@@ -12,6 +12,7 @@ pub mod flux;
 pub mod gas;
 pub mod mesh;
 pub mod pathways;
+pub mod overrides;
 pub mod photon;
 pub mod power;
 pub mod prune;

@@ -523,6 +523,13 @@ impl Study {
                     ));
                 }
                 parse_duration(&step.dt).map_err(|e| format!("schedule '{}': {e}", s.name))?;
+                if step.wall_loading_MW_m2.is_some() || step.partition.is_some() {
+                    return Err(format!(
+                        "schedule '{}': wall_loading_MW_m2 and partition are not part of \
+                         actinv-study-1",
+                        s.name
+                    ));
+                }
                 if !step.flux.is_finite() || step.flux < 0.0 {
                     return Err(format!(
                         "schedule '{}': flux must be a finite non-negative \
@@ -609,6 +616,8 @@ impl Study {
                     projectile: None,
                     power_W_cm3: None,
                     power_W_per_g: None,
+                    wall_loading_MW_m2: None,
+                    partition: None,
                 });
             }
         }
@@ -636,6 +645,7 @@ impl Study {
             summary: None,
             pathways: None,
             kerma: None,
+            overrides: Vec::new(),
         })
     }
 
@@ -798,6 +808,8 @@ impl StudySpectrum {
             boundaries_eV: self.boundaries_eV.clone(),
             descending: self.descending,
             relative_error: None,
+            rebin: None,
+            wall_loading_MW_m2: None,
         })
     }
 }

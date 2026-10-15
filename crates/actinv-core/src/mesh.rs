@@ -237,6 +237,21 @@ impl MeshSpec {
         {
             return Err("flux requires a path and a 64-hex-digit sha256".into());
         }
+        if self.library.path.is_empty() {
+            return Err("a mesh spec requires library.path: a decay-only run has no flux".into());
+        }
+        // Cells carry their own flux: a wall loading has no spectrum reference to scale against,
+        // and a partition would force every cell onto the coupled solve.
+        if self
+            .schedule
+            .iter()
+            .any(|step| step.wall_loading_MW_m2.is_some() || step.partition.is_some())
+        {
+            return Err(
+                "schedule wall_loading_MW_m2 and partition are not part of actinv-mesh-spec-1"
+                    .into(),
+            );
+        }
         if !(1..=MAX_CHUNK_CELLS).contains(&self.chunk_cells) {
             return Err(format!(
                 "chunk_cells must be between 1 and {MAX_CHUNK_CELLS}"
@@ -349,6 +364,8 @@ impl MeshSpec {
                 // (pre-rebin) source groups, carried separately via
                 // `MeshFluxOrigin`; this rebinned spectrum never carries it.
                 relative_error: None,
+                rebin: None,
+                wall_loading_MW_m2: None,
             },
             schedule: self.schedule.clone(),
             options: self.options.clone(),
@@ -361,6 +378,7 @@ impl MeshSpec {
             summary: self.summary.clone(),
             pathways: None,
             kerma: None,
+            overrides: Vec::new(),
         }
     }
 }
@@ -1879,6 +1897,8 @@ mod tests {
                 projectile: None,
                 power_W_cm3: None,
                 power_W_per_g: None,
+                wall_loading_MW_m2: None,
+                partition: None,
             }],
             options: Options::default(),
             photon: PhotonOptions::default(),

@@ -18,10 +18,15 @@ pub struct Spec {
     pub title: String,
     #[serde(default)]
     pub projectile: Projectile,
+    /// Omitted (or an empty `path`) only for a decay-only run: every schedule step must then have
+    /// zero flux, and chain building uses the decay data alone.
+    #[serde(default)]
     pub library: LibraryRef,
     #[serde(default)]
     pub decay: DecayRef,
     pub material: Material,
+    /// May be omitted for a decay-only run; the zero-flux placeholder is never read.
+    #[serde(default = "placeholder_spectrum")]
     pub spectrum: Spectrum,
     pub schedule: Vec<Step>,
     #[serde(default)]
@@ -49,9 +54,13 @@ pub struct Spec {
     /// per-step `kerma` block to the result. Absent from any spec echo when not declared.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub kerma: Option<KermaOptions>,
+    /// FISPACT-II `OVER` parity (P124): named per-nuclide replacements of one-group cross sections
+    /// and half-lives, and of their declared uncertainties. Absent = the library data as built.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub overrides: Vec<NamedOverride>,
 }
 
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Debug, Clone, Default, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct LibraryRef {
     pub path: String,
@@ -613,6 +622,98 @@ pub struct Spectrum {
     /// unused otherwise.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub relative_error: Option<Vec<f64>>,
+    /// P124 (FISPACT-II `GRPCONVERT`): when present, `flux_per_group` and `boundaries_eV` describe
+    /// the spectrum in its *own* groups and `structure` names the library structure it is
+    /// converted to inside the run.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub rebin: Option<SpectrumRebin>,
+    /// First-wall loading in MW m^-2 that the group fluxes correspond to, as recorded in a
+    /// FISPACT-II fluxes file. A step's `wall_loading_MW_m2` is scaled against it.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub wall_loading_MW_m2: Option<f64>,
+}
+
+/// Spectrum conversion options (FISPACT-II `GRPCONVERT`, `CNVTYPE`, `LIMGRP`).
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct SpectrumRebin {
+    /// How flux is distributed inside a source group: `"equal_lethargy"` (default, `CNVTYPE 0`)
+    /// or `"equal_energy"` (`CNVTYPE 1`).
+    #[serde(default = "equal_lethargy")]
+    pub convention: String,
+    /// `LIMGRP` lower limit: source flux below it is folded into the first group above it.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub emin_eV: Option<f64>,
+    /// `LIMGRP` upper limit: source flux above it is folded into the last group below it.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub emax_eV: Option<f64>,
+}
+fn equal_lethargy() -> String {
+    "equal_lethargy".into()
+}
+
+/// One named data replacement (FISPACT-II `OVER`). `kind` selects the sub-keyword:
+/// `cross_section` (`ACROSS`: the reaction's one-group collapsed cross section in barns),
+/// `cross_section_scale` (a multiplier on that collapsed value), `half_life` (`ALAM`),
+/// `cross_section_uncertainty` (`ADCROSS`) and `half_life_uncertainty` (`ADLAM`). The last two
+/// take a relative standard uncertainty rather than FISPACT-II's error factor.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct NamedOverride {
+    /// Explicit nuclide, e.g. `Pu239`; for the cross-section kinds the reaction's target.
+    pub nuclide: String,
+    pub kind: String,
+    /// ENDF reaction number selecting the library rows; required by the cross-section kinds and
+    /// forbidden for the half-life kinds. (FISPACT-II selects by daughter; a reaction's MT is the
+    /// unambiguous equivalent, and MT 18 is its `Fission`.)
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub mt: Option<i32>,
+    pub value: f64,
+    /// Time unit of a `half_life` value (`s` by default; any `schedule` duration unit, including
+    /// FISPACT-II's `SECS`, `MINS`, `HOURS`, `DAYS`, `YEARS`).
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub units: Option<String>,
+}
+
+impl NamedOverride {
+    pub const KINDS: [&'static str; 5] = [
+        "cross_section",
+        "cross_section_scale",
+        "half_life",
+        "cross_section_uncertainty",
+        "half_life_uncertainty",
+    ];
+
+    pub(crate) fn is_cross_section_value(&self) -> bool {
+        matches!(self.kind.as_str(), "cross_section" | "cross_section_scale")
+    }
+
+    /// The `half_life` value in seconds.
+    pub fn half_life_seconds(&self) -> Result<f64, String> {
+        let units = self.units.as_deref().unwrap_or("s");
+        let seconds = self.value * parse_duration(&format!("1 {units}"))?;
+        if !seconds.is_finite() || seconds <= 0.0 {
+            return Err(format!(
+                "override half_life for '{}' must be a finite positive time",
+                self.nuclide
+            ));
+        }
+        Ok(seconds)
+    }
+}
+
+/// The zero-flux, single-group spectrum a decay-only spec may leave out.
+fn placeholder_spectrum() -> Spectrum {
+    Spectrum {
+        structure: "custom".into(),
+        flux_per_group: vec![0.0],
+        total: None,
+        boundaries_eV: Some(vec![1.0, 2.0]),
+        descending: false,
+        relative_error: None,
+        rebin: None,
+        wall_loading_MW_m2: None,
+    }
 }
 
 impl Spectrum {
@@ -722,18 +823,182 @@ impl Spectrum {
             e
         })
     }
+
+    /// The flux the solver uses, in ascending library-group order. Without `rebin` this is
+    /// `ascending_flux()`; with it, the supplied spectrum is first clipped to the `LIMGRP`
+    /// limits, then distributed onto the named destination structure under the declared
+    /// convention. The second element is the conversion record the ledger carries.
+    pub(crate) fn resolved_flux(
+        &self,
+        scope: &str,
+    ) -> Result<(Vec<f64>, Option<serde_json::Value>), String> {
+        let Some(rebin) = &self.rebin else {
+            return Ok((self.ascending_flux(), None));
+        };
+        let destination = actinv_data::groups::GroupStructure::resolve_named(&self.structure)?
+            .ok_or_else(|| {
+                format!(
+                    "{scope}.rebin needs a named library structure in {scope}.structure, got '{}'",
+                    self.structure
+                )
+            })?;
+        let source_boundaries = self.boundaries_eV.as_ref().ok_or_else(|| {
+            format!("{scope}.rebin needs the source groups in {scope}.boundaries_eV")
+        })?;
+        let clipped = crate::flux::clip_spectrum_range(
+            source_boundaries,
+            &self.ascending_flux(),
+            rebin.emin_eV,
+            rebin.emax_eV,
+        )
+        .map_err(|error| format!("{scope}.rebin: {error}"))?;
+        let converted = match rebin.convention.as_str() {
+            "equal_lethargy" => crate::flux::rebin_equal_lethargy(
+                &clipped.boundaries,
+                &clipped.flux_per_group,
+                &destination.boundaries_ev,
+            ),
+            "equal_energy" => crate::flux::rebin_equal_energy(
+                &clipped.boundaries,
+                &clipped.flux_per_group,
+                &destination.boundaries_ev,
+            ),
+            other => return Err(format!("unknown {scope}.rebin.convention '{other}'")),
+        }
+        .map_err(|error| format!("{scope}.rebin: {error}"))?;
+        let record = serde_json::json!({
+            "scope": scope,
+            "convention": rebin.convention,
+            "cnvtype": if rebin.convention == "equal_energy" { 1 } else { 0 },
+            "destination_structure": self.structure,
+            "source_groups": self.flux_per_group.len(),
+            "destination_groups": converted.flux_per_group.len(),
+            "emin_eV": rebin.emin_eV,
+            "emax_eV": rebin.emax_eV,
+            "limit_flux_moved_from_below": clipped.moved_from_below,
+            "limit_flux_moved_from_above": clipped.moved_from_above,
+            "source_total": converted.source_total,
+            "destination_total": converted.destination_total,
+            "outside_destination_below": converted.underflow,
+            "outside_destination_above": converted.overflow,
+            "flux_conservation_residual": converted.relative_closure,
+            "exact_grid": converted.exact_grid,
+        });
+        Ok((converted.flux_per_group, Some(record)))
+    }
+
+    /// Structural checks of the P124 spectrum fields (`wall_loading_MW_m2`, `rebin`) that do not
+    /// need the destination's flux values.
+    fn check_rebin(&self, label: &str) -> Result<(), String> {
+        if self
+            .wall_loading_MW_m2
+            .is_some_and(|wall| !wall.is_finite() || wall <= 0.0)
+        {
+            return Err(format!(
+                "{label}.wall_loading_MW_m2 must be finite and positive"
+            ));
+        }
+        let Some(rebin) = &self.rebin else {
+            return Ok(());
+        };
+        match rebin.convention.as_str() {
+            "equal_lethargy" | "equal_energy" => {}
+            other => return Err(format!("unknown {label}.rebin.convention '{other}'")),
+        }
+        for (name, limit) in [("emin_eV", rebin.emin_eV), ("emax_eV", rebin.emax_eV)] {
+            if limit.is_some_and(|value| !value.is_finite() || value <= 0.0) {
+                return Err(format!("{label}.rebin.{name} must be finite and positive"));
+            }
+        }
+        if let (Some(low), Some(high)) = (rebin.emin_eV, rebin.emax_eV) {
+            if low >= high {
+                return Err(format!("{label}.rebin.emin_eV must be below emax_eV"));
+            }
+        }
+        if self.structure == "custom" {
+            return Err(format!(
+                "{label}.rebin converts to a library structure: {label}.structure must name one, not 'custom'"
+            ));
+        }
+        if self.relative_error.is_some() {
+            return Err(format!(
+                "{label}.relative_error cannot accompany {label}.rebin: it is indexed by the \
+                 supplied groups, not the library's"
+            ));
+        }
+        let boundaries = self.boundaries_eV.as_ref().ok_or_else(|| {
+            format!("{label}.rebin needs the source groups in {label}.boundaries_eV")
+        })?;
+        if boundaries.len() != self.flux_per_group.len() + 1 {
+            return Err(format!(
+                "{label}.boundaries_eV has {} entries; {} source groups need {}",
+                boundaries.len(),
+                self.flux_per_group.len(),
+                self.flux_per_group.len() + 1
+            ));
+        }
+        if boundaries
+            .iter()
+            .any(|value| !value.is_finite() || *value <= 0.0)
+            || boundaries.windows(2).any(|pair| pair[1] <= pair[0])
+        {
+            return Err(format!(
+                "{label}.boundaries_eV must be finite, positive and strictly ascending"
+            ));
+        }
+        Ok(())
+    }
 }
 fn g709() -> String {
     "fispact-709".into()
 }
 
+/// 14 MeV neutron current, in n cm^-2 s^-1, that FISPACT-II documents as equivalent to a first-wall
+/// loading of 1 MW m^-2: "a current C, of 4.44 x 10^13 n cm^-2 s^-1 is equivalent to 1 MW m^-2"
+/// (FISPACT-II User Manual UKAEA-R(18)001, section 4.91 WALL, closing paragraph). FISPACT-II's own
+/// `WALL` conversion scales the flux of the supplied spectrum by wall / (the file's wall loading)
+/// instead; this constant is only the stand-in when the spectrum declares no wall loading.
+pub const WALL_CURRENT_PER_MW_M2: f64 = 4.44e13;
+
+/// The flux multiplier a `wall_loading_MW_m2` step stands for, with the basis it was derived on.
+///
+/// With the spectrum's own `reference` loading, FISPACT-II section 4.91 applies: the step flux is
+/// `(wall / reference)` times the sum of the spectrum's group fluxes, so the multiplier on the
+/// spectrum is `wall / reference` ("If a wall loading of 2.0 MW m-2 was input then a flux value of
+/// (2.0/4.15) x 1.80 x 10^15 n cm-2 s-1 would be used"). Without one, the step flux is
+/// `wall * WALL_CURRENT_PER_MW_M2` and the multiplier is that over the spectrum's `total`.
+pub(crate) fn wall_flux_multiplier(
+    wall: f64,
+    reference: Option<f64>,
+    total: f64,
+) -> Result<(f64, &'static str), String> {
+    match reference {
+        Some(reference) => Ok((wall / reference, "spectrum_reference_wall_loading")),
+        None if total > 0.0 => Ok((
+            wall * WALL_CURRENT_PER_MW_M2 / total,
+            "14_MeV_current_equivalence",
+        )),
+        None => Err(
+            "a wall-loading step needs a spectrum with positive total flux or a declared \
+             wall_loading_MW_m2 reference"
+                .into(),
+        ),
+    }
+}
+
+/// One schedule segment. Exactly one irradiation driver is given on the wire: `flux`,
+/// `wall_loading_MW_m2` or a power target (`power_W_cm3` / `power_W_per_g`; an explicit `flux: 0`
+/// beside the target is accepted). A wall-loading step carries `flux: 0.0` here and its multiplier
+/// is derived against the step's spectrum by `Spec::physical_inputs`; a power-driven step's
+/// multipliers are solved at run time.
 #[derive(Debug, Clone, Serialize, Deserialize)]
-#[serde(try_from = "StepWire")]
+#[serde(try_from = "StepWire", into = "StepWire")]
 pub struct Step {
     /// duration with a unit: "300 s", "5 min", "7 h", "1 d", "100 y"
     pub dt: String,
     /// multiplier on the spectrum's total during this step; 0 is cooling. A power-driven step
-    /// (`power_W_cm3` / `power_W_per_g`) carries 0 here: its multipliers are solved at run time.
+    /// (`power_W_cm3` / `power_W_per_g`) or a wall-loading step carries 0 here: its multipliers are
+    /// derived at run time.
     pub flux: f64,
     /// optional per-step spectrum replacing the base `spectrum` for this step's duration;
     /// the `flux` multiplier scales this spectrum's total. Must share the base spectrum's
@@ -747,35 +1012,31 @@ pub struct Step {
     /// library, or names the base `library` again to return to it). The step must also declare its own
     /// `spectrum`, in the new library's group structure; later steps keep using that spectrum unless they
     /// declare theirs. The inventory carries across the switch; only the collapsed reaction rates change.
-    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub library: Option<LibraryRef>,
     /// the projectile of the overriding `library`; required when it differs from the spec's `projectile`
     /// and rejected without a `library`
-    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub projectile: Option<Projectile>,
     /// P126: irradiate at the flux amplitude that makes the material's kerma heating equal this
     /// power density (W cm^-3, needs `material.density_g_cm3`). Alternative to `flux`.
-    #[serde(skip_serializing_if = "Option::is_none")]
     pub power_W_cm3: Option<f64>,
     /// P126: as `power_W_cm3`, in W per gram of material. Alternative to `flux`.
-    #[serde(skip_serializing_if = "Option::is_none")]
     pub power_W_per_g: Option<f64>,
+    /// alternative to `flux` (FISPACT-II `WALL`): first-wall loading in MW m^-2 for this step
+    pub wall_loading_MW_m2: Option<f64>,
+    /// optional instantaneous partition (FISPACT-II `PARTITION`) at the start of this step:
+    /// element symbol -> fraction of that element's atoms kept (0 removes it all, 1 keeps it all)
+    pub partition: Option<BTreeMap<String, f64>>,
 }
 
-impl Step {
-    /// True when the step's flux amplitude is solved from a power target rather than given.
-    pub fn is_power_driven(&self) -> bool {
-        self.power_W_cm3.is_some() || self.power_W_per_g.is_some()
-    }
-}
-
-/// The step as written. `flux` is optional here because a power-driven step omits it; `Step`
-/// itself keeps `flux` a plain multiplier so every flux-driven consumer is unchanged.
-#[derive(Deserialize)]
+/// The wire form of [`Step`]: `flux` is optional so that "exactly one irradiation driver" (flux,
+/// `wall_loading_MW_m2`, or a power target) is decidable. An explicit `flux: 0` beside a power
+/// target is accepted, because a power-driven step serializes that zero.
+#[doc(hidden)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
-struct StepWire {
+pub struct StepWire {
     dt: String,
-    #[serde(default)]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     flux: Option<f64>,
     #[serde(default)]
     spectrum: Option<Spectrum>,
@@ -783,20 +1044,24 @@ struct StepWire {
     feed: Option<BTreeMap<String, f64>>,
     #[serde(default)]
     removal: Option<BTreeMap<String, f64>>,
-    #[serde(default)]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     library: Option<LibraryRef>,
-    #[serde(default)]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     projectile: Option<Projectile>,
-    #[serde(default)]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     power_W_cm3: Option<f64>,
-    #[serde(default)]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     power_W_per_g: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    wall_loading_MW_m2: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    partition: Option<BTreeMap<String, f64>>,
 }
 
 impl TryFrom<StepWire> for Step {
     type Error = String;
 
-    fn try_from(wire: StepWire) -> Result<Self, Self::Error> {
+    fn try_from(wire: StepWire) -> Result<Self, String> {
         let power_driven = wire.power_W_cm3.is_some() || wire.power_W_per_g.is_some();
         if wire.power_W_cm3.is_some() && wire.power_W_per_g.is_some() {
             return Err(
@@ -804,20 +1069,33 @@ impl TryFrom<StepWire> for Step {
                     .into(),
             );
         }
+        if power_driven && wire.wall_loading_MW_m2.is_some() {
+            return Err(
+                "schedule step declares both wall_loading_MW_m2 and a power target (power_W_cm3 / power_W_per_g); they are mutually exclusive"
+                    .into(),
+            );
+        }
         // A power-driven step serializes `flux: 0`, so an explicit zero beside a power target is
         // accepted; any other flux contradicts it.
-        let flux = match wire.flux {
-            Some(flux) if power_driven && flux != 0.0 => {
+        let flux = match (wire.flux, wire.wall_loading_MW_m2) {
+            (Some(_), Some(_)) => {
+                return Err(
+                    "a schedule step declares both flux and wall_loading_MW_m2; give exactly one"
+                        .into(),
+                );
+            }
+            (Some(flux), None) if power_driven && flux != 0.0 => {
                 return Err(
                     "schedule step declares both flux and a power target (power_W_cm3 / power_W_per_g); they are mutually exclusive"
                         .into(),
                 );
             }
-            Some(flux) => flux,
-            None if power_driven => 0.0,
-            None => {
+            (Some(flux), None) => flux,
+            (None, Some(_)) => 0.0,
+            (None, None) if power_driven => 0.0,
+            (None, None) => {
                 return Err(
-                    "schedule step needs flux, or a power target (power_W_cm3 / power_W_per_g)"
+                    "a schedule step needs one of flux and wall_loading_MW_m2, or a power target (power_W_cm3 / power_W_per_g)"
                         .into(),
                 );
             }
@@ -832,7 +1110,42 @@ impl TryFrom<StepWire> for Step {
             projectile: wire.projectile,
             power_W_cm3: wire.power_W_cm3,
             power_W_per_g: wire.power_W_per_g,
+            wall_loading_MW_m2: wire.wall_loading_MW_m2,
+            partition: wire.partition,
         })
+    }
+}
+
+impl From<Step> for StepWire {
+    fn from(step: Step) -> Self {
+        StepWire {
+            dt: step.dt,
+            flux: step.wall_loading_MW_m2.is_none().then_some(step.flux),
+            spectrum: step.spectrum,
+            feed: step.feed,
+            removal: step.removal,
+            library: step.library,
+            projectile: step.projectile,
+            power_W_cm3: step.power_W_cm3,
+            power_W_per_g: step.power_W_per_g,
+            wall_loading_MW_m2: step.wall_loading_MW_m2,
+            partition: step.partition,
+        }
+    }
+}
+
+impl Step {
+    /// True when the step's flux amplitude is solved from a power target rather than given.
+    pub fn is_power_driven(&self) -> bool {
+        self.power_W_cm3.is_some() || self.power_W_per_g.is_some()
+    }
+
+    /// Whether the step irradiates: a positive flux multiplier, a positive wall loading or a power
+    /// target (validated positive).
+    pub fn irradiates(&self) -> bool {
+        self.flux > 0.0
+            || self.wall_loading_MW_m2.is_some_and(|wall| wall > 0.0)
+            || self.is_power_driven()
     }
 }
 
@@ -1005,6 +1318,9 @@ pub(crate) struct PhysicalStep {
     /// P126: requested kerma heating power in W per gram of material. When set, `multiplier` is
     /// only a placeholder until the run solves the flux amplitude.
     pub(crate) power_w_per_g: Option<f64>,
+    /// (atomic number Z, fraction of the element's atoms kept) instantaneous partition applied
+    /// before this step evolves
+    pub(crate) partition: Vec<(i32, f64)>,
 }
 
 impl PhysicalStep {
@@ -1036,6 +1352,10 @@ pub(crate) struct PhysicalInputs {
     pub(crate) photon_boundaries: EnergyBoundaries,
     pub(crate) gamma_cutoff: ElectronVolts,
     pub(crate) fixed_fission_energy: Option<ElectronVolts>,
+    /// One ledger record per `spectrum.rebin` conversion (the base spectrum, then any step's)
+    pub(crate) spectrum_conversions: Vec<serde_json::Value>,
+    /// One ledger record per `wall_loading_MW_m2` step
+    pub(crate) wall_conversions: Vec<serde_json::Value>,
 }
 
 /// Parse a duration like "5 min" (also "5min", "300", "1 y"). Seconds when no unit is given.
@@ -1105,7 +1425,14 @@ impl Spec {
             }
         }
         if self.library.path.is_empty() {
-            return Err("library.path is empty".into());
+            if self.schedule.iter().any(Step::irradiates) {
+                return Err(
+                    "library.path is empty: an activation library may be omitted only when \
+                     every schedule step has zero flux (a decay-only run)"
+                        .into(),
+                );
+            }
+            self.validate_decay_only()?;
         }
         if let Some(hash) = &self.library.sha256 {
             if hash.len() != 64 || !hash.bytes().all(|byte| byte.is_ascii_hexdigit()) {
@@ -1420,6 +1747,60 @@ impl Spec {
                         .into(),
                 );
             }
+            if let Some(wall) = st.wall_loading_MW_m2 {
+                if st.is_power_driven() {
+                    return Err(
+                        "schedule step declares both wall_loading_MW_m2 and a power target (power_W_cm3 / power_W_per_g); they are mutually exclusive"
+                            .into(),
+                    );
+                }
+                if st.flux != 0.0 {
+                    return Err(
+                        "a schedule step declares both flux and wall_loading_MW_m2; give exactly one"
+                            .into(),
+                    );
+                }
+                if !wall.is_finite() || wall < 0.0 {
+                    return Err("wall_loading_MW_m2 must be finite and nonnegative".into());
+                }
+            }
+            if let Some(step_spectrum) = &st.spectrum {
+                step_spectrum.check_rebin("schedule step spectrum")?;
+            }
+            if let Some(partition) = &st.partition {
+                let mut elements = std::collections::HashSet::new();
+                for (key, kept) in partition {
+                    match actinv_data::composition::material_key(key) {
+                        Ok(actinv_data::composition::MaterialKey::Element(symbol)) => {
+                            if !elements.insert(symbol) {
+                                return Err(format!(
+                                    "schedule partition names element '{key}' more than once"
+                                ));
+                            }
+                        }
+                        Ok(actinv_data::composition::MaterialKey::Nuclide { .. }) => {
+                            return Err(format!(
+                                "schedule partition key '{key}' must name an element"
+                            ));
+                        }
+                        Err(error) => {
+                            return Err(format!("schedule partition key '{key}': {error}"));
+                        }
+                    }
+                    if !kept.is_finite() || !(0.0..=1.0).contains(kept) {
+                        return Err(format!(
+                            "schedule partition fraction for '{key}' must lie in [0, 1]"
+                        ));
+                    }
+                }
+                if self.options.mode == "trace" {
+                    return Err(
+                        "schedule partition is not supported with options.mode 'trace': the trace \
+                         formulation holds the bulk material undepleted; use 'coupled' or 'auto'"
+                            .into(),
+                    );
+                }
+            }
             if let Some(feed) = &st.feed {
                 for (key, rate) in feed {
                     match actinv_data::composition::material_key(key) {
@@ -1659,7 +2040,10 @@ impl Spec {
                 }
             }
         }
-        if self.spectrum.structure == "custom" {
+        self.spectrum.check_rebin("spectrum")?;
+        if self.spectrum.rebin.is_some() {
+            self.named_structure_groups()?;
+        } else if self.spectrum.structure == "custom" {
             let b = self
                 .spectrum
                 .boundaries_eV
@@ -1677,44 +2061,7 @@ impl Spec {
                 return Err("boundaries_eV must be finite and strictly ascending".into());
             }
         } else {
-            let (base_name, refine) = match self.spectrum.structure.rsplit_once('x') {
-                Some((b, n)) => match n.parse::<usize>() {
-                    Ok(n) => (b, Some(n)),
-                    Err(_) => (self.spectrum.structure.as_str(), None),
-                },
-                None => (self.spectrum.structure.as_str(), None),
-            };
-            if let Some(n) = refine {
-                if !(2..=64).contains(&n) {
-                    return Err(format!(
-                        "spectrum.structure refinement must be in 2..=64, got {n}"
-                    ));
-                }
-            }
-            let factor = refine.unwrap_or(1);
-            let (groups, expected_projectile) = match base_name {
-                "fispact-709" => (709 * factor, Projectile::Neutron),
-                "fispact-162" if !self.projectile.is_neutron() => (162 * factor, self.projectile),
-                "fispact-162" => {
-                    return Err("fispact-162 is reserved for charged-particle spectra".into());
-                }
-                // The remaining FISPACT-II standard structures (66 ... 1102) are neutron grids; the group
-                // count comes from the vendored boundary file, never from a hardcoded table.
-                value => match actinv_data::groups::GroupStructure::named(value)? {
-                    Some(base) if actinv_data::groups::GroupStructure::is_neutron_named(value) => {
-                        (base.groups() * factor, Projectile::Neutron)
-                    }
-                    _ => return Err(format!("unknown spectrum.structure '{value}'")),
-                },
-            };
-            if self.projectile != expected_projectile {
-                return Err(format!(
-                    "{} requires projectile '{}', got '{}'",
-                    self.spectrum.structure,
-                    expected_projectile.name(),
-                    self.projectile.name()
-                ));
-            }
+            let groups = self.named_structure_groups()?;
             if self.spectrum.flux_per_group.len() != groups {
                 return Err(format!(
                     "{} requires {groups} flux values, got {}",
@@ -1911,6 +2258,188 @@ impl Spec {
                 check_hashed_ref(reference, "fission_yields.spontaneous.nubar_table")?;
             }
         }
+        self.validate_overrides()?;
+        Ok(())
+    }
+
+    /// Group count of the named `spectrum.structure`, after checking it against the projectile.
+    fn named_structure_groups(&self) -> Result<usize, String> {
+        let (base_name, refine) = match self.spectrum.structure.rsplit_once('x') {
+            Some((b, n)) => match n.parse::<usize>() {
+                Ok(n) => (b, Some(n)),
+                Err(_) => (self.spectrum.structure.as_str(), None),
+            },
+            None => (self.spectrum.structure.as_str(), None),
+        };
+        if let Some(n) = refine {
+            if !(2..=64).contains(&n) {
+                return Err(format!(
+                    "spectrum.structure refinement must be in 2..=64, got {n}"
+                ));
+            }
+        }
+        let factor = refine.unwrap_or(1);
+        let (groups, expected_projectile) = match base_name {
+            "fispact-709" => (709 * factor, Projectile::Neutron),
+            "fispact-162" if !self.projectile.is_neutron() => (162 * factor, self.projectile),
+            "fispact-162" => {
+                return Err("fispact-162 is reserved for charged-particle spectra".into());
+            }
+            // The remaining FISPACT-II standard structures (66 ... 1102) are neutron grids; the group
+            // count comes from the vendored boundary file, never from a hardcoded table.
+            value => match actinv_data::groups::GroupStructure::named(value)? {
+                Some(base) if actinv_data::groups::GroupStructure::is_neutron_named(value) => {
+                    (base.groups() * factor, Projectile::Neutron)
+                }
+                _ => return Err(format!("unknown spectrum.structure '{value}'")),
+            },
+        };
+        if self.projectile != expected_projectile {
+            return Err(format!(
+                "{} requires projectile '{}', got '{}'",
+                self.spectrum.structure,
+                expected_projectile.name(),
+                self.projectile.name()
+            ));
+        }
+        Ok(groups)
+    }
+
+    /// What a run without an activation library cannot carry: every input that reads library
+    /// rows. The caller has already established that no step irradiates.
+    fn validate_decay_only(&self) -> Result<(), String> {
+        const NOTE: &str = "a decay-only run (no library.path) has no activation library to read";
+        if self.library.sha256.is_some() {
+            return Err("library.sha256 is declared without a library.path".into());
+        }
+        if self.uncertainty.is_some() {
+            return Err(format!("uncertainty is not available: {NOTE}"));
+        }
+        if self.self_shielding.is_some() {
+            return Err(format!("self_shielding is not available: {NOTE}"));
+        }
+        if self.damage.is_some() {
+            return Err(format!("damage is not available: {NOTE}"));
+        }
+        if !self.fission_yields.files.is_empty() {
+            return Err(format!("fission_yields files are not available: {NOTE}"));
+        }
+        if self.options.rate_scale.is_some() || self.options.yield_scale.is_some() {
+            return Err(format!(
+                "options.rate_scale and options.yield_scale are not available: {NOTE}"
+            ));
+        }
+        if let Some(item) = self
+            .overrides
+            .iter()
+            .find(|item| item.kind != "half_life" && item.kind != "half_life_uncertainty")
+        {
+            return Err(format!(
+                "override kind '{}' is not available: {NOTE}",
+                item.kind
+            ));
+        }
+        Ok(())
+    }
+
+    /// Structural checks of `overrides`. Which library rows or decay records they name is only
+    /// known to a run, where unknown names are errors.
+    fn validate_overrides(&self) -> Result<(), String> {
+        let mut seen = std::collections::HashSet::new();
+        let mut value_targets = std::collections::HashSet::new();
+        for item in &self.overrides {
+            let (za, liso) = scale_nuclide_key(&item.nuclide, "overrides nuclide")?;
+            if !NamedOverride::KINDS.contains(&item.kind.as_str()) {
+                return Err(format!(
+                    "unknown override kind '{}' for '{}'",
+                    item.kind, item.nuclide
+                ));
+            }
+            let label = format!("override {} '{}'", item.kind, item.nuclide);
+            if !item.value.is_finite() {
+                return Err(format!("{label}: value must be finite"));
+            }
+            let cross_section = item.kind.starts_with("cross_section");
+            match (cross_section, item.mt) {
+                (true, None) => return Err(format!("{label}: mt is required")),
+                (true, Some(mt)) if mt < 1 => {
+                    return Err(format!(
+                        "{label}: mt must be a positive ENDF reaction number"
+                    ));
+                }
+                (false, Some(_)) => {
+                    return Err(format!(
+                        "{label}: mt applies to cross-section overrides only"
+                    ));
+                }
+                _ => {}
+            }
+            if item.units.is_some() && item.kind != "half_life" {
+                return Err(format!("{label}: units apply to half_life only"));
+            }
+            match item.kind.as_str() {
+                "cross_section" if item.value < 0.0 => {
+                    return Err(format!("{label}: value must be nonnegative barns"));
+                }
+                "cross_section_scale" if item.value <= 0.0 => {
+                    return Err(format!("{label}: value must be a positive multiplier"));
+                }
+                "half_life" => {
+                    item.half_life_seconds()?;
+                }
+                "cross_section_uncertainty" | "half_life_uncertainty" if item.value < 0.0 => {
+                    return Err(format!(
+                        "{label}: value must be a nonnegative relative standard uncertainty"
+                    ));
+                }
+                _ => {}
+            }
+            if !seen.insert((za, liso, item.kind.clone(), item.mt)) {
+                return Err(format!("duplicate {label}"));
+            }
+            if item.is_cross_section_value() && !value_targets.insert((za, liso, item.mt)) {
+                return Err(format!(
+                    "{label}: cross_section and cross_section_scale name the same reaction"
+                ));
+            }
+        }
+        if self
+            .overrides
+            .iter()
+            .any(NamedOverride::is_cross_section_value)
+            && self.uncertainty.is_some()
+        {
+            return Err(
+                "cross-section overrides cannot be combined with uncertainty: the MF=33 \
+                 collapse is anchored to the library value"
+                    .into(),
+            );
+        }
+        let channel_requested = |channel: &str| {
+            self.uncertainty.as_ref().is_some_and(|options| {
+                (options.channels.is_empty() && channel == "cross_section_mf33")
+                    || options.channels.iter().any(|name| name == channel)
+            })
+        };
+        for item in &self.overrides {
+            let (channel, covariance) = match item.kind.as_str() {
+                "cross_section_uncertainty" => ("cross_section_mf33", true),
+                "half_life_uncertainty" => ("decay_constants", false),
+                _ => continue,
+            };
+            if !channel_requested(channel)
+                || (covariance
+                    && self
+                        .uncertainty
+                        .as_ref()
+                        .is_some_and(|options| options.covariance.is_none()))
+            {
+                return Err(format!(
+                    "override {} '{}' needs an uncertainty section requesting the {channel} channel",
+                    item.kind, item.nuclide
+                ));
+            }
+        }
         Ok(())
     }
 
@@ -1921,19 +2450,22 @@ impl Spec {
             .map_err(|_| "options.temperature_K must be finite and nonnegative".to_string())?;
         let bmin = AtomsPerGram::new(self.options.bmin_atoms_per_g)
             .map_err(|_| "options.bmin_atoms_per_g must be finite and nonnegative".to_string())?;
-        let flux = GroupFluxes::new(self.flux_ascending())
+        let (base_flux, base_conversion) = self.spectrum.resolved_flux("spectrum")?;
+        let flux = GroupFluxes::new(base_flux)
             .map_err(|_| "group fluxes must be finite and nonnegative".to_string())?;
         let (step_libraries, contexts) = self.resolve_step_libraries()?;
+        let mut spectrum_conversions: Vec<serde_json::Value> =
+            base_conversion.into_iter().collect();
+        let mut wall_conversions: Vec<serde_json::Value> = Vec::new();
         let schedule = self
             .schedule
             .iter()
             .zip(&contexts)
-            .map(|(step, context)| {
+            .enumerate()
+            .map(|(index, (step, context))| {
                 let parsed = parse_duration(&step.dt)?;
                 let duration =
                     Seconds::new(parsed).map_err(|_| format!("negative duration '{}'", step.dt))?;
-                let multiplier = FluxMultiplier::new(step.flux)
-                    .map_err(|_| "flux multiplier must be finite and nonnegative".to_string())?;
                 let power_w_per_g = match (step.power_W_per_g, step.power_W_cm3) {
                     (Some(power), None) => Some(power),
                     (None, Some(power)) => {
@@ -2012,10 +2544,68 @@ impl Spec {
                                 }
                             }
                         }
-                        GroupFluxes::new(s.ascending_flux())
+                        let (f, conversion) =
+                            s.resolved_flux(&format!("schedule[{index}].spectrum"))?;
+                        if step.spectrum.is_some() {
+                            spectrum_conversions.extend(conversion);
+                        }
+                        if context.library.is_none() && f.len() != flux.values().len() {
+                            return Err(format!(
+                                "schedule step spectrum has {} groups; the base spectrum declares {}",
+                                f.len(),
+                                flux.values().len()
+                            ));
+                        }
+                        GroupFluxes::new(f)
                             .map_err(|_| "schedule step spectrum group fluxes must be finite and nonnegative".to_string())
                     })
                     .transpose()?;
+                let multiplier = match step.wall_loading_MW_m2 {
+                    None => step.flux,
+                    Some(wall) => {
+                        let total = spectrum_flux.as_ref().unwrap_or(&flux).total().get();
+                        let reference = step
+                            .spectrum
+                            .as_ref()
+                            .unwrap_or(&self.spectrum)
+                            .wall_loading_MW_m2;
+                        let (multiplier, basis) = wall_flux_multiplier(wall, reference, total)?;
+                        wall_conversions.push(serde_json::json!({
+                            "step": index + 1,
+                            "wall_loading_MW_m2": wall,
+                            "basis": basis,
+                            "reference_wall_loading_MW_m2": reference,
+                            "current_per_MW_m2_cm2_s": reference
+                                .is_none()
+                                .then_some(WALL_CURRENT_PER_MW_M2),
+                            "flux_multiplier": multiplier,
+                            "step_total_flux_cm2_s": multiplier * total,
+                        }));
+                        multiplier
+                    }
+                };
+                let multiplier = FluxMultiplier::new(multiplier)
+                    .map_err(|_| "flux multiplier must be finite and nonnegative".to_string())?;
+                let partition = step
+                    .partition
+                    .iter()
+                    .flatten()
+                    .map(
+                        |(key, kept)| match actinv_data::composition::material_key(key) {
+                            Ok(actinv_data::composition::MaterialKey::Element(symbol)) => {
+                                let z =
+                                    actinv_data::composition::z_of(&symbol).ok_or_else(|| {
+                                        format!("unknown element symbol in partition key '{key}'")
+                                    })?;
+                                Ok((z, *kept))
+                            }
+                            Ok(actinv_data::composition::MaterialKey::Nuclide { .. }) => Err(
+                                format!("schedule partition key '{key}' must name an element"),
+                            ),
+                            Err(error) => Err(format!("schedule partition key '{key}': {error}")),
+                        },
+                    )
+                    .collect::<Result<Vec<_>, String>>()?;
                 Ok(PhysicalStep {
                     duration,
                     multiplier,
@@ -2024,6 +2614,7 @@ impl Spec {
                     feed,
                     removal,
                     power_w_per_g,
+                    partition,
                 })
             })
             .collect::<Result<Vec<_>, String>>()?;
@@ -2050,9 +2641,12 @@ impl Spec {
             photon_boundaries,
             gamma_cutoff,
             fixed_fission_energy,
+            spectrum_conversions,
+            wall_conversions,
         })
     }
-    /// Group fluxes in ascending-energy order, scaled to `total` when given.
+    /// Group fluxes in ascending-energy order, scaled to `total` when given: the spectrum as
+    /// supplied, before any `rebin` conversion onto the library's groups.
     pub fn flux_ascending(&self) -> Vec<f64> {
         self.spectrum.ascending_flux()
     }
@@ -3393,5 +3987,362 @@ mod duration_tests {
         assert!(Spec::from_json(&value.to_string())
             .unwrap_err()
             .contains("density"));
+    }
+}
+
+#[cfg(test)]
+mod input_parity_tests {
+    use super::{Spec, Step, WALL_CURRENT_PER_MW_M2};
+    use serde_json::{json, Value};
+
+    fn library_spec() -> Value {
+        json!({
+            "spec": "actinv-spec-1",
+            "library": {"path": "activation.npz"},
+            "decay": {"primary": "decay.endf"},
+            "material": {"basis": "wt_percent", "composition": {"FE": 100.0}},
+            "spectrum": {
+                "structure": "custom",
+                "boundaries_eV": [1.0, 2.0],
+                "flux_per_group": [1.0],
+                "total": 1.0e14,
+            },
+            "schedule": [{"dt": "1 s", "flux": 1.0}],
+        })
+    }
+
+    fn rebin_spec(convention: &str) -> Value {
+        let mut value = library_spec();
+        value["spectrum"] = json!({
+            "structure": "fispact-709",
+            "boundaries_eV": [1.0, 10.0, 100.0, 1000.0],
+            "flux_per_group": [1.0, 2.0, 3.0],
+            "rebin": {"convention": convention},
+        });
+        value
+    }
+
+    fn decay_only_spec() -> Value {
+        json!({
+            "spec": "actinv-spec-1",
+            "decay": {"primary": "decay.endf"},
+            "material": {"basis": "wt_percent", "composition": {"FE": 100.0}},
+            "schedule": [{"dt": "1 d", "flux": 0.0}],
+        })
+    }
+
+    fn error_of(value: &Value) -> String {
+        match Spec::from_json(&value.to_string()) {
+            Err(error) => error,
+            Ok(_) => panic!("spec unexpectedly validated: {value}"),
+        }
+    }
+
+    #[test]
+    fn rebin_conserves_total_flux_under_both_conventions() {
+        let mut distributions = Vec::new();
+        for (convention, cnvtype) in [("equal_lethargy", 0), ("equal_energy", 1)] {
+            let spec = Spec::from_json(&rebin_spec(convention).to_string()).unwrap();
+            let physical = spec.physical_inputs().unwrap();
+            let flux = physical.flux.values().to_vec();
+            assert_eq!(flux.len(), 709, "{convention}");
+            let total: f64 = flux.iter().sum();
+            assert!((total - 6.0).abs() <= 1e-12 * 6.0, "{convention}: {total}");
+            let record = &physical.spectrum_conversions[0];
+            assert_eq!(record["convention"], convention);
+            assert_eq!(record["cnvtype"], cnvtype);
+            assert_eq!(record["destination_groups"], 709);
+            assert!(record["flux_conservation_residual"].as_f64().unwrap() <= 1e-12);
+            assert!((record["destination_total"].as_f64().unwrap() - 6.0).abs() <= 1e-12 * 6.0);
+            distributions.push(flux);
+        }
+        // the two conventions split a source group differently
+        assert_ne!(distributions[0], distributions[1]);
+    }
+
+    #[test]
+    fn rebin_default_convention_is_equal_lethargy_and_limgrp_is_recorded() {
+        let mut value = rebin_spec("equal_lethargy");
+        value["spectrum"]["rebin"] = json!({"emin_eV": 5.0, "emax_eV": 500.0});
+        let spec = Spec::from_json(&value.to_string()).unwrap();
+        assert_eq!(
+            spec.spectrum.rebin.as_ref().unwrap().convention,
+            "equal_lethargy"
+        );
+        let physical = spec.physical_inputs().unwrap();
+        let record = &physical.spectrum_conversions[0];
+        assert_eq!(record["emin_eV"], 5.0);
+        assert_eq!(record["emax_eV"], 500.0);
+        let total: f64 = physical.flux.values().iter().sum();
+        assert!((total - 6.0).abs() <= 1e-12 * 6.0, "{total}");
+    }
+
+    #[test]
+    fn plain_spectrum_has_no_conversion_record() {
+        let spec = Spec::from_json(&library_spec().to_string()).unwrap();
+        let physical = spec.physical_inputs().unwrap();
+        assert!(physical.spectrum_conversions.is_empty());
+        assert!(physical.wall_conversions.is_empty());
+    }
+
+    #[test]
+    fn rebin_structural_errors() {
+        let mut value = rebin_spec("equal_lethargy");
+        value["spectrum"]["structure"] = json!("custom");
+        assert!(error_of(&value).contains("must name one"));
+
+        let mut value = rebin_spec("equal_lethargy");
+        value["spectrum"]["relative_error"] = json!([0.1, 0.1, 0.1]);
+        assert!(error_of(&value).contains("relative_error cannot accompany"));
+
+        let mut value = rebin_spec("equal_lethargy");
+        value["spectrum"]["boundaries_eV"] = json!([1.0, 100.0, 10.0, 1000.0]);
+        assert!(error_of(&value).contains("strictly ascending"));
+
+        let mut value = rebin_spec("equal_lethargy");
+        value["spectrum"]["rebin"] = json!({"emin_eV": 100.0, "emax_eV": 10.0});
+        assert!(error_of(&value).contains("emin_eV must be below emax_eV"));
+
+        let value = rebin_spec("equal_width");
+        assert!(error_of(&value).contains("unknown spectrum.rebin.convention"));
+    }
+
+    #[test]
+    fn wall_loading_uses_the_manual_current_equivalence_without_a_reference() {
+        assert_eq!(WALL_CURRENT_PER_MW_M2, 4.44e13);
+        let mut value = library_spec();
+        value["schedule"] = json!([
+            {"dt": "1 s", "wall_loading_MW_m2": 2.0},
+            {"dt": "1 s", "flux": 0.5},
+        ]);
+        let spec = Spec::from_json(&value.to_string()).unwrap();
+        let physical = spec.physical_inputs().unwrap();
+        // the spectrum total is 1e14 n cm^-2 s^-1, so 2 MW m^-2 is a multiplier of 0.888
+        let multiplier = physical.schedule[0].multiplier().get();
+        assert!((multiplier - 2.0 * 4.44e13 / 1.0e14).abs() <= 1e-15);
+        assert_eq!(physical.schedule[1].multiplier().get(), 0.5);
+        assert_eq!(physical.wall_conversions.len(), 1);
+        let record = &physical.wall_conversions[0];
+        assert_eq!(record["step"], 1);
+        assert_eq!(record["basis"], "14_MeV_current_equivalence");
+        assert_eq!(record["current_per_MW_m2_cm2_s"], 4.44e13);
+        let step_flux = record["step_total_flux_cm2_s"].as_f64().unwrap();
+        assert!((step_flux - 8.88e13).abs() <= 1e-9 * 8.88e13, "{step_flux}");
+    }
+
+    #[test]
+    fn wall_loading_scales_against_the_spectrum_reference_when_declared() {
+        let mut value = library_spec();
+        value["spectrum"]["total"] = json!(1.8e15);
+        value["spectrum"]["wall_loading_MW_m2"] = json!(4.15);
+        value["schedule"] = json!([{"dt": "1 s", "wall_loading_MW_m2": 2.0}]);
+        let spec = Spec::from_json(&value.to_string()).unwrap();
+        let physical = spec.physical_inputs().unwrap();
+        let multiplier = physical.schedule[0].multiplier().get();
+        assert!((multiplier - 2.0 / 4.15).abs() <= 1e-15);
+        let record = &physical.wall_conversions[0];
+        assert_eq!(record["basis"], "spectrum_reference_wall_loading");
+        assert_eq!(record["reference_wall_loading_MW_m2"], 4.15);
+        assert!(record["current_per_MW_m2_cm2_s"].is_null());
+        let step_flux = record["step_total_flux_cm2_s"].as_f64().unwrap();
+        assert!((step_flux - 2.0 / 4.15 * 1.8e15).abs() <= 1e-9 * step_flux);
+    }
+
+    #[test]
+    fn a_step_declares_exactly_one_of_flux_and_wall_loading() {
+        let mut value = library_spec();
+        value["schedule"] = json!([{"dt": "1 s", "flux": 1.0, "wall_loading_MW_m2": 2.0}]);
+        assert!(error_of(&value).contains("both flux and wall_loading_MW_m2"));
+
+        let mut value = library_spec();
+        value["schedule"] = json!([{"dt": "1 s"}]);
+        assert!(error_of(&value).contains("needs one of flux and wall_loading_MW_m2"));
+
+        // a hand-built step with both set is also refused by validate()
+        let mut spec = Spec::from_json(&library_spec().to_string()).unwrap();
+        spec.schedule[0].wall_loading_MW_m2 = Some(2.0);
+        assert!(spec
+            .validate()
+            .unwrap_err()
+            .contains("both flux and wall_loading_MW_m2"));
+
+        let mut value = library_spec();
+        value["schedule"] = json!([{"dt": "1 s", "wall_loading_MW_m2": -1.0}]);
+        assert!(error_of(&value).contains("wall_loading_MW_m2 must be finite and nonnegative"));
+    }
+
+    #[test]
+    fn step_serialisation_adds_nothing_unless_a_new_field_is_used() {
+        let spec = Spec::from_json(&library_spec().to_string()).unwrap();
+        let plain = serde_json::to_value(&spec.schedule[0]).unwrap();
+        let keys: Vec<&str> = plain
+            .as_object()
+            .unwrap()
+            .keys()
+            .map(String::as_str)
+            .collect();
+        assert_eq!(keys, ["dt", "feed", "flux", "removal", "spectrum"]);
+
+        let mut value = library_spec();
+        value["schedule"] = json!([{"dt": "1 s", "wall_loading_MW_m2": 2.0}]);
+        let spec = Spec::from_json(&value.to_string()).unwrap();
+        let wall = serde_json::to_value(&spec.schedule[0]).unwrap();
+        assert!(wall.get("flux").is_none());
+        assert_eq!(wall["wall_loading_MW_m2"], 2.0);
+        // the written form reads back to the same step
+        let again: Step = serde_json::from_value(wall).unwrap();
+        assert_eq!(again.wall_loading_MW_m2, Some(2.0));
+    }
+
+    #[test]
+    fn partition_keeps_the_stated_fraction_and_validates_its_range() {
+        let mut value = library_spec();
+        value["schedule"] = json!([
+            {"dt": "1 s", "flux": 1.0},
+            {"dt": "1 s", "flux": 0.0, "partition": {"Fe": 0.01, "Ar": 0.0}},
+        ]);
+        let spec = Spec::from_json(&value.to_string()).unwrap();
+        let physical = spec.physical_inputs().unwrap();
+        assert!(physical.schedule[0].partition.is_empty());
+        let mut kept = physical.schedule[1].partition.clone();
+        kept.sort_by_key(|(z, _)| *z);
+        assert_eq!(kept, vec![(18, 0.0), (26, 0.01)]);
+
+        for bad in [1.5, -0.1] {
+            let mut value = library_spec();
+            value["schedule"] = json!([{"dt": "1 s", "flux": 0.0, "partition": {"Fe": bad}}]);
+            assert!(error_of(&value).contains("must lie in [0, 1]"), "{bad}");
+        }
+        let mut value = library_spec();
+        value["schedule"] = json!([{"dt": "1 s", "flux": 0.0, "partition": {"Fe56": 0.5}}]);
+        assert!(error_of(&value).contains("must name an element"));
+
+        let mut value = library_spec();
+        value["options"] = json!({"mode": "trace"});
+        value["schedule"] = json!([{"dt": "1 s", "flux": 0.0, "partition": {"Fe": 0.5}}]);
+        assert!(error_of(&value).contains("not supported with options.mode 'trace'"));
+    }
+
+    #[test]
+    fn decay_only_spec_omits_library_and_spectrum() {
+        let spec = Spec::from_json(&decay_only_spec().to_string()).unwrap();
+        assert!(spec.library.path.is_empty());
+        assert!(!spec.schedule[0].irradiates());
+        // the placeholder spectrum is a valid zero-flux input
+        let physical = spec.physical_inputs().unwrap();
+        assert_eq!(physical.flux.values(), [0.0]);
+    }
+
+    #[test]
+    fn decay_only_spec_rejects_anything_that_needs_an_activation_library() {
+        let mut value = decay_only_spec();
+        value["schedule"] = json!([{"dt": "1 d", "flux": 1.0}]);
+        assert!(error_of(&value).contains("decay-only run"));
+
+        let mut value = decay_only_spec();
+        value["schedule"] = json!([{"dt": "1 d", "wall_loading_MW_m2": 1.0}]);
+        assert!(error_of(&value).contains("decay-only run"));
+
+        let mut value = decay_only_spec();
+        value["library"] = json!({"path": "", "sha256": "0".repeat(64)});
+        assert!(error_of(&value).contains("without a library.path"));
+
+        let mut value = decay_only_spec();
+        value["self_shielding"] =
+            json!({"table": {"path": "table.json", "sha256": "0".repeat(64)}});
+        assert!(error_of(&value).starts_with("self_shielding is not available"));
+
+        let mut value = decay_only_spec();
+        value["options"] = json!({"rate_scale": {"0": 1.1}});
+        assert!(error_of(&value).contains("rate_scale"));
+
+        let mut value = decay_only_spec();
+        value["overrides"] =
+            json!([{"nuclide": "Fe56", "kind": "cross_section", "mt": 102, "value": 1.0}]);
+        assert!(error_of(&value).contains("override kind 'cross_section' is not available"));
+
+        // a half-life override is a decay datum and stays allowed
+        let mut value = decay_only_spec();
+        value["overrides"] =
+            json!([{"nuclide": "Co60", "kind": "half_life", "value": 5.0, "units": "y"}]);
+        Spec::from_json(&value.to_string()).unwrap();
+    }
+
+    #[test]
+    fn library_runs_still_need_the_library_path() {
+        let mut value = library_spec();
+        value["library"] = json!({"path": ""});
+        assert!(error_of(&value).contains("decay-only run"));
+    }
+
+    #[test]
+    fn override_validation_errors() {
+        let cases = [
+            (
+                json!({"nuclide": "Fe56", "kind": "cross_section", "value": 1.0}),
+                "mt is required",
+            ),
+            (
+                json!({"nuclide": "Co60", "kind": "half_life", "mt": 102, "value": 1.0}),
+                "mt applies to cross-section overrides only",
+            ),
+            (
+                json!({"nuclide": "Fe56", "kind": "cross_section", "mt": 102, "value": -1.0}),
+                "nonnegative barns",
+            ),
+            (
+                json!({"nuclide": "Fe56", "kind": "cross_section_scale", "mt": 102, "value": 0.0}),
+                "positive multiplier",
+            ),
+            (
+                json!({"nuclide": "Fe56", "kind": "cross_section", "mt": 102, "value": 1.0,
+                       "units": "s"}),
+                "units apply to half_life only",
+            ),
+            (
+                json!({"nuclide": "Co60", "kind": "half_life", "value": 1.0, "units": "fortnight"}),
+                "unknown time unit",
+            ),
+            (
+                json!({"nuclide": "Fe56", "kind": "resonance", "mt": 102, "value": 1.0}),
+                "unknown override kind",
+            ),
+            (
+                json!({"nuclide": "Fe56", "kind": "cross_section_uncertainty", "mt": 102,
+                       "value": 0.1}),
+                "needs an uncertainty section",
+            ),
+        ];
+        for (item, expected) in cases {
+            let mut value = library_spec();
+            value["overrides"] = json!([item]);
+            let error = error_of(&value);
+            assert!(error.contains(expected), "{expected}: {error}");
+        }
+
+        let mut value = library_spec();
+        value["overrides"] = json!([
+            {"nuclide": "Fe56", "kind": "cross_section", "mt": 102, "value": 1.0},
+            {"nuclide": "Fe56", "kind": "cross_section_scale", "mt": 102, "value": 2.0},
+        ]);
+        assert!(error_of(&value).contains("name the same reaction"));
+
+        let mut value = library_spec();
+        let item = json!({"nuclide": "Co60", "kind": "half_life", "value": 1.0});
+        value["overrides"] = json!([item, item]);
+        assert!(error_of(&value).contains("duplicate override"));
+
+        let mut value = library_spec();
+        value["overrides"] = json!([
+            {"nuclide": "Fe56", "kind": "cross_section", "mt": 102, "value": 1.0},
+            {"nuclide": "Co60", "kind": "half_life", "value": 5.0, "units": "y"},
+            {"nuclide": "Fe56", "kind": "cross_section_scale", "mt": 16, "value": 0.5},
+        ]);
+        let spec = Spec::from_json(&value.to_string()).unwrap();
+        assert_eq!(spec.overrides.len(), 3);
+        assert_eq!(
+            spec.overrides[1].half_life_seconds().unwrap(),
+            5.0 * super::parse_duration("1 y").unwrap()
+        );
     }
 }

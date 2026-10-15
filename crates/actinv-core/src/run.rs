@@ -264,6 +264,20 @@ pub(crate) fn name_of(za: i32, liso: i32) -> String {
     }
 }
 
+/// Moves the fraction `1 - kept` of every listed state of `vector` to the removal sink at
+/// `sink` and returns the amount moved (the PARTITION operator, one element). The same linear
+/// map acts on the state, its tangents and the comparison solution.
+fn partition_move(vector: &mut [f64], members: &[usize], sink: usize, kept: f64) -> f64 {
+    let mut moved_total = 0.0;
+    for &k in members {
+        let moved = vector[k] * (1.0 - kept);
+        vector[k] -= moved;
+        vector[sink] += moved;
+        moved_total += moved;
+    }
+    moved_total
+}
+
 fn index_path(library_path: &str) -> String {
     match library_path.strip_suffix(".npz") {
         Some(stem) => format!("{stem}_index.json"),
@@ -422,6 +436,8 @@ enum ActivationLibrary {
     Dense(library::Library),
     Groupwise(prepared_data::PreparedLibrary),
     Collapsed(prepared_data::CollapsedLibrary),
+    /// A decay-only run (P124): no activation library, no rows and no groups.
+    Absent,
 }
 
 fn group_structure_mismatch(requested: Option<&str>, stored: Option<&str>) -> bool {
@@ -432,14 +448,18 @@ impl ActivationLibrary {
     fn dense(&self) -> Option<&library::Library> {
         match self {
             Self::Dense(library) => Some(library),
-            Self::Groupwise(_) | Self::Collapsed(_) => None,
+            Self::Groupwise(_) | Self::Collapsed(_) | Self::Absent => None,
         }
+    }
+
+    fn is_absent(&self) -> bool {
+        matches!(self, Self::Absent)
     }
 
     fn validate_flux(&self, phi: &[f64]) -> Result<(), String> {
         match self {
             Self::Collapsed(library) => library.validate_flux(phi),
-            Self::Dense(_) | Self::Groupwise(_) => Ok(()),
+            Self::Dense(_) | Self::Groupwise(_) | Self::Absent => Ok(()),
         }
     }
 }
@@ -450,6 +470,7 @@ impl ReactionLibrary for ActivationLibrary {
             Self::Dense(library) => library.rows(),
             Self::Groupwise(library) => library.rows(),
             Self::Collapsed(library) => library.rows(),
+            Self::Absent => &[],
         }
     }
 
@@ -458,6 +479,7 @@ impl ReactionLibrary for ActivationLibrary {
             Self::Dense(library) => ReactionLibrary::group_count(library),
             Self::Groupwise(library) => library.group_count(),
             Self::Collapsed(library) => library.group_count(),
+            Self::Absent => 0,
         }
     }
 
@@ -466,6 +488,7 @@ impl ReactionLibrary for ActivationLibrary {
             Self::Dense(library) => library.boundaries_ev(),
             Self::Groupwise(library) => library.boundaries_ev(),
             Self::Collapsed(library) => library.boundaries_ev(),
+            Self::Absent => &[],
         }
     }
 
@@ -499,6 +522,8 @@ impl ReactionLibrary for ActivationLibrary {
                 first_flux_group,
                 last_flux_group,
             ),
+            // no rows exist, so no caller can name one
+            Self::Absent => 0.0,
         }
     }
 
@@ -507,6 +532,7 @@ impl ReactionLibrary for ActivationLibrary {
             Self::Dense(library) => library.row_cross_section(row, group),
             Self::Groupwise(library) => library.row_cross_section(row, group),
             Self::Collapsed(library) => library.row_cross_section(row, group),
+            Self::Absent => 0.0,
         }
     }
 
@@ -515,6 +541,7 @@ impl ReactionLibrary for ActivationLibrary {
             Self::Dense(library) => library.fission_average_energy_ev(row, phi),
             Self::Groupwise(library) => library.fission_average_energy_ev(row, phi),
             Self::Collapsed(library) => library.fission_average_energy_ev(row, phi),
+            Self::Absent => Ok(None),
         }
     }
 }
@@ -2477,12 +2504,36 @@ impl PreparedRun {
                 projectile.name()
             ));
         }
+        // P124 decay-only run: an empty library path reads no activation data at all.
+        let decay_only = library_ref.path.is_empty();
+        if decay_only
+            && (uncertainty_options.is_some()
+                || shielding_options.is_some()
+                || damage_options.is_some()
+                || !fission_options.files.is_empty())
+        {
+            return Err(
+                "a decay-only run (empty library.path) cannot carry uncertainty, self_shielding, \
+                 damage or fission-yield files"
+                    .into(),
+            );
+        }
         profiler.finish("prepare_validation", validation_started);
 
         let hashes_started = profiler.start();
-        let library_sha = verify_hash(&library_ref.path, library_ref.sha256.as_deref())?;
-        let idx_path = index_path(&library_ref.path);
-        let (index_text, index_sha) = read_verified_text(&idx_path, None)?;
+        let (library_sha, idx_path, index_text, index_sha) = if decay_only {
+            (
+                String::new(),
+                String::new(),
+                "null".to_string(),
+                String::new(),
+            )
+        } else {
+            let library_sha = verify_hash(&library_ref.path, library_ref.sha256.as_deref())?;
+            let idx_path = index_path(&library_ref.path);
+            let (index_text, index_sha) = read_verified_text(&idx_path, None)?;
+            (library_sha, idx_path, index_text, index_sha)
+        };
         profiler.finish("input_hash_verification", hashes_started);
 
         let extensions_started = profiler.start();
@@ -2608,7 +2659,9 @@ impl PreparedRun {
         profiler.finish("index_read_validation", index_started);
 
         let activation_started = profiler.start();
-        let library = if uncertainty_options.is_some() {
+        let library = if decay_only {
+            ActivationLibrary::Absent
+        } else if uncertainty_options.is_some() {
             // Covariance propagation still indexes the original dense rows directly. The complete NPZ matched its
             // computed (and, when supplied, declared) SHA-256 above, so member CRC work is redundant.
             ActivationLibrary::Dense(library::read_npz_after_sha256_verification(
@@ -2637,33 +2690,6 @@ impl PreparedRun {
         };
         profiler.finish("activation_read_validation", activation_started);
 
-        let index_projectile = match index.get("projectile") {
-            None | Some(serde_json::Value::Null) => Projectile::Neutron,
-            Some(serde_json::Value::String(value)) => Projectile::parse(value)?,
-            Some(_) => return Err("activation-library index projectile must be a string".into()),
-        };
-        if index_projectile != projectile {
-            return Err(format!(
-                "spec projectile '{}' does not match activation-library projectile '{}'",
-                projectile.name(),
-                index_projectile.name()
-            ));
-        }
-        match index.get("sha256_npz") {
-            Some(serde_json::Value::String(recorded))
-                if !library_sha.eq_ignore_ascii_case(recorded) =>
-            {
-                return Err(format!(
-                    "activation-library index hash mismatch: index records {recorded}, computed {library_sha}"
-                ));
-            }
-            Some(serde_json::Value::String(_)) => {}
-            Some(_) => return Err("activation-library index sha256_npz must be a string".into()),
-            None if !projectile.is_neutron() => {
-                return Err("charged activation-library index has no sha256_npz".into());
-            }
-            None => {}
-        }
         let actual_group_hash = GroupStructure {
             name: library_group_structure
                 .clone()
@@ -2671,65 +2697,102 @@ impl PreparedRun {
             boundaries_ev: library.boundaries_ev().to_vec(),
         }
         .hash();
-        if let Some(recorded) = index.get("group_boundary_sha256") {
-            let recorded = recorded
-                .as_str()
-                .ok_or("activation-library group_boundary_sha256 must be a string")?;
-            if !actual_group_hash.eq_ignore_ascii_case(recorded) {
+        if !decay_only {
+            let index_projectile = match index.get("projectile") {
+                None | Some(serde_json::Value::Null) => Projectile::Neutron,
+                Some(serde_json::Value::String(value)) => Projectile::parse(value)?,
+                Some(_) => {
+                    return Err("activation-library index projectile must be a string".into())
+                }
+            };
+            if index_projectile != projectile {
                 return Err(format!(
-                    "activation-library group-boundary hash mismatch: index records {recorded}, computed {actual_group_hash}"
+                    "spec projectile '{}' does not match activation-library projectile '{}'",
+                    projectile.name(),
+                    index_projectile.name()
                 ));
             }
-        } else if !projectile.is_neutron() {
-            return Err("charged activation-library index has no group_boundary_sha256".into());
-        }
-        if !projectile.is_neutron() && library_group_structure.is_none() {
-            return Err("charged activation-library index has no named group structure".into());
-        }
-        if let Some(name) = library_group_structure.as_deref() {
-            let canonical = GroupStructure::resolve_named(name)?;
-            if let Some(canonical) = canonical {
-                if canonical.boundaries_ev.len() != library.boundaries_ev().len()
-                    || canonical
-                        .boundaries_ev
-                        .iter()
-                        .zip(library.boundaries_ev())
-                        .any(|(expected, stored)| expected.to_bits() != stored.to_bits())
+            match index.get("sha256_npz") {
+                Some(serde_json::Value::String(recorded))
+                    if !library_sha.eq_ignore_ascii_case(recorded) =>
                 {
                     return Err(format!(
+                    "activation-library index hash mismatch: index records {recorded}, computed {library_sha}"
+                ));
+                }
+                Some(serde_json::Value::String(_)) => {}
+                Some(_) => {
+                    return Err("activation-library index sha256_npz must be a string".into())
+                }
+                None if !projectile.is_neutron() => {
+                    return Err("charged activation-library index has no sha256_npz".into());
+                }
+                None => {}
+            }
+            if let Some(recorded) = index.get("group_boundary_sha256") {
+                let recorded = recorded
+                    .as_str()
+                    .ok_or("activation-library group_boundary_sha256 must be a string")?;
+                if !actual_group_hash.eq_ignore_ascii_case(recorded) {
+                    return Err(format!(
+                    "activation-library group-boundary hash mismatch: index records {recorded}, computed {actual_group_hash}"
+                ));
+                }
+            } else if !projectile.is_neutron() {
+                return Err("charged activation-library index has no group_boundary_sha256".into());
+            }
+            if !projectile.is_neutron() && library_group_structure.is_none() {
+                return Err("charged activation-library index has no named group structure".into());
+            }
+            if let Some(name) = library_group_structure.as_deref() {
+                let canonical = GroupStructure::resolve_named(name)?;
+                if let Some(canonical) = canonical {
+                    if canonical.boundaries_ev.len() != library.boundaries_ev().len()
+                        || canonical
+                            .boundaries_ev
+                            .iter()
+                            .zip(library.boundaries_ev())
+                            .any(|(expected, stored)| expected.to_bits() != stored.to_bits())
+                    {
+                        return Err(format!(
                         "activation-library boundaries do not match declared group structure '{name}'"
                     ));
+                    }
                 }
             }
-        }
-        match index.get("temperature_K") {
-            Some(value) => {
-                let temperature = value
-                    .as_f64()
-                    .ok_or("activation-library temperature_K must be numeric")?;
-                if (temperature - temperature_K.get()).abs() > 1e-9 {
-                    return Err(format!(
+            match index.get("temperature_K") {
+                Some(value) => {
+                    let temperature = value
+                        .as_f64()
+                        .ok_or("activation-library temperature_K must be numeric")?;
+                    if (temperature - temperature_K.get()).abs() > 1e-9 {
+                        return Err(format!(
                         "requested temperature {} K does not match library temperature {temperature} K",
                         temperature_K.get()
                     ));
+                    }
                 }
+                None if !projectile.is_neutron() => {
+                    return Err("charged activation-library index has no temperature_K".into());
+                }
+                None => {}
             }
-            None if !projectile.is_neutron() => {
-                return Err("charged activation-library index has no temperature_K".into());
-            }
-            None => {}
         }
-        let library_targets: Vec<(i32, i32)> = index["targets"]
-            .as_array()
-            .ok_or("library index has no targets")?
-            .iter()
-            .map(|target| {
-                (
-                    target["za"].as_i64().unwrap_or(0) as i32,
-                    target["liso"].as_i64().unwrap_or(0) as i32,
-                )
-            })
-            .collect();
+        let library_targets: Vec<(i32, i32)> = if decay_only {
+            Vec::new()
+        } else {
+            index["targets"]
+                .as_array()
+                .ok_or("library index has no targets")?
+                .iter()
+                .map(|target| {
+                    (
+                        target["za"].as_i64().unwrap_or(0) as i32,
+                        target["liso"].as_i64().unwrap_or(0) as i32,
+                    )
+                })
+                .collect()
+        };
         let covariance_started = profiler.start();
         let covariance = match uncertainty_options.and_then(|options| options.covariance.as_ref()) {
             Some(covariance_ref) => Some(Self::load_covariance(
@@ -3439,11 +3502,12 @@ impl PreparedRun {
         let lib_targets = &self.library_targets;
         let n_fallback = self.decay_nuclides_from_fallback;
         let ch = &self.chain;
+        let decay_only = lib.is_absent();
         // ---- P43 option perturbations (nonlinear sampling). These are
         // ordinary spec options, so perturbed samples share one prepared
         // run: the maps are applied to a scaled view of the decay data
         // and to the effective yields, never to the prepared inputs.
-        let decay_factors: BTreeMap<(i32, i32), f64> = spec
+        let mut decay_factors: BTreeMap<(i32, i32), f64> = spec
             .options
             .decay_scale
             .iter()
@@ -3465,6 +3529,50 @@ impl PreparedRun {
                 Ok((key, *factor))
             })
             .collect::<Result<_, String>>()?;
+        // ---- named half-life overrides (P124, OVER ALAM/ADLAM). A new half-life replaces the
+        // datum exactly as a decay_scale factor of (datum / new) would, so it rides the same
+        // scaled decay view; `half_life_uncertainty` replaces the decay channel's relative sigma.
+        let mut override_ledger: Vec<serde_json::Value> = Vec::new();
+        let mut decay_relative_overrides: HashMap<(i32, i32), f64> = HashMap::new();
+        for item in &spec.overrides {
+            let key = match item.kind.as_str() {
+                "half_life" | "half_life_uncertainty" => {
+                    crate::overrides::nuclide_key(&item.nuclide)?
+                }
+                _ => continue,
+            };
+            let datum = self.nuclides.get(&key).ok_or_else(|| {
+                format!(
+                    "override {} '{}' names a nuclide absent from the decay data",
+                    item.kind, item.nuclide
+                )
+            })?;
+            if datum.lambda() <= 0.0 {
+                return Err(format!(
+                    "override {} '{}' names a stable nuclide",
+                    item.kind, item.nuclide
+                ));
+            }
+            if item.kind == "half_life" {
+                let seconds = item.half_life_seconds()?;
+                *decay_factors.entry(key).or_insert(1.0) *= datum.half_life / seconds;
+                override_ledger.push(serde_json::json!({
+                    "nuclide": item.nuclide,
+                    "kind": item.kind,
+                    "value": item.value,
+                    "units": item.units,
+                    "half_life_s": seconds,
+                    "library_half_life_s": datum.half_life,
+                }));
+            } else {
+                decay_relative_overrides.insert(key, item.value);
+                override_ledger.push(serde_json::json!({
+                    "nuclide": item.nuclide,
+                    "kind": item.kind,
+                    "relative_standard_uncertainty": item.value,
+                }));
+            }
+        }
         let yield_factors: BTreeMap<(i32, i32, i32, i32), f64> = spec
             .options
             .yield_scale
@@ -3544,27 +3652,39 @@ impl PreparedRun {
             }
             l
         };
-        if lib.group_count() != spec.spectrum.flux_per_group.len() {
-            return Err(format!(
-                "spectrum has {} groups but activation library has {}",
-                spec.spectrum.flux_per_group.len(),
-                lib.group_count()
-            ));
-        }
-        if let Some(boundaries) = &spec.spectrum.boundaries_eV {
-            if boundaries.len() != lib.boundaries_ev().len()
-                || boundaries
-                    .iter()
-                    .zip(lib.boundaries_ev())
-                    .any(|(declared, stored)| {
-                        (declared - stored).abs()
-                            > 1e-12 * declared.abs().max(stored.abs()).max(1.0)
-                    })
-            {
-                return Err(
-                    "custom spectrum boundaries do not match the activation library boundaries"
-                        .into(),
-                );
+        // A decay-only run (P124) has no library groups to agree with.
+        if !decay_only {
+            // the solver's flux: the supplied groups, or `spectrum.rebin`'s conversion onto the
+            // library's structure
+            let spectrum_groups = physical.flux.values().len();
+            if lib.group_count() != spectrum_groups {
+                return Err(format!(
+                    "spectrum has {} groups but activation library has {}",
+                    spectrum_groups,
+                    lib.group_count()
+                ));
+            }
+            let declared_boundaries = match &spec.spectrum.rebin {
+                // the conversion's destination is the named structure
+                Some(_) => GroupStructure::resolve_named(&spec.spectrum.structure)?
+                    .map(|destination| destination.boundaries_ev),
+                None => spec.spectrum.boundaries_eV.clone(),
+            };
+            if let Some(boundaries) = &declared_boundaries {
+                if boundaries.len() != lib.boundaries_ev().len()
+                    || boundaries
+                        .iter()
+                        .zip(lib.boundaries_ev())
+                        .any(|(declared, stored)| {
+                            (declared - stored).abs()
+                                > 1e-12 * declared.abs().max(stored.abs()).max(1.0)
+                        })
+                {
+                    return Err(
+                        "custom spectrum boundaries do not match the activation library boundaries"
+                            .into(),
+                    );
+                }
             }
         }
         // ---- material
@@ -3695,6 +3815,40 @@ impl PreparedRun {
                     .collect()
             })
             .transpose()?;
+        // ---- named cross-section overrides (P124, OVER ACROSS): a view over the library that
+        // substitutes the named rows' collapsed values, so rates, optical depth and mode
+        // selection all see the same number.
+        let cross_overrides =
+            crate::overrides::resolve_cross_sections(&spec.overrides, lib.rows(), lib_targets)?;
+        if !cross_overrides.is_empty() {
+            if spec.uncertainty.is_some() {
+                return Err("cross-section overrides cannot be combined with uncertainty".into());
+            }
+            if shield_plan.is_some() && cross_overrides.has_absolute() {
+                return Err(
+                    "override cross_section cannot be combined with self_shielding; \
+                     use cross_section_scale"
+                        .into(),
+                );
+            }
+        }
+        let override_view = (!cross_overrides.is_empty())
+            .then(|| crate::overrides::OverriddenLibrary::new(lib, &cross_overrides));
+        if let Some(view) = &override_view {
+            view.check_spectrum(phi)?;
+            for entry in &cross_overrides.entries {
+                let (before, after) = view.before_after(entry, phi);
+                override_ledger.push(serde_json::json!({
+                    "nuclide": entry.nuclide,
+                    "kind": entry.kind,
+                    "mt": entry.mt,
+                    "value": entry.value,
+                    "library_rows": entry.rows,
+                    "base_spectrum_collapsed_barns_before": before,
+                    "base_spectrum_collapsed_barns_after": after,
+                }));
+            }
+        }
         let reaction_assembly = if spec.uncertainty.is_some() {
             chain::reaction_rates_with_derivatives(
                 lib,
@@ -3722,8 +3876,8 @@ impl PreparedRun {
                     phi,
                     cell,
                 });
-            let triplets = match &batched {
-                Some(view) => chain::reaction_rates(
+            let triplets = match (&override_view, &batched) {
+                (Some(view), _) => chain::reaction_rates(
                     view,
                     lib_targets,
                     phi,
@@ -3734,7 +3888,18 @@ impl PreparedRun {
                     rate_scales.as_ref(),
                     spec.options.gas,
                 ),
-                None => chain::reaction_rates(
+                (None, Some(view)) => chain::reaction_rates(
+                    view,
+                    lib_targets,
+                    phi,
+                    ch,
+                    &effective_fission_yields,
+                    &mut led,
+                    shield_plan.as_ref(),
+                    rate_scales.as_ref(),
+                    spec.options.gas,
+                ),
+                (None, None) => chain::reaction_rates(
                     lib,
                     lib_targets,
                     phi,
@@ -3983,6 +4148,19 @@ impl PreparedRun {
                 );
                 react_extra.push(assembly.triplets.clone());
                 react_extra_assembly.push(assembly);
+            } else if let Some(view) = &override_view {
+                view.check_spectrum(extra_phi)?;
+                react_extra.push(chain::reaction_rates(
+                    view,
+                    lib_targets,
+                    extra_phi,
+                    ch,
+                    &effective_fission_yields,
+                    &mut scratch,
+                    shield_plan.as_ref(),
+                    rate_scales.as_ref(),
+                    spec.options.gas,
+                ));
             } else {
                 react_extra.push(chain::reaction_rates(
                     extra_lib,
@@ -4049,7 +4227,11 @@ impl PreparedRun {
                 product_optical_depth_nuclide = Some(ch.keys[index]);
             }
         }
+        // A partition (P124) removes bulk atoms mid-run; the trace formulation holds the bulk
+        // undepleted, so a partition schedule always solves the full coupled system.
+        let has_partition = sched.iter().any(|step| !step.partition.is_empty());
         let mode = match spec.options.mode.as_str() {
+            "auto" if has_partition => "coupled",
             "auto" => {
                 if led.burnup_fraction_max < 1e-6 {
                     "trace"
@@ -4060,6 +4242,13 @@ impl PreparedRun {
             m => m,
         }
         .to_string();
+        if has_partition && mode == "trace" {
+            return Err(
+                "schedule partition is not supported with options.mode 'trace': the trace \
+                 formulation holds the bulk material undepleted; use 'coupled' or 'auto'"
+                    .into(),
+            );
+        }
         // ---- feed/removal (P23): per-step boundary sources and first-order sinks.
         // Feed becomes a unit-state source edge, exactly like a constant bulk production term.
         // Removal becomes a first-order edge into the dedicated `removed` sink plus a diagonal
@@ -4067,8 +4256,10 @@ impl PreparedRun {
         // defines them as undepleted constants, and the ledger names every exemption.
         let has_feed = sched.iter().any(|step| !step.feed.is_empty());
         let has_removal = sched.iter().any(|step| !step.removal.is_empty());
-        let removed = has_removal.then_some(ch.n);
-        let n_total = ch.n + usize::from(has_removal);
+        // a partition's removed atoms go to the same sink as first-order removal
+        let has_sink = has_removal || has_partition;
+        let removed = has_sink.then_some(ch.n);
+        let n_total = ch.n + usize::from(has_sink);
         let mut step_feed: Vec<Vec<(usize, usize, f64)>> = Vec::with_capacity(sched.len());
         let mut feed_states: std::collections::HashSet<usize> = Default::default();
         for (si, step) in sched.iter().enumerate() {
@@ -4410,7 +4601,7 @@ impl PreparedRun {
         // ---- prune
         // Feed and removal edges join the reachability graph so fed nuclides and the removed
         // sink are kept; removal diagonals accumulate into the bound estimate's loss rates.
-        let (keep, rate_pruned): (Vec<usize>, Vec<(usize, f64, f64)>) =
+        let (mut keep, rate_pruned): (Vec<usize>, Vec<(usize, f64, f64)>) =
             match spec.options.prune.as_str() {
                 "none" => ((0..n_total).collect(), Vec::new()),
                 p => {
@@ -4440,6 +4631,13 @@ impl PreparedRun {
                     )
                 }
             };
+        // No edge reaches the sink of a partition-only schedule, so reachability would drop it;
+        // it is the highest index, so appending keeps `keep` ascending.
+        if let Some(sink) = removed.filter(|_| has_partition) {
+            if !keep.contains(&sink) {
+                keep.push(sink);
+            }
+        }
         let mut pos = vec![usize::MAX; n_total];
         for (k, g) in keep.iter().enumerate() {
             pos[*g] = k;
@@ -4627,7 +4825,7 @@ impl PreparedRun {
                 let phis: Vec<&[f64]> = std::iter::once(phi)
                     .chain(extra_spectra.iter().copied())
                     .collect();
-                let collapsed = prepared.library.collapse_weighted_multi(
+                let mut collapsed = prepared.library.collapse_weighted_multi(
                     dense_library,
                     &phis,
                     &active_rows,
@@ -4675,6 +4873,25 @@ impl PreparedRun {
                             "covariance collapse nominal cross section differs at library row {row}"
                         ));
                     }
+                }
+                // ADCROSS (P124): the named reaction's covered parameters take the declared
+                // relative standard uncertainty; scaling a parameter's row and column leaves
+                // every correlation unchanged.
+                if spec
+                    .overrides
+                    .iter()
+                    .any(|item| item.kind == "cross_section_uncertainty")
+                {
+                    let (scale, records) = crate::overrides::uncertainty_scales(
+                        &spec.overrides,
+                        lib.rows(),
+                        lib_targets,
+                        &collapsed.row_indices,
+                        &collapsed.one_group_barns,
+                        &collapsed.covariance_barn2,
+                    )?;
+                    crate::overrides::rescale_covariance(&mut collapsed.covariance_barn2, &scale);
+                    override_ledger.extend(records);
                 }
                 if options.require_complete && !collapsed.uncovered_rows.is_empty() {
                     return Err(format!(
@@ -4826,6 +5043,11 @@ impl PreparedRun {
                             .get(&(za, liso))
                             .filter(|nuclide| nuclide.half_life > 0.0)
                             .map_or(0.0, |nuclide| nuclide.d_half_life / nuclide.half_life);
+                        // ADLAM (P124): a declared relative sigma replaces the datum's own.
+                        let relative = decay_relative_overrides
+                            .get(&(za, liso))
+                            .copied()
+                            .unwrap_or(relative);
                         decay_parameters.push(DecayParameter {
                             nuclide: name_of(za, liso),
                             za,
@@ -4836,6 +5058,17 @@ impl PreparedRun {
                         });
                         directions.push(Csc::from_triplets(m, triplets));
                         parameter_spectrum.push(None);
+                    }
+                }
+                for &(za, liso) in decay_relative_overrides.keys() {
+                    if !decay_parameters
+                        .iter()
+                        .any(|parameter| (parameter.za, parameter.liso) == (za, liso))
+                    {
+                        return Err(format!(
+                            "override half_life_uncertainty '{}' names a nuclide with no decay-constant parameter in this run",
+                            name_of(za, liso)
+                        ));
                     }
                 }
                 if yield_channel_requested {
@@ -4996,6 +5229,13 @@ impl PreparedRun {
             (None, None) => None,
             _ => return Err("prepared covariance state does not match the run spec".into()),
         };
+        if uncertainty_runtime.is_none()
+            && spec.overrides.iter().any(|item| {
+                item.kind == "half_life_uncertainty" || item.kind == "cross_section_uncertainty"
+            })
+        {
+            return Err("uncertainty overrides need an uncertainty section".into());
+        }
         profiler.finish("material_network_preparation", network_started);
         if std::env::var_os("ACTINV_TRACE").is_some() {
             eprintln!(
@@ -5164,9 +5404,38 @@ impl PreparedRun {
         // time-weighted mean of the solved sub-intervals for power-driven ones.
         let mut achieved_multiplier: Vec<f64> =
             sched.iter().map(|step| step.multiplier().get()).collect();
+        let mut partition_records: Vec<serde_json::Value> = Vec::new();
         for (si, schedule_step) in sched.iter().enumerate() {
             let dt = schedule_step.duration();
             let scheduled_fl = schedule_step.multiplier();
+            // ---- PARTITION (P124, FISPACT-II section 4.54): an instantaneous split before the
+            // step evolves. Each named element keeps the stated fraction of its atoms in every
+            // tracked state; the rest goes to the removal sink. The operator is linear and
+            // parameter-independent, so tangents and the comparison solution take it unchanged.
+            if let Some(sink) = removed.filter(|_| !schedule_step.partition.is_empty()) {
+                let sink_position = pos[sink];
+                for &(z, kept) in &schedule_step.partition {
+                    let members: Vec<usize> = keep
+                        .iter()
+                        .enumerate()
+                        .filter(|&(_, &g)| g < ch.keys.len() && ch.keys[g].0 / 1000 == z)
+                        .map(|(k, _)| k)
+                        .collect();
+                    let removed_atoms = partition_move(&mut y, &members, sink_position, kept);
+                    if let Some(runtime) = uncertainty_runtime.as_mut() {
+                        for tangent in runtime.tangents.iter_mut() {
+                            partition_move(tangent, &members, sink_position, kept);
+                        }
+                        partition_move(&mut runtime.alternate_y, &members, sink_position, kept);
+                    }
+                    partition_records.push(serde_json::json!({
+                        "step": si + 1,
+                        "element": composition::symbol_of(z),
+                        "fraction_kept": kept,
+                        "removed_atoms_per_g": removed_atoms,
+                    }));
+                }
+            }
             // the step's spectrum (index into rsubs: 0 = base, 1.. = overrides)
             let rs = match step_spectrum_id[si] {
                 Some(id) => &rsubs[id + 1],
@@ -6498,6 +6767,42 @@ impl PreparedRun {
             .as_object_mut()
             .expect("ledger is an object")
             .insert("decay_overrides_applied".into(), decay_overrides_json);
+        // P124 input-parity records; each key is present only when its feature was used, so
+        // every other result is unchanged.
+        {
+            let object = ledger.as_object_mut().expect("ledger is an object");
+            if decay_only {
+                object.insert("decay_only".into(), serde_json::json!(true));
+            }
+            if !physical.spectrum_conversions.is_empty() {
+                object.insert(
+                    "spectrum_conversion".into(),
+                    serde_json::json!(physical.spectrum_conversions),
+                );
+            }
+            if !physical.wall_conversions.is_empty() {
+                object.insert(
+                    "wall_loading".into(),
+                    serde_json::json!(physical.wall_conversions),
+                );
+            }
+            if !override_ledger.is_empty() {
+                object.insert("overrides".into(), serde_json::json!(override_ledger));
+            }
+            if has_partition {
+                object.insert(
+                    "partition".into(),
+                    serde_json::json!({
+                        "applied": partition_records,
+                        "mode": mode,
+                        "mode_forced_coupled": spec.options.mode == "auto",
+                        "removed_atoms_per_g_final": steps
+                            .last()
+                            .and_then(|step| step.removed_atoms_per_g),
+                    }),
+                );
+            }
+        }
         // Present only for a decay library with inconsistent branching, so runs on consistent data are unchanged.
         if !ch.ledger.branching_sums.is_empty() {
             let sums: BTreeMap<String, f64> = ch
@@ -7129,6 +7434,19 @@ impl PreparedRun {
                     );
             }
         }
+        if decay_only {
+            // P124: no activation library was read, so none is certified.
+            let certificate_object = certificate
+                .as_object_mut()
+                .expect("certificate is an object");
+            certificate_object.insert("decay_only".into(), serde_json::json!(true));
+            let inputs = certificate_object
+                .get_mut("inputs")
+                .and_then(serde_json::Value::as_object_mut)
+                .expect("certificate inputs is an object");
+            inputs.insert("library".into(), serde_json::Value::Null);
+            inputs.insert("library_index".into(), serde_json::Value::Null);
+        }
         if let Some(provenance) = &self.unmodeled_table {
             certificate
                 .as_object_mut()
@@ -7460,10 +7778,12 @@ fn prepared_fingerprint(
     } else {
         collapsible_spectrum(physical.flux.values())
     };
-    let mut files = vec![
-        fingerprint_file(&spec.library.path)?,
-        fingerprint_file(&spec.decay.primary)?,
-    ];
+    let mut files = Vec::new();
+    // A decay-only spec (P124) has no library file to fingerprint.
+    if !spec.library.path.is_empty() {
+        files.push(fingerprint_file(&spec.library.path)?);
+    }
+    files.push(fingerprint_file(&spec.decay.primary)?);
     if let Some(path) = spec.decay.fallback.as_ref().filter(|p| !p.is_empty()) {
         files.push(fingerprint_file(path)?);
     }
@@ -7985,6 +8305,8 @@ mod flux_channel_tests {
             boundaries_eV: None,
             descending: false,
             relative_error,
+            rebin: None,
+            wall_loading_MW_m2: None,
         }
     }
 
@@ -8605,6 +8927,211 @@ mod gas_prepared_tests {
             Err(error) => error,
         };
         assert!(error.contains("kerma"), "{error}");
+    }
+
+    fn run_synthetic(spec: &Spec, prepared: &PreparedRun) -> Result<RunResult, String> {
+        run_prepared(spec, prepared)
+    }
+
+    #[test]
+    fn partition_move_removes_exactly_the_fraction() {
+        let mut vector = vec![8.0, 0.0, 4.0, 2.0, 0.0];
+        let moved = partition_move(&mut vector, &[0, 2], 4, 0.25);
+        assert_eq!(moved, 9.0);
+        assert_eq!(vector, vec![2.0, 0.0, 1.0, 2.0, 9.0]);
+        // kept = 1 leaves everything, kept = 0 moves everything
+        assert_eq!(partition_move(&mut vector, &[0, 2], 4, 1.0), 0.0);
+        assert_eq!(partition_move(&mut vector, &[0, 2], 4, 0.0), 3.0);
+        assert_eq!(vector, vec![0.0, 0.0, 0.0, 2.0, 12.0]);
+    }
+
+    /// A zero-flux step with `partition: {Fe: kept}` moves exactly `1 - kept` of the Fe56
+    /// inventory into the removal sink, forces the coupled formulation under `auto`, and
+    /// reports the removal in the ledger.
+    #[test]
+    fn partition_step_moves_the_declared_fraction_to_the_sink() {
+        let (mut spec, prepared) = synthetic_gas_prepared("auto");
+        let removed_at = |spec: &mut Spec, kept: f64| {
+            spec.schedule = serde_json::from_value(serde_json::json!([
+                {"dt": "1 s", "flux": 0.0, "partition": {"Fe": kept}}
+            ]))
+            .expect("schedule parses");
+            let result = run_synthetic(spec, &prepared).expect("run succeeds");
+            assert_eq!(result.mode, "coupled");
+            let initial = result.steps[0]
+                .gas
+                .as_ref()
+                .expect("gas block present")
+                .initial_atoms_per_g;
+            let removed = result.steps[0]
+                .removed_atoms_per_g
+                .expect("a partition books the removal sink");
+            (result, removed, initial)
+        };
+        let (result, removed, initial) = removed_at(&mut spec, 0.25);
+        assert!(
+            (removed - 0.75 * initial).abs() <= 1e-9 * initial,
+            "removed {removed} vs 0.75 x {initial}"
+        );
+        let partition = &result.ledger["partition"];
+        assert_eq!(partition["mode"], "coupled");
+        assert_eq!(partition["mode_forced_coupled"], true);
+        assert_eq!(partition["applied"][0]["element"], "Fe");
+        assert_eq!(partition["applied"][0]["fraction_kept"], 0.25);
+        let (_, removed_all, _) = removed_at(&mut spec, 0.0);
+        assert!((removed_all - initial).abs() <= 1e-9 * initial);
+        let (_, removed_none, _) = removed_at(&mut spec, 1.0);
+        assert_eq!(removed_none, 0.0);
+    }
+
+    #[test]
+    fn partition_with_explicit_trace_mode_is_rejected_at_run() {
+        let (mut spec, prepared) = synthetic_gas_prepared("trace");
+        spec.schedule = serde_json::from_value(serde_json::json!([
+            {"dt": "1 s", "flux": 0.0, "partition": {"Fe": 0.5}}
+        ]))
+        .expect("schedule parses");
+        let error = match run_synthetic(&spec, &prepared) {
+            Err(error) => error,
+            Ok(_) => panic!("a trace-mode partition must be rejected"),
+        };
+        assert!(error.contains("partition is not supported"), "{error}");
+    }
+
+    fn radioactive_stand_in(za: i32, half_life: f64, daughter: bool) -> decay::Nuclide {
+        let mut nuclide = decay::Nuclide {
+            mat: 0,
+            za,
+            awr: (za % 1000) as f64,
+            liso: 0,
+            nst: 0,
+            half_life,
+            d_half_life: 0.0,
+            energies: Vec::new(),
+            modes: Vec::new(),
+            spectra: Vec::new(),
+        };
+        if daughter {
+            // beta-minus decay (RTYP 1.0) to the next element, the whole branching
+            nuclide.modes.push(decay::Mode {
+                rtyp: 1.0,
+                rfs: 0.0,
+                q: 0.0,
+                dq: 0.0,
+                br: 1.0,
+                dbr: 0.0,
+            });
+        }
+        nuclide
+    }
+
+    /// A decay-only prepared run: no activation library, one radioactive parent (Co60 stand-in)
+    /// feeding a stable daughter (Ni60 stand-in).
+    fn synthetic_decay_only_prepared(overrides: serde_json::Value) -> (Spec, PreparedRun) {
+        let spec = Spec::from_json(
+            &serde_json::json!({
+                "spec": "actinv-spec-1",
+                "decay": {"primary": "synthetic.dat"},
+                "material": {"mass_g": 1.0, "basis": "atoms_per_g", "composition": {"Co60": 1.0e20}},
+                "schedule": [{"dt": "1000 s", "flux": 0.0}],
+                "overrides": overrides,
+            })
+            .to_string(),
+        )
+        .expect("decay-only spec parses with no library and no spectrum");
+        let mut nuclides: HashMap<(i32, i32), decay::Nuclide> = HashMap::from([
+            ((27_060, 0), radioactive_stand_in(27_060, 1000.0, true)),
+            ((28_060, 0), stand_in((28_060, 0))),
+        ]);
+        let chain = chain::build(&nuclides);
+        let (chain, missing) = chain::ensure_light_states(chain);
+        for za in &missing {
+            nuclides.entry(*za).or_insert_with(|| stand_in(*za));
+        }
+        let prepared = PreparedRun {
+            library_path: String::new(),
+            library_sha_declared: None,
+            library_sha: String::new(),
+            index_path: String::new(),
+            index_sha: String::new(),
+            index: serde_json::Value::Null,
+            library: ActivationLibrary::Absent,
+            library_targets: Vec::new(),
+            decay_primary: "synthetic.dat".into(),
+            decay_primary_sha: "0".repeat(64),
+            decay_fallback: None,
+            decay_fallback_sha: None,
+            decay_overrides_sha: None,
+            decay_overrides_applied: Vec::new(),
+            nuclides,
+            decay_fallback_keys: HashSet::new(),
+            chain,
+            gas_missing_light_states: missing,
+            decay_nuclides_from_fallback: 0,
+            photon_options: PhotonOptions::default(),
+            response: None,
+            response_sha: None,
+            fission_options: FissionYieldOptions::default(),
+            fission_yields: HashMap::new(),
+            fission_yield_inputs: Vec::new(),
+            spontaneous: None,
+            projectile: Projectile::Neutron,
+            library_group_structure: None,
+            temperature_K: Kelvin::new(293.6).expect("293.6 K is valid"),
+            uncertainty_options: None,
+            covariance: None,
+            unmodeled_table: None,
+            unmodeled_evalspread: None,
+            radiological: None,
+            damage: None,
+            shielding: None,
+            step_libraries: Vec::new(),
+        };
+        (spec, prepared)
+    }
+
+    #[test]
+    fn decay_only_run_needs_no_library_and_applies_a_half_life_override() {
+        let (spec, prepared) = synthetic_decay_only_prepared(serde_json::json!([]));
+        let plain = run_synthetic(&spec, &prepared).expect("decay-only run succeeds");
+        assert_eq!(plain.ledger["decay_only"], true);
+        assert_eq!(plain.certificate["decay_only"], true);
+        let decayed = plain.steps[0].activity_Bq_per_g["Co60"];
+        // one half-life of 1000 s: A = lambda N0 / 2
+        let expected = std::f64::consts::LN_2 / 1000.0 * 1.0e20 * 0.5;
+        assert!(
+            (decayed - expected).abs() <= 1e-8 * expected,
+            "{decayed} vs {expected}"
+        );
+
+        let (spec, prepared) = synthetic_decay_only_prepared(serde_json::json!([
+            {"nuclide": "Co60", "kind": "half_life", "value": 2000.0, "units": "s"}
+        ]));
+        let overridden = run_synthetic(&spec, &prepared).expect("override run succeeds");
+        // lambda halves and N decays by 2^-0.5 instead of 2^-1
+        let ratio = overridden.steps[0].activity_Bq_per_g["Co60"] / decayed;
+        assert!(
+            (ratio - 0.5f64.sqrt()).abs() <= 1e-8,
+            "activity ratio {ratio}"
+        );
+        assert_eq!(overridden.ledger["overrides"][0]["kind"], "half_life");
+        assert_eq!(overridden.ledger["overrides"][0]["half_life_s"], 2000.0);
+        assert_eq!(
+            overridden.ledger["overrides"][0]["library_half_life_s"],
+            1000.0
+        );
+    }
+
+    #[test]
+    fn half_life_override_naming_a_stable_nuclide_is_an_error() {
+        let (spec, prepared) = synthetic_decay_only_prepared(serde_json::json!([
+            {"nuclide": "Ni60", "kind": "half_life", "value": 10.0}
+        ]));
+        let error = match run_synthetic(&spec, &prepared) {
+            Err(error) => error,
+            Ok(_) => panic!("a stable nuclide has no half-life to override"),
+        };
+        assert!(error.contains("stable nuclide"), "{error}");
     }
 }
 

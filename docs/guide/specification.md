@@ -27,13 +27,13 @@ actinv validate problem.json
 | field | meaning |
 |---|---|
 | `projectile` | `neutron`, `proton`, `deuteron`, `triton`, `helion` (He-3), `alpha` or `gamma`; omission preserves the historical neutron default. |
-| `library.path` | ACTINV `.npz` activation library; the adjacent `<stem>_index.json` is also required. |
+| `library.path` | ACTINV `.npz` activation library; the adjacent `<stem>_index.json` is also required. May be omitted only when every schedule step has zero flux (see Decay-only runs). |
 | `library.sha256` | Optional declared hash. ACTINV always computes the library hash and fails if a declaration differs. The index's recorded library hash is checked too. |
 | `decay.primary` | ENDF-6 radioactive-decay sublibrary. |
 | `decay.fallback` | Optional second decay sublibrary; records absent from the primary are taken from it. |
 | `material.composition` | Natural element symbols or explicit nuclides (`U235`, `Ba137m1`) and nonnegative values interpreted by `material.basis`. |
 | `spectrum.flux_per_group` | Group-integrated fluxes. `descending: true` reverses the supplied order before use. |
-| `schedule` | At least one duration/flux-multiplier pair (or, with a `kerma` section, a duration/power target). Accepted duration units: seconds, minutes, hours, days and years. |
+| `schedule` | At least one duration plus exactly one of `flux` (multiplier), `wall_loading_MW_m2` or, with a `kerma` section, a power target (`power_W_cm3` / `power_W_per_g`; an explicit `flux: 0` beside a power target is accepted); optional `partition`, `feed`, `removal`, `spectrum`, `library`. Accepted duration units: seconds, minutes, hours, days and years. |
 | `fission_yields` | Optional hash-pinned ENDF-6 neutron-induced fission-yield evaluations, and optional spontaneous-fission yields and neutron multiplicities; see below. Empty/omitted preserves the explicit no-yields leakage path. |
 | `uncertainty` | Optional neutron-only MF=33 sidecar and response selection; omission reads no covariance file and preserves the ordinary path. |
 | `radiological` | Optional hash-pinned clearance, waste, ingestion, or inhalation response table; omission reads no table. |
@@ -80,6 +80,88 @@ structure and temperature must all identify the same projectile/data build befor
 `descending`): each group's transport-tally statistical relative standard uncertainty. It is accepted and carried
 but otherwise unused unless `uncertainty.channels` requests `"flux"` (see below); requesting that channel with no
 `relative_error` given is an error naming the spectrum.
+
+## Spectrum conversion (`spectrum.rebin`)
+
+`spectrum.rebin` converts a spectrum supplied in its own groups onto a library structure inside the run
+(FISPACT-II `GRPCONVERT`, `CNVTYPE` and `LIMGRP`). With it, `spectrum.structure` names the destination structure
+(`fispact-709`, `fispact-162` or a refinement such as `fispact-709x4`; not `custom`), and `boundaries_eV`
+(strictly ascending, one more than the flux values) plus `flux_per_group` describe the supplied groups.
+
+| field | meaning | default |
+|---|---|---|
+| `convention` | `equal_lethargy` (`CNVTYPE 0`): flux is spread uniformly in lethargy inside a source group. `equal_energy` (`CNVTYPE 1`): uniformly in energy. | `equal_lethargy` |
+| `emin_eV` | `LIMGRP` lower limit: flux in source groups below it is folded into the first group above it, whose lower edge becomes `emin_eV`. | none |
+| `emax_eV` | `LIMGRP` upper limit: flux above it is folded into the last group below it, whose upper edge becomes `emax_eV`. | none |
+
+`total` rescales the supplied spectrum before conversion. `relative_error` cannot accompany `rebin` (it is indexed by
+the supplied groups). Flux falling outside the destination structure's range is not discarded silently: it is
+reported. The ledger gains `spectrum_conversion` (one record per converted spectrum, the base spectrum first, then
+any step spectrum) holding `convention`, `cnvtype`, `destination_structure`, `source_groups`, `destination_groups`,
+`emin_eV`, `emax_eV`, `limit_flux_moved_from_below`, `limit_flux_moved_from_above`, `source_total`,
+`destination_total`, `outside_destination_below`, `outside_destination_above`, `flux_conservation_residual` (the
+relative closure of source against destination plus outside flux; checked to `1e-12`) and `exact_grid`. A spectrum
+without `rebin` is unchanged and adds nothing to the ledger.
+
+## Wall loading (`wall_loading_MW_m2`)
+
+A schedule step gives exactly one of `flux` (a multiplier on the spectrum's total) and `wall_loading_MW_m2` (first
+wall loading in MW m^-2, FISPACT-II `WALL`); giving both or neither is an error. FISPACT-II section 4.91 scales the
+flux by `wall / wall_in_file`, the wall loading recorded with the spectrum. ACTINV follows that rule when the
+spectrum declares `spectrum.wall_loading_MW_m2` (the loading its group fluxes correspond to): the step multiplier is
+`wall / spectrum.wall_loading_MW_m2`. Without a reference, ACTINV uses the manual's closing statement of section
+4.91, "a current C, of 4.44 x 10^13 n cm^-2 s^-1 is equivalent to 1 MW m^-2" (a 14 MeV neutron current), and sets
+the step's total flux to `wall x 4.44e13` n cm^-2 s^-1 with the spectrum's shape; that needs a spectrum with a
+positive total. The constant is `spec::WALL_CURRENT_PER_MW_M2`. A step spectrum uses its own reference. The ledger
+gains `wall_loading`, one record per wall step: `step`, `wall_loading_MW_m2`, `basis`
+(`spectrum_reference_wall_loading` or `14_MeV_current_equivalence`), `reference_wall_loading_MW_m2`,
+`current_per_MW_m2_cm2_s`, `flux_multiplier` and `step_total_flux_cm2_s`.
+
+## Partition (`schedule[].partition`)
+
+`partition` is a map from element symbol to the fraction of that element's atoms **kept** at the start of the step
+(FISPACT-II section 4.54 `PARTITION`: a value of 0.01 for Ar reduces Ar by a factor of 100). Every nuclide and
+isomeric state of the element is scaled; the removed atoms move to the removal sink that `removal` also uses and are
+reported as `removed_atoms_per_g`. Fractions must lie in [0, 1] and keys must be elements. The split is applied
+before the step evolves and also acts on the uncertainty tangents and the comparison solution.
+
+A partition removes bulk atoms, which the `trace` formulation cannot represent (it holds the bulk undepleted), so
+`options.mode: "trace"` with a partition is an error, and `auto` selects `coupled`. The ledger gains `partition`:
+`applied` (per step and element: `step`, `element`, `fraction_kept`, `removed_atoms_per_g`), `mode`,
+`mode_forced_coupled` and `removed_atoms_per_g_final`. Partition is not accepted by mesh specs, study specs, reverse
+solves or the waste-composition solve.
+
+## Named data overrides (`overrides`)
+
+`overrides` is an optional list replacing data for a named nuclide (FISPACT-II section 4.53 `OVER`). They are
+applied while the reaction and decay networks are assembled, and each is listed in the ledger under `overrides`.
+
+| `kind` | FISPACT-II | fields | effect |
+|---|---|---|---|
+| `cross_section` | `ACROSS` | `nuclide`, `mt`, `value` (barns, >= 0) | Sets the reaction's one-group collapsed cross section for the run's spectrum. Product branching is kept. |
+| `cross_section_scale` | none (ACTINV) | `nuclide`, `mt`, `value` (> 0) | Multiplies the collapsed value. |
+| `half_life` | `ALAM` | `nuclide`, `value`, `units` (default `s`) | Replaces the half-life; the units are any `schedule` duration unit. |
+| `cross_section_uncertainty` | `ADCROSS` | `nuclide`, `mt`, `value` | Replaces the relative standard uncertainty of the reaction; needs the `cross_section_mf33` channel and a covariance. |
+| `half_life_uncertainty` | `ADLAM` | `nuclide`, `value` | Replaces the decay constant's relative standard uncertainty; needs the `decay_constants` channel. |
+
+Differences from the manual: FISPACT-II selects an `ACROSS` reaction by daughter, ACTINV by ENDF reaction number
+`mt`; `ADCROSS`/`ADLAM` take a relative standard uncertainty, not an error factor. A cross-section rescale keeps the
+correlations of the covariance row. A name that matches no library row or decay record is an error. Cross-section
+value overrides cannot be combined with `uncertainty` (the MF=33 collapse is anchored to the library value), and an
+absolute `cross_section` cannot be combined with `self_shielding`. Duplicate overrides, and a `cross_section` and a
+`cross_section_scale` on the same reaction, are rejected. A cross-section override's ledger entry records the
+one-group collapsed value before and after.
+
+## Decay-only runs
+
+A spec whose every step has zero flux needs no activation library: omit `library` (or leave `library.path` empty)
+and `spectrum`. The decay data and the material are read as usual and the schedule is a pure decay/cooling
+history. A spec that omits `library` with any irradiating step is rejected with a message naming the step rule.
+Everything that needs a library is rejected for a decay-only spec: `uncertainty`, `self_shielding`, `damage`,
+`fission_yields` files, `options.rate_scale`, `options.yield_scale`, `library.sha256` and cross-section overrides.
+`half_life` and `half_life_uncertainty` overrides remain allowed. The ledger and certificate carry
+`decay_only: true` and the library and library-index inputs are `null`. Runs that supply a library are unchanged.
+Mesh specs still require a library.
 
 ## Fission yields
 

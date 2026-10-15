@@ -646,6 +646,176 @@ pub fn rebin_equal_lethargy(
     })
 }
 
+/// The equal-energy counterpart of [`rebin_equal_lethargy`] (FISPACT-II `CNVTYPE 1`): flux is
+/// taken uniform per unit energy, not per unit lethargy, inside each source group, so a source
+/// group splits between destination groups in proportion to the energy widths of the overlaps.
+/// Conservation is accounted exactly as there: flux outside the destination range is returned as
+/// underflow/overflow and the closure over all three must hold to 1e-12.
+pub fn rebin_equal_energy(
+    source_boundaries: &[f64],
+    source_flux: &[f64],
+    destination_boundaries: &[f64],
+) -> Result<RebinResult, String> {
+    validate_boundaries(source_boundaries)?;
+    validate_boundaries(destination_boundaries)?;
+    if source_boundaries.len() != source_flux.len() + 1 {
+        return Err("source group count does not match its boundaries".into());
+    }
+    if source_flux
+        .iter()
+        .any(|value| !value.is_finite() || *value < 0.0)
+    {
+        return Err("source flux contains a nonfinite or negative value".into());
+    }
+    if source_boundaries == destination_boundaries {
+        let total = compensated(source_flux);
+        return Ok(RebinResult {
+            flux_per_group: source_flux.to_vec(),
+            underflow: 0.0,
+            overflow: 0.0,
+            source_total: total,
+            destination_total: total,
+            relative_closure: 0.0,
+            exact_grid: true,
+        });
+    }
+
+    let mut destination = vec![Neumaier::default(); destination_boundaries.len() - 1];
+    let mut underflow = Neumaier::default();
+    let mut overflow = Neumaier::default();
+    let target_low = destination_boundaries[0];
+    let target_high = *destination_boundaries.last().expect("validated boundaries");
+
+    for (group, &flux) in source_flux.iter().enumerate() {
+        if flux == 0.0 {
+            continue;
+        }
+        let low = source_boundaries[group];
+        let high = source_boundaries[group + 1];
+        let width = high - low;
+        if low < target_low {
+            let overlap_high = high.min(target_low);
+            if overlap_high > low {
+                underflow.add(flux * (overlap_high - low) / width);
+            }
+        }
+        if high > target_high {
+            let overlap_low = low.max(target_high);
+            if high > overlap_low {
+                overflow.add(flux * (high - overlap_low) / width);
+            }
+        }
+        let mut destination_group = destination_boundaries.partition_point(|value| *value <= low);
+        destination_group = destination_group.saturating_sub(1);
+        while destination_group < destination.len() {
+            let overlap_low = low.max(destination_boundaries[destination_group]);
+            let overlap_high = high.min(destination_boundaries[destination_group + 1]);
+            if overlap_high > overlap_low {
+                destination[destination_group].add(flux * (overlap_high - overlap_low) / width);
+            }
+            if destination_boundaries[destination_group + 1] >= high {
+                break;
+            }
+            destination_group += 1;
+        }
+    }
+
+    let flux_per_group: Vec<f64> = destination.into_iter().map(Neumaier::total).collect();
+    let source_total = compensated(source_flux);
+    let destination_total = compensated(&flux_per_group);
+    let underflow = underflow.total();
+    let overflow = overflow.total();
+    let accounted = destination_total + underflow + overflow;
+    let relative_closure = relative_difference(source_total, accounted);
+    if relative_closure > 1e-12 {
+        return Err(format!(
+            "equal-energy rebin failed conservation: source {source_total}, accounted {accounted}, relative {relative_closure}"
+        ));
+    }
+    Ok(RebinResult {
+        flux_per_group,
+        underflow,
+        overflow,
+        source_total,
+        destination_total,
+        relative_closure,
+        exact_grid: false,
+    })
+}
+
+/// A source spectrum after FISPACT-II `LIMGRP` clipping: the retained boundaries and fluxes and
+/// the flux that was moved inward from outside `[emin, emax]`.
+#[derive(Debug, Clone)]
+pub struct ClippedSpectrum {
+    pub boundaries: Vec<f64>,
+    pub flux_per_group: Vec<f64>,
+    pub moved_from_below: f64,
+    pub moved_from_above: f64,
+}
+
+/// FISPACT-II `LIMGRP Emin Emax` (manual section 4.36): flux below `emin` is removed and added to the
+/// first energy group above it, and flux above `emax` is added to the last group below it. A source
+/// group that straddles a limit is that first (last) group, so its boundary moves to the limit and
+/// it keeps its own flux; groups wholly outside are folded into it. The total is conserved exactly,
+/// and a limit outside the spectrum leaves that side untouched, as the manual allows.
+pub fn clip_spectrum_range(
+    source_boundaries: &[f64],
+    source_flux: &[f64],
+    emin: Option<f64>,
+    emax: Option<f64>,
+) -> Result<ClippedSpectrum, String> {
+    validate_boundaries(source_boundaries)?;
+    if source_boundaries.len() != source_flux.len() + 1 {
+        return Err("source group count does not match its boundaries".into());
+    }
+    for (name, limit) in [("emin", emin), ("emax", emax)] {
+        if let Some(value) = limit {
+            if !value.is_finite() || value <= 0.0 {
+                return Err(format!("{name} must be finite and positive"));
+            }
+        }
+    }
+    if let (Some(low), Some(high)) = (emin, emax) {
+        if low >= high {
+            return Err("emin must be below emax".into());
+        }
+    }
+    let mut boundaries = source_boundaries.to_vec();
+    let mut flux = source_flux.to_vec();
+    let mut moved_from_below = 0.0;
+    let mut moved_from_above = 0.0;
+    if let Some(limit) = emin.filter(|limit| *limit > boundaries[0]) {
+        if limit >= *boundaries.last().expect("validated boundaries") {
+            return Err("emin lies at or above the whole spectrum".into());
+        }
+        // Boundaries at or below the limit; the group containing it starts at the last of them.
+        let group = boundaries.partition_point(|value| *value <= limit) - 1;
+        moved_from_below = compensated(&flux[..group]);
+        flux.drain(..group);
+        boundaries.drain(..group);
+        flux[0] += moved_from_below;
+        boundaries[0] = limit;
+    }
+    if let Some(limit) = emax.filter(|limit| *limit < *boundaries.last().expect("boundaries")) {
+        if limit <= boundaries[0] {
+            return Err("emax lies at or below the whole spectrum".into());
+        }
+        // The group containing the limit ends at the first boundary at or above it.
+        let end = boundaries.partition_point(|value| *value < limit);
+        moved_from_above = compensated(&flux[end..]);
+        flux.truncate(end);
+        boundaries.truncate(end + 1);
+        flux[end - 1] += moved_from_above;
+        boundaries[end] = limit;
+    }
+    Ok(ClippedSpectrum {
+        boundaries,
+        flux_per_group: flux,
+        moved_from_below,
+        moved_from_above,
+    })
+}
+
 /// P93: per-source-group equal-lethargy weight map onto destination groups —
 /// the same overlap convention `rebin_equal_lethargy` uses to rebin a flux
 /// array, but returned per source group so a single input group's own flux
@@ -2474,6 +2644,65 @@ mod tests {
         assert!((result.flux_per_group[0] - 4.0).abs() < 1e-15);
         assert!((result.overflow - 3.0).abs() < 1e-15);
         assert!(result.relative_closure <= 1e-15);
+    }
+
+    #[test]
+    fn equal_energy_rebin_splits_by_energy_width_and_conserves() {
+        // Group [1, 3] holds 4 and group [3, 7] holds 8; the destination is [2, 5].
+        let result = rebin_equal_energy(&[1.0, 3.0, 7.0], &[4.0, 8.0], &[2.0, 5.0]).unwrap();
+        assert_eq!(result.flux_per_group.len(), 1);
+        assert!((result.underflow - 2.0).abs() < 1e-15);
+        assert!((result.flux_per_group[0] - 6.0).abs() < 1e-15);
+        assert!((result.overflow - 4.0).abs() < 1e-15);
+        assert!(result.relative_closure <= 1e-15);
+        assert_eq!(result.source_total, 12.0);
+    }
+
+    #[test]
+    fn both_rebin_conventions_conserve_total_flux() {
+        let source_boundaries = [1.0, 2.0, 4.0, 8.0, 16.0];
+        let source_flux = [1.0, 2.0, 3.0, 4.0];
+        let destination_boundaries = [1.5, 3.0, 6.0, 12.0];
+        for result in [
+            rebin_equal_lethargy(&source_boundaries, &source_flux, &destination_boundaries)
+                .unwrap(),
+            rebin_equal_energy(&source_boundaries, &source_flux, &destination_boundaries).unwrap(),
+        ] {
+            let accounted = result.destination_total + result.underflow + result.overflow;
+            assert!((accounted - 10.0).abs() <= 1e-12, "{accounted}");
+            assert!(result.relative_closure <= 1e-12);
+            assert!(result.underflow > 0.0 && result.overflow > 0.0);
+        }
+        // The two conventions differ on a split group: [2, 4] into [1.5, 3] puts a log-width
+        // share (ln 1.5 / ln 2) of its flux below 3 under equal lethargy and an energy share (1/2)
+        // under equal energy.
+        let lethargy = rebin_equal_lethargy(&[2.0, 4.0], &[1.0], &[1.5, 3.0, 6.0]).unwrap();
+        let energy = rebin_equal_energy(&[2.0, 4.0], &[1.0], &[1.5, 3.0, 6.0]).unwrap();
+        assert!((lethargy.flux_per_group[0] - 1.5f64.ln() / 2.0f64.ln()).abs() < 1e-15);
+        assert!((energy.flux_per_group[0] - 0.5).abs() < 1e-15);
+    }
+
+    #[test]
+    fn limgrp_clipping_folds_outside_flux_inward_and_conserves() {
+        let boundaries = [1.0, 2.0, 4.0, 8.0, 16.0];
+        let flux = [1.0, 2.0, 3.0, 4.0];
+        let clipped = clip_spectrum_range(&boundaries, &flux, Some(3.0), Some(10.0)).unwrap();
+        assert_eq!(clipped.boundaries, vec![3.0, 4.0, 8.0, 10.0]);
+        assert_eq!(clipped.flux_per_group, vec![3.0, 3.0, 4.0]);
+        assert_eq!(clipped.moved_from_below, 1.0);
+        assert_eq!(clipped.moved_from_above, 0.0);
+        let clipped = clip_spectrum_range(&boundaries, &flux, Some(3.0), Some(6.0)).unwrap();
+        assert_eq!(clipped.boundaries, vec![3.0, 4.0, 6.0]);
+        assert_eq!(clipped.flux_per_group, vec![3.0, 7.0]);
+        assert_eq!(clipped.moved_from_above, 4.0);
+        assert_eq!(clipped.flux_per_group.iter().sum::<f64>(), 10.0);
+        // Limits outside the spectrum leave it untouched.
+        let clipped = clip_spectrum_range(&boundaries, &flux, Some(1.0e-5), Some(1.0e9)).unwrap();
+        assert_eq!(clipped.boundaries, boundaries.to_vec());
+        assert_eq!(clipped.flux_per_group, flux.to_vec());
+        assert!(clip_spectrum_range(&boundaries, &flux, Some(5.0), Some(5.0)).is_err());
+        assert!(clip_spectrum_range(&boundaries, &flux, Some(20.0), None).is_err());
+        assert!(clip_spectrum_range(&boundaries, &flux, None, Some(0.5)).is_err());
     }
 
     #[test]

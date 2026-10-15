@@ -460,6 +460,9 @@ fn validate_base(
         if step.get("removal").is_some_and(|v| !v.is_null()) {
             return Err("schedule removal is unsupported".into());
         }
+        if step.get("partition").is_some_and(|v| !v.is_null()) {
+            return Err("schedule partition is unsupported".into());
+        }
         if step.get("spectrum").is_some_and(|v| !v.is_null()) {
             return Err("per-step spectra are unsupported".into());
         }
@@ -648,7 +651,7 @@ fn positive_exposure(spec: &Spec) -> bool {
             .total
             .unwrap_or_else(|| spectrum.flux_per_group.iter().sum());
         parse_duration(&step.dt).is_ok_and(|duration| duration > 0.0)
-            && (step.flux > 0.0 || step.is_power_driven())
+            && step.irradiates()
             && total > 0.0
     })
 }
