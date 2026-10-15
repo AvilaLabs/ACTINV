@@ -46,6 +46,7 @@ declaration is a constraint, not a value copied into the certificate.
 ## Material bases
 
 `material.mass_g` defaults to 1 g. Inventories remain per gram; the mass scales the total photon rates and powers.
+`material.density_g_cm3` is optional (finite and positive); only the [step summary](#step-summary)'s per-cm³ totals use it.
 Composition keys are case-insensitive natural element symbols or explicit `SymbolA[mN]` nuclides. Bare `m` means
 `m1`, so `BA137M`, `Ba137m` and `Ba137m1` identify the same state; aliases which collide are an error. A natural
 element and one of its explicit isotopes cannot appear together. An unknown element symbol is an error, and so is a
@@ -326,6 +327,33 @@ result serialization, not raw inputs converted at a `Spec::physical_inputs` boun
 outside the P16 typed-quantity inventory (`docs/QUANTITIES.md`, which P16 pins by hash), as
 `inventory[].atoms_per_g` does. The ledger's `gas` block records the ejectile table
 version, `uncovered` and `missing_light_states`.
+
+## Step summary
+
+`summary` (optional) adds a complete inventory report, `steps[].summary`, to every step: a FISPACT-II-style
+nuclide table, element table, decay-mode activity totals and dominant-contributor rankings. Without it the result is
+unchanged and no `summary` key is written.
+
+| Field | Default | Meaning |
+| --- | --- | --- |
+| `nuclides` | `true` | Emit the per-nuclide table. |
+| `elements` | `true` | Emit the per-element table. |
+| `dominant_top` | `10` | Entries kept in each dominant-contributor list; 1 to 256. |
+| `min_atoms` | `0` | FISPACT `MIND`: omit nuclide-table rows whose absolute atoms (`atoms × material.mass_g`) fall below this. Finite and not negative. |
+| `include_stable` | `true` | `false` is FISPACT `NOSTABLE`: omit stable nuclides from the nuclide table. |
+
+`min_atoms` and `include_stable` trim the nuclide table only. Totals, the element table and the dominant rankings
+always include every state, so a filtered table still reconciles with its totals. The same `summary` section is
+accepted by the mesh specification and applies to every cell.
+
+```json
+{
+  "material": {"mass_g": 10.0, "density_g_cm3": 7.87, "composition": {"Fe": 100}},
+  "summary": {"dominant_top": 5, "min_atoms": 1e6, "include_stable": false}
+}
+```
+
+[Read your results](results.md#step-summary) describes the emitted fields.
 
 ## Photon options
 

@@ -27,6 +27,50 @@ Photon group values represent source strength integrated over each energy group.
 
 Pathways identify a source and first product with ranked contributions in trace mode. They do not enumerate every intermediate member of a reaction chain.
 
+## Step summary
+
+When the problem declares [`summary`](specification.md#step-summary), each step gains a `summary` object. Every
+quantity is per gram of initial material, except the `absolute` and `per_cm3` totals. A state is counted with the
+same population rule as the rest of the output: constant bulk atoms in trace mode (plus the tracked population of a
+reservoir nuclide), the evolved state elsewhere, and bulk nuclides absent from the chain at their constant atoms.
+The leakage, unit and removal sinks are not nuclide states.
+
+`nuclides` lists one row per nuclide, descending by `atoms`:
+
+| Field | Meaning |
+| --- | --- |
+| `nuclide`, `Z`, `A`, `LISO` | Name and identity, as in `inventory` |
+| `atoms`, `grams` | Population and mass. `grams` uses the decay record's AWR times the neutron mass in u times the atomic mass constant (1.66053906660e-24 g, CODATA 2018). With no AWR it uses A times that constant and sets `mass_from_a` |
+| `activity_Bq` | λ·N |
+| `alpha_W`, `beta_W`, `gamma_W` | Activity times the record's mean heavy-particle, light-particle and electromagnetic decay energy, the same split as `heat_W_per_g` |
+| `half_life_s` | `null` for a stable nuclide or one without a decay record |
+| `stable`, `initial`, `decay_data` | A decay record exists with no decay constant; present at t = 0; a decay record exists. A state without one is reported with zero activity and heat, and is not called stable |
+
+`totals` always covers every state, whatever `min_atoms` or `include_stable` remove from the table:
+
+- `activity_Bq`, `activity_Ci` (1 Ci = 3.7e10 Bq exactly), `alpha_W`, `beta_W`, `gamma_W` and `heat_W`.
+- `activity_by_mode`: each nuclide's λN split by the branching ratios of its decay-mode records, classed by the
+  first digit of RTYP (1 β⁻, 2 EC/β⁺, 3 IT, 4 α, 5 n, 6 SF, 7 p, anything else `other`). The ratios are normalised
+  so the eight entries sum to `activity_Bq` to rounding; a record whose ratios fall short of one by more than the
+  chain tolerance, or that has no modes, books the shortfall to `other`.
+- FISPACT-compatible `alpha_Bq` (the α-mode activity), `beta_Bq` (β⁻, EC/β⁺ and IT modes) and `gamma_Bq` (the
+  activity of every nuclide whose mean electromagnetic decay energy is positive). These are FISPACT's report
+  categories; `activity_by_mode` is the exact partition.
+- `activity_excl_H3_Bq` and `heat_excl_H3_W`: the same totals with H-3 removed.
+- `mass_g`: the current total mass in grams per gram of initial material. Departure from 1 is a mass-closure
+  diagnostic: it reflects mass the represented chain does not carry and the difference between these AWR-based
+  masses and the composition's molar masses.
+- `leakage_atoms` and `n_nuclides` (states with a positive population).
+- `absolute`: activity (Bq, Ci), heat components and the H-3-excluded values multiplied by `material.mass_g`
+  (`multiplier`). `per_cm3` is the same multiplied by `material.density_g_cm3` (Bq/cm³, W/cm³) and is present only
+  when a density is given.
+
+`elements` (omitted with `summary.elements: false`) lists one row per Z, ascending, with `symbol`, `atoms`, `grams`,
+`activity_Bq` and the three heat components. `dominant` ranks the nuclides for `activity`, `heat`, `alpha_heat`,
+`beta_heat` and `gamma_heat`. Each list gives the `total`, the top `dominant_top` entries (`nuclide`, `value`,
+`percent`, `cumulative_percent`) and `n_for_90_percent` and `n_for_99_percent`, the number of nuclides needed to
+reach those shares of the total, counted over the full ranking rather than the truncated list.
+
 ## Check the ledger
 
 The top-level `ledger` records missing data, composition issues, leakage, pruning, mode selection, numerical diagnostics, and optional response coverage. Inspect it before interpreting a small value as physical absence.

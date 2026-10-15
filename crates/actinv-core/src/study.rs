@@ -605,6 +605,7 @@ impl Study {
                 mass_g: m.mass_g.unwrap_or(1.0),
                 basis: "wt_percent".into(),
                 composition: m.composition.clone(),
+                density_g_cm3: None,
             },
             spectrum: s.resolve(base)?,
             schedule,
@@ -615,6 +616,7 @@ impl Study {
             radiological: None,
             damage: None,
             self_shielding: None,
+            summary: None,
         })
     }
 

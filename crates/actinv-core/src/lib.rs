@@ -22,6 +22,7 @@ pub mod source_adapter;
 pub mod sparse;
 pub mod spec;
 pub mod study;
+pub mod summary;
 pub mod uncertainty;
 pub mod waste;
 pub mod waste_bounds;

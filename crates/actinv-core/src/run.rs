@@ -13,6 +13,7 @@ use crate::spec::{
     PhysicalInputs, Projectile, RadiologicalOptions, SelfShieldingOptions, Spec, Spectrum,
     UncertaintyOptions,
 };
+use crate::summary::{self, StateAtoms, StepSummary};
 use crate::uncertainty::{
     self as uncertainty_report, BandInput, ChannelData, DecayParameter, DecaySensitivityOut,
     DesignParameterEntry, DesignReactionEntry, DesignReport, FluxParameter, FluxSensitivityOut,
@@ -173,6 +174,9 @@ pub struct StepOut {
     /// P92 gas production; present only when `options.gas` is true.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub gas: Option<GasOut>,
+    /// P122 complete step summary; present only when the spec carries a `summary` section.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub summary: Option<StepSummary>,
 }
 #[derive(serde::Serialize)]
 pub struct Pathway {
@@ -4671,6 +4675,64 @@ impl PreparedRun {
             } else {
                 None
             };
+            // ---- P122 step summary: per-state atoms follow the gas rule above (coupled reads the
+            // tracked state; trace adds a tracked reservoir's population onto its constant bulk
+            // atoms, reads non-bulk states directly and leaves other bulk states at their constant
+            // atoms). The leakage, unit and removal sinks are not nuclide states, so `ch.keys`
+            // excludes them by construction; bulk nuclides absent from the chain keep their bulk atoms.
+            let step_summary = match &spec.summary {
+                Some(options) => {
+                    let state_atoms = |g: usize, key: (i32, i32)| -> f64 {
+                        let mut atoms = bulk_inv.get(&key).copied().unwrap_or(0.0);
+                        if pos[g] != usize::MAX {
+                            if mode == "coupled" {
+                                atoms = y[pos[g]];
+                            } else if tracked_reservoir.contains(&g) {
+                                atoms += y[pos[g]];
+                            } else if !bulk.contains_key(&g) {
+                                atoms = y[pos[g]];
+                            }
+                        }
+                        atoms
+                    };
+                    let initial =
+                        |key: &(i32, i32)| bulk_inv.get(key).is_some_and(|atoms| *atoms > 0.0);
+                    let mut states: Vec<StateAtoms> = ch
+                        .keys
+                        .iter()
+                        .enumerate()
+                        .map(|(g, &key)| StateAtoms {
+                            key,
+                            atoms: state_atoms(g, key),
+                            initial: initial(&key),
+                        })
+                        .collect();
+                    states.extend(
+                        bulk_inv
+                            .iter()
+                            .filter(|(key, _)| !ch.index.contains_key(*key))
+                            .map(|(&key, &atoms)| StateAtoms {
+                                key,
+                                atoms,
+                                initial: initial(&key),
+                            }),
+                    );
+                    let leakage_atoms = if pos[ch.leak] != usize::MAX {
+                        y.get(pos[ch.leak]).copied().unwrap_or(0.0)
+                    } else {
+                        0.0
+                    };
+                    Some(summary::build(
+                        options,
+                        nuclides,
+                        &states,
+                        leakage_atoms,
+                        spec.material.mass_g,
+                        spec.material.density_g_cm3,
+                    ))
+                }
+                None => None,
+            };
             let uncertainty = match (&uncertainty_runtime, &spec.uncertainty) {
                 (Some(runtime), Some(options)) => {
                     // P72/P77: a declared unmodeled source resolves to the
@@ -4834,6 +4896,7 @@ impl PreparedRun {
                 radiological,
                 damage,
                 gas: gas_out,
+                summary: step_summary,
             });
         }
         profiler.finish("schedule_solve_diagnostics", solve_started);
@@ -6168,6 +6231,7 @@ mod projectile_output_tests {
             radiological: None,
             damage: None,
             gas: None,
+            summary: None,
         }
     }
 

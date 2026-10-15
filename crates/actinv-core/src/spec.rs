@@ -37,6 +37,10 @@ pub struct Spec {
     pub damage: Option<DamageOptions>,
     #[serde(default)]
     pub self_shielding: Option<SelfShieldingOptions>,
+    /// Complete per-step inventory report (`steps[].summary`); absent emits nothing and is
+    /// byte-identical to pre-P122 output.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub summary: Option<SummaryOptions>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -221,6 +225,49 @@ fn dilution_composition() -> String {
     "composition".into()
 }
 
+/// Step-summary report (P122): FISPACT-II inventory-report parity. The filters only trim the
+/// nuclide table; every total, element row and dominant ranking includes all states.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct SummaryOptions {
+    /// Emit the per-nuclide table (`summary.nuclides`).
+    #[serde(default = "summary_true")]
+    pub nuclides: bool,
+    /// Emit the per-element table (`summary.elements`).
+    #[serde(default = "summary_true")]
+    pub elements: bool,
+    /// Entries kept in each `summary.dominant` list, 1..=256.
+    #[serde(default = "summary_dominant_top")]
+    pub dominant_top: usize,
+    /// FISPACT MIND: nuclide-table rows whose absolute atoms (`atoms_per_g * material.mass_g`)
+    /// fall below this are omitted. Zero keeps every row.
+    #[serde(default)]
+    pub min_atoms: f64,
+    /// False is FISPACT NOSTABLE: stable rows are omitted from the nuclide table.
+    #[serde(default = "summary_true")]
+    pub include_stable: bool,
+}
+
+fn summary_true() -> bool {
+    true
+}
+
+fn summary_dominant_top() -> usize {
+    10
+}
+
+impl Default for SummaryOptions {
+    fn default() -> Self {
+        Self {
+            nuclides: true,
+            elements: true,
+            dominant_top: summary_dominant_top(),
+            min_atoms: 0.0,
+            include_stable: true,
+        }
+    }
+}
+
 fn confidence_95() -> f64 {
     0.95
 }
@@ -306,6 +353,9 @@ pub struct Material {
     #[serde(default = "wt")]
     pub basis: String,
     pub composition: BTreeMap<String, f64>,
+    /// Material density in g/cm^3; only the step summary's per-cm^3 totals use it.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub density_g_cm3: Option<f64>,
 }
 fn one() -> f64 {
     1.0
@@ -612,6 +662,19 @@ impl Spec {
         }
         if !self.material.mass_g.is_finite() || self.material.mass_g <= 0.0 {
             return Err("material.mass_g must be positive".into());
+        }
+        if let Some(density) = self.material.density_g_cm3 {
+            if !density.is_finite() || density <= 0.0 {
+                return Err("material.density_g_cm3 must be finite and positive".into());
+            }
+        }
+        if let Some(summary) = &self.summary {
+            if !(1..=256).contains(&summary.dominant_top) {
+                return Err("summary.dominant_top must be between 1 and 256".into());
+            }
+            if !summary.min_atoms.is_finite() || summary.min_atoms < 0.0 {
+                return Err("summary.min_atoms must be a finite value >= 0".into());
+            }
         }
         if self.library.path.is_empty() {
             return Err("library.path is empty".into());

@@ -14,8 +14,9 @@ use crate::run::{
 use crate::spec::{
     DamageOptions, DecayRef, FissionYieldOptions, HashedFileRef, LibraryRef, Material, Options,
     PhotonOptions, Projectile, RadiologicalOptions, SelfShieldingOptions, Spec, Spectrum, Step,
-    UncertaintyOptions,
+    SummaryOptions, UncertaintyOptions,
 };
+use crate::summary::StepSummary;
 use crate::uncertainty::StepUncertainty;
 use rayon::prelude::*;
 use serde::{Deserialize, Serialize};
@@ -121,6 +122,7 @@ const STEP_FIELDS: &[&str] = &[
     "radiological",
     "damage",
     "gas",
+    "summary",
 ];
 
 /// `StepOut` fields that are absent (key omitted) rather than serialized as
@@ -136,6 +138,7 @@ const STEP_OPTIONAL_FIELDS: &[&str] = &[
     "radiological",
     "damage",
     "gas",
+    "summary",
 ];
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -166,6 +169,9 @@ pub struct MeshSpec {
     pub damage: Option<DamageOptions>,
     #[serde(default)]
     pub self_shielding: Option<SelfShieldingOptions>,
+    /// Per-cell step summary (P122); absent emits nothing.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub summary: Option<SummaryOptions>,
     #[serde(default = "default_chunk_cells")]
     pub chunk_cells: usize,
     #[serde(default = "default_threads")]
@@ -326,6 +332,7 @@ impl MeshSpec {
             radiological: self.radiological.clone(),
             damage: self.damage.clone(),
             self_shielding: self.self_shielding.clone(),
+            summary: self.summary.clone(),
         }
     }
 }
@@ -795,6 +802,7 @@ fn maximal_step_out() -> StepOut {
             He_inventory_appm: 0.0,
             initial_atoms_per_g: 0.0,
         }),
+        summary: Some(StepSummary::shape_placeholder()),
     }
 }
 
@@ -893,6 +901,10 @@ fn step_field(step: &StepOut, name: &str) -> Option<Result<serde_json::Value, St
         },
         "gas" => match &step.gas {
             Some(gas) => serde_json::to_value(gas),
+            None => Ok(serde_json::Value::Null),
+        },
+        "summary" => match &step.summary {
+            Some(summary) => serde_json::to_value(summary),
             None => Ok(serde_json::Value::Null),
         },
         _ => return None,
@@ -1764,6 +1776,7 @@ mod tests {
                 mass_g: 1.0,
                 basis: "wt_percent".into(),
                 composition: BTreeMap::from([("FE".into(), 100.0)]),
+                density_g_cm3: None,
             },
             flux: HashedFileRef {
                 path: "flux.ndjson".into(),
@@ -1783,6 +1796,7 @@ mod tests {
             radiological: None,
             damage: None,
             self_shielding: None,
+            summary: None,
             chunk_cells: 1,
             threads: 1,
             group_workloads: true,
@@ -2026,6 +2040,7 @@ mod tests {
             radiological: None,
             damage: None,
             gas: None,
+            summary: None,
         }
     }
 
