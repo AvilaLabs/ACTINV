@@ -4,10 +4,10 @@
 G0, G1 and G6 are external (protocol hash registry, fmt/clippy/tests, CI); they are recorded as external and do not
 enter the verdict. This checker evaluates G2-G5.
 
-G2  Default unchanged. examples/fns_fe_5min.json and examples/shielding_demo.json, and a short FNS Fe spec with a
-    `summary` block that does not ask for depletion, are byte-identical between reference and candidate apart from
-    `ms`; the candidate's summary-without-depletion run carries no `depletion` key in any step summary, in the ledger
-    or in the certificate.
+G2  Default unchanged. examples/fns_fe_5min.json and examples/shielding_demo.json are byte-identical between
+    reference and candidate apart from `ms`. Amendment A: a short FNS Fe spec with a `summary` block that does not ask
+    for depletion is run on the candidate only (the reference predates `summary`) and must carry no `depletion` key in
+    any step summary, in the ledger or in the certificate.
 G3  Coupled mode, depletion on. Three runs: FNS Fe as shipped, FNS Fe with the flux multiplier raised so Fe-56
     depletes by at least 1e-4 (schedule: 300 s at x2e8, 600 s off, 300 s at x1e8, 1 h off), and a radioactive
     initial material (Fe56 + Fe55 + Mn54) so the decay channel is not vacuous (natural Fe has only stable isotopes
@@ -754,17 +754,16 @@ def gate_g2(ref, cand, work, base_spec, timeout):
         run(cand, spec, b, timeout)
         same = base.mask_ms(a.read_bytes())[0] == base.mask_ms(b.read_bytes())[0]
         cases[label] = {"identical_apart_from_ms": same, "spec_sha256": sha256(spec)}
+    # Amendment A: the reference predates `summary` (P122), so this run is candidate-only.
     short = make_spec(base_spec, mode="coupled", schedule=SHORT_SCHEDULE, depletion=False, tag="summary only")
     path = write_spec(work, "summary_only", short)
-    a, b = work / "summary_only.ref.json", work / "summary_only.cand.json"
-    run(ref, path, a, timeout)
+    b = work / "summary_only.cand.json"
     cand_result = run(cand, path, b, timeout)
-    same = base.mask_ms(a.read_bytes())[0] == base.mask_ms(b.read_bytes())[0]
     absent = (all("depletion" not in step.get("summary", {}) for step in cand_result["steps"])
               and "depletion" not in cand_result["ledger"] and "depletion" not in cand_result["certificate"]
               and b'"depletion"' not in b.read_bytes())
-    cases["summary_without_depletion"] = {"identical_apart_from_ms": same, "no_depletion_key_anywhere": absent}
-    ok = all(v["identical_apart_from_ms"] for v in cases.values()) and absent
+    cases["summary_without_depletion"] = {"no_depletion_key_anywhere": absent}
+    ok = all(v["identical_apart_from_ms"] for k, v in cases.items() if k != "summary_without_depletion") and absent
     return {"pass": bool(ok), "cases": cases}
 
 
