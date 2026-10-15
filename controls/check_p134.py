@@ -4,11 +4,13 @@
 G2  examples/fns_fe_5min.json and examples/shielding_demo.json are byte-identical between reference and candidate
     apart from `ms`.
 G3  FNS Fe in trace mode with (a) flux 0.37 on the irradiation step, (b) irradiate-cool-irradiate, (c) a softened
-    step spectrum on the irradiation step: `pathway_closure` <= 1e-9, and for every nuclide above 1e-12 of the step's
-    tracked inventory the full decomposition total equals the inventory within 1e-9. Listed chains are truncated at
-    1e-6 of their nuclide for reporting, but each carries `fraction` of the complete decomposition, so
-    atoms_per_g / fraction recovers the full sum; every listed chain of a nuclide must give the same total.
-G4  For (a), every pathway's atoms in the irradiation step equal 0.37 x the flux-1.0 run's within 1e-9.
+    step spectrum on the irradiation step: for every nuclide above 1e-12 of the step's tracked inventory the full
+    decomposition total equals the inventory within 1e-9. Listed chains are truncated at 1e-6 of their nuclide for
+    reporting, but each carries `fraction` of the complete decomposition, so atoms_per_g / fraction recovers the full
+    sum; every listed chain of a nuclide must give the same total. `pathway_closure` is reported only: it has no
+    significance floor (Amendment A).
+G4  (Amendment A) (a) against the same spec with its spectrum scaled by 0.37 at multiplier 1.0: every step's inventory
+    and every listed pathway at or above 1e-12 of that step's tracked inventory agree within 1e-9.
 
 Usage: check_p134.py --reference REF --candidate CAND [--workdir target/p134-work]
 """
@@ -71,7 +73,7 @@ def closure_check(result):
             if rel > TOL or spread > TOL:
                 bad.append({"step": si + 1, "nuclide": nuclide, "inventory": atoms, "decomposition": totals[0],
                             "rel": rel, "spread": spread})
-    return {"pass": result["pathway_closure"] <= TOL and not bad and compared > 0, "mode": result["mode"],
+    return {"pass": not bad and compared > 0, "mode": result["mode"],
             "pathway_closure": result["pathway_closure"], "compared": compared, "worst": worst, "bad": bad[:20]}
 
 
@@ -99,7 +101,6 @@ def main(argv=None):
         g2[label] = {"identical_apart_from_ms": same, "spec_sha256": sha256(spec)}
     gates["G2"] = {"pass": all(v["identical_apart_from_ms"] for v in g2.values()), "specs": g2}
 
-    unit = absolute(base)
     scaled = absolute(base)
     scaled["schedule"][0] = dict(scaled["schedule"][0], flux=0.37)
     pulsed = absolute(base)
@@ -111,8 +112,13 @@ def main(argv=None):
     step_spectrum["flux_per_group"] = [v * 0.5 if i < len(groups) // 2 else v for i, v in enumerate(groups)]
     step_spectrum.pop("total", None)
     softened["schedule"][0] = dict(softened["schedule"][0], spectrum=step_spectrum)
+    shape_scaled = absolute(base)
+    shape_scaled["spectrum"]["flux_per_group"] = [v * 0.37 for v in base["spectrum"]["flux_per_group"]]
+    if "total" in shape_scaled["spectrum"]:
+        shape_scaled["spectrum"]["total"] = base["spectrum"]["total"] * 0.37
     results = {}
-    for label, spec in (("unit", unit), ("scaled", scaled), ("pulsed", pulsed), ("softened", softened)):
+    for label, spec in (("scaled", scaled), ("shape_scaled", shape_scaled), ("pulsed", pulsed),
+                        ("softened", softened)):
         path = work / f"{label}.json"
         path.write_text(json.dumps(spec))
         results[label] = run(cand, path, work / f"{label}.cand.json", args.timeout)
@@ -120,17 +126,26 @@ def main(argv=None):
     gates["G3"] = {"pass": all(v["pass"] and v["mode"] == "trace" for v in g3.values()), "cases": g3}
 
     worst, bad, compared = 0.0, [], 0
-    for nuclide, chains in results["unit"]["pathways"][0].items():
-        other = {(c["from"], c["first_product"]): c["atoms_per_g"] for c in results["scaled"]["pathways"][0].get(nuclide, [])}
-        for c in chains:
-            key = (c["from"], c["first_product"])
-            if key not in other:
-                continue
-            rel = abs(other[key] - 0.37 * c["atoms_per_g"]) / (0.37 * c["atoms_per_g"])
+    multiplier_run, shape_run = results["scaled"], results["shape_scaled"]
+    for si, (step_a, step_b) in enumerate(zip(multiplier_run["steps"], shape_run["steps"])):
+        inv_a = {row["nuclide"]: row["atoms_per_g"] for row in step_a["inventory"]}
+        inv_b = {row["nuclide"]: row["atoms_per_g"] for row in step_b["inventory"]}
+        floor = 1e-12 * sum(inv_a.values())
+        values = [("inventory", n, "", "", v, inv_b.get(n, 0.0)) for n, v in inv_a.items() if v >= floor]
+        paths_b = {(n, c["from"], c["first_product"]): c["atoms_per_g"]
+                   for n, chains in shape_run["pathways"][si].items() for c in chains}
+        for n, chains in multiplier_run["pathways"][si].items():
+            for c in chains:
+                if c["atoms_per_g"] >= floor:
+                    values.append(("pathway", n, c["from"], c["first_product"], c["atoms_per_g"],
+                                   paths_b.get((n, c["from"], c["first_product"]), 0.0)))
+        for kind, n, source, first, va, vb in values:
+            rel = abs(va - vb) / va
             compared += 1
             worst = max(worst, rel)
             if rel > TOL:
-                bad.append({"nuclide": nuclide, "from": key[0], "first_product": key[1], "rel": rel})
+                bad.append({"step": si + 1, "kind": kind, "nuclide": n, "from": source, "first_product": first,
+                            "multiplier_run": va, "spectrum_run": vb, "rel": rel})
     gates["G4"] = {"pass": compared > 0 and not bad, "compared": compared, "worst_relative": worst, "bad": bad[:20]}
 
     verdict = all(gates[g]["pass"] for g in ("G2", "G3", "G4"))
@@ -144,7 +159,7 @@ def main(argv=None):
         print(f"P134 {g}: {'PASS' if gates[g]['pass'] else 'FAIL'}")
     for label, v in g3.items():
         print(f"  G3/{label}: closure {v['pathway_closure']:.3e}, {v['compared']} nuclides, worst {v['worst']:.3e}")
-    print(f"  G4: {compared} pathways, worst {worst:.3e}")
+    print(f"  G4: {compared} inventory and pathway values, worst {worst:.3e}")
     print(f"P134: {record['verdict']} ({out})")
     return 0 if verdict else 1
 
