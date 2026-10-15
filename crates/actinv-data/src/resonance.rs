@@ -3221,10 +3221,7 @@ mod tests {
     fn rml_reduced_amplitudes_reproduce_listed_widths() {
         // The inelastic channel opens at 2000*56/55 eV; both resonances are above it.
         let threshold = 2000.0 * 56.0 / 55.0;
-        let listed = [
-            (1e4, [0.02, 0.4, 0.05, 0.3]),
-            (5e4, [0.03, 1.2, 0.0, 2.5]),
-        ];
+        let listed = [(1e4, [0.02, 0.4, 0.05, 0.3]), (5e4, [0.03, 1.2, 0.0, 2.5])];
         let widths = width_fixture(
             false,
             listed
