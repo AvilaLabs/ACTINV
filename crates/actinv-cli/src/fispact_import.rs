@@ -665,7 +665,7 @@ struct Pending {
 enum Drive {
     /// FLUX: projectiles cm^-2 s^-1; 0 is cooling
     Flux(f64),
-    /// POWER: kerma heating power per gram of material, W/g
+    /// POWER: kerma heating power density, W cm^-3
     Power(f64),
     /// WALL: first-wall loading, MW m^-2
     Wall(f64),
@@ -1047,7 +1047,7 @@ impl<'a> Interp<'a> {
                 self.log(
                     cmd,
                     Status::Noted,
-                    "FISPACT-II uses it for per-volume output only; spec material.density_g_cm3 (per-cm3 summary totals, power_W_cm3) is left unset so a converted problem stays identical to a hand-written one",
+                    "written to material.density_g_cm3 only when POWER needs it (power_W_cm3); otherwise FISPACT-II uses it for per-volume output only and it is left unset so a converted problem stays identical to a hand-written one",
                 );
             }
             "DOSE" => self.apply_dose(cmd)?,
@@ -1481,12 +1481,14 @@ impl<'a> Interp<'a> {
         if self.power_line.is_none() {
             self.power_line = Some(cmd.line);
         }
+        // POWER p n mt_1 .. mt_n: p in W/cc, normalized on the kerma of the listed MTs
+        let mts: Vec<&str> = cmd.args.iter().skip(2).map(String::as_str).collect();
         let mut detail = format!(
-            "steps that follow take power_W_per_g = {power}, reading the value as a power density in kW/kg (= W/g; check it against the manual if your deck means a total power); the flux amplitude is solved from kerma heating, which needs a hash-pinned kerma.table that no deck provides (see required_additions)"
+            "steps that follow take power_W_cm3 = {power} (FISPACT-II's W/cc) with material.density_g_cm3 from DENSITY; the flux amplitude is solved from kerma heating, which needs a hash-pinned kerma.table that no deck provides (see required_additions)"
         );
-        if cmd.args.len() > 1 {
+        if mts != ["301"] {
             detail.push_str(&format!(
-                "; the further argument(s) '{}' are not interpreted",
+                "; the deck normalizes on MT list '{}', ACTINV on the table's total kerma (MT=301)",
                 cmd.args[1..].join(" ")
             ));
         }
@@ -2285,7 +2287,7 @@ impl<'a> Interp<'a> {
                         item.insert("flux".into(), json!(multiplier));
                     }
                     Drive::Power(power) => {
-                        item.insert("power_W_per_g".into(), json!(power));
+                        item.insert("power_W_cm3".into(), json!(power));
                     }
                     Drive::Wall(wall) => {
                         item.insert("wall_loading_MW_m2".into(), json!(wall));
@@ -2317,7 +2319,7 @@ impl<'a> Interp<'a> {
                 });
                 match step.drive {
                     Drive::Flux(flux) => item["flux_cm2_s"] = json!(flux),
-                    Drive::Power(power) => item["power_W_per_g"] = json!(power),
+                    Drive::Power(power) => item["power_W_cm3"] = json!(power),
                     Drive::Wall(wall) => item["wall_loading_MW_m2"] = json!(wall),
                 }
                 item
@@ -2466,6 +2468,13 @@ impl<'a> Interp<'a> {
         spec.insert("projectile".into(), json!(projectile.name()));
         spec.insert("library".into(), json!({ "path": library }));
         spec.insert("decay".into(), decay);
+        let mut material = material;
+        if has_power {
+            // power_W_cm3 needs the density; FISPACT-II reads it from DENSITY
+            if let Some(density) = self.density {
+                material["density_g_cm3"] = json!(density);
+            }
+        }
         spec.insert("material".into(), material);
         spec.insert("spectrum".into(), Value::Object(spectrum));
         spec.insert("schedule".into(), Value::Array(schedule));
@@ -2557,6 +2566,15 @@ impl<'a> Interp<'a> {
                 "kerma".into(),
                 json!({"table": {"path": "kerma-table-to-be-supplied", "sha256": "0".repeat(64)}}),
             );
+            if self.density.is_none() {
+                validated["material"]["density_g_cm3"] = json!(1.0);
+                required.push(json!({
+                    "field": "material.density_g_cm3",
+                    "keyword": "POWER",
+                    "line": self.power_line,
+                    "reason": "POWER gives a power density (W/cc); the deck has no DENSITY, so add material.density_g_cm3",
+                }));
+            }
             required.push(json!({
                 "field": "kerma",
                 "keyword": "POWER",
@@ -3620,27 +3638,47 @@ END
 
     #[test]
     fn power_steps_emit_the_target_and_list_the_missing_kerma_table() {
-        let deck = deck_with("POWER 150.0\nTIME 1 HOURS ATOMS\nFLUX 0\nTIME 1 DAYS ATOMS");
+        // POWER p n mt..: p is a power density in W/cc; DENSITY supplies the g/cm3 it needs
+        let deck = deck_with(
+            "DENSITY 7.874\nPOWER 150.0 1 301\nTIME 1 HOURS ATOMS\nFLUX 0\nTIME 1 DAYS ATOMS",
+        );
         let conversion = convert(&deck, &context()).unwrap();
         let schedule = conversion.spec["schedule"].as_array().unwrap();
-        assert_eq!(schedule[0]["power_W_per_g"], 150.0);
-        assert!(schedule[0].get("flux").is_none());
+        assert_eq!(schedule[0]["power_W_cm3"], 150.0);
+        assert!(schedule[0].get("flux").is_none() && schedule[0].get("power_W_per_g").is_none());
         assert_eq!(schedule[1]["flux"], 0.0);
+        assert_eq!(conversion.spec["material"]["density_g_cm3"], 7.874);
         assert!(conversion.spec.get("kerma").is_none());
         assert!(conversion.spec["spectrum"].get("total").is_none());
         assert_eq!(entry_status(&conversion, "POWER"), vec!["approximated"]);
+        assert!(!entry_detail(&conversion, "POWER").contains("MT list"));
         let required = conversion.report["required_additions"].as_array().unwrap();
         assert_eq!(required.len(), 1);
         assert_eq!(required[0]["field"], "kerma");
-        assert_eq!(required[0]["line"], 5);
+        assert_eq!(required[0]["line"], 6);
         let map = &conversion.report["schedule_map"];
         assert_eq!(map[0]["kind"], "irradiation");
-        assert_eq!(map[0]["power_W_per_g"], 150.0);
+        assert_eq!(map[0]["power_W_cm3"], 150.0);
         assert_eq!(map[1]["kind"], "cooling");
         // adding the table makes the converted problem valid
         let mut spec = conversion.spec.clone();
         spec["kerma"] = json!({"table": {"path": "k.json", "sha256": "ab".repeat(32)}});
         Spec::from_json(&spec.to_string()).unwrap();
+        // without DENSITY the density is a required addition too; an MT list other than 301
+        // is named, since ACTINV heats from the table's total kerma
+        let bare = convert(
+            &deck_with("POWER 150.0 2 301 444\nTIME 1 HOURS ATOMS"),
+            &context(),
+        )
+        .unwrap();
+        let required = bare.report["required_additions"].as_array().unwrap();
+        let fields: Vec<&str> = required
+            .iter()
+            .map(|r| r["field"].as_str().unwrap())
+            .collect();
+        assert_eq!(fields, vec!["material.density_g_cm3", "kerma"]);
+        assert!(bare.spec["material"].get("density_g_cm3").is_none());
+        assert!(entry_detail(&bare, "POWER").contains("MT list '2 301 444'"));
         // a deck with no POWER lists nothing
         let plain = convert(&deck_with("FLUX 1E10\nTIME 1 HOURS ATOMS"), &context()).unwrap();
         assert!(plain.report["required_additions"]
