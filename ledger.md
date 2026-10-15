@@ -2955,3 +2955,49 @@ workflows completed success (`controls` 38799687767, `Build handbook` 3879968771
 `controls` run on `5996bd9` failed only on the P16 quantity-layer literal check, repaired in `88dba43` without changing
 any gate criterion or computed value. With the evidence of entries 146–150 this records **P122-PASS**, **P129-PASS**,
 **P130-PASS**, **P131-PASS** and **P133-PASS**; the P133 run-output baselines were unchanged in that run.
+
+## Entry 161 — CI red on `56fbb0e` and its repair; P137: G2–G4 recorded (2026-10-15)
+
+`controls` run 38810124236 on `56fbb0e` failed at "P117 terminal failure remains immutable": the P117 history
+verifier pins `.github/workflows/ci.yml` to its checkpoint copy plus the registered P117/P118 transition, and
+`9aac956` had added a step to it. No gate criterion or computed value was involved. Repair: `ci.yml` restored byte for
+byte to `5f76308`, and the example hash check runs inside `controls/check_public_examples.py` (the existing "Public
+examples are portable" step), adding errors only. Locally `controls/test_p117_history.py` passes and the examples
+control passes (16 hashes checked, 0 mismatched). The macOS x86_64 desktop job failed once on a runner disk-image
+eject ("hdiutil: couldn't eject disk2 - Resource busy") and passed on rerun; the other five workflows were green.
+
+P137, candidate release build of `2fb931a` (SHA-256 `e8e3ec1f…b752`, includes the six-significant-digit report fix
+`f83fe12`), checker `controls/check_p137.py`, record `results/p137_report.json`:
+
+- **G2:** 32,781 CSV cells rebuilt independently from the result JSON, all equal; the `--step 2 --nuclides` filter
+  (79 cells) equal; coverage matches the JSON.
+- **G3:** TSV equals CSV in all 8 tables; all 43,414 markdown and text numeric cells are the CSV value at six
+  significant digits.
+- **G4:** with `summary`, `photon_source`, `radiological` or all three removed, exactly the buildable tables are
+  written, omitted columns and unavailable tables are named, and exit statuses match the documented ones.
+
+G5 (CI) pending.
+
+## Entry 162 — P139: first run preserved, G2–G5 recorded under Amendment A (2026-10-15)
+
+First run (candidate `2fb931a`, reference release build of `0c3a573` SHA-256 `f7f38c02…fbae`), preserved in
+`results/failures/p139_initial/`: G2 and G3 passed; G4 failed on the IFG=1 synthetic file (group 361 off by 6.5e-8 and
+7.5e-8, limit 1e-9). Cause: the LRF=2 totals exceed their partials by up to 2.8e-7, the fixture carried the excess in
+a channel closed at every resonance, and the implementation zeroed closed channels under IFG=1 only. Amendment A
+(registered `29c635e`, before repair) zeroes closed channels under both IFG branches and opens the fixture's
+competitive channel (Q = 0).
+
+Candidate: release build of `332f8e5` (SHA-256 `0b62b47c…1170`); fmt and clippy clean, 789 workspace tests pass.
+Checker `controls/check_p139.py`, record `results/p139_lrf7.json`.
+
+- **G2:** `fns_fe_5min`, `shielding_demo` and the TENDL-2025 W-186 (LRF=2) foils at 0.01 and 0.1 cm byte-identical
+  to the reference apart from `ms`.
+- **G3:** ENDF/B-VIII.1 W-186 (LRF=7, IFG=0, KRM=3; 172 usable resonances) group factors recomputed independently
+  from MF=2 equal the ledger's applied factors exactly (worst 0.0) at both thicknesses; all in [0.06, 1] and
+  non-increasing with thickness. The HEAD-AWR convention would have differed by 3.1e-7.
+- **G4:** TENDL-2025 W-186 transcribed into LRF=7: IFG=0 file within 3.4e-16 of the LRF=2 run (limit 1e-12), IFG=1
+  file within 1.4e-10 (limit 1e-9), all 62 groups.
+- **G5 (report-only):** ENDF/B-VIII.1 against TENDL-2025, 53 common groups: worst factor difference 5.4 % at
+  0.01 cm, 29 % at 0.1 cm.
+
+G6 (CI) pending.

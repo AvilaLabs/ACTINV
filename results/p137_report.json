@@ -1,0 +1,386 @@
+{
+ "candidate_sha256": "e8e3ec1f7c857f06fa43734d7ef487e7493976c4ca30c8b8499c9c3be2b2b752",
+ "checker_sha256": "c9c684c72bbaf42ca6a59b854e780a8ccc7144a30aa3127b380702e8fa64d594",
+ "fixture": {
+  "density_g_cm3": 7.874,
+  "mass_g": 2.5,
+  "radiological_table_sha256": "ae3e3a4f0e400d894e53451961b73933bcfdf010dbde1db73ce28dbdab066ab6",
+  "spec": "/home/connoravila/Documents/actinv/target/wt-next/target/p137-work/fixture.spec.json",
+  "spec_sha256": "2df904b429cf8ea3f8a9b463bd0eda26bd85d4bbdfe025e815017dac914f0dea"
+ },
+ "gates": {
+  "G0": {
+   "external": true,
+   "note": "protocol SHA-256 in protocols/protocol_hash.txt (external)",
+   "pass": null
+  },
+  "G1": {
+   "external": true,
+   "note": "fmt, clippy, workspace tests including report (external)",
+   "pass": null
+  },
+  "G2": {
+   "bitwise_equal": 32781,
+   "cells": 32781,
+   "coverage": {
+    "dominant": {
+     "json_values": 840,
+     "table_rows": 840
+    },
+    "elements": {
+     "json_values": 147,
+     "table_rows": 147
+    },
+    "steps": 21,
+    "tab1": {
+     "json_values": 1036,
+     "table_rows": 1036
+    },
+    "tab2": {
+     "json_values": 700,
+     "table_rows": 700
+    },
+    "tab3": {
+     "json_values": 42,
+     "table_rows": 42
+    },
+    "tab4": {
+     "json_values": 504,
+     "table_rows": 504
+    },
+    "timeseries": {
+     "json_values": 21,
+     "table_rows": 21
+    },
+    "totals": {
+     "json_values": 21,
+     "table_rows": 21
+    }
+   },
+   "coverage_ok": true,
+   "filtered": {
+    "bitwise_equal": 79,
+    "cells": 79,
+    "mismatches": [],
+    "n_mismatches": 0,
+    "nuclides": [
+     "Mn54",
+     "Mn56"
+    ],
+    "signed_zero_pairs": 0,
+    "step": 2,
+    "string_form_mismatches": 0
+   },
+   "mismatches": [],
+   "n_mismatches": 0,
+   "pass": true,
+   "signed_zero_pairs": 0,
+   "string_form_mismatches": 0,
+   "tables": {
+    "dominant": {
+     "columns": 12,
+     "mismatches": 0,
+     "rows": 840
+    },
+    "elements": {
+     "columns": 10,
+     "mismatches": 0,
+     "rows": 147
+    },
+    "tab1": {
+     "columns": 7,
+     "mismatches": 0,
+     "rows": 1036
+    },
+    "tab2": {
+     "columns": 11,
+     "mismatches": 0,
+     "rows": 700
+    },
+    "tab3": {
+     "columns": 10,
+     "mismatches": 0,
+     "rows": 42
+    },
+    "tab4": {
+     "columns": 10,
+     "mismatches": 0,
+     "rows": 504
+    },
+    "timeseries": {
+     "columns": 10,
+     "mismatches": 0,
+     "rows": 21
+    },
+    "totals": {
+     "columns": 29,
+     "mismatches": 0,
+     "rows": 21
+    }
+   }
+  },
+  "G3": {
+   "digits_observed": {
+    "6_significant": 43414
+   },
+   "integer_text_empty_cells_compared": 11074,
+   "n_problems": 0,
+   "note": "report.rs renders markdown and text with sci() = format!(\"{:.6e}\"), which has seven significant digits; the protocol and docs/guide/cli.md say six",
+   "numeric_cells_per_format_compared": 21707,
+   "pass": true,
+   "problems": [],
+   "quoted_csv_cells": 0,
+   "required_significant_digits": 6,
+   "tsv_tables_equal_csv": 8
+  },
+  "G4": {
+   "cases": {
+    "base_only": {
+     "available": [
+      "tab1",
+      "tab2",
+      "timeseries",
+      "totals"
+     ],
+     "bitwise_equal": 7238,
+     "cells": 7238,
+     "mismatches": [],
+     "n_mismatches": 0,
+     "n_problems": 0,
+     "omitted_columns": {
+      "tab1": [
+       "mass_g_per_g",
+       "atoms",
+       "mass_g"
+      ],
+      "tab2": [
+       "heat_W_per_g",
+       "alpha_W_per_g",
+       "beta_W_per_g",
+       "gamma_W_per_g",
+       "half_life_s",
+       "activity_Bq",
+       "heat_W"
+      ],
+      "totals": [
+       "activity_Ci_per_g",
+       "alpha_activity_Bq_per_g",
+       "beta_activity_Bq_per_g",
+       "gamma_activity_Bq_per_g",
+       "activity_excl_H3_Bq_per_g",
+       "heat_excl_H3_W_per_g",
+       "mass_g_per_g",
+       "n_nuclides",
+       "mode_beta_minus_Bq_per_g",
+       "mode_ec_beta_plus_Bq_per_g",
+       "mode_isomeric_transition_Bq_per_g",
+       "mode_alpha_Bq_per_g",
+       "mode_neutron_Bq_per_g",
+       "mode_spontaneous_fission_Bq_per_g",
+       "mode_proton_Bq_per_g",
+       "mode_other_Bq_per_g",
+       "material_mass_g",
+       "activity_Bq",
+       "heat_W",
+       "density_g_cm3",
+       "activity_Bq_per_cm3",
+       "heat_W_per_cm3"
+      ]
+     },
+     "pass": true,
+     "problems": [],
+     "signed_zero_pairs": 0,
+     "string_form_mismatches": 0,
+     "unavailable": {
+      "dominant": "the result has no summary.dominant lists",
+      "elements": "the result has no summary.elements table",
+      "tab3": "the result has no radiological responses",
+      "tab4": "the result has no photon_source groups"
+     }
+    },
+    "exit_statuses": {
+     "cases": {
+      "bad format": {
+       "exit": 2,
+       "expected": 2,
+       "stderr": "--format must be csv, tsv, markdown or text, got 'xml'\nusage: actinv report RESULT.json [--tables LIST] [--format csv|tsv|markdown|text] [--out DIR] [--step N|a"
+      },
+      "missing file": {
+       "exit": 1,
+       "expected": 1,
+       "stderr": "cannot read /home/connoravila/Documents/actinv/target/wt-next/target/p137-work/does-not-exist.json: No such file or directory (os error 2)"
+      },
+      "no result file": {
+       "exit": 2,
+       "expected": 2,
+       "stderr": "expected exactly one RESULT.json, got 0\nusage: actinv report RESULT.json [--tables LIST] [--format csv|tsv|markdown|text] [--out DIR] [--step N|all] [--nuclides"
+      },
+      "no table buildable (tab4, tab3, dominant, elements on a base-only result)": {
+       "exit": 1,
+       "expected": 1,
+       "stderr": "note: tab3: unavailable: the result has no `radiological` responses (declare `radiological` in the spec)\nnote: tab4: unavailable: the result has no `photon_sour"
+      },
+      "not JSON": {
+       "exit": 1,
+       "expected": 1,
+       "stderr": "/home/connoravila/Documents/actinv/target/wt-next/protocols/ACTINV-P137_PROTOCOL.md is not valid JSON: expected value at line 1 column 1"
+      },
+      "nuclide in no step": {
+       "exit": 1,
+       "expected": 1,
+       "stderr": "nuclide 'Zz999' is in no selected step's inventory or activity; names are written as in the result, for example Co60 or Ta182m1"
+      },
+      "one buildable table is enough": {
+       "exit": 0,
+       "expected": 0,
+       "stderr": "note: tab4: unavailable: the result has no `photon_source` groups (the spec must request photon output)\nnote: tab1: columns omitted because the result does not "
+      },
+      "step beyond the result": {
+       "exit": 1,
+       "expected": 1,
+       "stderr": "step 9999 is not in the result (steps 1 to 21)"
+      },
+      "step zero": {
+       "exit": 2,
+       "expected": 2,
+       "stderr": "--step must be a positive integer or 'all', got '0'\nusage: actinv report RESULT.json [--tables LIST] [--format csv|tsv|markdown|text] [--out DIR] [--step N|all]"
+      },
+      "unknown option": {
+       "exit": 2,
+       "expected": 2,
+       "stderr": "unknown report option --bogus\nusage: actinv report RESULT.json [--tables LIST] [--format csv|tsv|markdown|text] [--out DIR] [--step N|all] [--nuclides LIST]"
+      },
+      "unknown table": {
+       "exit": 2,
+       "expected": 2,
+       "stderr": "unknown table 'tab9' (expected tab1, tab2, tab3, tab4, totals, dominant, elements, timeseries)\nusage: actinv report RESULT.json [--tables LIST] [--format csv|ts"
+      }
+     },
+     "failed": [],
+     "pass": true
+    },
+    "no_photon": {
+     "available": [
+      "dominant",
+      "elements",
+      "tab1",
+      "tab2",
+      "tab3",
+      "timeseries",
+      "totals"
+     ],
+     "bitwise_equal": 27741,
+     "cells": 27741,
+     "mismatches": [],
+     "n_mismatches": 0,
+     "n_problems": 0,
+     "omitted_columns": {},
+     "pass": true,
+     "problems": [],
+     "signed_zero_pairs": 0,
+     "string_form_mismatches": 0,
+     "unavailable": {
+      "tab4": "the result has no photon_source groups"
+     }
+    },
+    "no_radiological": {
+     "available": [
+      "dominant",
+      "elements",
+      "tab1",
+      "tab2",
+      "tab4",
+      "timeseries",
+      "totals"
+     ],
+     "bitwise_equal": 32298,
+     "cells": 32298,
+     "mismatches": [],
+     "n_mismatches": 0,
+     "n_problems": 0,
+     "omitted_columns": {},
+     "pass": true,
+     "problems": [],
+     "signed_zero_pairs": 0,
+     "string_form_mismatches": 0,
+     "unavailable": {
+      "tab3": "the result has no radiological responses"
+     }
+    },
+    "no_summary": {
+     "available": [
+      "tab1",
+      "tab2",
+      "tab3",
+      "tab4",
+      "timeseries",
+      "totals"
+     ],
+     "bitwise_equal": 12761,
+     "cells": 12761,
+     "mismatches": [],
+     "n_mismatches": 0,
+     "n_problems": 0,
+     "omitted_columns": {
+      "tab1": [
+       "mass_g_per_g",
+       "atoms",
+       "mass_g"
+      ],
+      "tab2": [
+       "heat_W_per_g",
+       "alpha_W_per_g",
+       "beta_W_per_g",
+       "gamma_W_per_g",
+       "half_life_s",
+       "activity_Bq",
+       "heat_W"
+      ],
+      "totals": [
+       "activity_Ci_per_g",
+       "alpha_activity_Bq_per_g",
+       "beta_activity_Bq_per_g",
+       "gamma_activity_Bq_per_g",
+       "activity_excl_H3_Bq_per_g",
+       "heat_excl_H3_W_per_g",
+       "mass_g_per_g",
+       "n_nuclides",
+       "mode_beta_minus_Bq_per_g",
+       "mode_ec_beta_plus_Bq_per_g",
+       "mode_isomeric_transition_Bq_per_g",
+       "mode_alpha_Bq_per_g",
+       "mode_neutron_Bq_per_g",
+       "mode_spontaneous_fission_Bq_per_g",
+       "mode_proton_Bq_per_g",
+       "mode_other_Bq_per_g",
+       "material_mass_g",
+       "activity_Bq",
+       "heat_W",
+       "density_g_cm3",
+       "activity_Bq_per_cm3",
+       "heat_W_per_cm3"
+      ]
+     },
+     "pass": true,
+     "problems": [],
+     "signed_zero_pairs": 0,
+     "string_form_mismatches": 0,
+     "unavailable": {
+      "dominant": "the result has no summary.dominant lists",
+      "elements": "the result has no summary.elements table"
+     }
+    }
+   },
+   "pass": true
+  },
+  "G5": {
+   "external": true,
+   "note": "CI green on the pushed commit (external)",
+   "pass": null
+  }
+ },
+ "protocol": "protocols/ACTINV-P137_PROTOCOL.md",
+ "protocol_sha256": "cb1fdf4b43f67df3ee662595bccff86e9f3a3c58400fe08f03f1ec2d465a7bb4",
+ "reference_sha256": "3d34d7ca5887be03e19b81f8ae06d784ed53ec1310a69764ed70b8672bc42b5f",
+ "verdict": "PASS"
+}
