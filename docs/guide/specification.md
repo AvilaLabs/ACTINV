@@ -699,7 +699,8 @@ every other channel (fission, charged particles, inelastic) counts only toward t
 and `Gamma` are the sums of the channel widths over those three sets. With widths listed (IFG=0) each channel contributes its
 magnitude; with reduced-width amplitudes (IFG=1) it contributes `2 P gamma^2`, with the penetrability `P` at the
 resonance energy from the same radii, penetrability flags and channel wave numbers as the LRF=7 reconstruction
-(P = 1 for the photon channel), and a channel closed at that energy contributes nothing. `g` uses the spin group's
+(P = 1 for the photon channel). Under either, a channel closed at the resonance energy (its pair's threshold at
+or above it) contributes nothing. `g` uses the spin group's
 `|J|` and the target spin of the neutron pair, and `A` is that pair's mass ratio. Resonances at non-positive energy
 or without a positive neutron or capture width are skipped, as for the other formalisms. The single-level sigmoid
 model does not use the interference between channels or between resonances that the LRF=7 formalism carries.

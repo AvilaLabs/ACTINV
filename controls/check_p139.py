@@ -62,9 +62,10 @@ K_WAVE = base.K_WAVE
 IFG0_TOL = 1e-12
 IFG1_TOL = 1e-9
 MAT = 7443
-# Q value (eV) of the synthetic competitive pair: the first excited 2+ state of W-186 (about 122.6 keV). It sits above
-# the resolved range, and the pair carries PNT=0, so no kinematic quantity of it enters a width.
-COMPETITIVE_Q_EV = -122600.0
+# Q value (eV) of the synthetic competitive pair. Amendment A: Q = 0 keeps the channel open at every resonance energy,
+# so it carries the LRF=2 total's excess under IFG=0 and IFG=1 alike (a channel closed at a resonance contributes no
+# width). The pair carries PNT=0, so no kinematic quantity of it enters a width.
+COMPETITIVE_Q_EV = 0.0
 COMPETITIVE_MT = 51
 
 

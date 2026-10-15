@@ -1760,8 +1760,8 @@ pub struct RmlResonanceWidths {
 ///
 /// IFG=0 widths are taken as listed, in magnitude. IFG=1 amplitudes become
 /// widths Γ = 2 P γ² with the penetrability, radius and wave-number convention
-/// of the reconstruction (eliminated photon channels have P = 1), and a channel
-/// closed at the resonance energy contributes nothing. Backgrounds and phase
+/// of the reconstruction (eliminated photon channels have P = 1). Under either,
+/// a channel closed at the resonance energy contributes nothing. Backgrounds and phase
 /// shifts do not enter: the model is a single-level approximation.
 pub fn rml_resonance_widths(rml: &RMatrixLimited) -> Result<Vec<RmlResonanceWidths>, String> {
     if rml.krm != 3 {
@@ -1804,12 +1804,16 @@ pub fn rml_resonance_widths(rml: &RMatrixLimited) -> Result<Vec<RmlResonanceWidt
             let (mut neutron, mut capture, mut total) = (0.0, 0.0, 0.0);
             for (channel, &listed) in spin_group.channels.iter().zip(&resonance.widths) {
                 let pair = &rml.particle_pairs[channel.pair];
-                let width = if !rml.reduced_widths {
+                // A channel closed at the resonance energy carries no outgoing
+                // flux, whether its width or its amplitude is listed.
+                let width = if pair.mt != 102
+                    && resonance.energy <= rml_threshold(pair, entrance_lab_to_cm)
+                {
+                    0.0
+                } else if !rml.reduced_widths {
                     listed.abs()
                 } else if pair.mt == 102 {
                     2.0 * listed * listed
-                } else if resonance.energy <= rml_threshold(pair, entrance_lab_to_cm) {
-                    0.0
                 } else {
                     let penetrability = rml_resonance_penetrability(
                         rml,
@@ -3158,17 +3162,18 @@ mod tests {
 
     #[test]
     fn rml_widths_classify_channels_by_particle_pair() {
+        // 10 keV: every channel, the inelastic one included, is open.
         let rml = width_fixture(
             false,
             vec![RmlResonance {
-                energy: 1e3,
+                energy: 1e4,
                 widths: vec![0.02, 0.4, -0.05, 0.3],
             }],
         );
         let lines = rml_resonance_widths(&rml).unwrap();
         assert_eq!(lines.len(), 1);
         let line = &lines[0];
-        assert_eq!(line.energy, 1e3);
+        assert_eq!(line.energy, 1e4);
         // |J| of the group, |I| of the elastic pair, A = m_b / m_a.
         assert_eq!(line.spin, 2.0);
         assert_eq!(line.target_spin, 1.5);
@@ -3285,6 +3290,21 @@ mod tests {
         let neutron = 2.0 * neutron_p * 0.2 * 0.2;
         assert!((line.neutron - neutron).abs() <= 1e-12 * neutron);
         assert!((line.total - (line.capture + line.neutron)).abs() <= 1e-15);
+    }
+
+    #[test]
+    fn rml_listed_widths_drop_channels_closed_at_the_resonance() {
+        // P139 Amendment A: a closed channel adds nothing under IFG=0 either.
+        let rml = width_fixture(
+            false,
+            vec![RmlResonance {
+                energy: 1e3,
+                widths: vec![0.02, 0.4, 0.0, 0.3],
+            }],
+        );
+        let line = &rml_resonance_widths(&rml).unwrap()[0];
+        assert_eq!((line.capture, line.neutron), (0.02, 0.4));
+        assert_eq!(line.total, 0.02 + 0.4);
     }
 
     #[test]
