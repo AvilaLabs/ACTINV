@@ -2946,3 +2946,12 @@ Candidate `2708493` (`73786dbf…d410`), the same checker. Record `results/p126_
   normalization), −1.52 % at 64, −0.097 % at 4096.
 
 G7 (CI) pending.
+
+## Entry 160 — P122, P129, P130, P131 and P133 PASS (2026-10-15)
+
+G-CI is green on `5f7630817301fbd423c27ae0f5f0111d92aaf8f8`, the pushed commit carrying entries 146–150: all six
+workflows completed success (`controls` 38799687767, `Build handbook` 38799687714, `fusion-isotope` 38799687880,
+`Build browser workbench` 38799687864, `fns-iron` 38799687846, `desktop builds` 38799687982). The preceding red
+`controls` run on `5996bd9` failed only on the P16 quantity-layer literal check, repaired in `88dba43` without changing
+any gate criterion or computed value. With the evidence of entries 146–150 this records **P122-PASS**, **P129-PASS**,
+**P130-PASS**, **P131-PASS** and **P133-PASS**; the P133 run-output baselines were unchanged in that run.
