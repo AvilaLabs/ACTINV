@@ -2725,3 +2725,38 @@ Candidate: the release build of `cfff234`, SHA-256 `a394e3a9…628c`. Checker: `
 - **G5:** U-235 independent and cumulative yields match an independent MT=454/459 parse within 1e-12. This holds at tabulated energies, at interior energies (with the `fission.rs` interpolation) and at clamped energies.
 
 Record: `results/p131_inspect.json`. G6 (CI) is pending.
+
+## Entry 148 — P129 candidate: G1–G5 recorded (2026-10-15)
+
+Geometry self-shielding (universal sigmoid curve) and `dilution_overrides`, in `shielding.rs`, `spec.rs`, `run.rs`
+and `study.rs`.
+
+G1 (P122 candidate tree): fmt, clippy `-D warnings` and the workspace tests are clean, including the 13 new tests.
+
+Candidate: release build of `cfff234`, SHA-256 `a394e3a9…628c`. Reference: `2f3daa4`. Checker: `controls/check_p129.py`.
+
+**Run history.**
+- First run (`results/failures/p129_initial/p129_shielding.json`): `examples/shielding_demo.json` was refused by
+  both binaries. Its declared table hash had been stale since `e333402`. This was repaired under Amendment A, which
+  changes the declared hash only, and a parking entry was added.
+- Second run (`results/failures/p129_initial/p129_shielding_after_amendment_a.json`): G2 and G3 passed. G4's
+  tenfold check selected W186 group 0, where `applied_factors` records an unresolved-segment factor of exactly 0.0.
+  That is a group with no unresolved overlap, whose applied scale is 1, so it cannot move.
+- The checker was changed only to select a covered group whose capture factor lies strictly in (0, 1).
+
+**Gates.**
+- **G2:** `shielding_demo` and `fns_fe_5min` are byte-identical apart from `ms`.
+- **G3:** TENDL-2025 W-186 (MLBW, 172 resonances; the ENDF/B-VIII.0/VIII.1 and FENDL-3.2c evaluations are LRF=7
+  and refused), with foils of 0.01 and 0.1 cm at 19.3 g/cm³.
+  - An independent MF=2 parse and sigmoid recomputation agrees with the ledger exactly (worst relative error 0.0)
+    in all 62 covered groups.
+  - Number density agrees exactly.
+  - Factors fall in [0.152, 0.990] at 0.01 cm and [0.075, …] at 0.1 cm, and are strictly lower at 0.1 cm in all 62
+    groups.
+- **G4:**
+  - Overriding with the computed σ0 differs only by the echoed override entry and `ms`.
+  - A tenfold σ0 in group 431 moves capture from 0.264 to 0.399 and total from 0.127 to 0.268, with every other
+    group unchanged.
+- **G5:** report-only. No tabulated FISPACT-II foil factor is available locally.
+
+Record: `results/p129_shielding.json`. G6 (CI) is pending.

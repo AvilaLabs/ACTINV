@@ -654,7 +654,12 @@ def gate_g4(runner, candidate, workdir):
     computed = sigma0[nuclide]
     rows = applied_for(base, nuclide)
     # The covered group with the largest capture suppression: the most room to move toward one.
-    group = min(rows, key=lambda g: rows[g][3])
+    # `applied_factors` records the unresolved-segment factor, which is exactly 0.0 in groups with no
+    # unresolved-range overlap (the applied scale there is 1); those groups cannot move and are skipped.
+    informative = {g: r for g, r in rows.items() if 0.0 < r[3] < 1.0}
+    if not informative:
+        raise ValueError("no covered group has a capture factor strictly between 0 and 1")
+    group = min(informative, key=lambda g: informative[g][3])
     base_factors = rows[group]
     out.update({"nuclide": nuclide, "group": int(group), "computed_sigma0_b": computed,
                 "base_factors": base_factors, "covered_groups": len(rows)})

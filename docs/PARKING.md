@@ -405,3 +405,11 @@ priority — each needs its own protocol before any code changes.
   example has been refused by every binary, and no control runs it: `controls/check_p18b.py` only hashes it as a
   file. Repaired under P129 Amendment A, which updates the declared hash only. Open: add a cheap CI step that runs
   `actinv validate --hashes` on every example spec, so a regenerated artifact cannot silently break an example again.
+
+- 2026-10-15 — **Geometry self-shielding refuses LRF=7 evaluations (found by P129 G3).** ENDF/B-VIII.0 and VIII.1, and
+  FENDL-3.2c, carry W-186 and many other resolved ranges as R-matrix limited (LRF=7). The universal-sigmoid geometry
+  mode needs per-resonance Γn and Γγ and refuses them, so on those libraries it works only from TENDL. A
+  surpass opportunity: derive the per-resonance parameters from the LRF=7 channel widths. Also, the ledger key
+  `shielding.applied_factors` records the unresolved-segment factor, not the scale actually applied
+  ((1−c)+c·f). It is exactly 0.0 in groups without unresolved overlap. Renaming or documenting it needs its own
+  change, because the key is in sealed results.
