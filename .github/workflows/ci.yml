@@ -45,9 +45,6 @@ jobs:
       - name: Preflight orchestration regression
         run: python3 scripts/test_preflight.py
 
-      - name: Example specs declare the hashes of the files they name
-        run: python3 controls/check_example_hashes.py
-
       - name: Fusion isotope benchmark opening audit (no inventory reproduction claim)
         run: |
           python3 controls/test_fusion_isotope_001.py

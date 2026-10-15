@@ -405,7 +405,8 @@ priority — each needs its own protocol before any code changes.
   example has been refused by every binary, and no control runs it: `controls/check_p18b.py` only hashes it as a
   file. Repaired under P129 Amendment A, which updates the declared hash only. Open: add a cheap CI step that runs
   `actinv validate --hashes` on every example spec, so a regenerated artifact cannot silently break an example again.
-  Resolved 2026-10-15: CI step `controls/check_example_hashes.py` checks every hash an example declares against the
+  Resolved 2026-10-15: `controls/check_example_hashes.py`, run inside the CI "Public examples are portable" step
+  (`ci.yml` itself is pinned by the P117 history verifier), checks every hash an example declares against the
   tracked file or the bundled data catalog (CI installs no nuclear data, so `validate --hashes` itself cannot run there).
 
 - 2026-10-15 — **Geometry self-shielding refuses LRF=7 evaluations (found by P129 G3).** ENDF/B-VIII.0 and VIII.1, and

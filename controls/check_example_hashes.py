@@ -7,7 +7,8 @@ naming `actinv-data/vX.Y.Z/...` or `catalog:ID` with the bundled data catalog. O
 outside the repository) are listed as not checkable. Found by the P129 gate run: a regenerated artifact had silently
 invalidated `examples/shielding_demo.json`.
 
-Usage: check_example_hashes.py
+Run by `controls/check_public_examples.py` (the CI "Public examples are portable" step). Usage:
+check_example_hashes.py
 """
 import hashlib
 import json
@@ -55,7 +56,8 @@ def catalog_ids():
     return {artifact["id"]: artifact["sha256"] for artifact in json.loads(catalogs[-1].read_text())["artifacts"]}
 
 
-def main():
+def survey():
+    """(checked count, references not checkable here, mismatch messages)."""
     listed = subprocess.run(["git", "ls-files", "-z"], cwd=ROOT, capture_output=True, check=True, timeout=60)
     tracked = set(listed.stdout.decode().split("\0"))
     checked, unchecked, bad = 0, [], []
@@ -82,6 +84,11 @@ def main():
             checked += 1
             if actual != declared:
                 bad.append(f"{name} {where}: {path} declares {declared}, file is {actual}")
+    return checked, unchecked, bad
+
+
+def main():
+    checked, unchecked, bad = survey()
     for line in unchecked:
         print(f"not checkable without external data: {line}")
     for line in bad:

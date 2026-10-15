@@ -79,6 +79,16 @@ def main() -> int:
             if not portable(path):
                 errors.append(f"{example.relative_to(ROOT)}:{location} is machine-specific: {path}")
 
+    # Every hash an example declares must match the tracked file or catalog entry it names (found by P129: a
+    # regenerated artifact had silently invalidated examples/shielding_demo.json).
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    from check_example_hashes import survey
+
+    checked, _external, mismatched = survey()
+    errors.extend(f"declared hash mismatch: {message}" for message in mismatched)
+    if not checked:
+        errors.append("no example declares a checkable file hash")
+
     quickstart = EXAMPLES / "fns_fe_5min.json"
     value = parsed[quickstart]
     observed = {
