@@ -802,6 +802,45 @@ pub fn read_npz_target(path: &str, target: usize) -> Result<Library, String> {
     read_npz_targets(path, &std::collections::BTreeSet::from([target]))
 }
 
+/// The row table and group boundaries of an NPZ, without its cross-section payload.
+#[derive(Clone, Debug)]
+pub struct LibraryStructure {
+    pub rows: Vec<Row>,
+    pub ngroups: usize,
+    pub bounds: Vec<f64>,
+}
+
+/// Read only `rows`, the `sig` array shape and `bounds`, so a summary of a production library never
+/// decodes its cross sections. The `sig` payload is neither read nor value-checked here.
+pub fn read_npz_structure(path: &str) -> Result<LibraryStructure, String> {
+    let mut archive = open_npz(path)?;
+    let rows = read_rows(&mut archive)?;
+    let member = archive
+        .by_name("sig.npy")
+        .map_err(|error| error.to_string())?;
+    let member_size = member.size();
+    let mut reader = BufReader::with_capacity(64 * 1024, member);
+    let header = read_npy_header(&mut reader)?;
+    if header.dtype != NpyDtype::F64 || header.shape.len() != 2 || header.shape[0] != rows.len() {
+        return Err(format!(
+            "sig must have dtype <f8 and shape ({}, G), got {header:?}",
+            rows.len()
+        ));
+    }
+    require_payload_size(&header, member_size, "sig.npy")?;
+    let ngroups = header.shape[1];
+    drop(reader);
+    if ngroups == 0 {
+        return Err("activation library has zero energy groups".into());
+    }
+    let bounds = read_bounds(&mut archive, ngroups)?;
+    Ok(LibraryStructure {
+        rows,
+        ngroups,
+        bounds,
+    })
+}
+
 pub(crate) fn write_npy_header(
     writer: &mut impl Write,
     dtype: &str,

@@ -6,6 +6,7 @@ pub mod budget;
 pub mod command;
 pub mod decide;
 pub mod evalspread;
+pub mod inspect;
 pub mod optimize;
 pub mod surrogate;
 pub mod twin;

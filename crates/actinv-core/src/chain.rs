@@ -9,7 +9,7 @@ use actinv_data::library::ReactionLibrary;
 use std::collections::{BTreeMap, HashMap};
 
 /// Elementary decay steps by ENDF RTYP digit: (dZ, dA).
-fn step_of(d: u32) -> Option<(i32, i32)> {
+pub fn step_of(d: u32) -> Option<(i32, i32)> {
     match d {
         1 => Some((1, 0)),
         2 => Some((-1, 0)),
@@ -22,7 +22,7 @@ fn step_of(d: u32) -> Option<(i32, i32)> {
 }
 
 /// RTYP is a decimal chain of elementary modes: 1.5 means beta- then neutron emission.
-fn rtyp_digits(rtyp: f64) -> Vec<u32> {
+pub fn rtyp_digits(rtyp: f64) -> Vec<u32> {
     let s = format!("{rtyp:.6}");
     let s = s.trim_end_matches('0').trim_end_matches('.');
     s.chars()

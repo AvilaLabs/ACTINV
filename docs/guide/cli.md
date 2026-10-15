@@ -41,6 +41,26 @@ actinv data verify [BUNDLE] [--output DIR]
 
 See [Data setup](data.md) for bundle names and library/covariance pairing.
 
+## Query data files
+
+```text
+actinv inspect decay DECAY_PATH [NUCLIDE...]
+actinv inspect xs LIBRARY.npz [--target NUCLIDE] [--mt MT] [--spectrum SPEC.json]
+actinv inspect yields YIELD_PATH... [--parent NUCLIDE] [--energy EV] [--cumulative]
+actinv inspect library LIBRARY.npz
+actinv inspect groups NAME
+```
+
+`inspect` reads the same files a run consumes and prints JSON to standard output. Add `--out OUT` to write the JSON to a file, or `--table` for a fixed-width table instead. It never modifies data.
+
+- `decay` reports, per nuclide (all of them when none is named), the half-life, each decay mode with its branching ratio and daughter, the mean beta, gamma and alpha energies as stored in the evaluation, and the number of discrete gamma lines with their total energy per decay. Name nuclides as in a material, for example `Co60` or `Ta182m1`.
+- `xs` lists a library's reactions: target, MT, product, group count and energy structure. With `--target` it also gives each reaction's group cross sections; `--target` takes a nuclide name or a raw target index, and a name needs the `*_index.json` file beside the library. `--mt` keeps one reaction type. With `--spectrum`, which accepts a spectrum object or a run spec, it also collapses each reaction with the solver's own flux-weighted average and reports the one-group cross section in barns and the reaction rate per target atom, `sigma * total_flux`. The spectrum must have the library's group count.
+- `yields` reads one or more fission-yield evaluations and reports independent yields at every tabulated incident energy. `--energy EV` interpolates between tabulated energies exactly as a run does and reports each product's propagated uncertainty. `--cumulative` selects the evaluation's cumulative (MT=459) yields, when present, for inspection only; runs never use them. `--parent` selects an evaluation by parent nuclide.
+- `library` summarizes a library without decoding its cross sections: targets, reactions (by MT), group structure, energy range, projectile, and the scalar fields of the index file.
+- `groups` prints the boundaries of `fispact-709`, `fispact-162`, a refinement such as `fispact-709x4`, or a group JSON file, in ascending energy.
+
+Without `--target`, `xs` omits the group values and lists every reaction in the library; narrow it with `--target` or `--mt`. With `--table` and a single reaction, `xs` prints one row per group.
+
 ## Import flux and run independent cells
 
 ```text
