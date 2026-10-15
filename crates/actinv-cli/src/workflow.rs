@@ -24,7 +24,10 @@ pub fn resolve_inputs(spec: &mut Spec, base: &Path) {
         }
     }
     if let Some(r) = &mut spec.radiological {
-        resolve(&mut r.table.path);
+        // `bundled:NAME` is a table inside the binary, not a path under `base`.
+        if actinv_core::radiological::bundled_name(&r.table.path).is_none() {
+            resolve(&mut r.table.path);
+        }
     }
     if let Some(r) = &mut spec.kerma {
         resolve(&mut r.table.path);
@@ -68,6 +71,13 @@ pub fn check_files(spec: &Spec, hashes: bool) -> Result<(), String> {
     let mut errors = Vec::new();
     for (label, path, hash) in inputs {
         if path.is_empty() {
+            continue;
+        }
+        if let Some(name) = actinv_core::radiological::bundled_name(path) {
+            let declared = if hashes { hash } else { None };
+            if let Err(e) = actinv_core::radiological::read_bundled(name, declared) {
+                errors.push(format!("{label}: {e}"));
+            }
             continue;
         }
         if let Err(e) = std::fs::File::open(path) {

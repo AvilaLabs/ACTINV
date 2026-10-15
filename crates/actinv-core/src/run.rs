@@ -2550,9 +2550,13 @@ impl PreparedRun {
         };
         let radiological = match radiological_options {
             Some(options) => {
-                let (text, sha256) =
-                    read_verified_text(&options.table.path, Some(&options.table.sha256))
-                        .map_err(|error| format!("radiological table: {error}"))?;
+                let (text, sha256) = match crate::radiological::bundled_name(&options.table.path) {
+                    Some(name) => {
+                        crate::radiological::read_bundled(name, Some(&options.table.sha256))
+                    }
+                    None => read_verified_text(&options.table.path, Some(&options.table.sha256)),
+                }
+                .map_err(|error| format!("radiological table: {error}"))?;
                 Some(PreparedRadiological {
                     options: options.clone(),
                     sha256,
@@ -7133,6 +7137,10 @@ impl PreparedRun {
             if prepared.table.has_a2() {
                 ledger["radiological"]["formula"]["a2"] = "sum(activity_Bq_per_g / A2_Bq)".into();
             }
+            if prepared.table.has_activity_limit() {
+                ledger["radiological"]["formula"]["activity_limit"] =
+                    "sum(activity_Bq_per_g / limit_Bq)".into();
+            }
         }
         if let (Some(prepared), Some(plan)) = (&self.damage, &damage_plan) {
             ledger.as_object_mut().expect("ledger is an object").insert(
@@ -7866,7 +7874,13 @@ fn prepared_fingerprint(
         }
     }
     if let Some(options) = spec.radiological.as_ref() {
-        files.push(fingerprint_file(&options.table.path)?);
+        match crate::radiological::bundled_name(&options.table.path) {
+            Some(name) => files.push(serde_json::json!({
+                "path": options.table.path,
+                "sha256": crate::radiological::bundled_sha256(name)?,
+            })),
+            None => files.push(fingerprint_file(&options.table.path)?),
+        }
     }
     if let Some(options) = spec.damage.as_ref() {
         files.push(fingerprint_file(&options.table.path)?);

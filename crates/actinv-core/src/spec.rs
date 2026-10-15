@@ -1595,6 +1595,9 @@ impl Spec {
             {
                 return Err("radiological.table requires a path and a 64-hex-digit sha256".into());
             }
+            if let Some(name) = crate::radiological::bundled_name(&radiological.table.path) {
+                crate::radiological::bundled_table(name)?;
+            }
             let mut selectors = std::collections::HashSet::new();
             for selector in &radiological.responses {
                 if selector.trim().is_empty() {

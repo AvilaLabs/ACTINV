@@ -477,6 +477,28 @@ fn resolve_catalog_value(
                     *resolved += 1;
                 }
             }
+            // `bundled:NAME` radiological tables ship inside the binary: the path stays, and a
+            // missing sha256 is filled from the table's bytes; a conflicting one is an error.
+            if let Some(serde_json::Value::String(path)) = map.get("path") {
+                if let Some(name) = actinv_core::radiological::bundled_name(path) {
+                    let sha256 = actinv_core::radiological::bundled_sha256(name)?;
+                    match map.get("sha256") {
+                        Some(serde_json::Value::String(declared))
+                            if !declared.eq_ignore_ascii_case(&sha256) =>
+                        {
+                            return Err(format!(
+                                "{} declared sha256 conflicts with the bundled table",
+                                map["path"].as_str().unwrap_or_default()
+                            ));
+                        }
+                        None | Some(serde_json::Value::Null) => {
+                            map.insert("sha256".into(), serde_json::Value::String(sha256));
+                        }
+                        _ => {}
+                    }
+                    *resolved += 1;
+                }
+            }
             // decay.primary / decay.fallback are bare path strings, not {path} objects
             for key in ["primary", "fallback"] {
                 if let Some(serde_json::Value::String(text)) = map.get(key) {
@@ -1437,5 +1459,32 @@ mod tests {
                 .is_err()
         );
         assert!(!second_output.0.join("v1.0.0/decay/primary.dat").exists());
+    }
+
+    #[test]
+    fn bundled_radiological_table_reference_gets_its_hash_and_keeps_its_path() {
+        let name = "us-49cfr173-a2";
+        let expected = actinv_core::radiological::bundled_sha256(name).unwrap();
+        let text = format!(r#"{{"radiological":{{"table":{{"path":"bundled:{name}"}}}}}}"#);
+        let resolved: serde_json::Value =
+            serde_json::from_str(&resolve_catalog_json(&text).unwrap()).unwrap();
+        assert_eq!(
+            resolved["radiological"]["table"]["path"],
+            format!("bundled:{name}")
+        );
+        assert_eq!(resolved["radiological"]["table"]["sha256"], expected);
+
+        let conflicting = format!(
+            r#"{{"radiological":{{"table":{{"path":"bundled:{name}","sha256":"{}"}}}}}}"#,
+            "0".repeat(64)
+        );
+        assert!(resolve_catalog_json(&conflicting)
+            .unwrap_err()
+            .contains("conflicts with the bundled table"));
+
+        let unknown = r#"{"radiological":{"table":{"path":"bundled:no-such-table"}}}"#;
+        assert!(resolve_catalog_json(unknown)
+            .unwrap_err()
+            .contains("unknown bundled radiological table"));
     }
 }

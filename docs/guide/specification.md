@@ -352,10 +352,11 @@ scenario selection. A minimal table is:
 ```
 
 Response IDs and canonical nuclide keys must be unique. `kind` is `clearance_index`, `waste_index`,
-`ingestion_dose`, `inhalation_dose`, or `a2`. Clearance/waste coefficients are limits in Bq/kg; ingestion/inhalation
-coefficients are in Sv/Bq; `a2` coefficients are A2 transport values in Bq (the FISPACT-II `ATWO` index
-`sum(A_i / A2_i)`, reported per gram of material). ACTINV ships no A2 values: supply the table, converting IAEA TBq values
-to Bq. Every coefficient must be finite and positive. An empty `responses` selector chooses every
+`ingestion_dose`, `inhalation_dose`, `a2`, or `activity_limit`. Clearance/waste coefficients are limits in Bq/kg;
+ingestion/inhalation coefficients are in Sv/Bq; `a2` coefficients are A2 transport values in Bq (the FISPACT-II `ATWO`
+index `sum(A_i / A2_i)`, reported per gram of material); `activity_limit` coefficients are any other absolute activity
+limit in Bq (A1, an exempt consignment or practice total), giving `sum(A_i / limit_i)` per gram of material. A2 values
+are bundled (below), or supply your own table, converting IAEA TBq values to Bq. Every coefficient must be finite and positive. An empty `responses` selector chooses every
 table response in table order; otherwise only the named unique IDs are evaluated.
 
 Each step reports the selected value, unit, covered and missing activity, activity-coverage fraction, contributing
@@ -363,6 +364,81 @@ nuclide count, and sorted active nuclides without a coefficient. Missing coeffic
 `require_complete: true` rejects the entire calculation when any selected response lacks a coefficient for positive
 activity. The certificate retains the table hash, source metadata, kind, basis, and coefficient count. See the
 [qualification boundary](qualification.md) before using a regulatory table.
+
+A table's `source` may also carry the optional strings `scope`, `retrieved`, `source_file`, `source_sha256`,
+`converter`, `licence`, and `row_provenance`. When present they are nonempty and are kept in the certificate.
+
+### Bundled regulatory tables
+
+ACTINV ships a few regulatory tables inside the program, converted from public sources by scripts that are kept in
+the repository. They are opt-in: set `radiological.table.path` to `bundled:NAME`. Nothing is selected for you, there
+is no default jurisdiction, and an unknown name is an error that lists the available names.
+
+```json
+"radiological": {
+  "table": {"path": "bundled:us-49cfr173-a2"},
+  "responses": ["a2-u-medium"]
+}
+```
+
+`actinv` fills a missing `sha256` from the bundled table and rejects a different one. Other front ends must declare
+the 64-hex-digit SHA-256 of the table, which is recorded in the result like any other table.
+
+| Name | Source and scope | Coefficient | Licence |
+| --- | --- | --- | --- |
+| `us-49cfr173-a1`, `us-49cfr173-a2` | 49 CFR 173.435 (eCFR, 2026-10-13), the IAEA SSR-6 Rev.1 (2018) Table 2 A1 and A2 values. United States transport of radioactive material. | A1 or A2 in Bq (from TBq) | US Government work, public domain |
+| `us-49cfr173-exempt-concentration` | 49 CFR 173.436, exempt material activity concentration. Transport. | Bq/kg (from Bq/g) | public domain |
+| `us-49cfr173-exempt-consignment` | 49 CFR 173.436, exempt consignment activity. Transport. | activity in Bq | public domain |
+| `euratom-2013-59-annex-vii-a` | Council Directive 2013/59/Euratom, Annex VII Table A Part 1: exemption and clearance of solid material, artificial radionuclides. European Union (national law may differ). | Bq/kg (from kBq/kg) | EU reuse with attribution |
+| `euratom-2013-59-annex-vii-b-concentration` | Annex VII Table B column 2, exemption of moderate amounts. | Bq/kg (from kBq/kg) | EU reuse with attribution |
+| `euratom-2013-59-annex-vii-b-activity` | Annex VII Table B column 3, total activity for exemption. | activity in Bq | EU reuse with attribution |
+
+Each table's `source` block names the title, edition, URL, retrieval date, SHA-256 of the source file, converter script
+(`scripts/regulatory/`), and licence. The converters read the downloaded file and type no numbers. Tables and the
+per-row sidecars are under `crates/actinv-core/data/regulatory/`; a sidecar (`*.rows.json`) holds the original row text,
+footnote markers, flags, and the reason any source row is not in a table. ACTINV does not read the sidecars.
+
+How to read the tables:
+
+- **Limits in Bq, not Bq/kg.** The A1, A2, and total-activity tables hold an activity in Bq, with response kind `a2`
+  (A2) or `activity_limit` (A1, exempt consignment, Directive Table B column 3). The index is the number of limits per
+  gram of material; multiply by the mass in grams to compare a consignment or inventory.
+- **Uranium.** The transport tables list uranium by lung-absorption type. Each carries three responses that differ only
+  in the uranium rows: `...-u-fast`, `...-u-medium`, `...-u-slow`. An empty `responses` list returns all three; choose
+  one deliberately.
+- **Unlimited and element-level rows.** Rows with no finite limit ("Unlimited"), and element-level rows such as
+  `U (nat)` or `Rb(nat)`, cannot be coefficients. They are in the sidecar. ACTINV reports their activity as uncovered
+  and never as zero, so `require_complete: true` rejects a run that contains them.
+- **Parents with progeny.** Rows marked as including progeny (footnote (a) in 173.435, (b) in 173.436, (1) or (2) in the
+  Directive) keep the parent's value. The sidecar lists the progeny when the source does. If your inventory contains the
+  progeny too, they are counted again; remove them from the inventory or accept the conservative result.
+- **Source anomalies** are recorded rather than corrected: the Directive's Table B lists U-240 twice (the nuclide-alone
+  row is used), and its parent/progeny marks disagree with its progeny lists for a few nuclides.
+- **Isomer labels.** Three CFR rows use lifetimes (`Eu-150`, `Np-236`, `Ta-178`). They are mapped to ACTINV isomer
+  states by the decay half-lives in ENDF/B-VIII.0, and flagged in the sidecar.
+
+These tables carry the regulation's numbers only. Whether a table applies to your material, jurisdiction, and use is
+your decision.
+
+### Building the ICRP 119 dose-coefficient table locally
+
+ICRP Publication 119 (the carrier of the ICRP 72 public ingestion and inhalation coefficients) is copyrighted, so
+ACTINV does not ship its values. If you have a copy of the PDF, generate a table for your own use:
+
+```text
+python3 -I scripts/regulatory/fetch_icrp119.py --pdf P119.pdf --out icrp119.json --fispact-convention
+```
+
+This needs `pdftotext` (poppler). The script reads Annex F (ingestion, adult) and Annex G (inhalation, 1 um AMAD,
+adult, types F/M/S) and writes one response per variant (`ingestion-adult-variant1`, `inhalation-adult-F`, ...) next
+to an `icrp119.variants.json` that records every choice. With `--fispact-convention` it adds
+`ingestion-adult-fispact-max` and `inhalation-adult-fispact-max`, the maximum over the f1 variants and over F/M/S,
+which is the convention found in FISPACT-II's hazards file for its ICRP 72 rows. Keep the output out of version
+control and do not redistribute it. `--download-url URL --yes-download` fetches the PDF first, but only from a URL you
+confirm.
+
+`scripts/regulatory/compare_fispact.py` compares a table with the clearance, A2, or hazards files of a FISPACT-II
+2012 data bundle that you hold. It is a QA report, not a feature; the FISPACT files are never copied into ACTINV.
 
 ## Damage observables (dpa)
 

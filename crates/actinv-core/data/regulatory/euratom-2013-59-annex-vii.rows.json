@@ -1,0 +1,9966 @@
+{
+ "format": "actinv-regulatory-rows-1",
+ "about": "Per-row source text for the tables built from Annex VII. ACTINV does not read this file; it records what a coefficient table cannot express. Superscripts in row_text are written ^{...}.",
+ "source": {
+  "citation": "Council Directive 2013/59/Euratom, Annex VII",
+  "edition": "Council Directive 2013/59/Euratom of 5 December 2013, OJ L 13, 17.1.2014, text as published in the Official Journal (later corrigenda not checked)",
+  "url": "http://publications.europa.eu/resource/celex/32013L0059",
+  "jurisdiction": "European Union (Euratom member states; national transposition may differ)",
+  "scope": "Tables A (Parts 1 and 2) and B",
+  "retrieved": "2026-10-15",
+  "source_file": "Directive_2013_59_Euratom_OJ_L13_2014.xhtml",
+  "source_sha256": "9f403f9016f0e7dcaa133d0680fc2d4733701ea057fad78981ad1494bf2d89a3",
+  "converter": "scripts/regulatory/convert_euratom_annex_vii.py",
+  "licence": "EU legal act; reuse with attribution to the source (Commission Decision 2011/833/EU). Source: Publications Office of the European Union, OJ L 13, 17.1.2014. The values originate with the IAEA basic safety standards (exemption and clearance levels)."
+ },
+ "tables": {
+  "euratom-2013-59-annex-vii-a.json": "8e200d52f8532c369ed9509c8eb8665f314205ff09a471836046e465be63c193",
+  "euratom-2013-59-annex-vii-b-concentration.json": "08ffa3c557d9a06ff4e5cc2463738cd1a3fd630246f384b3b4a0bc696811700c",
+  "euratom-2013-59-annex-vii-b-activity.json": "e1d72c8fe1958a94b8c0359009fbfd0b9708dbe7b6dc41ec0287c5c2e9d949aa"
+ },
+ "notes": {
+  "table_a_part1_note_1": "(1) Parent radionuclides, and their progeny whose dose contributions are taken into account in the dose calculation (thus requiring only the exemption level of the parent radionuclide to be considered), are listed in the following table.",
+  "table_b_note_1": "(1) Potassium salts in quantities less than 1 000 kg are exempted.",
+  "table_b_note_2": "(2) Parent radionuclides, and their progeny whose dose contributions are taken into account in the dose calculation (thus requiring only the exemption level of the parent radionuclide to be considered), are listed in the following:",
+  "table_a_part1_gap_rule": "For radionuclides not listed in Table A, Part 1 the competent authority shall assign appropriate values for the quantities and concentrations of activity per unit mass where the need arises. Values thus assigned shall be complementary to those in Table A, Part 1."
+ },
+ "progeny_lists": {
+  "Table A Part 1": {
+   "Fe52": {
+    "source_parent": "Fe-52",
+    "progeny": [
+     "Mn-52 m"
+    ]
+   },
+   "Zn69m1": {
+    "source_parent": "Zn-69 m",
+    "progeny": [
+     "Zn-69"
+    ]
+   },
+   "Sr90": {
+    "source_parent": "Sr-90",
+    "progeny": [
+     "Y-90"
+    ]
+   },
+   "Sr91": {
+    "source_parent": "Sr-91",
+    "progeny": [
+     "Y-91 m"
+    ]
+   },
+   "Zr95": {
+    "source_parent": "Zr-95",
+    "progeny": [
+     "Nb-95"
+    ]
+   },
+   "Zr97": {
+    "source_parent": "Zr-97",
+    "progeny": [
+     "Nb-97 m",
+     "Nb-97"
+    ]
+   },
+   "Nb97": {
+    "source_parent": "Nb-97",
+    "progeny": [
+     "Nb-97 m"
+    ]
+   },
+   "Mo99": {
+    "source_parent": "Mo-99",
+    "progeny": [
+     "Tc-99 m"
+    ]
+   },
+   "Mo101": {
+    "source_parent": "Mo-101",
+    "progeny": [
+     "Tc-101"
+    ]
+   },
+   "Ru103": {
+    "source_parent": "Ru-103",
+    "progeny": [
+     "Rh-103 m"
+    ]
+   },
+   "Ru105": {
+    "source_parent": "Ru-105",
+    "progeny": [
+     "Rh-105 m"
+    ]
+   },
+   "Ru106": {
+    "source_parent": "Ru-106",
+    "progeny": [
+     "Rh-106"
+    ]
+   },
+   "Pd103": {
+    "source_parent": "Pd-103",
+    "progeny": [
+     "Rh-103 m"
+    ]
+   },
+   "Pd109": {
+    "source_parent": "Pd-109",
+    "progeny": [
+     "Ag-109 m"
+    ]
+   },
+   "Ag110m1": {
+    "source_parent": "Ag-110 m",
+    "progeny": [
+     "Ag-110"
+    ]
+   },
+   "Cd109": {
+    "source_parent": "Cd-109",
+    "progeny": [
+     "Ag-109 m"
+    ]
+   },
+   "Cd115": {
+    "source_parent": "Cd-115",
+    "progeny": [
+     "In-115 m"
+    ]
+   },
+   "Cd115m1": {
+    "source_parent": "Cd-115 m",
+    "progeny": [
+     "In-115 m"
+    ]
+   },
+   "In114m1": {
+    "source_parent": "In-114 m",
+    "progeny": [
+     "In-114"
+    ]
+   },
+   "Sn113": {
+    "source_parent": "Sn-113",
+    "progeny": [
+     "In-113 m"
+    ]
+   },
+   "Sb125": {
+    "source_parent": "Sb-125",
+    "progeny": [
+     "Te-125 m"
+    ]
+   },
+   "Te127m1": {
+    "source_parent": "Te-127 m",
+    "progeny": [
+     "Te-127"
+    ]
+   },
+   "Te129m1": {
+    "source_parent": "Te-129 m",
+    "progeny": [
+     "Te-129"
+    ]
+   },
+   "Te131m1": {
+    "source_parent": "Te-131 m",
+    "progeny": [
+     "Te-131"
+    ]
+   },
+   "Te132": {
+    "source_parent": "Te132",
+    "progeny": [
+     "I-132"
+    ]
+   },
+   "Cs137": {
+    "source_parent": "Cs-137",
+    "progeny": [
+     "Ba-137 m"
+    ]
+   },
+   "Ce144": {
+    "source_parent": "Ce-144",
+    "progeny": [
+     "Pr-144",
+     "Pr-144 m"
+    ]
+   },
+   "U232": {
+    "source_parent": "U-232",
+    "progeny": [
+     "Th-228",
+     "Ra-224",
+     "Rn-220",
+     "Po-216",
+     "Pb-212",
+     "Bi-212",
+     "Tl-208"
+    ]
+   },
+   "U240": {
+    "source_parent": "U-240",
+    "progeny": [
+     "Np-240 m",
+     "Np-240"
+    ]
+   },
+   "Np237": {
+    "source_parent": "Np237",
+    "progeny": [
+     "Pa-233"
+    ]
+   },
+   "Pu244": {
+    "source_parent": "Pu-244",
+    "progeny": [
+     "U-240",
+     "Np-240 m",
+     "Np-240"
+    ]
+   },
+   "Am242m1": {
+    "source_parent": "Am-242 m",
+    "progeny": [
+     "Np-238"
+    ]
+   },
+   "Am243": {
+    "source_parent": "Am-243",
+    "progeny": [
+     "Np-239"
+    ]
+   },
+   "Cm247": {
+    "source_parent": "Cm-247",
+    "progeny": [
+     "Pu-243"
+    ]
+   },
+   "Es254": {
+    "source_parent": "Es-254",
+    "progeny": [
+     "Bk-250"
+    ]
+   },
+   "Es254m1": {
+    "source_parent": "Es-254 m",
+    "progeny": [
+     "Fm-254"
+    ]
+   }
+  },
+  "Table B": {
+   "Sr90": {
+    "source_parent": "Sr-90",
+    "progeny": [
+     "Y-90"
+    ]
+   },
+   "Zr93": {
+    "source_parent": "Zr-93",
+    "progeny": [
+     "Nb-93 m"
+    ]
+   },
+   "Zr97": {
+    "source_parent": "Zr-97",
+    "progeny": [
+     "Nb-97"
+    ]
+   },
+   "Ru106": {
+    "source_parent": "Ru-106",
+    "progeny": [
+     "Rh-106"
+    ]
+   },
+   "Ag108m1": {
+    "source_parent": "Ag-108 m",
+    "progeny": [
+     "Ag-108"
+    ]
+   },
+   "Cs137": {
+    "source_parent": "Cs-137",
+    "progeny": [
+     "Ba-137 m"
+    ]
+   },
+   "Ba140": {
+    "source_parent": "Ba-140",
+    "progeny": [
+     "La-140"
+    ]
+   },
+   "Ce144": {
+    "source_parent": "Ce-144",
+    "progeny": [
+     "Pr-144"
+    ]
+   },
+   "Pb210": {
+    "source_parent": "Pb-210",
+    "progeny": [
+     "Bi-210",
+     "Po-210"
+    ]
+   },
+   "Pb212": {
+    "source_parent": "Pb-212",
+    "progeny": [
+     "Bi-212",
+     "Tl-208 (0.36)",
+     "Po-212 (0.64)"
+    ]
+   },
+   "Bi212": {
+    "source_parent": "Bi-212",
+    "progeny": [
+     "Tl-208 (0.36)",
+     "Po-212 (0.64)"
+    ]
+   },
+   "Rn220": {
+    "source_parent": "Rn-220",
+    "progeny": [
+     "Po-216"
+    ]
+   },
+   "Rn222": {
+    "source_parent": "Rn-222",
+    "progeny": [
+     "Po-218",
+     "Pb-214",
+     "Bi-214",
+     "Po-214"
+    ]
+   },
+   "Ra223": {
+    "source_parent": "Ra-223",
+    "progeny": [
+     "Rn-219",
+     "Po-215",
+     "Pb-211",
+     "Bi-211",
+     "Tl-207"
+    ]
+   },
+   "Ra224": {
+    "source_parent": "Ra-224",
+    "progeny": [
+     "Rn-220",
+     "Po-216",
+     "Pb-212",
+     "Bi-212",
+     "Tl-208 (0.36)",
+     "Po-212 (0.64)"
+    ]
+   },
+   "Ra226": {
+    "source_parent": "Ra-226",
+    "progeny": [
+     "Rn-222",
+     "Po-218",
+     "Pb-214",
+     "Bi-214",
+     "Po-214",
+     "Pb-210",
+     "Bi-210",
+     "Po-210"
+    ]
+   },
+   "Ra228": {
+    "source_parent": "Ra-228",
+    "progeny": [
+     "Ac-228"
+    ]
+   },
+   "Th226": {
+    "source_parent": "Th-226",
+    "progeny": [
+     "Ra-222",
+     "Rn-218",
+     "Po-214"
+    ]
+   },
+   "Th228": {
+    "source_parent": "Th-228",
+    "progeny": [
+     "Ra-224",
+     "Rn-220",
+     "Po-216",
+     "Pb-212",
+     "Bi-212",
+     "Tl-208 (0.36)",
+     "Po-212 (0.64)"
+    ]
+   },
+   "Th229": {
+    "source_parent": "Th-229",
+    "progeny": [
+     "Ra-225",
+     "Ac-225",
+     "Fr-221",
+     "At-217",
+     "Bi-213",
+     "Po-213",
+     "Pb-209"
+    ]
+   },
+   "Th234": {
+    "source_parent": "Th-234",
+    "progeny": [
+     "Pa-234 m"
+    ]
+   },
+   "U230": {
+    "source_parent": "U-230",
+    "progeny": [
+     "Th-226",
+     "Ra-222",
+     "Rn-218",
+     "Po-214"
+    ]
+   },
+   "U232": {
+    "source_parent": "U-232",
+    "progeny": [
+     "Th-228",
+     "Ra-224",
+     "Rn-220",
+     "Po-216",
+     "Pb-212",
+     "Bi-212",
+     "Tl-208 (0.36)",
+     "Po-212 (0.64)"
+    ]
+   },
+   "U235": {
+    "source_parent": "U-235",
+    "progeny": [
+     "Th-231"
+    ]
+   },
+   "U238": {
+    "source_parent": "U-238",
+    "progeny": [
+     "Th-234",
+     "Pa-234 m"
+    ]
+   },
+   "U240": {
+    "source_parent": "U-240",
+    "progeny": [
+     "Np-240 m"
+    ]
+   },
+   "Np237": {
+    "source_parent": "Np237",
+    "progeny": [
+     "Pa-233"
+    ]
+   },
+   "Am242m1": {
+    "source_parent": "Am-242 m",
+    "progeny": [
+     "Am-242"
+    ]
+   },
+   "Am243": {
+    "source_parent": "Am-243",
+    "progeny": [
+     "Np-239"
+    ]
+   }
+  }
+ },
+ "source_anomalies": [
+  "Table A Part 1 progeny list spells parent 'Te132' without the hyphen/space of the data table",
+  "Table A Part 1 progeny list spells parent 'Np237' without the hyphen/space of the data table",
+  "Table B progeny list spells parent 'Np237' without the hyphen/space of the data table",
+  "Table A Part 1: 'U-231 (1)' carries (1) but is not in the progeny list",
+  "Table A Part 1: progeny list names 'Ce-144' but the data row is not marked",
+  "Table B: 'U-240 (2)' duplicates U240; the nuclide-alone row is used",
+  "Table B: progeny list names 'Ag-108 m' but the data row is not marked",
+  "Table B: progeny list names 'U-230' but the data row is not marked"
+ ],
+ "rows": [
+  {
+   "table": "Table A Part 1",
+   "row": 1,
+   "row_text": "H-3 | 100",
+   "nuclide": "H3",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "100",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 2,
+   "row_text": "Be-7 | 10",
+   "nuclide": "Be7",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "10",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 3,
+   "row_text": "C-14 | 1",
+   "nuclide": "C14",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 4,
+   "row_text": "F-18 | 10",
+   "nuclide": "F18",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "10",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 5,
+   "row_text": "Na-22 | 0,1",
+   "nuclide": "Na22",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "0,1",
+     "number": 0.1
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 6,
+   "row_text": "Na-24 | 1",
+   "nuclide": "Na24",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 7,
+   "row_text": "Si-31 | 1 000",
+   "nuclide": "Si31",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 000",
+     "number": 1000.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 8,
+   "row_text": "P-32 | 1 000",
+   "nuclide": "P32",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 000",
+     "number": 1000.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 9,
+   "row_text": "P-33 | 1 000",
+   "nuclide": "P33",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 000",
+     "number": 1000.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 10,
+   "row_text": "S-35 | 100",
+   "nuclide": "S35",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "100",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 11,
+   "row_text": "Cl-36 | 1",
+   "nuclide": "Cl36",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 12,
+   "row_text": "Cl-38 | 10",
+   "nuclide": "Cl38",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "10",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 13,
+   "row_text": "K-42 | 100",
+   "nuclide": "K42",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "100",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 14,
+   "row_text": "K-43 | 10",
+   "nuclide": "K43",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "10",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 15,
+   "row_text": "Ca-45 | 100",
+   "nuclide": "Ca45",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "100",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 16,
+   "row_text": "Ca-47 | 10",
+   "nuclide": "Ca47",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "10",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 17,
+   "row_text": "Sc-46 | 0,1",
+   "nuclide": "Sc46",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "0,1",
+     "number": 0.1
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 18,
+   "row_text": "Sc-47 | 100",
+   "nuclide": "Sc47",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "100",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 19,
+   "row_text": "Sc-48 | 1",
+   "nuclide": "Sc48",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 20,
+   "row_text": "V-48 | 1",
+   "nuclide": "V48",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 21,
+   "row_text": "Cr-51 | 100",
+   "nuclide": "Cr51",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "100",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 22,
+   "row_text": "Mn-51 | 10",
+   "nuclide": "Mn51",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "10",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 23,
+   "row_text": "Mn-52 | 1",
+   "nuclide": "Mn52",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 24,
+   "row_text": "Mn-52 m | 10",
+   "nuclide": "Mn52m1",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "10",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 25,
+   "row_text": "Mn-53 | 100",
+   "nuclide": "Mn53",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "100",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 26,
+   "row_text": "Mn-54 | 0,1",
+   "nuclide": "Mn54",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "0,1",
+     "number": 0.1
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 27,
+   "row_text": "Mn-56 | 10",
+   "nuclide": "Mn56",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "10",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 28,
+   "row_text": "Fe-52 (1) | 10",
+   "nuclide": "Fe52",
+   "footnotes": [
+    "1"
+   ],
+   "flags": [
+    "parent_with_progeny_included"
+   ],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "10",
+     "number": 10.0
+    }
+   },
+   "progeny_included": [
+    "Mn-52 m"
+   ]
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 29,
+   "row_text": "Fe-55 | 1 000",
+   "nuclide": "Fe55",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 000",
+     "number": 1000.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 30,
+   "row_text": "Fe-59 | 1",
+   "nuclide": "Fe59",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 31,
+   "row_text": "Co-55 | 10",
+   "nuclide": "Co55",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "10",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 32,
+   "row_text": "Co-56 | 0,1",
+   "nuclide": "Co56",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "0,1",
+     "number": 0.1
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 33,
+   "row_text": "Co-57 | 1",
+   "nuclide": "Co57",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 34,
+   "row_text": "Co-58 | 1",
+   "nuclide": "Co58",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 35,
+   "row_text": "Co-58 m | 10 000",
+   "nuclide": "Co58m1",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "10 000",
+     "number": 10000.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 36,
+   "row_text": "Co-60 | 0,1",
+   "nuclide": "Co60",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "0,1",
+     "number": 0.1
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 37,
+   "row_text": "Co-60 m | 1 000",
+   "nuclide": "Co60m1",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 000",
+     "number": 1000.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 38,
+   "row_text": "Co-61 | 100",
+   "nuclide": "Co61",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "100",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 39,
+   "row_text": "Co-62 m | 10",
+   "nuclide": "Co62m1",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "10",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 40,
+   "row_text": "Ni-59 | 100",
+   "nuclide": "Ni59",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "100",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 41,
+   "row_text": "Ni-63 | 100",
+   "nuclide": "Ni63",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "100",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 42,
+   "row_text": "Ni-65 | 10",
+   "nuclide": "Ni65",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "10",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 43,
+   "row_text": "Cu-64 | 100",
+   "nuclide": "Cu64",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "100",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 44,
+   "row_text": "Zn-65 | 0,1",
+   "nuclide": "Zn65",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "0,1",
+     "number": 0.1
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 45,
+   "row_text": "Zn-69 | 1 000",
+   "nuclide": "Zn69",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 000",
+     "number": 1000.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 46,
+   "row_text": "Zn-69 m (1) | 10",
+   "nuclide": "Zn69m1",
+   "footnotes": [
+    "1"
+   ],
+   "flags": [
+    "parent_with_progeny_included"
+   ],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "10",
+     "number": 10.0
+    }
+   },
+   "progeny_included": [
+    "Zn-69"
+   ]
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 47,
+   "row_text": "Ga-72 | 10",
+   "nuclide": "Ga72",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "10",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 48,
+   "row_text": "Ge-71 | 10 000",
+   "nuclide": "Ge71",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "10 000",
+     "number": 10000.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 49,
+   "row_text": "As-73 | 1 000",
+   "nuclide": "As73",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 000",
+     "number": 1000.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 50,
+   "row_text": "As-74 | 10",
+   "nuclide": "As74",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "10",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 51,
+   "row_text": "As-76 | 10",
+   "nuclide": "As76",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "10",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 52,
+   "row_text": "As-77 | 1 000",
+   "nuclide": "As77",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 000",
+     "number": 1000.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 53,
+   "row_text": "Se-75 | 1",
+   "nuclide": "Se75",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 54,
+   "row_text": "Br-82 | 1",
+   "nuclide": "Br82",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 55,
+   "row_text": "Rb-86 | 100",
+   "nuclide": "Rb86",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "100",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 56,
+   "row_text": "Sr-85 | 1",
+   "nuclide": "Sr85",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 57,
+   "row_text": "Sr-85 m | 100",
+   "nuclide": "Sr85m1",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "100",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 58,
+   "row_text": "Sr-87 m | 100",
+   "nuclide": "Sr87m1",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "100",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 59,
+   "row_text": "Sr-89 | 1 000",
+   "nuclide": "Sr89",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 000",
+     "number": 1000.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 60,
+   "row_text": "Sr-90 (1) | 1",
+   "nuclide": "Sr90",
+   "footnotes": [
+    "1"
+   ],
+   "flags": [
+    "parent_with_progeny_included"
+   ],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1",
+     "number": 1.0
+    }
+   },
+   "progeny_included": [
+    "Y-90"
+   ]
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 61,
+   "row_text": "Sr-91 (1) | 10",
+   "nuclide": "Sr91",
+   "footnotes": [
+    "1"
+   ],
+   "flags": [
+    "parent_with_progeny_included"
+   ],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "10",
+     "number": 10.0
+    }
+   },
+   "progeny_included": [
+    "Y-91 m"
+   ]
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 62,
+   "row_text": "Sr-92 | 10",
+   "nuclide": "Sr92",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "10",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 63,
+   "row_text": "Y-90 | 1 000",
+   "nuclide": "Y90",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 000",
+     "number": 1000.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 64,
+   "row_text": "Y-91 | 100",
+   "nuclide": "Y91",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "100",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 65,
+   "row_text": "Y-91 m | 100",
+   "nuclide": "Y91m1",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "100",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 66,
+   "row_text": "Y-92 | 100",
+   "nuclide": "Y92",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "100",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 67,
+   "row_text": "Y-93 | 100",
+   "nuclide": "Y93",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "100",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 68,
+   "row_text": "Zr-93 | 10",
+   "nuclide": "Zr93",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "10",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 69,
+   "row_text": "Zr-95 (1) | 1",
+   "nuclide": "Zr95",
+   "footnotes": [
+    "1"
+   ],
+   "flags": [
+    "parent_with_progeny_included"
+   ],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1",
+     "number": 1.0
+    }
+   },
+   "progeny_included": [
+    "Nb-95"
+   ]
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 70,
+   "row_text": "Zr-97 (1) | 10",
+   "nuclide": "Zr97",
+   "footnotes": [
+    "1"
+   ],
+   "flags": [
+    "parent_with_progeny_included"
+   ],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "10",
+     "number": 10.0
+    }
+   },
+   "progeny_included": [
+    "Nb-97 m",
+    "Nb-97"
+   ]
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 71,
+   "row_text": "Nb-93 m | 10",
+   "nuclide": "Nb93m1",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "10",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 72,
+   "row_text": "Nb-94 | 0,1",
+   "nuclide": "Nb94",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "0,1",
+     "number": 0.1
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 73,
+   "row_text": "Nb-95 | 1",
+   "nuclide": "Nb95",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 74,
+   "row_text": "Nb-97 (1) | 10",
+   "nuclide": "Nb97",
+   "footnotes": [
+    "1"
+   ],
+   "flags": [
+    "parent_with_progeny_included"
+   ],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "10",
+     "number": 10.0
+    }
+   },
+   "progeny_included": [
+    "Nb-97 m"
+   ]
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 75,
+   "row_text": "Nb-98 | 10",
+   "nuclide": "Nb98",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "10",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 76,
+   "row_text": "Mo-90 | 10",
+   "nuclide": "Mo90",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "10",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 77,
+   "row_text": "Mo-93 | 10",
+   "nuclide": "Mo93",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "10",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 78,
+   "row_text": "Mo-99 (1) | 10",
+   "nuclide": "Mo99",
+   "footnotes": [
+    "1"
+   ],
+   "flags": [
+    "parent_with_progeny_included"
+   ],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "10",
+     "number": 10.0
+    }
+   },
+   "progeny_included": [
+    "Tc-99 m"
+   ]
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 79,
+   "row_text": "Mo-101 (1) | 10",
+   "nuclide": "Mo101",
+   "footnotes": [
+    "1"
+   ],
+   "flags": [
+    "parent_with_progeny_included"
+   ],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "10",
+     "number": 10.0
+    }
+   },
+   "progeny_included": [
+    "Tc-101"
+   ]
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 80,
+   "row_text": "Tc-96 | 1",
+   "nuclide": "Tc96",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 81,
+   "row_text": "Tc-96 m | 1 000",
+   "nuclide": "Tc96m1",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 000",
+     "number": 1000.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 82,
+   "row_text": "Tc-97 | 10",
+   "nuclide": "Tc97",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "10",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 83,
+   "row_text": "Tc-97 m | 100",
+   "nuclide": "Tc97m1",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "100",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 84,
+   "row_text": "Tc-99 | 1",
+   "nuclide": "Tc99",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 85,
+   "row_text": "Tc-99 m | 100",
+   "nuclide": "Tc99m1",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "100",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 86,
+   "row_text": "Ru-97 | 10",
+   "nuclide": "Ru97",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "10",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 87,
+   "row_text": "Ru-103 (1) | 1",
+   "nuclide": "Ru103",
+   "footnotes": [
+    "1"
+   ],
+   "flags": [
+    "parent_with_progeny_included"
+   ],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1",
+     "number": 1.0
+    }
+   },
+   "progeny_included": [
+    "Rh-103 m"
+   ]
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 88,
+   "row_text": "Ru-105 (1) | 10",
+   "nuclide": "Ru105",
+   "footnotes": [
+    "1"
+   ],
+   "flags": [
+    "parent_with_progeny_included"
+   ],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "10",
+     "number": 10.0
+    }
+   },
+   "progeny_included": [
+    "Rh-105 m"
+   ]
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 89,
+   "row_text": "Ru-106 (1) | 0,1",
+   "nuclide": "Ru106",
+   "footnotes": [
+    "1"
+   ],
+   "flags": [
+    "parent_with_progeny_included"
+   ],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "0,1",
+     "number": 0.1
+    }
+   },
+   "progeny_included": [
+    "Rh-106"
+   ]
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 90,
+   "row_text": "Rh-103 m | 10 000",
+   "nuclide": "Rh103m1",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "10 000",
+     "number": 10000.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 91,
+   "row_text": "Rh-105 | 100",
+   "nuclide": "Rh105",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "100",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 92,
+   "row_text": "Pd-103 (1) | 1 000",
+   "nuclide": "Pd103",
+   "footnotes": [
+    "1"
+   ],
+   "flags": [
+    "parent_with_progeny_included"
+   ],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 000",
+     "number": 1000.0
+    }
+   },
+   "progeny_included": [
+    "Rh-103 m"
+   ]
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 93,
+   "row_text": "Pd-109 (1) | 100",
+   "nuclide": "Pd109",
+   "footnotes": [
+    "1"
+   ],
+   "flags": [
+    "parent_with_progeny_included"
+   ],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "100",
+     "number": 100.0
+    }
+   },
+   "progeny_included": [
+    "Ag-109 m"
+   ]
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 94,
+   "row_text": "Ag-105 | 1",
+   "nuclide": "Ag105",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 95,
+   "row_text": "Ag-110 m (1) | 0,1",
+   "nuclide": "Ag110m1",
+   "footnotes": [
+    "1"
+   ],
+   "flags": [
+    "parent_with_progeny_included"
+   ],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "0,1",
+     "number": 0.1
+    }
+   },
+   "progeny_included": [
+    "Ag-110"
+   ]
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 96,
+   "row_text": "Ag-111 | 100",
+   "nuclide": "Ag111",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "100",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 97,
+   "row_text": "Cd-109 (1) | 1",
+   "nuclide": "Cd109",
+   "footnotes": [
+    "1"
+   ],
+   "flags": [
+    "parent_with_progeny_included"
+   ],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1",
+     "number": 1.0
+    }
+   },
+   "progeny_included": [
+    "Ag-109 m"
+   ]
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 98,
+   "row_text": "Cd-115 (1) | 10",
+   "nuclide": "Cd115",
+   "footnotes": [
+    "1"
+   ],
+   "flags": [
+    "parent_with_progeny_included"
+   ],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "10",
+     "number": 10.0
+    }
+   },
+   "progeny_included": [
+    "In-115 m"
+   ]
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 99,
+   "row_text": "Cd-115 m (1) | 100",
+   "nuclide": "Cd115m1",
+   "footnotes": [
+    "1"
+   ],
+   "flags": [
+    "parent_with_progeny_included"
+   ],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "100",
+     "number": 100.0
+    }
+   },
+   "progeny_included": [
+    "In-115 m"
+   ]
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 100,
+   "row_text": "In-111 | 10",
+   "nuclide": "In111",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "10",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 101,
+   "row_text": "In-113 m | 100",
+   "nuclide": "In113m1",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "100",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 102,
+   "row_text": "In-114 m (1) | 10",
+   "nuclide": "In114m1",
+   "footnotes": [
+    "1"
+   ],
+   "flags": [
+    "parent_with_progeny_included"
+   ],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "10",
+     "number": 10.0
+    }
+   },
+   "progeny_included": [
+    "In-114"
+   ]
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 103,
+   "row_text": "In-115 m | 100",
+   "nuclide": "In115m1",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "100",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 104,
+   "row_text": "Sn-113 (1) | 1",
+   "nuclide": "Sn113",
+   "footnotes": [
+    "1"
+   ],
+   "flags": [
+    "parent_with_progeny_included"
+   ],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1",
+     "number": 1.0
+    }
+   },
+   "progeny_included": [
+    "In-113 m"
+   ]
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 105,
+   "row_text": "Sn-125 | 10",
+   "nuclide": "Sn125",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "10",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 106,
+   "row_text": "Sb-122 | 10",
+   "nuclide": "Sb122",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "10",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 107,
+   "row_text": "Sb-124 | 1",
+   "nuclide": "Sb124",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 108,
+   "row_text": "Sb-125 (1) | 0,1",
+   "nuclide": "Sb125",
+   "footnotes": [
+    "1"
+   ],
+   "flags": [
+    "parent_with_progeny_included"
+   ],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "0,1",
+     "number": 0.1
+    }
+   },
+   "progeny_included": [
+    "Te-125 m"
+   ]
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 109,
+   "row_text": "Te-123 m | 1",
+   "nuclide": "Te123m1",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 110,
+   "row_text": "Te-125 m | 1 000",
+   "nuclide": "Te125m1",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 000",
+     "number": 1000.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 111,
+   "row_text": "Te-127 | 1 000",
+   "nuclide": "Te127",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 000",
+     "number": 1000.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 112,
+   "row_text": "Te-127 m (1) | 10",
+   "nuclide": "Te127m1",
+   "footnotes": [
+    "1"
+   ],
+   "flags": [
+    "parent_with_progeny_included"
+   ],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "10",
+     "number": 10.0
+    }
+   },
+   "progeny_included": [
+    "Te-127"
+   ]
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 113,
+   "row_text": "Te-129 | 100",
+   "nuclide": "Te129",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "100",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 114,
+   "row_text": "Te-129 m (1) | 10",
+   "nuclide": "Te129m1",
+   "footnotes": [
+    "1"
+   ],
+   "flags": [
+    "parent_with_progeny_included"
+   ],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "10",
+     "number": 10.0
+    }
+   },
+   "progeny_included": [
+    "Te-129"
+   ]
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 115,
+   "row_text": "Te-131 | 100",
+   "nuclide": "Te131",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "100",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 116,
+   "row_text": "Te-131 m (1) | 10",
+   "nuclide": "Te131m1",
+   "footnotes": [
+    "1"
+   ],
+   "flags": [
+    "parent_with_progeny_included"
+   ],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "10",
+     "number": 10.0
+    }
+   },
+   "progeny_included": [
+    "Te-131"
+   ]
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 117,
+   "row_text": "Te-132 (1) | 1",
+   "nuclide": "Te132",
+   "footnotes": [
+    "1"
+   ],
+   "flags": [
+    "parent_with_progeny_included"
+   ],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1",
+     "number": 1.0
+    }
+   },
+   "progeny_included": [
+    "I-132"
+   ]
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 118,
+   "row_text": "Te-133 | 10",
+   "nuclide": "Te133",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "10",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 119,
+   "row_text": "Te-133 m | 10",
+   "nuclide": "Te133m1",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "10",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 120,
+   "row_text": "Te-134 | 10",
+   "nuclide": "Te134",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "10",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 121,
+   "row_text": "I-123 | 100",
+   "nuclide": "I123",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "100",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 122,
+   "row_text": "I-125 | 100",
+   "nuclide": "I125",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "100",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 123,
+   "row_text": "I-126 | 10",
+   "nuclide": "I126",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "10",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 124,
+   "row_text": "I-129 | 0,01",
+   "nuclide": "I129",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "0,01",
+     "number": 0.01
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 125,
+   "row_text": "I-130 | 10",
+   "nuclide": "I130",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "10",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 126,
+   "row_text": "I-131 | 10",
+   "nuclide": "I131",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "10",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 127,
+   "row_text": "I-132 | 10",
+   "nuclide": "I132",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "10",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 128,
+   "row_text": "I-133 | 10",
+   "nuclide": "I133",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "10",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 129,
+   "row_text": "I-134 | 10",
+   "nuclide": "I134",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "10",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 130,
+   "row_text": "I-135 | 10",
+   "nuclide": "I135",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "10",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 131,
+   "row_text": "Cs-129 | 10",
+   "nuclide": "Cs129",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "10",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 132,
+   "row_text": "Cs-131 | 1 000",
+   "nuclide": "Cs131",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 000",
+     "number": 1000.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 133,
+   "row_text": "Cs-132 | 10",
+   "nuclide": "Cs132",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "10",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 134,
+   "row_text": "Cs-134 | 0,1",
+   "nuclide": "Cs134",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "0,1",
+     "number": 0.1
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 135,
+   "row_text": "Cs-134 m | 1 000",
+   "nuclide": "Cs134m1",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 000",
+     "number": 1000.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 136,
+   "row_text": "Cs-135 | 100",
+   "nuclide": "Cs135",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "100",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 137,
+   "row_text": "Cs-136 | 1",
+   "nuclide": "Cs136",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 138,
+   "row_text": "Cs-137 (1) | 0,1",
+   "nuclide": "Cs137",
+   "footnotes": [
+    "1"
+   ],
+   "flags": [
+    "parent_with_progeny_included"
+   ],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "0,1",
+     "number": 0.1
+    }
+   },
+   "progeny_included": [
+    "Ba-137 m"
+   ]
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 139,
+   "row_text": "Cs-138 | 10",
+   "nuclide": "Cs138",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "10",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 140,
+   "row_text": "Ba-131 | 10",
+   "nuclide": "Ba131",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "10",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 141,
+   "row_text": "Ba-140 | 1",
+   "nuclide": "Ba140",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 142,
+   "row_text": "La-140 | 1",
+   "nuclide": "La140",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 143,
+   "row_text": "Ce-139 | 1",
+   "nuclide": "Ce139",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 144,
+   "row_text": "Ce-141 | 100",
+   "nuclide": "Ce141",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "100",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 145,
+   "row_text": "Ce-143 | 10",
+   "nuclide": "Ce143",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "10",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 146,
+   "row_text": "Ce-144 | 10",
+   "nuclide": "Ce144",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "10",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 147,
+   "row_text": "Pr-142 | 100",
+   "nuclide": "Pr142",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "100",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 148,
+   "row_text": "Pr-143 | 1 000",
+   "nuclide": "Pr143",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 000",
+     "number": 1000.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 149,
+   "row_text": "Nd-147 | 100",
+   "nuclide": "Nd147",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "100",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 150,
+   "row_text": "Nd-149 | 100",
+   "nuclide": "Nd149",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "100",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 151,
+   "row_text": "Pm-147 | 1 000",
+   "nuclide": "Pm147",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 000",
+     "number": 1000.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 152,
+   "row_text": "Pm-149 | 1 000",
+   "nuclide": "Pm149",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 000",
+     "number": 1000.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 153,
+   "row_text": "Sm-151 | 1 000",
+   "nuclide": "Sm151",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 000",
+     "number": 1000.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 154,
+   "row_text": "Sm-153 | 100",
+   "nuclide": "Sm153",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "100",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 155,
+   "row_text": "Eu-152 | 0,1",
+   "nuclide": "Eu152",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "0,1",
+     "number": 0.1
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 156,
+   "row_text": "Eu-152 m | 100",
+   "nuclide": "Eu152m1",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "100",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 157,
+   "row_text": "Eu-154 | 0,1",
+   "nuclide": "Eu154",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "0,1",
+     "number": 0.1
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 158,
+   "row_text": "Eu-155 | 1",
+   "nuclide": "Eu155",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 159,
+   "row_text": "Gd-153 | 10",
+   "nuclide": "Gd153",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "10",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 160,
+   "row_text": "Gd-159 | 100",
+   "nuclide": "Gd159",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "100",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 161,
+   "row_text": "Tb-160 | 1",
+   "nuclide": "Tb160",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 162,
+   "row_text": "Dy-165 | 1 000",
+   "nuclide": "Dy165",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 000",
+     "number": 1000.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 163,
+   "row_text": "Dy-166 | 100",
+   "nuclide": "Dy166",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "100",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 164,
+   "row_text": "Ho-166 | 100",
+   "nuclide": "Ho166",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "100",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 165,
+   "row_text": "Er-169 | 1 000",
+   "nuclide": "Er169",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 000",
+     "number": 1000.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 166,
+   "row_text": "Er-171 | 100",
+   "nuclide": "Er171",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "100",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 167,
+   "row_text": "Tm-170 | 100",
+   "nuclide": "Tm170",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "100",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 168,
+   "row_text": "Tm-171 | 1 000",
+   "nuclide": "Tm171",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 000",
+     "number": 1000.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 169,
+   "row_text": "Yb-175 | 100",
+   "nuclide": "Yb175",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "100",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 170,
+   "row_text": "Lu-177 | 100",
+   "nuclide": "Lu177",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "100",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 171,
+   "row_text": "Hf-181 | 1",
+   "nuclide": "Hf181",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 172,
+   "row_text": "Ta-182 | 0,1",
+   "nuclide": "Ta182",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "0,1",
+     "number": 0.1
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 173,
+   "row_text": "W-181 | 10",
+   "nuclide": "W181",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "10",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 174,
+   "row_text": "W-185 | 1 000",
+   "nuclide": "W185",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 000",
+     "number": 1000.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 175,
+   "row_text": "W-187 | 10",
+   "nuclide": "W187",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "10",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 176,
+   "row_text": "Re-186 | 1 000",
+   "nuclide": "Re186",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 000",
+     "number": 1000.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 177,
+   "row_text": "Re-188 | 100",
+   "nuclide": "Re188",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "100",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 178,
+   "row_text": "Os-185 | 1",
+   "nuclide": "Os185",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 179,
+   "row_text": "Os-191 | 100",
+   "nuclide": "Os191",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "100",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 180,
+   "row_text": "Os-191 m | 1 000",
+   "nuclide": "Os191m1",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 000",
+     "number": 1000.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 181,
+   "row_text": "Os-193 | 100",
+   "nuclide": "Os193",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "100",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 182,
+   "row_text": "Ir-190 | 1",
+   "nuclide": "Ir190",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 183,
+   "row_text": "Ir-192 | 1",
+   "nuclide": "Ir192",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 184,
+   "row_text": "Ir-194 | 100",
+   "nuclide": "Ir194",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "100",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 185,
+   "row_text": "Pt-191 | 10",
+   "nuclide": "Pt191",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "10",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 186,
+   "row_text": "Pt-193 m | 1 000",
+   "nuclide": "Pt193m1",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 000",
+     "number": 1000.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 187,
+   "row_text": "Pt-197 | 1 000",
+   "nuclide": "Pt197",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 000",
+     "number": 1000.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 188,
+   "row_text": "Pt-197 m | 100",
+   "nuclide": "Pt197m1",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "100",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 189,
+   "row_text": "Au-198 | 10",
+   "nuclide": "Au198",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "10",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 190,
+   "row_text": "Au-199 | 100",
+   "nuclide": "Au199",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "100",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 191,
+   "row_text": "Hg-197 | 100",
+   "nuclide": "Hg197",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "100",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 192,
+   "row_text": "Hg-197 m | 100",
+   "nuclide": "Hg197m1",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "100",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 193,
+   "row_text": "Hg-203 | 10",
+   "nuclide": "Hg203",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "10",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 194,
+   "row_text": "Tl-200 | 10",
+   "nuclide": "Tl200",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "10",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 195,
+   "row_text": "Tl-201 | 100",
+   "nuclide": "Tl201",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "100",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 196,
+   "row_text": "Tl-202 | 10",
+   "nuclide": "Tl202",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "10",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 197,
+   "row_text": "Tl-204 | 1",
+   "nuclide": "Tl204",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 198,
+   "row_text": "Pb-203 | 10",
+   "nuclide": "Pb203",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "10",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 199,
+   "row_text": "Bi-206 | 1",
+   "nuclide": "Bi206",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 200,
+   "row_text": "Bi-207 | 0,1",
+   "nuclide": "Bi207",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "0,1",
+     "number": 0.1
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 201,
+   "row_text": "Po-203 | 10",
+   "nuclide": "Po203",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "10",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 202,
+   "row_text": "Po-205 | 10",
+   "nuclide": "Po205",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "10",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 203,
+   "row_text": "Po-207 | 10",
+   "nuclide": "Po207",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "10",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 204,
+   "row_text": "At-211 | 1 000",
+   "nuclide": "At211",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 000",
+     "number": 1000.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 205,
+   "row_text": "Ra-225 | 10",
+   "nuclide": "Ra225",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "10",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 206,
+   "row_text": "Ra-227 | 100",
+   "nuclide": "Ra227",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "100",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 207,
+   "row_text": "Th-226 | 1 000",
+   "nuclide": "Th226",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 000",
+     "number": 1000.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 208,
+   "row_text": "Th-229 | 0,1",
+   "nuclide": "Th229",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "0,1",
+     "number": 0.1
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 209,
+   "row_text": "Pa-230 | 10",
+   "nuclide": "Pa230",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "10",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 210,
+   "row_text": "Pa-233 | 10",
+   "nuclide": "Pa233",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "10",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 211,
+   "row_text": "U-230 | 10",
+   "nuclide": "U230",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "10",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 212,
+   "row_text": "U-231 (1) | 100",
+   "nuclide": "U231",
+   "footnotes": [
+    "1"
+   ],
+   "flags": [
+    "parent_with_progeny_included",
+    "marked_parent_missing_from_progeny_list"
+   ],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "100",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 213,
+   "row_text": "U-232 (1) | 0,1",
+   "nuclide": "U232",
+   "footnotes": [
+    "1"
+   ],
+   "flags": [
+    "parent_with_progeny_included"
+   ],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "0,1",
+     "number": 0.1
+    }
+   },
+   "progeny_included": [
+    "Th-228",
+    "Ra-224",
+    "Rn-220",
+    "Po-216",
+    "Pb-212",
+    "Bi-212",
+    "Tl-208"
+   ]
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 214,
+   "row_text": "U-233 | 1",
+   "nuclide": "U233",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 215,
+   "row_text": "U-236 | 10",
+   "nuclide": "U236",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "10",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 216,
+   "row_text": "U-237 | 100",
+   "nuclide": "U237",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "100",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 217,
+   "row_text": "U-239 | 100",
+   "nuclide": "U239",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "100",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 218,
+   "row_text": "U-240 (1) | 100",
+   "nuclide": "U240",
+   "footnotes": [
+    "1"
+   ],
+   "flags": [
+    "parent_with_progeny_included"
+   ],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "100",
+     "number": 100.0
+    }
+   },
+   "progeny_included": [
+    "Np-240 m",
+    "Np-240"
+   ]
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 219,
+   "row_text": "Np-237 (1) | 1",
+   "nuclide": "Np237",
+   "footnotes": [
+    "1"
+   ],
+   "flags": [
+    "parent_with_progeny_included"
+   ],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1",
+     "number": 1.0
+    }
+   },
+   "progeny_included": [
+    "Pa-233"
+   ]
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 220,
+   "row_text": "Np-239 | 100",
+   "nuclide": "Np239",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "100",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 221,
+   "row_text": "Np-240 | 10",
+   "nuclide": "Np240",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "10",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 222,
+   "row_text": "Pu-234 | 100",
+   "nuclide": "Pu234",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "100",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 223,
+   "row_text": "Pu-235 | 100",
+   "nuclide": "Pu235",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "100",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 224,
+   "row_text": "Pu-236 | 1",
+   "nuclide": "Pu236",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 225,
+   "row_text": "Pu-237 | 100",
+   "nuclide": "Pu237",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "100",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 226,
+   "row_text": "Pu-238 | 0,1",
+   "nuclide": "Pu238",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "0,1",
+     "number": 0.1
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 227,
+   "row_text": "Pu-239 | 0,1",
+   "nuclide": "Pu239",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "0,1",
+     "number": 0.1
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 228,
+   "row_text": "Pu-240 | 0,1",
+   "nuclide": "Pu240",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "0,1",
+     "number": 0.1
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 229,
+   "row_text": "Pu-241 | 10",
+   "nuclide": "Pu241",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "10",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 230,
+   "row_text": "Pu-242 | 0,1",
+   "nuclide": "Pu242",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "0,1",
+     "number": 0.1
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 231,
+   "row_text": "Pu-243 | 1 000",
+   "nuclide": "Pu243",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 000",
+     "number": 1000.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 232,
+   "row_text": "Pu-244 (1) | 0,1",
+   "nuclide": "Pu244",
+   "footnotes": [
+    "1"
+   ],
+   "flags": [
+    "parent_with_progeny_included"
+   ],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "0,1",
+     "number": 0.1
+    }
+   },
+   "progeny_included": [
+    "U-240",
+    "Np-240 m",
+    "Np-240"
+   ]
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 233,
+   "row_text": "Am-241 | 0,1",
+   "nuclide": "Am241",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "0,1",
+     "number": 0.1
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 234,
+   "row_text": "Am-242 | 1 000",
+   "nuclide": "Am242",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 000",
+     "number": 1000.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 235,
+   "row_text": "Am-242 m (1) | 0,1",
+   "nuclide": "Am242m1",
+   "footnotes": [
+    "1"
+   ],
+   "flags": [
+    "parent_with_progeny_included"
+   ],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "0,1",
+     "number": 0.1
+    }
+   },
+   "progeny_included": [
+    "Np-238"
+   ]
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 236,
+   "row_text": "Am-243 (1) | 0,1",
+   "nuclide": "Am243",
+   "footnotes": [
+    "1"
+   ],
+   "flags": [
+    "parent_with_progeny_included"
+   ],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "0,1",
+     "number": 0.1
+    }
+   },
+   "progeny_included": [
+    "Np-239"
+   ]
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 237,
+   "row_text": "Cm-242 | 10",
+   "nuclide": "Cm242",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "10",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 238,
+   "row_text": "Cm-243 | 1",
+   "nuclide": "Cm243",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 239,
+   "row_text": "Cm-244 | 1",
+   "nuclide": "Cm244",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 240,
+   "row_text": "Cm-245 | 0,1",
+   "nuclide": "Cm245",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "0,1",
+     "number": 0.1
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 241,
+   "row_text": "Cm-246 | 0,1",
+   "nuclide": "Cm246",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "0,1",
+     "number": 0.1
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 242,
+   "row_text": "Cm-247 (1) | 0,1",
+   "nuclide": "Cm247",
+   "footnotes": [
+    "1"
+   ],
+   "flags": [
+    "parent_with_progeny_included"
+   ],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "0,1",
+     "number": 0.1
+    }
+   },
+   "progeny_included": [
+    "Pu-243"
+   ]
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 243,
+   "row_text": "Cm-248 | 0,1",
+   "nuclide": "Cm248",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "0,1",
+     "number": 0.1
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 244,
+   "row_text": "Bk-249 | 100",
+   "nuclide": "Bk249",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "100",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 245,
+   "row_text": "Cf-246 | 1 000",
+   "nuclide": "Cf246",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 000",
+     "number": 1000.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 246,
+   "row_text": "Cf-248 | 1",
+   "nuclide": "Cf248",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 247,
+   "row_text": "Cf-249 | 0,1",
+   "nuclide": "Cf249",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "0,1",
+     "number": 0.1
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 248,
+   "row_text": "Cf-250 | 1",
+   "nuclide": "Cf250",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 249,
+   "row_text": "Cf-251 | 0,1",
+   "nuclide": "Cf251",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "0,1",
+     "number": 0.1
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 250,
+   "row_text": "Cf-252 | 1",
+   "nuclide": "Cf252",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 251,
+   "row_text": "Cf-253 | 100",
+   "nuclide": "Cf253",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "100",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 252,
+   "row_text": "Cf-254 | 1",
+   "nuclide": "Cf254",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 253,
+   "row_text": "Es-253 | 100",
+   "nuclide": "Es253",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "100",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 254,
+   "row_text": "Es-254 (1) | 0,1",
+   "nuclide": "Es254",
+   "footnotes": [
+    "1"
+   ],
+   "flags": [
+    "parent_with_progeny_included"
+   ],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "0,1",
+     "number": 0.1
+    }
+   },
+   "progeny_included": [
+    "Bk-250"
+   ]
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 255,
+   "row_text": "Es-254 m (1) | 10",
+   "nuclide": "Es254m1",
+   "footnotes": [
+    "1"
+   ],
+   "flags": [
+    "parent_with_progeny_included"
+   ],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "10",
+     "number": 10.0
+    }
+   },
+   "progeny_included": [
+    "Fm-254"
+   ]
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 256,
+   "row_text": "Fm-254 | 10 000",
+   "nuclide": "Fm254",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "10 000",
+     "number": 10000.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 1",
+   "row": 257,
+   "row_text": "Fm-255 | 100",
+   "nuclide": "Fm255",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "100",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 1,
+   "row_text": "H-3 | 1 × 10^{6} | 1 × 10^{9}",
+   "nuclide": "H3",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{6}",
+     "number": 1000000.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{9}",
+     "number": 1000000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 2,
+   "row_text": "Be-7 | 1 × 10^{3} | 1 × 10^{7}",
+   "nuclide": "Be7",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{3}",
+     "number": 1000.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{7}",
+     "number": 10000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 3,
+   "row_text": "C-14 | 1 × 10^{4} | 1 × 10^{7}",
+   "nuclide": "C14",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{4}",
+     "number": 10000.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{7}",
+     "number": 10000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 4,
+   "row_text": "O-15 | 1 × 10^{2} | 1 × 10^{9}",
+   "nuclide": "O15",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{2}",
+     "number": 100.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{9}",
+     "number": 1000000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 5,
+   "row_text": "F-18 | 1 × 10^{1} | 1 × 10^{6}",
+   "nuclide": "F18",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{1}",
+     "number": 10.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{6}",
+     "number": 1000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 6,
+   "row_text": "Na-22 | 1 × 10^{1} | 1 × 10^{6}",
+   "nuclide": "Na22",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{1}",
+     "number": 10.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{6}",
+     "number": 1000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 7,
+   "row_text": "Na-24 | 1 × 10^{1} | 1 × 10^{5}",
+   "nuclide": "Na24",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{1}",
+     "number": 10.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{5}",
+     "number": 100000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 8,
+   "row_text": "Si-31 | 1 × 10^{3} | 1 × 10^{6}",
+   "nuclide": "Si31",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{3}",
+     "number": 1000.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{6}",
+     "number": 1000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 9,
+   "row_text": "P-32 | 1 × 10^{3} | 1 × 10^{5}",
+   "nuclide": "P32",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{3}",
+     "number": 1000.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{5}",
+     "number": 100000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 10,
+   "row_text": "P-33 | 1 × 10^{5} | 1 × 10^{8}",
+   "nuclide": "P33",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{5}",
+     "number": 100000.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{8}",
+     "number": 100000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 11,
+   "row_text": "S-35 | 1 × 10^{5} | 1 × 10^{8}",
+   "nuclide": "S35",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{5}",
+     "number": 100000.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{8}",
+     "number": 100000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 12,
+   "row_text": "Cl-36 | 1 × 10^{4} | 1 × 10^{6}",
+   "nuclide": "Cl36",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{4}",
+     "number": 10000.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{6}",
+     "number": 1000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 13,
+   "row_text": "Cl-38 | 1 × 10^{1} | 1 × 10^{5}",
+   "nuclide": "Cl38",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{1}",
+     "number": 10.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{5}",
+     "number": 100000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 14,
+   "row_text": "Ar-37 | 1 × 10^{6} | 1 × 10^{8}",
+   "nuclide": "Ar37",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{6}",
+     "number": 1000000.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{8}",
+     "number": 100000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 15,
+   "row_text": "Ar-41 | 1 × 10^{2} | 1 × 10^{9}",
+   "nuclide": "Ar41",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{2}",
+     "number": 100.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{9}",
+     "number": 1000000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 16,
+   "row_text": "K-40 (1) | 1 × 10^{2} | 1 × 10^{6}",
+   "nuclide": "K40",
+   "footnotes": [
+    "1"
+   ],
+   "flags": [
+    "potassium_salts_below_1000_kg_exempted"
+   ],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{2}",
+     "number": 100.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{6}",
+     "number": 1000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 17,
+   "row_text": "K-42 | 1 × 10^{2} | 1 × 10^{6}",
+   "nuclide": "K42",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{2}",
+     "number": 100.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{6}",
+     "number": 1000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 18,
+   "row_text": "K-43 | 1 × 10^{1} | 1 × 10^{6}",
+   "nuclide": "K43",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{1}",
+     "number": 10.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{6}",
+     "number": 1000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 19,
+   "row_text": "Ca-45 | 1 × 10^{4} | 1 × 10^{7}",
+   "nuclide": "Ca45",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{4}",
+     "number": 10000.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{7}",
+     "number": 10000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 20,
+   "row_text": "Ca-47 | 1 × 10^{1} | 1 × 10^{6}",
+   "nuclide": "Ca47",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{1}",
+     "number": 10.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{6}",
+     "number": 1000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 21,
+   "row_text": "Sc-46 | 1 × 10^{1} | 1 × 10^{6}",
+   "nuclide": "Sc46",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{1}",
+     "number": 10.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{6}",
+     "number": 1000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 22,
+   "row_text": "Sc-47 | 1 × 10^{2} | 1 × 10^{6}",
+   "nuclide": "Sc47",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{2}",
+     "number": 100.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{6}",
+     "number": 1000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 23,
+   "row_text": "Sc-48 | 1 × 10^{1} | 1 × 10^{5}",
+   "nuclide": "Sc48",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{1}",
+     "number": 10.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{5}",
+     "number": 100000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 24,
+   "row_text": "V-48 | 1 × 10^{1} | 1 × 10^{5}",
+   "nuclide": "V48",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{1}",
+     "number": 10.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{5}",
+     "number": 100000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 25,
+   "row_text": "Cr-51 | 1 × 10^{3} | 1 × 10^{7}",
+   "nuclide": "Cr51",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{3}",
+     "number": 1000.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{7}",
+     "number": 10000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 26,
+   "row_text": "Mn-51 | 1 × 10^{1} | 1 × 10^{5}",
+   "nuclide": "Mn51",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{1}",
+     "number": 10.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{5}",
+     "number": 100000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 27,
+   "row_text": "Mn-52 | 1 × 10^{1} | 1 × 10^{5}",
+   "nuclide": "Mn52",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{1}",
+     "number": 10.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{5}",
+     "number": 100000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 28,
+   "row_text": "Mn-52 m | 1 × 10^{1} | 1 × 10^{5}",
+   "nuclide": "Mn52m1",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{1}",
+     "number": 10.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{5}",
+     "number": 100000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 29,
+   "row_text": "Mn-53 | 1 × 10^{4} | 1 × 10^{9}",
+   "nuclide": "Mn53",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{4}",
+     "number": 10000.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{9}",
+     "number": 1000000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 30,
+   "row_text": "Mn-54 | 1 × 10^{1} | 1 × 10^{6}",
+   "nuclide": "Mn54",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{1}",
+     "number": 10.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{6}",
+     "number": 1000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 31,
+   "row_text": "Mn-56 | 1 × 10^{1} | 1 × 10^{5}",
+   "nuclide": "Mn56",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{1}",
+     "number": 10.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{5}",
+     "number": 100000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 32,
+   "row_text": "Fe-52 | 1 × 10^{1} | 1 × 10^{6}",
+   "nuclide": "Fe52",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{1}",
+     "number": 10.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{6}",
+     "number": 1000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 33,
+   "row_text": "Fe-55 | 1 × 10^{4} | 1 × 10^{6}",
+   "nuclide": "Fe55",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{4}",
+     "number": 10000.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{6}",
+     "number": 1000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 34,
+   "row_text": "Fe-59 | 1 × 10^{1} | 1 × 10^{6}",
+   "nuclide": "Fe59",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{1}",
+     "number": 10.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{6}",
+     "number": 1000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 35,
+   "row_text": "Co-55 | 1 × 10^{1} | 1 × 10^{6}",
+   "nuclide": "Co55",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{1}",
+     "number": 10.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{6}",
+     "number": 1000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 36,
+   "row_text": "Co-56 | 1 × 10^{1} | 1 × 10^{5}",
+   "nuclide": "Co56",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{1}",
+     "number": 10.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{5}",
+     "number": 100000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 37,
+   "row_text": "Co-57 | 1 × 10^{2} | 1 × 10^{6}",
+   "nuclide": "Co57",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{2}",
+     "number": 100.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{6}",
+     "number": 1000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 38,
+   "row_text": "Co-58 | 1 × 10^{1} | 1 × 10^{6}",
+   "nuclide": "Co58",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{1}",
+     "number": 10.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{6}",
+     "number": 1000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 39,
+   "row_text": "Co-58 m | 1 × 10^{4} | 1 × 10^{7}",
+   "nuclide": "Co58m1",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{4}",
+     "number": 10000.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{7}",
+     "number": 10000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 40,
+   "row_text": "Co-60 | 1 × 10^{1} | 1 × 10^{5}",
+   "nuclide": "Co60",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{1}",
+     "number": 10.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{5}",
+     "number": 100000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 41,
+   "row_text": "Co-60 m | 1 × 10^{3} | 1 × 10^{6}",
+   "nuclide": "Co60m1",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{3}",
+     "number": 1000.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{6}",
+     "number": 1000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 42,
+   "row_text": "Co-61 | 1 × 10^{2} | 1 × 10^{6}",
+   "nuclide": "Co61",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{2}",
+     "number": 100.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{6}",
+     "number": 1000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 43,
+   "row_text": "Co-62 m | 1 × 10^{1} | 1 × 10^{5}",
+   "nuclide": "Co62m1",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{1}",
+     "number": 10.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{5}",
+     "number": 100000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 44,
+   "row_text": "Ni-59 | 1 × 10^{4} | 1 × 10^{8}",
+   "nuclide": "Ni59",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{4}",
+     "number": 10000.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{8}",
+     "number": 100000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 45,
+   "row_text": "Ni-63 | 1 × 10^{5} | 1 × 10^{8}",
+   "nuclide": "Ni63",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{5}",
+     "number": 100000.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{8}",
+     "number": 100000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 46,
+   "row_text": "Ni-65 | 1 × 10^{1} | 1 × 10^{6}",
+   "nuclide": "Ni65",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{1}",
+     "number": 10.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{6}",
+     "number": 1000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 47,
+   "row_text": "Cu-64 | 1 × 10^{2} | 1 × 10^{6}",
+   "nuclide": "Cu64",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{2}",
+     "number": 100.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{6}",
+     "number": 1000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 48,
+   "row_text": "Zn-65 | 1 × 10^{1} | 1 × 10^{6}",
+   "nuclide": "Zn65",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{1}",
+     "number": 10.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{6}",
+     "number": 1000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 49,
+   "row_text": "Zn-69 | 1 × 10^{4} | 1 × 10^{6}",
+   "nuclide": "Zn69",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{4}",
+     "number": 10000.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{6}",
+     "number": 1000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 50,
+   "row_text": "Zn-69 m | 1 × 10^{2} | 1 × 10^{6}",
+   "nuclide": "Zn69m1",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{2}",
+     "number": 100.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{6}",
+     "number": 1000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 51,
+   "row_text": "Ga-72 | 1 × 10^{1} | 1 × 10^{5}",
+   "nuclide": "Ga72",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{1}",
+     "number": 10.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{5}",
+     "number": 100000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 52,
+   "row_text": "Ge-71 | 1 × 10^{4} | 1 × 10^{8}",
+   "nuclide": "Ge71",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{4}",
+     "number": 10000.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{8}",
+     "number": 100000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 53,
+   "row_text": "As-73 | 1 × 10^{3} | 1 × 10^{7}",
+   "nuclide": "As73",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{3}",
+     "number": 1000.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{7}",
+     "number": 10000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 54,
+   "row_text": "As-74 | 1 × 10^{1} | 1 × 10^{6}",
+   "nuclide": "As74",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{1}",
+     "number": 10.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{6}",
+     "number": 1000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 55,
+   "row_text": "As-76 | 1 × 10^{2} | 1 × 10^{5}",
+   "nuclide": "As76",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{2}",
+     "number": 100.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{5}",
+     "number": 100000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 56,
+   "row_text": "As-77 | 1 × 10^{3} | 1 × 10^{6}",
+   "nuclide": "As77",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{3}",
+     "number": 1000.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{6}",
+     "number": 1000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 57,
+   "row_text": "Se-75 | 1 × 10^{2} | 1 × 10^{6}",
+   "nuclide": "Se75",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{2}",
+     "number": 100.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{6}",
+     "number": 1000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 58,
+   "row_text": "Br-82 | 1 × 10^{1} | 1 × 10^{6}",
+   "nuclide": "Br82",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{1}",
+     "number": 10.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{6}",
+     "number": 1000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 59,
+   "row_text": "Kr-74 | 1 × 10^{2} | 1 × 10^{9}",
+   "nuclide": "Kr74",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{2}",
+     "number": 100.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{9}",
+     "number": 1000000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 60,
+   "row_text": "Kr-76 | 1 × 10^{2} | 1 × 10^{9}",
+   "nuclide": "Kr76",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{2}",
+     "number": 100.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{9}",
+     "number": 1000000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 61,
+   "row_text": "Kr-77 | 1 × 10^{2} | 1 × 10^{9}",
+   "nuclide": "Kr77",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{2}",
+     "number": 100.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{9}",
+     "number": 1000000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 62,
+   "row_text": "Kr-79 | 1 × 10^{3} | 1 × 10^{5}",
+   "nuclide": "Kr79",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{3}",
+     "number": 1000.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{5}",
+     "number": 100000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 63,
+   "row_text": "Kr-81 | 1 × 10^{4} | 1 × 10^{7}",
+   "nuclide": "Kr81",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{4}",
+     "number": 10000.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{7}",
+     "number": 10000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 64,
+   "row_text": "Kr-83 m | 1 × 10^{5} | 1 × 10^{12}",
+   "nuclide": "Kr83m1",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{5}",
+     "number": 100000.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{12}",
+     "number": 1000000000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 65,
+   "row_text": "Kr-85 | 1 × 10^{5} | 1 × 10^{4}",
+   "nuclide": "Kr85",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{5}",
+     "number": 100000.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{4}",
+     "number": 10000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 66,
+   "row_text": "Kr-85 m | 1 × 10^{3} | 1 × 10^{10}",
+   "nuclide": "Kr85m1",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{3}",
+     "number": 1000.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{10}",
+     "number": 10000000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 67,
+   "row_text": "Kr-87 | 1 × 10^{2} | 1 × 10^{9}",
+   "nuclide": "Kr87",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{2}",
+     "number": 100.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{9}",
+     "number": 1000000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 68,
+   "row_text": "Kr-88 | 1 × 10^{2} | 1 × 10^{9}",
+   "nuclide": "Kr88",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{2}",
+     "number": 100.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{9}",
+     "number": 1000000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 69,
+   "row_text": "Rb-86 | 1 × 10^{2} | 1 × 10^{5}",
+   "nuclide": "Rb86",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{2}",
+     "number": 100.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{5}",
+     "number": 100000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 70,
+   "row_text": "Sr-85 | 1 × 10^{2} | 1 × 10^{6}",
+   "nuclide": "Sr85",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{2}",
+     "number": 100.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{6}",
+     "number": 1000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 71,
+   "row_text": "Sr-85 m | 1 × 10^{2} | 1 × 10^{7}",
+   "nuclide": "Sr85m1",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{2}",
+     "number": 100.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{7}",
+     "number": 10000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 72,
+   "row_text": "Sr-87 m | 1 × 10^{2} | 1 × 10^{6}",
+   "nuclide": "Sr87m1",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{2}",
+     "number": 100.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{6}",
+     "number": 1000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 73,
+   "row_text": "Sr-89 | 1 × 10^{3} | 1 × 10^{6}",
+   "nuclide": "Sr89",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{3}",
+     "number": 1000.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{6}",
+     "number": 1000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 74,
+   "row_text": "Sr-90 (2) | 1 × 10^{2} | 1 × 10^{4}",
+   "nuclide": "Sr90",
+   "footnotes": [
+    "2"
+   ],
+   "flags": [
+    "parent_with_progeny_included"
+   ],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{2}",
+     "number": 100.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{4}",
+     "number": 10000.0
+    }
+   },
+   "progeny_included": [
+    "Y-90"
+   ]
+  },
+  {
+   "table": "Table B",
+   "row": 75,
+   "row_text": "Sr-91 | 1 × 10^{1} | 1 × 10^{5}",
+   "nuclide": "Sr91",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{1}",
+     "number": 10.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{5}",
+     "number": 100000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 76,
+   "row_text": "Sr-92 | 1 × 10^{1} | 1 × 10^{6}",
+   "nuclide": "Sr92",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{1}",
+     "number": 10.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{6}",
+     "number": 1000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 77,
+   "row_text": "Y-90 | 1 × 10^{3} | 1 × 10^{5}",
+   "nuclide": "Y90",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{3}",
+     "number": 1000.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{5}",
+     "number": 100000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 78,
+   "row_text": "Y-91 | 1 × 10^{3} | 1 × 10^{6}",
+   "nuclide": "Y91",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{3}",
+     "number": 1000.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{6}",
+     "number": 1000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 79,
+   "row_text": "Y-91 m | 1 × 10^{2} | 1 × 10^{6}",
+   "nuclide": "Y91m1",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{2}",
+     "number": 100.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{6}",
+     "number": 1000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 80,
+   "row_text": "Y-92 | 1 × 10^{2} | 1 × 10^{5}",
+   "nuclide": "Y92",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{2}",
+     "number": 100.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{5}",
+     "number": 100000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 81,
+   "row_text": "Y-93 | 1 × 10^{2} | 1 × 10^{5}",
+   "nuclide": "Y93",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{2}",
+     "number": 100.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{5}",
+     "number": 100000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 82,
+   "row_text": "Zr-93 (2) | 1 × 10^{3} | 1 × 10^{7}",
+   "nuclide": "Zr93",
+   "footnotes": [
+    "2"
+   ],
+   "flags": [
+    "parent_with_progeny_included"
+   ],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{3}",
+     "number": 1000.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{7}",
+     "number": 10000000.0
+    }
+   },
+   "progeny_included": [
+    "Nb-93 m"
+   ]
+  },
+  {
+   "table": "Table B",
+   "row": 83,
+   "row_text": "Zr-95 | 1 × 10^{1} | 1 × 10^{6}",
+   "nuclide": "Zr95",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{1}",
+     "number": 10.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{6}",
+     "number": 1000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 84,
+   "row_text": "Zr-97 (2) | 1 × 10^{1} | 1 × 10^{5}",
+   "nuclide": "Zr97",
+   "footnotes": [
+    "2"
+   ],
+   "flags": [
+    "parent_with_progeny_included"
+   ],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{1}",
+     "number": 10.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{5}",
+     "number": 100000.0
+    }
+   },
+   "progeny_included": [
+    "Nb-97"
+   ]
+  },
+  {
+   "table": "Table B",
+   "row": 85,
+   "row_text": "Nb-93 m | 1 × 10^{4} | 1 × 10^{7}",
+   "nuclide": "Nb93m1",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{4}",
+     "number": 10000.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{7}",
+     "number": 10000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 86,
+   "row_text": "Nb-94 | 1 × 10^{1} | 1 × 10^{6}",
+   "nuclide": "Nb94",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{1}",
+     "number": 10.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{6}",
+     "number": 1000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 87,
+   "row_text": "Nb-95 | 1 × 10^{1} | 1 × 10^{6}",
+   "nuclide": "Nb95",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{1}",
+     "number": 10.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{6}",
+     "number": 1000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 88,
+   "row_text": "Nb-97 | 1 × 10^{1} | 1 × 10^{6}",
+   "nuclide": "Nb97",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{1}",
+     "number": 10.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{6}",
+     "number": 1000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 89,
+   "row_text": "Nb-98 | 1 × 10^{1} | 1 × 10^{5}",
+   "nuclide": "Nb98",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{1}",
+     "number": 10.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{5}",
+     "number": 100000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 90,
+   "row_text": "Mo-90 | 1 × 10^{1} | 1 × 10^{6}",
+   "nuclide": "Mo90",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{1}",
+     "number": 10.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{6}",
+     "number": 1000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 91,
+   "row_text": "Mo-93 | 1 × 10^{3} | 1 × 10^{8}",
+   "nuclide": "Mo93",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{3}",
+     "number": 1000.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{8}",
+     "number": 100000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 92,
+   "row_text": "Mo-99 | 1 × 10^{2} | 1 × 10^{6}",
+   "nuclide": "Mo99",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{2}",
+     "number": 100.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{6}",
+     "number": 1000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 93,
+   "row_text": "Mo-101 | 1 × 10^{1} | 1 × 10^{6}",
+   "nuclide": "Mo101",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{1}",
+     "number": 10.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{6}",
+     "number": 1000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 94,
+   "row_text": "Tc-96 | 1 × 10^{1} | 1 × 10^{6}",
+   "nuclide": "Tc96",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{1}",
+     "number": 10.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{6}",
+     "number": 1000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 95,
+   "row_text": "Tc-96 m | 1 × 10^{3} | 1 × 10^{7}",
+   "nuclide": "Tc96m1",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{3}",
+     "number": 1000.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{7}",
+     "number": 10000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 96,
+   "row_text": "Tc-97 | 1 × 10^{3} | 1 × 10^{8}",
+   "nuclide": "Tc97",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{3}",
+     "number": 1000.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{8}",
+     "number": 100000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 97,
+   "row_text": "Tc-97 m | 1 × 10^{3} | 1 × 10^{7}",
+   "nuclide": "Tc97m1",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{3}",
+     "number": 1000.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{7}",
+     "number": 10000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 98,
+   "row_text": "Tc-99 | 1 × 10^{4} | 1 × 10^{7}",
+   "nuclide": "Tc99",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{4}",
+     "number": 10000.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{7}",
+     "number": 10000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 99,
+   "row_text": "Tc-99 m | 1 × 10^{2} | 1 × 10^{7}",
+   "nuclide": "Tc99m1",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{2}",
+     "number": 100.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{7}",
+     "number": 10000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 100,
+   "row_text": "Ru-97 | 1 × 10^{2} | 1 × 10^{7}",
+   "nuclide": "Ru97",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{2}",
+     "number": 100.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{7}",
+     "number": 10000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 101,
+   "row_text": "Ru-103 | 1 × 10^{2} | 1 × 10^{6}",
+   "nuclide": "Ru103",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{2}",
+     "number": 100.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{6}",
+     "number": 1000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 102,
+   "row_text": "Ru-105 | 1 × 10^{1} | 1 × 10^{6}",
+   "nuclide": "Ru105",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{1}",
+     "number": 10.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{6}",
+     "number": 1000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 103,
+   "row_text": "Ru-106 (2) | 1 × 10^{2} | 1 × 10^{5}",
+   "nuclide": "Ru106",
+   "footnotes": [
+    "2"
+   ],
+   "flags": [
+    "parent_with_progeny_included"
+   ],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{2}",
+     "number": 100.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{5}",
+     "number": 100000.0
+    }
+   },
+   "progeny_included": [
+    "Rh-106"
+   ]
+  },
+  {
+   "table": "Table B",
+   "row": 104,
+   "row_text": "Rh-103 m | 1 × 10^{4} | 1 × 10^{8}",
+   "nuclide": "Rh103m1",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{4}",
+     "number": 10000.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{8}",
+     "number": 100000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 105,
+   "row_text": "Rh-105 | 1 × 10^{2} | 1 × 10^{7}",
+   "nuclide": "Rh105",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{2}",
+     "number": 100.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{7}",
+     "number": 10000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 106,
+   "row_text": "Pd-103 | 1 × 10^{3} | 1 × 10^{8}",
+   "nuclide": "Pd103",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{3}",
+     "number": 1000.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{8}",
+     "number": 100000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 107,
+   "row_text": "Pd-109 | 1 × 10^{3} | 1 × 10^{6}",
+   "nuclide": "Pd109",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{3}",
+     "number": 1000.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{6}",
+     "number": 1000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 108,
+   "row_text": "Ag-105 | 1 × 10^{2} | 1 × 10^{6}",
+   "nuclide": "Ag105",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{2}",
+     "number": 100.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{6}",
+     "number": 1000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 109,
+   "row_text": "Ag-108 m | 1 × 10^{1} | 1 × 10^{6}",
+   "nuclide": "Ag108m1",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{1}",
+     "number": 10.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{6}",
+     "number": 1000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 110,
+   "row_text": "Ag-110 m | 1 × 10^{1} | 1 × 10^{6}",
+   "nuclide": "Ag110m1",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{1}",
+     "number": 10.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{6}",
+     "number": 1000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 111,
+   "row_text": "Ag-111 | 1 × 10^{3} | 1 × 10^{6}",
+   "nuclide": "Ag111",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{3}",
+     "number": 1000.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{6}",
+     "number": 1000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 112,
+   "row_text": "Cd-109 | 1 × 10^{4} | 1 × 10^{6}",
+   "nuclide": "Cd109",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{4}",
+     "number": 10000.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{6}",
+     "number": 1000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 113,
+   "row_text": "Cd-115 | 1 × 10^{2} | 1 × 10^{6}",
+   "nuclide": "Cd115",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{2}",
+     "number": 100.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{6}",
+     "number": 1000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 114,
+   "row_text": "Cd-115 m | 1 × 10^{3} | 1 × 10^{6}",
+   "nuclide": "Cd115m1",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{3}",
+     "number": 1000.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{6}",
+     "number": 1000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 115,
+   "row_text": "In-111 | 1 × 10^{2} | 1 × 10^{6}",
+   "nuclide": "In111",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{2}",
+     "number": 100.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{6}",
+     "number": 1000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 116,
+   "row_text": "In-113 m | 1 × 10^{2} | 1 × 10^{6}",
+   "nuclide": "In113m1",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{2}",
+     "number": 100.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{6}",
+     "number": 1000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 117,
+   "row_text": "In-114 m | 1 × 10^{2} | 1 × 10^{6}",
+   "nuclide": "In114m1",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{2}",
+     "number": 100.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{6}",
+     "number": 1000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 118,
+   "row_text": "In-115 m | 1 × 10^{2} | 1 × 10^{6}",
+   "nuclide": "In115m1",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{2}",
+     "number": 100.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{6}",
+     "number": 1000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 119,
+   "row_text": "Sn-113 | 1 × 10^{3} | 1 × 10^{7}",
+   "nuclide": "Sn113",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{3}",
+     "number": 1000.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{7}",
+     "number": 10000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 120,
+   "row_text": "Sn-125 | 1 × 10^{2} | 1 × 10^{5}",
+   "nuclide": "Sn125",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{2}",
+     "number": 100.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{5}",
+     "number": 100000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 121,
+   "row_text": "Sb-122 | 1 × 10^{2} | 1 × 10^{4}",
+   "nuclide": "Sb122",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{2}",
+     "number": 100.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{4}",
+     "number": 10000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 122,
+   "row_text": "Sb-124 | 1 × 10^{1} | 1 × 10^{6}",
+   "nuclide": "Sb124",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{1}",
+     "number": 10.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{6}",
+     "number": 1000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 123,
+   "row_text": "Sb-125 | 1 × 10^{2} | 1 × 10^{6}",
+   "nuclide": "Sb125",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{2}",
+     "number": 100.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{6}",
+     "number": 1000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 124,
+   "row_text": "Te-123 m | 1 × 10^{2} | 1 × 10^{7}",
+   "nuclide": "Te123m1",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{2}",
+     "number": 100.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{7}",
+     "number": 10000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 125,
+   "row_text": "Te-125 m | 1 × 10^{3} | 1 × 10^{7}",
+   "nuclide": "Te125m1",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{3}",
+     "number": 1000.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{7}",
+     "number": 10000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 126,
+   "row_text": "Te-127 | 1 × 10^{3} | 1 × 10^{6}",
+   "nuclide": "Te127",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{3}",
+     "number": 1000.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{6}",
+     "number": 1000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 127,
+   "row_text": "Te-127 m | 1 × 10^{3} | 1 × 10^{7}",
+   "nuclide": "Te127m1",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{3}",
+     "number": 1000.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{7}",
+     "number": 10000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 128,
+   "row_text": "Te-129 | 1 × 10^{2} | 1 × 10^{6}",
+   "nuclide": "Te129",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{2}",
+     "number": 100.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{6}",
+     "number": 1000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 129,
+   "row_text": "Te-129 m | 1 × 10^{3} | 1 × 10^{6}",
+   "nuclide": "Te129m1",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{3}",
+     "number": 1000.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{6}",
+     "number": 1000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 130,
+   "row_text": "Te-131 | 1 × 10^{2} | 1 × 10^{5}",
+   "nuclide": "Te131",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{2}",
+     "number": 100.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{5}",
+     "number": 100000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 131,
+   "row_text": "Te-131 m | 1 × 10^{1} | 1 × 10^{6}",
+   "nuclide": "Te131m1",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{1}",
+     "number": 10.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{6}",
+     "number": 1000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 132,
+   "row_text": "Te-132 | 1 × 10^{2} | 1 × 10^{7}",
+   "nuclide": "Te132",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{2}",
+     "number": 100.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{7}",
+     "number": 10000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 133,
+   "row_text": "Te-133 | 1 × 10^{1} | 1 × 10^{5}",
+   "nuclide": "Te133",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{1}",
+     "number": 10.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{5}",
+     "number": 100000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 134,
+   "row_text": "Te-133 m | 1 × 10^{1} | 1 × 10^{5}",
+   "nuclide": "Te133m1",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{1}",
+     "number": 10.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{5}",
+     "number": 100000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 135,
+   "row_text": "Te-134 | 1 × 10^{1} | 1 × 10^{6}",
+   "nuclide": "Te134",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{1}",
+     "number": 10.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{6}",
+     "number": 1000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 136,
+   "row_text": "I-123 | 1 × 10^{2} | 1 × 10^{7}",
+   "nuclide": "I123",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{2}",
+     "number": 100.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{7}",
+     "number": 10000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 137,
+   "row_text": "I-125 | 1 × 10^{3} | 1 × 10^{6}",
+   "nuclide": "I125",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{3}",
+     "number": 1000.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{6}",
+     "number": 1000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 138,
+   "row_text": "I-126 | 1 × 10^{2} | 1 × 10^{6}",
+   "nuclide": "I126",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{2}",
+     "number": 100.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{6}",
+     "number": 1000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 139,
+   "row_text": "I-129 | 1 × 10^{2} | 1 × 10^{5}",
+   "nuclide": "I129",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{2}",
+     "number": 100.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{5}",
+     "number": 100000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 140,
+   "row_text": "I-130 | 1 × 10^{1} | 1 × 10^{6}",
+   "nuclide": "I130",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{1}",
+     "number": 10.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{6}",
+     "number": 1000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 141,
+   "row_text": "I-131 | 1 × 10^{2} | 1 × 10^{6}",
+   "nuclide": "I131",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{2}",
+     "number": 100.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{6}",
+     "number": 1000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 142,
+   "row_text": "I-132 | 1 × 10^{1} | 1 × 10^{5}",
+   "nuclide": "I132",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{1}",
+     "number": 10.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{5}",
+     "number": 100000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 143,
+   "row_text": "I-133 | 1 × 10^{1} | 1 × 10^{6}",
+   "nuclide": "I133",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{1}",
+     "number": 10.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{6}",
+     "number": 1000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 144,
+   "row_text": "I-134 | 1 × 10^{1} | 1 × 10^{5}",
+   "nuclide": "I134",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{1}",
+     "number": 10.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{5}",
+     "number": 100000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 145,
+   "row_text": "I-135 | 1 × 10^{1} | 1 × 10^{6}",
+   "nuclide": "I135",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{1}",
+     "number": 10.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{6}",
+     "number": 1000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 146,
+   "row_text": "Xe-131 m | 1 × 10^{4} | 1 × 10^{4}",
+   "nuclide": "Xe131m1",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{4}",
+     "number": 10000.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{4}",
+     "number": 10000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 147,
+   "row_text": "Xe-133 | 1 × 10^{3} | 1 × 10^{4}",
+   "nuclide": "Xe133",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{3}",
+     "number": 1000.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{4}",
+     "number": 10000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 148,
+   "row_text": "Xe-135 | 1 × 10^{3} | 1 × 10^{10}",
+   "nuclide": "Xe135",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{3}",
+     "number": 1000.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{10}",
+     "number": 10000000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 149,
+   "row_text": "Cs-129 | 1 × 10^{2} | 1 × 10^{5}",
+   "nuclide": "Cs129",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{2}",
+     "number": 100.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{5}",
+     "number": 100000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 150,
+   "row_text": "Cs-131 | 1 × 10^{3} | 1 × 10^{6}",
+   "nuclide": "Cs131",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{3}",
+     "number": 1000.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{6}",
+     "number": 1000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 151,
+   "row_text": "Cs-132 | 1 × 10^{1} | 1 × 10^{5}",
+   "nuclide": "Cs132",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{1}",
+     "number": 10.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{5}",
+     "number": 100000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 152,
+   "row_text": "Cs-134 m | 1 × 10^{3} | 1 × 10^{5}",
+   "nuclide": "Cs134m1",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{3}",
+     "number": 1000.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{5}",
+     "number": 100000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 153,
+   "row_text": "Cs-134 | 1 × 10^{1} | 1 × 10^{4}",
+   "nuclide": "Cs134",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{1}",
+     "number": 10.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{4}",
+     "number": 10000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 154,
+   "row_text": "Cs-135 | 1 × 10^{4} | 1 × 10^{7}",
+   "nuclide": "Cs135",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{4}",
+     "number": 10000.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{7}",
+     "number": 10000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 155,
+   "row_text": "Cs-136 | 1 × 10^{1} | 1 × 10^{5}",
+   "nuclide": "Cs136",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{1}",
+     "number": 10.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{5}",
+     "number": 100000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 156,
+   "row_text": "Cs-137 (2) | 1 × 10^{1} | 1 × 10^{4}",
+   "nuclide": "Cs137",
+   "footnotes": [
+    "2"
+   ],
+   "flags": [
+    "parent_with_progeny_included"
+   ],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{1}",
+     "number": 10.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{4}",
+     "number": 10000.0
+    }
+   },
+   "progeny_included": [
+    "Ba-137 m"
+   ]
+  },
+  {
+   "table": "Table B",
+   "row": 157,
+   "row_text": "Cs-138 | 1 × 10^{1} | 1 × 10^{4}",
+   "nuclide": "Cs138",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{1}",
+     "number": 10.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{4}",
+     "number": 10000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 158,
+   "row_text": "Ba-131 | 1 × 10^{2} | 1 × 10^{6}",
+   "nuclide": "Ba131",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{2}",
+     "number": 100.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{6}",
+     "number": 1000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 159,
+   "row_text": "Ba-140 (2) | 1 × 10^{1} | 1 × 10^{5}",
+   "nuclide": "Ba140",
+   "footnotes": [
+    "2"
+   ],
+   "flags": [
+    "parent_with_progeny_included"
+   ],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{1}",
+     "number": 10.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{5}",
+     "number": 100000.0
+    }
+   },
+   "progeny_included": [
+    "La-140"
+   ]
+  },
+  {
+   "table": "Table B",
+   "row": 160,
+   "row_text": "La-140 | 1 × 10^{1} | 1 × 10^{5}",
+   "nuclide": "La140",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{1}",
+     "number": 10.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{5}",
+     "number": 100000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 161,
+   "row_text": "Ce-139 | 1 × 10^{2} | 1 × 10^{6}",
+   "nuclide": "Ce139",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{2}",
+     "number": 100.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{6}",
+     "number": 1000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 162,
+   "row_text": "Ce-141 | 1 × 10^{2} | 1 × 10^{7}",
+   "nuclide": "Ce141",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{2}",
+     "number": 100.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{7}",
+     "number": 10000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 163,
+   "row_text": "Ce-143 | 1 × 10^{2} | 1 × 10^{6}",
+   "nuclide": "Ce143",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{2}",
+     "number": 100.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{6}",
+     "number": 1000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 164,
+   "row_text": "Ce-144 (2) | 1 × 10^{2} | 1 × 10^{5}",
+   "nuclide": "Ce144",
+   "footnotes": [
+    "2"
+   ],
+   "flags": [
+    "parent_with_progeny_included"
+   ],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{2}",
+     "number": 100.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{5}",
+     "number": 100000.0
+    }
+   },
+   "progeny_included": [
+    "Pr-144"
+   ]
+  },
+  {
+   "table": "Table B",
+   "row": 165,
+   "row_text": "Pr-142 | 1 × 10^{2} | 1 × 10^{5}",
+   "nuclide": "Pr142",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{2}",
+     "number": 100.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{5}",
+     "number": 100000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 166,
+   "row_text": "Pr-143 | 1 × 10^{4} | 1 × 10^{6}",
+   "nuclide": "Pr143",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{4}",
+     "number": 10000.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{6}",
+     "number": 1000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 167,
+   "row_text": "Nd-147 | 1 × 10^{2} | 1 × 10^{6}",
+   "nuclide": "Nd147",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{2}",
+     "number": 100.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{6}",
+     "number": 1000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 168,
+   "row_text": "Nd-149 | 1 × 10^{2} | 1 × 10^{6}",
+   "nuclide": "Nd149",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{2}",
+     "number": 100.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{6}",
+     "number": 1000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 169,
+   "row_text": "Pm-147 | 1 × 10^{4} | 1 × 10^{7}",
+   "nuclide": "Pm147",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{4}",
+     "number": 10000.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{7}",
+     "number": 10000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 170,
+   "row_text": "Pm-149 | 1 × 10^{3} | 1 × 10^{6}",
+   "nuclide": "Pm149",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{3}",
+     "number": 1000.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{6}",
+     "number": 1000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 171,
+   "row_text": "Sm-151 | 1 × 10^{4} | 1 × 10^{8}",
+   "nuclide": "Sm151",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{4}",
+     "number": 10000.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{8}",
+     "number": 100000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 172,
+   "row_text": "Sm-153 | 1 × 10^{2} | 1 × 10^{6}",
+   "nuclide": "Sm153",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{2}",
+     "number": 100.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{6}",
+     "number": 1000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 173,
+   "row_text": "Eu-152 | 1 × 10^{1} | 1 × 10^{6}",
+   "nuclide": "Eu152",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{1}",
+     "number": 10.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{6}",
+     "number": 1000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 174,
+   "row_text": "Eu-152 m | 1 × 10^{2} | 1 × 10^{6}",
+   "nuclide": "Eu152m1",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{2}",
+     "number": 100.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{6}",
+     "number": 1000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 175,
+   "row_text": "Eu-154 | 1 × 10^{1} | 1 × 10^{6}",
+   "nuclide": "Eu154",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{1}",
+     "number": 10.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{6}",
+     "number": 1000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 176,
+   "row_text": "Eu-155 | 1 × 10^{2} | 1 × 10^{7}",
+   "nuclide": "Eu155",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{2}",
+     "number": 100.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{7}",
+     "number": 10000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 177,
+   "row_text": "Gd-153 | 1 × 10^{2} | 1 × 10^{7}",
+   "nuclide": "Gd153",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{2}",
+     "number": 100.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{7}",
+     "number": 10000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 178,
+   "row_text": "Gd-159 | 1 × 10^{3} | 1 × 10^{6}",
+   "nuclide": "Gd159",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{3}",
+     "number": 1000.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{6}",
+     "number": 1000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 179,
+   "row_text": "Tb-160 | 1 × 10^{1} | 1 × 10^{6}",
+   "nuclide": "Tb160",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{1}",
+     "number": 10.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{6}",
+     "number": 1000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 180,
+   "row_text": "Dy-165 | 1 × 10^{3} | 1 × 10^{6}",
+   "nuclide": "Dy165",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{3}",
+     "number": 1000.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{6}",
+     "number": 1000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 181,
+   "row_text": "Dy-166 | 1 × 10^{3} | 1 × 10^{6}",
+   "nuclide": "Dy166",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{3}",
+     "number": 1000.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{6}",
+     "number": 1000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 182,
+   "row_text": "Ho-166 | 1 × 10^{3} | 1 × 10^{5}",
+   "nuclide": "Ho166",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{3}",
+     "number": 1000.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{5}",
+     "number": 100000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 183,
+   "row_text": "Er-169 | 1 × 10^{4} | 1 × 10^{7}",
+   "nuclide": "Er169",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{4}",
+     "number": 10000.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{7}",
+     "number": 10000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 184,
+   "row_text": "Er-171 | 1 × 10^{2} | 1 × 10^{6}",
+   "nuclide": "Er171",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{2}",
+     "number": 100.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{6}",
+     "number": 1000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 185,
+   "row_text": "Tm-170 | 1 × 10^{3} | 1 × 10^{6}",
+   "nuclide": "Tm170",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{3}",
+     "number": 1000.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{6}",
+     "number": 1000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 186,
+   "row_text": "Tm-171 | 1 × 10^{4} | 1 × 10^{8}",
+   "nuclide": "Tm171",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{4}",
+     "number": 10000.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{8}",
+     "number": 100000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 187,
+   "row_text": "Yb-175 | 1 × 10^{3} | 1 × 10^{7}",
+   "nuclide": "Yb175",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{3}",
+     "number": 1000.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{7}",
+     "number": 10000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 188,
+   "row_text": "Lu-177 | 1 × 10^{3} | 1 × 10^{7}",
+   "nuclide": "Lu177",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{3}",
+     "number": 1000.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{7}",
+     "number": 10000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 189,
+   "row_text": "Hf-181 | 1 × 10^{1} | 1 × 10^{6}",
+   "nuclide": "Hf181",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{1}",
+     "number": 10.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{6}",
+     "number": 1000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 190,
+   "row_text": "Ta-182 | 1 × 10^{1} | 1 × 10^{4}",
+   "nuclide": "Ta182",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{1}",
+     "number": 10.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{4}",
+     "number": 10000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 191,
+   "row_text": "W-181 | 1 × 10^{3} | 1 × 10^{7}",
+   "nuclide": "W181",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{3}",
+     "number": 1000.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{7}",
+     "number": 10000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 192,
+   "row_text": "W-185 | 1 × 10^{4} | 1 × 10^{7}",
+   "nuclide": "W185",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{4}",
+     "number": 10000.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{7}",
+     "number": 10000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 193,
+   "row_text": "W-187 | 1 × 10^{2} | 1 × 10^{6}",
+   "nuclide": "W187",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{2}",
+     "number": 100.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{6}",
+     "number": 1000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 194,
+   "row_text": "Re-186 | 1 × 10^{3} | 1 × 10^{6}",
+   "nuclide": "Re186",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{3}",
+     "number": 1000.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{6}",
+     "number": 1000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 195,
+   "row_text": "Re-188 | 1 × 10^{2} | 1 × 10^{5}",
+   "nuclide": "Re188",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{2}",
+     "number": 100.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{5}",
+     "number": 100000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 196,
+   "row_text": "Os-185 | 1 × 10^{1} | 1 × 10^{6}",
+   "nuclide": "Os185",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{1}",
+     "number": 10.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{6}",
+     "number": 1000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 197,
+   "row_text": "Os-191 | 1 × 10^{2} | 1 × 10^{7}",
+   "nuclide": "Os191",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{2}",
+     "number": 100.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{7}",
+     "number": 10000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 198,
+   "row_text": "Os-191 m | 1 × 10^{3} | 1 × 10^{7}",
+   "nuclide": "Os191m1",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{3}",
+     "number": 1000.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{7}",
+     "number": 10000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 199,
+   "row_text": "Os-193 | 1 × 10^{2} | 1 × 10^{6}",
+   "nuclide": "Os193",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{2}",
+     "number": 100.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{6}",
+     "number": 1000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 200,
+   "row_text": "Ir-190 | 1 × 10^{1} | 1 × 10^{6}",
+   "nuclide": "Ir190",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{1}",
+     "number": 10.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{6}",
+     "number": 1000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 201,
+   "row_text": "Ir-192 | 1 × 10^{1} | 1 × 10^{4}",
+   "nuclide": "Ir192",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{1}",
+     "number": 10.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{4}",
+     "number": 10000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 202,
+   "row_text": "Ir-194 | 1 × 10^{2} | 1 × 10^{5}",
+   "nuclide": "Ir194",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{2}",
+     "number": 100.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{5}",
+     "number": 100000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 203,
+   "row_text": "Pt-191 | 1 × 10^{2} | 1 × 10^{6}",
+   "nuclide": "Pt191",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{2}",
+     "number": 100.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{6}",
+     "number": 1000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 204,
+   "row_text": "Pt-193 m | 1 × 10^{3} | 1 × 10^{7}",
+   "nuclide": "Pt193m1",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{3}",
+     "number": 1000.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{7}",
+     "number": 10000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 205,
+   "row_text": "Pt-197 | 1 × 10^{3} | 1 × 10^{6}",
+   "nuclide": "Pt197",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{3}",
+     "number": 1000.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{6}",
+     "number": 1000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 206,
+   "row_text": "Pt-197 m | 1 × 10^{2} | 1 × 10^{6}",
+   "nuclide": "Pt197m1",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{2}",
+     "number": 100.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{6}",
+     "number": 1000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 207,
+   "row_text": "Au-198 | 1 × 10^{2} | 1 × 10^{6}",
+   "nuclide": "Au198",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{2}",
+     "number": 100.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{6}",
+     "number": 1000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 208,
+   "row_text": "Au-199 | 1 × 10^{2} | 1 × 10^{6}",
+   "nuclide": "Au199",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{2}",
+     "number": 100.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{6}",
+     "number": 1000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 209,
+   "row_text": "Hg-197 | 1 × 10^{2} | 1 × 10^{7}",
+   "nuclide": "Hg197",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{2}",
+     "number": 100.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{7}",
+     "number": 10000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 210,
+   "row_text": "Hg-197 m | 1 × 10^{2} | 1 × 10^{6}",
+   "nuclide": "Hg197m1",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{2}",
+     "number": 100.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{6}",
+     "number": 1000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 211,
+   "row_text": "Hg-203 | 1 × 10^{2} | 1 × 10^{5}",
+   "nuclide": "Hg203",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{2}",
+     "number": 100.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{5}",
+     "number": 100000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 212,
+   "row_text": "Tl-200 | 1 × 10^{1} | 1 × 10^{6}",
+   "nuclide": "Tl200",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{1}",
+     "number": 10.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{6}",
+     "number": 1000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 213,
+   "row_text": "Tl-201 | 1 × 10^{2} | 1 × 10^{6}",
+   "nuclide": "Tl201",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{2}",
+     "number": 100.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{6}",
+     "number": 1000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 214,
+   "row_text": "Tl-202 | 1 × 10^{2} | 1 × 10^{6}",
+   "nuclide": "Tl202",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{2}",
+     "number": 100.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{6}",
+     "number": 1000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 215,
+   "row_text": "Tl-204 | 1 × 10^{4} | 1 × 10^{4}",
+   "nuclide": "Tl204",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{4}",
+     "number": 10000.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{4}",
+     "number": 10000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 216,
+   "row_text": "Pb-203 | 1 × 10^{2} | 1 × 10^{6}",
+   "nuclide": "Pb203",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{2}",
+     "number": 100.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{6}",
+     "number": 1000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 217,
+   "row_text": "Pb-210 (2) | 1 × 10^{1} | 1 × 10^{4}",
+   "nuclide": "Pb210",
+   "footnotes": [
+    "2"
+   ],
+   "flags": [
+    "parent_with_progeny_included"
+   ],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{1}",
+     "number": 10.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{4}",
+     "number": 10000.0
+    }
+   },
+   "progeny_included": [
+    "Bi-210",
+    "Po-210"
+   ]
+  },
+  {
+   "table": "Table B",
+   "row": 218,
+   "row_text": "Pb-212 (2) | 1 × 10^{1} | 1 × 10^{5}",
+   "nuclide": "Pb212",
+   "footnotes": [
+    "2"
+   ],
+   "flags": [
+    "parent_with_progeny_included"
+   ],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{1}",
+     "number": 10.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{5}",
+     "number": 100000.0
+    }
+   },
+   "progeny_included": [
+    "Bi-212",
+    "Tl-208 (0.36)",
+    "Po-212 (0.64)"
+   ]
+  },
+  {
+   "table": "Table B",
+   "row": 219,
+   "row_text": "Bi-206 | 1 × 10^{1} | 1 × 10^{5}",
+   "nuclide": "Bi206",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{1}",
+     "number": 10.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{5}",
+     "number": 100000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 220,
+   "row_text": "Bi-207 | 1 × 10^{1} | 1 × 10^{6}",
+   "nuclide": "Bi207",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{1}",
+     "number": 10.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{6}",
+     "number": 1000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 221,
+   "row_text": "Bi-210 | 1 × 10^{3} | 1 × 10^{6}",
+   "nuclide": "Bi210",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{3}",
+     "number": 1000.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{6}",
+     "number": 1000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 222,
+   "row_text": "Bi-212 (2) | 1 × 10^{1} | 1 × 10^{5}",
+   "nuclide": "Bi212",
+   "footnotes": [
+    "2"
+   ],
+   "flags": [
+    "parent_with_progeny_included"
+   ],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{1}",
+     "number": 10.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{5}",
+     "number": 100000.0
+    }
+   },
+   "progeny_included": [
+    "Tl-208 (0.36)",
+    "Po-212 (0.64)"
+   ]
+  },
+  {
+   "table": "Table B",
+   "row": 223,
+   "row_text": "Po-203 | 1 × 10^{1} | 1 × 10^{6}",
+   "nuclide": "Po203",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{1}",
+     "number": 10.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{6}",
+     "number": 1000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 224,
+   "row_text": "Po-205 | 1 × 10^{1} | 1 × 10^{6}",
+   "nuclide": "Po205",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{1}",
+     "number": 10.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{6}",
+     "number": 1000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 225,
+   "row_text": "Po-207 | 1 × 10^{1} | 1 × 10^{6}",
+   "nuclide": "Po207",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{1}",
+     "number": 10.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{6}",
+     "number": 1000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 226,
+   "row_text": "Po-210 | 1 × 10^{1} | 1 × 10^{4}",
+   "nuclide": "Po210",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{1}",
+     "number": 10.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{4}",
+     "number": 10000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 227,
+   "row_text": "At-211 | 1 × 10^{3} | 1 × 10^{7}",
+   "nuclide": "At211",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{3}",
+     "number": 1000.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{7}",
+     "number": 10000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 228,
+   "row_text": "Rn-220 (2) | 1 × 10^{4} | 1 × 10^{7}",
+   "nuclide": "Rn220",
+   "footnotes": [
+    "2"
+   ],
+   "flags": [
+    "parent_with_progeny_included"
+   ],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{4}",
+     "number": 10000.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{7}",
+     "number": 10000000.0
+    }
+   },
+   "progeny_included": [
+    "Po-216"
+   ]
+  },
+  {
+   "table": "Table B",
+   "row": 229,
+   "row_text": "Rn-222 (2) | 1 × 10^{1} | 1 × 10^{8}",
+   "nuclide": "Rn222",
+   "footnotes": [
+    "2"
+   ],
+   "flags": [
+    "parent_with_progeny_included"
+   ],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{1}",
+     "number": 10.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{8}",
+     "number": 100000000.0
+    }
+   },
+   "progeny_included": [
+    "Po-218",
+    "Pb-214",
+    "Bi-214",
+    "Po-214"
+   ]
+  },
+  {
+   "table": "Table B",
+   "row": 230,
+   "row_text": "Ra-223 (2) | 1 × 10^{2} | 1 × 10^{5}",
+   "nuclide": "Ra223",
+   "footnotes": [
+    "2"
+   ],
+   "flags": [
+    "parent_with_progeny_included"
+   ],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{2}",
+     "number": 100.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{5}",
+     "number": 100000.0
+    }
+   },
+   "progeny_included": [
+    "Rn-219",
+    "Po-215",
+    "Pb-211",
+    "Bi-211",
+    "Tl-207"
+   ]
+  },
+  {
+   "table": "Table B",
+   "row": 231,
+   "row_text": "Ra-224 (2) | 1 × 10^{1} | 1 × 10^{5}",
+   "nuclide": "Ra224",
+   "footnotes": [
+    "2"
+   ],
+   "flags": [
+    "parent_with_progeny_included"
+   ],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{1}",
+     "number": 10.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{5}",
+     "number": 100000.0
+    }
+   },
+   "progeny_included": [
+    "Rn-220",
+    "Po-216",
+    "Pb-212",
+    "Bi-212",
+    "Tl-208 (0.36)",
+    "Po-212 (0.64)"
+   ]
+  },
+  {
+   "table": "Table B",
+   "row": 232,
+   "row_text": "Ra-225 | 1 × 10^{2} | 1 × 10^{5}",
+   "nuclide": "Ra225",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{2}",
+     "number": 100.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{5}",
+     "number": 100000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 233,
+   "row_text": "Ra-226 (2) | 1 × 10^{1} | 1 × 10^{4}",
+   "nuclide": "Ra226",
+   "footnotes": [
+    "2"
+   ],
+   "flags": [
+    "parent_with_progeny_included"
+   ],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{1}",
+     "number": 10.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{4}",
+     "number": 10000.0
+    }
+   },
+   "progeny_included": [
+    "Rn-222",
+    "Po-218",
+    "Pb-214",
+    "Bi-214",
+    "Po-214",
+    "Pb-210",
+    "Bi-210",
+    "Po-210"
+   ]
+  },
+  {
+   "table": "Table B",
+   "row": 234,
+   "row_text": "Ra-227 | 1 × 10^{2} | 1 × 10^{6}",
+   "nuclide": "Ra227",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{2}",
+     "number": 100.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{6}",
+     "number": 1000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 235,
+   "row_text": "Ra-228 (2) | 1 × 10^{1} | 1 × 10^{5}",
+   "nuclide": "Ra228",
+   "footnotes": [
+    "2"
+   ],
+   "flags": [
+    "parent_with_progeny_included"
+   ],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{1}",
+     "number": 10.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{5}",
+     "number": 100000.0
+    }
+   },
+   "progeny_included": [
+    "Ac-228"
+   ]
+  },
+  {
+   "table": "Table B",
+   "row": 236,
+   "row_text": "Ac-228 | 1 × 10^{1} | 1 × 10^{6}",
+   "nuclide": "Ac228",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{1}",
+     "number": 10.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{6}",
+     "number": 1000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 237,
+   "row_text": "Th-226 (2) | 1 × 10^{3} | 1 × 10^{7}",
+   "nuclide": "Th226",
+   "footnotes": [
+    "2"
+   ],
+   "flags": [
+    "parent_with_progeny_included"
+   ],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{3}",
+     "number": 1000.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{7}",
+     "number": 10000000.0
+    }
+   },
+   "progeny_included": [
+    "Ra-222",
+    "Rn-218",
+    "Po-214"
+   ]
+  },
+  {
+   "table": "Table B",
+   "row": 238,
+   "row_text": "Th-227 | 1 × 10^{1} | 1 × 10^{4}",
+   "nuclide": "Th227",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{1}",
+     "number": 10.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{4}",
+     "number": 10000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 239,
+   "row_text": "Th-228 (2) | 1 × 10^{0} | 1 × 10^{4}",
+   "nuclide": "Th228",
+   "footnotes": [
+    "2"
+   ],
+   "flags": [
+    "parent_with_progeny_included"
+   ],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{0}",
+     "number": 1.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{4}",
+     "number": 10000.0
+    }
+   },
+   "progeny_included": [
+    "Ra-224",
+    "Rn-220",
+    "Po-216",
+    "Pb-212",
+    "Bi-212",
+    "Tl-208 (0.36)",
+    "Po-212 (0.64)"
+   ]
+  },
+  {
+   "table": "Table B",
+   "row": 240,
+   "row_text": "Th-229 (2) | 1 × 10^{0} | 1 × 10^{3}",
+   "nuclide": "Th229",
+   "footnotes": [
+    "2"
+   ],
+   "flags": [
+    "parent_with_progeny_included"
+   ],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{0}",
+     "number": 1.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{3}",
+     "number": 1000.0
+    }
+   },
+   "progeny_included": [
+    "Ra-225",
+    "Ac-225",
+    "Fr-221",
+    "At-217",
+    "Bi-213",
+    "Po-213",
+    "Pb-209"
+   ]
+  },
+  {
+   "table": "Table B",
+   "row": 241,
+   "row_text": "Th-230 | 1 × 10^{0} | 1 × 10^{4}",
+   "nuclide": "Th230",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{0}",
+     "number": 1.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{4}",
+     "number": 10000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 242,
+   "row_text": "Th-231 | 1 × 10^{3} | 1 × 10^{7}",
+   "nuclide": "Th231",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{3}",
+     "number": 1000.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{7}",
+     "number": 10000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 243,
+   "row_text": "Th-234 (2) | 1 × 10^{3} | 1 × 10^{5}",
+   "nuclide": "Th234",
+   "footnotes": [
+    "2"
+   ],
+   "flags": [
+    "parent_with_progeny_included"
+   ],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{3}",
+     "number": 1000.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{5}",
+     "number": 100000.0
+    }
+   },
+   "progeny_included": [
+    "Pa-234 m"
+   ]
+  },
+  {
+   "table": "Table B",
+   "row": 244,
+   "row_text": "Pa-230 | 1 × 10^{1} | 1 × 10^{6}",
+   "nuclide": "Pa230",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{1}",
+     "number": 10.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{6}",
+     "number": 1000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 245,
+   "row_text": "Pa-231 | 1 × 10^{0} | 1 × 10^{3}",
+   "nuclide": "Pa231",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{0}",
+     "number": 1.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{3}",
+     "number": 1000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 246,
+   "row_text": "Pa-233 | 1 × 10^{2} | 1 × 10^{7}",
+   "nuclide": "Pa233",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{2}",
+     "number": 100.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{7}",
+     "number": 10000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 247,
+   "row_text": "U-230 | 1 × 10^{1} | 1 × 10^{5}",
+   "nuclide": "U230",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{1}",
+     "number": 10.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{5}",
+     "number": 100000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 248,
+   "row_text": "U-231 | 1 × 10^{2} | 1 × 10^{7}",
+   "nuclide": "U231",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{2}",
+     "number": 100.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{7}",
+     "number": 10000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 249,
+   "row_text": "U-232 (2) | 1 × 10^{0} | 1 × 10^{3}",
+   "nuclide": "U232",
+   "footnotes": [
+    "2"
+   ],
+   "flags": [
+    "parent_with_progeny_included"
+   ],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{0}",
+     "number": 1.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{3}",
+     "number": 1000.0
+    }
+   },
+   "progeny_included": [
+    "Th-228",
+    "Ra-224",
+    "Rn-220",
+    "Po-216",
+    "Pb-212",
+    "Bi-212",
+    "Tl-208 (0.36)",
+    "Po-212 (0.64)"
+   ]
+  },
+  {
+   "table": "Table B",
+   "row": 250,
+   "row_text": "U-233 | 1 × 10^{1} | 1 × 10^{4}",
+   "nuclide": "U233",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{1}",
+     "number": 10.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{4}",
+     "number": 10000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 251,
+   "row_text": "U-234 | 1 × 10^{1} | 1 × 10^{4}",
+   "nuclide": "U234",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{1}",
+     "number": 10.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{4}",
+     "number": 10000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 252,
+   "row_text": "U-235 (2) | 1 × 10^{1} | 1 × 10^{4}",
+   "nuclide": "U235",
+   "footnotes": [
+    "2"
+   ],
+   "flags": [
+    "parent_with_progeny_included"
+   ],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{1}",
+     "number": 10.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{4}",
+     "number": 10000.0
+    }
+   },
+   "progeny_included": [
+    "Th-231"
+   ]
+  },
+  {
+   "table": "Table B",
+   "row": 253,
+   "row_text": "U-236 | 1 × 10^{1} | 1 × 10^{4}",
+   "nuclide": "U236",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{1}",
+     "number": 10.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{4}",
+     "number": 10000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 254,
+   "row_text": "U-237 | 1 × 10^{2} | 1 × 10^{6}",
+   "nuclide": "U237",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{2}",
+     "number": 100.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{6}",
+     "number": 1000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 255,
+   "row_text": "U-238 (2) | 1 × 10^{1} | 1 × 10^{4}",
+   "nuclide": "U238",
+   "footnotes": [
+    "2"
+   ],
+   "flags": [
+    "parent_with_progeny_included"
+   ],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{1}",
+     "number": 10.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{4}",
+     "number": 10000.0
+    }
+   },
+   "progeny_included": [
+    "Th-234",
+    "Pa-234 m"
+   ]
+  },
+  {
+   "table": "Table B",
+   "row": 256,
+   "row_text": "U-239 | 1 × 10^{2} | 1 × 10^{6}",
+   "nuclide": "U239",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{2}",
+     "number": 100.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{6}",
+     "number": 1000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 257,
+   "row_text": "U-240 | 1 × 10^{3} | 1 × 10^{7}",
+   "nuclide": "U240",
+   "footnotes": [],
+   "flags": [
+    "duplicate_nuclide_alternative_row_in_sidecar"
+   ],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{3}",
+     "number": 1000.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{7}",
+     "number": 10000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 258,
+   "row_text": "U-240 (2) | 1 × 10^{1} | 1 × 10^{6}",
+   "nuclide": "U240",
+   "footnotes": [
+    "2"
+   ],
+   "flags": [
+    "parent_with_progeny_included",
+    "duplicate_nuclide_row_not_in_table"
+   ],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{1}",
+     "number": 10.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{6}",
+     "number": 1000000.0
+    }
+   },
+   "progeny_included": [
+    "Np-240 m"
+   ]
+  },
+  {
+   "table": "Table B",
+   "row": 259,
+   "row_text": "Np-237 (2) | 1 × 10^{0} | 1 × 10^{3}",
+   "nuclide": "Np237",
+   "footnotes": [
+    "2"
+   ],
+   "flags": [
+    "parent_with_progeny_included"
+   ],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{0}",
+     "number": 1.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{3}",
+     "number": 1000.0
+    }
+   },
+   "progeny_included": [
+    "Pa-233"
+   ]
+  },
+  {
+   "table": "Table B",
+   "row": 260,
+   "row_text": "Np-239 | 1 × 10^{2} | 1 × 10^{7}",
+   "nuclide": "Np239",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{2}",
+     "number": 100.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{7}",
+     "number": 10000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 261,
+   "row_text": "Np-240 | 1 × 10^{1} | 1 × 10^{6}",
+   "nuclide": "Np240",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{1}",
+     "number": 10.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{6}",
+     "number": 1000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 262,
+   "row_text": "Pu-234 | 1 × 10^{2} | 1 × 10^{7}",
+   "nuclide": "Pu234",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{2}",
+     "number": 100.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{7}",
+     "number": 10000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 263,
+   "row_text": "Pu-235 | 1 × 10^{2} | 1 × 10^{7}",
+   "nuclide": "Pu235",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{2}",
+     "number": 100.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{7}",
+     "number": 10000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 264,
+   "row_text": "Pu-236 | 1 × 10^{1} | 1 × 10^{4}",
+   "nuclide": "Pu236",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{1}",
+     "number": 10.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{4}",
+     "number": 10000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 265,
+   "row_text": "Pu-237 | 1 × 10^{3} | 1 × 10^{7}",
+   "nuclide": "Pu237",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{3}",
+     "number": 1000.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{7}",
+     "number": 10000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 266,
+   "row_text": "Pu-238 | 1 × 10^{0} | 1 × 10^{4}",
+   "nuclide": "Pu238",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{0}",
+     "number": 1.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{4}",
+     "number": 10000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 267,
+   "row_text": "Pu-239 | 1 × 10^{0} | 1 × 10^{4}",
+   "nuclide": "Pu239",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{0}",
+     "number": 1.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{4}",
+     "number": 10000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 268,
+   "row_text": "Pu-240 | 1 × 10^{0} | 1 × 10^{3}",
+   "nuclide": "Pu240",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{0}",
+     "number": 1.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{3}",
+     "number": 1000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 269,
+   "row_text": "Pu-241 | 1 × 10^{2} | 1 × 10^{5}",
+   "nuclide": "Pu241",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{2}",
+     "number": 100.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{5}",
+     "number": 100000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 270,
+   "row_text": "Pu-242 | 1 × 10^{0} | 1 × 10^{4}",
+   "nuclide": "Pu242",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{0}",
+     "number": 1.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{4}",
+     "number": 10000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 271,
+   "row_text": "Pu-243 | 1 × 10^{3} | 1 × 10^{7}",
+   "nuclide": "Pu243",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{3}",
+     "number": 1000.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{7}",
+     "number": 10000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 272,
+   "row_text": "Pu-244 | 1 × 10^{0} | 1 × 10^{4}",
+   "nuclide": "Pu244",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{0}",
+     "number": 1.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{4}",
+     "number": 10000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 273,
+   "row_text": "Am-241 | 1 × 10^{0} | 1 × 10^{4}",
+   "nuclide": "Am241",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{0}",
+     "number": 1.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{4}",
+     "number": 10000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 274,
+   "row_text": "Am-242 | 1 × 10^{3} | 1 × 10^{6}",
+   "nuclide": "Am242",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{3}",
+     "number": 1000.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{6}",
+     "number": 1000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 275,
+   "row_text": "Am-242 m (2) | 1 × 10^{0} | 1 × 10^{4}",
+   "nuclide": "Am242m1",
+   "footnotes": [
+    "2"
+   ],
+   "flags": [
+    "parent_with_progeny_included"
+   ],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{0}",
+     "number": 1.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{4}",
+     "number": 10000.0
+    }
+   },
+   "progeny_included": [
+    "Am-242"
+   ]
+  },
+  {
+   "table": "Table B",
+   "row": 276,
+   "row_text": "Am-243 (2) | 1 × 10^{0} | 1 × 10^{3}",
+   "nuclide": "Am243",
+   "footnotes": [
+    "2"
+   ],
+   "flags": [
+    "parent_with_progeny_included"
+   ],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{0}",
+     "number": 1.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{3}",
+     "number": 1000.0
+    }
+   },
+   "progeny_included": [
+    "Np-239"
+   ]
+  },
+  {
+   "table": "Table B",
+   "row": 277,
+   "row_text": "Cm-242 | 1 × 10^{2} | 1 × 10^{5}",
+   "nuclide": "Cm242",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{2}",
+     "number": 100.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{5}",
+     "number": 100000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 278,
+   "row_text": "Cm-243 | 1 × 10^{0} | 1 × 10^{4}",
+   "nuclide": "Cm243",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{0}",
+     "number": 1.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{4}",
+     "number": 10000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 279,
+   "row_text": "Cm-244 | 1 × 10^{1} | 1 × 10^{4}",
+   "nuclide": "Cm244",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{1}",
+     "number": 10.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{4}",
+     "number": 10000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 280,
+   "row_text": "Cm-245 | 1 × 10^{0} | 1 × 10^{3}",
+   "nuclide": "Cm245",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{0}",
+     "number": 1.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{3}",
+     "number": 1000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 281,
+   "row_text": "Cm-246 | 1 × 10^{0} | 1 × 10^{3}",
+   "nuclide": "Cm246",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{0}",
+     "number": 1.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{3}",
+     "number": 1000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 282,
+   "row_text": "Cm-247 | 1 × 10^{0} | 1 × 10^{4}",
+   "nuclide": "Cm247",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{0}",
+     "number": 1.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{4}",
+     "number": 10000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 283,
+   "row_text": "Cm-248 | 1 × 10^{0} | 1 × 10^{3}",
+   "nuclide": "Cm248",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{0}",
+     "number": 1.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{3}",
+     "number": 1000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 284,
+   "row_text": "Bk-249 | 1 × 10^{3} | 1 × 10^{6}",
+   "nuclide": "Bk249",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{3}",
+     "number": 1000.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{6}",
+     "number": 1000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 285,
+   "row_text": "Cf-246 | 1 × 10^{3} | 1 × 10^{6}",
+   "nuclide": "Cf246",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{3}",
+     "number": 1000.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{6}",
+     "number": 1000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 286,
+   "row_text": "Cf-248 | 1 × 10^{1} | 1 × 10^{4}",
+   "nuclide": "Cf248",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{1}",
+     "number": 10.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{4}",
+     "number": 10000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 287,
+   "row_text": "Cf-249 | 1 × 10^{0} | 1 × 10^{3}",
+   "nuclide": "Cf249",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{0}",
+     "number": 1.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{3}",
+     "number": 1000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 288,
+   "row_text": "Cf-250 | 1 × 10^{1} | 1 × 10^{4}",
+   "nuclide": "Cf250",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{1}",
+     "number": 10.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{4}",
+     "number": 10000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 289,
+   "row_text": "Cf-251 | 1 × 10^{0} | 1 × 10^{3}",
+   "nuclide": "Cf251",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{0}",
+     "number": 1.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{3}",
+     "number": 1000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 290,
+   "row_text": "Cf-252 | 1 × 10^{1} | 1 × 10^{4}",
+   "nuclide": "Cf252",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{1}",
+     "number": 10.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{4}",
+     "number": 10000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 291,
+   "row_text": "Cf-253 | 1 × 10^{2} | 1 × 10^{5}",
+   "nuclide": "Cf253",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{2}",
+     "number": 100.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{5}",
+     "number": 100000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 292,
+   "row_text": "Cf-254 | 1 × 10^{0} | 1 × 10^{3}",
+   "nuclide": "Cf254",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{0}",
+     "number": 1.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{3}",
+     "number": 1000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 293,
+   "row_text": "Es-253 | 1 × 10^{2} | 1 × 10^{5}",
+   "nuclide": "Es253",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{2}",
+     "number": 100.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{5}",
+     "number": 100000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 294,
+   "row_text": "Es-254 | 1 × 10^{1} | 1 × 10^{4}",
+   "nuclide": "Es254",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{1}",
+     "number": 10.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{4}",
+     "number": 10000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 295,
+   "row_text": "Es-254 m | 1 × 10^{2} | 1 × 10^{6}",
+   "nuclide": "Es254m1",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{2}",
+     "number": 100.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{6}",
+     "number": 1000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 296,
+   "row_text": "Fm-254 | 1 × 10^{4} | 1 × 10^{7}",
+   "nuclide": "Fm254",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{4}",
+     "number": 10000.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{7}",
+     "number": 10000000.0
+    }
+   }
+  },
+  {
+   "table": "Table B",
+   "row": 297,
+   "row_text": "Fm-255 | 1 × 10^{3} | 1 × 10^{6}",
+   "nuclide": "Fm255",
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_kBq_per_kg": {
+     "text": "1 × 10^{3}",
+     "number": 1000.0
+    },
+    "activity_Bq": {
+     "text": "1 × 10^{6}",
+     "number": 1000000.0
+    }
+   }
+  },
+  {
+   "table": "Table A Part 2",
+   "row": 1,
+   "row_text": "Natural radionuclides from the U-238 series | 1 kBq kg^{-1}",
+   "nuclide": null,
+   "flags": [
+    "natural_series_entry_not_nuclide_keyed"
+   ]
+  },
+  {
+   "table": "Table A Part 2",
+   "row": 2,
+   "row_text": "Natural radionuclides from the Th-232 series | 1 kBq kg^{-1}",
+   "nuclide": null,
+   "flags": [
+    "natural_series_entry_not_nuclide_keyed"
+   ]
+  },
+  {
+   "table": "Table A Part 2",
+   "row": 3,
+   "row_text": "K-40 | 10 kBq kg^{-1}",
+   "nuclide": null,
+   "flags": [
+    "natural_series_entry_not_nuclide_keyed"
+   ]
+  }
+ ]
+}

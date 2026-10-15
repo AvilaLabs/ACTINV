@@ -4,11 +4,100 @@
 use actinv_data::composition::{self, MaterialKey};
 use serde::de::{Error as _, MapAccess, Visitor};
 use serde::{Deserialize, Deserializer, Serialize};
+use sha2::{Digest, Sha256};
 use std::collections::{BTreeMap, HashSet};
 use std::fmt;
 
 const TABLE_FORMAT: &str = "actinv-radiological-table-1";
 
+/// Prefix of a `radiological.table.path` that names a table shipped inside the binary.
+pub const BUNDLED_PREFIX: &str = "bundled:";
+
+/// Regulatory tables converted from public sources (`scripts/regulatory/`). Each is opt-in by
+/// name; none is ever a default. Per-row source text lives in the `*.rows.json` sidecars next
+/// to the tables, which are not read at run time.
+const BUNDLED_TABLES: &[(&str, &str)] = &[
+    (
+        "euratom-2013-59-annex-vii-a",
+        include_str!("../data/regulatory/euratom-2013-59-annex-vii-a.json"),
+    ),
+    (
+        "euratom-2013-59-annex-vii-b-activity",
+        include_str!("../data/regulatory/euratom-2013-59-annex-vii-b-activity.json"),
+    ),
+    (
+        "euratom-2013-59-annex-vii-b-concentration",
+        include_str!("../data/regulatory/euratom-2013-59-annex-vii-b-concentration.json"),
+    ),
+    (
+        "us-49cfr173-a1",
+        include_str!("../data/regulatory/us-49cfr173-a1.json"),
+    ),
+    (
+        "us-49cfr173-a2",
+        include_str!("../data/regulatory/us-49cfr173-a2.json"),
+    ),
+    (
+        "us-49cfr173-exempt-concentration",
+        include_str!("../data/regulatory/us-49cfr173-exempt-concentration.json"),
+    ),
+    (
+        "us-49cfr173-exempt-consignment",
+        include_str!("../data/regulatory/us-49cfr173-exempt-consignment.json"),
+    ),
+];
+
+/// Names of the bundled tables, in alphabetical order.
+pub fn bundled_table_names() -> Vec<&'static str> {
+    BUNDLED_TABLES.iter().map(|(name, _)| *name).collect()
+}
+
+/// The table name in a `bundled:NAME` path, or `None` for an ordinary file path.
+pub fn bundled_name(path: &str) -> Option<&str> {
+    path.strip_prefix(BUNDLED_PREFIX)
+}
+
+/// Text of a bundled table. An unknown name is an error that lists the available names;
+/// there is no fallback table.
+pub fn bundled_table(name: &str) -> Result<&'static str, String> {
+    BUNDLED_TABLES
+        .iter()
+        .find(|(known, _)| *known == name)
+        .map(|(_, text)| *text)
+        .ok_or_else(|| {
+            format!(
+                "unknown bundled radiological table '{name}'; available: {}",
+                bundled_table_names().join(", ")
+            )
+        })
+}
+
+/// SHA-256 of a bundled table's bytes: the digest a spec must declare.
+pub fn bundled_sha256(name: &str) -> Result<String, String> {
+    Ok(format!(
+        "{:x}",
+        Sha256::digest(bundled_table(name)?.as_bytes())
+    ))
+}
+
+/// Text and SHA-256 of a bundled table. A declared digest that differs is an error, as for a
+/// table read from a file.
+pub fn read_bundled(name: &str, declared: Option<&str>) -> Result<(String, String), String> {
+    let text = bundled_table(name)?;
+    let computed = bundled_sha256(name)?;
+    if let Some(expected) = declared {
+        if !computed.eq_ignore_ascii_case(expected) {
+            return Err(format!(
+                "SHA-256 mismatch for {BUNDLED_PREFIX}{name}: declared {expected}, computed {computed}"
+            ));
+        }
+    }
+    Ok((text.to_owned(), computed))
+}
+
+/// Source metadata. The first four fields are required. The rest are optional provenance that
+/// bundled and generated tables carry; an absent field is not serialized, so certificates of
+/// tables without them are unchanged.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct RadiologicalSource {
@@ -16,6 +105,20 @@ pub struct RadiologicalSource {
     edition: String,
     url: String,
     jurisdiction: String,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    scope: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    retrieved: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    source_file: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    source_sha256: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    converter: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    licence: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    row_provenance: Option<String>,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
@@ -28,6 +131,8 @@ pub enum RadiologicalKind {
     /// FISPACT-II `ATWO` transport index: activity over the nuclide's A2 value, summed.
     #[serde(rename = "a2")]
     A2,
+    /// Any absolute activity limit in Bq (A1, exempt consignment): activity over the limit, summed.
+    ActivityLimit,
 }
 
 impl RadiologicalKind {
@@ -38,6 +143,7 @@ impl RadiologicalKind {
             Self::IngestionDose => "ingestion_dose",
             Self::InhalationDose => "inhalation_dose",
             Self::A2 => "a2",
+            Self::ActivityLimit => "activity_limit",
         }
     }
 
@@ -46,6 +152,7 @@ impl RadiologicalKind {
             Self::ClearanceIndex | Self::WasteIndex => "dimensionless",
             Self::IngestionDose | Self::InhalationDose => "Sv/g_material_intake",
             Self::A2 => "A2_per_g_material",
+            Self::ActivityLimit => "limits_per_g_material",
         }
     }
 
@@ -53,7 +160,7 @@ impl RadiologicalKind {
         match self {
             Self::ClearanceIndex | Self::WasteIndex => "Bq/kg",
             Self::IngestionDose | Self::InhalationDose => "Sv/Bq",
-            Self::A2 => "Bq",
+            Self::A2 | Self::ActivityLimit => "Bq",
         }
     }
 
@@ -66,6 +173,7 @@ impl RadiologicalKind {
                 "sum(activity_Bq_per_g * dose_coefficient_Sv_per_Bq)"
             }
             Self::A2 => "sum(activity_Bq_per_g / A2_Bq)",
+            Self::ActivityLimit => "sum(activity_Bq_per_g / limit_Bq)",
         }
     }
 
@@ -73,7 +181,7 @@ impl RadiologicalKind {
         match self {
             Self::ClearanceIndex | Self::WasteIndex => 1000.0 * activity / coefficient,
             Self::IngestionDose | Self::InhalationDose => activity * coefficient,
-            Self::A2 => activity / coefficient,
+            Self::A2 | Self::ActivityLimit => activity / coefficient,
         }
     }
 }
@@ -209,12 +317,19 @@ impl PreparedRadiologicalTable {
             return Err("radiological table title must be nonempty".into());
         }
         for (name, value) in [
-            ("citation", &table.source.citation),
-            ("edition", &table.source.edition),
-            ("url", &table.source.url),
-            ("jurisdiction", &table.source.jurisdiction),
+            ("citation", Some(&table.source.citation)),
+            ("edition", Some(&table.source.edition)),
+            ("url", Some(&table.source.url)),
+            ("jurisdiction", Some(&table.source.jurisdiction)),
+            ("scope", table.source.scope.as_ref()),
+            ("retrieved", table.source.retrieved.as_ref()),
+            ("source_file", table.source.source_file.as_ref()),
+            ("source_sha256", table.source.source_sha256.as_ref()),
+            ("converter", table.source.converter.as_ref()),
+            ("licence", table.source.licence.as_ref()),
+            ("row_provenance", table.source.row_provenance.as_ref()),
         ] {
-            if value.trim().is_empty() {
+            if value.is_some_and(|value| value.trim().is_empty()) {
                 return Err(format!("radiological table source.{name} must be nonempty"));
             }
         }
@@ -348,9 +463,16 @@ impl PreparedRadiologicalTable {
 
     /// True when a selected response is an A2 transport index.
     pub fn has_a2(&self) -> bool {
-        self.responses
-            .iter()
-            .any(|response| response.kind == RadiologicalKind::A2)
+        self.has_kind(RadiologicalKind::A2)
+    }
+
+    /// True when a selected response is an absolute activity limit other than A2.
+    pub fn has_activity_limit(&self) -> bool {
+        self.has_kind(RadiologicalKind::ActivityLimit)
+    }
+
+    fn has_kind(&self, kind: RadiologicalKind) -> bool {
+        self.responses.iter().any(|response| response.kind == kind)
     }
 
     pub fn certificate_metadata(&self) -> serde_json::Value {
@@ -495,5 +617,135 @@ mod tests {
         assert!(PreparedRadiologicalTable::from_json(&zero, &[])
             .unwrap_err()
             .contains("strictly positive"));
+    }
+
+    #[test]
+    fn activity_limit_kind_divides_by_a_limit_in_bq() {
+        let text = table("").replace(
+            r#"{"id":"ingest", "kind":"ingestion_dose", "basis":"dose", "coefficients":{"Co60":0.25}}"#,
+            r#"{"id":"a1", "kind":"activity_limit", "basis":"A1 in Bq", "coefficients":{"Co60":8.0}}"#,
+        );
+        let prepared = PreparedRadiologicalTable::from_json(&text, &[]).unwrap();
+        assert!(prepared.has_activity_limit());
+        assert!(!prepared.has_a2());
+        let activity = BTreeMap::from([("Co60".to_owned(), 2.0)]);
+        let a1 = &prepared.evaluate(&activity, false).unwrap().responses[1];
+        assert_eq!(a1.value, 0.25);
+        assert_eq!(a1.unit, "limits_per_g_material");
+        let bundled = bundled_table("us-49cfr173-a1").unwrap();
+        let metadata = PreparedRadiologicalTable::from_json(bundled, &[])
+            .unwrap()
+            .certificate_metadata();
+        assert!(metadata["responses"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .all(|response| response["kind"] == "activity_limit"));
+    }
+
+    #[test]
+    fn every_bundled_table_parses_and_carries_provenance() {
+        let names = bundled_table_names();
+        assert_eq!(names.len(), 7);
+        let mut sorted = names.clone();
+        sorted.sort_unstable();
+        sorted.dedup();
+        assert_eq!(names, sorted, "bundled names are unique and alphabetical");
+        for name in names {
+            let text = bundled_table(name).unwrap();
+            let prepared = PreparedRadiologicalTable::from_json(text, &[]).unwrap();
+            let metadata = prepared.certificate_metadata();
+            let source = &metadata["source"];
+            for field in [
+                "scope",
+                "retrieved",
+                "source_file",
+                "source_sha256",
+                "converter",
+                "licence",
+                "row_provenance",
+            ] {
+                assert!(
+                    source[field]
+                        .as_str()
+                        .is_some_and(|value| !value.is_empty()),
+                    "{name}: source.{field}"
+                );
+            }
+            assert!(metadata["responses"]
+                .as_array()
+                .unwrap()
+                .iter()
+                .all(|response| response["coefficient_count"].as_u64().unwrap() > 100));
+        }
+    }
+
+    #[test]
+    fn bundled_table_resolves_by_name_and_evaluates() {
+        let (text, sha256) = read_bundled("us-49cfr173-a2", None).unwrap();
+        assert_eq!(sha256, bundled_sha256("us-49cfr173-a2").unwrap());
+        assert_eq!(
+            bundled_name("bundled:us-49cfr173-a2"),
+            Some("us-49cfr173-a2")
+        );
+        assert_eq!(bundled_name("tables/a2.json"), None);
+        let prepared =
+            PreparedRadiologicalTable::from_json(&text, &["a2-u-medium".to_owned()]).unwrap();
+        // Co-60 A2 is 0.4 TBq = 4e11 Bq in 49 CFR 173.435.
+        let activity = BTreeMap::from([("Co60".to_owned(), 2.0)]);
+        let result = prepared.evaluate(&activity, true).unwrap();
+        assert_eq!(result.responses.len(), 1);
+        assert!(prepared.has_a2());
+        assert_eq!(result.responses[0].value, 2.0 / 4.0e11);
+        assert_eq!(result.responses[0].unit, "A2_per_g_material");
+        // Uranium rows are explicit per lung-absorption response; U-236 fast is unlimited.
+        let uranium = BTreeMap::from([("U236".to_owned(), 1.0)]);
+        let fast = PreparedRadiologicalTable::from_json(&text, &["a2-u-fast".to_owned()]).unwrap();
+        assert_eq!(
+            fast.evaluate(&uranium, false).unwrap().responses[0].missing_active_nuclides,
+            vec!["U236".to_owned()]
+        );
+        assert!(prepared.evaluate(&uranium, true).is_ok());
+    }
+
+    #[test]
+    fn bundled_table_unit_conversions_match_the_source_units() {
+        let (concentration, _) = read_bundled("euratom-2013-59-annex-vii-a", None).unwrap();
+        let prepared = PreparedRadiologicalTable::from_json(&concentration, &[]).unwrap();
+        // Table A Part 1 lists H-3 at 100 kBq/kg = 1e5 Bq/kg, so 100 Bq/g is an index of 1.
+        let result = prepared
+            .evaluate(&BTreeMap::from([("H3".to_owned(), 100.0)]), true)
+            .unwrap();
+        assert!((result.responses[0].value - 1.0).abs() < 1e-12);
+    }
+
+    #[test]
+    fn unknown_bundled_name_is_an_error_listing_the_choices() {
+        let error = bundled_table("iaea-ssr6-rev1-a2").unwrap_err();
+        assert!(error.contains("unknown bundled radiological table 'iaea-ssr6-rev1-a2'"));
+        assert!(error.contains("us-49cfr173-a2"));
+        assert!(read_bundled("", None).is_err());
+    }
+
+    #[test]
+    fn bundled_table_declared_hash_is_enforced() {
+        let wrong = "0".repeat(64);
+        assert!(read_bundled("us-49cfr173-a1", Some(&wrong))
+            .unwrap_err()
+            .contains("SHA-256 mismatch for bundled:us-49cfr173-a1"));
+        let right = bundled_sha256("us-49cfr173-a1").unwrap().to_uppercase();
+        assert!(read_bundled("us-49cfr173-a1", Some(&right)).is_ok());
+    }
+
+    #[test]
+    fn empty_optional_provenance_is_rejected() {
+        let text = table("").replacen(
+            "\"jurisdiction\": \"test\"",
+            "\"jurisdiction\": \"test\", \"licence\": \" \"",
+            1,
+        );
+        assert!(PreparedRadiologicalTable::from_json(&text, &[])
+            .unwrap_err()
+            .contains("source.licence"));
     }
 }

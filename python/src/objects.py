@@ -70,7 +70,8 @@ def _paths(value, base=None):
     refs.extend((ref, "path") for ref in (value.get("fission_yields") or {}).get("files", []))
     for ref, key in refs:
         path = ref.get(key)
-        if path:
+        # "bundled:NAME" names a table inside the binary, not a file under base.
+        if path and not str(path).startswith("bundled:"):
             path = _Path(path)
             if base is not None and not path.is_absolute():
                 path = _Path(base) / path
