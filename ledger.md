@@ -2710,3 +2710,18 @@ The first checker invocation recorded no gate evidence for G3/G4: the variant ru
   - Mn57 sits at 0.818, which is the library difference.
 
 Record: `results/p122_summary.json`. G6 (CI) is pending.
+
+## Entry 147 — P131 candidate: G1–G5 recorded (2026-10-15)
+
+`actinv inspect {decay, xs, yields, library, groups}` is in `crates/actinv-cli/src/inspect.rs`. `chain::step_of` and `chain::rtyp_digits` were made public and `library::read_npz_structure` added; no solver path changed.
+
+G1 (with the P122 candidate tree): fmt, clippy `-D warnings` and the workspace tests are clean, including the 18 inspect tests.
+
+Candidate: the release build of `cfff234`, SHA-256 `a394e3a9…628c`. Checker: `controls/check_p131.py`.
+
+- **G2:** six nuclides (Co60, Cs137, Am241, Cf252, Tc99m, Fe55) agree with an independent MT=457 parse. Stored values match exactly, and γ energy per decay agrees within 1e-12.
+- **G3:** the Fe56 one-group cross sections and rates agree with an independent NumPy collapse of the NPZ within 1e-12 for every reaction row. The `fispact-709` boundaries are bitwise equal to the library's.
+- **G4:** not applicable. The solver result exposes no per-reaction rate or collapsed cross section (reason recorded).
+- **G5:** U-235 independent and cumulative yields match an independent MT=454/459 parse within 1e-12. This holds at tabulated energies, at interior energies (with the `fission.rs` interpolation) and at clamped energies.
+
+Record: `results/p131_inspect.json`. G6 (CI) is pending.
