@@ -2760,3 +2760,28 @@ Candidate: release build of `cfff234`, SHA-256 `a394e3a9…628c`. Reference: `2f
 - **G5:** report-only. No tabulated FISPACT-II foil factor is available locally.
 
 Record: `results/p129_shielding.json`. G6 (CI) is pending.
+
+## Entry 149 — P130 candidate: G1–G5 recorded (2026-10-15)
+
+Eleven FISPACT-II neutron group structures (66–1102) are vendored from `ebins.tar.bz2`, and an opt-in build-time
+spallation splice was added (`crates/actinv-data/src/spallation.rs`, `build-library --spallation`).
+
+G1 (P122 candidate tree): fmt, clippy `-D warnings` and the workspace tests are clean. Two test fixes were made
+during integration (`9f1cb7f`): a `div_ceil` lint, and a proton spec that needed `temperature_K: 0`.
+
+Candidate: release build of `cfff234`, SHA-256 `a394e3a9…628c`. Reference: `2f3daa4`. Checker: `controls/check_p130.py`.
+
+- **G2:** the archive SHA-256 (`fb612c2d…63a`) was verified, and all 13 structures equal their `ebins_N` sources,
+  boundary for boundary, including the pre-existing 709 and 162.
+- **G3:**
+  - `fns_fe_5min` is byte-identical apart from `ms`.
+  - The Mg (Mg24–26) 709-group TENDL-2025 library builds give bitwise-identical NPZ arrays under the reference and
+    the candidate. Index keys differ only in `builder_fingerprint`.
+- **G4:** a synthetic splice at 200 MeV (exact) and at 205 MeV (snapping to 240 MeV) leaves every row byte-identical
+  below the effective splice. Replaced groups equal the table, added rows are zero below the splice, and the index
+  records the table SHA-256 and the splice energies. A grid-mismatched request is refused.
+- **G5 (report-only):** an equal-lethargy spectrum gives a 1102-group to 709-group total activity ratio of
+  0.9999999988. All 14 significant reaction rates agree within 1.3e-9. The checker prints "FAIL" for G5 only because
+  a report-only gate carries no pass flag.
+
+Record: `results/p130_groups.json`. G6 (CI) is pending.

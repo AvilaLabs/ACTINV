@@ -1,0 +1,678 @@
+{
+  "candidate": "/home/connoravila/Documents/actinv/target/p122-candidate-actinv",
+  "candidate_sha256": "a394e3a9f5a0f295f0220d3b1136e3c86c4aa0dafcaff3943d21c6ba20f5628c",
+  "g5_within_tolerance_report_only": true,
+  "gates": {
+    "G2": {
+      "archive": "/home/connoravila/nuclear-data/fispact-tendl2017/ebins.tar.bz2",
+      "archive_members": [
+        "ebins_100",
+        "ebins_1102",
+        "ebins_162",
+        "ebins_172",
+        "ebins_175",
+        "ebins_211",
+        "ebins_315",
+        "ebins_351",
+        "ebins_586",
+        "ebins_616",
+        "ebins_66",
+        "ebins_69",
+        "ebins_709"
+      ],
+      "archive_sha256": "fb612c2df07269389b44e15dc101166e675d53269f4078174999650a68e1b63a",
+      "archive_sha256_checked_against_json": 11,
+      "pass": true,
+      "structures": {
+        "100": {
+          "archive_sha256_matches": true,
+          "ebins_boundaries": 101,
+          "ebins_descending": true,
+          "ebins_groups": 100,
+          "ebins_sha256": "6be33bcf482e7909f10c457825376c7b531bda89648a4d96224a39a1bfa8cddf",
+          "file_sha256_matches": true,
+          "json_boundaries": 101,
+          "json_descending": true,
+          "json_n_boundaries_field": 101,
+          "json_order_as_published": "descending (highest energy first)",
+          "mismatch_indices": [],
+          "pass": true,
+          "recorded_archive_sha256": "fb612c2df07269389b44e15dc101166e675d53269f4078174999650a68e1b63a",
+          "recorded_file_sha256": "6be33bcf482e7909f10c457825376c7b531bda89648a4d96224a39a1bfa8cddf",
+          "source_field": "FISPACT-II ebins.tar.bz2/ebins_100, SHA-256 6be33bcf482e7909f10c457825376c7b531bda89648a4d96224a39a1bfa8cddf; archive SHA-256 fb612c2df07269389b44e15dc101166e675d53269f4078174999650a68e1b63a",
+          "title": "GAM-II"
+        },
+        "1102": {
+          "archive_sha256_matches": true,
+          "ebins_boundaries": 1103,
+          "ebins_descending": true,
+          "ebins_groups": 1102,
+          "ebins_sha256": "aebc0b43673dd760e2f3d7441cadc765e39cdeba5407d89cacf654072325c317",
+          "file_sha256_matches": true,
+          "json_boundaries": 1103,
+          "json_descending": true,
+          "json_n_boundaries_field": 1103,
+          "json_order_as_published": "descending (highest energy first)",
+          "mismatch_indices": [],
+          "pass": true,
+          "recorded_archive_sha256": "fb612c2df07269389b44e15dc101166e675d53269f4078174999650a68e1b63a",
+          "recorded_file_sha256": "aebc0b43673dd760e2f3d7441cadc765e39cdeba5407d89cacf654072325c317",
+          "source_field": "FISPACT-II ebins.tar.bz2/ebins_1102, SHA-256 aebc0b43673dd760e2f3d7441cadc765e39cdeba5407d89cacf654072325c317; archive SHA-256 fb612c2df07269389b44e15dc101166e675d53269f4078174999650a68e1b63a",
+          "title": "UKAEA-1102"
+        },
+        "162": {
+          "archive_sha256_matches": null,
+          "ebins_boundaries": 163,
+          "ebins_descending": true,
+          "ebins_groups": 162,
+          "ebins_sha256": "4b1ba7ec855aa305b3312cb57d75cbcd6be41b4e67e93070df104bd62b500b0e",
+          "file_sha256_matches": true,
+          "json_boundaries": 163,
+          "json_descending": true,
+          "json_n_boundaries_field": 163,
+          "json_order_as_published": "descending (highest energy first)",
+          "mismatch_indices": [],
+          "pass": true,
+          "recorded_archive_sha256": null,
+          "recorded_file_sha256": "4b1ba7ec855aa305b3312cb57d75cbcd6be41b4e67e93070df104bd62b500b0e",
+          "source_field": "FISPACT-II ebins.tar.bz2/ebins_162, SHA-256 4b1ba7ec855aa305b3312cb57d75cbcd6be41b4e67e93070df104bd62b500b0e",
+          "title": "CCFE-162"
+        },
+        "172": {
+          "archive_sha256_matches": true,
+          "ebins_boundaries": 173,
+          "ebins_descending": true,
+          "ebins_groups": 172,
+          "ebins_sha256": "da499b2822204adfd25cae632f49885737a3903558188a843c3e49451fc3c917",
+          "file_sha256_matches": true,
+          "json_boundaries": 173,
+          "json_descending": true,
+          "json_n_boundaries_field": 173,
+          "json_order_as_published": "descending (highest energy first)",
+          "mismatch_indices": [],
+          "pass": true,
+          "recorded_archive_sha256": "fb612c2df07269389b44e15dc101166e675d53269f4078174999650a68e1b63a",
+          "recorded_file_sha256": "da499b2822204adfd25cae632f49885737a3903558188a843c3e49451fc3c917",
+          "source_field": "FISPACT-II ebins.tar.bz2/ebins_172, SHA-256 da499b2822204adfd25cae632f49885737a3903558188a843c3e49451fc3c917; archive SHA-256 fb612c2df07269389b44e15dc101166e675d53269f4078174999650a68e1b63a",
+          "title": "XMAS"
+        },
+        "175": {
+          "archive_sha256_matches": true,
+          "ebins_boundaries": 176,
+          "ebins_descending": true,
+          "ebins_groups": 175,
+          "ebins_sha256": "dd2282c204170dcb2462081444ee5715b78752fbf1d6a159d3157794fece2c1c",
+          "file_sha256_matches": true,
+          "json_boundaries": 176,
+          "json_descending": true,
+          "json_n_boundaries_field": 176,
+          "json_order_as_published": "descending (highest energy first)",
+          "mismatch_indices": [],
+          "pass": true,
+          "recorded_archive_sha256": "fb612c2df07269389b44e15dc101166e675d53269f4078174999650a68e1b63a",
+          "recorded_file_sha256": "dd2282c204170dcb2462081444ee5715b78752fbf1d6a159d3157794fece2c1c",
+          "source_field": "FISPACT-II ebins.tar.bz2/ebins_175, SHA-256 dd2282c204170dcb2462081444ee5715b78752fbf1d6a159d3157794fece2c1c; archive SHA-256 fb612c2df07269389b44e15dc101166e675d53269f4078174999650a68e1b63a",
+          "title": "VITAMIN-J"
+        },
+        "211": {
+          "archive_sha256_matches": true,
+          "ebins_boundaries": 212,
+          "ebins_descending": true,
+          "ebins_groups": 211,
+          "ebins_sha256": "e943b8dfc7c23eba0c4179c188ea199d0e236bdc70c553ac920f0c40f5c16e92",
+          "file_sha256_matches": true,
+          "json_boundaries": 212,
+          "json_descending": true,
+          "json_n_boundaries_field": 212,
+          "json_order_as_published": "descending (highest energy first)",
+          "mismatch_indices": [],
+          "pass": true,
+          "recorded_archive_sha256": "fb612c2df07269389b44e15dc101166e675d53269f4078174999650a68e1b63a",
+          "recorded_file_sha256": "e943b8dfc7c23eba0c4179c188ea199d0e236bdc70c553ac920f0c40f5c16e92",
+          "source_field": "FISPACT-II ebins.tar.bz2/ebins_211, SHA-256 e943b8dfc7c23eba0c4179c188ea199d0e236bdc70c553ac920f0c40f5c16e92; archive SHA-256 fb612c2df07269389b44e15dc101166e675d53269f4078174999650a68e1b63a",
+          "title": "VITAMIN-J+"
+        },
+        "315": {
+          "archive_sha256_matches": true,
+          "ebins_boundaries": 316,
+          "ebins_descending": true,
+          "ebins_groups": 315,
+          "ebins_sha256": "513f546b2e9ec811514034857033af0325d89f50bfe7aba709256d88fec2debd",
+          "file_sha256_matches": true,
+          "json_boundaries": 316,
+          "json_descending": true,
+          "json_n_boundaries_field": 316,
+          "json_order_as_published": "descending (highest energy first)",
+          "mismatch_indices": [],
+          "pass": true,
+          "recorded_archive_sha256": "fb612c2df07269389b44e15dc101166e675d53269f4078174999650a68e1b63a",
+          "recorded_file_sha256": "513f546b2e9ec811514034857033af0325d89f50bfe7aba709256d88fec2debd",
+          "source_field": "FISPACT-II ebins.tar.bz2/ebins_315, SHA-256 513f546b2e9ec811514034857033af0325d89f50bfe7aba709256d88fec2debd; archive SHA-256 fb612c2df07269389b44e15dc101166e675d53269f4078174999650a68e1b63a",
+          "title": "TRIPOLI"
+        },
+        "351": {
+          "archive_sha256_matches": true,
+          "ebins_boundaries": 352,
+          "ebins_descending": true,
+          "ebins_groups": 351,
+          "ebins_sha256": "a3cacd6648a1726cc9bbee6c4ccd8a92d9c9730c48b379a2a84ff13a6291ade3",
+          "file_sha256_matches": true,
+          "json_boundaries": 352,
+          "json_descending": true,
+          "json_n_boundaries_field": 352,
+          "json_order_as_published": "descending (highest energy first)",
+          "mismatch_indices": [],
+          "pass": true,
+          "recorded_archive_sha256": "fb612c2df07269389b44e15dc101166e675d53269f4078174999650a68e1b63a",
+          "recorded_file_sha256": "a3cacd6648a1726cc9bbee6c4ccd8a92d9c9730c48b379a2a84ff13a6291ade3",
+          "source_field": "FISPACT-II ebins.tar.bz2/ebins_351, SHA-256 a3cacd6648a1726cc9bbee6c4ccd8a92d9c9730c48b379a2a84ff13a6291ade3; archive SHA-256 fb612c2df07269389b44e15dc101166e675d53269f4078174999650a68e1b63a",
+          "title": "TRIPOLI+"
+        },
+        "586": {
+          "archive_sha256_matches": true,
+          "ebins_boundaries": 587,
+          "ebins_descending": true,
+          "ebins_groups": 586,
+          "ebins_sha256": "0869fb2542eb1d45a984d0bf62cfb764ad97038d8e704a363da3bd45de9c6fdd",
+          "file_sha256_matches": true,
+          "json_boundaries": 587,
+          "json_descending": true,
+          "json_n_boundaries_field": 587,
+          "json_order_as_published": "descending (highest energy first)",
+          "mismatch_indices": [],
+          "pass": true,
+          "recorded_archive_sha256": "fb612c2df07269389b44e15dc101166e675d53269f4078174999650a68e1b63a",
+          "recorded_file_sha256": "0869fb2542eb1d45a984d0bf62cfb764ad97038d8e704a363da3bd45de9c6fdd",
+          "source_field": "FISPACT-II ebins.tar.bz2/ebins_586, SHA-256 0869fb2542eb1d45a984d0bf62cfb764ad97038d8e704a363da3bd45de9c6fdd; archive SHA-256 fb612c2df07269389b44e15dc101166e675d53269f4078174999650a68e1b63a",
+          "title": "CASMO-586"
+        },
+        "616": {
+          "archive_sha256_matches": true,
+          "ebins_boundaries": 617,
+          "ebins_descending": true,
+          "ebins_groups": 616,
+          "ebins_sha256": "7a7a2c5807228cd49f02db61c8dacdc6533ae7a9342ceaf51fbf9324d229649a",
+          "file_sha256_matches": true,
+          "json_boundaries": 617,
+          "json_descending": true,
+          "json_n_boundaries_field": 617,
+          "json_order_as_published": "descending (highest energy first)",
+          "mismatch_indices": [],
+          "pass": true,
+          "recorded_archive_sha256": "fb612c2df07269389b44e15dc101166e675d53269f4078174999650a68e1b63a",
+          "recorded_file_sha256": "7a7a2c5807228cd49f02db61c8dacdc6533ae7a9342ceaf51fbf9324d229649a",
+          "source_field": "FISPACT-II ebins.tar.bz2/ebins_616, SHA-256 7a7a2c5807228cd49f02db61c8dacdc6533ae7a9342ceaf51fbf9324d229649a; archive SHA-256 fb612c2df07269389b44e15dc101166e675d53269f4078174999650a68e1b63a",
+          "title": "RED-616"
+        },
+        "66": {
+          "archive_sha256_matches": true,
+          "ebins_boundaries": 67,
+          "ebins_descending": true,
+          "ebins_groups": 66,
+          "ebins_sha256": "c37738d36c38baa72d95029ca016b7c6b3d8d4ee58e0619202e0a04ce9333630",
+          "file_sha256_matches": true,
+          "json_boundaries": 67,
+          "json_descending": true,
+          "json_n_boundaries_field": 67,
+          "json_order_as_published": "descending (highest energy first)",
+          "mismatch_indices": [],
+          "pass": true,
+          "recorded_archive_sha256": "fb612c2df07269389b44e15dc101166e675d53269f4078174999650a68e1b63a",
+          "recorded_file_sha256": "c37738d36c38baa72d95029ca016b7c6b3d8d4ee58e0619202e0a04ce9333630",
+          "source_field": "FISPACT-II ebins.tar.bz2/ebins_66, SHA-256 c37738d36c38baa72d95029ca016b7c6b3d8d4ee58e0619202e0a04ce9333630; archive SHA-256 fb612c2df07269389b44e15dc101166e675d53269f4078174999650a68e1b63a",
+          "title": "WIMS"
+        },
+        "69": {
+          "archive_sha256_matches": true,
+          "ebins_boundaries": 70,
+          "ebins_descending": true,
+          "ebins_groups": 69,
+          "ebins_sha256": "769e53c01ab8ed5f92762e063b2d2ecd9e57074a3a62c1a26809c398ea8ff5ad",
+          "file_sha256_matches": true,
+          "json_boundaries": 70,
+          "json_descending": true,
+          "json_n_boundaries_field": 70,
+          "json_order_as_published": "descending (highest energy first)",
+          "mismatch_indices": [],
+          "pass": true,
+          "recorded_archive_sha256": "fb612c2df07269389b44e15dc101166e675d53269f4078174999650a68e1b63a",
+          "recorded_file_sha256": "769e53c01ab8ed5f92762e063b2d2ecd9e57074a3a62c1a26809c398ea8ff5ad",
+          "source_field": "FISPACT-II ebins.tar.bz2/ebins_69, SHA-256 769e53c01ab8ed5f92762e063b2d2ecd9e57074a3a62c1a26809c398ea8ff5ad; archive SHA-256 fb612c2df07269389b44e15dc101166e675d53269f4078174999650a68e1b63a",
+          "title": "WIMS"
+        },
+        "709": {
+          "archive_sha256_matches": null,
+          "ebins_boundaries": 710,
+          "ebins_descending": true,
+          "ebins_groups": 709,
+          "ebins_sha256": "31bc68b8b042cf5bddd211508bf3a6315b56d31fdf688263f57f124e972840c4",
+          "file_sha256_matches": null,
+          "json_boundaries": 710,
+          "json_descending": true,
+          "json_n_boundaries_field": 710,
+          "json_order_as_published": "descending (highest energy first)",
+          "mismatch_indices": [],
+          "note": "no per-file SHA-256 recorded in the JSON source field",
+          "pass": true,
+          "recorded_archive_sha256": null,
+          "recorded_file_sha256": null,
+          "source_field": "pypact (github.com/fispact/pypact), Apache-2.0, pypact.ALL_GROUPS[709]",
+          "title": "CCFE-709"
+        }
+      },
+      "structures_checked": 13
+    },
+    "G3": {
+      "fns_fe_5min": {
+        "bytes_identical_apart_from_ms": true,
+        "candidate": {
+          "log": "/home/connoravila/Documents/actinv/target/p130-work/logs/g3_fns_candidate.log",
+          "rc": 0,
+          "seconds": 0.97,
+          "sha256": "59bea9fd0dface60f7ee8efd7761d0f4dd2f080622949063218b7702f2fda5f6"
+        },
+        "ms_occurrences_masked": {
+          "candidate": 1,
+          "reference": 1
+        },
+        "parsed_equal_without_top_level_ms": true,
+        "pass": true,
+        "raw_bytes_identical": false,
+        "reference": {
+          "log": "/home/connoravila/Documents/actinv/target/p130-work/logs/g3_fns_reference.log",
+          "rc": 0,
+          "seconds": 0.97,
+          "sha256": "21fa660a67782ec477c8539b76084d5755dd85dacbae5fdda5a95fb184d766d7"
+        }
+      },
+      "input_files_sha256": {
+        "n-Mg024.tendl": "18db7eb841c6a5b70caba22b541c9e341a56b66f2fc63ac6d7df68237eeaaa8c",
+        "n-Mg025.tendl": "c8d0719c080f5c92ef68620f62b382e1a7ef59bc411b09380e1c3e7405d2c0db",
+        "n-Mg026.tendl": "5bd3cdafb65431dc132762502eeb44d3a139c3f76f6fe791f067be8b646091a1"
+      },
+      "library": {
+        "builder_fingerprint": {
+          "candidate": "3d66f1c1bb8d1675b90169fc7eeb485cf37704bb5dae29b8c02d574f46671e0c",
+          "differ": true,
+          "reference": "f62f603533abcad58843c884fb36d238bcffeeceb59a2345f9b05ceae3c56845"
+        },
+        "candidate_build": {
+          "log": "/home/connoravila/Documents/actinv/target/p130-work/logs/g3_build_candidate.log",
+          "npz_sha256": "1216382c739d7e5a2602ce6b0996e1f968b65b5db550b197a2a81ff128f9e3ee",
+          "rc": 0,
+          "seconds": 23.07
+        },
+        "index_equal_apart_from_fingerprint": true,
+        "index_has_spallation_block": false,
+        "index_keys_allowed_to_differ": [
+          "builder_fingerprint"
+        ],
+        "npz": {
+          "arrays": {
+            "bounds": {
+              "bitwise_identical": true,
+              "dtype": "float64",
+              "shape": [
+                710
+              ]
+            },
+            "rows": {
+              "bitwise_identical": true,
+              "dtype": "int64",
+              "shape": [
+                148,
+                5
+              ]
+            },
+            "sig": {
+              "bitwise_identical": true,
+              "dtype": "float64",
+              "shape": [
+                148,
+                709
+              ]
+            }
+          },
+          "keys_equal": true,
+          "pass": true
+        },
+        "npz_bytes_identical": true,
+        "pass": true,
+        "reference_build": {
+          "log": "/home/connoravila/Documents/actinv/target/p130-work/logs/g3_build_reference.log",
+          "npz_sha256": "1216382c739d7e5a2602ce6b0996e1f968b65b5db550b197a2a81ff128f9e3ee",
+          "rc": 0,
+          "seconds": 22.81
+        }
+      },
+      "pass": true
+    },
+    "G4": {
+      "misaligned_table_refused": {
+        "index_written": false,
+        "log": "/home/connoravila/Documents/actinv/target/p130-work/logs/g4_misaligned.log",
+        "npz_written": false,
+        "pass": true,
+        "rc": 1
+      },
+      "pass": true,
+      "splices": {
+        "200MeV": {
+          "build": {
+            "log": "/home/connoravila/Documents/actinv/target/p130-work/logs/g4_spliced_200MeV.log",
+            "npz_sha256": "32dd07cfd0fc59c5442ccbd59289b165d3988ffdca960142712cee96879679f4",
+            "rc": 0,
+            "seconds": 24.57
+          },
+          "check": {
+            "bounds_identical": true,
+            "effective_splice_eV": 200000000.0,
+            "expected": {
+              "per_target": [
+                {
+                  "liso": 0,
+                  "rows_added": 1,
+                  "rows_replaced": 1,
+                  "za": 12024
+                },
+                {
+                  "liso": 0,
+                  "rows_added": 3,
+                  "rows_replaced": 0,
+                  "za": 12025
+                }
+              ],
+              "rows_added": 4,
+              "rows_replaced": 1,
+              "targets_not_in_library": [
+                {
+                  "liso": 0,
+                  "za": 82208
+                }
+              ]
+            },
+            "first_spliced_group": 689,
+            "index": {
+              "absent_ok": true,
+              "description_ok": true,
+              "effective_ok": true,
+              "effective_splice_eV": 200000000.0,
+              "first_spliced_group_ok": true,
+              "groups_spliced_ok": true,
+              "has_block": true,
+              "ledger_lines_ok": true,
+              "n_rows_and_npz_hash_ok": true,
+              "other_index_keys_unchanged": true,
+              "pass": true,
+              "projectile_ok": true,
+              "requested_ok": true,
+              "requested_splice_eV": 200000000.0,
+              "rows_ok": true,
+              "schema": "actinv-spallation-residuals-1",
+              "table_sha256_matches": true,
+              "target_problems": [],
+              "targets_consistent": true,
+              "targets_ok": true
+            },
+            "mismatch_counts": {
+              "added_below_nonzero": 0,
+              "added_wrong": 0,
+              "below_splice_changed": 0,
+              "replaced_wrong": 0,
+              "unnamed_row_changed": 0
+            },
+            "mismatches": {
+              "added_below_nonzero": [],
+              "added_wrong": [],
+              "below_splice_changed": [],
+              "replaced_wrong": [],
+              "unnamed_row_changed": []
+            },
+            "old_rows_below_splice_byte_identical": true,
+            "pass": true,
+            "precondition_replaces_and_adds": true,
+            "requested_splice_eV": 200000000.0,
+            "row_count": {
+              "expected": 152,
+              "spliced": 152,
+              "unspliced": 148
+            },
+            "row_keys_and_order_as_expected": true
+          },
+          "pass": true,
+          "requested_MeV": 200.0,
+          "table": {
+            "first_boundary_eV": 200000000.0,
+            "groups": 20,
+            "path": "/home/connoravila/Documents/actinv/target/p130-work/synthetic_table_200MeV.json",
+            "sha256": "701350ecd89e270a29d2a26885380547d1b901cd904f0c252d146fa3e69ab8ba",
+            "targets": [
+              [
+                12024,
+                0
+              ],
+              [
+                12025,
+                0
+              ],
+              [
+                82208,
+                0
+              ]
+            ]
+          }
+        },
+        "205MeV": {
+          "build": {
+            "log": "/home/connoravila/Documents/actinv/target/p130-work/logs/g4_spliced_205MeV.log",
+            "npz_sha256": "3fbd6cbdc3ba5818c0ccf8fc70061751f5c0abb5962a1cfc566ddc755d9f2378",
+            "rc": 0,
+            "seconds": 24.12
+          },
+          "check": {
+            "bounds_identical": true,
+            "effective_splice_eV": 240000000.0,
+            "expected": {
+              "per_target": [
+                {
+                  "liso": 0,
+                  "rows_added": 1,
+                  "rows_replaced": 1,
+                  "za": 12024
+                },
+                {
+                  "liso": 0,
+                  "rows_added": 3,
+                  "rows_replaced": 0,
+                  "za": 12025
+                }
+              ],
+              "rows_added": 4,
+              "rows_replaced": 1,
+              "targets_not_in_library": [
+                {
+                  "liso": 0,
+                  "za": 82208
+                }
+              ]
+            },
+            "first_spliced_group": 690,
+            "index": {
+              "absent_ok": true,
+              "description_ok": true,
+              "effective_ok": true,
+              "effective_splice_eV": 240000000.0,
+              "first_spliced_group_ok": true,
+              "groups_spliced_ok": true,
+              "has_block": true,
+              "ledger_lines_ok": true,
+              "n_rows_and_npz_hash_ok": true,
+              "other_index_keys_unchanged": true,
+              "pass": true,
+              "projectile_ok": true,
+              "requested_ok": true,
+              "requested_splice_eV": 205000000.0,
+              "rows_ok": true,
+              "schema": "actinv-spallation-residuals-1",
+              "table_sha256_matches": true,
+              "target_problems": [],
+              "targets_consistent": true,
+              "targets_ok": true
+            },
+            "mismatch_counts": {
+              "added_below_nonzero": 0,
+              "added_wrong": 0,
+              "below_splice_changed": 0,
+              "replaced_wrong": 0,
+              "unnamed_row_changed": 0
+            },
+            "mismatches": {
+              "added_below_nonzero": [],
+              "added_wrong": [],
+              "below_splice_changed": [],
+              "replaced_wrong": [],
+              "unnamed_row_changed": []
+            },
+            "old_rows_below_splice_byte_identical": true,
+            "pass": true,
+            "precondition_replaces_and_adds": true,
+            "requested_splice_eV": 205000000.0,
+            "row_count": {
+              "expected": 152,
+              "spliced": 152,
+              "unspliced": 148
+            },
+            "row_keys_and_order_as_expected": true
+          },
+          "pass": true,
+          "requested_MeV": 205.0,
+          "table": {
+            "first_boundary_eV": 240000000.0,
+            "groups": 19,
+            "path": "/home/connoravila/Documents/actinv/target/p130-work/synthetic_table_205MeV.json",
+            "sha256": "dd61f22c71fa57f8ba5c8397b7c2d80ab38becbbdab5284065b14b2901ac61b8",
+            "targets": [
+              [
+                12024,
+                0
+              ],
+              [
+                12025,
+                0
+              ],
+              [
+                82208,
+                0
+              ]
+            ]
+          }
+        }
+      }
+    },
+    "G5": {
+      "activity_within_tolerance": true,
+      "both_validate": true,
+      "build_1102": {
+        "log": "/home/connoravila/Documents/actinv/target/p130-work/logs/g5_build_1102.log",
+        "npz_sha256": "13224df0965e92eeaf1bf3b700f4a02bd2bf564ea4413120fdbce79f2d2882f7",
+        "rc": 0,
+        "seconds": 26.8
+      },
+      "dominant_nuclide_activity_ratios": {
+        "Mg23": 1.0,
+        "Mg27": 0.9999999987729287,
+        "Na24": 1.0,
+        "Na25": 0.9999999999999993,
+        "Na26": 0.9999999999999999,
+        "Ne23": 1.0
+      },
+      "rate_within_tolerance": true,
+      "reaction_rates": {
+        "loss_rows_compared": 43,
+        "rows_only_in_one": 0,
+        "significant_ratios": {
+          "t0_mt102": 0.9999999987971625,
+          "t0_mt103": 1.0,
+          "t0_mt107": 1.0,
+          "t0_mt22": 1.0,
+          "t0_mt28": 1.0,
+          "t1_mt102": 0.9999999988041666,
+          "t1_mt103": 0.9999999999999998,
+          "t1_mt107": 0.9999999999999999,
+          "t1_mt16": 1.0,
+          "t1_mt22": 1.0,
+          "t2_mt102": 0.9999999987729292,
+          "t2_mt107": 1.0,
+          "t2_mt16": 1.0,
+          "t2_mt22": 1.0
+        },
+        "significant_rows": 14,
+        "worst_significant_ratio": {
+          "mt": 102,
+          "ratio_1102_over_709": 0.9999999987729292,
+          "target": 2
+        }
+      },
+      "report_only": true,
+      "spectrum": {
+        "E_hi_eV": 20000000.0,
+        "E_lo_eV": 1e-05,
+        "irradiation": "3600 s",
+        "shape": "equal flux per unit lethargy",
+        "total_flux_n_cm2_s": 100000000000000.0
+      },
+      "structures": {
+        "fispact-1102": {
+          "flux_sum": 100000000000000.0,
+          "flux_sum_relative_error": 0.0,
+          "groups": 1102,
+          "library_bounds_equal_vendored": true,
+          "run_rc": 0,
+          "run_seconds": 0.82,
+          "spec": "/home/connoravila/Documents/actinv/target/p130-work/g5_fispact-1102.json",
+          "total_activity_Bq_per_g": 37625259332.7401,
+          "validate_rc": 0
+        },
+        "fispact-709": {
+          "flux_sum": 100000000000000.0,
+          "flux_sum_relative_error": 0.0,
+          "groups": 709,
+          "library_bounds_equal_vendored": true,
+          "run_rc": 0,
+          "run_seconds": 0.82,
+          "spec": "/home/connoravila/Documents/actinv/target/p130-work/g5_fispact-709.json",
+          "total_activity_Bq_per_g": 37625259376.86362,
+          "validate_rc": 0
+        }
+      },
+      "tolerance": {
+        "justification": "The test spectrum is flat in lethargy and the library collapses each group with flat-lethargy weighting, so the group-summed rate sum_g sigma_g * phi_g approximates the same integral of sigma over lethargy on both structures. Both spectrum edges (10 micro-eV and 20 MeV) are boundaries of both structures, so no group is split. What remains is the group-collapse difference: threshold onsets, resonance peaks and the Doppler reconstruction fall differently inside 709 and 1102 groups, and the activity adds a few chained reactions. The stated tolerances are 1% on the total activity and 2% on each reaction rate above 0.001 of the largest rate; this is report-only and does not enter the verdict.",
+        "reaction_rate": 0.02,
+        "significant_rate_fraction": 0.001,
+        "total_activity": 0.01
+      },
+      "total_activity": {
+        "fispact_1102_Bq_per_g": 37625259332.7401,
+        "fispact_709_Bq_per_g": 37625259376.86362,
+        "ratio_1102_over_709": 0.99999999882729
+      },
+      "within_tolerance": true
+    }
+  },
+  "library_inputs": {
+    "decay_in_builds": true,
+    "element": "Mg",
+    "isotopes": [
+      "Mg024",
+      "Mg025",
+      "Mg026"
+    ],
+    "tendl_dir": "/home/connoravila/nuclear-data/tendl-2025/files/n"
+  },
+  "pass": true,
+  "protocol": "ACTINV-P130",
+  "protocol_sha256": "bc1cbc8e7dcb1c55ce46bef1e7eb85001eae7efd021f85a5c89eb9af74ff81ee",
+  "reference": "/home/connoravila/Documents/actinv/target/ref-build/release/actinv",
+  "reference_sha256": "3d34d7ca5887be03e19b81f8ae06d784ed53ec1310a69764ed70b8672bc42b5f",
+  "verdict": "PASS"
+}
