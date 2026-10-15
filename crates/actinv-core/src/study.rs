@@ -2394,25 +2394,58 @@ fn evaluate_robustness_inner(
         // sampled parameters would not match the depleted matrix.
         let shield_plan: Option<crate::shielding::ShieldPlan> = match &spec.self_shielding {
             Some(options) => {
-                let table_path = resolve_path(base, &options.table.path);
-                let got = file_sha256(&table_path)?;
-                if got != options.table.sha256 {
-                    return Err(format!(
-                        "self-shielding table sha256 mismatch: declared {}, got {got}",
-                        options.table.sha256
-                    ));
-                }
-                let text = fs::read_to_string(&table_path).map_err(|error| {
-                    format!(
-                        "cannot read self-shielding table {}: {error}",
-                        table_path.display()
-                    )
-                })?;
-                let table = crate::shielding::PreparedShieldTable::from_json(&text)?;
-                Some(table.plan(
+                let table = match &options.table {
+                    Some(reference) => {
+                        let table_path = resolve_path(base, &reference.path);
+                        let got = file_sha256(&table_path)?;
+                        if got != reference.sha256 {
+                            return Err(format!(
+                                "self-shielding table sha256 mismatch: declared {}, got {got}",
+                                reference.sha256
+                            ));
+                        }
+                        let text = fs::read_to_string(&table_path).map_err(|error| {
+                            format!(
+                                "cannot read self-shielding table {}: {error}",
+                                table_path.display()
+                            )
+                        })?;
+                        Some(crate::shielding::PreparedShieldTable::from_json(&text)?)
+                    }
+                    None => None,
+                };
+                let geometry = match &options.geometry {
+                    Some(geometry) => {
+                        let mut files = Vec::with_capacity(geometry.resonance_files.len());
+                        for reference in &geometry.resonance_files {
+                            let path = resolve_path(base, &reference.path);
+                            let got = file_sha256(&path)?;
+                            if got != reference.sha256 {
+                                return Err(format!(
+                                    "self-shielding resonance file sha256 mismatch: declared {}, got {got}",
+                                    reference.sha256
+                                ));
+                            }
+                            let text = fs::read_to_string(&path).map_err(|error| {
+                                format!(
+                                    "cannot read self-shielding resonance file {}: {error}",
+                                    path.display()
+                                )
+                            })?;
+                            files.push((reference.path.clone(), text));
+                        }
+                        Some(crate::shielding::PreparedGeometry::from_evaluations(
+                            geometry, &files,
+                        )?)
+                    }
+                    None => None,
+                };
+                Some(crate::shielding::ShieldPlan::build(
+                    table.as_ref(),
+                    geometry.as_ref(),
+                    options,
                     &isotopes,
-                    &options.dilution,
-                    options.sigma0_b,
+                    &lib.bounds,
                     spec.options.temperature_K,
                     spec.options.require_shielding_complete,
                 )?)

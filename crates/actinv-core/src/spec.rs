@@ -210,7 +210,11 @@ pub struct DamageOptions {
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct SelfShieldingOptions {
-    pub table: HashedFileRef,
+    /// The Bondarenko table. Required unless `geometry` selects the
+    /// resolved-resonance sigmoid-curve model instead (the two are exclusive,
+    /// as FISPACT-II's PROBTABLE and SSFGEOMETRY are).
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub table: Option<HashedFileRef>,
     /// "composition" (default) computes per-nuclide sigma0 from the material
     /// composition; "fixed" applies `sigma0_b` to every covered nuclide.
     #[serde(default = "dilution_composition")]
@@ -219,6 +223,16 @@ pub struct SelfShieldingOptions {
     /// (or absent) for "composition".
     #[serde(default)]
     pub sigma0_b: Option<f64>,
+    /// Per-nuclide, per-group dilution cross sections in barns (FISPACT-II
+    /// SSFDILUTION) that replace the computed background dilution of the
+    /// Bondarenko path: nuclide name -> library group index (0-based,
+    /// ascending energy) -> sigma0. Table mode only.
+    #[serde(default, skip_serializing_if = "BTreeMap::is_empty")]
+    pub dilution_overrides: BTreeMap<String, BTreeMap<usize, f64>>,
+    /// Universal-sigmoid-curve self-shielding of the resolved resonances for a
+    /// foil, wire, sphere or cylinder target (FISPACT-II SSFGEOMETRY).
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub geometry: Option<SelfShieldingGeometry>,
 }
 
 fn dilution_composition() -> String {
@@ -265,6 +279,78 @@ impl Default for SummaryOptions {
             min_atoms: 0.0,
             include_stable: true,
         }
+    }
+}
+
+/// Geometry self-shielding (P129): target shape and size, the material
+/// density that turns the declared composition into number densities, and the
+/// ENDF-6 evaluations whose MF=2 resolved resonance parameters drive the
+/// universal sigmoid curve (Martinho, Goncalves and Salgado).
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct SelfShieldingGeometry {
+    /// "foil", "wire", "sphere" or "cylinder".
+    pub shape: String,
+    /// Foil thickness, or wire/sphere/cylinder radius, in cm.
+    pub length_cm: f64,
+    /// Cylinder height in cm; required for "cylinder", rejected otherwise.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub height_cm: Option<f64>,
+    /// Material density in g/cm^3: number density = atoms_per_gram * density.
+    pub density_g_cm3: f64,
+    /// Hash-pinned ENDF-6 neutron evaluations (one nuclide each) carrying
+    /// MF=2/MT=151 resolved resonance parameters.
+    pub resonance_files: Vec<HashedFileRef>,
+    /// Restrict the correction to these nuclides or elements (SSFCHOOSE);
+    /// absent means every material nuclide the resonance files supply.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub choose: Option<Vec<String>>,
+    /// "all" (default, as FISPACT-II applies the factor to every reaction of a
+    /// shielded nuclide) or "capture" (radiative capture, MT 102, only).
+    #[serde(default = "geometry_reactions_all")]
+    pub reactions: String,
+}
+
+fn geometry_reactions_all() -> String {
+    "all".into()
+}
+
+impl SelfShieldingGeometry {
+    fn validate(&self) -> Result<(), String> {
+        let shape = crate::shielding::GeometryShape::parse(&self.shape)?;
+        // Dimensions: finite and positive, height only for a cylinder.
+        shape.effective_length_cm(self.length_cm, self.height_cm)?;
+        if !self.density_g_cm3.is_finite() || self.density_g_cm3 <= 0.0 {
+            return Err(
+                "self_shielding.geometry.density_g_cm3 must be a positive finite number".into(),
+            );
+        }
+        if self.resonance_files.is_empty() {
+            return Err(
+                "self_shielding.geometry needs resonance data: resonance_files is empty".into(),
+            );
+        }
+        match self.reactions.as_str() {
+            "all" | "capture" => {}
+            value => {
+                return Err(format!(
+                    "unknown self_shielding.geometry.reactions '{value}' (expected all or capture)"
+                ));
+            }
+        }
+        if let Some(choose) = &self.choose {
+            if choose.is_empty() {
+                return Err(
+                    "self_shielding.geometry.choose must name at least one nuclide or element when present"
+                        .into(),
+                );
+            }
+            for raw in choose {
+                actinv_data::composition::material_key(raw)
+                    .map_err(|error| format!("self_shielding.geometry.choose: {error}"))?;
+            }
+        }
+        Ok(())
     }
 }
 
@@ -1073,6 +1159,18 @@ impl Spec {
                     self.projectile.name()
                 ));
             }
+            match (&shielding.table, &shielding.geometry) {
+                (Some(_), Some(_)) => {
+                    return Err(
+                        "self_shielding takes either a table (Bondarenko) or a geometry (sigmoid curve), not both"
+                            .into(),
+                    );
+                }
+                (None, None) => {
+                    return Err("self_shielding requires a table or a geometry section".into());
+                }
+                _ => {}
+            }
             match shielding.dilution.as_str() {
                 "composition" => {
                     if shielding.sigma0_b.is_some() {
@@ -1092,6 +1190,46 @@ impl Spec {
                 },
                 value => {
                     return Err(format!("unknown self_shielding.dilution '{value}'"));
+                }
+            }
+            if let Some(geometry) = &shielding.geometry {
+                if shielding.dilution != "composition" || !shielding.dilution_overrides.is_empty() {
+                    return Err(
+                        "self_shielding geometry does not use dilution, sigma0_b or dilution_overrides"
+                            .into(),
+                    );
+                }
+                geometry.validate()?;
+            }
+            for (name, groups) in &shielding.dilution_overrides {
+                match actinv_data::composition::material_key(name)
+                    .map_err(|error| format!("self_shielding.dilution_overrides: {error}"))?
+                {
+                    actinv_data::composition::MaterialKey::Nuclide { canonical, .. }
+                        if canonical == *name => {}
+                    actinv_data::composition::MaterialKey::Nuclide { canonical, .. } => {
+                        return Err(format!(
+                            "self_shielding.dilution_overrides nuclide '{name}' is not canonical; use '{canonical}'"
+                        ));
+                    }
+                    actinv_data::composition::MaterialKey::Element(_) => {
+                        return Err(format!(
+                            "self_shielding.dilution_overrides key '{name}' is elemental; expected a nuclide"
+                        ));
+                    }
+                }
+                if groups.is_empty() {
+                    return Err(format!(
+                        "self_shielding.dilution_overrides for '{name}' lists no groups"
+                    ));
+                }
+                if groups
+                    .values()
+                    .any(|value| !value.is_finite() || *value <= 0.0)
+                {
+                    return Err(format!(
+                        "self_shielding.dilution_overrides for '{name}' needs positive finite dilutions"
+                    ));
                 }
             }
         }
@@ -1728,6 +1866,153 @@ mod duration_tests {
         assert!(Spec::from_json(&value.to_string())
             .unwrap_err()
             .contains("unknown self_shielding.dilution"));
+    }
+
+    #[test]
+    fn self_shielding_defaults_serialize_without_the_new_sections() {
+        let table = serde_json::json!({"path": "t.json", "sha256": "0".repeat(64)});
+        let mut value = minimal_spec();
+        value["self_shielding"] = serde_json::json!({"table": table.clone()});
+        let spec = Spec::from_json(&value.to_string()).unwrap();
+        // The serialized form (and so the spec fingerprint) carries no
+        // geometry or dilution_overrides key.
+        assert_eq!(
+            serde_json::to_value(&spec.self_shielding).unwrap(),
+            serde_json::json!({"table": table, "dilution": "composition", "sigma0_b": null})
+        );
+    }
+
+    #[test]
+    fn self_shielding_geometry_is_validated() {
+        let geometry = || {
+            serde_json::json!({
+                "shape": "foil",
+                "length_cm": 0.01,
+                "density_g_cm3": 19.3,
+                "resonance_files": [{"path": "w184.endf", "sha256": "0".repeat(64)}],
+            })
+        };
+        let spec_with = |section: serde_json::Value| {
+            let mut value = minimal_spec();
+            value["self_shielding"] = section;
+            Spec::from_json(&value.to_string())
+        };
+        let with_geometry = |edit: &dyn Fn(&mut serde_json::Value)| {
+            let mut geometry = geometry();
+            edit(&mut geometry);
+            spec_with(serde_json::json!({ "geometry": geometry }))
+        };
+        let spec = with_geometry(&|_| {}).unwrap();
+        let section = serde_json::to_value(&spec.self_shielding).unwrap();
+        assert!(section.get("table").is_none());
+        assert_eq!(section["geometry"]["reactions"], "all");
+
+        for (edit, want) in [
+            (
+                serde_json::json!({"length_cm": 0.0}),
+                "length_cm must be a positive finite",
+            ),
+            (
+                serde_json::json!({"length_cm": -1.0}),
+                "length_cm must be a positive finite",
+            ),
+            (
+                serde_json::json!({"shape": "cylinder"}),
+                "requires height_cm",
+            ),
+            (
+                serde_json::json!({"shape": "cylinder", "height_cm": 0.0}),
+                "height_cm must be a positive finite",
+            ),
+            (
+                serde_json::json!({"height_cm": 1.0}),
+                "applies only to a cylinder",
+            ),
+            (
+                serde_json::json!({"shape": "slab"}),
+                "unknown self_shielding.geometry.shape",
+            ),
+            (
+                serde_json::json!({"density_g_cm3": 0.0}),
+                "density_g_cm3 must be a positive finite",
+            ),
+            (
+                serde_json::json!({"resonance_files": []}),
+                "needs resonance data",
+            ),
+            (
+                serde_json::json!({"reactions": "elastic"}),
+                "unknown self_shielding.geometry.reactions",
+            ),
+            (serde_json::json!({"choose": []}), "at least one"),
+            (serde_json::json!({"choose": ["Qq9"]}), "choose"),
+        ] {
+            let error = with_geometry(&|geometry| {
+                for (key, value) in edit.as_object().unwrap() {
+                    geometry[key.as_str()] = value.clone();
+                }
+            })
+            .unwrap_err();
+            assert!(error.contains(want), "{edit}: {error}");
+        }
+        // A valid cylinder, restricted to capture and a chosen element.
+        let spec = with_geometry(&|geometry| {
+            geometry["shape"] = serde_json::json!("cylinder");
+            geometry["height_cm"] = serde_json::json!(2.0);
+            geometry["reactions"] = serde_json::json!("capture");
+            geometry["choose"] = serde_json::json!(["W", "Mn55"]);
+        })
+        .unwrap();
+        assert_eq!(
+            spec.self_shielding.unwrap().geometry.unwrap().reactions,
+            "capture"
+        );
+
+        let table = serde_json::json!({"path": "t.json", "sha256": "0".repeat(64)});
+        let error =
+            spec_with(serde_json::json!({"table": table, "geometry": geometry()})).unwrap_err();
+        assert!(error.contains("not both"), "{error}");
+        let error = spec_with(serde_json::json!({"dilution": "composition"})).unwrap_err();
+        assert!(error.contains("requires a table or a geometry"), "{error}");
+        let error = spec_with(serde_json::json!({
+            "geometry": geometry(), "dilution": "fixed", "sigma0_b": 1.0
+        }))
+        .unwrap_err();
+        assert!(error.contains("does not use dilution"), "{error}");
+        let error = spec_with(serde_json::json!({
+            "geometry": geometry(), "dilution_overrides": {"W184": {"3": 10.0}}
+        }))
+        .unwrap_err();
+        assert!(error.contains("does not use dilution"), "{error}");
+        // Unknown geometry keys are errors.
+        let error =
+            with_geometry(&|geometry| geometry["thickness"] = serde_json::json!(1.0)).unwrap_err();
+        assert!(error.contains("thickness"), "{error}");
+    }
+
+    #[test]
+    fn self_shielding_dilution_overrides_are_validated() {
+        let table = || serde_json::json!({"path": "t.json", "sha256": "0".repeat(64)});
+        let spec_with = |overrides: serde_json::Value| {
+            let mut value = minimal_spec();
+            value["self_shielding"] =
+                serde_json::json!({"table": table(), "dilution_overrides": overrides});
+            Spec::from_json(&value.to_string())
+        };
+        let spec = spec_with(serde_json::json!({"W182": {"300": 100.0, "301": 80.0}})).unwrap();
+        let overrides = spec.self_shielding.unwrap().dilution_overrides;
+        assert_eq!(overrides["W182"][&300], 100.0);
+        assert_eq!(overrides["W182"][&301], 80.0);
+        for (overrides, want) in [
+            (serde_json::json!({"W": {"3": 1.0}}), "elemental"),
+            (serde_json::json!({"W184m": {"3": 1.0}}), "use 'W184m1'"),
+            (serde_json::json!({"W184": {}}), "lists no groups"),
+            (serde_json::json!({"W184": {"3": 0.0}}), "positive finite"),
+            (serde_json::json!({"W184": {"3": -2.0}}), "positive finite"),
+        ] {
+            let error = spec_with(overrides.clone()).unwrap_err();
+            assert!(error.contains(want), "{overrides}: {error}");
+        }
     }
 
     #[test]

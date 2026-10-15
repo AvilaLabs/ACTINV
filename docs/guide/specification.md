@@ -259,7 +259,8 @@ carry MT=444; build tables from `heatr`-processed or equivalent damage-energy ev
 `self_shielding` is optional; omission preserves the ordinary unshielded path byte-for-byte. Its `table` names a
 hash-pinned `actinv-shield-table-1` artifact — the declared SHA-256 is recomputed before the calculation and a
 mismatch is an error. Build tables with `actinv build-shielding EVAL_DIR OUT.json`; the table's group boundaries
-must equal the activation library's exactly.
+must equal the activation library's exactly. Instead of a `table`, a `geometry` section selects the
+resolved-resonance sigmoid-curve model described below; exactly one of the two is required.
 
 `dilution` selects the background dilution each covered nuclide sees: `"composition"` derives
 `sigma0_i = sum_j(n_j * sigma_p,j) / n_i` from the declared material (table potential cross sections where the
@@ -288,6 +289,73 @@ run checks the collapsed nominals against the shielded fold bitwise. The same fo
 A runnable walkthrough lives at `examples/shielding_demo.json`: pure W-186 under a 4–25 keV custom spectrum at
 fixed `sigma0_b = 0.1` — the ledger names every applied factor and W-187 activity lands ~28% below the
 unshielded solve of the same problem.
+
+### Dilution overrides
+
+`self_shielding.dilution_overrides` (table mode only) replaces the computed background dilution for chosen
+nuclides and groups, the equivalent of FISPACT-II `SSFDILUTION`:
+
+```json
+"dilution_overrides": {"W182": {"300": 100.0, "301": 80.0}, "W184": {"194": 2.5}}
+```
+
+Keys are canonical nuclide names; inner keys are library group indices (0-based, ascending energy, the same
+indices as `applied_factors`); values are positive finite dilution cross sections in barns. For a named group the
+supplied `sigma0` is used in place of the nuclide's `"composition"` or `"fixed"` value; every other group keeps
+the computed one. A nuclide the table does not cover, or a group the table does not carry for that nuclide, is an
+error. The ledger and certificate list the applied overrides under `dilution_overrides`; the reported
+`sigma0_eff_b` remains the computed value.
+
+### Geometry self-shielding (resolved resonances)
+
+`self_shielding.geometry` selects FISPACT-II's `SSFGEOMETRY` model instead of the Bondarenko table: the
+"universal sigmoid curve" of Martinho, Goncalves and Salgado. It is exclusive with `table`, `dilution`, `sigma0_b`
+and `dilution_overrides`, as `SSFGEOMETRY` and `PROBTABLE` are exclusive.
+
+```json
+"self_shielding": {
+  "geometry": {
+    "shape": "foil",
+    "length_cm": 0.01,
+    "density_g_cm3": 19.3,
+    "resonance_files": [{"path": "n_W184.endf", "sha256": "..."}],
+    "choose": ["W"],
+    "reactions": "all"
+  }
+}
+```
+
+- `shape` is `"foil"` (`length_cm` = thickness), `"wire"` or `"sphere"` (`length_cm` = radius), or `"cylinder"`
+  (`length_cm` = radius plus `height_cm`). Dimensions must be finite and positive; `height_cm` is required for,
+  and only for, a cylinder. The effective length is `y = 1.5 t` (foil), `2 r` (wire), `r` (sphere),
+  `1.65 r h / (r + h)` (cylinder).
+- `density_g_cm3` converts the declared material (atoms per gram) to number densities. FISPACT-II instead takes
+  atoms per unit area or length from `SSFFUEL`/`SSFMASS`; ACTINV uses the run's own material and a density.
+- `resonance_files` are hash-pinned ENDF-6 neutron evaluations, one nuclide each, carrying MF=2/MT=151 resolved
+  resonance parameters (Breit-Wigner or Reich-Moore; R-matrix-limited ranges are rejected). An empty list, an
+  evaluation without MF=2, or one without a resolved range is an error.
+- `choose` restricts the correction to listed nuclides or elements (`SSFCHOOSE`); every entry must be in the
+  material and supplied by a resonance file. Without it every material nuclide that a file supplies is shielded;
+  other material nuclides are named in `shielding_uncovered` (an error under `require_shielding_complete`).
+- `reactions` is `"all"` (default; FISPACT-II applies the factor to every reaction of the shielded nuclide) or
+  `"capture"` (MT 102 only).
+
+For each resolved resonance `i` of a shielded nuclide, `z_i = N * sigma_peak,i * y * sqrt(Gamma_gamma/Gamma)`, with
+`N` the nuclide number density, `sigma_peak,i = 4 pi/k^2 * g * Gamma_n/Gamma` the Breit-Wigner peak cross section
+and `g = (2J+1)/(2(2I+1))`. The resonance factor is `G(z) = (A1 - A2)/(1 + (z/z0)^p) + A2` with `A1 = 1.000`,
+`A2 = 0.060`, `z0 = 2.70`, `p = 0.82` (FISPACT-II manual Eqs. 43-48). The factor applied in a library group is the
+mean of `G` over the resonances peaking in that group, weighted by `w_i = (Gamma_gamma/E^2) * g Gamma_n/Gamma`
+(Eqs. 49-50); groups without resonance peaks are untouched. The scaled cross sections feed the same per-group fold
+as the Bondarenko path, including the MF=33 collapse.
+
+The ledger `shielding.geometry` block and the certificate record, per shielded nuclide, the number density and the
+applied factor for each group with its energy range and resonance count, the effective length, and the resonance
+file hashes (`resonance_files_sha256`, certificate `inputs.shielding_resonance_files`). Limits: the peak cross
+section is the single-level Breit-Wigner value (FISPACT-II cites Froehner, JEFF Report 18, for it without
+reproducing the formula); only the shielded nuclide's own peak enters `Sigma_tot`, the other mixture components are
+neglected (the model assumes non-overlapping resonances); the unresolved range, damage and temperature dependence
+are not treated; and the sigmoid fit is an approximation to Monte Carlo results for simple shapes, not a
+transport calculation.
 
 ## Gas production (H and He isotopes)
 

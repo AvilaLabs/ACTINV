@@ -651,8 +651,13 @@ struct PreparedDamage {
 
 struct PreparedShielding {
     options: crate::spec::SelfShieldingOptions,
-    sha256: String,
-    table: crate::shielding::PreparedShieldTable,
+    /// Bondarenko-table hash; `None` in geometry mode.
+    sha256: Option<String>,
+    table: Option<crate::shielding::PreparedShieldTable>,
+    /// Sigmoid-curve geometry (P129); exclusive with `table`.
+    geometry: Option<crate::shielding::PreparedGeometry>,
+    /// Computed hash of each `geometry.resonance_files` entry, in order.
+    resonance_sha256: Vec<String>,
 }
 
 struct PreparedCovariance {
@@ -2340,13 +2345,43 @@ impl PreparedRun {
                         projectile.name()
                     ));
                 }
-                let (text, sha256) =
-                    read_verified_text(&options.table.path, Some(&options.table.sha256))
-                        .map_err(|error| format!("self-shielding table: {error}"))?;
+                let (sha256, table) = match &options.table {
+                    Some(reference) => {
+                        let (text, sha256) =
+                            read_verified_text(&reference.path, Some(&reference.sha256))
+                                .map_err(|error| format!("self-shielding table: {error}"))?;
+                        (
+                            Some(sha256),
+                            Some(crate::shielding::PreparedShieldTable::from_json(&text)?),
+                        )
+                    }
+                    None => (None, None),
+                };
+                let mut resonance_sha256 = Vec::new();
+                let geometry = match &options.geometry {
+                    Some(geometry) => {
+                        let mut files = Vec::with_capacity(geometry.resonance_files.len());
+                        for reference in &geometry.resonance_files {
+                            let (text, sha) =
+                                read_verified_text(&reference.path, Some(&reference.sha256))
+                                    .map_err(|error| {
+                                        format!("self-shielding resonance file: {error}")
+                                    })?;
+                            resonance_sha256.push(sha);
+                            files.push((reference.path.clone(), text));
+                        }
+                        Some(crate::shielding::PreparedGeometry::from_evaluations(
+                            geometry, &files,
+                        )?)
+                    }
+                    None => None,
+                };
                 Some(PreparedShielding {
                     options: options.clone(),
                     sha256,
-                    table: crate::shielding::PreparedShieldTable::from_json(&text)?,
+                    table,
+                    geometry,
+                    resonance_sha256,
                 })
             }
             None => None,
@@ -3204,16 +3239,20 @@ impl PreparedRun {
         // inventories, and the spec temperature selects the table row.
         let shield_plan = match &self.shielding {
             Some(prepared) => {
-                if prepared.table.boundaries_eV() != lib.boundaries_ev() {
-                    return Err(
-                        "self-shielding table boundaries_eV do not match the activation library boundaries"
-                            .into(),
-                    );
+                if let Some(table) = &prepared.table {
+                    if table.boundaries_eV() != lib.boundaries_ev() {
+                        return Err(
+                            "self-shielding table boundaries_eV do not match the activation library boundaries"
+                                .into(),
+                        );
+                    }
                 }
-                Some(prepared.table.plan(
+                Some(crate::shielding::ShieldPlan::build(
+                    prepared.table.as_ref(),
+                    prepared.geometry.as_ref(),
+                    &prepared.options,
                     &bulk_inv,
-                    &prepared.options.dilution,
-                    prepared.options.sigma0_b,
+                    lib.boundaries_ev(),
                     self.temperature_K.get(),
                     spec.options.require_shielding_complete,
                 )?)
@@ -5694,22 +5733,50 @@ impl PreparedRun {
             );
         }
         if let (Some(prepared), Some(plan)) = (&self.shielding, &shield_plan) {
-            ledger.as_object_mut().expect("ledger is an object").insert(
-                "shielding".into(),
-                serde_json::json!({
-                    "table_sha256": &prepared.sha256,
-                    "dilution": plan.dilution,
-                    "sigma0_fixed_b": plan.sigma0_fixed_b,
-                    "require_complete": spec.options.require_shielding_complete,
-                    "sigma0_eff_b": plan.sigma0_eff_b,
-                    "applied_factors": plan.applied,
-                    "shielding_uncovered": &plan.uncovered_targets,
-                    "sigma_p_estimated": &plan.sigma_p_estimated,
-                    "channels": crate::shielding::CHANNELS,
-                    "model": "Bondarenko: sigma_eff_g = sigma_g * ((1 - c_g) + c_g * f(sigma0_eff, T)); factors interpolate in ln(sigma0) and sqrt(T); outside unresolved ranges f = 1",
-                    "channel_map": "mt 2 -> elastic; mt 18/19 -> fission; mt 102 -> capture; all other reactions take the total factor",
-                }),
-            );
+            let (model, channel_map) = if plan.geometry.is_some() {
+                (
+                    "universal sigmoid curve (Martinho, Goncalves and Salgado): per resolved resonance z = N * sigma_peak * y * sqrt(Gamma_gamma / Gamma), G(z) = (A1 - A2) / (1 + (z/z0)^p) + A2; the per-group applied factor is the Gamma_gamma/E^2 * g*Gamma_n/Gamma weighted mean of G over resonances peaking in the group",
+                    "reactions = all: every reaction of a shielded nuclide takes the group factor; reactions = capture: only mt 102 does",
+                )
+            } else {
+                (
+                    "Bondarenko: sigma_eff_g = sigma_g * ((1 - c_g) + c_g * f(sigma0_eff, T)); factors interpolate in ln(sigma0) and sqrt(T); outside unresolved ranges f = 1",
+                    "mt 2 -> elastic; mt 18/19 -> fission; mt 102 -> capture; all other reactions take the total factor",
+                )
+            };
+            let mut shielding_ledger = serde_json::json!({
+                "table_sha256": &prepared.sha256,
+                "dilution": plan.dilution,
+                "sigma0_fixed_b": plan.sigma0_fixed_b,
+                "require_complete": spec.options.require_shielding_complete,
+                "sigma0_eff_b": plan.sigma0_eff_b,
+                "applied_factors": plan.applied,
+                "shielding_uncovered": &plan.uncovered_targets,
+                "sigma_p_estimated": &plan.sigma_p_estimated,
+                "channels": crate::shielding::CHANNELS,
+                "model": model,
+                "channel_map": channel_map,
+            });
+            let shielding_object = shielding_ledger
+                .as_object_mut()
+                .expect("shielding ledger is an object");
+            if !plan.dilution_overrides.is_empty() {
+                shielding_object.insert(
+                    "dilution_overrides".into(),
+                    serde_json::json!(&plan.dilution_overrides),
+                );
+            }
+            if let Some(geometry) = &plan.geometry {
+                shielding_object.insert("geometry".into(), serde_json::json!(geometry));
+                shielding_object.insert(
+                    "resonance_files_sha256".into(),
+                    serde_json::json!(&prepared.resonance_sha256),
+                );
+            }
+            ledger
+                .as_object_mut()
+                .expect("ledger is an object")
+                .insert("shielding".into(), shielding_ledger);
         }
         if spec.options.gas {
             ledger.as_object_mut().expect("ledger is an object").insert(
@@ -5958,40 +6025,89 @@ impl PreparedRun {
             let certificate_object = certificate
                 .as_object_mut()
                 .expect("certificate is an object");
-            certificate_object.insert(
-                "shielding".into(),
-                serde_json::json!({
-                    "format": "actinv-shield-table-1",
-                    "table_sha256": prepared.sha256,
-                    "dilution": plan.dilution,
-                    "sigma0_fixed_b": plan.sigma0_fixed_b,
-                    "temperature_K": self.temperature_K.get(),
-                    "sigma0_eff_b": plan.sigma0_eff_b,
-                    "applied_factors": plan.applied,
-                    "shielding_uncovered": plan.uncovered_targets,
-                    "sigma_p_estimated": plan.sigma_p_estimated,
-                    "channel_map": "mt 2 -> elastic; mt 18/19 -> fission; mt 102 -> capture; all other reactions take the total factor",
-                    "method_limits": [
+            let (format_name, channel_map, method_limits) = if plan.geometry.is_some() {
+                (
+                    "sigmoid-curve-geometry",
+                    "reactions = all: every reaction of a shielded nuclide takes the group factor; reactions = capture: only mt 102 does",
+                    serde_json::json!([
+                        "sigmoid parameters A1, A2, z0, p are the Martinho et al. fit quoted in the FISPACT-II manual (Eqs. 45-48); the peak cross section is the single-level Breit-Wigner value 4*pi/k^2 * g*Gamma_n/Gamma",
+                        "Sigma_tot at each resonance counts only the shielded nuclide's own peak; the other mixture components are neglected (resonances are assumed not to overlap)",
+                        "only Breit-Wigner and Reich-Moore resolved resonances are used; the unresolved range is not shielded",
+                        "damage-energy observables are not shielded",
+                        "number densities use the declared material and density, not evolved inventories",
+                    ]),
+                )
+            } else {
+                (
+                    "actinv-shield-table-1",
+                    "mt 2 -> elastic; mt 18/19 -> fission; mt 102 -> capture; all other reactions take the total factor",
+                    serde_json::json!([
                         "resolved-resonance segments fold a SIGMA1-broadened pointwise quadrature per temperature column; unresolved segments carry PURR-style probability tables",
                         "factors apply to collapsed group rates via the full-group Bondarenko fold: covered segments carry the probability-table weight, the uncovered part is suppressed by sigma0/(sigma0+background total)",
                         "damage-energy observables are not shielded",
                         "composition dilution uses the declared material, not evolved inventories",
                         "sigma_p for composition members absent from the table is the analytic channel-radius estimate",
-                    ],
-                }),
-            );
-            certificate_object
+                    ]),
+                )
+            };
+            let mut shielding_certificate = serde_json::json!({
+                "format": format_name,
+                "table_sha256": prepared.sha256,
+                "dilution": plan.dilution,
+                "sigma0_fixed_b": plan.sigma0_fixed_b,
+                "temperature_K": self.temperature_K.get(),
+                "sigma0_eff_b": plan.sigma0_eff_b,
+                "applied_factors": plan.applied,
+                "shielding_uncovered": plan.uncovered_targets,
+                "sigma_p_estimated": plan.sigma_p_estimated,
+                "channel_map": channel_map,
+                "method_limits": method_limits,
+            });
+            let shielding_object = shielding_certificate
+                .as_object_mut()
+                .expect("shielding certificate is an object");
+            if !plan.dilution_overrides.is_empty() {
+                shielding_object.insert(
+                    "dilution_overrides".into(),
+                    serde_json::json!(&plan.dilution_overrides),
+                );
+            }
+            if let Some(geometry) = &plan.geometry {
+                shielding_object.insert("geometry".into(), serde_json::json!(geometry));
+            }
+            certificate_object.insert("shielding".into(), shielding_certificate);
+            let inputs = certificate_object
                 .get_mut("inputs")
                 .and_then(serde_json::Value::as_object_mut)
-                .expect("certificate inputs is an object")
-                .insert(
+                .expect("certificate inputs is an object");
+            if let Some(table) = &prepared.options.table {
+                inputs.insert(
                     "shielding_table".into(),
                     serde_json::json!({
-                        "path": &prepared.options.table.path,
-                        "sha256_declared": &prepared.options.table.sha256,
+                        "path": &table.path,
+                        "sha256_declared": &table.sha256,
                         "sha256": &prepared.sha256,
                     }),
                 );
+            }
+            if let Some(geometry) = &prepared.options.geometry {
+                let files: Vec<serde_json::Value> = geometry
+                    .resonance_files
+                    .iter()
+                    .zip(&prepared.resonance_sha256)
+                    .map(|(reference, sha256)| {
+                        serde_json::json!({
+                            "path": &reference.path,
+                            "sha256_declared": &reference.sha256,
+                            "sha256": sha256,
+                        })
+                    })
+                    .collect();
+                inputs.insert(
+                    "shielding_resonance_files".into(),
+                    serde_json::Value::Array(files),
+                );
+            }
         }
         if !spec.projectile.is_neutron() {
             certificate
@@ -6109,7 +6225,14 @@ fn prepared_fingerprint(
         files.push(fingerprint_file(&options.table.path)?);
     }
     if let Some(options) = spec.self_shielding.as_ref() {
-        files.push(fingerprint_file(&options.table.path)?);
+        if let Some(table) = &options.table {
+            files.push(fingerprint_file(&table.path)?);
+        }
+        if let Some(geometry) = &options.geometry {
+            for reference in &geometry.resonance_files {
+                files.push(fingerprint_file(&reference.path)?);
+            }
+        }
     }
     let mut canonical = serde_json::json!({
         "library": spec.library,

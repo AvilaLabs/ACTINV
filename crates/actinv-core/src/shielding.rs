@@ -8,8 +8,12 @@
 //! this module only consumes it. Factors interpolate linearly in ln(sigma0)
 //! and in sqrt(T), clamped at the grid ends.
 
+use actinv_data::activation::{parse_evaluations, Projectile};
 use actinv_data::composition::{self, MaterialKey};
-use serde::Deserialize;
+use actinv_data::resonance::{
+    legacy_effective_total_width, RangeData, ResonanceEvaluation, K_WAVE,
+};
+use serde::{Deserialize, Serialize};
 use std::collections::{BTreeMap, BTreeSet};
 
 const TABLE_FORMAT: &str = "actinv-shield-table-1";
@@ -114,6 +118,11 @@ pub struct ShieldPlan {
     pub sigma0_eff_b: BTreeMap<String, f64>,
     /// nuclide -> group -> per-channel applied factors, for the ledger.
     pub applied: BTreeMap<String, BTreeMap<usize, [f64; 4]>>,
+    /// nuclide -> group -> user dilution (barns) that replaced the computed
+    /// background dilution (SSFDILUTION); empty unless overrides were given.
+    pub dilution_overrides: BTreeMap<String, BTreeMap<usize, f64>>,
+    /// Sigmoid-curve geometry report; `None` on the Bondarenko path.
+    pub geometry: Option<GeometryReport>,
 }
 
 #[derive(Debug)]
@@ -342,6 +351,30 @@ impl PreparedShieldTable {
         temperature_K: f64,
         require_complete: bool,
     ) -> Result<ShieldPlan, String> {
+        self.plan_with_overrides(
+            composition_atoms,
+            dilution,
+            sigma0_fixed_b,
+            &BTreeMap::new(),
+            temperature_K,
+            require_complete,
+        )
+    }
+
+    /// [`Self::plan`] with user dilution cross sections (FISPACT-II
+    /// SSFDILUTION): `dilution_overrides[nuclide][group]` replaces the
+    /// nuclide's computed (or fixed) sigma0 in that group only. Every named
+    /// nuclide must be a covered material nuclide with table data in every
+    /// named group.
+    pub fn plan_with_overrides(
+        &self,
+        composition_atoms: &BTreeMap<(i32, i32), f64>,
+        dilution: &str,
+        sigma0_fixed_b: Option<f64>,
+        dilution_overrides: &BTreeMap<String, BTreeMap<usize, f64>>,
+        temperature_K: f64,
+        require_complete: bool,
+    ) -> Result<ShieldPlan, String> {
         let mut covered = BTreeMap::new();
         let mut uncovered = Vec::new();
         let mut estimated = Vec::new();
@@ -385,12 +418,20 @@ impl PreparedShieldTable {
                     }
                 }
             };
+            let name = name_of(za, liso);
+            let nuclide_overrides = dilution_overrides.get(&name);
             let mut scales: [GroupScales; 4] = Default::default();
             let mut rows = BTreeMap::new();
             for g in &nuc.groups {
                 let mut row = [0.0f64; 4];
+                // SSFDILUTION: a user dilution for this group replaces the
+                // nuclide's computed one.
+                let group_sigma0 = nuclide_overrides
+                    .and_then(|groups| groups.get(&g.group))
+                    .copied()
+                    .unwrap_or(sigma0);
                 for (c, channel) in CHANNELS.iter().enumerate() {
-                    let s0 = sigma0.clamp(grid_floor, f64::INFINITY);
+                    let s0 = group_sigma0.clamp(grid_floor, f64::INFINITY);
                     // Prefer the full-group Bondarenko factor (probability-
                     // table weight over the covered segments plus the smooth
                     // background's own suppression); the flat lethargy blend
@@ -412,7 +453,6 @@ impl PreparedShieldTable {
                 }
                 rows.insert(g.group, row);
             }
-            let name = name_of(za, liso);
             sigma0_eff.insert(name.clone(), sigma0);
             applied.insert(name, rows);
             covered.insert(
@@ -423,6 +463,18 @@ impl PreparedShieldTable {
                     scales,
                 },
             );
+        }
+        for (name, groups) in dilution_overrides {
+            let Some(rows) = applied.get(name) else {
+                return Err(format!(
+                    "self_shielding.dilution_overrides names '{name}', which is not a table-covered material nuclide"
+                ));
+            };
+            if let Some(group) = groups.keys().find(|group| !rows.contains_key(*group)) {
+                return Err(format!(
+                    "self_shielding.dilution_overrides for '{name}' names group {group}, which the table does not carry for that nuclide"
+                ));
+            }
         }
         if require_complete && !uncovered.is_empty() {
             return Err(format!(
@@ -438,11 +490,567 @@ impl PreparedShieldTable {
             sigma0_fixed_b,
             sigma0_eff_b: sigma0_eff,
             applied,
+            dilution_overrides: dilution_overrides.clone(),
+            geometry: None,
+        })
+    }
+}
+
+// ---- Geometry self-shielding (P129): the universal sigmoid curve -------------
+//
+// Martinho, Goncalves and Salgado's "universal sigmoid curve" model of resonance
+// self-shielding, as FISPACT-II implements it behind SSFGEOMETRY (manual
+// Appendix C.4.4): a dimensionless length z per resonance maps through one
+// sigmoid to a factor G, the factors of the resonances whose peaks fall in a
+// group are averaged with weights proportional to the resonance strength, and
+// the group average scales that nuclide's group cross sections.
+
+/// Sigmoid parameters A1, A2, z0 and p, fitted by Martinho et al. to MCNP
+/// results; FISPACT-II manual Eqs. 45-48 (published uncertainties 0.005,
+/// 0.011, 0.09 and 0.02 respectively).
+pub const SIGMOID_A1: f64 = 1.000;
+pub const SIGMOID_A2: f64 = 0.060;
+pub const SIGMOID_Z0: f64 = 2.70;
+pub const SIGMOID_P: f64 = 0.82;
+
+/// Universal sigmoid curve `G(z) = (A1 - A2) / (1 + (z/z0)^p) + A2`
+/// (FISPACT-II manual Eq. 44). G -> A1 = 1 as z -> 0 (thin target) and falls
+/// monotonically toward A2 as z grows.
+pub fn sigmoid_factor(z: f64) -> f64 {
+    if z.is_nan() || z <= 0.0 {
+        return SIGMOID_A1;
+    }
+    (SIGMOID_A1 - SIGMOID_A2) / (1.0 + (z / SIGMOID_Z0).powf(SIGMOID_P)) + SIGMOID_A2
+}
+
+/// Target shapes of SSFGEOMETRY types 1-4.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum GeometryShape {
+    Foil,
+    Wire,
+    Sphere,
+    Cylinder,
+}
+
+impl GeometryShape {
+    pub fn parse(value: &str) -> Result<Self, String> {
+        match value {
+            "foil" => Ok(Self::Foil),
+            "wire" => Ok(Self::Wire),
+            "sphere" => Ok(Self::Sphere),
+            "cylinder" => Ok(Self::Cylinder),
+            other => Err(format!(
+                "unknown self_shielding.geometry.shape '{other}' (expected foil, wire, sphere or cylinder)"
+            )),
+        }
+    }
+
+    pub fn name(self) -> &'static str {
+        match self {
+            Self::Foil => "foil",
+            Self::Wire => "wire",
+            Self::Sphere => "sphere",
+            Self::Cylinder => "cylinder",
+        }
+    }
+
+    /// The effective length y of FISPACT-II manual Table 25 in cm: foil of
+    /// thickness t, y = 1.5 t; wire of radius r, y = 2 r; sphere of radius r,
+    /// y = r; cylinder of radius r and height h, y = 1.65 r h / (r + h).
+    /// `length_cm` is the thickness (foil) or radius; `height_cm` is required
+    /// for, and only for, a cylinder. Dimensions must be finite and positive.
+    pub fn effective_length_cm(
+        self,
+        length_cm: f64,
+        height_cm: Option<f64>,
+    ) -> Result<f64, String> {
+        let positive = |value: f64, label: &str| -> Result<f64, String> {
+            if value.is_finite() && value > 0.0 {
+                Ok(value)
+            } else {
+                Err(format!(
+                    "self_shielding.geometry.{label} must be a positive finite number of cm"
+                ))
+            }
+        };
+        let length = positive(length_cm, "length_cm")?;
+        match (self, height_cm) {
+            (Self::Cylinder, Some(height)) => {
+                let height = positive(height, "height_cm")?;
+                Ok(1.65 * length * height / (length + height))
+            }
+            (Self::Cylinder, None) => {
+                Err("self_shielding.geometry shape 'cylinder' requires height_cm".into())
+            }
+            (_, Some(_)) => Err(format!(
+                "self_shielding.geometry.height_cm applies only to a cylinder, not a {}",
+                self.name()
+            )),
+            (Self::Foil, None) => Ok(1.5 * length),
+            (Self::Wire, None) => Ok(2.0 * length),
+            (Self::Sphere, None) => Ok(length),
+        }
+    }
+}
+
+/// One resolved resonance reduced to what the sigmoid model needs.
+#[derive(Debug, Clone, PartialEq)]
+struct ResonanceLine {
+    energy_ev: f64,
+    /// Peak total cross section of the isolated resonance, barns:
+    /// `4 pi/k^2 * g * Gamma_n/Gamma`, the single-level Breit-Wigner peak. The
+    /// FISPACT-II manual takes this from Froehner (JEFF Report 18, Eq. 186)
+    /// without reproducing it.
+    peak_b: f64,
+    /// `sqrt(Gamma_gamma / Gamma)`, the width factor of manual Eq. 43.
+    capture_root: f64,
+    /// Averaging weight `(Gamma_gamma / E^2) * (g Gamma_n / Gamma)` of Salgado
+    /// et al. (manual Eq. 49).
+    weight: f64,
+}
+
+impl ResonanceLine {
+    /// None for a resonance the model cannot use: a bound level (E <= 0) or
+    /// one without a positive neutron or capture width.
+    fn from_widths(
+        energy_ev: f64,
+        spin_j: f64,
+        target_spin: f64,
+        awri: f64,
+        gamma_n: f64,
+        gamma_g: f64,
+        gamma_total: f64,
+    ) -> Option<Self> {
+        let finite = [
+            energy_ev,
+            spin_j,
+            target_spin,
+            awri,
+            gamma_n,
+            gamma_g,
+            gamma_total,
+        ]
+        .iter()
+        .all(|value| value.is_finite());
+        if !finite
+            || energy_ev <= 0.0
+            || awri <= 0.0
+            || target_spin < 0.0
+            || gamma_n <= 0.0
+            || gamma_g <= 0.0
+        {
+            return None;
+        }
+        // The listed total can fall below its components through rounding.
+        let gamma = gamma_total.max(gamma_n + gamma_g);
+        // Statistical factor g = (2J+1) / (2(2I+1)) (manual, after Eq. 49).
+        let statistical = (2.0 * spin_j.abs() + 1.0) / (2.0 * (2.0 * target_spin + 1.0));
+        // ENDF-6 wave number in 1/sqrt(barn): pi/k^2 is a cross section in barns.
+        let wave = K_WAVE * awri / (awri + 1.0) * energy_ev.sqrt();
+        let neutron_fraction = statistical * gamma_n / gamma;
+        Some(Self {
+            energy_ev,
+            peak_b: 4.0 * std::f64::consts::PI / (wave * wave) * neutron_fraction,
+            capture_root: (gamma_g / gamma).sqrt(),
+            weight: gamma_g / (energy_ev * energy_ev) * neutron_fraction,
+        })
+    }
+
+    /// `z = Sigma_tot(E_res) * y * sqrt(Gamma_gamma / Gamma)` (manual Eq. 43)
+    /// with `Sigma_tot = N * sigma_peak` for the nuclide's own number density
+    /// `N` (cm^-3) and the target's effective length `y` (cm).
+    fn z(&self, number_density_per_cm3: f64, effective_length_cm: f64) -> f64 {
+        number_density_per_cm3 * self.peak_b * 1.0e-24 * effective_length_cm * self.capture_root
+    }
+}
+
+/// The resolved (LRU=1) Breit-Wigner and Reich-Moore resonances of the MF=2
+/// isotope whose ZA is `za`. R-matrix-limited ranges are an error rather than
+/// silently dropped.
+fn resolved_lines(evaluation: &ResonanceEvaluation, za: i32) -> Result<Vec<ResonanceLine>, String> {
+    let mut out = Vec::new();
+    for isotope in evaluation
+        .isotopes
+        .iter()
+        .filter(|isotope| isotope.zai == za || evaluation.isotopes.len() == 1)
+    {
+        for range in &isotope.ranges {
+            match &range.data {
+                RangeData::BreitWigner(resolved) => {
+                    for group in &resolved.groups {
+                        for resonance in &group.resonances {
+                            let total = legacy_effective_total_width(group, resonance);
+                            out.extend(ResonanceLine::from_widths(
+                                resonance.energy,
+                                resonance.spin,
+                                resolved.spin,
+                                group.awri,
+                                resonance.neutron,
+                                resonance.capture,
+                                total,
+                            ));
+                        }
+                    }
+                }
+                RangeData::ReichMoore(resolved) => {
+                    for group in &resolved.groups {
+                        for resonance in &group.resonances {
+                            // Reich-Moore lists no total; fission widths are signed.
+                            let total = resonance.neutron
+                                + resonance.capture
+                                + resonance.fission_a.abs()
+                                + resonance.fission_b.abs();
+                            out.extend(ResonanceLine::from_widths(
+                                resonance.energy,
+                                resonance.spin,
+                                resolved.spin,
+                                group.awri,
+                                resonance.neutron,
+                                resonance.capture,
+                                total,
+                            ));
+                        }
+                    }
+                }
+                RangeData::RMatrixLimited(_) => {
+                    return Err(format!(
+                        "resolved range {}-{} eV uses R-matrix-limited (LRF=7) parameters; the sigmoid-curve model needs Breit-Wigner or Reich-Moore resonances",
+                        range.energy_min, range.energy_max
+                    ));
+                }
+                RangeData::ScatteringOnly { .. } | RangeData::Unresolved(_) => {}
+            }
+        }
+    }
+    Ok(out)
+}
+
+/// Library group index containing `energy_ev` for ascending `boundaries_ev`
+/// (`[b_g, b_{g+1})`), or None outside the structure.
+fn group_of(boundaries_ev: &[f64], energy_ev: f64) -> Option<usize> {
+    let at_or_below = boundaries_ev.partition_point(|&boundary| boundary <= energy_ev);
+    (at_or_below >= 1 && at_or_below < boundaries_ev.len()).then(|| at_or_below - 1)
+}
+
+/// One SSFCHOOSE entry.
+#[derive(Debug, Clone, Copy)]
+enum ChooseEntry {
+    Nuclide(i32, i32),
+    Element(i32),
+}
+
+impl ChooseEntry {
+    fn matches(self, key: (i32, i32)) -> bool {
+        match self {
+            Self::Nuclide(za, liso) => key == (za, liso),
+            Self::Element(z) => key.0 / 1000 == z,
+        }
+    }
+}
+
+/// Applied factor of one nuclide in one library group, for the output.
+#[derive(Debug, Clone, Serialize)]
+pub struct GeometryGroupFactor {
+    pub group: usize,
+    pub energy_min_eV: f64,
+    pub energy_max_eV: f64,
+    /// Resonances whose peaks fall in the group.
+    pub resonances: usize,
+    /// Weighted mean G of those resonances (manual Eq. 50).
+    pub factor: f64,
+}
+
+/// What geometry mode applied, for the ledger and certificate.
+#[derive(Debug, Clone, Serialize)]
+pub struct GeometryReport {
+    pub shape: String,
+    pub length_cm: f64,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub height_cm: Option<f64>,
+    /// Effective length y of manual Table 25.
+    pub effective_length_cm: f64,
+    pub density_g_cm3: f64,
+    /// "all" or "capture": which reactions of a shielded nuclide scale.
+    pub reactions: String,
+    /// nuclide -> number density (cm^-3) used for z.
+    pub number_density_per_cm3: BTreeMap<String, f64>,
+    /// nuclide -> per-group applied factors with their energy ranges.
+    pub factors: BTreeMap<String, Vec<GeometryGroupFactor>>,
+    /// Nuclides with resonance data that took no part (not in the material
+    /// or not chosen).
+    pub resonance_data_unused: Vec<String>,
+}
+
+/// Parsed geometry-mode inputs: the target size and the resolved resonances
+/// of each nuclide supplied by the declared evaluations.
+#[derive(Debug)]
+pub struct PreparedGeometry {
+    shape: GeometryShape,
+    length_cm: f64,
+    height_cm: Option<f64>,
+    effective_length_cm: f64,
+    density_g_cm3: f64,
+    capture_only: bool,
+    choose: Vec<(String, ChooseEntry)>,
+    lines: BTreeMap<(i32, i32), Vec<ResonanceLine>>,
+}
+
+impl PreparedGeometry {
+    /// `files` holds (label, ENDF-6 text) per declared resonance file; the
+    /// caller has already verified each file's hash. Every evaluation must
+    /// carry MF=2/MT=151 with resolved resonances.
+    pub fn from_evaluations(
+        geometry: &crate::spec::SelfShieldingGeometry,
+        files: &[(String, String)],
+    ) -> Result<Self, String> {
+        let shape = GeometryShape::parse(&geometry.shape)?;
+        let effective_length_cm =
+            shape.effective_length_cm(geometry.length_cm, geometry.height_cm)?;
+        if !geometry.density_g_cm3.is_finite() || geometry.density_g_cm3 <= 0.0 {
+            return Err(
+                "self_shielding.geometry.density_g_cm3 must be a positive finite number".into(),
+            );
+        }
+        let capture_only = match geometry.reactions.as_str() {
+            "all" => false,
+            "capture" => true,
+            value => {
+                return Err(format!(
+                    "unknown self_shielding.geometry.reactions '{value}' (expected all or capture)"
+                ));
+            }
+        };
+        let mut choose = Vec::new();
+        for raw in geometry.choose.iter().flatten() {
+            let entry = match composition::material_key(raw)
+                .map_err(|error| format!("self_shielding.geometry.choose: {error}"))?
+            {
+                MaterialKey::Nuclide { za, liso, .. } => ChooseEntry::Nuclide(za, liso),
+                MaterialKey::Element(symbol) => {
+                    ChooseEntry::Element(composition::z_of(&symbol).ok_or_else(|| {
+                        format!("self_shielding.geometry.choose: unknown element '{symbol}'")
+                    })?)
+                }
+            };
+            choose.push((raw.clone(), entry));
+        }
+        let mut lines: BTreeMap<(i32, i32), Vec<ResonanceLine>> = BTreeMap::new();
+        for (label, text) in files {
+            let evaluations =
+                parse_evaluations(text, Some(Projectile::Neutron)).map_err(|error| {
+                    format!("self_shielding.geometry resonance file {label}: {error}")
+                })?;
+            for evaluation in &evaluations {
+                let key = (evaluation.metadata.za, evaluation.metadata.liso);
+                let name = name_of(key.0, key.1);
+                let Some(resonance) = &evaluation.resonance else {
+                    return Err(format!(
+                        "self_shielding.geometry resonance file {label}: {name} has no MF=2/MT=151 resonance parameters; geometry self-shielding needs resolved resonance data"
+                    ));
+                };
+                let found = resolved_lines(resonance, evaluation.metadata.za).map_err(|error| {
+                    format!("self_shielding.geometry resonance file {label}: {name}: {error}")
+                })?;
+                if found.is_empty() {
+                    return Err(format!(
+                        "self_shielding.geometry resonance file {label}: {name} has no usable resolved (LRU=1) resonances"
+                    ));
+                }
+                if lines.insert(key, found).is_some() {
+                    return Err(format!(
+                        "self_shielding.geometry resonance files supply {name} more than once"
+                    ));
+                }
+            }
+        }
+        Ok(Self {
+            shape,
+            length_cm: geometry.length_cm,
+            height_cm: geometry.height_cm,
+            effective_length_cm,
+            density_g_cm3: geometry.density_g_cm3,
+            capture_only,
+            choose,
+            lines,
+        })
+    }
+
+    fn is_chosen(&self, key: (i32, i32)) -> bool {
+        self.choose.is_empty() || self.choose.iter().any(|(_, entry)| entry.matches(key))
+    }
+
+    /// Build the per-run plan. `composition_atoms` is atoms per gram of the
+    /// declared material; `boundaries_ev` the activation library's ascending
+    /// group boundaries. Each shielded nuclide's number density is
+    /// `atoms_per_gram * density`; per group, the Eq. 50 weighted mean of the
+    /// resonances' G(z) scales that nuclide's cross sections. Groups without
+    /// resonance peaks keep factor one.
+    pub fn plan(
+        &self,
+        composition_atoms: &BTreeMap<(i32, i32), f64>,
+        boundaries_ev: &[f64],
+        require_complete: bool,
+    ) -> Result<ShieldPlan, String> {
+        if boundaries_ev.len() < 2
+            || boundaries_ev
+                .iter()
+                .any(|boundary| !boundary.is_finite() || *boundary <= 0.0)
+            || boundaries_ev.windows(2).any(|w| w[1] <= w[0])
+        {
+            return Err(
+                "self_shielding geometry needs positive, strictly ascending activation-library group boundaries"
+                    .into(),
+            );
+        }
+        for (raw, entry) in &self.choose {
+            if !composition_atoms.keys().any(|&key| entry.matches(key)) {
+                return Err(format!(
+                    "self_shielding.geometry.choose names '{raw}', which is not in the material"
+                ));
+            }
+        }
+        let mut covered = BTreeMap::new();
+        let mut uncovered = Vec::new();
+        let mut applied: BTreeMap<String, BTreeMap<usize, [f64; 4]>> = BTreeMap::new();
+        let mut factors: BTreeMap<String, Vec<GeometryGroupFactor>> = BTreeMap::new();
+        let mut densities = BTreeMap::new();
+        for (&key, &atoms_per_gram) in composition_atoms {
+            if !self.is_chosen(key) {
+                continue;
+            }
+            let name = name_of(key.0, key.1);
+            let Some(lines) = self.lines.get(&key) else {
+                if self.choose.is_empty() {
+                    uncovered.push(name);
+                    continue;
+                }
+                return Err(format!(
+                    "self_shielding.geometry.choose selects {name}, but no resonance file supplies it"
+                ));
+            };
+            let number_density = atoms_per_gram * self.density_g_cm3;
+            // group -> (sum of w*G, sum of w, resonance count)
+            let mut sums: BTreeMap<usize, (f64, f64, usize)> = BTreeMap::new();
+            for line in lines {
+                let Some(group) = group_of(boundaries_ev, line.energy_ev) else {
+                    continue;
+                };
+                let g = sigmoid_factor(line.z(number_density, self.effective_length_cm));
+                let entry = sums.entry(group).or_insert((0.0, 0.0, 0));
+                entry.0 += line.weight * g;
+                entry.1 += line.weight;
+                entry.2 += 1;
+            }
+            let mut scale_map = GroupScales::new();
+            let mut rows = BTreeMap::new();
+            let mut report_rows = Vec::new();
+            for (group, (weighted, weight, count)) in sums {
+                if weight <= 0.0 {
+                    continue;
+                }
+                let factor = weighted / weight;
+                scale_map.insert(group, factor);
+                rows.insert(
+                    group,
+                    if self.capture_only {
+                        [1.0, 1.0, 1.0, factor]
+                    } else {
+                        [factor; 4]
+                    },
+                );
+                report_rows.push(GeometryGroupFactor {
+                    group,
+                    energy_min_eV: boundaries_ev[group],
+                    energy_max_eV: boundaries_ev[group + 1],
+                    resonances: count,
+                    factor,
+                });
+            }
+            let mut scales: [GroupScales; 4] = Default::default();
+            if self.capture_only {
+                scales[3] = scale_map;
+            } else {
+                for channel in &mut scales {
+                    *channel = scale_map.clone();
+                }
+            }
+            covered.insert(
+                key,
+                PreparedNuclide {
+                    sigma_p_b: 0.0,
+                    sigma0_eff_b: 0.0,
+                    scales,
+                },
+            );
+            applied.insert(name.clone(), rows);
+            factors.insert(name.clone(), report_rows);
+            densities.insert(name, number_density);
+        }
+        if require_complete && !uncovered.is_empty() {
+            return Err(format!(
+                "self_shielding: material nuclides lack resonance data: {}",
+                uncovered.join(", ")
+            ));
+        }
+        let unused: Vec<String> = self
+            .lines
+            .keys()
+            .filter(|&&key| !composition_atoms.contains_key(&key) || !self.is_chosen(key))
+            .map(|&(za, liso)| name_of(za, liso))
+            .collect();
+        Ok(ShieldPlan {
+            covered,
+            uncovered_targets: uncovered,
+            sigma_p_estimated: Vec::new(),
+            dilution: "geometry".into(),
+            sigma0_fixed_b: None,
+            sigma0_eff_b: BTreeMap::new(),
+            applied,
+            dilution_overrides: BTreeMap::new(),
+            geometry: Some(GeometryReport {
+                shape: self.shape.name().into(),
+                length_cm: self.length_cm,
+                height_cm: self.height_cm,
+                effective_length_cm: self.effective_length_cm,
+                density_g_cm3: self.density_g_cm3,
+                reactions: if self.capture_only { "capture" } else { "all" }.into(),
+                number_density_per_cm3: densities,
+                factors,
+                resonance_data_unused: unused,
+            }),
         })
     }
 }
 
 impl ShieldPlan {
+    /// The plan for a `self_shielding` section: the Bondarenko table (with
+    /// any dilution overrides) or the sigmoid-curve geometry, never both.
+    /// `boundaries_ev` are the activation library's group boundaries.
+    pub fn build(
+        table: Option<&PreparedShieldTable>,
+        geometry: Option<&PreparedGeometry>,
+        options: &crate::spec::SelfShieldingOptions,
+        composition_atoms: &BTreeMap<(i32, i32), f64>,
+        boundaries_ev: &[f64],
+        temperature_K: f64,
+        require_complete: bool,
+    ) -> Result<ShieldPlan, String> {
+        match (table, geometry) {
+            (Some(table), None) => table.plan_with_overrides(
+                composition_atoms,
+                &options.dilution,
+                options.sigma0_b,
+                &options.dilution_overrides,
+                temperature_K,
+                require_complete,
+            ),
+            (None, Some(geometry)) => {
+                geometry.plan(composition_atoms, boundaries_ev, require_complete)
+            }
+            _ => Err("self_shielding needs exactly one of table or geometry".into()),
+        }
+    }
+
     /// The per-group scale map for one library row, or None when the row's
     /// target is uncovered. Callers multiply `sigma_g * scale(g)` inside the
     /// group fold; groups absent from the map scale by 1.
@@ -656,5 +1264,276 @@ mod tests {
         // Elemental nuclide key.
         let bad_key = table_json(uniform_factors(0.5)).replace("W186", "W");
         assert!(PreparedShieldTable::from_json(&bad_key).is_err());
+    }
+
+    #[test]
+    fn dilution_override_bypasses_the_computed_sigma0() {
+        // capture f = 0.4 at sigma0 = 1e2, 1.0 elsewhere on the grid floor row.
+        let mut factors = uniform_factors(1.0);
+        factors["capture"][2] = serde_json::json!(vec![0.4; 4]);
+        let table = PreparedShieldTable::from_json(&table_json(factors)).unwrap();
+        let atoms = BTreeMap::from([((74186, 0), 1.0e22)]);
+        // Pure W186 computes sigma0 = 0 (grid floor, f = 1): scale 1.
+        let base = table
+            .plan(&atoms, "composition", None, 293.6, false)
+            .unwrap();
+        assert_eq!(base.row_scales(74186, 0, 102).unwrap()[&1], 1.0);
+        assert!(base.dilution_overrides.is_empty());
+        // The user dilution 1e2 in group 1 replaces it: scale = 0.5 + 0.5*0.4.
+        let overrides = BTreeMap::from([("W186".to_string(), BTreeMap::from([(1usize, 1e2)]))]);
+        let plan = table
+            .plan_with_overrides(&atoms, "composition", None, &overrides, 293.6, false)
+            .unwrap();
+        let scale = plan.row_scales(74186, 0, 102).unwrap()[&1];
+        assert!((scale - 0.7).abs() < 1e-12, "scale {scale}");
+        // The computed effective dilution is still reported; the override is named.
+        assert_eq!(plan.sigma0_eff_b["W186"], 0.0);
+        assert_eq!(plan.dilution_overrides["W186"][&1], 1e2);
+        // The override also wins over a fixed dilution.
+        let plan = table
+            .plan_with_overrides(&atoms, "fixed", Some(1e10), &overrides, 293.6, false)
+            .unwrap();
+        assert!((plan.row_scales(74186, 0, 102).unwrap()[&1] - 0.7).abs() < 1e-12);
+    }
+
+    #[test]
+    fn dilution_override_names_must_be_covered() {
+        let table = PreparedShieldTable::from_json(&table_json(uniform_factors(0.5))).unwrap();
+        let atoms = BTreeMap::from([((74186, 0), 1.0e22)]);
+        let unknown = BTreeMap::from([("W184".to_string(), BTreeMap::from([(1usize, 1e2)]))]);
+        let error = table
+            .plan_with_overrides(&atoms, "composition", None, &unknown, 293.6, false)
+            .unwrap_err();
+        assert!(error.contains("'W184'"), "{error}");
+        let bad_group = BTreeMap::from([("W186".to_string(), BTreeMap::from([(7usize, 1e2)]))]);
+        let error = table
+            .plan_with_overrides(&atoms, "composition", None, &bad_group, 293.6, false)
+            .unwrap_err();
+        assert!(error.contains("group 7"), "{error}");
+    }
+
+    #[test]
+    fn empty_overrides_leave_the_plan_unchanged() {
+        let table = PreparedShieldTable::from_json(&table_json(uniform_factors(0.5))).unwrap();
+        let atoms = BTreeMap::from([((74186, 0), 1.0e22)]);
+        let plain = table
+            .plan(&atoms, "composition", None, 293.6, false)
+            .unwrap();
+        let empty = table
+            .plan_with_overrides(&atoms, "composition", None, &BTreeMap::new(), 293.6, false)
+            .unwrap();
+        assert_eq!(
+            plain.row_scales(74186, 0, 102).unwrap(),
+            empty.row_scales(74186, 0, 102).unwrap()
+        );
+        assert_eq!(plain.applied, empty.applied);
+        assert!(plain.dilution_overrides.is_empty() && plain.geometry.is_none());
+    }
+
+    #[test]
+    fn sigmoid_limits_and_monotone_decrease() {
+        // Thin limit: G -> A1 = 1.
+        assert_eq!(sigmoid_factor(0.0), 1.0);
+        assert!((sigmoid_factor(1e-12) - 1.0).abs() < 1e-9);
+        // Thick limit: G -> A2 = 0.06.
+        assert!((sigmoid_factor(1e30) - SIGMOID_A2).abs() < 1e-6);
+        // At z = z0 the sigmoid is at its midpoint: (A1 - A2)/2 + A2 = 0.53.
+        assert!((sigmoid_factor(SIGMOID_Z0) - 0.53).abs() < 1e-12);
+        let mut previous = sigmoid_factor(0.0);
+        for exponent in -6..=12 {
+            let g = sigmoid_factor(10f64.powf(f64::from(exponent) / 2.0));
+            assert!(g < previous, "G must fall with z: {g} !< {previous}");
+            assert!((SIGMOID_A2..=SIGMOID_A1).contains(&g));
+            previous = g;
+        }
+    }
+
+    #[test]
+    fn effective_lengths_follow_the_manual_table() {
+        let y = |shape: GeometryShape, length: f64, height: Option<f64>| {
+            shape.effective_length_cm(length, height).unwrap()
+        };
+        assert!((y(GeometryShape::Foil, 0.8, None) - 1.2).abs() < 1e-15);
+        assert!((y(GeometryShape::Wire, 0.5, None) - 1.0).abs() < 1e-15);
+        assert!((y(GeometryShape::Sphere, 0.5, None) - 0.5).abs() < 1e-15);
+        // 1.65 r h / (r + h) with r = 1, h = 3.
+        assert!((y(GeometryShape::Cylinder, 1.0, Some(3.0)) - 1.2375).abs() < 1e-15);
+        for bad in [0.0, -1.0, f64::NAN, f64::INFINITY] {
+            assert!(GeometryShape::Foil.effective_length_cm(bad, None).is_err());
+            assert!(GeometryShape::Cylinder
+                .effective_length_cm(1.0, Some(bad))
+                .is_err());
+        }
+        assert!(GeometryShape::Cylinder
+            .effective_length_cm(1.0, None)
+            .unwrap_err()
+            .contains("height_cm"));
+        assert!(GeometryShape::Sphere
+            .effective_length_cm(1.0, Some(1.0))
+            .is_err());
+        assert!(GeometryShape::parse("slab").is_err());
+        assert_eq!(GeometryShape::parse("wire").unwrap(), GeometryShape::Wire);
+    }
+
+    /// W184-like toy: two resonances in library group 1 ([100 eV, 1e4 eV)),
+    /// one below the structure.
+    fn toy_geometry(length_cm: f64, capture_only: bool) -> PreparedGeometry {
+        let line = |energy: f64, gamma_n: f64, gamma_g: f64| {
+            ResonanceLine::from_widths(energy, 0.5, 0.0, 183.0, gamma_n, gamma_g, gamma_n + gamma_g)
+                .unwrap()
+        };
+        PreparedGeometry {
+            shape: GeometryShape::Foil,
+            length_cm,
+            height_cm: None,
+            effective_length_cm: 1.5 * length_cm,
+            density_g_cm3: 19.3,
+            capture_only,
+            choose: Vec::new(),
+            lines: BTreeMap::from([(
+                (74184, 0),
+                vec![
+                    line(0.5, 1e-3, 5e-2),
+                    line(200.0, 2e-3, 6e-2),
+                    line(900.0, 5e-3, 4e-2),
+                ],
+            )]),
+        }
+    }
+
+    #[test]
+    fn geometry_factor_tends_to_one_when_thin_and_falls_with_thickness() {
+        let atoms = BTreeMap::from([((74184, 0), 3.0e21)]);
+        let bounds = [1.0, 100.0, 1.0e4];
+        let factor = |length: f64| {
+            let plan = toy_geometry(length, false)
+                .plan(&atoms, &bounds, false)
+                .unwrap();
+            plan.row_scales(74184, 0, 102).unwrap()[&1]
+        };
+        assert!((factor(1e-12) - 1.0).abs() < 1e-6);
+        let (thin, mid, thick) = (factor(1e-4), factor(1e-2), factor(1.0));
+        assert!(thin > mid && mid > thick, "{thin} {mid} {thick}");
+        assert!(thick > SIGMOID_A2 && thin < 1.0);
+    }
+
+    #[test]
+    fn geometry_group_factor_is_the_weighted_sigmoid_mean() {
+        let geometry = toy_geometry(0.01, false);
+        let atoms = BTreeMap::from([((74184, 0), 3.0e21)]);
+        let plan = geometry.plan(&atoms, &[1.0, 100.0, 1.0e4], false).unwrap();
+        let lines = &geometry.lines[&(74184, 0)];
+        let n = 3.0e21 * 19.3;
+        // Only the 200 and 900 eV resonances fall inside the structure; the
+        // 0.5 eV one lies below its first boundary.
+        let (mut num, mut den) = (0.0, 0.0);
+        for line in &lines[1..] {
+            num += line.weight * sigmoid_factor(line.z(n, 0.015));
+            den += line.weight;
+        }
+        let want = num / den;
+        let got = plan.row_scales(74184, 0, 102).unwrap()[&1];
+        assert!((got - want).abs() < 1e-15, "{got} vs {want}");
+        assert!(plan.row_scales(74184, 0, 102).unwrap().get(&0).is_none());
+        let report = plan.geometry.as_ref().unwrap();
+        let rows = &report.factors["W184"];
+        assert_eq!(rows.len(), 1);
+        assert_eq!(rows[0].group, 1);
+        assert_eq!(rows[0].resonances, 2);
+        assert_eq!(
+            (rows[0].energy_min_eV, rows[0].energy_max_eV),
+            (100.0, 1.0e4)
+        );
+        assert!((rows[0].factor - want).abs() < 1e-15);
+        assert_eq!(plan.dilution, "geometry");
+        assert!((report.effective_length_cm - 0.015).abs() < 1e-15);
+        assert!((report.number_density_per_cm3["W184"] - n).abs() < 1e-9 * n);
+    }
+
+    #[test]
+    fn geometry_reaction_scope_and_selection() {
+        let atoms = BTreeMap::from([((74184, 0), 3.0e21), ((25055, 0), 1.0e21)]);
+        let bounds = [1.0, 100.0, 1.0e4];
+        // All reactions: elastic and capture both scale.
+        let all = toy_geometry(0.01, false)
+            .plan(&atoms, &bounds, false)
+            .unwrap();
+        assert!(all.row_scales(74184, 0, 2).is_some());
+        assert!(all.row_scales(74184, 0, 102).is_some());
+        // Mn55 has no resonance data: named uncovered, untouched.
+        assert_eq!(all.uncovered_targets, vec!["Mn55".to_string()]);
+        assert!(all.row_scales(25055, 0, 102).is_none());
+        assert!(toy_geometry(0.01, false)
+            .plan(&atoms, &bounds, true)
+            .is_err());
+        // Capture only: MT 102 scales, other channels do not.
+        let capture = toy_geometry(0.01, true)
+            .plan(&atoms, &bounds, false)
+            .unwrap();
+        assert!(capture.row_scales(74184, 0, 2).is_none());
+        assert!(capture.row_scales(74184, 0, 16).is_none());
+        assert_eq!(
+            capture.row_scales(74184, 0, 102).unwrap(),
+            all.row_scales(74184, 0, 102).unwrap()
+        );
+        assert_eq!(capture.applied["W184"][&1][0], 1.0);
+        // Choosing a nuclide outside the material is an error.
+        let mut chosen = toy_geometry(0.01, false);
+        chosen.choose = vec![("W186".to_string(), ChooseEntry::Nuclide(74186, 0))];
+        let error = chosen.plan(&atoms, &bounds, false).unwrap_err();
+        assert!(error.contains("W186"), "{error}");
+        // Choosing the element selects its covered isotope and leaves Mn alone.
+        chosen.choose = vec![("W".to_string(), ChooseEntry::Element(74))];
+        let plan = chosen.plan(&atoms, &bounds, false).unwrap();
+        assert!(plan.uncovered_targets.is_empty());
+        assert!(plan.row_scales(74184, 0, 102).is_some());
+    }
+
+    #[test]
+    fn geometry_rejects_bad_boundaries_and_unusable_files() {
+        let atoms = BTreeMap::from([((74184, 0), 3.0e21)]);
+        assert!(toy_geometry(0.01, false)
+            .plan(&atoms, &[100.0, 1.0], false)
+            .is_err());
+        // Bound levels and resonances without a positive neutron or capture
+        // width are not usable lines.
+        assert!(ResonanceLine::from_widths(-1.0, 0.5, 0.0, 183.0, 1e-3, 1e-2, 1.1e-2).is_none());
+        assert!(ResonanceLine::from_widths(5.0, 0.5, 0.0, 183.0, 0.0, 1e-2, 1e-2).is_none());
+        assert!(ResonanceLine::from_widths(5.0, 0.5, 0.0, 183.0, 1e-3, 0.0, 1e-3).is_none());
+        // Malformed ENDF text fails with the file label in the message.
+        let geometry = crate::spec::SelfShieldingGeometry {
+            shape: "foil".into(),
+            length_cm: 0.01,
+            height_cm: None,
+            density_g_cm3: 19.3,
+            resonance_files: Vec::new(),
+            choose: None,
+            reactions: "all".into(),
+        };
+        let error = PreparedGeometry::from_evaluations(
+            &geometry,
+            &[("w184.endf".to_string(), "not an ENDF tape".to_string())],
+        )
+        .unwrap_err();
+        assert!(error.contains("w184.endf"), "{error}");
+        let mut bad = geometry.clone();
+        bad.length_cm = f64::NAN;
+        assert!(PreparedGeometry::from_evaluations(&bad, &[]).is_err());
+        let mut bad = geometry;
+        bad.reactions = "elastic".into();
+        assert!(PreparedGeometry::from_evaluations(&bad, &[]).is_err());
+    }
+
+    #[test]
+    fn resonance_peak_cross_section_scales_inversely_with_energy() {
+        // Same widths and spins: sigma_peak = 4 pi/k^2 g Gn/G with k^2 ~ E.
+        let a = ResonanceLine::from_widths(10.0, 0.5, 0.0, 100.0, 1e-3, 1e-2, 1.1e-2).unwrap();
+        let b = ResonanceLine::from_widths(40.0, 0.5, 0.0, 100.0, 1e-3, 1e-2, 1.1e-2).unwrap();
+        assert!((a.peak_b / b.peak_b - 4.0).abs() < 1e-12);
+        // g = (2J+1)/(2(2I+1)) = 1 for J = 1/2, I = 0.
+        let wave = K_WAVE * 100.0 / 101.0 * 10.0_f64.sqrt();
+        let want = 4.0 * std::f64::consts::PI / (wave * wave) * (1e-3 / 1.1e-2);
+        assert!((a.peak_b - want).abs() < 1e-9 * want);
+        assert!((a.capture_root - (1e-2_f64 / 1.1e-2).sqrt()).abs() < 1e-12);
     }
 }
