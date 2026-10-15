@@ -1,0 +1,179 @@
+{
+ "candidate_sha256": "73786dbf9aa50ea2337b337253136bff2017f9a86ad8a171a4c8331ea8d1d410",
+ "checker_sha256": "66155deab1f74c60d122436933adb0605dec183870f54b0f97eea848b637adf2",
+ "gates": {
+  "G2": {
+   "pass": true,
+   "specs": {
+    "fns_fe_5min": {
+     "identical_apart_from_ms": true,
+     "spec_sha256": "ed55ed00f6c00fc4a2351e18332e98e7feb33d9b7ca65e7ba861e0e5e8feef39"
+    },
+    "shielding_demo": {
+     "identical_apart_from_ms": true,
+     "spec_sha256": "5da1f8e0d1028bba93a51c5b21125d6145aaf24d0f1a65c2c90acf735616afb1"
+    }
+   }
+  },
+  "G3": {
+   "cases": {
+    "pulsed": {
+     "bad": [],
+     "compared": 566,
+     "mode": "trace",
+     "pass": false,
+     "pathway_closure": 1.0,
+     "worst": 4.6897634093125835e-15
+    },
+    "scaled": {
+     "bad": [],
+     "compared": 517,
+     "mode": "trace",
+     "pass": false,
+     "pathway_closure": 7.282257267463544e+33,
+     "worst": 4.581826523282772e-15
+    },
+    "softened": {
+     "bad": [],
+     "compared": 517,
+     "mode": "trace",
+     "pass": false,
+     "pathway_closure": 44.901823883239395,
+     "worst": 3.749638552723187e-15
+    }
+   },
+   "pass": false
+  },
+  "G4": {
+   "bad": [
+    {
+     "first_product": "Cr50",
+     "from": "Fe54",
+     "nuclide": "Cr49",
+     "rel": 0.6299999999994633
+    },
+    {
+     "first_product": "Fe53",
+     "from": "Fe54",
+     "nuclide": "Cr49",
+     "rel": 0.63000000003856
+    },
+    {
+     "first_product": "Mn54",
+     "from": "Fe54",
+     "nuclide": "Cr54",
+     "rel": 2.755910424900702e-08
+    },
+    {
+     "first_product": "Mn56",
+     "from": "Fe56",
+     "nuclide": "Cr56",
+     "rel": 0.6299999999994819
+    },
+    {
+     "first_product": "Mn57",
+     "from": "Fe57",
+     "nuclide": "Cr57",
+     "rel": 0.6299999999997031
+    },
+    {
+     "first_product": "Mn57",
+     "from": "Fe58",
+     "nuclide": "Cr57",
+     "rel": 0.6299999999997029
+    },
+    {
+     "first_product": "Mn58m1",
+     "from": "Fe58",
+     "nuclide": "Cr57",
+     "rel": 0.6300000000026275
+    },
+    {
+     "first_product": "Mn58",
+     "from": "Fe58",
+     "nuclide": "Cr57",
+     "rel": 0.630000000001313
+    },
+    {
+     "first_product": "Mn58m1",
+     "from": "Fe58",
+     "nuclide": "Cr58",
+     "rel": 0.62999999999974
+    },
+    {
+     "first_product": "Mn58",
+     "from": "Fe58",
+     "nuclide": "Cr58",
+     "rel": 0.6300000000000071
+    },
+    {
+     "first_product": "Fe53",
+     "from": "Fe54",
+     "nuclide": "Fe52",
+     "rel": 0.6299999999993546
+    },
+    {
+     "first_product": "Fe53",
+     "from": "Fe54",
+     "nuclide": "Fe53m1",
+     "rel": 0.6299999999993543
+    },
+    {
+     "first_product": "Fe55",
+     "from": "Fe56",
+     "nuclide": "Fe54",
+     "rel": 0.629999999999538
+    },
+    {
+     "first_product": "Fe55",
+     "from": "Fe54",
+     "nuclide": "Fe54",
+     "rel": 0.6299999999995382
+    },
+    {
+     "first_product": "Fe53",
+     "from": "Fe54",
+     "nuclide": "Fe54",
+     "rel": 0.6299999999994409
+    },
+    {
+     "first_product": "Fe59",
+     "from": "Fe58",
+     "nuclide": "Fe60",
+     "rel": 0.629999999999489
+    },
+    {
+     "first_product": "Fe53",
+     "from": "Fe54",
+     "nuclide": "Mn51",
+     "rel": 0.6300000065799111
+    },
+    {
+     "first_product": "Mn52",
+     "from": "Fe54",
+     "nuclide": "Mn51",
+     "rel": 0.6299999999993986
+    },
+    {
+     "first_product": "Mn52m1",
+     "from": "Fe54",
+     "nuclide": "Mn51",
+     "rel": 0.6299999999991698
+    },
+    {
+     "first_product": "Fe55",
+     "from": "Fe56",
+     "nuclide": "Mn55",
+     "rel": 1.5527044723434855e-07
+    }
+   ],
+   "compared": 142,
+   "pass": false,
+   "worst_relative": 0.6300008404556204
+  }
+ },
+ "protocol": "protocols/ACTINV-P134_PROTOCOL.md",
+ "protocol_sha256": "ae98c30fdc1139c4483858ebaa60bbe755d29c0d80854f79b65fd96fdd0c6494",
+ "reference_sha256": "3d34d7ca5887be03e19b81f8ae06d784ed53ec1310a69764ed70b8672bc42b5f",
+ "verdict": "FAIL"
+}
