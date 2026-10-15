@@ -1339,7 +1339,7 @@ mod tests {
 
     #[test]
     fn linear_chain_single_path_equals_the_full_solution() {
-        let (la, lb, n0, t) = (1.0e-3, 3.0e-4, 1.0e20, 5000.0);
+        let (la, lb, n0, t): (f64, f64, f64, f64) = (1.0e-3, 3.0e-4, 1.0e20, 5000.0);
         // Bateman, distinct rates: N_C = N0 (1 - (lb e^-la t - la e^-lb t) / (lb - la))
         let total = n0 * (1.0 - (lb * (-la * t).exp() - la * (-lb * t).exp()) / (lb - la));
         let graph = input(
@@ -1407,7 +1407,7 @@ mod tests {
 
     #[test]
     fn equal_rate_chain_has_no_bateman_singularity() {
-        let (l, t, n0) = (2.0e-3, 3000.0, 1.0e15);
+        let (l, t, n0): (f64, f64, f64) = (2.0e-3, 3000.0, 1.0e15);
         let x = l * t;
         // equal rates: N_C = N0 (1 - e^-x (1 + x))
         let total = n0 * (1.0 - (-x).exp() * (1.0 + x));
@@ -1481,18 +1481,14 @@ mod tests {
     #[test]
     fn reservoir_source_with_two_steps_matches_the_full_solution() {
         // reservoir supplies A at r during step 1 only; A -> B; target B, read after the cooling step
-        let (r, l, t1, t2) = (5.0e9, 2.0e-4, 4000.0, 6000.0);
+        let (r, l, t1, t2): (f64, f64, f64, f64) = (5.0e9, 2.0e-4, 4000.0, 6000.0);
         let step1 = single_step(t1, vec![(0, 0, -l), (1, 0, l)], vec![(0, 0, r)]);
         let step2 = single_step(t2, vec![(0, 0, -l), (1, 0, l)], vec![]);
-        // full three-node system, reservoir at index 2 with no loss
-        let mut m1 = vec![0.0; 9];
-        m1[0] = -l;
-        m1[3] = l;
-        m1[2] = r; // A <- reservoir
-        let mut m2 = m1.clone();
-        m2[2] = 0.0;
-        let after1 = full_solution(&m1, 3, t1, &[0.0, 0.0, 1.0]);
-        let after2 = full_solution(&m2, 3, t2, &after1);
+        // Closed form, not `full_solution`: the reservoir column gives the full matrix a norm of
+        // r*t1 = 2e13, where plain scaling and squaring overscales and loses about 1e-4.
+        let a1 = r / l * (1.0 - (-l * t1).exp());
+        let after1 = [a1, r * t1 - a1, 1.0];
+        let after2 = [a1 * (-l * t2).exp(), after1[1] + a1 * (1.0 - (-l * t2).exp()), 1.0];
         let graph = input(
             &["Mn54", "Fe54"],
             &["Cr54"],
