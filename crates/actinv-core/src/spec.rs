@@ -371,6 +371,11 @@ pub struct FissionYieldOptions {
     pub energy: String,
     #[serde(default)]
     pub fixed_energy_eV: Option<f64>,
+    /// Spontaneous-fission inputs: independent-yield files that route each state's SF branch to
+    /// products instead of leakage, and neutron multiplicities for the SF neutron source. Absent =
+    /// SF branches stay on leakage and the spec echo is byte-identical to a pre-P125 spec.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub spontaneous: Option<SpontaneousFissionOptions>,
 }
 
 fn spectrum_average() -> String {
@@ -383,6 +388,51 @@ impl Default for FissionYieldOptions {
             files: Vec::new(),
             energy: spectrum_average(),
             fixed_energy_eV: None,
+            spontaneous: None,
+        }
+    }
+}
+
+/// P125 spontaneous fission, all hash-pinned. A state with an SF branch and no yield data keeps
+/// that branch on leakage and is named in the ledger; a state with an SF branch and no nu-bar adds
+/// to the neutron source's uncovered decay rate. Nothing is inferred for either.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct SpontaneousFissionOptions {
+    /// ENDF-6 MF=8/MT=454 spontaneous-fission yield files (the ENDF/B `sfy` sublibrary). A file may
+    /// hold one material or the whole sublibrary; the yields are read at the lowest tabulated
+    /// incident energy (E = 0 for spontaneous fission).
+    #[serde(default)]
+    pub files: Vec<HashedFileRef>,
+    /// ENDF file whose MF=1/MT=452 (else MT=456) gives each state's spontaneous-fission nu-bar: the
+    /// ENDF/B decay sublibrary. Do not name a neutron sublibrary (its MF=1 is the induced value).
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub nubar_endf: Option<HashedFileRef>,
+    /// JSON `{"source": "<citation>", "nubar": {"Cf252": <value>, ...}}`. Entries override
+    /// `nubar_endf` for the same state; the citation is required and recorded in the certificate.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub nubar_table: Option<HashedFileRef>,
+}
+
+/// Opt-in cumulative fission count and burn-up per step (P125): neutron-induced fissions from the
+/// MT=18 reaction rate plus one per spontaneous-fission decay, as a `fission.count` block.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct FissionCountOptions {
+    /// Energy per fission for burn-up in MWd/kg. The default is a conventional 200 MeV, not a
+    /// nuclide-specific value; supply the figure your comparison uses.
+    #[serde(default = "fission_energy_mev")]
+    pub energy_per_fission_MeV: f64,
+}
+
+fn fission_energy_mev() -> f64 {
+    crate::fission_count::DEFAULT_ENERGY_PER_FISSION_MEV
+}
+
+impl Default for FissionCountOptions {
+    fn default() -> Self {
+        Self {
+            energy_per_fission_MeV: fission_energy_mev(),
         }
     }
 }
@@ -742,6 +792,10 @@ pub struct Options {
     /// echo or fingerprint when false, so gas-off output is byte-identical to pre-P92 output.
     #[serde(default, skip_serializing_if = "is_false")]
     pub gas: bool,
+    /// P125: cumulative fission count and burn-up per step. Absent from any spec echo or
+    /// fingerprint when unset, so default output is byte-identical to pre-P125 output.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub fission: Option<FissionCountOptions>,
 }
 fn is_false(b: &bool) -> bool {
     !*b
@@ -776,8 +830,23 @@ impl Default for Options {
             decay_scale: None,
             yield_scale: None,
             gas: false,
+            fission: None,
         }
     }
+}
+
+/// A hash-pinned file reference needs a path and a 64-hex-digit sha256.
+fn check_hashed_ref(reference: &HashedFileRef, what: &str) -> Result<(), String> {
+    if reference.path.is_empty()
+        || reference.sha256.len() != 64
+        || !reference
+            .sha256
+            .bytes()
+            .all(|byte| byte.is_ascii_hexdigit())
+    {
+        return Err(format!("{what} requires a path and a 64-hex-digit sha256"));
+    }
+    Ok(())
 }
 
 /// Parse a scale-map key as an explicit nuclide (an element key like "Fe"
@@ -1226,6 +1295,14 @@ impl Spec {
                 ));
             }
         }
+        if let Some(fission) = &self.options.fission {
+            if !fission.energy_per_fission_MeV.is_finite() || fission.energy_per_fission_MeV <= 0.0
+            {
+                return Err(
+                    "options.fission.energy_per_fission_MeV must be finite and positive".into(),
+                );
+            }
+        }
         if !self.options.temperature_K.is_finite() || self.options.temperature_K < 0.0 {
             return Err("options.temperature_K must be finite and nonnegative".into());
         }
@@ -1607,6 +1684,33 @@ impl Spec {
         {
             return Err("empty fission_yields.files requires the default energy settings".into());
         }
+        if let Some(spontaneous) = &self.fission_yields.spontaneous {
+            if spontaneous.files.is_empty()
+                && spontaneous.nubar_endf.is_none()
+                && spontaneous.nubar_table.is_none()
+            {
+                return Err(
+                    "fission_yields.spontaneous declares no files, nubar_endf or nubar_table"
+                        .into(),
+                );
+            }
+            let mut sf_paths = std::collections::HashSet::new();
+            for reference in &spontaneous.files {
+                check_hashed_ref(reference, "every fission_yields.spontaneous file")?;
+                if !sf_paths.insert(&reference.path) {
+                    return Err(format!(
+                        "duplicate fission_yields.spontaneous file path '{}'",
+                        reference.path
+                    ));
+                }
+            }
+            if let Some(reference) = &spontaneous.nubar_endf {
+                check_hashed_ref(reference, "fission_yields.spontaneous.nubar_endf")?;
+            }
+            if let Some(reference) = &spontaneous.nubar_table {
+                check_hashed_ref(reference, "fission_yields.spontaneous.nubar_table")?;
+            }
+        }
         Ok(())
     }
 
@@ -1984,6 +2088,64 @@ mod duration_tests {
         let mut value = minimal_spec();
         value["options"] = serde_json::json!({"gas": true});
         assert!(Spec::from_json(&value.to_string()).is_ok());
+    }
+
+    #[test]
+    fn spontaneous_fission_and_fission_count_options_are_opt_in_and_validated() {
+        // Absent options vanish from the echoed spec, so default output is unchanged.
+        let spec = Spec::from_json(&minimal_spec().to_string()).unwrap();
+        let echoed = serde_json::to_value(&spec).unwrap();
+        assert!(echoed["fission_yields"].get("spontaneous").is_none());
+        assert!(echoed["options"].get("fission").is_none());
+
+        let mut value = minimal_spec();
+        value["options"] = serde_json::json!({"fission": {}});
+        let spec = Spec::from_json(&value.to_string()).unwrap();
+        assert_eq!(
+            spec.options
+                .fission
+                .as_ref()
+                .unwrap()
+                .energy_per_fission_MeV,
+            200.0
+        );
+        value["options"] = serde_json::json!({"fission": {"energy_per_fission_MeV": 0.0}});
+        assert!(Spec::from_json(&value.to_string())
+            .unwrap_err()
+            .contains("energy_per_fission_MeV"));
+
+        let mut value = minimal_spec();
+        value["fission_yields"] = serde_json::json!({"spontaneous": {}});
+        assert!(Spec::from_json(&value.to_string())
+            .unwrap_err()
+            .contains("declares no files"));
+        value["fission_yields"] = serde_json::json!({"spontaneous": {
+            "files": [{"path": "sfy.endf", "sha256": "0".repeat(64)}],
+            "nubar_table": {"path": "nubar.json", "sha256": "short"},
+        }});
+        assert!(Spec::from_json(&value.to_string())
+            .unwrap_err()
+            .contains("nubar_table requires a path"));
+        value["fission_yields"] = serde_json::json!({"spontaneous": {
+            "files": [
+                {"path": "sfy.endf", "sha256": "0".repeat(64)},
+                {"path": "sfy.endf", "sha256": "1".repeat(64)},
+            ],
+        }});
+        assert!(Spec::from_json(&value.to_string())
+            .unwrap_err()
+            .contains("duplicate fission_yields.spontaneous file path"));
+        value["fission_yields"] = serde_json::json!({"spontaneous": {
+            "files": [{"path": "sfy.endf", "sha256": "0".repeat(64)}],
+            "nubar_endf": {"path": "decay.endf", "sha256": "1".repeat(64)},
+            "nubar_table": {"path": "nubar.json", "sha256": "2".repeat(64)},
+        }});
+        let spec = Spec::from_json(&value.to_string()).unwrap();
+        let echoed = serde_json::to_value(&spec).unwrap();
+        assert_eq!(
+            echoed["fission_yields"]["spontaneous"]["nubar_table"]["path"],
+            "nubar.json"
+        );
     }
 
     #[test]

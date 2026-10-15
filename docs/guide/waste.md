@@ -267,8 +267,8 @@ eight elements and four target steps per component, 32 pure-element runs, and
 spec are limited to 8 MiB; a final result is limited to 32 MiB. Unsupported
 features include non-neutron projectiles, feed/removal/per-step spectra,
 screening, uncertainty, shielding and radiological/damage extensions, scale
-overrides, gas output, non-default photon settings, and CRAM orders other than
-16.
+overrides, gas output, fission-count and spontaneous-fission options,
+non-default photon settings, and CRAM orders other than 16.
 
 The element set comes from P75b's tested mixtures. Its superposition results
 apply to the tested neutron spectra and schedules; passing these witness checks

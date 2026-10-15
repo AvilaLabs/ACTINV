@@ -107,6 +107,33 @@ The leakage, unit and removal sinks are not nuclide states.
 `percent`, `cumulative_percent`) and `n_for_90_percent` and `n_for_99_percent`, the number of nuclides needed to
 reach those shares of the total, counted over the full ranking rather than the truncated list.
 
+## Fission count, burn-up and spontaneous-fission neutrons
+
+Each step gains a `fission` block only when `options.fission` is set (`fission.count`) or
+`fission_yields.spontaneous` supplies a neutron multiplicity (`fission.spontaneous_neutron_source`); see the
+[specification](specification.md). Absent means not requested.
+
+| Field | Meaning | Unit |
+| --- | --- | --- |
+| `fission.count.fissions_per_g` | Cumulative fissions since the start of the schedule, per gram of initial material | fissions/g |
+| `fission.count.neutron_induced_fissions_per_g` | The part from library fission (MT=18) rates | fissions/g |
+| `fission.count.spontaneous_fissions_per_g` | One per spontaneous-fission decay, including states with no yield data | fissions/g |
+| `fission.count.initial_heavy_metal_atoms_per_g` | Atoms with Z ≥ 90 in the declared material | atoms/g |
+| `fission.count.burnup_percent` | 100 × fissions ÷ initial heavy-metal atoms; absent without heavy metal | % |
+| `fission.count.burnup_MWd_per_kg_hm` | Fissions × `energy_per_fission_MeV` ÷ initial heavy-metal mass; absent without heavy metal or when a heavy-metal isotope has no mass in the decay data | MWd/kg |
+| `fission.spontaneous_neutron_source.neutrons_per_s_per_g` | Σ λ · BR_SF · N · ν̄ at the end of the step | neutrons/s/g |
+| `fission.spontaneous_neutron_source.by_nuclide` | The same sum split by nuclide | neutrons/s/g |
+| `fission.spontaneous_neutron_source.uncovered_sf_decays_per_s_per_g` | Spontaneous-fission decays of populated states with no ν̄; their neutrons are not in the total | decays/s/g |
+
+The count integrates each step's fission rate times the evolving population, in the same matrix-exponential
+solve family as the inventory, so it is not a rectangle or trapezoid estimate. It is the rate integral and differs from
+FISPACT-II's `NUMBER OF FISSIONS`, which counts the change in the number of fissionable nuclides. Burn-up is per gram
+of the initial material and per kilogram of initial heavy metal; the 200 MeV default of `energy_per_fission_MeV` is a
+stated convention, so state the energy you compare with. The source covers only the states in the decay library that
+have both a spontaneous-fission branch and a ν̄; ledger `spontaneous_fission.nubar_uncovered` names the populated
+ones that lack it, and `uncovered_to_leakage` names the populated ones whose SF branch still goes to leakage for lack
+of a yield evaluation.
+
 ## Check the ledger
 
 The top-level `ledger` records missing data, composition issues, leakage, pruning, mode selection, numerical diagnostics, and optional response coverage. Inspect it before interpreting a small value as physical absence.

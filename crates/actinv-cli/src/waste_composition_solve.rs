@@ -342,7 +342,13 @@ fn validate_base(
         .or_insert_with(|| json!({}))
         .as_object_mut()
         .ok_or("base_spec.options must be an object")?;
-    for key in ["screen", "rate_scale", "decay_scale", "yield_scale"] {
+    for key in [
+        "screen",
+        "rate_scale",
+        "decay_scale",
+        "yield_scale",
+        "fission",
+    ] {
         if options.get(key).is_some_and(|v| !v.is_null()) {
             return Err(format!("base_spec.options.{key} is unsupported"));
         }
@@ -398,6 +404,7 @@ fn validate_base(
             .and_then(Value::as_array)
             .is_some_and(|a| !a.is_empty())
             || v.get("fixed_energy_eV").is_some_and(|x| !x.is_null())
+            || v.get("spontaneous").is_some_and(|x| !x.is_null())
             || v.get("energy")
                 .and_then(Value::as_str)
                 .is_some_and(|s| s != "spectrum_average")

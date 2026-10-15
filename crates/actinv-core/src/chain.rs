@@ -46,7 +46,20 @@ pub struct Chain {
 
 #[derive(Default, Debug)]
 pub struct ChainLedger {
+    /// Spontaneous-fission branches booked to leakage: every one when no spontaneous-fission yields
+    /// are supplied, otherwise those of states without yield data.
     pub sf_branches: usize,
+    /// Every spontaneous-fission branch as (state index, lambda * branching) in 1/s per atom, whether
+    /// its products were routed or not: each decay is one fission for the fission count and the
+    /// neutron source.
+    pub sf_decay: Vec<(usize, f64)>,
+    /// States whose spontaneous-fission branch was routed to products by independent yields.
+    pub sf_routed: Vec<(i32, i32)>,
+    /// States with a spontaneous-fission branch and no yield data; the branch stays on leakage.
+    /// Populated only when spontaneous-fission yields were supplied.
+    pub sf_uncovered: Vec<(i32, i32)>,
+    /// Routed products absent from the decay library, whose production is booked to leakage.
+    pub sf_product_leakage: Vec<SpontaneousProductLeakage>,
     pub unknown_modes: usize,
     pub daughters_missing: Vec<(i32, i32, f64)>,
     /// Radioactive states whose positive branching ratios sum further than `BRANCHING_TOLERANCE`
@@ -59,8 +72,31 @@ pub struct ChainLedger {
 /// UKDD-2020 each carry states summing to 0.9 or less, and 1.01.
 pub const BRANCHING_TOLERANCE: f64 = 1e-5;
 
+/// One routed spontaneous-fission product that has no state in the decay library.
+#[derive(Clone, Debug, PartialEq, serde::Serialize)]
+pub struct SpontaneousProductLeakage {
+    pub parent: String,
+    pub product: String,
+    pub yield_value: f64,
+    pub production_rate_per_parent_s: f64,
+}
+
+/// Independent spontaneous-fission yields per fission: decaying state (ZA, LISO) -> product
+/// (ZA, state) -> yield. The yields of one state sum to 2.
+pub type SpontaneousYields = HashMap<(i32, i32), BTreeMap<(i32, i32), f64>>;
+
 /// Build the decay network. Index order is (ZA, LISO) ascending, matching controls/chain.py.
 pub fn build(nuclides: &HashMap<(i32, i32), Nuclide>) -> Chain {
+    build_with_spontaneous(nuclides, None)
+}
+
+/// `build` with optional spontaneous-fission yields. A state's spontaneous-fission branch
+/// (RTYP digit 6) with yield data feeds its products at lambda * branching * yield; any other
+/// spontaneous-fission branch is booked to leakage, as `build` always did. `None` is `build`.
+pub fn build_with_spontaneous(
+    nuclides: &HashMap<(i32, i32), Nuclide>,
+    sf_yields: Option<&SpontaneousYields>,
+) -> Chain {
     let mut keys: Vec<(i32, i32)> = nuclides.keys().copied().collect();
     keys.sort();
     let index: HashMap<(i32, i32), usize> = keys.iter().enumerate().map(|(i, k)| (*k, i)).collect();
@@ -104,12 +140,23 @@ pub fn build(nuclides: &HashMap<(i32, i32), Nuclide>) -> Chain {
             let digits = rtyp_digits(md.rtyp);
             let (mut zz, mut aa) = (z, a);
             let mut bad = false;
-            for d in digits {
+            let mut sf_products: Option<&BTreeMap<(i32, i32), f64>> = None;
+            for (position, d) in digits.into_iter().enumerate() {
                 if d == 6 {
-                    led.sf_branches += 1;
+                    // Spontaneous fission. Only a branch that is the whole mode has yields to route.
+                    led.sf_decay.push((k, rate));
+                    sf_products = sf_yields
+                        .and_then(|yields| yields.get(key))
+                        .filter(|_| position == 0);
+                    if sf_products.is_none() {
+                        led.sf_branches += 1;
+                        if sf_yields.is_some() {
+                            led.sf_uncovered.push(*key);
+                        }
+                    }
                     bad = true;
                     break;
-                } // spontaneous fission: no yields yet
+                }
                 match step_of(d) {
                     Some((dz, da)) => {
                         zz += dz;
@@ -121,6 +168,28 @@ pub fn build(nuclides: &HashMap<(i32, i32), Nuclide>) -> Chain {
                         break;
                     }
                 }
+            }
+            if let Some(products) = sf_products {
+                led.sf_routed.push(*key);
+                for (&product, &yield_value) in products {
+                    let product_rate = rate * yield_value;
+                    if product_rate == 0.0 {
+                        continue;
+                    }
+                    match index.get(&product) {
+                        Some(&row) => trip.push((row, k, product_rate)),
+                        None => {
+                            trip.push((leak, k, product_rate));
+                            led.sf_product_leakage.push(SpontaneousProductLeakage {
+                                parent: format!("{}_{}", key.0, key.1),
+                                product: format!("{}_{}", product.0, product.1),
+                                yield_value,
+                                production_rate_per_parent_s: product_rate,
+                            });
+                        }
+                    }
+                }
+                continue;
             }
             if bad {
                 trip.push((leak, k, rate));
@@ -299,6 +368,9 @@ pub struct RateLedger {
     pub burnup_optical_depth_max: f64,
     pub burnup_fraction_max: f64,
     pub burnup_nuclide: Option<(i32, i32)>,
+    /// Total fission rate per atom (1/s) of every chain state with a nonzero MT=18 row, keyed by
+    /// the state's chain index, under this ledger's flux. Feeds the opt-in fission count.
+    pub fission_rate_per_atom: BTreeMap<usize, f64>,
     /// P92 gas: reaction rate of product rows whose MT has no ejectile-table entry (for
     /// example MT 18, fission), keyed by MT. Populated only when gas is enabled.
     pub gas_uncovered: BTreeMap<String, f64>,
@@ -513,6 +585,9 @@ fn assemble_reaction_rates<L: ReactionLibrary + ?Sized>(
             continue;
         } // loss term
         if r.mt == 18 && r.zap == 0 {
+            if rate != 0.0 {
+                *led.fission_rate_per_atom.entry(col).or_insert(0.0) += rate;
+            }
             // Ternary-fission gas is not modelled: fission is always uncovered.
             if gas {
                 add_gas_ejectiles(
@@ -821,6 +896,130 @@ mod tests {
         assert_eq!(entries(&chain, (25_056, 0)), vec![(k, -l), (chain.leak, l)]);
         assert_eq!(chain.ledger.branching_sums, vec![((25_056, 0), 0.0)]);
         assert!(chain.ledger.branching_sums[0].1.is_sign_positive());
+    }
+
+    fn network_with_sf(nuclides: Vec<Nuclide>, yields: &SpontaneousYields) -> Chain {
+        build_with_spontaneous(
+            &nuclides.into_iter().map(|n| ((n.za, n.liso), n)).collect(),
+            Some(yields),
+        )
+    }
+
+    /// A synthetic parent with an alpha branch and an SF branch, and two stable fragment states.
+    fn sf_parent_and_fragments() -> Vec<Nuclide> {
+        vec![
+            nuclide(98_252, 0, 10.0, &[(4.0, 0.0, 0.75), (6.0, 0.0, 0.25)]),
+            nuclide(96_248, 0, 0.0, &[]),
+            nuclide(54_140, 0, 0.0, &[]),
+            nuclide(38_094, 0, 0.0, &[]),
+        ]
+    }
+
+    #[test]
+    fn spontaneous_fission_with_yields_feeds_products_and_moves_nothing_to_leakage() {
+        let l = std::f64::consts::LN_2 / 10.0;
+        // Two fragments of yield 1 each: two product atoms per fission (a synthetic evaluation).
+        let yields: SpontaneousYields = HashMap::from([(
+            (98_252, 0),
+            BTreeMap::from([((54_140, 0), 1.0), ((38_094, 0), 1.0)]),
+        )]);
+        let chain = network_with_sf(sf_parent_and_fragments(), &yields);
+        let parent = chain.index[&(98_252, 0)];
+        let (cm, xe, sr) = (
+            chain.index[&(96_248, 0)],
+            chain.index[&(54_140, 0)],
+            chain.index[&(38_094, 0)],
+        );
+        let sf_rate = l * 0.25;
+        let column = entries(&chain, (98_252, 0));
+        let into = |row: usize| -> f64 {
+            column
+                .iter()
+                .filter(|entry| entry.0 == row)
+                .map(|entry| entry.1)
+                .sum()
+        };
+        assert_eq!(into(parent), -l);
+        assert_eq!(into(cm), l * 0.75);
+        assert_eq!(into(xe), sf_rate);
+        assert_eq!(into(sr), sf_rate);
+        // lambda * BR_SF * 2 product atoms per decay, and nothing on leakage.
+        assert_eq!(into(xe) + into(sr), 2.0 * sf_rate);
+        assert_eq!(into(chain.leak), 0.0);
+        assert!(column.iter().all(|entry| entry.0 != chain.leak));
+        assert_eq!(chain.ledger.sf_branches, 0);
+        assert_eq!(chain.ledger.sf_routed, vec![(98_252, 0)]);
+        assert!(chain.ledger.sf_uncovered.is_empty());
+        assert!(chain.ledger.sf_product_leakage.is_empty());
+        // The fission count and neutron source still see the decay rate.
+        assert_eq!(chain.ledger.sf_decay, vec![(parent, sf_rate)]);
+    }
+
+    #[test]
+    fn spontaneous_fission_without_yield_data_stays_on_leakage_and_is_listed() {
+        let l = std::f64::consts::LN_2 / 10.0;
+        // Yields exist, but for another parent: this state is uncovered.
+        let yields: SpontaneousYields = HashMap::from([(
+            (96_244, 0),
+            BTreeMap::from([((54_140, 0), 1.0), ((38_094, 0), 1.0)]),
+        )]);
+        let chain = network_with_sf(sf_parent_and_fragments(), &yields);
+        let parent = chain.index[&(98_252, 0)];
+        let column = entries(&chain, (98_252, 0));
+        let leaked: f64 = column
+            .iter()
+            .filter(|entry| entry.0 == chain.leak)
+            .map(|entry| entry.1)
+            .sum();
+        assert_eq!(leaked, l * 0.25);
+        for product in [(54_140, 0), (38_094, 0)] {
+            assert!(column.iter().all(|entry| entry.0 != chain.index[&product]));
+        }
+        assert_eq!(chain.ledger.sf_branches, 1);
+        assert!(chain.ledger.sf_routed.is_empty());
+        assert_eq!(chain.ledger.sf_uncovered, vec![(98_252, 0)]);
+        assert_eq!(chain.ledger.sf_decay, vec![(parent, l * 0.25)]);
+        // Without any yield input the matrix is exactly `build`'s.
+        let plain = network(sf_parent_and_fragments());
+        let none = build_with_spontaneous(
+            &sf_parent_and_fragments()
+                .into_iter()
+                .map(|n| ((n.za, n.liso), n))
+                .collect(),
+            None,
+        );
+        assert_eq!(plain.decay, none.decay);
+        assert_eq!(plain.ledger.sf_branches, 1);
+        assert!(plain.ledger.sf_uncovered.is_empty());
+    }
+
+    #[test]
+    fn a_routed_product_absent_from_the_decay_library_is_booked_to_leakage_by_name() {
+        let l = std::f64::consts::LN_2 / 10.0;
+        let yields: SpontaneousYields = HashMap::from([(
+            (98_252, 0),
+            BTreeMap::from([((54_140, 0), 1.0), ((38_094, 0), 1.0)]),
+        )]);
+        let mut nuclides = sf_parent_and_fragments();
+        nuclides.pop(); // Sr-94 has no decay-library entry
+        let chain = network_with_sf(nuclides, &yields);
+        let column = entries(&chain, (98_252, 0));
+        let leaked: f64 = column
+            .iter()
+            .filter(|entry| entry.0 == chain.leak)
+            .map(|entry| entry.1)
+            .sum();
+        assert_eq!(leaked, l * 0.25);
+        assert_eq!(
+            chain.ledger.sf_product_leakage,
+            vec![SpontaneousProductLeakage {
+                parent: "98252_0".into(),
+                product: "38094_0".into(),
+                yield_value: 1.0,
+                production_rate_per_parent_s: l * 0.25,
+            }]
+        );
+        assert_eq!(chain.ledger.sf_branches, 0);
     }
 
     #[test]

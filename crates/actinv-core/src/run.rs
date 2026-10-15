@@ -3,6 +3,7 @@
 use crate::chain::{self, RateLedger};
 use crate::cram::{step as cram_step, step_with_tangents, Cram};
 use crate::damage::{DamageStepOut, PreparedDamageTable};
+use crate::fission_count::{self, FissionStepOut};
 use crate::gas;
 use crate::photon::{self, PhotonDiagnostics, PhotonResponse, PhotonSourceOut};
 use crate::quantity::{AtomsPerGram, Kelvin, Seconds};
@@ -11,7 +12,7 @@ use crate::sparse::Csc;
 use crate::spec::{
     DamageOptions, DecayRef, FissionYieldOptions, HashedFileRef, LibraryRef, PhotonOptions,
     PhysicalInputs, Projectile, RadiologicalOptions, SelfShieldingOptions, Spec, Spectrum,
-    StepLibrary, UncertaintyOptions,
+    StepLibrary, SpontaneousFissionOptions, UncertaintyOptions,
 };
 use crate::summary::{self, StateAtoms, StepSummary};
 use crate::uncertainty::{
@@ -177,6 +178,10 @@ pub struct StepOut {
     /// P122 complete step summary; present only when the spec carries a `summary` section.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub summary: Option<StepSummary>,
+    /// P125 fission count, burn-up and spontaneous-fission neutron source; present only when
+    /// `options.fission` is set or `fission_yields.spontaneous` supplies nu-bar data.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub fission: Option<FissionStepOut>,
 }
 #[derive(serde::Serialize)]
 pub struct Pathway {
@@ -644,6 +649,8 @@ pub struct PreparedRun {
     fission_options: FissionYieldOptions,
     fission_yields: HashMap<(i32, i32), fission::FissionYields>,
     fission_yield_inputs: Vec<(HashedFileRef, String, (i32, i32))>,
+    /// P125: present only when `fission_yields.spontaneous` is declared.
+    spontaneous: Option<PreparedSpontaneous>,
     projectile: Projectile,
     library_group_structure: Option<String>,
     temperature_K: Kelvin,
@@ -660,6 +667,91 @@ pub struct PreparedRun {
     shielding: Option<PreparedShielding>,
     /// Libraries named by schedule-step overrides, in order of first use (empty without overrides).
     step_libraries: Vec<PreparedStepLibrary>,
+}
+
+/// P125 spontaneous-fission inputs, resolved at preparation. The yields are already routed in
+/// `PreparedRun::chain`; they are kept here for the ledger.
+struct PreparedSpontaneous {
+    /// (reference, computed sha256, parent states read) per yield file.
+    yield_inputs: Vec<(HashedFileRef, String, Vec<(i32, i32)>)>,
+    yields: chain::SpontaneousYields,
+    /// State -> (nu-bar, where it came from). Empty when no nu-bar input was declared.
+    nubar: BTreeMap<(i32, i32), (f64, String)>,
+    /// Provenance of each nu-bar input, for the certificate.
+    nubar_inputs: Vec<serde_json::Value>,
+}
+
+/// Read and verify the spontaneous-fission inputs. Yields are taken at the lowest tabulated
+/// incident energy (E = 0 for spontaneous fission); a table entry overrides an ENDF multiplicity
+/// for the same state.
+fn load_spontaneous(options: &SpontaneousFissionOptions) -> Result<PreparedSpontaneous, String> {
+    let mut yields = chain::SpontaneousYields::new();
+    let mut yield_inputs = Vec::with_capacity(options.files.len());
+    for reference in &options.files {
+        let (text, sha) = read_verified_text(&reference.path, Some(&reference.sha256))?;
+        let evaluations = fission::parse_tape_text(&text)
+            .map_err(|error| format!("{}: {error}", reference.path))?;
+        let mut parents = Vec::with_capacity(evaluations.len());
+        for evaluation in evaluations {
+            let parent = evaluation.parent;
+            let effective = evaluation
+                .effective(0.0)
+                .map_err(|error| format!("{}: {error}", reference.path))?;
+            if yields.insert(parent, effective.products).is_some() {
+                return Err(format!(
+                    "duplicate spontaneous-fission yield parent {}_{}",
+                    parent.0, parent.1
+                ));
+            }
+            parents.push(parent);
+        }
+        yield_inputs.push((reference.clone(), sha, parents));
+    }
+    let mut nubar: BTreeMap<(i32, i32), (f64, String)> = BTreeMap::new();
+    let mut nubar_inputs = Vec::new();
+    if let Some(reference) = &options.nubar_endf {
+        let (text, sha) = read_verified_text(&reference.path, Some(&reference.sha256))?;
+        let parsed = fission::parse_spontaneous_nubar_text(&text)
+            .map_err(|error| format!("{}: {error}", reference.path))?;
+        for (key, value) in &parsed {
+            nubar.insert(
+                *key,
+                (
+                    value.nubar,
+                    format!("ENDF MF=1/MT={} ({})", value.mt, value.basis),
+                ),
+            );
+        }
+        nubar_inputs.push(serde_json::json!({
+            "kind": "endf",
+            "path": reference.path,
+            "sha256_declared": reference.sha256,
+            "sha256": sha,
+            "nuclides": parsed.len(),
+        }));
+    }
+    if let Some(reference) = &options.nubar_table {
+        let (text, sha) = read_verified_text(&reference.path, Some(&reference.sha256))?;
+        let (source, table) = fission_count::parse_nubar_table(&text)
+            .map_err(|error| format!("{}: {error}", reference.path))?;
+        for (key, value) in &table {
+            nubar.insert(*key, (*value, format!("table: {source}")));
+        }
+        nubar_inputs.push(serde_json::json!({
+            "kind": "table",
+            "path": reference.path,
+            "sha256_declared": reference.sha256,
+            "sha256": sha,
+            "source": source,
+            "nuclides": table.len(),
+        }));
+    }
+    Ok(PreparedSpontaneous {
+        yield_inputs,
+        yields,
+        nubar,
+        nubar_inputs,
+    })
 }
 
 struct PreparedDamage {
@@ -2422,6 +2514,11 @@ impl PreparedRun {
             }
             fission_yield_inputs.push((reference.clone(), sha, parent));
         }
+        let spontaneous = fission_options
+            .spontaneous
+            .as_ref()
+            .map(load_spontaneous)
+            .transpose()?;
         profiler.finish("extension_input_preparation", extensions_started);
 
         let index_started = profiler.start();
@@ -2623,7 +2720,12 @@ impl PreparedRun {
         }
 
         let chain_started = profiler.start();
-        let mut chain = chain::build(&nuclides);
+        // P125: spontaneous-fission branches with supplied yields feed their products; without
+        // `fission_yields.spontaneous` this is `chain::build` exactly.
+        let mut chain = chain::build_with_spontaneous(
+            &nuclides,
+            spontaneous.as_ref().map(|prepared| &prepared.yields),
+        );
         // P92 gas: ensure the five light ground states exist (a stable stand-in when the decay
         // library itself lacks one), then add the alpha/proton decay-gas edges. Both are no-ops
         // when gas is disabled, so chain::build's own output — and every gas-off byte — is
@@ -2696,6 +2798,7 @@ impl PreparedRun {
             fission_options: fission_options.clone(),
             fission_yields,
             fission_yield_inputs,
+            spontaneous,
             projectile,
             library_group_structure,
             temperature_K,
@@ -3697,6 +3800,8 @@ impl PreparedRun {
         // The first collapse's ledger of each overriding library, emitted under `ledger.step_libraries`.
         let mut step_library_ledgers: Vec<Option<RateLedger>> =
             self.step_libraries.iter().map(|_| None).collect();
+        // Per-atom fission rates under each override spectrum, for the opt-in fission count.
+        let mut fission_rates_extra: Vec<BTreeMap<usize, f64>> = Vec::new();
         for (extra_phi, extra_slot) in extra_spectra.iter().zip(&extra_libraries) {
             let (extra_lib, extra_targets): (&ActivationLibrary, &[(i32, i32)]) = match extra_slot {
                 Some(slot) => (
@@ -3735,6 +3840,7 @@ impl PreparedRun {
                     spec.options.gas,
                 ));
             }
+            fission_rates_extra.push(std::mem::take(&mut scratch.fission_rate_per_atom));
             if let Some(slot) = extra_slot {
                 if step_library_ledgers[*slot].is_none() {
                     step_library_ledgers[*slot] = Some(scratch);
@@ -4813,6 +4919,69 @@ impl PreparedRun {
             .iter()
             .position(|state| state.is_none());
         let mut route_steps: Vec<crate::pathways::StepGraph> = Vec::new();
+        // ---- P125 fission count (opt-in). The neutron-induced and spontaneous counts are two
+        // extra states of a throwaway copy of each step's matrix, so each step's integral is exact
+        // in the same CRAM sense as the inventory and the nominal solve is untouched.
+        let fission_count_options = spec.options.fission.as_ref();
+        let sf_nubar = self
+            .spontaneous
+            .as_ref()
+            .filter(|prepared| !prepared.nubar.is_empty());
+        let sf_decay_eff: Vec<(usize, f64)> = ch
+            .ledger
+            .sf_decay
+            .iter()
+            .map(|&(column, rate)| {
+                let factor = decay_factors.get(&ch.keys[column]).copied().unwrap_or(1.0);
+                (column, rate * factor)
+            })
+            .collect();
+        // Counter edges take the same trace form as the reaction and decay edges: a reservoir
+        // nuclide feeds the counter through the unit state, and its tracked population directly.
+        let counter_edges = |rates: &[(usize, f64)]| -> Vec<(usize, f64)> {
+            let mut edges = Vec::new();
+            for &(column, rate) in rates {
+                if mode == "trace" && bulk.contains_key(&column) {
+                    if pos[ch.unit] != usize::MAX {
+                        edges.push((pos[ch.unit], rate * bulk[&column]));
+                    }
+                    if tracked_reservoir.contains(&column) && pos[column] != usize::MAX {
+                        edges.push((pos[column], rate));
+                    }
+                } else if pos[column] != usize::MAX {
+                    edges.push((pos[column], rate));
+                }
+            }
+            edges
+        };
+        // Index 0 is the base spectrum, then one entry per distinct step-spectrum override.
+        let induced_edges: Vec<Vec<(usize, f64)>> = if fission_count_options.is_some() {
+            std::iter::once(&led.fission_rate_per_atom)
+                .chain(fission_rates_extra.iter())
+                .map(|rates| {
+                    let rates: Vec<(usize, f64)> = rates
+                        .iter()
+                        .map(|(&column, &rate)| (column, rate))
+                        .collect();
+                    counter_edges(&rates)
+                })
+                .collect()
+        } else {
+            Vec::new()
+        };
+        let spontaneous_edges = if fission_count_options.is_some() {
+            counter_edges(&sf_decay_eff)
+        } else {
+            Vec::new()
+        };
+        let heavy_metal = fission_count::heavy_metal(&bulk_inv, |key| {
+            nuclides
+                .get(&key)
+                .map(|nuclide| nuclide.awr)
+                .filter(|awr| *awr > 0.0)
+        });
+        let mut induced_cum = 0.0f64;
+        let mut spontaneous_cum = 0.0f64;
         for (si, schedule_step) in sched.iter().enumerate() {
             let dt = schedule_step.duration();
             let fl = schedule_step.multiplier();
@@ -4870,6 +5039,26 @@ impl PreparedRun {
                     pos[ch.unit],
                     supply,
                 ));
+            }
+            if fission_count_options.is_some() {
+                // Fissions in this step: the two counters accumulate edge-rate times population
+                // over the step from the pre-step state, in a solve that only they read.
+                let mut augmented = trip.clone();
+                if fl.get() > 0.0 {
+                    let spectrum_index = step_spectrum_id[si].map_or(0, |id| id + 1);
+                    for &(column, rate) in &induced_edges[spectrum_index] {
+                        augmented.push((m, column, C64::new(rate * fl.get(), 0.0)));
+                    }
+                }
+                for &(column, rate) in &spontaneous_edges {
+                    augmented.push((m + 1, column, C64::new(rate, 0.0)));
+                }
+                let augmented_matrix = Csc::from_triplets(m + 2, &augmented);
+                let mut counted = y.clone();
+                counted.extend([0.0, 0.0]);
+                let counted = cram_step(&augmented_matrix, &counted, dt.get(), &c)?.0;
+                induced_cum += counted[m].max(0.0);
+                spontaneous_cum += counted[m + 1].max(0.0);
             }
             if let Some(runtime) = uncertainty_runtime.as_mut() {
                 // Each (spectrum, parameter) direction acts only on steps that
@@ -5274,6 +5463,41 @@ impl PreparedRun {
             } else {
                 None
             };
+            // ---- P125 fission count, burn-up and spontaneous-fission neutron source.
+            let fission_out = if fission_count_options.is_some() || sf_nubar.is_some() {
+                let count = fission_count_options.map(|options| {
+                    fission_count::fission_count(
+                        induced_cum,
+                        spontaneous_cum,
+                        &heavy_metal,
+                        options.energy_per_fission_MeV,
+                    )
+                });
+                let spontaneous_neutron_source = sf_nubar.map(|prepared| {
+                    // Populated atoms of each SF state: the constant reservoir in trace mode plus
+                    // any tracked population, the evolved state alone in coupled mode.
+                    let decays: Vec<((i32, i32), f64)> = sf_decay_eff
+                        .iter()
+                        .map(|&(column, rate)| {
+                            let mut atoms = 0.0;
+                            if mode == "trace" {
+                                atoms += bulk.get(&column).copied().unwrap_or(0.0);
+                            }
+                            if pos[column] != usize::MAX {
+                                atoms += y[pos[column]].max(0.0);
+                            }
+                            (ch.keys[column], rate * atoms)
+                        })
+                        .collect();
+                    fission_count::sf_neutron_source(&decays, &prepared.nubar)
+                });
+                Some(FissionStepOut {
+                    count,
+                    spontaneous_neutron_source,
+                })
+            } else {
+                None
+            };
             steps.push(StepOut {
                 step: si + 1,
                 t_s: t_cum.get(),
@@ -5314,6 +5538,7 @@ impl PreparedRun {
                 damage,
                 gas: gas_out,
                 summary: step_summary,
+                fission: fission_out,
             });
         }
         profiler.finish("schedule_solve_diagnostics", solve_started);
@@ -6321,6 +6546,74 @@ impl PreparedRun {
                 }),
             );
         }
+        if let Some(options) = &spec.options.fission {
+            ledger.as_object_mut().expect("ledger is an object").insert(
+                "fission".into(),
+                serde_json::json!({
+                    "energy_per_fission_MeV": options.energy_per_fission_MeV,
+                    "heavy_metal_min_Z": fission_count::HEAVY_METAL_MIN_Z,
+                    "initial_heavy_metal_atoms_per_g": heavy_metal.atoms_per_g,
+                    "heavy_metal_isotopes_without_mass": heavy_metal
+                        .without_mass
+                        .iter()
+                        .map(|(za, liso)| name_of(*za, *liso))
+                        .collect::<Vec<_>>(),
+                    "model": "fissions = integral over the schedule of (MT=18 reaction rate per atom x population), flux-scaled per step, plus one per spontaneous-fission decay (lambda x SF branching x population), whether or not the state has yield data; every MT=18 row counts, including those with no fission yields; burnup_percent = 100 x fissions / initial atoms with Z >= 90; burnup_MWd_per_kg_hm = fissions x energy_per_fission / initial heavy-metal mass, with heavy-metal mass from the decay evaluation's AWR; the count is the rate integral, not FISPACT-II's change in the number of fissionable nuclides",
+                }),
+            );
+        }
+        if let Some(prepared) = &self.spontaneous {
+            // Coverage is reported for states that are present in this solve, not for every state
+            // in the decay library with an SF branch.
+            let active =
+                |key: &(i32, i32)| active_fission_parents.contains(&format!("{}_{}", key.0, key.1));
+            let active_names = |keys: &[(i32, i32)]| -> Vec<String> {
+                let mut keys: Vec<(i32, i32)> =
+                    keys.iter().copied().filter(|key| active(key)).collect();
+                keys.sort_unstable();
+                keys.dedup();
+                keys.into_iter().map(|key| name_of(key.0, key.1)).collect()
+            };
+            let sf_states: Vec<(i32, i32)> = ch
+                .ledger
+                .sf_decay
+                .iter()
+                .map(|&(column, _)| ch.keys[column])
+                .collect();
+            let (with_nubar, without_nubar): (Vec<(i32, i32)>, Vec<(i32, i32)>) = sf_states
+                .iter()
+                .copied()
+                .partition(|key| prepared.nubar.contains_key(key));
+            ledger.as_object_mut().expect("ledger is an object").insert(
+                "spontaneous_fission".into(),
+                serde_json::json!({
+                    "yield_files": prepared.yield_inputs.iter().map(|(reference, sha, parents)| serde_json::json!({
+                        "path": reference.path,
+                        "sha256": sha,
+                        "parents": parents.iter().map(|parent| name_of(parent.0, parent.1)).collect::<Vec<_>>(),
+                    })).collect::<Vec<_>>(),
+                    "yield_selection": "independent yields at the lowest tabulated incident energy (E = 0 for spontaneous fission)",
+                    "yield_sum_per_parent": prepared
+                        .yields
+                        .iter()
+                        .filter(|(parent, _)| active(parent))
+                        .map(|(parent, products)| (name_of(parent.0, parent.1), products.values().sum::<f64>()))
+                        .collect::<BTreeMap<_, _>>(),
+                    "routed_to_products": active_names(&ch.ledger.sf_routed),
+                    "uncovered_to_leakage": active_names(&ch.ledger.sf_uncovered),
+                    "products_to_leakage": ch
+                        .ledger
+                        .sf_product_leakage
+                        .iter()
+                        .filter(|entry| active_fission_parents.contains(&entry.parent))
+                        .collect::<Vec<_>>(),
+                    "nubar_covered": active_names(&with_nubar),
+                    "nubar_uncovered": active_names(&without_nubar),
+                    "nubar_inputs": prepared.nubar_inputs,
+                    "scope": "coverage lists name states present in this solve; states with an SF branch and no yield data keep the branch on leakage, and states with no nu-bar add to uncovered_sf_decays_per_s_per_g, never an estimate",
+                }),
+            );
+        }
         if let (Some(options), Some(runtime)) = (&spec.uncertainty, &uncertainty_runtime) {
             let flux_running = runtime.flux_channel_requested;
             let flux_excluded_entry = if flux_running {
@@ -6675,6 +6968,26 @@ impl PreparedRun {
                 );
             }
         }
+        if let Some(prepared) = &self.spontaneous {
+            certificate
+                .as_object_mut()
+                .expect("certificate is an object")
+                .get_mut("inputs")
+                .and_then(serde_json::Value::as_object_mut)
+                .expect("certificate inputs is an object")
+                .insert(
+                    "spontaneous_fission".into(),
+                    serde_json::json!({
+                        "yield_files": prepared.yield_inputs.iter().map(|(reference, sha, parents)| serde_json::json!({
+                            "path": reference.path,
+                            "sha256_declared": reference.sha256,
+                            "sha256": sha,
+                            "parents": parents.iter().map(|parent| name_of(parent.0, parent.1)).collect::<Vec<_>>(),
+                        })).collect::<Vec<_>>(),
+                        "nubar": prepared.nubar_inputs,
+                    }),
+                );
+        }
         if !spec.projectile.is_neutron() {
             certificate
                 .as_object_mut()
@@ -6788,6 +7101,16 @@ fn prepared_fingerprint(
     let step_libraries = spec.step_libraries()?;
     for step_library in &step_libraries {
         files.push(fingerprint_file(&step_library.library.path)?);
+    }
+    if let Some(spontaneous) = spec.fission_yields.spontaneous.as_ref() {
+        for file in spontaneous
+            .files
+            .iter()
+            .chain(&spontaneous.nubar_endf)
+            .chain(&spontaneous.nubar_table)
+        {
+            files.push(fingerprint_file(&file.path)?);
+        }
     }
     if let Some(options) = spec.radiological.as_ref() {
         files.push(fingerprint_file(&options.table.path)?);
@@ -6941,6 +7264,7 @@ mod projectile_output_tests {
             damage: None,
             gas: None,
             summary: None,
+            fission: None,
         }
     }
 
@@ -7523,6 +7847,7 @@ mod gas_prepared_tests {
             fission_options: FissionYieldOptions::default(),
             fission_yields: HashMap::new(),
             fission_yield_inputs: Vec::new(),
+            spontaneous: None,
             projectile: Projectile::Neutron,
             library_group_structure: None,
             temperature_K: Kelvin::new(293.6).expect("293.6 K is valid"), // spec.options.temperature_K default
@@ -7801,6 +8126,7 @@ mod step_library_tests {
             fission_options: FissionYieldOptions::default(),
             fission_yields: HashMap::new(),
             fission_yield_inputs: Vec::new(),
+            spontaneous: None,
             projectile: Projectile::Neutron,
             library_group_structure: None,
             temperature_K: Kelvin::new(293.6).expect("293.6 K is valid"),
@@ -7946,5 +8272,320 @@ mod step_library_tests {
             error.contains("cannot be combined with options.gas"),
             "{error}"
         );
+    }
+}
+
+/// P125 end-to-end tests: a hand-built `PreparedRun` (as in `gas_prepared_tests`) run through the
+/// real per-step solve. The fission count is checked against the analytic depletion of a nuclide
+/// whose only loss is fission, and spontaneous-fission routing, count and neutron source against
+/// the decay law of a pure spontaneous-fission parent. The multiplicity and yields are synthetic.
+#[cfg(test)]
+mod fission_prepared_tests {
+    use super::*;
+    use std::collections::HashSet;
+
+    const FUEL: (i32, i32) = (92_235, 0);
+    const SF_PARENT: (i32, i32) = (98_252, 0);
+    const FRAGMENT_A: (i32, i32) = (54_140, 0);
+    const FRAGMENT_B: (i32, i32) = (38_094, 0);
+    const SF_HALF_LIFE_S: f64 = 1.0e6;
+
+    fn nuclide(za: (i32, i32), half_life: f64, modes: Vec<decay::Mode>) -> decay::Nuclide {
+        decay::Nuclide {
+            mat: 0,
+            za: za.0,
+            awr: (za.0 % 1000) as f64,
+            liso: za.1,
+            nst: if half_life > 0.0 { 0 } else { 1 },
+            half_life,
+            d_half_life: 0.0,
+            energies: Vec::new(),
+            modes,
+            spectra: Vec::new(),
+        }
+    }
+
+    fn spontaneous() -> PreparedSpontaneous {
+        PreparedSpontaneous {
+            yield_inputs: Vec::new(),
+            // Two fragments of yield 1: two product atoms per fission.
+            yields: HashMap::from([(
+                SF_PARENT,
+                BTreeMap::from([(FRAGMENT_A, 1.0), (FRAGMENT_B, 1.0)]),
+            )]),
+            nubar: BTreeMap::from([(SF_PARENT, (3.0, "test table".to_string()))]),
+            nubar_inputs: Vec::new(),
+        }
+    }
+
+    /// The fuel (stable stand-in) has a fission row and a loss row of equal cross section, so all
+    /// its depletion is fission. The parent decays only by spontaneous fission.
+    fn prepared_run(spontaneous: Option<PreparedSpontaneous>) -> PreparedRun {
+        let lib = library::Library {
+            rows: vec![
+                library::Row {
+                    target: 0,
+                    mt: 18,
+                    zap: 0,
+                    lfs: 0,
+                    lmf: 3,
+                },
+                library::Row {
+                    target: 0,
+                    mt: 1,
+                    zap: -1,
+                    lfs: 0,
+                    lmf: 3,
+                },
+            ],
+            sig: vec![1.0; 2 * 4],
+            ngroups: 4,
+            bounds: vec![1.0, 2.0, 3.0, 4.0, 5.0],
+        };
+        let sf_mode = decay::Mode {
+            rtyp: 6.0,
+            rfs: 0.0,
+            q: 0.0,
+            dq: 0.0,
+            br: 1.0,
+            dbr: 0.0,
+        };
+        let nuclides: HashMap<(i32, i32), decay::Nuclide> = HashMap::from([
+            (FUEL, nuclide(FUEL, 0.0, Vec::new())),
+            (SF_PARENT, nuclide(SF_PARENT, SF_HALF_LIFE_S, vec![sf_mode])),
+            (FRAGMENT_A, nuclide(FRAGMENT_A, 0.0, Vec::new())),
+            (FRAGMENT_B, nuclide(FRAGMENT_B, 0.0, Vec::new())),
+        ]);
+        let chain = chain::build_with_spontaneous(
+            &nuclides,
+            spontaneous.as_ref().map(|prepared| &prepared.yields),
+        );
+        PreparedRun {
+            library_path: "synthetic.npz".into(),
+            library_sha_declared: None,
+            library_sha: "0".repeat(64),
+            index_path: "synthetic_index.json".into(),
+            index_sha: "0".repeat(64),
+            index: serde_json::json!({}),
+            library: ActivationLibrary::Dense(lib),
+            library_targets: vec![FUEL],
+            decay_primary: "synthetic.dat".into(),
+            decay_primary_sha: "0".repeat(64),
+            decay_fallback: None,
+            decay_fallback_sha: None,
+            decay_overrides_sha: None,
+            decay_overrides_applied: Vec::new(),
+            nuclides,
+            decay_fallback_keys: HashSet::new(),
+            chain,
+            gas_missing_light_states: Vec::new(),
+            decay_nuclides_from_fallback: 0,
+            photon_options: PhotonOptions::default(),
+            response: None,
+            response_sha: None,
+            fission_options: FissionYieldOptions::default(),
+            fission_yields: HashMap::new(),
+            fission_yield_inputs: Vec::new(),
+            spontaneous,
+            projectile: Projectile::Neutron,
+            library_group_structure: None,
+            temperature_K: Kelvin::new(293.6).expect("293.6 K is valid"),
+            uncertainty_options: None,
+            covariance: None,
+            unmodeled_table: None,
+            unmodeled_evalspread: None,
+            radiological: None,
+            damage: None,
+            shielding: None,
+            step_libraries: Vec::new(),
+        }
+    }
+
+    fn spec(composition: serde_json::Value, dt: &str, fission: serde_json::Value) -> Spec {
+        serde_json::from_value(serde_json::json!({
+            "spec": "actinv-spec-1",
+            "library": {"path": "synthetic.npz"},
+            "decay": {"primary": "synthetic.dat"},
+            "material": {"mass_g": 1.0, "basis": "wt_percent", "composition": composition},
+            "spectrum": {"structure": "custom", "boundaries_eV": [1.0, 2.0, 3.0, 4.0, 5.0],
+                         "flux_per_group": [1.0e12, 1.0e12, 1.0e12, 1.0e12], "descending": false},
+            "schedule": [{"dt": dt, "flux": 1.0}],
+            "options": {"mode": "coupled", "prune": "none",
+                        "outputs": ["inventory", "activity", "heat"], "fission": fission}
+        }))
+        .expect("synthetic fission spec parses")
+    }
+
+    fn run_prepared(spec: &Spec, prepared: &PreparedRun) -> RunResult {
+        let physical = spec.physical_inputs().expect("physical inputs resolve");
+        let mut profiler = RunProfiler::disabled();
+        prepared
+            .run_started_profiled(
+                spec,
+                &physical,
+                "test",
+                std::time::Instant::now(),
+                &mut profiler,
+                None,
+                None,
+            )
+            .expect("run succeeds")
+    }
+
+    fn atoms(step: &StepOut, name: &str) -> f64 {
+        step.inventory
+            .iter()
+            .find(|entry| entry.nuclide == name)
+            .map_or(0.0, |entry| entry.atoms_per_g)
+    }
+
+    fn close(got: f64, want: f64, rel: f64) {
+        assert!(
+            (got - want).abs() <= rel * want.abs(),
+            "got {got}, want {want}"
+        );
+    }
+
+    #[test]
+    fn induced_fission_count_equals_the_depletion_of_a_fission_only_nuclide() {
+        // Collapsed rate k = 1 b x 4e12 cm^-2 s^-1 = 4e-12 /s; k * t = 1 over the step.
+        let spec = spec(
+            serde_json::json!({"U235": 100.0}),
+            "2.5e11 s",
+            serde_json::json!({}),
+        );
+        let result = run_prepared(&spec, &prepared_run(None));
+        let step = &result.steps[0];
+        let fission = step.fission.as_ref().expect("fission block");
+        let count = fission.count.as_ref().expect("fission count block");
+        assert!(fission.spontaneous_neutron_source.is_none());
+        let n0 = count.initial_heavy_metal_atoms_per_g;
+        // The fuel's only loss is fission, so fissions = initial - remaining atoms.
+        close(
+            count.neutron_induced_fissions_per_g,
+            n0 - atoms(step, "U235"),
+            1e-9,
+        );
+        close(
+            count.neutron_induced_fissions_per_g,
+            n0 * (1.0 - (-1.0f64).exp()),
+            1e-9,
+        );
+        assert_eq!(count.spontaneous_fissions_per_g, 0.0);
+        close(
+            count.fissions_per_g,
+            count.neutron_induced_fissions_per_g,
+            1e-15,
+        );
+        close(
+            count.burnup_percent.unwrap(),
+            100.0 * (1.0 - (-1.0f64).exp()),
+            1e-9,
+        );
+        // Pure U-235 is 1 g of heavy metal per gram of material: 1e-3 kg.
+        close(
+            count.burnup_MWd_per_kg_hm.unwrap(),
+            count.fissions_per_g * 200.0e6 * EV / 8.64e10 / 1.0e-3,
+            1e-12,
+        );
+        assert_eq!(count.energy_per_fission_MeV, 200.0);
+        assert!(
+            result.ledger["fission"]["heavy_metal_isotopes_without_mass"]
+                .as_array()
+                .unwrap()
+                .is_empty()
+        );
+    }
+
+    #[test]
+    fn spontaneous_fission_routes_products_counts_fissions_and_sources_neutrons() {
+        let spec = spec(
+            serde_json::json!({"Cf252": 100.0}),
+            "1e6 s",
+            serde_json::json!({"energy_per_fission_MeV": 180.0}),
+        );
+        let result = run_prepared(&spec, &prepared_run(Some(spontaneous())));
+        let step = &result.steps[0];
+        let fission = step.fission.as_ref().expect("fission block");
+        let count = fission.count.as_ref().expect("count block");
+        let n0 = count.initial_heavy_metal_atoms_per_g;
+        // One half-life of a pure SF parent: half the atoms decayed, each decay one fission.
+        close(count.spontaneous_fissions_per_g, 0.5 * n0, 1e-9);
+        assert!(count.neutron_induced_fissions_per_g <= 1e-12 * n0);
+        close(count.burnup_percent.unwrap(), 50.0, 1e-9);
+        assert_eq!(count.energy_per_fission_MeV, 180.0);
+        // Two product atoms per fission, and nothing booked to leakage.
+        close(atoms(step, "Xe140"), 0.5 * n0, 1e-9);
+        close(atoms(step, "Sr94"), 0.5 * n0, 1e-9);
+        assert!(step.leakage_atoms_per_g <= 1e-9 * n0);
+        assert_eq!(result.ledger["spontaneous_fission_branches_to_leakage"], 0);
+        assert_eq!(
+            result.ledger["spontaneous_fission"]["routed_to_products"],
+            serde_json::json!(["Cf252"])
+        );
+        assert_eq!(
+            result.ledger["spontaneous_fission"]["uncovered_to_leakage"],
+            serde_json::json!([])
+        );
+        // Neutron source: lambda * N(t) * nu-bar.
+        let source = fission
+            .spontaneous_neutron_source
+            .as_ref()
+            .expect("neutron source block");
+        let lambda = std::f64::consts::LN_2 / SF_HALF_LIFE_S;
+        close(source.neutrons_per_s_per_g, lambda * 0.5 * n0 * 3.0, 1e-9);
+        close(
+            source.by_nuclide["Cf252"],
+            source.neutrons_per_s_per_g,
+            1e-15,
+        );
+        assert_eq!(source.uncovered_sf_decays_per_s_per_g, 0.0);
+    }
+
+    #[test]
+    fn spontaneous_fission_without_yields_stays_on_leakage_but_is_still_counted() {
+        let spec = spec(
+            serde_json::json!({"Cf252": 100.0}),
+            "1e6 s",
+            serde_json::json!({}),
+        );
+        let result = run_prepared(&spec, &prepared_run(None));
+        let step = &result.steps[0];
+        let count = step
+            .fission
+            .as_ref()
+            .and_then(|fission| fission.count.as_ref())
+            .expect("count block");
+        let n0 = count.initial_heavy_metal_atoms_per_g;
+        close(count.spontaneous_fissions_per_g, 0.5 * n0, 1e-9);
+        assert_eq!(atoms(step, "Xe140"), 0.0);
+        assert_eq!(atoms(step, "Sr94"), 0.0);
+        close(step.leakage_atoms_per_g, 0.5 * n0, 1e-9);
+        assert_eq!(result.ledger["spontaneous_fission_branches_to_leakage"], 1);
+        assert!(result.ledger.get("spontaneous_fission").is_none());
+    }
+
+    #[test]
+    fn default_run_has_no_fission_output_and_no_fission_ledger_keys() {
+        let mut value = serde_json::json!({
+            "spec": "actinv-spec-1",
+            "library": {"path": "synthetic.npz"},
+            "decay": {"primary": "synthetic.dat"},
+            "material": {"mass_g": 1.0, "basis": "wt_percent", "composition": {"Cf252": 100.0}},
+            "spectrum": {"structure": "custom", "boundaries_eV": [1.0, 2.0, 3.0, 4.0, 5.0],
+                         "flux_per_group": [1.0e12, 1.0e12, 1.0e12, 1.0e12], "descending": false},
+            "schedule": [{"dt": "1e6 s", "flux": 1.0}],
+            "options": {"mode": "coupled", "prune": "none", "outputs": ["inventory"]}
+        });
+        value["options"]["outputs"] = serde_json::json!(["inventory", "activity", "heat"]);
+        let spec: Spec = serde_json::from_value(value).expect("default spec parses");
+        let result = run_prepared(&spec, &prepared_run(None));
+        assert!(result.steps[0].fission.is_none());
+        assert!(serde_json::to_value(&result.steps[0])
+            .unwrap()
+            .get("fission")
+            .is_none());
+        assert!(result.ledger.get("fission").is_none());
+        assert!(result.ledger.get("spontaneous_fission").is_none());
     }
 }

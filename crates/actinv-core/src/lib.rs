@@ -7,6 +7,7 @@ pub mod cram_coeffs;
 pub mod damage;
 pub mod doppler;
 pub mod finite;
+pub mod fission_count;
 pub mod flux;
 pub mod gas;
 pub mod mesh;

@@ -2,7 +2,7 @@
 //!
 //! Independent yields are the production source. Cumulative yields are retained only so callers can inspect and
 //! cross-check the evaluation; they must never be substituted into a depletion matrix.
-use crate::endf::{fields, tail};
+use crate::endf::{fields, read_list_checked, read_tab1_checked, tail, ContRecord};
 use std::collections::{BTreeMap, HashSet};
 
 pub type NuclideKey = (i32, i32);
@@ -251,11 +251,15 @@ fn yield_section(lines: &[&str], mt: i32) -> Result<(i32, f64, Vec<YieldTable>),
 /// Parse one ENDF fission-yield evaluation from text.
 pub fn parse_text(text: &str) -> Result<FissionYields, String> {
     let lines: Vec<&str> = text.lines().collect();
-    let independent_lines = section(&lines, 8, 454)?
+    parse_lines(&lines)
+}
+
+fn parse_lines(lines: &[&str]) -> Result<FissionYields, String> {
+    let independent_lines = section(lines, 8, 454)?
         .ok_or_else(|| "fission-yield evaluation has no MF=8/MT=454 section".to_string())?;
     let (parent_za, awr, independent) = yield_section(&independent_lines, 454)?;
 
-    let parent_liso = section(&lines, 1, 451)?
+    let parent_liso = section(lines, 1, 451)?
         .and_then(|section| section.get(1).copied())
         .map(fields)
         .map(|values| parse_i32(values[3], "LISO"))
@@ -267,7 +271,7 @@ pub fn parse_text(text: &str) -> Result<FissionYields, String> {
         return Err(format!("invalid fission parent LISO {parent_liso}"));
     }
 
-    let cumulative = match section(&lines, 8, 459)? {
+    let cumulative = match section(lines, 8, 459)? {
         Some(section) => {
             let (za, cumulative_awr, tables) = yield_section(&section, 459)?;
             if za != parent_za || cumulative_awr.to_bits() != awr.to_bits() {
@@ -293,11 +297,171 @@ pub fn parse_text(text: &str) -> Result<FissionYields, String> {
     })
 }
 
+/// Parse every MF=8/MT=454 evaluation of an ENDF tape that may hold several materials, as the ENDF/B
+/// spontaneous-fission yield (`sfy`) sublibrary does. Materials without an MF=8/MT=454 section are
+/// skipped; a tape with none is an error. A single-material file parses to one evaluation.
+pub fn parse_tape_text(text: &str) -> Result<Vec<FissionYields>, String> {
+    let mut groups: Vec<(i32, Vec<&str>)> = Vec::new();
+    for line in text.lines() {
+        let Some((mat, mf, _)) = tail(line) else {
+            continue;
+        };
+        if mat <= 0 || mf <= 0 {
+            continue;
+        }
+        if let Some((current, lines)) = groups.last_mut() {
+            if *current == mat {
+                lines.push(line);
+                continue;
+            }
+        }
+        groups.push((mat, vec![line]));
+    }
+    let mut out = Vec::new();
+    for (mat, lines) in &groups {
+        if !lines.iter().any(|line| tail(line) == Some((*mat, 8, 454))) {
+            continue;
+        }
+        out.push(parse_lines(lines).map_err(|error| format!("MAT {mat}: {error}"))?);
+    }
+    if out.is_empty() {
+        return Err("no MF=8/MT=454 fission-yield evaluation found".into());
+    }
+    Ok(out)
+}
+
 /// Parse one ENDF fission-yield evaluation.
 pub fn parse_file(path: &str) -> Result<FissionYields, String> {
     let text = std::fs::read_to_string(path)
         .map_err(|error| format!("cannot read fission yields {path}: {error}"))?;
     parse_text(&text).map_err(|error| format!("{path}: {error}"))
+}
+
+/// A spontaneous-fission neutron multiplicity read from ENDF MF=1.
+#[derive(Clone, Debug, PartialEq)]
+pub struct SpontaneousNubar {
+    pub nubar: f64,
+    /// Section the value came from: 452 (total) when present, else 456 (prompt).
+    pub mt: i32,
+    /// How the value was taken from the section, e.g. "LNU=1 polynomial C0".
+    pub basis: String,
+}
+
+/// The records of one material that the multiplicity reader needs.
+#[derive(Default)]
+struct NubarMaterial<'a> {
+    mat: i32,
+    mt451: Vec<&'a str>,
+    mt452: Vec<&'a str>,
+    mt456: Vec<&'a str>,
+    mt457_head: Option<&'a str>,
+}
+
+fn insert_nubar(
+    out: &mut BTreeMap<NuclideKey, SpontaneousNubar>,
+    material: &NubarMaterial<'_>,
+) -> Result<(), String> {
+    let (mt, lines) = if !material.mt452.is_empty() {
+        (452, &material.mt452)
+    } else if !material.mt456.is_empty() {
+        (456, &material.mt456)
+    } else {
+        return Ok(());
+    };
+    let mat = material.mat;
+    let head = ContRecord::parse(lines[0]).map_err(|error| format!("MAT {mat}: {error}"))?;
+    let za = head.c1.round() as i32;
+    if za <= 0 || (head.c1 - f64::from(za)).abs() > 1e-8 {
+        return Err(format!("MAT {mat}: invalid MF=1/MT={mt} ZA {}", head.c1));
+    }
+    // HEAD = (ZA, AWR, 0, LNU, 0, 0); LNU 1 is a polynomial in the incident energy, LNU 2 a table.
+    // Spontaneous fission has no incident particle, so the value is taken at E = 0.
+    let (nubar, basis) = match head.l2 {
+        1 => {
+            let (list, _) = read_list_checked(lines.as_slice(), 1)
+                .map_err(|error| format!("MAT {mat}: MF=1/MT={mt}: {error}"))?;
+            let c0 = *list
+                .values
+                .first()
+                .ok_or_else(|| format!("MAT {mat}: MF=1/MT={mt} polynomial has no coefficients"))?;
+            (c0, "LNU=1 polynomial C0".to_string())
+        }
+        2 => {
+            let (table, _) = read_tab1_checked(lines.as_slice(), 1)
+                .map_err(|error| format!("MAT {mat}: MF=1/MT={mt}: {error}"))?;
+            let &(energy, value) = table
+                .points
+                .first()
+                .ok_or_else(|| format!("MAT {mat}: MF=1/MT={mt} table has no points"))?;
+            (value, format!("LNU=2 table at {energy:.6e} eV"))
+        }
+        other => {
+            return Err(format!(
+                "MAT {mat}: MF=1/MT={mt} has unsupported LNU {other}"
+            ));
+        }
+    };
+    if !nubar.is_finite() || nubar < 0.0 {
+        return Err(format!("MAT {mat}: invalid spontaneous nubar {nubar}"));
+    }
+    // The decay sublibrary carries the state in the MF=8/MT=457 HEAD (L2); a sublibrary without it
+    // carries it in the second MF=1/MT=451 record, as the fission-yield files do.
+    let state_line = material
+        .mt457_head
+        .or_else(|| material.mt451.get(1).copied());
+    let liso = match state_line {
+        Some(line) => {
+            ContRecord::parse(line)
+                .map_err(|error| format!("MAT {mat}: {error}"))?
+                .l2
+        }
+        None => 0,
+    };
+    if liso < 0 {
+        return Err(format!("MAT {mat}: invalid LISO {liso}"));
+    }
+    let entry = SpontaneousNubar { nubar, mt, basis };
+    if out.insert((za, liso), entry).is_some() {
+        return Err(format!(
+            "duplicate spontaneous nubar for ZA={za} LISO={liso}"
+        ));
+    }
+    Ok(())
+}
+
+/// Read the spontaneous-fission neutron multiplicity of every material of an ENDF tape that carries
+/// MF=1/MT=452 (total) or, failing that, MT=456 (prompt): the ENDF/B decay sublibrary holds the
+/// spontaneous-fission value there (Cf-252 carries 3.7676 in MT=452). Materials with neither are
+/// skipped. Do not point this at a neutron sublibrary: its MF=1 is the induced-fission multiplicity.
+pub fn parse_spontaneous_nubar_text(
+    text: &str,
+) -> Result<BTreeMap<NuclideKey, SpontaneousNubar>, String> {
+    let mut out = BTreeMap::new();
+    let mut material = NubarMaterial::default();
+    for line in text.lines() {
+        let Some((mat, mf, mt)) = tail(line) else {
+            continue;
+        };
+        if mat <= 0 {
+            continue;
+        }
+        if mat != material.mat {
+            insert_nubar(&mut out, &material)?;
+            material = NubarMaterial {
+                mat,
+                ..NubarMaterial::default()
+            };
+        }
+        match (mf, mt) {
+            (1, 451) if material.mt451.len() < 2 => material.mt451.push(line),
+            (1, 452) => material.mt452.push(line),
+            (1, 456) => material.mt456.push(line),
+            (8, 457) if material.mt457_head.is_none() => material.mt457_head = Some(line),
+            _ => {}
+        }
+    }
+    insert_nubar(&mut out, &material)?;
+    Ok(out)
 }
 
 impl FissionYields {
@@ -474,5 +638,156 @@ mod tests {
     fn rejects_declared_incident_energies_before_reserving_memory() {
         let error = parse_text(&minimal_evaluation("2000000000", "4", true)).unwrap_err();
         assert!(error.contains("declares 2000000000 incident energies"));
+    }
+
+    /// One spontaneous-fission yield material: two products of yield 1 each at E = 0.
+    fn sfy_material(mat: i32, za: &str, product_a: &str, product_b: &str) -> Vec<String> {
+        vec![
+            record([za, "250", "0", "0", "0", "0"], mat, 1, 451, 1),
+            record(["0", "0", "0", "0", "0", "0"], mat, 1, 451, 2),
+            record(["", "", "", "", "", ""], mat, 1, 0, 99_999),
+            record([za, "250", "1", "0", "0", "0"], mat, 8, 454, 1),
+            record(["0", "0", "0", "0", "8", "2"], mat, 8, 454, 2),
+            record(
+                [product_a, "0", "1.0", "0.1", product_b, "0"],
+                mat,
+                8,
+                454,
+                3,
+            ),
+            record(["1.0", "0.1", "", "", "", ""], mat, 8, 454, 4),
+            record(["", "", "", "", "", ""], mat, 8, 0, 99_999),
+            record(["", "", "", "", "", ""], mat, 0, 0, 0),
+        ]
+    }
+
+    #[test]
+    fn tape_parser_reads_every_material_of_a_spontaneous_yield_sublibrary() {
+        let mut lines = sfy_material(3644, "98252", "54140", "38094");
+        lines.extend(sfy_material(9643, "96244", "55137", "39090"));
+        let parsed = parse_tape_text(&lines.join("\n")).expect("two-material tape");
+        assert_eq!(parsed.len(), 2);
+        assert_eq!(parsed[0].parent, (98_252, 0));
+        assert_eq!(parsed[1].parent, (96_244, 0));
+        let at_zero = parsed[0].effective(0.0).unwrap();
+        assert_eq!(at_zero.products[&(54_140, 0)], 1.0);
+        assert_eq!(at_zero.products[&(38_094, 0)], 1.0);
+        assert_eq!(at_zero.sum, 2.0);
+        assert!(!at_zero.clamped);
+        // A single-material file is the one-evaluation case of the same reader.
+        let single = parse_tape_text(&sfy_material(3644, "98252", "54140", "38094").join("\n"))
+            .expect("single material");
+        assert_eq!(single.len(), 1);
+        assert!(parse_tape_text("").unwrap_err().contains("MF=8/MT=454"));
+    }
+
+    fn nubar_material(
+        mat: i32,
+        za: &str,
+        liso: &str,
+        section: Option<(i32, &str, Vec<[&str; 6]>)>,
+    ) -> Vec<String> {
+        let mut lines = vec![
+            record([za, "249.916", "-1", "1", "0", "1"], mat, 1, 451, 1),
+            record(["0", "1", "0", "0", "0", "6"], mat, 1, 451, 2),
+            record(["", "", "", "", "", ""], mat, 1, 0, 99_999),
+        ];
+        if let Some((mt, lnu, payload)) = section {
+            lines.push(record([za, "249.916", "0", lnu, "0", "0"], mat, 1, mt, 1));
+            for (index, values) in payload.into_iter().enumerate() {
+                lines.push(record(values, mat, 1, mt, index as i32 + 2));
+            }
+            lines.push(record(["", "", "", "", "", ""], mat, 1, 0, 99_999));
+        }
+        lines.push(record([za, "249.916", "0", liso, "0", "4"], mat, 8, 457, 1));
+        lines.push(record(["", "", "", "", "", ""], mat, 8, 0, 99_999));
+        lines.push(record(["", "", "", "", "", ""], mat, 0, 0, 0));
+        lines
+    }
+
+    #[test]
+    fn spontaneous_nubar_reads_polynomial_and_table_and_prefers_total_over_prompt() {
+        // Layout of the ENDF/B-VIII.0 decay sublibrary's Cf-252 MF=1/MT=452 (a one-term polynomial).
+        let mut lines = nubar_material(
+            3644,
+            "98252",
+            "0",
+            Some((
+                452,
+                "1",
+                vec![
+                    ["0", "0", "0", "0", "1", "0"],
+                    ["3.7676", "", "", "", "", ""],
+                ],
+            )),
+        );
+        // A material with only the prompt multiplicity.
+        lines.extend(nubar_material(
+            9237,
+            "92238",
+            "0",
+            Some((
+                456,
+                "1",
+                vec![["0", "0", "0", "0", "1", "0"], ["2.0", "", "", "", "", ""]],
+            )),
+        ));
+        // A tabulated multiplicity on an isomer: the state comes from the MF=8/MT=457 HEAD.
+        lines.extend(nubar_material(
+            9547,
+            "95242",
+            "1",
+            Some((
+                452,
+                "2",
+                vec![
+                    ["0", "0", "0", "0", "1", "2"],
+                    ["2", "2", "", "", "", ""],
+                    [
+                        "1.000000-5",
+                        "2.500000+0",
+                        "2.000000+7",
+                        "2.900000+0",
+                        "",
+                        "",
+                    ],
+                ],
+            )),
+        ));
+        // No multiplicity at all: skipped, not an error.
+        lines.extend(nubar_material(2631, "26056", "0", None));
+        let parsed = parse_spontaneous_nubar_text(&lines.join("\n")).expect("nubar tape");
+        assert_eq!(parsed.len(), 3);
+        assert_eq!(
+            parsed[&(98_252, 0)],
+            SpontaneousNubar {
+                nubar: 3.7676,
+                mt: 452,
+                basis: "LNU=1 polynomial C0".into(),
+            }
+        );
+        assert_eq!(parsed[&(92_238, 0)].mt, 456);
+        assert_eq!(parsed[&(92_238, 0)].nubar, 2.0);
+        assert_eq!(parsed[&(95_242, 1)].nubar, 2.5);
+        assert_eq!(parsed[&(95_242, 1)].basis, "LNU=2 table at 1.000000e-5 eV");
+    }
+
+    #[test]
+    fn spontaneous_nubar_rejects_an_unsupported_representation() {
+        let lines = nubar_material(
+            3644,
+            "98252",
+            "0",
+            Some((
+                452,
+                "3",
+                vec![
+                    ["0", "0", "0", "0", "1", "0"],
+                    ["3.7676", "", "", "", "", ""],
+                ],
+            )),
+        );
+        let error = parse_spontaneous_nubar_text(&lines.join("\n")).unwrap_err();
+        assert!(error.contains("unsupported LNU 3"), "{error}");
     }
 }

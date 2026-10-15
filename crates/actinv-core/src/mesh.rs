@@ -2,6 +2,7 @@
 //! Deterministic, bounded-memory independent-cell activation runner.
 
 use crate::damage::DamageStepOut;
+use crate::fission_count::{FissionCountOut, FissionStepOut, SfNeutronSourceOut};
 use crate::flux::{
     atomic_output, rebin_equal_lethargy, sha256_file, FluxCell, FluxGeometry, FluxSource,
     FluxStream, RebinResult,
@@ -129,6 +130,7 @@ const STEP_FIELDS: &[&str] = &[
     "damage",
     "gas",
     "summary",
+    "fission",
 ];
 
 /// `StepOut` fields that are absent (key omitted) rather than serialized as
@@ -145,6 +147,7 @@ const STEP_OPTIONAL_FIELDS: &[&str] = &[
     "damage",
     "gas",
     "summary",
+    "fission",
 ];
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -821,6 +824,22 @@ fn maximal_step_out() -> StepOut {
             initial_atoms_per_g: 0.0,
         }),
         summary: Some(StepSummary::shape_placeholder()),
+        fission: Some(FissionStepOut {
+            count: Some(FissionCountOut {
+                fissions_per_g: 0.0,
+                neutron_induced_fissions_per_g: 0.0,
+                spontaneous_fissions_per_g: 0.0,
+                initial_heavy_metal_atoms_per_g: 0.0,
+                burnup_percent: Some(0.0),
+                energy_per_fission_MeV: 0.0,
+                burnup_MWd_per_kg_hm: Some(0.0),
+            }),
+            spontaneous_neutron_source: Some(SfNeutronSourceOut {
+                neutrons_per_s_per_g: 0.0,
+                by_nuclide: BTreeMap::new(),
+                uncovered_sf_decays_per_s_per_g: 0.0,
+            }),
+        }),
     }
 }
 
@@ -927,6 +946,10 @@ fn step_field(step: &StepOut, name: &str) -> Option<Result<serde_json::Value, St
         },
         "summary" => match &step.summary {
             Some(summary) => serde_json::to_value(summary),
+            None => Ok(serde_json::Value::Null),
+        },
+        "fission" => match &step.fission {
+            Some(fission) => serde_json::to_value(fission),
             None => Ok(serde_json::Value::Null),
         },
         _ => return None,
@@ -2084,6 +2107,7 @@ mod tests {
             damage: None,
             gas: None,
             summary: None,
+            fission: None,
         }
     }
 

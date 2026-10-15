@@ -34,7 +34,7 @@ actinv validate problem.json
 | `material.composition` | Natural element symbols or explicit nuclides (`U235`, `Ba137m1`) and nonnegative values interpreted by `material.basis`. |
 | `spectrum.flux_per_group` | Group-integrated fluxes. `descending: true` reverses the supplied order before use. |
 | `schedule` | At least one duration/flux-multiplier pair. Accepted duration units: seconds, minutes, hours, days and years. |
-| `fission_yields` | Optional hash-pinned ENDF-6 neutron-induced fission-yield evaluations; see below. Empty/omitted preserves the explicit no-yields leakage path. |
+| `fission_yields` | Optional hash-pinned ENDF-6 neutron-induced fission-yield evaluations, and optional spontaneous-fission yields and neutron multiplicities; see below. Empty/omitted preserves the explicit no-yields leakage path. |
 | `uncertainty` | Optional neutron-only MF=33 sidecar and response selection; omission reads no covariance file and preserves the ordinary path. |
 | `radiological` | Optional hash-pinned clearance, waste, ingestion, or inhalation response table; omission reads no table. |
 | `damage` | Optional hash-pinned `actinv-damage-table-1` damage-energy table plus per-element displacement energies; required when `outputs` contains `damage`. |
@@ -107,6 +107,56 @@ clamped to the evaluated range. `energy: "spectrum_average"` is the default and 
 the fission-rate-weighted representative incident energy separately for each parent. The certificate records the
 requested energy, selected bracket, interpolation weight, clamp decision, product count and effective yield sum.
 Fissioning parents without a matching file remain explicit leakage and never borrow another parent's evaluation.
+
+### Spontaneous fission
+
+Without further input, a decay state's spontaneous-fission branch (RTYP digit 6) is booked to leakage and counted
+in the ledger's `spontaneous_fission_branches_to_leakage`. `fission_yields.spontaneous` routes it to products
+instead, and supplies the neutron multiplicity for a spontaneous-fission neutron source. Every input is hash-pinned
+and optional, but the object must declare at least one:
+
+```json
+"fission_yields": {
+  "spontaneous": {
+    "files": [{"path": "/data/sfy/spontaneous-yields.endf", "sha256": "64 hexadecimal digits"}],
+    "nubar_endf": {"path": "/data/endfb-viii.0-decay/endf-b-viii-0_decay.dat", "sha256": "..."},
+    "nubar_table": {"path": "nubar.json", "sha256": "..."}
+  }
+}
+```
+
+- `files` are ENDF-6 MF=8/MT=454 spontaneous-fission yield evaluations (the ENDF/B `sfy` sublibrary, same record
+  layout as the neutron-induced files). A file may hold one material or the whole sublibrary; each material is one
+  parent. Yields are read at the lowest tabulated incident energy, which is `0` for spontaneous fission, and the same
+  checks apply (independent yields sum to two fragments within `1e-6`, no renormalization). A state with a
+  spontaneous-fission branch and a yield evaluation sends `λ · BR_SF · yield` to each fragment, so one decay makes
+  two product atoms and nothing goes to leakage. A fragment absent from the decay library is booked to leakage by name.
+  A state with the branch and no evaluation keeps the branch on leakage and is named under
+  `ledger.spontaneous_fission.uncovered_to_leakage`; no other parent's yields are borrowed. Only a branch that is the
+  whole decay mode is routed.
+- `nubar_endf` names an ENDF file whose MF=1 MT=452 (total, preferred) or MT=456 (prompt) section gives each state's
+  spontaneous-fission neutron multiplicity, taken at `E = 0` (a polynomial's constant term, or the lowest tabulated
+  point, recorded in the ledger). The ENDF/B-VIII.0 decay sublibrary carries these values (Cf-252: 3.7676). Do not name a
+  neutron sublibrary: its MF=1 is the induced-fission multiplicity.
+- `nubar_table` names a JSON document `{"source": "<citation>", "nubar": {"Cf252": 3.7676, ...}}`. The citation is
+  required and recorded in the certificate; keys are explicit nuclide names. Its entries override `nubar_endf` for the
+  same state. ACTINV builds in no multiplicity, and a state with an SF branch and no multiplicity is reported as
+  uncovered, never estimated.
+
+With any `nubar_*` input every step gains `fission.spontaneous_neutron_source` (see [Read your results](results.md)).
+
+### Fission count and burn-up
+
+`options.fission` (absent by default) adds a `fission.count` block to every step:
+
+```json
+"options": { "fission": { "energy_per_fission_MeV": 200.0 } }
+```
+
+`energy_per_fission_MeV` defaults to 200, a conventional round figure and not a nuclide-specific energy; it affects
+only the MWd/kg burn-up and must be finite and positive. The option works without fission-yield files: every library
+fission (MT=18) row is counted, whether or not yields exist for it. Both this option and
+`fission_yields.spontaneous` are refused by the native waste composition solve.
 
 ## MF=33 uncertainty
 
