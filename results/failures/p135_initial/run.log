@@ -1,0 +1,13 @@
+P135 G2: FAIL
+  G2: ERROR RuntimeError: /home/connoravila/Documents/actinv/target/ref-build/release/actinv failed on /home/connoravila/Documents/actinv/target/p135-work/summary_only.spec.json: spec: unknown field `summary`, expected one of `spec`, `title`, `projectile`, `library`, `decay`, `material`, `spectrum`, `schedule`, `options`, `photon`, `fission_yields`, `uncertainty`, `radiological`, `damage`, `self_shielding` at line 1 column 6088
+P135 G3: PASS
+  G3/fns_unscaled: PASS, 860 comparisons, 0 failures
+  G3/fns_scaled: PASS, 352 comparisons, 0 failures
+  G3/radioactive_initial: PASS, 291 comparisons, 0 failures
+P135 G4: PASS
+  G4/fns_auto: PASS, 1028 comparisons, 0 failures
+  G4/fns_scaled_trace: PASS, 384 comparisons, 0 failures
+P135 G5: PASS
+  G5: 100 comparisons, 0 failures, joint totals evaluated 0
+P135 G0, G1, G6: external (not evaluated here)
+P135: FAIL (/home/connoravila/Documents/actinv/results/p135_depletion.json)
