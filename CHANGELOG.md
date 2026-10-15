@@ -44,6 +44,8 @@
   residual-production splice for `build-library` (P130).
 - Geometry self-shielding (foil, wire, sphere, cylinder) by the universal sigmoid curve, and per-group dilution
   overrides (P129).
+- Geometry self-shielding reads R-matrix-limited (LRF=7) evaluations (ENDF/B-VIII, FENDL-3.2c), deriving the
+  neutron and capture widths from the spin-group channel widths or reduced-width amplitudes (P139).
 - `study.robustness.statistics` (FISPACT-II `SENSITIVITY`/`MCSAMPLE` output): per-response sample distribution
   (mean, std, skewness, exact order-statistic percentiles, histogram), input-output Pearson and Spearman
   correlation tables by sampled parameter, a response-response correlation matrix, and bootstrap standard errors

@@ -1677,6 +1677,37 @@ fn rml_background(extension: &RmlExtension, energy: f64) -> Result<Complex64, St
     }
 }
 
+/// Penetrability of a channel at a resonance energy, the factor that converts
+/// between a listed width and its reduced-width amplitude (ENDF-6
+/// Γ = 2 P γ²): 1 for a penetrability-flag-0 pair, otherwise the neutral or
+/// Coulomb penetrability at the true radius with the channel wave number taken
+/// at |E_r − threshold|.
+fn rml_resonance_penetrability(
+    rml: &RMatrixLimited,
+    channel: &RmlChannel,
+    resonance_energy: f64,
+    entrance_mass: f64,
+    entrance_lab_to_cm: f64,
+) -> Result<f64, String> {
+    let pair = &rml.particle_pairs[channel.pair];
+    if pair.penetrability == 0 {
+        return Ok(1.0);
+    }
+    if channel.true_radius <= 0.0 {
+        return Err(format!("RML MT={} needs a positive true radius", pair.mt));
+    }
+    let threshold = rml_threshold(pair, entrance_lab_to_cm);
+    let coefficient = rml_wave_coefficient(pair, entrance_mass, entrance_lab_to_cm)?;
+    let wave = coefficient * (resonance_energy - threshold).abs().sqrt();
+    let rho = wave * channel.true_radius;
+    let penetrability = if pair.za != 0 && pair.zb != 0 {
+        coulomb_penetration_shift(channel.l, coulomb_eta(pair, wave)?, rho)?.0
+    } else {
+        penetration_shift(channel.l, rho)?.0
+    };
+    Ok(penetrability)
+}
+
 fn rml_reduced_amplitude(
     rml: &RMatrixLimited,
     channel: &RmlChannel,
@@ -1689,22 +1720,13 @@ fn rml_reduced_amplitude(
         return Ok(0.0);
     }
     let pair = &rml.particle_pairs[channel.pair];
-    let penetrability = if pair.penetrability == 0 {
-        1.0
-    } else {
-        if channel.true_radius <= 0.0 {
-            return Err(format!("RML MT={} needs a positive true radius", pair.mt));
-        }
-        let threshold = rml_threshold(pair, entrance_lab_to_cm);
-        let coefficient = rml_wave_coefficient(pair, entrance_mass, entrance_lab_to_cm)?;
-        let wave = coefficient * (resonance_energy - threshold).abs().sqrt();
-        let rho = wave * channel.true_radius;
-        if pair.za != 0 && pair.zb != 0 {
-            coulomb_penetration_shift(channel.l, coulomb_eta(pair, wave)?, rho)?.0
-        } else {
-            penetration_shift(channel.l, rho)?.0
-        }
-    };
+    let penetrability = rml_resonance_penetrability(
+        rml,
+        channel,
+        resonance_energy,
+        entrance_mass,
+        entrance_lab_to_cm,
+    )?;
     if penetrability <= 0.0 || !penetrability.is_finite() {
         return Err(format!(
             "RML MT={} resonance has nonpositive penetrability",
@@ -1712,6 +1734,117 @@ fn rml_reduced_amplitude(
         ));
     }
     Ok(width.signum() * (0.5 * width.abs() / penetrability).sqrt())
+}
+
+/// One R-matrix-limited resonance reduced to the single-level quantities the
+/// geometry self-shielding model needs.
+#[derive(Clone, Debug, PartialEq)]
+pub struct RmlResonanceWidths {
+    pub energy: f64,
+    /// |J| of the spin group.
+    pub spin: f64,
+    /// |I| of the target in the neutron entrance pair.
+    pub target_spin: f64,
+    /// Target mass in neutron masses, from the entrance pair.
+    pub awri: f64,
+    /// Sum over the neutron (MT=2) channels.
+    pub neutron: f64,
+    /// Sum over the capture (MT=102, eliminated photon) channels.
+    pub capture: f64,
+    /// Sum over every channel, fission and charged-particle ones included.
+    pub total: f64,
+}
+
+/// Neutron, capture and total widths of every positive-energy resonance of an
+/// R-matrix-limited range, classifying channels by their particle pair.
+///
+/// IFG=0 widths are taken as listed, in magnitude. IFG=1 amplitudes become
+/// widths Γ = 2 P γ² with the penetrability, radius and wave-number convention
+/// of the reconstruction (eliminated photon channels have P = 1), and a channel
+/// closed at the resonance energy contributes nothing. Backgrounds and phase
+/// shifts do not enter: the model is a single-level approximation.
+pub fn rml_resonance_widths(rml: &RMatrixLimited) -> Result<Vec<RmlResonanceWidths>, String> {
+    if rml.krm != 3 {
+        return Err(format!("unsupported RML KRM={}", rml.krm));
+    }
+    let entrance_pair = rml
+        .particle_pairs
+        .iter()
+        .find(|pair| pair.mt == 2)
+        .ok_or("RML evaluation has no neutron entrance particle pair")?;
+    if entrance_pair.mass_a <= 0.0 || entrance_pair.mass_b <= 0.0 {
+        return Err("RML neutron entrance pair has invalid masses".into());
+    }
+    let entrance_lab_to_cm = entrance_pair.mass_b / (entrance_pair.mass_a + entrance_pair.mass_b);
+    let awri = entrance_pair.mass_b / entrance_pair.mass_a;
+    let target_spin = entrance_pair.spin_b.abs();
+    let mut out = Vec::new();
+    for (group_index, spin_group) in rml.spin_groups.iter().enumerate() {
+        if let Some(channel) = spin_group
+            .channels
+            .iter()
+            .find(|channel| channel.pair >= rml.particle_pairs.len())
+        {
+            return Err(format!(
+                "RML spin group {} has a channel in particle pair {}, but only {} pairs are declared",
+                group_index + 1,
+                channel.pair + 1,
+                rml.particle_pairs.len()
+            ));
+        }
+        for resonance in &spin_group.resonances {
+            if resonance.widths.len() != spin_group.channels.len() {
+                return Err("RML resonance width count disagrees with its channels".into());
+            }
+            // Bound levels are not usable lines; skip them before any
+            // penetrability is evaluated.
+            if resonance.energy <= 0.0 {
+                continue;
+            }
+            let (mut neutron, mut capture, mut total) = (0.0, 0.0, 0.0);
+            for (channel, &listed) in spin_group.channels.iter().zip(&resonance.widths) {
+                let pair = &rml.particle_pairs[channel.pair];
+                let width = if !rml.reduced_widths {
+                    listed.abs()
+                } else if pair.mt == 102 {
+                    2.0 * listed * listed
+                } else if resonance.energy <= rml_threshold(pair, entrance_lab_to_cm) {
+                    0.0
+                } else {
+                    let penetrability = rml_resonance_penetrability(
+                        rml,
+                        channel,
+                        resonance.energy,
+                        entrance_pair.mass_a,
+                        entrance_lab_to_cm,
+                    )?;
+                    if penetrability < 0.0 || !penetrability.is_finite() {
+                        return Err(format!(
+                            "RML MT={} resonance has an invalid penetrability",
+                            pair.mt
+                        ));
+                    }
+                    2.0 * penetrability * listed * listed
+                };
+                match pair.mt {
+                    2 => neutron += width,
+                    102 => capture += width,
+                    _ => {}
+                }
+                total += width;
+            }
+            out.push(RmlResonanceWidths {
+                energy: resonance.energy,
+                spin: spin_group.spin.abs(),
+                target_spin,
+                awri,
+                neutron,
+                capture,
+                total,
+            });
+        }
+    }
+    Ok(out)
 }
 
 /// Validate that an R-matrix-limited range uses only the subset implemented by this crate.
@@ -2951,6 +3084,210 @@ mod tests {
         assert_eq!(actual.fission, 0.0);
         assert_eq!(actual.competitive, 0.0);
         assert!(actual.elastic.is_finite() && actual.elastic >= 0.0);
+    }
+
+    fn width_pair(
+        mass_a: f64,
+        mass_b: f64,
+        q_value: f64,
+        penetrability: i32,
+        mt: i32,
+    ) -> ParticlePair {
+        ParticlePair {
+            mass_a,
+            mass_b,
+            za: 0,
+            zb: 26,
+            spin_a: if mt == 2 { 0.5 } else { 0.0 },
+            // ENDF-6 encodes parity in the sign; the target spin is 3/2.
+            spin_b: if mt == 2 { -1.5 } else { 0.0 },
+            q_value,
+            penetrability,
+            shift: 0,
+            mt,
+            parity_a: 1,
+            parity_b: 1,
+        }
+    }
+
+    fn width_channel(pair: usize, l: i32, radius: f64) -> RmlChannel {
+        RmlChannel {
+            pair,
+            l,
+            spin: 0.0,
+            boundary: 0.0,
+            effective_radius: radius,
+            true_radius: radius,
+        }
+    }
+
+    /// Capture, neutron (l=1), fission and an inelastic pair opening at
+    /// 2000*56/55 eV, one spin group of |J|=2.
+    fn width_fixture(reduced_widths: bool, resonances: Vec<RmlResonance>) -> RMatrixLimited {
+        RMatrixLimited {
+            reduced_widths,
+            krm: 3,
+            particle_pairs: vec![
+                width_pair(0.0, 56.0, 0.0, 0, 102),
+                width_pair(1.0, 55.0, 0.0, 1, 2),
+                width_pair(0.0, 56.0, 0.0, 0, 18),
+                width_pair(1.0, 55.0, -2000.0, 1, 51),
+            ],
+            spin_groups: vec![SpinGroup {
+                spin: -2.0,
+                parity: 1.0,
+                channels: vec![
+                    width_channel(0, 0, 0.0),
+                    width_channel(1, 1, 0.7),
+                    width_channel(2, 0, 0.0),
+                    width_channel(3, 1, 0.7),
+                ],
+                resonances,
+                backgrounds: Vec::new(),
+                phase_shifts: Vec::new(),
+            }],
+        }
+    }
+
+    /// Penetrability of the l=1 neutron or inelastic channel of the fixture
+    /// for a channel energy above its threshold, computed independently.
+    fn width_fixture_penetrability(channel_energy: f64) -> f64 {
+        let wave = K_WAVE * 55.0 / 56.0 * channel_energy.sqrt();
+        penetration_shift(1, wave * 0.7).unwrap().0
+    }
+
+    #[test]
+    fn rml_widths_classify_channels_by_particle_pair() {
+        let rml = width_fixture(
+            false,
+            vec![RmlResonance {
+                energy: 1e3,
+                widths: vec![0.02, 0.4, -0.05, 0.3],
+            }],
+        );
+        let lines = rml_resonance_widths(&rml).unwrap();
+        assert_eq!(lines.len(), 1);
+        let line = &lines[0];
+        assert_eq!(line.energy, 1e3);
+        // |J| of the group, |I| of the elastic pair, A = m_b / m_a.
+        assert_eq!(line.spin, 2.0);
+        assert_eq!(line.target_spin, 1.5);
+        assert_eq!(line.awri, 55.0);
+        // Widths are magnitudes; fission and inelastic count only in the total.
+        assert_eq!(line.neutron, 0.4);
+        assert_eq!(line.capture, 0.02);
+        assert!((line.total - (0.02 + 0.4 + 0.05 + 0.3)).abs() < 1e-15);
+    }
+
+    #[test]
+    fn rml_widths_skip_bound_levels_and_reject_unclassifiable_pairs() {
+        let rml = width_fixture(
+            false,
+            vec![
+                RmlResonance {
+                    energy: -5.0,
+                    widths: vec![0.02, 0.4, 0.05, 0.3],
+                },
+                RmlResonance {
+                    energy: 10.0,
+                    widths: vec![0.02, 0.4, 0.05, 0.3],
+                },
+            ],
+        );
+        let lines = rml_resonance_widths(&rml).unwrap();
+        assert_eq!(lines.len(), 1);
+        assert_eq!(lines[0].energy, 10.0);
+
+        let mut dangling = rml.clone();
+        dangling.spin_groups[0].channels[2].pair = 9;
+        let error = rml_resonance_widths(&dangling).unwrap_err();
+        assert!(error.contains("particle pair 10"), "{error}");
+
+        let mut short = rml.clone();
+        short.spin_groups[0].resonances[1].widths.pop();
+        assert!(rml_resonance_widths(&short).is_err());
+
+        let mut no_neutron = rml.clone();
+        no_neutron.particle_pairs[1].mt = 5;
+        let error = rml_resonance_widths(&no_neutron).unwrap_err();
+        assert!(error.contains("neutron entrance"), "{error}");
+
+        let mut other_model = rml;
+        other_model.krm = 2;
+        assert!(rml_resonance_widths(&other_model).is_err());
+    }
+
+    #[test]
+    fn rml_reduced_amplitudes_reproduce_listed_widths() {
+        // The inelastic channel opens at 2000*56/55 eV; both resonances are above it.
+        let threshold = 2000.0 * 56.0 / 55.0;
+        let listed = [
+            (1e4, [0.02, 0.4, 0.05, 0.3]),
+            (5e4, [0.03, 1.2, 0.0, 2.5]),
+        ];
+        let widths = width_fixture(
+            false,
+            listed
+                .iter()
+                .map(|&(energy, widths)| RmlResonance {
+                    energy,
+                    widths: widths.to_vec(),
+                })
+                .collect(),
+        );
+        let amplitudes = width_fixture(
+            true,
+            listed
+                .iter()
+                .map(|&(energy, widths)| {
+                    let neutron_p = width_fixture_penetrability(energy);
+                    let inelastic_p = width_fixture_penetrability(energy - threshold);
+                    RmlResonance {
+                        energy,
+                        // Photon and fission channels have P = 1.
+                        widths: vec![
+                            (widths[0] / 2.0f64).sqrt(),
+                            (widths[1] / (2.0 * neutron_p)).sqrt(),
+                            -(widths[2] / 2.0f64).sqrt(),
+                            (widths[3] / (2.0 * inelastic_p)).sqrt(),
+                        ],
+                    }
+                })
+                .collect(),
+        );
+        let from_widths = rml_resonance_widths(&widths).unwrap();
+        let from_amplitudes = rml_resonance_widths(&amplitudes).unwrap();
+        assert_eq!(from_widths.len(), from_amplitudes.len());
+        for (want, got) in from_widths.iter().zip(&from_amplitudes) {
+            assert_eq!((want.energy, want.spin), (got.energy, got.spin));
+            assert_eq!((want.target_spin, want.awri), (got.target_spin, got.awri));
+            for (w, g) in [
+                (want.neutron, got.neutron),
+                (want.capture, got.capture),
+                (want.total, got.total),
+            ] {
+                assert!((w - g).abs() <= 1e-12 * w, "{w} vs {g}");
+            }
+        }
+    }
+
+    #[test]
+    fn rml_reduced_amplitudes_drop_channels_closed_at_the_resonance() {
+        // At 1 keV the inelastic pair (threshold ~2036 eV) is closed: its
+        // amplitude adds nothing to the total, whatever it lists.
+        let neutron_p = width_fixture_penetrability(1e3);
+        let rml = width_fixture(
+            true,
+            vec![RmlResonance {
+                energy: 1e3,
+                widths: vec![0.1, 0.2, 0.0, 5.0],
+            }],
+        );
+        let line = &rml_resonance_widths(&rml).unwrap()[0];
+        assert!((line.capture - 2.0 * 0.1 * 0.1).abs() < 1e-15);
+        let neutron = 2.0 * neutron_p * 0.2 * 0.2;
+        assert!((line.neutron - neutron).abs() <= 1e-12 * neutron);
+        assert!((line.total - (line.capture + line.neutron)).abs() <= 1e-15);
     }
 
     #[test]

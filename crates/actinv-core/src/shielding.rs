@@ -11,7 +11,7 @@
 use actinv_data::activation::{parse_evaluations, Projectile};
 use actinv_data::composition::{self, MaterialKey};
 use actinv_data::resonance::{
-    legacy_effective_total_width, RangeData, ResonanceEvaluation, K_WAVE,
+    legacy_effective_total_width, rml_resonance_widths, RangeData, ResonanceEvaluation, K_WAVE,
 };
 use serde::{Deserialize, Serialize};
 use std::collections::{BTreeMap, BTreeSet};
@@ -668,9 +668,11 @@ impl ResonanceLine {
     }
 }
 
-/// The resolved (LRU=1) Breit-Wigner and Reich-Moore resonances of the MF=2
-/// isotope whose ZA is `za`. R-matrix-limited ranges are an error rather than
-/// silently dropped.
+/// The resolved (LRU=1) Breit-Wigner, Reich-Moore and R-matrix-limited
+/// resonances of the MF=2 isotope whose ZA is `za`. R-matrix-limited (LRF=7)
+/// spin groups give Gamma_n, Gamma_gamma and Gamma by summing the neutron,
+/// capture and all channel widths; a feature that cannot be read that way is
+/// an error rather than silently dropped.
 fn resolved_lines(evaluation: &ResonanceEvaluation, za: i32) -> Result<Vec<ResonanceLine>, String> {
     let mut out = Vec::new();
     for isotope in evaluation
@@ -716,11 +718,24 @@ fn resolved_lines(evaluation: &ResonanceEvaluation, za: i32) -> Result<Vec<Reson
                         }
                     }
                 }
-                RangeData::RMatrixLimited(_) => {
-                    return Err(format!(
-                        "resolved range {}-{} eV uses R-matrix-limited (LRF=7) parameters; the sigmoid-curve model needs Breit-Wigner or Reich-Moore resonances",
-                        range.energy_min, range.energy_max
-                    ));
+                RangeData::RMatrixLimited(rml) => {
+                    let resonances = rml_resonance_widths(rml).map_err(|error| {
+                        format!(
+                            "resolved range {}-{} eV (LRF=7): {error}",
+                            range.energy_min, range.energy_max
+                        )
+                    })?;
+                    for resonance in resonances {
+                        out.extend(ResonanceLine::from_widths(
+                            resonance.energy,
+                            resonance.spin,
+                            resonance.target_spin,
+                            resonance.awri,
+                            resonance.neutron,
+                            resonance.capture,
+                            resonance.total,
+                        ));
+                    }
                 }
                 RangeData::ScatteringOnly { .. } | RangeData::Unresolved(_) => {}
             }
@@ -1539,5 +1554,202 @@ mod tests {
         let want = 4.0 * std::f64::consts::PI / (wave * wave) * (1e-3 / 1.1e-2);
         assert!((a.peak_b - want).abs() < 1e-9 * want);
         assert!((a.capture_root - (1e-2_f64 / 1.1e-2).sqrt()).abs() < 1e-12);
+    }
+
+    fn test_evaluation(data: RangeData) -> ResonanceEvaluation {
+        use actinv_data::resonance::{ResonanceIsotope, ResonanceRange};
+        ResonanceEvaluation {
+            za: 74183,
+            awr: 181.0,
+            isotopes: vec![ResonanceIsotope {
+                zai: 74183,
+                abundance: 1.0,
+                fission_widths: false,
+                ranges: vec![ResonanceRange {
+                    energy_min: 1e-5,
+                    energy_max: 1e4,
+                    lru: 1,
+                    lrf: 7,
+                    naps: 1,
+                    scattering_radius: None,
+                    data,
+                }],
+            }],
+        }
+    }
+
+    /// One spin group of J=2 on a spin-3/2 target (A=181): capture, neutron
+    /// (l=0, radius 0.7) and fission channels.
+    fn rml_test_evaluation(
+        reduced_widths: bool,
+        resonances: Vec<actinv_data::resonance::RmlResonance>,
+    ) -> ResonanceEvaluation {
+        use actinv_data::resonance::{ParticlePair, RMatrixLimited, RmlChannel, SpinGroup};
+        let pair = |mass_a: f64, mass_b: f64, mt: i32, penetrability: i32| ParticlePair {
+            mass_a,
+            mass_b,
+            za: 0,
+            zb: 74,
+            spin_a: if mt == 2 { 0.5 } else { 0.0 },
+            spin_b: if mt == 2 { 1.5 } else { 0.0 },
+            q_value: 0.0,
+            penetrability,
+            shift: 0,
+            mt,
+            parity_a: 1,
+            parity_b: 1,
+        };
+        let channel = |pair: usize, radius: f64| RmlChannel {
+            pair,
+            l: 0,
+            spin: 0.0,
+            boundary: 0.0,
+            effective_radius: radius,
+            true_radius: radius,
+        };
+        test_evaluation(RangeData::RMatrixLimited(RMatrixLimited {
+            reduced_widths,
+            krm: 3,
+            particle_pairs: vec![
+                pair(0.0, 182.0, 102, 0),
+                pair(1.0, 181.0, 2, 1),
+                pair(0.0, 182.0, 18, 0),
+            ],
+            spin_groups: vec![SpinGroup {
+                spin: 2.0,
+                parity: 1.0,
+                channels: vec![channel(0, 0.0), channel(1, 0.7), channel(2, 0.0)],
+                resonances,
+                backgrounds: Vec::new(),
+                phase_shifts: Vec::new(),
+            }],
+        }))
+    }
+
+    fn assert_line_close(got: &ResonanceLine, want: &ResonanceLine) {
+        for (g, w) in [
+            (got.energy_ev, want.energy_ev),
+            (got.peak_b, want.peak_b),
+            (got.capture_root, want.capture_root),
+            (got.weight, want.weight),
+        ] {
+            assert!((g - w).abs() <= 1e-12 * w.abs(), "{g} vs {w}");
+        }
+    }
+
+    #[test]
+    fn rml_lines_match_the_equivalent_breit_wigner_lines() {
+        use actinv_data::resonance::{LegacyLGroup, LegacyResolved, LegacyResonance, RmlResonance};
+        // Neutron 0.4, capture 0.02, fission 0.05 (listed with a sign); J=2 on
+        // a target of spin 3/2 gives g = 5/8, not the I=0 value.
+        let resonance = |energy: f64, widths: [f64; 3]| RmlResonance {
+            energy,
+            widths: widths.to_vec(),
+        };
+        let evaluation = rml_test_evaluation(
+            false,
+            vec![
+                resonance(10.0, [0.02, 0.4, -0.05]),
+                // A bound level, a resonance without capture and one without
+                // a neutron width are not lines.
+                resonance(-3.0, [0.02, 0.4, 0.0]),
+                resonance(20.0, [0.0, 0.4, 0.05]),
+                resonance(30.0, [0.02, 0.0, 0.05]),
+                resonance(40.0, [0.01, 0.9, 0.0]),
+            ],
+        );
+        let lines = resolved_lines(&evaluation, 74183).unwrap();
+        assert_eq!(lines.len(), 2);
+        let legacy = |energy: f64, neutron: f64, capture: f64, fission: f64| LegacyResonance {
+            energy,
+            spin: 2.0,
+            total: neutron + capture + fission,
+            neutron,
+            capture,
+            fission_a: fission,
+            fission_b: 0.0,
+        };
+        let breit_wigner = test_evaluation(RangeData::BreitWigner(LegacyResolved {
+            spin: 1.5,
+            ap: 0.7,
+            groups: vec![LegacyLGroup {
+                awri: 181.0,
+                apl: 0.7,
+                qx: 0.0,
+                l: 0,
+                lrx: 0,
+                resonances: vec![legacy(10.0, 0.4, 0.02, 0.05), legacy(40.0, 0.9, 0.01, 0.0)],
+            }],
+        }));
+        let expected = resolved_lines(&breit_wigner, 74183).unwrap();
+        assert_eq!(expected.len(), 2);
+        for (got, want) in lines.iter().zip(&expected) {
+            assert_line_close(got, want);
+        }
+        // g = (2J+1)/(2(2I+1)) = 5/8 rather than the I=0 value.
+        let wave = K_WAVE * 181.0 / 182.0 * 10.0_f64.sqrt();
+        let want = 4.0 * std::f64::consts::PI / (wave * wave) * 0.625 * (0.4 / 0.47);
+        assert!((lines[0].peak_b - want).abs() <= 1e-12 * want);
+    }
+
+    #[test]
+    fn rml_reduced_widths_give_the_same_lines_as_listed_widths() {
+        use actinv_data::resonance::RmlResonance;
+        // Neutron l=0 channel with true radius 0.7: P = rho = k a.
+        let widths = [(10.0, [0.02, 0.4, 0.05]), (250.0, [0.03, 0.8, 0.0])];
+        let listed = rml_test_evaluation(
+            false,
+            widths
+                .iter()
+                .map(|&(energy, widths)| RmlResonance {
+                    energy,
+                    widths: widths.to_vec(),
+                })
+                .collect(),
+        );
+        let reduced = rml_test_evaluation(
+            true,
+            widths
+                .iter()
+                .map(|&(energy, widths)| {
+                    let wave = K_WAVE * 181.0 / 182.0 * f64::sqrt(energy);
+                    let penetrability = wave * 0.7;
+                    RmlResonance {
+                        energy,
+                        widths: vec![
+                            (widths[0] / 2.0).sqrt(),
+                            (widths[1] / (2.0 * penetrability)).sqrt(),
+                            (widths[2] / 2.0).sqrt(),
+                        ],
+                    }
+                })
+                .collect(),
+        );
+        let from_listed = resolved_lines(&listed, 74183).unwrap();
+        let from_reduced = resolved_lines(&reduced, 74183).unwrap();
+        assert_eq!(from_listed.len(), 2);
+        assert_eq!(from_reduced.len(), 2);
+        for (got, want) in from_reduced.iter().zip(&from_listed) {
+            assert_line_close(got, want);
+        }
+    }
+
+    #[test]
+    fn rml_range_with_an_unclassifiable_channel_is_an_error() {
+        use actinv_data::resonance::RmlResonance;
+        let mut evaluation = rml_test_evaluation(
+            false,
+            vec![RmlResonance {
+                energy: 10.0,
+                widths: vec![0.02, 0.4, 0.05],
+            }],
+        );
+        let RangeData::RMatrixLimited(rml) = &mut evaluation.isotopes[0].ranges[0].data else {
+            unreachable!("fixture is R-matrix limited");
+        };
+        rml.spin_groups[0].channels[2].pair = 7;
+        let error = resolved_lines(&evaluation, 74183).unwrap_err();
+        assert!(error.contains("LRF=7"), "{error}");
+        assert!(error.contains("particle pair 8"), "{error}");
     }
 }

@@ -675,8 +675,9 @@ and `dilution_overrides`, as `SSFGEOMETRY` and `PROBTABLE` are exclusive.
 - `density_g_cm3` converts the declared material (atoms per gram) to number densities. FISPACT-II instead takes
   atoms per unit area or length from `SSFFUEL`/`SSFMASS`; ACTINV uses the run's own material and a density.
 - `resonance_files` are hash-pinned ENDF-6 neutron evaluations, one nuclide each, carrying MF=2/MT=151 resolved
-  resonance parameters (Breit-Wigner or Reich-Moore; R-matrix-limited ranges are rejected). An empty list, an
-  evaluation without MF=2, or one without a resolved range is an error.
+  resonance parameters (Breit-Wigner, Reich-Moore or R-matrix-limited, LRF=1, 2, 3 or 7). An empty list, an
+  evaluation without MF=2, or one without a resolved range is an error. An LRF=7 feature that cannot be read as
+  the widths below (an unknown channel reference, a KRM other than 3) is an error rather than a dropped resonance.
 - `choose` restricts the correction to listed nuclides or elements (`SSFCHOOSE`); every entry must be in the
   material and supplied by a resonance file. Without it every material nuclide that a file supplies is shielded;
   other material nuclides are named in `shielding_uncovered` (an error under `require_shielding_complete`).
@@ -690,6 +691,18 @@ and `g = (2J+1)/(2(2I+1))`. The resonance factor is `G(z) = (A1 - A2)/(1 + (z/z0
 mean of `G` over the resonances peaking in that group, weighted by `w_i = (Gamma_gamma/E^2) * g Gamma_n/Gamma`
 (Eqs. 49-50); groups without resonance peaks are untouched. The scaled cross sections feed the same per-group fold
 as the Bondarenko path, including the MF=33 collapse.
+
+For R-matrix-limited (LRF=7) evaluations, which ENDF/B-VIII and FENDL-3.2c use for many nuclides, the per-resonance
+widths come from the spin groups' channels, classified by their particle pair: the incident-neutron pair (MT=2) gives
+the neutron channels, the capture pair (MT=102, including the eliminated photon channel) the capture channels, and
+every other channel (fission, charged particles, inelastic) counts only toward the total. `Gamma_n`, `Gamma_gamma`
+and `Gamma` are the sums of the channel widths over those three sets. With widths listed (IFG=0) each channel contributes its
+magnitude; with reduced-width amplitudes (IFG=1) it contributes `2 P gamma^2`, with the penetrability `P` at the
+resonance energy from the same radii, penetrability flags and channel wave numbers as the LRF=7 reconstruction
+(P = 1 for the photon channel), and a channel closed at that energy contributes nothing. `g` uses the spin group's
+`|J|` and the target spin of the neutron pair, and `A` is that pair's mass ratio. Resonances at non-positive energy
+or without a positive neutron or capture width are skipped, as for the other formalisms. The single-level sigmoid
+model does not use the interference between channels or between resonances that the LRF=7 formalism carries.
 
 The ledger `shielding.geometry` block and the certificate record, per shielded nuclide, the number density and the
 applied factor for each group with its energy range and resonance count, the effective length, and the resonance
