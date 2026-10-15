@@ -4,6 +4,7 @@
 //! `material.mass_g` and `material.density_g_cm3`. Emitted only when the spec carries a `summary`
 //! section; absence leaves results byte-identical.
 use crate::chain::BRANCHING_TOLERANCE;
+use crate::depletion::StepDepletion;
 use crate::run::{name_of, EV};
 use crate::spec::SummaryOptions;
 use actinv_data::{composition, decay::Nuclide};
@@ -182,20 +183,29 @@ pub struct StepSummary {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub elements: Option<Vec<SummaryElement>>,
     pub dominant: SummaryDominant,
+    /// FISPACT-II DEPLETION table of the initial nuclides; present only when
+    /// `summary.depletion` is true. The run loop fills it, since the rates are not summary inputs.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub depletion: Option<StepDepletion>,
 }
 
 impl StepSummary {
     /// A summary with every optional block present, used only to learn the static JSON shape of
     /// `steps.summary.<key>` paths (see `mesh::maximal_step_out`).
     pub(crate) fn shape_placeholder() -> Self {
-        build(
+        let mut placeholder = build(
             &SummaryOptions::default(),
             &HashMap::new(),
             &[],
             0.0,
             1.0,
             Some(1.0),
-        )
+        );
+        placeholder.depletion = Some(StepDepletion {
+            model: "coupled",
+            nuclides: Vec::new(),
+        });
+        placeholder
     }
 }
 
@@ -506,6 +516,7 @@ pub fn build(
         totals,
         elements,
         dominant,
+        depletion: None,
     }
 }
 

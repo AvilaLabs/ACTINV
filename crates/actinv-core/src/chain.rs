@@ -374,6 +374,24 @@ pub struct RateLedger {
     /// P92 gas: reaction rate of product rows whose MT has no ejectile-table entry (for
     /// example MT 18, fission), keyed by MT. Populated only when gas is enabled.
     pub gas_uncovered: BTreeMap<String, f64>,
+    /// Chain columns whose loss rows are recorded in `loss_rates`. `None` records nothing, so a
+    /// default collapse carries no extra allocation. Set by the opt-in depletion table.
+    pub record_loss_columns: Option<std::collections::BTreeSet<usize>>,
+    /// Per-(target, MT) loss rates under this ledger's flux, in library row order, for the
+    /// columns named in `record_loss_columns`: the exact rates the solver's diagonal carries.
+    pub loss_rates: Vec<LossRate>,
+}
+
+/// One loss row's collapsed rate per atom (1/s) under a group flux, before the step's flux
+/// multiplier. The depletion table splits a nuclide's removal by `mt` from these.
+#[derive(Clone, Copy, Debug, PartialEq)]
+pub struct LossRate {
+    /// Chain column of the target nuclide.
+    pub column: usize,
+    /// Activation-library row of the loss term.
+    pub library_row: usize,
+    pub mt: i32,
+    pub rate_per_s: f64,
 }
 
 #[derive(Clone, Copy, Debug)]
@@ -573,6 +591,18 @@ fn assemble_reaction_rates<L: ReactionLibrary + ?Sized>(
         if r.zap == -1 {
             if rate != 0.0 {
                 trip.push((col, col, -rate));
+                if led
+                    .record_loss_columns
+                    .as_ref()
+                    .is_some_and(|columns| columns.contains(&col))
+                {
+                    led.loss_rates.push(LossRate {
+                        column: col,
+                        library_row: i,
+                        mt: r.mt,
+                        rate_per_s: rate,
+                    });
+                }
             }
             if let Some(derivatives) = derivatives.as_mut() {
                 derivatives.push(ReactionDerivative {

@@ -456,6 +456,41 @@
             "null"
           ],
           "minimum": 0
+        },
+        "statistics": {
+          "description": "opt-in Monte Carlo output tables (sampling_statistics): distribution, input-output and response-response correlations, bootstrap convergence",
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "percentiles": {
+              "type": "array",
+              "items": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 100
+              }
+            },
+            "histogram_bins": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 1000
+            },
+            "correlation_top": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 1000,
+              "default": 10
+            },
+            "bootstrap_resamples": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 2000,
+              "not": {
+                "const": 1
+              },
+              "default": 200
+            }
+          }
         }
       }
     },

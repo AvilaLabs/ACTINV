@@ -9,6 +9,7 @@ pub mod evalspread;
 pub mod fispact_import;
 pub mod inspect;
 pub mod optimize;
+pub mod report;
 pub mod surrogate;
 pub mod twin;
 pub mod twin_waste;

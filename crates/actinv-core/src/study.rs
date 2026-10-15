@@ -157,6 +157,44 @@ pub struct Robustness {
     /// switch it off — the mechanics gate still demonstrates it.
     #[serde(default = "default_true")]
     pub first_order_comparison: bool,
+    /// opt-in Monte Carlo output tables: per-response distribution,
+    /// input-output and response-response correlations, convergence.
+    /// Absent: the record carries none of these keys.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub statistics: Option<SamplingStatistics>,
+}
+
+/// `robustness.statistics`: options for the opt-in sampling output tables.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct SamplingStatistics {
+    /// percentiles in [0, 100], exact order statistics (nearest rank)
+    #[serde(default = "default_stat_percentiles")]
+    pub percentiles: Vec<f64>,
+    /// fixed-width histogram bin count; 0 omits the histogram
+    #[serde(default)]
+    pub histogram_bins: u32,
+    /// parameters kept per response in the input-output table; 0 omits it
+    #[serde(default = "default_correlation_top")]
+    pub correlation_top: u32,
+    /// bootstrap resamples for the std and percentile standard errors;
+    /// 0 omits the convergence diagnostic
+    #[serde(default = "default_bootstrap_resamples")]
+    pub bootstrap_resamples: u32,
+}
+
+pub const MAX_STAT_HISTOGRAM_BINS: u32 = 1000;
+pub const MAX_STAT_CORRELATION_TOP: u32 = 1000;
+pub const MAX_STAT_BOOTSTRAP_RESAMPLES: u32 = 2000;
+
+fn default_stat_percentiles() -> Vec<f64> {
+    crate::sample_stats::DEFAULT_PERCENTILES.to_vec()
+}
+fn default_correlation_top() -> u32 {
+    10
+}
+fn default_bootstrap_resamples() -> u32 {
+    200
 }
 
 /// One user-declared numerical criterion on a response at a cooling time.
@@ -390,6 +428,31 @@ impl Study {
                 && !ch.fission_yields
             {
                 return Err("robustness enables no channel".into());
+            }
+            if let Some(st) = &rb.statistics {
+                if st.percentiles.iter().any(|p| !(0.0..=100.0).contains(p)) {
+                    return Err("robustness.statistics.percentiles must be in [0, 100]".into());
+                }
+                if st.histogram_bins > MAX_STAT_HISTOGRAM_BINS {
+                    return Err(format!(
+                        "robustness.statistics.histogram_bins must be <= \
+                         {MAX_STAT_HISTOGRAM_BINS}"
+                    ));
+                }
+                if st.correlation_top > MAX_STAT_CORRELATION_TOP {
+                    return Err(format!(
+                        "robustness.statistics.correlation_top must be <= \
+                         {MAX_STAT_CORRELATION_TOP}"
+                    ));
+                }
+                if st.bootstrap_resamples == 1
+                    || st.bootstrap_resamples > MAX_STAT_BOOTSTRAP_RESAMPLES
+                {
+                    return Err(format!(
+                        "robustness.statistics.bootstrap_resamples must be 0 or in \
+                         2..={MAX_STAT_BOOTSTRAP_RESAMPLES}"
+                    ));
+                }
             }
         }
         if let Some(rf) = &self.refinement {
@@ -2283,6 +2346,8 @@ struct CovCtx {
     sigma0: Vec<f64>,
     cov: Vec<f64>,
     uncovered: Vec<usize>,
+    /// parameter identity per collapsed row (statistics output only)
+    labels: Vec<Value>,
 }
 
 /// Digest of the study-level configuration a case record is derived
@@ -2294,20 +2359,22 @@ struct CovCtx {
 /// digest a config change would silently reuse stale sample
 /// statistics.
 fn robustness_config_sha(study: &Study, rb: &Robustness) -> String {
-    sha256_hex(
-        serde_json::to_vec(&json!({
-            "samples": rb.samples,
-            "seed": rb.seed,
-            "channels": rb.channels,
-            "covariance": rb.covariance,
-            "responses": rb.responses,
-            "resource_limit_runs": rb.resource_limit_runs,
-            "first_order_comparison": rb.first_order_comparison,
-            "study_responses": study.responses,
-        }))
-        .unwrap_or_default()
-        .as_slice(),
-    )
+    let mut config = json!({
+        "samples": rb.samples,
+        "seed": rb.seed,
+        "channels": rb.channels,
+        "covariance": rb.covariance,
+        "responses": rb.responses,
+        "resource_limit_runs": rb.resource_limit_runs,
+        "first_order_comparison": rb.first_order_comparison,
+        "study_responses": study.responses,
+    });
+    // opt-in tables enter the digest only when declared, so every existing
+    // configuration keeps its digest
+    if let Some(statistics) = &rb.statistics {
+        config["statistics"] = json!(statistics);
+    }
+    sha256_hex(serde_json::to_vec(&config).unwrap_or_default().as_slice())
 }
 
 /// Evaluate ACT-ROBUST-01 for one case: nominal + `samples` perturbed
@@ -2496,7 +2563,33 @@ fn evaluate_robustness_inner(
                 .unwrap_or(1.0)
         };
         let collapsed = cov.collapse_weighted(&lib, phi, &active_rows, &row_scale)?;
+        let labels: Vec<Value> = collapsed
+            .row_indices
+            .iter()
+            .map(|&row| {
+                let descriptor = lib.rows[row];
+                let target = lib_targets
+                    .get(descriptor.target)
+                    .map(|&(za, liso)| crate::run::name_of(za, liso))
+                    .unwrap_or_default();
+                let isomer = if descriptor.lfs > 0 {
+                    format!(":lfs{}", descriptor.lfs)
+                } else {
+                    String::new()
+                };
+                json!({
+                    "channel": "cross_section_mf33",
+                    "name": format!("xs:{target}:MT{}{isomer}", descriptor.mt),
+                    "target": target,
+                    "mt": descriptor.mt,
+                    "product_zap": descriptor.zap,
+                    "product_lfs": descriptor.lfs,
+                    "group": "spectrum-collapsed one-group value",
+                })
+            })
+            .collect();
         cov_ctx = Some(CovCtx {
+            labels,
             rows: collapsed.row_indices,
             sigma0: collapsed.one_group_barns,
             cov: collapsed.covariance_barn2,
@@ -2589,6 +2682,7 @@ fn evaluate_robustness_inner(
     let nominal_vals = response_times(nominal_out, &rb.responses);
     let mut samples_out: Vec<Value> = Vec::new();
     let mut sample_values: Vec<Value> = vec![Value::Null; n as usize];
+    let mut sample_inputs: Vec<Vec<f64>> = vec![Vec::new(); n as usize];
     let mut n_failed = 0usize;
     let mut n_clamped_comp = 0usize;
     let mut n_clamped_xs = 0usize;
@@ -2622,7 +2716,11 @@ fn evaluate_robustness_inner(
     // case-dependent draw count (xs rows, yield pairs) can never shift
     // another channel's stream position, and a joint run reads the same
     // channel streams as an isolated run on the same tag.
+    let track_inputs = rb.statistics.is_some();
     let mut draw = |sample_seed: u64, channels: &RobustChannels, sspec: &mut Spec| {
+        // log of every applied factor, in the layout `labels` names below
+        // (statistics only; empty otherwise)
+        let mut ln_factors: Vec<f64> = Vec::new();
         let stream = |tag: u64| Rng(sample_seed ^ tag);
         // draw stage: consume z's for every study-enabled channel, each
         // from its own tagged stream
@@ -2664,6 +2762,9 @@ fn evaluate_robustness_inner(
         } else {
             1.0
         };
+        if track_inputs && channels.flux_rel_std > 0.0 {
+            ln_factors.push(flux_factor.ln());
+        }
         let comp_factors: BTreeMap<String, f64> = channels
             .composition_rel_std
             .iter()
@@ -2673,6 +2774,9 @@ fn evaluate_robustness_inner(
                 (k.clone(), (-0.5 * s2 + s2.sqrt() * z).exp())
             })
             .collect();
+        if track_inputs {
+            ln_factors.extend(comp_factors.values().map(|f| f.ln()));
+        }
         let mut decay_factors = BTreeMap::new();
         if channels.decay_constants {
             for (((za, liso), _, rel), z) in decay_inputs.iter().zip(decay_z.iter()) {
@@ -2683,7 +2787,13 @@ fn evaluate_robustness_inner(
                 let f = (-0.5 * s2 + s2.sqrt() * z).exp();
                 if !(f.is_finite() && f > 0.0) {
                     n_clamped_decay += 1;
+                    if track_inputs {
+                        ln_factors.push(0.0);
+                    }
                     continue;
+                }
+                if track_inputs {
+                    ln_factors.push(f.ln());
                 }
                 decay_factors.insert(crate::run::name_of(*za, *liso), f);
             }
@@ -2698,7 +2808,13 @@ fn evaluate_robustness_inner(
                 let f = (-0.5 * s2 + s2.sqrt() * z).exp();
                 if !(f.is_finite() && f > 0.0) {
                     n_clamped_yield += 1;
+                    if track_inputs {
+                        ln_factors.push(0.0);
+                    }
                     continue;
+                }
+                if track_inputs {
+                    ln_factors.push(f.ln());
                 }
                 yield_factors.insert(
                     format!(
@@ -2724,7 +2840,13 @@ fn evaluate_robustness_inner(
                     let factor = (delta - 0.5 * xs_rel_diag[i2]).exp();
                     if !(factor.is_finite() && factor > 0.0) {
                         n_clamped_xs += 1;
+                        if track_inputs {
+                            ln_factors.push(0.0);
+                        }
                         continue;
+                    }
+                    if track_inputs {
+                        ln_factors.push(factor.ln());
                     }
                     rate_factors.push((row, factor));
                 }
@@ -2738,7 +2860,7 @@ fn evaluate_robustness_inner(
             &decay_factors,
             &yield_factors,
         );
-        (flux_factor, rate_factors.len())
+        (flux_factor, rate_factors.len(), ln_factors)
     };
 
     let mut draw_samples = |channels: &RobustChannels,
@@ -2746,16 +2868,21 @@ fn evaluate_robustness_inner(
                             seed_tag: u64,
                             keep_outs: bool,
                             outs: &mut Vec<Value>,
-                            aligned: Option<&mut Vec<Value>>|
+                            aligned: Option<&mut Vec<Value>>,
+                            inputs: Option<&mut Vec<Vec<f64>>>|
      -> usize {
         let mut aligned = aligned;
+        let mut inputs = inputs;
         let mut failed = 0usize;
         for i in 0..n {
             let mut sspec = spec.clone();
             let sample_seed =
                 rb.seed ^ seed_tag ^ (i as u64 + 1).wrapping_mul(0x9E37_79B9_7F4A_7C15);
-            let (flux_factor, n_rows) = draw(sample_seed, channels, &mut sspec);
+            let (flux_factor, n_rows, ln_factors) = draw(sample_seed, channels, &mut sspec);
             n_applied_rows = n_applied_rows.max(n_rows);
+            if let Some(iv) = inputs.as_deref_mut() {
+                iv[i as usize] = ln_factors;
+            }
             let spath = cdir.join(format!("{prefix}{i}.json"));
             let stext =
                 serde_json::to_string_pretty(&serde_json::to_value(&sspec).unwrap_or_default())
@@ -2884,6 +3011,7 @@ fn evaluate_robustness_inner(
         true,
         &mut samples_out,
         Some(&mut sample_values),
+        Some(&mut sample_inputs),
     );
 
     // per-response statistics across samples
@@ -2988,6 +3116,7 @@ fn evaluate_robustness_inner(
                 },
                 false,
                 &mut outs,
+                None,
                 None,
             );
             let mut vars = Map::new();
@@ -3220,11 +3349,65 @@ fn evaluate_robustness_inner(
         }
     }
 
+    // --- opt-in Monte Carlo output tables -----------------------------
+    let sampling_statistics: Option<Value> = rb.statistics.as_ref().map(|st| {
+        // parameter identities in the layout `draw` logged the factors in
+        let mut labels: Vec<Value> = Vec::new();
+        if rb.channels.flux_rel_std > 0.0 {
+            labels.push(json!({"channel": "flux", "name": "flux"}));
+        }
+        for element in rb.channels.composition_rel_std.keys() {
+            labels.push(json!({
+                "channel": "composition",
+                "name": format!("composition:{element}"),
+                "element": element,
+            }));
+        }
+        for ((_, _, rel), name) in decay_inputs.iter().zip(&decay_names) {
+            if *rel > 0.0 {
+                labels.push(json!({
+                    "channel": "decay_constants",
+                    "name": format!("decay:{name}"),
+                    "nuclide": name,
+                }));
+            }
+        }
+        for ((_, _, rel), name) in yield_inputs.iter().zip(&yield_names) {
+            if *rel > 0.0 {
+                labels.push(json!({
+                    "channel": "fission_yields",
+                    "name": format!("yield:{name}"),
+                    "edge": name,
+                }));
+            }
+        }
+        if let Some(ctx) = cov_ctx
+            .as_ref()
+            .filter(|_| xs_correlated && rb.channels.cross_section_mf33)
+        {
+            for (i2, label) in ctx.labels.iter().enumerate() {
+                if ctx.sigma0[i2] > 0.0 {
+                    labels.push(label.clone());
+                }
+            }
+        }
+        sampling_statistics_block(
+            rb.seed,
+            &rb.responses,
+            st,
+            &nominal_vals,
+            &sample_values,
+            &sample_inputs,
+            &labels,
+            &local_vs_nonlinear,
+        )
+    });
+
     let (covered_rows, uncovered_rows) = cov_ctx
         .as_ref()
         .map(|c| (c.rows.len(), c.uncovered.clone()))
         .unwrap_or_default();
-    Ok(json!({
+    let mut record = json!({
         "local_vs_nonlinear": local_vs_nonlinear,
         "channel_attribution": attribution,
         "pathway_view": pathway_view,
@@ -3282,7 +3465,188 @@ fn evaluate_robustness_inner(
         "sample_values": sample_values,
         "sample_artifacts": sample_digests,
         "semantics": "sample spread is a sensitivity over the declared input distributions — not a domain bound or an evaluation comparison; sampling error, covered uncertainty, missing covariance and failures are reported separately",
-    }))
+    });
+    if let Some(block) = sampling_statistics {
+        record["sampling_statistics"] = block;
+    }
+    Ok(record)
+}
+
+/// Tag mixed into the bootstrap seed so its stream never coincides with a sampling stream.
+const STAT_BOOTSTRAP_TAG: u64 = 0xB007_57A9_0000_0001;
+
+/// The opt-in `sampling_statistics` block: per-(response, time) distribution summary,
+/// bootstrap convergence of the sampled std and percentiles, the first-order std when the run
+/// computed it, input-output correlations, and the response-response Pearson matrix.
+/// `sample_values[i]` is null for a failed sample; `sample_inputs[i]` holds that sample's
+/// log-factors in the order of `labels`. Deterministic given its arguments.
+#[allow(clippy::too_many_arguments)]
+fn sampling_statistics_block(
+    seed: u64,
+    responses: &[String],
+    st: &SamplingStatistics,
+    times: &BTreeMap<String, Vec<(f64, String, f64)>>,
+    sample_values: &[Value],
+    sample_inputs: &[Vec<f64>],
+    labels: &[Value],
+    local_vs_nonlinear: &Value,
+) -> Value {
+    use crate::sample_stats as ss;
+    let n = sample_values.len();
+    let pkey = |p: f64| format!("{p}");
+    let pct_map = |pairs: &[(f64, f64)]| -> Value {
+        Value::Object(pairs.iter().map(|&(p, v)| (pkey(p), json!(v))).collect())
+    };
+    let layout_ok =
+        sample_inputs.len() == n && sample_inputs.iter().all(|r| r.len() == labels.len());
+    let ranked = (layout_ok && st.correlation_top > 0 && !labels.is_empty()).then(|| {
+        ss::RankedInputs::new(
+            (0..labels.len())
+                .map(|j| sample_inputs.iter().map(|r| r[j]).collect())
+                .collect(),
+        )
+    });
+
+    let mut series_labels: Vec<String> = Vec::new();
+    let mut series: Vec<Vec<Option<f64>>> = Vec::new();
+    let mut by_response = Map::new();
+    let mut counter = 0u64;
+    for response in responses {
+        let mut per_time = Map::new();
+        for (_, tkey, _) in times.get(response).map(Vec::as_slice).unwrap_or_default() {
+            let y: Vec<Option<f64>> = sample_values
+                .iter()
+                .map(|o| sample_response(o, tkey, response).filter(|v| v.is_finite()))
+                .collect();
+            let vals: Vec<f64> = y.iter().flatten().copied().collect();
+            counter += 1;
+            let mut entry = Map::new();
+
+            let summary = ss::summarize(&vals, &st.percentiles);
+            let mut dist = Map::new();
+            dist.insert("n".into(), json!(vals.len()));
+            if let Some(s) = &summary {
+                dist.insert("mean".into(), json!(s.mean));
+                dist.insert("std".into(), json!(s.std));
+                dist.insert("skewness".into(), json!(s.skewness));
+                dist.insert("min".into(), json!(s.min));
+                dist.insert("max".into(), json!(s.max));
+                dist.insert("percentiles".into(), pct_map(&s.percentiles));
+                if st.histogram_bins > 0 {
+                    if let Some(h) = ss::histogram(&vals, st.histogram_bins as usize) {
+                        dist.insert(
+                            "histogram".into(),
+                            json!({"bin_edges": h.edges, "counts": h.counts}),
+                        );
+                    }
+                }
+            }
+            entry.insert("distribution".into(), Value::Object(dist));
+
+            let sampled_std = summary.as_ref().map(|s| s.std).filter(|v| v.is_finite());
+            let mut std_se = None;
+            if st.bootstrap_resamples > 0 {
+                let boot_seed =
+                    seed ^ STAT_BOOTSTRAP_TAG ^ counter.wrapping_mul(0x9E37_79B9_7F4A_7C15);
+                let conv = match ss::bootstrap_se(
+                    &vals,
+                    &st.percentiles,
+                    st.bootstrap_resamples as usize,
+                    boot_seed,
+                ) {
+                    Some(b) => {
+                        std_se = Some(b.std_se);
+                        json!({
+                            "method": "nonparametric bootstrap, fixed seed",
+                            "resamples": b.resamples,
+                            "std_standard_error": b.std_se,
+                            "std_relative_standard_error":
+                                sampled_std.filter(|s| *s > 0.0).map(|s| b.std_se / s),
+                            "percentile_standard_error": pct_map(&b.percentile_se),
+                        })
+                    }
+                    None => json!({"status": "insufficient_samples"}),
+                };
+                entry.insert("convergence".into(), conv);
+            }
+
+            // the linear prediction, when the run computed one for this response and time
+            let first_order = local_vs_nonlinear["comparisons"][response.as_str()][tkey.as_str()]
+                ["first_order_std"]
+                .as_f64();
+            entry.insert(
+                "first_order".into(),
+                match (first_order, sampled_std) {
+                    (Some(l), Some(smp)) => json!({
+                        "std": l,
+                        "sampled_std": smp,
+                        "sampled_over_first_order": (l > 0.0).then(|| smp / l),
+                        "deviation_in_std_standard_errors":
+                            std_se.filter(|e| *e > 0.0).map(|e| (smp - l) / e),
+                    }),
+                    _ => Value::Null,
+                },
+            );
+
+            if let Some(r) = &ranked {
+                let ok: Vec<usize> = (0..n).filter(|&i| y[i].is_some()).collect();
+                let all = if ok.len() == n {
+                    r.correlate(&vals)
+                } else {
+                    r.subset(&ok).correlate(&vals)
+                };
+                let top = ss::top_correlations(&all, st.correlation_top as usize);
+                let rows: Vec<Value> = top
+                    .iter()
+                    .map(|c| {
+                        json!({
+                            "parameter": labels[c.parameter],
+                            "pearson": c.pearson,
+                            "spearman": c.spearman,
+                        })
+                    })
+                    .collect();
+                entry.insert(
+                    "input_correlations".into(),
+                    json!({
+                        "ranked_by": "abs_spearman",
+                        "n_pairs": ok.len(),
+                        "n_parameters": labels.len(),
+                        "n_constant_parameters": all.iter().filter(|c| c.is_none()).count(),
+                        "top": rows,
+                    }),
+                );
+            }
+
+            series_labels.push(format!("{response}@{tkey}"));
+            series.push(y);
+            per_time.insert(tkey.clone(), Value::Object(entry));
+        }
+        by_response.insert(response.clone(), Value::Object(per_time));
+    }
+
+    let matrix: Vec<Vec<Value>> = ss::pearson_matrix(&series)
+        .into_iter()
+        .map(|row| row.into_iter().map(|v| json!(v)).collect())
+        .collect();
+    json!({
+        "samples": n,
+        "samples_succeeded": sample_values.iter().filter(|v| !v.is_null()).count(),
+        "input_parameters": labels.len(),
+        "definitions": {
+            "percentile": "exact order statistic (nearest rank): the smallest sample value x_(k) with k/n >= p/100, k = max(1, ceil(n*p/100)); no interpolation",
+            "std": "unbiased sample standard deviation (divisor n-1), two-pass",
+            "skewness": "moment skewness m3/m2^1.5 with population central moments (divisor n)",
+            "input": "natural log of the applied multiplicative factor (flux and composition factors are the draws before composition renormalization); parameters constant over the sample are omitted",
+            "pearson_spearman": "Pearson on the values and on average ranks (ties share the mean rank) over the samples where the response is defined",
+        },
+        "responses": by_response,
+        "response_correlation": {
+            "method": "Pearson over the samples where both responses are defined; null when undefined",
+            "labels": series_labels,
+            "pearson": matrix,
+        },
+    })
 }
 
 /// First-order MF=33 standard uncertainty for a declared robustness
@@ -3855,5 +4219,259 @@ mod robustness_tests {
         // ensure the rate_scale check itself accepts a positive factor
         let err = spec.validate().unwrap_err();
         assert!(!err.contains("rate_scale"), "{err}");
+    }
+}
+
+#[cfg(test)]
+mod sampling_statistics_tests {
+    use super::*;
+
+    const RESP: &str = "total_activity_bq_per_g";
+
+    fn study_json(statistics: Option<Value>) -> Value {
+        let mut v = json!({
+            "study": "actinv-study-1",
+            "study_id": "t",
+            "library": {"path": "lib.npz"},
+            "decay": {"primary": "d.dat"},
+            "cases": {
+                "materials": [{"name": "a", "composition": {"Fe": 100.0}}],
+                "spectra": [{"name": "s", "flux_per_group": [1.0]}],
+                "schedules": [{"name": "p", "steps": [{"dt": "5 s", "flux": 1.0}]}]
+            },
+            "responses": [RESP],
+            "robustness": {
+                "samples": 4,
+                "seed": 7,
+                "channels": {"flux_rel_std": 0.05},
+                "responses": [RESP]
+            }
+        });
+        if let Some(st) = statistics {
+            v["robustness"]["statistics"] = st;
+        }
+        v
+    }
+
+    fn study_with(statistics: Option<Value>) -> Study {
+        serde_json::from_value(study_json(statistics)).unwrap()
+    }
+
+    #[test]
+    fn statistics_defaults_and_validation() {
+        let s = study_with(Some(json!({})));
+        s.validate().unwrap();
+        let st = s.robustness.unwrap().statistics.unwrap();
+        assert_eq!(st.percentiles, vec![2.5, 5.0, 16.0, 50.0, 84.0, 95.0, 97.5]);
+        assert_eq!(
+            (
+                st.histogram_bins,
+                st.correlation_top,
+                st.bootstrap_resamples
+            ),
+            (0, 10, 200)
+        );
+        for bad in [
+            json!({"percentiles": [101.0]}),
+            json!({"percentiles": [-1.0]}),
+            json!({"histogram_bins": MAX_STAT_HISTOGRAM_BINS + 1}),
+            json!({"correlation_top": MAX_STAT_CORRELATION_TOP + 1}),
+            json!({"bootstrap_resamples": 1}),
+            json!({"bootstrap_resamples": MAX_STAT_BOOTSTRAP_RESAMPLES + 1}),
+        ] {
+            let err = study_with(Some(bad)).validate().unwrap_err();
+            assert!(err.contains("robustness.statistics"), "{err}");
+        }
+        // bootstrap 0 and top 0 switch the pieces off and are valid
+        study_with(Some(
+            json!({"bootstrap_resamples": 0, "correlation_top": 0}),
+        ))
+        .validate()
+        .unwrap();
+        let unknown = serde_json::from_value::<Study>(study_json(Some(json!({"bogus": 1}))));
+        assert!(unknown.unwrap_err().to_string().contains("bogus"));
+    }
+
+    #[test]
+    fn default_off_adds_no_keys_and_keeps_the_digest() {
+        let s = study_with(None);
+        let rb = s.robustness.as_ref().unwrap();
+        // the serialized block has no `statistics` key at all
+        assert!(serde_json::to_value(rb)
+            .unwrap()
+            .get("statistics")
+            .is_none());
+        // the config digest is exactly the pre-existing one
+        let legacy = sha256_hex(
+            serde_json::to_vec(&json!({
+                "samples": rb.samples,
+                "seed": rb.seed,
+                "channels": rb.channels,
+                "covariance": rb.covariance,
+                "responses": rb.responses,
+                "resource_limit_runs": rb.resource_limit_runs,
+                "first_order_comparison": rb.first_order_comparison,
+                "study_responses": s.responses,
+            }))
+            .unwrap()
+            .as_slice(),
+        );
+        assert_eq!(robustness_config_sha(&s, rb), legacy);
+        // declaring the tables changes the digest, so a stale block is never resumed
+        let with = study_with(Some(json!({})));
+        let rbw = with.robustness.as_ref().unwrap();
+        assert_ne!(robustness_config_sha(&with, rbw), legacy);
+        let other = study_with(Some(json!({"histogram_bins": 5})));
+        assert_ne!(
+            robustness_config_sha(&other, other.robustness.as_ref().unwrap()),
+            robustness_config_sha(&with, rbw)
+        );
+    }
+
+    type Fixture = (
+        BTreeMap<String, Vec<(f64, String, f64)>>,
+        Vec<Value>,
+        Vec<Vec<f64>>,
+        Vec<Value>,
+    );
+
+    /// Eight samples: the activity is 10 exp(x0) (monotone in parameter 0, unrelated to
+    /// parameter 1) and the heat response is its exact negative.
+    fn fixture() -> Fixture {
+        let x0 = [-1.5, -1.0, -0.5, 0.0, 0.5, 1.0, 1.5, 2.0];
+        let x1 = [3.0, 1.0, 4.0, 1.5, 5.0, 9.0, 2.0, 6.0];
+        let times = BTreeMap::from([
+            (RESP.to_string(), vec![(3600.0, "3600".to_string(), 10.0)]),
+            (
+                "decay_heat_w_per_g".to_string(),
+                vec![(3600.0, "3600".to_string(), 1.0)],
+            ),
+        ]);
+        let values: Vec<Value> = x0
+            .iter()
+            .map(|x| {
+                json!({"3600": {
+                    RESP: 10.0 * f64::exp(*x),
+                    "decay_heat_w_per_g": -10.0 * f64::exp(*x),
+                }})
+            })
+            .collect();
+        let inputs: Vec<Vec<f64>> = x0.iter().zip(&x1).map(|(a, b)| vec![*a, *b]).collect();
+        let labels = vec![
+            json!({"channel": "flux", "name": "flux"}),
+            json!({"channel": "composition", "name": "composition:Fe", "element": "Fe"}),
+        ];
+        (times, values, inputs, labels)
+    }
+
+    fn opts(v: Value) -> SamplingStatistics {
+        serde_json::from_value(v).unwrap()
+    }
+
+    fn block(
+        seed: u64,
+        fx: &Fixture,
+        values: &[Value],
+        st: &SamplingStatistics,
+        lvn: &Value,
+    ) -> Value {
+        let responses = vec![RESP.to_string(), "decay_heat_w_per_g".to_string()];
+        sampling_statistics_block(seed, &responses, st, &fx.0, values, &fx.2, &fx.3, lvn)
+    }
+
+    #[test]
+    fn block_distribution_correlation_and_determinism() {
+        let fx = fixture();
+        let st = opts(json!({"histogram_bins": 4, "bootstrap_resamples": 32}));
+        let a = block(7, &fx, &fx.1, &st, &Value::Null);
+        assert_eq!(
+            a,
+            block(7, &fx, &fx.1, &st, &Value::Null),
+            "fixed seed repeats"
+        );
+
+        assert_eq!(a["samples"], 8);
+        assert_eq!(a["samples_succeeded"], 8);
+        assert_eq!(a["input_parameters"], 2);
+        let e = &a["responses"][RESP]["3600"];
+        let d = &e["distribution"];
+        assert_eq!(d["n"], 8);
+        // x0 runs -1.5..2 in steps of 0.5, so y = 10 exp(x0) is already ascending
+        assert_eq!(d["min"], 10.0 * f64::exp(-1.5));
+        assert_eq!(d["max"], 10.0 * f64::exp(2.0));
+        assert_eq!(d["percentiles"]["50"], 10.0); // k = ceil(8 * 0.5) = 4, x0 = 0
+        assert_eq!(d["percentiles"]["2.5"], d["min"]); // k = 1
+        assert_eq!(d["percentiles"]["97.5"], d["max"]); // k = ceil(7.8) = 8
+        assert!(d["skewness"].as_f64().unwrap() > 0.0); // exp is right-skewed
+        let counts: u64 = d["histogram"]["counts"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .map(|c| c.as_u64().unwrap())
+            .sum();
+        assert_eq!(counts, 8);
+        assert_eq!(d["histogram"]["bin_edges"].as_array().unwrap().len(), 5);
+
+        // the response is a monotone function of parameter 0: Spearman exactly 1
+        let ic = &e["input_correlations"];
+        assert_eq!(ic["ranked_by"], "abs_spearman");
+        assert_eq!(ic["n_pairs"], 8);
+        assert_eq!(ic["top"][0]["parameter"]["name"], "flux");
+        assert!((ic["top"][0]["spearman"].as_f64().unwrap() - 1.0).abs() < 1e-12);
+        assert!(ic["top"][0]["pearson"].as_f64().unwrap() < 1.0);
+        assert_eq!(ic["top"][1]["parameter"]["name"], "composition:Fe");
+
+        // the heat response is the exact negative: perfectly anti-correlated
+        let rc = &a["response_correlation"];
+        assert_eq!(rc["labels"][0], format!("{RESP}@3600"));
+        assert!((rc["pearson"][0][1].as_f64().unwrap() + 1.0).abs() < 1e-12);
+        assert!((rc["pearson"][0][0].as_f64().unwrap() - 1.0).abs() < 1e-12);
+
+        // convergence is present and positive; no first-order run was available
+        let c = &e["convergence"];
+        assert_eq!(c["resamples"], 32);
+        assert!(c["std_standard_error"].as_f64().unwrap() > 0.0);
+        assert!(c["percentile_standard_error"]["95"].as_f64().unwrap() >= 0.0);
+        assert!(e["first_order"].is_null());
+
+        // a different seed moves the bootstrap but not the sample statistics
+        let b = block(8, &fx, &fx.1, &st, &Value::Null);
+        assert_eq!(b["responses"][RESP]["3600"]["distribution"], *d);
+        assert_ne!(b["responses"][RESP]["3600"]["convergence"], *c);
+    }
+
+    #[test]
+    fn block_optional_pieces_and_failed_samples() {
+        let fx = fixture();
+        let mut values = fx.1.clone();
+        values[2] = Value::Null; // a failed sample
+        let st = opts(json!({"bootstrap_resamples": 0, "correlation_top": 1}));
+        let lvn = json!({"comparisons": {RESP: {"3600": {"first_order_std": 5.0}}}});
+        let a = block(1, &fx, &values, &st, &lvn);
+        assert_eq!(a["samples_succeeded"], 7);
+        let e = &a["responses"][RESP]["3600"];
+        assert_eq!(e["distribution"]["n"], 7);
+        assert!(e["distribution"].get("histogram").is_none());
+        assert!(
+            e.get("convergence").is_none(),
+            "bootstrap 0 omits the diagnostic"
+        );
+        // correlations use the 7 complete pairs and honor `top`
+        assert_eq!(e["input_correlations"]["n_pairs"], 7);
+        assert_eq!(e["input_correlations"]["top"].as_array().unwrap().len(), 1);
+        // the linear prediction sits next to the sampled std
+        let fo = &e["first_order"];
+        assert_eq!(fo["std"], 5.0);
+        let smp = e["distribution"]["std"].as_f64().unwrap();
+        assert_eq!(fo["sampled_std"].as_f64().unwrap(), smp);
+        assert!((fo["sampled_over_first_order"].as_f64().unwrap() - smp / 5.0).abs() < 1e-12);
+        assert!(fo["deviation_in_std_standard_errors"].is_null());
+
+        // top 0 omits the input table entirely
+        let off = opts(json!({"correlation_top": 0}));
+        let b = block(1, &fx, &values, &off, &Value::Null);
+        assert!(b["responses"][RESP]["3600"]
+            .get("input_correlations")
+            .is_none());
     }
 }

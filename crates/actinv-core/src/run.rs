@@ -3,6 +3,7 @@
 use crate::chain::{self, RateLedger};
 use crate::cram::{step as cram_step, step_with_tangents, Cram};
 use crate::damage::{DamageStepOut, PreparedDamageTable};
+use crate::depletion::{DepletionTracker, LossCovariance, Tracked};
 use crate::fission_count::{self, FissionStepOut};
 use crate::gas;
 use crate::photon::{self, PhotonDiagnostics, PhotonResponse, PhotonSourceOut};
@@ -193,6 +194,9 @@ pub struct StepOut {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub power: Option<PowerStepOut>,
 }
+/// A trace-mode pathway source: (product row fed, rate at unit multiplier, bulk nuclide it came from).
+type PathwaySource = (usize, f64, (i32, i32));
+
 #[derive(serde::Serialize)]
 pub struct Pathway {
     pub from: String,
@@ -3801,6 +3805,25 @@ impl PreparedRun {
             }
         }
         let mut led = RateLedger::default();
+        // FISPACT-II DEPLETION: the initial nuclides the table follows, and the loss rows the
+        // rate assembly records for them (the solver's own collapsed rates; nothing is
+        // recomputed). Present only when `summary.depletion` is true.
+        let want_depletion = spec
+            .summary
+            .as_ref()
+            .is_some_and(|options| options.depletion);
+        let depletion_columns: Vec<(usize, (i32, i32), f64)> = if want_depletion {
+            bulk_inv
+                .iter()
+                .filter(|(_, atoms)| **atoms > 0.0)
+                .filter_map(|(&key, &atoms)| ch.index.get(&key).map(|&column| (column, key, atoms)))
+                .collect()
+        } else {
+            Vec::new()
+        };
+        if want_depletion {
+            led.record_loss_columns = Some(depletion_columns.iter().map(|c| c.0).collect());
+        }
         let rate_scales: Option<std::collections::HashMap<usize, f64>> = spec
             .options
             .rate_scale
@@ -4143,6 +4166,8 @@ impl PreparedRun {
             self.step_libraries.iter().map(|_| None).collect();
         // Per-atom fission rates under each override spectrum, for the opt-in fission count.
         let mut fission_rates_extra: Vec<BTreeMap<usize, f64>> = Vec::new();
+        // Loss rates of the depletion table's nuclides under each override spectrum.
+        let mut loss_rates_extra: Vec<Vec<chain::LossRate>> = Vec::new();
         for (extra_phi, extra_slot) in extra_spectra.iter().zip(&extra_libraries) {
             let (extra_lib, extra_targets): (&ActivationLibrary, &[(i32, i32)]) = match extra_slot {
                 Some(slot) => (
@@ -4153,7 +4178,10 @@ impl PreparedRun {
             };
             // a throwaway ledger per extra collapse: the base ledger already
             // recorded the channel universe; these calls only differ in phi
-            let mut scratch = RateLedger::default();
+            let mut scratch = RateLedger {
+                record_loss_columns: led.record_loss_columns.clone(),
+                ..RateLedger::default()
+            };
             if spec.uncertainty.is_some() {
                 let assembly = chain::reaction_rates_with_derivatives(
                     extra_lib,
@@ -4195,6 +4223,7 @@ impl PreparedRun {
                 ));
             }
             fission_rates_extra.push(std::mem::take(&mut scratch.fission_rate_per_atom));
+            loss_rates_extra.push(std::mem::take(&mut scratch.loss_rates));
             if let Some(slot) = extra_slot {
                 if step_library_ledgers[*slot].is_none() {
                     step_library_ledgers[*slot] = Some(scratch);
@@ -4421,7 +4450,7 @@ impl PreparedRun {
         let mut unit_origin_react: Vec<Vec<(usize, usize, f64)>> = Vec::new();
         // (product row fed, rate at unit multiplier, bulk nuclide it came from), one list per spectrum
         // in rsubs order (0 = base, 1.. = step overrides)
-        let mut sources: Vec<Vec<(usize, f64, (i32, i32))>> = Vec::new();
+        let mut sources: Vec<Vec<PathwaySource>> = Vec::new();
         let mut d_src: Vec<(usize, usize, f64)> = Vec::new();
         // r_srcs[0] is the base spectrum; one entry per distinct step override follows
         let mut r_srcs: Vec<Vec<(usize, usize, f64)>> = Vec::new();
@@ -4476,7 +4505,7 @@ impl PreparedRun {
                 std::iter::once(&react).chain(react_extra.iter()).collect();
             for (si_react, react_i) in reacts.iter().enumerate() {
                 let mut r_i: Vec<(usize, usize, f64)> = Vec::new();
-                let mut sources_i: Vec<(usize, f64, (i32, i32))> = Vec::new();
+                let mut sources_i: Vec<PathwaySource> = Vec::new();
                 let mut origin_i: Vec<(usize, usize, f64)> = Vec::new();
                 for (r, c, v) in react_i.iter() {
                     if bulk.contains_key(c) {
@@ -4835,6 +4864,8 @@ impl PreparedRun {
                     &input,
                 )
             };
+        // The collapsed MF=33 covariance of the depletion table's loss rows.
+        let mut depletion_covariance: Option<LossCovariance> = None;
         let mut uncertainty_runtime = match (&self.covariance, &spec.uncertainty) {
             (Some(prepared), Some(options)) => {
                 // Union of rows active under any step spectrum: a row's tangent
@@ -5179,6 +5210,21 @@ impl PreparedRun {
                     propagated_parameter_positions
                         .push(xs_count + decay_parameters.len() + yield_parameters.len() + i);
                 }
+                // The depletion table's loss rows take their covariance from the same collapse
+                // (flux weights, shielding scales and ADCROSS rescaling included).
+                if want_depletion {
+                    let tracked_columns: BTreeSet<usize> =
+                        depletion_columns.iter().map(|c| c.0).collect();
+                    depletion_covariance =
+                        Some(LossCovariance::from_collapsed(&collapsed, |row| {
+                            let descriptor = lib.rows()[row];
+                            descriptor.zap == -1
+                                && lib_targets
+                                    .get(descriptor.target)
+                                    .and_then(|key| ch.index.get(key))
+                                    .is_some_and(|column| tracked_columns.contains(column))
+                        }));
+                }
                 // Restricted runs contract the quadratic form over nonzero
                 // covariance entries only — MF=33 blocks are block-sparse, so
                 // on wide-coverage chains this replaces a covered^2 scan per
@@ -5299,6 +5345,38 @@ impl PreparedRun {
         }
 
         let solve_started = profiler.start();
+        // ---- depletion table (opt-in): trace mode holds the reservoir constant, so it is depleted
+        // analytically from the same rates; coupled mode reads the evolved populations.
+        let depletion_with_covariance = depletion_covariance.is_some();
+        let mut depletion = want_depletion.then(|| {
+            let tracked: Vec<Tracked> = depletion_columns
+                .iter()
+                .map(|&(column, key, atoms)| {
+                    let relative = decay_relative_overrides.get(&key).copied().or_else(|| {
+                        self.nuclides
+                            .get(&key)
+                            .filter(|nuclide| nuclide.half_life > 0.0)
+                            .map(|nuclide| nuclide.d_half_life / nuclide.half_life)
+                    });
+                    Tracked {
+                        key,
+                        column,
+                        initial_atoms: atoms,
+                        lambda: lambda_eff[column],
+                        lambda_relative: relative.filter(|relative| *relative > 0.0),
+                    }
+                })
+                .collect();
+            let mut slot_rates = vec![std::mem::take(&mut led.loss_rates)];
+            slot_rates.append(&mut loss_rates_extra);
+            DepletionTracker::new(
+                mode == "trace",
+                spec.projectile.is_neutron(),
+                tracked,
+                slot_rates,
+                depletion_covariance,
+            )
+        });
         // ---- solve
         let c = cram(spec.options.cram_order);
         let alternate_c = spec.uncertainty.as_ref().map(|_| {
@@ -5837,7 +5915,7 @@ impl PreparedRun {
             // atoms, reads non-bulk states directly and leaves other bulk states at their constant
             // atoms). The leakage, unit and removal sinks are not nuclide states, so `ch.keys`
             // excludes them by construction; bulk nuclides absent from the chain keep their bulk atoms.
-            let step_summary = match &spec.summary {
+            let mut step_summary = match &spec.summary {
                 Some(options) => {
                     let state_atoms = |g: usize, key: (i32, i32)| -> f64 {
                         let mut atoms = bulk_inv.get(&key).copied().unwrap_or(0.0);
@@ -5890,6 +5968,11 @@ impl PreparedRun {
                 }
                 None => None,
             };
+            if let (Some(tracker), Some(summary)) = (depletion.as_mut(), step_summary.as_mut()) {
+                let slot = step_spectrum_id[si].map_or(0, |id| id + 1);
+                summary.depletion =
+                    Some(tracker.step(slot, fl.get(), dt.get(), &|column| atoms_of(column, &y)));
+            }
             let uncertainty = match (&uncertainty_runtime, &spec.uncertainty) {
                 (Some(runtime), Some(options)) => {
                     // P72/P77: a declared unmodeled source resolves to the
@@ -6860,6 +6943,20 @@ impl PreparedRun {
             if !override_ledger.is_empty() {
                 object.insert("overrides".into(), serde_json::json!(override_ledger));
             }
+            if want_depletion {
+                object.insert(
+                    "depletion".into(),
+                    serde_json::json!({
+                        "requested": true,
+                        "model": if mode == "trace" { "trace_analytic" } else { "coupled" },
+                        "nuclides": depletion_columns.len(),
+                        "initial_nuclides_absent_from_decay_library":
+                            absent.iter().map(|(z, l)| format!("{z}_{l}")).collect::<Vec<_>>(),
+                        "rate_source": "the solver's collapsed loss rows times the flux multiplier",
+                        "uncertainty": if depletion_with_covariance { "mf33" } else { "none" },
+                    }),
+                );
+            }
             if has_partition {
                 object.insert(
                     "partition".into(),
@@ -7453,6 +7550,16 @@ impl PreparedRun {
         });
         // Opt-in photon components are recorded only when requested, so default certificates
         // keep their bytes.
+        if want_depletion {
+            certificate["depletion"] = serde_json::json!({
+                "formula": "removal per atom = lambda + sum of loss rows (sigma phi multiplier)",
+                "uncertainty": if depletion_with_covariance {
+                    "sqrt(w^T C w) of the MF=33 covariance, w = sigma_g phi_g / sum(sigma phi)"
+                } else {
+                    "none (no MF=33 covariance in this run)"
+                },
+            });
+        }
         if let Some(point) = &spec.photon.point_source {
             certificate["photon"]["point_source"] = serde_json::json!({
                 "formula": "FISPACT-II manual Eq. 63: D = C sum_i mu_a(E_i) exp(-mu(E_i) r) m_s S(E_i) / (4 pi r^2), group centroids, no build-up",
@@ -9581,6 +9688,396 @@ mod step_library_tests {
             error.contains("cannot be combined with options.gas"),
             "{error}"
         );
+    }
+
+    #[test]
+    fn depletion_table_follows_each_steps_own_library() {
+        let mut spec = spec_json(true);
+        spec.summary = Some(crate::spec::SummaryOptions {
+            depletion: true,
+            ..Default::default()
+        });
+        let result = solve(&spec, &prepared(true)).expect("switching run succeeds");
+        let removal = |step: usize| {
+            let table = result.steps[step]
+                .summary
+                .as_ref()
+                .and_then(|summary| summary.depletion.as_ref())
+                .expect("depletion table is present");
+            assert_eq!(table.nuclides.len(), 1);
+            assert_eq!(table.nuclides[0].nuclide, "Fe56");
+            table.nuclides[0].removal_rate_per_s
+        };
+        // library A under the base spectrum, library B under its own, then flux off
+        close(removal(0), RATE_A);
+        close(removal(1), RATE_B);
+        assert_eq!(removal(2), 0.0);
+    }
+}
+
+/// FISPACT-II DEPLETION table on a synthetic chain run through the full per-step solve. The
+/// radioactive target Fe56 (lambda 0.25 s^-1) has two reactions, MT102 at 1 b and MT16 at 2 b, so
+/// under a 5e23 flux the channels remove it at 0.5 and 1.0 s^-1 and every product is stable; the
+/// target is fed by nothing, so its population is the exact exponential of the total removal.
+#[cfg(test)]
+mod depletion_prepared_tests {
+    use super::*;
+    use std::collections::HashSet;
+
+    const TARGET: (i32, i32) = (26_056, 0);
+    const DAUGHTER: (i32, i32) = (27_056, 0);
+    const CAPTURE_PRODUCT: (i32, i32) = (26_057, 0);
+    const N2N_PRODUCT: (i32, i32) = (26_055, 0);
+    const LAMBDA: f64 = 0.25;
+    const RATE_CAPTURE: f64 = 0.5;
+    const RATE_N2N: f64 = 1.0;
+    const N0: f64 = 1.0e20;
+
+    fn stand_in(za: (i32, i32), half_life: f64) -> decay::Nuclide {
+        let mut nuclide = decay::Nuclide {
+            mat: 0,
+            za: za.0,
+            awr: (za.0 % 1000) as f64,
+            liso: za.1,
+            nst: if half_life > 0.0 { 0 } else { 1 },
+            half_life,
+            d_half_life: 0.0,
+            energies: Vec::new(),
+            modes: Vec::new(),
+            spectra: Vec::new(),
+        };
+        if half_life > 0.0 {
+            // beta-minus decay (RTYP 1.0) to the daughter, the whole branching
+            nuclide.modes.push(decay::Mode {
+                rtyp: 1.0,
+                rfs: 0.0,
+                q: 0.0,
+                dq: 0.0,
+                br: 1.0,
+                dbr: 0.0,
+            });
+        }
+        nuclide
+    }
+
+    fn library() -> library::Library {
+        let row = |mt: i32, zap: i32, lfs: i32| library::Row {
+            target: 0,
+            mt,
+            zap,
+            lfs,
+            lmf: if zap == -1 { 0 } else { -1 },
+        };
+        let mut sig = Vec::new();
+        sig.extend([1.0; 8]); // MT102 loss row and product row
+        sig.extend([2.0; 8]); // MT16 loss row and product row
+        library::Library {
+            rows: vec![
+                row(102, -1, -1),
+                row(102, CAPTURE_PRODUCT.0, 0),
+                row(16, -1, -1),
+                row(16, N2N_PRODUCT.0, 0),
+            ],
+            sig,
+            ngroups: 4,
+            bounds: vec![1.0, 2.0, 3.0, 4.0, 5.0],
+        }
+    }
+
+    fn prepared(radioactive: bool) -> PreparedRun {
+        let nuclides: HashMap<(i32, i32), decay::Nuclide> = HashMap::from([
+            (
+                TARGET,
+                stand_in(
+                    TARGET,
+                    if radioactive {
+                        std::f64::consts::LN_2 / LAMBDA
+                    } else {
+                        0.0
+                    },
+                ),
+            ),
+            (DAUGHTER, stand_in(DAUGHTER, 0.0)),
+            (CAPTURE_PRODUCT, stand_in(CAPTURE_PRODUCT, 0.0)),
+            (N2N_PRODUCT, stand_in(N2N_PRODUCT, 0.0)),
+        ]);
+        let chain = chain::build(&nuclides);
+        PreparedRun {
+            library_path: "synthetic.npz".into(),
+            library_sha_declared: None,
+            library_sha: "0".repeat(64),
+            index_path: "synthetic_index.json".into(),
+            index_sha: "0".repeat(64),
+            index: serde_json::json!({}),
+            library: ActivationLibrary::Dense(library()),
+            library_targets: vec![TARGET],
+            decay_primary: "synthetic.dat".into(),
+            decay_primary_sha: "0".repeat(64),
+            decay_fallback: None,
+            decay_fallback_sha: None,
+            decay_overrides_sha: None,
+            decay_overrides_applied: Vec::new(),
+            nuclides,
+            decay_fallback_keys: HashSet::new(),
+            chain,
+            gas_missing_light_states: Vec::new(),
+            decay_nuclides_from_fallback: 0,
+            photon_options: PhotonOptions::default(),
+            response: None,
+            response_sha: None,
+            fission_options: FissionYieldOptions::default(),
+            fission_yields: HashMap::new(),
+            fission_yield_inputs: Vec::new(),
+            spontaneous: None,
+            projectile: Projectile::Neutron,
+            library_group_structure: None,
+            temperature_K: Kelvin::new(293.6).expect("293.6 K is valid"),
+            uncertainty_options: None,
+            covariance: None,
+            unmodeled_table: None,
+            unmodeled_evalspread: None,
+            radiological: None,
+            damage: None,
+            shielding: None,
+            step_libraries: Vec::new(),
+        }
+    }
+
+    fn spec(mode: &str, summary: Option<serde_json::Value>) -> Spec {
+        let mut value = serde_json::json!({
+            "spec": "actinv-spec-1",
+            "library": {"path": "synthetic.npz"},
+            "decay": {"primary": "synthetic.dat"},
+            "material": {"mass_g": 1.0, "basis": "atoms_per_g", "composition": {"Fe56": N0}},
+            "spectrum": {"structure": "custom", "boundaries_eV": [1.0, 2.0, 3.0, 4.0, 5.0],
+                         "flux_per_group": [1.25e23, 1.25e23, 1.25e23, 1.25e23],
+                         "descending": false},
+            "schedule": [
+                {"dt": "1 s", "flux": 1.0},
+                {"dt": "2 s", "flux": 0.5},
+                {"dt": "3 s", "flux": 0.0},
+            ],
+            "options": {"mode": mode, "prune": "none"},
+        });
+        if let Some(summary) = summary {
+            value["summary"] = summary;
+        }
+        serde_json::from_value(value).expect("synthetic depletion spec parses")
+    }
+
+    fn solve(spec: &Spec, prepared: &PreparedRun) -> RunResult {
+        let physical = spec.physical_inputs().expect("physical inputs");
+        let mut profiler = RunProfiler::disabled();
+        prepared
+            .run_started_profiled(
+                spec,
+                &physical,
+                "test",
+                std::time::Instant::now(),
+                &mut profiler,
+                None,
+                None,
+            )
+            .expect("synthetic depletion run succeeds")
+    }
+
+    fn close(actual: f64, expected: f64) {
+        assert!(
+            (actual - expected).abs() <= 1e-9 * expected.abs().max(1e-300),
+            "{actual} vs {expected}"
+        );
+    }
+
+    fn table(result: &RunResult, step: usize) -> &crate::depletion::StepDepletion {
+        result.steps[step]
+            .summary
+            .as_ref()
+            .and_then(|summary| summary.depletion.as_ref())
+            .expect("depletion table is present")
+    }
+
+    fn rate_of(nuclide: &crate::depletion::DepletionNuclide, channel: &str) -> Option<f64> {
+        nuclide
+            .channels
+            .iter()
+            .find(|entry| entry.channel == channel)
+            .map(|entry| entry.rate_per_s)
+    }
+
+    #[test]
+    fn coupled_table_matches_the_analytic_depletion_channel_by_channel() {
+        let spec = spec("coupled", Some(serde_json::json!({"depletion": true})));
+        let result = solve(&spec, &prepared(true));
+        assert_eq!(result.steps.len(), 3);
+        // (flux multiplier, seconds) of the three steps
+        let schedule = [(1.0, 1.0), (0.5, 2.0), (0.0, 3.0)];
+        let mut expected_start = N0;
+        for (step, (multiplier, seconds)) in schedule.into_iter().enumerate() {
+            let step_table = table(&result, step);
+            assert_eq!(step_table.model, "coupled");
+            assert_eq!(step_table.nuclides.len(), 1);
+            let nuclide = &step_table.nuclides[0];
+            assert_eq!(nuclide.nuclide, "Fe56");
+            let capture = RATE_CAPTURE * multiplier;
+            let n2n = RATE_N2N * multiplier;
+            let total = LAMBDA + capture + n2n;
+            close(nuclide.removal_rate_per_s, total);
+            close(rate_of(nuclide, "decay").unwrap(), LAMBDA);
+            if multiplier > 0.0 {
+                close(rate_of(nuclide, "MT102").unwrap(), capture);
+                close(rate_of(nuclide, "MT16").unwrap(), n2n);
+                assert_eq!(nuclide.channels.len(), 3);
+            } else {
+                assert!(rate_of(nuclide, "MT102").is_none());
+                assert_eq!(nuclide.channels.len(), 1);
+            }
+            // shares sum to one and the ranking is descending
+            let share_sum: f64 = nuclide.channels.iter().map(|channel| channel.share).sum();
+            assert!((share_sum - 1.0).abs() < 1e-12, "{share_sum}");
+            for channel in &nuclide.channels {
+                close(channel.share, channel.rate_per_s / total);
+            }
+            assert!(nuclide
+                .channels
+                .windows(2)
+                .all(|pair| pair[0].rate_per_s >= pair[1].rate_per_s));
+            // atoms: the start is the previous end, the end the solver's own population
+            let expected_end = expected_start * (-total * seconds).exp();
+            close(nuclide.atoms_start_per_g, expected_start);
+            close(nuclide.atoms_end_per_g, expected_end);
+            let solved = result.steps[step]
+                .inventory
+                .iter()
+                .find(|entry| entry.nuclide == "Fe56")
+                .map_or(0.0, |entry| entry.atoms_per_g);
+            assert_eq!(nuclide.atoms_end_per_g, solved);
+            close(nuclide.depleted_atoms_per_g, expected_start - expected_end);
+            close(
+                nuclide.depleted_fraction,
+                (expected_start - expected_end) / expected_start,
+            );
+            close(nuclide.cumulative_depleted_atoms_per_g, N0 - expected_end);
+            close(
+                nuclide.cumulative_depleted_fraction,
+                (N0 - expected_end) / N0,
+            );
+            assert_eq!(nuclide.initial_atoms_per_g, N0);
+            expected_start = expected_end;
+        }
+        // decay-only cooling step: the whole removal is decay
+        let cooling = &table(&result, 2).nuclides[0];
+        assert_eq!(cooling.channels[0].channel, "decay");
+        assert_eq!(cooling.channels[0].kind, "decay");
+        assert!((cooling.channels[0].share - 1.0).abs() < 1e-12);
+        // no covariance in this run: no uncertainty keys at all
+        let json = serde_json::to_value(table(&result, 0)).unwrap();
+        let nuclide = &json["nuclides"][0];
+        assert!(nuclide
+            .get("removal_rate_relative_standard_uncertainty")
+            .is_none());
+        assert!(nuclide.get("uncertainty_covered_share").is_none());
+        assert!(nuclide["channels"][0]
+            .get("relative_standard_uncertainty")
+            .is_none());
+        assert_eq!(nuclide["channels"][0]["channel"], "MT16");
+        assert_eq!(nuclide["channels"][0]["reaction"], "(n,2n)");
+        // the request is recorded in the ledger and the certificate
+        assert_eq!(result.ledger["depletion"]["requested"], true);
+        assert_eq!(result.ledger["depletion"]["model"], "coupled");
+        assert_eq!(result.ledger["depletion"]["uncertainty"], "none");
+        assert!(result.certificate.get("depletion").is_some());
+    }
+
+    #[test]
+    fn trace_mode_depletes_the_reservoir_analytically_and_leaves_the_rest_alone() {
+        let spec = spec("trace", Some(serde_json::json!({"depletion": true})));
+        let result = solve(&spec, &prepared(false));
+        assert_eq!(result.ledger["mode"], "trace");
+        assert_eq!(result.ledger["depletion"]["model"], "trace_analytic");
+        let first = &table(&result, 0);
+        assert_eq!(first.model, "trace_analytic");
+        let nuclide = &first.nuclides[0];
+        close(nuclide.removal_rate_per_s, RATE_CAPTURE + RATE_N2N);
+        close(nuclide.atoms_end_per_g, N0 * (-1.5f64).exp());
+        close(nuclide.depleted_fraction, 1.0 - (-1.5f64).exp());
+        // step 2 runs at half the flux for two seconds: another exp(-0.75 x 2)
+        let second = &table(&result, 1).nuclides[0];
+        close(second.atoms_start_per_g, nuclide.atoms_end_per_g);
+        close(second.atoms_end_per_g, N0 * (-3.0f64).exp());
+        close(second.cumulative_depleted_fraction, 1.0 - (-3.0f64).exp());
+        // a stable target with the flux off has nothing left to remove it
+        let cooling = &table(&result, 2).nuclides[0];
+        assert!(cooling.channels.is_empty());
+        assert_eq!(cooling.atoms_start_per_g, cooling.atoms_end_per_g);
+        // the ordinary inventory table still holds the reservoir constant
+        let summary = result.steps[0].summary.as_ref().unwrap();
+        let reservoir = summary
+            .nuclides
+            .as_ref()
+            .and_then(|rows| rows.iter().find(|row| row.nuclide == "Fe56"))
+            .expect("Fe56 row");
+        close(reservoir.atoms, N0);
+    }
+
+    #[test]
+    fn default_runs_carry_no_depletion_keys_and_the_rest_is_unchanged() {
+        let without = solve(
+            &spec("coupled", Some(serde_json::json!({}))),
+            &prepared(true),
+        );
+        let explicit_off = solve(
+            &spec("coupled", Some(serde_json::json!({"depletion": false}))),
+            &prepared(true),
+        );
+        let with = solve(
+            &spec("coupled", Some(serde_json::json!({"depletion": true}))),
+            &prepared(true),
+        );
+        let plain = solve(&spec("coupled", None), &prepared(true));
+        for result in [&without, &explicit_off] {
+            assert!(result.ledger.get("depletion").is_none());
+            assert!(result.certificate.get("depletion").is_none());
+            for step in &result.steps {
+                let summary = serde_json::to_value(step.summary.as_ref().unwrap()).unwrap();
+                assert!(summary.get("depletion").is_none());
+            }
+        }
+        assert!(plain.ledger.get("depletion").is_none());
+        assert!(plain.certificate.get("depletion").is_none());
+        assert!(plain.steps.iter().all(|step| step.summary.is_none()));
+        // the opt-in key is the only difference from the same summary without it
+        for (a, b) in without.steps.iter().zip(&explicit_off.steps) {
+            assert_eq!(
+                serde_json::to_value(a.summary.as_ref().unwrap()).unwrap(),
+                serde_json::to_value(b.summary.as_ref().unwrap()).unwrap()
+            );
+        }
+        for (a, b) in without.steps.iter().zip(&with.steps) {
+            let mut stripped = serde_json::to_value(b.summary.as_ref().unwrap()).unwrap();
+            stripped.as_object_mut().unwrap().remove("depletion");
+            assert_eq!(
+                serde_json::to_value(a.summary.as_ref().unwrap()).unwrap(),
+                stripped
+            );
+            assert_eq!(a.inventory.len(), b.inventory.len());
+            for (x, y) in a.inventory.iter().zip(&b.inventory) {
+                assert_eq!(x.atoms_per_g, y.atoms_per_g);
+            }
+        }
+    }
+
+    #[test]
+    fn spec_option_parses_and_defaults_off() {
+        let parsed: crate::spec::SummaryOptions =
+            serde_json::from_value(serde_json::json!({})).unwrap();
+        assert!(!parsed.depletion);
+        // serialising the default leaves the key out, so existing specs keep their bytes
+        let json = serde_json::to_value(&parsed).unwrap();
+        assert!(json.get("depletion").is_none());
+        let on: crate::spec::SummaryOptions =
+            serde_json::from_value(serde_json::json!({"depletion": true})).unwrap();
+        assert!(on.depletion);
+        assert_eq!(serde_json::to_value(&on).unwrap()["depletion"], true);
     }
 }
 

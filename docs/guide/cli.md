@@ -61,6 +61,32 @@ actinv inspect groups NAME
 
 Without `--target`, `xs` omits the group values and lists every reaction in the library; narrow it with `--target` or `--mt`. With `--table` and a single reaction, `xs` prints one row per group.
 
+## Render result tables
+
+```text
+actinv report RESULT.json [--tables LIST] [--format csv|tsv|markdown|text]
+              [--out DIR] [--step N|all] [--nuclides LIST]
+```
+
+`report` turns a result JSON from `actinv run` into FISPACT-II style tables, ready to plot. It runs no solver and reads no data files; the output depends only on the result. `--tables` takes a comma-separated list (default: all of them); `--step` selects one step by its one-based number (default `all`); `--nuclides Co60,Mn54` keeps only those rows in `tab1` and `tab2` and adds their atoms and activity columns to `timeseries`. A nuclide that is in no selected step is an error. Names are written as in the result, for example `Co60` or `Ta182m1`.
+
+| Table | One row per | Columns |
+| --- | --- | --- |
+| `tab1` | step and nuclide, largest population first | `step`, `time_s`, `nuclide`, `atoms_per_g`, `mass_g_per_g`, `atoms`, `mass_g` |
+| `tab2` | step and nuclide with activity, largest first | `step`, `time_s`, `nuclide`, `activity_Bq_per_g`, `heat_W_per_g`, `alpha_W_per_g`, `beta_W_per_g`, `gamma_W_per_g`, `half_life_s`, `activity_Bq`, `heat_W` |
+| `tab3` | step and ingestion or inhalation dose response | `step`, `time_s`, `response`, `value`, `unit`, `covered_activity_Bq_per_g`, `missing_activity_Bq_per_g`, `activity_coverage_fraction`, `contributing_nuclides`, `missing_active_nuclides` |
+| `tab4` | step and photon energy group | `step`, `time_s`, `group`, `low_eV`, `high_eV`, `centroid_eV`, `photons_s_g`, `power_W_g`, `photons_s`, `power_W` |
+| `totals` | step | total activity and heat per gram; with a `summary`, also Ci, the alpha, beta and gamma activity, activity by decay mode, activity and heat without H-3, mass, absolute and per-cm³ values |
+| `dominant` | step, quantity and rank | the `summary.dominant` lists with percent, cumulative percent, and the counts to reach 90 % and 99 % |
+| `elements` | step and element | the `summary.elements` table |
+| `timeseries` | step | `activity_Bq_per_g`, `heat_total_W_per_g`, `heat_alpha_W_per_g`, `heat_beta_W_per_g`, `heat_gamma_W_per_g`, then the photon dose rates (`contact_gamma_air_dose_proxy_Gy_h`, `point_source_gamma_air_dose_Sv_h`), one column per radiological response, and `NUCLIDE_atoms_per_g`, `NUCLIDE_activity_Bq_per_g` for each `--nuclides` entry |
+
+Every column name carries its unit. `time_s` is the time at the end of the step. `_per_g` quantities are per gram of initial material; `atoms`, `mass_g`, `activity_Bq` and `heat_W` are those values times `material.mass_g`, and exist only when the result has a `summary`. Heat is in watts, where FISPACT-II prints kW. `half_life_s` is empty for a stable nuclide. A step that lacks a value (for instance a photon dose rate) leaves the cell empty.
+
+`--format csv` (the default) and `tsv` print every number in the shortest form that parses back to the same value, for example `3.0000000000000004e-1`, with one header row. `markdown` prints a pipe table under a heading, and `text` a fixed-width table, both rounded to six significant digits and followed by `Note:` lines for omitted columns. Without `--out`, the tables go to standard output; with several tables in `csv` or `tsv`, each is introduced by a `# name` line. `--out DIR` creates `DIR` and writes one file per table (`tab1.csv`, `tab4.csv`, and so on; `.tsv`, `.md` or `.txt` for the other formats), replacing files of the same name.
+
+Anything the result cannot supply is left out, never estimated. Standard error lists the columns omitted and the tables that are unavailable, each with the reason (for example, no `summary` section, no `radiological` responses, no `photon_source`). The command fails only when no requested table can be built. Add a [`summary`](specification.md#step-summary) section to the problem for grams, the heat split and the element and dominant tables; an `outputs` selection that drops `inventory`, `activity_Bq_per_g` or `heat_W_per_g` removes the tables built from them.
+
 ## Import flux and run independent cells
 
 ```text

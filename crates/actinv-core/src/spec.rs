@@ -314,6 +314,11 @@ pub struct SummaryOptions {
     /// False is FISPACT NOSTABLE: stable rows are omitted from the nuclide table.
     #[serde(default = "summary_true")]
     pub include_stable: bool,
+    /// FISPACT-II DEPLETION: add `summary.depletion`, the per-step depletion table of every
+    /// initial-material nuclide with its removal rate split into decay and reaction channels.
+    /// Absent from the serialized options when false, so existing specs keep their bytes.
+    #[serde(default, skip_serializing_if = "is_false")]
+    pub depletion: bool,
 }
 
 fn summary_true() -> bool {
@@ -332,6 +337,7 @@ impl Default for SummaryOptions {
             dominant_top: summary_dominant_top(),
             min_atoms: 0.0,
             include_stable: true,
+            depletion: false,
         }
     }
 }

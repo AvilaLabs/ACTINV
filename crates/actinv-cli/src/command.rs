@@ -50,6 +50,7 @@ const USAGE: &str = "usage: actinv run SPEC.json [OUT.json]\n\
                     actinv waste intrusion-screen SPEC.json [OUT.json]\n\
                     actinv study {validate|build|run} STUDY.json [OUTDIR] [--revocations FILE]\n\
                     actinv inspect {decay|xs|yields|library|groups} ... [--table] [--out OUT]\n\
+                    actinv report RESULT.json [--tables LIST] [--format csv|tsv|markdown|text] [--out DIR] [--step N|all] [--nuclides LIST]\n\
                     actinv export-openmc RESULT.json STEP OUT.py\n\
                     actinv export-openmc-mesh MESH_RESULT.ndjson STEP OUT.py\n\
                     actinv export-r2s MESH_RESULT.ndjson STEP OUT.ndjson\n\
@@ -672,6 +673,7 @@ pub fn main_from(a: Vec<String>) {
             "waste" => println!("usage: actinv waste WASTE.json [OUT.json]\n       actinv waste budget BUDGET.json [OUT.json]\n       actinv waste bounds BOUNDS.json [OUT.json]\n       actinv waste composition COMPOSITION.json [OUT.json]\n       actinv waste composition solve SPEC.json [OUT.json]\n       actinv waste intrusion-screen SPEC.json [OUT.json]\nNominal component classification, verified class impurity budgets, conservative classification of declared activity boxes, caller-declared affine composition ranges, native solver-generated composition responses, and opt-in screening against a pinned 2026 draft intrusion table. Draft screening is a review aid only; it does not assess dose, acceptance, or legal compliance. See the public waste handbook at docs/guide/waste.md."),
             "study" => println!("usage: actinv study validate STUDY.json\n       actinv study build STUDY.json [OUTDIR] [--revocations FILE]\n       actinv study run STUDY.json [OUTDIR] [--revocations FILE]\nValidate an actinv-study-1 document, expand it deterministically into actinv-spec-1 cases plus a manifest, or run the population and write study_record.json.\nSee docs/STUDY.md for the schema."),
             "inspect" => println!("{}\n{}", crate::inspect::USAGE, crate::inspect::HELP),
+            "report" => println!("{}\n{}", crate::report::USAGE, crate::report::HELP),
             _ => println!("{USAGE}\n\nSee docs/SPEC.md for format details and examples."),
         }
         return;
@@ -731,6 +733,11 @@ pub fn main_from(a: Vec<String>) {
             Ok(()) => {}
             Err(crate::inspect::InspectError::Usage(message)) => die(message, 2),
             Err(crate::inspect::InspectError::Failure(message)) => die(message, 1),
+        },
+        "report" => match crate::report::run(&a[2..]) {
+            Ok(()) => {}
+            Err(crate::report::ReportError::Usage(message)) => die(message, 2),
+            Err(crate::report::ReportError::Failure(message)) => die(message, 1),
         },
         "new" => {
             if a.len() != 3 && !(a.len() == 5 && a[3] == "--data-dir") {

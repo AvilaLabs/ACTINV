@@ -599,6 +599,36 @@ so the propagated parameters are the same shielded one-group cross sections the 
 run checks the collapsed nominals against the shielded fold bitwise. The same fold applies on the
 `study.robustness` MF=33 sampling path.
 
+### Monte Carlo sampling statistics
+
+The `study.robustness` sampling path is the equivalent of FISPACT-II `SENSITIVITY`/`MCSAMPLE`. By default
+it reports each response's sample mean, std and sampling error. Declare `robustness.statistics` (an object,
+`{}` for the defaults) to add a `sampling_statistics` block per case:
+
+```json
+"robustness": {
+  "samples": 1000, "seed": 17, "responses": ["total_activity_bq_per_g"],
+  "channels": {"cross_section_mf33": true, "flux_rel_std": 0.05},
+  "covariance": {"path": "cov.npz", "sha256": "..."},
+  "statistics": {"percentiles": [2.5, 16, 50, 84, 97.5], "histogram_bins": 20,
+                 "correlation_top": 10, "bootstrap_resamples": 200}
+}
+```
+
+Per response and cooling time it gives the distribution (`n`, `mean`, `std`, `skewness`, `min`, `max`,
+`percentiles`, optional `histogram`), a bootstrap `convergence` block (standard error of the std and of every
+requested percentile), the linear `first_order` std for the same response when the run computed it (with the
+ratio and the gap in bootstrap standard errors), and `input_correlations`: the Pearson and Spearman
+correlation of the response with each sampled input parameter, ranked by `|spearman|` and cut to
+`correlation_top`, each parameter named by channel and target nuclide, MT, decay-constant or yield edge. A
+case-level `response_correlation` matrix gives the Pearson correlation between all requested responses.
+
+Percentiles are exact order statistics (nearest rank): the smallest sample value `x_(k)` with
+`k/n >= p/100`, `k = max(1, ceil(n p/100))`; there is no interpolation. Spearman uses average ranks for ties.
+The sampled input is the natural log of each applied multiplicative factor. Without `statistics` the
+robustness record is unchanged. See [the study reference](https://github.com/AvilaLabs/ACTINV/blob/master/docs/STUDY.md)
+for every field.
+
 A runnable walkthrough lives at `examples/shielding_demo.json`: pure W-186 under a 4–25 keV custom spectrum at
 fixed `sigma0_b = 0.1` — the ledger names every applied factor and W-187 activity lands ~28% below the
 unshielded solve of the same problem.
@@ -723,10 +753,17 @@ unchanged and no `summary` key is written.
 | `dominant_top` | `10` | Entries kept in each dominant-contributor list; 1 to 256. |
 | `min_atoms` | `0` | FISPACT `MIND`: omit nuclide-table rows whose absolute atoms (`atoms × material.mass_g`) fall below this. Finite and not negative. |
 | `include_stable` | `true` | `false` is FISPACT `NOSTABLE`: omit stable nuclides from the nuclide table. |
+| `depletion` | `false` | `true` is FISPACT `DEPLETION`: add `summary.depletion`, the per-step depletion table of every initial-material nuclide. |
 
 `min_atoms` and `include_stable` trim the nuclide table only. Totals, the element table and the dominant rankings
 always include every state, so a filtered table still reconciles with its totals. The same `summary` section is
 accepted by the mesh specification and applies to every cell.
+
+`depletion` is opt-in within the summary: without it no `depletion` key appears in `steps[].summary`, and the ledger
+and certificate carry no `depletion` entry. It works with trace and coupled mode, with per-step spectra, and with
+schedule library switches (each step reports the rates of the library it ran on). With an `uncertainty` section that
+supplies MF=33 covariance, each reaction channel also carries the relative standard uncertainty of its one-group
+rate. [Read your results](results.md#depletion-table) describes the emitted fields.
 
 ```json
 {

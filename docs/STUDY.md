@@ -158,6 +158,52 @@ reports a `null` variance, and the remainder is then `null`, never a silent zero
 `pathway_view` names the dominant nuclides and their
 production legs per cooling time with the unattributed `pathway_closure` remainder.
 
+### `robustness.statistics` — Monte Carlo output tables
+
+Opt-in. Declaring `"statistics": {}` adds a `sampling_statistics` block to each case's
+`robustness` record; without it no key, digest or sampling stream changes. Options (all optional):
+
+| Option | Default | Meaning |
+| --- | --- | --- |
+| `percentiles` | `[2.5, 5, 16, 50, 84, 95, 97.5]` | percentiles in [0, 100] |
+| `histogram_bins` | `0` (none) | fixed-width bins between the sample min and max, at most 1000 |
+| `correlation_top` | `10` | parameters kept per response in the input-output table (0 omits it, at most 1000) |
+| `bootstrap_resamples` | `200` | resamples for the convergence diagnostic (0 omits it, otherwise 2–2000) |
+
+Per `(response, time)` the block reports, under `responses.<response>.<time_s>`:
+
+- `distribution`: `n`, `mean`, `std` (unbiased, divisor `n-1`), `skewness` (moment skewness
+  `m3/m2^1.5`, population moments; `null` below three samples or for a constant sample), `min`,
+  `max`, `percentiles` and, when requested, `histogram {bin_edges, counts}` (the last bin is closed
+  on the right). Percentiles are exact order statistics (nearest rank, Hyndman-Fan type 1): the
+  smallest sample value `x_(k)` with `k/n >= p/100`, `k = max(1, ceil(n p / 100))`. They are never
+  interpolated, so every reported percentile is a value that occurred in the sample.
+- `convergence`: a fixed-seed nonparametric bootstrap gives `std_standard_error`,
+  `std_relative_standard_error` and a `percentile_standard_error` for every requested percentile.
+  Read it as "how much would this number move with another `samples` draws": a relative standard
+  error of the std near `1/sqrt(2(n-1))` is what a normal response gives, and a tail percentile
+  with a large standard error says `samples` is too small for that tail.
+- `first_order`: the P11 first-order std for the same response and time (`std`), next to the
+  `sampled_std`, their ratio and the gap in bootstrap standard errors
+  (`deviation_in_std_standard_errors`). `null` when the first-order comparison was not computed
+  (no `cross_section_mf33`, `first_order_comparison: false` or a truncated run).
+- `input_correlations`: for every sampled input parameter the Pearson and Spearman correlation
+  with the response, ranked by `|spearman|` (ties by `|pearson|`, then input order) and cut to
+  `correlation_top`. Spearman is Pearson on average ranks, so ties share their mean rank. A
+  parameter is identified by `channel` and `name` plus its identity: `flux`; `composition:<El>`;
+  `decay:<nuclide>`; `yield:<parent>:<product>`; or for `cross_section_mf33`
+  `xs:<target>:MT<mt>` with `target`, `mt`, `product_zap` and `product_lfs` (the sampled
+  quantity is the spectrum-collapsed one-group value of that row, so there is no group index).
+  The sampled variable is the natural log of the applied multiplicative factor. Parameters that
+  never vary (zero declared uncertainty) are omitted and counted in `n_constant_parameters`;
+  failed samples are dropped pairwise (`n_pairs`).
+
+`response_correlation` holds the Pearson matrix over all `(response, time)` series, labeled
+`<response>@<time_s>`, using the samples where both are defined (`null` where undefined).
+A correlation over `n` samples carries a sampling error of about `1/sqrt(n)`; small correlations
+from a few dozen samples are noise. Everything is deterministic given the seed; the bootstrap
+stream is tagged away from the sampling streams.
+
 ## Execution efficiency (P31)
 
 The runner shares prepared nuclear data across cases and samples whose specs carry the same

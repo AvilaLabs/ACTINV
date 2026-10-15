@@ -74,10 +74,10 @@ struct Request {
 
 /// A fixed-width table: left-aligned columns separated by two spaces.
 #[derive(Debug, Clone, PartialEq)]
-struct Table {
-    title: String,
-    headers: Vec<String>,
-    rows: Vec<Vec<String>>,
+pub(crate) struct Table {
+    pub(crate) title: String,
+    pub(crate) headers: Vec<String>,
+    pub(crate) rows: Vec<Vec<String>>,
 }
 
 struct Output {
@@ -312,7 +312,7 @@ fn execute(command: &Command) -> Result<Output, String> {
 
 // ---- formatting ----
 
-fn render_table(table: &Table) -> String {
+pub(crate) fn render_table(table: &Table) -> String {
     let mut widths: Vec<usize> = table
         .headers
         .iter()
@@ -358,7 +358,7 @@ fn render_tables(tables: &[Table]) -> String {
         .join("\n\n")
 }
 
-fn sci(value: f64) -> String {
+pub(crate) fn sci(value: f64) -> String {
     format!("{value:.6e}")
 }
 

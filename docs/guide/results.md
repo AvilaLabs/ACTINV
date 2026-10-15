@@ -107,6 +107,45 @@ The leakage, unit and removal sinks are not nuclide states.
 `percent`, `cumulative_percent`) and `n_for_90_percent` and `n_for_99_percent`, the number of nuclides needed to
 reach those shares of the total, counted over the full ranking rather than the truncated list.
 
+## Depletion table
+
+With [`summary.depletion`](specification.md#step-summary) set to `true`, `steps[].summary.depletion` reports how
+much of each initial-material nuclide the step removed and which channels removed it. Without it the key is absent.
+`model` is `coupled` when the solver evolves the initial nuclides, and `trace_analytic` in trace mode, where the
+reservoir is held constant in the inventory and is instead depleted analytically,
+N(t) = N(0) exp(−∫ removal rate dt), the same first-order law as the ledger's `max_burnup_fraction`. Analytic
+depletion has no ingrowth from other nuclides. Initial nuclides absent from the decay library carry no rates and
+are listed under `ledger.depletion.initial_nuclides_absent_from_decay_library`.
+
+`nuclides` has one row per initial nuclide, largest first:
+
+| Field | Meaning |
+| --- | --- |
+| `nuclide`, `Z`, `A`, `LISO` | Name and identity |
+| `initial_atoms_per_g`, `atoms_start_per_g`, `atoms_end_per_g` | Atoms per gram of initial material at t = 0, at the start of the step and at its end |
+| `depleted_atoms_per_g`, `depleted_fraction` | Start minus end, and that over the start, for this step. Net of ingrowth from other nuclides and of a partition or removal applied at the step start |
+| `cumulative_depleted_atoms_per_g`, `cumulative_depleted_fraction` | Initial minus end, and that over the initial atoms |
+| `removal_rate_per_s` | Total removal rate per atom: decay plus every reaction channel |
+| `channels` | The removal split, descending by rate |
+| `removal_rate_relative_standard_uncertainty` | With MF=33 covariance and only when every channel is covered |
+| `uncertainty_covered_share` | With MF=33 covariance: the share of the removal carried by channels that have an uncertainty |
+
+Each channel has `channel` (`decay` or `MT<n>`), `kind`, `mt`, `reaction` (the conventional name such as `(n,g)` for
+a neutron projectile), `rate_per_s`, `share` and, with covariance, `relative_standard_uncertainty`.
+
+The rates are the solver's own, not a recomputation. A reaction channel is the sum of the nuclide's loss rows with
+that MT, collapsed under the step's spectrum with self-shielding, `options.rate_scale` and named overrides applied,
+times the flux multiplier the step ran at (the time-weighted mean for a power-driven step). The decay channel is
+the effective decay constant after `decay_scale` and half-life overrides. The channels therefore sum to
+`removal_rate_per_s`, the diagonal of the step matrix, and the shares sum to one. A reaction whose loss row is
+absent from the library is not listed. Fission appears as `MT18`.
+
+The uncertainty of a reaction channel is the flux-weighted collapse of the MF=33 covariance for its loss rows, the
+same collapse the uncertainty bands use: for weights w<sub>g</sub> = σ<sub>g</sub>φ<sub>g</sub> / Σσφ it is
+√(wᵀCw) on the relative covariance. A decay channel takes the half-life uncertainty of the decay data, or a
+`half_life_uncertainty` override. The total includes the correlation between a nuclide's reaction channels from the
+cross-MT covariance blocks. Fission-yield, flux and composition uncertainty do not enter a removal rate.
+
 ## Fission count, burn-up and spontaneous-fission neutrons
 
 Each step gains a `fission` block only when `options.fission` is set (`fission.count`) or

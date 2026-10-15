@@ -28,13 +28,26 @@
   - element table;
   - dominant lists with cumulative percent and counts to 90/99 %;
   - MIND/NOSTABLE filters.
+- Depletion table (`summary.depletion`; `DEPLETION`): per step and initial nuclide, atoms at start and end,
+  step and cumulative depleted fraction, and the removal rate split into decay and reaction channels by MT with
+  each channel's share. The rates are the solver's own, so the shares sum to one. With an MF=33 covariance each
+  channel also reports the relative standard uncertainty of its one-group rate, and the total includes the
+  correlation between channels.
 - `actinv inspect {decay, xs, yields, library, groups}` (P131): query decay data, group and one-group
   cross sections for a spectrum, independent and cumulative fission yields, and group boundaries, as JSON or a
   table.
+- `actinv report RESULT.json` (P132b): FISPACT-style `TAB1` to `TAB4` tables, step totals, dominant
+  and element tables, and a plot-ready `timeseries` (`GRAPH`, `NUCGRAPH`), rendered from an existing
+  result as csv, tsv, markdown or text. Exact `{:e}` values with units in the headers; columns the
+  result lacks are omitted and named, never filled in.
 - All FISPACT-II neutron group structures, fispact-66 to fispact-1102 (to 1 GeV), and an opt-in high-energy
   residual-production splice for `build-library` (P130).
 - Geometry self-shielding (foil, wire, sphere, cylinder) by the universal sigmoid curve, and per-group dilution
   overrides (P129).
+- `study.robustness.statistics` (FISPACT-II `SENSITIVITY`/`MCSAMPLE` output): per-response sample distribution
+  (mean, std, skewness, exact order-statistic percentiles, histogram), input-output Pearson and Spearman
+  correlation tables by sampled parameter, a response-response correlation matrix, and bootstrap standard errors
+  of the sampled std and percentiles next to the first-order std. Absent by default; existing records unchanged.
 - Merged and unit-tested, qualification pending:
   - Steiner 22-group photon structure, point-source dose, a separately reported bremsstrahlung component and the
     A2 index (P123a);
