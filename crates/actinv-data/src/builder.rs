@@ -4627,6 +4627,98 @@ mod tests {
         assert_eq!(built.rows[1].sigma, vec![2.0]);
     }
 
+    /// Build the one-row capture evaluation of Fe-56 under `projectile` and return the residual ZAP of the MT=102 row.
+    fn capture_residual(projectile: Projectile) -> i32 {
+        let groups = GroupStructure {
+            name: "custom".into(),
+            boundaries_ev: vec![1.0, 4.0],
+        };
+        let products = BTreeMap::from([(102, (0, 1))]);
+        let built = build_evaluation(
+            evaluation(projectile),
+            LibraryFormat::Tendl,
+            "x-Fe056",
+            &"0".repeat(64),
+            EvaluationBuildSettings {
+                groups: &groups,
+                temperature_K: 0.0,
+                grid_density: 1.0,
+                strict_states: false,
+                normalize_state_sums: false,
+                drop_orphan_sections: false,
+            },
+            &products,
+        )
+        .unwrap();
+        assert_eq!(built.rows.len(), 2);
+        built.rows[1].zap
+    }
+
+    #[test]
+    fn triton_and_helion_residual_arithmetic_includes_projectile() {
+        // MT=102 is (x,gamma): the compound nucleus is target + projectile, so Fe-56 + t = Co-59 (Z+1, A+3)
+        // and Fe-56 + He-3 = Ni-59 (Z+2, A+3). The delta table is written for a neutron incident; the
+        // projectile (Z, A) in `residual_product` supplies the rest.
+        assert_eq!(capture_residual(Projectile::Proton), 27057);
+        assert_eq!(capture_residual(Projectile::Triton), 27059);
+        assert_eq!(capture_residual(Projectile::Helion), 28059);
+    }
+
+    #[test]
+    fn triton_and_helion_residuals_follow_the_ejectile_mt_numbering() {
+        // Net deltas are for the neutron-incident convention (target + n - ejectile); the same arithmetic
+        // is exact for any projectile. Fe-56 (x,p): MT=103 delta (-1, 0).
+        let proton_out = (-1, 0);
+        // (t,p) -> Fe-58; (He-3,p) -> Co-58.
+        assert_eq!(
+            residual_product(26056, Projectile::Triton, proton_out),
+            Some(26058)
+        );
+        assert_eq!(
+            residual_product(26056, Projectile::Helion, proton_out),
+            Some(27058)
+        );
+        // Same-particle emission closes on the target: (t,t') MT=105 delta (-1, -2), (He-3,He-3') MT=106
+        // delta (-2, -2).
+        assert_eq!(
+            residual_product(26056, Projectile::Triton, (-1, -2)),
+            Some(26056)
+        );
+        assert_eq!(
+            residual_product(26056, Projectile::Helion, (-2, -2)),
+            Some(26056)
+        );
+        // An unbound residual is refused rather than wrapped.
+        assert_eq!(residual_product(1001, Projectile::Triton, (-3, -5)), None);
+    }
+
+    #[test]
+    fn triton_and_helion_libraries_use_the_charged_particle_group_structure() {
+        for projectile in [Projectile::Triton, Projectile::Helion] {
+            let mut options = BuildOptions {
+                format: LibraryFormat::Tendl,
+                projectile: Some(projectile),
+                groups: GroupStructure::fispact_709().unwrap(),
+                temperature_K: 0.0,
+                workers: 1,
+                cache: None,
+                grid_density: 1.0,
+                strict_states: false,
+                decay_path: None,
+                decay_fallback_path: None,
+                normalize_profile: NormalizeProfile::None,
+                continue_on_error: false,
+            };
+            let error = validate_options(&options).unwrap_err();
+            assert!(error.contains("162-group"), "{error}");
+            options.groups = GroupStructure::fispact_162().unwrap();
+            assert!(validate_options(&options).is_ok());
+            options.temperature_K = 293.6;
+            let error = validate_options(&options).unwrap_err();
+            assert!(error.contains("0 K"), "{error}");
+        }
+    }
+
     #[test]
     fn gamma_residual_arithmetic_shifts_by_one_mass_unit() {
         // MT=102 (radiative capture, mt_products.json delta (0,1), written for a neutron

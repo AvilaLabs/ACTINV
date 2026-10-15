@@ -269,6 +269,15 @@ impl MeshSpec {
             );
         }
 
+        // A mesh cell's flux is the base projectile's; a step on another library has no cell flux to run against.
+        if self
+            .schedule
+            .iter()
+            .any(|step| step.library.is_some() || step.projectile.is_some())
+        {
+            return Err("mesh schedule steps cannot declare a library override".into());
+        }
+
         // Reuse the ordinary-spec validator for every shared field. The placeholder spectrum
         // is valid by construction and is replaced with each rebinned cell before execution.
         self.cell_spec(vec![1.0, 2.0], vec![0.0], &self.material)
@@ -1790,6 +1799,8 @@ mod tests {
                 spectrum: None,
                 feed: None,
                 removal: None,
+                library: None,
+                projectile: None,
             }],
             options: Options::default(),
             photon: PhotonOptions::default(),
@@ -1818,6 +1829,25 @@ mod tests {
         spec.chunk_cells = 1;
         spec.threads = MAX_THREADS + 1;
         assert!(spec.validate().unwrap_err().contains("threads"));
+    }
+
+    #[test]
+    fn mesh_schedule_refuses_a_library_override() {
+        let mut spec = minimal_spec();
+        spec.schedule[0].library = Some(LibraryRef {
+            path: "other.npz".into(),
+            sha256: None,
+        });
+        assert!(spec
+            .validate()
+            .unwrap_err()
+            .contains("cannot declare a library override"));
+        let mut spec = minimal_spec();
+        spec.schedule[0].projectile = Some(Projectile::Triton);
+        assert!(spec
+            .validate()
+            .unwrap_err()
+            .contains("cannot declare a library override"));
     }
 
     fn write_minimal_canonical_flux(path: &Path, flux_units: &str) -> String {

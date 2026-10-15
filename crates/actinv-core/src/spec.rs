@@ -43,7 +43,7 @@ pub struct Spec {
     pub summary: Option<SummaryOptions>,
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct LibraryRef {
     pub path: String,
@@ -533,6 +533,69 @@ impl Spectrum {
         Ok(())
     }
 
+    /// Structure check of a schedule-step spectrum against the projectile of the library the step runs on:
+    /// the named structure must suit the projectile (fispact-709 is the neutron grid, fispact-162 every other
+    /// projectile's), the flux count must match it, and a custom structure needs matching ascending boundaries.
+    fn check_structure_for(&self, projectile: Projectile, label: &str) -> Result<(), String> {
+        if self.structure == "custom" {
+            let boundaries = self
+                .boundaries_eV
+                .as_ref()
+                .ok_or_else(|| format!("{label} custom structure needs boundaries_eV"))?;
+            if boundaries.len() != self.flux_per_group.len() + 1 {
+                return Err(format!(
+                    "{label} boundaries_eV has {} entries; {} groups need {}",
+                    boundaries.len(),
+                    self.flux_per_group.len(),
+                    self.flux_per_group.len() + 1
+                ));
+            }
+            if boundaries.iter().any(|value| !value.is_finite())
+                || boundaries.windows(2).any(|w| w[1] <= w[0])
+            {
+                return Err(format!(
+                    "{label} boundaries_eV must be finite and strictly ascending"
+                ));
+            }
+            return Ok(());
+        }
+        let (base_name, refine) = match self.structure.rsplit_once('x') {
+            Some((base, count)) => match count.parse::<usize>() {
+                Ok(count) => (base, Some(count)),
+                Err(_) => (self.structure.as_str(), None),
+            },
+            None => (self.structure.as_str(), None),
+        };
+        if let Some(count) = refine {
+            if !(2..=64).contains(&count) {
+                return Err(format!(
+                    "{label} structure refinement must be in 2..=64, got {count}"
+                ));
+            }
+        }
+        let factor = refine.unwrap_or(1);
+        let (groups, neutron_grid) = match base_name {
+            "fispact-709" => (709 * factor, true),
+            "fispact-162" => (162 * factor, false),
+            value => return Err(format!("unknown {label} structure '{value}'")),
+        };
+        if neutron_grid != projectile.is_neutron() {
+            return Err(format!(
+                "{label} structure '{}' does not suit the {} projectile of the step's library",
+                self.structure,
+                projectile.name()
+            ));
+        }
+        if self.flux_per_group.len() != groups {
+            return Err(format!(
+                "{label} structure '{}' requires {groups} flux values, got {}",
+                self.structure,
+                self.flux_per_group.len()
+            ));
+        }
+        Ok(())
+    }
+
     /// Group fluxes in ascending-energy order, scaled to `total` when given.
     pub fn ascending_flux(&self) -> Vec<f64> {
         let mut f = self.flux_per_group.clone();
@@ -586,6 +649,31 @@ pub struct Step {
     /// optional first-order removal during this step: nuclide or element key -> s^-1
     #[serde(default)]
     pub removal: Option<BTreeMap<String, f64>>,
+    /// optional activation-library override from this step onward (until a later step names another
+    /// library, or names the base `library` again to return to it). The step must also declare its own
+    /// `spectrum`, in the new library's group structure; later steps keep using that spectrum unless they
+    /// declare theirs. The inventory carries across the switch; only the collapsed reaction rates change.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub library: Option<LibraryRef>,
+    /// the projectile of the overriding `library`; required when it differs from the spec's `projectile`
+    /// and rejected without a `library`
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub projectile: Option<Projectile>,
+}
+
+/// An activation library a schedule step switches to, with the projectile its index must declare.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct StepLibrary {
+    pub library: LibraryRef,
+    pub projectile: Projectile,
+}
+
+/// What one schedule step runs against: `library` is an index into [`Spec::step_libraries`] (`None` is the
+/// base library), `spectrum` is the spectrum replacing the base one for this step (`None` is the base spectrum).
+#[derive(Debug, Clone, Copy)]
+pub(crate) struct StepContext<'a> {
+    pub(crate) library: Option<usize>,
+    pub(crate) spectrum: Option<&'a Spectrum>,
 }
 
 /// P65 certified screening options.
@@ -714,6 +802,8 @@ pub(crate) struct PhysicalStep {
     multiplier: FluxMultiplier,
     /// per-step spectrum (ascending group fluxes); None = base spectrum
     pub(crate) spectrum_flux: Option<GroupFluxes>,
+    /// index into [`Spec::step_libraries`] of the library this step collapses against; None = base library
+    pub(crate) library: Option<usize>,
     /// ((ZA, LISO), atoms s^-1 g^-1) constant feed during this step
     pub(crate) feed: Vec<((i32, i32), f64)>,
     /// (selector, s^-1) first-order removal during this step
@@ -1089,6 +1179,12 @@ impl Spec {
                     }
                 }
             }
+        }
+        self.resolve_step_libraries()?;
+        if let Some(feature) = self.step_library_conflict() {
+            return Err(format!(
+                "schedule step library overrides cannot be combined with {feature}"
+            ));
         }
         match self.options.mode.as_str() {
             "auto" | "trace" | "coupled" => {}
@@ -1516,10 +1612,12 @@ impl Spec {
             .map_err(|_| "options.bmin_atoms_per_g must be finite and nonnegative".to_string())?;
         let flux = GroupFluxes::new(self.flux_ascending())
             .map_err(|_| "group fluxes must be finite and nonnegative".to_string())?;
+        let (step_libraries, contexts) = self.resolve_step_libraries()?;
         let schedule = self
             .schedule
             .iter()
-            .map(|step| {
+            .zip(&contexts)
+            .map(|(step, context)| {
                 let parsed = parse_duration(&step.dt)?;
                 let duration =
                     Seconds::new(parsed).map_err(|_| format!("negative duration '{}'", step.dt))?;
@@ -1561,26 +1659,34 @@ impl Spec {
                         },
                     )
                     .collect::<Result<Vec<_>, String>>()?;
-                let spectrum_flux = step
+                let spectrum_flux = context
                     .spectrum
-                    .as_ref()
                     .map(|s| {
                         s.check_total_has_shape("schedule step spectrum")?;
-                        if s.structure != self.spectrum.structure {
-                            return Err(format!(
-                                "schedule step spectrum.structure '{}' must match the base spectrum's '{}'",
-                                s.structure, self.spectrum.structure
-                            ));
+                        match context.library {
+                            // A step on an overriding library carries a spectrum in that library's own
+                            // group structure, not the base spectrum's.
+                            Some(slot) => s.check_structure_for(
+                                step_libraries[slot].projectile,
+                                "schedule step spectrum",
+                            )?,
+                            None => {
+                                if s.structure != self.spectrum.structure {
+                                    return Err(format!(
+                                        "schedule step spectrum.structure '{}' must match the base spectrum's '{}'",
+                                        s.structure, self.spectrum.structure
+                                    ));
+                                }
+                                if s.flux_per_group.len() != flux.values().len() {
+                                    return Err(format!(
+                                        "schedule step spectrum has {} groups; the base spectrum declares {}",
+                                        s.flux_per_group.len(),
+                                        flux.values().len()
+                                    ));
+                                }
+                            }
                         }
-                        let f = s.ascending_flux();
-                        if f.len() != flux.values().len() {
-                            return Err(format!(
-                                "schedule step spectrum has {} groups; the base spectrum declares {}",
-                                f.len(),
-                                flux.values().len()
-                            ));
-                        }
-                        GroupFluxes::new(f)
+                        GroupFluxes::new(s.ascending_flux())
                             .map_err(|_| "schedule step spectrum group fluxes must be finite and nonnegative".to_string())
                     })
                     .transpose()?;
@@ -1588,6 +1694,7 @@ impl Spec {
                     duration,
                     multiplier,
                     spectrum_flux,
+                    library: context.library,
                     feed,
                     removal,
                 })
@@ -1621,6 +1728,101 @@ impl Spec {
     /// Group fluxes in ascending-energy order, scaled to `total` when given.
     pub fn flux_ascending(&self) -> Vec<f64> {
         self.spectrum.ascending_flux()
+    }
+
+    /// The distinct libraries the schedule's `library` overrides switch to, in order of first use. Empty for
+    /// every spec without an override. A step that names the base library and projectile again is a return to
+    /// the base, not an entry.
+    pub fn step_libraries(&self) -> Result<Vec<StepLibrary>, String> {
+        Ok(self.resolve_step_libraries()?.0)
+    }
+
+    /// The first feature a schedule with library overrides cannot be combined with (None for a schedule without
+    /// overrides). The switch is a rate-set change on one shared decay chain; these features are built on a single
+    /// library's rows, flux basis or parameter set, so they are refused rather than half-applied.
+    pub(crate) fn step_library_conflict(&self) -> Option<&'static str> {
+        if self.schedule.iter().all(|step| step.library.is_none()) {
+            None
+        } else if self.uncertainty.is_some() {
+            Some("uncertainty")
+        } else if self.options.gas {
+            Some("options.gas")
+        } else if self.self_shielding.is_some() {
+            Some("self_shielding")
+        } else if self.damage.is_some() {
+            Some("damage")
+        } else if !self.fission_yields.files.is_empty() {
+            Some("fission_yields")
+        } else if self.options.rate_scale.is_some() {
+            Some("options.rate_scale")
+        } else {
+            None
+        }
+    }
+
+    /// Resolve the schedule's library overrides. A step's `library` is sticky: later steps keep it until another
+    /// step names a library. Its spectrum is sticky in the same way, but only as the default: a step that
+    /// declares its own spectrum uses it for that step alone (the base-spectrum rule of `Step.spectrum`).
+    pub(crate) fn resolve_step_libraries(
+        &self,
+    ) -> Result<(Vec<StepLibrary>, Vec<StepContext<'_>>), String> {
+        let mut libraries: Vec<StepLibrary> = Vec::new();
+        let mut contexts = Vec::with_capacity(self.schedule.len());
+        let mut active: Option<usize> = None;
+        let mut active_spectrum: Option<&Spectrum> = None;
+        for (index, step) in self.schedule.iter().enumerate() {
+            let number = index + 1;
+            match (&step.library, step.projectile) {
+                (None, Some(_)) => {
+                    return Err(format!(
+                        "schedule step {number}: projectile is only valid together with a library override"
+                    ));
+                }
+                (Some(library), projectile) => {
+                    if library.path.is_empty() {
+                        return Err(format!("schedule step {number}: library.path is empty"));
+                    }
+                    if let Some(hash) = &library.sha256 {
+                        if hash.len() != 64 || !hash.bytes().all(|byte| byte.is_ascii_hexdigit()) {
+                            return Err(format!(
+                                "schedule step {number}: library.sha256 must contain 64 hexadecimal digits"
+                            ));
+                        }
+                    }
+                    let projectile = projectile.unwrap_or(self.projectile);
+                    if *library == self.library && projectile == self.projectile {
+                        active = None;
+                        active_spectrum = None;
+                    } else {
+                        let candidate = StepLibrary {
+                            library: library.clone(),
+                            projectile,
+                        };
+                        let slot = match libraries.iter().position(|known| *known == candidate) {
+                            Some(slot) => slot,
+                            None => {
+                                libraries.push(candidate);
+                                libraries.len() - 1
+                            }
+                        };
+                        let spectrum = step.spectrum.as_ref().ok_or_else(|| {
+                            format!(
+                                "schedule step {number} switches to library '{}' and must declare a spectrum in its group structure",
+                                library.path
+                            )
+                        })?;
+                        active = Some(slot);
+                        active_spectrum = Some(spectrum);
+                    }
+                }
+                (None, None) => {}
+            }
+            contexts.push(StepContext {
+                library: active,
+                spectrum: step.spectrum.as_ref().or(active_spectrum),
+            });
+        }
+        Ok((libraries, contexts))
     }
     pub fn schedule_seconds(&self) -> Vec<(f64, f64)> {
         self.schedule
@@ -2431,5 +2633,229 @@ mod duration_tests {
             let error = Spec::from_json(&value.to_string()).unwrap_err();
             assert!(error.contains(message), "{error}");
         }
+    }
+
+    #[test]
+    fn triton_and_helion_specs_use_the_charged_particle_grid() {
+        for name in ["triton", "helion"] {
+            let mut value = minimal_spec();
+            value["projectile"] = serde_json::json!(name);
+            value["options"] = serde_json::json!({"temperature_K": 0.0});
+            value["spectrum"] = serde_json::json!({
+                "structure": "fispact-162",
+                "flux_per_group": vec![1.0; 162],
+            });
+            let spec = Spec::from_json(&value.to_string()).unwrap();
+            assert_eq!(spec.projectile.name(), name);
+
+            // The restrictions that hold for every charged projectile hold here.
+            let mut hot = value.clone();
+            hot["options"] = serde_json::json!({});
+            assert!(Spec::from_json(&hot.to_string())
+                .unwrap_err()
+                .contains("temperature_K: 0"));
+            let mut gas = value.clone();
+            gas["options"] = serde_json::json!({"temperature_K": 0.0, "gas": true});
+            assert!(Spec::from_json(&gas.to_string())
+                .unwrap_err()
+                .contains("options.gas is supported only for neutron activation"));
+            let mut yields = value.clone();
+            yields["fission_yields"] = serde_json::json!({
+                "files": [{"path": "yield.endf", "sha256": "0".repeat(64)}],
+            });
+            assert!(Spec::from_json(&yields.to_string())
+                .unwrap_err()
+                .contains(&format!("not supported for {name}")));
+            let mut neutron_grid = value.clone();
+            neutron_grid["spectrum"] = serde_json::json!({
+                "structure": "fispact-709",
+                "flux_per_group": vec![1.0; 709],
+            });
+            assert!(Spec::from_json(&neutron_grid.to_string())
+                .unwrap_err()
+                .contains("requires projectile 'neutron'"));
+        }
+    }
+
+    #[test]
+    fn projectile_names_round_trip_through_the_spec() {
+        for name in [
+            "neutron", "proton", "deuteron", "triton", "helion", "alpha", "gamma",
+        ] {
+            let mut value = minimal_spec();
+            value["projectile"] = serde_json::json!(name);
+            value["options"] = serde_json::json!({"temperature_K": 0.0});
+            // A custom structure suits every projectile, so only the name is under test.
+            let spec = Spec::from_json(&value.to_string()).unwrap();
+            let echoed = serde_json::to_value(&spec).unwrap();
+            assert_eq!(echoed["projectile"], serde_json::json!(name));
+            assert_eq!(spec.projectile.name(), name);
+        }
+    }
+
+    fn library_switch_spec() -> serde_json::Value {
+        let mut value = minimal_spec();
+        value["schedule"] = serde_json::json!([
+            {"dt": "1 s", "flux": 1.0},
+            {
+                "dt": "2 s",
+                "flux": 1.0,
+                "library": {"path": "second.npz"},
+                "spectrum": {
+                    "structure": "custom",
+                    "boundaries_eV": [1.0, 3.0, 5.0],
+                    "flux_per_group": [1.0, 2.0],
+                },
+            },
+            {"dt": "3 s", "flux": 0.0},
+        ]);
+        value
+    }
+
+    #[test]
+    fn schedule_without_overrides_serializes_without_library_fields() {
+        let spec = Spec::from_json(&minimal_spec().to_string()).unwrap();
+        assert!(spec.step_libraries().unwrap().is_empty());
+        let echoed = serde_json::to_value(&spec.schedule[0]).unwrap();
+        assert!(echoed.get("library").is_none(), "{echoed}");
+        assert!(echoed.get("projectile").is_none(), "{echoed}");
+        let physical = spec.physical_inputs().unwrap();
+        assert!(physical.schedule[0].library.is_none());
+    }
+
+    #[test]
+    fn schedule_library_override_is_sticky_and_carries_its_spectrum() {
+        let spec = Spec::from_json(&library_switch_spec().to_string()).unwrap();
+        let libraries = spec.step_libraries().unwrap();
+        assert_eq!(libraries.len(), 1);
+        assert_eq!(libraries[0].library.path, "second.npz");
+        assert_eq!(libraries[0].projectile, Projectile::Neutron);
+        let physical = spec.physical_inputs().unwrap();
+        let slots: Vec<Option<usize>> = physical.schedule.iter().map(|step| step.library).collect();
+        assert_eq!(slots, vec![None, Some(0), Some(0)]);
+        assert!(physical.schedule[0].spectrum_flux.is_none());
+        // the cooling step keeps the library and the spectrum it was switched in with
+        assert_eq!(
+            physical.schedule[2]
+                .spectrum_flux
+                .as_ref()
+                .unwrap()
+                .values(),
+            &[1.0, 2.0]
+        );
+    }
+
+    #[test]
+    fn schedule_library_override_can_return_to_the_base_library() {
+        let mut value = library_switch_spec();
+        let steps = value["schedule"].as_array_mut().unwrap();
+        steps.push(serde_json::json!({
+            "dt": "4 s", "flux": 1.0, "library": {"path": "activation.npz"},
+        }));
+        steps.push(serde_json::json!({
+            "dt": "5 s",
+            "flux": 1.0,
+            "library": {"path": "second.npz"},
+            "spectrum": {
+                "structure": "custom",
+                "boundaries_eV": [1.0, 3.0, 5.0],
+                "flux_per_group": [3.0, 4.0],
+            },
+        }));
+        let spec = Spec::from_json(&value.to_string()).unwrap();
+        // the repeated library is one entry, not two
+        assert_eq!(spec.step_libraries().unwrap().len(), 1);
+        let physical = spec.physical_inputs().unwrap();
+        let slots: Vec<Option<usize>> = physical.schedule.iter().map(|step| step.library).collect();
+        assert_eq!(slots, vec![None, Some(0), Some(0), None, Some(0)]);
+        // the returning step has no spectrum of its own, so it runs on the base spectrum
+        assert!(physical.schedule[3].spectrum_flux.is_none());
+        assert_eq!(
+            physical.schedule[4]
+                .spectrum_flux
+                .as_ref()
+                .unwrap()
+                .values(),
+            &[3.0, 4.0]
+        );
+    }
+
+    #[test]
+    fn schedule_library_override_declares_its_projectile() {
+        let mut value = library_switch_spec();
+        value["schedule"][1]["projectile"] = serde_json::json!("triton");
+        value["schedule"][1]["spectrum"] = serde_json::json!({
+            "structure": "fispact-162",
+            "flux_per_group": vec![1.0; 162],
+        });
+        let spec = Spec::from_json(&value.to_string()).unwrap();
+        let libraries = spec.step_libraries().unwrap();
+        assert_eq!(libraries[0].projectile, Projectile::Triton);
+        spec.physical_inputs().unwrap();
+
+        // The neutron grid does not suit a triton library.
+        value["schedule"][1]["spectrum"] = serde_json::json!({
+            "structure": "fispact-709",
+            "flux_per_group": vec![1.0; 709],
+        });
+        let error = Spec::from_json(&value.to_string())
+            .and_then(|spec| spec.physical_inputs().map(|_| ()))
+            .unwrap_err();
+        assert!(
+            error.contains("does not suit the triton projectile"),
+            "{error}"
+        );
+
+        // A projectile with no library to describe is a mistake, not a no-op.
+        let mut value = minimal_spec();
+        value["schedule"][0]["projectile"] = serde_json::json!("proton");
+        assert!(Spec::from_json(&value.to_string())
+            .unwrap_err()
+            .contains("only valid together with a library override"));
+    }
+
+    #[test]
+    fn schedule_library_override_needs_a_spectrum_in_the_new_structure() {
+        let mut value = library_switch_spec();
+        value["schedule"][1]
+            .as_object_mut()
+            .unwrap()
+            .remove("spectrum");
+        assert!(Spec::from_json(&value.to_string())
+            .unwrap_err()
+            .contains("must declare a spectrum"));
+
+        let mut value = library_switch_spec();
+        value["schedule"][1]["spectrum"]["boundaries_eV"] = serde_json::json!([1.0, 3.0]);
+        let error = Spec::from_json(&value.to_string())
+            .and_then(|spec| spec.physical_inputs().map(|_| ()))
+            .unwrap_err();
+        assert!(error.contains("groups need 3"), "{error}");
+    }
+
+    #[test]
+    fn schedule_library_override_refuses_single_library_features() {
+        let mut value = library_switch_spec();
+        value["uncertainty"] = serde_json::json!({
+            "covariance": {"path": "cov.npz", "sha256": "0".repeat(64)},
+        });
+        assert!(Spec::from_json(&value.to_string())
+            .unwrap_err()
+            .contains("cannot be combined with uncertainty"));
+
+        let mut value = library_switch_spec();
+        value["options"] = serde_json::json!({"gas": true});
+        assert!(Spec::from_json(&value.to_string())
+            .unwrap_err()
+            .contains("cannot be combined with options.gas"));
+
+        let mut value = library_switch_spec();
+        value["options"] = serde_json::json!({"rate_scale": {"0": 2.0}});
+        assert!(Spec::from_json(&value.to_string())
+            .unwrap_err()
+            .contains("cannot be combined with options.rate_scale"));
+
+        // The same spec without the conflict is valid.
+        assert!(Spec::from_json(&library_switch_spec().to_string()).is_ok());
     }
 }

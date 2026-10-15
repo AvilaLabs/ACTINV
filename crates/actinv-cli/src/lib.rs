@@ -265,7 +265,7 @@ impl DataCatalog {
             }
             let expected_groups = match bundle.projectile.as_str() {
                 "neutron" => "fispact-709",
-                "proton" | "deuteron" | "alpha" => "fispact-162",
+                "proton" | "deuteron" | "triton" | "helion" | "alpha" => "fispact-162",
                 other => {
                     return Err(format!(
                         "bundle '{}' has unsupported projectile '{other}'",

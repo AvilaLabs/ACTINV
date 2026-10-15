@@ -26,7 +26,7 @@ actinv validate problem.json
 
 | field | meaning |
 |---|---|
-| `projectile` | `neutron`, `proton`, `deuteron`, `alpha` or `gamma`; omission preserves the historical neutron default. |
+| `projectile` | `neutron`, `proton`, `deuteron`, `triton`, `helion` (He-3), `alpha` or `gamma`; omission preserves the historical neutron default. |
 | `library.path` | ACTINV `.npz` activation library; the adjacent `<stem>_index.json` is also required. |
 | `library.sha256` | Optional declared hash. ACTINV always computes the library hash and fails if a declaration differs. The index's recorded library hash is checked too. |
 | `decay.primary` | ENDF-6 radioactive-decay sublibrary. |
@@ -68,7 +68,7 @@ aggregates explicit isotopes back to elemental mass fractions.
 ## Projectile and spectrum
 
 Neutrons use `fispact-709` with exactly 709 values, or any other FISPACT-II neutron structure listed under
-[Group structures](#group-structures) with exactly that structure's group count. Proton, deuteron and alpha use
+[Group structures](#group-structures) with exactly that structure's group count. Proton, deuteron, triton, helion and alpha use
 `fispact-162` with exactly 162 values and require `options.temperature_K: 0`; charged specs reject fission-yield files. `custom` requires one more
 strictly increasing boundary than flux values. Those boundaries must match the activation library to `1e-12`
 relative. `total`, when present, rescales group values while preserving shape; a positive `total` with an all-zero
@@ -540,6 +540,27 @@ directions are the rows collapsed under its own spectrum, decay-constant directi
 the propagated covariance carries the cross-spectrum blocks `φ_sᵀ C φ_s'` so a single physical draw propagates
 through every step's collapse. Each sensitivity parameter reports its `spectrum` index (0 = base).
 
+Any step may also declare an optional `library` override (and, when that library is for a different projectile than
+the spec's, the matching `projectile`). The override is sticky: the step and every later step collapse their reaction
+rates from the new library until a step names another library, or names the spec's own `library` again to return to
+it. The step that switches must carry its own `spectrum` in the new library's group structure (`fispact-709` for a
+neutron library, `fispact-162` for any other projectile, or `custom` with boundaries equal to the library's); later
+steps on that library keep it as their default spectrum, and may replace it for a single step with their own. A
+`projectile` without a `library` is rejected. Each overriding library is verified like the base library (hashes,
+index projectile, group structure, and temperature: a neutron library must match `options.temperature_K`, any other
+projectile's index must say 0 K), and its path joins the prepared-data fingerprint.
+
+All libraries share the one decay chain, so the state vector is the same through a switch: the inventory at the end
+of one step is the initial inventory of the next, and only the collapsed rate triplets change. A product that the
+decay chain does not know leaks exactly as in a single-library run; each overriding library's unmapped products,
+products without decay data, isomer fallbacks and absent targets are listed under `ledger.step_libraries`, together
+with the steps it served and its fluence, and the library and index hashes appear under
+`certificate.inputs.step_libraries`. The cumulative `fluence_*` fields add every step's own spectrum total whatever
+its projectile; the per-library fluence is the one to read across a switch. Pathway attribution covers the base
+library only and is suppressed (named in `ledger.step_libraries.pathways_suppressed`). Overrides cannot be combined
+with `uncertainty`, `options.gas`, `self_shielding`, `damage`, `fission_yields` or `options.rate_scale` (each is built
+on one library's rows), with mesh mode, or inside a study; the spec is refused rather than half-applied.
+
 Any step may also declare optional `feed` and `removal` maps. `feed` entries are explicit nuclides
 (`Co60`, `Ta180m1`) with constant rates in atoms s⁻¹ g⁻¹, applied during the declaring step regardless of the
 multiplier — a feed on a zero-flux cooling step still delivers atoms. `removal` entries are nuclides or element
@@ -552,7 +573,7 @@ is named in the ledger under `feed_removal.removal_reservoir_exempt`, along with
 the declared removals. Pathway attribution covers production chains only and is suppressed when a schedule
 declares feed or removal.
 
-For non-neutron projectiles (proton, deuteron, alpha and gamma), steps expose the generic `fluence_particles_cm2`
+For non-neutron projectiles (proton, deuteron, triton, helion, alpha and gamma), steps expose the generic `fluence_particles_cm2`
 and identify the projectile in the result, ledger, certificate and prepared/mesh compatibility records. Neutron
 results retain their historical bytes and `fluence_n_cm2` field when `projectile` is omitted.
 
@@ -581,9 +602,9 @@ actinv build-library INPUT OUTPUT.npz \
 ```
 
 `INPUT` is one ENDF-6 evaluation or a directory. `--format` accepts `auto`, `tendl` or `eaf`; `--projectile` accepts
-`auto`, `neutron`, `proton`, `deuteron`, `alpha` or `gamma`; `--groups` accepts any named structure under
+`auto`, `neutron`, `proton`, `deuteron`, `triton`, `helion`, `alpha` or `gamma`; `--groups` accepts any named structure under
 [Group structures](#group-structures) (a neutron build takes `fispact-709` or another neutron grid; the
-charged-particle and gamma builds take `fispact-162`) or a custom boundary file. Neutron defaults are 709 groups and 293.6 K; proton/deuteron/alpha/gamma defaults are 162
+charged-particle and gamma builds take `fispact-162`) or a custom boundary file. Neutron defaults are 709 groups and 293.6 K; the other projectiles' defaults are 162
 groups and 0 K (gamma, like the other non-neutron projectiles, refuses a nonzero temperature — TENDL does not carry
 a Doppler-broadened gamma sublibrary). The adjacent `<stem>_index.json` records source hashes, normalized options,
 group hash, builder fingerprint, target ledgers and the final NPZ hash. A content-addressed cache is optional and
@@ -665,6 +686,17 @@ The index gains a `spallation` block (omitted without the option, leaving the in
 and SHA-256, its description, the requested and effective splice energies, the first spliced group, the rows
 replaced and added in total and per target, and the skipped targets. Each affected target's ledger carries a line with
 the same counts.
+
+### Triton and helion projectiles
+
+`--projectile triton` and `--projectile helion` build from ENDF-6 evaluations whose incident-particle record is
+NSUB 10030 (triton, projectile ZA `(1, 3)`) or NSUB 20030 (He-3, ZA `(2, 3)`), on the same CCFE-162 structure and the
+same MF=3/6/8/10 families as the other charged projectiles. The projectile is read from the evaluation, not from a file
+name, and AWI must be within 10% of mass number 3. Residual arithmetic is target + projectile − emitted particles
+(for example Fe-56 + t gives Co-59 for MT=102, Fe-56 + He-3 gives Ni-59), and the MT=5 residual production of charged
+projectiles uses the same MF=6/MF=8/MF=10 path as proton, deuteron and alpha. ACTINV ships no triton or helion
+library: the TENDL t and h sublibraries are the intended source, but none is in the standard catalog, so build the
+library yourself and check its coverage in the target ledgers.
 
 ### Gamma (photonuclear) projectile
 

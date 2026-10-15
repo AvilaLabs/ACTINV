@@ -11,7 +11,7 @@ use crate::sparse::Csc;
 use crate::spec::{
     DamageOptions, DecayRef, FissionYieldOptions, HashedFileRef, LibraryRef, PhotonOptions,
     PhysicalInputs, Projectile, RadiologicalOptions, SelfShieldingOptions, Spec, Spectrum,
-    UncertaintyOptions,
+    StepLibrary, UncertaintyOptions,
 };
 use crate::summary::{self, StateAtoms, StepSummary};
 use crate::uncertainty::{
@@ -594,6 +594,19 @@ impl ReactionLibrary for BatchedView<'_> {
     }
 }
 
+/// A library a schedule step switches to (`Step.library`), verified and loaded beside the base one. It shares the
+/// run's decay chain: only its collapsed reaction rates differ, so the state vector needs no remapping.
+struct PreparedStepLibrary {
+    reference: LibraryRef,
+    projectile: Projectile,
+    library_sha: String,
+    index_path: String,
+    index_sha: String,
+    library: ActivationLibrary,
+    library_targets: Vec<(i32, i32)>,
+    group_structure: Option<String>,
+}
+
 /// Immutable, verified nuclear data shared by ordinary and mesh solves.
 ///
 /// A prepared value owns the decompressed activation library, parsed decay records, decay
@@ -641,6 +654,8 @@ pub struct PreparedRun {
     radiological: Option<PreparedRadiological>,
     damage: Option<PreparedDamage>,
     shielding: Option<PreparedShielding>,
+    /// Libraries named by schedule-step overrides, in order of first use (empty without overrides).
+    step_libraries: Vec<PreparedStepLibrary>,
 }
 
 struct PreparedDamage {
@@ -2183,6 +2198,8 @@ impl PreparedRun {
         )?;
         prepared.unmodeled_table = unmodeled_table;
         prepared.unmodeled_evalspread = unmodeled_evalspread;
+        prepared.step_libraries =
+            Self::prepare_step_libraries(&spec.step_libraries()?, physical.temperature)?;
         Ok(prepared)
     }
 
@@ -2685,6 +2702,152 @@ impl PreparedRun {
             radiological,
             damage,
             shielding,
+            step_libraries: Vec::new(),
+        })
+    }
+
+    /// Load and verify the libraries a schedule's `library` overrides name. Each is held to the same index
+    /// contract as the base library (hashes, projectile, group structure, temperature), against the projectile
+    /// the step declares. Neutron libraries must match the run's temperature; charged-particle libraries are 0 K.
+    fn prepare_step_libraries(
+        step_libraries: &[StepLibrary],
+        temperature_K: Kelvin,
+    ) -> Result<Vec<PreparedStepLibrary>, String> {
+        step_libraries
+            .iter()
+            .map(|step_library| {
+                Self::prepare_step_library(step_library, temperature_K).map_err(|error| {
+                    format!("schedule library '{}': {error}", step_library.library.path)
+                })
+            })
+            .collect()
+    }
+
+    fn prepare_step_library(
+        step_library: &StepLibrary,
+        temperature_K: Kelvin,
+    ) -> Result<PreparedStepLibrary, String> {
+        let reference = &step_library.library;
+        let projectile = step_library.projectile;
+        let library_sha = verify_hash(&reference.path, reference.sha256.as_deref())?;
+        let idx_path = index_path(&reference.path);
+        let (index_text, index_sha) = read_verified_text(&idx_path, None)?;
+        let index: serde_json::Value =
+            serde_json::from_str(&index_text).map_err(|e| e.to_string())?;
+        let group_structure = index
+            .get("groups")
+            .and_then(serde_json::Value::as_str)
+            .map(str::to_owned);
+        let library = ActivationLibrary::Groupwise(
+            prepared_data::load_or_prepare_groupwise_after_sha256_verification(
+                &reference.path,
+                &library_sha,
+                &index_sha,
+            )?,
+        );
+        let index_projectile = match index.get("projectile") {
+            None | Some(serde_json::Value::Null) => Projectile::Neutron,
+            Some(serde_json::Value::String(value)) => Projectile::parse(value)?,
+            Some(_) => return Err("activation-library index projectile must be a string".into()),
+        };
+        if index_projectile != projectile {
+            return Err(format!(
+                "step projectile '{}' does not match activation-library projectile '{}'",
+                projectile.name(),
+                index_projectile.name()
+            ));
+        }
+        match index.get("sha256_npz") {
+            Some(serde_json::Value::String(recorded))
+                if !library_sha.eq_ignore_ascii_case(recorded) =>
+            {
+                return Err(format!(
+                    "activation-library index hash mismatch: index records {recorded}, computed {library_sha}"
+                ));
+            }
+            Some(serde_json::Value::String(_)) => {}
+            Some(_) => return Err("activation-library index sha256_npz must be a string".into()),
+            None if !projectile.is_neutron() => {
+                return Err("charged activation-library index has no sha256_npz".into());
+            }
+            None => {}
+        }
+        let actual_group_hash = GroupStructure {
+            name: group_structure.clone().unwrap_or_else(|| "custom".into()),
+            boundaries_ev: library.boundaries_ev().to_vec(),
+        }
+        .hash();
+        if let Some(recorded) = index.get("group_boundary_sha256") {
+            let recorded = recorded
+                .as_str()
+                .ok_or("activation-library group_boundary_sha256 must be a string")?;
+            if !actual_group_hash.eq_ignore_ascii_case(recorded) {
+                return Err(format!(
+                    "activation-library group-boundary hash mismatch: index records {recorded}, computed {actual_group_hash}"
+                ));
+            }
+        } else if !projectile.is_neutron() {
+            return Err("charged activation-library index has no group_boundary_sha256".into());
+        }
+        if !projectile.is_neutron() && group_structure.is_none() {
+            return Err("charged activation-library index has no named group structure".into());
+        }
+        if let Some(name) = group_structure.as_deref() {
+            if let Some(canonical) = GroupStructure::resolve_named(name)? {
+                if canonical.boundaries_ev.len() != library.boundaries_ev().len()
+                    || canonical
+                        .boundaries_ev
+                        .iter()
+                        .zip(library.boundaries_ev())
+                        .any(|(expected, stored)| expected.to_bits() != stored.to_bits())
+                {
+                    return Err(format!(
+                        "activation-library boundaries do not match declared group structure '{name}'"
+                    ));
+                }
+            }
+        }
+        let expected_temperature = if projectile.is_neutron() {
+            temperature_K.get()
+        } else {
+            0.0
+        };
+        match index.get("temperature_K") {
+            Some(value) => {
+                let temperature = value
+                    .as_f64()
+                    .ok_or("activation-library temperature_K must be numeric")?;
+                if (temperature - expected_temperature).abs() > 1e-9 {
+                    return Err(format!(
+                        "requested temperature {expected_temperature} K does not match library temperature {temperature} K"
+                    ));
+                }
+            }
+            None if !projectile.is_neutron() => {
+                return Err("charged activation-library index has no temperature_K".into());
+            }
+            None => {}
+        }
+        let library_targets: Vec<(i32, i32)> = index["targets"]
+            .as_array()
+            .ok_or("library index has no targets")?
+            .iter()
+            .map(|target| {
+                (
+                    target["za"].as_i64().unwrap_or(0) as i32,
+                    target["liso"].as_i64().unwrap_or(0) as i32,
+                )
+            })
+            .collect();
+        Ok(PreparedStepLibrary {
+            reference: reference.clone(),
+            projectile,
+            library_sha,
+            index_path: idx_path,
+            index_sha,
+            library,
+            library_targets,
+            group_structure,
         })
     }
 
@@ -2913,6 +3076,17 @@ impl PreparedRun {
                 != self.shielding.as_ref().map(|prepared| &prepared.options)
         {
             return Err("run spec nuclear-data inputs do not match the prepared data".into());
+        }
+        let step_libraries = spec.step_libraries()?;
+        if step_libraries.len() != self.step_libraries.len()
+            || step_libraries
+                .iter()
+                .zip(&self.step_libraries)
+                .any(|(wanted, prepared)| {
+                    wanted.library != prepared.reference || wanted.projectile != prepared.projectile
+                })
+        {
+            return Err("run spec schedule libraries do not match the prepared data".into());
         }
         if group_structure_mismatch(
             Some(&spec.spectrum.structure),
@@ -3418,26 +3592,95 @@ impl PreparedRun {
         // spectrum; distinct override spectra collapse once each on the
         // groupwise rows (multi-spectrum specs never take the pre-collapsed
         // library path) and map back to their declaring steps.
+        //
+        // Schedule library overrides (`Step.library`) ride the same mechanism: a step on another library always
+        // owns an extra spectrum entry, tagged with that library's slot, because its rates are collapsed from
+        // that library's rows. Every library shares the decay chain, so the rate triplets are over the same
+        // state indices and the state vector crosses a switch unchanged.
+        let has_step_library = !self.step_libraries.is_empty();
+        if let Some(feature) = spec.step_library_conflict() {
+            return Err(format!(
+                "schedule step library overrides cannot be combined with {feature}"
+            ));
+        }
+        let (_, step_contexts) = spec.resolve_step_libraries()?;
         let mut step_spectrum_id: Vec<Option<usize>> = Vec::with_capacity(sched.len());
         let mut extra_spectra: Vec<&[f64]> = Vec::new();
-        for step in sched.iter() {
+        // The library slot each extra spectrum collapses against (None = base library); parallel to extra_spectra.
+        let mut extra_libraries: Vec<Option<usize>> = Vec::new();
+        for (si, step) in sched.iter().enumerate() {
             if let Some(sf) = &step.spectrum_flux {
                 let vals: &[f64] = sf.values();
-                let id = if vals == phi {
+                if let Some(slot) = step.library {
+                    // ensure_compatible matched the prepared libraries to this spec's, so the slot exists.
+                    let step_library = &self.step_libraries[slot];
+                    let declared = step_contexts[si].spectrum.ok_or_else(|| {
+                        format!(
+                            "schedule step {} on a library override has no spectrum",
+                            si + 1
+                        )
+                    })?;
+                    if step_library.library.group_count() != vals.len() {
+                        return Err(format!(
+                            "schedule step {} spectrum has {} groups but activation library '{}' has {}",
+                            si + 1,
+                            vals.len(),
+                            step_library.reference.path,
+                            step_library.library.group_count()
+                        ));
+                    }
+                    if group_structure_mismatch(
+                        Some(&declared.structure),
+                        step_library.group_structure.as_deref(),
+                    ) {
+                        return Err(format!(
+                            "schedule step {} spectrum group structure '{}' does not match activation-library group structure '{}'",
+                            si + 1,
+                            declared.structure,
+                            step_library.group_structure.as_deref().unwrap_or_default()
+                        ));
+                    }
+                    if let Some(boundaries) = &declared.boundaries_eV {
+                        let stored = step_library.library.boundaries_ev();
+                        if boundaries.len() != stored.len()
+                            || boundaries.iter().zip(stored).any(|(declared, stored)| {
+                                (declared - stored).abs()
+                                    > 1e-12 * declared.abs().max(stored.abs()).max(1.0)
+                            })
+                        {
+                            return Err(format!(
+                                "schedule step {} spectrum boundaries do not match activation library '{}'",
+                                si + 1,
+                                step_library.reference.path
+                            ));
+                        }
+                    }
+                    step_library.library.validate_flux(vals)?;
+                }
+                let id = if step.library.is_none() && vals == phi {
                     None
                 } else {
-                    let pos = extra_spectra.iter().position(|s| *s == vals);
+                    let pos = (0..extra_spectra.len())
+                        .find(|&i| extra_libraries[i] == step.library && extra_spectra[i] == vals);
                     let pos = match pos {
                         Some(p) => p,
                         None => {
-                            lib.validate_flux(vals)?;
+                            if step.library.is_none() {
+                                lib.validate_flux(vals)?;
+                            }
                             extra_spectra.push(vals);
+                            extra_libraries.push(step.library);
                             extra_spectra.len() - 1
                         }
                     };
                     Some(pos)
                 };
                 step_spectrum_id.push(id);
+            } else if step.library.is_some() {
+                return Err(format!(
+                    "schedule step {} on a library override has no spectrum",
+                    si + 1
+                ));
             } else {
                 step_spectrum_id.push(None);
             }
@@ -3447,14 +3690,24 @@ impl PreparedRun {
         // row's tangent direction is the collapse of its derivative edges under
         // that step's spectrum.
         let mut react_extra_assembly: Vec<chain::ReactionAssembly> = Vec::new();
-        for extra_phi in &extra_spectra {
+        // The first collapse's ledger of each overriding library, emitted under `ledger.step_libraries`.
+        let mut step_library_ledgers: Vec<Option<RateLedger>> =
+            self.step_libraries.iter().map(|_| None).collect();
+        for (extra_phi, extra_slot) in extra_spectra.iter().zip(&extra_libraries) {
+            let (extra_lib, extra_targets): (&ActivationLibrary, &[(i32, i32)]) = match extra_slot {
+                Some(slot) => (
+                    &self.step_libraries[*slot].library,
+                    self.step_libraries[*slot].library_targets.as_slice(),
+                ),
+                None => (lib, lib_targets.as_slice()),
+            };
             // a throwaway ledger per extra collapse: the base ledger already
             // recorded the channel universe; these calls only differ in phi
             let mut scratch = RateLedger::default();
             if spec.uncertainty.is_some() {
                 let assembly = chain::reaction_rates_with_derivatives(
-                    lib,
-                    lib_targets,
+                    extra_lib,
+                    extra_targets,
                     extra_phi,
                     ch,
                     &effective_fission_yields,
@@ -3467,8 +3720,8 @@ impl PreparedRun {
                 react_extra_assembly.push(assembly);
             } else {
                 react_extra.push(chain::reaction_rates(
-                    lib,
-                    lib_targets,
+                    extra_lib,
+                    extra_targets,
                     extra_phi,
                     ch,
                     &effective_fission_yields,
@@ -3478,15 +3731,37 @@ impl PreparedRun {
                     spec.options.gas,
                 ));
             }
+            if let Some(slot) = extra_slot {
+                if step_library_ledgers[*slot].is_none() {
+                    step_library_ledgers[*slot] = Some(scratch);
+                }
+            }
         }
         let flux_weighted_time_s: f64 = sched
             .iter()
             .map(|step| (step.duration() * step.multiplier()).get())
             .sum();
         let mut burnup_optical_depth: HashMap<usize, f64> = HashMap::new();
-        for (r, c, v) in &react {
-            if *r == *c && *v < 0.0 {
-                *burnup_optical_depth.entry(*c).or_insert(0.0) += -v * flux_weighted_time_s;
+        if has_step_library {
+            // Each step depletes under its own library's rates, so the depth is summed step by step instead of
+            // scaling the base rates by the whole schedule's flux-weighted time.
+            for (si, step) in sched.iter().enumerate() {
+                let step_time_s = (step.duration() * step.multiplier()).get();
+                let step_react = match step_spectrum_id[si] {
+                    Some(id) => &react_extra[id],
+                    None => &react,
+                };
+                for (r, c, v) in step_react {
+                    if *r == *c && *v < 0.0 {
+                        *burnup_optical_depth.entry(*c).or_insert(0.0) += -v * step_time_s;
+                    }
+                }
+            }
+        } else {
+            for (r, c, v) in &react {
+                if *r == *c && *v < 0.0 {
+                    *burnup_optical_depth.entry(*c).or_insert(0.0) += -v * flux_weighted_time_s;
+                }
             }
         }
         // Product-column optical depth: the scale on which a flux
@@ -4984,7 +5259,10 @@ impl PreparedRun {
         let mut closure = 0.0f64;
         // Feed/removal boundary sources and sinks are not production chains: when a schedule
         // declares them, pathway attribution is suppressed rather than silently mis-attributed.
-        let pathways_suppressed = want_paths && mode == "trace" && (has_feed || has_removal);
+        // A schedule that switches library is suppressed the same way: the source terms and the pathway solve
+        // below carry the base library's rates only.
+        let pathways_suppressed =
+            want_paths && mode == "trace" && (has_feed || has_removal || has_step_library);
         if mode == "trace" && want_paths && !sources.is_empty() && !pathways_suppressed {
             let mut agg: BTreeMap<(usize, (i32, i32)), f64> = BTreeMap::new();
             for (row, rate, from) in &sources {
@@ -5445,6 +5723,62 @@ impl PreparedRun {
             ledger.as_object_mut().expect("ledger is an object").insert(
                 "projectile".into(),
                 serde_json::Value::String(spec.projectile.name().into()),
+            );
+        }
+        if has_step_library {
+            let libraries: Vec<serde_json::Value> = self
+                .step_libraries
+                .iter()
+                .enumerate()
+                .map(|(slot, step_library)| {
+                    let steps_on: Vec<usize> = sched
+                        .iter()
+                        .enumerate()
+                        .filter(|(_, step)| step.library == Some(slot))
+                        .map(|(si, _)| si + 1)
+                        .collect();
+                    let fluence: f64 = sched
+                        .iter()
+                        .enumerate()
+                        .filter(|(_, step)| step.library == Some(slot))
+                        .map(|(si, step)| {
+                            let total: f64 = step_spectrum_id[si].map_or_else(
+                                || base_flux_total.get(),
+                                |id| extra_spectra[id].iter().sum(),
+                            );
+                            (step.duration() * step.multiplier()).get() * total
+                        })
+                        .sum();
+                    let rates = step_library_ledgers[slot].as_ref();
+                    serde_json::json!({
+                        "library": step_library.reference.path,
+                        "library_sha256": step_library.library_sha,
+                        "projectile": step_library.projectile.name(),
+                        "group_structure": step_library.group_structure,
+                        "steps": steps_on,
+                        "fluence_particles_cm2": fluence,
+                        "products_no_evaluated_decay_data": rates.map(|ledger| &ledger.products_no_decay_data),
+                        "products_unmapped_to_leakage": rates.map(|ledger| &ledger.products_unmapped),
+                        "isomer_state_absent_from_decay_library_used_ground": rates.map(|ledger| &ledger.isomer_fell_back_to_ground),
+                        "targets_absent_from_decay_library": rates.map(|ledger| {
+                            ledger
+                                .targets_absent_from_decay_lib
+                                .iter()
+                                .map(|(z, l)| format!("{z}_{l}"))
+                                .collect::<Vec<_>>()
+                        }),
+                    })
+                })
+                .collect();
+            ledger.as_object_mut().expect("ledger is an object").insert(
+                "step_libraries".into(),
+                serde_json::json!({
+                    "libraries": libraries,
+                    "fluence_note": "schedule.fluence_* and steps[].fluence_* accumulate every step's own spectrum total whatever its projectile; the per-library fluence is listed above",
+                    "pathways_suppressed": pathways_suppressed.then_some(
+                        "schedule library overrides declared; pathway attribution covers the base library only"
+                    ),
+                }),
             );
         }
         // Attached post-construction — the json! literal is at its
@@ -6001,6 +6335,26 @@ impl PreparedRun {
                 .expect("certificate inputs is an object")
                 .insert("unmodeled_evalspread".into(), provenance.clone());
         }
+        if has_step_library {
+            let entries: Vec<serde_json::Value> = self
+                .step_libraries
+                .iter()
+                .map(|step_library| {
+                    serde_json::json!({
+                        "projectile": step_library.projectile.name(),
+                        "library": {"path": step_library.reference.path, "sha256": step_library.library_sha},
+                        "library_index": {"path": step_library.index_path, "sha256": step_library.index_sha},
+                    })
+                })
+                .collect();
+            certificate
+                .as_object_mut()
+                .expect("certificate is an object")
+                .get_mut("inputs")
+                .and_then(serde_json::Value::as_object_mut)
+                .expect("certificate inputs is an object")
+                .insert("step_libraries".into(), serde_json::Value::Array(entries));
+        }
         if let Some(prepared) = &self.radiological {
             let mut metadata = prepared.table.certificate_metadata();
             let metadata_object = metadata
@@ -6267,6 +6621,10 @@ fn prepared_fingerprint(
     for file in &spec.fission_yields.files {
         files.push(fingerprint_file(&file.path)?);
     }
+    let step_libraries = spec.step_libraries()?;
+    for step_library in &step_libraries {
+        files.push(fingerprint_file(&step_library.library.path)?);
+    }
     if let Some(options) = spec.radiological.as_ref() {
         files.push(fingerprint_file(&options.table.path)?);
     }
@@ -6306,6 +6664,21 @@ fn prepared_fingerprint(
             .map(|flux| flux.iter().map(|v| v.to_bits()).collect::<Vec<u64>>()),
         "files": files,
     });
+    // Present only for a schedule that switches library, so every other fingerprint is unchanged.
+    if !step_libraries.is_empty() {
+        canonical["step_libraries"] = serde_json::Value::Array(
+            step_libraries
+                .iter()
+                .map(|step_library| {
+                    serde_json::json!({
+                        "library": step_library.library.path,
+                        "sha256": step_library.library.sha256,
+                        "projectile": step_library.projectile.name(),
+                    })
+                })
+                .collect(),
+        );
+    }
     let full = format!("{:x}", Sha256::digest(canonical.to_string().as_bytes()));
     let object = canonical
         .as_object_mut()
@@ -6996,6 +7369,7 @@ mod gas_prepared_tests {
             radiological: None,
             damage: None,
             shielding: None,
+            step_libraries: Vec::new(),
         };
         (spec, prepared)
     }
@@ -7113,6 +7487,300 @@ mod gas_prepared_tests {
             "He4 inventory_appm {} vs appm {}",
             last.He4.inventory_appm,
             last.He4.appm
+        );
+    }
+}
+
+/// Schedule library overrides (`Step.library`) on a synthetic chain: two dense libraries over one decay chain,
+/// solved by the full per-step path. Library A (4 groups) converts Fe56 to Fe57 at 0.5 s^-1 under the base
+/// spectrum; library B (2 groups) converts Fe56 to Co59 at 0.3 s^-1 under its own spectrum. Every cross section
+/// is 1 b, so a library's rate is 1e-24 times its spectrum's total flux.
+#[cfg(test)]
+mod step_library_tests {
+    use super::*;
+    use std::collections::HashSet;
+
+    const TARGET: (i32, i32) = (26_056, 0);
+    const PRODUCT_A: (i32, i32) = (26_057, 0);
+    const PRODUCT_B: (i32, i32) = (27_059, 0);
+    const RATE_A: f64 = 0.5;
+    const RATE_B: f64 = 0.3;
+
+    fn stand_in(za: (i32, i32)) -> decay::Nuclide {
+        decay::Nuclide {
+            mat: 0,
+            za: za.0,
+            awr: (za.0 % 1000) as f64,
+            liso: za.1,
+            nst: 1,
+            half_life: 0.0,
+            d_half_life: 0.0,
+            energies: Vec::new(),
+            modes: Vec::new(),
+            spectra: Vec::new(),
+        }
+    }
+
+    /// Loss row plus one capture-like product row, both 1 b in every group.
+    fn one_channel_library(mt: i32, product: (i32, i32), bounds: Vec<f64>) -> library::Library {
+        let ngroups = bounds.len() - 1;
+        library::Library {
+            rows: vec![
+                library::Row {
+                    target: 0,
+                    mt: 1,
+                    zap: -1,
+                    lfs: 0,
+                    lmf: 0,
+                },
+                library::Row {
+                    target: 0,
+                    mt,
+                    zap: product.0,
+                    lfs: product.1,
+                    lmf: -1,
+                },
+            ],
+            sig: vec![1.0; 2 * ngroups],
+            ngroups,
+            bounds,
+        }
+    }
+
+    fn spec_json(with_switch: bool) -> Spec {
+        let mut schedule = vec![serde_json::json!({"dt": "1 s", "flux": 1.0})];
+        if with_switch {
+            schedule.push(serde_json::json!({
+                "dt": "2 s",
+                "flux": 1.0,
+                "library": {"path": "synthetic_b.npz"},
+                "spectrum": {
+                    "structure": "custom",
+                    "boundaries_eV": [1.0, 3.0, 5.0],
+                    "flux_per_group": [1.0e23, 2.0e23],
+                },
+            }));
+            // cooling: keeps library B and its spectrum, but flux 0 switches every rate off
+            schedule.push(serde_json::json!({"dt": "3 s", "flux": 0.0}));
+        } else {
+            schedule.push(serde_json::json!({"dt": "2 s", "flux": 1.0}));
+            schedule.push(serde_json::json!({"dt": "3 s", "flux": 0.0}));
+        }
+        serde_json::from_value(serde_json::json!({
+            "spec": "actinv-spec-1",
+            "library": {"path": "synthetic.npz"},
+            "decay": {"primary": "synthetic.dat"},
+            "material": {"mass_g": 1.0, "basis": "wt_percent", "composition": {"Fe56": 100.0}},
+            "spectrum": {"structure": "custom", "boundaries_eV": [1.0, 2.0, 3.0, 4.0, 5.0],
+                         "flux_per_group": [1.25e23, 1.25e23, 1.25e23, 1.25e23], "descending": false},
+            "schedule": schedule,
+            "options": {"mode": "coupled", "prune": "none"}
+        }))
+        .expect("synthetic switching spec parses")
+    }
+
+    fn prepared(with_step_library: bool) -> PreparedRun {
+        let nuclides: HashMap<(i32, i32), decay::Nuclide> = HashMap::from([
+            (TARGET, stand_in(TARGET)),
+            (PRODUCT_A, stand_in(PRODUCT_A)),
+            (PRODUCT_B, stand_in(PRODUCT_B)),
+        ]);
+        let chain = chain::build(&nuclides);
+        let step_libraries = if with_step_library {
+            vec![PreparedStepLibrary {
+                reference: LibraryRef {
+                    path: "synthetic_b.npz".into(),
+                    sha256: None,
+                },
+                projectile: Projectile::Neutron,
+                library_sha: "1".repeat(64),
+                index_path: "synthetic_b_index.json".into(),
+                index_sha: "2".repeat(64),
+                library: ActivationLibrary::Dense(one_channel_library(
+                    105,
+                    PRODUCT_B,
+                    vec![1.0, 3.0, 5.0],
+                )),
+                library_targets: vec![TARGET],
+                group_structure: None,
+            }]
+        } else {
+            Vec::new()
+        };
+        PreparedRun {
+            library_path: "synthetic.npz".into(),
+            library_sha_declared: None,
+            library_sha: "0".repeat(64),
+            index_path: "synthetic_index.json".into(),
+            index_sha: "0".repeat(64),
+            index: serde_json::json!({}),
+            library: ActivationLibrary::Dense(one_channel_library(
+                102,
+                PRODUCT_A,
+                vec![1.0, 2.0, 3.0, 4.0, 5.0],
+            )),
+            library_targets: vec![TARGET],
+            decay_primary: "synthetic.dat".into(),
+            decay_primary_sha: "0".repeat(64),
+            decay_fallback: None,
+            decay_fallback_sha: None,
+            decay_overrides_sha: None,
+            decay_overrides_applied: Vec::new(),
+            nuclides,
+            decay_fallback_keys: HashSet::new(),
+            chain,
+            gas_missing_light_states: Vec::new(),
+            decay_nuclides_from_fallback: 0,
+            photon_options: PhotonOptions::default(),
+            response: None,
+            response_sha: None,
+            fission_options: FissionYieldOptions::default(),
+            fission_yields: HashMap::new(),
+            fission_yield_inputs: Vec::new(),
+            projectile: Projectile::Neutron,
+            library_group_structure: None,
+            temperature_K: Kelvin::new(293.6).expect("293.6 K is valid"),
+            uncertainty_options: None,
+            covariance: None,
+            unmodeled_table: None,
+            unmodeled_evalspread: None,
+            radiological: None,
+            damage: None,
+            shielding: None,
+            step_libraries,
+        }
+    }
+
+    fn solve(spec: &Spec, prepared: &PreparedRun) -> Result<RunResult, String> {
+        let physical = spec.physical_inputs()?;
+        let mut profiler = RunProfiler::disabled();
+        prepared.run_started_profiled(
+            spec,
+            &physical,
+            "test",
+            std::time::Instant::now(),
+            &mut profiler,
+            None,
+            None,
+        )
+    }
+
+    fn atoms(step: &StepOut, nuclide: &str) -> f64 {
+        step.inventory
+            .iter()
+            .find(|entry| entry.nuclide == nuclide)
+            .map_or(0.0, |entry| entry.atoms_per_g)
+    }
+
+    fn close(actual: f64, expected: f64) {
+        assert!(
+            (actual - expected).abs() <= 1e-9 * expected.abs().max(1e-300),
+            "{actual} vs {expected}"
+        );
+    }
+
+    #[test]
+    fn inventory_carries_across_the_switch_and_the_second_library_applies_only_after_it() {
+        let result = solve(&spec_json(true), &prepared(true)).expect("switching run succeeds");
+        assert_eq!(result.steps.len(), 3);
+        // all three nuclides are stable here, so the total is the initial inventory
+        let n0: f64 = ["Fe56", "Fe57", "Co59"]
+            .iter()
+            .map(|name| atoms(&result.steps[2], name))
+            .sum();
+        assert!(n0 > 1.0e21, "{n0}");
+
+        // step 1, base spectrum, library A: Fe56 -> Fe57 at RATE_A and no Co59 at all
+        let n1 = n0 * (-RATE_A * 1.0).exp();
+        let a1 = n0 - n1;
+        close(atoms(&result.steps[0], "Fe56"), n1);
+        close(atoms(&result.steps[0], "Fe57"), a1);
+        assert!(atoms(&result.steps[0], "Co59") < 1.0e-9 * n0);
+
+        // step 2, library B: the Fe56 left by step 1 depletes at RATE_B into Co59, and the Fe57 made before
+        // the switch is carried across untouched
+        let n2 = n1 * (-RATE_B * 2.0).exp();
+        close(atoms(&result.steps[1], "Fe56"), n2);
+        close(atoms(&result.steps[1], "Co59"), n1 - n2);
+        close(atoms(&result.steps[1], "Fe57"), a1);
+
+        // step 3, cooling on library B's context with flux 0: nothing is produced or lost
+        close(atoms(&result.steps[2], "Fe56"), n2);
+        close(atoms(&result.steps[2], "Co59"), n1 - n2);
+        close(atoms(&result.steps[2], "Fe57"), a1);
+    }
+
+    #[test]
+    fn single_library_schedule_is_unchanged_and_reports_no_switch() {
+        let result = solve(&spec_json(false), &prepared(false)).expect("plain run succeeds");
+        assert!(result.ledger.get("step_libraries").is_none());
+        assert!(result.certificate["inputs"].get("step_libraries").is_none());
+        // Library A applies to step 2 as well: Fe57 keeps growing and Co59 never appears.
+        let n0: f64 = ["Fe56", "Fe57"]
+            .iter()
+            .map(|name| atoms(&result.steps[2], name))
+            .sum();
+        close(atoms(&result.steps[1], "Fe56"), n0 * (-RATE_A * 3.0).exp());
+        assert!(atoms(&result.steps[1], "Co59") < 1.0e-9 * n0);
+    }
+
+    #[test]
+    fn ledger_and_certificate_name_the_switched_library() {
+        let result = solve(&spec_json(true), &prepared(true)).expect("switching run succeeds");
+        let block = &result.ledger["step_libraries"];
+        let library = &block["libraries"][0];
+        assert_eq!(library["library"], serde_json::json!("synthetic_b.npz"));
+        assert_eq!(library["steps"], serde_json::json!([2, 3]));
+        assert_eq!(library["projectile"], serde_json::json!("neutron"));
+        // step 2 only: 2 s at a spectrum total of 3e23; the cooling step contributes none
+        close(
+            library["fluence_particles_cm2"].as_f64().unwrap(),
+            2.0 * 3.0e23,
+        );
+        assert!(block["pathways_suppressed"].is_null());
+        let input = &result.certificate["inputs"]["step_libraries"][0];
+        assert_eq!(
+            input["library"]["path"],
+            serde_json::json!("synthetic_b.npz")
+        );
+        assert_eq!(input["projectile"], serde_json::json!("neutron"));
+    }
+
+    #[test]
+    fn a_prepared_run_without_the_schedule_libraries_is_refused() {
+        let error = solve(&spec_json(true), &prepared(false)).err().unwrap();
+        assert!(
+            error.contains("schedule libraries do not match the prepared data"),
+            "{error}"
+        );
+    }
+
+    #[test]
+    fn a_step_spectrum_must_have_the_step_librarys_group_count() {
+        let mut spec = spec_json(true);
+        spec.schedule[1].spectrum = Some(
+            serde_json::from_value(serde_json::json!({
+                "structure": "custom",
+                "boundaries_eV": [1.0, 2.0, 3.0, 4.0],
+                "flux_per_group": [1.0e23, 1.0e23, 1.0e23],
+            }))
+            .expect("three-group spectrum parses"),
+        );
+        let error = solve(&spec, &prepared(true)).err().unwrap();
+        assert!(
+            error.contains("has 3 groups but activation library 'synthetic_b.npz' has 2"),
+            "{error}"
+        );
+    }
+
+    #[test]
+    fn a_step_library_run_refuses_single_library_features_at_run_time() {
+        let mut spec = spec_json(true);
+        spec.options.gas = true;
+        let error = solve(&spec, &prepared(true)).err().unwrap();
+        assert!(
+            error.contains("cannot be combined with options.gas"),
+            "{error}"
         );
     }
 }

@@ -610,7 +610,7 @@ if ui.button("Choose folder").clicked(){if let Some(p)=rfd::FileDialog::new().pi
             egui::ComboBox::from_id_salt("projectile")
                 .selected_text(&p)
                 .show_ui(ui, |ui| {
-                    for v in ["neutron", "proton", "deuteron", "alpha"] {
+                    for v in ["neutron", "proton", "deuteron", "triton", "helion", "alpha"] {
                         if ui.selectable_label(p == v, v).clicked() {
                             self.document["projectile"] = v.into();
                         }

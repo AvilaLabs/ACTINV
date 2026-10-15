@@ -21,6 +21,8 @@ pub enum Projectile {
     Neutron,
     Proton,
     Deuteron,
+    Triton,
+    Helion,
     Alpha,
     Gamma,
 }
@@ -31,10 +33,12 @@ impl Projectile {
             "neutron" => Ok(Self::Neutron),
             "proton" => Ok(Self::Proton),
             "deuteron" => Ok(Self::Deuteron),
+            "triton" => Ok(Self::Triton),
+            "helion" => Ok(Self::Helion),
             "alpha" => Ok(Self::Alpha),
             "gamma" => Ok(Self::Gamma),
             _ => Err(format!(
-                "unknown projectile '{value}'; expected neutron, proton, deuteron, alpha or gamma"
+                "unknown projectile '{value}'; expected neutron, proton, deuteron, triton, helion, alpha or gamma"
             )),
         }
     }
@@ -44,6 +48,8 @@ impl Projectile {
             Self::Neutron => "neutron",
             Self::Proton => "proton",
             Self::Deuteron => "deuteron",
+            Self::Triton => "triton",
+            Self::Helion => "helion",
             Self::Alpha => "alpha",
             Self::Gamma => "gamma",
         }
@@ -57,11 +63,15 @@ impl Projectile {
         self == Self::Gamma
     }
 
+    /// ENDF-6 incident-particle sublibrary number `NSUB = 10 * ZA + 0` (neutron 10, proton 10010, deuteron 10020,
+    /// triton 10030, He-3 (helion) 20030, alpha 20040).
     pub fn nsub(self) -> usize {
         match self {
             Self::Neutron => 10,
             Self::Proton => 10_010,
             Self::Deuteron => 10_020,
+            Self::Triton => 10_030,
+            Self::Helion => 20_030,
             Self::Alpha => 20_040,
             Self::Gamma => 0,
         }
@@ -73,6 +83,8 @@ impl Projectile {
             Self::Neutron => (0, 1),
             Self::Proton => (1, 1),
             Self::Deuteron => (1, 2),
+            Self::Triton => (1, 3),
+            Self::Helion => (2, 3),
             Self::Alpha => (2, 4),
             Self::Gamma => (0, 0),
         }
@@ -83,6 +95,8 @@ impl Projectile {
             10 => Ok(Self::Neutron),
             10_010 => Ok(Self::Proton),
             10_020 => Ok(Self::Deuteron),
+            10_030 => Ok(Self::Triton),
+            20_030 => Ok(Self::Helion),
             20_040 => Ok(Self::Alpha),
             0 => Ok(Self::Gamma),
             _ => Err(format!("unsupported incident-particle NSUB={nsub}")),
@@ -769,6 +783,90 @@ mod tests {
         // projectile also fails closed, not silently accepted.
         let error = parse_evaluations(&basic_tape(&[]), Some(Projectile::Gamma)).unwrap_err();
         assert!(error.contains("expected gamma"), "{error}");
+    }
+
+    /// A bare MF=1 tape for an incident particle with the given AWI and NSUB.
+    fn charged_tape(awi: &str, nsub: &str) -> String {
+        [
+            record(["26056", "55.45", "0", "0", "0", "0"], 2631, 1, 451, 1),
+            record(["0", "0", "0", "0", "0", "0"], 2631, 1, 451, 2),
+            record([awi, "2e8", "1", "0", nsub, "2025"], 2631, 1, 451, 3),
+            record(["0", "0", "0", "0", "0", "0"], 2631, 1, 451, 4),
+            send(2631, 1),
+        ]
+        .join("\n")
+    }
+
+    #[test]
+    fn projectile_triton_and_helion_identity() {
+        // ENDF-6 NSUB = 10 * ZA: triton ZA=1003, He-3 ZA=2003.
+        assert_eq!(Projectile::parse("triton"), Ok(Projectile::Triton));
+        assert_eq!(Projectile::parse("helion"), Ok(Projectile::Helion));
+        assert_eq!(Projectile::Triton.name(), "triton");
+        assert_eq!(Projectile::Helion.name(), "helion");
+        assert_eq!(Projectile::Triton.nsub(), 10_030);
+        assert_eq!(Projectile::Helion.nsub(), 20_030);
+        assert_eq!(Projectile::Triton.za(), (1, 3));
+        assert_eq!(Projectile::Helion.za(), (2, 3));
+        assert!(!Projectile::Triton.is_neutron() && !Projectile::Helion.is_gamma());
+        assert_eq!(Projectile::from_nsub(10_030), Ok(Projectile::Triton));
+        assert_eq!(Projectile::from_nsub(20_030), Ok(Projectile::Helion));
+        let error = Projectile::parse("he3").unwrap_err();
+        assert!(error.contains("triton, helion"), "{error}");
+    }
+
+    #[test]
+    fn projectile_serde_round_trips_every_variant() {
+        for (projectile, name) in [
+            (Projectile::Neutron, "neutron"),
+            (Projectile::Proton, "proton"),
+            (Projectile::Deuteron, "deuteron"),
+            (Projectile::Triton, "triton"),
+            (Projectile::Helion, "helion"),
+            (Projectile::Alpha, "alpha"),
+            (Projectile::Gamma, "gamma"),
+        ] {
+            let text = serde_json::to_string(&projectile).unwrap();
+            assert_eq!(text, format!("\"{name}\""));
+            assert_eq!(
+                serde_json::from_str::<Projectile>(&text).unwrap(),
+                projectile
+            );
+            assert_eq!(Projectile::parse(name), Ok(projectile));
+            assert_eq!(projectile.name(), name);
+        }
+    }
+
+    #[test]
+    fn triton_and_helion_metadata_parse_from_nsub() {
+        // AWI is the nuclear mass over the neutron mass: triton 3.01550 u and helion 3.01493 u (CODATA 2018)
+        // over 1.008665 u give 2.9896 and 2.9890.
+        for (projectile, awi, nsub) in [
+            (Projectile::Triton, "2.9896", "10030"),
+            (Projectile::Helion, "2.9890", "20030"),
+        ] {
+            let tape = charged_tape(awi, nsub);
+            let evaluations = parse_evaluations(&tape, Some(projectile)).unwrap();
+            assert_eq!(evaluations.len(), 1);
+            let metadata = &evaluations[0].metadata;
+            assert_eq!(metadata.projectile, projectile);
+            assert_eq!(metadata.nsub, projectile.nsub());
+            // Auto-detection (no expected projectile) reads the same sublibrary.
+            let detected = parse_evaluations(&tape, None).unwrap();
+            assert_eq!(detected[0].metadata.projectile, projectile);
+        }
+    }
+
+    #[test]
+    fn triton_and_helion_sublibraries_do_not_cross_match() {
+        let triton = charged_tape("2.9896", "10030");
+        let error = parse_evaluations(&triton, Some(Projectile::Helion)).unwrap_err();
+        assert!(error.contains("expected helion"), "{error}");
+        let error = parse_evaluations(&triton, Some(Projectile::Deuteron)).unwrap_err();
+        assert!(error.contains("expected deuteron"), "{error}");
+        // A triton NSUB with a deuteron-sized AWI fails the mass sanity check.
+        let error = parse_evaluations(&charged_tape("1.9966", "10030"), None).unwrap_err();
+        assert!(error.contains("AWI=1.9966"), "{error}");
     }
 
     #[test]

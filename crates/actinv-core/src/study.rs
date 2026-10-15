@@ -509,6 +509,13 @@ impl Study {
                         s.name
                     ));
                 }
+                if step.library.is_some() || step.projectile.is_some() {
+                    return Err(format!(
+                        "schedule '{}': per-step library is not part of \
+                         actinv-study-1",
+                        s.name
+                    ));
+                }
                 parse_duration(&step.dt).map_err(|e| format!("schedule '{}': {e}", s.name))?;
                 if !step.flux.is_finite() || step.flux < 0.0 {
                     return Err(format!(
@@ -592,6 +599,8 @@ impl Study {
                     spectrum: None,
                     feed: None,
                     removal: None,
+                    library: None,
+                    projectile: None,
                 });
             }
         }
