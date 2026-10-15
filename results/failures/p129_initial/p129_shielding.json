@@ -1,0 +1,351 @@
+{
+  "candidate": {
+    "path": "/home/connoravila/Documents/actinv/target/p122-candidate-actinv",
+    "sha256": "a394e3a9f5a0f295f0220d3b1136e3c86c4aa0dafcaff3943d21c6ba20f5628c"
+  },
+  "gates": {
+    "G2": {
+      "pass": false,
+      "specs": {
+        "fns_fe_5min": {
+          "bytes_equal_after_masking_ms": true,
+          "candidate_ms": 927.8357900000001,
+          "candidate_output_sha256": "36fcc31355355836b262ab70a3862c8d1c5d82eb93f05b2edd4368fdb7658992",
+          "parsed_equal_without_ms": true,
+          "pass": true,
+          "raw_bytes_identical": false,
+          "reference_ms": 953.98136,
+          "reference_output_sha256": "f328c0cd00bf163dcaddc032c704db9d5d00448a9b95115300d7c823694b9e1b",
+          "spec_sha256": "ed55ed00f6c00fc4a2351e18332e98e7feb33d9b7ca65e7ba861e0e5e8feef39"
+        },
+        "shielding_demo": {
+          "error": "RuntimeError: reference exited 1 on shielding_demo.json; see /home/connoravila/Documents/actinv/target/p129-work/shielding_demo.reference.log",
+          "pass": false,
+          "spec_sha256": "1643e052a3d8a47f8024c1373b7a07fdbb473ff79ff1194769e9b27ed4e741d7"
+        }
+      }
+    },
+    "G3": {
+      "candidates": [
+        {
+          "bytes": 4233789,
+          "library": "TENDL-2025",
+          "path": "/home/connoravila/nuclear-data/tendl-2025/files/n/n-W186.tendl",
+          "ranges": [
+            {
+              "ev": [
+                1e-05,
+                4341.0
+              ],
+              "lrf": 2,
+              "lru": 1
+            },
+            {
+              "ev": [
+                4341.0,
+                25000.0
+              ],
+              "lrf": 2,
+              "lru": 2
+            }
+          ],
+          "selectable": true,
+          "sha256": "ff8cb04fa35fc4fb5e84d6b406238f05c0797f6fc873f5555e869999e508e083",
+          "stopped_at": [
+            "unresolved range reached"
+          ],
+          "usable": true,
+          "usable_resonances": 172
+        },
+        {
+          "bytes": 8600160,
+          "library": "ENDF/B-VIII.0",
+          "note": "no usable BW/Reich-Moore resonances (LRF=7 or no MF=2 resolved range)",
+          "path": "/home/connoravila/nuclear-data/endfb-viii.0-n-test/n_7443_74-W-186.dat",
+          "ranges": [
+            {
+              "ev": [
+                1e-05,
+                10000.0
+              ],
+              "lrf": 7,
+              "lru": 1
+            }
+          ],
+          "selectable": true,
+          "sha256": "67b1ab026ceab34a564516189852c5f65727acdd3cf4e7d9f911b6c92fb6ff8b",
+          "stopped_at": [
+            "LRF=7 (R-matrix limited) range; rejected by the solver"
+          ],
+          "usable": false,
+          "usable_resonances": 0
+        },
+        {
+          "bytes": 8599996,
+          "library": "ENDF/B-VIII.1",
+          "note": "no usable BW/Reich-Moore resonances (LRF=7 or no MF=2 resolved range)",
+          "path": "/home/connoravila/nuclear-data/endfb-viii.1-fns-arm/pristine/W186.endf",
+          "ranges": [
+            {
+              "ev": [
+                1e-05,
+                10000.0
+              ],
+              "lrf": 7,
+              "lru": 1
+            }
+          ],
+          "selectable": false,
+          "sha256": "ff90d82f9db72da1b1922157a4d06f3022a1888e0b99a0d2072d8f9208fb784d",
+          "stopped_at": [
+            "LRF=7 (R-matrix limited) range; rejected by the solver"
+          ],
+          "usable": false,
+          "usable_resonances": 0
+        },
+        {
+          "bytes": 7970880,
+          "library": "FENDL-3.2c",
+          "note": "no usable BW/Reich-Moore resonances (LRF=7 or no MF=2 resolved range)",
+          "path": "/home/connoravila/nuclear-data/fendl-3.2c/endf/n_7443_74-W-186.endf",
+          "ranges": [
+            {
+              "ev": [
+                1e-05,
+                10000.0
+              ],
+              "lrf": 7,
+              "lru": 1
+            }
+          ],
+          "selectable": false,
+          "sha256": "bf6bf3bb7a1583be49ae8aab865e75d256e0965f969f38a14d63260b3f4a8744",
+          "stopped_at": [
+            "LRF=7 (R-matrix limited) range; rejected by the solver"
+          ],
+          "usable": false,
+          "usable_resonances": 0
+        },
+        {
+          "bytes": 3587582,
+          "library": "TENDL-2023",
+          "path": "/home/connoravila/nuclear-data/tendl-2023/files/n_074-W-186_7443.dat",
+          "ranges": [
+            {
+              "ev": [
+                1e-05,
+                4341.0
+              ],
+              "lrf": 2,
+              "lru": 1
+            },
+            {
+              "ev": [
+                4341.0,
+                25000.0
+              ],
+              "lrf": 2,
+              "lru": 2
+            }
+          ],
+          "selectable": false,
+          "sha256": "76c490051bcf93c69aca906d9ffb5d38087b1db99bda9d136b0a0c9ab4d560b8",
+          "stopped_at": [
+            "unresolved range reached"
+          ],
+          "usable": true,
+          "usable_resonances": 172
+        },
+        {
+          "bytes": 4201188,
+          "library": "TENDL-2017",
+          "path": "/home/connoravila/nuclear-data/tendl-2017/files/n_7443_74-W-186.dat",
+          "ranges": [
+            {
+              "ev": [
+                1e-05,
+                17301.0
+              ],
+              "lrf": 2,
+              "lru": 1
+            }
+          ],
+          "selectable": false,
+          "sha256": "cd52c9acce1cf6cebc1657e9b58e3434ea32f0be352f9f69b0d55c7f76a50bdd",
+          "stopped_at": [],
+          "usable": true,
+          "usable_resonances": 171
+        }
+      ],
+      "constants": {
+        "K_WAVE_codata_derived": 0.0021968076895752284,
+        "K_WAVE_endf": 0.002196771,
+        "avogadro": 6.02214076e+23,
+        "neutron_mass_amu": 1.00866491595,
+        "relative_gap": 1.6701314094229827e-05,
+        "sanity_limit": 0.0001,
+        "sigmoid": {
+          "A1": 1.0,
+          "A2": 0.06,
+          "p": 0.82,
+          "z0": 2.7
+        }
+      },
+      "file": {
+        "awr": 184.3569,
+        "energy_range_eV": [
+          18.83,
+          17340.0
+        ],
+        "ranges": [
+          {
+            "ev": [
+              1e-05,
+              4341.0
+            ],
+            "lrf": 2,
+            "lru": 1
+          },
+          {
+            "ev": [
+              4341.0,
+              25000.0
+            ],
+            "lrf": 2,
+            "lru": 2
+          }
+        ],
+        "usable_resonances": 172
+      },
+      "group_boundaries": {
+        "count": 710,
+        "source": "examples/shielding_demo.json spectrum.boundaries_eV"
+      },
+      "k_wave_sanity": true,
+      "material": {
+        "atomic_mass_u": 185.95433704330256,
+        "atoms_per_gram": 3.238505138278998e+21,
+        "decay_awr": 184.3569,
+        "decay_library": "/home/connoravila/Documents/actinv/actinv-data/v1.1.0/decay/endf-b-viii-0_decay.dat",
+        "density_g_cm3": 19.3,
+        "nuclide": "W186"
+      },
+      "monotonic_with_thickness": {
+        "groups_compared": 62,
+        "min_thick": 0.07527615641073385,
+        "min_thin": 0.15250000282050163,
+        "pass": true,
+        "same_group_set": true,
+        "strictly_lower_in": 62,
+        "violations": []
+      },
+      "pass": true,
+      "selected": {
+        "library": "TENDL-2025",
+        "path": "/home/connoravila/nuclear-data/tendl-2025/files/n/n-W186.tendl",
+        "sha256": "ff8cb04fa35fc4fb5e84d6b406238f05c0797f6fc873f5555e869999e508e083",
+        "usable_resonances": 172
+      },
+      "thicknesses": {
+        "0.01": {
+          "all_in_range": true,
+          "applied_factor_mismatches": [],
+          "effective_length_cm": {
+            "expected": 0.015,
+            "ledger": 0.015
+          },
+          "factor_range": [
+            0.15250000282050163,
+            0.9895463546693541
+          ],
+          "group_bound_mismatches": [],
+          "groups_independent": 62,
+          "groups_ledger": 62,
+          "number_density_per_cm3": {
+            "independent": 6.250314916878466e+22,
+            "ledger": 6.250314916878466e+22,
+            "relative_difference": 0.0
+          },
+          "pass": true,
+          "problems": [],
+          "resonance_count_mismatches": [],
+          "resonances_counted": 172,
+          "spec": "/home/connoravila/Documents/actinv/target/p129-work/w186_foil_0p01.json",
+          "spec_sha256": "fdee4d4ae66f4a51484f363af83195d643a87035cfaa290d8f6d7f50564ad177",
+          "thickness_cm": 0.01,
+          "worst_group": null,
+          "worst_relative_error": 0.0,
+          "worst_relative_error_using_ledger_density": 0.0
+        },
+        "0.1": {
+          "all_in_range": true,
+          "applied_factor_mismatches": [],
+          "effective_length_cm": {
+            "expected": 0.15000000000000002,
+            "ledger": 0.15000000000000002
+          },
+          "factor_range": [
+            0.07527615641073385,
+            0.9349872643325832
+          ],
+          "group_bound_mismatches": [],
+          "groups_independent": 62,
+          "groups_ledger": 62,
+          "number_density_per_cm3": {
+            "independent": 6.250314916878466e+22,
+            "ledger": 6.250314916878466e+22,
+            "relative_difference": 0.0
+          },
+          "pass": true,
+          "problems": [],
+          "resonance_count_mismatches": [],
+          "resonances_counted": 172,
+          "spec": "/home/connoravila/Documents/actinv/target/p129-work/w186_foil_0p1.json",
+          "spec_sha256": "98ad91e341820cbac2345066ed9daf3c6b9237fc1f35e7c1ffe1844448a533ac",
+          "thickness_cm": 0.1,
+          "worst_group": null,
+          "worst_relative_error": 0.0,
+          "worst_relative_error_using_ledger_density": 0.0
+        }
+      }
+    },
+    "G4": {
+      "error": "RuntimeError: candidate exited 1 on shielding_demo.json; see /home/connoravila/Documents/actinv/target/p129-work/shielding_demo.candidate.log",
+      "pass": false
+    },
+    "G5": {
+      "actinv_minimum_factor_per_thickness": {
+        "0.01": {
+          "factor": 0.15250000282050163,
+          "group": 313
+        },
+        "0.1": {
+          "factor": 0.07527615641073385,
+          "group": 313
+        }
+      },
+      "available": false,
+      "note": "No tabulated FISPACT-II geometry factor for a foil case is available in this checkout (no FISPACT-II manual table or output was supplied via --fispact-factors); nothing to tabulate beside ACTINV's factors. Reported, not gated.",
+      "pass": null,
+      "report_only": true
+    }
+  },
+  "gates_run": [
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "protocol": "ACTINV-P129",
+  "protocol_sha256": "89ee9acf7849fd53fa44b44907ec011e16d3fb3f63e1b0eebaec6284401216c2",
+  "reference": {
+    "path": "/home/connoravila/Documents/actinv/target/ref-build/release/actinv",
+    "sha256": "3d34d7ca5887be03e19b81f8ae06d784ed53ec1310a69764ed70b8672bc42b5f"
+  },
+  "specs": {
+    "fns_fe_5min": "ed55ed00f6c00fc4a2351e18332e98e7feb33d9b7ca65e7ba861e0e5e8feef39",
+    "shielding_demo": "1643e052a3d8a47f8024c1373b7a07fdbb473ff79ff1194769e9b27ed4e741d7"
+  },
+  "timeout_s": 3600,
+  "verdict": "FAIL"
+}
