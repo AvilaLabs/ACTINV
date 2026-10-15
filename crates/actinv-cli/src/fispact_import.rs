@@ -258,6 +258,7 @@ const KEYWORDS: &[(&str, Arity)] = &[
 ];
 
 /// Keywords the interpreter handles itself; every other table entry has a [`simple_disposition`].
+#[cfg(test)]
 const HANDLED: &[&str] = &[
     "ATOMS",
     "DENSITY",
@@ -1029,16 +1030,12 @@ impl<'a> Interp<'a> {
                     3 => Projectile::Proton,
                     4 => Projectile::Alpha,
                     5 => Projectile::Gamma,
+                    6 => Projectile::Triton,
+                    7 => Projectile::Helion,
                     other => {
-                        self.log(
-                            cmd,
-                            Status::Unsupported,
-                            format!(
-                                "projectile code {other} (triton or helion) has no ACTINV library"
-                            ),
-                        );
+                        self.log(cmd, Status::Unsupported, format!("projectile code {other}"));
                         return Err(format!(
-                            "line {}: PROJECTILE {other} cannot be represented; ACTINV supports neutron, deuteron, proton, alpha and gamma",
+                            "line {}: PROJECTILE {other} is not a FISPACT-II projectile code (1-7)",
                             cmd.line
                         ));
                     }
@@ -1298,7 +1295,8 @@ impl<'a> Interp<'a> {
             Projectile::Proton => Some("catalog:tendl-2025-proton-162g"),
             Projectile::Deuteron => Some("catalog:tendl-2025-deuteron-162g"),
             Projectile::Alpha => Some("catalog:tendl-2025-alpha-162g"),
-            Projectile::Gamma => None,
+            // No catalog library exists for gamma, triton or helion: the caller passes --library.
+            Projectile::Gamma | Projectile::Triton | Projectile::Helion => None,
         }
     }
 
@@ -2124,7 +2122,8 @@ END
     fn mass_rejects_a_nuclide_and_an_unknown_element() {
         let nuclide = "FISPACT\n* t\nMASS 1E-3 1\n Fe56 100\nFLUX 1E10\nTIME 1 ATOMS\nEND\n";
         assert!(convert(nuclide, &context())
-            .unwrap_err()
+            .err()
+            .unwrap()
             .contains("use FUEL"));
         let unknown = "FISPACT\n* t\nMASS 1E-3 1\n Qq 100\nFLUX 1E10\nTIME 1 ATOMS\nEND\n";
         assert!(convert(unknown, &context()).is_err());
@@ -2263,9 +2262,15 @@ END
         let conversion = convert(nested, &context()).unwrap();
         assert_eq!(conversion.spec["schedule"].as_array().unwrap().len(), 8);
         let open = "FISPACT\n* t\nMASS 1E-3 1\n FE 100\nPULSE 2\n FLUX 1E10\n TIME 1 ATOMS\nEND\n";
-        assert!(convert(open, &context()).unwrap_err().contains("ENDPULSE"));
+        assert!(convert(open, &context())
+            .err()
+            .unwrap()
+            .contains("ENDPULSE"));
         let stray = "FISPACT\n* t\nENDPULSE\nEND\n";
-        assert!(convert(stray, &context()).unwrap_err().contains("without"));
+        assert!(convert(stray, &context())
+            .err()
+            .unwrap()
+            .contains("without"));
     }
 
     #[test]
@@ -2334,11 +2339,12 @@ END
     fn material_is_required_and_defined_once() {
         let none = "FISPACT\n* t\nFLUX 1E10\nTIME 1 ATOMS\nEND\n";
         assert!(convert(none, &context())
-            .unwrap_err()
+            .err()
+            .unwrap()
             .contains("MASS or FUEL"));
         let twice =
             "FISPACT\n* t\nMASS 1E-3 1\n FE 100\nFUEL 1\n Li6 1E20\nFLUX 1E10\nTIME 1 ATOMS\nEND\n";
-        assert!(convert(twice, &context()).unwrap_err().contains("once"));
+        assert!(convert(twice, &context()).err().unwrap().contains("once"));
     }
 
     #[test]
@@ -2348,7 +2354,7 @@ END
             flux: None,
             ..context()
         };
-        let error = convert(deck, &ctx).unwrap_err();
+        let error = convert(deck, &ctx).err().unwrap();
         assert!(error.contains("--fluxes"), "{error}");
     }
 
@@ -2356,7 +2362,7 @@ END
     fn getxs_group_count_must_match_the_flux_file() {
         let deck =
             "GETXS 1 162\nFISPACT\n* t\nMASS 1E-3 1\n FE 100\nFLUX 1E10\nTIME 1 HOURS ATOMS\nEND\n";
-        let error = convert(deck, &context()).unwrap_err();
+        let error = convert(deck, &context()).err().unwrap();
         assert!(error.contains("162"), "{error}");
     }
 
@@ -2443,8 +2449,16 @@ END
         assert_eq!(conversion.spec["projectile"], "proton");
         assert_eq!(conversion.spec["spectrum"]["structure"], "fispact-162");
         assert_eq!(conversion.spec["options"]["temperature_K"], 0.0);
-        let tritons = "PROJECTILE 6\nFISPACT\n* t\nEND\n";
-        assert!(convert(tritons, &ctx).unwrap_err().contains("PROJECTILE 6"));
+        // PROJECTILE 6 and 7 map to triton and helion (P128) on the same 162-group grid.
+        for (code, name) in [("6", "triton"), ("7", "helion")] {
+            let charged = deck.replace("PROJECTILE 3", &format!("PROJECTILE {code}"));
+            let conversion = convert(&charged, &ctx).ok().unwrap();
+            assert_eq!(conversion.spec["projectile"], name);
+            assert_eq!(conversion.spec["spectrum"]["structure"], "fispact-162");
+        }
+        let unknown = deck.replace("PROJECTILE 3", "PROJECTILE 8");
+        let error = convert(&unknown, &ctx).err().unwrap();
+        assert!(error.contains("PROJECTILE 8"), "{error}");
     }
 
     #[test]

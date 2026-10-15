@@ -708,9 +708,12 @@ pub struct PreparedRun {
 
 /// P125 spontaneous-fission inputs, resolved at preparation. The yields are already routed in
 /// `PreparedRun::chain`; they are kept here for the ledger.
+/// (reference, computed sha256, parent states read) for one spontaneous-fission yield file.
+type SpontaneousYieldInput = (HashedFileRef, String, Vec<(i32, i32)>);
+
 struct PreparedSpontaneous {
-    /// (reference, computed sha256, parent states read) per yield file.
-    yield_inputs: Vec<(HashedFileRef, String, Vec<(i32, i32)>)>,
+    /// One entry per yield file.
+    yield_inputs: Vec<SpontaneousYieldInput>,
     yields: chain::SpontaneousYields,
     /// State -> (nu-bar, where it came from). Empty when no nu-bar input was declared.
     nubar: BTreeMap<(i32, i32), (f64, String)>,
@@ -4243,8 +4246,24 @@ impl PreparedRun {
         // A partition (P124) removes bulk atoms mid-run; the trace formulation holds the bulk
         // undepleted, so a partition schedule always solves the full coupled system.
         let has_partition = sched.iter().any(|step| !step.partition.is_empty());
+        // P133: the trace reservoir is constant, so a bulk nuclide that decays appreciably over the
+        // schedule (an activated restart inventory) needs the coupled system just as burn-up does.
+        // Decay depth uses the effective lambda (decay_scale and half-life overrides included).
+        let schedule_time_s: f64 = sched.iter().map(|step| step.duration().get()).sum();
+        let mut bulk_decay_fraction_max = 0.0f64;
+        let mut bulk_decay_nuclide = None;
+        for &(r, c, v) in &decay_edges {
+            if r == c && v < 0.0 && bulk.contains_key(&c) {
+                let fraction = -(v * schedule_time_s).exp_m1();
+                if fraction > bulk_decay_fraction_max {
+                    bulk_decay_fraction_max = fraction;
+                    bulk_decay_nuclide = Some(ch.keys[c]);
+                }
+            }
+        }
+        let bulk_decays = bulk_decay_fraction_max >= 1e-6;
         let mode = match spec.options.mode.as_str() {
-            "auto" if has_partition => "coupled",
+            "auto" if has_partition || bulk_decays => "coupled",
             "auto" => {
                 if led.burnup_fraction_max < 1e-6 {
                     "trace"
@@ -4255,6 +4274,14 @@ impl PreparedRun {
             m => m,
         }
         .to_string();
+        if bulk_decays && mode == "trace" {
+            let (za, liso) = bulk_decay_nuclide.expect("set with the fraction");
+            return Err(format!(
+                "options.mode 'trace' holds the initial material constant, but {} decays by a fraction of \
+                 {bulk_decay_fraction_max:.3e} over the schedule; use 'coupled' or 'auto'",
+                name_of(za, liso)
+            ));
+        }
         if has_partition && mode == "trace" {
             return Err(
                 "schedule partition is not supported with options.mode 'trace': the trace \
@@ -6768,6 +6795,17 @@ impl PreparedRun {
         // Attached post-construction — the json! literal is at its
         // recursion cap. Product-chain optical depth bounds the nonlinear
         // correction to linear flux scaling (P70 flux_scale certificate).
+        if bulk_decays {
+            let fields = ledger.as_object_mut().expect("ledger is an object");
+            fields.insert(
+                "bulk_decay_fraction_max".into(),
+                serde_json::json!(bulk_decay_fraction_max),
+            );
+            fields.insert(
+                "bulk_decay_nuclide".into(),
+                serde_json::json!(bulk_decay_nuclide.map(|key| name_of(key.0, key.1))),
+            );
+        }
         ledger.as_object_mut().expect("ledger is an object").insert(
             "max_product_optical_depth".into(),
             serde_json::json!(product_optical_depth_max),
@@ -7254,7 +7292,7 @@ impl PreparedRun {
                 .iter()
                 .map(|&(column, _)| ch.keys[column])
                 .collect();
-            let (with_nubar, without_nubar): (Vec<(i32, i32)>, Vec<(i32, i32)>) = sf_states
+            let (with_nubar, without_nubar): (Vec<_>, Vec<_>) = sf_states
                 .iter()
                 .copied()
                 .partition(|key| prepared.nubar.contains_key(key));
@@ -9101,6 +9139,28 @@ mod gas_prepared_tests {
             step_libraries: Vec::new(),
         };
         (spec, prepared)
+    }
+
+    #[test]
+    fn radioactive_initial_material_selects_coupled_and_refuses_trace() {
+        // P133: a decaying initial inventory cannot be a constant trace reservoir.
+        let (mut spec, prepared) = synthetic_decay_only_prepared(serde_json::json!([]));
+        let auto = run_synthetic(&spec, &prepared).expect("auto run succeeds");
+        assert_eq!(auto.mode, "coupled");
+        assert_eq!(auto.ledger["bulk_decay_nuclide"], "Co60");
+        let fraction = auto.ledger["bulk_decay_fraction_max"].as_f64().unwrap();
+        assert!((fraction - 0.5).abs() < 1e-12, "{fraction}");
+        // the daughter takes exactly what the parent lost
+        let ni60 = auto.steps[0]
+            .inventory
+            .iter()
+            .find(|row| row.nuclide == "Ni60")
+            .map(|row| row.atoms_per_g)
+            .unwrap();
+        assert!((ni60 - 0.5e20).abs() <= 1e-9 * 0.5e20, "{ni60}");
+        spec.options.mode = "trace".into();
+        let error = run_synthetic(&spec, &prepared).err().unwrap();
+        assert!(error.contains("Co60 decays"), "{error}");
     }
 
     #[test]

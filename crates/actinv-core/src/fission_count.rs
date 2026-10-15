@@ -162,8 +162,11 @@ struct NubarTable {
     nubar: BTreeMap<String, f64>,
 }
 
+/// (ZA, LISO) -> nu-bar.
+pub type NubarMap = BTreeMap<(i32, i32), f64>;
+
 /// Parse a nu-bar table into its citation and (ZA, LISO) -> nu-bar map.
-pub fn parse_nubar_table(text: &str) -> Result<(String, BTreeMap<(i32, i32), f64>), String> {
+pub fn parse_nubar_table(text: &str) -> Result<(String, NubarMap), String> {
     let table: NubarTable =
         serde_json::from_str(text).map_err(|error| format!("nubar table: {error}"))?;
     if table.source.trim().is_empty() {
