@@ -2808,3 +2808,110 @@ Candidate: release build of `b09a298`, SHA-256 `72896398…c5d0`. Reference: `2f
   all 7 activity contributors above 1e-12 of total activity also match exactly (520.2776 Bq/g both ways).
 
 Record: `results/p133_trace_decay.json`. G5 (CI with sealed baselines unchanged) is pending.
+
+## Entries 151–157 — wave-2 candidate runs (2026-10-15)
+
+Candidate for all seven: release build of `3356b55`, SHA-256 `3227fbe1…b298` (P122–P133 integrated, P123b bundled
+tables). Reference: `2f3daa4` (`3d34d7ca…2b5f`). Checkers run serially under the bounded cgroup. G1 (fmt, clippy
+`-D warnings`, workspace tests) was clean on `3356b55` and again on `88dba43`.
+
+## Entry 151 — P123: G2–G6 recorded
+
+Checker `controls/check_p123.py`. Record `results/p123_radiological.json`.
+
+- **G2:** `fns_fe_5min`, FNS Fe with the installed photon response, and FNS Fe with a legacy radiological table are
+  byte-identical apart from `ms`. The photon-response builder's default and `--elements all` outputs are identical
+  between the reference and working scripts.
+- **G3:** five point-source dose runs (air attenuation unavailable/off, 1 m and 3 m with rebuilt air attenuation at
+  2.5 g, Steiner 22-group) are recomputed independently: 912 comparisons each, 0 mismatches. The 1 m/3 m ratio
+  against 9·exp(2μ) gives 5,793 comparisons, 0 mismatches.
+- **G4:** bremsstrahlung Eq. 66/67 recomputed in 60-digit decimals: 24,681 comparisons (Fe) and 24,816 (90/10 Fe/Cr,
+  atom-fraction Z_eff), 0 mismatches. Every other field is identical with and without the option.
+- **G5:** both converters reproduce all bundled tables byte for byte from pinned sources (SHA-256s match
+  `~/nuclear-data/regulatory/MANIFEST.sha256`); an independent parse agrees with all seven tables. Report-only:
+  FISPACT A2 equal on 330/350, 330/351, 335/351 (FISPACT uses the 1985 values); Euratom clearance 255/256 (K-42);
+  ICRP 119 vs hazards_2012 within 2 %: ingestion 723/725, inhalation 722/725.
+- **G6:** a user A2/waste table and `bundled:us-49cfr173-a2` (kind `a2`, SHA-256 filled by `actinv`) agree with an
+  independent Σ A/A2 within 1e-12 (341 comparisons, 0 mismatches).
+
+## Entry 152 — P124: G2–G7 recorded
+
+Checker `controls/check_p124.py`. Record `results/p124_inputs.json`.
+
+- **G2:** `fns_fe_5min` byte-identical apart from `ms`.
+- **G3:** FNS spectrum aggregated to fispact-175 and converted back under both conventions; ledger conversion
+  scalars agree with an independent implementation at 1e-12 and flux is conserved; a run on the checker's own
+  converted 709-group spectrum agrees within 1e-9.
+- **G4:** wall loading at both bases: multipliers independent (bitwise / 1e-12), and each run equals the same spec
+  with that multiplier as explicit flux apart from the wall-loading echo.
+- **G5:** a 0-s partition step keeping 0.25 of Mn: removed atoms 5.3718e9 atoms/g equal the sink growth; other
+  nuclides unchanged; explicit trace refused.
+- **G6:** Mn-56 half-life and Fe-56(n,p) overrides: identity overrides change nothing but echoes; halved half-life
+  and ×2 cross section match single-nuclide recomputations at 1e-9 (inspect one-group σ 0.093612 b vs independent
+  collapse: 1.5e-16).
+- **G7:** a decay-only run (no library) matches the full spec's 20 cooling steps from the same 50-nuclide inventory
+  at 1e-12, both coupled.
+
+## Entry 153 — P125: G0–G4 recorded, G5 data-limited
+
+Checker `controls/check_p125.py`. Record `results/p125_fission.json`.
+
+- **G2:** FNS Fe and a U-235 yield spec are byte-identical apart from timing.
+- **G3a:** U-235 induced fissions (coupled, optical depth 0.003) agree with an exact 3-state network within 1.05e-7
+  (tolerance 1e-6).
+- **G3b:** Cf-252 spontaneous fissions agree with a 60-digit 51-state chain solve within 2.8e-14.
+- **G4:** the spontaneous-fission neutron source equals Σ λ·BR_SF·ν̄ (ν̄ from an independent MT=452 parse) exactly;
+  the uncovered list (Cm-250, no ν̄) is consistent.
+- **G5:** data-limited, no spontaneous-fission yield sublibrary is installed; routing is covered by unit tests.
+
+## Entry 154 — P126: G0–G4 pass, G5 FAIL (P126-FAIL on this candidate)
+
+Checker `controls/check_p126.py`. Record `results/p126_power.json`, preserved at
+`results/failures/p126_initial/` with the two G5 specs.
+
+- **G2:** FNS Fe identical apart from timing. **G3:** NJOY 2016.79 (RECONR, BROADR 293.6 K, HEATR local=0, GROUPR
+  709 groups) Fe-56 MT=301 kerma agrees with the table built by `scripts/build_kerma_table.py` within 1e-12, on the
+  library's own grid. **G4:** per-contributor heating recomputed for the synthetic and the NJOY Fe-56 tables, exact.
+- **G5 FAIL:** Fe power steps and the B-10 refinement replay pass, but `max_substeps: 1` is not byte-identical to the
+  flux-driven run at the start multiplier: it differs at `/pathways` and `/pathway_closure`. The candidate
+  suppressed trace pathway attribution for power-driven schedules, and the flux-driven run's closure 6.851e-5
+  equals 1 − multiplier, exposing the pre-existing defect registered as P134.
+- **G6 (report-only):** B-10 end-of-step power error −39.3 % at `max_substeps: 1`, −1.52 % at 64, −0.097 % at 4096
+  (converged at 1024 sub-intervals).
+
+Repair under `protocols/ACTINV-P126_AMENDMENT_A.md` and P134.
+
+## Entry 155 — P127: G2–G5 recorded
+
+Checker `controls/check_p127.py`. Record `results/p127_pathways.json`.
+
+- **G2:** FNS Fe byte-identical apart from `ms`, with no `pathway_routes` key by default.
+- **G3:** every route for Mn-56, Mn-54, Cr-51 and Fe-55 recomputed as a linear chain (40-digit expm, independent
+  rates from the NPZ and MT=457): 154 comparisons, all strict at 1e-8.
+- **G4:** listed routes plus residual equal each total within 1e-12; explained fraction 100.000 % for all four.
+- **G5:** trace and coupled agree on all 154 by-step route values at 1e-8.
+- **G6 (report-only):** Fe-56→Mn-56 99.69 % (FISPACT-II 99.42 %), Fe-54→Mn-54 99.98 % (99.98 %), Fe-54→Cr-51
+  100 % (100 %), Fe-56→Fe-55 99.96 % (99.97 %); FISPACT-II ran TENDL-2017.
+
+## Entry 156 — P128: G2–G3 recorded, G4 data-limited
+
+Checker `controls/check_p128.py`. Record `results/p128_libraries.json`.
+
+- **G2:** FNS Fe byte-identical apart from `ms`; no `step_libraries` key by default.
+- **G3:** a step naming the base library equals no override (apart from `ms`); the TENDL-2023 switch is recorded in
+  ledger and certificate; step 2 recomputed from step 1 with the second library's rates agrees on 26 nuclides within
+  2.1e-10 (Mn-52m1), and the base-library rates give a visibly different step 2.
+- **G4:** data-limited, no TENDL triton/helion sublibrary is installed; 10 covering unit tests exist.
+
+## Entry 157 — P132: G2–G4 recorded
+
+Checker `controls/check_p132.py`. Record `results/p132_import.json`.
+
+- **G2:** all 132 FNS decks import with 0 failures and no unsupported entry on an implemented keyword; every spec
+  validates with `--files`.
+- **G3:** 2,511 steps compared against the decks' `.out` files: 2,236 durations equal within 1e-9 and 275 at the
+  printed five-digit resolution; elapsed time, step kind, flux amplitude and the fluxes files agree.
+- **G4:** the imported `Fe/TENDL-2017_1996exp_5min` spec without its `uncertainty`/`summary` blocks runs identically
+  to `examples/fns_fe_5min.json` apart from echoes.
+
+Final verdicts for P123, P124, P125, P127, P128 and P132 wait on G-CI for a pushed commit carrying them.

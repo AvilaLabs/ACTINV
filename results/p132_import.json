@@ -1,0 +1,4969 @@
+{
+ "candidate_binary": {
+  "path": "/home/connoravila/Documents/actinv/target/cand3-actinv",
+  "sha256": "3227fbe181ea00f87712ff60763c73fd450261e8ca0848df5c8598701d11b298"
+ },
+ "checker": {
+  "path": "/home/connoravila/Documents/actinv/controls/check_p132.py",
+  "sha256": "f76f1b870b9244f34274f54081503ba8a1d3e155a24871d1054c415ad96ed2dd"
+ },
+ "fns_root": "/home/connoravila/nuclear-data/conderc-fns/fns",
+ "gate_spec": {
+  "path": "/home/connoravila/Documents/actinv/examples/fns_fe_5min.json",
+  "sha256": "ed55ed00f6c00fc4a2351e18332e98e7feb33d9b7ca65e7ba861e0e5e8feef39"
+ },
+ "gates": {
+  "G1": {
+   "external": "fmt, clippy -D warnings and workspace tests are not run here"
+  },
+  "G2": {
+   "decks": 132,
+   "expected_decks": 132,
+   "implemented_keywords": [
+    "ATOMS",
+    "DENSITY",
+    "END",
+    "ENDPULSE",
+    "FISPACT",
+    "FLUX",
+    "FLUXES",
+    "FUEL",
+    "GETDECAY",
+    "GETXS",
+    "MASS",
+    "MIND",
+    "NOERROR",
+    "NOSTABLE",
+    "PROJECTILE",
+    "PULSE",
+    "SORTDOMINANT",
+    "SPECTRUM",
+    "STEP",
+    "TIME",
+    "UNCERTAINTY",
+    "ZERO"
+   ],
+   "import_all": {
+    "argv": [
+     "/usr/bin/python3",
+     "/home/connoravila/Documents/actinv/controls/p132_import_all.py",
+     "/home/connoravila/nuclear-data/conderc-fns/fns",
+     "--out",
+     "/home/connoravila/Documents/actinv/target/p132-work/imports"
+    ],
+    "env": {
+     "ACTINV_BIN": "/home/connoravila/Documents/actinv/target/cand3-actinv",
+     "removed": [
+      "ACTINV_LIBRARY",
+      "ACTINV_ENDF_DECAY",
+      "ACTINV_COVARIANCE"
+     ]
+    },
+    "exit_code": 0,
+    "stderr_tail": "",
+    "stdout_tail": "132 decks, 132 imported, 0 failed\nentry statuses: mapped=5814, approximated=528, noted=1323, unsupported=0\nkeyword               mapped  approximated         noted   unsupported\nATOMS                   2511             0           132             0\nCLOBBER                    0             0           132             0\nDENSITY                    0             0           132             0\nEND                        0             0           132             0\nFISPACT                  132             0             0             0\nFLUX                     264             0             0             0\nGETDECAY                   0           132             0             0\nGETXS                      0           132             0             0\nGRAPH                      0             0           132             0\nHALF                       0             0           132             0\nHAZARDS                    0             0           132             0\nMASS                     132             0             0             0\nMIND                     132             0             0             0\nMONITOR                    0             0             1             0\nNOSTABLE                   0           132             0             0\nNUCGRAPH                   0             0           132             0\nPATHRESET                  0             0             1             0\nPRINTLIB                   0             0             1             0\nTIME                    2511             0             0             0\nTOLERANCE                  0             0           264             0\nUNCERTAINTY                0           132             0             0\nZERO                     132             0             0             0\n",
+    "summary_sha256": "f01e8e20d5b3a4cd865f7026e2e01cbafbd93ab64734f01e10f4eb474be0dc57",
+    "wall_s": 0.5914124511182308
+   },
+   "import_failures": [],
+   "keyword_status_table": {
+    "ATOMS": {
+     "approximated": 0,
+     "mapped": 2511,
+     "noted": 132,
+     "unsupported": 0
+    },
+    "CLOBBER": {
+     "approximated": 0,
+     "mapped": 0,
+     "noted": 132,
+     "unsupported": 0
+    },
+    "DENSITY": {
+     "approximated": 0,
+     "mapped": 0,
+     "noted": 132,
+     "unsupported": 0
+    },
+    "END": {
+     "approximated": 0,
+     "mapped": 0,
+     "noted": 132,
+     "unsupported": 0
+    },
+    "FISPACT": {
+     "approximated": 0,
+     "mapped": 132,
+     "noted": 0,
+     "unsupported": 0
+    },
+    "FLUX": {
+     "approximated": 0,
+     "mapped": 264,
+     "noted": 0,
+     "unsupported": 0
+    },
+    "GETDECAY": {
+     "approximated": 132,
+     "mapped": 0,
+     "noted": 0,
+     "unsupported": 0
+    },
+    "GETXS": {
+     "approximated": 132,
+     "mapped": 0,
+     "noted": 0,
+     "unsupported": 0
+    },
+    "GRAPH": {
+     "approximated": 0,
+     "mapped": 0,
+     "noted": 132,
+     "unsupported": 0
+    },
+    "HALF": {
+     "approximated": 0,
+     "mapped": 0,
+     "noted": 132,
+     "unsupported": 0
+    },
+    "HAZARDS": {
+     "approximated": 0,
+     "mapped": 0,
+     "noted": 132,
+     "unsupported": 0
+    },
+    "MASS": {
+     "approximated": 0,
+     "mapped": 132,
+     "noted": 0,
+     "unsupported": 0
+    },
+    "MIND": {
+     "approximated": 0,
+     "mapped": 132,
+     "noted": 0,
+     "unsupported": 0
+    },
+    "MONITOR": {
+     "approximated": 0,
+     "mapped": 0,
+     "noted": 1,
+     "unsupported": 0
+    },
+    "NOSTABLE": {
+     "approximated": 132,
+     "mapped": 0,
+     "noted": 0,
+     "unsupported": 0
+    },
+    "NUCGRAPH": {
+     "approximated": 0,
+     "mapped": 0,
+     "noted": 132,
+     "unsupported": 0
+    },
+    "PATHRESET": {
+     "approximated": 0,
+     "mapped": 0,
+     "noted": 1,
+     "unsupported": 0
+    },
+    "PRINTLIB": {
+     "approximated": 0,
+     "mapped": 0,
+     "noted": 1,
+     "unsupported": 0
+    },
+    "TIME": {
+     "approximated": 0,
+     "mapped": 2511,
+     "noted": 0,
+     "unsupported": 0
+    },
+    "TOLERANCE": {
+     "approximated": 0,
+     "mapped": 0,
+     "noted": 264,
+     "unsupported": 0
+    },
+    "UNCERTAINTY": {
+     "approximated": 132,
+     "mapped": 0,
+     "noted": 0,
+     "unsupported": 0
+    },
+    "ZERO": {
+     "approximated": 0,
+     "mapped": 132,
+     "noted": 0,
+     "unsupported": 0
+    }
+   },
+   "missing_outputs": [],
+   "n_import_failures": 0,
+   "n_unsupported_on_implemented_keywords": 0,
+   "pass": true,
+   "report_inconsistencies": [],
+   "status_totals": {
+    "approximated": 528,
+    "mapped": 5814,
+    "noted": 1323,
+    "unsupported": 0
+   },
+   "table_matches_import_all_summary": true,
+   "unsupported_on_implemented_keywords": [],
+   "unsupported_on_other_keywords": {},
+   "validate_files": {
+    "failed": [],
+    "n_failed": 0,
+    "passed": 132
+   }
+  },
+  "G3": {
+   "decks": 132,
+   "decks_checked": 132,
+   "decks_with_failures": 0,
+   "durations_equal_at_printed_resolution_only": 275,
+   "durations_equal_within_1e-9": 2236,
+   "failures": {},
+   "pass": true,
+   "per_deck": [
+    {
+     "deck_steps": 21,
+     "fluxes_groups": 709,
+     "fluxes_wall_loading": 1.0,
+     "id": "Ag__TENDL-2017_2000exp_5min",
+     "out_intervals": 22,
+     "print_resolution_only": 0,
+     "spectrum_total": 11160000000.0,
+     "steps": 21,
+     "strict": 21
+    },
+    {
+     "deck_steps": 21,
+     "fluxes_groups": 709,
+     "fluxes_wall_loading": 1.0,
+     "id": "Al__TENDL-2017_1996exp_5min",
+     "out_intervals": 22,
+     "print_resolution_only": 0,
+     "spectrum_total": 11350000000.0,
+     "steps": 21,
+     "strict": 21
+    },
+    {
+     "deck_steps": 8,
+     "fluxes_groups": 709,
+     "fluxes_wall_loading": 1.0,
+     "id": "Al__TENDL-2017_1996exp_7hour",
+     "out_intervals": 9,
+     "print_resolution_only": 7,
+     "spectrum_total": 10500000000.0,
+     "steps": 8,
+     "strict": 1
+    },
+    {
+     "deck_steps": 22,
+     "fluxes_groups": 709,
+     "fluxes_wall_loading": 1.0,
+     "id": "Al__TENDL-2017_2000exp_5min",
+     "out_intervals": 23,
+     "print_resolution_only": 0,
+     "spectrum_total": 11160000000.0,
+     "steps": 22,
+     "strict": 22
+    },
+    {
+     "deck_steps": 22,
+     "fluxes_groups": 709,
+     "fluxes_wall_loading": 1.0,
+     "id": "As__TENDL-2017_2000exp_5min",
+     "out_intervals": 23,
+     "print_resolution_only": 0,
+     "spectrum_total": 11160000000.0,
+     "steps": 22,
+     "strict": 22
+    },
+    {
+     "deck_steps": 22,
+     "fluxes_groups": 709,
+     "fluxes_wall_loading": 1.0,
+     "id": "Au__TENDL-2017_2000exp_5min",
+     "out_intervals": 23,
+     "print_resolution_only": 0,
+     "spectrum_total": 11160000000.0,
+     "steps": 22,
+     "strict": 22
+    },
+    {
+     "deck_steps": 21,
+     "fluxes_groups": 709,
+     "fluxes_wall_loading": 1.0,
+     "id": "Ba__TENDL-2017_1996exp_5min",
+     "out_intervals": 22,
+     "print_resolution_only": 0,
+     "spectrum_total": 11160000000.0,
+     "steps": 21,
+     "strict": 21
+    },
+    {
+     "deck_steps": 7,
+     "fluxes_groups": 709,
+     "fluxes_wall_loading": 1.0,
+     "id": "Ba__TENDL-2017_1996exp_7hour",
+     "out_intervals": 8,
+     "print_resolution_only": 7,
+     "spectrum_total": 10500000000.0,
+     "steps": 7,
+     "strict": 0
+    },
+    {
+     "deck_steps": 23,
+     "fluxes_groups": 709,
+     "fluxes_wall_loading": 1.0,
+     "id": "Ba__TENDL-2017_2000exp_5min",
+     "out_intervals": 24,
+     "print_resolution_only": 0,
+     "spectrum_total": 11160000000.0,
+     "steps": 23,
+     "strict": 23
+    },
+    {
+     "deck_steps": 21,
+     "fluxes_groups": 709,
+     "fluxes_wall_loading": 1.0,
+     "id": "Bi__TENDL-2017_1996exp_5min",
+     "out_intervals": 22,
+     "print_resolution_only": 0,
+     "spectrum_total": 11160000000.0,
+     "steps": 21,
+     "strict": 21
+    },
+    {
+     "deck_steps": 6,
+     "fluxes_groups": 709,
+     "fluxes_wall_loading": 1.0,
+     "id": "Bi__TENDL-2017_1996exp_7hour",
+     "out_intervals": 7,
+     "print_resolution_only": 6,
+     "spectrum_total": 10500000000.0,
+     "steps": 6,
+     "strict": 0
+    },
+    {
+     "deck_steps": 21,
+     "fluxes_groups": 709,
+     "fluxes_wall_loading": 1.0,
+     "id": "Bi__TENDL-2017_2000exp_5min",
+     "out_intervals": 22,
+     "print_resolution_only": 0,
+     "spectrum_total": 11160000000.0,
+     "steps": 21,
+     "strict": 21
+    },
+    {
+     "deck_steps": 22,
+     "fluxes_groups": 709,
+     "fluxes_wall_loading": 1.0,
+     "id": "Br__TENDL-2017_2000exp_5min",
+     "out_intervals": 23,
+     "print_resolution_only": 0,
+     "spectrum_total": 11160000000.0,
+     "steps": 22,
+     "strict": 22
+    },
+    {
+     "deck_steps": 21,
+     "fluxes_groups": 709,
+     "fluxes_wall_loading": 1.0,
+     "id": "Ca__TENDL-2017_1996exp_5min",
+     "out_intervals": 22,
+     "print_resolution_only": 0,
+     "spectrum_total": 11160000000.0,
+     "steps": 21,
+     "strict": 21
+    },
+    {
+     "deck_steps": 7,
+     "fluxes_groups": 709,
+     "fluxes_wall_loading": 1.0,
+     "id": "Ca__TENDL-2017_1996exp_7hour",
+     "out_intervals": 8,
+     "print_resolution_only": 7,
+     "spectrum_total": 10500000000.0,
+     "steps": 7,
+     "strict": 0
+    },
+    {
+     "deck_steps": 22,
+     "fluxes_groups": 709,
+     "fluxes_wall_loading": 1.0,
+     "id": "Ca__TENDL-2017_2000exp_5min",
+     "out_intervals": 23,
+     "print_resolution_only": 0,
+     "spectrum_total": 11160000000.0,
+     "steps": 22,
+     "strict": 22
+    },
+    {
+     "deck_steps": 23,
+     "fluxes_groups": 709,
+     "fluxes_wall_loading": 1.0,
+     "id": "Cd__TENDL-2017_2000exp_5min",
+     "out_intervals": 24,
+     "print_resolution_only": 0,
+     "spectrum_total": 11160000000.0,
+     "steps": 23,
+     "strict": 23
+    },
+    {
+     "deck_steps": 22,
+     "fluxes_groups": 709,
+     "fluxes_wall_loading": 1.0,
+     "id": "Ce__TENDL-2017_2000exp_5min",
+     "out_intervals": 23,
+     "print_resolution_only": 0,
+     "spectrum_total": 11160000000.0,
+     "steps": 22,
+     "strict": 22
+    },
+    {
+     "deck_steps": 22,
+     "fluxes_groups": 709,
+     "fluxes_wall_loading": 1.0,
+     "id": "Cl__TENDL-2017_2000exp_5min",
+     "out_intervals": 23,
+     "print_resolution_only": 0,
+     "spectrum_total": 11160000000.0,
+     "steps": 22,
+     "strict": 22
+    },
+    {
+     "deck_steps": 22,
+     "fluxes_groups": 709,
+     "fluxes_wall_loading": 1.0,
+     "id": "Co__TENDL-2017_1996exp_5min",
+     "out_intervals": 23,
+     "print_resolution_only": 0,
+     "spectrum_total": 11160000000.0,
+     "steps": 22,
+     "strict": 22
+    },
+    {
+     "deck_steps": 11,
+     "fluxes_groups": 709,
+     "fluxes_wall_loading": 1.0,
+     "id": "Co__TENDL-2017_1996exp_7hour",
+     "out_intervals": 12,
+     "print_resolution_only": 10,
+     "spectrum_total": 10500000000.0,
+     "steps": 11,
+     "strict": 1
+    },
+    {
+     "deck_steps": 22,
+     "fluxes_groups": 709,
+     "fluxes_wall_loading": 1.0,
+     "id": "Co__TENDL-2017_2000exp_5min",
+     "out_intervals": 23,
+     "print_resolution_only": 0,
+     "spectrum_total": 11160000000.0,
+     "steps": 22,
+     "strict": 22
+    },
+    {
+     "deck_steps": 21,
+     "fluxes_groups": 709,
+     "fluxes_wall_loading": 1.0,
+     "id": "Cr__TENDL-2017_1996exp_5min",
+     "out_intervals": 22,
+     "print_resolution_only": 0,
+     "spectrum_total": 11160000000.0,
+     "steps": 21,
+     "strict": 21
+    },
+    {
+     "deck_steps": 10,
+     "fluxes_groups": 709,
+     "fluxes_wall_loading": 1.0,
+     "id": "Cr__TENDL-2017_1996exp_7hour",
+     "out_intervals": 11,
+     "print_resolution_only": 10,
+     "spectrum_total": 10500000000.0,
+     "steps": 10,
+     "strict": 0
+    },
+    {
+     "deck_steps": 22,
+     "fluxes_groups": 709,
+     "fluxes_wall_loading": 1.0,
+     "id": "Cr__TENDL-2017_2000exp_5min",
+     "out_intervals": 23,
+     "print_resolution_only": 0,
+     "spectrum_total": 11160000000.0,
+     "steps": 22,
+     "strict": 22
+    },
+    {
+     "deck_steps": 22,
+     "fluxes_groups": 709,
+     "fluxes_wall_loading": 1.0,
+     "id": "Cs__TENDL-2017_2000exp_5min",
+     "out_intervals": 23,
+     "print_resolution_only": 0,
+     "spectrum_total": 11160000000.0,
+     "steps": 22,
+     "strict": 22
+    },
+    {
+     "deck_steps": 21,
+     "fluxes_groups": 709,
+     "fluxes_wall_loading": 1.0,
+     "id": "Cu__TENDL-2017_1996exp_5min",
+     "out_intervals": 22,
+     "print_resolution_only": 0,
+     "spectrum_total": 11350000000.0,
+     "steps": 21,
+     "strict": 21
+    },
+    {
+     "deck_steps": 11,
+     "fluxes_groups": 709,
+     "fluxes_wall_loading": 1.0,
+     "id": "Cu__TENDL-2017_1996exp_7hour",
+     "out_intervals": 12,
+     "print_resolution_only": 11,
+     "spectrum_total": 10500000000.0,
+     "steps": 11,
+     "strict": 0
+    },
+    {
+     "deck_steps": 22,
+     "fluxes_groups": 709,
+     "fluxes_wall_loading": 1.0,
+     "id": "Cu__TENDL-2017_2000exp_5min",
+     "out_intervals": 23,
+     "print_resolution_only": 0,
+     "spectrum_total": 11160000000.0,
+     "steps": 22,
+     "strict": 22
+    },
+    {
+     "deck_steps": 21,
+     "fluxes_groups": 709,
+     "fluxes_wall_loading": 1.0,
+     "id": "Dy__TENDL-2017_2000exp_5min",
+     "out_intervals": 22,
+     "print_resolution_only": 0,
+     "spectrum_total": 11160000000.0,
+     "steps": 21,
+     "strict": 21
+    },
+    {
+     "deck_steps": 22,
+     "fluxes_groups": 709,
+     "fluxes_wall_loading": 1.0,
+     "id": "Er__TENDL-2017_2000exp_5min",
+     "out_intervals": 23,
+     "print_resolution_only": 0,
+     "spectrum_total": 11160000000.0,
+     "steps": 22,
+     "strict": 22
+    },
+    {
+     "deck_steps": 21,
+     "fluxes_groups": 709,
+     "fluxes_wall_loading": 1.0,
+     "id": "Eu__TENDL-2017_2000exp_5min",
+     "out_intervals": 22,
+     "print_resolution_only": 0,
+     "spectrum_total": 11160000000.0,
+     "steps": 21,
+     "strict": 21
+    },
+    {
+     "deck_steps": 21,
+     "fluxes_groups": 709,
+     "fluxes_wall_loading": 1.0,
+     "id": "F__TENDL-2017_1996exp_5min",
+     "out_intervals": 22,
+     "print_resolution_only": 0,
+     "spectrum_total": 11160000000.0,
+     "steps": 21,
+     "strict": 21
+    },
+    {
+     "deck_steps": 22,
+     "fluxes_groups": 709,
+     "fluxes_wall_loading": 1.0,
+     "id": "F__TENDL-2017_2000exp_5min",
+     "out_intervals": 23,
+     "print_resolution_only": 0,
+     "spectrum_total": 11160000000.0,
+     "steps": 22,
+     "strict": 22
+    },
+    {
+     "deck_steps": 21,
+     "fluxes_groups": 709,
+     "fluxes_wall_loading": 1.0,
+     "id": "Fe__TENDL-2017_1996exp_5min",
+     "out_intervals": 22,
+     "print_resolution_only": 0,
+     "spectrum_total": 11160000000.0,
+     "steps": 21,
+     "strict": 21
+    },
+    {
+     "deck_steps": 11,
+     "fluxes_groups": 709,
+     "fluxes_wall_loading": 1.0,
+     "id": "Fe__TENDL-2017_1996exp_7hour",
+     "out_intervals": 12,
+     "print_resolution_only": 10,
+     "spectrum_total": 10500000000.0,
+     "steps": 11,
+     "strict": 1
+    },
+    {
+     "deck_steps": 22,
+     "fluxes_groups": 709,
+     "fluxes_wall_loading": 1.0,
+     "id": "Fe__TENDL-2017_2000exp_5min",
+     "out_intervals": 23,
+     "print_resolution_only": 0,
+     "spectrum_total": 11160000000.0,
+     "steps": 22,
+     "strict": 22
+    },
+    {
+     "deck_steps": 23,
+     "fluxes_groups": 709,
+     "fluxes_wall_loading": 1.0,
+     "id": "Ga__TENDL-2017_2000exp_5min",
+     "out_intervals": 24,
+     "print_resolution_only": 0,
+     "spectrum_total": 11160000000.0,
+     "steps": 23,
+     "strict": 23
+    },
+    {
+     "deck_steps": 22,
+     "fluxes_groups": 709,
+     "fluxes_wall_loading": 1.0,
+     "id": "Gd__TENDL-2017_2000exp_5min",
+     "out_intervals": 23,
+     "print_resolution_only": 0,
+     "spectrum_total": 11160000000.0,
+     "steps": 22,
+     "strict": 22
+    },
+    {
+     "deck_steps": 23,
+     "fluxes_groups": 709,
+     "fluxes_wall_loading": 1.0,
+     "id": "Ge__TENDL-2017_2000exp_5min",
+     "out_intervals": 24,
+     "print_resolution_only": 0,
+     "spectrum_total": 11160000000.0,
+     "steps": 23,
+     "strict": 23
+    },
+    {
+     "deck_steps": 21,
+     "fluxes_groups": 709,
+     "fluxes_wall_loading": 1.0,
+     "id": "Hf__TENDL-2017_2000exp_5min",
+     "out_intervals": 22,
+     "print_resolution_only": 0,
+     "spectrum_total": 11160000000.0,
+     "steps": 21,
+     "strict": 21
+    },
+    {
+     "deck_steps": 22,
+     "fluxes_groups": 709,
+     "fluxes_wall_loading": 1.0,
+     "id": "Hg__TENDL-2017_2000exp_5min",
+     "out_intervals": 23,
+     "print_resolution_only": 0,
+     "spectrum_total": 11160000000.0,
+     "steps": 22,
+     "strict": 22
+    },
+    {
+     "deck_steps": 22,
+     "fluxes_groups": 709,
+     "fluxes_wall_loading": 1.0,
+     "id": "Ho__TENDL-2017_2000exp_5min",
+     "out_intervals": 23,
+     "print_resolution_only": 0,
+     "spectrum_total": 11160000000.0,
+     "steps": 22,
+     "strict": 22
+    },
+    {
+     "deck_steps": 22,
+     "fluxes_groups": 709,
+     "fluxes_wall_loading": 1.0,
+     "id": "I__TENDL-2017_2000exp_5min",
+     "out_intervals": 23,
+     "print_resolution_only": 0,
+     "spectrum_total": 11160000000.0,
+     "steps": 22,
+     "strict": 22
+    },
+    {
+     "deck_steps": 22,
+     "fluxes_groups": 709,
+     "fluxes_wall_loading": 1.0,
+     "id": "In__TENDL-2017_2000exp_5min",
+     "out_intervals": 23,
+     "print_resolution_only": 0,
+     "spectrum_total": 11160000000.0,
+     "steps": 22,
+     "strict": 22
+    },
+    {
+     "deck_steps": 21,
+     "fluxes_groups": 709,
+     "fluxes_wall_loading": 1.0,
+     "id": "Inc600__TENDL-2017_1996exp_5min",
+     "out_intervals": 22,
+     "print_resolution_only": 0,
+     "spectrum_total": 11160000000.0,
+     "steps": 21,
+     "strict": 21
+    },
+    {
+     "deck_steps": 11,
+     "fluxes_groups": 709,
+     "fluxes_wall_loading": 1.0,
+     "id": "Inc600__TENDL-2017_1996exp_7hour",
+     "out_intervals": 12,
+     "print_resolution_only": 10,
+     "spectrum_total": 10500000000.0,
+     "steps": 11,
+     "strict": 1
+    },
+    {
+     "deck_steps": 22,
+     "fluxes_groups": 709,
+     "fluxes_wall_loading": 1.0,
+     "id": "Inc600__TENDL-2017_2000exp_5min",
+     "out_intervals": 23,
+     "print_resolution_only": 0,
+     "spectrum_total": 11160000000.0,
+     "steps": 22,
+     "strict": 22
+    },
+    {
+     "deck_steps": 20,
+     "fluxes_groups": 709,
+     "fluxes_wall_loading": 1.0,
+     "id": "Ir__TENDL-2017_2000exp_5min",
+     "out_intervals": 21,
+     "print_resolution_only": 0,
+     "spectrum_total": 11160000000.0,
+     "steps": 20,
+     "strict": 20
+    },
+    {
+     "deck_steps": 21,
+     "fluxes_groups": 709,
+     "fluxes_wall_loading": 1.0,
+     "id": "K__TENDL-2017_1996exp_5min",
+     "out_intervals": 22,
+     "print_resolution_only": 0,
+     "spectrum_total": 11160000000.0,
+     "steps": 21,
+     "strict": 21
+    },
+    {
+     "deck_steps": 9,
+     "fluxes_groups": 709,
+     "fluxes_wall_loading": 1.0,
+     "id": "K__TENDL-2017_1996exp_7hour",
+     "out_intervals": 10,
+     "print_resolution_only": 8,
+     "spectrum_total": 10500000000.0,
+     "steps": 9,
+     "strict": 1
+    },
+    {
+     "deck_steps": 22,
+     "fluxes_groups": 709,
+     "fluxes_wall_loading": 1.0,
+     "id": "K__TENDL-2017_2000exp_5min",
+     "out_intervals": 23,
+     "print_resolution_only": 0,
+     "spectrum_total": 11160000000.0,
+     "steps": 22,
+     "strict": 22
+    },
+    {
+     "deck_steps": 22,
+     "fluxes_groups": 709,
+     "fluxes_wall_loading": 1.0,
+     "id": "La__TENDL-2017_2000exp_5min",
+     "out_intervals": 23,
+     "print_resolution_only": 0,
+     "spectrum_total": 11160000000.0,
+     "steps": 22,
+     "strict": 22
+    },
+    {
+     "deck_steps": 22,
+     "fluxes_groups": 709,
+     "fluxes_wall_loading": 1.0,
+     "id": "Lu__TENDL-2017_2000exp_5min",
+     "out_intervals": 23,
+     "print_resolution_only": 0,
+     "spectrum_total": 11160000000.0,
+     "steps": 22,
+     "strict": 22
+    },
+    {
+     "deck_steps": 20,
+     "fluxes_groups": 709,
+     "fluxes_wall_loading": 1.0,
+     "id": "Mg__TENDL-2017_2000exp_5min",
+     "out_intervals": 21,
+     "print_resolution_only": 0,
+     "spectrum_total": 11160000000.0,
+     "steps": 20,
+     "strict": 20
+    },
+    {
+     "deck_steps": 21,
+     "fluxes_groups": 709,
+     "fluxes_wall_loading": 1.0,
+     "id": "Mn__TENDL-2017_1996exp_5min",
+     "out_intervals": 22,
+     "print_resolution_only": 0,
+     "spectrum_total": 11160000000.0,
+     "steps": 21,
+     "strict": 21
+    },
+    {
+     "deck_steps": 11,
+     "fluxes_groups": 709,
+     "fluxes_wall_loading": 1.0,
+     "id": "Mn__TENDL-2017_1996exp_7hour",
+     "out_intervals": 12,
+     "print_resolution_only": 11,
+     "spectrum_total": 10500000000.0,
+     "steps": 11,
+     "strict": 0
+    },
+    {
+     "deck_steps": 23,
+     "fluxes_groups": 709,
+     "fluxes_wall_loading": 1.0,
+     "id": "Mn__TENDL-2017_2000exp_5min",
+     "out_intervals": 24,
+     "print_resolution_only": 0,
+     "spectrum_total": 11160000000.0,
+     "steps": 23,
+     "strict": 23
+    },
+    {
+     "deck_steps": 21,
+     "fluxes_groups": 709,
+     "fluxes_wall_loading": 1.0,
+     "id": "Mo__TENDL-2017_1996exp_5min",
+     "out_intervals": 22,
+     "print_resolution_only": 0,
+     "spectrum_total": 11160000000.0,
+     "steps": 21,
+     "strict": 21
+    },
+    {
+     "deck_steps": 10,
+     "fluxes_groups": 709,
+     "fluxes_wall_loading": 1.0,
+     "id": "Mo__TENDL-2017_1996exp_7hour",
+     "out_intervals": 11,
+     "print_resolution_only": 10,
+     "spectrum_total": 10500000000.0,
+     "steps": 10,
+     "strict": 0
+    },
+    {
+     "deck_steps": 21,
+     "fluxes_groups": 709,
+     "fluxes_wall_loading": 1.0,
+     "id": "Mo__TENDL-2017_2000exp_5min",
+     "out_intervals": 22,
+     "print_resolution_only": 0,
+     "spectrum_total": 11160000000.0,
+     "steps": 21,
+     "strict": 21
+    },
+    {
+     "deck_steps": 21,
+     "fluxes_groups": 709,
+     "fluxes_wall_loading": 1.0,
+     "id": "Na__TENDL-2017_1996exp_5min",
+     "out_intervals": 22,
+     "print_resolution_only": 0,
+     "spectrum_total": 11160000000.0,
+     "steps": 21,
+     "strict": 21
+    },
+    {
+     "deck_steps": 11,
+     "fluxes_groups": 709,
+     "fluxes_wall_loading": 1.0,
+     "id": "Na__TENDL-2017_1996exp_7hour",
+     "out_intervals": 12,
+     "print_resolution_only": 11,
+     "spectrum_total": 10500000000.0,
+     "steps": 11,
+     "strict": 0
+    },
+    {
+     "deck_steps": 23,
+     "fluxes_groups": 709,
+     "fluxes_wall_loading": 1.0,
+     "id": "Na__TENDL-2017_2000exp_5min",
+     "out_intervals": 24,
+     "print_resolution_only": 0,
+     "spectrum_total": 11160000000.0,
+     "steps": 23,
+     "strict": 23
+    },
+    {
+     "deck_steps": 21,
+     "fluxes_groups": 709,
+     "fluxes_wall_loading": 1.0,
+     "id": "Nb__TENDL-2017_1996exp_5min",
+     "out_intervals": 22,
+     "print_resolution_only": 0,
+     "spectrum_total": 11160000000.0,
+     "steps": 21,
+     "strict": 21
+    },
+    {
+     "deck_steps": 9,
+     "fluxes_groups": 709,
+     "fluxes_wall_loading": 1.0,
+     "id": "Nb__TENDL-2017_1996exp_7hour",
+     "out_intervals": 10,
+     "print_resolution_only": 9,
+     "spectrum_total": 10500000000.0,
+     "steps": 9,
+     "strict": 0
+    },
+    {
+     "deck_steps": 21,
+     "fluxes_groups": 709,
+     "fluxes_wall_loading": 1.0,
+     "id": "Nb__TENDL-2017_2000exp_5min",
+     "out_intervals": 22,
+     "print_resolution_only": 0,
+     "spectrum_total": 11160000000.0,
+     "steps": 21,
+     "strict": 21
+    },
+    {
+     "deck_steps": 22,
+     "fluxes_groups": 709,
+     "fluxes_wall_loading": 1.0,
+     "id": "Nd__TENDL-2017_2000exp_5min",
+     "out_intervals": 23,
+     "print_resolution_only": 0,
+     "spectrum_total": 11160000000.0,
+     "steps": 22,
+     "strict": 22
+    },
+    {
+     "deck_steps": 21,
+     "fluxes_groups": 709,
+     "fluxes_wall_loading": 1.0,
+     "id": "Ni__TENDL-2017_1996exp_5min",
+     "out_intervals": 22,
+     "print_resolution_only": 0,
+     "spectrum_total": 11160000000.0,
+     "steps": 21,
+     "strict": 21
+    },
+    {
+     "deck_steps": 11,
+     "fluxes_groups": 709,
+     "fluxes_wall_loading": 1.0,
+     "id": "Ni__TENDL-2017_1996exp_7hour",
+     "out_intervals": 12,
+     "print_resolution_only": 11,
+     "spectrum_total": 10500000000.0,
+     "steps": 11,
+     "strict": 0
+    },
+    {
+     "deck_steps": 22,
+     "fluxes_groups": 709,
+     "fluxes_wall_loading": 1.0,
+     "id": "Ni__TENDL-2017_2000exp_5min",
+     "out_intervals": 23,
+     "print_resolution_only": 0,
+     "spectrum_total": 11160000000.0,
+     "steps": 22,
+     "strict": 22
+    },
+    {
+     "deck_steps": 21,
+     "fluxes_groups": 709,
+     "fluxes_wall_loading": 1.0,
+     "id": "NiCr__TENDL-2017_1996exp_5min",
+     "out_intervals": 22,
+     "print_resolution_only": 0,
+     "spectrum_total": 11350000000.0,
+     "steps": 21,
+     "strict": 21
+    },
+    {
+     "deck_steps": 11,
+     "fluxes_groups": 709,
+     "fluxes_wall_loading": 1.0,
+     "id": "NiCr__TENDL-2017_1996exp_7hour",
+     "out_intervals": 12,
+     "print_resolution_only": 11,
+     "spectrum_total": 10500000000.0,
+     "steps": 11,
+     "strict": 0
+    },
+    {
+     "deck_steps": 22,
+     "fluxes_groups": 709,
+     "fluxes_wall_loading": 1.0,
+     "id": "NiCr__TENDL-2017_2000exp_5min",
+     "out_intervals": 23,
+     "print_resolution_only": 0,
+     "spectrum_total": 11160000000.0,
+     "steps": 22,
+     "strict": 22
+    },
+    {
+     "deck_steps": 22,
+     "fluxes_groups": 709,
+     "fluxes_wall_loading": 1.0,
+     "id": "Os__TENDL-2017_2000exp_5min",
+     "out_intervals": 23,
+     "print_resolution_only": 0,
+     "spectrum_total": 11160000000.0,
+     "steps": 22,
+     "strict": 22
+    },
+    {
+     "deck_steps": 21,
+     "fluxes_groups": 709,
+     "fluxes_wall_loading": 1.0,
+     "id": "P__TENDL-2017_2000exp_5min",
+     "out_intervals": 22,
+     "print_resolution_only": 0,
+     "spectrum_total": 11160000000.0,
+     "steps": 21,
+     "strict": 21
+    },
+    {
+     "deck_steps": 21,
+     "fluxes_groups": 709,
+     "fluxes_wall_loading": 1.0,
+     "id": "Pb__TENDL-2017_1996exp_5min",
+     "out_intervals": 22,
+     "print_resolution_only": 0,
+     "spectrum_total": 11160000000.0,
+     "steps": 21,
+     "strict": 21
+    },
+    {
+     "deck_steps": 8,
+     "fluxes_groups": 709,
+     "fluxes_wall_loading": 1.0,
+     "id": "Pb__TENDL-2017_1996exp_7hour",
+     "out_intervals": 9,
+     "print_resolution_only": 7,
+     "spectrum_total": 10500000000.0,
+     "steps": 8,
+     "strict": 1
+    },
+    {
+     "deck_steps": 21,
+     "fluxes_groups": 709,
+     "fluxes_wall_loading": 1.0,
+     "id": "Pb__TENDL-2017_2000exp_5min",
+     "out_intervals": 22,
+     "print_resolution_only": 0,
+     "spectrum_total": 11160000000.0,
+     "steps": 21,
+     "strict": 21
+    },
+    {
+     "deck_steps": 22,
+     "fluxes_groups": 709,
+     "fluxes_wall_loading": 1.0,
+     "id": "Pd__TENDL-2017_2000exp_5min",
+     "out_intervals": 23,
+     "print_resolution_only": 0,
+     "spectrum_total": 11160000000.0,
+     "steps": 22,
+     "strict": 22
+    },
+    {
+     "deck_steps": 22,
+     "fluxes_groups": 709,
+     "fluxes_wall_loading": 1.0,
+     "id": "Pr__TENDL-2017_2000exp_5min",
+     "out_intervals": 23,
+     "print_resolution_only": 0,
+     "spectrum_total": 11160000000.0,
+     "steps": 22,
+     "strict": 22
+    },
+    {
+     "deck_steps": 21,
+     "fluxes_groups": 709,
+     "fluxes_wall_loading": 1.0,
+     "id": "Pt__TENDL-2017_2000exp_5min",
+     "out_intervals": 22,
+     "print_resolution_only": 0,
+     "spectrum_total": 11160000000.0,
+     "steps": 21,
+     "strict": 21
+    },
+    {
+     "deck_steps": 22,
+     "fluxes_groups": 709,
+     "fluxes_wall_loading": 1.0,
+     "id": "Rb__TENDL-2017_2000exp_5min",
+     "out_intervals": 23,
+     "print_resolution_only": 0,
+     "spectrum_total": 11160000000.0,
+     "steps": 22,
+     "strict": 22
+    },
+    {
+     "deck_steps": 21,
+     "fluxes_groups": 709,
+     "fluxes_wall_loading": 1.0,
+     "id": "Re__TENDL-2017_1996exp_5min",
+     "out_intervals": 22,
+     "print_resolution_only": 0,
+     "spectrum_total": 11160000000.0,
+     "steps": 21,
+     "strict": 21
+    },
+    {
+     "deck_steps": 11,
+     "fluxes_groups": 709,
+     "fluxes_wall_loading": 1.0,
+     "id": "Re__TENDL-2017_1996exp_7hour",
+     "out_intervals": 12,
+     "print_resolution_only": 9,
+     "spectrum_total": 10500000000.0,
+     "steps": 11,
+     "strict": 2
+    },
+    {
+     "deck_steps": 21,
+     "fluxes_groups": 709,
+     "fluxes_wall_loading": 1.0,
+     "id": "Re__TENDL-2017_2000exp_5min",
+     "out_intervals": 22,
+     "print_resolution_only": 0,
+     "spectrum_total": 11160000000.0,
+     "steps": 21,
+     "strict": 21
+    },
+    {
+     "deck_steps": 20,
+     "fluxes_groups": 709,
+     "fluxes_wall_loading": 1.0,
+     "id": "Rh__TENDL-2017_2000exp_5min",
+     "out_intervals": 21,
+     "print_resolution_only": 0,
+     "spectrum_total": 11160000000.0,
+     "steps": 20,
+     "strict": 20
+    },
+    {
+     "deck_steps": 22,
+     "fluxes_groups": 709,
+     "fluxes_wall_loading": 1.0,
+     "id": "Ru__TENDL-2017_2000exp_5min",
+     "out_intervals": 23,
+     "print_resolution_only": 0,
+     "spectrum_total": 11160000000.0,
+     "steps": 22,
+     "strict": 22
+    },
+    {
+     "deck_steps": 21,
+     "fluxes_groups": 709,
+     "fluxes_wall_loading": 1.0,
+     "id": "S__TENDL-2017_1996exp_5min",
+     "out_intervals": 22,
+     "print_resolution_only": 0,
+     "spectrum_total": 11160000000.0,
+     "steps": 21,
+     "strict": 21
+    },
+    {
+     "deck_steps": 10,
+     "fluxes_groups": 709,
+     "fluxes_wall_loading": 1.0,
+     "id": "S__TENDL-2017_1996exp_7hour",
+     "out_intervals": 11,
+     "print_resolution_only": 10,
+     "spectrum_total": 10500000000.0,
+     "steps": 10,
+     "strict": 0
+    },
+    {
+     "deck_steps": 20,
+     "fluxes_groups": 709,
+     "fluxes_wall_loading": 1.0,
+     "id": "S__TENDL-2017_2000exp_5min",
+     "out_intervals": 21,
+     "print_resolution_only": 0,
+     "spectrum_total": 11160000000.0,
+     "steps": 20,
+     "strict": 20
+    },
+    {
+     "deck_steps": 21,
+     "fluxes_groups": 709,
+     "fluxes_wall_loading": 1.0,
+     "id": "SS304__TENDL-2017_1996exp_5min",
+     "out_intervals": 22,
+     "print_resolution_only": 0,
+     "spectrum_total": 11160000000.0,
+     "steps": 21,
+     "strict": 21
+    },
+    {
+     "deck_steps": 11,
+     "fluxes_groups": 709,
+     "fluxes_wall_loading": 1.0,
+     "id": "SS304__TENDL-2017_1996exp_7hour",
+     "out_intervals": 12,
+     "print_resolution_only": 11,
+     "spectrum_total": 10500000000.0,
+     "steps": 11,
+     "strict": 0
+    },
+    {
+     "deck_steps": 22,
+     "fluxes_groups": 709,
+     "fluxes_wall_loading": 1.0,
+     "id": "SS304__TENDL-2017_2000exp_5min",
+     "out_intervals": 23,
+     "print_resolution_only": 0,
+     "spectrum_total": 11160000000.0,
+     "steps": 22,
+     "strict": 22
+    },
+    {
+     "deck_steps": 21,
+     "fluxes_groups": 709,
+     "fluxes_wall_loading": 1.0,
+     "id": "SS316__TENDL-2017_1996exp_5min",
+     "out_intervals": 22,
+     "print_resolution_only": 0,
+     "spectrum_total": 11160000000.0,
+     "steps": 21,
+     "strict": 21
+    },
+    {
+     "deck_steps": 11,
+     "fluxes_groups": 709,
+     "fluxes_wall_loading": 1.0,
+     "id": "SS316__TENDL-2017_1996exp_7hour",
+     "out_intervals": 12,
+     "print_resolution_only": 11,
+     "spectrum_total": 10500000000.0,
+     "steps": 11,
+     "strict": 0
+    },
+    {
+     "deck_steps": 22,
+     "fluxes_groups": 709,
+     "fluxes_wall_loading": 1.0,
+     "id": "SS316__TENDL-2017_2000exp_5min",
+     "out_intervals": 23,
+     "print_resolution_only": 0,
+     "spectrum_total": 11160000000.0,
+     "steps": 22,
+     "strict": 22
+    },
+    {
+     "deck_steps": 22,
+     "fluxes_groups": 709,
+     "fluxes_wall_loading": 1.0,
+     "id": "Sb__TENDL-2017_2000exp_5min",
+     "out_intervals": 23,
+     "print_resolution_only": 0,
+     "spectrum_total": 11160000000.0,
+     "steps": 22,
+     "strict": 22
+    },
+    {
+     "deck_steps": 22,
+     "fluxes_groups": 709,
+     "fluxes_wall_loading": 1.0,
+     "id": "Sc__TENDL-2017_2000exp_5min",
+     "out_intervals": 23,
+     "print_resolution_only": 0,
+     "spectrum_total": 11160000000.0,
+     "steps": 22,
+     "strict": 22
+    },
+    {
+     "deck_steps": 22,
+     "fluxes_groups": 709,
+     "fluxes_wall_loading": 1.0,
+     "id": "Se__TENDL-2017_2000exp_5min",
+     "out_intervals": 23,
+     "print_resolution_only": 0,
+     "spectrum_total": 11160000000.0,
+     "steps": 22,
+     "strict": 22
+    },
+    {
+     "deck_steps": 22,
+     "fluxes_groups": 709,
+     "fluxes_wall_loading": 1.0,
+     "id": "Si__TENDL-2017_2000exp_5min",
+     "out_intervals": 23,
+     "print_resolution_only": 0,
+     "spectrum_total": 11160000000.0,
+     "steps": 22,
+     "strict": 22
+    },
+    {
+     "deck_steps": 21,
+     "fluxes_groups": 709,
+     "fluxes_wall_loading": 1.0,
+     "id": "Sm__TENDL-2017_2000exp_5min",
+     "out_intervals": 22,
+     "print_resolution_only": 0,
+     "spectrum_total": 11160000000.0,
+     "steps": 21,
+     "strict": 21
+    },
+    {
+     "deck_steps": 21,
+     "fluxes_groups": 709,
+     "fluxes_wall_loading": 1.0,
+     "id": "Sn__TENDL-2017_1996exp_5min",
+     "out_intervals": 22,
+     "print_resolution_only": 0,
+     "spectrum_total": 11160000000.0,
+     "steps": 21,
+     "strict": 21
+    },
+    {
+     "deck_steps": 11,
+     "fluxes_groups": 709,
+     "fluxes_wall_loading": 1.0,
+     "id": "Sn__TENDL-2017_1996exp_7hour",
+     "out_intervals": 12,
+     "print_resolution_only": 10,
+     "spectrum_total": 10500000000.0,
+     "steps": 11,
+     "strict": 1
+    },
+    {
+     "deck_steps": 22,
+     "fluxes_groups": 709,
+     "fluxes_wall_loading": 1.0,
+     "id": "Sn__TENDL-2017_2000exp_5min",
+     "out_intervals": 23,
+     "print_resolution_only": 0,
+     "spectrum_total": 11160000000.0,
+     "steps": 22,
+     "strict": 22
+    },
+    {
+     "deck_steps": 21,
+     "fluxes_groups": 709,
+     "fluxes_wall_loading": 1.0,
+     "id": "Sr__TENDL-2017_1996exp_5min",
+     "out_intervals": 22,
+     "print_resolution_only": 0,
+     "spectrum_total": 11160000000.0,
+     "steps": 21,
+     "strict": 21
+    },
+    {
+     "deck_steps": 11,
+     "fluxes_groups": 709,
+     "fluxes_wall_loading": 1.0,
+     "id": "Sr__TENDL-2017_1996exp_7hour",
+     "out_intervals": 12,
+     "print_resolution_only": 9,
+     "spectrum_total": 10500000000.0,
+     "steps": 11,
+     "strict": 2
+    },
+    {
+     "deck_steps": 22,
+     "fluxes_groups": 709,
+     "fluxes_wall_loading": 1.0,
+     "id": "Sr__TENDL-2017_2000exp_5min",
+     "out_intervals": 23,
+     "print_resolution_only": 0,
+     "spectrum_total": 11160000000.0,
+     "steps": 22,
+     "strict": 22
+    },
+    {
+     "deck_steps": 21,
+     "fluxes_groups": 709,
+     "fluxes_wall_loading": 1.0,
+     "id": "Ta__TENDL-2017_1996exp_5min",
+     "out_intervals": 22,
+     "print_resolution_only": 0,
+     "spectrum_total": 11160000000.0,
+     "steps": 21,
+     "strict": 21
+    },
+    {
+     "deck_steps": 11,
+     "fluxes_groups": 709,
+     "fluxes_wall_loading": 1.0,
+     "id": "Ta__TENDL-2017_1996exp_7hour",
+     "out_intervals": 12,
+     "print_resolution_only": 11,
+     "spectrum_total": 10500000000.0,
+     "steps": 11,
+     "strict": 0
+    },
+    {
+     "deck_steps": 22,
+     "fluxes_groups": 709,
+     "fluxes_wall_loading": 1.0,
+     "id": "Ta__TENDL-2017_2000exp_5min",
+     "out_intervals": 23,
+     "print_resolution_only": 0,
+     "spectrum_total": 11160000000.0,
+     "steps": 22,
+     "strict": 22
+    },
+    {
+     "deck_steps": 22,
+     "fluxes_groups": 709,
+     "fluxes_wall_loading": 1.0,
+     "id": "Tb__TENDL-2017_2000exp_5min",
+     "out_intervals": 23,
+     "print_resolution_only": 0,
+     "spectrum_total": 11160000000.0,
+     "steps": 22,
+     "strict": 22
+    },
+    {
+     "deck_steps": 22,
+     "fluxes_groups": 709,
+     "fluxes_wall_loading": 1.0,
+     "id": "Te__TENDL-2017_2000exp_5min",
+     "out_intervals": 23,
+     "print_resolution_only": 0,
+     "spectrum_total": 11160000000.0,
+     "steps": 22,
+     "strict": 22
+    },
+    {
+     "deck_steps": 21,
+     "fluxes_groups": 709,
+     "fluxes_wall_loading": 1.0,
+     "id": "Ti__TENDL-2017_1996exp_5min",
+     "out_intervals": 22,
+     "print_resolution_only": 0,
+     "spectrum_total": 11160000000.0,
+     "steps": 21,
+     "strict": 21
+    },
+    {
+     "deck_steps": 11,
+     "fluxes_groups": 709,
+     "fluxes_wall_loading": 1.0,
+     "id": "Ti__TENDL-2017_1996exp_7hour",
+     "out_intervals": 12,
+     "print_resolution_only": 10,
+     "spectrum_total": 10500000000.0,
+     "steps": 11,
+     "strict": 1
+    },
+    {
+     "deck_steps": 22,
+     "fluxes_groups": 709,
+     "fluxes_wall_loading": 1.0,
+     "id": "Ti__TENDL-2017_2000exp_5min",
+     "out_intervals": 23,
+     "print_resolution_only": 0,
+     "spectrum_total": 11160000000.0,
+     "steps": 22,
+     "strict": 22
+    },
+    {
+     "deck_steps": 21,
+     "fluxes_groups": 709,
+     "fluxes_wall_loading": 1.0,
+     "id": "Tl__TENDL-2017_2000exp_5min",
+     "out_intervals": 22,
+     "print_resolution_only": 0,
+     "spectrum_total": 11160000000.0,
+     "steps": 21,
+     "strict": 21
+    },
+    {
+     "deck_steps": 22,
+     "fluxes_groups": 709,
+     "fluxes_wall_loading": 1.0,
+     "id": "Tm__TENDL-2017_2000exp_5min",
+     "out_intervals": 23,
+     "print_resolution_only": 0,
+     "spectrum_total": 11160000000.0,
+     "steps": 22,
+     "strict": 22
+    },
+    {
+     "deck_steps": 21,
+     "fluxes_groups": 709,
+     "fluxes_wall_loading": 1.0,
+     "id": "V__TENDL-2017_1996exp_5min",
+     "out_intervals": 22,
+     "print_resolution_only": 0,
+     "spectrum_total": 11350000000.0,
+     "steps": 21,
+     "strict": 21
+    },
+    {
+     "deck_steps": 8,
+     "fluxes_groups": 709,
+     "fluxes_wall_loading": 1.0,
+     "id": "V__TENDL-2017_1996exp_7hour",
+     "out_intervals": 9,
+     "print_resolution_only": 8,
+     "spectrum_total": 10500000000.0,
+     "steps": 8,
+     "strict": 0
+    },
+    {
+     "deck_steps": 22,
+     "fluxes_groups": 709,
+     "fluxes_wall_loading": 1.0,
+     "id": "V__TENDL-2017_2000exp_5min",
+     "out_intervals": 23,
+     "print_resolution_only": 0,
+     "spectrum_total": 11160000000.0,
+     "steps": 22,
+     "strict": 22
+    },
+    {
+     "deck_steps": 21,
+     "fluxes_groups": 709,
+     "fluxes_wall_loading": 1.0,
+     "id": "W__TENDL-2017_1996exp_5min",
+     "out_intervals": 22,
+     "print_resolution_only": 0,
+     "spectrum_total": 11160000000.0,
+     "steps": 21,
+     "strict": 21
+    },
+    {
+     "deck_steps": 11,
+     "fluxes_groups": 709,
+     "fluxes_wall_loading": 1.0,
+     "id": "W__TENDL-2017_1996exp_7hour",
+     "out_intervals": 12,
+     "print_resolution_only": 9,
+     "spectrum_total": 10500000000.0,
+     "steps": 11,
+     "strict": 2
+    },
+    {
+     "deck_steps": 21,
+     "fluxes_groups": 709,
+     "fluxes_wall_loading": 1.0,
+     "id": "W__TENDL-2017_2000exp_5min",
+     "out_intervals": 22,
+     "print_resolution_only": 0,
+     "spectrum_total": 11160000000.0,
+     "steps": 21,
+     "strict": 21
+    },
+    {
+     "deck_steps": 21,
+     "fluxes_groups": 709,
+     "fluxes_wall_loading": 1.0,
+     "id": "Y__TENDL-2017_1996exp_5min",
+     "out_intervals": 22,
+     "print_resolution_only": 0,
+     "spectrum_total": 11160000000.0,
+     "steps": 21,
+     "strict": 21
+    },
+    {
+     "deck_steps": 11,
+     "fluxes_groups": 709,
+     "fluxes_wall_loading": 1.0,
+     "id": "Y__TENDL-2017_1996exp_7hour",
+     "out_intervals": 12,
+     "print_resolution_only": 11,
+     "spectrum_total": 10500000000.0,
+     "steps": 11,
+     "strict": 0
+    },
+    {
+     "deck_steps": 22,
+     "fluxes_groups": 709,
+     "fluxes_wall_loading": 1.0,
+     "id": "Y__TENDL-2017_2000exp_5min",
+     "out_intervals": 23,
+     "print_resolution_only": 0,
+     "spectrum_total": 11160000000.0,
+     "steps": 22,
+     "strict": 22
+    },
+    {
+     "deck_steps": 22,
+     "fluxes_groups": 709,
+     "fluxes_wall_loading": 1.0,
+     "id": "Yb__TENDL-2017_2000exp_5min",
+     "out_intervals": 23,
+     "print_resolution_only": 0,
+     "spectrum_total": 11160000000.0,
+     "steps": 22,
+     "strict": 22
+    },
+    {
+     "deck_steps": 22,
+     "fluxes_groups": 709,
+     "fluxes_wall_loading": 1.0,
+     "id": "Zn__TENDL-2017_2000exp_5min",
+     "out_intervals": 23,
+     "print_resolution_only": 0,
+     "spectrum_total": 11160000000.0,
+     "steps": 22,
+     "strict": 22
+    },
+    {
+     "deck_steps": 21,
+     "fluxes_groups": 709,
+     "fluxes_wall_loading": 1.0,
+     "id": "Zr__TENDL-2017_1996exp_5min",
+     "out_intervals": 22,
+     "print_resolution_only": 0,
+     "spectrum_total": 11350000000.0,
+     "steps": 21,
+     "strict": 21
+    },
+    {
+     "deck_steps": 11,
+     "fluxes_groups": 709,
+     "fluxes_wall_loading": 1.0,
+     "id": "Zr__TENDL-2017_1996exp_7hour",
+     "out_intervals": 12,
+     "print_resolution_only": 10,
+     "spectrum_total": 10500000000.0,
+     "steps": 11,
+     "strict": 1
+    },
+    {
+     "deck_steps": 22,
+     "fluxes_groups": 709,
+     "fluxes_wall_loading": 1.0,
+     "id": "Zr__TENDL-2017_2000exp_5min",
+     "out_intervals": 23,
+     "print_resolution_only": 0,
+     "spectrum_total": 11160000000.0,
+     "steps": 22,
+     "strict": 22
+    }
+   ],
+   "steps_compared": 2511,
+   "tolerances": {
+    "duration_relative": 1e-09,
+    "multiplier_relative": 1e-12,
+    "print_resolution": "half a unit in the last printed digit"
+   }
+  },
+  "G4": {
+   "activity_table_report_only": {
+    "decks": [
+     {
+      "element": "Ag",
+      "id": "Ag__TENDL-2017_2000exp_5min",
+      "mass_g": 1.0,
+      "ratio_end_of_irradiation": 1.1329481073913426,
+      "ratio_max": 1.1329481073913426,
+      "ratio_median": 0.9660099601008137,
+      "ratio_min": 0.9016925185322904,
+      "run": "imported spec without the uncertainty and summary blocks",
+      "steps": [
+       {
+        "actinv_Bq": 42867924.013419926,
+        "fispact_Bq": 37837500.0,
+        "interval": 2,
+        "ratio": 1.1329481073913426,
+        "t_s": 300.0
+       },
+       {
+        "actinv_Bq": 24494292.15961688,
+        "fispact_Bq": 22384900.0,
+        "interval": 3,
+        "ratio": 1.0942328158542982,
+        "t_s": 350.0
+       },
+       {
+        "actinv_Bq": 21287898.780655876,
+        "fispact_Bq": 19671400.0,
+        "interval": 4,
+        "ratio": 1.0821750755236472,
+        "t_s": 365.0
+       },
+       {
+        "actinv_Bq": 18710314.508866154,
+        "fispact_Bq": 17477600.0,
+        "interval": 5,
+        "ratio": 1.0705311088974547,
+        "t_s": 380.0
+       },
+       {
+        "actinv_Bq": 16615058.087903423,
+        "fispact_Bq": 15681600.0,
+        "interval": 6,
+        "ratio": 1.0595256917599878,
+        "t_s": 395.0
+       },
+       {
+        "actinv_Bq": 13819045.124633944,
+        "fispact_Bq": 13257800.0,
+        "interval": 7,
+        "ratio": 1.0423332019365161,
+        "t_s": 421.0
+       },
+       {
+        "actinv_Bq": 11116917.170186449,
+        "fispact_Bq": 10869900.0,
+        "interval": 8,
+        "ratio": 1.0227248797308577,
+        "t_s": 457.0
+       },
+       {
+        "actinv_Bq": 9249253.772649566,
+        "fispact_Bq": 9180090.0,
+        "interval": 9,
+        "ratio": 1.0075341061634,
+        "t_s": 493.0
+       },
+       {
+        "actinv_Bq": 7397753.598872856,
+        "fispact_Bq": 7461830.0,
+        "interval": 10,
+        "ratio": 0.9914127766074617,
+        "t_s": 545.0
+       },
+       {
+        "actinv_Bq": 5848138.490629521,
+        "fispact_Bq": 5985880.0,
+        "interval": 11,
+        "ratio": 0.9769889290512875,
+        "t_s": 611.0
+       },
+       {
+        "actinv_Bq": 4795157.520745227,
+        "fispact_Bq": 4963880.0,
+        "interval": 12,
+        "ratio": 0.9660099601008137,
+        "t_s": 677.0
+       },
+       {
+        "actinv_Bq": 3783076.3221263424,
+        "fispact_Bq": 3969010.0,
+        "interval": 13,
+        "ratio": 0.9531536383446608,
+        "t_s": 771.0
+       },
+       {
+        "actinv_Bq": 2936458.8956635585,
+        "fispact_Bq": 3127680.0,
+        "interval": 14,
+        "ratio": 0.9388616788365685,
+        "t_s": 898.0
+       },
+       {
+        "actinv_Bq": 2435204.5216930737,
+        "fispact_Bq": 2624080.0,
+        "interval": 15,
+        "ratio": 0.9280222103339356,
+        "t_s": 1021.0
+       },
+       {
+        "actinv_Bq": 1980107.017381022,
+        "fispact_Bq": 2159960.0,
+        "interval": 16,
+        "ratio": 0.916733188290997,
+        "t_s": 1208.0
+       },
+       {
+        "actinv_Bq": 1641531.1730462827,
+        "fispact_Bq": 1806290.0,
+        "interval": 17,
+        "ratio": 0.9087860604035247,
+        "t_s": 1451.0
+       },
+       {
+        "actinv_Bq": 1417273.121729069,
+        "fispact_Bq": 1566120.0,
+        "interval": 18,
+        "ratio": 0.9049581907702277,
+        "t_s": 1697.0
+       },
+       {
+        "actinv_Bq": 1246889.7422049632,
+        "fispact_Bq": 1380640.0,
+        "interval": 19,
+        "ratio": 0.9031244511277112,
+        "t_s": 1940.0
+       },
+       {
+        "actinv_Bq": 1009763.3506410227,
+        "fispact_Bq": 1119620.0,
+        "interval": 20,
+        "ratio": 0.9018804153561232,
+        "t_s": 2367.0
+       },
+       {
+        "actinv_Bq": 754849.1868117513,
+        "fispact_Bq": 837147.0,
+        "interval": 21,
+        "ratio": 0.9016925185322904,
+        "t_s": 2974.0
+       },
+       {
+        "actinv_Bq": 567193.0394723377,
+        "fispact_Bq": 628693.0,
+        "interval": 22,
+        "ratio": 0.902178073355895,
+        "t_s": 3577.0
+       }
+      ]
+     },
+     {
+      "element": "Cd",
+      "id": "Cd__TENDL-2017_2000exp_5min",
+      "mass_g": 1.0,
+      "ratio_end_of_irradiation": 0.9343296763351676,
+      "ratio_max": 1.0795861226303012,
+      "ratio_median": 1.0724620007757266,
+      "ratio_min": 0.9343296763351676,
+      "run": "imported spec without the uncertainty and summary blocks",
+      "steps": [
+       {
+        "actinv_Bq": 1257561.0278633188,
+        "fispact_Bq": 1345950.0,
+        "interval": 2,
+        "ratio": 0.9343296763351676,
+        "t_s": 300.0
+       },
+       {
+        "actinv_Bq": 1082084.8561254202,
+        "fispact_Bq": 1111930.0,
+        "interval": 3,
+        "ratio": 0.9731591522176938,
+        "t_s": 320.0
+       },
+       {
+        "actinv_Bq": 1015959.2274628421,
+        "fispact_Bq": 1028820.0,
+        "interval": 4,
+        "ratio": 0.9874994921005056,
+        "t_s": 335.0
+       },
+       {
+        "actinv_Bq": 967682.5973878261,
+        "fispact_Bq": 968189.0,
+        "interval": 5,
+        "ratio": 0.999476958928294,
+        "t_s": 350.0
+       },
+       {
+        "actinv_Bq": 928338.4909470871,
+        "fispact_Bq": 918650.0,
+        "interval": 6,
+        "ratio": 1.0105464441812302,
+        "t_s": 366.0
+       },
+       {
+        "actinv_Bq": 899362.7720872685,
+        "fispact_Bq": 882079.0,
+        "interval": 7,
+        "ratio": 1.019594358427384,
+        "t_s": 381.0
+       },
+       {
+        "actinv_Bq": 875900.4406440941,
+        "fispact_Bq": 852492.0,
+        "interval": 8,
+        "ratio": 1.0274588390789523,
+        "t_s": 396.0
+       },
+       {
+        "actinv_Bq": 845387.9967499909,
+        "fispact_Bq": 814146.0,
+        "interval": 9,
+        "ratio": 1.038373948591519,
+        "t_s": 421.0
+       },
+       {
+        "actinv_Bq": 812878.3640146535,
+        "fispact_Bq": 773860.0,
+        "interval": 10,
+        "ratio": 1.050420442993117,
+        "t_s": 458.0
+       },
+       {
+        "actinv_Bq": 789945.2561332688,
+        "fispact_Bq": 746129.0,
+        "interval": 11,
+        "ratio": 1.0587247729725944,
+        "t_s": 494.0
+       },
+       {
+        "actinv_Bq": 766668.7650954537,
+        "fispact_Bq": 718956.0,
+        "interval": 12,
+        "ratio": 1.0663639570369448,
+        "t_s": 543.0
+       },
+       {
+        "actinv_Bq": 743411.3546217198,
+        "fispact_Bq": 693182.0,
+        "interval": 13,
+        "ratio": 1.0724620007757266,
+        "t_s": 609.0
+       },
+       {
+        "actinv_Bq": 725135.6392188773,
+        "fispact_Bq": 674066.0,
+        "interval": 14,
+        "ratio": 1.0757635590860202,
+        "t_s": 675.0
+       },
+       {
+        "actinv_Bq": 703455.4154877568,
+        "fispact_Bq": 652490.0,
+        "interval": 15,
+        "ratio": 1.0781091135308691,
+        "t_s": 769.0
+       },
+       {
+        "actinv_Bq": 678344.4844505709,
+        "fispact_Bq": 628511.0,
+        "interval": 16,
+        "ratio": 1.079288165920041,
+        "t_s": 895.0
+       },
+       {
+        "actinv_Bq": 656122.784373056,
+        "fispact_Bq": 607754.0,
+        "interval": 17,
+        "ratio": 1.0795861226303012,
+        "t_s": 1018.0
+       },
+       {
+        "actinv_Bq": 625479.6026538523,
+        "fispact_Bq": 579441.0,
+        "interval": 18,
+        "ratio": 1.07945347784132,
+        "t_s": 1202.0
+       },
+       {
+        "actinv_Bq": 588027.2728104455,
+        "fispact_Bq": 544987.0,
+        "interval": 19,
+        "ratio": 1.0789748614378794,
+        "t_s": 1448.0
+       },
+       {
+        "actinv_Bq": 553590.9240961095,
+        "fispact_Bq": 513341.0,
+        "interval": 20,
+        "ratio": 1.0784077720192025,
+        "t_s": 1695.0
+       },
+       {
+        "actinv_Bq": 521890.0974740567,
+        "fispact_Bq": 484184.0,
+        "interval": 21,
+        "ratio": 1.0778755544876673,
+        "t_s": 1941.0
+       },
+       {
+        "actinv_Bq": 471972.14349578944,
+        "fispact_Bq": 438232.0,
+        "interval": 22,
+        "ratio": 1.0769915101950325,
+        "t_s": 2368.0
+       },
+       {
+        "actinv_Bq": 410247.918279022,
+        "fispact_Bq": 381307.0,
+        "interval": 23,
+        "ratio": 1.0758992577608646,
+        "t_s": 2974.0
+       },
+       {
+        "actinv_Bq": 357191.96808236715,
+        "fispact_Bq": 332304.0,
+        "interval": 24,
+        "ratio": 1.0748951805646851,
+        "t_s": 3581.0
+       }
+      ]
+     },
+     {
+      "element": "Er",
+      "id": "Er__TENDL-2017_2000exp_5min",
+      "mass_g": 1.0,
+      "ratio_end_of_irradiation": 1.3258480015131648,
+      "ratio_max": 1.3258480015131648,
+      "ratio_median": 0.9779792694082952,
+      "ratio_min": 0.9613734347291327,
+      "run": "imported spec without the uncertainty and summary blocks",
+      "steps": [
+       {
+        "actinv_Bq": 7077522.47535744,
+        "fispact_Bq": 5338110.0,
+        "interval": 2,
+        "ratio": 1.3258480015131648,
+        "t_s": 300.0
+       },
+       {
+        "actinv_Bq": 253271.20959581644,
+        "fispact_Bq": 249341.0,
+        "interval": 3,
+        "ratio": 1.0157623880381343,
+        "t_s": 336.0
+       },
+       {
+        "actinv_Bq": 208658.51620415182,
+        "fispact_Bq": 205596.0,
+        "interval": 4,
+        "ratio": 1.014895796631023,
+        "t_s": 352.0
+       },
+       {
+        "actinv_Bq": 197754.76728936785,
+        "fispact_Bq": 195499.0,
+        "interval": 5,
+        "ratio": 1.0115385106285344,
+        "t_s": 367.0
+       },
+       {
+        "actinv_Bq": 193444.63954870484,
+        "fispact_Bq": 191978.0,
+        "interval": 6,
+        "ratio": 1.0076396230229758,
+        "t_s": 383.0
+       },
+       {
+        "actinv_Bq": 191082.7695910951,
+        "fispact_Bq": 190271.0,
+        "interval": 7,
+        "ratio": 1.0042663863179102,
+        "t_s": 398.0
+       },
+       {
+        "actinv_Bq": 187939.70819083712,
+        "fispact_Bq": 188085.0,
+        "interval": 8,
+        "ratio": 0.9992275204872112,
+        "t_s": 424.0
+       },
+       {
+        "actinv_Bq": 184216.31911027126,
+        "fispact_Bq": 185465.0,
+        "interval": 9,
+        "ratio": 0.9932672963107393,
+        "t_s": 461.0
+       },
+       {
+        "actinv_Bq": 181281.19472183834,
+        "fispact_Bq": 183328.0,
+        "interval": 10,
+        "ratio": 0.98883528278189,
+        "t_s": 495.0
+       },
+       {
+        "actinv_Bq": 177465.8641853298,
+        "fispact_Bq": 180460.0,
+        "interval": 11,
+        "ratio": 0.9834083131183076,
+        "t_s": 547.0
+       },
+       {
+        "actinv_Bq": 173508.1920820727,
+        "fispact_Bq": 177415.0,
+        "interval": 12,
+        "ratio": 0.9779792694082952,
+        "t_s": 613.0
+       },
+       {
+        "actinv_Bq": 170246.71897631194,
+        "fispact_Bq": 174833.0,
+        "interval": 13,
+        "ratio": 0.9737676467046378,
+        "t_s": 680.0
+       },
+       {
+        "actinv_Bq": 166515.39756049777,
+        "fispact_Bq": 171788.0,
+        "interval": 14,
+        "ratio": 0.9693075043687439,
+        "t_s": 777.0
+       },
+       {
+        "actinv_Bq": 162879.5123193988,
+        "fispact_Bq": 168696.0,
+        "interval": 15,
+        "ratio": 0.9655208915409897,
+        "t_s": 904.0
+       },
+       {
+        "actinv_Bq": 160246.33709813116,
+        "fispact_Bq": 166341.0,
+        "interval": 16,
+        "ratio": 0.9633604288667926,
+        "t_s": 1028.0
+       },
+       {
+        "actinv_Bq": 157327.39551653952,
+        "fispact_Bq": 163583.0,
+        "interval": 17,
+        "ratio": 0.9617588350656212,
+        "t_s": 1215.0
+       },
+       {
+        "actinv_Bq": 154532.12727179553,
+        "fispact_Bq": 160741.0,
+        "interval": 18,
+        "ratio": 0.9613734347291327,
+        "t_s": 1462.0
+       },
+       {
+        "actinv_Bq": 152342.1212346526,
+        "fispact_Bq": 158380.0,
+        "interval": 19,
+        "ratio": 0.9618772650249563,
+        "t_s": 1706.0
+       },
+       {
+        "actinv_Bq": 150397.83933211264,
+        "fispact_Bq": 156228.0,
+        "interval": 20,
+        "ratio": 0.9626817173113184,
+        "t_s": 1953.0
+       },
+       {
+        "actinv_Bq": 147345.15422245974,
+        "fispact_Bq": 152801.0,
+        "interval": 21,
+        "ratio": 0.9642944367017214,
+        "t_s": 2380.0
+       },
+       {
+        "actinv_Bq": 143380.31762075922,
+        "fispact_Bq": 148326.0,
+        "interval": 22,
+        "ratio": 0.9666566726046628,
+        "t_s": 2984.0
+       },
+       {
+        "actinv_Bq": 139700.0978837384,
+        "fispact_Bq": 144173.0,
+        "interval": 23,
+        "ratio": 0.9689754522950789,
+        "t_s": 3588.0
+       }
+      ]
+     },
+     {
+      "element": "Hg",
+      "id": "Hg__TENDL-2017_2000exp_5min",
+      "mass_g": 1.0,
+      "ratio_end_of_irradiation": 0.9582293947283376,
+      "ratio_max": 0.9582293947283376,
+      "ratio_median": 0.9023219105339556,
+      "ratio_min": 0.9007715488574257,
+      "run": "imported spec without the uncertainty and summary blocks",
+      "steps": [
+       {
+        "actinv_Bq": 1595729.8287471533,
+        "fispact_Bq": 1665290.0,
+        "interval": 2,
+        "ratio": 0.9582293947283376,
+        "t_s": 300.0
+       },
+       {
+        "actinv_Bq": 577703.8122895563,
+        "fispact_Bq": 636940.0,
+        "interval": 3,
+        "ratio": 0.906998794689541,
+        "t_s": 336.0
+       },
+       {
+        "actinv_Bq": 549351.5486344021,
+        "fispact_Bq": 608374.0,
+        "interval": 4,
+        "ratio": 0.9029832777771603,
+        "t_s": 351.0
+       },
+       {
+        "actinv_Bq": 540052.605654776,
+        "fispact_Bq": 598898.0,
+        "interval": 5,
+        "ratio": 0.9017438790157523,
+        "t_s": 366.0
+       },
+       {
+        "actinv_Bq": 535501.1333861863,
+        "fispact_Bq": 594185.0,
+        "interval": 6,
+        "ratio": 0.9012363714772105,
+        "t_s": 381.0
+       },
+       {
+        "actinv_Bq": 532275.7391730653,
+        "fispact_Bq": 590673.0,
+        "interval": 7,
+        "ratio": 0.9011343656694403,
+        "t_s": 396.0
+       },
+       {
+        "actinv_Bq": 527638.0828643271,
+        "fispact_Bq": 585723.0,
+        "interval": 8,
+        "ratio": 0.9008321047053421,
+        "t_s": 422.0
+       },
+       {
+        "actinv_Bq": 522250.22936810716,
+        "fispact_Bq": 579781.0,
+        "interval": 9,
+        "ratio": 0.9007715488574257,
+        "t_s": 456.0
+       },
+       {
+        "actinv_Bq": 516918.6084265951,
+        "fispact_Bq": 573840.0,
+        "interval": 10,
+        "ratio": 0.9008061627397795,
+        "t_s": 492.0
+       },
+       {
+        "actinv_Bq": 509541.5117594248,
+        "fispact_Bq": 565575.0,
+        "interval": 11,
+        "ratio": 0.9009265115314942,
+        "t_s": 544.0
+       },
+       {
+        "actinv_Bq": 500469.65244795766,
+        "fispact_Bq": 555379.0,
+        "interval": 12,
+        "ratio": 0.9011317540777697,
+        "t_s": 610.0
+       },
+       {
+        "actinv_Bq": 491616.27648648946,
+        "fispact_Bq": 545451.0,
+        "interval": 13,
+        "ratio": 0.9013023653572722,
+        "t_s": 676.0
+       },
+       {
+        "actinv_Bq": 479323.92229724536,
+        "fispact_Bq": 531651.0,
+        "interval": 14,
+        "ratio": 0.9015762639348847,
+        "t_s": 770.0
+       },
+       {
+        "actinv_Bq": 463262.1384675338,
+        "fispact_Bq": 513625.0,
+        "interval": 15,
+        "ratio": 0.9019462418447969,
+        "t_s": 897.0
+       },
+       {
+        "actinv_Bq": 447910.7917452345,
+        "fispact_Bq": 496398.0,
+        "interval": 16,
+        "ratio": 0.9023219105339556,
+        "t_s": 1023.0
+       },
+       {
+        "actinv_Bq": 426133.68350296764,
+        "fispact_Bq": 471967.0,
+        "interval": 17,
+        "ratio": 0.9028887263367305,
+        "t_s": 1210.0
+       },
+       {
+        "actinv_Bq": 399189.81494947616,
+        "fispact_Bq": 441758.0,
+        "interval": 18,
+        "ratio": 0.903639130359781,
+        "t_s": 1456.0
+       },
+       {
+        "actinv_Bq": 374034.4012457855,
+        "fispact_Bq": 413574.0,
+        "interval": 19,
+        "ratio": 0.9043953470135587,
+        "t_s": 1702.0
+       },
+       {
+        "actinv_Bq": 350715.5196198098,
+        "fispact_Bq": 387470.0,
+        "interval": 20,
+        "ratio": 0.9051423842357081,
+        "t_s": 1946.0
+       },
+       {
+        "actinv_Bq": 313475.6773961855,
+        "fispact_Bq": 345830.0,
+        "interval": 21,
+        "ratio": 0.9064444304895051,
+        "t_s": 2373.0
+       },
+       {
+        "actinv_Bq": 267532.8907211216,
+        "fispact_Bq": 294555.0,
+        "interval": 22,
+        "ratio": 0.9082612439820122,
+        "t_s": 2979.0
+       },
+       {
+        "actinv_Bq": 228558.07306820832,
+        "fispact_Bq": 251152.0,
+        "interval": 23,
+        "ratio": 0.9100388333288539,
+        "t_s": 3585.0
+       }
+      ]
+     },
+     {
+      "element": "Lu",
+      "id": "Lu__TENDL-2017_2000exp_5min",
+      "mass_g": 1.0,
+      "ratio_end_of_irradiation": 0.9951682131578239,
+      "ratio_max": 1.2213090937134408,
+      "ratio_median": 1.220263511574739,
+      "ratio_min": 0.9951682131578239,
+      "run": "imported spec without the uncertainty and summary blocks",
+      "steps": [
+       {
+        "actinv_Bq": 1737513.9417629025,
+        "fispact_Bq": 1745950.0,
+        "interval": 2,
+        "ratio": 0.9951682131578239,
+        "t_s": 300.0
+       },
+       {
+        "actinv_Bq": 106290.60581675098,
+        "fispact_Bq": 97642.2,
+        "interval": 3,
+        "ratio": 1.0885724186545467,
+        "t_s": 335.0
+       },
+       {
+        "actinv_Bq": 61911.3160433671,
+        "fispact_Bq": 52881.6,
+        "interval": 4,
+        "ratio": 1.1707534575989966,
+        "t_s": 351.0
+       },
+       {
+        "actinv_Bq": 52496.30686708087,
+        "fispact_Bq": 43431.4,
+        "interval": 5,
+        "ratio": 1.2087178140027923,
+        "t_s": 367.0
+       },
+       {
+        "actinv_Bq": 50527.22158635038,
+        "fispact_Bq": 41482.6,
+        "interval": 6,
+        "ratio": 1.2180341055370296,
+        "t_s": 382.0
+       },
+       {
+        "actinv_Bq": 50021.42293846923,
+        "fispact_Bq": 40993.3,
+        "interval": 7,
+        "ratio": 1.2202341099269691,
+        "t_s": 398.0
+       },
+       {
+        "actinv_Bq": 49837.715925345634,
+        "fispact_Bq": 40806.8,
+        "interval": 8,
+        "ratio": 1.2213090937134408,
+        "t_s": 424.0
+       },
+       {
+        "actinv_Bq": 49730.810755853636,
+        "fispact_Bq": 40728.8,
+        "interval": 9,
+        "ratio": 1.2210232257236557,
+        "t_s": 461.0
+       },
+       {
+        "actinv_Bq": 49634.130913743626,
+        "fispact_Bq": 40650.9,
+        "interval": 10,
+        "ratio": 1.220984797722649,
+        "t_s": 498.0
+       },
+       {
+        "actinv_Bq": 49499.196030667976,
+        "fispact_Bq": 40541.7,
+        "interval": 11,
+        "ratio": 1.2209452497223348,
+        "t_s": 550.0
+       },
+       {
+        "actinv_Bq": 49325.99633035031,
+        "fispact_Bq": 40401.5,
+        "interval": 12,
+        "ratio": 1.22089517296017,
+        "t_s": 617.0
+       },
+       {
+        "actinv_Bq": 49156.004264132964,
+        "fispact_Bq": 40263.9,
+        "interval": 13,
+        "ratio": 1.2208455779031082,
+        "t_s": 683.0
+       },
+       {
+        "actinv_Bq": 48907.24944784502,
+        "fispact_Bq": 40062.4,
+        "interval": 14,
+        "ratio": 1.2207768243501391,
+        "t_s": 780.0
+       },
+       {
+        "actinv_Bq": 48583.48705734342,
+        "fispact_Bq": 39800.3,
+        "interval": 15,
+        "ratio": 1.220681428465198,
+        "t_s": 907.0
+       },
+       {
+        "actinv_Bq": 48264.41861518183,
+        "fispact_Bq": 39541.9,
+        "interval": 16,
+        "ratio": 1.2205892639246427,
+        "t_s": 1033.0
+       },
+       {
+        "actinv_Bq": 47799.78590423781,
+        "fispact_Bq": 39165.7,
+        "interval": 17,
+        "ratio": 1.2204501873894202,
+        "t_s": 1218.0
+       },
+       {
+        "actinv_Bq": 47186.491755434734,
+        "fispact_Bq": 38669.1,
+        "interval": 18,
+        "ratio": 1.220263511574739,
+        "t_s": 1465.0
+       },
+       {
+        "actinv_Bq": 46581.167106225475,
+        "fispact_Bq": 38178.9,
+        "interval": 19,
+        "ratio": 1.2200761967009388,
+        "t_s": 1712.0
+       },
+       {
+        "actinv_Bq": 45986.11151164948,
+        "fispact_Bq": 37697.1,
+        "interval": 20,
+        "ratio": 1.2198845935536018,
+        "t_s": 1958.0
+       },
+       {
+        "actinv_Bq": 44969.10854703153,
+        "fispact_Bq": 36873.5,
+        "interval": 21,
+        "ratio": 1.2195508575815024,
+        "t_s": 2386.0
+       },
+       {
+        "actinv_Bq": 43572.554068129975,
+        "fispact_Bq": 35742.7,
+        "interval": 22,
+        "ratio": 1.2190616284760238,
+        "t_s": 2990.0
+       },
+       {
+        "actinv_Bq": 42213.3491977849,
+        "fispact_Bq": 34642.0,
+        "interval": 23,
+        "ratio": 1.2185598174985537,
+        "t_s": 3597.0
+       }
+      ]
+     },
+     {
+      "element": "NiCr",
+      "id": "NiCr__TENDL-2017_1996exp_5min",
+      "mass_g": 1.0,
+      "ratio_end_of_irradiation": 1.1274656995106316,
+      "ratio_max": 1.1274656995106316,
+      "ratio_median": 1.0827818339979598,
+      "ratio_min": 0.9678473797261912,
+      "run": "imported spec without the uncertainty and summary blocks",
+      "steps": [
+       {
+        "actinv_Bq": 1922577.0601195192,
+        "fispact_Bq": 1705220.0,
+        "interval": 2,
+        "ratio": 1.1274656995106316,
+        "t_s": 300.0
+       },
+       {
+        "actinv_Bq": 1589069.8259915162,
+        "fispact_Bq": 1412740.0,
+        "interval": 3,
+        "ratio": 1.1248140676922267,
+        "t_s": 366.0
+       },
+       {
+        "actinv_Bq": 1521469.6663317035,
+        "fispact_Bq": 1353960.0,
+        "interval": 4,
+        "ratio": 1.1237183272265825,
+        "t_s": 382.0
+       },
+       {
+        "actinv_Bq": 1457795.4880835814,
+        "fispact_Bq": 1298620.0,
+        "interval": 5,
+        "ratio": 1.1225727988815677,
+        "t_s": 398.0
+       },
+       {
+        "actinv_Bq": 1358427.7902590302,
+        "fispact_Bq": 1212420.0,
+        "interval": 6,
+        "ratio": 1.1204267417718532,
+        "t_s": 425.0
+       },
+       {
+        "actinv_Bq": 1233719.6038901503,
+        "fispact_Bq": 1104370.0,
+        "interval": 7,
+        "ratio": 1.1171252423464513,
+        "t_s": 463.0
+       },
+       {
+        "actinv_Bq": 1126878.203634265,
+        "fispact_Bq": 1011880.0,
+        "interval": 8,
+        "ratio": 1.1136480646265023,
+        "t_s": 500.0
+       },
+       {
+        "actinv_Bq": 994714.718753855,
+        "fispact_Bq": 897521.0,
+        "interval": 9,
+        "ratio": 1.1082913032161419,
+        "t_s": 553.0
+       },
+       {
+        "actinv_Bq": 861780.9033851152,
+        "fispact_Bq": 782445.0,
+        "interval": 10,
+        "ratio": 1.1013948627508836,
+        "t_s": 617.0
+       },
+       {
+        "actinv_Bq": 747360.7081051021,
+        "fispact_Bq": 683259.0,
+        "interval": 11,
+        "ratio": 1.0938175832372528,
+        "t_s": 684.0
+       },
+       {
+        "actinv_Bq": 618339.890813879,
+        "fispact_Bq": 571066.0,
+        "interval": 12,
+        "ratio": 1.0827818339979598,
+        "t_s": 779.0
+       },
+       {
+        "actinv_Bq": 490190.0842160004,
+        "fispact_Bq": 458939.0,
+        "interval": 13,
+        "ratio": 1.0680942003534248,
+        "t_s": 906.0
+       },
+       {
+        "actinv_Bq": 397366.7469504641,
+        "fispact_Bq": 376973.0,
+        "interval": 14,
+        "ratio": 1.0540986939395238,
+        "t_s": 1033.0
+       },
+       {
+        "actinv_Bq": 328349.2439829452,
+        "fispact_Bq": 315356.0,
+        "interval": 15,
+        "ratio": 1.04120182898992,
+        "t_s": 1161.0
+       },
+       {
+        "actinv_Bq": 256721.86647015566,
+        "fispact_Bq": 250471.0,
+        "interval": 16,
+        "ratio": 1.0249564479327173,
+        "t_s": 1349.0
+       },
+       {
+        "actinv_Bq": 195894.1013197645,
+        "fispact_Bq": 194225.0,
+        "interval": 17,
+        "ratio": 1.008593648190318,
+        "t_s": 1596.0
+       },
+       {
+        "actinv_Bq": 156920.18352984346,
+        "fispact_Bq": 157391.0,
+        "interval": 18,
+        "ratio": 0.9970086188526883,
+        "t_s": 1843.0
+       },
+       {
+        "actinv_Bq": 130594.90456764813,
+        "fispact_Bq": 132068.0,
+        "interval": 19,
+        "ratio": 0.9888459321534977,
+        "t_s": 2090.0
+       },
+       {
+        "actinv_Bq": 101778.37909742277,
+        "fispact_Bq": 103886.0,
+        "interval": 20,
+        "ratio": 0.9797121758217928,
+        "t_s": 2518.0
+       },
+       {
+        "actinv_Bq": 79717.5440018551,
+        "fispact_Bq": 81996.9,
+        "interval": 21,
+        "ratio": 0.9722019247295338,
+        "t_s": 3126.0
+       },
+       {
+        "actinv_Bq": 68326.92789705397,
+        "fispact_Bq": 70596.8,
+        "interval": 22,
+        "ratio": 0.9678473797261912,
+        "t_s": 3733.0
+       }
+      ]
+     },
+     {
+      "element": "Re",
+      "id": "Re__TENDL-2017_1996exp_5min",
+      "mass_g": 1.0,
+      "ratio_end_of_irradiation": 0.6012951840083923,
+      "ratio_max": 0.7813663189926514,
+      "ratio_median": 0.6570202222506569,
+      "ratio_min": 0.5841608060591339,
+      "run": "imported spec without the uncertainty and summary blocks",
+      "steps": [
+       {
+        "actinv_Bq": 49248.42062150496,
+        "fispact_Bq": 81903.9,
+        "interval": 2,
+        "ratio": 0.6012951840083923,
+        "t_s": 300.0
+       },
+       {
+        "actinv_Bq": 37465.795873489216,
+        "fispact_Bq": 64136.1,
+        "interval": 3,
+        "ratio": 0.5841608060591339,
+        "t_s": 366.0
+       },
+       {
+        "actinv_Bq": 36891.64085612333,
+        "fispact_Bq": 62624.6,
+        "interval": 4,
+        "ratio": 0.58909184020534,
+        "t_s": 382.0
+       },
+       {
+        "actinv_Bq": 36372.6172654705,
+        "fispact_Bq": 61254.5,
+        "interval": 5,
+        "ratio": 0.5937950234753446,
+        "t_s": 398.0
+       },
+       {
+        "actinv_Bq": 35606.0545448004,
+        "fispact_Bq": 59223.3,
+        "interval": 6,
+        "ratio": 0.6012169964321542,
+        "t_s": 425.0
+       },
+       {
+        "actinv_Bq": 34826.112826345765,
+        "fispact_Bq": 57144.2,
+        "interval": 7,
+        "ratio": 0.6094426525587158,
+        "t_s": 458.0
+       },
+       {
+        "actinv_Bq": 34099.34827834338,
+        "fispact_Bq": 55190.7,
+        "interval": 8,
+        "ratio": 0.6178459102410983,
+        "t_s": 496.0
+       },
+       {
+        "actinv_Bq": 33317.6104461348,
+        "fispact_Bq": 53062.9,
+        "interval": 9,
+        "ratio": 0.6278889854518844,
+        "t_s": 549.0
+       },
+       {
+        "actinv_Bq": 32601.579601785314,
+        "fispact_Bq": 51074.7,
+        "interval": 10,
+        "ratio": 0.6383117199275828,
+        "t_s": 616.0
+       },
+       {
+        "actinv_Bq": 32079.69010538611,
+        "fispact_Bq": 49587.5,
+        "interval": 11,
+        "ratio": 0.646930982715122,
+        "t_s": 684.0
+       },
+       {
+        "actinv_Bq": 31546.760269343067,
+        "fispact_Bq": 48014.9,
+        "interval": 12,
+        "ratio": 0.6570202222506569,
+        "t_s": 782.0
+       },
+       {
+        "actinv_Bq": 31076.115916248338,
+        "fispact_Bq": 46561.8,
+        "interval": 13,
+        "ratio": 0.6674165499668899,
+        "t_s": 906.0
+       },
+       {
+        "actinv_Bq": 30712.873527714197,
+        "fispact_Bq": 45397.1,
+        "interval": 14,
+        "ratio": 0.6765382266205153,
+        "t_s": 1033.0
+       },
+       {
+        "actinv_Bq": 30416.218992213653,
+        "fispact_Bq": 44424.8,
+        "interval": 15,
+        "ratio": 0.684667550382076,
+        "t_s": 1158.0
+       },
+       {
+        "actinv_Bq": 30033.83134937682,
+        "fispact_Bq": 43156.9,
+        "interval": 16,
+        "ratio": 0.6959218884900634,
+        "t_s": 1346.0
+       },
+       {
+        "actinv_Bq": 29605.079882481416,
+        "fispact_Bq": 41727.1,
+        "interval": 17,
+        "ratio": 0.7094928687227585,
+        "t_s": 1593.0
+       },
+       {
+        "actinv_Bq": 29236.23779789852,
+        "fispact_Bq": 40505.8,
+        "interval": 18,
+        "ratio": 0.7217790488744456,
+        "t_s": 1841.0
+       },
+       {
+        "actinv_Bq": 28918.839143289293,
+        "fispact_Bq": 39459.7,
+        "interval": 19,
+        "ratio": 0.7328702231210398,
+        "t_s": 2088.0
+       },
+       {
+        "actinv_Bq": 28466.999379796536,
+        "fispact_Bq": 37985.6,
+        "interval": 20,
+        "ratio": 0.7494155516773866,
+        "t_s": 2514.0
+       },
+       {
+        "actinv_Bq": 27984.70546811187,
+        "fispact_Bq": 36445.2,
+        "interval": 21,
+        "ratio": 0.7678570969047193,
+        "t_s": 3119.0
+       },
+       {
+        "actinv_Bq": 27635.98906318729,
+        "fispact_Bq": 35368.8,
+        "interval": 22,
+        "ratio": 0.7813663189926514,
+        "t_s": 3723.0
+       }
+      ]
+     },
+     {
+      "element": "Se",
+      "id": "Se__TENDL-2017_2000exp_5min",
+      "mass_g": 1.0,
+      "ratio_end_of_irradiation": 1.1277879639178645,
+      "ratio_max": 1.1277879639178645,
+      "ratio_median": 1.1096018758827206,
+      "ratio_min": 1.021029579980007,
+      "run": "imported spec without the uncertainty and summary blocks",
+      "steps": [
+       {
+        "actinv_Bq": 21944272.644321024,
+        "fispact_Bq": 19457800.0,
+        "interval": 2,
+        "ratio": 1.1277879639178645,
+        "t_s": 300.0
+       },
+       {
+        "actinv_Bq": 8751534.70970097,
+        "fispact_Bq": 7850840.0,
+        "interval": 3,
+        "ratio": 1.114725903177363,
+        "t_s": 336.0
+       },
+       {
+        "actinv_Bq": 6795978.609218899,
+        "fispact_Bq": 6124700.0,
+        "interval": 4,
+        "ratio": 1.1096018758827206,
+        "t_s": 351.0
+       },
+       {
+        "actinv_Bq": 5594508.487744596,
+        "fispact_Bq": 5059840.0,
+        "interval": 5,
+        "ratio": 1.1056690503542792,
+        "t_s": 367.0
+       },
+       {
+        "actinv_Bq": 4885541.246194758,
+        "fispact_Bq": 4427640.0,
+        "interval": 6,
+        "ratio": 1.1034188069027198,
+        "t_s": 383.0
+       },
+       {
+        "actinv_Bq": 4462696.179236916,
+        "fispact_Bq": 4047680.0,
+        "interval": 7,
+        "ratio": 1.102531864978683,
+        "t_s": 398.0
+       },
+       {
+        "actinv_Bq": 3989511.7645448986,
+        "fispact_Bq": 3617750.0,
+        "interval": 8,
+        "ratio": 1.1027604905106485,
+        "t_s": 425.0
+       },
+       {
+        "actinv_Bq": 3595561.428583249,
+        "fispact_Bq": 3255220.0,
+        "interval": 9,
+        "ratio": 1.1045525121445705,
+        "t_s": 461.0
+       },
+       {
+        "actinv_Bq": 3291665.3075462347,
+        "fispact_Bq": 2973920.0,
+        "interval": 10,
+        "ratio": 1.1068439324347106,
+        "t_s": 498.0
+       },
+       {
+        "actinv_Bq": 2937696.9979349836,
+        "fispact_Bq": 2646520.0,
+        "interval": 11,
+        "ratio": 1.1100225949303173,
+        "t_s": 550.0
+       },
+       {
+        "actinv_Bq": 2559408.0470849937,
+        "fispact_Bq": 2297880.0,
+        "interval": 12,
+        "ratio": 1.113812752225962,
+        "t_s": 617.0
+       },
+       {
+        "actinv_Bq": 2252184.2067915453,
+        "fispact_Bq": 2015990.0,
+        "interval": 13,
+        "ratio": 1.1171604059502007,
+        "t_s": 683.0
+       },
+       {
+        "actinv_Bq": 1893104.9359387662,
+        "fispact_Bq": 1688350.0,
+        "interval": 14,
+        "ratio": 1.121275171580991,
+        "t_s": 780.0
+       },
+       {
+        "actinv_Bq": 1550351.4204173207,
+        "fispact_Bq": 1378180.0,
+        "interval": 15,
+        "ratio": 1.1249266571981313,
+        "t_s": 906.0
+       },
+       {
+        "actinv_Bq": 1305445.4326477065,
+        "fispact_Bq": 1159050.0,
+        "interval": 16,
+        "ratio": 1.1263063997650717,
+        "t_s": 1033.0
+       },
+       {
+        "actinv_Bq": 1064291.8874100356,
+        "fispact_Bq": 946825.0,
+        "interval": 17,
+        "ratio": 1.1240639900826823,
+        "t_s": 1221.0
+       },
+       {
+        "actinv_Bq": 879009.1573104376,
+        "fispact_Bq": 788310.0,
+        "interval": 18,
+        "ratio": 1.1150551906108481,
+        "t_s": 1465.0
+       },
+       {
+        "actinv_Bq": 769197.1049454241,
+        "fispact_Bq": 697891.0,
+        "interval": 19,
+        "ratio": 1.102173698966492,
+        "t_s": 1711.0
+       },
+       {
+        "actinv_Bq": 697875.9458512545,
+        "fispact_Bq": 641280.0,
+        "interval": 20,
+        "ratio": 1.0882546560804243,
+        "t_s": 1958.0
+       },
+       {
+        "actinv_Bq": 615976.8214382984,
+        "fispact_Bq": 577944.0,
+        "interval": 21,
+        "ratio": 1.065807104906874,
+        "t_s": 2386.0
+       },
+       {
+        "actinv_Bq": 535210.3026239681,
+        "fispact_Bq": 514473.0,
+        "interval": 22,
+        "ratio": 1.0403078541030688,
+        "t_s": 2990.0
+       },
+       {
+        "actinv_Bq": 470364.8438164497,
+        "fispact_Bq": 460677.0,
+        "interval": 23,
+        "ratio": 1.021029579980007,
+        "t_s": 3596.0
+       }
+      ]
+     },
+     {
+      "element": "Ti",
+      "id": "Ti__TENDL-2017_1996exp_5min",
+      "mass_g": 1.0,
+      "ratio_end_of_irradiation": 1.305595398489868,
+      "ratio_max": 1.305595398489868,
+      "ratio_median": 0.9855643519840447,
+      "ratio_min": 0.9658298382658075,
+      "run": "imported spec without the uncertainty and summary blocks",
+      "steps": [
+       {
+        "actinv_Bq": 2439609.4497101977,
+        "fispact_Bq": 1868580.0,
+        "interval": 2,
+        "ratio": 1.305595398489868,
+        "t_s": 300.0
+       },
+       {
+        "actinv_Bq": 150099.61516488914,
+        "fispact_Bq": 155410.0,
+        "interval": 3,
+        "ratio": 0.9658298382658075,
+        "t_s": 366.0
+       },
+       {
+        "actinv_Bq": 118041.80723270783,
+        "fispact_Bq": 121487.0,
+        "interval": 4,
+        "ratio": 0.9716414697268665,
+        "t_s": 382.0
+       },
+       {
+        "actinv_Bq": 98357.30890273352,
+        "fispact_Bq": 100736.0,
+        "interval": 5,
+        "ratio": 0.9763868815789144,
+        "t_s": 398.0
+       },
+       {
+        "actinv_Bq": 79503.85519729235,
+        "fispact_Bq": 80961.5,
+        "interval": 6,
+        "ratio": 0.9819958276130302,
+        "t_s": 425.0
+       },
+       {
+        "actinv_Bq": 67090.18252907887,
+        "fispact_Bq": 68048.9,
+        "interval": 7,
+        "ratio": 0.9859113450633129,
+        "t_s": 459.0
+       },
+       {
+        "actinv_Bq": 59082.89329387938,
+        "fispact_Bq": 59784.3,
+        "interval": 8,
+        "ratio": 0.9882677106511137,
+        "t_s": 496.0
+       },
+       {
+        "actinv_Bq": 51590.13565770654,
+        "fispact_Bq": 52095.6,
+        "interval": 9,
+        "ratio": 0.9902973697914322,
+        "t_s": 549.0
+       },
+       {
+        "actinv_Bq": 45400.52609321324,
+        "fispact_Bq": 45773.6,
+        "interval": 10,
+        "ratio": 0.9918495834545074,
+        "t_s": 616.0
+       },
+       {
+        "actinv_Bq": 41349.636571923635,
+        "fispact_Bq": 41670.8,
+        "interval": 11,
+        "ratio": 0.9922928422762134,
+        "t_s": 683.0
+       },
+       {
+        "actinv_Bq": 37691.04944408156,
+        "fispact_Bq": 37994.7,
+        "interval": 12,
+        "ratio": 0.9920080812345291,
+        "t_s": 781.0
+       },
+       {
+        "actinv_Bq": 35094.630500782485,
+        "fispact_Bq": 35424.0,
+        "interval": 13,
+        "ratio": 0.9907020805324775,
+        "t_s": 908.0
+       },
+       {
+        "actinv_Bq": 33641.55387733236,
+        "fispact_Bq": 34014.7,
+        "interval": 14,
+        "ratio": 0.9890298570127727,
+        "t_s": 1035.0
+       },
+       {
+        "actinv_Bq": 32702.11775946877,
+        "fispact_Bq": 33117.6,
+        "interval": 15,
+        "ratio": 0.987454337254776,
+        "t_s": 1162.0
+       },
+       {
+        "actinv_Bq": 31716.347854763346,
+        "fispact_Bq": 32180.9,
+        "interval": 16,
+        "ratio": 0.9855643519840447,
+        "t_s": 1350.0
+       },
+       {
+        "actinv_Bq": 30727.78560862203,
+        "fispact_Bq": 31230.0,
+        "interval": 17,
+        "ratio": 0.9839188475383295,
+        "t_s": 1594.0
+       },
+       {
+        "actinv_Bq": 29870.050578766473,
+        "fispact_Bq": 30385.2,
+        "interval": 18,
+        "ratio": 0.9830460414532889,
+        "t_s": 1841.0
+       },
+       {
+        "actinv_Bq": 29092.22918865283,
+        "fispact_Bq": 29612.0,
+        "interval": 19,
+        "ratio": 0.9824472912553299,
+        "t_s": 2088.0
+       },
+       {
+        "actinv_Bq": 27869.244324287192,
+        "fispact_Bq": 28376.7,
+        "interval": 20,
+        "ratio": 0.982117170928515,
+        "t_s": 2516.0
+       },
+       {
+        "actinv_Bq": 26330.39140851497,
+        "fispact_Bq": 26806.2,
+        "interval": 21,
+        "ratio": 0.982250054409613,
+        "t_s": 3121.0
+       },
+       {
+        "actinv_Bq": 24954.376547788794,
+        "fispact_Bq": 25395.5,
+        "interval": 22,
+        "ratio": 0.9826298575648754,
+        "t_s": 3728.0
+       }
+      ]
+     },
+     {
+      "element": "Zr",
+      "id": "Zr__TENDL-2017_1996exp_5min",
+      "mass_g": 1.0,
+      "ratio_end_of_irradiation": 1.0830234040247941,
+      "ratio_max": 1.0830234040247941,
+      "ratio_median": 0.9609720975440369,
+      "ratio_min": 0.9486129367814539,
+      "run": "imported spec without the uncertainty and summary blocks",
+      "steps": [
+       {
+        "actinv_Bq": 23657130.028155994,
+        "fispact_Bq": 21843600.0,
+        "interval": 2,
+        "ratio": 1.0830234040247941,
+        "t_s": 300.0
+       },
+       {
+        "actinv_Bq": 2375481.288160436,
+        "fispact_Bq": 2442430.0,
+        "interval": 3,
+        "ratio": 0.9725893017038096,
+        "t_s": 382.0
+       },
+       {
+        "actinv_Bq": 2257603.427555663,
+        "fispact_Bq": 2328370.0,
+        "interval": 4,
+        "ratio": 0.9696068183130959,
+        "t_s": 398.0
+       },
+       {
+        "actinv_Bq": 2160223.7454356537,
+        "fispact_Bq": 2231570.0,
+        "interval": 5,
+        "ratio": 0.9680286728337689,
+        "t_s": 413.0
+       },
+       {
+        "actinv_Bq": 2003786.4994813171,
+        "fispact_Bq": 2073060.0,
+        "interval": 6,
+        "ratio": 0.9665839384684076,
+        "t_s": 440.0
+       },
+       {
+        "actinv_Bq": 1813815.125682155,
+        "fispact_Bq": 1878300.0,
+        "interval": 7,
+        "ratio": 0.9656684904872251,
+        "t_s": 477.0
+       },
+       {
+        "actinv_Bq": 1644058.8322590138,
+        "fispact_Bq": 1703570.0,
+        "interval": 8,
+        "ratio": 0.9650667904805871,
+        "t_s": 514.0
+       },
+       {
+        "actinv_Bq": 1429771.4132336087,
+        "fispact_Bq": 1482690.0,
+        "interval": 9,
+        "ratio": 0.9643090688098043,
+        "t_s": 567.0
+       },
+       {
+        "actinv_Bq": 1200302.2130666121,
+        "fispact_Bq": 1245960.0,
+        "interval": 10,
+        "ratio": 0.9633553348956725,
+        "t_s": 634.0
+       },
+       {
+        "actinv_Bq": 1009661.707899589,
+        "fispact_Bq": 1049110.0,
+        "interval": 11,
+        "ratio": 0.9623983261045924,
+        "t_s": 701.0
+       },
+       {
+        "actinv_Bq": 787316.7517410491,
+        "fispact_Bq": 819292.0,
+        "interval": 12,
+        "ratio": 0.9609720975440369,
+        "t_s": 799.0
+       },
+       {
+        "actinv_Bq": 575683.8293297543,
+        "fispact_Bq": 600228.0,
+        "interval": 13,
+        "ratio": 0.9591085876196285,
+        "t_s": 926.0
+       },
+       {
+        "actinv_Bq": 429525.010412024,
+        "fispact_Bq": 448685.0,
+        "interval": 14,
+        "ratio": 0.957297459045932,
+        "t_s": 1050.0
+       },
+       {
+        "actinv_Bq": 325609.32002544485,
+        "fispact_Bq": 340765.0,
+        "interval": 15,
+        "ratio": 0.9555245404470671,
+        "t_s": 1174.0
+       },
+       {
+        "actinv_Bq": 222236.36246651158,
+        "fispact_Bq": 233189.0,
+        "interval": 16,
+        "ratio": 0.9530310712191037,
+        "t_s": 1362.0
+       },
+       {
+        "actinv_Bq": 146528.68775857086,
+        "fispact_Bq": 154168.0,
+        "interval": 17,
+        "ratio": 0.9504481329366072,
+        "t_s": 1609.0
+       },
+       {
+        "actinv_Bq": 107443.36886982681,
+        "fispact_Bq": 113219.0,
+        "interval": 18,
+        "ratio": 0.9489870858232877,
+        "t_s": 1857.0
+       },
+       {
+        "actinv_Bq": 87115.39474285643,
+        "fispact_Bq": 91834.5,
+        "interval": 19,
+        "ratio": 0.9486129367814539,
+        "t_s": 2104.0
+       },
+       {
+        "actinv_Bq": 71421.37262936629,
+        "fispact_Bq": 75222.2,
+        "interval": 20,
+        "ratio": 0.9494719993481485,
+        "t_s": 2532.0
+       },
+       {
+        "actinv_Bq": 63803.797622166276,
+        "fispact_Bq": 67067.2,
+        "interval": 21,
+        "ratio": 0.9513413057674434,
+        "t_s": 3140.0
+       },
+       {
+        "actinv_Bq": 60643.93294453026,
+        "fispact_Bq": 63643.2,
+        "interval": 22,
+        "ratio": 0.9528737232654905,
+        "t_s": 3744.0
+       }
+      ]
+     }
+    ],
+    "report_only": true
+   },
+   "as_written": {
+    "differences": [
+     {
+      "echo": true,
+      "explained_by_spec_block": null,
+      "hand_written": "'actinv-data/v1.1.0/decay/jeff-3-3_decay.dat'",
+      "imported": "'/home/connoravila/Documents/actinv/actinv-data/v1.1.0/decay/jeff-3-3_decay.dat'",
+      "path": "/certificate/decay_fallback"
+     },
+     {
+      "echo": true,
+      "explained_by_spec_block": null,
+      "hand_written": "'actinv-data/v1.1.0/decay/endf-b-viii-0_decay.dat'",
+      "imported": "'/home/connoravila/Documents/actinv/actinv-data/v1.1.0/decay/endf-b-viii-0_de...",
+      "path": "/certificate/decay_primary"
+     },
+     {
+      "echo": false,
+      "explained_by_spec_block": "uncertainty",
+      "hand_written": "<absent>",
+      "imported": "{'builder_fingerprint': 'c9825cafd8945f32efda4a00ea081af811b887562ebf07ae33ac...",
+      "path": "/certificate/inputs/covariance"
+     },
+     {
+      "echo": true,
+      "explained_by_spec_block": null,
+      "hand_written": "'actinv-data/v1.1.0/decay/jeff-3-3_decay.dat'",
+      "imported": "'/home/connoravila/Documents/actinv/actinv-data/v1.1.0/decay/jeff-3-3_decay.dat'",
+      "path": "/certificate/inputs/decay_fallback/path"
+     },
+     {
+      "echo": true,
+      "explained_by_spec_block": null,
+      "hand_written": "'actinv-data/v1.1.0/decay/endf-b-viii-0_decay.dat'",
+      "imported": "'/home/connoravila/Documents/actinv/actinv-data/v1.1.0/decay/endf-b-viii-0_de...",
+      "path": "/certificate/inputs/decay_primary/path"
+     },
+     {
+      "echo": true,
+      "explained_by_spec_block": null,
+      "hand_written": "'actinv-data/v1.1.0/activation/tendl-2025-neutron-709g.npz'",
+      "imported": "'/home/connoravila/Documents/actinv/actinv-data/v1.1.0/activation/tendl-2025-...",
+      "path": "/certificate/inputs/library/path"
+     },
+     {
+      "echo": true,
+      "explained_by_spec_block": null,
+      "hand_written": "'actinv-data/v1.1.0/activation/tendl-2025-neutron-709g_index.json'",
+      "imported": "'/home/connoravila/Documents/actinv/actinv-data/v1.1.0/activation/tendl-2025-...",
+      "path": "/certificate/inputs/library_index/path"
+     },
+     {
+      "echo": true,
+      "explained_by_spec_block": null,
+      "hand_written": "'actinv-data/v1.1.0/activation/tendl-2025-neutron-709g.npz'",
+      "imported": "'/home/connoravila/Documents/actinv/actinv-data/v1.1.0/activation/tendl-2025-...",
+      "path": "/certificate/library"
+     },
+     {
+      "echo": false,
+      "explained_by_spec_block": "uncertainty",
+      "hand_written": "<absent>",
+      "imported": "{'band_name': 'MF=33 nuclear-data band', 'collapse_convention': 'uniform flux...",
+      "path": "/certificate/uncertainty"
+     },
+     {
+      "echo": false,
+      "explained_by_spec_block": "uncertainty",
+      "hand_written": "<absent>",
+      "imported": "{'absent_cross_parameter_pairs': 1572905, 'active_parameters': 2137, 'band_na...",
+      "path": "/ledger/uncertainty"
+     },
+     {
+      "echo": true,
+      "explained_by_spec_block": null,
+      "hand_written": "905.30932",
+      "imported": "54285.950476",
+      "path": "/ms"
+     },
+     {
+      "echo": true,
+      "explained_by_spec_block": null,
+      "hand_written": "'FNS Fe, 5-minute irradiation, 1996 campaign'",
+      "imported": "'FNS 5 Min Fe'",
+      "path": "/spec_title"
+     },
+     {
+      "echo": false,
+      "explained_by_spec_block": "summary",
+      "hand_written": "<absent>",
+      "imported": "{'nuclides': [{'nuclide': 'Fe55', 'Z': 26, 'A': 55, 'LISO': 0, 'atoms': 11813...",
+      "path": "/steps[0]/summary"
+     },
+     {
+      "echo": false,
+      "explained_by_spec_block": "uncertainty",
+      "hand_written": "<absent>",
+      "imported": "{'method': 'local first-order propagation of spectrum-collapsed ENDF-6 MF=33 ...",
+      "path": "/steps[0]/uncertainty"
+     },
+     {
+      "echo": false,
+      "explained_by_spec_block": "summary",
+      "hand_written": "<absent>",
+      "imported": "{'nuclides': [{'nuclide': 'Fe55', 'Z': 26, 'A': 55, 'LISO': 0, 'atoms': 11813...",
+      "path": "/steps[1]/summary"
+     },
+     {
+      "echo": false,
+      "explained_by_spec_block": "uncertainty",
+      "hand_written": "<absent>",
+      "imported": "{'method': 'local first-order propagation of spectrum-collapsed ENDF-6 MF=33 ...",
+      "path": "/steps[1]/uncertainty"
+     },
+     {
+      "echo": false,
+      "explained_by_spec_block": "summary",
+      "hand_written": "<absent>",
+      "imported": "{'nuclides': [{'nuclide': 'Fe55', 'Z': 26, 'A': 55, 'LISO': 0, 'atoms': 11813...",
+      "path": "/steps[2]/summary"
+     },
+     {
+      "echo": false,
+      "explained_by_spec_block": "uncertainty",
+      "hand_written": "<absent>",
+      "imported": "{'method': 'local first-order propagation of spectrum-collapsed ENDF-6 MF=33 ...",
+      "path": "/steps[2]/uncertainty"
+     },
+     {
+      "echo": false,
+      "explained_by_spec_block": "summary",
+      "hand_written": "<absent>",
+      "imported": "{'nuclides': [{'nuclide': 'Fe55', 'Z': 26, 'A': 55, 'LISO': 0, 'atoms': 11813...",
+      "path": "/steps[3]/summary"
+     },
+     {
+      "echo": false,
+      "explained_by_spec_block": "uncertainty",
+      "hand_written": "<absent>",
+      "imported": "{'method': 'local first-order propagation of spectrum-collapsed ENDF-6 MF=33 ...",
+      "path": "/steps[3]/uncertainty"
+     },
+     {
+      "echo": false,
+      "explained_by_spec_block": "summary",
+      "hand_written": "<absent>",
+      "imported": "{'nuclides': [{'nuclide': 'Fe55', 'Z': 26, 'A': 55, 'LISO': 0, 'atoms': 11813...",
+      "path": "/steps[4]/summary"
+     },
+     {
+      "echo": false,
+      "explained_by_spec_block": "uncertainty",
+      "hand_written": "<absent>",
+      "imported": "{'method': 'local first-order propagation of spectrum-collapsed ENDF-6 MF=33 ...",
+      "path": "/steps[4]/uncertainty"
+     },
+     {
+      "echo": false,
+      "explained_by_spec_block": "summary",
+      "hand_written": "<absent>",
+      "imported": "{'nuclides': [{'nuclide': 'Fe55', 'Z': 26, 'A': 55, 'LISO': 0, 'atoms': 11813...",
+      "path": "/steps[5]/summary"
+     },
+     {
+      "echo": false,
+      "explained_by_spec_block": "uncertainty",
+      "hand_written": "<absent>",
+      "imported": "{'method': 'local first-order propagation of spectrum-collapsed ENDF-6 MF=33 ...",
+      "path": "/steps[5]/uncertainty"
+     },
+     {
+      "echo": false,
+      "explained_by_spec_block": "summary",
+      "hand_written": "<absent>",
+      "imported": "{'nuclides': [{'nuclide': 'Fe55', 'Z': 26, 'A': 55, 'LISO': 0, 'atoms': 11813...",
+      "path": "/steps[6]/summary"
+     },
+     {
+      "echo": false,
+      "explained_by_spec_block": "uncertainty",
+      "hand_written": "<absent>",
+      "imported": "{'method': 'local first-order propagation of spectrum-collapsed ENDF-6 MF=33 ...",
+      "path": "/steps[6]/uncertainty"
+     },
+     {
+      "echo": false,
+      "explained_by_spec_block": "summary",
+      "hand_written": "<absent>",
+      "imported": "{'nuclides': [{'nuclide': 'Fe55', 'Z': 26, 'A': 55, 'LISO': 0, 'atoms': 11813...",
+      "path": "/steps[7]/summary"
+     },
+     {
+      "echo": false,
+      "explained_by_spec_block": "uncertainty",
+      "hand_written": "<absent>",
+      "imported": "{'method': 'local first-order propagation of spectrum-collapsed ENDF-6 MF=33 ...",
+      "path": "/steps[7]/uncertainty"
+     },
+     {
+      "echo": false,
+      "explained_by_spec_block": "summary",
+      "hand_written": "<absent>",
+      "imported": "{'nuclides': [{'nuclide': 'Fe55', 'Z': 26, 'A': 55, 'LISO': 0, 'atoms': 11813...",
+      "path": "/steps[8]/summary"
+     },
+     {
+      "echo": false,
+      "explained_by_spec_block": "uncertainty",
+      "hand_written": "<absent>",
+      "imported": "{'method': 'local first-order propagation of spectrum-collapsed ENDF-6 MF=33 ...",
+      "path": "/steps[8]/uncertainty"
+     },
+     {
+      "echo": false,
+      "explained_by_spec_block": "summary",
+      "hand_written": "<absent>",
+      "imported": "{'nuclides': [{'nuclide': 'Fe55', 'Z': 26, 'A': 55, 'LISO': 0, 'atoms': 11813...",
+      "path": "/steps[9]/summary"
+     },
+     {
+      "echo": false,
+      "explained_by_spec_block": "uncertainty",
+      "hand_written": "<absent>",
+      "imported": "{'method': 'local first-order propagation of spectrum-collapsed ENDF-6 MF=33 ...",
+      "path": "/steps[9]/uncertainty"
+     },
+     {
+      "echo": false,
+      "explained_by_spec_block": "summary",
+      "hand_written": "<absent>",
+      "imported": "{'nuclides': [{'nuclide': 'Fe55', 'Z': 26, 'A': 55, 'LISO': 0, 'atoms': 11813...",
+      "path": "/steps[10]/summary"
+     },
+     {
+      "echo": false,
+      "explained_by_spec_block": "uncertainty",
+      "hand_written": "<absent>",
+      "imported": "{'method': 'local first-order propagation of spectrum-collapsed ENDF-6 MF=33 ...",
+      "path": "/steps[10]/uncertainty"
+     },
+     {
+      "echo": false,
+      "explained_by_spec_block": "summary",
+      "hand_written": "<absent>",
+      "imported": "{'nuclides': [{'nuclide': 'Fe55', 'Z': 26, 'A': 55, 'LISO': 0, 'atoms': 11813...",
+      "path": "/steps[11]/summary"
+     },
+     {
+      "echo": false,
+      "explained_by_spec_block": "uncertainty",
+      "hand_written": "<absent>",
+      "imported": "{'method': 'local first-order propagation of spectrum-collapsed ENDF-6 MF=33 ...",
+      "path": "/steps[11]/uncertainty"
+     },
+     {
+      "echo": false,
+      "explained_by_spec_block": "summary",
+      "hand_written": "<absent>",
+      "imported": "{'nuclides': [{'nuclide': 'Fe55', 'Z': 26, 'A': 55, 'LISO': 0, 'atoms': 11813...",
+      "path": "/steps[12]/summary"
+     },
+     {
+      "echo": false,
+      "explained_by_spec_block": "uncertainty",
+      "hand_written": "<absent>",
+      "imported": "{'method': 'local first-order propagation of spectrum-collapsed ENDF-6 MF=33 ...",
+      "path": "/steps[12]/uncertainty"
+     },
+     {
+      "echo": false,
+      "explained_by_spec_block": "summary",
+      "hand_written": "<absent>",
+      "imported": "{'nuclides': [{'nuclide': 'Fe55', 'Z': 26, 'A': 55, 'LISO': 0, 'atoms': 11813...",
+      "path": "/steps[13]/summary"
+     },
+     {
+      "echo": false,
+      "explained_by_spec_block": "uncertainty",
+      "hand_written": "<absent>",
+      "imported": "{'method': 'local first-order propagation of spectrum-collapsed ENDF-6 MF=33 ...",
+      "path": "/steps[13]/uncertainty"
+     },
+     {
+      "echo": false,
+      "explained_by_spec_block": "summary",
+      "hand_written": "<absent>",
+      "imported": "{'nuclides': [{'nuclide': 'Fe55', 'Z': 26, 'A': 55, 'LISO': 0, 'atoms': 11813...",
+      "path": "/steps[14]/summary"
+     },
+     {
+      "echo": false,
+      "explained_by_spec_block": "uncertainty",
+      "hand_written": "<absent>",
+      "imported": "{'method': 'local first-order propagation of spectrum-collapsed ENDF-6 MF=33 ...",
+      "path": "/steps[14]/uncertainty"
+     },
+     {
+      "echo": false,
+      "explained_by_spec_block": "summary",
+      "hand_written": "<absent>",
+      "imported": "{'nuclides': [{'nuclide': 'Fe55', 'Z': 26, 'A': 55, 'LISO': 0, 'atoms': 11813...",
+      "path": "/steps[15]/summary"
+     },
+     {
+      "echo": false,
+      "explained_by_spec_block": "uncertainty",
+      "hand_written": "<absent>",
+      "imported": "{'method': 'local first-order propagation of spectrum-collapsed ENDF-6 MF=33 ...",
+      "path": "/steps[15]/uncertainty"
+     },
+     {
+      "echo": false,
+      "explained_by_spec_block": "summary",
+      "hand_written": "<absent>",
+      "imported": "{'nuclides': [{'nuclide': 'Fe55', 'Z': 26, 'A': 55, 'LISO': 0, 'atoms': 11813...",
+      "path": "/steps[16]/summary"
+     },
+     {
+      "echo": false,
+      "explained_by_spec_block": "uncertainty",
+      "hand_written": "<absent>",
+      "imported": "{'method': 'local first-order propagation of spectrum-collapsed ENDF-6 MF=33 ...",
+      "path": "/steps[16]/uncertainty"
+     },
+     {
+      "echo": false,
+      "explained_by_spec_block": "summary",
+      "hand_written": "<absent>",
+      "imported": "{'nuclides': [{'nuclide': 'Fe55', 'Z': 26, 'A': 55, 'LISO': 0, 'atoms': 11813...",
+      "path": "/steps[17]/summary"
+     },
+     {
+      "echo": false,
+      "explained_by_spec_block": "uncertainty",
+      "hand_written": "<absent>",
+      "imported": "{'method': 'local first-order propagation of spectrum-collapsed ENDF-6 MF=33 ...",
+      "path": "/steps[17]/uncertainty"
+     },
+     {
+      "echo": false,
+      "explained_by_spec_block": "summary",
+      "hand_written": "<absent>",
+      "imported": "{'nuclides': [{'nuclide': 'Fe55', 'Z': 26, 'A': 55, 'LISO': 0, 'atoms': 11813...",
+      "path": "/steps[18]/summary"
+     },
+     {
+      "echo": false,
+      "explained_by_spec_block": "uncertainty",
+      "hand_written": "<absent>",
+      "imported": "{'method': 'local first-order propagation of spectrum-collapsed ENDF-6 MF=33 ...",
+      "path": "/steps[18]/uncertainty"
+     },
+     {
+      "echo": false,
+      "explained_by_spec_block": "summary",
+      "hand_written": "<absent>",
+      "imported": "{'nuclides': [{'nuclide': 'Fe55', 'Z': 26, 'A': 55, 'LISO': 0, 'atoms': 11813...",
+      "path": "/steps[19]/summary"
+     },
+     {
+      "echo": false,
+      "explained_by_spec_block": "uncertainty",
+      "hand_written": "<absent>",
+      "imported": "{'method': 'local first-order propagation of spectrum-collapsed ENDF-6 MF=33 ...",
+      "path": "/steps[19]/uncertainty"
+     },
+     {
+      "echo": false,
+      "explained_by_spec_block": "summary",
+      "hand_written": "<absent>",
+      "imported": "{'nuclides': [{'nuclide': 'Fe55', 'Z': 26, 'A': 55, 'LISO': 0, 'atoms': 11813...",
+      "path": "/steps[20]/summary"
+     },
+     {
+      "echo": false,
+      "explained_by_spec_block": "uncertainty",
+      "hand_written": "<absent>",
+      "imported": "{'method': 'local first-order propagation of spectrum-collapsed ENDF-6 MF=33 ...",
+      "path": "/steps[20]/uncertainty"
+     }
+    ],
+    "identical_apart_from_echoes": false,
+    "n_differences": 54,
+    "n_echo": 9,
+    "n_other": 45,
+    "n_other_explained_by_added_blocks": 45,
+    "n_other_unexplained": 0,
+    "truncated": false
+   },
+   "blocks_removed_for_the_second_comparison": [
+    "uncertainty",
+    "summary"
+   ],
+   "deck": "Fe/TENDL-2017_1996exp_5min.i",
+   "explained_by_option_defaults": false,
+   "hand_written_spec": {
+    "path": "/home/connoravila/Documents/actinv/examples/fns_fe_5min.json",
+    "sha256": "ed55ed00f6c00fc4a2351e18332e98e7feb33d9b7ca65e7ba861e0e5e8feef39"
+   },
+   "imported_spec": {
+    "path": "/home/connoravila/Documents/actinv/target/p132-work/imports/Fe__TENDL-2017_1996exp_5min.json",
+    "sha256": "cd14077416e426c548ba6eef62430372603a6f993ee95c03ba2837d94571365d"
+   },
+   "pass": true,
+   "spec_differences": [
+    {
+     "hand_written": "'actinv-data/v1.1.0/decay/jeff-3-3_decay.dat'",
+     "imported": "'catalog:jeff-3-3-decay'",
+     "path": "/decay/fallback"
+    },
+    {
+     "hand_written": "'actinv-data/v1.1.0/decay/endf-b-viii-0_decay.dat'",
+     "imported": "'catalog:endfb-viii-0-decay'",
+     "path": "/decay/primary"
+    },
+    {
+     "hand_written": "'actinv-data/v1.1.0/activation/tendl-2025-neutron-709g.npz'",
+     "imported": "'catalog:tendl-2025-neutron-709g'",
+     "path": "/library/path"
+    },
+    {
+     "hand_written": "'ec4c72bf598dc8ad3d533d9cfafdcf493e2d1f949a3e4db6251495659b68cc44'",
+     "imported": "<absent>",
+     "path": "/library/sha256"
+    },
+    {
+     "hand_written": "100.0",
+     "imported": "<absent>",
+     "path": "/material/composition/FE"
+    },
+    {
+     "hand_written": "<absent>",
+     "imported": "100.0",
+     "path": "/material/composition/Fe"
+    },
+    {
+     "hand_written": "{'mode': 'auto', 'prune': 'rate', 'bmin_atoms_per_g': 1e-08, 'temperature_K':...",
+     "imported": "<absent>",
+     "path": "/options"
+    },
+    {
+     "hand_written": "'300.0 s'",
+     "imported": "'5.0 min'",
+     "path": "/schedule[0]/dt"
+    },
+    {
+     "hand_written": "<absent>",
+     "imported": "{'include_stable': False, 'min_atoms': 1000.0}",
+     "path": "/summary"
+    },
+    {
+     "hand_written": "'FNS Fe, 5-minute irradiation, 1996 campaign'",
+     "imported": "'FNS 5 Min Fe'",
+     "path": "/title"
+    },
+    {
+     "hand_written": "<absent>",
+     "imported": "{'covariance': {'path': 'catalog:tendl-2025-neutron-709g-covariance', 'sha256...",
+     "path": "/uncertainty"
+    }
+   ],
+   "spec_flux_per_group_differences": 0,
+   "without_blocks": {
+    "differences": [
+     {
+      "echo": true,
+      "explained_by_spec_block": null,
+      "hand_written": "'actinv-data/v1.1.0/decay/jeff-3-3_decay.dat'",
+      "imported": "'/home/connoravila/Documents/actinv/actinv-data/v1.1.0/decay/jeff-3-3_decay.dat'",
+      "path": "/certificate/decay_fallback"
+     },
+     {
+      "echo": true,
+      "explained_by_spec_block": null,
+      "hand_written": "'actinv-data/v1.1.0/decay/endf-b-viii-0_decay.dat'",
+      "imported": "'/home/connoravila/Documents/actinv/actinv-data/v1.1.0/decay/endf-b-viii-0_de...",
+      "path": "/certificate/decay_primary"
+     },
+     {
+      "echo": true,
+      "explained_by_spec_block": null,
+      "hand_written": "'actinv-data/v1.1.0/decay/jeff-3-3_decay.dat'",
+      "imported": "'/home/connoravila/Documents/actinv/actinv-data/v1.1.0/decay/jeff-3-3_decay.dat'",
+      "path": "/certificate/inputs/decay_fallback/path"
+     },
+     {
+      "echo": true,
+      "explained_by_spec_block": null,
+      "hand_written": "'actinv-data/v1.1.0/decay/endf-b-viii-0_decay.dat'",
+      "imported": "'/home/connoravila/Documents/actinv/actinv-data/v1.1.0/decay/endf-b-viii-0_de...",
+      "path": "/certificate/inputs/decay_primary/path"
+     },
+     {
+      "echo": true,
+      "explained_by_spec_block": null,
+      "hand_written": "'actinv-data/v1.1.0/activation/tendl-2025-neutron-709g.npz'",
+      "imported": "'/home/connoravila/Documents/actinv/actinv-data/v1.1.0/activation/tendl-2025-...",
+      "path": "/certificate/inputs/library/path"
+     },
+     {
+      "echo": true,
+      "explained_by_spec_block": null,
+      "hand_written": "'actinv-data/v1.1.0/activation/tendl-2025-neutron-709g_index.json'",
+      "imported": "'/home/connoravila/Documents/actinv/actinv-data/v1.1.0/activation/tendl-2025-...",
+      "path": "/certificate/inputs/library_index/path"
+     },
+     {
+      "echo": true,
+      "explained_by_spec_block": null,
+      "hand_written": "'actinv-data/v1.1.0/activation/tendl-2025-neutron-709g.npz'",
+      "imported": "'/home/connoravila/Documents/actinv/actinv-data/v1.1.0/activation/tendl-2025-...",
+      "path": "/certificate/library"
+     },
+     {
+      "echo": true,
+      "explained_by_spec_block": null,
+      "hand_written": "905.30932",
+      "imported": "1040.617399",
+      "path": "/ms"
+     },
+     {
+      "echo": true,
+      "explained_by_spec_block": null,
+      "hand_written": "'FNS Fe, 5-minute irradiation, 1996 campaign'",
+      "imported": "'FNS 5 Min Fe'",
+      "path": "/spec_title"
+     }
+    ],
+    "identical_apart_from_echoes": true,
+    "n_differences": 9,
+    "n_echo": 9,
+    "n_other": 0,
+    "n_other_explained_by_added_blocks": 0,
+    "n_other_unexplained": 0,
+    "truncated": false
+   },
+   "without_blocks_with_hand_written_options": {
+    "differences": [
+     {
+      "echo": true,
+      "explained_by_spec_block": null,
+      "hand_written": "'actinv-data/v1.1.0/decay/jeff-3-3_decay.dat'",
+      "imported": "'/home/connoravila/Documents/actinv/actinv-data/v1.1.0/decay/jeff-3-3_decay.dat'",
+      "path": "/certificate/decay_fallback"
+     },
+     {
+      "echo": true,
+      "explained_by_spec_block": null,
+      "hand_written": "'actinv-data/v1.1.0/decay/endf-b-viii-0_decay.dat'",
+      "imported": "'/home/connoravila/Documents/actinv/actinv-data/v1.1.0/decay/endf-b-viii-0_de...",
+      "path": "/certificate/decay_primary"
+     },
+     {
+      "echo": true,
+      "explained_by_spec_block": null,
+      "hand_written": "'actinv-data/v1.1.0/decay/jeff-3-3_decay.dat'",
+      "imported": "'/home/connoravila/Documents/actinv/actinv-data/v1.1.0/decay/jeff-3-3_decay.dat'",
+      "path": "/certificate/inputs/decay_fallback/path"
+     },
+     {
+      "echo": true,
+      "explained_by_spec_block": null,
+      "hand_written": "'actinv-data/v1.1.0/decay/endf-b-viii-0_decay.dat'",
+      "imported": "'/home/connoravila/Documents/actinv/actinv-data/v1.1.0/decay/endf-b-viii-0_de...",
+      "path": "/certificate/inputs/decay_primary/path"
+     },
+     {
+      "echo": true,
+      "explained_by_spec_block": null,
+      "hand_written": "'actinv-data/v1.1.0/activation/tendl-2025-neutron-709g.npz'",
+      "imported": "'/home/connoravila/Documents/actinv/actinv-data/v1.1.0/activation/tendl-2025-...",
+      "path": "/certificate/inputs/library/path"
+     },
+     {
+      "echo": true,
+      "explained_by_spec_block": null,
+      "hand_written": "'actinv-data/v1.1.0/activation/tendl-2025-neutron-709g_index.json'",
+      "imported": "'/home/connoravila/Documents/actinv/actinv-data/v1.1.0/activation/tendl-2025-...",
+      "path": "/certificate/inputs/library_index/path"
+     },
+     {
+      "echo": true,
+      "explained_by_spec_block": null,
+      "hand_written": "'actinv-data/v1.1.0/activation/tendl-2025-neutron-709g.npz'",
+      "imported": "'/home/connoravila/Documents/actinv/actinv-data/v1.1.0/activation/tendl-2025-...",
+      "path": "/certificate/library"
+     },
+     {
+      "echo": true,
+      "explained_by_spec_block": null,
+      "hand_written": "905.30932",
+      "imported": "850.706494",
+      "path": "/ms"
+     },
+     {
+      "echo": true,
+      "explained_by_spec_block": null,
+      "hand_written": "'FNS Fe, 5-minute irradiation, 1996 campaign'",
+      "imported": "'FNS 5 Min Fe'",
+      "path": "/spec_title"
+     }
+    ],
+    "identical_apart_from_echoes": true,
+    "n_differences": 9,
+    "n_echo": 9,
+    "n_other": 0,
+    "n_other_explained_by_added_blocks": 0,
+    "n_other_unexplained": 0,
+    "truncated": false
+   }
+  },
+  "G5": {
+   "external": "CI on the pushed commit is not run here"
+  }
+ },
+ "import_all": {
+  "argv": [
+   "/usr/bin/python3",
+   "/home/connoravila/Documents/actinv/controls/p132_import_all.py",
+   "/home/connoravila/nuclear-data/conderc-fns/fns",
+   "--out",
+   "/home/connoravila/Documents/actinv/target/p132-work/imports"
+  ],
+  "env": {
+   "ACTINV_BIN": "/home/connoravila/Documents/actinv/target/cand3-actinv",
+   "removed": [
+    "ACTINV_LIBRARY",
+    "ACTINV_ENDF_DECAY",
+    "ACTINV_COVARIANCE"
+   ]
+  },
+  "exit_code": 0,
+  "stderr_tail": "",
+  "stdout_tail": "132 decks, 132 imported, 0 failed\nentry statuses: mapped=5814, approximated=528, noted=1323, unsupported=0\nkeyword               mapped  approximated         noted   unsupported\nATOMS                   2511             0           132             0\nCLOBBER                    0             0           132             0\nDENSITY                    0             0           132             0\nEND                        0             0           132             0\nFISPACT                  132             0             0             0\nFLUX                     264             0             0             0\nGETDECAY                   0           132             0             0\nGETXS                      0           132             0             0\nGRAPH                      0             0           132             0\nHALF                       0             0           132             0\nHAZARDS                    0             0           132             0\nMASS                     132             0             0             0\nMIND                     132             0             0             0\nMONITOR                    0             0             1             0\nNOSTABLE                   0           132             0             0\nNUCGRAPH                   0             0           132             0\nPATHRESET                  0             0             1             0\nPRINTLIB                   0             0             1             0\nTIME                    2511             0             0             0\nTOLERANCE                  0             0           264             0\nUNCERTAINTY                0           132             0             0\nZERO                     132             0             0             0\n",
+  "summary_sha256": "f01e8e20d5b3a4cd865f7026e2e01cbafbd93ab64734f01e10f4eb474be0dc57",
+  "wall_s": 0.5914124511182308
+ },
+ "import_driver": {
+  "path": "/home/connoravila/Documents/actinv/controls/p132_import_all.py",
+  "sha256": "5a38ffa5fc77dbdfd7f735acdda0d6e4f4f0ffd7f028196c3b6e2c340b13ed58"
+ },
+ "inputs": {
+  "Ag__TENDL-2017_2000exp_5min": {
+   "deck": "59d2563c36447bc4094df7cff4d07815b8e69ceac11710fad4cf5a9ce96599e7",
+   "files": "0cf9871e607a6a6b244285fa67676a9242ff8d054c6cf0eba444e59339c6bfe3",
+   "fluxes": "ccfe40519346d7525c7211dfefacb13f38fe933ed302c13ce060a75e03aebf50",
+   "out": "ff0ff685c983f5f43a2a40a39cd7b6d8fc1ee23ec6d043f7925ac2872dd8003f"
+  },
+  "Al__TENDL-2017_1996exp_5min": {
+   "deck": "a72d0636f4c761a99f8b1dc54777159b1ccf3fd60bdfcfd054ccde401e4d2a05",
+   "files": "687b153e0ed6618bef264b3989acfae0c28c6cfd6d8e25825b8a85974f3b3b24",
+   "fluxes": "44447d73937921261b27dc73d05e358d58932754c471927808ad41dd409b6e9b",
+   "out": "6b685baa4e6301531ca420cb3d4d297c0cf88c024ea947ca906c2273fc57ada6"
+  },
+  "Al__TENDL-2017_1996exp_7hour": {
+   "deck": "f559e2371aded00fea9ba533bd6bc2300e8fc5f3d492f97b8ebec64e652ddee0",
+   "files": "5c490291da0025be5e472f8e93dc12f3cc91ddf2ea22a6798714a79014355d06",
+   "fluxes": "98ec52a392ead5fe5c5060d603d2464139201745744c6880c4ca2cbc15badbe9",
+   "out": "5788b43fae7f1d504c24deeaf59a5a67612174c334918275da812bac18bb736f"
+  },
+  "Al__TENDL-2017_2000exp_5min": {
+   "deck": "17d831e948c340428a08c1f362b6c73d5fb0ef05ffde0a529837a392c836bcc9",
+   "files": "0cf9871e607a6a6b244285fa67676a9242ff8d054c6cf0eba444e59339c6bfe3",
+   "fluxes": "ccfe40519346d7525c7211dfefacb13f38fe933ed302c13ce060a75e03aebf50",
+   "out": "2061f2a1b79d93e97ac259ec361c7130fcbf885de3d07148498002b8413f8bd1"
+  },
+  "As__TENDL-2017_2000exp_5min": {
+   "deck": "aa1a5cfc6ef16c12b49c7c7d34e6e1bc465128cf19f13fe42385eec064f28a75",
+   "files": "0cf9871e607a6a6b244285fa67676a9242ff8d054c6cf0eba444e59339c6bfe3",
+   "fluxes": "ccfe40519346d7525c7211dfefacb13f38fe933ed302c13ce060a75e03aebf50",
+   "out": "2d80bb7f288ab2f0c3f02d72b996be0d0d4849941708635d1c3b4fc67ba28056"
+  },
+  "Au__TENDL-2017_2000exp_5min": {
+   "deck": "bdc00f9fc7bb62547af3795a2d31e727b767a42f4aefb19104f94abaedbac5dc",
+   "files": "0cf9871e607a6a6b244285fa67676a9242ff8d054c6cf0eba444e59339c6bfe3",
+   "fluxes": "ccfe40519346d7525c7211dfefacb13f38fe933ed302c13ce060a75e03aebf50",
+   "out": "8081157aad143bf6f6d441fd9e5d468c60f5906673e29f6757ed93e530d53a61"
+  },
+  "Ba__TENDL-2017_1996exp_5min": {
+   "deck": "5858529c6726eda124390cfc24777ba2457b85e7f8195c4897edb2af8d3087a4",
+   "files": "687b153e0ed6618bef264b3989acfae0c28c6cfd6d8e25825b8a85974f3b3b24",
+   "fluxes": "ccfe40519346d7525c7211dfefacb13f38fe933ed302c13ce060a75e03aebf50",
+   "out": "05dd10e30237333533703b460fbac2f45db7f790f638359e8c7a1a727559c963"
+  },
+  "Ba__TENDL-2017_1996exp_7hour": {
+   "deck": "ccb8cf09ccbc04ed6940496c0e6b4471df247d6a09f4f67b5bc415c05d885b73",
+   "files": "5c490291da0025be5e472f8e93dc12f3cc91ddf2ea22a6798714a79014355d06",
+   "fluxes": "98ec52a392ead5fe5c5060d603d2464139201745744c6880c4ca2cbc15badbe9",
+   "out": "85889238127f27f4b5aae2d6950766c12c3531ebcaf5f9947384a42bf6e586ba"
+  },
+  "Ba__TENDL-2017_2000exp_5min": {
+   "deck": "1d9edfc4e71e9ce3c931ae3fe2467162dbc174ed7fcccad5bc57f2efb066035b",
+   "files": "0cf9871e607a6a6b244285fa67676a9242ff8d054c6cf0eba444e59339c6bfe3",
+   "fluxes": "ccfe40519346d7525c7211dfefacb13f38fe933ed302c13ce060a75e03aebf50",
+   "out": "dbd6ca6ece98eb16fcc6a134fe9c1b5461f95b5ca50c4a7a2e7df45efc8bb1c3"
+  },
+  "Bi__TENDL-2017_1996exp_5min": {
+   "deck": "5507b19c7056afa70480e59bf8f228debe3b52021bdbf125f8f7b54cf437d7e2",
+   "files": "687b153e0ed6618bef264b3989acfae0c28c6cfd6d8e25825b8a85974f3b3b24",
+   "fluxes": "ccfe40519346d7525c7211dfefacb13f38fe933ed302c13ce060a75e03aebf50",
+   "out": "98670c4b2f666e5bc263cfec9c6178693f7da5ff43adc504fdada15b0314a650"
+  },
+  "Bi__TENDL-2017_1996exp_7hour": {
+   "deck": "2bc7a5ea4318749b599d443841798a2d3045585b61556e17228244d0c4a4e6f2",
+   "files": "5c490291da0025be5e472f8e93dc12f3cc91ddf2ea22a6798714a79014355d06",
+   "fluxes": "98ec52a392ead5fe5c5060d603d2464139201745744c6880c4ca2cbc15badbe9",
+   "out": "6e567951efd76e60e2e476d14d9055bc8200ed9a4b343469f629853d7afef6e4"
+  },
+  "Bi__TENDL-2017_2000exp_5min": {
+   "deck": "566c9a2c87dcedd41e1cab667fe245d6bd3f334c8238d040f85df4303a173a32",
+   "files": "0cf9871e607a6a6b244285fa67676a9242ff8d054c6cf0eba444e59339c6bfe3",
+   "fluxes": "ccfe40519346d7525c7211dfefacb13f38fe933ed302c13ce060a75e03aebf50",
+   "out": "7188605c22f432d21ea9468c39040672fc497b788a137dfd9895da139a4c172a"
+  },
+  "Br__TENDL-2017_2000exp_5min": {
+   "deck": "12f508a8c3fb4df026974ef1a9ceb10be785f4b60876249e2f564910704bdce0",
+   "files": "0cf9871e607a6a6b244285fa67676a9242ff8d054c6cf0eba444e59339c6bfe3",
+   "fluxes": "ccfe40519346d7525c7211dfefacb13f38fe933ed302c13ce060a75e03aebf50",
+   "out": "717a4199565ccbe54e83524baa777b7f4d62e388af61732199f362a6c858ed84"
+  },
+  "Ca__TENDL-2017_1996exp_5min": {
+   "deck": "24f8189d10d7ac95322c9e4974c82524a78f320e0b49a0646ce43d6a2b69e77a",
+   "files": "687b153e0ed6618bef264b3989acfae0c28c6cfd6d8e25825b8a85974f3b3b24",
+   "fluxes": "ccfe40519346d7525c7211dfefacb13f38fe933ed302c13ce060a75e03aebf50",
+   "out": "a2f54a528eb7cfe3a808cebb63adaf457616defea9f35dcd4cb45c6275007997"
+  },
+  "Ca__TENDL-2017_1996exp_7hour": {
+   "deck": "852be3a09f9845d3722b4441d34e3ef7f6e41c8610d82a7e514a006855637316",
+   "files": "5c490291da0025be5e472f8e93dc12f3cc91ddf2ea22a6798714a79014355d06",
+   "fluxes": "98ec52a392ead5fe5c5060d603d2464139201745744c6880c4ca2cbc15badbe9",
+   "out": "f2276e173e589ee5dedae961f5d824f7a2dae5582fb9238462e5a0c96530ba6f"
+  },
+  "Ca__TENDL-2017_2000exp_5min": {
+   "deck": "f0ed2b2a4e2e4834d27ede05725428b072bf8481f45cf7d2425852cfca05865c",
+   "files": "0cf9871e607a6a6b244285fa67676a9242ff8d054c6cf0eba444e59339c6bfe3",
+   "fluxes": "ccfe40519346d7525c7211dfefacb13f38fe933ed302c13ce060a75e03aebf50",
+   "out": "da4bca5349411dbbf3376c005a6fd2d0c2c5728ddcb7f3b1ecad3fd55138d081"
+  },
+  "Cd__TENDL-2017_2000exp_5min": {
+   "deck": "b3d77ec32fa59738e5a40298d9b093725eaca59f23319638f5e37312eef0c940",
+   "files": "0cf9871e607a6a6b244285fa67676a9242ff8d054c6cf0eba444e59339c6bfe3",
+   "fluxes": "ccfe40519346d7525c7211dfefacb13f38fe933ed302c13ce060a75e03aebf50",
+   "out": "451dedba5e73b539544997207e5d24bca5654b321bae1fdbe0b01142b64452f2"
+  },
+  "Ce__TENDL-2017_2000exp_5min": {
+   "deck": "40a4c5f92215774848f70f927b0566c3d291f06328ad7340fd2f030e9a2037a6",
+   "files": "0cf9871e607a6a6b244285fa67676a9242ff8d054c6cf0eba444e59339c6bfe3",
+   "fluxes": "ccfe40519346d7525c7211dfefacb13f38fe933ed302c13ce060a75e03aebf50",
+   "out": "a42d874ebbbe95dbcc0479a95f4878fabc138d3999f4d43640d1e7cf71b982c7"
+  },
+  "Cl__TENDL-2017_2000exp_5min": {
+   "deck": "1d39a3d725c02a8b6ba8ba3657e51a05f3e846187d238e389a2821d515a50452",
+   "files": "0cf9871e607a6a6b244285fa67676a9242ff8d054c6cf0eba444e59339c6bfe3",
+   "fluxes": "ccfe40519346d7525c7211dfefacb13f38fe933ed302c13ce060a75e03aebf50",
+   "out": "9cee693471885a47faaad9e0374e3e53a26dbbe6f4be6c3ddf37aaa1ed25b4c8"
+  },
+  "Co__TENDL-2017_1996exp_5min": {
+   "deck": "6f25213fa64c257647855ebd800b5aa28a898fb0ce85e8db62558a7fbe7c0478",
+   "files": "687b153e0ed6618bef264b3989acfae0c28c6cfd6d8e25825b8a85974f3b3b24",
+   "fluxes": "6c2a23393bd71bc5ac957ee53ca6b6ea747b8b0ed87d19361053f37505937d66",
+   "out": "1bea5a881f6ca6d5452fa3415bae5052c363828ae8c47ec0f37e8e720e77213b"
+  },
+  "Co__TENDL-2017_1996exp_7hour": {
+   "deck": "960faafd239b2c996d465830e4422926dea694ee32a68afaa031899421118074",
+   "files": "5c490291da0025be5e472f8e93dc12f3cc91ddf2ea22a6798714a79014355d06",
+   "fluxes": "98ec52a392ead5fe5c5060d603d2464139201745744c6880c4ca2cbc15badbe9",
+   "out": "1b8a80d24725271eaf65de609a86316c1f79a584d091b64e9c4d8f37d4ed6993"
+  },
+  "Co__TENDL-2017_2000exp_5min": {
+   "deck": "67a8d3db691ebee4e6eea069eea4786b92ab844918caec53ab4cd74e38f56d01",
+   "files": "0cf9871e607a6a6b244285fa67676a9242ff8d054c6cf0eba444e59339c6bfe3",
+   "fluxes": "ccfe40519346d7525c7211dfefacb13f38fe933ed302c13ce060a75e03aebf50",
+   "out": "a4d06bc6472681acc07496e04cb6cd9041cf340e3afa46f0276f4a060d549cf4"
+  },
+  "Cr__TENDL-2017_1996exp_5min": {
+   "deck": "3837896291b0aaeb5c7ca312854fd54985c10e428ac1590f543d83fb3eeb1448",
+   "files": "687b153e0ed6618bef264b3989acfae0c28c6cfd6d8e25825b8a85974f3b3b24",
+   "fluxes": "ccfe40519346d7525c7211dfefacb13f38fe933ed302c13ce060a75e03aebf50",
+   "out": "4a636a313e767529dbf17973a2be5a9a338e6badb6c32235d69672289878b70d"
+  },
+  "Cr__TENDL-2017_1996exp_7hour": {
+   "deck": "d23f72713f4fc3fa331abed74783df9b894703dcf0ee668529c412becdb474d6",
+   "files": "5c490291da0025be5e472f8e93dc12f3cc91ddf2ea22a6798714a79014355d06",
+   "fluxes": "98ec52a392ead5fe5c5060d603d2464139201745744c6880c4ca2cbc15badbe9",
+   "out": "67330195b133b5d71544407e97836f0cf9a5892f9ecdfcf294cb92f3051c1bd7"
+  },
+  "Cr__TENDL-2017_2000exp_5min": {
+   "deck": "6d9e8e9f57bdaeae8fee03f61aeb764f793a3f8905859370985f5f8b2e7cb5b1",
+   "files": "0cf9871e607a6a6b244285fa67676a9242ff8d054c6cf0eba444e59339c6bfe3",
+   "fluxes": "ccfe40519346d7525c7211dfefacb13f38fe933ed302c13ce060a75e03aebf50",
+   "out": "8b4bd5195e7bebe96a8d1acf5ca7459567c92d26d0d00229711a9f031d8bbbc3"
+  },
+  "Cs__TENDL-2017_2000exp_5min": {
+   "deck": "4769d3d4ba4eb614a26af8efff09a4481ec29eaf5872ca80443e446d13a72f61",
+   "files": "0cf9871e607a6a6b244285fa67676a9242ff8d054c6cf0eba444e59339c6bfe3",
+   "fluxes": "ccfe40519346d7525c7211dfefacb13f38fe933ed302c13ce060a75e03aebf50",
+   "out": "90f3cd7e0236f7cd084a89a4bbd0cf023932366335bd4b3683023a5e948466be"
+  },
+  "Cu__TENDL-2017_1996exp_5min": {
+   "deck": "eccf38eb9416c33e907097d1d14c2dd91e7c4c8b3da19d89cc19b6cc18749bbb",
+   "files": "687b153e0ed6618bef264b3989acfae0c28c6cfd6d8e25825b8a85974f3b3b24",
+   "fluxes": "44447d73937921261b27dc73d05e358d58932754c471927808ad41dd409b6e9b",
+   "out": "ad7355d4d8537998a05f9262988a63d6d623c239caba0c1e78aa68fdb23bea0e"
+  },
+  "Cu__TENDL-2017_1996exp_7hour": {
+   "deck": "cd6e7217e1092277c4993e86046fc423f566f01ee2b5d3cfaedee1f1340ec586",
+   "files": "5c490291da0025be5e472f8e93dc12f3cc91ddf2ea22a6798714a79014355d06",
+   "fluxes": "98ec52a392ead5fe5c5060d603d2464139201745744c6880c4ca2cbc15badbe9",
+   "out": "643fbce7e33f0e173e116290ff1bc5c9f7e62dbb5d0b2d70e6aa79999beade02"
+  },
+  "Cu__TENDL-2017_2000exp_5min": {
+   "deck": "14833940882add3d50b5dd2035459cc3ab30b5f3a63389b40ed4da5d28766646",
+   "files": "0cf9871e607a6a6b244285fa67676a9242ff8d054c6cf0eba444e59339c6bfe3",
+   "fluxes": "ccfe40519346d7525c7211dfefacb13f38fe933ed302c13ce060a75e03aebf50",
+   "out": "d44219112f74967a86970382fb453a9d699cfa77d67f70cd9b1c39ad980dab12"
+  },
+  "Dy__TENDL-2017_2000exp_5min": {
+   "deck": "1b3ee0a9e0f1daf5a4eb92eedaac1ddc8a083c0396cb9db31a1dbea5056da69e",
+   "files": "0cf9871e607a6a6b244285fa67676a9242ff8d054c6cf0eba444e59339c6bfe3",
+   "fluxes": "ccfe40519346d7525c7211dfefacb13f38fe933ed302c13ce060a75e03aebf50",
+   "out": "150dfe34b15a799480dddd7e347c31aee57cba0e6fbdba6ee759ef50047f4b43"
+  },
+  "Er__TENDL-2017_2000exp_5min": {
+   "deck": "335e186c392ddc9325f3acf0dc58d2d89e45709f328c50f2b03a77a872feb9b1",
+   "files": "0cf9871e607a6a6b244285fa67676a9242ff8d054c6cf0eba444e59339c6bfe3",
+   "fluxes": "ccfe40519346d7525c7211dfefacb13f38fe933ed302c13ce060a75e03aebf50",
+   "out": "5c79f49e7122f4e4260dd2b1950900d1e5fbfa3691863834c1b7148f083aaf24"
+  },
+  "Eu__TENDL-2017_2000exp_5min": {
+   "deck": "3e6b2e144bfddc81e729f6d507583ef0279469597eaa0d7418c9db7a12e159a7",
+   "files": "0cf9871e607a6a6b244285fa67676a9242ff8d054c6cf0eba444e59339c6bfe3",
+   "fluxes": "ccfe40519346d7525c7211dfefacb13f38fe933ed302c13ce060a75e03aebf50",
+   "out": "dd573c16b84d274440ffdfb8deff23558f91b6d1e0281f13e991a2b5d5ec5194"
+  },
+  "F__TENDL-2017_1996exp_5min": {
+   "deck": "85ce3b5f7e14f72a9d3981b508127d34a56a29808fc8991e5a4217ab8534b263",
+   "files": "687b153e0ed6618bef264b3989acfae0c28c6cfd6d8e25825b8a85974f3b3b24",
+   "fluxes": "ccfe40519346d7525c7211dfefacb13f38fe933ed302c13ce060a75e03aebf50",
+   "out": "c615c6e8bf78b27bac08d2b6d309ebcf7e0c1bef38823b88a76cd1b3c5e4fcdc"
+  },
+  "F__TENDL-2017_2000exp_5min": {
+   "deck": "4bbdd8afb76d9c36e7ade6b814abb7cbfffcc13bb12f75b164845c0ad084a57e",
+   "files": "0cf9871e607a6a6b244285fa67676a9242ff8d054c6cf0eba444e59339c6bfe3",
+   "fluxes": "ccfe40519346d7525c7211dfefacb13f38fe933ed302c13ce060a75e03aebf50",
+   "out": "89fb85a30ec7b5dcc153eba726245c2b6e43dcae031227b3f75bb71b0ff5ad8e"
+  },
+  "Fe__TENDL-2017_1996exp_5min": {
+   "deck": "fdb943333dd293cdda057fad49df8bf152000cf3f48fa64b12afd54a57eda071",
+   "files": "687b153e0ed6618bef264b3989acfae0c28c6cfd6d8e25825b8a85974f3b3b24",
+   "fluxes": "6c2a23393bd71bc5ac957ee53ca6b6ea747b8b0ed87d19361053f37505937d66",
+   "out": "29b21cd8936fd99095ecc99b761b7995459c61e2f2fd49654f7b4fa537db8b26"
+  },
+  "Fe__TENDL-2017_1996exp_7hour": {
+   "deck": "bccafd490c67974a18651e7567e6c652ee5c9f64fb0dfac7194bdc9fcd25d53c",
+   "files": "5c490291da0025be5e472f8e93dc12f3cc91ddf2ea22a6798714a79014355d06",
+   "fluxes": "98ec52a392ead5fe5c5060d603d2464139201745744c6880c4ca2cbc15badbe9",
+   "out": "1187071cf8f8dba478663ad8cc88619fae6420b4a78ae14db802e044c58be37d"
+  },
+  "Fe__TENDL-2017_2000exp_5min": {
+   "deck": "cad6fe7a947ae98aac019532f9c3e60192b20b3ae9fe13b511471dd6c3d71480",
+   "files": "0cf9871e607a6a6b244285fa67676a9242ff8d054c6cf0eba444e59339c6bfe3",
+   "fluxes": "ccfe40519346d7525c7211dfefacb13f38fe933ed302c13ce060a75e03aebf50",
+   "out": "5d44f65a2fdf552b8c4f5b82030d3a8c89fd86f0e5042a8882b0ac868eedac66"
+  },
+  "Ga__TENDL-2017_2000exp_5min": {
+   "deck": "4d6a57aaa41d42d62032844e6b8539fa12087ff07c12126adce666d32590aaaa",
+   "files": "0cf9871e607a6a6b244285fa67676a9242ff8d054c6cf0eba444e59339c6bfe3",
+   "fluxes": "ccfe40519346d7525c7211dfefacb13f38fe933ed302c13ce060a75e03aebf50",
+   "out": "c99c9bf57976187e7f578adbb613cc0de4cfe2e76c6cab402d6c66543ca330c6"
+  },
+  "Gd__TENDL-2017_2000exp_5min": {
+   "deck": "860d4d53f4676f0432a5b66d86d9eff9b362653048c4b1bdeed2d1fb793bf0b8",
+   "files": "0cf9871e607a6a6b244285fa67676a9242ff8d054c6cf0eba444e59339c6bfe3",
+   "fluxes": "ccfe40519346d7525c7211dfefacb13f38fe933ed302c13ce060a75e03aebf50",
+   "out": "1ca2defb02a4fbe2d87c04ac4ef4005b967a7cc49d8c234d395b0938f0fdbd8a"
+  },
+  "Ge__TENDL-2017_2000exp_5min": {
+   "deck": "babac072591a9a8e5cf10ab2afee07fb1a7d2d653d554d8b130c3509bbaae4f2",
+   "files": "0cf9871e607a6a6b244285fa67676a9242ff8d054c6cf0eba444e59339c6bfe3",
+   "fluxes": "ccfe40519346d7525c7211dfefacb13f38fe933ed302c13ce060a75e03aebf50",
+   "out": "0f01dc002c0caee1a1dca850cd3430a7833615e9ae9e3abd2bed71aa458db2ed"
+  },
+  "Hf__TENDL-2017_2000exp_5min": {
+   "deck": "bb20f1214eeaaf212200be6f4e35b2081f5c8883ea362a172d02ea96999f4658",
+   "files": "0cf9871e607a6a6b244285fa67676a9242ff8d054c6cf0eba444e59339c6bfe3",
+   "fluxes": "ccfe40519346d7525c7211dfefacb13f38fe933ed302c13ce060a75e03aebf50",
+   "out": "aba164533563a0690d9560ab3e037d07d09cb76579b22d2b1eea56c0b5077e15"
+  },
+  "Hg__TENDL-2017_2000exp_5min": {
+   "deck": "b595db7861abdfed691ac61b28da8a8a710e994f305671ade793930c600e85a9",
+   "files": "0cf9871e607a6a6b244285fa67676a9242ff8d054c6cf0eba444e59339c6bfe3",
+   "fluxes": "ccfe40519346d7525c7211dfefacb13f38fe933ed302c13ce060a75e03aebf50",
+   "out": "721ffa38ff873175c76cbda4ec4f4e27c8fe9acb0e63465306598d445b15f979"
+  },
+  "Ho__TENDL-2017_2000exp_5min": {
+   "deck": "b82344a60a81a2e6e145695a6edb468f5b6f70e7342ac0ecb4c641c3e5f44f74",
+   "files": "0cf9871e607a6a6b244285fa67676a9242ff8d054c6cf0eba444e59339c6bfe3",
+   "fluxes": "ccfe40519346d7525c7211dfefacb13f38fe933ed302c13ce060a75e03aebf50",
+   "out": "691e7dfc274e6edc2d2bb2173c09ebd40144157965341764c5b6beb65ea0add1"
+  },
+  "I__TENDL-2017_2000exp_5min": {
+   "deck": "b4c54df773cd570ad1ab72f5d68359a9fcd88bbec56b1a158b9f5e6ff856273b",
+   "files": "0cf9871e607a6a6b244285fa67676a9242ff8d054c6cf0eba444e59339c6bfe3",
+   "fluxes": "ccfe40519346d7525c7211dfefacb13f38fe933ed302c13ce060a75e03aebf50",
+   "out": "6f1d96da48b2ef21ec0734d5204ef68cb510c703dde613cae46464450abb7549"
+  },
+  "In__TENDL-2017_2000exp_5min": {
+   "deck": "6f67f212cabaa2764e6a27be8a2177a3336b9bd7226b6ace5d913cdf2213e112",
+   "files": "0cf9871e607a6a6b244285fa67676a9242ff8d054c6cf0eba444e59339c6bfe3",
+   "fluxes": "ccfe40519346d7525c7211dfefacb13f38fe933ed302c13ce060a75e03aebf50",
+   "out": "cda8ab82145c4e7ca73211b85089b7a9d294eb100bd09b625cbc597d2d0b67aa"
+  },
+  "Inc600__TENDL-2017_1996exp_5min": {
+   "deck": "93a004b871b8de8e8082af8b738f1bee8a01e58388bace01e4a9e0fca375a3f9",
+   "files": "687b153e0ed6618bef264b3989acfae0c28c6cfd6d8e25825b8a85974f3b3b24",
+   "fluxes": "6c2a23393bd71bc5ac957ee53ca6b6ea747b8b0ed87d19361053f37505937d66",
+   "out": "a164750251f62857ef9c59ec57910f0680c70ec149934fbe6745c5220d24ffbd"
+  },
+  "Inc600__TENDL-2017_1996exp_7hour": {
+   "deck": "3bdb1d5888f7237fb62d038e3dd1913ceb14db13b2f14ce8fdda75c901a2cfb5",
+   "files": "5c490291da0025be5e472f8e93dc12f3cc91ddf2ea22a6798714a79014355d06",
+   "fluxes": "98ec52a392ead5fe5c5060d603d2464139201745744c6880c4ca2cbc15badbe9",
+   "out": "8f59fb0d9e32d4b43f05343a7888d91b31fe27e065372a37137d1157d07e27a4"
+  },
+  "Inc600__TENDL-2017_2000exp_5min": {
+   "deck": "697883954debba98666f4887ba2154c8857fe14faa457d78dc6d8f8f9e6d66c0",
+   "files": "0cf9871e607a6a6b244285fa67676a9242ff8d054c6cf0eba444e59339c6bfe3",
+   "fluxes": "ccfe40519346d7525c7211dfefacb13f38fe933ed302c13ce060a75e03aebf50",
+   "out": "9243dbd34e664a754be08c82aa38df889d77ea2dca52a73535012ee18c51a696"
+  },
+  "Ir__TENDL-2017_2000exp_5min": {
+   "deck": "4bb9a5691cbccc6886311d22cb011ce9e3972d118082d01b992d37b6905614dc",
+   "files": "0cf9871e607a6a6b244285fa67676a9242ff8d054c6cf0eba444e59339c6bfe3",
+   "fluxes": "ccfe40519346d7525c7211dfefacb13f38fe933ed302c13ce060a75e03aebf50",
+   "out": "38f253e84c7a5861139decad6cdf82f54b292fcb70ad8b1558b6cde69bc94afe"
+  },
+  "K__TENDL-2017_1996exp_5min": {
+   "deck": "79c499344bf2f43b090c9f749a59b8a64f6c5391170887f4d8132c25544e69b6",
+   "files": "687b153e0ed6618bef264b3989acfae0c28c6cfd6d8e25825b8a85974f3b3b24",
+   "fluxes": "ccfe40519346d7525c7211dfefacb13f38fe933ed302c13ce060a75e03aebf50",
+   "out": "72c0d8387b34a2c21e80552bcbb8c88031db6ff8450abfc512beef042c001eb1"
+  },
+  "K__TENDL-2017_1996exp_7hour": {
+   "deck": "771b68eb2b1c070af00b4c5cb34c803edbeaa495e7616b23366b248f1ce5d906",
+   "files": "5c490291da0025be5e472f8e93dc12f3cc91ddf2ea22a6798714a79014355d06",
+   "fluxes": "98ec52a392ead5fe5c5060d603d2464139201745744c6880c4ca2cbc15badbe9",
+   "out": "5bf0e96d116245896131bf567a16d5bb5bf493dfd6aa4a04d0bb0fc398a780aa"
+  },
+  "K__TENDL-2017_2000exp_5min": {
+   "deck": "50074fdf74578202fe6462fd8d7bdaf1c547e214cc0d99bdd724e315295fcc38",
+   "files": "0cf9871e607a6a6b244285fa67676a9242ff8d054c6cf0eba444e59339c6bfe3",
+   "fluxes": "ccfe40519346d7525c7211dfefacb13f38fe933ed302c13ce060a75e03aebf50",
+   "out": "6e449635109f91951b8071cb57b935d4db7767a74c652fb4c6dd64f371487332"
+  },
+  "La__TENDL-2017_2000exp_5min": {
+   "deck": "e607d9861248d52835fd8e9dbd1f674eb8106f7018af2d588c6ef9efc8cf0b20",
+   "files": "0cf9871e607a6a6b244285fa67676a9242ff8d054c6cf0eba444e59339c6bfe3",
+   "fluxes": "ccfe40519346d7525c7211dfefacb13f38fe933ed302c13ce060a75e03aebf50",
+   "out": "5511142dcec58c659a50fe0d23c60bdcf27fe4c2b167e7a3ab54e5fdb1128aa3"
+  },
+  "Lu__TENDL-2017_2000exp_5min": {
+   "deck": "24611a24199177b4be857cb487edd3cc438487eaa87ef5d656afaa3de28022dc",
+   "files": "0cf9871e607a6a6b244285fa67676a9242ff8d054c6cf0eba444e59339c6bfe3",
+   "fluxes": "ccfe40519346d7525c7211dfefacb13f38fe933ed302c13ce060a75e03aebf50",
+   "out": "b8a6f8bea9f805717bf221b0880687e80e4c24a42de2485186c63959c6c0bdff"
+  },
+  "Mg__TENDL-2017_2000exp_5min": {
+   "deck": "cf306f98b072f2596b2b182f9927d4f164a1de96f526e63d823d7e60ec3601df",
+   "files": "0cf9871e607a6a6b244285fa67676a9242ff8d054c6cf0eba444e59339c6bfe3",
+   "fluxes": "ccfe40519346d7525c7211dfefacb13f38fe933ed302c13ce060a75e03aebf50",
+   "out": "819ec328b36d649b54c7a05c73305997e7062b0b09732e46f2090e9362208504"
+  },
+  "Mn__TENDL-2017_1996exp_5min": {
+   "deck": "577f7956553dd830c2c0097eaa53eaf29087735ca9cf35d84df977d4e8497e30",
+   "files": "687b153e0ed6618bef264b3989acfae0c28c6cfd6d8e25825b8a85974f3b3b24",
+   "fluxes": "ccfe40519346d7525c7211dfefacb13f38fe933ed302c13ce060a75e03aebf50",
+   "out": "38bb49cdff3640f36ea1cab8c44f42672993817d7847000737fda6311d6f908f"
+  },
+  "Mn__TENDL-2017_1996exp_7hour": {
+   "deck": "31af4169b3eabc1c6658e9d0dc65535089c241af5f3418de67979d98703058ca",
+   "files": "5c490291da0025be5e472f8e93dc12f3cc91ddf2ea22a6798714a79014355d06",
+   "fluxes": "98ec52a392ead5fe5c5060d603d2464139201745744c6880c4ca2cbc15badbe9",
+   "out": "f8193f0e1304fc27924393fe29934afba00824ec30ebfbeac474b106ecce91fd"
+  },
+  "Mn__TENDL-2017_2000exp_5min": {
+   "deck": "08c8eb29aea6c01991eeda161e4ce4463837a61b7cddcc3877517be15b97ae30",
+   "files": "0cf9871e607a6a6b244285fa67676a9242ff8d054c6cf0eba444e59339c6bfe3",
+   "fluxes": "ccfe40519346d7525c7211dfefacb13f38fe933ed302c13ce060a75e03aebf50",
+   "out": "608a84a1b96b26eddaea913bed49cc29867ae634e3406fd35e66943dbc33dd57"
+  },
+  "Mo__TENDL-2017_1996exp_5min": {
+   "deck": "813fbfd654bebc4e753a4ff199cc583f1c97a74a386a4314da73892caa99b3f4",
+   "files": "687b153e0ed6618bef264b3989acfae0c28c6cfd6d8e25825b8a85974f3b3b24",
+   "fluxes": "6c2a23393bd71bc5ac957ee53ca6b6ea747b8b0ed87d19361053f37505937d66",
+   "out": "d9a47e5e82ba7fe5fd7d95bdc9cb9ba8de9acc80a77f857c33d9723ffe1e9358"
+  },
+  "Mo__TENDL-2017_1996exp_7hour": {
+   "deck": "d72b4172fc6d8297b10c5015859464cbb72ff2e81622ba058f0fc493a78f0199",
+   "files": "5c490291da0025be5e472f8e93dc12f3cc91ddf2ea22a6798714a79014355d06",
+   "fluxes": "98ec52a392ead5fe5c5060d603d2464139201745744c6880c4ca2cbc15badbe9",
+   "out": "46e9f0ddc369210b5ce5690739d71a437434e99360ae343210c0cdd33b514aab"
+  },
+  "Mo__TENDL-2017_2000exp_5min": {
+   "deck": "3da68c4b8845599cad40239b034af02ac2f0263e0990c0fb893a967f106452e2",
+   "files": "0cf9871e607a6a6b244285fa67676a9242ff8d054c6cf0eba444e59339c6bfe3",
+   "fluxes": "ccfe40519346d7525c7211dfefacb13f38fe933ed302c13ce060a75e03aebf50",
+   "out": "01ff5b1ce8e282cbde5c9f572d5625e17e61301c5a7ce9f677fd601e4b30c84e"
+  },
+  "Na__TENDL-2017_1996exp_5min": {
+   "deck": "e27cb137205f2065db0afbf4a2b0012a07188f97aaf4ecea9b31c002ea20b470",
+   "files": "687b153e0ed6618bef264b3989acfae0c28c6cfd6d8e25825b8a85974f3b3b24",
+   "fluxes": "ccfe40519346d7525c7211dfefacb13f38fe933ed302c13ce060a75e03aebf50",
+   "out": "d05d574f563548c57f1a699ef54a150e55f41f4735edd92f70e02cbbdf84dc9e"
+  },
+  "Na__TENDL-2017_1996exp_7hour": {
+   "deck": "701ce95da6d298e3b8f4ccb8b31875a1487ce79fb073bf51a1834d28ce6954ee",
+   "files": "5c490291da0025be5e472f8e93dc12f3cc91ddf2ea22a6798714a79014355d06",
+   "fluxes": "98ec52a392ead5fe5c5060d603d2464139201745744c6880c4ca2cbc15badbe9",
+   "out": "bd092e21415784c3dafc784791da8f6b0795a970bf06bc1996aba825f4c7bdaf"
+  },
+  "Na__TENDL-2017_2000exp_5min": {
+   "deck": "28cf73ad9d45429c7d438cb142c480811c017a5f3fc26849704c813347c83d5f",
+   "files": "0cf9871e607a6a6b244285fa67676a9242ff8d054c6cf0eba444e59339c6bfe3",
+   "fluxes": "ccfe40519346d7525c7211dfefacb13f38fe933ed302c13ce060a75e03aebf50",
+   "out": "17a245e410c2a4de4512067f36aa52949e049040c361491099d3f39dfe1f20ed"
+  },
+  "Nb__TENDL-2017_1996exp_5min": {
+   "deck": "705ab5e8a378827d22bf70b3becf5611cd16c94675fcee99f1a4a4b635195d58",
+   "files": "687b153e0ed6618bef264b3989acfae0c28c6cfd6d8e25825b8a85974f3b3b24",
+   "fluxes": "ccfe40519346d7525c7211dfefacb13f38fe933ed302c13ce060a75e03aebf50",
+   "out": "0a46c77de05a980f555793dd53a1e0713a0263fbacc5dc8938c708811c6601b8"
+  },
+  "Nb__TENDL-2017_1996exp_7hour": {
+   "deck": "2d1c8f07cd19c79f74bbafe5390329624057d9969a476bb3f56d9880d5fcd5a2",
+   "files": "5c490291da0025be5e472f8e93dc12f3cc91ddf2ea22a6798714a79014355d06",
+   "fluxes": "98ec52a392ead5fe5c5060d603d2464139201745744c6880c4ca2cbc15badbe9",
+   "out": "145080f2a396995c4959d7de3f924ab71de05725de89b64d77751eb31ec55ee3"
+  },
+  "Nb__TENDL-2017_2000exp_5min": {
+   "deck": "e32f458839a5134126e7a2f0b60e0612215773e3cd7268c242cde1cd52731408",
+   "files": "0cf9871e607a6a6b244285fa67676a9242ff8d054c6cf0eba444e59339c6bfe3",
+   "fluxes": "ccfe40519346d7525c7211dfefacb13f38fe933ed302c13ce060a75e03aebf50",
+   "out": "22de3f109c743e9347b70f891e16348df9f894c0fda7bd2ac51b1190f0db5972"
+  },
+  "Nd__TENDL-2017_2000exp_5min": {
+   "deck": "16a99ed34c3b79766018eca8ae15cc0c72351e422c3e814782b34ab17752dc51",
+   "files": "0cf9871e607a6a6b244285fa67676a9242ff8d054c6cf0eba444e59339c6bfe3",
+   "fluxes": "ccfe40519346d7525c7211dfefacb13f38fe933ed302c13ce060a75e03aebf50",
+   "out": "3ec6aacf8f1847fa26bd07521cad2a117d30c477d211564af883ec4057a7d095"
+  },
+  "NiCr__TENDL-2017_1996exp_5min": {
+   "deck": "5da393f7761f3d8cbf8f853054cf9e278838108cb206a8d5d293f1188979f07a",
+   "files": "687b153e0ed6618bef264b3989acfae0c28c6cfd6d8e25825b8a85974f3b3b24",
+   "fluxes": "44447d73937921261b27dc73d05e358d58932754c471927808ad41dd409b6e9b",
+   "out": "ec7f0b41f578a430f96af9b5d48541d43384c027debc5660b9ec2bf38b3fe52b"
+  },
+  "NiCr__TENDL-2017_1996exp_7hour": {
+   "deck": "a7822f643fa4c08ec2bb1cc2b11baf8d3217edef4c9b5d083d05848f33064355",
+   "files": "5c490291da0025be5e472f8e93dc12f3cc91ddf2ea22a6798714a79014355d06",
+   "fluxes": "98ec52a392ead5fe5c5060d603d2464139201745744c6880c4ca2cbc15badbe9",
+   "out": "33330b8db669c7265ee85bce250022af578325f52355118b2194ba29910d5b0c"
+  },
+  "NiCr__TENDL-2017_2000exp_5min": {
+   "deck": "e36c481419c3bd08de0f8ac6b1ecb9632f34e95b76a062ea2ad0bccdc46a37bf",
+   "files": "0cf9871e607a6a6b244285fa67676a9242ff8d054c6cf0eba444e59339c6bfe3",
+   "fluxes": "ccfe40519346d7525c7211dfefacb13f38fe933ed302c13ce060a75e03aebf50",
+   "out": "cb469ea75098a6bef4424e7e5ff89f8f233a1f11fd577f470219e36fe4b046f9"
+  },
+  "Ni__TENDL-2017_1996exp_5min": {
+   "deck": "05c98587bdf2a51954586c60277cfe922da7cda61e9e82897456baf39c223628",
+   "files": "687b153e0ed6618bef264b3989acfae0c28c6cfd6d8e25825b8a85974f3b3b24",
+   "fluxes": "ccfe40519346d7525c7211dfefacb13f38fe933ed302c13ce060a75e03aebf50",
+   "out": "319eb3bb90ffdf379990f12f7b0fe9842ed96131865580ca13eeef7c06e4ddec"
+  },
+  "Ni__TENDL-2017_1996exp_7hour": {
+   "deck": "f07007783892e452c1c76d20fe1a5b37ec4a0ca644683c00b639fc0fb264bb7a",
+   "files": "5c490291da0025be5e472f8e93dc12f3cc91ddf2ea22a6798714a79014355d06",
+   "fluxes": "98ec52a392ead5fe5c5060d603d2464139201745744c6880c4ca2cbc15badbe9",
+   "out": "8625179e1c889ef253779dea634df0cc18c073e4778808fb4d8495a0d0164141"
+  },
+  "Ni__TENDL-2017_2000exp_5min": {
+   "deck": "0baf155b28be4a7bd302696e13f6b1457af807e1344abcb7595d1668690578a3",
+   "files": "0cf9871e607a6a6b244285fa67676a9242ff8d054c6cf0eba444e59339c6bfe3",
+   "fluxes": "ccfe40519346d7525c7211dfefacb13f38fe933ed302c13ce060a75e03aebf50",
+   "out": "db141ec71d2539fd5a8ee437baa3d40a1d03205dead3ffabd738101d2cc07342"
+  },
+  "Os__TENDL-2017_2000exp_5min": {
+   "deck": "f44834e835302fe16a62d25032b90be49a2aa116d99fa40a0224aef4dc4a5023",
+   "files": "0cf9871e607a6a6b244285fa67676a9242ff8d054c6cf0eba444e59339c6bfe3",
+   "fluxes": "ccfe40519346d7525c7211dfefacb13f38fe933ed302c13ce060a75e03aebf50",
+   "out": "4838cbccfc594c9949419617214400fb5cf5059d3cb4e70dbcb1239ceb486bed"
+  },
+  "P__TENDL-2017_2000exp_5min": {
+   "deck": "3b794a2976b48d9e9e181faf794b78a0af4e459996deafd9a48743d4451e6ca5",
+   "files": "0cf9871e607a6a6b244285fa67676a9242ff8d054c6cf0eba444e59339c6bfe3",
+   "fluxes": "ccfe40519346d7525c7211dfefacb13f38fe933ed302c13ce060a75e03aebf50",
+   "out": "adedd708782a69384372ec1da4d9e943e0fc240d9da49bc84119ef068a18c429"
+  },
+  "Pb__TENDL-2017_1996exp_5min": {
+   "deck": "4881ba2fc6ddff2ec8f8758271f01fa09f2292783125e533ddd4e3a987c2e0bd",
+   "files": "687b153e0ed6618bef264b3989acfae0c28c6cfd6d8e25825b8a85974f3b3b24",
+   "fluxes": "ccfe40519346d7525c7211dfefacb13f38fe933ed302c13ce060a75e03aebf50",
+   "out": "8ad1d3fdefd85aeb92017514ff8f2971c7f572004e01e459f41c1f641aadaa34"
+  },
+  "Pb__TENDL-2017_1996exp_7hour": {
+   "deck": "d6109f48be407e808be05c79b8a4a1f6f2ee30d8312267e4e8880620985eb274",
+   "files": "5c490291da0025be5e472f8e93dc12f3cc91ddf2ea22a6798714a79014355d06",
+   "fluxes": "98ec52a392ead5fe5c5060d603d2464139201745744c6880c4ca2cbc15badbe9",
+   "out": "ccc5650c5ca0d1195026a6aaea12f9b56606288d828a9eccc10db1483491706d"
+  },
+  "Pb__TENDL-2017_2000exp_5min": {
+   "deck": "6ec0a7ab9e3e5a7c78c38510066194040ecb905a3d8a246ca444e4c98f0b316f",
+   "files": "0cf9871e607a6a6b244285fa67676a9242ff8d054c6cf0eba444e59339c6bfe3",
+   "fluxes": "ccfe40519346d7525c7211dfefacb13f38fe933ed302c13ce060a75e03aebf50",
+   "out": "ff0b08fd20fe3b8748f14eac7e1bf93461653a227bd09e62e512abf56ce270cd"
+  },
+  "Pd__TENDL-2017_2000exp_5min": {
+   "deck": "8c55369fab8232dd4e1a4403417a082ec10be71e6c43060a3ba2d1e68fa35121",
+   "files": "0cf9871e607a6a6b244285fa67676a9242ff8d054c6cf0eba444e59339c6bfe3",
+   "fluxes": "ccfe40519346d7525c7211dfefacb13f38fe933ed302c13ce060a75e03aebf50",
+   "out": "7ec9d2222cf8483f60d661a2ee7ad0d8d7d6cf08e5d924d6f117aad282fc5cb7"
+  },
+  "Pr__TENDL-2017_2000exp_5min": {
+   "deck": "d6559102d47e5222f6e6289166541af8b27dfdbda9ed4b30848005bd4873b4d8",
+   "files": "0cf9871e607a6a6b244285fa67676a9242ff8d054c6cf0eba444e59339c6bfe3",
+   "fluxes": "ccfe40519346d7525c7211dfefacb13f38fe933ed302c13ce060a75e03aebf50",
+   "out": "12291cf08c8777dc8509cf7452129cd89131dcb1f1e605150952d3f0a5ae6438"
+  },
+  "Pt__TENDL-2017_2000exp_5min": {
+   "deck": "4078a5b51b0e589e54dd6a50551a2e7a81b6c360bea81071aa359c4ee955708c",
+   "files": "0cf9871e607a6a6b244285fa67676a9242ff8d054c6cf0eba444e59339c6bfe3",
+   "fluxes": "ccfe40519346d7525c7211dfefacb13f38fe933ed302c13ce060a75e03aebf50",
+   "out": "31124b91a825cd59ae2fbdf80133b17ea697d893fc91125ffc90475beb28d8b4"
+  },
+  "Rb__TENDL-2017_2000exp_5min": {
+   "deck": "fee23ded7d1f2b021b8eef3db0589d5f5a50efdb02de1b7b479e9bff8118f24b",
+   "files": "0cf9871e607a6a6b244285fa67676a9242ff8d054c6cf0eba444e59339c6bfe3",
+   "fluxes": "ccfe40519346d7525c7211dfefacb13f38fe933ed302c13ce060a75e03aebf50",
+   "out": "9dabfb9310b55c0309d4eced35462c3c888f763f488094f3bb1ad9f17b0e3a11"
+  },
+  "Re__TENDL-2017_1996exp_5min": {
+   "deck": "7718097d4672b6a495e5776f43657d8435e079e0952903ee46f6b99adb535e99",
+   "files": "687b153e0ed6618bef264b3989acfae0c28c6cfd6d8e25825b8a85974f3b3b24",
+   "fluxes": "ccfe40519346d7525c7211dfefacb13f38fe933ed302c13ce060a75e03aebf50",
+   "out": "faec79db5c284780968a7d6992395d783b3b2a4e305ad6e8850e151ab509de2a"
+  },
+  "Re__TENDL-2017_1996exp_7hour": {
+   "deck": "bfb340de2a0f286c461367e0aa38a4b2c7ca2ce3f88588434a3845ec33d4e624",
+   "files": "5c490291da0025be5e472f8e93dc12f3cc91ddf2ea22a6798714a79014355d06",
+   "fluxes": "98ec52a392ead5fe5c5060d603d2464139201745744c6880c4ca2cbc15badbe9",
+   "out": "7a6f01e2aa611a2b34b5dda138bf3aaa6e944b390bd44bab55e81a962585078f"
+  },
+  "Re__TENDL-2017_2000exp_5min": {
+   "deck": "f8665967cb0b8601aaf72d717ce77d228e0298bf5dcde9c630a627d7842e50b2",
+   "files": "0cf9871e607a6a6b244285fa67676a9242ff8d054c6cf0eba444e59339c6bfe3",
+   "fluxes": "ccfe40519346d7525c7211dfefacb13f38fe933ed302c13ce060a75e03aebf50",
+   "out": "eea7add9d0fc67e4bb27870c172ae6bae29ab81e4f04bff40067c6801f3f1c50"
+  },
+  "Rh__TENDL-2017_2000exp_5min": {
+   "deck": "506844133832b3a84f1f04010d3c03ac873acfed70d1b22b27c1a0b5fce35f5a",
+   "files": "0cf9871e607a6a6b244285fa67676a9242ff8d054c6cf0eba444e59339c6bfe3",
+   "fluxes": "ccfe40519346d7525c7211dfefacb13f38fe933ed302c13ce060a75e03aebf50",
+   "out": "5a1a4bfcbddbff21fa703e79927459a0efab737c5aa6b8cdf752d88862f2453a"
+  },
+  "Ru__TENDL-2017_2000exp_5min": {
+   "deck": "2cd9eb459f1c48710a6b8bbeb55e610fdb6ee44b886a35e90417a33b4f4245a7",
+   "files": "0cf9871e607a6a6b244285fa67676a9242ff8d054c6cf0eba444e59339c6bfe3",
+   "fluxes": "ccfe40519346d7525c7211dfefacb13f38fe933ed302c13ce060a75e03aebf50",
+   "out": "df88a4b59002a48f94af5a917c121573fe8064dd1d6423fbd682f63cb6e531c8"
+  },
+  "SS304__TENDL-2017_1996exp_5min": {
+   "deck": "2a1cfa8cc1095648ebea491792d38f43e2774dc5ce868df7c0d8b7b18f640c03",
+   "files": "687b153e0ed6618bef264b3989acfae0c28c6cfd6d8e25825b8a85974f3b3b24",
+   "fluxes": "6c2a23393bd71bc5ac957ee53ca6b6ea747b8b0ed87d19361053f37505937d66",
+   "out": "659d37e7fc8eb01a8e09305ad3349769e03c41828b555e6947adc1439550e9cd"
+  },
+  "SS304__TENDL-2017_1996exp_7hour": {
+   "deck": "ac9620e375c05d33b5d2c94f1109281d91127676639ff45c4f02e65d115149af",
+   "files": "5c490291da0025be5e472f8e93dc12f3cc91ddf2ea22a6798714a79014355d06",
+   "fluxes": "98ec52a392ead5fe5c5060d603d2464139201745744c6880c4ca2cbc15badbe9",
+   "out": "9ac63ba608bf070ff53a0543698a947ab1293be9f4dc041bce6d89c4fdc14806"
+  },
+  "SS304__TENDL-2017_2000exp_5min": {
+   "deck": "e9fcd42bc6296cee06e73ccb3832a0418845e816d7bca8c8b4f42f0da2971d2b",
+   "files": "0cf9871e607a6a6b244285fa67676a9242ff8d054c6cf0eba444e59339c6bfe3",
+   "fluxes": "ccfe40519346d7525c7211dfefacb13f38fe933ed302c13ce060a75e03aebf50",
+   "out": "152a5a47192cda8ec1c7f866e22d3b95be83be15cc257f50e081389a8f488875"
+  },
+  "SS316__TENDL-2017_1996exp_5min": {
+   "deck": "82a24c534f846c1f254c28e7323b3da79eb04444bcd27c6a99cacf85241a0851",
+   "files": "687b153e0ed6618bef264b3989acfae0c28c6cfd6d8e25825b8a85974f3b3b24",
+   "fluxes": "6c2a23393bd71bc5ac957ee53ca6b6ea747b8b0ed87d19361053f37505937d66",
+   "out": "902b35f5e28ad55552129fb8da2ee22de442dfc4c19b44ef13e9c70fa77e56ff"
+  },
+  "SS316__TENDL-2017_1996exp_7hour": {
+   "deck": "52a1b2e9c3f0d9d960d0770b55eb3af66563a50e2e619e992e2ed1f1574334d6",
+   "files": "5c490291da0025be5e472f8e93dc12f3cc91ddf2ea22a6798714a79014355d06",
+   "fluxes": "98ec52a392ead5fe5c5060d603d2464139201745744c6880c4ca2cbc15badbe9",
+   "out": "f61093b19769ccd0998648c75f1bb4b32d4d2409831fd055b97a54b72d44a6d7"
+  },
+  "SS316__TENDL-2017_2000exp_5min": {
+   "deck": "b773aa4c71e4fd0f0e9d03ec39d320b6a451b116295ae637048290613cc43837",
+   "files": "0cf9871e607a6a6b244285fa67676a9242ff8d054c6cf0eba444e59339c6bfe3",
+   "fluxes": "ccfe40519346d7525c7211dfefacb13f38fe933ed302c13ce060a75e03aebf50",
+   "out": "05d2e5c9dce1b26bc6d1e1bfe4d51132a5e0342d70645ec70c19c9245cbcc443"
+  },
+  "S__TENDL-2017_1996exp_5min": {
+   "deck": "d78e7c94e9dacb56812a57f4c497684ef697451a13cdab10fac7826150f2d109",
+   "files": "687b153e0ed6618bef264b3989acfae0c28c6cfd6d8e25825b8a85974f3b3b24",
+   "fluxes": "ccfe40519346d7525c7211dfefacb13f38fe933ed302c13ce060a75e03aebf50",
+   "out": "3ecd61dbc349d122a98c029463354c91cfed2e3b0812e2a755e9669f0b369323"
+  },
+  "S__TENDL-2017_1996exp_7hour": {
+   "deck": "5c814d4d5044dca9edb53a672a852fb3ed201f42f7ef8eed9fceb7042da72276",
+   "files": "5c490291da0025be5e472f8e93dc12f3cc91ddf2ea22a6798714a79014355d06",
+   "fluxes": "98ec52a392ead5fe5c5060d603d2464139201745744c6880c4ca2cbc15badbe9",
+   "out": "975b0fdda9ffe9b954e87ff2f1aa7ac4bbdba297aec70283f506b39ff8ddd986"
+  },
+  "S__TENDL-2017_2000exp_5min": {
+   "deck": "93f438dfc74e1f3218407e7b97e8520ab9d44b8f25702e3156f44743a6329923",
+   "files": "0cf9871e607a6a6b244285fa67676a9242ff8d054c6cf0eba444e59339c6bfe3",
+   "fluxes": "ccfe40519346d7525c7211dfefacb13f38fe933ed302c13ce060a75e03aebf50",
+   "out": "4908e443d925715138ce8639a3525bcca5b4229a720c6a48b16c8e399f626f82"
+  },
+  "Sb__TENDL-2017_2000exp_5min": {
+   "deck": "2e1b83819dda9ebc3fd298e1ffcf739b286ea8cf6568f4e2205ff5831d7fb040",
+   "files": "0cf9871e607a6a6b244285fa67676a9242ff8d054c6cf0eba444e59339c6bfe3",
+   "fluxes": "ccfe40519346d7525c7211dfefacb13f38fe933ed302c13ce060a75e03aebf50",
+   "out": "5c94bbf662aac8ea148b5e9e777ce5760c056303fa686e8525c9c180bbdda2a5"
+  },
+  "Sc__TENDL-2017_2000exp_5min": {
+   "deck": "0d9b07753b172829bbe9986210da5f7bb3b0a46f3449863c1534f742412929ac",
+   "files": "0cf9871e607a6a6b244285fa67676a9242ff8d054c6cf0eba444e59339c6bfe3",
+   "fluxes": "ccfe40519346d7525c7211dfefacb13f38fe933ed302c13ce060a75e03aebf50",
+   "out": "30b04db8bff41cb6fcacac9cf6487a372a65d1efc2e9f121d82d170b72f9b9c0"
+  },
+  "Se__TENDL-2017_2000exp_5min": {
+   "deck": "3a6c050291ed8dd1d90e645a69ab8c38857daf8cb3dd5e5406db9511f1ec35a6",
+   "files": "0cf9871e607a6a6b244285fa67676a9242ff8d054c6cf0eba444e59339c6bfe3",
+   "fluxes": "ccfe40519346d7525c7211dfefacb13f38fe933ed302c13ce060a75e03aebf50",
+   "out": "267ab8446ec98fcd3e40fd06db261abf6afa352739638584f42870e55f62e57b"
+  },
+  "Si__TENDL-2017_2000exp_5min": {
+   "deck": "c12edb96f00e34a15f0b61c4b6fecb1f87cbd01f96939c8a34167e69a01c9e7d",
+   "files": "0cf9871e607a6a6b244285fa67676a9242ff8d054c6cf0eba444e59339c6bfe3",
+   "fluxes": "ccfe40519346d7525c7211dfefacb13f38fe933ed302c13ce060a75e03aebf50",
+   "out": "7e3e8916c7371f68529a485c82e02e13a0cc07ba09e20c521ac88de35874c1d7"
+  },
+  "Sm__TENDL-2017_2000exp_5min": {
+   "deck": "782a285ab0d0d5bcc8d95954c6186bc13e1e9ca438f678a6a1d6d07577b38c36",
+   "files": "0cf9871e607a6a6b244285fa67676a9242ff8d054c6cf0eba444e59339c6bfe3",
+   "fluxes": "ccfe40519346d7525c7211dfefacb13f38fe933ed302c13ce060a75e03aebf50",
+   "out": "2b72a7ed8eee01a85e99f0a971203b51a4099f7257acaf76e4624ac30fa2ce3a"
+  },
+  "Sn__TENDL-2017_1996exp_5min": {
+   "deck": "4cec6038dbb4be3203d51daa4356a6dc7fff531eb2fea1157bee0957b23453c6",
+   "files": "687b153e0ed6618bef264b3989acfae0c28c6cfd6d8e25825b8a85974f3b3b24",
+   "fluxes": "ccfe40519346d7525c7211dfefacb13f38fe933ed302c13ce060a75e03aebf50",
+   "out": "af5e544b00ca44c57d9e75bc8cc7efffb559ad0300656b26ae9187c8b96cac83"
+  },
+  "Sn__TENDL-2017_1996exp_7hour": {
+   "deck": "2586b67a41e2d8f8dfdb6a4f9dcc0341e2dc1eb041d7ef9a83112f1025a4ee78",
+   "files": "5c490291da0025be5e472f8e93dc12f3cc91ddf2ea22a6798714a79014355d06",
+   "fluxes": "98ec52a392ead5fe5c5060d603d2464139201745744c6880c4ca2cbc15badbe9",
+   "out": "11629c9467e8a5d72bb4769ae1987c7f866f964a85f5e1dd8f0f782a22ca2bf7"
+  },
+  "Sn__TENDL-2017_2000exp_5min": {
+   "deck": "3ef99e861ed514cb0928abc704a67f570510ec4a9b31436861fe9cd7b7b4da23",
+   "files": "0cf9871e607a6a6b244285fa67676a9242ff8d054c6cf0eba444e59339c6bfe3",
+   "fluxes": "ccfe40519346d7525c7211dfefacb13f38fe933ed302c13ce060a75e03aebf50",
+   "out": "1ad0bdc9acba1d665233ef2a931d8d63145b4b58a0dc79cc2543bf652d899c55"
+  },
+  "Sr__TENDL-2017_1996exp_5min": {
+   "deck": "c90a5943dddc4a0664a0aa5e55e07374e47d3c7722b5a05344f5e173d168ce8d",
+   "files": "687b153e0ed6618bef264b3989acfae0c28c6cfd6d8e25825b8a85974f3b3b24",
+   "fluxes": "ccfe40519346d7525c7211dfefacb13f38fe933ed302c13ce060a75e03aebf50",
+   "out": "fb850f5bc606b7fd9462c4faa44f263196eccc8589d00f59e229fe2873ba8db2"
+  },
+  "Sr__TENDL-2017_1996exp_7hour": {
+   "deck": "0454cc779c27db6472e0bf5dd2ba0209490fb859b60d666cf383c09920added2",
+   "files": "5c490291da0025be5e472f8e93dc12f3cc91ddf2ea22a6798714a79014355d06",
+   "fluxes": "98ec52a392ead5fe5c5060d603d2464139201745744c6880c4ca2cbc15badbe9",
+   "out": "a09bd5d04ad3e8eecd7a8ddf4dd6b25546a5a87413ea719f8c9f8674a68bddfe"
+  },
+  "Sr__TENDL-2017_2000exp_5min": {
+   "deck": "d249712876373b249ae19cc85af5789c5f2723b557f061a579f426579e5e1c95",
+   "files": "0cf9871e607a6a6b244285fa67676a9242ff8d054c6cf0eba444e59339c6bfe3",
+   "fluxes": "ccfe40519346d7525c7211dfefacb13f38fe933ed302c13ce060a75e03aebf50",
+   "out": "23080196bf8a4619b0c4f13e2665b451f4b86e1fb0bb64b8af16e9d75870a656"
+  },
+  "Ta__TENDL-2017_1996exp_5min": {
+   "deck": "74c2ced4a799186f52834feaaa90b0ae88f9c68590700947c9e06bc95fa7b18a",
+   "files": "687b153e0ed6618bef264b3989acfae0c28c6cfd6d8e25825b8a85974f3b3b24",
+   "fluxes": "ccfe40519346d7525c7211dfefacb13f38fe933ed302c13ce060a75e03aebf50",
+   "out": "fb7db2c685bd04c59655d0b9291bd17632669328c68697100848715159bd4757"
+  },
+  "Ta__TENDL-2017_1996exp_7hour": {
+   "deck": "5ce70a2c84fd61ad60170b6626f57ec215dbd3309c0da5aadc05ecbced423e51",
+   "files": "5c490291da0025be5e472f8e93dc12f3cc91ddf2ea22a6798714a79014355d06",
+   "fluxes": "98ec52a392ead5fe5c5060d603d2464139201745744c6880c4ca2cbc15badbe9",
+   "out": "b006cf1747505d2da6f82a6838e8b9b751e26899a5caee3bb7b280b35002df67"
+  },
+  "Ta__TENDL-2017_2000exp_5min": {
+   "deck": "216478825ab2130e3d6b305a9599f6265b28a614a568c64c9d1b7306d75426ac",
+   "files": "0cf9871e607a6a6b244285fa67676a9242ff8d054c6cf0eba444e59339c6bfe3",
+   "fluxes": "ccfe40519346d7525c7211dfefacb13f38fe933ed302c13ce060a75e03aebf50",
+   "out": "72bb5b2b1db7def0397fb2f1c82f87d498415a5d4343c9b2612967ae33dcab7f"
+  },
+  "Tb__TENDL-2017_2000exp_5min": {
+   "deck": "8ef3fd9293fb64de5d26180c97fa487a7a4a7cc1664ad49f05c7d3f9256483ce",
+   "files": "0cf9871e607a6a6b244285fa67676a9242ff8d054c6cf0eba444e59339c6bfe3",
+   "fluxes": "ccfe40519346d7525c7211dfefacb13f38fe933ed302c13ce060a75e03aebf50",
+   "out": "92ba9c3b2ad875a73ddc81f9416dda66d4a35a5329a5ca0996d38f8005094657"
+  },
+  "Te__TENDL-2017_2000exp_5min": {
+   "deck": "a3d00ddde2a5f528370ad4317c3f8d811a63d82281ec8aa5b7e21f6420e856d5",
+   "files": "0cf9871e607a6a6b244285fa67676a9242ff8d054c6cf0eba444e59339c6bfe3",
+   "fluxes": "ccfe40519346d7525c7211dfefacb13f38fe933ed302c13ce060a75e03aebf50",
+   "out": "b75751835be434b72efe9f5c4a2012f4195025dd662b3574170d6243f3de0d69"
+  },
+  "Ti__TENDL-2017_1996exp_5min": {
+   "deck": "4f5dacffed660093b1913e2f099612a7d740877bfbe19a8defa5a4221a6f93c3",
+   "files": "687b153e0ed6618bef264b3989acfae0c28c6cfd6d8e25825b8a85974f3b3b24",
+   "fluxes": "ccfe40519346d7525c7211dfefacb13f38fe933ed302c13ce060a75e03aebf50",
+   "out": "a38b919ec25fa3b146c329105501699f8f74510aeacacc24db1a3b882927d673"
+  },
+  "Ti__TENDL-2017_1996exp_7hour": {
+   "deck": "53b1b49b81614735fd12fec4ccf06767034383a33d984f5148a6de11014c7e7f",
+   "files": "5c490291da0025be5e472f8e93dc12f3cc91ddf2ea22a6798714a79014355d06",
+   "fluxes": "98ec52a392ead5fe5c5060d603d2464139201745744c6880c4ca2cbc15badbe9",
+   "out": "50585399459ae6d9468e3c6ce1d9d43662c1b5b943c89d096b80cb6d7eda9cf4"
+  },
+  "Ti__TENDL-2017_2000exp_5min": {
+   "deck": "39cee3d9e9f098f88340c3aefcee06efcbb55f54ebe24d6008cf7efa68c6f171",
+   "files": "0cf9871e607a6a6b244285fa67676a9242ff8d054c6cf0eba444e59339c6bfe3",
+   "fluxes": "ccfe40519346d7525c7211dfefacb13f38fe933ed302c13ce060a75e03aebf50",
+   "out": "1162930c8305dfc71dee92f94f8d4fed7894f5049884fab862972de2dd4c4c04"
+  },
+  "Tl__TENDL-2017_2000exp_5min": {
+   "deck": "2e6966f8391d9ce7bd77d3af693b2c297d95df2807134c1b9abac705dd26d1cc",
+   "files": "0cf9871e607a6a6b244285fa67676a9242ff8d054c6cf0eba444e59339c6bfe3",
+   "fluxes": "ccfe40519346d7525c7211dfefacb13f38fe933ed302c13ce060a75e03aebf50",
+   "out": "3c981e59f396b8bae377c67f70a2292b2aeb5368e3dc7a3e7d8e5d7d3d544f7e"
+  },
+  "Tm__TENDL-2017_2000exp_5min": {
+   "deck": "55964168ecc208e132715cbc34e8d8876173efcaeaf6f0d71214f92174cf7f4d",
+   "files": "0cf9871e607a6a6b244285fa67676a9242ff8d054c6cf0eba444e59339c6bfe3",
+   "fluxes": "ccfe40519346d7525c7211dfefacb13f38fe933ed302c13ce060a75e03aebf50",
+   "out": "060fee5b175516fc5e7dc8b813fbb86686e0778fde20322969d01690637d73d5"
+  },
+  "V__TENDL-2017_1996exp_5min": {
+   "deck": "8f632bdf07e9519b208bb8b92a1e8f4c75d0297266da542c3ea2089b5eb6cbb6",
+   "files": "687b153e0ed6618bef264b3989acfae0c28c6cfd6d8e25825b8a85974f3b3b24",
+   "fluxes": "44447d73937921261b27dc73d05e358d58932754c471927808ad41dd409b6e9b",
+   "out": "2c5ede0166a4c225c7ed133edf7684de0449a6b7b01449f68fa055ee8d5794de"
+  },
+  "V__TENDL-2017_1996exp_7hour": {
+   "deck": "1736b8bc071decc3579af188c997a6ee4868ca42254e7e25ac6af4c5a099e9d6",
+   "files": "5c490291da0025be5e472f8e93dc12f3cc91ddf2ea22a6798714a79014355d06",
+   "fluxes": "98ec52a392ead5fe5c5060d603d2464139201745744c6880c4ca2cbc15badbe9",
+   "out": "db8b10e09e488fc703a5b856fcf2eaee5b5c59d37142560bd5244db4ea9dfc35"
+  },
+  "V__TENDL-2017_2000exp_5min": {
+   "deck": "9cd688e270223e8b5e452e432a61c5206f3fe5c0b5f8e8ee3e3be49449108930",
+   "files": "0cf9871e607a6a6b244285fa67676a9242ff8d054c6cf0eba444e59339c6bfe3",
+   "fluxes": "ccfe40519346d7525c7211dfefacb13f38fe933ed302c13ce060a75e03aebf50",
+   "out": "c41ca7143ee0a40ce4c3085de5d538f7f9cf2d10fc56c6ca73f9e853e115c5eb"
+  },
+  "W__TENDL-2017_1996exp_5min": {
+   "deck": "e9469d5a882b8a1946ae0ba0fca6dc1fcd496d46a81da9b90ac04ae94f703dc2",
+   "files": "687b153e0ed6618bef264b3989acfae0c28c6cfd6d8e25825b8a85974f3b3b24",
+   "fluxes": "6c2a23393bd71bc5ac957ee53ca6b6ea747b8b0ed87d19361053f37505937d66",
+   "out": "06bb2bebeb86a080191b6ebc33a43cb0a0b5b47cee8c167e121458bca4c4af47"
+  },
+  "W__TENDL-2017_1996exp_7hour": {
+   "deck": "a5cd082c8c9e5fb67a754182ebe01d466b45acc2fd28f82f5fc392d2a3b97898",
+   "files": "5c490291da0025be5e472f8e93dc12f3cc91ddf2ea22a6798714a79014355d06",
+   "fluxes": "98ec52a392ead5fe5c5060d603d2464139201745744c6880c4ca2cbc15badbe9",
+   "out": "ec6c8827a840082712206a3a4064bf092835dbfbc5e931e5c16a84e322227c3e"
+  },
+  "W__TENDL-2017_2000exp_5min": {
+   "deck": "850e83b388b1cc569b6b23af266c343a0a7f716f3cd7a7e22b340752685db38f",
+   "files": "0cf9871e607a6a6b244285fa67676a9242ff8d054c6cf0eba444e59339c6bfe3",
+   "fluxes": "ccfe40519346d7525c7211dfefacb13f38fe933ed302c13ce060a75e03aebf50",
+   "out": "0953223e8702812e1ac3bd28e2b65c6d9ce7848c367d64cebfeb446f5c259eb9"
+  },
+  "Y__TENDL-2017_1996exp_5min": {
+   "deck": "266d5d6d0705dff4f0f02a8b85f894f377b60cac8359233acd9141b739a9e00f",
+   "files": "687b153e0ed6618bef264b3989acfae0c28c6cfd6d8e25825b8a85974f3b3b24",
+   "fluxes": "ccfe40519346d7525c7211dfefacb13f38fe933ed302c13ce060a75e03aebf50",
+   "out": "7641ddced56b1a32d24c0d828ebc5a274e2877cc3add6b439e0dad30a6437aff"
+  },
+  "Y__TENDL-2017_1996exp_7hour": {
+   "deck": "9999d1ebe6f42588c2d2fd8bc08d364d5be337ead129ca1dba70f40a393422be",
+   "files": "5c490291da0025be5e472f8e93dc12f3cc91ddf2ea22a6798714a79014355d06",
+   "fluxes": "98ec52a392ead5fe5c5060d603d2464139201745744c6880c4ca2cbc15badbe9",
+   "out": "b55b02c3ca9de4995b0e8c8a246d948143de064e7f7588db55aa3376503c3389"
+  },
+  "Y__TENDL-2017_2000exp_5min": {
+   "deck": "9dec2f2c925dddaea42e0d32ee51357ebd4fe9e38961a47628d971d4623aaa25",
+   "files": "0cf9871e607a6a6b244285fa67676a9242ff8d054c6cf0eba444e59339c6bfe3",
+   "fluxes": "ccfe40519346d7525c7211dfefacb13f38fe933ed302c13ce060a75e03aebf50",
+   "out": "07c4b3635cd1dc5960352389acb041c6700c59287e275747c7b8925657ab1828"
+  },
+  "Yb__TENDL-2017_2000exp_5min": {
+   "deck": "03460ca1fe9d17539cb22dec8e11869681346d0dc096df8dbbd8ae1bd353fb99",
+   "files": "0cf9871e607a6a6b244285fa67676a9242ff8d054c6cf0eba444e59339c6bfe3",
+   "fluxes": "ccfe40519346d7525c7211dfefacb13f38fe933ed302c13ce060a75e03aebf50",
+   "out": "170eed9d2478699b2c27a1273c097f0040c05662f1c3614d885b051317a8c70f"
+  },
+  "Zn__TENDL-2017_2000exp_5min": {
+   "deck": "0afb32ffece27bface8210699327a3e94bd03bafa520cf4a6259e005ccbd7dde",
+   "files": "0cf9871e607a6a6b244285fa67676a9242ff8d054c6cf0eba444e59339c6bfe3",
+   "fluxes": "ccfe40519346d7525c7211dfefacb13f38fe933ed302c13ce060a75e03aebf50",
+   "out": "89a81a7d5a72d9bc1ff310ef18651c0c99e8262157473247a078ec4c8e9114ca"
+  },
+  "Zr__TENDL-2017_1996exp_5min": {
+   "deck": "5c467fb53988b926e0c40c0a0dafce18c0d4513365a4105c8b6945ede440c99c",
+   "files": "687b153e0ed6618bef264b3989acfae0c28c6cfd6d8e25825b8a85974f3b3b24",
+   "fluxes": "44447d73937921261b27dc73d05e358d58932754c471927808ad41dd409b6e9b",
+   "out": "6b07417923087033d990a5b8502d01f256d9ce0832584b668883dd0cb37bd471"
+  },
+  "Zr__TENDL-2017_1996exp_7hour": {
+   "deck": "22a7e058382f552d0a1433e32b62df5eaf2d46b121d45b30d43399ac0341ba75",
+   "files": "5c490291da0025be5e472f8e93dc12f3cc91ddf2ea22a6798714a79014355d06",
+   "fluxes": "98ec52a392ead5fe5c5060d603d2464139201745744c6880c4ca2cbc15badbe9",
+   "out": "8133642d6d93104fa82ef86532248aadd9329f70d3429d2c75556082c376cc09"
+  },
+  "Zr__TENDL-2017_2000exp_5min": {
+   "deck": "67fb11f90ee7b1f892c2e6d2756f1b5f20debcf64cc490e62339bc27dcfbf897",
+   "files": "0cf9871e607a6a6b244285fa67676a9242ff8d054c6cf0eba444e59339c6bfe3",
+   "fluxes": "ccfe40519346d7525c7211dfefacb13f38fe933ed302c13ce060a75e03aebf50",
+   "out": "e46f777b5258aa8a39167d44a2207a2760bd13f4299eaed31528af78269e471c"
+  }
+ },
+ "protocol": "ACTINV-P132",
+ "protocol_file": {
+  "path": "/home/connoravila/Documents/actinv/protocols/ACTINV-P132_PROTOCOL.md",
+  "sha256": "7f5884e4fed5277d9d81a8beab22e1d15c83c316d6e498048a31cab93431d70a"
+ },
+ "runs": {
+  "g4_hand_written": {
+   "binary": "/home/connoravila/Documents/actinv/target/cand3-actinv",
+   "cwd": "/home/connoravila/Documents/actinv",
+   "exit_code": 0,
+   "output": {
+    "path": "/home/connoravila/Documents/actinv/target/p132-work/g4_hand_written.json",
+    "sha256": "183a0b27fc523bd247cbc277302eeb3440df024dbe60b7cb2e157377e398fda1"
+   },
+   "spec": {
+    "path": "/home/connoravila/Documents/actinv/examples/fns_fe_5min.json",
+    "sha256": "ed55ed00f6c00fc4a2351e18332e98e7feb33d9b7ca65e7ba861e0e5e8feef39"
+   },
+   "wall_s": 0.9604219240136445
+  },
+  "g4_imported_as_written": {
+   "binary": "/home/connoravila/Documents/actinv/target/cand3-actinv",
+   "cwd": "/home/connoravila/Documents/actinv",
+   "exit_code": 0,
+   "output": {
+    "path": "/home/connoravila/Documents/actinv/target/p132-work/g4_imported_as_written.json",
+    "sha256": "d59015b0af47765f57013b359b5a2024d8729206ed7c66b00ee85e3d1f1af34a"
+   },
+   "spec": {
+    "path": "/home/connoravila/Documents/actinv/target/p132-work/g4_imported_as_written.spec.json",
+    "sha256": "e8f6754b5e22425cb84380911155a2ca414da0ce401487c62da8f233bc603836"
+   },
+   "wall_s": 58.52054279111326
+  },
+  "g4_imported_without_blocks": {
+   "binary": "/home/connoravila/Documents/actinv/target/cand3-actinv",
+   "cwd": "/home/connoravila/Documents/actinv",
+   "exit_code": 0,
+   "output": {
+    "path": "/home/connoravila/Documents/actinv/target/p132-work/g4_imported_without_blocks.json",
+    "sha256": "010dc287eefd06fa58084f487298d3faa36664fe89e35d0090a90ad13fca1c5a"
+   },
+   "spec": {
+    "path": "/home/connoravila/Documents/actinv/target/p132-work/g4_imported_without_blocks.spec.json",
+    "sha256": "0a1627d71d1a08c6b5150b8a4c5241e510594d8f6b9e376f29f687c1e55c60cd"
+   },
+   "wall_s": 1.097999086836353
+  },
+  "g4_imported_without_blocks_hand_options": {
+   "binary": "/home/connoravila/Documents/actinv/target/cand3-actinv",
+   "cwd": "/home/connoravila/Documents/actinv",
+   "exit_code": 0,
+   "output": {
+    "path": "/home/connoravila/Documents/actinv/target/p132-work/g4_imported_without_blocks_hand_options.json",
+    "sha256": "48303f43a8df80914d0396729df66563e13415d829eb0665d9afeaf9fa313522"
+   },
+   "spec": {
+    "path": "/home/connoravila/Documents/actinv/target/p132-work/g4_imported_without_blocks_hand_options.spec.json",
+    "sha256": "2a010c793694bf45312fca88bab1f9c75f6e5889b12ecf4f0791e23a3b98cce5"
+   },
+   "wall_s": 0.9264009189791977
+  },
+  "report_Ag__TENDL-2017_2000exp_5min": {
+   "binary": "/home/connoravila/Documents/actinv/target/cand3-actinv",
+   "cwd": "/home/connoravila/Documents/actinv",
+   "exit_code": 0,
+   "output": {
+    "path": "/home/connoravila/Documents/actinv/target/p132-work/report_Ag__TENDL-2017_2000exp_5min.json",
+    "sha256": "3f4f0200561b0831c002bb9901a9626a5f59877e921fbdc6322e52875a552188"
+   },
+   "spec": {
+    "path": "/home/connoravila/Documents/actinv/target/p132-work/report_Ag__TENDL-2017_2000exp_5min.spec.json",
+    "sha256": "f9f01abb1a01db5886e376f047727fa7602f8cbc2dbe9c0dfc60ac7c666078b3"
+   },
+   "wall_s": 1.0515915588475764
+  },
+  "report_Cd__TENDL-2017_2000exp_5min": {
+   "binary": "/home/connoravila/Documents/actinv/target/cand3-actinv",
+   "cwd": "/home/connoravila/Documents/actinv",
+   "exit_code": 0,
+   "output": {
+    "path": "/home/connoravila/Documents/actinv/target/p132-work/report_Cd__TENDL-2017_2000exp_5min.json",
+    "sha256": "fb7c93bc44ec397c8182ab814dfe50ca2aaa3ebfb1e98bf8d1a88f8d5dda479e"
+   },
+   "spec": {
+    "path": "/home/connoravila/Documents/actinv/target/p132-work/report_Cd__TENDL-2017_2000exp_5min.spec.json",
+    "sha256": "278d2cf5f63855c34152f7dfea956c3c1e4d66fb984fcf371f409db059a8fba9"
+   },
+   "wall_s": 2.67680293507874
+  },
+  "report_Er__TENDL-2017_2000exp_5min": {
+   "binary": "/home/connoravila/Documents/actinv/target/cand3-actinv",
+   "cwd": "/home/connoravila/Documents/actinv",
+   "exit_code": 0,
+   "output": {
+    "path": "/home/connoravila/Documents/actinv/target/p132-work/report_Er__TENDL-2017_2000exp_5min.json",
+    "sha256": "4f612d3fc553fe357955bb41781b1c43b4345782ee636c8adbffc274f494837a"
+   },
+   "spec": {
+    "path": "/home/connoravila/Documents/actinv/target/p132-work/report_Er__TENDL-2017_2000exp_5min.spec.json",
+    "sha256": "84ee69311dbdc6efad14a39da955e7f5c7e9fe978942084cde98a760509c274d"
+   },
+   "wall_s": 2.0519045018590987
+  },
+  "report_Hg__TENDL-2017_2000exp_5min": {
+   "binary": "/home/connoravila/Documents/actinv/target/cand3-actinv",
+   "cwd": "/home/connoravila/Documents/actinv",
+   "exit_code": 0,
+   "output": {
+    "path": "/home/connoravila/Documents/actinv/target/p132-work/report_Hg__TENDL-2017_2000exp_5min.json",
+    "sha256": "1ba87eb06f14bc0e3972f1540a2e1f20c55d7514710eae86ec87c1d0b8e97b50"
+   },
+   "spec": {
+    "path": "/home/connoravila/Documents/actinv/target/p132-work/report_Hg__TENDL-2017_2000exp_5min.spec.json",
+    "sha256": "3cc67334b232198031c9265ac7c9103bfe2730ef027ec1675dbcdd4e8cfd9e47"
+   },
+   "wall_s": 2.5324236769229174
+  },
+  "report_Lu__TENDL-2017_2000exp_5min": {
+   "binary": "/home/connoravila/Documents/actinv/target/cand3-actinv",
+   "cwd": "/home/connoravila/Documents/actinv",
+   "exit_code": 0,
+   "output": {
+    "path": "/home/connoravila/Documents/actinv/target/p132-work/report_Lu__TENDL-2017_2000exp_5min.json",
+    "sha256": "073eb225173c76f05c9b7898d7af7debb977c7af83bbaa82b4a1f1a3c1bc024e"
+   },
+   "spec": {
+    "path": "/home/connoravila/Documents/actinv/target/p132-work/report_Lu__TENDL-2017_2000exp_5min.spec.json",
+    "sha256": "ed138e6c979a2a6029439ea8eb5eae685fe23c104690ea5cb813aa438164393a"
+   },
+   "wall_s": 1.2099235500209033
+  },
+  "report_NiCr__TENDL-2017_1996exp_5min": {
+   "binary": "/home/connoravila/Documents/actinv/target/cand3-actinv",
+   "cwd": "/home/connoravila/Documents/actinv",
+   "exit_code": 0,
+   "output": {
+    "path": "/home/connoravila/Documents/actinv/target/p132-work/report_NiCr__TENDL-2017_1996exp_5min.json",
+    "sha256": "dc6cf0bfee3187aa48a067d0e98dc8833a37b02a86cf633cbbb8c3f9b7891997"
+   },
+   "spec": {
+    "path": "/home/connoravila/Documents/actinv/target/p132-work/report_NiCr__TENDL-2017_1996exp_5min.spec.json",
+    "sha256": "91466cebdec0db3c6053ed2865db4e98358294b4ff9488cb26206750ab75cf97"
+   },
+   "wall_s": 2.373933995142579
+  },
+  "report_Re__TENDL-2017_1996exp_5min": {
+   "binary": "/home/connoravila/Documents/actinv/target/cand3-actinv",
+   "cwd": "/home/connoravila/Documents/actinv",
+   "exit_code": 0,
+   "output": {
+    "path": "/home/connoravila/Documents/actinv/target/p132-work/report_Re__TENDL-2017_1996exp_5min.json",
+    "sha256": "c8780ae7ea8be31e0c7ca571bb46e4762358189d5b0563f4adb2495c764b66da"
+   },
+   "spec": {
+    "path": "/home/connoravila/Documents/actinv/target/p132-work/report_Re__TENDL-2017_1996exp_5min.spec.json",
+    "sha256": "0813074f33dbd4f836e4f9c576a4756fca85b527c8bc8c57365d15c0a2908d6c"
+   },
+   "wall_s": 1.047669264022261
+  },
+  "report_Se__TENDL-2017_2000exp_5min": {
+   "binary": "/home/connoravila/Documents/actinv/target/cand3-actinv",
+   "cwd": "/home/connoravila/Documents/actinv",
+   "exit_code": 0,
+   "output": {
+    "path": "/home/connoravila/Documents/actinv/target/p132-work/report_Se__TENDL-2017_2000exp_5min.json",
+    "sha256": "7d96751b59b8466662b1f87fe60ca3987210adeab1f80d4aed7cf3cb30b53c80"
+   },
+   "spec": {
+    "path": "/home/connoravila/Documents/actinv/target/p132-work/report_Se__TENDL-2017_2000exp_5min.spec.json",
+    "sha256": "fd9c591bb16c8d4ae409d6ae3f791e6bce7051b28d4841bd9fb8ec29107da68c"
+   },
+   "wall_s": 1.5837132472079247
+  },
+  "report_Ti__TENDL-2017_1996exp_5min": {
+   "binary": "/home/connoravila/Documents/actinv/target/cand3-actinv",
+   "cwd": "/home/connoravila/Documents/actinv",
+   "exit_code": 0,
+   "output": {
+    "path": "/home/connoravila/Documents/actinv/target/p132-work/report_Ti__TENDL-2017_1996exp_5min.json",
+    "sha256": "c823aa841aa85d322d1522ed73883ff09356748dd6cd9c602447c8af9cca27b4"
+   },
+   "spec": {
+    "path": "/home/connoravila/Documents/actinv/target/p132-work/report_Ti__TENDL-2017_1996exp_5min.spec.json",
+    "sha256": "f995caba89ee6f2d06349c7e741681016c7695f07a961623e26cbec1886b65c7"
+   },
+   "wall_s": 1.0382823089603335
+  },
+  "report_Zr__TENDL-2017_1996exp_5min": {
+   "binary": "/home/connoravila/Documents/actinv/target/cand3-actinv",
+   "cwd": "/home/connoravila/Documents/actinv",
+   "exit_code": 0,
+   "output": {
+    "path": "/home/connoravila/Documents/actinv/target/p132-work/report_Zr__TENDL-2017_1996exp_5min.json",
+    "sha256": "fc2227b93dbd56231721bb38f1e21084d5f7f5b664a83dba10921abd41b8ad4c"
+   },
+   "spec": {
+    "path": "/home/connoravila/Documents/actinv/target/p132-work/report_Zr__TENDL-2017_1996exp_5min.spec.json",
+    "sha256": "a90a5095df5bcbcb267a0018337f9b746ce75c89e36a53e4eda6c6088f0f7c23"
+   },
+   "wall_s": 1.4263178419787437
+  }
+ },
+ "verdict": "P132-PASS"
+}

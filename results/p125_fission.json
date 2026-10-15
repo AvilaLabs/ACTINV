@@ -1,0 +1,871 @@
+{
+ "candidate_binary": {
+  "path": "/home/connoravila/Documents/actinv/target/cand3-actinv",
+  "sha256": "3227fbe181ea00f87712ff60763c73fd450261e8ca0848df5c8598701d11b298"
+ },
+ "checker": {
+  "path": "/home/connoravila/Documents/actinv/controls/check_p125.py",
+  "sha256": "bf6d0d2fd10571154417be256bafd35b1e3ea81067103f9108764846d8981fc1"
+ },
+ "decay_parse": {
+  "from_fallback": 50,
+  "primary_duplicates": [],
+  "primary_keys": 3821
+ },
+ "external_gates": {
+  "G1": "fmt, clippy -D warnings, workspace tests: run by the coordinator",
+  "G6": "CI on the pushed commit and the committed baselines: run by the coordinator"
+ },
+ "fns_spec": {
+  "path": "/home/connoravila/Documents/actinv/examples/fns_fe_5min.json",
+  "sha256": "ed55ed00f6c00fc4a2351e18332e98e7feb33d9b7ca65e7ba861e0e5e8feef39"
+ },
+ "gates": {
+  "G0": {
+   "first_commit_listing_the_hash": "2fb0af2d729faa7fa10b69669d6c493e92c34f74",
+   "in_protocol_hash_txt": true,
+   "pass": true,
+   "protocol": "protocols/ACTINV-P125_PROTOCOL.md",
+   "sha256": "1562d7782da9308a1888cb65776537e049331e6079b29f444d572ef26d04699f"
+  },
+  "G2": {
+   "cases": {
+    "fns_fe_5min": {
+     "canonical_equal_without_timing": true,
+     "pass": true,
+     "steps": 21,
+     "timing_keys_dropped": [
+      "/ms"
+     ]
+    },
+    "u235_yields": {
+     "canonical_equal_without_timing": true,
+     "pass": true,
+     "steps": 3,
+     "timing_keys_dropped": [
+      "/ms"
+     ]
+    }
+   },
+   "pass": true,
+   "timing_keys_policy": {
+    "anywhere": [
+     "wall_time_s",
+     "cells_per_s"
+    ],
+    "top_level": [
+     "ms"
+    ]
+   }
+  },
+  "G3": {
+   "parts": [
+    "G3a",
+    "G3b"
+   ],
+   "pass": true
+  },
+  "G3a": {
+   "bound_note": "terms neglected: U-236 (n,2n) back to U-235 and trapezoid error of the second-generation fissioners; both scale with the optical depth squared or are below 1e-6 of the total at the sized optical depth 0.003",
+   "multiplier": 20000.0,
+   "other_fissionable_nuclides": {
+    "Am241": {
+     "rate_per_atom_per_s": 2.7860274194643447e-14
+    },
+    "Np231": {
+     "rate_per_atom_per_s": 2.7359872238223852e-14
+    },
+    "Np232": {
+     "rate_per_atom_per_s": 2.6409460756372244e-14
+    },
+    "Np233": {
+     "rate_per_atom_per_s": 3.007525873581625e-14
+    },
+    "Np234": {
+     "rate_per_atom_per_s": 2.92560009055385e-14
+    },
+    "Np235": {
+     "rate_per_atom_per_s": 2.962289058978771e-14
+    },
+    "Np236": {
+     "rate_per_atom_per_s": 3.082313211202892e-14
+    },
+    "Np236m1": {
+     "rate_per_atom_per_s": 3.0042214615495856e-14
+    },
+    "Np237": {
+     "rate_per_atom_per_s": 2.3355286711299613e-14
+    },
+    "Np238": {
+     "rate_per_atom_per_s": 2.8323069657027817e-14
+    },
+    "Np239": {
+     "rate_per_atom_per_s": 2.579018786628102e-14
+    },
+    "Np240": {
+     "rate_per_atom_per_s": 2.4677204441193594e-14
+    },
+    "Np240m1": {
+     "rate_per_atom_per_s": 2.6181692536328395e-14
+    },
+    "Np241": {
+     "rate_per_atom_per_s": 2.314599543542714e-14
+    },
+    "Pa225": {
+     "rate_per_atom_per_s": 2.8411276213570752e-14
+    },
+    "Pa226": {
+     "rate_per_atom_per_s": 2.711459613225488e-14
+    },
+    "Pa227": {
+     "rate_per_atom_per_s": 2.7413646113922735e-14
+    },
+    "Pa228": {
+     "rate_per_atom_per_s": 2.4922919438581515e-14
+    },
+    "Pa229": {
+     "rate_per_atom_per_s": 2.588384745584885e-14
+    },
+    "Pa230": {
+     "rate_per_atom_per_s": 2.603537810815642e-14
+    },
+    "Pa231": {
+     "rate_per_atom_per_s": 1.548741352818405e-14
+    },
+    "Pa232": {
+     "rate_per_atom_per_s": 1.6880195930291365e-14
+    },
+    "Pa233": {
+     "rate_per_atom_per_s": 5.2931744125329606e-15
+    },
+    "Pa234": {
+     "rate_per_atom_per_s": 1.1980607765233107e-14
+    },
+    "Pa234m1": {
+     "rate_per_atom_per_s": 1.3475621309870336e-14
+    },
+    "Pa236": {
+     "rate_per_atom_per_s": 1.0110824788003886e-14
+    },
+    "Pa237": {
+     "rate_per_atom_per_s": 6.109890778187571e-15
+    },
+    "Pa238": {
+     "rate_per_atom_per_s": 2.367580763895128e-15
+    },
+    "Pa239": {
+     "rate_per_atom_per_s": 3.8549683611772304e-15
+    },
+    "Pa240": {
+     "rate_per_atom_per_s": 3.407317421635226e-15
+    },
+    "Pu232": {
+     "rate_per_atom_per_s": 2.6997680934118297e-14
+    },
+    "Pu233": {
+     "rate_per_atom_per_s": 2.5337992685642802e-14
+    },
+    "Pu234": {
+     "rate_per_atom_per_s": 2.716699651362042e-14
+    },
+    "Pu235": {
+     "rate_per_atom_per_s": 3.101323549322726e-14
+    },
+    "Pu236": {
+     "rate_per_atom_per_s": 3.2946606531184804e-14
+    },
+    "Pu237": {
+     "rate_per_atom_per_s": 3.2765332016122843e-14
+    },
+    "Pu238": {
+     "rate_per_atom_per_s": 2.970298294765762e-14
+    },
+    "Pu239": {
+     "rate_per_atom_per_s": 2.719927655540978e-14
+    },
+    "Pu240": {
+     "rate_per_atom_per_s": 2.499122414439541e-14
+    },
+    "Pu241": {
+     "rate_per_atom_per_s": 2.5862465244580257e-14
+    },
+    "Pu242": {
+     "rate_per_atom_per_s": 2.2029870509812773e-14
+    },
+    "Th224": {
+     "rate_per_atom_per_s": 2.8695778289451226e-14
+    },
+    "Th225": {
+     "rate_per_atom_per_s": 2.978719386503379e-14
+    },
+    "Th226": {
+     "rate_per_atom_per_s": 2.191897364466555e-14
+    },
+    "Th227": {
+     "rate_per_atom_per_s": 1.871454475303192e-14
+    },
+    "Th228": {
+     "rate_per_atom_per_s": 5.813155476837473e-15
+    },
+    "Th229": {
+     "rate_per_atom_per_s": 1.729006983646083e-14
+    },
+    "Th230": {
+     "rate_per_atom_per_s": 7.463638922332946e-15
+    },
+    "Th231": {
+     "rate_per_atom_per_s": 1.94597485822977e-14
+    },
+    "Th232": {
+     "rate_per_atom_per_s": 4.159750585401673e-15
+    },
+    "Th233": {
+     "rate_per_atom_per_s": 9.92426343941454e-15
+    },
+    "Th234": {
+     "rate_per_atom_per_s": 4.085094428933682e-15
+    },
+    "Th235": {
+     "rate_per_atom_per_s": 8.275970714081573e-15
+    },
+    "Th236": {
+     "rate_per_atom_per_s": 5.906354200253185e-15
+    },
+    "Th237": {
+     "rate_per_atom_per_s": 3.2614324018343357e-15
+    },
+    "Th238": {
+     "rate_per_atom_per_s": 1.973898120636197e-15
+    },
+    "U227": {
+     "rate_per_atom_per_s": 2.8062592866887822e-14
+    },
+    "U228": {
+     "rate_per_atom_per_s": 2.6187259789634056e-14
+    },
+    "U229": {
+     "rate_per_atom_per_s": 2.653478724843787e-14
+    },
+    "U230": {
+     "rate_per_atom_per_s": 2.2883960190769068e-14
+    },
+    "U231": {
+     "rate_per_atom_per_s": 1.1415657983079852e-15
+    },
+    "U232": {
+     "rate_per_atom_per_s": 2.8711125526335807e-14
+    },
+    "U233": {
+     "rate_per_atom_per_s": 2.7238144676904398e-14
+    },
+    "U234": {
+     "rate_per_atom_per_s": 2.2357786453977763e-14
+    },
+    "U236": {
+     "rate_per_atom_per_s": 1.7785115006051675e-14
+    },
+    "U237": {
+     "rate_per_atom_per_s": 1.7077218342106076e-14
+    },
+    "U238": {
+     "rate_per_atom_per_s": 1.2691367525381195e-14
+    },
+    "U239": {
+     "rate_per_atom_per_s": 1.2929950681239041e-14
+    },
+    "U240": {
+     "rate_per_atom_per_s": 7.608191130954482e-15
+    },
+    "U241": {
+     "rate_per_atom_per_s": 1.6551112639026544e-14
+    }
+   },
+   "pass": true,
+   "plan": {
+    "fission_rate_per_s": 2.332939936581388e-14,
+    "lambda_per_s": 3.120850692744529e-17,
+    "loss_rate_per_s": 3.1186236648550735e-14,
+    "n_rows": 48,
+    "removal_rate_per_s": 3.121744515547818e-14,
+    "state_fission_rate_per_s": [
+     2.332939936581388e-14,
+     2.535191026627837e-14,
+     7.063286438097583e-15
+    ],
+    "unmapped_rate_per_s": 0.0
+   },
+   "plan_products": {
+    "90229_0": 1.0429626123233291e-33,
+    "90230_0": 3.7948045995814343e-23,
+    "90231_0": 1.8613303041359144e-19,
+    "90232_0": 4.248824493391595e-18,
+    "90233_0": 2.391908415079907e-29,
+    "90234_0": 3.921729926267334e-34,
+    "91232_0": 1.9939385665299775e-26,
+    "91233_0": 2.4746392036517685e-19,
+    "91234_0": 1.7320457598240393e-18,
+    "91234_1": 7.813178778805309e-20,
+    "91235_0": 2.801149335910177e-17,
+    "92232_0": 0.0,
+    "92233_0": 9.828058005754615e-16,
+    "92234_0": 4.451113299841026e-15,
+    "92235_1": 1.9899000465204358e-15,
+    "92236_0": 3.9851400541002373e-16
+   },
+   "steps": [
+    {
+     "arithmetic_relative_errors": {
+      "burnup_MWd_per_kg_hm": 0.0,
+      "burnup_percent": 0.0,
+      "energy_per_fission_echo": 0.0,
+      "fissions_sum": 0.0,
+      "initial_heavy_metal_atoms": 0.0
+     },
+     "burnup_MWd_per_kg_hm": 0.38299032735454686,
+     "burnup_percent": 0.040305036196630104,
+     "dt_s": 864000.0,
+     "induced_expected": 4.0305035894343597e+17,
+     "induced_network_part": 4.030304458991596e+17,
+     "induced_other_part": 19913044276336.406,
+     "induced_run": 4.03050361966301e+17,
+     "isomer_atoms_model": 90784749116889.9,
+     "isomer_atoms_run": 90788329548017.67,
+     "multiplier": 20000.0,
+     "other_share": 4.940584677442503e-05,
+     "pa235_atoms_model": 1184608510667.5315,
+     "pa235_atoms_run": 1184607296118.3105,
+     "relative_error": 7.49996856949637e-09,
+     "spontaneous_fissions_run": 1.9940316826352393,
+     "step": 1,
+     "u235_atoms_model": 9.99496006393167e+20,
+     "u235_atoms_run": 9.994960075352251e+20,
+     "u235_model_relative_error": 1.1426340034967123e-09
+    },
+    {
+     "arithmetic_relative_errors": {
+      "burnup_MWd_per_kg_hm": 0.0,
+      "burnup_percent": 0.0,
+      "energy_per_fission_echo": 0.0,
+      "fissions_sum": 0.0,
+      "initial_heavy_metal_atoms": 0.0
+     },
+     "burnup_MWd_per_kg_hm": 0.38299032735454686,
+     "burnup_percent": 0.040305036196630104,
+     "dt_s": 259200.0,
+     "induced_expected": 4.0305035894343597e+17,
+     "induced_network_part": 4.030304458991596e+17,
+     "induced_other_part": 19913044276336.406,
+     "induced_run": 4.03050361966301e+17,
+     "isomer_atoms_model": 0.037364945758956054,
+     "isomer_atoms_run": null,
+     "multiplier": 0.0,
+     "other_share": 4.940584677442503e-05,
+     "pa235_atoms_model": 7.306176863924684e-42,
+     "pa235_atoms_run": null,
+     "relative_error": 7.49996856949637e-09,
+     "spontaneous_fissions_run": 2.6080361206422955,
+     "step": 2,
+     "u235_atoms_model": 9.994960983544427e+20,
+     "u235_atoms_run": 9.99496099500076e+20,
+     "u235_model_relative_error": 1.1462109517927643e-09
+    },
+    {
+     "arithmetic_relative_errors": {
+      "burnup_MWd_per_kg_hm": 0.0,
+      "burnup_percent": 0.0,
+      "energy_per_fission_echo": 0.0,
+      "fissions_sum": 0.0,
+      "initial_heavy_metal_atoms": 0.0
+     },
+     "burnup_MWd_per_kg_hm": 1.913400769919834,
+     "burnup_percent": 0.2013619712617091,
+     "dt_s": 1728000.0,
+     "induced_expected": 2.013619500576676e+18,
+     "induced_network_part": 2.0131223871117978e+18,
+     "induced_other_part": 497113464878392.94,
+     "induced_run": 2.013619712617091e+18,
+     "isomer_atoms_model": 181204026472987.56,
+     "isomer_atoms_run": 181240593705713.88,
+     "multiplier": 40000.0,
+     "other_share": 0.0002468755714453628,
+     "pa235_atoms_model": 2364447921351.8413,
+     "pa235_atoms_run": 2364444058155.608,
+     "relative_error": 1.05303119539354e-07,
+     "spontaneous_fissions_run": 7.123879549721781,
+     "step": 3,
+     "u235_atoms_model": 9.974828463642467e+20,
+     "u235_atoms_run": 9.974828757002146e+20,
+     "u235_model_relative_error": 2.9409997373271623e-08
+    }
+   ],
+   "tolerance": 1e-06,
+   "tolerances": {
+    "arithmetic": 1e-12,
+    "induced": 1e-06,
+    "model_vs_inventory": 1e-07
+   },
+   "worst_arithmetic_relative_error": 0.0,
+   "worst_induced_relative_error": 1.05303119539354e-07,
+   "worst_model_relative_error": 2.9409997373271623e-08,
+   "xs_source": "streamed sig.npy rows (not `actinv inspect xs`)"
+  },
+  "G3b": {
+   "chain_states": 51,
+   "closed_form_first_step_ok": true,
+   "closed_form_note": "N0 (1 - exp(-lambda t)) BR_SF omits the daughters' fissions (Cm-248, ...); it is gated on the first step, where they are below 1e-9, and tabulated afterwards",
+   "head_br_sf_effective": 0.030920000000000003,
+   "head_lambda_per_s": 8.304339378638385e-09,
+   "induced_is_zero": true,
+   "pass": true,
+   "solver": "mpmath 60 digits, exact matrix exponential with counter rows",
+   "steps": [
+    {
+     "cf252_atoms_chain": 9.999850523008365e+20,
+     "cf252_atoms_run": 9.999850523008363e+20,
+     "closed_form_Cf252_only": 462182858136897.06,
+     "closed_form_relative_error": 2.2781134814137415e-10,
+     "daughter_share_of_chain": 2.2783930297975985e-10,
+     "fissions_sum_error": 0.0,
+     "induced_run": 0.0,
+     "relative_error": 2.799216753560402e-14,
+     "sf_expected_chain": 462182858242200.5,
+     "sf_run": 462182858242187.56,
+     "step": 1,
+     "t_s": 1800.0,
+     "t_s_run": 1800.0
+    },
+    {
+     "cf252_atoms_chain": 9.992678254375056e+20,
+     "cf252_atoms_run": 9.992678254375055e+20,
+     "closed_form_Cf252_only": 2.263883747232729e+16,
+     "closed_form_relative_error": 7.396390746860487e-09,
+     "daughter_share_of_chain": 7.3964180336005825e-09,
+     "fissions_sum_error": 0.0,
+     "induced_run": 0.0,
+     "relative_error": 2.7386565064221224e-14,
+     "sf_expected_chain": 2.2638837639773596e+16,
+     "sf_run": 2.2638837639772976e+16,
+     "step": 2,
+     "t_s": 88200.0,
+     "t_s_run": 88200.0
+    },
+    {
+     "cf252_atoms_chain": 9.779885756034368e+20,
+     "cf252_atoms_run": 9.77988575603437e+20,
+     "closed_form_Cf252_only": 6.80593242341735e+17,
+     "closed_form_relative_error": 2.2331675962730886e-07,
+     "daughter_share_of_chain": 2.2331672722142315e-07,
+     "fissions_sum_error": 0.0,
+     "induced_run": 0.0,
+     "relative_error": 1.749061936124914e-14,
+     "sf_expected_chain": 6.805933943296244e+17,
+     "sf_run": 6.805933943296125e+17,
+     "step": 3,
+     "t_s": 2680200.0,
+     "t_s_run": 2680200.0
+    },
+    {
+     "cf252_atoms_chain": 7.526590541541668e+20,
+     "cf252_atoms_run": 7.526590541541671e+20,
+     "closed_form_Cf252_only": 7.64778204555316e+18,
+     "closed_form_relative_error": 2.9737798406103795e-06,
+     "daughter_share_of_chain": 2.9737709995592e-06,
+     "fissions_sum_error": 0.0,
+     "induced_run": 0.0,
+     "relative_error": 2.276208726779338e-15,
+     "sf_expected_chain": 7.64780478837325e+18,
+     "sf_run": 7.647804788373233e+18,
+     "step": 4,
+     "t_s": 34216200.0,
+     "t_s_run": 34216200.0
+    }
+   ],
+   "tolerance": 1e-09,
+   "worst_relative_error": 2.799216753560402e-14
+  },
+  "G4": {
+   "cf252_initial_neutrons_per_s_per_g": 967407306008.2607,
+   "cf252_nubar": {
+    "basis": "LNU=1 polynomial C0",
+    "mt": 452,
+    "value": 3.7676
+   },
+   "coverage_lists_consistent": true,
+   "ledger_spontaneous_fission": {
+    "nubar_covered": [
+     "Th230",
+     "Th232",
+     "Pa231",
+     "U234",
+     "U235",
+     "U236",
+     "U238",
+     "Pu238",
+     "Pu239",
+     "Pu240",
+     "Pu242",
+     "Pu244",
+     "Am243",
+     "Cm246",
+     "Cm248",
+     "Cf250",
+     "Cf252"
+    ],
+    "nubar_uncovered": [
+     "Cm244m1",
+     "Cm250",
+     "Cf237",
+     "Cf256",
+     "Es255",
+     "Fm255",
+     "Fm258",
+     "No258",
+     "Lr262",
+     "Rf262",
+     "Rf263"
+    ],
+    "routed_to_products": [],
+    "uncovered_to_leakage": [
+     "Th230",
+     "Th232",
+     "Pa231",
+     "U234",
+     "U235",
+     "U236",
+     "U238",
+     "Pu238",
+     "Pu239",
+     "Pu240",
+     "Pu242",
+     "Pu244",
+     "Am243",
+     "Cm244m1",
+     "Cm246",
+     "Cm248",
+     "Cm250",
+     "Cf237",
+     "Cf250",
+     "Cf252",
+     "Cf256",
+     "Es255",
+     "Fm255",
+     "Fm258",
+     "No258",
+     "Lr262",
+     "Rf262",
+     "Rf263"
+    ]
+   },
+   "nubar_endf_sha256": "6f04cf009086c179021f243a58dadc2d5bb078de5ba39c4fe46ccad77d228ddb",
+   "nubar_source": "own MF=1/MT=452 parse of the ENDF/B-VIII.0 decay file",
+   "pass": true,
+   "steps": [
+    {
+     "by_nuclide_expected": {
+      "Cf250": 9.029472215034177e-10,
+      "Cf252": 967392845494.8817,
+      "Cm246": 4.629462242646852e-15,
+      "Cm248": 242.4735984168612,
+      "Pu238": 6.701739143628316e-44,
+      "Pu240": 1.1737459870879938e-28,
+      "Pu242": 1.944202057390716e-27,
+      "Pu244": 5.844008533011356e-13,
+      "Th230": 3.4816438291528678e-68,
+      "Th232": 2.4993589207019147e-60,
+      "U234": 2.6998821517127137e-56,
+      "U236": 4.859438128712174e-43,
+      "U238": 3.2732663687670805e-43
+     },
+     "cf252_expected": 967392845494.8817,
+     "cf252_run": 967392845494.8817,
+     "covered_states_missing_from_ledger_covered": [],
+     "neutrons_expected": 967392845737.3553,
+     "neutrons_run": 967392845737.3553,
+     "populated_sf_states_missing_from_ledger_uncovered": [],
+     "relative_error_by_nuclide_worst": 0.0,
+     "relative_error_cf252": 0.0,
+     "relative_error_total": 0.0,
+     "run_only_nuclides": [],
+     "step": 1,
+     "uncovered_expected": 19.582820896241703,
+     "uncovered_relative_error": 0.0,
+     "uncovered_run": 19.582820896241703,
+     "uncovered_states_expected": [
+      "Cf237",
+      "Cm250",
+      "No258",
+      "Rf262"
+     ]
+    },
+    {
+     "by_nuclide_expected": {
+      "Cf250": 6.898893362265313e-07,
+      "Cf252": 966698994987.2301,
+      "Cm246": 4.54879286080256e-11,
+      "Cm248": 11876.944967271977,
+      "Pu238": 2.307393150867476e-41,
+      "Pu240": 1.385478871801016e-21,
+      "Pu242": 1.1795180302596755e-21,
+      "Pu244": 1.4028109237529641e-09,
+      "Th230": 1.6621967881439737e-61,
+      "Th232": 9.455929326773868e-50,
+      "U234": 3.086906583716663e-51,
+      "U236": 3.288883174375443e-34,
+      "U238": 1.1622604306677406e-35
+     },
+     "cf252_expected": 966698994987.2301,
+     "cf252_run": 966698994987.2301,
+     "covered_states_missing_from_ledger_covered": [],
+     "neutrons_expected": 966699006864.175,
+     "neutrons_run": 966699006864.175,
+     "populated_sf_states_missing_from_ledger_uncovered": [],
+     "relative_error_by_nuclide_worst": 0.0,
+     "relative_error_cf252": 0.0,
+     "relative_error_total": 0.0,
+     "run_only_nuclides": [],
+     "step": 2,
+     "uncovered_expected": 19.582816418773827,
+     "uncovered_relative_error": 0.0,
+     "uncovered_run": 19.582816418773827,
+     "uncovered_states_expected": [
+      "Cf256",
+      "Cm250",
+      "No258",
+      "Rf262",
+      "Rf263"
+     ]
+    },
+    {
+     "by_nuclide_expected": {
+      "Am243": 2.2754724507079924e-53,
+      "Cf250": 2.560730269008694e-05,
+      "Cf252": 946113293231.3772,
+      "Cm246": 2.5672411444580435e-08,
+      "Cm248": 357057.5490249546,
+      "Pa231": 5.545353706479236e-79,
+      "Pu238": 8.241234753612019e-41,
+      "Pu239": 3.473047041689976e-61,
+      "Pu240": 1.5197544104255274e-16,
+      "Pu242": 2.3493071162452478e-17,
+      "Pu244": 1.2861341610148118e-06,
+      "Th230": 1.9889745379373886e-51,
+      "Th232": 1.3052631172544407e-41,
+      "U234": 1.5009697368577274e-42,
+      "U235": 7.485874938388667e-71,
+      "U236": 1.299565998311534e-27,
+      "U238": 7.767689179158785e-30
+     },
+     "cf252_expected": 946113293231.3772,
+     "cf252_run": 946113293231.3772,
+     "covered_states_missing_from_ledger_covered": [],
+     "neutrons_expected": 946113650288.9263,
+     "neutrons_run": 946113650288.9263,
+     "populated_sf_states_missing_from_ledger_uncovered": [],
+     "relative_error_by_nuclide_worst": 0.0,
+     "relative_error_cf252": 0.0,
+     "relative_error_total": 0.0,
+     "run_only_nuclides": [],
+     "step": 3,
+     "uncovered_expected": 19.582682095213485,
+     "uncovered_relative_error": 0.0,
+     "uncovered_run": 19.582682095213485,
+     "uncovered_states_expected": [
+      "Cf256",
+      "Cm244m1",
+      "Cm250",
+      "Es255",
+      "Fm255",
+      "Lr262",
+      "No258",
+      "Rf262"
+     ]
+    },
+    {
+     "by_nuclide_expected": {
+      "Am243": 2.790994502120334e-49,
+      "Cf250": 0.0003202357899978605,
+      "Cf252": 728127867922.0084,
+      "Cm246": 5.638139426426717e-07,
+      "Cm248": 4012228.283400804,
+      "Pa231": 1.0486033016407413e-70,
+      "Pu238": 8.176719629865569e-41,
+      "Pu239": 1.7406118946940165e-55,
+      "Pu240": 3.197117750913354e-13,
+      "Pu242": 8.304679945436312e-15,
+      "Pu244": 0.000192512444103383,
+      "Th230": 1.2630064496798175e-44,
+      "Th232": 4.788233363597631e-36,
+      "U234": 6.169377933726189e-37,
+      "U235": 7.2638724699192e-64,
+      "U236": 3.618981341167517e-23,
+      "U238": 4.1525141598594065e-26
+     },
+     "cf252_expected": 728127867922.0084,
+     "cf252_run": 728127867922.0084,
+     "covered_states_missing_from_ledger_covered": [],
+     "neutrons_expected": 728131880150.2924,
+     "neutrons_run": 728131880150.2924,
+     "populated_sf_states_missing_from_ledger_uncovered": [],
+     "relative_error_by_nuclide_worst": 0.0,
+     "relative_error_cf252": 0.0,
+     "relative_error_total": 0.0,
+     "run_only_nuclides": [],
+     "step": 4,
+     "uncovered_expected": 19.581047899025872,
+     "uncovered_relative_error": 0.0,
+     "uncovered_run": 19.581047899025872,
+     "uncovered_states_expected": [
+      "Cf237",
+      "Cm244m1",
+      "Cm250",
+      "Es255",
+      "Fm255",
+      "Fm258",
+      "No258",
+      "Rf262"
+     ]
+    }
+   ],
+   "tolerance": 1e-12,
+   "worst_relative_error": 0.0,
+   "worst_uncovered_relative_error": 0.0
+  },
+  "G5": {
+   "blocking": false,
+   "found": [],
+   "pass": null,
+   "reason": "no ENDF/B spontaneous-fission yield (sfy) sublibrary is installed under ~/nuclear-data; routing is covered by the synthetic MT=454 unit tests",
+   "searched": "~/nuclear-data, patterns *sfy*, *spontaneous*yield*",
+   "status": "data_limited"
+  }
+ },
+ "inputs": {
+  "decay": {
+   "fallback": {
+    "path": "/home/connoravila/Documents/actinv/actinv-data/v1.1.0/decay/jeff-3-3_decay.dat",
+    "sha256": "850b8b7f85f8d88b6ad826c4cd341aaaffabd525c8ecf3c588a0ad437bf5d123"
+   },
+   "primary": {
+    "path": "/home/connoravila/Documents/actinv/actinv-data/v1.1.0/decay/endf-b-viii-0_decay.dat",
+    "sha256": "6f04cf009086c179021f243a58dadc2d5bb078de5ba39c4fe46ccad77d228ddb"
+   }
+  },
+  "library": {
+   "path": "/home/connoravila/Documents/actinv/actinv-data/v1.1.0/activation/tendl-2025-neutron-709g.npz",
+   "sha256": "ec4c72bf598dc8ad3d533d9cfafdcf493e2d1f949a3e4db6251495659b68cc44"
+  },
+  "library_index": {
+   "path": "/home/connoravila/Documents/actinv/actinv-data/v1.1.0/activation/tendl-2025-neutron-709g_index.json",
+   "sha256": "8bd19b4001c246758e739cd0067a0087e1ce5c2157438dae97bd52e1d3beb3fb"
+  },
+  "u235_yields": {
+   "path": "/home/connoravila/nuclear-data/endfb-viii.0-nfpy/nfy-092_U_235.endf",
+   "sha256": "9e1320293a544fc03f33f804a15a9e3ccc3be026552ee6dbc03b8d3e24615e41"
+  }
+ },
+ "protocol": "ACTINV-P125",
+ "protocol_file": {
+  "path": "/home/connoravila/Documents/actinv/protocols/ACTINV-P125_PROTOCOL.md",
+  "sha256": "1562d7782da9308a1888cb65776537e049331e6079b29f444d572ef26d04699f"
+ },
+ "reference_binary": {
+  "path": "/home/connoravila/Documents/actinv/target/ref-build/release/actinv",
+  "sha256": "3d34d7ca5887be03e19b81f8ae06d784ed53ec1310a69764ed70b8672bc42b5f"
+ },
+ "runs": {
+  "g2_fns_candidate": {
+   "binary": "/home/connoravila/Documents/actinv/target/cand3-actinv",
+   "cwd": "/home/connoravila/Documents/actinv",
+   "exit_code": 0,
+   "output": {
+    "path": "/home/connoravila/Documents/actinv/target/p125-work/g2_fns_candidate.json",
+    "sha256": "131ccde96b1d95ccf2de1576027870ef71020a9633b4618bd411f89aeb3f6ab5"
+   },
+   "spec": {
+    "path": "/home/connoravila/Documents/actinv/examples/fns_fe_5min.json",
+    "sha256": "ed55ed00f6c00fc4a2351e18332e98e7feb33d9b7ca65e7ba861e0e5e8feef39"
+   }
+  },
+  "g2_fns_reference": {
+   "binary": "/home/connoravila/Documents/actinv/target/ref-build/release/actinv",
+   "cwd": "/home/connoravila/Documents/actinv",
+   "exit_code": 0,
+   "output": {
+    "path": "/home/connoravila/Documents/actinv/target/p125-work/g2_fns_reference.json",
+    "sha256": "9b4aed31b88365d559669066f74642a5320d57942fadbb19afb74388275dea5a"
+   },
+   "spec": {
+    "path": "/home/connoravila/Documents/actinv/examples/fns_fe_5min.json",
+    "sha256": "ed55ed00f6c00fc4a2351e18332e98e7feb33d9b7ca65e7ba861e0e5e8feef39"
+   }
+  },
+  "g2_u235_candidate": {
+   "binary": "/home/connoravila/Documents/actinv/target/cand3-actinv",
+   "cwd": "/home/connoravila/Documents/actinv/target/p125-work",
+   "exit_code": 0,
+   "output": {
+    "path": "/home/connoravila/Documents/actinv/target/p125-work/g2_u235_candidate.json",
+    "sha256": "2baf895d586a293bad65cc547a429b64d8ce10769948e07d6e51bcfb5d2ff779"
+   },
+   "spec": {
+    "path": "/home/connoravila/Documents/actinv/target/p125-work/u235_plain.spec.json",
+    "sha256": "4c923751606797918ab4723fa10b8d9edb241c74934df291e0bfc3c0580782dd"
+   }
+  },
+  "g2_u235_reference": {
+   "binary": "/home/connoravila/Documents/actinv/target/ref-build/release/actinv",
+   "cwd": "/home/connoravila/Documents/actinv/target/p125-work",
+   "exit_code": 0,
+   "output": {
+    "path": "/home/connoravila/Documents/actinv/target/p125-work/g2_u235_reference.json",
+    "sha256": "f16a51a768e543341d1842ce37aee738198439ec0a243c228a64019734c60fdc"
+   },
+   "spec": {
+    "path": "/home/connoravila/Documents/actinv/target/p125-work/u235_plain.spec.json",
+    "sha256": "4c923751606797918ab4723fa10b8d9edb241c74934df291e0bfc3c0580782dd"
+   }
+  },
+  "g3a_u235_candidate": {
+   "binary": "/home/connoravila/Documents/actinv/target/cand3-actinv",
+   "cwd": "/home/connoravila/Documents/actinv/target/p125-work",
+   "exit_code": 0,
+   "output": {
+    "path": "/home/connoravila/Documents/actinv/target/p125-work/g3a_u235_candidate.json",
+    "sha256": "40ceee901eb8d99c4c5719ec747f61dd521a85e448145be4d50b504ddf9bdeaa"
+   },
+   "spec": {
+    "path": "/home/connoravila/Documents/actinv/target/p125-work/u235_count.spec.json",
+    "sha256": "e3170da0f67026d637464b8836f60d8f37721801a30d4d47ba6ee6a10bc198d5"
+   }
+  },
+  "g3b_cf252_candidate": {
+   "binary": "/home/connoravila/Documents/actinv/target/cand3-actinv",
+   "cwd": "/home/connoravila/Documents/actinv/target/p125-work",
+   "exit_code": 0,
+   "output": {
+    "path": "/home/connoravila/Documents/actinv/target/p125-work/g3b_cf252_candidate.json",
+    "sha256": "a81df847541e81ac51cdaabd079db5c42d13c640cfc3f0c42a6f8cc32610038f"
+   },
+   "spec": {
+    "path": "/home/connoravila/Documents/actinv/target/p125-work/cf252_decay_only.spec.json",
+    "sha256": "198df5605a01755f82898a03419bca127970a6a4e4f180763102a92400f0b175"
+   }
+  }
+ },
+ "u235_sizing": {
+  "multiplier": 20000.0,
+  "removal_rate_per_s": 3.121744515547818e-14,
+  "schedule_days_weights": [
+   [
+    10.0,
+    1.0
+   ],
+   [
+    20.0,
+    2.0
+   ]
+  ],
+  "target_optical_depth": 0.003
+ },
+ "verdict": "PASS"
+}

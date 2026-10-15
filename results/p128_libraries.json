@@ -1,0 +1,853 @@
+{
+ "candidate_binary": {
+  "path": "/home/connoravila/Documents/actinv/target/cand3-actinv",
+  "sha256": "3227fbe181ea00f87712ff60763c73fd450261e8ca0848df5c8598701d11b298"
+ },
+ "checker": {
+  "path": "/home/connoravila/Documents/actinv/controls/check_p128.py",
+  "sha256": "b61eb24240eceec9c427aee34bbe78b6b6cc9de2dc1178107047f39d76224484"
+ },
+ "data_inputs": {
+  "decay_fallback": {
+   "path": "/home/connoravila/Documents/actinv/actinv-data/v1.1.0/decay/jeff-3-3_decay.dat",
+   "sha256": "850b8b7f85f8d88b6ad826c4cd341aaaffabd525c8ecf3c588a0ad437bf5d123"
+  },
+  "decay_primary": {
+   "path": "/home/connoravila/Documents/actinv/actinv-data/v1.1.0/decay/endf-b-viii-0_decay.dat",
+   "sha256": "6f04cf009086c179021f243a58dadc2d5bb078de5ba39c4fe46ccad77d228ddb"
+  },
+  "library": {
+   "path": "/home/connoravila/Documents/actinv/actinv-data/v1.1.0/activation/tendl-2025-neutron-709g.npz",
+   "sha256": "ec4c72bf598dc8ad3d533d9cfafdcf493e2d1f949a3e4db6251495659b68cc44"
+  },
+  "library_index": {
+   "path": "/home/connoravila/Documents/actinv/actinv-data/v1.1.0/activation/tendl-2025-neutron-709g_index.json",
+   "sha256": "8bd19b4001c246758e739cd0067a0087e1ce5c2157438dae97bd52e1d3beb3fb"
+  }
+ },
+ "gate_spec": {
+  "matches_protocol_sha256": true,
+  "path": "/home/connoravila/Documents/actinv/examples/fns_fe_5min.json",
+  "sha256": "ed55ed00f6c00fc4a2351e18332e98e7feb33d9b7ca65e7ba861e0e5e8feef39"
+ },
+ "gates": {
+  "G2": {
+   "byte_identical_after_ms_mask": true,
+   "bytes_candidate": 10823474,
+   "bytes_reference": 10823481,
+   "ms_masked_candidate": 1,
+   "ms_masked_reference": 1,
+   "no_pathway_routes_key_in_either": true,
+   "no_step_libraries_key_in_candidate": true,
+   "pass": true,
+   "spec_sha256_matches_protocol": true
+  },
+  "G3": {
+   "a_run1_vs_run2": {
+    "blocks_removed_run1": [],
+    "blocks_removed_run2": [],
+    "equal_after_removing_step_libraries": true,
+    "ledger_step_spectra": [
+     0,
+     0
+    ],
+    "ms_masked": [
+     1,
+     1
+    ],
+    "pass": true,
+    "raw_byte_identical_after_ms_mask": true,
+    "steps": [
+     22,
+     22
+    ]
+   },
+   "b_run3_ledger": {
+    "certificate_entries": 1,
+    "certificate_index_sha256": "9bd0910e65d57b1d80252b199b81784f0d1f2e5add88c137b453498f8f0be605",
+    "certificate_index_sha_matches": true,
+    "certificate_library_sha256": "a9f90234e42c538676de904c734510c4a62126017459e638ed338d052072e92c",
+    "certificate_sha_matches": true,
+    "ledger_block_present": true,
+    "ledger_libraries": 1,
+    "ledger_library_sha256": "a9f90234e42c538676de904c734510c4a62126017459e638ed338d052072e92c",
+    "ledger_sha_matches": true,
+    "ledger_steps_expected": [
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15,
+     16,
+     17,
+     18,
+     19,
+     20,
+     21,
+     22
+    ],
+    "ledger_steps_match": true,
+    "ledger_steps_served": [
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15,
+     16,
+     17,
+     18,
+     19,
+     20,
+     21,
+     22
+    ],
+    "pass": true
+   },
+   "c_run3_recompute": {
+    "decay": {
+     "chain_keys": 3871,
+     "fallback_keys": 3852,
+     "from_fallback": 0,
+     "from_primary": 50,
+     "needed_without_record": [],
+     "primary_keys": 3821
+    },
+    "dt_s": 150.0,
+    "fission_rows_among_nodes": [],
+    "harness_step1_base_library": {
+     "label": "step 1 from zero, base library (informational)",
+     "n_compared": 26,
+     "n_failing": 0,
+     "pass": true,
+     "reported_total_atoms_per_g": 10753353771.09265,
+     "worst_nuclide": "Mn52m1",
+     "worst_relative": 1.3335629456169303e-10,
+     "worst_rows": [
+      {
+       "nuclide": "Mn52m1",
+       "recomputed": 217.00330876481544,
+       "relative": 1.3335629456169303e-10,
+       "reported": 217.0033087937542
+      },
+      {
+       "nuclide": "Cr52",
+       "recomputed": 19858473.684257038,
+       "relative": 6.081131534070088e-11,
+       "reported": 19858473.685464658
+      },
+      {
+       "nuclide": "V51",
+       "recomputed": 1866.1421420988772,
+       "relative": 5.008784814878134e-12,
+       "reported": 1866.1421421082243
+      },
+      {
+       "nuclide": "Cr53",
+       "recomputed": 700352638.0150086,
+       "relative": 3.396605144117101e-12,
+       "reported": 700352638.0173874
+      },
+      {
+       "nuclide": "Co59",
+       "recomputed": 1.0184000269173947,
+       "relative": 1.1396574226890514e-12,
+       "reported": 1.018400026916234
+      },
+      {
+       "nuclide": "Fe59",
+       "recomputed": 75310.35133731672,
+       "relative": 1.0704718399739722e-13,
+       "reported": 75310.35133732478
+      },
+      {
+       "nuclide": "Fe56",
+       "recomputed": 341109363.69415146,
+       "relative": 5.5916044407467044e-14,
+       "reported": 341109363.6941324
+      },
+      {
+       "nuclide": "Fe58",
+       "recomputed": 1729359.6958336986,
+       "relative": 3.217753019648609e-14,
+       "reported": 1729359.695833643
+      },
+      {
+       "nuclide": "Fe57",
+       "recomputed": 77392643.4307555,
+       "relative": 3.157652106789086e-14,
+       "reported": 77392643.43075305
+      },
+      {
+       "nuclide": "Mn53",
+       "recomputed": 597577120.8808254,
+       "relative": 2.852674208917945e-14,
+       "reported": 597577120.8808084
+      },
+      {
+       "nuclide": "Ti50",
+       "recomputed": 0.22067684243113558,
+       "relative": 2.829931969624462e-14,
+       "reported": 0.22067684243112934
+      },
+      {
+       "nuclide": "Mn54",
+       "recomputed": 281934265.86961204,
+       "relative": 2.8117964769820483e-14,
+       "reported": 281934265.8696041
+      },
+      {
+       "nuclide": "Fe55",
+       "recomputed": 5906892394.806668,
+       "relative": 2.793104152080651e-14,
+       "reported": 5906892394.806503
+      },
+      {
+       "nuclide": "Mn55",
+       "recomputed": 1155574211.098146,
+       "relative": 2.7853259331673724e-14,
+       "reported": 1155574211.0981138
+      },
+      {
+       "nuclide": "V50",
+       "recomputed": 8303.322800857613,
+       "relative": 2.7821591402716946e-14,
+       "reported": 8303.322800857382
+      },
+      {
+       "nuclide": "Cr51",
+       "recomputed": 85914004.44767106,
+       "relative": 2.7577397248022276e-14,
+       "reported": 85914004.44766869
+      },
+      {
+       "nuclide": "Cr50",
+       "recomputed": 1538993.128121249,
+       "relative": 2.753435110963391e-14,
+       "reported": 1538993.1281212065
+      },
+      {
+       "nuclide": "Mn56",
+       "recomputed": 1546650859.0239325,
+       "relative": 2.1581212643740082e-14,
+       "reported": 1546650859.023899
+      },
+      {
+       "nuclide": "Cr54",
+       "recomputed": 15007152.817494707,
+       "relative": 1.9610510878213426e-14,
+       "reported": 15007152.817494413
+      },
+      {
+       "nuclide": "Cr55",
+       "recomputed": 783603.421275407,
+       "relative": 9.062408915832323e-15,
+       "reported": 783603.4212754141
+      }
+     ]
+    },
+    "libraries_distinguishable": true,
+    "mode": "trace",
+    "multiplier": 1.0,
+    "network_a": {
+     "label": "nuclides above 1e-12, kept set A",
+     "n_compared": 26,
+     "n_failing": 0,
+     "pass": true,
+     "reported_total_atoms_per_g": 21578695983.08683,
+     "scipy_vs_mpmath_worst_relative": 5.962194514182207e-16,
+     "worst_nuclide": "Mn52m1",
+     "worst_relative": 2.1097509492062284e-10,
+     "worst_rows": [
+      {
+       "nuclide": "Mn52m1",
+       "recomputed": 400.01960156185294,
+       "relative": 2.1097509492062284e-10,
+       "reported": 400.0196016462471
+      },
+      {
+       "nuclide": "Cr52",
+       "recomputed": 39577594.51427441,
+       "relative": 7.534391636271551e-11,
+       "reported": 39577594.51725634
+      },
+      {
+       "nuclide": "V51",
+       "recomputed": 7464.460399943795,
+       "relative": 1.1157802821829388e-11,
+       "reported": 7464.460400027082
+      },
+      {
+       "nuclide": "Cr53",
+       "recomputed": 1378264675.382202,
+       "relative": 3.3195746903076134e-12,
+       "reported": 1378264675.3867772
+      },
+      {
+       "nuclide": "Co59",
+       "recomputed": 4.073594032583335,
+       "relative": 2.68834837917259e-13,
+       "reported": 4.07359403258224
+      },
+      {
+       "nuclide": "Fe59",
+       "recomputed": 150620.93235147497,
+       "relative": 9.757896297144492e-14,
+       "reported": 150620.93235148967
+      },
+      {
+       "nuclide": "Mn52",
+       "recomputed": 895.8360316048534,
+       "relative": 5.368117675518206e-14,
+       "reported": 895.8360316049015
+      },
+      {
+       "nuclide": "Fe56",
+       "recomputed": 701447771.4846175,
+       "relative": 2.7361546216127184e-14,
+       "reported": 701447771.4845983
+      },
+      {
+       "nuclide": "V50",
+       "recomputed": 17394.751407828764,
+       "relative": 1.5058247627081113e-14,
+       "reported": 17394.751407828502
+      },
+      {
+       "nuclide": "Fe57",
+       "recomputed": 163934306.48796958,
+       "relative": 1.4179955349436423e-14,
+       "reported": 163934306.48796725
+      },
+      {
+       "nuclide": "Mn54",
+       "recomputed": 563878360.7344073,
+       "relative": 1.4164442113898243e-14,
+       "reported": 563878360.7343993
+      },
+      {
+       "nuclide": "Fe58",
+       "recomputed": 3774974.5100064175,
+       "relative": 1.4062449060879097e-14,
+       "reported": 3774974.5100063644
+      },
+      {
+       "nuclide": "Cr50",
+       "recomputed": 3124093.225741467,
+       "relative": 1.4011157108328188e-14,
+       "reported": 3124093.225741423
+      },
+      {
+       "nuclide": "Mn53",
+       "recomputed": 1193278792.6776824,
+       "relative": 1.3986086604002303e-14,
+       "reported": 1193278792.6776657
+      },
+      {
+       "nuclide": "Fe55",
+       "recomputed": 11868128103.003492,
+       "relative": 1.3660505884498608e-14,
+       "reported": 11868128103.00333
+      },
+      {
+       "nuclide": "Mn55",
+       "recomputed": 2352737398.695044,
+       "relative": 1.3579114106542244e-14,
+       "reported": 2352737398.695012
+      },
+      {
+       "nuclide": "Cr55",
+       "recomputed": 1287412.2539538865,
+       "relative": 1.3563874524582134e-14,
+       "reported": 1287412.253953904
+      },
+      {
+       "nuclide": "Cr51",
+       "recomputed": 171824273.1348335,
+       "relative": 1.3355382112117453e-14,
+       "reported": 171824273.13483122
+      },
+      {
+       "nuclide": "Ti50",
+       "recomputed": 0.4116895663393706,
+       "relative": 1.2270203510283561e-14,
+       "reported": 0.41168956633936554
+      },
+      {
+       "nuclide": "Mn56",
+       "recomputed": 3075803958.230345,
+       "relative": 1.0851992366061925e-14,
+       "reported": 3075803958.2303114
+      }
+     ]
+    },
+    "network_a_nodes": 26,
+    "network_b": {
+     "label": "nuclides above 1e-12, kept set B",
+     "n_compared": 26,
+     "n_failing": 0,
+     "pass": true,
+     "reported_total_atoms_per_g": 21578695983.08683,
+     "worst_nuclide": "Co59",
+     "worst_relative": 3.229070518697803e-13,
+     "worst_rows": [
+      {
+       "nuclide": "Co59",
+       "recomputed": 4.073594032583555,
+       "relative": 3.229070518697803e-13,
+       "reported": 4.07359403258224
+      },
+      {
+       "nuclide": "V51",
+       "recomputed": 7464.460400029488,
+       "relative": 3.222756042995274e-13,
+       "reported": 7464.460400027082
+      },
+      {
+       "nuclide": "Fe56",
+       "recomputed": 701447771.4846175,
+       "relative": 2.7361546216127184e-14,
+       "reported": 701447771.4845983
+      },
+      {
+       "nuclide": "Fe58",
+       "recomputed": 3774974.510006423,
+       "relative": 1.5542706856761083e-14,
+       "reported": 3774974.5100063644
+      },
+      {
+       "nuclide": "V50",
+       "recomputed": 17394.751407828764,
+       "relative": 1.5058247627081113e-14,
+       "reported": 17394.751407828502
+      },
+      {
+       "nuclide": "Fe57",
+       "recomputed": 163934306.48796967,
+       "relative": 1.472533824749166e-14,
+       "reported": 163934306.48796725
+      },
+      {
+       "nuclide": "Mn52",
+       "recomputed": 895.8360316049146,
+       "relative": 1.4721079204730563e-14,
+       "reported": 895.8360316049015
+      },
+      {
+       "nuclide": "Fe59",
+       "recomputed": 150620.93235149182,
+       "relative": 1.429869952452836e-14,
+       "reported": 150620.93235148967
+      },
+      {
+       "nuclide": "Mn54",
+       "recomputed": 563878360.7344073,
+       "relative": 1.4164442113898243e-14,
+       "reported": 563878360.7343993
+      },
+      {
+       "nuclide": "Cr50",
+       "recomputed": 3124093.225741467,
+       "relative": 1.4011157108328188e-14,
+       "reported": 3124093.225741423
+      },
+      {
+       "nuclide": "Mn53",
+       "recomputed": 1193278792.6776824,
+       "relative": 1.3986086604002303e-14,
+       "reported": 1193278792.6776657
+      },
+      {
+       "nuclide": "Cr52",
+       "recomputed": 39577594.51725689,
+       "relative": 1.3930684037200972e-14,
+       "reported": 39577594.51725634
+      },
+      {
+       "nuclide": "Cr53",
+       "recomputed": 1378264675.386796,
+       "relative": 1.3665784290479306e-14,
+       "reported": 1378264675.3867772
+      },
+      {
+       "nuclide": "Fe55",
+       "recomputed": 11868128103.003492,
+       "relative": 1.3660505884498608e-14,
+       "reported": 11868128103.00333
+      },
+      {
+       "nuclide": "Mn55",
+       "recomputed": 2352737398.695044,
+       "relative": 1.3579114106542244e-14,
+       "reported": 2352737398.695012
+      },
+      {
+       "nuclide": "Cr51",
+       "recomputed": 171824273.1348335,
+       "relative": 1.3355382112117453e-14,
+       "reported": 171824273.13483122
+      },
+      {
+       "nuclide": "Cr54",
+       "recomputed": 29180470.102510694,
+       "relative": 1.3277037336238956e-14,
+       "reported": 29180470.102510307
+      },
+      {
+       "nuclide": "Ti50",
+       "recomputed": 0.4116895663393707,
+       "relative": 1.2539878312707373e-14,
+       "reported": 0.41168956633936554
+      },
+      {
+       "nuclide": "Mn56",
+       "recomputed": 3075803958.230345,
+       "relative": 1.0851992366061925e-14,
+       "reported": 3075803958.2303114
+      },
+      {
+       "nuclide": "Mn52m1",
+       "recomputed": 400.01960164624757,
+       "relative": 1.1368126687167055e-15,
+       "reported": 400.0196016462471
+      }
+     ]
+    },
+    "network_b_nodes": 50,
+    "pass": true,
+    "second_library_rows": 164315,
+    "significance_share": 1e-12,
+    "status": "run",
+    "step1_inventory_equals_run1": true,
+    "step1_total_atoms_per_g": 10753353771.09265,
+    "step2_total_atoms_per_g": 21578695983.08683,
+    "step2_with_base_library_rates": {
+     "label": "base-library rates against the switched result",
+     "n_compared": 26,
+     "n_failing": 25,
+     "pass": false,
+     "reported_total_atoms_per_g": 21578695983.08683,
+     "worst_nuclide": "Cr56",
+     "worst_relative": 0.07263035640350106,
+     "worst_rows": [
+      {
+       "nuclide": "Cr56",
+       "recomputed": 0.7223590137145193,
+       "relative": 0.07263035640350106,
+       "reported": 0.6698938210971522
+      },
+      {
+       "nuclide": "Ti50",
+       "recomputed": 0.44139786448108004,
+       "relative": 0.06730503369480598,
+       "reported": 0.41168956633936554
+      },
+      {
+       "nuclide": "Mn52",
+       "recomputed": 841.4297185225228,
+       "relative": 0.06073244562948545,
+       "reported": 895.8360316049015
+      },
+      {
+       "nuclide": "Mn58",
+       "recomputed": 21550.255769726897,
+       "relative": 0.051882368526391116,
+       "reported": 22729.516944255618
+      },
+      {
+       "nuclide": "V50",
+       "recomputed": 16606.645710717356,
+       "relative": 0.04530709744759329,
+       "reported": 17394.751407828502
+      },
+      {
+       "nuclide": "Mn52m1",
+       "recomputed": 416.8971349992584,
+       "relative": 0.04048368754810782,
+       "reported": 400.0196016462471
+      },
+      {
+       "nuclide": "Mn58m1",
+       "recomputed": 410690.1519797572,
+       "relative": 0.04040116904729848,
+       "reported": 394097.7897235623
+      },
+      {
+       "nuclide": "Cr54",
+       "recomputed": 30015392.876175974,
+       "relative": 0.027816486597727237,
+       "reported": 29180470.102510307
+      },
+      {
+       "nuclide": "Cr55",
+       "recomputed": 1261012.2387345855,
+       "relative": 0.020506263738160523,
+       "reported": 1287412.253953904
+      },
+      {
+       "nuclide": "Mn55",
+       "recomputed": 2311461709.1088176,
+       "relative": 0.017543687454914778,
+       "reported": 2352737398.695012
+      },
+      {
+       "nuclide": "Cr53",
+       "recomputed": 1400705276.0320325,
+       "relative": 0.016020929619702622,
+       "reported": 1378264675.3867772
+      },
+      {
+       "nuclide": "Cr50",
+       "recomputed": 3077986.2562967604,
+       "relative": 0.014758512666894085,
+       "reported": 3124093.225741423
+      },
+      {
+       "nuclide": "Fe57",
+       "recomputed": 162154700.75912917,
+       "relative": 0.010855602875098683,
+       "reported": 163934306.48796725
+      },
+      {
+       "nuclide": "Mn57",
+       "recomputed": 13565753.816161886,
+       "relative": 0.006290298458231491,
+       "reported": 13480421.175847335
+      },
+      {
+       "nuclide": "Fe58",
+       "recomputed": 3751806.599001902,
+       "relative": 0.006137236408630272,
+       "reported": 3774974.5100063644
+      },
+      {
+       "nuclide": "Fe55",
+       "recomputed": 11813777697.29905,
+       "relative": 0.0045795263779236615,
+       "reported": 11868128103.00333
+      },
+      {
+       "nuclide": "Cr52",
+       "recomputed": 39716964.2729088,
+       "relative": 0.003509073722120361,
+       "reported": 39577594.51725634
+      },
+      {
+       "nuclide": "Mn53",
+       "recomputed": 1197019113.411638,
+       "relative": 0.0031246959150986148,
+       "reported": 1193278792.6776657
+      },
+      {
+       "nuclide": "Fe56",
+       "recomputed": 699443061.4216361,
+       "relative": 0.002857960555950233,
+       "reported": 701447771.4845983
+      },
+      {
+       "nuclide": "Mn56",
+       "recomputed": 3076077384.116391,
+       "relative": 8.88878438142187e-05,
+       "reported": 3075803958.2303114
+      }
+     ]
+    },
+    "step_index": 2,
+    "tolerance_relative": 1e-08
+   },
+   "complete": true,
+   "pass": true,
+   "split": "schedule[0] (300 s irradiation) duplicated into two 150 s halves; the override is on step 2"
+  },
+  "G4": {
+   "covered_by_unit_tests": [
+    {
+     "file": "crates/actinv-data/src/activation.rs",
+     "test": "projectile_triton_and_helion_identity"
+    },
+    {
+     "file": "crates/actinv-data/src/activation.rs",
+     "test": "triton_and_helion_metadata_parse_from_nsub"
+    },
+    {
+     "file": "crates/actinv-data/src/activation.rs",
+     "test": "triton_and_helion_sublibraries_do_not_cross_match"
+    },
+    {
+     "file": "crates/actinv-data/src/builder.rs",
+     "test": "triton_and_helion_residual_arithmetic_includes_projectile"
+    },
+    {
+     "file": "crates/actinv-data/src/builder.rs",
+     "test": "triton_and_helion_residuals_follow_the_ejectile_mt_numbering"
+    },
+    {
+     "file": "crates/actinv-data/src/builder.rs",
+     "test": "triton_and_helion_libraries_use_the_charged_particle_group_structure"
+    },
+    {
+     "file": "crates/actinv-core/src/spec.rs",
+     "test": "triton_and_helion_specs_use_the_charged_particle_grid"
+    },
+    {
+     "file": "crates/actinv-core/src/run.rs",
+     "test": "inventory_carries_across_the_switch_and_the_second_library_applies_only_after_it"
+    },
+    {
+     "file": "crates/actinv-core/src/run.rs",
+     "test": "ledger_and_certificate_name_the_switched_library"
+    },
+    {
+     "file": "crates/actinv-core/src/run.rs",
+     "test": "single_library_schedule_is_unchanged_and_reports_no_switch"
+    }
+   ],
+   "note": "the synthetic NSUB 10030/20030 tape builds and its residuals follow hand arithmetic in the tests above; their execution belongs to the G1 workspace test run, not to this checker",
+   "pass": null,
+   "reason": "no TENDL triton or helion sublibrary is installed under ~/nuclear-data or actinv-data, so no real-data triton/helion library can be built or run; the protocol reports this gate as data-limited and upgrades it when real data is installed",
+   "status": "data_limited",
+   "tests_not_found_in_source": [],
+   "triton_helion_paths_found": []
+  }
+ },
+ "isotope_table": {
+  "path": "/home/connoravila/Documents/actinv/crates/actinv-data/src/tables.rs",
+  "sha256": "888923a68d6a7841c75883615f7cc738fc4a06ca5ec4f1e13ce3ea9146146d2f"
+ },
+ "protocol": "ACTINV-P128",
+ "protocol_file": {
+  "path": "/home/connoravila/Documents/actinv/protocols/ACTINV-P128_PROTOCOL.md",
+  "sha256": "86225056539d1647592d95fc4407f3b9c3275505f773b87a8ca72fef06152ecb"
+ },
+ "reference_binary": {
+  "path": "/home/connoravila/Documents/actinv/target/ref-build/release/actinv",
+  "sha256": "3d34d7ca5887be03e19b81f8ae06d784ed53ec1310a69764ed70b8672bc42b5f"
+ },
+ "runs": {
+  "g2_candidate": {
+   "binary": "/home/connoravila/Documents/actinv/target/cand3-actinv",
+   "cwd": "/home/connoravila/Documents/actinv",
+   "exit_code": 0,
+   "output": {
+    "path": "/home/connoravila/Documents/actinv/target/p128-work/g2_candidate.json",
+    "sha256": "dd6be2a224ccf8cbd8d920fe635ac1f1323cd65181447eb8c66a4a58de36b6e8"
+   },
+   "spec": {
+    "path": "/home/connoravila/Documents/actinv/examples/fns_fe_5min.json",
+    "sha256": "ed55ed00f6c00fc4a2351e18332e98e7feb33d9b7ca65e7ba861e0e5e8feef39"
+   }
+  },
+  "g2_reference": {
+   "binary": "/home/connoravila/Documents/actinv/target/ref-build/release/actinv",
+   "cwd": "/home/connoravila/Documents/actinv",
+   "exit_code": 0,
+   "output": {
+    "path": "/home/connoravila/Documents/actinv/target/p128-work/g2_reference.json",
+    "sha256": "3f8eb1f37d029689bbf2d071deb7f318666d352ae526366074c836111b608af0"
+   },
+   "spec": {
+    "path": "/home/connoravila/Documents/actinv/examples/fns_fe_5min.json",
+    "sha256": "ed55ed00f6c00fc4a2351e18332e98e7feb33d9b7ca65e7ba861e0e5e8feef39"
+   }
+  },
+  "run1_two_halves": {
+   "binary": "/home/connoravila/Documents/actinv/target/cand3-actinv",
+   "cwd": "/home/connoravila/Documents/actinv/target/p128-work",
+   "exit_code": 0,
+   "output": {
+    "path": "/home/connoravila/Documents/actinv/target/p128-work/run1_two_halves.json",
+    "sha256": "b16e6c8fb77bf8324bc5a64bac624770251bcd0f4e8857d56ceec04f49062292"
+   },
+   "spec": {
+    "path": "/home/connoravila/Documents/actinv/target/p128-work/run1.spec.json",
+    "sha256": "717ae1f80634fd875c918bd247444d315d7ded8cde060c3e04f24229247c5166"
+   }
+  },
+  "run2_same_library_override": {
+   "binary": "/home/connoravila/Documents/actinv/target/cand3-actinv",
+   "cwd": "/home/connoravila/Documents/actinv/target/p128-work",
+   "exit_code": 0,
+   "output": {
+    "path": "/home/connoravila/Documents/actinv/target/p128-work/run2_same_library_override.json",
+    "sha256": "0e81a55e6dadc7ecd9a6d4c89d1ef92c6aa1d1c876b79fb92c1036a003691d22"
+   },
+   "spec": {
+    "path": "/home/connoravila/Documents/actinv/target/p128-work/run2.spec.json",
+    "sha256": "6bdd2a6895d0a693435d9b91b7bafdc1dd10e7bee25d5fac882fc4199d57bd2b"
+   }
+  },
+  "run3_second_library": {
+   "binary": "/home/connoravila/Documents/actinv/target/cand3-actinv",
+   "cwd": "/home/connoravila/Documents/actinv/target/p128-work",
+   "exit_code": 0,
+   "output": {
+    "path": "/home/connoravila/Documents/actinv/target/p128-work/run3_second_library.json",
+    "sha256": "452e40d751c285bad6cc9c1528ba7a0eff4b7b963380a0c109091ebfb6a83f75"
+   },
+   "spec": {
+    "path": "/home/connoravila/Documents/actinv/target/p128-work/run3.spec.json",
+    "sha256": "d75e48912af91ea97f270e9189647ac7579e4d61f71255b681416f6af17f076f"
+   }
+  }
+ },
+ "second_library_search": {
+  "attempts": [
+   {
+    "accepted": true,
+    "groups_field": 709,
+    "index": {
+     "path": "/home/connoravila/nuclear-data/tendl-2023/actinv_tendl2023_709g_index.json",
+     "sha256": "9bd0910e65d57b1d80252b199b81784f0d1f2e5add88c137b453498f8f0be605"
+    },
+    "label": "TENDL-2023, full 709-group neutron library",
+    "n_rows": 164315,
+    "n_targets": 2847,
+    "path": "/home/connoravila/nuclear-data/tendl-2023/actinv_tendl2023_709g.npz",
+    "projectile": null,
+    "reasons": [],
+    "sha256": "a9f90234e42c538676de904c734510c4a62126017459e638ed338d052072e92c",
+    "temperature_K": 293.6
+   }
+  ],
+  "chosen": {
+   "accepted": true,
+   "groups_field": 709,
+   "index": {
+    "path": "/home/connoravila/nuclear-data/tendl-2023/actinv_tendl2023_709g_index.json",
+    "sha256": "9bd0910e65d57b1d80252b199b81784f0d1f2e5add88c137b453498f8f0be605"
+   },
+   "label": "TENDL-2023, full 709-group neutron library",
+   "n_rows": 164315,
+   "n_targets": 2847,
+   "path": "/home/connoravila/nuclear-data/tendl-2023/actinv_tendl2023_709g.npz",
+   "projectile": null,
+   "reasons": [],
+   "sha256": "a9f90234e42c538676de904c734510c4a62126017459e638ed338d052072e92c",
+   "temperature_K": 293.6
+  },
+  "preference_order": [
+   "TENDL-2023, full 709-group neutron library",
+   "TENDL-2023, FNS target subset",
+   "TENDL-2023, Fe set",
+   "FENDL-3.2c, 24-target set"
+  ]
+ },
+ "verdict": "PASS"
+}
