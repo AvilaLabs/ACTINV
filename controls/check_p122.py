@@ -1109,6 +1109,9 @@ def main(argv=None):
     ap.add_argument("--timeout", type=int, default=3600, help="seconds allowed per run")
     ap.add_argument("--reuse", action="store_true", help="reuse existing outputs in the workdir")
     args = ap.parse_args(argv)
+    # Runs execute from the workdir as well as the repo root, so binaries must be absolute.
+    args.reference = str(Path(args.reference).resolve())
+    args.candidate = str(Path(args.candidate).resolve())
 
     workdir = Path(args.workdir)
     if not workdir.is_absolute():

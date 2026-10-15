@@ -2685,3 +2685,28 @@ On the P121 Rust tree, with the registered seal-test change and release binary S
 ## Entry 145 — P121-PASS (2026-10-07)
 
 G1–G3 remain the successful evidence recorded in entry 142; no Rust source or scientific criterion changed during the CI repair. G4 is green on `804a9c7ebdadaa59da676f26e7db1fadc36c97b5`: all four triggered workflows (`controls` 37719680402, `desktop builds` 37719680370, `fns-iron` 37719680387 and `fusion-isotope` 37719680467) completed success, and each `gh run watch --exit-status` exited zero; the handbook and browser workflows were path-filtered and not triggered (`results/p121/ci_runs.json`). Retain the original red controls run 37716441875 on `1b91e5f5c9078dde3950bac8f0fe4e3258e332af`: P120 missed the seal test's live-source report, fixed only after Amendment B registration `3ccaefe4212572ed2a25e011cad2ba96bcff1b64` by reading the sealed production map and pinned Git objects, with every assertion unchanged. All fourteen local CI history steps exited zero (entry 144), every later controls step now passes including unchanged run-output baselines, and the combined G1–G4 evidence records **P121-PASS**.
+
+## Entry 146 — P122 candidate: G1–G5 recorded (2026-10-15)
+
+FISPACT-II parity program, first phase. The opt-in step summary is implemented in `crates/actinv-core/src/summary.rs` and wired into `run.rs` and `mesh.rs`. It adds `Spec.summary`, `material.density_g_cm3` and `StepOut.summary`.
+
+G1, under the cgroup: `cargo fmt --check` clean; clippy `-D warnings` clean; `cargo test --workspace --all-targets --all-features` exit zero, including the ten new summary tests.
+
+The candidate is the release build of `cfff234`, SHA-256 `a394e3a9f5a0f295f0220d3b1136e3c86c4aa0dafcaff3943d21c6ba20f5628c`. That commit also carries the opt-in P123a/P127–P131 code, so G2 additionally covers their default-output identity. The reference is the release build of `2f3daa4`.
+
+The first checker invocation recorded no gate evidence for G3/G4: the variant runs were launched from the work directory with the relative candidate path, and every one failed with `FileNotFoundError`. That record is kept at `results/failures/p122_invocation1/p122_summary.json`. The checker was changed only to resolve the binary paths to absolute paths, then rerun.
+
+- **G2:** the gate spec is byte-identical apart from `ms`.
+- **G3:** an independent Python MT=457 parse made 32,158 comparisons with 0 mismatches. All 34 decay-mode partitions were exact.
+- **G4:**
+  - totals agree with the existing activity and heat fields to at most 9.1e-16 relative;
+  - the mode partition sums to total activity within 4.3e-16;
+  - trace and coupled agree within 1e-8 on all 168 totals.
+- **G5 (report-only, FNS Fe 5-minute case against FISPACT-II 4.0 on TENDL-2017):**
+  - total activity ratios run from 0.942 at shutdown to about 0.998 at later cooling steps;
+  - heat ratios run from 0.966 to about 0.995;
+  - top-10 dominant overlap is 8–9 of 10;
+  - Mn56 agrees to 0.9986 and Fe53 to 0.99999;
+  - Mn57 sits at 0.818, which is the library difference.
+
+Record: `results/p122_summary.json`. G6 (CI) is pending.

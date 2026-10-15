@@ -1,0 +1,112 @@
+{
+ "candidate_binary": {
+  "path": "target/p122-candidate-actinv",
+  "sha256": "a394e3a9f5a0f295f0220d3b1136e3c86c4aa0dafcaff3943d21c6ba20f5628c"
+ },
+ "checker": {
+  "path": "/home/connoravila/Documents/actinv/controls/check_p122.py",
+  "sha256": "741225e8a9b8bea23359187013c6f7b50d1704fd3d0b8a3a1802d3bfea9dbc0f"
+ },
+ "gate_spec": {
+  "matches_protocol_sha256": true,
+  "path": "/home/connoravila/Documents/actinv/examples/fns_fe_5min.json",
+  "sha256": "ed55ed00f6c00fc4a2351e18332e98e7feb33d9b7ca65e7ba861e0e5e8feef39"
+ },
+ "gates": {
+  "G2": {
+   "canonical_equal_without_timing": true,
+   "no_summary_key_in_either_result": true,
+   "pass": true,
+   "spec_sha256_matches_protocol": true,
+   "steps": 21,
+   "timing_keys_dropped_candidate": [
+    "/ms"
+   ],
+   "timing_keys_dropped_reference": [
+    "/ms"
+   ],
+   "timing_keys_policy": {
+    "anywhere": [
+     "wall_time_s",
+     "cells_per_s"
+    ],
+    "top_level": [
+     "ms"
+    ]
+   }
+  },
+  "G3": {
+   "error": "summary variant runs missing or without `summary` blocks; see runs",
+   "pass": false
+  },
+  "G4": {
+   "error": "summary variant runs missing or without `summary` blocks; see runs",
+   "pass": false
+  },
+  "G5": {
+   "report_only": true,
+   "skipped": "no summary run or FISPACT output not found"
+  }
+ },
+ "mode_selection": {
+  "declared": "auto",
+  "declared_resolved": "trace",
+  "other": "coupled"
+ },
+ "protocol": "ACTINV-P122",
+ "protocol_file": {
+  "path": "/home/connoravila/Documents/actinv/protocols/ACTINV-P122_PROTOCOL.md",
+  "sha256": "63d6da8c1cfbcd5e49ac71e8e44ad48b7abc7791d28ba680f52a5a681d8e64ec"
+ },
+ "reference_binary": {
+  "path": "target/ref-build/release/actinv",
+  "sha256": "3d34d7ca5887be03e19b81f8ae06d784ed53ec1310a69764ed70b8672bc42b5f"
+ },
+ "runs": {
+  "g2_candidate": {
+   "binary": "target/p122-candidate-actinv",
+   "cwd": "/home/connoravila/Documents/actinv",
+   "exit_code": 0,
+   "output": {
+    "path": "/home/connoravila/Documents/actinv/target/p122-work/g2_candidate.json",
+    "sha256": "d0388975f686dd7837b1eaa13b211035f186961d4a917520402326091764260a"
+   },
+   "spec": {
+    "path": "/home/connoravila/Documents/actinv/examples/fns_fe_5min.json",
+    "sha256": "ed55ed00f6c00fc4a2351e18332e98e7feb33d9b7ca65e7ba861e0e5e8feef39"
+   }
+  },
+  "g2_reference": {
+   "binary": "target/ref-build/release/actinv",
+   "cwd": "/home/connoravila/Documents/actinv",
+   "exit_code": 0,
+   "output": {
+    "path": "/home/connoravila/Documents/actinv/target/p122-work/g2_reference.json",
+    "sha256": "82df7d7a40699c0833037aaa905539c1897753c475f9417587c13c783ee16d5a"
+   },
+   "spec": {
+    "path": "/home/connoravila/Documents/actinv/examples/fns_fe_5min.json",
+    "sha256": "ed55ed00f6c00fc4a2351e18332e98e7feb33d9b7ca65e7ba861e0e5e8feef39"
+   }
+  },
+  "summary_declared": {
+   "binary": "target/p122-candidate-actinv",
+   "cwd": "/home/connoravila/Documents/actinv/target/p122-work",
+   "error": "FileNotFoundError: [Errno 2] No such file or directory: 'target/p122-candidate-actinv'",
+   "spec": {
+    "path": "/home/connoravila/Documents/actinv/target/p122-work/declared.spec.json",
+    "sha256": "915a9ff9793c8e121340a76d8290825080e0b3e85e259f1881d556ac10610961"
+   }
+  },
+  "summary_other": {
+   "binary": "target/p122-candidate-actinv",
+   "cwd": "/home/connoravila/Documents/actinv/target/p122-work",
+   "error": "FileNotFoundError: [Errno 2] No such file or directory: 'target/p122-candidate-actinv'",
+   "spec": {
+    "path": "/home/connoravila/Documents/actinv/target/p122-work/other.spec.json",
+    "sha256": "7c23e5aed856cb1acce9644e5f6eb2dcce67d717a628d2f31b76d8857ad5465f"
+   }
+  }
+ },
+ "verdict": "FAIL"
+}
