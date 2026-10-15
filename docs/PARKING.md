@@ -413,3 +413,10 @@ priority — each needs its own protocol before any code changes.
   `shielding.applied_factors` records the unresolved-segment factor, not the scale actually applied
   ((1−c)+c·f). It is exactly 0.0 in groups without unresolved overlap. Renaming or documenting it needs its own
   change, because the key is in sealed results.
+
+- 2026-10-15 — **Trace mode held radioactive initial material constant (found in P124 integration; fixed by
+  P133).** `auto` chose trace from reaction burn-up alone. A Co-60 initial inventory with zero flux kept a constant
+  activity, and its daughter grew linearly (base release: Co-60 4.17e11 Bq/g after one half-life, expected 2.08e11).
+  Any run starting from an activated inventory in `auto` or `trace` mode was affected. That includes cooling
+  continuations such as the FARIS restart method (2026-10-08 entry) unless they set `coupled`. Those results should
+  be rerun after P133.
