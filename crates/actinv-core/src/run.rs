@@ -4419,7 +4419,9 @@ impl PreparedRun {
         let want_routes = spec.pathways.is_some();
         let mut unit_origin_decay: Vec<(usize, usize, f64)> = Vec::new();
         let mut unit_origin_react: Vec<Vec<(usize, usize, f64)>> = Vec::new();
-        let mut sources: Vec<(usize, f64, (i32, i32))> = Vec::new(); // (product row fed, rate, bulk nuclide it came from)
+        // (product row fed, rate at unit multiplier, bulk nuclide it came from), one list per spectrum
+        // in rsubs order (0 = base, 1.. = step overrides)
+        let mut sources: Vec<Vec<(usize, f64, (i32, i32))>> = Vec::new();
         let mut d_src: Vec<(usize, usize, f64)> = Vec::new();
         // r_srcs[0] is the base spectrum; one entry per distinct step override follows
         let mut r_srcs: Vec<Vec<(usize, usize, f64)>> = Vec::new();
@@ -4468,12 +4470,13 @@ impl PreparedRun {
                 }
             }
             // The trace remap runs per spectrum: bulk feeds differ across
-            // spectra, so each override needs its own r_src. Bookkeeping
-            // (sources, dropped-production ledger) stays base-spectrum only.
+            // spectra, so each override needs its own r_src and pathway sources.
+            // The dropped-production ledger stays base-spectrum only.
             let reacts: Vec<&Vec<(usize, usize, f64)>> =
                 std::iter::once(&react).chain(react_extra.iter()).collect();
             for (si_react, react_i) in reacts.iter().enumerate() {
                 let mut r_i: Vec<(usize, usize, f64)> = Vec::new();
+                let mut sources_i: Vec<(usize, f64, (i32, i32))> = Vec::new();
                 let mut origin_i: Vec<(usize, usize, f64)> = Vec::new();
                 for (r, c, v) in react_i.iter() {
                     if bulk.contains_key(c) {
@@ -4500,14 +4503,13 @@ impl PreparedRun {
                         if want_routes {
                             origin_i.push((*r, *c, v * bulk[c]));
                         }
-                        if si_react == 0 {
-                            sources.push((*r, v * bulk[c], ch.keys[*c]));
-                        }
+                        sources_i.push((*r, v * bulk[c], ch.keys[*c]));
                     } else if !bulk.contains_key(r) || tracked_reservoir.contains(r) {
                         r_i.push((*r, *c, *v));
                     }
                 }
                 r_srcs.push(r_i);
+                sources.push(sources_i);
                 unit_origin_react.push(origin_i);
             }
             r_src = r_srcs[0].clone();
@@ -4695,7 +4697,6 @@ impl PreparedRun {
         };
         let dsub = sub(&d_src);
         let rsubs: Vec<Vec<(usize, usize, C64)>> = r_srcs.iter().map(sub).collect();
-        let rsub = rsubs[0].clone();
         // derivative_subs[0] is the base spectrum; one entry per distinct
         // step-spectrum override follows. A row's tangent direction differs
         // per spectrum because the collapse weights differ.
@@ -6173,30 +6174,33 @@ impl PreparedRun {
         let mut closure = 0.0f64;
         // Feed/removal boundary sources and sinks are not production chains: when a schedule
         // declares them, pathway attribution is suppressed rather than silently mis-attributed.
-        // A schedule that switches library is suppressed the same way: the source terms and the pathway solve
-        // below carry the base library's rates only. So is a power-driven schedule, whose flux amplitude varies
-        // within the step.
-        let pathways_suppressed = want_paths
-            && mode == "trace"
-            && (has_feed || has_removal || has_step_library || has_power);
-        if mode == "trace" && want_paths && !sources.is_empty() && !pathways_suppressed {
-            let mut agg: BTreeMap<(usize, (i32, i32)), f64> = BTreeMap::new();
-            for (row, rate, from) in &sources {
-                if pos[*row] != usize::MAX {
-                    *agg.entry((*row, *from)).or_insert(0.0) += rate;
+        // A schedule that switches library is suppressed the same way: the pathway solve below
+        // carries the base library's rates only.
+        let pathways_suppressed =
+            want_paths && mode == "trace" && (has_feed || has_removal || has_step_library);
+        if mode == "trace"
+            && want_paths
+            && sources.iter().any(|list| !list.is_empty())
+            && !pathways_suppressed
+        {
+            // one unit state per (row fed, bulk nuclide), carrying its rate under every spectrum
+            let mut agg: BTreeMap<(usize, (i32, i32)), Vec<f64>> = BTreeMap::new();
+            for (spectrum, list) in sources.iter().enumerate() {
+                for (row, rate, from) in list {
+                    if pos[*row] != usize::MAX {
+                        agg.entry((*row, *from))
+                            .or_insert_with(|| vec![0.0; sources.len()])[spectrum] += rate;
+                    }
                 }
             }
             let labels: Vec<_> = agg.into_iter().collect();
             let ns = labels.len();
             let mp = m + ns; // one extra unit state per source
-            let mut ptrip: Vec<(usize, usize, C64)> = dsub
+            let ptrip: Vec<(usize, usize, C64)> = dsub
                 .iter()
                 .filter(|(i, j, _)| *i != pos[ch.unit] && *j != pos[ch.unit])
                 .cloned()
                 .collect();
-            for (k, ((row, _), rate)) in labels.iter().enumerate() {
-                ptrip.push((pos[*row], m + k, C64::new(*rate, 0.0)));
-            }
             let mut cols: Vec<Vec<f64>> = (0..ns)
                 .map(|k| {
                     let mut v = vec![0.0f64; mp];
@@ -6204,32 +6208,44 @@ impl PreparedRun {
                     v
                 })
                 .collect();
-            let mut t_acc = Seconds::new(0.0).expect("zero seconds is valid");
-            for schedule_step in sched {
-                let dt = schedule_step.duration();
-                let fl = schedule_step.multiplier();
-                let mut trip = ptrip.clone();
-                if fl.get() > 0.0 {
-                    for (i, j, v) in rsub.iter() {
-                        if *i != pos[ch.unit] && *j != pos[ch.unit] {
-                            trip.push((*i, *j, v * C64::new(fl.get(), 0.0)));
+            for (si, schedule_step) in sched.iter().enumerate() {
+                // the same matrices the solve used: the step's spectrum, at each multiplier it
+                // applied (one per sub-interval for a power-driven step)
+                let spectrum = step_spectrum_id[si].map_or(0, |id| id + 1);
+                let intervals: Vec<(f64, f64)> = match steps[si].power.as_ref() {
+                    Some(power) => power
+                        .flux_multiplier_per_substep
+                        .iter()
+                        .map(|&multiplier| (power.substep_duration_s, multiplier))
+                        .collect(),
+                    None => vec![(
+                        schedule_step.duration().get(),
+                        schedule_step.multiplier().get(),
+                    )],
+                };
+                for (h, fl) in intervals {
+                    let mut trip = ptrip.clone();
+                    if fl > 0.0 {
+                        // feeds scale with the multiplier like the solve's unit column
+                        for (k, ((row, _), rates)) in labels.iter().enumerate() {
+                            trip.push((pos[*row], m + k, C64::new(rates[spectrum] * fl, 0.0)));
+                        }
+                        for (i, j, v) in rsubs[spectrum].iter() {
+                            if *i != pos[ch.unit] && *j != pos[ch.unit] {
+                                trip.push((*i, *j, v * C64::new(fl, 0.0)));
+                            }
                         }
                     }
-                } else {
-                    // during cooling the sources are off: drop the unit-state feeds
-                    trip.retain(|(_, j, _)| *j < m);
-                }
-                let a = Csc::from_triplets(mp, &trip);
-                cols = crate::cram::step_multi(&a, &cols, dt.get(), &c)?;
-                if fl.get() <= 0.0 {
-                    for col in cols.iter_mut() {
-                        for k in 0..ns {
-                            col[m + k] = 0.0;
+                    // during cooling the feeds are absent; each unit state stays exactly 1 so a
+                    // later irradiation sources again
+                    let a = Csc::from_triplets(mp, &trip);
+                    cols = crate::cram::step_multi(&a, &cols, h, &c)?;
+                    for (k, col) in cols.iter_mut().enumerate() {
+                        for (other, value) in col[m..].iter_mut().enumerate() {
+                            *value = if other == k { 1.0 } else { 0.0 };
                         }
                     }
                 }
-                t_acc += dt;
-                let _ = t_acc;
                 // report at every step, ranked, keeping chains above 1e-6 of the nuclide
                 let mut per: BTreeMap<String, Vec<Pathway>> = BTreeMap::new();
                 for (k, col) in cols.iter().enumerate() {
@@ -7198,7 +7214,6 @@ impl PreparedRun {
                                 .collect::<Vec<_>>(),
                             "model": "power = flux_multiplier * sum_i N_i * k_i; each step is split into equal sub-intervals, the multiplier is set at the start of each from the composition then reached, and the split doubles up to max_substeps until every sub-interval's end power is within power_tolerance of the request (relative); the reported drift is that end-of-interval departure",
                             "estimate": "the start-of-run composition sizes the flux used for rate pruning and the burnup-mode decision before the schedule is solved; achieved multipliers are reported per step",
-                            "pathways_suppressed": "pathway attribution is not emitted for power-driven schedules",
                         }))
                     } else {
                         None
@@ -8978,6 +8993,58 @@ mod gas_prepared_tests {
         let value = serde_json::to_value(&plain.steps[0]).unwrap();
         assert!(value.get("kerma").is_none() && value.get("power").is_none());
         assert!(plain.ledger.get("kerma").is_none());
+    }
+
+    #[test]
+    fn trace_pathways_close_under_a_flux_multiplier_and_after_a_cooling_gap() {
+        // the decomposition must use the multiplier the solve used, and a source must feed again
+        // when irradiation resumes after cooling
+        let (mut spec, prepared) = synthetic_gas_prepared("trace");
+        spec.schedule = serde_json::from_value(serde_json::json!([
+            {"dt": "1 s", "flux": 0.37},
+            {"dt": "1 s", "flux": 0.0},
+            {"dt": "1 s", "flux": 2.5}
+        ]))
+        .expect("schedule parses");
+        let result = run_prepared(&spec, &prepared).expect("run succeeds");
+        assert_eq!(result.mode, "trace");
+        assert_eq!(result.pathways.len(), 3);
+        assert!(!result.pathways[0].is_empty() && !result.pathways[2].is_empty());
+        assert!(
+            result.pathway_closure < 1e-10,
+            "closure {}",
+            result.pathway_closure
+        );
+    }
+
+    #[test]
+    fn power_step_in_trace_mode_reports_pathways_that_close() {
+        let (mut spec, mut prepared) = synthetic_gas_prepared("trace");
+        with_cross_section(&mut prepared, 1.0e-4);
+        let path = attach_kerma(&mut spec, "paths", 1.0, 1.0e-3, 8);
+        spec.schedule = serde_json::from_value(serde_json::json!([
+            {"dt": "1 s", "power_W_per_g": 0.3},
+            {"dt": "1 s", "flux": 0.0}
+        ]))
+        .expect("schedule parses");
+        spec.validate().expect("spec validates");
+        let result = run_prepared(&spec, &prepared).expect("run succeeds");
+        std::fs::remove_file(&path).ok();
+        assert_eq!(result.mode, "trace");
+        let power = result.steps[0]
+            .power
+            .as_ref()
+            .expect("power record present");
+        assert!((power.flux_multiplier_per_substep[0] - 1.0).abs() > 1e-3);
+        assert!(!result.pathways.is_empty() && !result.pathways[0].is_empty());
+        assert!(
+            result.pathway_closure < 1e-10,
+            "closure {}",
+            result.pathway_closure
+        );
+        assert!(result.ledger["kerma"]["power"]
+            .get("pathways_suppressed")
+            .is_none());
     }
 
     #[test]

@@ -10,6 +10,15 @@
   account. Handbook page "Avila Labs account (optional)".
 - Tool launcher, new application icon and tool marks (window icon, favicon, installer icons).
 
+**Fixed (2026-10-15)**
+
+- Trace mode held radioactive initial material constant (P133): `auto` now also weighs bulk decay over the
+  schedule and selects coupled when any initial nuclide decays by 1e-6 or more; explicit trace is refused there.
+  Restart or cooling runs from an activated inventory that did not set `coupled` should be rerun.
+- Trace-mode pathway attribution (P134) ignored the step's flux multiplier and spectrum override, and lost
+  production after a cooling gap; `pathway_closure` showed the error. It now uses the solve's own matrices, and
+  power-driven steps report pathways over their realized sub-intervals.
+
 **Added (FISPACT-II parity program, 2026-10-15; all opt-in, default results unchanged)**
 
 - Step summary (`summary`, `material.density_g_cm3`; P122):
