@@ -23,11 +23,11 @@ waste classes; open source and open data.
 
 | # | FISPACT-II capability (keywords) | ACTINV status | phase |
 |---:|---|---|---|
-| 1 | Per-nuclide inventory columns: grams, Bq, α/β/γ power, half-life, flags (`ATOMS`, `HALF`) | absent (atoms and Bq only; trace-mode bulk material and states without decay records are not listed) | P122 |
-| 2 | Step totals: Ci, α/β/γ Bq, activity and heat excluding tritium, total mass, per-cm³ with `DENSITY` | absent | P122 |
-| 3 | Inventory by element (`NOCOMP` to suppress) | absent | P122 |
-| 4 | Dominant-nuclide lists per quantity (`SORTDOMINANT`, `NOSORT`) | absent | P122 |
-| 5 | Output filters `MIND`, `NOSTABLE` | absent | P122 |
+| 1 | Per-nuclide inventory columns: grams, Bq, α/β/γ power, half-life, flags (`ATOMS`, `HALF`) | **parity** (`summary`: grams, Bq, α/β/γ W, half-life per nuclide; P122-PASS) | P122 |
+| 2 | Step totals: Ci, α/β/γ Bq, activity and heat excluding tritium, total mass, per-cm³ with `DENSITY` | **parity** (α/β/γ split by branching weight of every decay mode; P122-PASS) | P122 |
+| 3 | Inventory by element (`NOCOMP` to suppress) | **parity** (P122-PASS) | P122 |
+| 4 | Dominant-nuclide lists per quantity (`SORTDOMINANT`, `NOSORT`) | **parity** (plus cumulative percent and counts to 90 %/99 %; P122-PASS) | P122 |
+| 5 | Output filters `MIND`, `NOSTABLE` | **parity** (P122-PASS) | P122 |
 | 6 | Point-source dose at distance (`DOSE 2`) | absent | P123 |
 | 7 | Bremsstrahlung dose correction (`BREMSSTRAHLUNG`) | absent | P123 |
 | 8 | Approximate γ spectra for nuclides without spectral data (`SPEK`) | absent (unrepresented power reported) | P123 |
@@ -45,9 +45,9 @@ waste classes; open source and open data.
 | 20 | Power normalization by kerma (`POWER`); kerma, gas and dpa from library MTs | absent (gas from ejectiles; dpa from damage tables) | P126 |
 | 21 | Pathways and routes: multi-link paths with loops, `PATH`, `ROUTES`, generic pathways, `LOOKAHEAD`, `PATHRESET` | partial (trace-mode first-product attribution) | P127 |
 | 22 | Triton and helion projectiles; projectile or library change mid-schedule (`PROJECTILE 6/7`, `GETXS` in inventory phase) | absent (γ, n, p, d, α supported) | P128 |
-| 23 | Geometry self-shielding (`SSFGEOMETRY`), per-group dilution override (`SSFDILUTION`) | absent (composition/fixed dilution) | P129 |
-| 24 | High-energy data to 1 GeV, 1102 groups, spallation splice (`USESPALLATION`, `USEXSEXTRA`) | absent | P130 |
-| 25 | Library inspection (`PRINTLIB`, `EXTRACTXS`) | absent | P131 |
+| 23 | Geometry self-shielding (`SSFGEOMETRY`), per-group dilution override (`SSFDILUTION`) | **parity**: foil, wire, sphere, cylinder by the universal sigmoid curve, per-group dilution overrides (P129-PASS) | P129 |
+| 24 | High-energy data to 1 GeV, 1102 groups, spallation splice (`USESPALLATION`, `USEXSEXTRA`) | **parity**: every FISPACT-II group structure (66–1102, to 1 GeV), opt-in residual-production splice (P130-PASS) | P130 |
+| 25 | Library inspection (`PRINTLIB`, `EXTRACTXS`) | **parity** (`actinv inspect`: decay, group and spectrum-collapsed cross sections, yields, group bounds, as JSON or tables, without a run; P131-PASS) | P131 |
 | 26 | Tabular and plot output (`TAB1`–`TAB4`, `GRAPH`, `NUCGRAPH`) | partial (JSON; desktop CSV/plots) | P132 |
 | 27 | FISPACT-II input decks | absent (fluxes files import only) | P132 |
 | 28 | Monte Carlo sensitivity distributions and correlation tables (`SENSITIVITY`, `MCSAMPLE`) | partial (lognormal correlated sampling) | P125/P127 |
