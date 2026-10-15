@@ -3001,3 +3001,55 @@ Checker `controls/check_p139.py`, record `results/p139_lrf7.json`.
   0.01 cm, 29 % at 0.1 cm.
 
 G6 (CI) pending.
+
+## Entry 163 — P135: first run preserved, G2–G5 recorded under Amendment A (2026-10-15)
+
+Candidate: release build of `332f8e5` (SHA-256 `0b62b47c…1170`); reference: release build of `2f3daa4`. Checker
+`controls/check_p135.py`.
+
+The first run (`results/failures/p135_initial/`) passed G3–G5 and recorded G2 FAIL without a comparison: the checker
+also compared a `summary` spec with the reference, which predates `summary` and refused it. Amendment A (`06ad284`,
+before the rerun) evaluates G2 as registered and keeps the summary-without-depletion run as a candidate-only check.
+
+- **G2:** `fns_fe_5min` and `shielding_demo` byte-identical apart from `ms`; with `summary` but no depletion request,
+  no `depletion` key appears in any step summary, ledger or certificate.
+- **G3 (coupled):** depletion tables recomputed independently (start/end atoms, depleted fractions, shares summing to
+  1 within 1e-12, decay channels from MT=457, reaction channels from the library loss rows within 1e-9): unscaled FNS
+  Fe 860 comparisons, flux-scaled FNS Fe 352 (Fe-56 cumulative depletion above 1e-4), radioactive initial material
+  291; no failures.
+- **G4 (trace):** `auto` selects trace on the shipped schedule; 1,028 and 384 comparisons against 1 − exp(−R·t),
+  no failures (fractions below about 1e-6 compared at their subtraction resolution).
+- **G5 (uncertainty):** 100 per-channel relative uncertainties against an independent flux-weighted collapse of the
+  TENDL-2025 MF=33 covariance within 1e-6, no failures. The joint total is not evaluable on Fe: every isotope has an
+  uncovered reaction channel, and the candidate correctly omits the total there.
+
+Record `results/p135_depletion.json`. G6 (CI) pending.
+
+## Entry 164 — P136: G2–G4 recorded (2026-10-15)
+
+Candidate `0b62b47c…1170`, reference `2f3daa4`. Checker `controls/check_p136.py`, base study the P30 sampling study
+repointed to the v1.1.0 data. Record `results/p136_sampling_statistics.json`.
+
+- **G2:** the default study (no `statistics`) gives the same 264 files: 131 byte-identical, 130 output files equal
+  apart from `ms`, no other difference.
+- **G3:** for both cases, explicit and default settings: distributions (24 fields), exact order-statistic percentiles,
+  histograms, Pearson and Spearman tables and the response correlation matrix recomputed from the sample records, no
+  mismatch. Gap, as anticipated: per-sample MF=33, decay and yield inputs are not in the record, so input correlations
+  are recomputed for the flux and composition parameters only.
+- **G4:** repeated runs identical (2 cases, explicit and default).
+
+G5 (CI) pending.
+
+## Entry 165 — P138: G2–G4 recorded (2026-10-15)
+
+Candidate `0b62b47c…1170`. Checker `controls/check_p138.py`, record `results/p138_importer_keywords.json`.
+
+- **G2:** all 132 FNS decks import; `controls/check_p132.py` on the candidate gives P132-PASS (G2–G4).
+- **G3:** decks derived from the FNS Fe deck with WALL, PARTITION, OVER ALAM, OVER ACROSS, GRPCONVERT, DOSE 2, GROUP 1,
+  BREMSSTRAHLUNG, PATH, ATWO and POWER (with a kerma table) run identically to hand-written specs of the same meaning
+  apart from echoes; CNVTYPE and LIMGRP report-only cases also agree.
+- **G4:** ADLAM, ADCROSS, ambiguous and isomer ACROSS, PARTITION with trailing words, BREMSSTRAHLUNG without
+  nuclides, DOSE 3, GROUP 2, PATH beside POWER, UNCERTAINTY beside ACROSS and unconverted group structures each report
+  a specific non-mapped status; none produces a spec that silently differs from the deck.
+
+G5 (CI) pending.
