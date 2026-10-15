@@ -1,0 +1,5 @@
+P139 G2: PASS
+P139 G3: PASS
+P139 G4: FAIL
+P139 G5: REPORT (0.01 cm 53 common groups, max |rel diff| 0.0542; 0.1 cm 53 common groups, max |rel diff| 0.292)
+P139: FAIL (/home/connoravila/Documents/actinv/target/wt-next/results/p139_lrf7.json)
