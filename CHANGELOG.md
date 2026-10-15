@@ -10,6 +10,28 @@
   account. Handbook page "Avila Labs account (optional)".
 - Tool launcher, new application icon and tool marks (window icon, favicon, installer icons).
 
+**Added (FISPACT-II parity program, 2026-10-15; all opt-in, default results unchanged)**
+
+- Step summary (`summary`, `material.density_g_cm3`; P122):
+  - full inventory with grams, Bq, α/β/γ W and half-life;
+  - Ci, activity and heat ex-tritium, per-cm³ and absolute totals;
+  - an exact branching-weighted activity split by decay mode;
+  - element table;
+  - dominant lists with cumulative percent and counts to 90/99 %;
+  - MIND/NOSTABLE filters.
+- `actinv inspect {decay, xs, yields, library, groups}` (P131): query decay data, group and one-group
+  cross sections for a spectrum, independent and cumulative fission yields, and group boundaries, as JSON or a
+  table.
+- All FISPACT-II neutron group structures, fispact-66 to fispact-1102 (to 1 GeV), and an opt-in high-energy
+  residual-production splice for `build-library` (P130).
+- Geometry self-shielding (foil, wire, sphere, cylinder) by the universal sigmoid curve, and per-group dilution
+  overrides (P129).
+- Merged and unit-tested, qualification pending:
+  - Steiner 22-group photon structure, point-source dose, a separately reported bremsstrahlung component and the
+    A2 index (P123a);
+  - full pathways and routes analysis with exact chain integration and a closure diagnostic (P127);
+  - triton and helion projectiles, and schedule-level library switching (P128).
+
 **Added**
 
 - `actinv waste composition solve SPEC.json [OUT.json]` creates pure-element
