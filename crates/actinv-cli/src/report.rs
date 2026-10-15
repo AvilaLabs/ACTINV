@@ -9,7 +9,7 @@
 //! `csv` and `tsv` carry every value as a shortest round-trip `{:e}` string; `text` and
 //! `markdown` use six significant digits.
 
-use crate::inspect::{render_table, sci, Table};
+use crate::inspect::{render_table, Table};
 use serde_json::Value;
 use std::collections::{BTreeMap, BTreeSet};
 
@@ -150,7 +150,8 @@ impl Cell {
 
     fn human(&self) -> String {
         match self {
-            Self::Num(value) => sci(*value),
+            // `{:.5e}`: one digit before the point and five after, six significant digits.
+            Self::Num(value) => format!("{value:.5e}"),
             other => other.exact(),
         }
     }
@@ -1772,18 +1773,18 @@ mod tests {
             "### TAB1 atoms and mass per nuclide\n\n\
              | step | time_s | nuclide | atoms_per_g | mass_g_per_g | atoms | mass_g |\n\
              | --- | --- | --- | --- | --- | --- | --- |\n\
-             | 1 | 1.000000e1 | Fe56 | 1.000000e22 | 5.000000e-1 | 2.000000e22 | 1.000000e0 |\n\
-             | 1 | 1.000000e1 | Co60 | 2.000000e15 | 2.500000e-7 | 4.000000e15 | 5.000000e-7 |\n\
-             | 1 | 1.000000e1 | Mn54 | 5.000000e14 | 5.000000e-8 | 1.000000e15 | 1.000000e-7 |"
+             | 1 | 1.00000e1 | Fe56 | 1.00000e22 | 5.00000e-1 | 2.00000e22 | 1.00000e0 |\n\
+             | 1 | 1.00000e1 | Co60 | 2.00000e15 | 2.50000e-7 | 4.00000e15 | 5.00000e-7 |\n\
+             | 1 | 1.00000e1 | Mn54 | 5.00000e14 | 5.00000e-8 | 1.00000e15 | 1.00000e-7 |"
         );
         assert_eq!(
             render(&tab1, Format::Text),
             "TAB1 atoms and mass per nuclide\n\
-             step  time_s      nuclide  atoms_per_g  mass_g_per_g  atoms        mass_g\n\
-             ----  ----------  -------  -----------  ------------  -----------  -----------\n\
-             1     1.000000e1  Fe56     1.000000e22  5.000000e-1   2.000000e22  1.000000e0\n\
-             1     1.000000e1  Co60     2.000000e15  2.500000e-7   4.000000e15  5.000000e-7\n\
-             1     1.000000e1  Mn54     5.000000e14  5.000000e-8   1.000000e15  1.000000e-7"
+             step  time_s     nuclide  atoms_per_g  mass_g_per_g  atoms       mass_g\n\
+             ----  ---------  -------  -----------  ------------  ----------  ----------\n\
+             1     1.00000e1  Fe56     1.00000e22   5.00000e-1    2.00000e22  1.00000e0\n\
+             1     1.00000e1  Co60     2.00000e15   2.50000e-7    4.00000e15  5.00000e-7\n\
+             1     1.00000e1  Mn54     5.00000e14   5.00000e-8    1.00000e15  1.00000e-7"
         );
     }
 
