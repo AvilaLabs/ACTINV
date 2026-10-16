@@ -262,6 +262,7 @@ a1148214804c25cdce30c7bee1d748bb960fd87adf74619a7e5654be4efc1941  ./controls/che
 e876e393811f604afae3ba11626b1dead61ac94514eab5d7721c4908778705e3  ./controls/check_p140_docs.py
 a0498b480ab79acf0071d4424520578e6d03c77a67e80463d571ec44e35cf838  ./controls/check_p140_import.py
 8687cbe16f379ced1071e003f8208ab78a2a5177d5583f3c9f9a33d85efda00e  ./controls/check_p140_matrix.py
+13ec1e49f75795d154e31cdb5cbad859992e74bfa72fda3338b89e46329c63a6  ./controls/check_p142.py
 24ad768ce772812470b385d32bd6ac3bd897c226e0af9c648131cf1916eb31e3  ./controls/check_p15.py
 3923f2a5d61580af1c60924581c01e90532131d1b0019da991717a8e46d60de3  ./controls/check_p16.py
 5f0afe1712eb9b0a3077aec2e9515ee1192d728b35726ce2c78466b0e8a564d3  ./controls/check_p17.py
@@ -898,7 +899,7 @@ e125e4a03e44d4175d9c82a10cd143888aecdcdf97084a2f2a5c92bd73416d5b  ./crates/actin
 23a41809157ce20357d4a0b4cdf805f79ba83aed28e8ca437f3262da68c162da  ./crates/actinv-cli/src/waste_budget.rs
 5f24307f0b6674dff0a692bfe74dd694c025e151e12c77640b6d102ed5e3cb30  ./crates/actinv-cli/src/waste_composition.rs
 715be9eeeaeb36a494e05c5ea66a7a3869b3a26fef63764cba46ea2f60d21195  ./crates/actinv-cli/src/waste_composition_solve.rs
-363ae16501e33ff002db3afe5d12e76f39168cf516472350e59779fe2442a1b0  ./crates/actinv-cli/src/waste_composition_verify.rs
+34d079b9f66c2910e1406fedfb32c1d8b43d4245588da68ef4cf1446368be3fe  ./crates/actinv-cli/src/waste_composition_verify.rs
 32fd0c623960581995bea73744fadd52c07f1f3d0e9b7d9cbe03a03edfe1688c  ./crates/actinv-cli/src/waste_intrusion.rs
 1e99fbd1109027fbb2587686c9fcbbee1c8805bfe45134888181f40e252f4d51  ./crates/actinv-cli/src/worker.rs
 cbc58c3f0fd29b9280cca4bb248fe6935a02a590281f033e9030cbc4f3494e8f  ./crates/actinv-cli/src/workflow.rs

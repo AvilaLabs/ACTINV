@@ -987,4 +987,18 @@ mod tests {
         assert!(incomplete.contains("run_audit_incomplete"));
         assert!(incomplete.contains("audit_x"));
     }
+
+    #[test]
+    fn unmodelled_decay_branches_are_an_audit_reason() {
+        // P142 Q3: the decay defect P140 Amendment E added reaches the coverage reasons by its class name.
+        let mut reasons = BTreeSet::new();
+        audit_reasons(
+            &json!({"completeness":{"status":"incomplete","reaction_channel":{"defects":[]},
+                "decay_channel":{"defects":[{"class":"unmodelled_decay_branches_to_leakage","instances":3}]},
+                "unquantified":[]}}),
+            &mut reasons,
+        );
+        assert!(reasons.contains("audit_unmodelled_decay_branches_to_leakage"));
+        assert!(reasons.contains("run_audit_incomplete"));
+    }
 }
