@@ -3398,3 +3398,12 @@ fell back to the Python unit tests' self-contained specs for exactly those cases
 regression test included), the binding's fmt/check/clippy, module build, smoke and `test_python_objects.py` (13 tests)
 all exited 0 on `31bc50a`, whose code equals the candidate's (`results/p143/w4.json`). CI on the pushed evidence
 commit decides the rest of W4.
+
+## Entry 188 — P145 registered: waste classification under nuclear-data uncertainty (2026-10-16)
+
+Registered before any source change for the phase: **P145** `7a50a266d7bb68f0745ac159114493b7731479c3bbc6b4b61b72cff6e2bd89f1`. A new command
+`actinv waste uncertainty` and `actinv.waste.uncertainty` classify every `study.robustness` sample with the nominal
+evaluator and report class probabilities with Clopper–Pearson intervals, the class established at a confidence level,
+percentiles of each table's normalized sum and the earliest established step, with coverage and exclusions stated in
+the result. U1 same samples as `study.robustness`; U2 independent tallies; U3 lognormal closed-form calibration at
+4096 samples; U4 refusals and invariance; U5 quality and CI.
