@@ -3414,3 +3414,26 @@ the result. U1 same samples as `study.robustness`; U2 independent tallies; U3 lo
 187, and all six workflows on the pushed evidence commit `6856da5` succeeded, `controls` included
 (`results/p143/ci_runs.json`). `actinv.waste` (six operations plus `summary`) and `actinv.twin` return the CLI's own
 output bytes.
+
+## Entry 190 — P144 evidence: V1–V4 and local V5 pass on the candidate (2026-10-16)
+
+Candidate `2b60db9`, clean tracked tree, release CLI and desktop rebuilt from it; every step ran serially in the
+bounded scope and exited 0 (`results/p144/steps.tsv`, `logs/`). Cases fixed before any evidence run in
+`controls/p144_inputs/v1_cases.json`: `examples/fns_fe_5min.json` (general waste, entered volume) and the P49
+reduced-activation steel `examples/optimize_ra_steel/base_spec.json` (activated metal, entered volume, declared external
+H-3 of 1000 Bq at every step). **V1**: an ignored test drives the desktop through its own Open problem and Open result
+actions and the Waste class page's load, classify and save actions with scripted dialogs; for both cases
+`actinv waste waste-spec.json OUT` wrote bytes identical to the result the page saved (769 080 and 1 125 641 bytes).
+The input base folder is set to the repository root, where the problems' relative data paths resolve, as a desktop
+user sets it in Overview & data. **V2**: Z, half-life and alpha emission of the 161 nuclides the page filled equal an
+independent stdlib ENDF-6 MF=8 MT=457 reading of the same primary decay file, with zero tolerance on half-lives.
+**V3**: in the Chromium smoke, the browser's waste reader (the page's own `read_result`, exposed as a test hook)
+opened the P105 waste, P112 intrusion-screen and P116 twin control results (committed under `web/smoke-fixtures/`)
+and both V1 results, each with the classes the file holds, and three malformed inputs each came back as a message,
+with no page error. **V4**: `visuals.rs` and the GUI assets are unchanged since registration; desktop smoke captured
+30 screens, and the Waste class capture, reviewed against the Ledger page, keeps the look. **V5 (local)**: fmt,
+clippy `-D warnings` native and wasm, and workspace tests (1056 passed, 0 failed) exited 0; CI decides the rest.
+
+Found during the pre-evidence rehearsal and fixed before the candidate: with external H-3 declared, the page read
+properties only for nuclides active in the run, so a run that made no H-3 left H-3 without properties and every step
+`unknown`. The page now includes H-3 whenever external H-3 is declared (regression test); the steel case classifies A.

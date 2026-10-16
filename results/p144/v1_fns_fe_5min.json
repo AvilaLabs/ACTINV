@@ -1,0 +1,25 @@
+{
+ "argv": [
+  "actinv",
+  "waste",
+  "waste-spec.json",
+  "OUT"
+ ],
+ "binary": "/home/connoravila/Documents/actinv/target/release/actinv",
+ "binary_sha256": "216e136c0619680cc00586b432c81ebed3df4e4ea9e721aaa47019f92ca46b69",
+ "bytes": {
+  "out": 769080,
+  "page_result": 769080
+ },
+ "commit": "2b60db933e2a43ab3fce43260ca987a96898655e",
+ "exit": 0,
+ "out": "target/p144/v1_fns_fe_5min_b2y9e48_/waste-result.json",
+ "out_sha256": "8d7bb143c91ae4838f6b0fda4f2c00fb5069aaa6c532d373b88efd65fe04a6e3",
+ "page_result": "/home/connoravila/Documents/actinv/target/p144/v1/fns_fe_5min/waste-result.json",
+ "page_result_sha256": "8d7bb143c91ae4838f6b0fda4f2c00fb5069aaa6c532d373b88efd65fe04a6e3",
+ "pass": true,
+ "schema": "actinv-p144-v1-1",
+ "spec": "/home/connoravila/Documents/actinv/target/p144/v1/fns_fe_5min/waste-spec.json",
+ "spec_sha256": "c3f0d8f820a1172d595a1dede7891a5dde682d6117571911f9b9daa17c0df038",
+ "stderr_tail": ""
+}

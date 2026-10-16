@@ -1,0 +1,25 @@
+{
+ "captures_kept": {
+  "09_ledger.png": "38aaf88976e5b6767bb56faf41c9ae020f06e2a08e7a6db4f1998724ff35e140",
+  "10_waste_class.png": "3b89699471d929b3b98eefe89c5e2c6783844464e67629ac80f6780018101da7"
+ },
+ "commit": "2b60db933e2a43ab3fce43260ca987a96898655e",
+ "look_diff": "git diff --exit-code 2b2c51e HEAD -- crates/actinv-gui/src/visuals.rs crates/actinv-gui/assets: empty",
+ "pass": true,
+ "review": "Coordinator review of capture 10 (Waste class) against capture 09 (Ledger & certificate), dark theme: same header, sidebar groups and highlight, button style, typography and palette; cards drawn as the existing pages' groups; the orange 'no decay record' text is the existing warning colour. No look change found.",
+ "schema": "actinv-p144-v4-1",
+ "steps": {
+  "gui_build": {
+   "argv": "cargo build --release --locked -p actinv-gui",
+   "exit": 0
+  },
+  "v4_desktop_smoke": {
+   "argv": "python3 scripts/desktop_smoke.py target/release/actinv-gui target/p144/desktop_smoke --require-render",
+   "exit": 0
+  },
+  "v4_look_diff": {
+   "argv": "git diff --exit-code 2b2c51e HEAD -- crates/actinv-gui/src/visuals.rs crates/actinv-gui/assets",
+   "exit": 0
+  }
+ }
+}

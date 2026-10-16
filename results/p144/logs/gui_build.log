@@ -1,0 +1,4 @@
+   Compiling actinv-core v1.5.0 (/home/connoravila/Documents/actinv/crates/actinv-core)
+   Compiling actinv-cli v1.5.0 (/home/connoravila/Documents/actinv/crates/actinv-cli)
+   Compiling actinv-gui v0.4.0-preview.1 (/home/connoravila/Documents/actinv/crates/actinv-gui)
+    Finished `release` profile [optimized] target(s) in 3m 59s

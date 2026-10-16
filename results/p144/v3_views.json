@@ -1,0 +1,243 @@
+{
+ "files": [
+  "/home/connoravila/Documents/actinv/web/smoke-fixtures/waste-result.json",
+  "/home/connoravila/Documents/actinv/web/smoke-fixtures/intrusion-screen-result.json",
+  "/home/connoravila/Documents/actinv/web/smoke-fixtures/twin-result.json",
+  "/home/connoravila/Documents/actinv/target/p144/v1/fns_fe_5min/waste-result.json",
+  "/home/connoravila/Documents/actinv/target/p144/v1/ra_steel/waste-result.json"
+ ],
+ "views": {
+  "opened": [
+   {
+    "components": [
+     {
+      "id": "p105-nb-component",
+      "steps": [
+       {
+        "class": "A",
+        "step": 1
+       },
+       {
+        "class": "A",
+        "step": 2
+       }
+      ]
+     }
+    ],
+    "source": "waste"
+   },
+   {
+    "components": [
+     {
+      "id": "component-1",
+      "steps": [
+       {
+        "class": "A",
+        "step": 1
+       }
+      ]
+     }
+    ],
+    "source": "intrusion_screen"
+   },
+   {
+    "components": [
+     {
+      "id": "component-a",
+      "steps": [
+       {
+        "class": "A",
+        "step": 1
+       },
+       {
+        "class": "A",
+        "step": 2
+       }
+      ]
+     },
+     {
+      "id": "component-b",
+      "steps": [
+       {
+        "class": "A",
+        "step": 1
+       },
+       {
+        "class": "A",
+        "step": 2
+       }
+      ]
+     }
+    ],
+    "source": "twin"
+   },
+   {
+    "components": [
+     {
+      "id": "component",
+      "steps": [
+       {
+        "class": "A",
+        "step": 1
+       },
+       {
+        "class": "A",
+        "step": 2
+       },
+       {
+        "class": "A",
+        "step": 3
+       },
+       {
+        "class": "A",
+        "step": 4
+       },
+       {
+        "class": "A",
+        "step": 5
+       },
+       {
+        "class": "A",
+        "step": 6
+       },
+       {
+        "class": "A",
+        "step": 7
+       },
+       {
+        "class": "A",
+        "step": 8
+       },
+       {
+        "class": "A",
+        "step": 9
+       },
+       {
+        "class": "A",
+        "step": 10
+       },
+       {
+        "class": "A",
+        "step": 11
+       },
+       {
+        "class": "A",
+        "step": 12
+       },
+       {
+        "class": "A",
+        "step": 13
+       },
+       {
+        "class": "A",
+        "step": 14
+       },
+       {
+        "class": "A",
+        "step": 15
+       },
+       {
+        "class": "A",
+        "step": 16
+       },
+       {
+        "class": "A",
+        "step": 17
+       },
+       {
+        "class": "A",
+        "step": 18
+       },
+       {
+        "class": "A",
+        "step": 19
+       },
+       {
+        "class": "A",
+        "step": 20
+       },
+       {
+        "class": "A",
+        "step": 21
+       }
+      ]
+     }
+    ],
+    "source": "waste"
+   },
+   {
+    "components": [
+     {
+      "id": "component",
+      "steps": [
+       {
+        "class": "A",
+        "step": 1
+       },
+       {
+        "class": "A",
+        "step": 2
+       },
+       {
+        "class": "A",
+        "step": 3
+       },
+       {
+        "class": "A",
+        "step": 4
+       },
+       {
+        "class": "A",
+        "step": 5
+       },
+       {
+        "class": "A",
+        "step": 6
+       },
+       {
+        "class": "A",
+        "step": 7
+       },
+       {
+        "class": "A",
+        "step": 8
+       },
+       {
+        "class": "A",
+        "step": 9
+       },
+       {
+        "class": "A",
+        "step": 10
+       },
+       {
+        "class": "A",
+        "step": 11
+       },
+       {
+        "class": "A",
+        "step": 12
+       },
+       {
+        "class": "A",
+        "step": 13
+       }
+      ]
+     }
+    ],
+    "source": "waste"
+   }
+  ],
+  "malformed": [
+   {
+    "error": "Invalid JSON: key must be a string at line 1 column 3"
+   },
+   {
+    "error": "The waste result has no components"
+   },
+   {
+    "error": "This file has no waste result in it. Open an actinv-waste-result-1 document, an intrusion-screen result (a `classification` member) or a twin result (a `waste_classification` member)."
+   }
+  ]
+ }
+}

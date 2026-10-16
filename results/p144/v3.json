@@ -1,0 +1,36 @@
+{
+ "commit": "2b60db933e2a43ab3fce43260ca987a96898655e",
+ "files_opened": [
+  "waste-result.json",
+  "intrusion-screen-result.json",
+  "twin-result.json",
+  "target/p144/v1/fns_fe_5min/waste-result.json",
+  "target/p144/v1/ra_steel/waste-result.json"
+ ],
+ "malformed_messages": [
+  "Invalid JSON: key must be a string at line 1 column 3",
+  "The waste result has no components",
+  "This file has no waste result in it. Open an actinv-waste-result-1 document, an intrusion-screen result (a `classification` member) or a twin result (a `waste_classification` member)."
+ ],
+ "note": "web/smoke.mjs asserts each opened file's classes equal the file's own per-target classes, every malformed input returns a message, and no page error occurred",
+ "pass": true,
+ "schema": "actinv-p144-v3-1",
+ "sources": [
+  "waste",
+  "intrusion_screen",
+  "twin",
+  "waste",
+  "waste"
+ ],
+ "steps": {
+  "v3_smoke": {
+   "argv": "python3 -m http.server 8093 --directory target/p144/web/site --bind 127.0.0.1 & srv=$!; trap 'kill $srv' EXIT; ACTINV_WEB_URL=http://127.0.0.1:8093 ACTINV_WEB_WASTE_FILES=/home/connoravila/Documents/actinv/target/p144/v1/fns_fe_5min/waste-result.json:/home/connoravila/Documents/actinv/target/p144/v1/ra_steel/waste-result.json ACTINV_WEB_WASTE_REPORT=/home/connoravila/Documents/actinv/results/p144/v3_views.json timeout 300s node web/smoke.mjs",
+   "exit": 0
+  },
+  "web_build": {
+   "argv": "trunk build --config crates/actinv-gui/Trunk.toml --release --locked --public-url ./ --dist /home/connoravila/Documents/actinv/target/p144/web/app && mdbook build -d /home/connoravila/Documents/actinv/target/p144/web/docs && python3 scripts/check_docs.py target/p144/web/docs && cp -r target/p144/web/app target/p144/web/site && python3 scripts/prepare_web.py target/p144/web/site --docs target/p144/web/docs",
+   "exit": 0
+  }
+ },
+ "tree_clean_tracked": true
+}

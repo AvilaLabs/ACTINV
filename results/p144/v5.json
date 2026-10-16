@@ -1,0 +1,26 @@
+{
+ "commit": "2b60db933e2a43ab3fce43260ca987a96898655e",
+ "note": "local half of V5; the verdict also requires CI green on the pushed evidence commit",
+ "pass": true,
+ "schema": "actinv-p144-v5-1",
+ "steps": {
+  "v5_clippy_native": {
+   "argv": "cargo clippy --workspace --all-targets --all-features -- -D warnings",
+   "exit": 0
+  },
+  "v5_clippy_wasm": {
+   "argv": "cargo clippy --locked -p actinv-gui --lib --no-default-features --target wasm32-unknown-unknown -- -D warnings",
+   "exit": 0
+  },
+  "v5_fmt": {
+   "argv": "cargo fmt --all -- --check",
+   "exit": 0
+  },
+  "v5_workspace_tests": {
+   "argv": "cargo test --locked --workspace",
+   "exit": 0
+  }
+ },
+ "tests_failed": 0,
+ "tests_passed": 1056
+}

@@ -1,0 +1,3802 @@
+{
+ "counts": {
+  "absent": 0,
+  "from_fallback": 0,
+  "from_primary": 161,
+  "mismatches": 0,
+  "nuclides": 161
+ },
+ "inputs_sha256": {
+  "actinv-data/v1.1.0/decay/endf-b-viii-0_decay.dat": "6f04cf009086c179021f243a58dadc2d5bb078de5ba39c4fe46ccad77d228ddb",
+  "actinv-data/v1.1.0/decay/jeff-3-3_decay.dat": "850b8b7f85f8d88b6ad826c4cd341aaaffabd525c8ecf3c588a0ad437bf5d123",
+  "target/p144/v1/fns_fe_5min/waste-spec.json": "c3f0d8f820a1172d595a1dede7891a5dde682d6117571911f9b9daa17c0df038",
+  "target/p144/v1/ra_steel/waste-spec.json": "6b4f11f72bc165bdd6050cb6f60ce1051199d6b691200a6e746f07d8028c6e8e"
+ },
+ "mismatches": [],
+ "pass": true,
+ "rows": [
+  {
+   "liso": 0,
+   "nuclide": "Co58",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 6122304.0,
+    "z": 27
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 6122304.0,
+    "modes": [
+     [
+      2.0,
+      1.0
+     ]
+    ],
+    "z": 27
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 27058
+  },
+  {
+   "liso": 1,
+   "nuclide": "Co58m1",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 32760.0,
+    "z": 27
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 32760.0,
+    "modes": [
+     [
+      3.0,
+      1.0
+     ]
+    ],
+    "z": 27
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 27058
+  },
+  {
+   "liso": 0,
+   "nuclide": "Cr49",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 2538.0,
+    "z": 24
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 2538.0,
+    "modes": [
+     [
+      2.0,
+      1.0
+     ]
+    ],
+    "z": 24
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 24049
+  },
+  {
+   "liso": 0,
+   "nuclide": "Cr51",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 2393366.0,
+    "z": 24
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 2393366.0,
+    "modes": [
+     [
+      2.0,
+      1.0
+     ]
+    ],
+    "z": 24
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 24051
+  },
+  {
+   "liso": 0,
+   "nuclide": "Cr55",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 209.82,
+    "z": 24
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 209.82,
+    "modes": [
+     [
+      1.0,
+      1.0
+     ]
+    ],
+    "z": 24
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 24055
+  },
+  {
+   "liso": 0,
+   "nuclide": "Cr56",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 356.4,
+    "z": 24
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 356.4,
+    "modes": [
+     [
+      1.0,
+      1.0
+     ]
+    ],
+    "z": 24
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 24056
+  },
+  {
+   "liso": 0,
+   "nuclide": "Cr57",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 21.1,
+    "z": 24
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 21.1,
+    "modes": [
+     [
+      1.0,
+      1.0
+     ]
+    ],
+    "z": 24
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 24057
+  },
+  {
+   "liso": 0,
+   "nuclide": "Cr58",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 7.0,
+    "z": 24
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 7.0,
+    "modes": [
+     [
+      1.0,
+      1.0
+     ]
+    ],
+    "z": 24
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 24058
+  },
+  {
+   "liso": 0,
+   "nuclide": "Fe52",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 29790.0,
+    "z": 26
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 29790.0,
+    "modes": [
+     [
+      2.0,
+      1.0
+     ]
+    ],
+    "z": 26
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 26052
+  },
+  {
+   "liso": 0,
+   "nuclide": "Fe53",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 510.6,
+    "z": 26
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 510.6,
+    "modes": [
+     [
+      2.0,
+      1.0
+     ]
+    ],
+    "z": 26
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 26053
+  },
+  {
+   "liso": 1,
+   "nuclide": "Fe53m1",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 152.4,
+    "z": 26
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 152.4,
+    "modes": [
+     [
+      3.0,
+      1.0
+     ]
+    ],
+    "z": 26
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 26053
+  },
+  {
+   "liso": 0,
+   "nuclide": "Fe55",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 86594050.0,
+    "z": 26
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 86594050.0,
+    "modes": [
+     [
+      2.0,
+      1.0
+     ]
+    ],
+    "z": 26
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 26055
+  },
+  {
+   "liso": 0,
+   "nuclide": "Fe59",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 3844368.0,
+    "z": 26
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 3844368.0,
+    "modes": [
+     [
+      1.0,
+      1.0
+     ]
+    ],
+    "z": 26
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 26059
+  },
+  {
+   "liso": 0,
+   "nuclide": "Fe60",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 47336400000000.0,
+    "z": 26
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 47336400000000.0,
+    "modes": [
+     [
+      1.0,
+      1.0
+     ]
+    ],
+    "z": 26
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 26060
+  },
+  {
+   "liso": 0,
+   "nuclide": "Mn51",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 2772.0,
+    "z": 25
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 2772.0,
+    "modes": [
+     [
+      2.0,
+      1.0
+     ]
+    ],
+    "z": 25
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 25051
+  },
+  {
+   "liso": 0,
+   "nuclide": "Mn52",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 483062.4,
+    "z": 25
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 483062.4,
+    "modes": [
+     [
+      2.0,
+      1.0
+     ]
+    ],
+    "z": 25
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 25052
+  },
+  {
+   "liso": 1,
+   "nuclide": "Mn52m1",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 1266.0,
+    "z": 25
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 1266.0,
+    "modes": [
+     [
+      2.0,
+      0.9825
+     ],
+     [
+      3.0,
+      0.0175
+     ]
+    ],
+    "z": 25
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 25052
+  },
+  {
+   "liso": 0,
+   "nuclide": "Mn53",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 116763000000000.0,
+    "z": 25
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 116763000000000.0,
+    "modes": [
+     [
+      2.0,
+      1.0
+     ]
+    ],
+    "z": 25
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 25053
+  },
+  {
+   "liso": 0,
+   "nuclide": "Mn54",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 26961120.0,
+    "z": 25
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 26961120.0,
+    "modes": [
+     [
+      2.0,
+      1.0
+     ]
+    ],
+    "z": 25
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 25054
+  },
+  {
+   "liso": 0,
+   "nuclide": "Mn56",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 9284.04,
+    "z": 25
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 9284.04,
+    "modes": [
+     [
+      1.0,
+      1.0
+     ]
+    ],
+    "z": 25
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 25056
+  },
+  {
+   "liso": 0,
+   "nuclide": "Mn57",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 85.4,
+    "z": 25
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 85.4,
+    "modes": [
+     [
+      1.0,
+      1.0
+     ]
+    ],
+    "z": 25
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 25057
+  },
+  {
+   "liso": 0,
+   "nuclide": "Mn58",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 3.0,
+    "z": 25
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 3.0,
+    "modes": [
+     [
+      1.0,
+      1.0
+     ]
+    ],
+    "z": 25
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 25058
+  },
+  {
+   "liso": 1,
+   "nuclide": "Mn58m1",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 65.4,
+    "z": 25
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 65.4,
+    "modes": [
+     [
+      1.0,
+      1.0
+     ]
+    ],
+    "z": 25
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 25058
+  },
+  {
+   "liso": 0,
+   "nuclide": "Mn59",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 4.59,
+    "z": 25
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 4.59,
+    "modes": [
+     [
+      1.0,
+      1.0
+     ]
+    ],
+    "z": 25
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 25059
+  },
+  {
+   "liso": 0,
+   "nuclide": "Sc47",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 289370.9,
+    "z": 21
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 289370.9,
+    "modes": [
+     [
+      1.0,
+      1.0
+     ]
+    ],
+    "z": 21
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 21047
+  },
+  {
+   "liso": 0,
+   "nuclide": "Sc48",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 157212.0,
+    "z": 21
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 157212.0,
+    "modes": [
+     [
+      1.0,
+      1.0
+     ]
+    ],
+    "z": 21
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 21048
+  },
+  {
+   "liso": 0,
+   "nuclide": "Ti51",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 345.6,
+    "z": 22
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 345.6,
+    "modes": [
+     [
+      1.0,
+      1.0
+     ]
+    ],
+    "z": 22
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 22051
+  },
+  {
+   "liso": 0,
+   "nuclide": "Ti52",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 102.0,
+    "z": 22
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 102.0,
+    "modes": [
+     [
+      1.0,
+      1.0
+     ]
+    ],
+    "z": 22
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 22052
+  },
+  {
+   "liso": 0,
+   "nuclide": "V49",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 28512000.0,
+    "z": 23
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 28512000.0,
+    "modes": [
+     [
+      2.0,
+      1.0
+     ]
+    ],
+    "z": 23
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 23049
+  },
+  {
+   "liso": 0,
+   "nuclide": "V50",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 4.41806e+24,
+    "z": 23
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 4.41806e+24,
+    "modes": [
+     [
+      2.0,
+      0.83
+     ],
+     [
+      1.0,
+      0.17
+     ]
+    ],
+    "z": 23
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 23050
+  },
+  {
+   "liso": 0,
+   "nuclide": "V52",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 224.58,
+    "z": 23
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 224.58,
+    "modes": [
+     [
+      1.0,
+      1.0
+     ]
+    ],
+    "z": 23
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 23052
+  },
+  {
+   "liso": 0,
+   "nuclide": "V53",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 92.58,
+    "z": 23
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 92.58,
+    "modes": [
+     [
+      1.0,
+      1.0
+     ]
+    ],
+    "z": 23
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 23053
+  },
+  {
+   "liso": 0,
+   "nuclide": "V54",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 49.8,
+    "z": 23
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 49.8,
+    "modes": [
+     [
+      1.0,
+      1.0
+     ]
+    ],
+    "z": 23
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 23054
+  },
+  {
+   "liso": 0,
+   "nuclide": "V55",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 6.54,
+    "z": 23
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 6.54,
+    "modes": [
+     [
+      1.0,
+      1.0
+     ]
+    ],
+    "z": 23
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 23055
+  },
+  {
+   "liso": 0,
+   "nuclide": "Ar37",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 3027456.0,
+    "z": 18
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 3027456.0,
+    "modes": [
+     [
+      2.0,
+      1.0
+     ]
+    ],
+    "z": 18
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 18037
+  },
+  {
+   "liso": 0,
+   "nuclide": "Ar39",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 8488990000.0,
+    "z": 18
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 8488990000.0,
+    "modes": [
+     [
+      1.0,
+      1.0
+     ]
+    ],
+    "z": 18
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 18039
+  },
+  {
+   "liso": 0,
+   "nuclide": "Ar41",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 6576.6,
+    "z": 18
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 6576.6,
+    "modes": [
+     [
+      1.0,
+      1.0
+     ]
+    ],
+    "z": 18
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 18041
+  },
+  {
+   "liso": 0,
+   "nuclide": "Ar42",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 1038250000.0,
+    "z": 18
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 1038250000.0,
+    "modes": [
+     [
+      1.0,
+      1.0
+     ]
+    ],
+    "z": 18
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 18042
+  },
+  {
+   "liso": 0,
+   "nuclide": "Ar43",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 322.2,
+    "z": 18
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 322.2,
+    "modes": [
+     [
+      1.0,
+      1.0
+     ]
+    ],
+    "z": 18
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 18043
+  },
+  {
+   "liso": 0,
+   "nuclide": "Ar44",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 712.2,
+    "z": 18
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 712.2,
+    "modes": [
+     [
+      1.0,
+      1.0
+     ]
+    ],
+    "z": 18
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 18044
+  },
+  {
+   "liso": 0,
+   "nuclide": "Ar45",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 21.48,
+    "z": 18
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 21.48,
+    "modes": [
+     [
+      1.0,
+      1.0
+     ]
+    ],
+    "z": 18
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 18045
+  },
+  {
+   "liso": 0,
+   "nuclide": "Ar46",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 8.4,
+    "z": 18
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 8.4,
+    "modes": [
+     [
+      1.0,
+      1.0
+     ]
+    ],
+    "z": 18
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 18046
+  },
+  {
+   "liso": 0,
+   "nuclide": "Ar47",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 1.23,
+    "z": 18
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 1.23,
+    "modes": [
+     [
+      1.0,
+      1.0
+     ]
+    ],
+    "z": 18
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 18047
+  },
+  {
+   "liso": 0,
+   "nuclide": "Ar48",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 0.475,
+    "z": 18
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 0.475,
+    "modes": [
+     [
+      1.0,
+      1.0
+     ]
+    ],
+    "z": 18
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 18048
+  },
+  {
+   "liso": 0,
+   "nuclide": "Ca41",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 3218880000000.0,
+    "z": 20
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 3218880000000.0,
+    "modes": [
+     [
+      2.0,
+      1.0
+     ]
+    ],
+    "z": 20
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 20041
+  },
+  {
+   "liso": 0,
+   "nuclide": "Ca45",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 14049500.0,
+    "z": 20
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 14049500.0,
+    "modes": [
+     [
+      1.0,
+      0.999981
+     ],
+     [
+      1.0,
+      1.9e-05
+     ]
+    ],
+    "z": 20
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 20045
+  },
+  {
+   "liso": 0,
+   "nuclide": "Ca47",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 391910.4,
+    "z": 20
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 391910.4,
+    "modes": [
+     [
+      1.0,
+      1.0
+     ]
+    ],
+    "z": 20
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 20047
+  },
+  {
+   "liso": 0,
+   "nuclide": "Ca48",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 7.25824e+26,
+    "z": 20
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 7.25824e+26,
+    "modes": [
+     [
+      1.1,
+      0.75
+     ],
+     [
+      1.0,
+      0.25
+     ]
+    ],
+    "z": 20
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 20048
+  },
+  {
+   "liso": 0,
+   "nuclide": "Ca49",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 523.08,
+    "z": 20
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 523.08,
+    "modes": [
+     [
+      1.0,
+      1.0
+     ]
+    ],
+    "z": 20
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 20049
+  },
+  {
+   "liso": 0,
+   "nuclide": "Ca50",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 13.9,
+    "z": 20
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 13.9,
+    "modes": [
+     [
+      1.0,
+      0.0035
+     ],
+     [
+      1.0,
+      0.9965
+     ]
+    ],
+    "z": 20
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 20050
+  },
+  {
+   "liso": 0,
+   "nuclide": "Ca51",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 10.0,
+    "z": 20
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 10.0,
+    "modes": [
+     [
+      1.0,
+      1.0
+     ]
+    ],
+    "z": 20
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 20051
+  },
+  {
+   "liso": 0,
+   "nuclide": "Ca52",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 4.6,
+    "z": 20
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 4.6,
+    "modes": [
+     [
+      1.0,
+      0.98
+     ],
+     [
+      1.5,
+      0.02
+     ]
+    ],
+    "z": 20
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 20052
+  },
+  {
+   "liso": 0,
+   "nuclide": "Ca53",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 0.09,
+    "z": 20
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 0.09,
+    "modes": [
+     [
+      1.0,
+      0.7
+     ],
+     [
+      1.5,
+      0.3
+     ]
+    ],
+    "z": 20
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 20053
+  },
+  {
+   "liso": 0,
+   "nuclide": "Cl36",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 9498840000000.0,
+    "z": 17
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 9498840000000.0,
+    "modes": [
+     [
+      2.0,
+      0.019
+     ],
+     [
+      1.0,
+      0.981
+     ]
+    ],
+    "z": 17
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 17036
+  },
+  {
+   "liso": 0,
+   "nuclide": "Cl38",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 2233.8,
+    "z": 17
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 2233.8,
+    "modes": [
+     [
+      1.0,
+      1.0
+     ]
+    ],
+    "z": 17
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 17038
+  },
+  {
+   "liso": 1,
+   "nuclide": "Cl38m1",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 0.715,
+    "z": 17
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 0.715,
+    "modes": [
+     [
+      3.0,
+      1.0
+     ]
+    ],
+    "z": 17
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 17038
+  },
+  {
+   "liso": 0,
+   "nuclide": "Cl39",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 3336.0,
+    "z": 17
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 3336.0,
+    "modes": [
+     [
+      1.0,
+      1.0
+     ]
+    ],
+    "z": 17
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 17039
+  },
+  {
+   "liso": 0,
+   "nuclide": "Cl40",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 81.0,
+    "z": 17
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 81.0,
+    "modes": [
+     [
+      1.0,
+      1.0
+     ]
+    ],
+    "z": 17
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 17040
+  },
+  {
+   "liso": 0,
+   "nuclide": "Cl41",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 38.4,
+    "z": 17
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 38.4,
+    "modes": [
+     [
+      1.0,
+      1.0
+     ]
+    ],
+    "z": 17
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 17041
+  },
+  {
+   "liso": 0,
+   "nuclide": "Cl42",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 6.8,
+    "z": 17
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 6.8,
+    "modes": [
+     [
+      1.0,
+      1.0
+     ]
+    ],
+    "z": 17
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 17042
+  },
+  {
+   "liso": 0,
+   "nuclide": "Cl43",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 3.13,
+    "z": 17
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 3.13,
+    "modes": [
+     [
+      1.0,
+      1.0
+     ]
+    ],
+    "z": 17
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 17043
+  },
+  {
+   "liso": 0,
+   "nuclide": "Co55",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 63108.0,
+    "z": 27
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 63108.0,
+    "modes": [
+     [
+      2.0,
+      1.0
+     ]
+    ],
+    "z": 27
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 27055
+  },
+  {
+   "liso": 0,
+   "nuclide": "Co56",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 6672931.0,
+    "z": 27
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 6672931.0,
+    "modes": [
+     [
+      2.0,
+      1.0
+     ]
+    ],
+    "z": 27
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 27056
+  },
+  {
+   "liso": 0,
+   "nuclide": "Co57",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 23478340.0,
+    "z": 27
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 23478340.0,
+    "modes": [
+     [
+      2.0,
+      1.0
+     ]
+    ],
+    "z": 27
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 27057
+  },
+  {
+   "liso": 0,
+   "nuclide": "Co58",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 6122304.0,
+    "z": 27
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 6122304.0,
+    "modes": [
+     [
+      2.0,
+      1.0
+     ]
+    ],
+    "z": 27
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 27058
+  },
+  {
+   "liso": 1,
+   "nuclide": "Co58m1",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 32760.0,
+    "z": 27
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 32760.0,
+    "modes": [
+     [
+      3.0,
+      1.0
+     ]
+    ],
+    "z": 27
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 27058
+  },
+  {
+   "liso": 0,
+   "nuclide": "Co60",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 166344200.0,
+    "z": 27
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 166344200.0,
+    "modes": [
+     [
+      1.0,
+      1.0
+     ]
+    ],
+    "z": 27
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 27060
+  },
+  {
+   "liso": 1,
+   "nuclide": "Co60m1",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 628.02,
+    "z": 27
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 628.02,
+    "modes": [
+     [
+      1.0,
+      0.0024
+     ],
+     [
+      3.0,
+      0.9976
+     ]
+    ],
+    "z": 27
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 27060
+  },
+  {
+   "liso": 0,
+   "nuclide": "Co61",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 5940.0,
+    "z": 27
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 5940.0,
+    "modes": [
+     [
+      1.0,
+      1.0
+     ]
+    ],
+    "z": 27
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 27061
+  },
+  {
+   "liso": 0,
+   "nuclide": "Co62",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 90.0,
+    "z": 27
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 90.0,
+    "modes": [
+     [
+      1.0,
+      1.0
+     ]
+    ],
+    "z": 27
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 27062
+  },
+  {
+   "liso": 1,
+   "nuclide": "Co62m1",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 834.6,
+    "z": 27
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 834.6,
+    "modes": [
+     [
+      1.0,
+      0.99
+     ],
+     [
+      3.0,
+      0.01
+     ]
+    ],
+    "z": 27
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 27062
+  },
+  {
+   "liso": 0,
+   "nuclide": "Cr48",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 77616.0,
+    "z": 24
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 77616.0,
+    "modes": [
+     [
+      2.0,
+      1.0
+     ]
+    ],
+    "z": 24
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 24048
+  },
+  {
+   "liso": 0,
+   "nuclide": "Cr49",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 2538.0,
+    "z": 24
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 2538.0,
+    "modes": [
+     [
+      2.0,
+      1.0
+     ]
+    ],
+    "z": 24
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 24049
+  },
+  {
+   "liso": 0,
+   "nuclide": "Cr51",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 2393366.0,
+    "z": 24
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 2393366.0,
+    "modes": [
+     [
+      2.0,
+      1.0
+     ]
+    ],
+    "z": 24
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 24051
+  },
+  {
+   "liso": 0,
+   "nuclide": "Cr55",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 209.82,
+    "z": 24
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 209.82,
+    "modes": [
+     [
+      1.0,
+      1.0
+     ]
+    ],
+    "z": 24
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 24055
+  },
+  {
+   "liso": 0,
+   "nuclide": "Cr56",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 356.4,
+    "z": 24
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 356.4,
+    "modes": [
+     [
+      1.0,
+      1.0
+     ]
+    ],
+    "z": 24
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 24056
+  },
+  {
+   "liso": 0,
+   "nuclide": "Cr57",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 21.1,
+    "z": 24
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 21.1,
+    "modes": [
+     [
+      1.0,
+      1.0
+     ]
+    ],
+    "z": 24
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 24057
+  },
+  {
+   "liso": 0,
+   "nuclide": "Cr58",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 7.0,
+    "z": 24
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 7.0,
+    "modes": [
+     [
+      1.0,
+      1.0
+     ]
+    ],
+    "z": 24
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 24058
+  },
+  {
+   "liso": 0,
+   "nuclide": "Cr59",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 0.46,
+    "z": 24
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 0.46,
+    "modes": [
+     [
+      1.0,
+      1.0
+     ]
+    ],
+    "z": 24
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 24059
+  },
+  {
+   "liso": 0,
+   "nuclide": "Cr60",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 0.49,
+    "z": 24
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 0.49,
+    "modes": [
+     [
+      1.0,
+      1.0
+     ]
+    ],
+    "z": 24
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 24060
+  },
+  {
+   "liso": 0,
+   "nuclide": "Fe51",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 0.305,
+    "z": 26
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 0.305,
+    "modes": [
+     [
+      2.0,
+      1.0
+     ]
+    ],
+    "z": 26
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 26051
+  },
+  {
+   "liso": 0,
+   "nuclide": "Fe52",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 29790.0,
+    "z": 26
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 29790.0,
+    "modes": [
+     [
+      2.0,
+      1.0
+     ]
+    ],
+    "z": 26
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 26052
+  },
+  {
+   "liso": 1,
+   "nuclide": "Fe52m1",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 45.9,
+    "z": 26
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 45.9,
+    "modes": [
+     [
+      2.0,
+      1.0
+     ]
+    ],
+    "z": 26
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 26052
+  },
+  {
+   "liso": 0,
+   "nuclide": "Fe53",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 510.6,
+    "z": 26
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 510.6,
+    "modes": [
+     [
+      2.0,
+      1.0
+     ]
+    ],
+    "z": 26
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 26053
+  },
+  {
+   "liso": 1,
+   "nuclide": "Fe53m1",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 152.4,
+    "z": 26
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 152.4,
+    "modes": [
+     [
+      3.0,
+      1.0
+     ]
+    ],
+    "z": 26
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 26053
+  },
+  {
+   "liso": 0,
+   "nuclide": "Fe55",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 86594050.0,
+    "z": 26
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 86594050.0,
+    "modes": [
+     [
+      2.0,
+      1.0
+     ]
+    ],
+    "z": 26
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 26055
+  },
+  {
+   "liso": 0,
+   "nuclide": "Fe59",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 3844368.0,
+    "z": 26
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 3844368.0,
+    "modes": [
+     [
+      1.0,
+      1.0
+     ]
+    ],
+    "z": 26
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 26059
+  },
+  {
+   "liso": 0,
+   "nuclide": "Fe60",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 47336400000000.0,
+    "z": 26
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 47336400000000.0,
+    "modes": [
+     [
+      1.0,
+      1.0
+     ]
+    ],
+    "z": 26
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 26060
+  },
+  {
+   "liso": 0,
+   "nuclide": "Fe61",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 358.8,
+    "z": 26
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 358.8,
+    "modes": [
+     [
+      1.0,
+      1.0
+     ]
+    ],
+    "z": 26
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 26061
+  },
+  {
+   "liso": 0,
+   "nuclide": "H3",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 388789600.0,
+    "z": 1
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 388789600.0,
+    "modes": [
+     [
+      1.0,
+      1.0
+     ]
+    ],
+    "z": 1
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 1003
+  },
+  {
+   "liso": 0,
+   "nuclide": "K38",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 458.16,
+    "z": 19
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 458.16,
+    "modes": [
+     [
+      2.0,
+      1.0
+     ]
+    ],
+    "z": 19
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 19038
+  },
+  {
+   "liso": 1,
+   "nuclide": "K38m1",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 0.924,
+    "z": 19
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 0.924,
+    "modes": [
+     [
+      2.0,
+      1.0
+     ]
+    ],
+    "z": 19
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 19038
+  },
+  {
+   "liso": 0,
+   "nuclide": "K40",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 3.93839e+16,
+    "z": 19
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 3.93839e+16,
+    "modes": [
+     [
+      2.0,
+      0.1086
+     ],
+     [
+      1.0,
+      0.8914
+     ]
+    ],
+    "z": 19
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 19040
+  },
+  {
+   "liso": 0,
+   "nuclide": "K42",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 44496.0,
+    "z": 19
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 44496.0,
+    "modes": [
+     [
+      1.0,
+      1.0
+     ]
+    ],
+    "z": 19
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 19042
+  },
+  {
+   "liso": 0,
+   "nuclide": "K43",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 80280.0,
+    "z": 19
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 80280.0,
+    "modes": [
+     [
+      1.0,
+      1.0
+     ]
+    ],
+    "z": 19
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 19043
+  },
+  {
+   "liso": 0,
+   "nuclide": "K44",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 1327.8,
+    "z": 19
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 1327.8,
+    "modes": [
+     [
+      1.0,
+      1.0
+     ]
+    ],
+    "z": 19
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 19044
+  },
+  {
+   "liso": 0,
+   "nuclide": "K45",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 1068.6,
+    "z": 19
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 1068.6,
+    "modes": [
+     [
+      1.0,
+      1.0
+     ]
+    ],
+    "z": 19
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 19045
+  },
+  {
+   "liso": 0,
+   "nuclide": "K46",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 105.0,
+    "z": 19
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 105.0,
+    "modes": [
+     [
+      1.0,
+      1.0
+     ]
+    ],
+    "z": 19
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 19046
+  },
+  {
+   "liso": 0,
+   "nuclide": "K47",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 17.5,
+    "z": 19
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 17.5,
+    "modes": [
+     [
+      1.0,
+      1.0
+     ]
+    ],
+    "z": 19
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 19047
+  },
+  {
+   "liso": 0,
+   "nuclide": "K48",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 6.8,
+    "z": 19
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 6.8,
+    "modes": [
+     [
+      1.0,
+      0.9886
+     ],
+     [
+      1.5,
+      0.0114
+     ]
+    ],
+    "z": 19
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 19048
+  },
+  {
+   "liso": 0,
+   "nuclide": "K49",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 1.26,
+    "z": 19
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 1.26,
+    "modes": [
+     [
+      1.0,
+      0.14
+     ],
+     [
+      1.5,
+      0.86
+     ]
+    ],
+    "z": 19
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 19049
+  },
+  {
+   "liso": 0,
+   "nuclide": "K50",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 0.472,
+    "z": 19
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 0.472,
+    "modes": [
+     [
+      1.0,
+      0.71
+     ],
+     [
+      1.5,
+      0.29
+     ]
+    ],
+    "z": 19
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 19050
+  },
+  {
+   "liso": 0,
+   "nuclide": "Mn50",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 0.28319,
+    "z": 25
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 0.28319,
+    "modes": [
+     [
+      2.0,
+      1.0
+     ]
+    ],
+    "z": 25
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 25050
+  },
+  {
+   "liso": 1,
+   "nuclide": "Mn50m1",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 105.0,
+    "z": 25
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 105.0,
+    "modes": [
+     [
+      2.0,
+      1.0
+     ]
+    ],
+    "z": 25
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 25050
+  },
+  {
+   "liso": 0,
+   "nuclide": "Mn51",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 2772.0,
+    "z": 25
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 2772.0,
+    "modes": [
+     [
+      2.0,
+      1.0
+     ]
+    ],
+    "z": 25
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 25051
+  },
+  {
+   "liso": 0,
+   "nuclide": "Mn52",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 483062.4,
+    "z": 25
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 483062.4,
+    "modes": [
+     [
+      2.0,
+      1.0
+     ]
+    ],
+    "z": 25
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 25052
+  },
+  {
+   "liso": 1,
+   "nuclide": "Mn52m1",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 1266.0,
+    "z": 25
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 1266.0,
+    "modes": [
+     [
+      2.0,
+      0.9825
+     ],
+     [
+      3.0,
+      0.0175
+     ]
+    ],
+    "z": 25
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 25052
+  },
+  {
+   "liso": 0,
+   "nuclide": "Mn53",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 116763000000000.0,
+    "z": 25
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 116763000000000.0,
+    "modes": [
+     [
+      2.0,
+      1.0
+     ]
+    ],
+    "z": 25
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 25053
+  },
+  {
+   "liso": 0,
+   "nuclide": "Mn54",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 26961120.0,
+    "z": 25
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 26961120.0,
+    "modes": [
+     [
+      2.0,
+      1.0
+     ]
+    ],
+    "z": 25
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 25054
+  },
+  {
+   "liso": 0,
+   "nuclide": "Mn56",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 9284.04,
+    "z": 25
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 9284.04,
+    "modes": [
+     [
+      1.0,
+      1.0
+     ]
+    ],
+    "z": 25
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 25056
+  },
+  {
+   "liso": 0,
+   "nuclide": "Mn57",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 85.4,
+    "z": 25
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 85.4,
+    "modes": [
+     [
+      1.0,
+      1.0
+     ]
+    ],
+    "z": 25
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 25057
+  },
+  {
+   "liso": 0,
+   "nuclide": "Mn58",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 3.0,
+    "z": 25
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 3.0,
+    "modes": [
+     [
+      1.0,
+      1.0
+     ]
+    ],
+    "z": 25
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 25058
+  },
+  {
+   "liso": 1,
+   "nuclide": "Mn58m1",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 65.4,
+    "z": 25
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 65.4,
+    "modes": [
+     [
+      1.0,
+      1.0
+     ]
+    ],
+    "z": 25
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 25058
+  },
+  {
+   "liso": 0,
+   "nuclide": "Mn59",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 4.59,
+    "z": 25
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 4.59,
+    "modes": [
+     [
+      1.0,
+      1.0
+     ]
+    ],
+    "z": 25
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 25059
+  },
+  {
+   "liso": 0,
+   "nuclide": "Mn60",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 51.0,
+    "z": 25
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 51.0,
+    "modes": [
+     [
+      1.0,
+      1.0
+     ]
+    ],
+    "z": 25
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 25060
+  },
+  {
+   "liso": 1,
+   "nuclide": "Mn60m1",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 1.77,
+    "z": 25
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 1.77,
+    "modes": [
+     [
+      1.0,
+      0.885
+     ],
+     [
+      3.0,
+      0.115
+     ]
+    ],
+    "z": 25
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 25060
+  },
+  {
+   "liso": 0,
+   "nuclide": "Mn61",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 0.67,
+    "z": 25
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 0.67,
+    "modes": [
+     [
+      1.0,
+      1.0
+     ]
+    ],
+    "z": 25
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 25061
+  },
+  {
+   "liso": 0,
+   "nuclide": "Ni59",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 2398380000000.0,
+    "z": 28
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 2398380000000.0,
+    "modes": [
+     [
+      2.0,
+      1.0
+     ]
+    ],
+    "z": 28
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 28059
+  },
+  {
+   "liso": 0,
+   "nuclide": "S35",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 7560864.0,
+    "z": 16
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 7560864.0,
+    "modes": [
+     [
+      1.0,
+      1.0
+     ]
+    ],
+    "z": 16
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 16035
+  },
+  {
+   "liso": 0,
+   "nuclide": "S37",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 303.0,
+    "z": 16
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 303.0,
+    "modes": [
+     [
+      1.0,
+      1.0
+     ]
+    ],
+    "z": 16
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 16037
+  },
+  {
+   "liso": 0,
+   "nuclide": "S38",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 10218.0,
+    "z": 16
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 10218.0,
+    "modes": [
+     [
+      1.0,
+      1.0
+     ]
+    ],
+    "z": 16
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 16038
+  },
+  {
+   "liso": 0,
+   "nuclide": "S39",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 11.5,
+    "z": 16
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 11.5,
+    "modes": [
+     [
+      1.0,
+      1.0
+     ]
+    ],
+    "z": 16
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 16039
+  },
+  {
+   "liso": 0,
+   "nuclide": "S40",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 8.8,
+    "z": 16
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 8.8,
+    "modes": [
+     [
+      1.0,
+      1.0
+     ]
+    ],
+    "z": 16
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 16040
+  },
+  {
+   "liso": 0,
+   "nuclide": "Sc42",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 0.6808,
+    "z": 21
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 0.6808,
+    "modes": [
+     [
+      2.0,
+      1.0
+     ]
+    ],
+    "z": 21
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 21042
+  },
+  {
+   "liso": 0,
+   "nuclide": "Sc43",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 14007.6,
+    "z": 21
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 14007.6,
+    "modes": [
+     [
+      2.0,
+      1.0
+     ]
+    ],
+    "z": 21
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 21043
+  },
+  {
+   "liso": 0,
+   "nuclide": "Sc44",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 14292.0,
+    "z": 21
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 14292.0,
+    "modes": [
+     [
+      2.0,
+      1.0
+     ]
+    ],
+    "z": 21
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 21044
+  },
+  {
+   "liso": 1,
+   "nuclide": "Sc44m1",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 210996.0,
+    "z": 21
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 210996.0,
+    "modes": [
+     [
+      2.0,
+      0.012
+     ],
+     [
+      3.0,
+      0.988
+     ]
+    ],
+    "z": 21
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 21044
+  },
+  {
+   "liso": 1,
+   "nuclide": "Sc45m1",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 0.318,
+    "z": 21
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 0.318,
+    "modes": [
+     [
+      3.0,
+      1.0
+     ]
+    ],
+    "z": 21
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 21045
+  },
+  {
+   "liso": 0,
+   "nuclide": "Sc46",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 7239456.0,
+    "z": 21
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 7239456.0,
+    "modes": [
+     [
+      1.0,
+      1.0
+     ]
+    ],
+    "z": 21
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 21046
+  },
+  {
+   "liso": 1,
+   "nuclide": "Sc46m1",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 18.75,
+    "z": 21
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 18.75,
+    "modes": [
+     [
+      3.0,
+      1.0
+     ]
+    ],
+    "z": 21
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 21046
+  },
+  {
+   "liso": 0,
+   "nuclide": "Sc47",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 289370.9,
+    "z": 21
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 289370.9,
+    "modes": [
+     [
+      1.0,
+      1.0
+     ]
+    ],
+    "z": 21
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 21047
+  },
+  {
+   "liso": 0,
+   "nuclide": "Sc48",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 157212.0,
+    "z": 21
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 157212.0,
+    "modes": [
+     [
+      1.0,
+      1.0
+     ]
+    ],
+    "z": 21
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 21048
+  },
+  {
+   "liso": 0,
+   "nuclide": "Sc49",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 3430.8,
+    "z": 21
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 3430.8,
+    "modes": [
+     [
+      1.0,
+      1.0
+     ]
+    ],
+    "z": 21
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 21049
+  },
+  {
+   "liso": 0,
+   "nuclide": "Sc50",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 102.5,
+    "z": 21
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 102.5,
+    "modes": [
+     [
+      1.0,
+      1.0
+     ]
+    ],
+    "z": 21
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 21050
+  },
+  {
+   "liso": 1,
+   "nuclide": "Sc50m1",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 0.35,
+    "z": 21
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 0.35,
+    "modes": [
+     [
+      3.0,
+      1.0
+     ]
+    ],
+    "z": 21
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 21050
+  },
+  {
+   "liso": 0,
+   "nuclide": "Sc51",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 12.4,
+    "z": 21
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 12.4,
+    "modes": [
+     [
+      1.0,
+      1.0
+     ]
+    ],
+    "z": 21
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 21051
+  },
+  {
+   "liso": 0,
+   "nuclide": "Sc52",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 8.2,
+    "z": 21
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 8.2,
+    "modes": [
+     [
+      1.0,
+      1.0
+     ]
+    ],
+    "z": 21
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 21052
+  },
+  {
+   "liso": 0,
+   "nuclide": "Sc53",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 3.0,
+    "z": 21
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 3.0,
+    "modes": [
+     [
+      1.0,
+      1.0
+     ]
+    ],
+    "z": 21
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 21053
+  },
+  {
+   "liso": 0,
+   "nuclide": "Sc54",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 0.36,
+    "z": 21
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 0.36,
+    "modes": [
+     [
+      1.0,
+      1.0
+     ]
+    ],
+    "z": 21
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 21054
+  },
+  {
+   "liso": 0,
+   "nuclide": "Sc55",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 0.105,
+    "z": 21
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 0.105,
+    "modes": [
+     [
+      1.0,
+      1.0
+     ]
+    ],
+    "z": 21
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 21055
+  },
+  {
+   "liso": 0,
+   "nuclide": "Ti44",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 1893460000.0,
+    "z": 22
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 1893460000.0,
+    "modes": [
+     [
+      2.0,
+      1.0
+     ]
+    ],
+    "z": 22
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 22044
+  },
+  {
+   "liso": 0,
+   "nuclide": "Ti45",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 11088.0,
+    "z": 22
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 11088.0,
+    "modes": [
+     [
+      2.0,
+      1.0
+     ]
+    ],
+    "z": 22
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 22045
+  },
+  {
+   "liso": 0,
+   "nuclide": "Ti51",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 345.6,
+    "z": 22
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 345.6,
+    "modes": [
+     [
+      1.0,
+      1.0
+     ]
+    ],
+    "z": 22
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 22051
+  },
+  {
+   "liso": 0,
+   "nuclide": "Ti52",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 102.0,
+    "z": 22
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 102.0,
+    "modes": [
+     [
+      1.0,
+      1.0
+     ]
+    ],
+    "z": 22
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 22052
+  },
+  {
+   "liso": 0,
+   "nuclide": "Ti53",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 32.7,
+    "z": 22
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 32.7,
+    "modes": [
+     [
+      1.0,
+      1.0
+     ]
+    ],
+    "z": 22
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 22053
+  },
+  {
+   "liso": 0,
+   "nuclide": "Ti54",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 1.5,
+    "z": 22
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 1.5,
+    "modes": [
+     [
+      1.0,
+      1.0
+     ]
+    ],
+    "z": 22
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 22054
+  },
+  {
+   "liso": 0,
+   "nuclide": "Ti55",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 1.3,
+    "z": 22
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 1.3,
+    "modes": [
+     [
+      1.0,
+      1.0
+     ]
+    ],
+    "z": 22
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 22055
+  },
+  {
+   "liso": 0,
+   "nuclide": "Ti56",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 0.2,
+    "z": 22
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 0.2,
+    "modes": [
+     [
+      1.0,
+      1.0
+     ]
+    ],
+    "z": 22
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 22056
+  },
+  {
+   "liso": 0,
+   "nuclide": "V46",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 0.4225,
+    "z": 23
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 0.4225,
+    "modes": [
+     [
+      2.0,
+      1.0
+     ]
+    ],
+    "z": 23
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 23046
+  },
+  {
+   "liso": 0,
+   "nuclide": "V47",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 1956.0,
+    "z": 23
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 1956.0,
+    "modes": [
+     [
+      2.0,
+      1.0
+     ]
+    ],
+    "z": 23
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 23047
+  },
+  {
+   "liso": 0,
+   "nuclide": "V48",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 1380110.0,
+    "z": 23
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 1380110.0,
+    "modes": [
+     [
+      2.0,
+      1.0
+     ]
+    ],
+    "z": 23
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 23048
+  },
+  {
+   "liso": 0,
+   "nuclide": "V49",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 28512000.0,
+    "z": 23
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 28512000.0,
+    "modes": [
+     [
+      2.0,
+      1.0
+     ]
+    ],
+    "z": 23
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 23049
+  },
+  {
+   "liso": 0,
+   "nuclide": "V50",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 4.41806e+24,
+    "z": 23
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 4.41806e+24,
+    "modes": [
+     [
+      2.0,
+      0.83
+     ],
+     [
+      1.0,
+      0.17
+     ]
+    ],
+    "z": 23
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 23050
+  },
+  {
+   "liso": 0,
+   "nuclide": "V52",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 224.58,
+    "z": 23
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 224.58,
+    "modes": [
+     [
+      1.0,
+      1.0
+     ]
+    ],
+    "z": 23
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 23052
+  },
+  {
+   "liso": 0,
+   "nuclide": "V53",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 92.58,
+    "z": 23
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 92.58,
+    "modes": [
+     [
+      1.0,
+      1.0
+     ]
+    ],
+    "z": 23
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 23053
+  },
+  {
+   "liso": 0,
+   "nuclide": "V54",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 49.8,
+    "z": 23
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 49.8,
+    "modes": [
+     [
+      1.0,
+      1.0
+     ]
+    ],
+    "z": 23
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 23054
+  },
+  {
+   "liso": 0,
+   "nuclide": "V55",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 6.54,
+    "z": 23
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 6.54,
+    "modes": [
+     [
+      1.0,
+      1.0
+     ]
+    ],
+    "z": 23
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 23055
+  },
+  {
+   "liso": 0,
+   "nuclide": "V56",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 0.216,
+    "z": 23
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 0.216,
+    "modes": [
+     [
+      1.0,
+      1.0
+     ]
+    ],
+    "z": 23
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 23056
+  },
+  {
+   "liso": 0,
+   "nuclide": "V57",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 0.35,
+    "z": 23
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 0.35,
+    "modes": [
+     [
+      1.0,
+      0.9996
+     ],
+     [
+      1.5,
+      0.0004
+     ]
+    ],
+    "z": 23
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 23057
+  },
+  {
+   "liso": 0,
+   "nuclide": "V58",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 0.185,
+    "z": 23
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 0.185,
+    "modes": [
+     [
+      1.0,
+      1.0
+     ]
+    ],
+    "z": 23
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 23058
+  },
+  {
+   "liso": 0,
+   "nuclide": "V59",
+   "page": {
+    "alpha_emitting": false,
+    "half_life_s": 0.075,
+    "z": 23
+   },
+   "reader": {
+    "alpha_emitting": false,
+    "half_life_s": 0.075,
+    "modes": [
+     [
+      1.0,
+      1.0
+     ]
+    ],
+    "z": 23
+   },
+   "source": "primary",
+   "spec": "waste-spec.json",
+   "za": 23059
+  }
+ ],
+ "schema": "actinv-p144-v2-1",
+ "tolerance": {
+  "half_life_relative": 0
+ }
+}

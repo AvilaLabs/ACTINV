@@ -1,0 +1,13 @@
+2026-10-16T21:30:10.697028Z  INFO 🚀 Starting trunk 0.21.14
+2026-10-16T21:30:10.701663Z  INFO 📦 starting build
+   Compiling zip v9.0.4
+   Compiling actinv-data v1.5.0 (/home/connoravila/Documents/actinv/crates/actinv-data)
+   Compiling actinv-gui v0.4.0-preview.1 (/home/connoravila/Documents/actinv/crates/actinv-gui)
+   Compiling actinv-core v1.5.0 (/home/connoravila/Documents/actinv/crates/actinv-core)
+    Finished `release` profile [optimized] target(s) in 2m 23s
+2026-10-16T21:33:27.397277Z  INFO applying new distribution
+2026-10-16T21:33:27.397694Z  INFO ✅ success
+ INFO Book building has started
+ INFO Running the html backend
+ INFO HTML book written to `/home/connoravila/Documents/actinv/target/p144/web/docs`
+Handbook chapters, version, local files, and anchors are valid.

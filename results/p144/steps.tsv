@@ -1,0 +1,17 @@
+build_cli	cargo build --release --locked -p actinv-cli	0
+run_fns_fe_5min	target/release/actinv run examples/fns_fe_5min.json target/p144/runs/fns_fe_5min.json	0
+run_ra_steel	target/release/actinv run examples/optimize_ra_steel/base_spec.json target/p144/runs/ra_steel.json	0
+drive_fns_fe_5min	ACTINV_P144_V1_CASE=/home/connoravila/Documents/actinv/target/p144/runs/fns_fe_5min.case.json cargo test --locked -p actinv-gui --bins app::pages::waste::tests::p144_v1_drive_the_waste_page -- --ignored --exact	0
+v1_fns_fe_5min	python3 controls/check_p144.py v1 target/p144/v1/fns_fe_5min/waste-spec.json target/p144/v1/fns_fe_5min/waste-result.json	0
+drive_ra_steel	ACTINV_P144_V1_CASE=/home/connoravila/Documents/actinv/target/p144/runs/ra_steel.case.json cargo test --locked -p actinv-gui --bins app::pages::waste::tests::p144_v1_drive_the_waste_page -- --ignored --exact	0
+v1_ra_steel	python3 controls/check_p144.py v1 target/p144/v1/ra_steel/waste-spec.json target/p144/v1/ra_steel/waste-result.json	0
+v2	python3 controls/check_p144.py v2 target/p144/v1/fns_fe_5min/waste-spec.json,target/p144/v1/ra_steel/waste-spec.json actinv-data/v1.1.0/decay/endf-b-viii-0_decay.dat actinv-data/v1.1.0/decay/jeff-3-3_decay.dat	0
+web_build	trunk build --config crates/actinv-gui/Trunk.toml --release --locked --public-url ./ --dist /home/connoravila/Documents/actinv/target/p144/web/app && mdbook build -d /home/connoravila/Documents/actinv/target/p144/web/docs && python3 scripts/check_docs.py target/p144/web/docs && cp -r target/p144/web/app target/p144/web/site && python3 scripts/prepare_web.py target/p144/web/site --docs target/p144/web/docs	0
+v3_smoke	python3 -m http.server 8093 --directory target/p144/web/site --bind 127.0.0.1 & srv=$!; trap 'kill $srv' EXIT; ACTINV_WEB_URL=http://127.0.0.1:8093 ACTINV_WEB_WASTE_FILES=/home/connoravila/Documents/actinv/target/p144/v1/fns_fe_5min/waste-result.json:/home/connoravila/Documents/actinv/target/p144/v1/ra_steel/waste-result.json ACTINV_WEB_WASTE_REPORT=/home/connoravila/Documents/actinv/results/p144/v3_views.json timeout 300s node web/smoke.mjs	0
+gui_build	cargo build --release --locked -p actinv-gui	0
+v4_desktop_smoke	python3 scripts/desktop_smoke.py target/release/actinv-gui target/p144/desktop_smoke --require-render	0
+v4_look_diff	git diff --exit-code 2b2c51e HEAD -- crates/actinv-gui/src/visuals.rs crates/actinv-gui/assets	0
+v5_fmt	cargo fmt --all -- --check	0
+v5_clippy_native	cargo clippy --workspace --all-targets --all-features -- -D warnings	0
+v5_clippy_wasm	cargo clippy --locked -p actinv-gui --lib --no-default-features --target wasm32-unknown-unknown -- -D warnings	0
+v5_workspace_tests	cargo test --locked --workspace	0

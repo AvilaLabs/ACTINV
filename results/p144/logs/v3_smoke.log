@@ -1,0 +1,22 @@
+127.0.0.1 - - [16/Oct/2026 17:33:29] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [16/Oct/2026 17:33:29] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [16/Oct/2026 17:33:29] "GET /actinv-gui-55a102142e70f5b4_bg.wasm HTTP/1.1" 200 -
+127.0.0.1 - - [16/Oct/2026 17:33:29] "GET /actinv-gui-55a102142e70f5b4.js HTTP/1.1" 200 -
+127.0.0.1 - - [16/Oct/2026 17:33:29] "GET /actinv-mark.svg HTTP/1.1" 200 -
+127.0.0.1 - - [16/Oct/2026 17:33:30] "GET /download/ HTTP/1.1" 200 -
+127.0.0.1 - - [16/Oct/2026 17:33:30] "GET /download/download.mjs HTTP/1.1" 200 -
+127.0.0.1 - - [16/Oct/2026 17:33:30] "GET /download/platform.mjs HTTP/1.1" 200 -
+127.0.0.1 - - [16/Oct/2026 17:33:30] "GET /download/releases.json HTTP/1.1" 200 -
+127.0.0.1 - - [16/Oct/2026 17:33:30] "GET /download/ HTTP/1.1" 200 -
+127.0.0.1 - - [16/Oct/2026 17:33:30] "GET /download/download.mjs HTTP/1.1" 200 -
+127.0.0.1 - - [16/Oct/2026 17:33:30] "GET /download/platform.mjs HTTP/1.1" 200 -
+127.0.0.1 - - [16/Oct/2026 17:33:30] "GET /download/releases.json HTTP/1.1" 200 -
+127.0.0.1 - - [16/Oct/2026 17:33:31] "GET /download/ HTTP/1.1" 200 -
+127.0.0.1 - - [16/Oct/2026 17:33:31] "GET /download/download.mjs HTTP/1.1" 200 -
+127.0.0.1 - - [16/Oct/2026 17:33:31] "GET /download/platform.mjs HTTP/1.1" 200 -
+127.0.0.1 - - [16/Oct/2026 17:33:31] "GET /download/releases.json HTTP/1.1" 200 -
+127.0.0.1 - - [16/Oct/2026 17:33:31] "GET /download/ HTTP/1.1" 200 -
+127.0.0.1 - - [16/Oct/2026 17:33:31] "GET /download/download.mjs HTTP/1.1" 200 -
+127.0.0.1 - - [16/Oct/2026 17:33:31] "GET /download/platform.mjs HTTP/1.1" 200 -
+127.0.0.1 - - [16/Oct/2026 17:33:31] "GET /download/releases.json HTTP/1.1" 200 -
+Browser startup, import and report hooks, and four download scenarios passed.
