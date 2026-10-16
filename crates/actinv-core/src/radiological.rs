@@ -748,4 +748,162 @@ mod tests {
             .unwrap_err()
             .contains("source.licence"));
     }
+
+    /// P140 hardening regressions: each asserts the corrected behaviour and fails on the code
+    /// that predates the repair. The bundled tables are read in their current format, so the
+    /// fixtures need no table-format knowledge.
+    fn bundled_prepared(name: &str, selector: &str) -> PreparedRadiologicalTable {
+        let selectors: Vec<String> = if selector.is_empty() {
+            Vec::new()
+        } else {
+            vec![selector.to_owned()]
+        };
+        PreparedRadiologicalTable::from_json(bundled_table(name).unwrap(), &selectors).unwrap()
+    }
+
+    fn inventory(items: &[(&str, f64)]) -> BTreeMap<String, f64> {
+        items
+            .iter()
+            .map(|(name, activity)| ((*name).to_owned(), *activity))
+            .collect()
+    }
+
+    // ---- F2: progeny covered by a parent row
+
+    #[test]
+    fn p140_rad_f2_progeny_covered_by_a_parent_row_is_not_missing() {
+        // Euratom Table A lists Cs-137 with "(1)": Ba-137m is included in the parent value.
+        let prepared = bundled_prepared("euratom-2013-59-annex-vii-a", "");
+        let activity = inventory(&[("Cs137", 1.0), ("Ba137m1", 0.9)]);
+        let out = &prepared.evaluate(&activity, false).unwrap().responses[0];
+        // Cs-137: 0.1 kBq/kg = 100 Bq/kg, so 1 Bq/g is an index of 10; the progeny adds nothing.
+        assert!((out.value - 10.0).abs() < 1e-12, "{}", out.value);
+        assert!(
+            out.missing_active_nuclides.is_empty(),
+            "progeny reported missing: {:?}",
+            out.missing_active_nuclides
+        );
+        assert_eq!(out.missing_activity_Bq_per_g, 0.0);
+        assert_eq!(out.activity_coverage_fraction, 1.0);
+    }
+
+    #[test]
+    fn p140_rad_f2_require_complete_accepts_parents_with_their_progeny() {
+        // Every table whose source states the parent/progeny pairs: Euratom A and B, 49 CFR
+        // 173.436 exempt concentration and consignment (footnote b).
+        let activity = inventory(&[
+            ("Cs137", 1.0),
+            ("Ba137m1", 0.9),
+            ("Ru106", 1.0),
+            ("Rh106", 0.5),
+        ]);
+        for name in [
+            "euratom-2013-59-annex-vii-a",
+            "euratom-2013-59-annex-vii-b-activity",
+            "euratom-2013-59-annex-vii-b-concentration",
+            "us-49cfr173-exempt-concentration",
+            "us-49cfr173-exempt-consignment",
+        ] {
+            let prepared = bundled_prepared(name, "");
+            let result = prepared
+                .evaluate(&activity, true)
+                .unwrap_or_else(|error| panic!("{name}: {error}"));
+            for response in &result.responses {
+                assert_eq!(
+                    response.activity_coverage_fraction, 1.0,
+                    "{name}/{}",
+                    response.id
+                );
+            }
+        }
+    }
+
+    #[test]
+    fn p140_rad_f2_progeny_with_its_own_row_is_not_counted_twice() {
+        // Euratom Table A: Sr-90 (1) includes Y-90, which also has its own row (1000 kBq/kg).
+        // With both in the inventory the progeny is covered by the parent, not summed again.
+        let prepared = bundled_prepared("euratom-2013-59-annex-vii-a", "");
+        let activity = inventory(&[("Sr90", 1.0), ("Y90", 1.0)]);
+        let out = &prepared.evaluate(&activity, true).unwrap().responses[0];
+        // Sr-90 alone: 1 kBq/kg = 1000 Bq/kg, index 1.0 per Bq/g.
+        assert!(
+            (out.value - 1.0).abs() < 1e-12,
+            "double counted: {}",
+            out.value
+        );
+    }
+
+    #[test]
+    fn p140_rad_f2_guard_progeny_without_its_parent_keeps_its_own_row() {
+        // The repair must not blanket-ignore progeny: Y-90 alone uses its row, and a progeny
+        // with no row and no parent present stays visibly missing.
+        let prepared = bundled_prepared("euratom-2013-59-annex-vii-a", "");
+        let y90 = &prepared
+            .evaluate(&inventory(&[("Y90", 1.0)]), true)
+            .unwrap()
+            .responses[0];
+        assert!((y90.value - 1.0e-3).abs() < 1e-15, "{}", y90.value);
+        let ba = &prepared
+            .evaluate(&inventory(&[("Ba137m1", 1.0)]), false)
+            .unwrap()
+            .responses[0];
+        assert_eq!(ba.missing_active_nuclides, vec!["Ba137m1".to_owned()]);
+    }
+
+    // ---- F3: "Unlimited" A1/A2 rows contribute zero and count as covered
+
+    #[test]
+    fn p140_rad_f3_unlimited_a2_nuclides_are_covered_with_zero_contribution() {
+        // Mn-53, Ni-59, Zr-93 and I-129 are "Unlimited" in 49 CFR 173.435.
+        let prepared = bundled_prepared("us-49cfr173-a2", "a2-u-medium");
+        let activity = inventory(&[
+            ("Co60", 2.0),
+            ("Mn53", 1.0),
+            ("Ni59", 1.0),
+            ("Zr93", 1.0),
+            ("I129", 1.0),
+        ]);
+        let out = &prepared.evaluate(&activity, false).unwrap().responses[0];
+        assert_eq!(out.value, 2.0 / 4.0e11);
+        assert!(
+            out.missing_active_nuclides.is_empty(),
+            "unlimited rows reported missing: {:?}",
+            out.missing_active_nuclides
+        );
+        assert_eq!(out.missing_activity_Bq_per_g, 0.0);
+        assert_eq!(out.activity_coverage_fraction, 1.0);
+    }
+
+    #[test]
+    fn p140_rad_f3_require_complete_accepts_unlimited_nuclides_in_a1_and_a2() {
+        let activity = inventory(&[("Co60", 2.0), ("Mn53", 1.0), ("Ni59", 1.0)]);
+        for (name, selector) in [
+            ("us-49cfr173-a2", "a2-u-medium"),
+            ("us-49cfr173-a1", "a1-u-medium"),
+        ] {
+            let prepared = bundled_prepared(name, selector);
+            let result = prepared
+                .evaluate(&activity, true)
+                .unwrap_or_else(|error| panic!("{name}: {error}"));
+            assert_eq!(
+                result.responses[0].activity_coverage_fraction, 1.0,
+                "{name}"
+            );
+            assert_eq!(result.responses[0].value, 2.0 / 4.0e11, "{name}");
+        }
+    }
+
+    #[test]
+    fn p140_rad_f3_guard_a_nuclide_absent_from_the_table_without_a_reason_stays_missing() {
+        // Unlimited is an explicit statement of the source, not a default for unknown nuclides.
+        let prepared = bundled_prepared("us-49cfr173-a2", "a2-u-medium");
+        let out = &prepared
+            .evaluate(&inventory(&[("Co60", 2.0), ("He3", 1.0)]), false)
+            .unwrap()
+            .responses[0];
+        assert_eq!(out.missing_active_nuclides, vec!["He3".to_owned()]);
+        assert!(prepared
+            .evaluate(&inventory(&[("Co60", 2.0), ("He3", 1.0)]), true)
+            .is_err());
+    }
 }

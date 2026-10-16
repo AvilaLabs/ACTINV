@@ -2337,4 +2337,453 @@ mod tests {
             assert!(out.contains("particle=\"photon\""));
         }
     }
+
+    /// P140 hardening regressions: each asserts the corrected behaviour and fails on the code
+    /// that predates the repair.
+    mod p140 {
+        use super::super::{
+            add_bremsstrahlung, add_point_source_dose, bremsstrahlung_energy_below_keV,
+            bremsstrahlung_photons_per_electron, source_for_step, PhotonResponse, PhotonSourceOut,
+            ResponseCurve,
+        };
+        use crate::run::EV;
+        use crate::spec::{BremsstrahlungOptions, PointSourceOptions};
+        use actinv_data::decay::{DiscreteRadiation, Mode, Nuclide, Spectrum};
+        use std::collections::BTreeMap;
+
+        // Manual Eq. (65): a = 2.76e-6 per keV.
+        const A: f64 = 2.76e-6;
+        // Group 0 is 0.5-1.5 MeV, so a 1 MeV line sits on its midpoint and on a tabulated energy.
+        const GAMMA_BOUNDS: [f64; 3] = [5.0e5, 1.5e6, 1.0e8];
+
+        fn close(a: f64, b: f64) -> bool {
+            (a - b).abs() <= 1e-9 * b.abs().max(1e-300)
+        }
+
+        fn curve(values: [f64; 4]) -> ResponseCurve {
+            ResponseCurve {
+                energy_eV: vec![1.0e3, 1.0e4, 1.0e6, 1.0e7],
+                values_cm2_g: values.to_vec(),
+            }
+        }
+
+        fn response() -> PhotonResponse {
+            let mut elements = BTreeMap::new();
+            elements.insert("H".to_string(), curve([4500.0, 5.0, 0.06, 0.03]));
+            PhotonResponse {
+                schema: "actinv-photon-response-1".into(),
+                provenance: serde_json::Value::Null,
+                air_mass_energy_absorption: curve([3000.0, 10.0, 0.03, 0.02]),
+                air_mass_attenuation: Some(curve([3100.0, 11.0, 0.06, 0.04])),
+                element_mass_attenuation: elements,
+            }
+        }
+
+        fn fractions() -> BTreeMap<String, f64> {
+            BTreeMap::from([("H".to_string(), 1.0)])
+        }
+
+        fn gamma_line(energy: f64, intensity: f64) -> DiscreteRadiation {
+            DiscreteRadiation {
+                energy,
+                d_energy: 0.0,
+                rtyp: 0.0,
+                transition_type: 0.0,
+                intensity,
+                d_intensity: 0.0,
+                pair_intensity: 0.0,
+                d_pair_intensity: 0.0,
+                conversion_total: 0.0,
+                d_conversion_total: 0.0,
+                conversion_k: 0.0,
+                d_conversion_k: 0.0,
+                conversion_l: 0.0,
+                d_conversion_l: 0.0,
+            }
+        }
+
+        fn spectrum(styp: f64, average_energy: f64, discrete: Vec<DiscreteRadiation>) -> Spectrum {
+            Spectrum {
+                styp,
+                lcon: 0,
+                lcov: 0,
+                fd: 1.0,
+                d_fd: 0.0,
+                average_energy,
+                d_average_energy: 0.0,
+                fc: 0.0,
+                d_fc: 0.0,
+                discrete,
+                continuous: None,
+            }
+        }
+
+        /// A decaying nuclide with gamma lines `(energy_eV, intensity)` (mean EM energy equal to
+        /// their sum), a STYP=1 spectrum with ENDF list item ER `beta_er_eV` (the average energy
+        /// per decay of the parent) and decay modes `(RTYP, branching ratio)`.
+        fn nuclide(
+            gamma_lines: &[(f64, f64)],
+            beta_er_eV: Option<f64>,
+            modes: &[(f64, f64)],
+        ) -> Nuclide {
+            let mut spectra = Vec::new();
+            if !gamma_lines.is_empty() {
+                let discrete = gamma_lines.iter().map(|&(e, i)| gamma_line(e, i)).collect();
+                spectra.push(spectrum(0.0, 0.0, discrete));
+            }
+            if let Some(er) = beta_er_eV {
+                spectra.push(spectrum(1.0, er, Vec::new()));
+            }
+            Nuclide {
+                mat: 0,
+                za: 19042,
+                awr: 1.0,
+                liso: 0,
+                nst: 0,
+                half_life: 1.0,
+                d_half_life: 0.0,
+                energies: vec![0.0, 0.0, gamma_lines.iter().map(|&(e, i)| e * i).sum()],
+                modes: modes
+                    .iter()
+                    .map(|&(rtyp, br)| Mode {
+                        rtyp,
+                        rfs: 0.0,
+                        q: 0.0,
+                        dq: 0.0,
+                        br,
+                        dbr: 0.0,
+                    })
+                    .collect(),
+                spectra,
+            }
+        }
+
+        fn brems(names: &[&str]) -> BremsstrahlungOptions {
+            BremsstrahlungOptions {
+                nuclides: names.iter().map(|n| n.to_string()).collect(),
+            }
+        }
+
+        fn point(distance_m: f64) -> PointSourceOptions {
+            PointSourceOptions {
+                distance_m,
+                air_attenuation: false,
+                air_density_g_cm3: 1.0e-3,
+            }
+        }
+
+        /// Photon-free source of the single nuclide "X" plus its bremsstrahlung component.
+        fn brems_source(n: &Nuclide, activity: f64, bounds: &[f64], z: f64) -> PhotonSourceOut {
+            let (mut src, _) = source_for_step(
+                &[("X", n, activity)],
+                bounds,
+                "test",
+                1.0,
+                None,
+                &BTreeMap::new(),
+                false,
+                2.0,
+                0.0,
+            )
+            .unwrap();
+            add_bremsstrahlung(
+                &mut src,
+                &[("X", n, activity)],
+                &brems(&["X"]),
+                &Ok(z),
+                1.0,
+                None,
+                &BTreeMap::new(),
+                false,
+                2.0,
+            );
+            src
+        }
+
+        /// Eqs. (66)-(67) for `activity * electrons_per_decay` electrons of `e0_eV` each:
+        /// `(photons/s/g, power W/g in the groups, power W/g in the zero-lower-edge group)`.
+        fn expected_brems(
+            activity: f64,
+            electrons_per_decay: f64,
+            e0_eV: f64,
+            z: f64,
+            bounds: &[f64],
+        ) -> (f64, f64, f64) {
+            let e0_keV = e0_eV / 1000.0;
+            let rate = activity * electrons_per_decay;
+            let (mut photons, mut power, mut zero_edge) = (0.0, 0.0, 0.0);
+            for w in bounds.windows(2) {
+                let (lo, hi) = (w[0], w[1]);
+                if lo <= 0.0 {
+                    let below = bremsstrahlung_energy_below_keV(z, e0_keV, hi / 1000.0);
+                    zero_edge += rate * below * 1000.0 * EV;
+                    continue;
+                }
+                let per_electron =
+                    bremsstrahlung_photons_per_electron(z, e0_keV, lo / 1000.0, hi / 1000.0);
+                let n = rate * per_electron;
+                photons += n;
+                power += n * 0.5 * (lo + hi) * EV;
+            }
+            (photons, power, zero_edge)
+        }
+
+        const BREMS_BOUNDS: [f64; 4] = [1.0e4, 1.0e5, 3.0e5, 1.0e6];
+
+        // ---- F1: STYP=1 average_energy is per decay of the parent (already branching-weighted)
+
+        #[test]
+        fn p140_ph_f1_partial_beta_emitter_uses_electron_fraction_and_per_beta_energy() {
+            // Cu-64 and K-40 (ENDF/B-VIII.0): ER is the beta-minus energy per decay of the parent,
+            // so one electron per decay of mean energy ER is wrong; f electrons of ER/f are right.
+            for (er, modes, f) in [
+                (7.340812e4, [(2.0, 0.615), (1.0, 0.385)], 0.385),
+                (4.993307e5, [(2.0, 0.1086), (1.0, 0.8914)], 0.8914),
+            ] {
+                let n = nuclide(&[], Some(er), &modes);
+                let src = brems_source(&n, 2.0, &BREMS_BOUNDS, 26.0);
+                let b = src.bremsstrahlung.as_ref().unwrap();
+                assert!(b.missing_inputs.is_empty(), "{:?}", b.missing_inputs);
+                let nuc = &b.by_nuclide[0];
+                let e0 = er / f;
+                assert!(
+                    close(nuc.mean_beta_energy_eV, e0),
+                    "ER {er}: E0 {} vs {e0}",
+                    nuc.mean_beta_energy_eV
+                );
+                let (photons, power, _) = expected_brems(2.0, f, e0, 26.0, &BREMS_BOUNDS);
+                assert!(
+                    close(nuc.photons_s_g, photons),
+                    "ER {er}: photons {} vs {photons}",
+                    nuc.photons_s_g
+                );
+                assert!(
+                    close(b.power_W_g, power),
+                    "ER {er}: {} vs {power}",
+                    b.power_W_g
+                );
+            }
+        }
+
+        #[test]
+        fn p140_ph_f1_endpoint_region_above_the_branch_weighted_energy_is_populated() {
+            // Cu-64: the code's E0 is 73.4 keV, so the [100, 300] keV group stays empty; the
+            // physical 190.7 keV mean beta energy populates it.
+            let n = nuclide(&[], Some(7.340812e4), &[(2.0, 0.615), (1.0, 0.385)]);
+            let src = brems_source(&n, 1.0, &BREMS_BOUNDS, 26.0);
+            let b = src.bremsstrahlung.as_ref().unwrap();
+            assert!(b.groups[1].photons_s_g > 0.0, "{:?}", b.groups[1]);
+        }
+
+        #[test]
+        fn p140_ph_f1_multi_particle_beta_codes_count_as_beta_electrons() {
+            // RTYP 1.5 (beta-minus then neutron) contains the digit 1 and carries a beta-minus
+            // electron; EC (2.0) does not. f = 0.2 + 0.1.
+            let er = 1.0e5;
+            let n = nuclide(&[], Some(er), &[(1.0, 0.2), (1.5, 0.1), (2.0, 0.7)]);
+            let src = brems_source(&n, 3.0, &BREMS_BOUNDS, 26.0);
+            let b = src.bremsstrahlung.as_ref().unwrap();
+            assert!(b.missing_inputs.is_empty(), "{:?}", b.missing_inputs);
+            let f = 0.3;
+            assert!(close(b.by_nuclide[0].mean_beta_energy_eV, er / f));
+            let (photons, _, _) = expected_brems(3.0, f, er / f, 26.0, &BREMS_BOUNDS);
+            assert!(close(b.by_nuclide[0].photons_s_g, photons));
+        }
+
+        #[test]
+        fn p140_ph_f1_nuclide_without_beta_minus_branching_is_a_missing_input() {
+            // A STYP=1 average energy but no decay mode with a beta-minus electron (f == 0), and
+            // a record with no modes at all: the electron count is unknown, so nothing is emitted.
+            for modes in [vec![(2.0, 1.0)], Vec::new()] {
+                let n = nuclide(&[], Some(1.0e5), &modes);
+                let src = brems_source(&n, 1.0, &BREMS_BOUNDS, 26.0);
+                let b = src.bremsstrahlung.as_ref().unwrap();
+                assert!(!b.inputs_complete, "modes {modes:?}");
+                assert_eq!(b.missing_inputs.len(), 1, "modes {modes:?}");
+                assert_eq!(b.missing_inputs[0].nuclide, "X");
+                assert!(b.by_nuclide.is_empty());
+                assert_eq!(b.photons_s_g, 0.0);
+            }
+        }
+
+        #[test]
+        fn p140_ph_f1_guard_pure_beta_minus_emitter_keeps_er_as_the_energy() {
+            // BR(beta-) = 1: f = 1 and E0 = ER, so the repair must not move this case.
+            let n = nuclide(&[], Some(7.0e5), &[(1.0, 1.0)]);
+            let src = brems_source(&n, 2.0, &BREMS_BOUNDS, 26.0);
+            let b = src.bremsstrahlung.as_ref().unwrap();
+            assert!(close(b.by_nuclide[0].mean_beta_energy_eV, 7.0e5));
+            let (photons, power, _) = expected_brems(2.0, 1.0, 7.0e5, 26.0, &BREMS_BOUNDS);
+            assert!(close(b.photons_s_g, photons));
+            assert!(close(b.power_W_g, power));
+        }
+
+        // ---- F6: completeness diagnostics. The field names below are the proposed wire names.
+
+        #[test]
+        fn p140_ph_f6_zero_edge_energy_share_is_reported() {
+            // Share of the analytic emitted energy a Z E0^2 / 2 that falls below the first
+            // nonzero edge u = 10 keV and is therefore not in the grouped photons.
+            for er in [1.0e5, 2.5e5, 5.0e5] {
+                let n = nuclide(&[], Some(er), &[(1.0, 1.0)]);
+                let src = brems_source(&n, 2.0, &[0.0, 1.0e4, 1.0e5, 1.0e6], 26.0);
+                let json = serde_json::to_value(src.bremsstrahlung.as_ref().unwrap()).unwrap();
+                let e0 = er / 1000.0;
+                let u = 10.0_f64;
+                let expected = (e0 * u - 0.5 * u * u) / (0.5 * e0 * e0);
+                let share = json["zero_lower_edge_energy_fraction"]
+                    .as_f64()
+                    .unwrap_or_else(|| panic!("no zero_lower_edge_energy_fraction in {json}"));
+                assert!(close(share, expected), "E0 {e0} keV: {share} vs {expected}");
+            }
+        }
+
+        #[test]
+        fn p140_ph_f6_energy_closure_compares_emitted_to_the_analytic_total() {
+            // E0 = 120 keV sits inside the [100, 200] keV group; Eq. (67) assigns that group's
+            // photons the 150 keV midpoint, and the [10, 100] keV group its 55 keV midpoint, so
+            // the emitted energy does not close on a Z E0^2 / 2 per electron.
+            let bounds = [0.0, 1.0e4, 1.0e5, 2.0e5, 1.0e6];
+            let (activity, z, er) = (4.0, 26.0, 1.2e5);
+            let n = nuclide(&[], Some(er), &[(1.0, 1.0)]);
+            let src = brems_source(&n, activity, &bounds, z);
+            let json = serde_json::to_value(src.bremsstrahlung.as_ref().unwrap()).unwrap();
+            let (_, power, zero_edge) = expected_brems(activity, 1.0, er, z, &bounds);
+            let e0_keV = er / 1000.0;
+            let analytic = activity * A * z * 0.5 * e0_keV * e0_keV * 1000.0 * EV;
+            let expected = (power + zero_edge) / analytic;
+            assert!(expected > 1.5, "scenario must overshoot: {expected}");
+            let closure = json["energy_closure"]
+                .as_f64()
+                .unwrap_or_else(|| panic!("no energy_closure in {json}"));
+            assert!(close(closure, expected), "{closure} vs {expected}");
+        }
+
+        // ---- F5: the point-source dose must not be reported while gamma power is unrepresented
+
+        fn source_with_unrepresented_power() -> PhotonSourceOut {
+            let normal = nuclide(&[(1.0e6, 1.0)], None, &[]);
+            // Decay-record EM energy but no STYP=0 spectrum: its power cannot be placed in groups.
+            let mut orphan = nuclide(&[], None, &[]);
+            orphan.energies[2] = 2.0e5;
+            let r = response();
+            let (src, _) = source_for_step(
+                &[("A", &normal, 1.0), ("B", &orphan, 1.0)],
+                &GAMMA_BOUNDS,
+                "test",
+                1.0,
+                Some(&r),
+                &fractions(),
+                true,
+                2.0,
+                0.0,
+            )
+            .unwrap();
+            assert!(src.unrepresented_gamma_power_W_g > 0.0, "precondition");
+            src
+        }
+
+        #[test]
+        fn p140_ph_f5_point_source_dose_is_withheld_while_gamma_power_is_unrepresented() {
+            let mut src = source_with_unrepresented_power();
+            add_point_source_dose(&mut src, Some(&response()), &point(1.0), 1.0);
+            let out = src.point_source_dose.as_ref().unwrap();
+            assert!(
+                out.gamma_air_dose_Sv_h.is_none(),
+                "dose {:?} reported with {} W/g of gamma power unrepresented",
+                out.gamma_air_dose_Sv_h,
+                src.unrepresented_gamma_power_W_g
+            );
+            assert!(out.gamma_air_dose_Sv_h_per_g.is_none());
+            assert!(out.unavailable_reason.is_some());
+        }
+
+        #[test]
+        fn p140_ph_f5_unrepresented_gamma_power_is_counted_as_excluded_power() {
+            let mut src = source_with_unrepresented_power();
+            let missing_W = src.unrepresented_gamma_power_W_g * 1.0;
+            add_point_source_dose(&mut src, Some(&response()), &point(1.0), 1.0);
+            let out = src.point_source_dose.as_ref().unwrap();
+            assert!(
+                close(out.excluded_power_W, missing_W),
+                "excluded {} vs unrepresented {missing_W}",
+                out.excluded_power_W
+            );
+        }
+
+        // ---- F7: add_point_source_dose is pub and must not trust its options
+
+        fn simple_source(mass_g: f64) -> PhotonSourceOut {
+            let n = nuclide(&[(1.0e6, 1.0)], None, &[]);
+            let r = response();
+            source_for_step(
+                &[("A", &n, 2.0)],
+                &GAMMA_BOUNDS,
+                "test",
+                mass_g,
+                Some(&r),
+                &fractions(),
+                true,
+                2.0,
+                0.0,
+            )
+            .unwrap()
+            .0
+        }
+
+        #[test]
+        fn p140_ph_f7_point_source_dose_refuses_unusable_distances() {
+            // Control: the shortest allowed distance is evaluated.
+            let mut src = simple_source(1.0);
+            add_point_source_dose(&mut src, Some(&response()), &point(0.3), 1.0);
+            let d = src.point_source_dose.as_ref().unwrap().gamma_air_dose_Sv_h;
+            assert!(d.is_some_and(f64::is_finite), "{d:?}");
+            for bad in [0.0, 0.1, 0.29, -1.0, f64::NAN, f64::INFINITY] {
+                let mut src = simple_source(1.0);
+                add_point_source_dose(&mut src, Some(&response()), &point(bad), 1.0);
+                let out = src.point_source_dose.as_ref().unwrap();
+                assert!(
+                    out.gamma_air_dose_Sv_h.is_none(),
+                    "distance {bad}: dose {:?}",
+                    out.gamma_air_dose_Sv_h
+                );
+                assert!(out.gamma_air_dose_Sv_h_per_g.is_none(), "distance {bad}");
+                assert!(
+                    out.unavailable_reason
+                        .as_deref()
+                        .is_some_and(|r| r.contains("distance")),
+                    "distance {bad}: {:?}",
+                    out.unavailable_reason
+                );
+                assert!(
+                    src.by_nuclide
+                        .iter()
+                        .all(|n| n.point_source_gamma_air_dose_Sv_h.is_none()),
+                    "distance {bad}: per-nuclide dose reported"
+                );
+            }
+        }
+
+        #[test]
+        fn p140_ph_f7_point_source_dose_refuses_unusable_mass() {
+            for bad in [0.0, -1.0, f64::NAN] {
+                let mut src = simple_source(1.0);
+                add_point_source_dose(&mut src, Some(&response()), &point(1.0), bad);
+                let out = src.point_source_dose.as_ref().unwrap();
+                assert!(
+                    out.gamma_air_dose_Sv_h.is_none() && out.gamma_air_dose_Sv_h_per_g.is_none(),
+                    "mass {bad}: dose {:?}, per g {:?}",
+                    out.gamma_air_dose_Sv_h,
+                    out.gamma_air_dose_Sv_h_per_g
+                );
+                assert!(
+                    out.unavailable_reason
+                        .as_deref()
+                        .is_some_and(|r| r.contains("mass")),
+                    "mass {bad}: {:?}",
+                    out.unavailable_reason
+                );
+            }
+        }
+    }
 }

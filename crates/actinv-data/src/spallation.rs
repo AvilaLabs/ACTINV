@@ -817,4 +817,74 @@ mod tests {
         assert!(SpallationSplice::from_file(directory.join("missing.json"), 1e3).is_err());
         std::fs::remove_dir_all(directory).unwrap();
     }
+
+    #[test]
+    fn p140_sg06_splice_reports_library_rows_left_untouched_but_nonzero_above_the_splice() {
+        // A residual-arithmetic production row (lmf -1) shares (mt, zap, lfs) with the table's lmf=10
+        // row, so the splice replaces the loss row, leaves this row alone and appends the table's:
+        // the production is counted twice. The report has to name such rows.
+        let rows = vec![
+            Row {
+                target: 0,
+                mt: 5,
+                zap: -1,
+                lfs: -1,
+                lmf: 0,
+            },
+            Row {
+                target: 0,
+                mt: 5,
+                zap: 80200,
+                lfs: 0,
+                lmf: -1,
+            },
+            // Nonzero below the splice only: not a double count.
+            Row {
+                target: 0,
+                mt: 102,
+                zap: 82209,
+                lfs: 0,
+                lmf: -1,
+            },
+        ];
+        let mut sig = vec![1.0; 12];
+        sig.extend([1.0, 1.0, 1.0, 0.0, 0.0, 0.0]);
+        let mut library = Library {
+            rows,
+            sig,
+            ngroups: 6,
+            bounds: vec![1.0, 10.0, 1e2, 1e3, 1e4, 1e5, 1e6],
+        };
+        let table = parse(&serde_json::json!({
+            "schema": SPALLATION_SCHEMA,
+            "description": "synthetic unit-test data",
+            "projectile": "neutron",
+            "boundaries_eV": [1e3, 1e4, 1e5, 1e6],
+            "targets": [{"za": 82208, "liso": 0, "channels": [
+                {"mt": 5,
+                 "loss_barns": [10.0, 20.0, 30.0],
+                 "products": [{"zap": 80200, "sigma_barns": [1.0, 2.0, 3.0]}]}
+            ]}]
+        }))
+        .unwrap();
+        let report = table
+            .apply(&mut library, &[(82208, 0)], Projectile::Neutron, 1e3)
+            .unwrap();
+        // One loss row replaced, one product row appended; the lmf=-1 product row is untouched.
+        assert_eq!(library.rows.len(), 4);
+        let splice = SpallationSplice {
+            table,
+            splice_ev: 1e3,
+            source_path: "table.json".into(),
+            source_sha256: "0".repeat(64),
+        };
+        let block = report.provenance(&splice);
+        let untouched = &block["untouched_rows_nonzero_in_spliced_groups"];
+        assert_eq!(
+            untouched["count"], 1,
+            "provenance lacks untouched_rows_nonzero_in_spliced_groups: {block}"
+        );
+        assert_eq!(untouched["rows"][0]["mt"], 5);
+        assert_eq!(untouched["rows"][0]["zap"], 80200);
+    }
 }

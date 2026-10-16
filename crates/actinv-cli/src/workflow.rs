@@ -193,4 +193,111 @@ mod tests {
         assert!(e.contains("_index.json"));
         assert!(e.contains("actinv data fetch"));
     }
+
+    // ---- P140 regressions (SG-09, power/fission F8): they assert the intended behaviour ----
+
+    /// The example spec with every newer path-bearing field populated under `prefix`.
+    fn p140_spec(prefix: &str) -> Spec {
+        let hash = "0".repeat(64);
+        let file =
+            |name: &str| serde_json::json!({"path": format!("{prefix}/{name}"), "sha256": hash});
+        let mut spec = Spec::from_json(IRON_EXAMPLE).unwrap();
+        spec.schedule[1].library = Some(actinv_core::spec::LibraryRef {
+            path: format!("{prefix}/step-lib.npz"),
+            sha256: None,
+        });
+        spec.self_shielding = Some(
+            serde_json::from_value(serde_json::json!({
+                "table": file("shield-table.json"),
+                "geometry": {
+                    "shape": "foil",
+                    "length_cm": 0.01,
+                    "density_g_cm3": 19.3,
+                    "resonance_files": [file("w186.endf")],
+                },
+            }))
+            .unwrap(),
+        );
+        spec.damage = Some(
+            serde_json::from_value(serde_json::json!({"table": file("damage-table.json")}))
+                .unwrap(),
+        );
+        spec.fission_yields.spontaneous = Some(
+            serde_json::from_value(serde_json::json!({
+                "files": [file("sfy.endf")],
+                "nubar_endf": file("nubar-decay.endf"),
+                "nubar_table": file("nubar-table.json"),
+            }))
+            .unwrap(),
+        );
+        spec
+    }
+
+    #[test]
+    fn p140_sg09_resolve_inputs_rebases_every_path_bearing_field() {
+        let mut spec = p140_spec("rel");
+        resolve_inputs(&mut spec, Path::new("/project"));
+        let shielding = spec.self_shielding.as_ref().unwrap();
+        let spontaneous = spec.fission_yields.spontaneous.as_ref().unwrap();
+        let fields: Vec<(&str, &str)> = vec![
+            (
+                "schedule[1].library.path",
+                spec.schedule[1].library.as_ref().unwrap().path.as_str(),
+            ),
+            (
+                "self_shielding.table",
+                shielding.table.as_ref().unwrap().path.as_str(),
+            ),
+            (
+                "self_shielding.geometry.resonance_files[0]",
+                shielding.geometry.as_ref().unwrap().resonance_files[0]
+                    .path
+                    .as_str(),
+            ),
+            (
+                "damage.table",
+                spec.damage.as_ref().unwrap().table.path.as_str(),
+            ),
+            (
+                "fission_yields.spontaneous.files[0]",
+                spontaneous.files[0].path.as_str(),
+            ),
+            (
+                "fission_yields.spontaneous.nubar_endf",
+                spontaneous.nubar_endf.as_ref().unwrap().path.as_str(),
+            ),
+            (
+                "fission_yields.spontaneous.nubar_table",
+                spontaneous.nubar_table.as_ref().unwrap().path.as_str(),
+            ),
+        ];
+        let unresolved: Vec<&str> = fields
+            .iter()
+            .filter(|(_, path)| !path.starts_with("/project/"))
+            .map(|(label, _)| *label)
+            .collect();
+        assert!(unresolved.is_empty(), "paths left relative: {unresolved:?}");
+    }
+
+    #[test]
+    fn p140_sg09_check_files_opens_every_path_bearing_field() {
+        let spec = p140_spec("/nonexistent-actinv-p140");
+        let error = check_files(&spec, false).unwrap_err();
+        let unchecked: Vec<&str> = [
+            "step-lib.npz",
+            "shield-table.json",
+            "w186.endf",
+            "damage-table.json",
+            "sfy.endf",
+            "nubar-decay.endf",
+            "nubar-table.json",
+        ]
+        .into_iter()
+        .filter(|name| !error.contains(name))
+        .collect();
+        assert!(
+            unchecked.is_empty(),
+            "files never opened: {unchecked:?}\n{error}"
+        );
+    }
 }

@@ -1980,4 +1980,185 @@ mod tests {
         assert_eq!(mapped.get(&(1, 0)).map(String::as_str), Some("b-"));
         assert_eq!(mapped.get(&(1, 2)).map(String::as_str), Some("b-"));
     }
+
+    #[test]
+    fn p140_ps_f2_a_tiny_target_does_not_starve_the_routes_of_a_later_source() {
+        // Junk cluster J0..J5 (nodes 0..5): fully connected, every edge carries 1/5 of its source's atoms, and
+        // none of it reaches a target. Source Fe54 (node 6) feeds the real target Ni58 (node 7). Ni60 (node 8) is
+        // a target with a tiny inventory, so the shared floor drops to 1e-36 and the junk tree (5^10 leaves)
+        // exhausts the 2,000,000-node budget inside the first source before Fe54 is ever expanded.
+        let (rate, t, n0): (f64, f64, f64) = (1.0e-3, 1000.0, 1.0e12);
+        let mut edges = Vec::new();
+        for from in 0..6 {
+            edges.push((from, from, -5.0 * rate));
+            for to in (0..6).filter(|to| *to != from) {
+                edges.push((to, from, rate));
+            }
+        }
+        edges.push((6, 6, -rate));
+        edges.push((7, 6, rate));
+        let total_a = n0 * (1.0 - (-rate * t).exp());
+        let graph = input(
+            &[
+                "Cr50", "Cr51", "Cr52", "Cr53", "Cr54", "Mn55", "Fe54", "Ni58", "Ni60",
+            ],
+            &[],
+            vec![single_step(t, edges, vec![])],
+            vec![(0, n0), (6, n0)],
+            &[("Ni58", total_a), ("Ni60", 1.0e-30)],
+        );
+        let with_targets = |targets: &[&str]| PathwayOptions {
+            targets: targets.iter().map(|name| (*name).to_owned()).collect(),
+            path_floor: 1e-6,
+            loop_floor: 1e-9,
+            ..PathwayOptions::default()
+        };
+        let alone = analyse(&graph, &with_targets(&["Ni58"])).unwrap();
+        assert!(
+            !alone.search_truncated,
+            "the single-target search must finish"
+        );
+        assert_close(alone.targets[0].explained_fraction, 1.0, 1e-9, "alone");
+
+        let both = analyse(&graph, &with_targets(&["Ni58", "Ni60"])).unwrap();
+        let ni58 = both.targets.iter().find(|t| t.target == "Ni58").unwrap();
+        // the routes into Ni58 must not depend on which other targets were asked for
+        assert_close(
+            ni58.explained_fraction,
+            alone.targets[0].explained_fraction,
+            1e-9,
+            "Ni58 explained fraction with a tiny second target",
+        );
+        assert!(
+            ni58.paths.iter().any(|path| path.source == "Fe54"),
+            "the Fe54 -> Ni58 route was never explored (search_truncated = {})",
+            both.search_truncated
+        );
+    }
+
+    #[test]
+    fn p140_ps_f5_candidate_cap_drops_are_reported_per_target_and_in_notes() {
+        // one source, twelve parallel two-edge routes into the target; max_paths 1 keeps 8 candidates
+        let (la, lm, t, n0) = (1.0e-3, 2.0e-3, 3000.0, 1.0e14);
+        let mids = 12usize;
+        let mut edges = vec![(0, 0, -(mids as f64) * la)];
+        for m in 1..=mids {
+            edges.push((m, 0, la));
+            edges.push((m, m, -lm));
+            edges.push((mids + 1, m, lm));
+        }
+        let n = mids + 2;
+        let mut matrix = vec![0.0; n * n];
+        for &(to, from, v) in &edges {
+            matrix[to * n + from] += v;
+        }
+        let mut x0 = vec![0.0; n];
+        x0[0] = n0;
+        let total = full_solution(&matrix, n, t, &x0)[mids + 1];
+        let mut names: Vec<String> = vec!["Fe54".to_owned()];
+        names.extend((1..=mids).map(|m| format!("Mid{m}")));
+        names.push("Zn54".to_owned());
+        let names: Vec<&str> = names.iter().map(String::as_str).collect();
+        let graph = input(
+            &names,
+            &[],
+            vec![single_step(t, edges, vec![])],
+            vec![(0, n0)],
+            &[("Zn54", total)],
+        );
+        let mut options = options_for("Zn54");
+        options.max_paths = 1;
+        let report = analyse(&graph, &options).unwrap();
+        assert_eq!(report.candidates_dropped_by_cap, mids - 8);
+        let target = serde_json::to_value(&report.targets[0]).unwrap();
+        assert_eq!(
+            target["candidates_dropped_by_cap"],
+            mids - 8,
+            "the target block must say how many of its candidates the cap dropped: {target}"
+        );
+        assert!(
+            report.notes.iter().any(|note| note.contains("candidate")),
+            "the cap must be mentioned in the notes: {:?}",
+            report.notes
+        );
+    }
+
+    #[test]
+    fn p140_ps_f8_spontaneous_fission_edges_are_labelled_sf() {
+        let nuclide = |za: i32, half_life: f64, modes: &[(f64, f64, f64)]| Nuclide {
+            mat: 0,
+            za,
+            awr: 0.0,
+            liso: 0,
+            nst: if half_life > 0.0 { 0 } else { 1 },
+            half_life,
+            d_half_life: 0.0,
+            energies: Vec::new(),
+            modes: modes
+                .iter()
+                .map(|&(rtyp, rfs, br)| Mode {
+                    rtyp,
+                    rfs,
+                    q: 0.0,
+                    dq: 0.0,
+                    br,
+                    dbr: 0.0,
+                })
+                .collect(),
+            spectra: Vec::new(),
+        };
+        // Cf252 fissions spontaneously (RTYP 6) into two Ba140 per fission
+        let table: HashMap<(i32, i32), Nuclide> = [
+            nuclide(98252, 8.3e7, &[(6.0, 0.0, 1.0)]),
+            nuclide(56140, 0.0, &[]),
+        ]
+        .into_iter()
+        .map(|n| ((n.za, n.liso), n))
+        .collect();
+        let yields: chain::SpontaneousYields =
+            HashMap::from([((98252, 0), BTreeMap::from([((56140, 0), 2.0)]))]);
+        let network = chain::build_with_spontaneous(&table, Some(&yields));
+        let (cf, ba) = (network.index[&(98252, 0)], network.index[&(56140, 0)]);
+        assert!(
+            network
+                .decay
+                .iter()
+                .any(|&(row, column, rate)| row == ba && column == cf && rate > 0.0),
+            "the spontaneous-fission edge must exist in the matrix"
+        );
+        let mut labels = GlobalLabels::new();
+        decay_edge_labels(&table, &network, &mut labels);
+        assert_eq!(
+            labels
+                .get(&(ba, cf))
+                .map(|set| set.iter().cloned().collect::<Vec<_>>()),
+            Some(vec!["SF".to_owned()])
+        );
+    }
+
+    #[test]
+    fn p140_ps_f8_feed_edges_are_labelled_feed() {
+        // the run builds no label for a declared feed (its reservoir stands for no chain state), so the
+        // route's first edge must not fall back to the generic "edge"
+        let (l, t) = (1.0e-3, 2000.0);
+        let mut graph = input(
+            &["Mn54", "Fe54"],
+            &["feed"],
+            vec![single_step(
+                t,
+                vec![(0, 0, -l), (1, 0, l)],
+                vec![(0, 0, 1.0e6)],
+            )],
+            vec![],
+            &[("Fe54", 1.0e9)],
+        );
+        graph.labels.remove(&(0, 2));
+        let report = analyse(&graph, &options_for("Fe54")).unwrap();
+        let route = report.targets[0]
+            .paths
+            .iter()
+            .find(|path| path.source == "feed")
+            .expect("the route fed from the reservoir is reported");
+        assert_eq!(route.edges, ["feed", "b-"]);
+    }
 }

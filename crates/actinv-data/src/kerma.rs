@@ -406,4 +406,21 @@ mod tests {
         assert!(!table.covers(28058, 0));
         assert_eq!(table.damage_energy_eV_per_s(26056, 0, &rates), None);
     }
+
+    #[test]
+    fn p140_pf_f10_damage_rows_without_a_heating_row_are_refused() {
+        // a damage row for a nuclide the heating rows do not cover would be dropped in silence
+        let mut wire: serde_json::Value =
+            serde_json::from_str(&table_json(serde_json::json!({"Fe56": [1.0, 1.0]}))).unwrap();
+        wire["damage_energy_targets"] = serde_json::json!({"Co59": [1.0, 2.0]});
+        let error = KermaTable::from_json(&wire.to_string(), "neutron")
+            .expect_err("a damage row with no heating row is unreachable and must be refused");
+        assert!(
+            error.contains("damage") && error.contains("Co59"),
+            "{error}"
+        );
+        // damage rows that sit on heating rows stay valid
+        wire["damage_energy_targets"] = serde_json::json!({"Fe56": [1.0, 2.0]});
+        assert!(KermaTable::from_json(&wire.to_string(), "neutron").is_ok());
+    }
 }

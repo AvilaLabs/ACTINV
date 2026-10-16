@@ -554,4 +554,32 @@ mod tests {
         close(got.0, pearson(&[1.0, 2.0, 3.0], &y).unwrap());
         close(got.1, 1.0);
     }
+
+    #[test]
+    fn p140_ps_f1_std_of_a_single_value_is_undefined() {
+        // the unbiased spread of one value does not exist: NaN (variance already says so), never 0
+        let sd = std_dev(&[3.0]);
+        assert!(sd.is_nan(), "std_dev of one value is {sd}");
+        assert!(std_dev(&[]).is_nan());
+        let one = summarize(&[3.0], &[50.0]).unwrap();
+        assert!(one.std.is_nan(), "summary std of one value is {}", one.std);
+        // two equal values do have a spread estimate, and it is exactly zero
+        assert_eq!(std_dev(&[3.0, 3.0]), 0.0);
+    }
+
+    #[test]
+    fn p140_ps_f11_percentile_rank_is_exact_for_decimal_p() {
+        // k = ceil(n p / 100) in exact arithmetic; the float product n * p lands just above the integer
+        // for these decimals: (1500, 2.2) -> 33 (not 34), (750, 4.4) -> 33, (10500, 95.4) -> 10017
+        let ramp = |n: usize| (1..=n).map(|v| v as f64).collect::<Vec<_>>();
+        assert_eq!(percentile_sorted(&ramp(1500), 2.2), 33.0);
+        assert_eq!(percentile_sorted(&ramp(750), 4.4), 33.0);
+        assert_eq!(percentile_sorted(&ramp(10500), 95.4), 10017.0);
+        // the cases that were already right stay right
+        assert_eq!(percentile_sorted(&ramp(40), 2.5), 1.0);
+        assert_eq!(percentile_sorted(&ramp(40), 97.5), 39.0);
+        assert_eq!(percentile_sorted(&ramp(8), 50.0), 4.0);
+        assert_eq!(percentile_sorted(&ramp(8), 0.0), 1.0);
+        assert_eq!(percentile_sorted(&ramp(8), 100.0), 8.0);
+    }
 }

@@ -1440,4 +1440,58 @@ mod tests {
         assert!((y1[p] - want_p).abs() / want_p < 1e-9);
         assert!((y1[he4] - want_he4).abs() / want_he4 < 1e-9);
     }
+
+    #[test]
+    fn p140_pf_f1_beta_delayed_fission_is_not_spontaneous_fission() {
+        let l = std::f64::consts::LN_2 / 10.0;
+        // Bk-238-like: an EC/beta+ branch followed by fission (RTYP 2.6) beside the ordinary EC branch.
+        // The fission happens in the daughter, so the parent has no spontaneous-fission branch.
+        let parent = (97_238, 0);
+        let nuclides = || {
+            vec![
+                nuclide(97_238, 0, 10.0, &[(2.6, 0.0, 5.0e-4), (2.0, 0.0, 0.9995)]),
+                nuclide(96_238, 0, 0.0, &[]),
+            ]
+        };
+        let yields: SpontaneousYields = HashMap::from([(
+            parent,
+            BTreeMap::from([((54_140, 0), 1.0), ((38_094, 0), 1.0)]),
+        )]);
+        for (label, chain) in [
+            ("without yields", network(nuclides())),
+            ("with yields", network_with_sf(nuclides(), &yields)),
+        ] {
+            assert!(
+                chain.ledger.sf_decay.is_empty(),
+                "{label}: RTYP 2.6 recorded as spontaneous fission: {:?}",
+                chain.ledger.sf_decay
+            );
+            assert_eq!(chain.ledger.sf_branches, 0, "{label}");
+            assert!(chain.ledger.sf_uncovered.is_empty(), "{label}");
+            assert!(chain.ledger.sf_routed.is_empty(), "{label}");
+            // The delayed-fission branch is an unmodelled mode: it goes to leakage, and the EC branch
+            // still feeds the daughter.
+            let column = entries(&chain, parent);
+            let leaked: f64 = column
+                .iter()
+                .filter(|entry| entry.0 == chain.leak)
+                .map(|entry| entry.1)
+                .sum();
+            assert!(
+                (leaked - l * 5.0e-4).abs() <= 1e-12 * l,
+                "{label}: {leaked}"
+            );
+            let daughter = chain.index[&(96_238, 0)];
+            let fed: f64 = column
+                .iter()
+                .filter(|entry| entry.0 == daughter)
+                .map(|entry| entry.1)
+                .sum();
+            assert!((fed - l * 0.9995).abs() <= 1e-12 * l, "{label}: {fed}");
+        }
+        // A genuine spontaneous-fission branch (RTYP 6.0) is unchanged.
+        let genuine = network(vec![nuclide(98_252, 0, 10.0, &[(6.0, 0.0, 1.0)])]);
+        assert_eq!(genuine.ledger.sf_decay.len(), 1);
+        assert_eq!(genuine.ledger.sf_branches, 1);
+    }
 }

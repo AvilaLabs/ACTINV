@@ -3678,7 +3678,7 @@ END
             .collect();
         assert_eq!(fields, vec!["material.density_g_cm3", "kerma"]);
         assert!(bare.spec["material"].get("density_g_cm3").is_none());
-        assert!(entry_detail(&bare, "POWER").contains("MT list '2 301 444'"));
+        assert!(entry_detail(&bare, "POWER").contains("301 444"));
         // a deck with no POWER lists nothing
         let plain = convert(&deck_with("FLUX 1E10\nTIME 1 HOURS ATOMS"), &context()).unwrap();
         assert!(plain.report["required_additions"]
@@ -4152,5 +4152,704 @@ END
         let conversion = convert(deck, &ctx_with_groups(162)).unwrap();
         assert_eq!(conversion.spec["projectile"], "triton");
         assert!(!entry_detail(&conversion, "PROJECTILE").contains("required"));
+    }
+
+    // -----------------------------------------------------------------------------------------
+    // P140 phase 1: regression tests for the hardening review. Each asserts the correct
+    // behaviour and fails on the importer as it stood when they were written.
+    // -----------------------------------------------------------------------------------------
+
+    /// The shipped conderc-fission deck `U235pulse.i`, verbatim (`NOHEAD` and `TOL`).
+    const U235_PULSE: &str = "CLOBBER
+NOHEAD
+GETXS 0
+GETDECAY 0
+FISPACT
+*Uranium 235 fission pulse
+USEFISSION
+FISYIELD 1 U235
+FUEL 1
+  U235 1.0E+24
+MIND 1.0
+DENSITY 19.0
+HAZA
+HALF
+OVER U235
+  ACROSS U236 0.0
+GRAPH 5 2 1 1 2 3 4 5
+UNCERT 2
+SORTDOMINANT 100 100
+TOL 0 1E-2 1E-6
+FISCHOOSE 1 U235
+ATOMS
+FLUX 1.0E+22
+TIME 1.0E-06
+ATOMS
+FLUX 0.
+ZERO
+";
+
+    /// A deck with no irradiation: it needs no fluxes file.
+    const COOLING_ONLY: &str =
+        "FISPACT\n* t\nMASS 1E-3 1\n FE 100\nFLUX 0\nTIME 1 DAYS ATOMS\nEND\n";
+
+    fn entries_on_line(conversion: &Conversion, line: usize) -> Vec<&Value> {
+        entries(conversion)
+            .iter()
+            .filter(|entry| entry["line"] == line)
+            .collect()
+    }
+
+    /// The entry text the importer uses for a word it did not recognise.
+    fn reads_as_unrecognised(entry: &Value) -> bool {
+        let detail = entry["detail"].as_str().unwrap_or_default().to_lowercase();
+        detail.contains("cannot tell")
+            || detail.contains("not a fispact-ii keyword")
+            || detail.contains("unknown to this importer")
+    }
+
+    fn mentions_any(text: &str, needles: &[&str]) -> bool {
+        let text = text.to_lowercase();
+        needles
+            .iter()
+            .any(|needle| text.contains(&needle.to_lowercase()))
+    }
+
+    /// Convert a deck whose only keyword of interest sits on line 5, followed by one irradiation.
+    fn convert_line_five(keyword_line: &str) -> Conversion {
+        let deck = deck_with(&format!("{keyword_line}\nFLUX 1E10\nTIME 1 HOURS ATOMS"));
+        convert(&deck, &context()).unwrap()
+    }
+
+    /// Convert on a worker thread with a large stack; `None` when it did not finish in time. A
+    /// runaway conversion keeps spinning on its detached thread until the test process exits, which
+    /// is why only decks the correct importer refuses at once may be passed here.
+    fn convert_bounded(deck: String, seconds: u64) -> Option<Result<Conversion, String>> {
+        let (sender, receiver) = std::sync::mpsc::channel();
+        std::thread::Builder::new()
+            .stack_size(64 << 20)
+            .spawn(move || {
+                let _ = sender.send(convert(&deck, &context()));
+            })
+            .unwrap();
+        receiver
+            .recv_timeout(std::time::Duration::from_secs(seconds))
+            .ok()
+    }
+
+    fn p140_scratch(name: &str) -> PathBuf {
+        let dir =
+            std::env::temp_dir().join(format!("actinv-p140-if-{}-{name}", std::process::id()));
+        let _ = std::fs::remove_dir_all(&dir);
+        std::fs::create_dir_all(&dir).unwrap();
+        dir
+    }
+
+    fn p140_cli(deck: &Path, out: &Path) -> CliArgs {
+        CliArgs {
+            deck: deck.display().to_string(),
+            out: out.display().to_string(),
+            library: Some("lib.npz".into()),
+            decay: Some("decay.endf".into()),
+            ..CliArgs::default()
+        }
+    }
+
+    // ---- F1: abbreviations and keywords missing from the table ----
+
+    #[test]
+    fn p140_if_f1_three_letter_abbreviations_resolve() {
+        assert_eq!(
+            resolve_keyword("TOL").map(|keyword| keyword.0),
+            Some("TOLERANCE")
+        );
+        assert_eq!(
+            resolve_keyword("tol").map(|keyword| keyword.0),
+            Some("TOLERANCE")
+        );
+        assert_eq!(
+            resolve_keyword("HAZ").map(|keyword| keyword.0),
+            Some("HAZARDS")
+        );
+    }
+
+    #[test]
+    fn p140_if_f1_shipped_fission_deck_tol_and_nohead_are_noted() {
+        let conversion = convert(U235_PULSE, &context()).unwrap();
+        // NOHEAD is on line 2 of the shipped deck
+        let nohead = entries_on_line(&conversion, 2);
+        assert_eq!(nohead.len(), 1, "{nohead:?}");
+        assert_eq!(nohead[0]["status"], "noted", "{nohead:?}");
+        assert!(!reads_as_unrecognised(nohead[0]), "{nohead:?}");
+        // TOL carries the arguments `0 1E-2 1E-6`
+        let tol: Vec<&Value> = entries(&conversion)
+            .iter()
+            .filter(|entry| entry["args"] == "0 1E-2 1E-6")
+            .collect();
+        assert_eq!(tol.len(), 1, "{tol:?}");
+        assert_eq!(tol[0]["status"], "noted", "{tol:?}");
+        assert!(!reads_as_unrecognised(tol[0]), "{tol:?}");
+        // nothing in the deck is reported as a misspelled keyword
+        assert!(
+            !entries(&conversion).iter().any(reads_as_unrecognised),
+            "{:?}",
+            entries(&conversion)
+        );
+    }
+
+    #[test]
+    fn p140_if_f1_noheader_and_mcseed_are_recognised() {
+        for keyword_line in ["NOHEAD", "NOHEADER", "TOL 0 1E-2 1E-6", "TOLER 0 1E-2 1E-6"] {
+            let conversion = convert_line_five(keyword_line);
+            let on_line = entries_on_line(&conversion, 5);
+            assert_eq!(on_line.len(), 1, "{keyword_line}: {on_line:?}");
+            assert_eq!(on_line[0]["status"], "noted", "{keyword_line}: {on_line:?}");
+            assert_eq!(conversion.counts.unsupported, 0, "{keyword_line}");
+        }
+        // MCSEED seeds MCSAMPLE: whatever its status, it is a known keyword
+        let conversion = convert_line_five("MCSEED 12345");
+        let on_line = entries_on_line(&conversion, 5);
+        assert!(!on_line.is_empty());
+        assert!(!on_line.iter().any(|entry| reads_as_unrecognised(entry)));
+    }
+
+    #[test]
+    fn p140_if_f1_deprecated_keywords_are_recognised() {
+        // COLLAPSE = GETXS 1, ARRAY = GETDECAY 0, AINPUT = GETXS 0 GETDECAY 0: library selection
+        // that is mapped, approximated or noted, never "not a keyword" and never unsupported
+        for keyword in ["COLLAPSE", "ARRAY", "AINPUT"] {
+            let conversion = convert_line_five(keyword);
+            let on_line = entries_on_line(&conversion, 5);
+            assert!(!on_line.is_empty(), "{keyword} has no entry");
+            for entry in &on_line {
+                assert!(!reads_as_unrecognised(entry), "{keyword}: {entry}");
+                assert_ne!(entry["status"], "unsupported", "{keyword}: {entry}");
+            }
+        }
+        // the print and no-op switches of the same FISPACT-II inventory
+        for keyword in [
+            "CONV",
+            "DOMINANT",
+            "EAFVERSION",
+            "ENFA",
+            "LEVEL",
+            "LINA",
+            "LOOPS",
+            "NEWFILE",
+            "SEQNUMBER",
+            "SEQUENTIAL",
+            "TAPA",
+        ] {
+            let conversion = convert_line_five(keyword);
+            let on_line = entries_on_line(&conversion, 5);
+            assert!(!on_line.is_empty(), "{keyword} has no entry");
+            assert!(
+                !on_line.iter().any(|entry| reads_as_unrecognised(entry)),
+                "{keyword}: {on_line:?}"
+            );
+        }
+    }
+
+    // ---- F2: an unknown keyword after a Words-arity keyword is not an argument ----
+
+    #[test]
+    fn p140_if_f2_unknown_keyword_after_a_words_keyword_gets_its_own_entry() {
+        for head in [
+            "PATH Co58",
+            "ROUTES Co58",
+            "OVER Co58 ALAM 5 DAYS",
+            "PARTITION 1 Fe 0.5",
+            "POWER 1.0 1 301",
+            "BREMSSTRAHLUNG 1 Co60",
+        ] {
+            let conversion = convert_line_five(&format!("{head}\nFROBNICATE"));
+            assert_eq!(
+                entry_status(&conversion, "FROBNICATE"),
+                vec!["unsupported"],
+                "after '{head}': {:?}",
+                entries(&conversion)
+            );
+            assert!(
+                conversion
+                    .unsupported
+                    .iter()
+                    .any(|(keyword, line)| keyword == "FROBNICATE" && *line == 6),
+                "after '{head}': {:?}",
+                conversion.unsupported
+            );
+        }
+    }
+
+    #[test]
+    fn p140_if_f2_a_valid_partition_stays_mapped_beside_an_unknown_keyword() {
+        let conversion = convert_line_five("PARTITION 1 Fe 0.5\nFROBNICATE");
+        assert_eq!(entry_status(&conversion, "PARTITION"), vec!["mapped"]);
+        assert_eq!(entry_status(&conversion, "FROBNICATE"), vec!["unsupported"]);
+        assert_eq!(
+            conversion.spec["schedule"][0]["partition"],
+            json!({"Fe": 0.5})
+        );
+        // the keyword is not folded into PATH's prose either
+        let path = convert_line_five("PATH Co58\nFROBNICATE");
+        assert!(!entry_detail(&path, "PATH").contains("FROBNICATE"));
+    }
+
+    // ---- F3: a superseded or trailing TIME is unsupported, deferral semantics kept ----
+
+    #[test]
+    fn p140_if_f3_a_superseded_time_is_unsupported_with_its_duration_and_flux() {
+        let deck = deck_with("FLUX 1E14\nTIME 1 HOURS\nFLUX 0\nTIME 1 DAYS ATOMS");
+        let conversion = convert(&deck, &context()).unwrap();
+        // the documented deferral is kept: one step, the later interval
+        let schedule = conversion.spec["schedule"].as_array().unwrap();
+        assert_eq!(schedule.len(), 1);
+        assert_eq!(seconds(&schedule[0]), 86_400.0);
+        // the interval that no output keyword ran is strict-visible and says what was lost
+        let lost: Vec<&Value> = entries(&conversion)
+            .iter()
+            .filter(|entry| entry["keyword"] == "TIME" && entry["status"] == "unsupported")
+            .collect();
+        assert!(
+            !lost.is_empty(),
+            "no unsupported TIME entry: {:?}",
+            entries(&conversion)
+        );
+        assert!(conversion.counts.unsupported >= 1);
+        let detail = lost
+            .iter()
+            .map(|entry| entry["detail"].as_str().unwrap())
+            .collect::<Vec<_>>()
+            .join(" ");
+        assert!(mentions_any(&detail, &["3600", "1 h"]), "{detail}");
+        assert!(
+            mentions_any(&detail, &["1e14", "1e+14", "100000000000000"]),
+            "{detail}"
+        );
+    }
+
+    #[test]
+    fn p140_if_f3_a_trailing_time_is_unsupported_with_its_duration_and_flux() {
+        let deck = deck_with("FLUX 1E10\nTIME 1 HOURS ATOMS\nTIME 3 HOURS");
+        let conversion = convert(&deck, &context()).unwrap();
+        assert_eq!(conversion.spec["schedule"].as_array().unwrap().len(), 1);
+        let lost: Vec<&Value> = entries(&conversion)
+            .iter()
+            .filter(|entry| entry["keyword"] == "TIME" && entry["status"] == "unsupported")
+            .collect();
+        assert_eq!(lost.len(), 1, "{:?}", entries(&conversion));
+        assert!(conversion.counts.unsupported >= 1);
+        let detail = lost[0]["detail"].as_str().unwrap();
+        assert!(mentions_any(detail, &["10800", "3 h"]), "{detail}");
+        assert!(
+            mentions_any(detail, &["1e10", "1e+10", "10000000000"]),
+            "{detail}"
+        );
+    }
+
+    // ---- F4: OVER after the first TIME is not mapped from t = 0 ----
+
+    #[test]
+    fn p140_if_f4_over_after_the_first_step_is_not_reported_as_mapped() {
+        let deck = deck_with(
+            "FLUX 1E10\nTIME 1 YEARS ATOMS\nOVER Co58\n ALAM 100 DAYS\nFLUX 0\nTIME 1 DAYS ATOMS",
+        );
+        let conversion = convert(&deck, &context()).unwrap();
+        for keyword in ["ALAM", "OVER"] {
+            let status = entry_status(&conversion, keyword);
+            assert_eq!(status.len(), 1, "{keyword}");
+            assert!(
+                status[0] == "approximated" || status[0] == "unsupported",
+                "{keyword} after a step is '{}', not a from-t=0 mapping: {:?}",
+                status[0],
+                entries(&conversion)
+            );
+        }
+        // an OVER before the first TIME is still a plain mapping
+        let early = deck_with("OVER Co58\n ALAM 100 DAYS\nFLUX 1E10\nTIME 1 YEARS ATOMS");
+        let early = convert(&early, &context()).unwrap();
+        assert_eq!(entry_status(&early, "ALAM"), vec!["mapped"]);
+    }
+
+    // ---- F5: bounded work for nested and deep PULSE ----
+
+    #[test]
+    fn p140_if_f5_nested_huge_pulse_counts_are_refused_not_run() {
+        let deck = deck_with(
+            "PULSE 1000000000\n PULSE 1000000000\n  FLUX 1E10\n ENDPULSE\nENDPULSE\nFLUX 1E10\nTIME 1 HOURS ATOMS",
+        );
+        let result = convert_bounded(deck, 10).expect(
+            "no answer within 10 s: 1e9 x 1e9 repetitions of a step-free PULSE body were run instead of refused",
+        );
+        let error = result.err().expect("1e18 loop iterations were accepted");
+        assert!(error.to_lowercase().contains("pulse"), "{error}");
+    }
+
+    #[test]
+    fn p140_if_f5_deeply_nested_pulses_are_refused() {
+        // 4000 levels recurse fine on the 64 MiB worker stack of the current code, so a failure
+        // here is the missing depth limit, not a crash; ~10^5 levels overflow the default stack
+        // (see target/p140/repro/if/deep_pulse.i)
+        let depth = 4000;
+        let mut deck = String::from("FISPACT\n* t\nMASS 1E-3 1\n FE 100\n");
+        deck.push_str(&"PULSE 1\n".repeat(depth));
+        deck.push_str("FLUX 1E10\nTIME 1 SECS ATOMS\n");
+        deck.push_str(&"ENDPULSE\n".repeat(depth));
+        deck.push_str("END\n");
+        let result = convert_bounded(deck, 30).expect("no answer within 30 s");
+        let error = result
+            .err()
+            .expect("a 4000-deep PULSE nest was accepted: there is no nesting limit");
+        assert!(error.to_lowercase().contains("pulse"), "{error}");
+    }
+
+    // ---- F6: keywords inside PULSE 0 are still reported ----
+
+    #[test]
+    fn p140_if_f6_keywords_inside_a_zero_count_pulse_are_reported() {
+        let deck = deck_with(
+            "PULSE 0\n SSFGEOMETRY 1 0.5\n FROBNICATE\n FLUX 7E7\nENDPULSE\nFLUX 1E10\nTIME 1 HOURS ATOMS",
+        );
+        let conversion = convert(&deck, &context()).unwrap();
+        assert_eq!(
+            entry_status(&conversion, "SSFGEOMETRY"),
+            vec!["unsupported"]
+        );
+        assert_eq!(entry_status(&conversion, "FROBNICATE"), vec!["unsupported"]);
+        assert!(conversion.counts.unsupported >= 2);
+        // the skipped body has no effect on the problem: its FLUX is not the spectrum total
+        assert_eq!(conversion.spec["spectrum"]["total"], 1.0e10);
+        assert_eq!(conversion.spec["schedule"].as_array().unwrap().len(), 1);
+    }
+
+    // ---- F7: repeated deferred keywords and loop bodies ----
+
+    #[test]
+    fn p140_if_f7_a_repeated_uncertainty_leaves_no_unsettled_entry() {
+        let deck = deck_with("UNCERT 2\nUNCERT 0\nFLUX 1E10\nTIME 1 HOURS ATOMS");
+        let conversion = convert(&deck, &context()).unwrap();
+        assert_eq!(entry_status(&conversion, "UNCERTAINTY").len(), 2);
+        for entry in entries(&conversion)
+            .iter()
+            .filter(|entry| entry["keyword"] == "UNCERTAINTY")
+        {
+            assert!(
+                !entry["detail"]
+                    .as_str()
+                    .unwrap()
+                    .contains("resolved when the deck ends"),
+                "stale placeholder: {entry}"
+            );
+        }
+        // the first request is said to be superseded, not left claiming a status of its own
+        let first = entries_on_line(&conversion, 5)[0];
+        assert!(
+            mentions_any(
+                first["detail"].as_str().unwrap(),
+                &["supersed", "replaced", "overridden", "later", "last"]
+            ),
+            "{first}"
+        );
+        // the last request is the one that applies
+        let deck = deck_with("UNCERT 0\nUNCERT 2\nFLUX 1E10\nTIME 1 HOURS ATOMS");
+        let conversion = convert(&deck, &context_with_covariance()).unwrap();
+        assert!(conversion.spec.get("uncertainty").is_some());
+        let statuses = entry_status(&conversion, "UNCERTAINTY");
+        assert_eq!(statuses.last().unwrap(), "mapped");
+        assert!(!entries(&conversion).iter().any(|entry| entry["detail"]
+            .as_str()
+            .unwrap()
+            .contains("resolved when the deck ends")));
+    }
+
+    #[test]
+    fn p140_if_f7_a_repeated_spectrum_conversion_leaves_no_unsettled_entry() {
+        let deck = deck_with(
+            "GRPCONVERT 709 1\nGRPCONVERT 709 2\nCNVTYPE 0\nCNVTYPE 1\nFLUX 1E10\nTIME 1 HOURS ATOMS",
+        );
+        let conversion = convert(&deck, &context()).unwrap();
+        assert_eq!(entry_status(&conversion, "GRPCONVERT").len(), 2);
+        assert_eq!(entry_status(&conversion, "CNVTYPE").len(), 2);
+        for entry in entries(&conversion) {
+            assert!(
+                !entry["detail"]
+                    .as_str()
+                    .unwrap()
+                    .contains("resolved when the deck ends"),
+                "stale placeholder: {entry}"
+            );
+        }
+    }
+
+    #[test]
+    fn p140_if_f7_uncertainty_inside_a_pulse_body_is_settled() {
+        let deck = deck_with("PULSE 2\n UNCERT 2\n FLUX 1E10\n TIME 1 SECS ATOMS\nENDPULSE");
+        let conversion = convert(&deck, &context_with_covariance()).unwrap();
+        assert_eq!(conversion.spec["schedule"].as_array().unwrap().len(), 2);
+        assert!(conversion.spec.get("uncertainty").is_some());
+        // the second repetition (not recorded) must not erase the entry to settle
+        assert_eq!(entry_status(&conversion, "UNCERTAINTY"), vec!["mapped"]);
+    }
+
+    // ---- F8: DOSE 1 after DOSE 2 ----
+
+    #[test]
+    fn p140_if_f8_the_spec_and_the_dose_entries_agree() {
+        let deck = deck_with(
+            "DOSE 2 1.0\nFLUX 1E10\nTIME 1 HOURS ATOMS\nDOSE 1\nFLUX 0\nTIME 1 DAYS ATOMS",
+        );
+        let conversion = convert(&deck, &context()).unwrap();
+        let has_point_source = conversion
+            .spec
+            .get("photon")
+            .and_then(|photon| photon.get("point_source"))
+            .is_some();
+        let statuses = entry_status(&conversion, "DOSE");
+        assert_eq!(statuses.len(), 2);
+        // a mapped DOSE 2 must be in the spec; if DOSE 1 erased it, the entry must say so
+        assert!(
+            (has_point_source && statuses[0] == "mapped") || statuses[0] != "mapped",
+            "spec has no photon.point_source yet DOSE 2 is '{}' and DOSE 1 is '{}': {:?}",
+            statuses[0],
+            statuses[1],
+            entries(&conversion)
+        );
+    }
+
+    // ---- F9: encodings and line ends ----
+
+    #[test]
+    fn p140_if_f9_a_utf8_bom_is_not_part_of_the_first_keyword() {
+        let deck = format!("\u{feff}{}", deck_with("FLUX 1E10\nTIME 1 HOURS ATOMS"));
+        let conversion = convert(&deck, &context()).unwrap();
+        assert_eq!(
+            conversion.counts.unsupported, 0,
+            "{:?}",
+            conversion.unsupported
+        );
+        assert_eq!(conversion.spec["title"], "t");
+        // and before a `*` title line
+        let lexed = lex("\u{feff}* a title\nFLUX 1");
+        assert!(lexed.tokens[0].star, "{:?}", lexed.tokens);
+        assert_eq!(lexed.tokens[0].text, "a title");
+    }
+
+    #[test]
+    fn p140_if_f9_bare_cr_line_ends_split_lines() {
+        let deck = deck_with("FLUX 1E10\nTIME 1 HOURS ATOMS").replace('\n', "\r");
+        let conversion = convert(&deck, &context()).unwrap();
+        assert_eq!(conversion.spec["title"], "t");
+        assert_eq!(
+            conversion.counts.unsupported, 0,
+            "{:?}",
+            conversion.unsupported
+        );
+        assert_eq!(conversion.spec["schedule"].as_array().unwrap().len(), 1);
+        let lexed = lex("FLUX 1\rTIME 5\rATOMS\r");
+        let lines: Vec<usize> = lexed.tokens.iter().map(|token| token.line).collect();
+        assert_eq!(lines, vec![1, 1, 2, 2, 3]);
+    }
+
+    #[test]
+    fn p140_if_f9_a_deck_with_a_non_utf8_comment_byte_imports() {
+        let dir = p140_scratch("f9-latin1");
+        let deck = dir.join("deck.i");
+        let out = dir.join("out.json");
+        let mut bytes = b"<< dose in \xb5Sv/h >>\n".to_vec();
+        bytes.extend_from_slice(COOLING_ONLY.as_bytes());
+        std::fs::write(&deck, bytes).unwrap();
+        let result = run(&p140_cli(&deck, &out));
+        let written = out.exists();
+        let _ = std::fs::remove_dir_all(&dir);
+        assert!(result.is_ok(), "{result:?}");
+        assert!(written);
+    }
+
+    // ---- F10: an unresolvable fluxes entry matters only to a deck that irradiates ----
+
+    #[test]
+    fn p140_if_f10_a_missing_fluxes_file_is_ignored_by_a_cooling_only_deck() {
+        let dir = p140_scratch("f10-cooling");
+        let deck = dir.join("deck.i");
+        let files = dir.join("files");
+        let out = dir.join("out.json");
+        std::fs::write(&deck, COOLING_ONLY).unwrap();
+        std::fs::write(&files, "fluxes /nonexistent/p140/fluxes\n").unwrap();
+        let mut cli = p140_cli(&deck, &out);
+        cli.files = Some(files.display().to_string());
+        let result = run(&cli);
+        let written = out.exists();
+        let _ = std::fs::remove_dir_all(&dir);
+        assert!(result.is_ok(), "{result:?}");
+        assert!(written);
+    }
+
+    #[test]
+    fn p140_if_f10_a_missing_fluxes_file_still_stops_an_irradiating_deck() {
+        let dir = p140_scratch("f10-irradiating");
+        let deck = dir.join("deck.i");
+        let files = dir.join("files");
+        let out = dir.join("out.json");
+        std::fs::write(
+            &deck,
+            "FISPACT\n* t\nMASS 1E-3 1\n FE 100\nFLUX 1E10\nTIME 1 HOURS ATOMS\nEND\n",
+        )
+        .unwrap();
+        std::fs::write(&files, "fluxes /nonexistent/p140/fluxes\n").unwrap();
+        let mut cli = p140_cli(&deck, &out);
+        cli.files = Some(files.display().to_string());
+        let result = run(&cli);
+        let written = out.exists();
+        let _ = std::fs::remove_dir_all(&dir);
+        let error = result
+            .err()
+            .expect("an irradiating deck needs its spectrum");
+        assert!(error.contains("flux"), "{error}");
+        assert!(!written);
+    }
+
+    // ---- F11: --strict leaves no stale spec; OUT must not be the deck ----
+
+    #[test]
+    fn p140_if_f11_a_strict_failure_removes_a_stale_output() {
+        let dir = p140_scratch("f11-strict");
+        let deck = dir.join("deck.i");
+        let out = dir.join("out.json");
+        std::fs::write(
+            &deck,
+            "FISPACT\n* t\nMASS 1E-3 1\n FE 100\nFROBNICATE\nFLUX 0\nTIME 1 DAYS ATOMS\nEND\n",
+        )
+        .unwrap();
+        std::fs::write(&out, "{\"stale\": true}\n").unwrap();
+        let mut cli = p140_cli(&deck, &out);
+        cli.strict = true;
+        let result = run(&cli);
+        let stale_left = out.exists();
+        let report_written = dir.join("out.import.json").exists();
+        let _ = std::fs::remove_dir_all(&dir);
+        let error = result.err().expect("--strict must fail on FROBNICATE");
+        assert!(error.contains("--strict"), "{error}");
+        assert!(report_written);
+        assert!(
+            !stale_left,
+            "the previous OUT.json survived a failed --strict import"
+        );
+    }
+
+    #[test]
+    fn p140_if_f11_out_equal_to_deck_is_refused() {
+        let dir = p140_scratch("f11-same");
+        let deck = dir.join("deck.i");
+        std::fs::write(&deck, COOLING_ONLY).unwrap();
+        let result = run(&p140_cli(&deck, &deck));
+        let after = std::fs::read_to_string(&deck).unwrap_or_default();
+        let _ = std::fs::remove_dir_all(&dir);
+        assert!(result.is_err(), "{result:?}");
+        assert_eq!(after, COOLING_ONLY, "the deck was overwritten by the spec");
+    }
+
+    #[test]
+    fn p140_if_f11_out_aliasing_the_deck_through_a_path_alias_is_refused() {
+        let dir = p140_scratch("f11-alias");
+        std::fs::create_dir_all(dir.join("sub")).unwrap();
+        let deck = dir.join("deck.i");
+        std::fs::write(&deck, COOLING_ONLY).unwrap();
+        let alias = dir.join("sub").join("..").join("deck.i");
+        let result = run(&p140_cli(&deck, &alias));
+        let after = std::fs::read_to_string(&deck).unwrap_or_default();
+        let _ = std::fs::remove_dir_all(&dir);
+        assert!(result.is_err(), "{result:?}");
+        assert_eq!(after, COOLING_ONLY, "the deck was overwritten by the spec");
+    }
+
+    // ---- F13: time unit tokens ----
+
+    #[test]
+    fn p140_if_f13_single_letter_time_units_are_units() {
+        let year = 365.25 * 86_400.0;
+        for (unit, scale) in [
+            ("s", 1.0),
+            ("S", 1.0),
+            ("m", 60.0),
+            ("M", 60.0),
+            ("h", 3_600.0),
+            ("H", 3_600.0),
+            ("d", 86_400.0),
+            ("D", 86_400.0),
+            ("y", year),
+            ("Y", year),
+        ] {
+            let deck = deck_with(&format!("FLUX 1E10\nTIME 5 {unit} ATOMS"));
+            let conversion = convert(&deck, &context()).unwrap();
+            let schedule = conversion.spec["schedule"].as_array().unwrap();
+            assert_eq!(schedule.len(), 1, "TIME 5 {unit}");
+            let want = 5.0 * scale;
+            let got = seconds(&schedule[0]);
+            assert!(
+                (got - want).abs() <= 1e-9 * want,
+                "TIME 5 {unit} is {got} s, expected {want} s"
+            );
+            assert_eq!(
+                conversion.counts.unsupported, 0,
+                "TIME 5 {unit}: {:?}",
+                conversion.unsupported
+            );
+        }
+    }
+
+    // ---- F14: POWER detail and arguments ----
+
+    #[test]
+    fn p140_if_f14_power_without_an_mt_list_does_not_claim_an_empty_list() {
+        let conversion = convert(
+            &deck_with("DENSITY 7.874\nPOWER 150.0\nTIME 1 HOURS ATOMS"),
+            &context(),
+        )
+        .unwrap();
+        let detail = entry_detail(&conversion, "POWER");
+        assert!(!detail.contains("MT list ''"), "{detail}");
+    }
+
+    #[test]
+    fn p140_if_f14_power_reads_its_declared_count_of_mt_numbers() {
+        let conversion = convert(
+            &deck_with("DENSITY 7.874\nPOWER 150.0 2 301 444\nTIME 1 HOURS ATOMS"),
+            &context(),
+        )
+        .unwrap();
+        let detail = entry_detail(&conversion, "POWER");
+        // the count `2` is not an MT number
+        assert!(!detail.contains("'2 301 444'"), "{detail}");
+        assert!(mentions_any(&detail, &["301 444", "301, 444"]), "{detail}");
+        // a list that is exactly MT 301 stays silent about the MT list
+        let plain = convert(
+            &deck_with("DENSITY 7.874\nPOWER 150.0 1 301\nTIME 1 HOURS ATOMS"),
+            &context(),
+        )
+        .unwrap();
+        assert!(!entry_detail(&plain, "POWER").contains("MT list"));
+    }
+
+    #[test]
+    fn p140_if_f14_power_flags_words_after_its_mt_list() {
+        let conversion = convert(
+            &deck_with("DENSITY 7.874\nPOWER 150.0 1 301 999\nTIME 1 HOURS ATOMS"),
+            &context(),
+        )
+        .unwrap();
+        let detail = entry_detail(&conversion, "POWER");
+        assert!(
+            mentions_any(
+                &detail,
+                &[
+                    "ignored",
+                    "not interpreted",
+                    "extra",
+                    "unread",
+                    "trailing",
+                    "beyond"
+                ]
+            ),
+            "{detail}"
+        );
     }
 }

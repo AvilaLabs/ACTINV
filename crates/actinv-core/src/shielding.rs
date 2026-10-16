@@ -1752,4 +1752,382 @@ mod tests {
         assert!(error.contains("LRF=7"), "{error}");
         assert!(error.contains("particle pair 8"), "{error}");
     }
+
+    // ---- P140 regressions (SG-01, SG-03, SG-07): they assert the intended behaviour ----
+
+    /// The cards of one ENDF-6 section: six right-aligned 11-column fields per record, then SEND.
+    fn p140_section(mat: i32, mf: i32, mt: i32, records: &[Vec<String>]) -> Vec<String> {
+        let mut lines: Vec<String> = records
+            .iter()
+            .enumerate()
+            .map(|(index, record)| {
+                let mut fields = record.clone();
+                fields.resize(6, "0".to_string());
+                let body: String = fields.iter().map(|field| format!("{field:>11}")).collect();
+                format!("{body}{mat:>4}{mf:>2}{mt:>3}{:>5}", index + 1)
+            })
+            .collect();
+        lines.push(format!("{:66}{mat:>4}{mf:>2}{:>3}{:>5}", "", 0, 99_999));
+        lines
+    }
+
+    /// One MF=2 isotope: its ZAI and ranges, each range (EL, EH, levels as [E, J, GN, GG]).
+    type P140Isotope = (i32, Vec<(f64, f64, Vec<[f64; 4]>)>);
+
+    /// A neutron ENDF tape (one MAT) whose MF=2/MT=151 holds one single-level Breit-Wigner
+    /// L-group per range of every isotope (target spin 0, no fission width).
+    fn p140_tape(mat: i32, za: i32, awr: f64, isotopes: &[P140Isotope]) -> String {
+        let num = |value: f64| format!("{value:.6e}");
+        let count = |value: usize| value.to_string();
+        let mf1 = vec![
+            vec![za.to_string(), num(awr)],
+            vec![],
+            vec![
+                num(1.0),
+                num(2.0e7),
+                "0".into(),
+                "0".into(),
+                "10".into(),
+                "6".into(),
+            ],
+            vec![],
+        ];
+        let mut mf2 = vec![vec![
+            za.to_string(),
+            num(awr),
+            "0".into(),
+            "0".into(),
+            count(isotopes.len()),
+            "0".into(),
+        ]];
+        for (zai, ranges) in isotopes {
+            mf2.push(vec![
+                zai.to_string(),
+                num(1.0),
+                "0".into(),
+                "0".into(),
+                count(ranges.len()),
+                "0".into(),
+            ]);
+            for (low, high, rows) in ranges {
+                mf2.push(vec![
+                    num(*low),
+                    num(*high),
+                    "1".into(),
+                    "1".into(),
+                    "0".into(),
+                    "0".into(),
+                ]);
+                mf2.push(vec![
+                    num(0.0),
+                    num(0.7),
+                    "0".into(),
+                    "0".into(),
+                    "1".into(),
+                    "0".into(),
+                ]);
+                mf2.push(vec![
+                    num(awr),
+                    num(0.0),
+                    "0".into(),
+                    "0".into(),
+                    count(6 * rows.len()),
+                    count(rows.len()),
+                ]);
+                for [energy, spin, neutron, capture] in rows {
+                    mf2.push(vec![
+                        num(*energy),
+                        num(*spin),
+                        num(neutron + capture),
+                        num(*neutron),
+                        num(*capture),
+                        num(0.0),
+                    ]);
+                }
+            }
+        }
+        let mut lines = p140_section(mat, 1, 451, &mf1);
+        lines.extend(p140_section(mat, 2, 151, &mf2));
+        lines.join("\n")
+    }
+
+    fn p140_geometry_spec() -> crate::spec::SelfShieldingGeometry {
+        serde_json::from_value(serde_json::json!({
+            "shape": "foil",
+            "length_cm": 0.01,
+            "density_g_cm3": 19.3,
+            "resonance_files": [{"path": "w.endf", "sha256": "0".repeat(64)}],
+        }))
+        .unwrap()
+    }
+
+    /// W186 with a resolved range of 1e-5 .. 1e4 eV: levels at 10 and 200 eV lie inside it, the one
+    /// at 12 000 eV is an R-matrix pole above the range (like W186's three levels near 10.1-10.4 keV).
+    fn p140_w186_geometry() -> PreparedGeometry {
+        let tape = p140_tape(
+            7437,
+            74186,
+            183.0,
+            &[(
+                74186,
+                vec![(
+                    1e-5,
+                    1e4,
+                    vec![
+                        [10.0, 0.5, 1e-3, 5e-2],
+                        [200.0, 0.5, 2e-3, 6e-2],
+                        [12_000.0, 0.5, 5e-3, 4e-2],
+                    ],
+                )],
+            )],
+        );
+        PreparedGeometry::from_evaluations(
+            &p140_geometry_spec(),
+            &[("w186.endf".to_string(), tape)],
+        )
+        .expect("the synthetic tape parses")
+    }
+
+    #[test]
+    fn p140_sg01_resonances_above_the_resolved_range_are_not_shielding_peaks() {
+        let geometry = p140_w186_geometry();
+        // Expected: the level above EH is clipped away. Current code keeps all three.
+        assert_eq!(
+            geometry.lines[&(74186, 0)].len(),
+            2,
+            "a level above the evaluation's EH must not become a shielding line"
+        );
+        let atoms = BTreeMap::from([((74186, 0), 3.0e21)]);
+        // Groups: [1, 100), [100, 1e4), [1e4, 1e5). The 12 000 eV level would land in group 2.
+        let plan = geometry
+            .plan(&atoms, &[1.0, 100.0, 1.0e4, 1.0e5], false)
+            .unwrap();
+        let rows = &plan.geometry.as_ref().unwrap().factors["W186"];
+        assert!(
+            rows.iter().all(|row| row.group != 2),
+            "no applied factor may exist above EH: {rows:?}"
+        );
+        assert_eq!(rows.iter().map(|row| row.resonances).sum::<usize>(), 2);
+        assert!(plan.row_scales(74186, 0, 102).unwrap().get(&2).is_none());
+    }
+
+    #[test]
+    fn p140_sg01_every_arm_keeps_only_levels_inside_its_own_range() {
+        use actinv_data::resonance::{
+            LegacyLGroup, LegacyResolved, LegacyResonance, ResonanceIsotope, ResonanceRange,
+            RmlResonance,
+        };
+        let legacy_range = |low: f64, high: f64, energies: &[f64], reich_moore: bool| {
+            let resolved = LegacyResolved {
+                spin: 0.0,
+                ap: 0.7,
+                groups: vec![LegacyLGroup {
+                    awri: 183.0,
+                    apl: 0.7,
+                    qx: 0.0,
+                    l: 0,
+                    lrx: 0,
+                    resonances: energies
+                        .iter()
+                        .map(|&energy| LegacyResonance {
+                            energy,
+                            spin: 0.5,
+                            total: 5.1e-2,
+                            neutron: 1e-3,
+                            capture: 5e-2,
+                            fission_a: 0.0,
+                            fission_b: 0.0,
+                        })
+                        .collect(),
+                }],
+            };
+            ResonanceRange {
+                energy_min: low,
+                energy_max: high,
+                lru: 1,
+                lrf: if reich_moore { 3 } else { 1 },
+                naps: 1,
+                scattering_radius: None,
+                data: if reich_moore {
+                    RangeData::ReichMoore(resolved)
+                } else {
+                    RangeData::BreitWigner(resolved)
+                },
+            }
+        };
+        let rml_range = |low: f64, high: f64, energies: &[f64]| {
+            let mut range = rml_test_evaluation(
+                false,
+                energies
+                    .iter()
+                    .map(|&energy| RmlResonance {
+                        energy,
+                        widths: vec![0.02, 0.4, 0.05],
+                    })
+                    .collect(),
+            )
+            .isotopes
+            .remove(0)
+            .ranges
+            .remove(0);
+            range.energy_min = low;
+            range.energy_max = high;
+            range
+        };
+        let evaluation = |ranges: Vec<ResonanceRange>| ResonanceEvaluation {
+            za: 74183,
+            awr: 181.0,
+            isotopes: vec![ResonanceIsotope {
+                zai: 74183,
+                abundance: 1.0,
+                fission_widths: false,
+                ranges,
+            }],
+        };
+        // Range 1 spans 1e-5 .. 100 eV, range 2 spans 100 .. 1e4 eV. Each lists one level below its
+        // lower edge, one above its upper edge (150 eV belongs to range 2's span, but it is range
+        // 1's parameter) and one inside.
+        for (arm, ranges) in [
+            (
+                "Breit-Wigner",
+                vec![
+                    legacy_range(1e-5, 100.0, &[1e-7, 50.0, 150.0], false),
+                    legacy_range(100.0, 1e4, &[500.0, 2.0e4, 20.0], false),
+                ],
+            ),
+            (
+                "Reich-Moore",
+                vec![
+                    legacy_range(1e-5, 100.0, &[1e-7, 50.0, 150.0], true),
+                    legacy_range(100.0, 1e4, &[500.0, 2.0e4, 20.0], true),
+                ],
+            ),
+            (
+                "R-matrix limited",
+                vec![
+                    rml_range(1e-5, 100.0, &[1e-7, 50.0, 150.0]),
+                    rml_range(100.0, 1e4, &[500.0, 2.0e4, 20.0]),
+                ],
+            ),
+        ] {
+            let mut energies: Vec<f64> = resolved_lines(&evaluation(ranges), 74183)
+                .unwrap()
+                .iter()
+                .map(|line| line.energy_ev)
+                .collect();
+            energies.sort_by(f64::total_cmp);
+            assert_eq!(energies, vec![50.0, 500.0], "{arm} arm");
+        }
+    }
+
+    #[test]
+    fn p140_sg01_geometry_ledger_counts_the_levels_it_dropped() {
+        let atoms = BTreeMap::from([((74186, 0), 3.0e21)]);
+        let plan = p140_w186_geometry()
+            .plan(&atoms, &[1.0, 100.0, 1.0e4, 1.0e5], false)
+            .unwrap();
+        let report = serde_json::to_value(plan.geometry.as_ref().unwrap()).unwrap();
+        assert_eq!(
+            report["resonances_outside_range"]["W186"], 1,
+            "the geometry ledger must count levels clipped to [EL, EH]: {report}"
+        );
+    }
+
+    #[test]
+    fn p140_sg03_choose_element_reports_isotopes_without_files_as_uncovered() {
+        let atoms = BTreeMap::from([((74184, 0), 3.0e21), ((74186, 0), 2.0e21)]);
+        let bounds = [1.0, 100.0, 1.0e4];
+        let mut geometry = toy_geometry(0.01, false);
+        // Choosing the element selects W184 (supplied) and W186 (no file): the latter is uncovered,
+        // exactly as without `choose`. Current code refuses the whole run.
+        geometry.choose = vec![("W".to_string(), ChooseEntry::Element(74))];
+        let plan = geometry
+            .plan(&atoms, &bounds, false)
+            .expect("an element entry must not fail because one isotope has no file");
+        assert_eq!(plan.uncovered_targets, vec!["W186".to_string()]);
+        assert!(plan.row_scales(74184, 0, 102).is_some());
+        assert!(plan.row_scales(74186, 0, 102).is_none());
+        // require_shielding_complete still turns the gap into an error.
+        let error = geometry.plan(&atoms, &bounds, true).unwrap_err();
+        assert!(error.contains("W186"), "{error}");
+        // An explicit nuclide entry without a file stays a hard error.
+        geometry.choose = vec![("W186".to_string(), ChooseEntry::Nuclide(74186, 0))];
+        let error = geometry.plan(&atoms, &bounds, false).unwrap_err();
+        assert!(error.contains("W186"), "{error}");
+    }
+
+    #[test]
+    fn p140_sg07_natural_element_evaluation_is_keyed_by_isotope_or_refused_clearly() {
+        // One MAT with ZA 40000 and two MF=2 isotopes, as a JEFF natural-element file has.
+        let tape = p140_tape(
+            4000,
+            40000,
+            91.22,
+            &[
+                (40090, vec![(1e-5, 1e4, vec![[10.0, 0.5, 1e-3, 5e-2]])]),
+                (40091, vec![(1e-5, 1e4, vec![[20.0, 0.5, 2e-3, 6e-2]])]),
+            ],
+        );
+        match PreparedGeometry::from_evaluations(
+            &p140_geometry_spec(),
+            &[("zr.endf".to_string(), tape)],
+        ) {
+            Err(error) => assert!(
+                error.contains("isotope"),
+                "a multi-isotope refusal must say so: {error}"
+            ),
+            Ok(geometry) => {
+                assert!(geometry.lines.contains_key(&(40090, 0)));
+                assert!(geometry.lines.contains_key(&(40091, 0)));
+            }
+        }
+    }
+
+    #[test]
+    fn p140_sg07_multi_isotope_material_does_not_silently_drop_isotopes() {
+        // The MAT's ZA equals the first isotope's, so the ad hoc filter keeps only that one.
+        let tape = p140_tape(
+            4009,
+            40090,
+            89.13,
+            &[
+                (40090, vec![(1e-5, 1e4, vec![[10.0, 0.5, 1e-3, 5e-2]])]),
+                (40091, vec![(1e-5, 1e4, vec![[20.0, 0.5, 2e-3, 6e-2]])]),
+            ],
+        );
+        match PreparedGeometry::from_evaluations(
+            &p140_geometry_spec(),
+            &[("zr90.endf".to_string(), tape)],
+        ) {
+            Err(error) => assert!(error.contains("isotope"), "{error}"),
+            Ok(geometry) => {
+                assert!(geometry.lines.contains_key(&(40090, 0)));
+                assert!(
+                    geometry.lines.contains_key(&(40091, 0)),
+                    "Zr91 was dropped without a word"
+                );
+            }
+        }
+    }
+
+    #[test]
+    fn p140_sg07_isotope_zai_differing_from_the_mat_za_is_not_accepted_under_the_mat_name() {
+        // MAT ZA 74186 whose single MF=2 isotope is W184: its levels must not be filed under W186.
+        let tape = p140_tape(
+            7437,
+            74186,
+            183.0,
+            &[(74184, vec![(1e-5, 1e4, vec![[10.0, 0.5, 1e-3, 5e-2]])])],
+        );
+        match PreparedGeometry::from_evaluations(
+            &p140_geometry_spec(),
+            &[("w.endf".to_string(), tape)],
+        ) {
+            Err(_) => {}
+            Ok(geometry) => assert!(
+                !geometry.lines.contains_key(&(74186, 0)),
+                "W184 levels were silently registered as W186"
+            ),
+        }
+    }
 }

@@ -4262,7 +4262,7 @@ mod input_parity_tests {
         })
     }
 
-    fn error_of(value: &Value) -> String {
+    pub(super) fn error_of(value: &Value) -> String {
         match Spec::from_json(&value.to_string()) {
             Err(error) => error,
             Ok(_) => panic!("spec unexpectedly validated: {value}"),
@@ -4575,5 +4575,453 @@ mod input_parity_tests {
             spec.overrides[1].half_life_seconds().unwrap(),
             5.0 * super::parse_duration("1 y").unwrap()
         );
+    }
+}
+
+/// P140 H1 regression tests for the schedule-control findings (rebin, wall loading, partition,
+/// decay-only runs). Each asserts the behaviour the finding calls for.
+#[cfg(test)]
+mod p140_schedule_tests {
+    use super::input_parity_tests::error_of;
+    use super::Spec;
+    use serde_json::{json, Value};
+
+    fn library_spec() -> Value {
+        json!({
+            "spec": "actinv-spec-1",
+            "library": {"path": "activation.npz"},
+            "decay": {"primary": "decay.endf"},
+            "material": {"basis": "wt_percent", "composition": {"FE": 100.0}},
+            "spectrum": {
+                "structure": "custom",
+                "boundaries_eV": [1.0, 2.0],
+                "flux_per_group": [1.0],
+                "total": 1.0e14,
+            },
+            "schedule": [{"dt": "1 s", "flux": 1.0}],
+        })
+    }
+
+    fn rebin_spec() -> Value {
+        let mut value = library_spec();
+        value["spectrum"] = json!({
+            "structure": "fispact-709",
+            "boundaries_eV": [1.0, 10.0, 100.0, 1000.0],
+            "flux_per_group": [1.0, 2.0, 3.0],
+            "rebin": {},
+        });
+        value
+    }
+
+    fn decay_only_spec() -> Value {
+        json!({
+            "spec": "actinv-spec-1",
+            "decay": {"primary": "decay.endf"},
+            "material": {"basis": "wt_percent", "composition": {"FE": 100.0}},
+            "schedule": [{"dt": "1 d", "flux": 0.0}],
+        })
+    }
+
+    /// Validation followed by the physical-input resolution a run starts with.
+    fn resolve(value: &Value) -> Result<(), String> {
+        Spec::from_json(&value.to_string()).and_then(|spec| spec.physical_inputs().map(|_| ()))
+    }
+
+    /// A source spectrum wholly below the fispact-709 grid (1e-5 eV .. 1e9 eV).
+    fn below_the_grid() -> Value {
+        json!({
+            "structure": "fispact-709",
+            "boundaries_eV": [1.0e-12, 1.0e-11],
+            "flux_per_group": [1.0e14],
+            "rebin": {},
+        })
+    }
+
+    #[test]
+    fn p140_sc_f1_rebin_leaving_no_destination_flux_is_refused() {
+        let mut value = library_spec();
+        value["spectrum"] = below_the_grid();
+        let error = resolve(&value)
+            .expect_err("a rebin that lands none of the flux on the destination must be refused");
+        assert!(
+            error.contains("rebin") && error.contains("destination"),
+            "{error}"
+        );
+        // a source that overlaps the destination grid is untouched by the refusal
+        assert!(resolve(&rebin_spec()).is_ok());
+    }
+
+    #[test]
+    fn p140_sc_f1_step_spectrum_rebin_leaving_no_destination_flux_is_refused() {
+        let mut value = rebin_spec();
+        value["schedule"] = json!([{"dt": "1 s", "flux": 1.0, "spectrum": below_the_grid()}]);
+        let error = resolve(&value)
+            .expect_err("a step spectrum that lands none of its flux must be refused");
+        assert!(
+            error.contains("rebin") && error.contains("destination"),
+            "{error}"
+        );
+    }
+
+    #[test]
+    fn p140_sc_f2_zero_wall_loading_needs_no_spectrum_total() {
+        // decay-only: the placeholder spectrum has no flux, and wall 0 is a cooling step
+        let mut value = decay_only_spec();
+        value["schedule"] = json!([{"dt": "1 d", "wall_loading_MW_m2": 0.0}]);
+        let spec = Spec::from_json(&value.to_string()).unwrap();
+        let physical = spec
+            .physical_inputs()
+            .expect("a zero wall loading is a zero multiplier whatever the spectrum");
+        assert_eq!(physical.schedule[0].multiplier().get(), 0.0);
+
+        // a library run on an all-zero spectrum
+        let mut value = library_spec();
+        value["spectrum"] = json!({
+            "structure": "custom",
+            "boundaries_eV": [1.0, 2.0],
+            "flux_per_group": [0.0],
+        });
+        value["schedule"] = json!([{"dt": "1 d", "wall_loading_MW_m2": 0.0}]);
+        let spec = Spec::from_json(&value.to_string()).unwrap();
+        let physical = spec
+            .physical_inputs()
+            .expect("wall 0 on a zero spectrum runs");
+        assert_eq!(physical.schedule[0].multiplier().get(), 0.0);
+
+        // a positive wall loading still has nothing to scale
+        value["schedule"] = json!([{"dt": "1 d", "wall_loading_MW_m2": 1.0}]);
+        assert!(resolve(&value).unwrap_err().contains("positive total flux"));
+    }
+
+    #[test]
+    fn p140_sc_f4_kerma_in_a_decay_only_spec_is_refused_at_validation() {
+        let mut value = decay_only_spec();
+        value["kerma"] = json!({
+            "table": {"path": "kerma.json", "sha256": "0".repeat(64)},
+        });
+        let error = Spec::from_json(&value.to_string())
+            .expect_err("a decay-only run has no activation library to take a kerma table from");
+        assert!(
+            error.contains("kerma") && error.contains("decay-only run"),
+            "{error}"
+        );
+    }
+
+    #[test]
+    fn p140_sc_f6_empty_partition_is_no_partition() {
+        let empty = json!([{"dt": "1 s", "flux": 1.0, "partition": {}}]);
+        let mut failures = Vec::new();
+        let mut check = |label: &str, value: &Value| {
+            if let Err(error) = Spec::from_json(&value.to_string()) {
+                failures.push(format!("{label}: {error}"));
+            }
+        };
+
+        let mut value = library_spec();
+        value["options"] = json!({"mode": "trace"});
+        value["schedule"] = empty.clone();
+        check("options.mode trace", &value);
+
+        let mut value = library_spec();
+        value["pathways"] = json!({"targets": ["Fe57"]});
+        value["schedule"] = empty.clone();
+        check("pathways", &value);
+
+        let mut value = library_spec();
+        value["schedule"] = json!([
+            {"dt": "1 s", "flux": 1.0},
+            {
+                "dt": "2 s",
+                "flux": 1.0,
+                "library": {"path": "second.npz"},
+                "spectrum": {
+                    "structure": "custom",
+                    "boundaries_eV": [1.0, 3.0, 5.0],
+                    "flux_per_group": [1.0, 2.0],
+                },
+                "partition": {},
+            },
+        ]);
+        check("step library override", &value);
+
+        assert!(
+            failures.is_empty(),
+            "an empty partition is a no-op in the run and must not be refused: {failures:?}"
+        );
+    }
+
+    #[test]
+    fn p140_sc_f10_rebin_limits_outside_the_spectrum_are_refused_at_validation() {
+        // the source spans 1 .. 1000 eV: emin at or above the top, emax at or below the bottom
+        let mut failures = Vec::new();
+        for (name, rebin) in [
+            ("emin", json!({"emin_eV": 1.0e9})),
+            ("emax", json!({"emax_eV": 0.5})),
+        ] {
+            let mut value = rebin_spec();
+            value["spectrum"]["rebin"] = rebin.clone();
+            match Spec::from_json(&value.to_string()) {
+                Ok(_) => failures.push(format!("base {name}: validated")),
+                Err(error) if !(error.contains(name) && error.contains("rebin")) => {
+                    failures.push(format!("base {name}: unrelated message '{error}'"));
+                }
+                Err(_) => {}
+            }
+            let mut value = rebin_spec();
+            value["schedule"] = json!([{
+                "dt": "1 s",
+                "flux": 1.0,
+                "spectrum": {
+                    "structure": "fispact-709",
+                    "boundaries_eV": [1.0, 10.0, 100.0, 1000.0],
+                    "flux_per_group": [1.0, 2.0, 3.0],
+                    "rebin": rebin,
+                },
+            }]);
+            match Spec::from_json(&value.to_string()) {
+                Ok(_) => failures.push(format!("step {name}: validated")),
+                Err(error) if !(error.contains(name) && error.contains("rebin")) => {
+                    failures.push(format!("step {name}: unrelated message '{error}'"));
+                }
+                Err(_) => {}
+            }
+        }
+        assert!(
+            failures.is_empty(),
+            "limits outside the spectrum are known at validation: {failures:?}"
+        );
+        // limits inside, or merely touching, the spectrum stay valid
+        let mut value = rebin_spec();
+        value["spectrum"]["rebin"] = json!({"emin_eV": 0.1, "emax_eV": 5000.0});
+        assert!(Spec::from_json(&value.to_string()).is_ok());
+    }
+
+    #[test]
+    fn p140_sc_f12_wall_loading_fallback_is_refused_for_non_neutron_projectiles() {
+        let mut value = library_spec();
+        value["projectile"] = json!("proton");
+        value["options"] = json!({"temperature_K": 0.0});
+        value["schedule"] = json!([{"dt": "1 s", "wall_loading_MW_m2": 1.0}]);
+        let error = resolve(&value).expect_err(
+            "4.44e13 n cm^-2 s^-1 per MW m^-2 is a 14 MeV neutron equivalence, not a proton one",
+        );
+        assert!(
+            error.contains("wall_loading") && error.contains("neutron"),
+            "{error}"
+        );
+        // a declared reference loading does not use the neutron current and stays valid
+        value["spectrum"]["wall_loading_MW_m2"] = json!(4.15);
+        assert!(resolve(&value).is_ok());
+    }
+
+    #[test]
+    fn p140_sc_f16_omitted_base_spectrum_is_not_reported_as_the_placeholder() {
+        // a step spectrum on a spec that declares no base spectrum
+        let mut value = decay_only_spec();
+        value["schedule"] = json!([{
+            "dt": "1 d",
+            "flux": 0.0,
+            "spectrum": {"structure": "fispact-709", "flux_per_group": vec![0.0; 709]},
+        }]);
+        let error = resolve(&value).expect_err("a step spectrum needs a base spectrum to match");
+        assert!(
+            !error.contains("custom"),
+            "the zero-flux placeholder must not leak into the message: {error}"
+        );
+        assert!(
+            error.contains("spectrum"),
+            "the message names the spectrum: {error}"
+        );
+    }
+
+    // ---- P140: photon/radiological validation
+
+    #[test]
+    fn p140_ph_f4_point_source_needs_a_photon_producing_output() {
+        // options.outputs without "photons" or "dose" builds no photon source, so a requested
+        // point-source dose would be certified without having been computed.
+        for outputs in [json!(["activity"]), json!(["inventory", "heat"]), json!([])] {
+            let mut value = decay_only_spec();
+            value["options"] = json!({"outputs": outputs});
+            value["photon"] = json!({"point_source": {"distance_m": 1.0}});
+            let error = error_of(&value);
+            assert!(
+                error.contains("photon.point_source") && error.contains("options.outputs"),
+                "{outputs}: {error}"
+            );
+        }
+    }
+
+    #[test]
+    fn p140_ph_f4_bremsstrahlung_needs_a_photon_producing_output() {
+        for outputs in [json!(["activity"]), json!(["radiological", "ledger"])] {
+            let mut value = decay_only_spec();
+            value["options"] = json!({"outputs": outputs});
+            value["photon"] = json!({"bremsstrahlung": {"nuclides": ["Cl36"]}});
+            let error = error_of(&value);
+            assert!(
+                error.contains("photon.bremsstrahlung") && error.contains("options.outputs"),
+                "{outputs}: {error}"
+            );
+        }
+    }
+
+    #[test]
+    fn p140_ph_f4_guard_photon_extras_stay_valid_when_photons_are_produced() {
+        // Controls that already hold: a photon-producing output list, or none at all, and an
+        // output list that skips photons when no photon extra is requested.
+        for outputs in [
+            json!(["photons"]),
+            json!(["dose"]),
+            json!(["activity", "photons"]),
+        ] {
+            let mut value = decay_only_spec();
+            value["options"] = json!({"outputs": outputs});
+            value["photon"] = json!({
+                "point_source": {"distance_m": 1.0},
+                "bremsstrahlung": {"nuclides": ["Cl36"]},
+            });
+            assert!(Spec::from_json(&value.to_string()).is_ok(), "{outputs}");
+        }
+        let mut value = decay_only_spec();
+        value["photon"] = json!({"point_source": {"distance_m": 1.0}});
+        assert!(Spec::from_json(&value.to_string()).is_ok());
+        let mut value = decay_only_spec();
+        value["options"] = json!({"outputs": ["activity"]});
+        assert!(Spec::from_json(&value.to_string()).is_ok());
+    }
+
+    #[test]
+    fn p140_rad_f8_unknown_bundled_response_selector_fails_validation() {
+        // The bundled table is in memory at validation time, so a typo must not wait for the run.
+        for (table, bad, good) in [
+            ("us-49cfr173-a2", "a2-u-medum", "a2-u-medium"),
+            (
+                "euratom-2013-59-annex-vii-a",
+                "annex-vii-table-a",
+                "annex-vii-table-a-part1",
+            ),
+        ] {
+            let sha256 = crate::radiological::bundled_sha256(table).unwrap();
+            let mut value = decay_only_spec();
+            value["radiological"] = json!({
+                "table": {"path": format!("bundled:{table}"), "sha256": sha256},
+                "responses": [good],
+            });
+            assert!(
+                Spec::from_json(&value.to_string()).is_ok(),
+                "{table}: the real selector '{good}' must validate"
+            );
+            value["radiological"]["responses"] = json!([good, bad]);
+            let error = error_of(&value);
+            assert!(
+                error.contains(bad) && error.contains("radiological response selector"),
+                "{table}: {error}"
+            );
+        }
+    }
+}
+
+/// P140 regressions (SG-02, SG-13): they assert the intended behaviour.
+#[cfg(test)]
+mod p140_sg_tests {
+    use super::{Projectile, Spec, Spectrum};
+    use actinv_data::groups::{GroupStructure, NAMED_STRUCTURES};
+    use serde_json::{json, Value};
+
+    fn flat_spectrum(structure: &str, groups: usize) -> Spectrum {
+        serde_json::from_value(json!({
+            "structure": structure,
+            "flux_per_group": vec![1.0; groups],
+        }))
+        .unwrap()
+    }
+
+    #[test]
+    fn p140_sg02_step_library_accepts_every_named_neutron_structure() {
+        for (name, _) in NAMED_STRUCTURES {
+            if name == "fispact-162" {
+                continue;
+            }
+            let groups = GroupStructure::named(name).unwrap().unwrap().groups();
+            flat_spectrum(name, groups)
+                .check_structure_for(Projectile::Neutron, "schedule step spectrum")
+                .unwrap_or_else(|error| panic!("{name} on a neutron step library: {error}"));
+            // A refinement of the named grid, as for the base spectrum.
+            flat_spectrum(&format!("{name}x2"), 2 * groups)
+                .check_structure_for(Projectile::Neutron, "schedule step spectrum")
+                .unwrap_or_else(|error| panic!("{name}x2 on a neutron step library: {error}"));
+            // A neutron grid does not suit a charged-particle step library.
+            assert!(
+                flat_spectrum(name, groups)
+                    .check_structure_for(Projectile::Proton, "schedule step spectrum")
+                    .is_err(),
+                "{name} must not suit a proton library"
+            );
+            // The flux count is still checked against the grid.
+            assert!(flat_spectrum(name, groups + 1)
+                .check_structure_for(Projectile::Neutron, "schedule step spectrum")
+                .is_err());
+        }
+        // fispact-162 suits every non-neutron projectile and no neutron library.
+        let spectrum = flat_spectrum("fispact-162", 162);
+        assert!(spectrum
+            .check_structure_for(Projectile::Alpha, "schedule step spectrum")
+            .is_ok());
+        assert!(spectrum
+            .check_structure_for(Projectile::Neutron, "schedule step spectrum")
+            .is_err());
+        assert!(flat_spectrum("fispact-nonsense", 3)
+            .check_structure_for(Projectile::Neutron, "schedule step spectrum")
+            .is_err());
+    }
+
+    fn geometry_spec(material_density: Option<f64>, geometry_density: Option<f64>) -> Value {
+        let mut material = json!({"basis": "wt_percent", "composition": {"FE": 100.0}});
+        if let Some(density) = material_density {
+            material["density_g_cm3"] = json!(density);
+        }
+        let mut geometry = json!({
+            "shape": "foil",
+            "length_cm": 0.01,
+            "resonance_files": [{"path": "w184.endf", "sha256": "0".repeat(64)}],
+        });
+        if let Some(density) = geometry_density {
+            geometry["density_g_cm3"] = json!(density);
+        }
+        json!({
+            "spec": "actinv-spec-1",
+            "library": {"path": "activation.npz"},
+            "decay": {"primary": "decay.endf"},
+            "material": material,
+            "spectrum": {
+                "structure": "custom",
+                "boundaries_eV": [1.0, 2.0],
+                "flux_per_group": [1.0],
+            },
+            "schedule": [{"dt": "1 s", "flux": 1.0}],
+            "self_shielding": {"geometry": geometry},
+        })
+    }
+
+    #[test]
+    fn p140_sg13_geometry_density_defaults_to_the_material_density() {
+        // Expected: accepted; the target density is the material's. Current code requires the key.
+        let spec = Spec::from_json(&geometry_spec(Some(19.3), None).to_string())
+            .expect("geometry.density_g_cm3 may be omitted when material.density_g_cm3 is given");
+        assert!(spec.self_shielding.is_some());
+        // With neither density the section is still refused, naming the density.
+        let error = Spec::from_json(&geometry_spec(None, None).to_string()).unwrap_err();
+        assert!(error.contains("density_g_cm3"), "{error}");
+    }
+
+    #[test]
+    fn p140_sg13_geometry_density_disagreeing_with_the_material_density_is_an_error() {
+        // Agreement is fine.
+        assert!(Spec::from_json(&geometry_spec(Some(19.3), Some(19.3)).to_string()).is_ok());
+        // Expected: iron at 7.874 g/cm^3 cannot be a 19.3 g/cm^3 foil. Current code accepts it.
+        let error = Spec::from_json(&geometry_spec(Some(7.874), Some(19.3)).to_string())
+            .expect_err("two different densities for one material must be refused");
+        assert!(error.contains("density"), "{error}");
     }
 }

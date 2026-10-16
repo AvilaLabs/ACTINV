@@ -9394,6 +9394,272 @@ mod gas_prepared_tests {
         };
         assert!(error.contains("stable nuclide"), "{error}");
     }
+
+    /// P140: in trace mode the decay of a (practically constant) radioactive bulk nuclide feeds its daughter
+    /// through the unit state. The first-product table is built from the reaction sources only, so that
+    /// production must either appear in `pathways` or show up as a closure gap; it must not vanish silently.
+    #[test]
+    fn p140_ps_f4_trace_decay_fed_product_is_reported_or_flagged() {
+        let (mut spec, mut prepared) = synthetic_gas_prepared("trace");
+        // Co60 stand-in with a 1e9 s half-life (decays ~1e-9 of itself over the schedule, under the trace
+        // limit) into stable Ni60
+        prepared
+            .nuclides
+            .insert((27_060, 0), radioactive_stand_in(27_060, 1.0e9, true));
+        prepared.nuclides.insert((28_060, 0), stand_in((28_060, 0)));
+        let (mut chain, missing) = chain::ensure_light_states(chain::build(&prepared.nuclides));
+        for za in &missing {
+            prepared
+                .nuclides
+                .entry(*za)
+                .or_insert_with(|| stand_in(*za));
+        }
+        chain::add_gas_decay_edges(&prepared.nuclides, &mut chain);
+        prepared.chain = chain;
+        prepared.gas_missing_light_states = missing;
+        spec.material = serde_json::from_value(serde_json::json!({
+            "mass_g": 1.0, "basis": "wt_percent", "composition": {"Fe56": 99.0, "Co60": 1.0}
+        }))
+        .expect("material parses");
+        spec.schedule = serde_json::from_value(serde_json::json!([
+            {"dt": "1 s", "flux": 1.0},
+            {"dt": "1 s", "flux": 0.0}
+        ]))
+        .expect("schedule parses");
+        let result = run_prepared(&spec, &prepared).expect("run succeeds");
+        assert_eq!(result.mode, "trace");
+        assert!(
+            !result.pathways.is_empty(),
+            "the Fe56 activation is attributed"
+        );
+        let last = result.steps.len() - 1;
+        let ni60 = result.steps[last]
+            .inventory
+            .iter()
+            .find(|row| row.nuclide == "Ni60")
+            .map(|row| row.atoms_per_g)
+            .expect("Ni60 is in the inventory");
+        assert!(ni60 > 0.0);
+        let listed: f64 = result
+            .pathways
+            .get(last)
+            .and_then(|per| per.get("Ni60"))
+            .map(|chains| chains.iter().map(|p| p.atoms_per_g).sum())
+            .unwrap_or(0.0);
+        let covered = (listed - ni60).abs() <= 1e-6 * ni60;
+        let flagged = result.pathway_closure >= 0.5;
+        assert!(
+            covered || flagged,
+            "Ni60 inventory {ni60:e}: pathways list {listed:e} and pathway_closure is {}",
+            result.pathway_closure
+        );
+    }
+
+    // ---- P140 H1 regressions: schedule controls and kerma coverage.
+
+    #[test]
+    fn p140_sc_f5_cross_section_override_ignores_spectra_of_cooling_steps() {
+        let (mut spec, prepared) = synthetic_gas_prepared("coupled");
+        spec.options.gas = false;
+        spec.overrides = serde_json::from_value(serde_json::json!([
+            {"nuclide": "Fe56", "kind": "cross_section", "mt": 1, "value": 0.4}
+        ]))
+        .expect("overrides parse");
+        let empty_spectrum = serde_json::json!({
+            "structure": "custom",
+            "boundaries_eV": [1.0, 2.0, 3.0, 4.0, 5.0],
+            "flux_per_group": vec![0.0; 4],
+        });
+        spec.schedule = serde_json::from_value(serde_json::json!([
+            {"dt": "1 s", "flux": 1.0},
+            {"dt": "1 d", "flux": 0.0, "spectrum": empty_spectrum}
+        ]))
+        .expect("schedule parses");
+        spec.validate().expect("spec validates");
+        // the cooling step never reads the cross section, so its all-zero spectrum is no reason
+        // to refuse the override
+        run_synthetic(&spec, &prepared)
+            .expect("an override is checked against spectra the schedule irradiates with");
+        // an irradiating step on the same spectrum does read it, and is still refused
+        spec.schedule[1].flux = 1.0;
+        let error = run_synthetic(&spec, &prepared)
+            .err()
+            .expect("an irradiating step on a spectrum the reaction vanishes under");
+        assert!(error.contains("collapses to zero"), "{error}");
+    }
+
+    #[test]
+    fn p140_sc_f7_partition_acts_on_bulk_isotopes_absent_from_the_chain() {
+        // natural iron: Fe54, Fe57 and Fe58 have no decay record and live only in the bulk
+        // inventory, but a partition of Fe takes the whole element
+        let (mut spec, prepared) = synthetic_gas_prepared("auto");
+        spec.options.gas = false;
+        spec.material = serde_json::from_value(serde_json::json!({
+            "mass_g": 1.0, "basis": "wt_percent", "composition": {"Fe": 100.0}
+        }))
+        .expect("material parses");
+        spec.summary = Some(serde_json::from_value(serde_json::json!({})).expect("summary parses"));
+        spec.schedule = serde_json::from_value(serde_json::json!([
+            {"dt": "1 s", "flux": 0.0, "partition": {"Fe": 0.25}}
+        ]))
+        .expect("schedule parses");
+        let initial = initial_atoms(&spec, &prepared);
+        match run_synthetic(&spec, &prepared) {
+            // refusing a partition it cannot apply to the whole element is also correct
+            Err(error) => assert!(
+                error.contains("partition") && error.contains("decay"),
+                "{error}"
+            ),
+            Ok(result) => {
+                let removed = result.steps[0]
+                    .removed_atoms_per_g
+                    .expect("a partition books the removal sink");
+                assert!(
+                    (removed - 0.75 * initial).abs() <= 1e-9 * initial,
+                    "removed {removed} vs 0.75 x {initial}"
+                );
+                let summary = result.steps[0].summary.as_ref().expect("summary present");
+                let iron = summary
+                    .elements
+                    .as_ref()
+                    .expect("element table present")
+                    .iter()
+                    .find(|element| element.symbol == "Fe")
+                    .expect("an Fe row");
+                assert!(
+                    (iron.atoms - 0.25 * initial).abs() <= 1e-9 * initial,
+                    "kept Fe {} vs 0.25 x {initial}",
+                    iron.atoms
+                );
+            }
+        }
+    }
+
+    #[test]
+    fn p140_sc_f9_mode_forced_coupled_only_when_trace_would_have_run() {
+        // burn-up alone selects the coupled formulation: the partition forced nothing
+        let (mut spec, mut prepared) = synthetic_gas_prepared("auto");
+        with_cross_section(&mut prepared, 1.0e3);
+        spec.schedule = serde_json::from_value(serde_json::json!([
+            {"dt": "1 s", "flux": 1.0e18, "partition": {"Fe": 0.5}}
+        ]))
+        .expect("schedule parses");
+        let result = run_synthetic(&spec, &prepared).expect("run succeeds");
+        assert_eq!(result.mode, "coupled");
+        assert!(result.ledger["partition"].is_object());
+        assert_eq!(
+            result.ledger["partition"]["mode_forced_coupled"], false,
+            "burn-up selects coupled with or without the partition"
+        );
+
+        // a decaying initial inventory does the same
+        let (mut spec, prepared) = synthetic_decay_only_prepared(serde_json::json!([]));
+        spec.schedule = serde_json::from_value(serde_json::json!([
+            {"dt": "1000 s", "flux": 0.0, "partition": {"Co": 0.5}}
+        ]))
+        .expect("schedule parses");
+        let result = run_synthetic(&spec, &prepared).expect("run succeeds");
+        assert_eq!(result.mode, "coupled");
+        assert!(result.ledger["partition"].is_object());
+        assert_eq!(
+            result.ledger["partition"]["mode_forced_coupled"], false,
+            "bulk decay selects coupled with or without the partition"
+        );
+    }
+
+    #[test]
+    fn p140_sc_f16_omitted_spectrum_with_a_library_is_not_reported_as_one_group() {
+        let (_, prepared) = synthetic_gas_prepared("coupled");
+        let value = serde_json::json!({
+            "spec": "actinv-spec-1",
+            "library": {"path": "synthetic.npz"},
+            "decay": {"primary": "synthetic.dat"},
+            "material": {"mass_g": 1.0, "basis": "wt_percent", "composition": {"Fe56": 100.0}},
+            "schedule": [{"dt": "1 s", "flux": 0.0}],
+            "options": {"mode": "coupled", "prune": "none"}
+        });
+        let outcome =
+            Spec::from_json(&value.to_string()).and_then(|spec| run_synthetic(&spec, &prepared));
+        let error = match outcome {
+            Err(error) => error,
+            Ok(_) => panic!("a library run with no spectrum has nothing to collapse against"),
+        };
+        assert!(
+            !error.contains("1 groups"),
+            "the zero-flux placeholder must not leak into the message: {error}"
+        );
+        let lowered = error.to_lowercase();
+        assert!(
+            lowered.contains("spectrum")
+                && (lowered.contains("required")
+                    || lowered.contains("omitted")
+                    || lowered.contains("declare")),
+            "{error}"
+        );
+    }
+
+    /// Natural iron against a kerma table whose only row is the element `Fe`: the chain holds
+    /// Fe56 alone, so Fe54, Fe57 and Fe58 are composition isotopes that heat nothing.
+    fn run_natural_iron_with_element_kerma(require_complete: bool) -> Result<RunResult, String> {
+        let (mut spec, prepared) = synthetic_gas_prepared("coupled");
+        spec.options.gas = false;
+        spec.material = serde_json::from_value(serde_json::json!({
+            "mass_g": 1.0, "basis": "wt_percent", "composition": {"Fe": 100.0}
+        }))
+        .expect("material parses");
+        spec.schedule = serde_json::from_value(serde_json::json!([{"dt": "1 s", "flux": 1.0}]))
+            .expect("schedule parses");
+        let path = std::env::temp_dir().join(format!(
+            "actinv-kerma-{}-p140-pf-f2-{require_complete}.json",
+            std::process::id()
+        ));
+        let table = serde_json::json!({
+            "format": "actinv-kerma-table-1",
+            "source": {"citation": "synthetic", "edition": "test", "url": "local"},
+            "projectile": "neutron",
+            "group_structure": "test-4g",
+            "boundaries_eV": [1.0, 2.0, 3.0, 4.0, 5.0],
+            "units": "kerma_barn_eV_per_group",
+            "targets": {"Fe": vec![1.0; 4]},
+        });
+        std::fs::write(&path, table.to_string()).expect("kerma table is written");
+        let location = path.to_string_lossy().into_owned();
+        spec.kerma = Some(KermaOptions {
+            table: HashedFileRef {
+                sha256: file_sha256(&location).expect("kerma table hashes"),
+                path: location,
+            },
+            require_complete,
+            power_tolerance: 1.0e-3,
+            max_substeps: 8,
+            top: 5,
+        });
+        let result = run_synthetic(&spec, &prepared);
+        std::fs::remove_file(&path).ok();
+        result
+    }
+
+    #[test]
+    fn p140_pf_f2_require_complete_refuses_composition_isotopes_outside_the_chain() {
+        let error = run_natural_iron_with_element_kerma(true)
+            .err()
+            .expect("Fe54 has a table row but is not a chain state, so it heats nothing");
+        assert!(error.contains("kerma") && error.contains("Fe54"), "{error}");
+    }
+
+    #[test]
+    fn p140_pf_f2_composition_isotopes_outside_the_chain_are_listed_as_uncovered() {
+        let result = run_natural_iron_with_element_kerma(false).expect("run succeeds");
+        let listed = result.ledger["kerma"]["uncovered_composition_targets"]
+            .as_array()
+            .expect("uncovered list present");
+        assert!(
+            listed.iter().any(|name| name.as_str() == Some("Fe54")),
+            "{listed:?}"
+        );
+        // Fe56 is a chain state with a row and is not listed
+        assert!(!listed.iter().any(|name| name.as_str() == Some("Fe56")));
+    }
 }
 
 /// Schedule library overrides (`Step.library`) on a synthetic chain: two dense libraries over one decay chain,
@@ -9712,6 +9978,147 @@ mod step_library_tests {
         close(removal(0), RATE_A);
         close(removal(1), RATE_B);
         assert_eq!(removal(2), 0.0);
+    }
+
+    // ---- P140 regressions (SG-04, SG-05): they assert the intended behaviour ----
+
+    #[test]
+    fn p140_sg05_step_library_ledger_lists_material_nuclides_without_rows() {
+        // Library B has rows for Co59 only, while the material is Fe56 alone: on the steps that use B
+        // the Fe56 contributes no rate at all, and the ledger has to say so.
+        let mut run_data = prepared(true);
+        run_data.step_libraries[0].library =
+            ActivationLibrary::Dense(one_channel_library(105, PRODUCT_A, vec![1.0, 3.0, 5.0]));
+        run_data.step_libraries[0].library_targets = vec![PRODUCT_B];
+        let result = solve(&spec_json(true), &run_data).expect("switching run succeeds");
+        let library = &result.ledger["step_libraries"]["libraries"][0];
+        let missing = library["material_nuclides_without_rows"]
+            .as_array()
+            .unwrap_or_else(|| panic!("no material_nuclides_without_rows list in {library}"));
+        assert!(
+            missing.iter().any(|name| name == "Fe56"),
+            "Fe56 has no row in library B: {missing:?}"
+        );
+        // A library that does carry the nuclide (the default fixture's B) lists nothing of the kind.
+        let covered = solve(&spec_json(true), &prepared(true)).expect("switching run succeeds");
+        let listed = covered.ledger["step_libraries"]["libraries"][0]
+            ["material_nuclides_without_rows"]
+            .as_array()
+            .unwrap_or_else(|| panic!("no material_nuclides_without_rows list"));
+        assert!(listed.is_empty(), "{listed:?}");
+    }
+
+    /// The cards of one ENDF-6 section: six right-aligned 11-column fields per record, then SEND.
+    fn p140_section(mat: i32, mf: i32, mt: i32, records: &[Vec<String>]) -> Vec<String> {
+        let mut lines: Vec<String> = records
+            .iter()
+            .enumerate()
+            .map(|(index, record)| {
+                let mut fields = record.clone();
+                fields.resize(6, "0".to_string());
+                let body: String = fields.iter().map(|field| format!("{field:>11}")).collect();
+                format!("{body}{mat:>4}{mf:>2}{mt:>3}{:>5}", index + 1)
+            })
+            .collect();
+        lines.push(format!("{:66}{mat:>4}{mf:>2}{:>3}{:>5}", "", 0, 99_999));
+        lines
+    }
+
+    /// A neutron tape for Fe56 whose single resolved Breit-Wigner level sits at 2.5 eV.
+    fn p140_fe56_tape() -> String {
+        let num = |value: f64| format!("{value:.6e}");
+        let strings = |items: &[&str]| {
+            items
+                .iter()
+                .map(|item| item.to_string())
+                .collect::<Vec<_>>()
+        };
+        let mf1 = vec![
+            vec!["26056".to_string(), num(55.454)],
+            vec![],
+            vec![
+                num(1.0),
+                num(2.0e7),
+                "0".into(),
+                "0".into(),
+                "10".into(),
+                "6".into(),
+            ],
+            vec![],
+        ];
+        let mf2 = vec![
+            [
+                vec!["26056".to_string(), num(55.454)],
+                strings(&["0", "0", "1", "0"]),
+            ]
+            .concat(),
+            [
+                vec!["26056".to_string(), num(1.0)],
+                strings(&["0", "0", "1", "0"]),
+            ]
+            .concat(),
+            [vec![num(1e-5), num(1e4)], strings(&["1", "1", "0", "0"])].concat(),
+            [vec![num(0.0), num(0.7)], strings(&["0", "0", "1", "0"])].concat(),
+            [vec![num(55.454), num(0.0)], strings(&["0", "0", "6", "1"])].concat(),
+            vec![
+                num(2.5),
+                num(0.5),
+                num(0.051),
+                num(0.001),
+                num(0.05),
+                num(0.0),
+            ],
+        ];
+        let mut lines = p140_section(2631, 1, 451, &mf1);
+        lines.extend(p140_section(2631, 2, 151, &mf2));
+        lines.join("\n")
+    }
+
+    #[test]
+    fn p140_sg04_geometry_certificate_method_limits_mention_r_matrix_limited_ranges() {
+        let options: crate::spec::SelfShieldingOptions =
+            serde_json::from_value(serde_json::json!({
+                "geometry": {
+                    "shape": "foil",
+                    "length_cm": 0.01,
+                    "density_g_cm3": 7.874,
+                    "resonance_files": [{"path": "fe56.endf", "sha256": "0".repeat(64)}],
+                }
+            }))
+            .unwrap();
+        let geometry = crate::shielding::PreparedGeometry::from_evaluations(
+            options.geometry.as_ref().unwrap(),
+            &[("fe56.endf".to_string(), p140_fe56_tape())],
+        )
+        .expect("the synthetic Fe56 tape parses");
+        let mut run_data = prepared(false);
+        run_data.shielding = Some(PreparedShielding {
+            options: options.clone(),
+            sha256: None,
+            table: None,
+            geometry: Some(geometry),
+            resonance_sha256: vec!["0".repeat(64)],
+        });
+        let mut spec = spec_json(false);
+        spec.self_shielding = Some(options);
+        let result = solve(&spec, &run_data).expect("geometry run succeeds");
+        let limits = result.certificate["shielding"]["method_limits"]
+            .as_array()
+            .expect("geometry certificate lists method limits");
+        // Expected: the sentence names the R-matrix-limited (LRF=7) support added in P139. Current text
+        // says only Breit-Wigner and Reich-Moore are used.
+        assert!(
+            limits
+                .iter()
+                .any(|limit| limit.as_str().is_some_and(|text| text.contains("LRF=7"))),
+            "method_limits is stale for LRF=7: {limits:?}"
+        );
+        assert!(
+            !limits.iter().any(|limit| limit
+                .as_str()
+                .is_some_and(|text| text.contains("only Breit-Wigner and Reich-Moore"))),
+            "{limits:?}"
+        );
     }
 }
 
@@ -10078,6 +10485,102 @@ mod depletion_prepared_tests {
             serde_json::from_value(serde_json::json!({"depletion": true})).unwrap();
         assert!(on.depletion);
         assert_eq!(serde_json::to_value(&on).unwrap()["depletion"], true);
+    }
+
+    // ---- P140 H1 regression tests (hardening pass) ----
+
+    /// The synthetic spec with a single step of `dt`, flux multiplier `flux` and a first-order
+    /// `removal` map, depletion on.
+    fn removal_spec(mode: &str, dt: &str, flux: f64, removal: serde_json::Value) -> Spec {
+        let value = serde_json::json!({
+            "spec": "actinv-spec-1",
+            "library": {"path": "synthetic.npz"},
+            "decay": {"primary": "synthetic.dat"},
+            "material": {"mass_g": 1.0, "basis": "atoms_per_g", "composition": {"Fe56": N0}},
+            "spectrum": {"structure": "custom", "boundaries_eV": [1.0, 2.0, 3.0, 4.0, 5.0],
+                         "flux_per_group": [1.25e23, 1.25e23, 1.25e23, 1.25e23],
+                         "descending": false},
+            "schedule": [{"dt": dt, "flux": flux, "removal": removal}],
+            "options": {"mode": mode, "prune": "none"},
+            "summary": {"depletion": true},
+        });
+        serde_json::from_value(value).expect("synthetic removal spec parses")
+    }
+
+    /// The channels explain the whole removal: their rates sum to `removal_rate_per_s` and their
+    /// shares to one.
+    fn assert_channels_explain_removal(nuclide: &crate::depletion::DepletionNuclide) {
+        assert!(
+            !nuclide.channels.is_empty(),
+            "no channel carries the removal (removal_rate_per_s {})",
+            nuclide.removal_rate_per_s
+        );
+        let rates: f64 = nuclide.channels.iter().map(|c| c.rate_per_s).sum();
+        close(rates, nuclide.removal_rate_per_s);
+        let shares: f64 = nuclide.channels.iter().map(|c| c.share).sum();
+        assert!((shares - 1.0).abs() < 1e-12, "{shares}");
+    }
+
+    #[test]
+    fn p140_dep_f1_removal_is_a_channel() {
+        // Stable Fe56, flux off, scheduled first-order removal 1e-3 s^-1 for 1000 s. The state
+        // falls by exp(-1); the matrix diagonal is exactly the declared removal.
+        let spec = removal_spec(
+            "coupled",
+            "1000 s",
+            0.0,
+            serde_json::json!({"Fe56": 1.0e-3}),
+        );
+        let result = solve(&spec, &prepared(false));
+        let nuclide = &table(&result, 0).nuclides[0];
+        assert_eq!(nuclide.nuclide, "Fe56");
+        close(nuclide.depleted_fraction, 1.0 - (-1.0f64).exp());
+        close(nuclide.removal_rate_per_s, 1.0e-3);
+        assert_channels_explain_removal(nuclide);
+        assert!(nuclide.removal_rate_per_s.is_sign_positive());
+    }
+
+    #[test]
+    fn p140_dep_f1_removal_adds_to_decay_and_reaction_channels() {
+        // Radioactive Fe56 under flux 1 (capture 0.5, n2n 1.0, decay 0.25) plus removal 0.1: the
+        // diagonal is 1.85 and the table must say so; the state follows exp(-1.85 dt).
+        let spec = removal_spec("coupled", "1 s", 1.0, serde_json::json!({"Fe56": 0.1}));
+        let result = solve(&spec, &prepared(true));
+        let nuclide = &table(&result, 0).nuclides[0];
+        close(nuclide.atoms_end_per_g, N0 * (-1.85f64).exp());
+        close(nuclide.removal_rate_per_s, 1.85);
+        assert_channels_explain_removal(nuclide);
+        // the table's own rate reproduces the solved depletion of this unfed nuclide
+        let implied = (nuclide.atoms_start_per_g / nuclide.atoms_end_per_g).ln();
+        close(implied, nuclide.removal_rate_per_s);
+    }
+
+    #[test]
+    fn p140_dep_f1_element_removal_is_a_channel() {
+        let spec = removal_spec("coupled", "1000 s", 0.0, serde_json::json!({"Fe": 1.0e-3}));
+        let result = solve(&spec, &prepared(false));
+        let nuclide = &table(&result, 0).nuclides[0];
+        close(nuclide.depleted_fraction, 1.0 - (-1.0f64).exp());
+        close(nuclide.removal_rate_per_s, 1.0e-3);
+        assert_channels_explain_removal(nuclide);
+    }
+
+    #[test]
+    fn p140_dep_negzero_cooling_step_removal_rate_is_positive_zero() {
+        // Stable Fe56 in the flux-off third step has no channel: removal_rate_per_s is 0.0, not
+        // -0.0, in the struct and in the serialised table.
+        let spec = spec("coupled", Some(serde_json::json!({"depletion": true})));
+        let result = solve(&spec, &prepared(false));
+        let cooling = &table(&result, 2);
+        let nuclide = &cooling.nuclides[0];
+        assert!(nuclide.channels.is_empty());
+        assert_eq!(nuclide.removal_rate_per_s, 0.0);
+        assert!(
+            nuclide.removal_rate_per_s.is_sign_positive(),
+            "removal_rate_per_s is negative zero"
+        );
+        let json = serde_json::to_string(cooling).unwrap();
+        assert!(!json.contains("-0.0"), "{json}");
     }
 }
 

@@ -1,0 +1,5051 @@
+{
+ "protocol": "ACTINV-P140",
+ "gate": "H4",
+ "checker": {
+  "path": "/home/connoravila/Documents/actinv/controls/check_p140_docs.py",
+  "sha256": "e876e393811f604afae3ba11626b1dead61ac94514eab5d7721c4908778705e3"
+ },
+ "protocol_file": {
+  "path": "/home/connoravila/Documents/actinv/protocols/ACTINV-P140_PROTOCOL.md",
+  "sha256": "9022bcdddafe220933068fd2af9eb18ea4a65ec267f3f641839026f4eab9eaca"
+ },
+ "candidate_binary": {
+  "path": "/home/connoravila/Documents/actinv/target/cand9-actinv",
+  "sha256": "0b62b47cebe232eea01d4fd91a68614d96eda874f50d67f73067e62d671d1170"
+ },
+ "gate_spec": {
+  "path": "/home/connoravila/Documents/actinv/examples/fns_fe_5min.json",
+  "sha256": "ed55ed00f6c00fc4a2351e18332e98e7feb33d9b7ca65e7ba861e0e5e8feef39"
+ },
+ "conventions_doc": {
+  "path": "/home/connoravila/Documents/actinv/docs/maintainers/DOCUMENTATION.md",
+  "sha256": "ea83f46c2f23d8ad2550ccfbf2ab7ab5d5e3160afd3874b7830bea512f9213ff"
+ },
+ "handbook_files": {
+  "SUMMARY.md": "740fe7887202f41a37cdf32b4c0a36ce1249bccc6f61fdf8cc6054b0c863a846",
+  "account.md": "29b9a4871b61c1e5af86963b6f73f4319b50a1fe0c1e5a7e0461c3afe3ac1fd9",
+  "benchmarks.md": "f586f3b25716d6c0a3fb61afe1e0eb1d7eb9a5ebc656bb73e6ce48bfbdf0731c",
+  "browser.md": "367e375bec3102f4f24b41f1119c560b7ae7363848d33dd54e37e3641e4ff4e3",
+  "cli.md": "80c3615cce051d5f6bb140ab6bdfa52620da3be94167c175550f301e65486ce2",
+  "data-limits.md": "07928f227e9685aae31bf6abb134ac9e33addb3196a8e28ba932f100547a74c7",
+  "data.md": "b3075f18d4b5a7c0e3df7c14906e5962184452b544cb4c1326d3529e7e12ccac",
+  "desktop.md": "2422f927efbd58a10f62acfe8596b285a80f5d3e4cbf3c0623517c5f9fad6f12",
+  "fispact-migration.md": "1fc7debd50f6daefc9b3d4a667c8eebdafc7c11df38e315ffebcfb10f4daebca",
+  "index.md": "35df99e9141bca9146f82addae120b9aae9403e885f1f5e9939693be6043f705",
+  "install.md": "4d439211e5767c3a07dc3e73db79a96ca6508a9d09203e520710413f262f0aa8",
+  "method.md": "989c944f098054d01032bcb52b008c3b7a25c6e2f9dad23d547cd664e5f42eb1",
+  "problems.md": "e2b5e857553bd5bfcac04a7a8882f88ea316acff8594c16a61239957ba3fc860",
+  "python.md": "8f7877eb0993c9e06a1d2af54e2fcb9c99762a923d26854da34fa3977bfdade5",
+  "qualification.md": "aa611a277ea7586d8a5eaace0169af725e83998024b8fdcadc08855b3547aa1a",
+  "quick-start.md": "6b827c7dfc13e20fc0f2e663472859ce2b9779179b56b4ef49b2df29f2629ae6",
+  "releases.md": "fc060b5c33d79b9daac35b7a8b718493426f9249fa0229040509b034b3ea6628",
+  "results.md": "15cd56dfdb298fc1404a758f437572546ca01290f7b74e75032ba00972e65b12",
+  "specification.md": "b20708e12269073a5d65a2369e3d406fdcad2bb8bb8576f55c53719c66f56ec1",
+  "troubleshooting.md": "e7d781c721fd6bd9d9177f96d870b20b104975585c54e3f01be77697e356cf7a",
+  "validation.md": "ac4c91f970b5e192efe4efdec60bafd00c6569ec6e672e2ef061610c66df0081",
+  "waste.md": "43bc31f0f8973caf089cf44fced3f28f1a3c6d35e8fc4bca50225f5e62eb8ed9",
+  "workflows.md": "5eddb13ab599f9342a6645c91eb408f308ce31f281eee02a4b436b19194000d3"
+ },
+ "complete_spec_rule": "complete spec iff the block, parsed as written, is a top-level object with spec == 'actinv-spec-1'; the handbook labels every other JSON block a fragment (docs/maintainers/DOCUMENTATION.md; docs/guide/specification.md line 23)",
+ "fns_root": "/home/connoravila/nuclear-data/conderc-fns/fns",
+ "cwd": "/home/connoravila/Documents/actinv",
+ "timeout_s": 600,
+ "classification": {
+  "json_blocks": [
+   {
+    "source": "docs/guide/problems.md:11-17",
+    "heading": "Material",
+    "kind": "fragment",
+    "parse": "wrapped",
+    "label": [
+     "prose before the block says fragment (problems.md:9)"
+    ],
+    "reason": "problem keys ['material'] without a document identifier",
+    "schema": null,
+    "file": "target/p140-docs/blocks/problems_L11.json"
+   },
+   {
+    "source": "docs/guide/problems.md:41-46",
+    "heading": "Irradiation and cooling",
+    "kind": "fragment",
+    "parse": "wrapped",
+    "label": [
+     "prose before the block says fragment (problems.md:39)"
+    ],
+    "reason": "problem keys ['schedule'] without a document identifier",
+    "schema": null,
+    "file": "target/p140-docs/blocks/problems_L41.json"
+   },
+   {
+    "source": "docs/guide/specification.md:170-181",
+    "heading": "Fission yields",
+    "kind": "fragment",
+    "parse": "wrapped",
+    "label": [
+     "docs/guide/specification.md:23 says JSON fragments below are not standalone"
+    ],
+    "reason": "problem keys ['fission_yields'] without a document identifier",
+    "schema": null,
+    "file": "target/p140-docs/blocks/specification_L170.json"
+   },
+   {
+    "source": "docs/guide/specification.md:201-209",
+    "heading": "Spontaneous fission",
+    "kind": "fragment",
+    "parse": "wrapped",
+    "label": [
+     "docs/guide/specification.md:23 says JSON fragments below are not standalone"
+    ],
+    "reason": "problem keys ['fission_yields'] without a document identifier",
+    "schema": null,
+    "file": "target/p140-docs/blocks/specification_L201.json"
+   },
+   {
+    "source": "docs/guide/specification.md:235-237",
+    "heading": "Fission count and burn-up",
+    "kind": "fragment",
+    "parse": "wrapped",
+    "label": [
+     "docs/guide/specification.md:23 says JSON fragments below are not standalone"
+    ],
+    "reason": "problem keys ['options'] without a document identifier",
+    "schema": null,
+    "file": "target/p140-docs/blocks/specification_L235.json"
+   },
+   {
+    "source": "docs/guide/specification.md:333-352",
+    "heading": "Radiological responses",
+    "kind": "other_document",
+    "parse": "as-is",
+    "label": [
+     "docs/guide/specification.md:23 says JSON fragments below are not standalone"
+    ],
+    "reason": "carries its own identifier format=actinv-radiological-table-1",
+    "schema": "actinv-radiological-table-1",
+    "file": "target/p140-docs/blocks/specification_L333.json"
+   },
+   {
+    "source": "docs/guide/specification.md:377-382",
+    "heading": "Bundled regulatory tables",
+    "kind": "fragment",
+    "parse": "wrapped",
+    "label": [
+     "docs/guide/specification.md:23 says JSON fragments below are not standalone"
+    ],
+    "reason": "problem keys ['radiological'] without a document identifier",
+    "schema": null,
+    "file": "target/p140-docs/blocks/specification_L377.json"
+   },
+   {
+    "source": "docs/guide/specification.md:477-489",
+    "heading": "Kerma heating and power-driven steps",
+    "kind": "fragment",
+    "parse": "wrapped",
+    "label": [
+     "docs/guide/specification.md:23 says JSON fragments below are not standalone"
+    ],
+    "reason": "problem keys ['kerma', 'material', 'schedule'] without a document identifier",
+    "schema": null,
+    "file": "target/p140-docs/blocks/specification_L477.json"
+   },
+   {
+    "source": "docs/guide/specification.md:608-616",
+    "heading": "Monte Carlo sampling statistics",
+    "kind": "fragment",
+    "parse": "wrapped",
+    "label": [
+     "docs/guide/specification.md:23 says JSON fragments below are not standalone"
+    ],
+    "reason": "problem keys ['robustness'] without a document identifier",
+    "schema": null,
+    "file": "target/p140-docs/blocks/specification_L608.json"
+   },
+   {
+    "source": "docs/guide/specification.md:641-643",
+    "heading": "Dilution overrides",
+    "kind": "fragment",
+    "parse": "wrapped",
+    "label": [
+     "docs/guide/specification.md:23 says JSON fragments below are not standalone"
+    ],
+    "reason": "problem keys ['dilution_overrides'] without a document identifier",
+    "schema": null,
+    "file": "target/p140-docs/blocks/specification_L641.json"
+   },
+   {
+    "source": "docs/guide/specification.md:658-669",
+    "heading": "Geometry self-shielding (resolved resonances)",
+    "kind": "fragment",
+    "parse": "wrapped",
+    "label": [
+     "docs/guide/specification.md:23 says JSON fragments below are not standalone"
+    ],
+    "reason": "problem keys ['self_shielding'] without a document identifier",
+    "schema": null,
+    "file": "target/p140-docs/blocks/specification_L658.json"
+   },
+   {
+    "source": "docs/guide/specification.md:782-787",
+    "heading": "Step summary",
+    "kind": "fragment",
+    "parse": "as-is",
+    "label": [
+     "docs/guide/specification.md:23 says JSON fragments below are not standalone"
+    ],
+    "reason": "problem keys ['material', 'summary'] without a document identifier",
+    "schema": null,
+    "file": "target/p140-docs/blocks/specification_L782.json"
+   },
+   {
+    "source": "docs/guide/specification.md:798-807",
+    "heading": "Pathways and routes analysis",
+    "kind": "fragment",
+    "parse": "wrapped",
+    "label": [
+     "docs/guide/specification.md:23 says JSON fragments below are not standalone"
+    ],
+    "reason": "problem keys ['pathways'] without a document identifier",
+    "schema": null,
+    "file": "target/p140-docs/blocks/specification_L798.json"
+   },
+   {
+    "source": "docs/guide/specification.md:1078-1092",
+    "heading": "High-energy spallation splice",
+    "kind": "other_document",
+    "parse": "as-is",
+    "label": [
+     "docs/guide/specification.md:23 says JSON fragments below are not standalone"
+    ],
+    "reason": "carries its own identifier schema=actinv-spallation-residuals-1",
+    "schema": "actinv-spallation-residuals-1",
+    "file": "target/p140-docs/blocks/specification_L1078.json"
+   },
+   {
+    "source": "docs/guide/specification.md:1271-1307",
+    "heading": "Independent mesh specification (`actinv-mesh-spec-1`)",
+    "kind": "other_document",
+    "parse": "as-is",
+    "label": [
+     "docs/guide/specification.md:23 says JSON fragments below are not standalone"
+    ],
+    "reason": "carries its own identifier spec=actinv-mesh-spec-1",
+    "schema": "actinv-mesh-spec-1",
+    "file": "target/p140-docs/blocks/specification_L1271.json"
+   },
+   {
+    "source": "docs/guide/waste.md:42-66",
+    "heading": "Classify declared waste components in a facility twin",
+    "kind": "other_document",
+    "parse": "as-is",
+    "label": [],
+    "reason": "carries its own identifier spec=actinv-twin-1",
+    "schema": "actinv-twin-1",
+    "file": "target/p140-docs/blocks/waste_L42.json"
+   },
+   {
+    "source": "docs/guide/waste.md:99-136",
+    "heading": "Screen a whole container against the fusion draft",
+    "kind": "other_document",
+    "parse": "as-is",
+    "label": [],
+    "reason": "carries its own identifier schema=actinv-waste-intrusion-screen-spec-1",
+    "schema": "actinv-waste-intrusion-screen-spec-1",
+    "file": "target/p140-docs/blocks/waste_L99.json"
+   },
+   {
+    "source": "docs/guide/waste.md:194-228",
+    "heading": "Classify declared composition ranges",
+    "kind": "other_document",
+    "parse": "as-is",
+    "label": [],
+    "reason": "carries its own identifier schema=actinv-waste-composition-spec-1",
+    "schema": "actinv-waste-composition-spec-1",
+    "file": "target/p140-docs/blocks/waste_L194.json"
+   },
+   {
+    "source": "docs/guide/waste.md:292-314",
+    "heading": "Generate and verify a native composition basis",
+    "kind": "other_document",
+    "parse": "as-is",
+    "label": [],
+    "reason": "carries its own identifier schema=actinv-waste-composition-solve-spec-1",
+    "schema": "actinv-waste-composition-solve-spec-1",
+    "file": "target/p140-docs/blocks/waste_L292.json"
+   },
+   {
+    "source": "docs/guide/waste.md:327-353",
+    "heading": "Classify declared activity bounds",
+    "kind": "other_document",
+    "parse": "as-is",
+    "label": [],
+    "reason": "carries its own identifier schema=actinv-waste-bounds-spec-1",
+    "schema": "actinv-waste-bounds-spec-1",
+    "file": "target/p140-docs/blocks/waste_L327.json"
+   },
+   {
+    "source": "docs/guide/waste.md:379-388",
+    "heading": "Classify declared activity bounds",
+    "kind": "other_document_fragment",
+    "parse": "as-is",
+    "label": [
+     "prose before the block says fragment (waste.md:377)"
+    ],
+    "reason": "waste external_tritium object (waste.md)",
+    "schema": null,
+    "file": "target/p140-docs/blocks/waste_L379.json"
+   },
+   {
+    "source": "docs/guide/waste.md:409-426",
+    "heading": "Describe a component",
+    "kind": "other_document",
+    "parse": "as-is",
+    "label": [],
+    "reason": "carries its own identifier schema=actinv-waste-spec-1",
+    "schema": "actinv-waste-spec-1",
+    "file": "target/p140-docs/blocks/waste_L409.json"
+   },
+   {
+    "source": "docs/guide/waste.md:439-446",
+    "heading": "Include retained tritium",
+    "kind": "other_document_fragment",
+    "parse": "as-is",
+    "label": [],
+    "reason": "waste external_tritium object (waste.md)",
+    "schema": null,
+    "file": "target/p140-docs/blocks/waste_L439.json"
+   }
+  ],
+  "commands": [
+   {
+    "source": "docs/guide/cli.md:21",
+    "text": "actinv new OUT.json [--data-dir DIR]",
+    "command": "new",
+    "sub": "",
+    "flags": [
+     "--data-dir"
+    ],
+    "form": "synopsis",
+    "scope": "H4 (generated example)"
+   },
+   {
+    "source": "docs/guide/cli.md:22",
+    "text": "actinv validate SPEC.json [--schema|--files|--hashes]",
+    "command": "validate",
+    "sub": "",
+    "flags": [
+     "--files",
+     "--hashes",
+     "--schema"
+    ],
+    "form": "synopsis",
+    "scope": "out of H4 scope"
+   },
+   {
+    "source": "docs/guide/cli.md:23",
+    "text": "actinv doctor [SPEC.json]",
+    "command": "doctor",
+    "sub": "",
+    "flags": [],
+    "form": "synopsis",
+    "scope": "out of H4 scope"
+   },
+   {
+    "source": "docs/guide/cli.md:24",
+    "text": "actinv run SPEC.json [OUT.json]",
+    "command": "run",
+    "sub": "",
+    "flags": [],
+    "form": "synopsis",
+    "scope": "out of H4 scope"
+   },
+   {
+    "source": "docs/guide/cli.md:36",
+    "text": "actinv data list",
+    "command": "data",
+    "sub": "",
+    "flags": [],
+    "form": "literal",
+    "scope": "out of H4 scope"
+   },
+   {
+    "source": "docs/guide/cli.md:37",
+    "text": "actinv data manifest",
+    "command": "data",
+    "sub": "",
+    "flags": [],
+    "form": "literal",
+    "scope": "out of H4 scope"
+   },
+   {
+    "source": "docs/guide/cli.md:38",
+    "text": "actinv data fetch [BUNDLE] [--output DIR] [--force]",
+    "command": "data",
+    "sub": "",
+    "flags": [
+     "--force",
+     "--output"
+    ],
+    "form": "synopsis",
+    "scope": "out of H4 scope"
+   },
+   {
+    "source": "docs/guide/cli.md:39",
+    "text": "actinv data verify [BUNDLE] [--output DIR]",
+    "command": "data",
+    "sub": "",
+    "flags": [
+     "--output"
+    ],
+    "form": "synopsis",
+    "scope": "out of H4 scope"
+   },
+   {
+    "source": "docs/guide/cli.md:47",
+    "text": "actinv inspect decay DECAY_PATH [NUCLIDE...]",
+    "command": "inspect",
+    "sub": "decay",
+    "flags": [],
+    "form": "synopsis",
+    "scope": "H4"
+   },
+   {
+    "source": "docs/guide/cli.md:48",
+    "text": "actinv inspect xs LIBRARY.npz [--target NUCLIDE] [--mt MT] [--spectrum SPEC.json]",
+    "command": "inspect",
+    "sub": "xs",
+    "flags": [
+     "--mt",
+     "--spectrum",
+     "--target"
+    ],
+    "form": "synopsis",
+    "scope": "H4"
+   },
+   {
+    "source": "docs/guide/cli.md:49",
+    "text": "actinv inspect yields YIELD_PATH... [--parent NUCLIDE] [--energy EV] [--cumulative]",
+    "command": "inspect",
+    "sub": "yields",
+    "flags": [
+     "--cumulative",
+     "--energy",
+     "--parent"
+    ],
+    "form": "synopsis",
+    "scope": "H4"
+   },
+   {
+    "source": "docs/guide/cli.md:50",
+    "text": "actinv inspect library LIBRARY.npz",
+    "command": "inspect",
+    "sub": "library",
+    "flags": [],
+    "form": "synopsis",
+    "scope": "H4"
+   },
+   {
+    "source": "docs/guide/cli.md:51",
+    "text": "actinv inspect groups NAME",
+    "command": "inspect",
+    "sub": "groups",
+    "flags": [],
+    "form": "synopsis",
+    "scope": "H4"
+   },
+   {
+    "source": "docs/guide/cli.md:67-68",
+    "text": "actinv report RESULT.json [--tables LIST] [--format csv|tsv|markdown|text] [--out DIR] [--step N|all] [--nuclides LIST]",
+    "command": "report",
+    "sub": "",
+    "flags": [
+     "--format",
+     "--nuclides",
+     "--out",
+     "--step",
+     "--tables"
+    ],
+    "form": "synopsis",
+    "scope": "H4"
+   },
+   {
+    "source": "docs/guide/cli.md:93",
+    "text": "actinv import-flux openmc SOURCE.h5 OUT.ndjson --tally ID --source-rate RATE",
+    "command": "import-flux",
+    "sub": "",
+    "flags": [
+     "--source-rate",
+     "--tally"
+    ],
+    "form": "synopsis",
+    "scope": "out of H4 scope"
+   },
+   {
+    "source": "docs/guide/cli.md:94",
+    "text": "actinv import-flux meshtal SOURCE OUT.ndjson --tally ID --source-rate RATE",
+    "command": "import-flux",
+    "sub": "",
+    "flags": [
+     "--source-rate",
+     "--tally"
+    ],
+    "form": "synopsis",
+    "scope": "out of H4 scope"
+   },
+   {
+    "source": "docs/guide/cli.md:95",
+    "text": "actinv import-flux mctal SOURCE OUT.ndjson --tally ID --source-rate RATE",
+    "command": "import-flux",
+    "sub": "",
+    "flags": [
+     "--source-rate",
+     "--tally"
+    ],
+    "form": "synopsis",
+    "scope": "out of H4 scope"
+   },
+   {
+    "source": "docs/guide/cli.md:96",
+    "text": "actinv import-flux fispact FLUXES OUT.ndjson --groups GROUPS.json",
+    "command": "import-flux",
+    "sub": "",
+    "flags": [
+     "--groups"
+    ],
+    "form": "synopsis",
+    "scope": "out of H4 scope"
+   },
+   {
+    "source": "docs/guide/cli.md:97",
+    "text": "actinv mesh SPEC.json OUT.ndjson",
+    "command": "mesh",
+    "sub": "",
+    "flags": [],
+    "form": "synopsis",
+    "scope": "out of H4 scope"
+   },
+   {
+    "source": "docs/guide/cli.md:122",
+    "text": "actinv import-fispact DECK.i OUT.json [--fluxes FLUXES] [--files FILES] [--library LIB.npz] [--decay DECAY] [--covariance COV.npz] [--strict]",
+    "command": "import-fispact",
+    "sub": "",
+    "flags": [
+     "--covariance",
+     "--decay",
+     "--files",
+     "--fluxes",
+     "--library",
+     "--strict"
+    ],
+    "form": "synopsis",
+    "scope": "H4"
+   },
+   {
+    "source": "docs/guide/cli.md:130",
+    "text": "actinv export-openmc RESULT.json STEP OUT.py",
+    "command": "export-openmc",
+    "sub": "",
+    "flags": [],
+    "form": "synopsis",
+    "scope": "out of H4 scope"
+   },
+   {
+    "source": "docs/guide/cli.md:131",
+    "text": "actinv export-mcnp RESULT.json STEP OUT.sdef",
+    "command": "export-mcnp",
+    "sub": "",
+    "flags": [],
+    "form": "synopsis",
+    "scope": "out of H4 scope"
+   },
+   {
+    "source": "docs/guide/cli.md:132",
+    "text": "actinv export-openmc-mesh MESH_RESULT.ndjson STEP OUT.py",
+    "command": "export-openmc-mesh",
+    "sub": "",
+    "flags": [],
+    "form": "synopsis",
+    "scope": "out of H4 scope"
+   },
+   {
+    "source": "docs/guide/cli.md:133",
+    "text": "actinv export-r2s MESH_RESULT.ndjson STEP OUT.ndjson",
+    "command": "export-r2s",
+    "sub": "",
+    "flags": [],
+    "form": "synopsis",
+    "scope": "out of H4 scope"
+   },
+   {
+    "source": "docs/guide/cli.md:134",
+    "text": "actinv export-source openmc R2S_SOURCE.ndjson OUT",
+    "command": "export-source",
+    "sub": "",
+    "flags": [],
+    "form": "synopsis",
+    "scope": "out of H4 scope"
+   },
+   {
+    "source": "docs/guide/cli.md:135",
+    "text": "actinv export-source mcnp R2S_SOURCE.ndjson OUT",
+    "command": "export-source",
+    "sub": "",
+    "flags": [],
+    "form": "synopsis",
+    "scope": "out of H4 scope"
+   },
+   {
+    "source": "docs/guide/cli.md:136",
+    "text": "actinv export-source serpent R2S_SOURCE.ndjson OUT",
+    "command": "export-source",
+    "sub": "",
+    "flags": [],
+    "form": "synopsis",
+    "scope": "out of H4 scope"
+   },
+   {
+    "source": "docs/guide/cli.md:137",
+    "text": "actinv export-source alara R2S_SOURCE.ndjson OUT_DIR --shutdown-t-s T",
+    "command": "export-source",
+    "sub": "",
+    "flags": [
+     "--shutdown-t-s"
+    ],
+    "form": "synopsis",
+    "scope": "out of H4 scope"
+   },
+   {
+    "source": "docs/guide/cli.md:147",
+    "text": "actinv build-library INPUT OUTPUT.npz [OPTIONS]",
+    "command": "build-library",
+    "sub": "",
+    "flags": [],
+    "form": "synopsis",
+    "scope": "out of H4 scope"
+   },
+   {
+    "source": "docs/guide/cli.md:148",
+    "text": "actinv build-covariance INPUT ACTIVATION.npz OUTPUT.cov.npz [OPTIONS]",
+    "command": "build-covariance",
+    "sub": "",
+    "flags": [],
+    "form": "synopsis",
+    "scope": "out of H4 scope"
+   },
+   {
+    "source": "docs/guide/cli.md:149",
+    "text": "actinv build-damage EVALUATION_DIR OUT.json [OPTIONS]",
+    "command": "build-damage",
+    "sub": "",
+    "flags": [],
+    "form": "synopsis",
+    "scope": "out of H4 scope"
+   },
+   {
+    "source": "docs/guide/cli.md:150",
+    "text": "actinv build-shielding EVALUATION_DIR OUT.json [OPTIONS]",
+    "command": "build-shielding",
+    "sub": "",
+    "flags": [],
+    "form": "synopsis",
+    "scope": "out of H4 scope"
+   },
+   {
+    "source": "docs/guide/cli.md:158",
+    "text": "actinv study validate STUDY.json",
+    "command": "study",
+    "sub": "",
+    "flags": [],
+    "form": "synopsis",
+    "scope": "out of H4 scope"
+   },
+   {
+    "source": "docs/guide/cli.md:159",
+    "text": "actinv study build STUDY.json [OUTDIR] [--revocations FILE]",
+    "command": "study",
+    "sub": "",
+    "flags": [
+     "--revocations"
+    ],
+    "form": "synopsis",
+    "scope": "out of H4 scope"
+   },
+   {
+    "source": "docs/guide/cli.md:160",
+    "text": "actinv study run STUDY.json [OUTDIR] [--revocations FILE]",
+    "command": "study",
+    "sub": "",
+    "flags": [
+     "--revocations"
+    ],
+    "form": "synopsis",
+    "scope": "out of H4 scope"
+   },
+   {
+    "source": "docs/guide/cli.md:161",
+    "text": "actinv reverse PROBLEM.json MEASUREMENTS.json [OUT.json] [--segments]",
+    "command": "reverse",
+    "sub": "",
+    "flags": [
+     "--segments"
+    ],
+    "form": "synopsis",
+    "scope": "out of H4 scope"
+   },
+   {
+    "source": "docs/guide/cli.md:162",
+    "text": "actinv reverse-qualified PROBLEM.json MEASUREMENTS.json OUT.ndjson",
+    "command": "reverse-qualified",
+    "sub": "",
+    "flags": [],
+    "form": "synopsis",
+    "scope": "out of H4 scope"
+   },
+   {
+    "source": "docs/guide/cli.md:163",
+    "text": "actinv optimize OPTSPEC.json [OUTDIR] [--resume]",
+    "command": "optimize",
+    "sub": "",
+    "flags": [
+     "--resume"
+    ],
+    "form": "synopsis",
+    "scope": "out of H4 scope"
+   },
+   {
+    "source": "docs/guide/cli.md:164",
+    "text": "actinv decide DECISION.json [OUT.json]",
+    "command": "decide",
+    "sub": "",
+    "flags": [],
+    "form": "synopsis",
+    "scope": "out of H4 scope"
+   },
+   {
+    "source": "docs/guide/cli.md:165",
+    "text": "actinv budget BUDGET.json [OUT.json] [--no-verify]",
+    "command": "budget",
+    "sub": "",
+    "flags": [
+     "--no-verify"
+    ],
+    "form": "synopsis",
+    "scope": "out of H4 scope"
+   },
+   {
+    "source": "docs/guide/cli.md:166",
+    "text": "actinv waste WASTE.json [OUT.json]",
+    "command": "waste",
+    "sub": "",
+    "flags": [],
+    "form": "synopsis",
+    "scope": "out of H4 scope"
+   },
+   {
+    "source": "docs/guide/cli.md:167",
+    "text": "actinv waste budget BUDGET.json [OUT.json]",
+    "command": "waste",
+    "sub": "",
+    "flags": [],
+    "form": "synopsis",
+    "scope": "out of H4 scope"
+   },
+   {
+    "source": "docs/guide/cli.md:168",
+    "text": "actinv waste bounds BOUNDS.json [OUT.json]",
+    "command": "waste",
+    "sub": "",
+    "flags": [],
+    "form": "synopsis",
+    "scope": "out of H4 scope"
+   },
+   {
+    "source": "docs/guide/cli.md:169",
+    "text": "actinv waste composition COMPOSITION.json [OUT.json]",
+    "command": "waste",
+    "sub": "",
+    "flags": [],
+    "form": "synopsis",
+    "scope": "out of H4 scope"
+   },
+   {
+    "source": "docs/guide/cli.md:170",
+    "text": "actinv waste composition solve NATIVE_COMPOSITION.json [OUT.json]",
+    "command": "waste",
+    "sub": "",
+    "flags": [],
+    "form": "synopsis",
+    "scope": "out of H4 scope"
+   },
+   {
+    "source": "docs/guide/cli.md:171",
+    "text": "actinv waste intrusion-screen INTRUSION.json [OUT.json]",
+    "command": "waste",
+    "sub": "",
+    "flags": [],
+    "form": "synopsis",
+    "scope": "out of H4 scope"
+   },
+   {
+    "source": "docs/guide/data.md:8",
+    "text": "actinv data fetch",
+    "command": "data",
+    "sub": "",
+    "flags": [],
+    "form": "literal",
+    "scope": "out of H4 scope"
+   },
+   {
+    "source": "docs/guide/data.md:9",
+    "text": "actinv data verify",
+    "command": "data",
+    "sub": "",
+    "flags": [],
+    "form": "literal",
+    "scope": "out of H4 scope"
+   },
+   {
+    "source": "docs/guide/data.md:10",
+    "text": "actinv data list",
+    "command": "data",
+    "sub": "",
+    "flags": [],
+    "form": "literal",
+    "scope": "out of H4 scope"
+   },
+   {
+    "source": "docs/guide/data.md:30",
+    "text": "actinv data fetch tendl-2025-neutron-covariance",
+    "command": "data",
+    "sub": "",
+    "flags": [],
+    "form": "literal",
+    "scope": "out of H4 scope"
+   },
+   {
+    "source": "docs/guide/data.md:31",
+    "text": "actinv data verify tendl-2025-neutron-covariance",
+    "command": "data",
+    "sub": "",
+    "flags": [],
+    "form": "literal",
+    "scope": "out of H4 scope"
+   },
+   {
+    "source": "docs/guide/data.md:41",
+    "text": "actinv data fetch --output /data/actinv",
+    "command": "data",
+    "sub": "",
+    "flags": [
+     "--output"
+    ],
+    "form": "literal",
+    "scope": "out of H4 scope"
+   },
+   {
+    "source": "docs/guide/data.md:42",
+    "text": "actinv data verify --output /data/actinv",
+    "command": "data",
+    "sub": "",
+    "flags": [
+     "--output"
+    ],
+    "form": "literal",
+    "scope": "out of H4 scope"
+   },
+   {
+    "source": "docs/guide/data.md:43",
+    "text": "actinv new problem.json --data-dir /data/actinv",
+    "command": "new",
+    "sub": "",
+    "flags": [
+     "--data-dir"
+    ],
+    "form": "literal",
+    "scope": "H4 (generated example)"
+   },
+   {
+    "source": "docs/guide/fispact-migration.md:6-8",
+    "text": "actinv import-fispact DECK.i OUT.json [--fluxes FLUXES] [--files FILES] [--library LIB.npz] [--decay DECAY] [--covariance COV.npz] [--strict]",
+    "command": "import-fispact",
+    "sub": "",
+    "flags": [
+     "--covariance",
+     "--decay",
+     "--files",
+     "--fluxes",
+     "--library",
+     "--strict"
+    ],
+    "form": "synopsis",
+    "scope": "H4"
+   },
+   {
+    "source": "docs/guide/fispact-migration.md:14",
+    "text": "actinv import-fispact TENDL-2017_1996exp_5min.i fe_5min.json",
+    "command": "import-fispact",
+    "sub": "",
+    "flags": [],
+    "form": "literal",
+    "scope": "H4 (literal walkthrough)"
+   },
+   {
+    "source": "docs/guide/fispact-migration.md:15",
+    "text": "actinv validate fe_5min.json",
+    "command": "validate",
+    "sub": "",
+    "flags": [],
+    "form": "literal",
+    "scope": "H4 (literal walkthrough)"
+   },
+   {
+    "source": "docs/guide/fispact-migration.md:16",
+    "text": "actinv run fe_5min.json fe_5min_result.json",
+    "command": "run",
+    "sub": "",
+    "flags": [],
+    "form": "literal",
+    "scope": "H4 (literal walkthrough)"
+   },
+   {
+    "source": "docs/guide/fispact-migration.md:118-119",
+    "text": "actinv report RESULT.json [--tables LIST] [--format csv|tsv|markdown|text] [--out DIR] [--step N|all] [--nuclides Co60,Mn54]",
+    "command": "report",
+    "sub": "",
+    "flags": [
+     "--format",
+     "--nuclides",
+     "--out",
+     "--step",
+     "--tables"
+    ],
+    "form": "synopsis",
+    "scope": "H4"
+   },
+   {
+    "source": "docs/guide/install.md:26",
+    "text": "actinv --version",
+    "command": "--version",
+    "sub": "",
+    "flags": [
+     "--version"
+    ],
+    "form": "literal",
+    "scope": "out of H4 scope"
+   },
+   {
+    "source": "docs/guide/install.md:50",
+    "text": "actinv data fetch",
+    "command": "data",
+    "sub": "",
+    "flags": [],
+    "form": "literal",
+    "scope": "out of H4 scope"
+   },
+   {
+    "source": "docs/guide/install.md:51",
+    "text": "actinv data verify",
+    "command": "data",
+    "sub": "",
+    "flags": [],
+    "form": "literal",
+    "scope": "out of H4 scope"
+   },
+   {
+    "source": "docs/guide/quick-start.md:12",
+    "text": "actinv --version",
+    "command": "--version",
+    "sub": "",
+    "flags": [
+     "--version"
+    ],
+    "form": "literal",
+    "scope": "out of H4 scope"
+   },
+   {
+    "source": "docs/guide/quick-start.md:18",
+    "text": "actinv data fetch",
+    "command": "data",
+    "sub": "",
+    "flags": [],
+    "form": "literal",
+    "scope": "out of H4 scope"
+   },
+   {
+    "source": "docs/guide/quick-start.md:19",
+    "text": "actinv new problem.json",
+    "command": "new",
+    "sub": "",
+    "flags": [],
+    "form": "literal",
+    "scope": "H4 (generated example)"
+   },
+   {
+    "source": "docs/guide/quick-start.md:27",
+    "text": "actinv validate problem.json",
+    "command": "validate",
+    "sub": "",
+    "flags": [],
+    "form": "literal",
+    "scope": "out of H4 scope"
+   },
+   {
+    "source": "docs/guide/quick-start.md:28",
+    "text": "actinv validate problem.json --hashes",
+    "command": "validate",
+    "sub": "",
+    "flags": [
+     "--hashes"
+    ],
+    "form": "literal",
+    "scope": "out of H4 scope"
+   },
+   {
+    "source": "docs/guide/quick-start.md:29",
+    "text": "actinv run problem.json result.json",
+    "command": "run",
+    "sub": "",
+    "flags": [],
+    "form": "literal",
+    "scope": "out of H4 scope"
+   },
+   {
+    "source": "docs/guide/specification.md:19",
+    "text": "actinv new problem.json",
+    "command": "new",
+    "sub": "",
+    "flags": [],
+    "form": "literal",
+    "scope": "H4 (generated example)"
+   },
+   {
+    "source": "docs/guide/specification.md:20",
+    "text": "actinv validate problem.json",
+    "command": "validate",
+    "sub": "",
+    "flags": [],
+    "form": "literal",
+    "scope": "out of H4 scope"
+   },
+   {
+    "source": "docs/guide/specification.md:1025-1027",
+    "text": "actinv build-library INPUT OUTPUT.npz --format auto --projectile auto --groups fispact-709 --temperature-K 293.6 --workers 4 --cache /data/actinv-cache",
+    "command": "build-library",
+    "sub": "",
+    "flags": [
+     "--cache",
+     "--format",
+     "--groups",
+     "--projectile",
+     "--temperature-",
+     "--workers"
+    ],
+    "form": "synopsis",
+    "scope": "out of H4 scope"
+   },
+   {
+    "source": "docs/guide/specification.md:1164-1165",
+    "text": "actinv build-damage INPUT OUTPUT.json --projectile auto --groups fispact-709 --temperature-K 293.6 --cache /data/actinv-damage-cache",
+    "command": "build-damage",
+    "sub": "",
+    "flags": [
+     "--cache",
+     "--groups",
+     "--projectile",
+     "--temperature-"
+    ],
+    "form": "synopsis",
+    "scope": "out of H4 scope"
+   },
+   {
+    "source": "docs/guide/specification.md:1178-1179",
+    "text": "actinv build-covariance INPUT ACTIVATION.npz OUTPUT.cov.npz --workers 4 --cache /data/actinv-cov-cache",
+    "command": "build-covariance",
+    "sub": "",
+    "flags": [
+     "--cache",
+     "--workers"
+    ],
+    "form": "synopsis",
+    "scope": "out of H4 scope"
+   },
+   {
+    "source": "docs/guide/specification.md:1204",
+    "text": "actinv export-openmc result.json 2 source.py",
+    "command": "export-openmc",
+    "sub": "",
+    "flags": [],
+    "form": "literal",
+    "scope": "out of H4 scope"
+   },
+   {
+    "source": "docs/guide/specification.md:1205",
+    "text": "actinv export-mcnp result.json 2 source.sdef",
+    "command": "export-mcnp",
+    "sub": "",
+    "flags": [],
+    "form": "literal",
+    "scope": "out of H4 scope"
+   },
+   {
+    "source": "docs/guide/specification.md:1228-1229",
+    "text": "actinv import-flux openmc statepoint.h5 flux.ndjson --tally 7 --source-rate 1.0e15 --energy-floor-eV 1.0e-5 --window-rows 16384",
+    "command": "import-flux",
+    "sub": "",
+    "flags": [
+     "--energy-floor-e",
+     "--source-rate",
+     "--tally",
+     "--window-rows"
+    ],
+    "form": "literal",
+    "scope": "out of H4 scope"
+   },
+   {
+    "source": "docs/guide/specification.md:1230-1231",
+    "text": "actinv import-flux meshtal meshtal flux.ndjson --tally 24 --source-rate 1.0e15 --energy-floor-eV 1.0e-5",
+    "command": "import-flux",
+    "sub": "",
+    "flags": [
+     "--energy-floor-e",
+     "--source-rate",
+     "--tally"
+    ],
+    "form": "literal",
+    "scope": "out of H4 scope"
+   },
+   {
+    "source": "docs/guide/specification.md:1232-1233",
+    "text": "actinv import-flux mctal mctal flux.ndjson --tally 4 --source-rate 1.0e15 --energy-floor-eV 1.0e-5",
+    "command": "import-flux",
+    "sub": "",
+    "flags": [
+     "--energy-floor-e",
+     "--source-rate",
+     "--tally"
+    ],
+    "form": "literal",
+    "scope": "out of H4 scope"
+   },
+   {
+    "source": "docs/guide/specification.md:1234",
+    "text": "actinv import-flux fispact fluxes flux.ndjson --groups descending-boundaries.json",
+    "command": "import-flux",
+    "sub": "",
+    "flags": [
+     "--groups"
+    ],
+    "form": "literal",
+    "scope": "out of H4 scope"
+   },
+   {
+    "source": "docs/guide/troubleshooting.md:6",
+    "text": "actinv --version",
+    "command": "--version",
+    "sub": "",
+    "flags": [
+     "--version"
+    ],
+    "form": "literal",
+    "scope": "out of H4 scope"
+   },
+   {
+    "source": "docs/guide/troubleshooting.md:7",
+    "text": "actinv doctor problem.json",
+    "command": "doctor",
+    "sub": "",
+    "flags": [],
+    "form": "literal",
+    "scope": "out of H4 scope"
+   },
+   {
+    "source": "docs/guide/troubleshooting.md:8",
+    "text": "actinv validate problem.json --hashes",
+    "command": "validate",
+    "sub": "",
+    "flags": [
+     "--hashes"
+    ],
+    "form": "literal",
+    "scope": "out of H4 scope"
+   },
+   {
+    "source": "docs/guide/troubleshooting.md:32",
+    "text": "actinv data fetch --force",
+    "command": "data",
+    "sub": "",
+    "flags": [
+     "--force"
+    ],
+    "form": "literal",
+    "scope": "out of H4 scope"
+   },
+   {
+    "source": "docs/guide/troubleshooting.md:33",
+    "text": "actinv data verify",
+    "command": "data",
+    "sub": "",
+    "flags": [],
+    "form": "literal",
+    "scope": "out of H4 scope"
+   },
+   {
+    "source": "docs/guide/waste.md:11",
+    "text": "actinv waste component.json component-waste.json",
+    "command": "waste",
+    "sub": "",
+    "flags": [],
+    "form": "literal",
+    "scope": "out of H4 scope"
+   },
+   {
+    "source": "docs/guide/waste.md:12",
+    "text": "actinv waste budget class-budget.json class-budget-result.json",
+    "command": "waste",
+    "sub": "",
+    "flags": [],
+    "form": "literal",
+    "scope": "out of H4 scope"
+   },
+   {
+    "source": "docs/guide/waste.md:13",
+    "text": "actinv waste bounds activity-bounds.json activity-bounds-result.json",
+    "command": "waste",
+    "sub": "",
+    "flags": [],
+    "form": "literal",
+    "scope": "out of H4 scope"
+   },
+   {
+    "source": "docs/guide/waste.md:14",
+    "text": "actinv waste composition composition.json composition-result.json",
+    "command": "waste",
+    "sub": "",
+    "flags": [],
+    "form": "literal",
+    "scope": "out of H4 scope"
+   },
+   {
+    "source": "docs/guide/waste.md:15",
+    "text": "actinv waste composition solve native-composition.json native-composition-result.json",
+    "command": "waste",
+    "sub": "",
+    "flags": [],
+    "form": "literal",
+    "scope": "out of H4 scope"
+   },
+   {
+    "source": "docs/guide/waste.md:16",
+    "text": "actinv waste intrusion-screen intrusion.json intrusion-result.json",
+    "command": "waste",
+    "sub": "",
+    "flags": [],
+    "form": "literal",
+    "scope": "out of H4 scope"
+   }
+  ],
+  "unclassified": []
+ },
+ "features": {
+  "summary": {
+   "covered": true,
+   "fragments": [
+    {
+     "item": "json:specification:782",
+     "source": "docs/guide/specification.md:782-787"
+    },
+    {
+     "item": "derived:summary.depletion",
+     "source": "docs/guide/specification.md:770"
+    }
+   ]
+  },
+  "summary.depletion": {
+   "covered": true,
+   "fragments": [
+    {
+     "item": "derived:summary.depletion",
+     "source": "docs/guide/specification.md:770"
+    }
+   ]
+  },
+  "photon.point_source": {
+   "covered": false,
+   "fragments": [],
+   "prose_only_at": [
+    "docs/guide/fispact-migration.md:62",
+    "docs/guide/fispact-migration.md:80",
+    "docs/guide/results.md:28"
+   ]
+  },
+  "photon.bremsstrahlung": {
+   "covered": false,
+   "fragments": [],
+   "prose_only_at": [
+    "docs/guide/fispact-migration.md:64",
+    "docs/guide/results.md:28",
+    "docs/guide/specification.md:911"
+   ]
+  },
+  "photon.group_structure": {
+   "covered": false,
+   "fragments": [],
+   "prose_only_at": [
+    "docs/guide/specification.md:503",
+    "docs/guide/specification.md:860"
+   ]
+  },
+  "schedule[].power_W_cm3": {
+   "covered": true,
+   "fragments": [
+    {
+     "item": "json:specification:477",
+     "source": "docs/guide/specification.md:477-489"
+    }
+   ]
+  },
+  "schedule[].power_W_per_g": {
+   "covered": false,
+   "fragments": [],
+   "prose_only_at": [
+    "docs/guide/specification.md:36",
+    "docs/guide/specification.md:41",
+    "docs/guide/specification.md:520"
+   ]
+  },
+  "kerma": {
+   "covered": true,
+   "fragments": [
+    {
+     "item": "json:specification:477",
+     "source": "docs/guide/specification.md:477-489"
+    }
+   ]
+  },
+  "schedule[].wall_loading_MW_m2": {
+   "covered": false,
+   "fragments": [],
+   "prose_only_at": [
+    "docs/guide/fispact-migration.md:58",
+    "docs/guide/fispact-migration.md:76",
+    "docs/guide/specification.md:36"
+   ]
+  },
+  "schedule[].partition": {
+   "covered": false,
+   "fragments": [],
+   "prose_only_at": [
+    "docs/guide/fispact-migration.md:59",
+    "docs/guide/fispact-migration.md:106",
+    "docs/guide/specification.md:36"
+   ]
+  },
+  "overrides": {
+   "covered": false,
+   "fragments": [],
+   "prose_only_at": [
+    "docs/guide/fispact-migration.md:60",
+    "docs/guide/specification.md:134",
+    "docs/guide/specification.md:136"
+   ]
+  },
+  "pathways": {
+   "covered": true,
+   "fragments": [
+    {
+     "item": "json:specification:798",
+     "source": "docs/guide/specification.md:798-807"
+    }
+   ]
+  },
+  "self_shielding.geometry": {
+   "covered": true,
+   "fragments": [
+    {
+     "item": "json:specification:658",
+     "source": "docs/guide/specification.md:658-669"
+    }
+   ]
+  },
+  "self_shielding.dilution_overrides": {
+   "covered": true,
+   "fragments": [
+    {
+     "item": "json:specification:641",
+     "source": "docs/guide/specification.md:641-643"
+    }
+   ]
+  },
+  "spectrum.rebin": {
+   "covered": false,
+   "fragments": [],
+   "prose_only_at": [
+    "docs/guide/fispact-migration.md:31",
+    "docs/guide/fispact-migration.md:61",
+    "docs/guide/specification.md:84"
+   ]
+  },
+  "fission_yields.spontaneous": {
+   "covered": true,
+   "fragments": [
+    {
+     "item": "json:specification:201",
+     "source": "docs/guide/specification.md:201-209"
+    }
+   ]
+  },
+  "options.fission": {
+   "covered": true,
+   "fragments": [
+    {
+     "item": "json:specification:235",
+     "source": "docs/guide/specification.md:235-237"
+    }
+   ]
+  },
+  "schedule[].library": {
+   "covered": false,
+   "fragments": [],
+   "prose_only_at": [
+    "docs/guide/fispact-migration.md:106",
+    "docs/guide/specification.md:132",
+    "docs/guide/specification.md:244"
+   ]
+  },
+  "schedule[].projectile": {
+   "covered": false,
+   "fragments": [],
+   "prose_only_at": [
+    "docs/guide/specification.md:973"
+   ]
+  },
+  "radiological.bundled": {
+   "covered": true,
+   "fragments": [
+    {
+     "item": "derived:bundled:us-49cfr173-a1",
+     "source": "docs/guide/specification.md:389"
+    },
+    {
+     "item": "derived:bundled:us-49cfr173-a2",
+     "source": "docs/guide/specification.md:389"
+    },
+    {
+     "item": "derived:bundled:us-49cfr173-exempt-concentration",
+     "source": "docs/guide/specification.md:390"
+    },
+    {
+     "item": "derived:bundled:us-49cfr173-exempt-consignment",
+     "source": "docs/guide/specification.md:391"
+    },
+    {
+     "item": "derived:bundled:euratom-2013-59-annex-vii-a",
+     "source": "docs/guide/specification.md:392"
+    },
+    {
+     "item": "derived:bundled:euratom-2013-59-annex-vii-b-concentration",
+     "source": "docs/guide/specification.md:393"
+    },
+    {
+     "item": "derived:bundled:euratom-2013-59-annex-vii-b-activity",
+     "source": "docs/guide/specification.md:394"
+    }
+   ]
+  },
+  "robustness.statistics": {
+   "covered": true,
+   "fragments": [
+    {
+     "item": "json:specification:608",
+     "source": "docs/guide/specification.md:608-616"
+    }
+   ]
+  }
+ },
+ "items": [
+  {
+   "id": "support:run-gate-spec",
+   "category": "support",
+   "source": [
+    "examples/fns_fe_5min.json"
+   ],
+   "classification": "support",
+   "action": "run examples/fns_fe_5min.json into the workdir (the RESULT.json the report items read)",
+   "gating": true,
+   "checks": [
+    {
+     "argv": [
+      "CAND",
+      "run",
+      "examples/fns_fe_5min.json",
+      "target/p140-docs/run/base_result.json"
+     ],
+     "expected_exit": 0,
+     "exit_code": 0,
+     "wall_s": 1.071,
+     "stdout_bytes": 0,
+     "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+     "stdout_tail": "",
+     "stderr_tail": "21 steps, 51 of 3873 states, 1021.8 ms -> /home/connoravila/Documents/actinv/target/p140-docs/run/base_result.json\n",
+     "ok": true
+    }
+   ],
+   "outcome": "pass"
+  },
+  {
+   "id": "support:run-rich-spec",
+   "category": "support",
+   "source": [
+    "target/p140-docs/merged/rich_spec.json"
+   ],
+   "classification": "support",
+   "merge_rules": [
+    "material: taken from the merged derived:summary.depletion",
+    "summary: taken from the merged derived:summary.depletion",
+    "radiological: taken from the merged derived:bundled:us-49cfr173-a2"
+   ],
+   "action": "run the gate spec with the handbook's summary (with depletion) and bundled A2 table (a result that has the sections `report` tables need)",
+   "gating": true,
+   "checks": [
+    {
+     "argv": [
+      "CAND",
+      "run",
+      "target/p140-docs/merged/rich_spec.json",
+      "target/p140-docs/run/rich_result.json"
+     ],
+     "expected_exit": 0,
+     "exit_code": 0,
+     "wall_s": 1.021,
+     "stdout_bytes": 0,
+     "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+     "stdout_tail": "",
+     "stderr_tail": "21 steps, 51 of 3873 states, 973.8 ms -> /home/connoravila/Documents/actinv/target/p140-docs/run/rich_result.json\n",
+     "ok": true
+    }
+   ],
+   "outcome": "pass"
+  },
+  {
+   "id": "json:problems:11",
+   "category": "fragment",
+   "source": [
+    "docs/guide/problems.md:11-17"
+   ],
+   "classification": "fragment",
+   "target": "spec",
+   "merge_rules": [
+    "target: examples/fns_fe_5min.json",
+    "material.mass_g: replaced",
+    "material.basis: replaced",
+    "material.composition: replaced"
+   ],
+   "substitutions": [],
+   "file": "target/p140-docs/merged/json_problems_11.json",
+   "unresolved_paths": [],
+   "action": "validate + validate --files",
+   "note": "",
+   "gating": true,
+   "checks": [
+    {
+     "argv": [
+      "CAND",
+      "validate",
+      "target/p140-docs/merged/json_problems_11.json"
+     ],
+     "expected_exit": 0,
+     "exit_code": 0,
+     "wall_s": 0.004,
+     "stdout_bytes": 54,
+     "stdout_sha256": "5605b178f25bf4925ca3ade4602d133d0f4d612b7b3a16eeb557c345aa91a519",
+     "stdout_tail": "ok (--schema): actinv-spec-1 \u2014 709 groups, 21 steps\n",
+     "stderr_tail": "",
+     "ok": true
+    },
+    {
+     "argv": [
+      "CAND",
+      "validate",
+      "target/p140-docs/merged/json_problems_11.json",
+      "--files"
+     ],
+     "expected_exit": 0,
+     "exit_code": 0,
+     "wall_s": 0.002,
+     "stdout_bytes": 53,
+     "stdout_sha256": "92fba8b40e93c73b87978708d75cab29cc86ce41fec4989ec1fde051c3d0a8b3",
+     "stdout_tail": "ok (--files): actinv-spec-1 \u2014 709 groups, 21 steps\n",
+     "stderr_tail": "",
+     "ok": true
+    }
+   ],
+   "outcome": "pass"
+  },
+  {
+   "id": "json:problems:41",
+   "category": "fragment",
+   "source": [
+    "docs/guide/problems.md:41-46"
+   ],
+   "classification": "fragment",
+   "target": "spec",
+   "merge_rules": [
+    "target: examples/fns_fe_5min.json",
+    "schedule: replaced"
+   ],
+   "substitutions": [],
+   "file": "target/p140-docs/merged/json_problems_41.json",
+   "unresolved_paths": [],
+   "action": "validate + validate --files",
+   "note": "",
+   "gating": true,
+   "checks": [
+    {
+     "argv": [
+      "CAND",
+      "validate",
+      "target/p140-docs/merged/json_problems_41.json"
+     ],
+     "expected_exit": 0,
+     "exit_code": 0,
+     "wall_s": 0.003,
+     "stdout_bytes": 53,
+     "stdout_sha256": "4d6fd0e3fbeda2fb2eb16ab19da57e4c6d8f603bf8a63a60703643a349dedff9",
+     "stdout_tail": "ok (--schema): actinv-spec-1 \u2014 709 groups, 2 steps\n",
+     "stderr_tail": "",
+     "ok": true
+    },
+    {
+     "argv": [
+      "CAND",
+      "validate",
+      "target/p140-docs/merged/json_problems_41.json",
+      "--files"
+     ],
+     "expected_exit": 0,
+     "exit_code": 0,
+     "wall_s": 0.003,
+     "stdout_bytes": 52,
+     "stdout_sha256": "7b1df951593f736e7be6705e0e4fc7816bb9a93f666cc12bc647087075b48312",
+     "stdout_tail": "ok (--files): actinv-spec-1 \u2014 709 groups, 2 steps\n",
+     "stderr_tail": "",
+     "ok": true
+    }
+   ],
+   "outcome": "pass"
+  },
+  {
+   "id": "json:specification:170",
+   "category": "fragment",
+   "source": [
+    "docs/guide/specification.md:170-181"
+   ],
+   "classification": "fragment",
+   "target": "spec",
+   "merge_rules": [
+    "target: examples/fns_fe_5min.json",
+    "fission_yields: added"
+   ],
+   "substitutions": [
+    {
+     "at": "/fission_yields/files/0",
+     "what": "path",
+     "from": "/data/endfb-viii.0-nfpy/nfy-092_U_235.endf",
+     "to": "/home/connoravila/nuclear-data/endfb-viii.0-nfpy/nfy-092_U_235.endf"
+    },
+    {
+     "at": "/fission_yields/files/0",
+     "what": "sha256",
+     "from": "64 hexadecimal digits",
+     "to": "9e1320293a544fc03f33f804a15a9e3ccc3be026552ee6dbc03b8d3e24615e41"
+    }
+   ],
+   "file": "target/p140-docs/merged/json_specification_170.json",
+   "unresolved_paths": [],
+   "action": "validate + validate --files",
+   "note": "",
+   "gating": true,
+   "checks": [
+    {
+     "argv": [
+      "CAND",
+      "validate",
+      "target/p140-docs/merged/json_specification_170.json"
+     ],
+     "expected_exit": 0,
+     "exit_code": 0,
+     "wall_s": 0.003,
+     "stdout_bytes": 54,
+     "stdout_sha256": "5605b178f25bf4925ca3ade4602d133d0f4d612b7b3a16eeb557c345aa91a519",
+     "stdout_tail": "ok (--schema): actinv-spec-1 \u2014 709 groups, 21 steps\n",
+     "stderr_tail": "",
+     "ok": true
+    },
+    {
+     "argv": [
+      "CAND",
+      "validate",
+      "target/p140-docs/merged/json_specification_170.json",
+      "--files"
+     ],
+     "expected_exit": 0,
+     "exit_code": 0,
+     "wall_s": 0.002,
+     "stdout_bytes": 53,
+     "stdout_sha256": "92fba8b40e93c73b87978708d75cab29cc86ce41fec4989ec1fde051c3d0a8b3",
+     "stdout_tail": "ok (--files): actinv-spec-1 \u2014 709 groups, 21 steps\n",
+     "stderr_tail": "",
+     "ok": true
+    }
+   ],
+   "outcome": "pass"
+  },
+  {
+   "id": "json:specification:201",
+   "category": "fragment",
+   "source": [
+    "docs/guide/specification.md:201-209"
+   ],
+   "classification": "fragment",
+   "target": "spec",
+   "merge_rules": [
+    "target: examples/fns_fe_5min.json",
+    "fission_yields: added"
+   ],
+   "substitutions": [
+    {
+     "at": "/fission_yields/spontaneous/files/0",
+     "what": "sha256 placeholder",
+     "from": "64 hexadecimal digits",
+     "to": "0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    {
+     "at": "/fission_yields/spontaneous/nubar_endf",
+     "what": "path",
+     "from": "/data/endfb-viii.0-decay/endf-b-viii-0_decay.dat",
+     "to": "actinv-data/v1.1.0/decay/endf-b-viii-0_decay.dat"
+    },
+    {
+     "at": "/fission_yields/spontaneous/nubar_endf",
+     "what": "sha256",
+     "from": "...",
+     "to": "6f04cf009086c179021f243a58dadc2d5bb078de5ba39c4fe46ccad77d228ddb"
+    },
+    {
+     "at": "/fission_yields/spontaneous/nubar_table",
+     "what": "sha256 placeholder",
+     "from": "...",
+     "to": "0000000000000000000000000000000000000000000000000000000000000000"
+    }
+   ],
+   "file": "target/p140-docs/merged/json_specification_201.json",
+   "unresolved_paths": [
+    "/data/sfy/spontaneous-yields.endf",
+    "nubar.json"
+   ],
+   "action": "validate (no --files: files not shipped)",
+   "note": "",
+   "gating": true,
+   "checks": [
+    {
+     "argv": [
+      "CAND",
+      "validate",
+      "target/p140-docs/merged/json_specification_201.json"
+     ],
+     "expected_exit": 0,
+     "exit_code": 0,
+     "wall_s": 0.003,
+     "stdout_bytes": 54,
+     "stdout_sha256": "5605b178f25bf4925ca3ade4602d133d0f4d612b7b3a16eeb557c345aa91a519",
+     "stdout_tail": "ok (--schema): actinv-spec-1 \u2014 709 groups, 21 steps\n",
+     "stderr_tail": "",
+     "ok": true
+    }
+   ],
+   "outcome": "pass"
+  },
+  {
+   "id": "json:specification:235",
+   "category": "fragment",
+   "source": [
+    "docs/guide/specification.md:235-237"
+   ],
+   "classification": "fragment",
+   "target": "spec",
+   "merge_rules": [
+    "target: examples/fns_fe_5min.json",
+    "options.fission: added"
+   ],
+   "substitutions": [],
+   "file": "target/p140-docs/merged/json_specification_235.json",
+   "unresolved_paths": [],
+   "action": "validate + validate --files",
+   "note": "",
+   "gating": true,
+   "checks": [
+    {
+     "argv": [
+      "CAND",
+      "validate",
+      "target/p140-docs/merged/json_specification_235.json"
+     ],
+     "expected_exit": 0,
+     "exit_code": 0,
+     "wall_s": 0.003,
+     "stdout_bytes": 54,
+     "stdout_sha256": "5605b178f25bf4925ca3ade4602d133d0f4d612b7b3a16eeb557c345aa91a519",
+     "stdout_tail": "ok (--schema): actinv-spec-1 \u2014 709 groups, 21 steps\n",
+     "stderr_tail": "",
+     "ok": true
+    },
+    {
+     "argv": [
+      "CAND",
+      "validate",
+      "target/p140-docs/merged/json_specification_235.json",
+      "--files"
+     ],
+     "expected_exit": 0,
+     "exit_code": 0,
+     "wall_s": 0.002,
+     "stdout_bytes": 53,
+     "stdout_sha256": "92fba8b40e93c73b87978708d75cab29cc86ce41fec4989ec1fde051c3d0a8b3",
+     "stdout_tail": "ok (--files): actinv-spec-1 \u2014 709 groups, 21 steps\n",
+     "stderr_tail": "",
+     "ok": true
+    }
+   ],
+   "outcome": "pass"
+  },
+  {
+   "id": "json:specification:333",
+   "category": "other_document",
+   "source": [
+    "docs/guide/specification.md:333-352"
+   ],
+   "gating": false,
+   "classification": "other_document",
+   "schema": "actinv-radiological-table-1",
+   "file": "target/p140-docs/blocks/specification_L333.json",
+   "action": "parsed only",
+   "outcome": "info",
+   "note": "actinv-radiological-table-1: not an actinv-spec-1 problem; `actinv validate` does not apply and the document needs inputs outside H4"
+  },
+  {
+   "id": "json:specification:377",
+   "category": "fragment",
+   "source": [
+    "docs/guide/specification.md:377-382"
+   ],
+   "classification": "fragment",
+   "target": "spec",
+   "merge_rules": [
+    "target: examples/fns_fe_5min.json",
+    "radiological: added"
+   ],
+   "substitutions": [],
+   "file": "target/p140-docs/merged/json_specification_377.json",
+   "unresolved_paths": [],
+   "action": "validate + validate --files",
+   "note": "",
+   "gating": true,
+   "checks": [
+    {
+     "argv": [
+      "CAND",
+      "validate",
+      "target/p140-docs/merged/json_specification_377.json"
+     ],
+     "expected_exit": 0,
+     "exit_code": 0,
+     "wall_s": 0.003,
+     "stdout_bytes": 54,
+     "stdout_sha256": "5605b178f25bf4925ca3ade4602d133d0f4d612b7b3a16eeb557c345aa91a519",
+     "stdout_tail": "ok (--schema): actinv-spec-1 \u2014 709 groups, 21 steps\n",
+     "stderr_tail": "",
+     "ok": true
+    },
+    {
+     "argv": [
+      "CAND",
+      "validate",
+      "target/p140-docs/merged/json_specification_377.json",
+      "--files"
+     ],
+     "expected_exit": 0,
+     "exit_code": 0,
+     "wall_s": 0.003,
+     "stdout_bytes": 53,
+     "stdout_sha256": "92fba8b40e93c73b87978708d75cab29cc86ce41fec4989ec1fde051c3d0a8b3",
+     "stdout_tail": "ok (--files): actinv-spec-1 \u2014 709 groups, 21 steps\n",
+     "stderr_tail": "",
+     "ok": true
+    }
+   ],
+   "outcome": "pass"
+  },
+  {
+   "id": "json:specification:477",
+   "category": "fragment",
+   "source": [
+    "docs/guide/specification.md:477-489"
+   ],
+   "classification": "fragment",
+   "target": "spec",
+   "merge_rules": [
+    "target: examples/fns_fe_5min.json",
+    "material.composition: replaced",
+    "material.density_g_cm3: added",
+    "kerma: added",
+    "schedule: replaced"
+   ],
+   "substitutions": [
+    {
+     "at": "/kerma/table",
+     "what": "sha256 placeholder",
+     "from": "64 hexadecimal digits",
+     "to": "0000000000000000000000000000000000000000000000000000000000000000"
+    }
+   ],
+   "file": "target/p140-docs/merged/json_specification_477.json",
+   "unresolved_paths": [
+    "/data/kerma/fe_kerma.json"
+   ],
+   "action": "validate (no --files: files not shipped)",
+   "note": "",
+   "gating": true,
+   "checks": [
+    {
+     "argv": [
+      "CAND",
+      "validate",
+      "target/p140-docs/merged/json_specification_477.json"
+     ],
+     "expected_exit": 0,
+     "exit_code": 0,
+     "wall_s": 0.003,
+     "stdout_bytes": 53,
+     "stdout_sha256": "4d6fd0e3fbeda2fb2eb16ab19da57e4c6d8f603bf8a63a60703643a349dedff9",
+     "stdout_tail": "ok (--schema): actinv-spec-1 \u2014 709 groups, 2 steps\n",
+     "stderr_tail": "",
+     "ok": true
+    }
+   ],
+   "outcome": "pass"
+  },
+  {
+   "id": "json:specification:608",
+   "category": "fragment",
+   "source": [
+    "docs/guide/specification.md:608-616"
+   ],
+   "classification": "fragment",
+   "target": "study",
+   "merge_rules": [
+    "target: examples/study_fe_smoke.json (a `robustness` block belongs to a study spec)",
+    "study key robustness: set",
+    "robustness.covariance: placeholder replaced by the shipped covariance actinv-data/v1.1.0/uncertainty/tendl-2025-neutron-709g.cov.npz",
+    "cases.spectra[].spec_ref: rewritten relative to the merged study file"
+   ],
+   "substitutions": [],
+   "file": "target/p140-docs/merged/json_specification_608.json",
+   "unresolved_paths": [],
+   "action": "study validate",
+   "note": "",
+   "gating": true,
+   "checks": [
+    {
+     "argv": [
+      "CAND",
+      "study",
+      "validate",
+      "target/p140-docs/merged/json_specification_608.json"
+     ],
+     "expected_exit": 0,
+     "exit_code": 0,
+     "wall_s": 0.002,
+     "stdout_bytes": 42,
+     "stdout_sha256": "f2379694f059a4f2ba88f79ab2c5bddbacc5a1d8dfc14f236b44e529c9e007c0",
+     "stdout_tail": "ok: fns-fe-smoke \u2014 2 cases, 3 responses\n",
+     "stderr_tail": "",
+     "ok": true
+    }
+   ],
+   "outcome": "pass"
+  },
+  {
+   "id": "json:specification:641",
+   "category": "fragment",
+   "source": [
+    "docs/guide/specification.md:641-643"
+   ],
+   "classification": "fragment",
+   "target": "spec",
+   "merge_rules": [
+    "target: examples/fns_fe_5min.json",
+    "self_shielding: table block copied from examples/shielding_demo.json (prerequisite: dilution_overrides is table mode only)",
+    "self_shielding.dilution_overrides: placed under self_shielding (home inferred from the heading/prose)"
+   ],
+   "substitutions": [],
+   "file": "target/p140-docs/merged/json_specification_641.json",
+   "unresolved_paths": [],
+   "action": "validate + validate --files",
+   "note": "",
+   "gating": true,
+   "checks": [
+    {
+     "argv": [
+      "CAND",
+      "validate",
+      "target/p140-docs/merged/json_specification_641.json"
+     ],
+     "expected_exit": 0,
+     "exit_code": 0,
+     "wall_s": 0.003,
+     "stdout_bytes": 54,
+     "stdout_sha256": "5605b178f25bf4925ca3ade4602d133d0f4d612b7b3a16eeb557c345aa91a519",
+     "stdout_tail": "ok (--schema): actinv-spec-1 \u2014 709 groups, 21 steps\n",
+     "stderr_tail": "",
+     "ok": true
+    },
+    {
+     "argv": [
+      "CAND",
+      "validate",
+      "target/p140-docs/merged/json_specification_641.json",
+      "--files"
+     ],
+     "expected_exit": 0,
+     "exit_code": 0,
+     "wall_s": 0.003,
+     "stdout_bytes": 53,
+     "stdout_sha256": "92fba8b40e93c73b87978708d75cab29cc86ce41fec4989ec1fde051c3d0a8b3",
+     "stdout_tail": "ok (--files): actinv-spec-1 \u2014 709 groups, 21 steps\n",
+     "stderr_tail": "",
+     "ok": true
+    }
+   ],
+   "outcome": "pass"
+  },
+  {
+   "id": "json:specification:658",
+   "category": "fragment",
+   "source": [
+    "docs/guide/specification.md:658-669"
+   ],
+   "classification": "fragment",
+   "target": "spec",
+   "merge_rules": [
+    "target: examples/fns_fe_5min.json",
+    "self_shielding: added"
+   ],
+   "substitutions": [
+    {
+     "at": "/self_shielding/geometry/resonance_files/0",
+     "what": "sha256 placeholder",
+     "from": "...",
+     "to": "0000000000000000000000000000000000000000000000000000000000000000"
+    }
+   ],
+   "file": "target/p140-docs/merged/json_specification_658.json",
+   "unresolved_paths": [
+    "n_W184.endf"
+   ],
+   "action": "validate (no --files: files not shipped)",
+   "note": "",
+   "gating": true,
+   "checks": [
+    {
+     "argv": [
+      "CAND",
+      "validate",
+      "target/p140-docs/merged/json_specification_658.json"
+     ],
+     "expected_exit": 0,
+     "exit_code": 0,
+     "wall_s": 0.003,
+     "stdout_bytes": 54,
+     "stdout_sha256": "5605b178f25bf4925ca3ade4602d133d0f4d612b7b3a16eeb557c345aa91a519",
+     "stdout_tail": "ok (--schema): actinv-spec-1 \u2014 709 groups, 21 steps\n",
+     "stderr_tail": "",
+     "ok": true
+    }
+   ],
+   "outcome": "pass"
+  },
+  {
+   "id": "json:specification:782",
+   "category": "fragment",
+   "source": [
+    "docs/guide/specification.md:782-787"
+   ],
+   "classification": "fragment",
+   "target": "spec",
+   "merge_rules": [
+    "target: examples/fns_fe_5min.json",
+    "material.mass_g: replaced",
+    "material.density_g_cm3: added",
+    "material.composition: replaced",
+    "summary: added"
+   ],
+   "substitutions": [],
+   "file": "target/p140-docs/merged/json_specification_782.json",
+   "unresolved_paths": [],
+   "action": "validate + validate --files",
+   "note": "",
+   "gating": true,
+   "checks": [
+    {
+     "argv": [
+      "CAND",
+      "validate",
+      "target/p140-docs/merged/json_specification_782.json"
+     ],
+     "expected_exit": 0,
+     "exit_code": 0,
+     "wall_s": 0.003,
+     "stdout_bytes": 54,
+     "stdout_sha256": "5605b178f25bf4925ca3ade4602d133d0f4d612b7b3a16eeb557c345aa91a519",
+     "stdout_tail": "ok (--schema): actinv-spec-1 \u2014 709 groups, 21 steps\n",
+     "stderr_tail": "",
+     "ok": true
+    },
+    {
+     "argv": [
+      "CAND",
+      "validate",
+      "target/p140-docs/merged/json_specification_782.json",
+      "--files"
+     ],
+     "expected_exit": 0,
+     "exit_code": 0,
+     "wall_s": 0.002,
+     "stdout_bytes": 53,
+     "stdout_sha256": "92fba8b40e93c73b87978708d75cab29cc86ce41fec4989ec1fde051c3d0a8b3",
+     "stdout_tail": "ok (--files): actinv-spec-1 \u2014 709 groups, 21 steps\n",
+     "stderr_tail": "",
+     "ok": true
+    }
+   ],
+   "outcome": "pass"
+  },
+  {
+   "id": "json:specification:798",
+   "category": "fragment",
+   "source": [
+    "docs/guide/specification.md:798-807"
+   ],
+   "classification": "fragment",
+   "target": "spec",
+   "merge_rules": [
+    "target: examples/fns_fe_5min.json",
+    "pathways: added"
+   ],
+   "substitutions": [],
+   "file": "target/p140-docs/merged/json_specification_798.json",
+   "unresolved_paths": [],
+   "action": "validate + validate --files",
+   "note": "",
+   "gating": true,
+   "checks": [
+    {
+     "argv": [
+      "CAND",
+      "validate",
+      "target/p140-docs/merged/json_specification_798.json"
+     ],
+     "expected_exit": 0,
+     "exit_code": 0,
+     "wall_s": 0.003,
+     "stdout_bytes": 54,
+     "stdout_sha256": "5605b178f25bf4925ca3ade4602d133d0f4d612b7b3a16eeb557c345aa91a519",
+     "stdout_tail": "ok (--schema): actinv-spec-1 \u2014 709 groups, 21 steps\n",
+     "stderr_tail": "",
+     "ok": true
+    },
+    {
+     "argv": [
+      "CAND",
+      "validate",
+      "target/p140-docs/merged/json_specification_798.json",
+      "--files"
+     ],
+     "expected_exit": 0,
+     "exit_code": 0,
+     "wall_s": 0.003,
+     "stdout_bytes": 53,
+     "stdout_sha256": "92fba8b40e93c73b87978708d75cab29cc86ce41fec4989ec1fde051c3d0a8b3",
+     "stdout_tail": "ok (--files): actinv-spec-1 \u2014 709 groups, 21 steps\n",
+     "stderr_tail": "",
+     "ok": true
+    }
+   ],
+   "outcome": "pass"
+  },
+  {
+   "id": "json:specification:1078",
+   "category": "other_document",
+   "source": [
+    "docs/guide/specification.md:1078-1092"
+   ],
+   "gating": false,
+   "classification": "other_document",
+   "schema": "actinv-spallation-residuals-1",
+   "file": "target/p140-docs/blocks/specification_L1078.json",
+   "action": "parsed only",
+   "outcome": "info",
+   "note": "actinv-spallation-residuals-1: not an actinv-spec-1 problem; `actinv validate` does not apply and the document needs inputs outside H4"
+  },
+  {
+   "id": "json:specification:1271",
+   "category": "other_document",
+   "source": [
+    "docs/guide/specification.md:1271-1307"
+   ],
+   "gating": false,
+   "classification": "other_document",
+   "schema": "actinv-mesh-spec-1",
+   "file": "target/p140-docs/blocks/specification_L1271.json",
+   "action": "parsed only",
+   "outcome": "info",
+   "note": "actinv-mesh-spec-1: not an actinv-spec-1 problem; `actinv validate` does not apply and the document needs inputs outside H4"
+  },
+  {
+   "id": "json:waste:42",
+   "category": "other_document",
+   "source": [
+    "docs/guide/waste.md:42-66"
+   ],
+   "gating": false,
+   "classification": "other_document",
+   "schema": "actinv-twin-1",
+   "file": "target/p140-docs/blocks/waste_L42.json",
+   "action": "parsed only",
+   "outcome": "info",
+   "note": "actinv-twin-1: not an actinv-spec-1 problem; `actinv validate` does not apply and the document needs inputs outside H4"
+  },
+  {
+   "id": "json:waste:99",
+   "category": "other_document",
+   "source": [
+    "docs/guide/waste.md:99-136"
+   ],
+   "gating": false,
+   "classification": "other_document",
+   "schema": "actinv-waste-intrusion-screen-spec-1",
+   "file": "target/p140-docs/blocks/waste_L99.json",
+   "action": "parsed only",
+   "outcome": "info",
+   "note": "actinv-waste-intrusion-screen-spec-1: not an actinv-spec-1 problem; `actinv validate` does not apply and the document needs inputs outside H4"
+  },
+  {
+   "id": "json:waste:194",
+   "category": "other_document",
+   "source": [
+    "docs/guide/waste.md:194-228"
+   ],
+   "gating": false,
+   "classification": "other_document",
+   "schema": "actinv-waste-composition-spec-1",
+   "file": "target/p140-docs/blocks/waste_L194.json",
+   "action": "parsed only",
+   "outcome": "info",
+   "note": "actinv-waste-composition-spec-1: not an actinv-spec-1 problem; `actinv validate` does not apply and the document needs inputs outside H4"
+  },
+  {
+   "id": "json:waste:292",
+   "category": "other_document",
+   "source": [
+    "docs/guide/waste.md:292-314"
+   ],
+   "gating": false,
+   "classification": "other_document",
+   "schema": "actinv-waste-composition-solve-spec-1",
+   "file": "target/p140-docs/blocks/waste_L292.json",
+   "action": "parsed only",
+   "outcome": "info",
+   "note": "actinv-waste-composition-solve-spec-1: not an actinv-spec-1 problem; `actinv validate` does not apply and the document needs inputs outside H4"
+  },
+  {
+   "id": "json:waste:327",
+   "category": "other_document",
+   "source": [
+    "docs/guide/waste.md:327-353"
+   ],
+   "gating": false,
+   "classification": "other_document",
+   "schema": "actinv-waste-bounds-spec-1",
+   "file": "target/p140-docs/blocks/waste_L327.json",
+   "action": "parsed only",
+   "outcome": "info",
+   "note": "actinv-waste-bounds-spec-1: not an actinv-spec-1 problem; `actinv validate` does not apply and the document needs inputs outside H4"
+  },
+  {
+   "id": "json:waste:379",
+   "category": "other_document",
+   "source": [
+    "docs/guide/waste.md:379-388"
+   ],
+   "gating": false,
+   "classification": "other_document_fragment",
+   "schema": null,
+   "file": "target/p140-docs/blocks/waste_L379.json",
+   "action": "parsed only",
+   "outcome": "info",
+   "note": "document fragment: not an actinv-spec-1 problem; `actinv validate` does not apply and the document needs inputs outside H4"
+  },
+  {
+   "id": "json:waste:409",
+   "category": "other_document",
+   "source": [
+    "docs/guide/waste.md:409-426"
+   ],
+   "gating": false,
+   "classification": "other_document",
+   "schema": "actinv-waste-spec-1",
+   "file": "target/p140-docs/blocks/waste_L409.json",
+   "action": "parsed only",
+   "outcome": "info",
+   "note": "actinv-waste-spec-1: not an actinv-spec-1 problem; `actinv validate` does not apply and the document needs inputs outside H4"
+  },
+  {
+   "id": "json:waste:439",
+   "category": "other_document",
+   "source": [
+    "docs/guide/waste.md:439-446"
+   ],
+   "gating": false,
+   "classification": "other_document_fragment",
+   "schema": null,
+   "file": "target/p140-docs/blocks/waste_L439.json",
+   "action": "parsed only",
+   "outcome": "info",
+   "note": "document fragment: not an actinv-spec-1 problem; `actinv validate` does not apply and the document needs inputs outside H4"
+  },
+  {
+   "id": "derived:bundled:us-49cfr173-a1",
+   "category": "derived_fragment",
+   "source": [
+    "docs/guide/specification.md:389"
+   ],
+   "classification": "fragment",
+   "target": "spec",
+   "merge_rules": [
+    "derived from the 'Bundled regulatory tables' table: the bundled name as radiological.table.path with no responses (an empty selector chooses all)",
+    "target: examples/fns_fe_5min.json",
+    "radiological: added"
+   ],
+   "substitutions": [],
+   "file": "target/p140-docs/merged/derived_bundled_us-49cfr173-a1.json",
+   "unresolved_paths": [],
+   "action": "validate + validate --files",
+   "note": "",
+   "gating": true,
+   "checks": [
+    {
+     "argv": [
+      "CAND",
+      "validate",
+      "target/p140-docs/merged/derived_bundled_us-49cfr173-a1.json"
+     ],
+     "expected_exit": 0,
+     "exit_code": 0,
+     "wall_s": 0.003,
+     "stdout_bytes": 54,
+     "stdout_sha256": "5605b178f25bf4925ca3ade4602d133d0f4d612b7b3a16eeb557c345aa91a519",
+     "stdout_tail": "ok (--schema): actinv-spec-1 \u2014 709 groups, 21 steps\n",
+     "stderr_tail": "",
+     "ok": true
+    },
+    {
+     "argv": [
+      "CAND",
+      "validate",
+      "target/p140-docs/merged/derived_bundled_us-49cfr173-a1.json",
+      "--files"
+     ],
+     "expected_exit": 0,
+     "exit_code": 0,
+     "wall_s": 0.003,
+     "stdout_bytes": 53,
+     "stdout_sha256": "92fba8b40e93c73b87978708d75cab29cc86ce41fec4989ec1fde051c3d0a8b3",
+     "stdout_tail": "ok (--files): actinv-spec-1 \u2014 709 groups, 21 steps\n",
+     "stderr_tail": "",
+     "ok": true
+    }
+   ],
+   "outcome": "pass"
+  },
+  {
+   "id": "derived:bundled:us-49cfr173-a2",
+   "category": "derived_fragment",
+   "source": [
+    "docs/guide/specification.md:389"
+   ],
+   "classification": "fragment",
+   "target": "spec",
+   "merge_rules": [
+    "derived from the 'Bundled regulatory tables' table: the bundled name as radiological.table.path with no responses (an empty selector chooses all)",
+    "target: examples/fns_fe_5min.json",
+    "radiological: added"
+   ],
+   "substitutions": [],
+   "file": "target/p140-docs/merged/derived_bundled_us-49cfr173-a2.json",
+   "unresolved_paths": [],
+   "action": "validate + validate --files",
+   "note": "",
+   "gating": true,
+   "checks": [
+    {
+     "argv": [
+      "CAND",
+      "validate",
+      "target/p140-docs/merged/derived_bundled_us-49cfr173-a2.json"
+     ],
+     "expected_exit": 0,
+     "exit_code": 0,
+     "wall_s": 0.002,
+     "stdout_bytes": 54,
+     "stdout_sha256": "5605b178f25bf4925ca3ade4602d133d0f4d612b7b3a16eeb557c345aa91a519",
+     "stdout_tail": "ok (--schema): actinv-spec-1 \u2014 709 groups, 21 steps\n",
+     "stderr_tail": "",
+     "ok": true
+    },
+    {
+     "argv": [
+      "CAND",
+      "validate",
+      "target/p140-docs/merged/derived_bundled_us-49cfr173-a2.json",
+      "--files"
+     ],
+     "expected_exit": 0,
+     "exit_code": 0,
+     "wall_s": 0.003,
+     "stdout_bytes": 53,
+     "stdout_sha256": "92fba8b40e93c73b87978708d75cab29cc86ce41fec4989ec1fde051c3d0a8b3",
+     "stdout_tail": "ok (--files): actinv-spec-1 \u2014 709 groups, 21 steps\n",
+     "stderr_tail": "",
+     "ok": true
+    }
+   ],
+   "outcome": "pass"
+  },
+  {
+   "id": "derived:bundled:us-49cfr173-exempt-concentration",
+   "category": "derived_fragment",
+   "source": [
+    "docs/guide/specification.md:390"
+   ],
+   "classification": "fragment",
+   "target": "spec",
+   "merge_rules": [
+    "derived from the 'Bundled regulatory tables' table: the bundled name as radiological.table.path with no responses (an empty selector chooses all)",
+    "target: examples/fns_fe_5min.json",
+    "radiological: added"
+   ],
+   "substitutions": [],
+   "file": "target/p140-docs/merged/derived_bundled_us-49cfr173-exempt-concentration.json",
+   "unresolved_paths": [],
+   "action": "validate + validate --files",
+   "note": "",
+   "gating": true,
+   "checks": [
+    {
+     "argv": [
+      "CAND",
+      "validate",
+      "target/p140-docs/merged/derived_bundled_us-49cfr173-exempt-concentration.json"
+     ],
+     "expected_exit": 0,
+     "exit_code": 0,
+     "wall_s": 0.002,
+     "stdout_bytes": 54,
+     "stdout_sha256": "5605b178f25bf4925ca3ade4602d133d0f4d612b7b3a16eeb557c345aa91a519",
+     "stdout_tail": "ok (--schema): actinv-spec-1 \u2014 709 groups, 21 steps\n",
+     "stderr_tail": "",
+     "ok": true
+    },
+    {
+     "argv": [
+      "CAND",
+      "validate",
+      "target/p140-docs/merged/derived_bundled_us-49cfr173-exempt-concentration.json",
+      "--files"
+     ],
+     "expected_exit": 0,
+     "exit_code": 0,
+     "wall_s": 0.002,
+     "stdout_bytes": 53,
+     "stdout_sha256": "92fba8b40e93c73b87978708d75cab29cc86ce41fec4989ec1fde051c3d0a8b3",
+     "stdout_tail": "ok (--files): actinv-spec-1 \u2014 709 groups, 21 steps\n",
+     "stderr_tail": "",
+     "ok": true
+    }
+   ],
+   "outcome": "pass"
+  },
+  {
+   "id": "derived:bundled:us-49cfr173-exempt-consignment",
+   "category": "derived_fragment",
+   "source": [
+    "docs/guide/specification.md:391"
+   ],
+   "classification": "fragment",
+   "target": "spec",
+   "merge_rules": [
+    "derived from the 'Bundled regulatory tables' table: the bundled name as radiological.table.path with no responses (an empty selector chooses all)",
+    "target: examples/fns_fe_5min.json",
+    "radiological: added"
+   ],
+   "substitutions": [],
+   "file": "target/p140-docs/merged/derived_bundled_us-49cfr173-exempt-consignment.json",
+   "unresolved_paths": [],
+   "action": "validate + validate --files",
+   "note": "",
+   "gating": true,
+   "checks": [
+    {
+     "argv": [
+      "CAND",
+      "validate",
+      "target/p140-docs/merged/derived_bundled_us-49cfr173-exempt-consignment.json"
+     ],
+     "expected_exit": 0,
+     "exit_code": 0,
+     "wall_s": 0.002,
+     "stdout_bytes": 54,
+     "stdout_sha256": "5605b178f25bf4925ca3ade4602d133d0f4d612b7b3a16eeb557c345aa91a519",
+     "stdout_tail": "ok (--schema): actinv-spec-1 \u2014 709 groups, 21 steps\n",
+     "stderr_tail": "",
+     "ok": true
+    },
+    {
+     "argv": [
+      "CAND",
+      "validate",
+      "target/p140-docs/merged/derived_bundled_us-49cfr173-exempt-consignment.json",
+      "--files"
+     ],
+     "expected_exit": 0,
+     "exit_code": 0,
+     "wall_s": 0.002,
+     "stdout_bytes": 53,
+     "stdout_sha256": "92fba8b40e93c73b87978708d75cab29cc86ce41fec4989ec1fde051c3d0a8b3",
+     "stdout_tail": "ok (--files): actinv-spec-1 \u2014 709 groups, 21 steps\n",
+     "stderr_tail": "",
+     "ok": true
+    }
+   ],
+   "outcome": "pass"
+  },
+  {
+   "id": "derived:bundled:euratom-2013-59-annex-vii-a",
+   "category": "derived_fragment",
+   "source": [
+    "docs/guide/specification.md:392"
+   ],
+   "classification": "fragment",
+   "target": "spec",
+   "merge_rules": [
+    "derived from the 'Bundled regulatory tables' table: the bundled name as radiological.table.path with no responses (an empty selector chooses all)",
+    "target: examples/fns_fe_5min.json",
+    "radiological: added"
+   ],
+   "substitutions": [],
+   "file": "target/p140-docs/merged/derived_bundled_euratom-2013-59-annex-vii-a.json",
+   "unresolved_paths": [],
+   "action": "validate + validate --files",
+   "note": "",
+   "gating": true,
+   "checks": [
+    {
+     "argv": [
+      "CAND",
+      "validate",
+      "target/p140-docs/merged/derived_bundled_euratom-2013-59-annex-vii-a.json"
+     ],
+     "expected_exit": 0,
+     "exit_code": 0,
+     "wall_s": 0.002,
+     "stdout_bytes": 54,
+     "stdout_sha256": "5605b178f25bf4925ca3ade4602d133d0f4d612b7b3a16eeb557c345aa91a519",
+     "stdout_tail": "ok (--schema): actinv-spec-1 \u2014 709 groups, 21 steps\n",
+     "stderr_tail": "",
+     "ok": true
+    },
+    {
+     "argv": [
+      "CAND",
+      "validate",
+      "target/p140-docs/merged/derived_bundled_euratom-2013-59-annex-vii-a.json",
+      "--files"
+     ],
+     "expected_exit": 0,
+     "exit_code": 0,
+     "wall_s": 0.002,
+     "stdout_bytes": 53,
+     "stdout_sha256": "92fba8b40e93c73b87978708d75cab29cc86ce41fec4989ec1fde051c3d0a8b3",
+     "stdout_tail": "ok (--files): actinv-spec-1 \u2014 709 groups, 21 steps\n",
+     "stderr_tail": "",
+     "ok": true
+    }
+   ],
+   "outcome": "pass"
+  },
+  {
+   "id": "derived:bundled:euratom-2013-59-annex-vii-b-concentration",
+   "category": "derived_fragment",
+   "source": [
+    "docs/guide/specification.md:393"
+   ],
+   "classification": "fragment",
+   "target": "spec",
+   "merge_rules": [
+    "derived from the 'Bundled regulatory tables' table: the bundled name as radiological.table.path with no responses (an empty selector chooses all)",
+    "target: examples/fns_fe_5min.json",
+    "radiological: added"
+   ],
+   "substitutions": [],
+   "file": "target/p140-docs/merged/derived_bundled_euratom-2013-59-annex-vii-b-concentration.json",
+   "unresolved_paths": [],
+   "action": "validate + validate --files",
+   "note": "",
+   "gating": true,
+   "checks": [
+    {
+     "argv": [
+      "CAND",
+      "validate",
+      "target/p140-docs/merged/derived_bundled_euratom-2013-59-annex-vii-b-concentration.json"
+     ],
+     "expected_exit": 0,
+     "exit_code": 0,
+     "wall_s": 0.002,
+     "stdout_bytes": 54,
+     "stdout_sha256": "5605b178f25bf4925ca3ade4602d133d0f4d612b7b3a16eeb557c345aa91a519",
+     "stdout_tail": "ok (--schema): actinv-spec-1 \u2014 709 groups, 21 steps\n",
+     "stderr_tail": "",
+     "ok": true
+    },
+    {
+     "argv": [
+      "CAND",
+      "validate",
+      "target/p140-docs/merged/derived_bundled_euratom-2013-59-annex-vii-b-concentration.json",
+      "--files"
+     ],
+     "expected_exit": 0,
+     "exit_code": 0,
+     "wall_s": 0.002,
+     "stdout_bytes": 53,
+     "stdout_sha256": "92fba8b40e93c73b87978708d75cab29cc86ce41fec4989ec1fde051c3d0a8b3",
+     "stdout_tail": "ok (--files): actinv-spec-1 \u2014 709 groups, 21 steps\n",
+     "stderr_tail": "",
+     "ok": true
+    }
+   ],
+   "outcome": "pass"
+  },
+  {
+   "id": "derived:bundled:euratom-2013-59-annex-vii-b-activity",
+   "category": "derived_fragment",
+   "source": [
+    "docs/guide/specification.md:394"
+   ],
+   "classification": "fragment",
+   "target": "spec",
+   "merge_rules": [
+    "derived from the 'Bundled regulatory tables' table: the bundled name as radiological.table.path with no responses (an empty selector chooses all)",
+    "target: examples/fns_fe_5min.json",
+    "radiological: added"
+   ],
+   "substitutions": [],
+   "file": "target/p140-docs/merged/derived_bundled_euratom-2013-59-annex-vii-b-activity.json",
+   "unresolved_paths": [],
+   "action": "validate + validate --files",
+   "note": "",
+   "gating": true,
+   "checks": [
+    {
+     "argv": [
+      "CAND",
+      "validate",
+      "target/p140-docs/merged/derived_bundled_euratom-2013-59-annex-vii-b-activity.json"
+     ],
+     "expected_exit": 0,
+     "exit_code": 0,
+     "wall_s": 0.002,
+     "stdout_bytes": 54,
+     "stdout_sha256": "5605b178f25bf4925ca3ade4602d133d0f4d612b7b3a16eeb557c345aa91a519",
+     "stdout_tail": "ok (--schema): actinv-spec-1 \u2014 709 groups, 21 steps\n",
+     "stderr_tail": "",
+     "ok": true
+    },
+    {
+     "argv": [
+      "CAND",
+      "validate",
+      "target/p140-docs/merged/derived_bundled_euratom-2013-59-annex-vii-b-activity.json",
+      "--files"
+     ],
+     "expected_exit": 0,
+     "exit_code": 0,
+     "wall_s": 0.003,
+     "stdout_bytes": 53,
+     "stdout_sha256": "92fba8b40e93c73b87978708d75cab29cc86ce41fec4989ec1fde051c3d0a8b3",
+     "stdout_tail": "ok (--files): actinv-spec-1 \u2014 709 groups, 21 steps\n",
+     "stderr_tail": "",
+     "ok": true
+    }
+   ],
+   "outcome": "pass"
+  },
+  {
+   "id": "derived:summary.depletion",
+   "category": "derived_fragment",
+   "source": [
+    "docs/guide/specification.md:770"
+   ],
+   "classification": "fragment",
+   "target": "spec",
+   "merge_rules": [
+    "the summary fragment of docs/guide/specification.md:782-787 plus `depletion: true`, from the field table",
+    "target: examples/fns_fe_5min.json",
+    "material.mass_g: replaced",
+    "material.density_g_cm3: added",
+    "material.composition: replaced",
+    "summary: added"
+   ],
+   "substitutions": [],
+   "file": "target/p140-docs/merged/derived_summary.depletion.json",
+   "unresolved_paths": [],
+   "action": "validate + validate --files",
+   "note": "",
+   "gating": true,
+   "checks": [
+    {
+     "argv": [
+      "CAND",
+      "validate",
+      "target/p140-docs/merged/derived_summary.depletion.json"
+     ],
+     "expected_exit": 0,
+     "exit_code": 0,
+     "wall_s": 0.002,
+     "stdout_bytes": 54,
+     "stdout_sha256": "5605b178f25bf4925ca3ade4602d133d0f4d612b7b3a16eeb557c345aa91a519",
+     "stdout_tail": "ok (--schema): actinv-spec-1 \u2014 709 groups, 21 steps\n",
+     "stderr_tail": "",
+     "ok": true
+    },
+    {
+     "argv": [
+      "CAND",
+      "validate",
+      "target/p140-docs/merged/derived_summary.depletion.json",
+      "--files"
+     ],
+     "expected_exit": 0,
+     "exit_code": 0,
+     "wall_s": 0.002,
+     "stdout_bytes": 53,
+     "stdout_sha256": "92fba8b40e93c73b87978708d75cab29cc86ce41fec4989ec1fde051c3d0a8b3",
+     "stdout_tail": "ok (--files): actinv-spec-1 \u2014 709 groups, 21 steps\n",
+     "stderr_tail": "",
+     "ok": true
+    }
+   ],
+   "outcome": "pass"
+  },
+  {
+   "id": "derived:radiological-minimal-table",
+   "category": "derived_fragment",
+   "source": [
+    "docs/guide/specification.md:333-352"
+   ],
+   "classification": "fragment",
+   "target": "spec",
+   "merge_rules": [
+    "the 'minimal table' block written to the workdir, hash-pinned, and selected by a problem's radiological section",
+    "target: examples/fns_fe_5min.json",
+    "radiological: added"
+   ],
+   "substitutions": [],
+   "file": "target/p140-docs/merged/derived_radiological-minimal-table.json",
+   "unresolved_paths": [],
+   "action": "validate + validate --files",
+   "note": "",
+   "gating": true,
+   "checks": [
+    {
+     "argv": [
+      "CAND",
+      "validate",
+      "target/p140-docs/merged/derived_radiological-minimal-table.json"
+     ],
+     "expected_exit": 0,
+     "exit_code": 0,
+     "wall_s": 0.002,
+     "stdout_bytes": 54,
+     "stdout_sha256": "5605b178f25bf4925ca3ade4602d133d0f4d612b7b3a16eeb557c345aa91a519",
+     "stdout_tail": "ok (--schema): actinv-spec-1 \u2014 709 groups, 21 steps\n",
+     "stderr_tail": "",
+     "ok": true
+    },
+    {
+     "argv": [
+      "CAND",
+      "validate",
+      "target/p140-docs/merged/derived_radiological-minimal-table.json",
+      "--files"
+     ],
+     "expected_exit": 0,
+     "exit_code": 0,
+     "wall_s": 0.002,
+     "stdout_bytes": 53,
+     "stdout_sha256": "92fba8b40e93c73b87978708d75cab29cc86ce41fec4989ec1fde051c3d0a8b3",
+     "stdout_tail": "ok (--files): actinv-spec-1 \u2014 709 groups, 21 steps\n",
+     "stderr_tail": "",
+     "ok": true
+    }
+   ],
+   "outcome": "pass"
+  },
+  {
+   "id": "cmd:new",
+   "category": "generated_example",
+   "source": [
+    "docs/guide/cli.md:21",
+    "docs/guide/data.md:43",
+    "docs/guide/quick-start.md:19",
+    "docs/guide/specification.md:19"
+   ],
+   "classification": "literal sequence",
+   "action": "new, then validate / --files / --hashes (quick-start.md and specification.md show new, validate and validate --hashes)",
+   "gating": true,
+   "checks": [
+    {
+     "argv": [
+      "CAND",
+      "new",
+      "target/p140-docs/new/problem.json"
+     ],
+     "expected_exit": 0,
+     "exit_code": 0,
+     "wall_s": 0.003,
+     "stdout_bytes": 230,
+     "stdout_sha256": "0bdb6cb76a1e205f0e098fb2a0c3c010a4d0bf5799dc3aa7615723eca07dcf75",
+     "stdout_tail": "Created /home/connoravila/Documents/actinv/target/p140-docs/new/problem.json with the complete FNS iron spectrum.\nReview material and schedule, then validate and run.\nInstall data if needed: actinv data fetch --output actinv-data\n",
+     "stderr_tail": "",
+     "ok": true
+    },
+    {
+     "argv": [
+      "CAND",
+      "validate",
+      "target/p140-docs/new/problem.json"
+     ],
+     "expected_exit": 0,
+     "exit_code": 0,
+     "wall_s": 0.003,
+     "stdout_bytes": 54,
+     "stdout_sha256": "5605b178f25bf4925ca3ade4602d133d0f4d612b7b3a16eeb557c345aa91a519",
+     "stdout_tail": "ok (--schema): actinv-spec-1 \u2014 709 groups, 21 steps\n",
+     "stderr_tail": "",
+     "ok": true
+    },
+    {
+     "argv": [
+      "CAND",
+      "validate",
+      "target/p140-docs/new/problem.json",
+      "--files"
+     ],
+     "expected_exit": 0,
+     "exit_code": 0,
+     "wall_s": 0.003,
+     "stdout_bytes": 53,
+     "stdout_sha256": "92fba8b40e93c73b87978708d75cab29cc86ce41fec4989ec1fde051c3d0a8b3",
+     "stdout_tail": "ok (--files): actinv-spec-1 \u2014 709 groups, 21 steps\n",
+     "stderr_tail": "",
+     "ok": true
+    },
+    {
+     "argv": [
+      "CAND",
+      "validate",
+      "target/p140-docs/new/problem.json",
+      "--hashes"
+     ],
+     "expected_exit": 0,
+     "exit_code": 0,
+     "wall_s": 0.072,
+     "stdout_bytes": 54,
+     "stdout_sha256": "c9eb7839a49b12331dbc0481aeb9b784d6eec15e62a226f6ab3689c1989523e7",
+     "stdout_tail": "ok (--hashes): actinv-spec-1 \u2014 709 groups, 21 steps\n",
+     "stderr_tail": "",
+     "ok": true
+    }
+   ],
+   "outcome": "pass"
+  },
+  {
+   "id": "cmd:import-fispact:default",
+   "category": "cli_import_fispact",
+   "source": [
+    "docs/guide/cli.md:122",
+    "docs/guide/fispact-migration.md:6-8",
+    "docs/guide/fispact-migration.md:14"
+   ],
+   "classification": "synopsis expansion",
+   "action": "import-fispact DECK.i OUT.json (no options), then validate and validate --files",
+   "gating": true,
+   "checks": [
+    {
+     "argv": [
+      "CAND",
+      "import-fispact",
+      "/home/connoravila/nuclear-data/conderc-fns/fns/Fe/TENDL-2017_1996exp_5min.i",
+      "target/p140-docs/import/default.json"
+     ],
+     "expected_exit": 0,
+     "exit_code": 0,
+     "wall_s": 0.004,
+     "stdout_bytes": 311,
+     "stdout_sha256": "fc9068b95fccd743bca47216dff6984f29f9ac3a3883d789ec13a562747b076b",
+     "stdout_tail": "imported /home/connoravila/nuclear-data/conderc-fns/fns/Fe/TENDL-2017_1996exp_5min.i -> /home/connoravila/Documents/actinv/target/p140-docs/import/default.json (21 steps; 48 mapped, 4 approximated, 10 noted, 0 unsupported); report: /home/connoravila/Documents/actinv/target/p140-docs/import/default.import.json\n",
+     "stderr_tail": "",
+     "ok": true
+    },
+    {
+     "argv": [
+      "CAND",
+      "validate",
+      "target/p140-docs/import/default.json"
+     ],
+     "expected_exit": 0,
+     "exit_code": 0,
+     "wall_s": 0.003,
+     "stdout_bytes": 54,
+     "stdout_sha256": "5605b178f25bf4925ca3ade4602d133d0f4d612b7b3a16eeb557c345aa91a519",
+     "stdout_tail": "ok (--schema): actinv-spec-1 \u2014 709 groups, 21 steps\n",
+     "stderr_tail": "",
+     "ok": true
+    },
+    {
+     "argv": [
+      "CAND",
+      "validate",
+      "target/p140-docs/import/default.json",
+      "--files"
+     ],
+     "expected_exit": 0,
+     "exit_code": 0,
+     "wall_s": 0.003,
+     "stdout_bytes": 53,
+     "stdout_sha256": "92fba8b40e93c73b87978708d75cab29cc86ce41fec4989ec1fde051c3d0a8b3",
+     "stdout_tail": "ok (--files): actinv-spec-1 \u2014 709 groups, 21 steps\n",
+     "stderr_tail": "",
+     "ok": true
+    }
+   ],
+   "outcome": "pass"
+  },
+  {
+   "id": "cmd:import-fispact:explicit-inputs",
+   "category": "cli_import_fispact",
+   "source": [
+    "docs/guide/cli.md:122",
+    "docs/guide/fispact-migration.md:6-8",
+    "docs/guide/fispact-migration.md:14"
+   ],
+   "classification": "synopsis expansion",
+   "action": "import-fispact with --fluxes --files --library --decay, then validate --files",
+   "gating": true,
+   "checks": [
+    {
+     "argv": [
+      "CAND",
+      "import-fispact",
+      "/home/connoravila/nuclear-data/conderc-fns/fns/Fe/TENDL-2017_1996exp_5min.i",
+      "target/p140-docs/import/explicit.json",
+      "--fluxes",
+      "/home/connoravila/nuclear-data/conderc-fns/fns/Fe/1996exp_5min_fluxes",
+      "--files",
+      "/home/connoravila/nuclear-data/conderc-fns/fns/Fe/TENDL-2017_1996exp_5min_files",
+      "--library",
+      "actinv-data/v1.1.0/activation/tendl-2025-neutron-709g.npz",
+      "--decay",
+      "actinv-data/v1.1.0/decay/endf-b-viii-0_decay.dat"
+     ],
+     "expected_exit": 0,
+     "exit_code": 0,
+     "wall_s": 0.004,
+     "stdout_bytes": 313,
+     "stdout_sha256": "1d316da5f0fff553388647a72f6ea12f4b3729cef4513f4d8a2d0383a26046c0",
+     "stdout_tail": "imported /home/connoravila/nuclear-data/conderc-fns/fns/Fe/TENDL-2017_1996exp_5min.i -> /home/connoravila/Documents/actinv/target/p140-docs/import/explicit.json (21 steps; 50 mapped, 1 approximated, 10 noted, 1 unsupported); report: /home/connoravila/Documents/actinv/target/p140-docs/import/explicit.import.json\n",
+     "stderr_tail": "",
+     "ok": true
+    },
+    {
+     "argv": [
+      "CAND",
+      "validate",
+      "target/p140-docs/import/explicit.json"
+     ],
+     "expected_exit": 0,
+     "exit_code": 0,
+     "wall_s": 0.003,
+     "stdout_bytes": 54,
+     "stdout_sha256": "5605b178f25bf4925ca3ade4602d133d0f4d612b7b3a16eeb557c345aa91a519",
+     "stdout_tail": "ok (--schema): actinv-spec-1 \u2014 709 groups, 21 steps\n",
+     "stderr_tail": "",
+     "ok": true
+    },
+    {
+     "argv": [
+      "CAND",
+      "validate",
+      "target/p140-docs/import/explicit.json",
+      "--files"
+     ],
+     "expected_exit": 0,
+     "exit_code": 0,
+     "wall_s": 0.003,
+     "stdout_bytes": 53,
+     "stdout_sha256": "92fba8b40e93c73b87978708d75cab29cc86ce41fec4989ec1fde051c3d0a8b3",
+     "stdout_tail": "ok (--files): actinv-spec-1 \u2014 709 groups, 21 steps\n",
+     "stderr_tail": "",
+     "ok": true
+    }
+   ],
+   "outcome": "pass"
+  },
+  {
+   "id": "cmd:import-fispact:covariance",
+   "category": "cli_import_fispact",
+   "source": [
+    "docs/guide/cli.md:122",
+    "docs/guide/fispact-migration.md:6-8",
+    "docs/guide/fispact-migration.md:14"
+   ],
+   "classification": "synopsis expansion",
+   "action": "import-fispact with --covariance (paired with --library), then validate --files",
+   "gating": true,
+   "checks": [
+    {
+     "argv": [
+      "CAND",
+      "import-fispact",
+      "/home/connoravila/nuclear-data/conderc-fns/fns/Fe/TENDL-2017_1996exp_5min.i",
+      "target/p140-docs/import/covariance.json",
+      "--library",
+      "actinv-data/v1.1.0/activation/tendl-2025-neutron-709g.npz",
+      "--decay",
+      "actinv-data/v1.1.0/decay/endf-b-viii-0_decay.dat",
+      "--covariance",
+      "actinv-data/v1.1.0/uncertainty/tendl-2025-neutron-709g.cov.npz"
+     ],
+     "expected_exit": 0,
+     "exit_code": 0,
+     "wall_s": 0.143,
+     "stdout_bytes": 317,
+     "stdout_sha256": "23994a5941e91ce842c3ebb2f93a83527e8c6d769bee3131b2627b7ce29a50ee",
+     "stdout_tail": "imported /home/connoravila/nuclear-data/conderc-fns/fns/Fe/TENDL-2017_1996exp_5min.i -> /home/connoravila/Documents/actinv/target/p140-docs/import/covariance.json (21 steps; 51 mapped, 1 approximated, 10 noted, 0 unsupported); report: /home/connoravila/Documents/actinv/target/p140-docs/import/covariance.import.json\n",
+     "stderr_tail": "",
+     "ok": true
+    },
+    {
+     "argv": [
+      "CAND",
+      "validate",
+      "target/p140-docs/import/covariance.json"
+     ],
+     "expected_exit": 0,
+     "exit_code": 0,
+     "wall_s": 0.003,
+     "stdout_bytes": 54,
+     "stdout_sha256": "5605b178f25bf4925ca3ade4602d133d0f4d612b7b3a16eeb557c345aa91a519",
+     "stdout_tail": "ok (--schema): actinv-spec-1 \u2014 709 groups, 21 steps\n",
+     "stderr_tail": "",
+     "ok": true
+    },
+    {
+     "argv": [
+      "CAND",
+      "validate",
+      "target/p140-docs/import/covariance.json",
+      "--files"
+     ],
+     "expected_exit": 0,
+     "exit_code": 0,
+     "wall_s": 0.003,
+     "stdout_bytes": 53,
+     "stdout_sha256": "92fba8b40e93c73b87978708d75cab29cc86ce41fec4989ec1fde051c3d0a8b3",
+     "stdout_tail": "ok (--files): actinv-spec-1 \u2014 709 groups, 21 steps\n",
+     "stderr_tail": "",
+     "ok": true
+    }
+   ],
+   "outcome": "pass"
+  },
+  {
+   "id": "cmd:import-fispact:strict",
+   "category": "cli_import_fispact",
+   "source": [
+    "docs/guide/cli.md:122",
+    "docs/guide/fispact-migration.md:6-8",
+    "docs/guide/fispact-migration.md:14"
+   ],
+   "classification": "synopsis expansion",
+   "action": "import-fispact --strict: fails exactly when the (non-strict) report lists an unsupported keyword",
+   "gating": true,
+   "checks": [
+    {
+     "argv": [
+      "CAND",
+      "import-fispact",
+      "/home/connoravila/nuclear-data/conderc-fns/fns/Fe/TENDL-2017_1996exp_5min.i",
+      "target/p140-docs/import/strict.json",
+      "--strict"
+     ],
+     "expected_exit": 0,
+     "exit_code": 0,
+     "wall_s": 0.005,
+     "stdout_bytes": 309,
+     "stdout_sha256": "c1c5ded45519d3a531ac6ff4398030de9de4db4f68afb5901af79f9f7b0ae9ac",
+     "stdout_tail": "imported /home/connoravila/nuclear-data/conderc-fns/fns/Fe/TENDL-2017_1996exp_5min.i -> /home/connoravila/Documents/actinv/target/p140-docs/import/strict.json (21 steps; 48 mapped, 4 approximated, 10 noted, 0 unsupported); report: /home/connoravila/Documents/actinv/target/p140-docs/import/strict.import.json\n",
+     "stderr_tail": "",
+     "ok": true
+    }
+   ],
+   "outcome": "pass"
+  },
+  {
+   "id": "cmd:import-fispact:strict-unsupported",
+   "category": "cli_import_fispact",
+   "source": [
+    "docs/guide/cli.md:122",
+    "docs/guide/fispact-migration.md:6-8",
+    "docs/guide/fispact-migration.md:14"
+   ],
+   "classification": "synopsis expansion",
+   "action": "copy of the gate deck with a PROBTABLE line added after FISPACT (fe_5min_probtable.i) has PROBTABLE, which the handbook lists as unsupported: the report must say so and --strict must fail",
+   "gating": true,
+   "checks": [
+    {
+     "argv": [
+      "CAND",
+      "import-fispact",
+      "target/p140-docs/docs/fe_5min_probtable.i",
+      "target/p140-docs/import/unsupported/plain.json",
+      "--files",
+      "/home/connoravila/nuclear-data/conderc-fns/fns/Fe/TENDL-2017_1996exp_5min_files",
+      "--fluxes",
+      "/home/connoravila/nuclear-data/conderc-fns/fns/Fe/1996exp_5min_fluxes"
+     ],
+     "expected_exit": 0,
+     "exit_code": 0,
+     "wall_s": 0.004,
+     "stdout_bytes": 332,
+     "stdout_sha256": "8708631c12de4ae414ed97e6e17d90404d032abe2f380eb9dfc174e1d6c949c3",
+     "stdout_tail": "imported /home/connoravila/Documents/actinv/target/p140-docs/docs/fe_5min_probtable.i -> /home/connoravila/Documents/actinv/target/p140-docs/import/unsupported/plain.json (21 steps; 48 mapped, 4 approximated, 11 noted, 1 unsupported); report: /home/connoravila/Documents/actinv/target/p140-docs/import/unsupported/plain.import.json\n",
+     "stderr_tail": "",
+     "ok": true
+    },
+    {
+     "argv": [
+      "(report check)"
+     ],
+     "ok": true,
+     "stdout_tail": "unsupported keywords in the report: ['PROBTABLE']",
+     "check_failed": null
+    },
+    {
+     "argv": [
+      "CAND",
+      "import-fispact",
+      "target/p140-docs/docs/fe_5min_probtable.i",
+      "target/p140-docs/import/unsupported/strict.json",
+      "--strict",
+      "--files",
+      "/home/connoravila/nuclear-data/conderc-fns/fns/Fe/TENDL-2017_1996exp_5min_files",
+      "--fluxes",
+      "/home/connoravila/nuclear-data/conderc-fns/fns/Fe/1996exp_5min_fluxes"
+     ],
+     "expected_exit": "nonzero",
+     "exit_code": 1,
+     "wall_s": 0.004,
+     "stdout_bytes": 0,
+     "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+     "stdout_tail": "",
+     "stderr_tail": "--strict: 1 unsupported keyword(s): PROBTABLE (line 5); see /home/connoravila/Documents/actinv/target/p140-docs/import/unsupported/strict.import.json\n",
+     "ok": true
+    }
+   ],
+   "outcome": "pass"
+  },
+  {
+   "id": "cmd:walkthrough:fispact-migration:14",
+   "category": "walkthrough",
+   "source": [
+    "docs/guide/fispact-migration.md:14",
+    "docs/guide/fispact-migration.md:15",
+    "docs/guide/fispact-migration.md:16"
+   ],
+   "classification": "literal sequence",
+   "action": "run the shown sequence with DECK -> the FNS Fe 5-minute deck and each .json -> the workdir: import-fispact TENDL-2017_1996exp_5min.i; validate fe_5min.json; run fe_5min.json",
+   "gating": true,
+   "checks": [
+    {
+     "argv": [
+      "CAND",
+      "import-fispact",
+      "/home/connoravila/nuclear-data/conderc-fns/fns/Fe/TENDL-2017_1996exp_5min.i",
+      "target/p140-docs/walkthrough/fe_5min.json"
+     ],
+     "expected_exit": 0,
+     "exit_code": 0,
+     "wall_s": 0.004,
+     "stdout_bytes": 321,
+     "stdout_sha256": "5a54ca2e0fd07a50ab5f9624bc971378f1fc7555de4381861704b1bea32aaa45",
+     "stdout_tail": "imported /home/connoravila/nuclear-data/conderc-fns/fns/Fe/TENDL-2017_1996exp_5min.i -> /home/connoravila/Documents/actinv/target/p140-docs/walkthrough/fe_5min.json (21 steps; 48 mapped, 4 approximated, 10 noted, 0 unsupported); report: /home/connoravila/Documents/actinv/target/p140-docs/walkthrough/fe_5min.import.json\n",
+     "stderr_tail": "",
+     "ok": true
+    },
+    {
+     "argv": [
+      "CAND",
+      "validate",
+      "target/p140-docs/walkthrough/fe_5min.json"
+     ],
+     "expected_exit": 0,
+     "exit_code": 0,
+     "wall_s": 0.003,
+     "stdout_bytes": 54,
+     "stdout_sha256": "5605b178f25bf4925ca3ade4602d133d0f4d612b7b3a16eeb557c345aa91a519",
+     "stdout_tail": "ok (--schema): actinv-spec-1 \u2014 709 groups, 21 steps\n",
+     "stderr_tail": "",
+     "ok": true
+    },
+    {
+     "argv": [
+      "CAND",
+      "run",
+      "target/p140-docs/walkthrough/fe_5min.json",
+      "target/p140-docs/walkthrough/fe_5min_result.json"
+     ],
+     "expected_exit": 0,
+     "exit_code": 0,
+     "wall_s": 72.25,
+     "stdout_bytes": 0,
+     "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+     "stdout_tail": "",
+     "stderr_tail": "21 steps, 51 of 3873 states, 61072.0 ms -> /home/connoravila/Documents/actinv/target/p140-docs/walkthrough/fe_5min_result.json\n",
+     "ok": true
+    }
+   ],
+   "outcome": "pass"
+  },
+  {
+   "id": "cmd:report:base:all",
+   "category": "cli_report",
+   "source": [
+    "docs/guide/cli.md:67-68",
+    "docs/guide/fispact-migration.md:118-119"
+   ],
+   "classification": "synopsis expansion",
+   "action": "report on the base result (all); exit 0 iff a requested table can be built and every named nuclide is in a selected step",
+   "gating": true,
+   "checks": [
+    {
+     "argv": [
+      "CAND",
+      "report",
+      "target/p140-docs/run/base_result.json"
+     ],
+     "expected_exit": 0,
+     "exit_code": 0,
+     "wall_s": 0.124,
+     "stdout_bytes": 120779,
+     "stdout_sha256": "5a8b641a75880d61271cd0c9e49ff202dd83a74a130ceb5a8484f45b5c9421bd",
+     "stdout_tail": "e-8\n18,2.078e3,2.035140878529375e5,8.21009373861603e-8,0e0,2.7173132429612262e-8,5.492780495654803e-8\n19,2.506e3,1.9619641966919717e5,7.918465794660797e-8,0e0,2.615624423275802e-8,5.302841371384995e-8\n20,3.113e3,1.868625024427618e5,7.544070517353197e-8,0e0,2.4883290142655633e-8,5.055741503087634e-8\n21,3.721e3,1.7829301218761838e5,7.198952897352315e-8,0e0,2.3729056257907273e-8,4.826047271561587e-8\n",
+     "stderr_tail": "on_Bq_per_g, mode_spontaneous_fission_Bq_per_g, mode_proton_Bq_per_g, mode_other_Bq_per_g, material_mass_g, activity_Bq, heat_W, density_g_cm3, activity_Bq_per_cm3, heat_W_per_cm3\nnote: dominant: unavailable: the result has no `summary.dominant` lists (add a `summary` section to the spec)\nnote: elements: unavailable: the result has no `summary.elements` table (add a `summary` section to the spec)\n",
+     "ok": true
+    }
+   ],
+   "outcome": "pass"
+  },
+  {
+   "id": "cmd:report:base:tsv-tab1-tab2-step1",
+   "category": "cli_report",
+   "source": [
+    "docs/guide/cli.md:67-68",
+    "docs/guide/fispact-migration.md:118-119"
+   ],
+   "classification": "synopsis expansion",
+   "action": "report on the base result (tsv-tab1-tab2-step1); exit 0 iff a requested table can be built and every named nuclide is in a selected step",
+   "gating": true,
+   "checks": [
+    {
+     "argv": [
+      "CAND",
+      "report",
+      "target/p140-docs/run/base_result.json",
+      "--tables",
+      "tab1,tab2",
+      "--format",
+      "tsv",
+      "--step",
+      "1"
+     ],
+     "expected_exit": 0,
+     "exit_code": 0,
+     "wall_s": 0.069,
+     "stdout_bytes": 2800,
+     "stdout_sha256": "7e7d4b4ef007c256d9f0728d72151e4321a55c4751c797aa6cc21e64f0e78c07",
+     "stdout_tail": "3e2\tMn59\t1.4933593573045061e-10\n1\t3e2\tTi52\t3.970225950164058e-11\n1\t3e2\tCr49\t3.256029005423774e-11\n1\t3e2\tCr58\t3.07138518449354e-11\n1\t3e2\tMn51\t4.4445981113657037e-13\n1\t3e2\tV49\t1.0935212059239432e-13\n1\t3e2\tSc47\t2.7172623273402666e-15\n1\t3e2\tSc48\t5.623853528643781e-16\n1\t3e2\tCo58m1\t4.1603386533007505e-17\n1\t3e2\tCo58\t1.2778775079683564e-19\n1\t3e2\tV50\t2.6054081775579067e-21\n1\t3e2\tFe60\t9.372496415267849e-24\n",
+     "stderr_tail": "note: tab1: columns omitted because the result does not carry them (add a `summary` section to the spec): mass_g_per_g, atoms, mass_g\nnote: tab2: columns omitted because the result does not carry them (add a `summary` section to the spec): heat_W_per_g, alpha_W_per_g, beta_W_per_g, gamma_W_per_g, half_life_s, activity_Bq, heat_W\n",
+     "ok": true
+    }
+   ],
+   "outcome": "pass"
+  },
+  {
+   "id": "cmd:report:base:markdown-totals-tab2",
+   "category": "cli_report",
+   "source": [
+    "docs/guide/cli.md:67-68",
+    "docs/guide/fispact-migration.md:118-119"
+   ],
+   "classification": "synopsis expansion",
+   "action": "report on the base result (markdown-totals-tab2); exit 0 iff a requested table can be built and every named nuclide is in a selected step",
+   "gating": true,
+   "checks": [
+    {
+     "argv": [
+      "CAND",
+      "report",
+      "target/p140-docs/run/base_result.json",
+      "--tables",
+      "totals,tab2",
+      "--format",
+      "markdown"
+     ],
+     "expected_exit": 0,
+     "exit_code": 0,
+     "wall_s": 0.068,
+     "stdout_bytes": 30019,
+     "stdout_sha256": "e64365a366b9e0f61f8edc961a4846867d313a6cfb5f87a6f257ad3707a5e89c",
+     "stdout_tail": "250e-24 |\n| 21 | 3.72100e3 | Mn58 | 5.50719e-28 |\n| 21 | 3.72100e3 | Cr58 | 3.77014e-28 |\n| 21 | 3.72100e3 | V54 | 1.08279e-29 |\n| 21 | 3.72100e3 | V55 | 3.27787e-33 |\n| 21 | 3.72100e3 | Cr57 | 2.42669e-58 |\n\nNote: columns omitted because the result does not carry them (add a `summary` section to the spec): heat_W_per_g, alpha_W_per_g, beta_W_per_g, gamma_W_per_g, half_life_s, activity_Bq, heat_W\n",
+     "stderr_tail": "ha_Bq_per_g, mode_neutron_Bq_per_g, mode_spontaneous_fission_Bq_per_g, mode_proton_Bq_per_g, mode_other_Bq_per_g, material_mass_g, activity_Bq, heat_W, density_g_cm3, activity_Bq_per_cm3, heat_W_per_cm3\nnote: tab2: columns omitted because the result does not carry them (add a `summary` section to the spec): heat_W_per_g, alpha_W_per_g, beta_W_per_g, gamma_W_per_g, half_life_s, activity_Bq, heat_W\n",
+     "ok": true
+    }
+   ],
+   "outcome": "pass"
+  },
+  {
+   "id": "cmd:report:base:text-totals",
+   "category": "cli_report",
+   "source": [
+    "docs/guide/cli.md:67-68",
+    "docs/guide/fispact-migration.md:118-119"
+   ],
+   "classification": "synopsis expansion",
+   "action": "report on the base result (text-totals); exit 0 iff a requested table can be built and every named nuclide is in a selected step",
+   "gating": true,
+   "checks": [
+    {
+     "argv": [
+      "CAND",
+      "report",
+      "target/p140-docs/run/base_result.json",
+      "--tables",
+      "totals",
+      "--format",
+      "text",
+      "--step",
+      "all"
+     ],
+     "expected_exit": 0,
+     "exit_code": 0,
+     "wall_s": 0.076,
+     "stdout_bytes": 3034,
+     "stdout_sha256": "0e24ee3f7c6c9f1643fbe8f5e11c36a7f347424101f3798c16ee940433514aa4",
+     "stdout_tail": "gamma_activity_Bq_per_g, activity_excl_H3_Bq_per_g, heat_excl_H3_W_per_g, mass_g_per_g, n_nuclides, mode_beta_minus_Bq_per_g, mode_ec_beta_plus_Bq_per_g, mode_isomeric_transition_Bq_per_g, mode_alpha_Bq_per_g, mode_neutron_Bq_per_g, mode_spontaneous_fission_Bq_per_g, mode_proton_Bq_per_g, mode_other_Bq_per_g, material_mass_g, activity_Bq, heat_W, density_g_cm3, activity_Bq_per_cm3, heat_W_per_cm3\n",
+     "stderr_tail": "gamma_activity_Bq_per_g, activity_excl_H3_Bq_per_g, heat_excl_H3_W_per_g, mass_g_per_g, n_nuclides, mode_beta_minus_Bq_per_g, mode_ec_beta_plus_Bq_per_g, mode_isomeric_transition_Bq_per_g, mode_alpha_Bq_per_g, mode_neutron_Bq_per_g, mode_spontaneous_fission_Bq_per_g, mode_proton_Bq_per_g, mode_other_Bq_per_g, material_mass_g, activity_Bq, heat_W, density_g_cm3, activity_Bq_per_cm3, heat_W_per_cm3\n",
+     "ok": true
+    }
+   ],
+   "outcome": "pass"
+  },
+  {
+   "id": "cmd:report:base:timeseries-doc-nuclides",
+   "category": "cli_report",
+   "source": [
+    "docs/guide/cli.md:67-68",
+    "docs/guide/fispact-migration.md:118-119"
+   ],
+   "classification": "synopsis expansion",
+   "action": "report on the base result (timeseries-doc-nuclides); exit 0 iff a requested table can be built and every named nuclide is in a selected step",
+   "gating": true,
+   "checks": [
+    {
+     "argv": [
+      "CAND",
+      "report",
+      "target/p140-docs/run/base_result.json",
+      "--tables",
+      "timeseries",
+      "--nuclides",
+      "Co60,Mn54"
+     ],
+     "expected_exit": "nonzero",
+     "exit_code": 1,
+     "wall_s": 0.068,
+     "stdout_bytes": 0,
+     "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+     "stdout_tail": "",
+     "stderr_tail": "nuclide 'Co60' is in no selected step's inventory or activity; names are written as in the result, for example Co60 or Ta182m1\n",
+     "ok": true
+    }
+   ],
+   "outcome": "pass"
+  },
+  {
+   "id": "cmd:report:base:timeseries-present-nuclides",
+   "category": "cli_report",
+   "source": [
+    "docs/guide/cli.md:67-68",
+    "docs/guide/fispact-migration.md:118-119"
+   ],
+   "classification": "synopsis expansion",
+   "action": "report on the base result (timeseries-present-nuclides); exit 0 iff a requested table can be built and every named nuclide is in a selected step",
+   "gating": true,
+   "checks": [
+    {
+     "argv": [
+      "CAND",
+      "report",
+      "target/p140-docs/run/base_result.json",
+      "--tables",
+      "timeseries,tab1,tab2",
+      "--nuclides",
+      "Mn56,Fe53"
+     ],
+     "expected_exit": 0,
+     "exit_code": 0,
+     "wall_s": 0.067,
+     "stdout_bytes": 7020,
+     "stdout_sha256": "0bcef3369fe39a86861c35d9532eb7e6c6df41fdb80ee62ab2c11073fba212b9",
+     "stdout_tail": "\n16,1.584e3,Fe53,4.366042914103305e3\n17,1.831e3,Mn56,2.048537246356591e5\n17,1.831e3,Fe53,3.12224055847628e3\n18,2.078e3,Mn56,2.011106282646967e5\n18,2.078e3,Fe53,2.2327737717613313e3\n19,2.506e3,Mn56,1.947858268785639e5\n19,2.506e3,Fe53,1.2488563572267385e3\n20,3.113e3,Mn56,1.8615542851858676e5\n20,3.113e3,Fe53,5.478337509039438e2\n21,3.721e3,Mn56,1.778941361389855e5\n21,3.721e3,Fe53,2.3999131159164764e2\n",
+     "stderr_tail": "note: tab1: columns omitted because the result does not carry them (add a `summary` section to the spec): mass_g_per_g, atoms, mass_g\nnote: tab2: columns omitted because the result does not carry them (add a `summary` section to the spec): heat_W_per_g, alpha_W_per_g, beta_W_per_g, gamma_W_per_g, half_life_s, activity_Bq, heat_W\n",
+     "ok": true
+    }
+   ],
+   "outcome": "pass"
+  },
+  {
+   "id": "cmd:report:base:dominant-elements",
+   "category": "cli_report",
+   "source": [
+    "docs/guide/cli.md:67-68",
+    "docs/guide/fispact-migration.md:118-119"
+   ],
+   "classification": "synopsis expansion",
+   "action": "report on the base result (dominant-elements); exit 0 iff a requested table can be built and every named nuclide is in a selected step",
+   "gating": true,
+   "checks": [
+    {
+     "argv": [
+      "CAND",
+      "report",
+      "target/p140-docs/run/base_result.json",
+      "--tables",
+      "dominant,elements"
+     ],
+     "expected_exit": "nonzero",
+     "exit_code": 1,
+     "wall_s": 0.067,
+     "stdout_bytes": 0,
+     "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+     "stdout_tail": "",
+     "stderr_tail": "note: dominant: unavailable: the result has no `summary.dominant` lists (add a `summary` section to the spec)\nnote: elements: unavailable: the result has no `summary.elements` table (add a `summary` section to the spec)\nnone of the requested tables can be built from this result\n",
+     "ok": true
+    }
+   ],
+   "outcome": "pass"
+  },
+  {
+   "id": "cmd:report:base:tab3",
+   "category": "cli_report",
+   "source": [
+    "docs/guide/cli.md:67-68",
+    "docs/guide/fispact-migration.md:118-119"
+   ],
+   "classification": "synopsis expansion",
+   "action": "report on the base result (tab3); exit 0 iff a requested table can be built and every named nuclide is in a selected step",
+   "gating": true,
+   "checks": [
+    {
+     "argv": [
+      "CAND",
+      "report",
+      "target/p140-docs/run/base_result.json",
+      "--tables",
+      "tab3"
+     ],
+     "expected_exit": "nonzero",
+     "exit_code": 1,
+     "wall_s": 0.067,
+     "stdout_bytes": 0,
+     "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+     "stdout_tail": "",
+     "stderr_tail": "note: tab3: unavailable: the result has no `radiological` responses (declare `radiological` in the spec)\nnone of the requested tables can be built from this result\n",
+     "ok": true
+    }
+   ],
+   "outcome": "pass"
+  },
+  {
+   "id": "cmd:report:base:tab4",
+   "category": "cli_report",
+   "source": [
+    "docs/guide/cli.md:67-68",
+    "docs/guide/fispact-migration.md:118-119"
+   ],
+   "classification": "synopsis expansion",
+   "action": "report on the base result (tab4); exit 0 iff a requested table can be built and every named nuclide is in a selected step",
+   "gating": true,
+   "checks": [
+    {
+     "argv": [
+      "CAND",
+      "report",
+      "target/p140-docs/run/base_result.json",
+      "--tables",
+      "tab4"
+     ],
+     "expected_exit": 0,
+     "exit_code": 0,
+     "wall_s": 0.069,
+     "stdout_bytes": 53480,
+     "stdout_sha256": "186f813058409875838f650b0f7959753e08c86a82604ece750ca38eab7aa4c6",
+     "stdout_tail": "389e-10\n21,3.721e3,18,4e6,5e6,4.815399999869268e6,8.614823755945589e-7,6.646441079930365e-19,8.614823755945589e-7,6.646441079930365e-19\n21,3.721e3,19,5e6,6.5e6,0e0,0e0,0e0,0e0,0e0\n21,3.721e3,20,6.5e6,8e6,0e0,0e0,0e0,0e0,0e0\n21,3.721e3,21,8e6,1e7,0e0,0e0,0e0,0e0,0e0\n21,3.721e3,22,1e7,1.2e7,0e0,0e0,0e0,0e0,0e0\n21,3.721e3,23,1.2e7,1.4e7,0e0,0e0,0e0,0e0,0e0\n21,3.721e3,24,1.4e7,2e7,0e0,0e0,0e0,0e0,0e0\n",
+     "stderr_tail": "",
+     "ok": true
+    }
+   ],
+   "outcome": "pass"
+  },
+  {
+   "id": "cmd:report:base:out-dir",
+   "category": "cli_report",
+   "source": [
+    "docs/guide/cli.md:67-68",
+    "docs/guide/fispact-migration.md:118-119"
+   ],
+   "classification": "synopsis expansion",
+   "action": "report on the base result with --out DIR (one file per table)",
+   "gating": true,
+   "checks": [
+    {
+     "argv": [
+      "CAND",
+      "report",
+      "target/p140-docs/run/base_result.json",
+      "--format",
+      "csv",
+      "--out",
+      "target/p140-docs/report/base"
+     ],
+     "expected_exit": 0,
+     "exit_code": 0,
+     "wall_s": 0.167,
+     "stdout_bytes": 0,
+     "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+     "stdout_tail": "",
+     "stderr_tail": "te /home/connoravila/Documents/actinv/target/p140-docs/report/base/tab1.csv\nwrote /home/connoravila/Documents/actinv/target/p140-docs/report/base/tab2.csv\nwrote /home/connoravila/Documents/actinv/target/p140-docs/report/base/tab4.csv\nwrote /home/connoravila/Documents/actinv/target/p140-docs/report/base/totals.csv\nwrote /home/connoravila/Documents/actinv/target/p140-docs/report/base/timeseries.csv\n",
+     "ok": true
+    }
+   ],
+   "outcome": "pass"
+  },
+  {
+   "id": "cmd:report:rich:all",
+   "category": "cli_report",
+   "source": [
+    "docs/guide/cli.md:67-68",
+    "docs/guide/fispact-migration.md:118-119"
+   ],
+   "classification": "synopsis expansion",
+   "action": "report on the rich result (all); exit 0 iff a requested table can be built and every named nuclide is in a selected step",
+   "gating": true,
+   "checks": [
+    {
+     "argv": [
+      "CAND",
+      "report",
+      "target/p140-docs/run/rich_result.json"
+     ],
+     "expected_exit": 0,
+     "exit_code": 0,
+     "wall_s": 0.129,
+     "stdout_bytes": 182087,
+     "stdout_sha256": "aaa7fc2e35897ad865df556b50007c0e02083f988c13044abcc72ba45b29de18",
+     "stdout_tail": "02841371384995e-8,6.4930464126391e-7,6.4930464126391e-7,6.4930464126391e-7\n20,3.113e3,1.868625024427618e5,7.544070517353197e-8,0e0,2.4883290142655633e-8,5.055741503087634e-8,6.205366461977021e-7,6.205366461977021e-7,6.205366461977021e-7\n21,3.721e3,1.7829301218761838e5,7.198952897352315e-8,0e0,2.3729056257907273e-8,4.826047271561587e-8,5.929990043977564e-7,5.929990043977564e-7,5.929990043977564e-7\n",
+     "stderr_tail": "note: tab1: 859 inventory entries are not in summary.nuclides (min_atoms or include_stable); the table lists the summary rows\nnote: tab3: unavailable: the result has radiological responses but none is an ingestion or inhalation dose (units: A2_per_g_material)\n",
+     "ok": true
+    }
+   ],
+   "outcome": "pass"
+  },
+  {
+   "id": "cmd:report:rich:tsv-tab1-tab2-step1",
+   "category": "cli_report",
+   "source": [
+    "docs/guide/cli.md:67-68",
+    "docs/guide/fispact-migration.md:118-119"
+   ],
+   "classification": "synopsis expansion",
+   "action": "report on the rich result (tsv-tab1-tab2-step1); exit 0 iff a requested table can be built and every named nuclide is in a selected step",
+   "gating": true,
+   "checks": [
+    {
+     "argv": [
+      "CAND",
+      "report",
+      "target/p140-docs/run/rich_result.json",
+      "--tables",
+      "tab1,tab2",
+      "--format",
+      "tsv",
+      "--step",
+      "1"
+     ],
+     "expected_exit": 0,
+     "exit_code": 0,
+     "wall_s": 0.075,
+     "stdout_bytes": 2718,
+     "stdout_sha256": "4e2d6d2ec5126d79767c7822f67b6b3639130ccbb2b0cc8bfab3792fc6e0c97b",
+     "stdout_tail": "1499e-15\t1.9416548350630947e-12\t2.696112e7\t1.4496546484915913e2\t1.9513881271545265e-11\n1\t3e2\tFe59\t2.715684440616763e-2\t5.682454504189292e-15\t0e0\t5.122844191117891e-16\t5.170170085077503e-15\t3.844368e6\t2.715684440616763e-1\t5.682454504189292e-14\n1\t3e2\tMn53\t7.105936157324075e-6\t6.1334517274573474e-21\t0e0\t4.588320726651042e-21\t1.545131000806306e-21\t1.16763e14\t7.105936157324075e-5\t6.133451727457348e-20\n",
+     "stderr_tail": "note: tab1: 40 inventory entries are not in summary.nuclides (min_atoms or include_stable); the table lists the summary rows\n",
+     "ok": true
+    }
+   ],
+   "outcome": "pass"
+  },
+  {
+   "id": "cmd:report:rich:markdown-totals-tab2",
+   "category": "cli_report",
+   "source": [
+    "docs/guide/cli.md:67-68",
+    "docs/guide/fispact-migration.md:118-119"
+   ],
+   "classification": "synopsis expansion",
+   "action": "report on the rich result (markdown-totals-tab2); exit 0 iff a requested table can be built and every named nuclide is in a selected step",
+   "gating": true,
+   "checks": [
+    {
+     "argv": [
+      "CAND",
+      "report",
+      "target/p140-docs/run/rich_result.json",
+      "--tables",
+      "totals,tab2",
+      "--format",
+      "markdown"
+     ],
+     "expected_exit": 0,
+     "exit_code": 0,
+     "wall_s": 0.074,
+     "stdout_bytes": 31110,
+     "stdout_sha256": "5fdf760365501e43c8469ea110da8fa87e5e023c252e89b1196ff2964f37469a",
+     "stdout_tail": "12 |\n| 21 | 3.72100e3 | Mn54 | 1.44953e1 | 1.95122e-12 | 0.00000e0 | 9.73244e-15 | 1.94148e-12 | 2.69611e7 | 1.44953e2 | 1.95122e-11 |\n| 21 | 3.72100e3 | Fe59 | 2.71401e-2 | 5.67895e-15 | 0.00000e0 | 5.11969e-16 | 5.16698e-15 | 3.84437e6 | 2.71401e-1 | 5.67895e-14 |\n| 21 | 3.72100e3 | Mn53 | 7.21400e-6 | 6.22672e-21 | 0.00000e0 | 4.65809e-21 | 1.56863e-21 | 1.16763e14 | 7.21400e-5 | 6.22672e-20 |\n",
+     "stderr_tail": "",
+     "ok": true
+    }
+   ],
+   "outcome": "pass"
+  },
+  {
+   "id": "cmd:report:rich:text-totals",
+   "category": "cli_report",
+   "source": [
+    "docs/guide/cli.md:67-68",
+    "docs/guide/fispact-migration.md:118-119"
+   ],
+   "classification": "synopsis expansion",
+   "action": "report on the rich result (text-totals); exit 0 iff a requested table can be built and every named nuclide is in a selected step",
+   "gating": true,
+   "checks": [
+    {
+     "argv": [
+      "CAND",
+      "report",
+      "target/p140-docs/run/rich_result.json",
+      "--tables",
+      "totals",
+      "--format",
+      "text",
+      "--step",
+      "all"
+     ],
+     "expected_exit": 0,
+     "exit_code": 0,
+     "wall_s": 0.072,
+     "stdout_bytes": 13429,
+     "stdout_sha256": "d482f5dab504d7f2cac1a1163f9cb0e90c29cf10f807e5f65e09d56d330c1137",
+     "stdout_tail": "1.78293e5                1.78293e5                  7.19895e-8            1.00000e0     49          1.77894e5                 3.98797e2                   6.13779e-4                         0.00000e0            0.00000e0              0.00000e0                          0.00000e0             0.00000e0            1.00000e1        1.78293e6    7.19895e-7  7.87000e0      1.40317e6            5.66558e-7\n",
+     "stderr_tail": "",
+     "ok": true
+    }
+   ],
+   "outcome": "pass"
+  },
+  {
+   "id": "cmd:report:rich:timeseries-doc-nuclides",
+   "category": "cli_report",
+   "source": [
+    "docs/guide/cli.md:67-68",
+    "docs/guide/fispact-migration.md:118-119"
+   ],
+   "classification": "synopsis expansion",
+   "action": "report on the rich result (timeseries-doc-nuclides); exit 0 iff a requested table can be built and every named nuclide is in a selected step",
+   "gating": true,
+   "checks": [
+    {
+     "argv": [
+      "CAND",
+      "report",
+      "target/p140-docs/run/rich_result.json",
+      "--tables",
+      "timeseries",
+      "--nuclides",
+      "Co60,Mn54"
+     ],
+     "expected_exit": "nonzero",
+     "exit_code": 1,
+     "wall_s": 0.072,
+     "stdout_bytes": 0,
+     "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+     "stdout_tail": "",
+     "stderr_tail": "nuclide 'Co60' is in no selected step's inventory or activity; names are written as in the result, for example Co60 or Ta182m1\n",
+     "ok": true
+    }
+   ],
+   "outcome": "pass"
+  },
+  {
+   "id": "cmd:report:rich:timeseries-present-nuclides",
+   "category": "cli_report",
+   "source": [
+    "docs/guide/cli.md:67-68",
+    "docs/guide/fispact-migration.md:118-119"
+   ],
+   "classification": "synopsis expansion",
+   "action": "report on the rich result (timeseries-present-nuclides); exit 0 iff a requested table can be built and every named nuclide is in a selected step",
+   "gating": true,
+   "checks": [
+    {
+     "argv": [
+      "CAND",
+      "report",
+      "target/p140-docs/run/rich_result.json",
+      "--tables",
+      "timeseries,tab1,tab2",
+      "--nuclides",
+      "Mn56,Fe53"
+     ],
+     "expected_exit": 0,
+     "exit_code": 0,
+     "wall_s": 0.073,
+     "stdout_bytes": 16310,
+     "stdout_sha256": "359a970b76cf26b051fe6056908a1655244050b7e165213ab7ad488c54c42dec",
+     "stdout_tail": "139099146e-11,1.0313303165953484e-10,5.106e2,5.478337509039438e3,1.9954645305052628e-9\n21,3.721e3,Mn56,1.778941361389855e5,7.189974597556154e-8,0e0,2.3686700184871375e-8,4.8213045790690176e-8,9.28404e3,1.778941361389855e6,7.189974597556154e-7\n21,3.721e3,Fe53,2.3999131159164764e2,8.74159631677271e-11,0e0,4.223614083010248e-11,4.5179822337624624e-11,5.106e2,2.3999131159164763e3,8.74159631677271e-10\n",
+     "stderr_tail": "note: tab1: 859 inventory entries are not in summary.nuclides (min_atoms or include_stable); the table lists the summary rows\n",
+     "ok": true
+    }
+   ],
+   "outcome": "pass"
+  },
+  {
+   "id": "cmd:report:rich:dominant-elements",
+   "category": "cli_report",
+   "source": [
+    "docs/guide/cli.md:67-68",
+    "docs/guide/fispact-migration.md:118-119"
+   ],
+   "classification": "synopsis expansion",
+   "action": "report on the rich result (dominant-elements); exit 0 iff a requested table can be built and every named nuclide is in a selected step",
+   "gating": true,
+   "checks": [
+    {
+     "argv": [
+      "CAND",
+      "report",
+      "target/p140-docs/run/rich_result.json",
+      "--tables",
+      "dominant,elements"
+     ],
+     "expected_exit": 0,
+     "exit_code": 0,
+     "wall_s": 0.071,
+     "stdout_bytes": 69967,
+     "stdout_sha256": "2dc16cea8bb9b2dda69a1ee0c34c8f0d0e7b66e09a128fbbbab052f5174a8464",
+     "stdout_tail": "97308685e-13\n21,3.721e3,25,Mn,6.474807964297608e9,5.896724332210979e-13,1.779086677012209e5,0e0,2.3686716193633308e-8,4.821500139221021e-8\n21,3.721e3,26,Fe,1.0783642708533693e22,1.0000000388076726e0,3.3457994258046375e2,0e0,4.23002929455742e-11,4.5209859478536735e-11\n21,3.721e3,27,Co,9.694848192034233e1,9.487462949095319e-21,3.8841704159112006e-17,0e0,1.4227596105710214e-31,3.4298404644151775e-32\n",
+     "stderr_tail": "",
+     "ok": true
+    }
+   ],
+   "outcome": "pass"
+  },
+  {
+   "id": "cmd:report:rich:tab3",
+   "category": "cli_report",
+   "source": [
+    "docs/guide/cli.md:67-68",
+    "docs/guide/fispact-migration.md:118-119"
+   ],
+   "classification": "synopsis expansion",
+   "action": "report on the rich result (tab3); exit 0 iff a requested table can be built and every named nuclide is in a selected step",
+   "gating": true,
+   "checks": [
+    {
+     "argv": [
+      "CAND",
+      "report",
+      "target/p140-docs/run/rich_result.json",
+      "--tables",
+      "tab3"
+     ],
+     "expected_exit": "nonzero",
+     "exit_code": 1,
+     "wall_s": 0.069,
+     "stdout_bytes": 0,
+     "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+     "stdout_tail": "",
+     "stderr_tail": "note: tab3: unavailable: the result has radiological responses but none is an ingestion or inhalation dose (units: A2_per_g_material)\nnone of the requested tables can be built from this result\n",
+     "ok": true
+    }
+   ],
+   "outcome": "pass"
+  },
+  {
+   "id": "cmd:report:rich:tab4",
+   "category": "cli_report",
+   "source": [
+    "docs/guide/cli.md:67-68",
+    "docs/guide/fispact-migration.md:118-119"
+   ],
+   "classification": "synopsis expansion",
+   "action": "report on the rich result (tab4); exit 0 iff a requested table can be built and every named nuclide is in a selected step",
+   "gating": true,
+   "checks": [
+    {
+     "argv": [
+      "CAND",
+      "report",
+      "target/p140-docs/run/rich_result.json",
+      "--tables",
+      "tab4"
+     ],
+     "expected_exit": 0,
+     "exit_code": 0,
+     "wall_s": 0.073,
+     "stdout_bytes": 53392,
+     "stdout_sha256": "4ffd442001a7a2c6eeba247cfef22c59c889675c32784f9469f47bd7366e2ca7",
+     "stdout_tail": "66388e-9\n21,3.721e3,18,4e6,5e6,4.815399999869268e6,8.614823755945589e-7,6.646441079930365e-19,8.61482375594559e-6,6.646441079930365e-18\n21,3.721e3,19,5e6,6.5e6,0e0,0e0,0e0,0e0,0e0\n21,3.721e3,20,6.5e6,8e6,0e0,0e0,0e0,0e0,0e0\n21,3.721e3,21,8e6,1e7,0e0,0e0,0e0,0e0,0e0\n21,3.721e3,22,1e7,1.2e7,0e0,0e0,0e0,0e0,0e0\n21,3.721e3,23,1.2e7,1.4e7,0e0,0e0,0e0,0e0,0e0\n21,3.721e3,24,1.4e7,2e7,0e0,0e0,0e0,0e0,0e0\n",
+     "stderr_tail": "",
+     "ok": true
+    }
+   ],
+   "outcome": "pass"
+  },
+  {
+   "id": "cmd:report:rich:out-dir",
+   "category": "cli_report",
+   "source": [
+    "docs/guide/cli.md:67-68",
+    "docs/guide/fispact-migration.md:118-119"
+   ],
+   "classification": "synopsis expansion",
+   "action": "report on the rich result with --out DIR (one file per table)",
+   "gating": true,
+   "checks": [
+    {
+     "argv": [
+      "CAND",
+      "report",
+      "target/p140-docs/run/rich_result.json",
+      "--format",
+      "csv",
+      "--out",
+      "target/p140-docs/report/rich"
+     ],
+     "expected_exit": 0,
+     "exit_code": 0,
+     "wall_s": 0.073,
+     "stdout_bytes": 0,
+     "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+     "stdout_tail": "",
+     "stderr_tail": "/connoravila/Documents/actinv/target/p140-docs/report/rich/tab4.csv\nwrote /home/connoravila/Documents/actinv/target/p140-docs/report/rich/totals.csv\nwrote /home/connoravila/Documents/actinv/target/p140-docs/report/rich/dominant.csv\nwrote /home/connoravila/Documents/actinv/target/p140-docs/report/rich/elements.csv\nwrote /home/connoravila/Documents/actinv/target/p140-docs/report/rich/timeseries.csv\n",
+     "ok": true
+    }
+   ],
+   "outcome": "pass"
+  },
+  {
+   "id": "cmd:inspect:decay:nuclides",
+   "category": "cli_inspect",
+   "source": [
+    "docs/guide/cli.md:47"
+   ],
+   "classification": "synopsis expansion",
+   "action": "inspect decay actinv-data/v1.1.0/decay/endf-b-viii-0_decay.dat Co60 Mn54",
+   "gating": true,
+   "checks": [
+    {
+     "argv": [
+      "CAND",
+      "inspect",
+      "decay",
+      "actinv-data/v1.1.0/decay/endf-b-viii-0_decay.dat",
+      "Co60",
+      "Mn54"
+     ],
+     "expected_exit": 0,
+     "exit_code": 0,
+     "wall_s": 0.375,
+     "stdout_bytes": 3171,
+     "stdout_sha256": "8d1b8e2bafbf5131538ec658bb10d961f57180f91a1616d33f4b052dd2b2cc8c",
+     "stdout_tail": "\n        },\n        {\n          \"average_energy_eV\": 0.797242,\n          \"discrete_lines\": 10,\n          \"has_continuum\": false,\n          \"styp\": 9.0,\n          \"type\": \"x-ray/annihilation\"\n        }\n      ],\n      \"stable\": false,\n      \"za\": 27060\n    }\n  ],\n  \"schema\": \"actinv-inspect-decay-1\",\n  \"source\": \"/home/connoravila/Documents/actinv/actinv-data/v1.1.0/decay/endf-b-viii-0_decay.dat\"\n}\n",
+     "stderr_tail": "",
+     "ok": true
+    }
+   ],
+   "outcome": "pass"
+  },
+  {
+   "id": "cmd:inspect:decay:isomer-table",
+   "category": "cli_inspect",
+   "source": [
+    "docs/guide/cli.md:47"
+   ],
+   "classification": "synopsis expansion",
+   "action": "inspect decay actinv-data/v1.1.0/decay/endf-b-viii-0_decay.dat Ta182m1 --table",
+   "gating": true,
+   "checks": [
+    {
+     "argv": [
+      "CAND",
+      "inspect",
+      "decay",
+      "actinv-data/v1.1.0/decay/endf-b-viii-0_decay.dat",
+      "Ta182m1",
+      "--table"
+     ],
+     "expected_exit": 0,
+     "exit_code": 0,
+     "wall_s": 0.314,
+     "stdout_bytes": 422,
+     "stdout_sha256": "514fa73b950a5a269fb846dbcdef4eee0f45f06e7b9fae85813a024d002ada62",
+     "stdout_tail": "oravila/Documents/actinv/actinv-data/v1.1.0/decay/endf-b-viii-0_decay.dat\nNuclide  Half-life (s)  Modes         E beta (eV)  E gamma (eV)  E alpha (eV)  Gamma lines  Gamma E/decay (eV)\n-------  -------------  ------------  -----------  ------------  ------------  -----------  ------------------\nTa182m1  2.830000e-1    IT 100.0000%  1.101568e4   1.159845e3    0.000000e0    1            3.775336e-1\n",
+     "stderr_tail": "",
+     "ok": true
+    }
+   ],
+   "outcome": "pass"
+  },
+  {
+   "id": "cmd:inspect:decay:all-to-file",
+   "category": "cli_inspect",
+   "source": [
+    "docs/guide/cli.md:47"
+   ],
+   "classification": "synopsis expansion",
+   "action": "inspect decay actinv-data/v1.1.0/decay/endf-b-viii-0_decay.dat --out target/p140-docs/inspect/decay_all.json",
+   "gating": true,
+   "checks": [
+    {
+     "argv": [
+      "CAND",
+      "inspect",
+      "decay",
+      "actinv-data/v1.1.0/decay/endf-b-viii-0_decay.dat",
+      "--out",
+      "target/p140-docs/inspect/decay_all.json"
+     ],
+     "expected_exit": 0,
+     "exit_code": 0,
+     "wall_s": 0.419,
+     "stdout_bytes": 0,
+     "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+     "stdout_tail": "",
+     "stderr_tail": "wrote /home/connoravila/Documents/actinv/target/p140-docs/inspect/decay_all.json\n",
+     "ok": true
+    }
+   ],
+   "outcome": "pass"
+  },
+  {
+   "id": "cmd:inspect:xs:library",
+   "category": "cli_inspect",
+   "source": [
+    "docs/guide/cli.md:48"
+   ],
+   "classification": "synopsis expansion",
+   "action": "inspect xs actinv-data/v1.1.0/activation/tendl-2025-neutron-709g.npz",
+   "gating": true,
+   "checks": [
+    {
+     "argv": [
+      "CAND",
+      "inspect",
+      "xs",
+      "actinv-data/v1.1.0/activation/tendl-2025-neutron-709g.npz"
+     ],
+     "expected_exit": 0,
+     "exit_code": 0,
+     "wall_s": 3.014,
+     "stdout_bytes": 57293115,
+     "stdout_sha256": "5ebce1fff26e38323301e8497b294840f758d3315213d337ec5ea65fa7d766eb",
+     "stdout_tail": "\n      \"max_cross_section_b\": 0.0002016561789109291,\n      \"mt\": 107,\n      \"nonzero_groups\": 92,\n      \"product\": \"Sr100\",\n      \"product_lfs\": 0,\n      \"product_za\": 38100,\n      \"target\": \"Zr103\",\n      \"target_index\": 2849\n    }\n  ],\n  \"schema\": \"actinv-inspect-xs-1\",\n  \"source\": \"/home/connoravila/Documents/actinv/actinv-data/v1.1.0/activation/tendl-2025-neutron-709g.npz\",\n  \"target\": null\n}\n",
+     "stderr_tail": "",
+     "ok": true
+    }
+   ],
+   "outcome": "pass"
+  },
+  {
+   "id": "cmd:inspect:xs:target",
+   "category": "cli_inspect",
+   "source": [
+    "docs/guide/cli.md:48"
+   ],
+   "classification": "synopsis expansion",
+   "action": "inspect xs actinv-data/v1.1.0/activation/tendl-2025-neutron-709g.npz --target Fe56",
+   "gating": true,
+   "checks": [
+    {
+     "argv": [
+      "CAND",
+      "inspect",
+      "xs",
+      "actinv-data/v1.1.0/activation/tendl-2025-neutron-709g.npz",
+      "--target",
+      "Fe56"
+     ],
+     "expected_exit": 0,
+     "exit_code": 0,
+     "wall_s": 0.646,
+     "stdout_bytes": 563658,
+     "stdout_sha256": "5d7e5fc5b1d21bc197c47067c98e768d9bbffb52919a6308afeeea1e06d37d21",
+     "stdout_tail": "\n      \"max_cross_section_b\": 0.000015029043658281493,\n      \"mt\": 117,\n      \"nonzero_groups\": 30,\n      \"product\": \"V51\",\n      \"product_lfs\": 0,\n      \"product_za\": 23051,\n      \"target\": \"Fe56\",\n      \"target_index\": 782\n    }\n  ],\n  \"schema\": \"actinv-inspect-xs-1\",\n  \"source\": \"/home/connoravila/Documents/actinv/actinv-data/v1.1.0/activation/tendl-2025-neutron-709g.npz\",\n  \"target\": \"Fe56\"\n}\n",
+     "stderr_tail": "",
+     "ok": true
+    }
+   ],
+   "outcome": "pass"
+  },
+  {
+   "id": "cmd:inspect:xs:target-mt",
+   "category": "cli_inspect",
+   "source": [
+    "docs/guide/cli.md:48"
+   ],
+   "classification": "synopsis expansion",
+   "action": "inspect xs actinv-data/v1.1.0/activation/tendl-2025-neutron-709g.npz --target Fe56 --mt 16",
+   "gating": true,
+   "checks": [
+    {
+     "argv": [
+      "CAND",
+      "inspect",
+      "xs",
+      "actinv-data/v1.1.0/activation/tendl-2025-neutron-709g.npz",
+      "--target",
+      "Fe56",
+      "--mt",
+      "16"
+     ],
+     "expected_exit": 0,
+     "exit_code": 0,
+     "wall_s": 0.641,
+     "stdout_bytes": 32124,
+     "stdout_sha256": "d0998bcf62afdb10959d66e1aeb47b769dcb990d82f4d84c49091f6e20d2bead",
+     "stdout_tail": ": -1,\n      \"max_cross_section_b\": 0.5646238055606898,\n      \"mt\": 16,\n      \"nonzero_groups\": 54,\n      \"product\": \"Fe55\",\n      \"product_lfs\": 0,\n      \"product_za\": 26055,\n      \"target\": \"Fe56\",\n      \"target_index\": 782\n    }\n  ],\n  \"schema\": \"actinv-inspect-xs-1\",\n  \"source\": \"/home/connoravila/Documents/actinv/actinv-data/v1.1.0/activation/tendl-2025-neutron-709g.npz\",\n  \"target\": \"Fe56\"\n}\n",
+     "stderr_tail": "",
+     "ok": true
+    }
+   ],
+   "outcome": "pass"
+  },
+  {
+   "id": "cmd:inspect:xs:target-mt-table",
+   "category": "cli_inspect",
+   "source": [
+    "docs/guide/cli.md:48"
+   ],
+   "classification": "synopsis expansion",
+   "action": "inspect xs actinv-data/v1.1.0/activation/tendl-2025-neutron-709g.npz --target Fe56 --mt 16 --table",
+   "gating": true,
+   "checks": [
+    {
+     "argv": [
+      "CAND",
+      "inspect",
+      "xs",
+      "actinv-data/v1.1.0/activation/tendl-2025-neutron-709g.npz",
+      "--target",
+      "Fe56",
+      "--mt",
+      "16",
+      "--table"
+     ],
+     "expected_exit": 0,
+     "exit_code": 0,
+     "wall_s": 0.639,
+     "stdout_bytes": 357,
+     "stdout_sha256": "c80016dac391eba8bef3ef69a38d8914e0286b6193640c2acb203af3a20e5733",
+     "stdout_tail": "Reactions: /home/connoravila/Documents/actinv/actinv-data/v1.1.0/activation/tendl-2025-neutron-709g.npz (fispact-709)\nTarget  MT  Reaction  Product  Groups  Nonzero  Max xs (b)\n------  --  --------  -------  ------  -------  -----------\nFe56    16  (x,2n)             709     54       5.646238e-1\nFe56    16  (x,2n)    Fe55     709     54       5.646238e-1\n",
+     "stderr_tail": "",
+     "ok": true
+    }
+   ],
+   "outcome": "pass"
+  },
+  {
+   "id": "cmd:inspect:xs:mt-to-file",
+   "category": "cli_inspect",
+   "source": [
+    "docs/guide/cli.md:48"
+   ],
+   "classification": "synopsis expansion",
+   "action": "inspect xs actinv-data/v1.1.0/activation/tendl-2025-neutron-709g.npz --mt 102 --out target/p140-docs/inspect/xs_mt102.json",
+   "gating": true,
+   "checks": [
+    {
+     "argv": [
+      "CAND",
+      "inspect",
+      "xs",
+      "actinv-data/v1.1.0/activation/tendl-2025-neutron-709g.npz",
+      "--mt",
+      "102",
+      "--out",
+      "target/p140-docs/inspect/xs_mt102.json"
+     ],
+     "expected_exit": 0,
+     "exit_code": 0,
+     "wall_s": 1.445,
+     "stdout_bytes": 0,
+     "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+     "stdout_tail": "",
+     "stderr_tail": "wrote /home/connoravila/Documents/actinv/target/p140-docs/inspect/xs_mt102.json\n",
+     "ok": true
+    }
+   ],
+   "outcome": "pass"
+  },
+  {
+   "id": "cmd:inspect:xs:spectrum-run-spec",
+   "category": "cli_inspect",
+   "source": [
+    "docs/guide/cli.md:48"
+   ],
+   "classification": "synopsis expansion",
+   "action": "inspect xs actinv-data/v1.1.0/activation/tendl-2025-neutron-709g.npz --target Fe56 --spectrum examples/fns_fe_5min.json",
+   "gating": true,
+   "checks": [
+    {
+     "argv": [
+      "CAND",
+      "inspect",
+      "xs",
+      "actinv-data/v1.1.0/activation/tendl-2025-neutron-709g.npz",
+      "--target",
+      "Fe56",
+      "--spectrum",
+      "examples/fns_fe_5min.json"
+     ],
+     "expected_exit": 0,
+     "exit_code": 0,
+     "wall_s": 0.653,
+     "stdout_bytes": 568577,
+     "stdout_sha256": "846688e8c0feaf9564e005a5d7fee30c1a0a60765555c9fa81a608d600909623",
+     "stdout_tail": "\": 23051,\n      \"reaction_rate_per_target_atom_per_s\": 0.0,\n      \"target\": \"Fe56\",\n      \"target_index\": 782\n    }\n  ],\n  \"schema\": \"actinv-inspect-xs-1\",\n  \"source\": \"/home/connoravila/Documents/actinv/actinv-data/v1.1.0/activation/tendl-2025-neutron-709g.npz\",\n  \"spectrum\": {\n    \"groups\": 709,\n    \"structure\": \"fispact-709\",\n    \"total_flux_cm2_s\": 11159999999.999998\n  },\n  \"target\": \"Fe56\"\n}\n",
+     "stderr_tail": "",
+     "ok": true
+    }
+   ],
+   "outcome": "pass"
+  },
+  {
+   "id": "cmd:inspect:xs:spectrum-object",
+   "category": "cli_inspect",
+   "source": [
+    "docs/guide/cli.md:48"
+   ],
+   "classification": "synopsis expansion",
+   "action": "inspect xs actinv-data/v1.1.0/activation/tendl-2025-neutron-709g.npz --target Fe56 --mt 16 --spectrum target/p140-docs/docs/spectrum_object.json",
+   "gating": true,
+   "checks": [
+    {
+     "argv": [
+      "CAND",
+      "inspect",
+      "xs",
+      "actinv-data/v1.1.0/activation/tendl-2025-neutron-709g.npz",
+      "--target",
+      "Fe56",
+      "--mt",
+      "16",
+      "--spectrum",
+      "target/p140-docs/docs/spectrum_object.json"
+     ],
+     "expected_exit": 0,
+     "exit_code": 0,
+     "wall_s": 0.637,
+     "stdout_bytes": 32465,
+     "stdout_sha256": "c1dcb16b1289b36f937f641a3fc3a17c54013b89f75a0c63bcc9db74b6b1516b",
+     "stdout_tail": "action_rate_per_target_atom_per_s\": 3.9783394538126586e-15,\n      \"target\": \"Fe56\",\n      \"target_index\": 782\n    }\n  ],\n  \"schema\": \"actinv-inspect-xs-1\",\n  \"source\": \"/home/connoravila/Documents/actinv/actinv-data/v1.1.0/activation/tendl-2025-neutron-709g.npz\",\n  \"spectrum\": {\n    \"groups\": 709,\n    \"structure\": \"fispact-709\",\n    \"total_flux_cm2_s\": 11159999999.999998\n  },\n  \"target\": \"Fe56\"\n}\n",
+     "stderr_tail": "",
+     "ok": true
+    }
+   ],
+   "outcome": "pass"
+  },
+  {
+   "id": "cmd:inspect:yields:one-evaluation",
+   "category": "cli_inspect",
+   "source": [
+    "docs/guide/cli.md:49"
+   ],
+   "classification": "synopsis expansion",
+   "action": "inspect yields /home/connoravila/nuclear-data/endfb-viii.0-nfpy/nfy-092_U_235.endf",
+   "gating": true,
+   "checks": [
+    {
+     "argv": [
+      "CAND",
+      "inspect",
+      "yields",
+      "/home/connoravila/nuclear-data/endfb-viii.0-nfpy/nfy-092_U_235.endf"
+     ],
+     "expected_exit": 0,
+     "exit_code": 0,
+     "wall_s": 0.02,
+     "stdout_bytes": 707367,
+     "stdout_sha256": "384ca4e7ec7dd4464f09dfa8f73e310f81beb4f2e1060133233abbf3e0f137ef",
+     "stdout_tail": "nuclide\": \"Hf172\",\n              \"uncertainty\": 0.0,\n              \"yield\": 0.0,\n              \"za\": 72172\n            }\n          ],\n          \"sum\": 1.9999996103156326\n        }\n      ],\n      \"parent\": \"U235\",\n      \"parent_liso\": 0,\n      \"parent_za\": 92235,\n      \"source\": \"/home/connoravila/nuclear-data/endfb-viii.0-nfpy/nfy-092_U_235.endf\"\n    }\n  ],\n  \"schema\": \"actinv-inspect-yields-1\"\n}\n",
+     "stderr_tail": "",
+     "ok": true
+    }
+   ],
+   "outcome": "pass"
+  },
+  {
+   "id": "cmd:inspect:yields:parent",
+   "category": "cli_inspect",
+   "source": [
+    "docs/guide/cli.md:49"
+   ],
+   "classification": "synopsis expansion",
+   "action": "inspect yields /home/connoravila/nuclear-data/endfb-viii.0-nfpy/nfy-092_U_235.endf /home/connoravila/nuclear-data/endfb-viii.0-nfpy/nfy-094_Pu_239.endf --parent Pu239",
+   "gating": true,
+   "checks": [
+    {
+     "argv": [
+      "CAND",
+      "inspect",
+      "yields",
+      "/home/connoravila/nuclear-data/endfb-viii.0-nfpy/nfy-092_U_235.endf",
+      "/home/connoravila/nuclear-data/endfb-viii.0-nfpy/nfy-094_Pu_239.endf",
+      "--parent",
+      "Pu239"
+     ],
+     "expected_exit": 0,
+     "exit_code": 0,
+     "wall_s": 0.03,
+     "stdout_bytes": 940530,
+     "stdout_sha256": "5baa574597a27e32a8be3a09a9a16012241349d451e36dc2fe4b88eec9b2437b",
+     "stdout_tail": "\n              \"uncertainty\": 1.21245e-14,\n              \"yield\": 1.89445e-14,\n              \"za\": 72172\n            }\n          ],\n          \"sum\": 1.9999999620122562\n        }\n      ],\n      \"parent\": \"Pu239\",\n      \"parent_liso\": 0,\n      \"parent_za\": 94239,\n      \"source\": \"/home/connoravila/nuclear-data/endfb-viii.0-nfpy/nfy-094_Pu_239.endf\"\n    }\n  ],\n  \"schema\": \"actinv-inspect-yields-1\"\n}\n",
+     "stderr_tail": "",
+     "ok": true
+    }
+   ],
+   "outcome": "pass"
+  },
+  {
+   "id": "cmd:inspect:yields:energy",
+   "category": "cli_inspect",
+   "source": [
+    "docs/guide/cli.md:49"
+   ],
+   "classification": "synopsis expansion",
+   "action": "inspect yields /home/connoravila/nuclear-data/endfb-viii.0-nfpy/nfy-092_U_235.endf --energy 14000000",
+   "gating": true,
+   "checks": [
+    {
+     "argv": [
+      "CAND",
+      "inspect",
+      "yields",
+      "/home/connoravila/nuclear-data/endfb-viii.0-nfpy/nfy-092_U_235.endf",
+      "--energy",
+      "14000000"
+     ],
+     "expected_exit": 0,
+     "exit_code": 0,
+     "wall_s": 0.01,
+     "stdout_bytes": 200908,
+     "stdout_sha256": "66a0c477abde2ea5648c274943eb2b20998768e5e74a21f755c8e28cebdbff9e",
+     "stdout_tail": "          \"nuclide\": \"Hf172\",\n          \"uncertainty\": 0.0,\n          \"yield\": 0.0,\n          \"za\": 72172\n        }\n      ],\n      \"requested_energy_eV\": 14000000.0,\n      \"source\": \"/home/connoravila/nuclear-data/endfb-viii.0-nfpy/nfy-092_U_235.endf\",\n      \"sum\": 1.9999996103156326,\n      \"upper_energy_eV\": 14000000.0,\n      \"upper_weight\": 0.0\n    }\n  ],\n  \"schema\": \"actinv-inspect-yields-1\"\n}\n",
+     "stderr_tail": "",
+     "ok": true
+    }
+   ],
+   "outcome": "pass"
+  },
+  {
+   "id": "cmd:inspect:yields:energy-table",
+   "category": "cli_inspect",
+   "source": [
+    "docs/guide/cli.md:49"
+   ],
+   "classification": "synopsis expansion",
+   "action": "inspect yields /home/connoravila/nuclear-data/endfb-viii.0-nfpy/nfy-092_U_235.endf --energy 0.0253 --table",
+   "gating": true,
+   "checks": [
+    {
+     "argv": [
+      "CAND",
+      "inspect",
+      "yields",
+      "/home/connoravila/nuclear-data/endfb-viii.0-nfpy/nfy-092_U_235.endf",
+      "--energy",
+      "0.0253",
+      "--table"
+     ],
+     "expected_exit": 0,
+     "exit_code": 0,
+     "wall_s": 0.011,
+     "stdout_bytes": 43909,
+     "stdout_sha256": "3ef95cc4a6e8a11f51b5e4f7dad5aa7ac304535bdebff6161b07bbf48d1b9580",
+     "stdout_tail": " 0.000000e0    0.000000e0\nYb170    0.000000e0    0.000000e0\nYb171    0.000000e0    0.000000e0\nYb172    0.000000e0    0.000000e0\nLu169    0.000000e0    0.000000e0\nLu169m1  0.000000e0    0.000000e0\nLu171    0.000000e0    0.000000e0\nLu171m1  0.000000e0    0.000000e0\nLu172    0.000000e0    0.000000e0\nLu172m1  0.000000e0    0.000000e0\nHf171    0.000000e0    0.000000e0\nHf172    0.000000e0    0.000000e0\n",
+     "stderr_tail": "",
+     "ok": true
+    }
+   ],
+   "outcome": "pass"
+  },
+  {
+   "id": "cmd:inspect:yields:cumulative",
+   "category": "cli_inspect",
+   "source": [
+    "docs/guide/cli.md:49"
+   ],
+   "classification": "synopsis expansion",
+   "action": "inspect yields /home/connoravila/nuclear-data/endfb-viii.0-nfpy/nfy-092_U_235.endf --cumulative",
+   "gating": true,
+   "checks": [
+    {
+     "argv": [
+      "CAND",
+      "inspect",
+      "yields",
+      "/home/connoravila/nuclear-data/endfb-viii.0-nfpy/nfy-092_U_235.endf",
+      "--cumulative"
+     ],
+     "expected_exit": 0,
+     "exit_code": 0,
+     "wall_s": 0.022,
+     "stdout_bytes": 707701,
+     "stdout_sha256": "d2e58adac7ea8ed3783e6ce376acc0d14c3717a1803636423166b13ca9c67393",
+     "stdout_tail": "\"nuclide\": \"Hf172\",\n              \"uncertainty\": 0.0,\n              \"yield\": 0.0,\n              \"za\": 72172\n            }\n          ],\n          \"sum\": 7.880643713130853\n        }\n      ],\n      \"parent\": \"U235\",\n      \"parent_liso\": 0,\n      \"parent_za\": 92235,\n      \"source\": \"/home/connoravila/nuclear-data/endfb-viii.0-nfpy/nfy-092_U_235.endf\"\n    }\n  ],\n  \"schema\": \"actinv-inspect-yields-1\"\n}\n",
+     "stderr_tail": "",
+     "ok": true
+    }
+   ],
+   "outcome": "pass"
+  },
+  {
+   "id": "cmd:inspect:library:json",
+   "category": "cli_inspect",
+   "source": [
+    "docs/guide/cli.md:50"
+   ],
+   "classification": "synopsis expansion",
+   "action": "inspect library actinv-data/v1.1.0/activation/tendl-2025-neutron-709g.npz",
+   "gating": true,
+   "checks": [
+    {
+     "argv": [
+      "CAND",
+      "inspect",
+      "library",
+      "actinv-data/v1.1.0/activation/tendl-2025-neutron-709g.npz"
+     ],
+     "expected_exit": 0,
+     "exit_code": 0,
+     "wall_s": 0.038,
+     "stdout_bytes": 39043,
+     "stdout_sha256": "78924cc23755841093fa9a2c5ac8044ac2183380b7dda96eefad4d09588facf8",
+     "stdout_tail": "\"Zn78\",\n    \"Zr80\",\n    \"Zr81\",\n    \"Zr82\",\n    \"Zr83\",\n    \"Zr84\",\n    \"Zr85\",\n    \"Zr85m1\",\n    \"Zr86\",\n    \"Zr87\",\n    \"Zr87m1\",\n    \"Zr88\",\n    \"Zr89\",\n    \"Zr89m1\",\n    \"Zr90\",\n    \"Zr91\",\n    \"Zr92\",\n    \"Zr93\",\n    \"Zr94\",\n    \"Zr95\",\n    \"Zr96\",\n    \"Zr97\",\n    \"Zr98\",\n    \"Zr99\",\n    \"Zr100\",\n    \"Zr101\",\n    \"Zr102\",\n    \"Zr103\"\n  ],\n  \"targets\": 2850,\n  \"targets_with_reactions\": 2850\n}\n",
+     "stderr_tail": "",
+     "ok": true
+    }
+   ],
+   "outcome": "pass"
+  },
+  {
+   "id": "cmd:inspect:library:table",
+   "category": "cli_inspect",
+   "source": [
+    "docs/guide/cli.md:50"
+   ],
+   "classification": "synopsis expansion",
+   "action": "inspect library actinv-data/v1.1.0/activation/tendl-2025-neutron-709g.npz --table",
+   "gating": true,
+   "checks": [
+    {
+     "argv": [
+      "CAND",
+      "inspect",
+      "library",
+      "actinv-data/v1.1.0/activation/tendl-2025-neutron-709g.npz",
+      "--table"
+     ],
+     "expected_exit": 0,
+     "exit_code": 0,
+     "wall_s": 0.038,
+     "stdout_bytes": 2812,
+     "stdout_sha256": "e7cb39d1f9722303bcbbf1b496c3bc795aa0d4297841d77fae81ae73adc9a54d",
+     "stdout_tail": "2fc80ec0e3a58abb5dea269cd68720429a087e48ea703f1c42b6ba57ab875\nindex.groups                 fispact-709\nindex.n_rows                 167735\nindex.projectile             neutron\nindex.schema                 actinv-library-index-1\nindex.sha256_npz             ec4c72bf598dc8ad3d533d9cfafdcf493e2d1f949a3e4db6251495659b68cc44\nindex.temperature_K          293.6\nindex.weighting              flat-lethargy\n",
+     "stderr_tail": "",
+     "ok": true
+    }
+   ],
+   "outcome": "pass"
+  },
+  {
+   "id": "cmd:inspect:groups:fispact-66",
+   "category": "cli_inspect",
+   "source": [
+    "docs/guide/cli.md:51"
+   ],
+   "classification": "synopsis expansion",
+   "action": "inspect groups fispact-66",
+   "gating": true,
+   "checks": [
+    {
+     "argv": [
+      "CAND",
+      "inspect",
+      "groups",
+      "fispact-66"
+     ],
+     "expected_exit": 0,
+     "exit_code": 0,
+     "wall_s": 0.005,
+     "stdout_bytes": 1028,
+     "stdout_sha256": "0636564d0d07497afa6b6e358ab32f581868c40bb6c34df6bdd4628bf727d6fa",
+     "stdout_tail": "9280.0,\n    820850.0,\n    1110000.0,\n    1350000.0,\n    1740000.0,\n    2230000.0,\n    2870000.0,\n    3680000.0,\n    4970000.0,\n    6070000.0,\n    10000000.0,\n    14900000.0,\n    16900000.0,\n    20000000.0,\n    25000000.0\n  ],\n  \"boundary_sha256\": \"7acdcdb3cac66b3edeaafb9d407467417df64b672f07f74d6e9a9514b8c5a38d\",\n  \"group_count\": 66,\n  \"name\": \"fispact-66\",\n  \"schema\": \"actinv-inspect-groups-1\"\n}\n",
+     "stderr_tail": "",
+     "ok": true
+    }
+   ],
+   "outcome": "pass"
+  },
+  {
+   "id": "cmd:inspect:groups:fispact-69",
+   "category": "cli_inspect",
+   "source": [
+    "docs/guide/cli.md:51"
+   ],
+   "classification": "synopsis expansion",
+   "action": "inspect groups fispact-69",
+   "gating": true,
+   "checks": [
+    {
+     "argv": [
+      "CAND",
+      "inspect",
+      "groups",
+      "fispact-69"
+     ],
+     "expected_exit": 0,
+     "exit_code": 0,
+     "wall_s": 0.002,
+     "stdout_bytes": 982,
+     "stdout_sha256": "aa8a11d2a926fb15f92254b97987420971d2aad39f8e373609c4f7acdaf01e63",
+     "stdout_tail": "    5530.0,\n    9118.0,\n    15030.0,\n    24780.0,\n    40850.0,\n    67340.0,\n    111000.0,\n    183000.0,\n    302500.0,\n    500000.0,\n    821000.0,\n    1353000.0,\n    2231000.0,\n    3679000.0,\n    6066000.0,\n    10000000.0\n  ],\n  \"boundary_sha256\": \"2db868a17b1adc6d99e055c8dcda05ff36357ceb618acc20a25633f45b4e2c70\",\n  \"group_count\": 69,\n  \"name\": \"fispact-69\",\n  \"schema\": \"actinv-inspect-groups-1\"\n}\n",
+     "stderr_tail": "",
+     "ok": true
+    }
+   ],
+   "outcome": "pass"
+  },
+  {
+   "id": "cmd:inspect:groups:fispact-100",
+   "category": "cli_inspect",
+   "source": [
+    "docs/guide/cli.md:51"
+   ],
+   "classification": "synopsis expansion",
+   "action": "inspect groups fispact-100",
+   "gating": true,
+   "checks": [
+    {
+     "argv": [
+      "CAND",
+      "inspect",
+      "groups",
+      "fispact-100"
+     ],
+     "expected_exit": 0,
+     "exit_code": 0,
+     "wall_s": 0.002,
+     "stdout_bytes": 1596,
+     "stdout_sha256": "20d089dbd9e3b4f0342c73ed3b00123a36c208e10c73c126b5976a7d06cd8aa8",
+     "stdout_tail": "30.0,\n    4065620.0,\n    4493210.0,\n    4965770.0,\n    5488020.0,\n    6065200.0,\n    6703090.0,\n    7408060.0,\n    8187170.0,\n    9048220.0,\n    9999830.0,\n    11051500.0,\n    12213800.0,\n    13498300.0,\n    14918000.0\n  ],\n  \"boundary_sha256\": \"7b805f395be282f269605cc20bbf51ae08276aa9c8a1245c0b66843357a11133\",\n  \"group_count\": 100,\n  \"name\": \"fispact-100\",\n  \"schema\": \"actinv-inspect-groups-1\"\n}\n",
+     "stderr_tail": "",
+     "ok": true
+    }
+   ],
+   "outcome": "pass"
+  },
+  {
+   "id": "cmd:inspect:groups:fispact-172",
+   "category": "cli_inspect",
+   "source": [
+    "docs/guide/cli.md:51"
+   ],
+   "classification": "synopsis expansion",
+   "action": "inspect groups fispact-172",
+   "gating": true,
+   "checks": [
+    {
+     "argv": [
+      "CAND",
+      "inspect",
+      "groups",
+      "fispact-172"
+     ],
+     "expected_exit": 0,
+     "exit_code": 0,
+     "wall_s": 0.002,
+     "stdout_bytes": 2307,
+     "stdout_sha256": "ae1b711ca4f696ac55bfe8e3f1b5dd3661b0966ada3e0e5572929c531edf665a",
+     "stdout_tail": ".0,\n    2465970.0,\n    3011940.0,\n    3678790.0,\n    4493290.0,\n    5488120.0,\n    6065310.0,\n    6703200.0,\n    8187310.0,\n    10000000.0,\n    11618300.0,\n    13840300.0,\n    14918300.0,\n    17332500.0,\n    19640300.0\n  ],\n  \"boundary_sha256\": \"515801920adabd56139e7785bb9b5812ddfdaed8240044406e78d99235995c14\",\n  \"group_count\": 172,\n  \"name\": \"fispact-172\",\n  \"schema\": \"actinv-inspect-groups-1\"\n}\n",
+     "stderr_tail": "",
+     "ok": true
+    }
+   ],
+   "outcome": "pass"
+  },
+  {
+   "id": "cmd:inspect:groups:fispact-175",
+   "category": "cli_inspect",
+   "source": [
+    "docs/guide/cli.md:51"
+   ],
+   "classification": "synopsis expansion",
+   "action": "inspect groups fispact-175",
+   "gating": true,
+   "checks": [
+    {
+     "argv": [
+      "CAND",
+      "inspect",
+      "groups",
+      "fispact-175"
+     ],
+     "expected_exit": 0,
+     "exit_code": 0,
+     "wall_s": 0.002,
+     "stdout_bytes": 2678,
+     "stdout_sha256": "8760f4aa481b26d088f241610142e031d3ca728a403b1471f1b860415da8b978",
+     "stdout_tail": "11618300.0,\n    12214000.0,\n    12523200.0,\n    12840300.0,\n    13498600.0,\n    13840300.0,\n    14190700.0,\n    14549900.0,\n    14918200.0,\n    15683100.0,\n    16487200.0,\n    16904600.0,\n    17332500.0,\n    19640300.0\n  ],\n  \"boundary_sha256\": \"84aebd7489e5453631be9a54c463023ec7d33063fb863b2698528941ec54ca2f\",\n  \"group_count\": 175,\n  \"name\": \"fispact-175\",\n  \"schema\": \"actinv-inspect-groups-1\"\n}\n",
+     "stderr_tail": "",
+     "ok": true
+    }
+   ],
+   "outcome": "pass"
+  },
+  {
+   "id": "cmd:inspect:groups:fispact-211",
+   "category": "cli_inspect",
+   "source": [
+    "docs/guide/cli.md:51"
+   ],
+   "classification": "synopsis expansion",
+   "action": "inspect groups fispact-211",
+   "gating": true,
+   "checks": [
+    {
+     "argv": [
+      "CAND",
+      "inspect",
+      "groups",
+      "fispact-211"
+     ],
+     "expected_exit": 0,
+     "exit_code": 0,
+     "wall_s": 0.002,
+     "stdout_bytes": 3254,
+     "stdout_sha256": "d1e2078207af35aad86be761a39709488180ce3f6857dd1c74798f9230fae7e8",
+     "stdout_tail": "42000000.0,\n    43000000.0,\n    44000000.0,\n    45000000.0,\n    46000000.0,\n    47000000.0,\n    48000000.0,\n    49000000.0,\n    50000000.0,\n    51000000.0,\n    52000000.0,\n    53000000.0,\n    54000000.0,\n    55000000.0\n  ],\n  \"boundary_sha256\": \"2a5f5e6c5edd0217726f87294b6cf1686b035c3c3da5b19b0716dce316a9d9f3\",\n  \"group_count\": 211,\n  \"name\": \"fispact-211\",\n  \"schema\": \"actinv-inspect-groups-1\"\n}\n",
+     "stderr_tail": "",
+     "ok": true
+    }
+   ],
+   "outcome": "pass"
+  },
+  {
+   "id": "cmd:inspect:groups:fispact-315",
+   "category": "cli_inspect",
+   "source": [
+    "docs/guide/cli.md:51"
+   ],
+   "classification": "synopsis expansion",
+   "action": "inspect groups fispact-315",
+   "gating": true,
+   "checks": [
+    {
+     "argv": [
+      "CAND",
+      "inspect",
+      "groups",
+      "fispact-315"
+     ],
+     "expected_exit": 0,
+     "exit_code": 0,
+     "wall_s": 0.002,
+     "stdout_bytes": 4174,
+     "stdout_sha256": "a6157e6ee96309316a674f3e8e368c31a706c3cfb5289de653e140b50c8f7b42",
+     "stdout_tail": "11050000.0,\n    11620000.0,\n    12210000.0,\n    12840000.0,\n    13500000.0,\n    13840000.0,\n    14190000.0,\n    14550000.0,\n    14920000.0,\n    15680000.0,\n    16490000.0,\n    16910000.0,\n    17330000.0,\n    19640000.0\n  ],\n  \"boundary_sha256\": \"4fa495d148f1563dab43f8fe22d33a8bc6e302a29f4b27904900198d3944bac5\",\n  \"group_count\": 315,\n  \"name\": \"fispact-315\",\n  \"schema\": \"actinv-inspect-groups-1\"\n}\n",
+     "stderr_tail": "",
+     "ok": true
+    }
+   ],
+   "outcome": "pass"
+  },
+  {
+   "id": "cmd:inspect:groups:fispact-351",
+   "category": "cli_inspect",
+   "source": [
+    "docs/guide/cli.md:51"
+   ],
+   "classification": "synopsis expansion",
+   "action": "inspect groups fispact-351",
+   "gating": true,
+   "checks": [
+    {
+     "argv": [
+      "CAND",
+      "inspect",
+      "groups",
+      "fispact-351"
+     ],
+     "expected_exit": 0,
+     "exit_code": 0,
+     "wall_s": 0.002,
+     "stdout_bytes": 4750,
+     "stdout_sha256": "605a81266063ddf2ec592ca11faf5c2f7955b74f22439c6624024f76ab5547bf",
+     "stdout_tail": "42000000.0,\n    43000000.0,\n    44000000.0,\n    45000000.0,\n    46000000.0,\n    47000000.0,\n    48000000.0,\n    49000000.0,\n    50000000.0,\n    51000000.0,\n    52000000.0,\n    53000000.0,\n    54000000.0,\n    55000000.0\n  ],\n  \"boundary_sha256\": \"3c9e49cc201ea0d732bfce9978a3de0ae97a6bd1edeef547fc0fb55bb801a727\",\n  \"group_count\": 351,\n  \"name\": \"fispact-351\",\n  \"schema\": \"actinv-inspect-groups-1\"\n}\n",
+     "stderr_tail": "",
+     "ok": true
+    }
+   ],
+   "outcome": "pass"
+  },
+  {
+   "id": "cmd:inspect:groups:fispact-586",
+   "category": "cli_inspect",
+   "source": [
+    "docs/guide/cli.md:51"
+   ],
+   "classification": "synopsis expansion",
+   "action": "inspect groups fispact-586",
+   "gating": true,
+   "checks": [
+    {
+     "argv": [
+      "CAND",
+      "inspect",
+      "groups",
+      "fispact-586"
+     ],
+     "expected_exit": 0,
+     "exit_code": 0,
+     "wall_s": 0.002,
+     "stdout_bytes": 6801,
+     "stdout_sha256": "ce9fea46ab920b9d0954d7aaf4e58066c55d20fd43fda1f11dd884bafa57d77b",
+     "stdout_tail": "11618000.0,\n    12214000.0,\n    12523000.0,\n    12840000.0,\n    13499000.0,\n    13840000.0,\n    14191000.0,\n    14550000.0,\n    14918000.0,\n    15683000.0,\n    16487000.0,\n    16905000.0,\n    17332000.0,\n    20000000.0\n  ],\n  \"boundary_sha256\": \"95dafd3363604eadcca942e681cec5efdd2d17642c9f9cc034300906ac7ed658\",\n  \"group_count\": 586,\n  \"name\": \"fispact-586\",\n  \"schema\": \"actinv-inspect-groups-1\"\n}\n",
+     "stderr_tail": "",
+     "ok": true
+    }
+   ],
+   "outcome": "pass"
+  },
+  {
+   "id": "cmd:inspect:groups:fispact-616",
+   "category": "cli_inspect",
+   "source": [
+    "docs/guide/cli.md:51"
+   ],
+   "classification": "synopsis expansion",
+   "action": "inspect groups fispact-616",
+   "gating": true,
+   "checks": [
+    {
+     "argv": [
+      "CAND",
+      "inspect",
+      "groups",
+      "fispact-616"
+     ],
+     "expected_exit": 0,
+     "exit_code": 0,
+     "wall_s": 0.002,
+     "stdout_bytes": 9086,
+     "stdout_sha256": "cdfce313290f5dc5d3ecb20b6fab85e593e85c3134d0418b33927ae9993e8c9a",
+     "stdout_tail": "11481500.0,\n    12022600.0,\n    12589200.0,\n    13182600.0,\n    13803800.0,\n    14454400.0,\n    15135600.0,\n    15848900.0,\n    16595900.0,\n    17378000.0,\n    18197000.0,\n    19054600.0,\n    19952600.0,\n    20000000.0\n  ],\n  \"boundary_sha256\": \"cddb742266d483378c47d7ba29ef1f6c1247745cb29355a41d728cb427ae50cc\",\n  \"group_count\": 616,\n  \"name\": \"fispact-616\",\n  \"schema\": \"actinv-inspect-groups-1\"\n}\n",
+     "stderr_tail": "",
+     "ok": true
+    }
+   ],
+   "outcome": "pass"
+  },
+  {
+   "id": "cmd:inspect:groups:fispact-709",
+   "category": "cli_inspect",
+   "source": [
+    "docs/guide/cli.md:51"
+   ],
+   "classification": "synopsis expansion",
+   "action": "inspect groups fispact-709",
+   "gating": true,
+   "checks": [
+    {
+     "argv": [
+      "CAND",
+      "inspect",
+      "groups",
+      "fispact-709"
+     ],
+     "expected_exit": 0,
+     "exit_code": 0,
+     "wall_s": 0.002,
+     "stdout_bytes": 11118,
+     "stdout_sha256": "1c6f89dea9955b677a6e4e06993845db9fab2ffd168194c8da23bab6698cc973",
+     "stdout_tail": "  520000000.0,\n    560000000.0,\n    600000000.0,\n    640000000.0,\n    680000000.0,\n    720000000.0,\n    760000000.0,\n    800000000.0,\n    840000000.0,\n    880000000.0,\n    920000000.0,\n    960000000.0,\n    1000000000.0\n  ],\n  \"boundary_sha256\": \"a9c2fc80ec0e3a58abb5dea269cd68720429a087e48ea703f1c42b6ba57ab875\",\n  \"group_count\": 709,\n  \"name\": \"fispact-709\",\n  \"schema\": \"actinv-inspect-groups-1\"\n}\n",
+     "stderr_tail": "",
+     "ok": true
+    }
+   ],
+   "outcome": "pass"
+  },
+  {
+   "id": "cmd:inspect:groups:fispact-1102",
+   "category": "cli_inspect",
+   "source": [
+    "docs/guide/cli.md:51"
+   ],
+   "classification": "synopsis expansion",
+   "action": "inspect groups fispact-1102",
+   "gating": true,
+   "checks": [
+    {
+     "argv": [
+      "CAND",
+      "inspect",
+      "groups",
+      "fispact-1102"
+     ],
+     "expected_exit": 0,
+     "exit_code": 0,
+     "wall_s": 0.002,
+     "stdout_bytes": 14568,
+     "stdout_sha256": "c46efb2afe336dfbbd73f02dda300103cddbacd48bf0e5b812ee7a1ec24b72b7",
+     "stdout_tail": "575440000.0,\n    602560000.0,\n    630960000.0,\n    660690000.0,\n    691830000.0,\n    724440000.0,\n    758580000.0,\n    794330000.0,\n    831760000.0,\n    870960000.0,\n    912010000.0,\n    954990000.0,\n    1000000000.0\n  ],\n  \"boundary_sha256\": \"a4fac7f2d01a3439bafa2c06507d815f4f3b033e5e6280c55d937c2321087d94\",\n  \"group_count\": 1102,\n  \"name\": \"fispact-1102\",\n  \"schema\": \"actinv-inspect-groups-1\"\n}\n",
+     "stderr_tail": "",
+     "ok": true
+    }
+   ],
+   "outcome": "pass"
+  },
+  {
+   "id": "cmd:inspect:groups:fispact-162",
+   "category": "cli_inspect",
+   "source": [
+    "docs/guide/cli.md:51"
+   ],
+   "classification": "synopsis expansion",
+   "action": "inspect groups fispact-162",
+   "gating": true,
+   "checks": [
+    {
+     "argv": [
+      "CAND",
+      "inspect",
+      "groups",
+      "fispact-162"
+     ],
+     "expected_exit": 0,
+     "exit_code": 0,
+     "wall_s": 0.002,
+     "stdout_bytes": 2650,
+     "stdout_sha256": "6b16606b3e9649c500d6787a8c606b51d9d339baa25590559110c32e8684a366",
+     "stdout_tail": "  520000000.0,\n    560000000.0,\n    600000000.0,\n    640000000.0,\n    680000000.0,\n    720000000.0,\n    760000000.0,\n    800000000.0,\n    840000000.0,\n    880000000.0,\n    920000000.0,\n    960000000.0,\n    1000000000.0\n  ],\n  \"boundary_sha256\": \"60d0553a39eea8bf219c3f64a7204c14563bf815fcf8c8a20cdd8f858ab4334c\",\n  \"group_count\": 162,\n  \"name\": \"fispact-162\",\n  \"schema\": \"actinv-inspect-groups-1\"\n}\n",
+     "stderr_tail": "",
+     "ok": true
+    }
+   ],
+   "outcome": "pass"
+  },
+  {
+   "id": "cmd:inspect:groups:fispact-709x4",
+   "category": "cli_inspect",
+   "source": [
+    "docs/guide/cli.md:51"
+   ],
+   "classification": "synopsis expansion",
+   "action": "inspect groups fispact-709x4",
+   "gating": true,
+   "checks": [
+    {
+     "argv": [
+      "CAND",
+      "inspect",
+      "groups",
+      "fispact-709x4"
+     ],
+     "expected_exit": 0,
+     "exit_code": 0,
+     "wall_s": 0.004,
+     "stdout_bytes": 63059,
+     "stdout_sha256": "2c3224c4a191ff97530ba814e707ce514e1db3ff6ffbacb8eacc06755b8b9b3c",
+     "stdout_tail": "19,\n    909832693.5812262,\n    920000000.0,\n    929840971.9737271,\n    939787209.9576573,\n    949839839.9516388,\n    960000000.0,\n    969847442.2447803,\n    979795897.1132694,\n    989846400.7679518,\n    1000000000.0\n  ],\n  \"boundary_sha256\": \"9d4993eb559efc23ea5674d5298fce22a3c5beae291f1ccce11fcb900900f228\",\n  \"group_count\": 2836,\n  \"name\": \"fispact-709x4\",\n  \"schema\": \"actinv-inspect-groups-1\"\n}\n",
+     "stderr_tail": "",
+     "ok": true
+    }
+   ],
+   "outcome": "pass"
+  },
+  {
+   "id": "cmd:inspect:groups:fispact-1102x2",
+   "category": "cli_inspect",
+   "source": [
+    "docs/guide/cli.md:51"
+   ],
+   "classification": "synopsis expansion",
+   "action": "inspect groups fispact-1102x2",
+   "gating": true,
+   "checks": [
+    {
+     "argv": [
+      "CAND",
+      "inspect",
+      "groups",
+      "fispact-1102x2"
+     ],
+     "expected_exit": 0,
+     "exit_code": 0,
+     "wall_s": 0.004,
+     "stdout_bytes": 41019,
+     "stdout_sha256": "f4d236511d8da8a0257716d70e562327c55aa42a51575df1341ef81f6b8ac24c",
+     "stdout_tail": "  794330000.0,\n    812829576.7256497,\n    831760000.0,\n    851134354.6115364,\n    870960000.0,\n    891248691.2192348,\n    912010000.0,\n    933252607.7649077,\n    954990000.0,\n    977235897.8261092,\n    1000000000.0\n  ],\n  \"boundary_sha256\": \"f68121118167009dd9b90f2ebdf331073c807ad7bd81136b038af07f3a5ecedc\",\n  \"group_count\": 2204,\n  \"name\": \"fispact-1102x2\",\n  \"schema\": \"actinv-inspect-groups-1\"\n}\n",
+     "stderr_tail": "",
+     "ok": true
+    }
+   ],
+   "outcome": "pass"
+  },
+  {
+   "id": "cmd:inspect:groups:json-file",
+   "category": "cli_inspect",
+   "source": [
+    "docs/guide/cli.md:51"
+   ],
+   "classification": "synopsis expansion",
+   "action": "inspect groups target/p140-docs/docs/custom_groups.json",
+   "gating": true,
+   "checks": [
+    {
+     "argv": [
+      "CAND",
+      "inspect",
+      "groups",
+      "target/p140-docs/docs/custom_groups.json"
+     ],
+     "expected_exit": 0,
+     "exit_code": 0,
+     "wall_s": 0.002,
+     "stdout_bytes": 266,
+     "stdout_sha256": "5aeb5188412fa3764ce9c4339d154089699ff82e348f40d6177c38a92dfe2d76",
+     "stdout_tail": "{\n  \"boundaries_eV\": [\n    0.00001,\n    1.0,\n    1000.0,\n    1000000.0,\n    20000000.0\n  ],\n  \"boundary_sha256\": \"3e94037b56fad8f398f6770203fd6680d236abf4f1983906f481b186fb6b4731\",\n  \"group_count\": 4,\n  \"name\": \"p140-custom\",\n  \"schema\": \"actinv-inspect-groups-1\"\n}\n",
+     "stderr_tail": "",
+     "ok": true
+    }
+   ],
+   "outcome": "pass"
+  },
+  {
+   "id": "cmd:inspect:groups:table",
+   "category": "cli_inspect",
+   "source": [
+    "docs/guide/cli.md:51"
+   ],
+   "classification": "synopsis expansion",
+   "action": "inspect groups fispact-162 --table",
+   "gating": true,
+   "checks": [
+    {
+     "argv": [
+      "CAND",
+      "inspect",
+      "groups",
+      "fispact-162",
+      "--table"
+     ],
+     "expected_exit": 0,
+     "exit_code": 0,
+     "wall_s": 0.002,
+     "stdout_bytes": 4964,
+     "stdout_sha256": "068bf8a8df8e79e7bbf32aa00132bab4002cb99006d2452e31066efbac389007",
+     "stdout_tail": ".800000e8\n149    4.800000e8  5.200000e8\n150    5.200000e8  5.600000e8\n151    5.600000e8  6.000000e8\n152    6.000000e8  6.400000e8\n153    6.400000e8  6.800000e8\n154    6.800000e8  7.200000e8\n155    7.200000e8  7.600000e8\n156    7.600000e8  8.000000e8\n157    8.000000e8  8.400000e8\n158    8.400000e8  8.800000e8\n159    8.800000e8  9.200000e8\n160    9.200000e8  9.600000e8\n161    9.600000e8  1.000000e9\n",
+     "stderr_tail": "",
+     "ok": true
+    }
+   ],
+   "outcome": "pass"
+  },
+  {
+   "id": "cmd:inspect:groups:to-file",
+   "category": "cli_inspect",
+   "source": [
+    "docs/guide/cli.md:51"
+   ],
+   "classification": "synopsis expansion",
+   "action": "inspect groups fispact-709 --out target/p140-docs/inspect/groups_709.json",
+   "gating": true,
+   "checks": [
+    {
+     "argv": [
+      "CAND",
+      "inspect",
+      "groups",
+      "fispact-709",
+      "--out",
+      "target/p140-docs/inspect/groups_709.json"
+     ],
+     "expected_exit": 0,
+     "exit_code": 0,
+     "wall_s": 0.003,
+     "stdout_bytes": 0,
+     "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+     "stdout_tail": "",
+     "stderr_tail": "wrote /home/connoravila/Documents/actinv/target/p140-docs/inspect/groups_709.json\n",
+     "ok": true
+    }
+   ],
+   "outcome": "pass"
+  }
+ ],
+ "counts": {
+  "gating_items": 85,
+  "pass": 85,
+  "fail": 0,
+  "info_items": 11,
+  "by_category": {
+   "cli_import_fispact": {
+    "pass": 5
+   },
+   "cli_inspect": {
+    "pass": 35
+   },
+   "cli_report": {
+    "pass": 20
+   },
+   "derived_fragment": {
+    "pass": 9
+   },
+   "fragment": {
+    "pass": 12
+   },
+   "generated_example": {
+    "pass": 1
+   },
+   "other_document": {
+    "info": 11
+   },
+   "support": {
+    "pass": 2
+   },
+   "walkthrough": {
+    "pass": 1
+   }
+  },
+  "plan": {
+   "items_by_category": {
+    "cli_import_fispact": 5,
+    "cli_inspect": 35,
+    "cli_report": 20,
+    "derived_fragment": 9,
+    "fragment": 12,
+    "generated_example": 1,
+    "other_document": 11,
+    "support": 2,
+    "walkthrough": 1
+   },
+   "json_blocks": 23,
+   "json_blocks_by_kind": {
+    "fragment": 12,
+    "other_document": 9,
+    "other_document_fragment": 2
+   },
+   "commands": 90,
+   "commands_by_scope_form": {
+    "H4 / synopsis": 9,
+    "H4 (generated example) / literal": 3,
+    "H4 (generated example) / synopsis": 1,
+    "H4 (literal walkthrough) / literal": 3,
+    "out of H4 scope / literal": 35,
+    "out of H4 scope / synopsis": 39
+   },
+   "unclassified": 0,
+   "features_covered": [
+    "summary",
+    "summary.depletion",
+    "schedule[].power_W_cm3",
+    "kerma",
+    "pathways",
+    "self_shielding.geometry",
+    "self_shielding.dilution_overrides",
+    "fission_yields.spontaneous",
+    "options.fission",
+    "radiological.bundled",
+    "robustness.statistics"
+   ],
+   "features_without_fenced_fragment": [
+    "photon.point_source",
+    "photon.bremsstrahlung",
+    "photon.group_structure",
+    "schedule[].power_W_per_g",
+    "schedule[].wall_loading_MW_m2",
+    "schedule[].partition",
+    "overrides",
+    "spectrum.rebin",
+    "schedule[].library",
+    "schedule[].projectile"
+   ]
+  }
+ },
+ "failures": [],
+ "unclassified": [],
+ "wall_s": 86.2,
+ "verdict": "PASS"
+}

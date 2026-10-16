@@ -723,4 +723,182 @@ mod tests {
         assert_eq!(nuclide["channels"][0]["reaction"], "(n,g)");
         assert_eq!(nuclide["nuclide"], "Fe56");
     }
+
+    // ---- P140 H1 regression tests (hardening pass) ----
+
+    fn relative_close(actual: f64, expected: f64, tolerance: f64) {
+        assert!(
+            (actual - expected).abs() <= tolerance * expected.abs(),
+            "{actual:e} vs {expected:e}"
+        );
+    }
+
+    #[test]
+    fn p140_dep_f4_trace_analytic_fraction_keeps_precision_for_tiny_exponents() {
+        // Trace mode is chosen below a burnup of 1e-6, so R dt is tiny. The depleted fraction is
+        // -expm1(-R dt) to full precision; `start - start exp(-R dt)` is good to ~1e-16 only.
+        let mut tracker = DepletionTracker::new(
+            true,
+            true,
+            vec![tracked(0.0, None)],
+            vec![vec![loss(0, 102, 3.0e-12)]],
+            None,
+        );
+        let expected_step = -f64::exp_m1(-3.0e-12);
+        let first = tracker.step(0, 1.0, 1.0, &|_| {
+            panic!("the analytic model reads no state")
+        });
+        let first = &first.nuclides[0];
+        relative_close(first.depleted_fraction, expected_step, 1e-9);
+        relative_close(first.depleted_atoms_per_g, 1.0e20 * expected_step, 1e-9);
+        relative_close(first.cumulative_depleted_fraction, expected_step, 1e-9);
+        relative_close(
+            first.cumulative_depleted_atoms_per_g,
+            1.0e20 * expected_step,
+            1e-9,
+        );
+        let second = tracker.step(0, 1.0, 1.0, &|_| {
+            panic!("the analytic model reads no state")
+        });
+        let second = &second.nuclides[0];
+        relative_close(second.depleted_fraction, expected_step, 1e-9);
+        relative_close(
+            second.cumulative_depleted_fraction,
+            -f64::exp_m1(-6.0e-12),
+            1e-9,
+        );
+        relative_close(
+            second.cumulative_depleted_atoms_per_g,
+            1.0e20 * -f64::exp_m1(-6.0e-12),
+            1e-9,
+        );
+    }
+
+    #[test]
+    fn p140_dep_f4_trace_analytic_fraction_is_not_zero_below_machine_epsilon() {
+        // R dt = 1e-20 is far below f64 epsilon: start - start exp(-R dt) is exactly 0.0, yet the
+        // removal rate is positive, so the fraction must be 1e-20, not 0.
+        let mut tracker = DepletionTracker::new(
+            true,
+            true,
+            vec![tracked(0.0, None)],
+            vec![vec![loss(0, 102, 1.0e-20)]],
+            None,
+        );
+        let step = tracker.step(0, 1.0, 1.0, &|_| {
+            panic!("the analytic model reads no state")
+        });
+        let nuclide = &step.nuclides[0];
+        assert!(nuclide.removal_rate_per_s > 0.0);
+        relative_close(nuclide.depleted_fraction, 1.0e-20, 1e-9);
+        relative_close(nuclide.cumulative_depleted_fraction, 1.0e-20, 1e-9);
+        relative_close(nuclide.depleted_atoms_per_g, 1.0e20 * 1.0e-20, 1e-9);
+    }
+
+    #[test]
+    fn p140_dep_negzero_removal_rate_is_positive_zero() {
+        // A stable nuclide with the flux off has no channel; the empty float sum is -0.0, which
+        // serialises as "-0.0". The documented value is a plain 0.0.
+        let mut tracker = DepletionTracker::new(
+            false,
+            true,
+            vec![tracked(0.0, None)],
+            vec![vec![loss(0, 102, 0.5)]],
+            None,
+        );
+        let step = tracker.step(0, 0.0, 1.0, &|_| 1.0e20);
+        let nuclide = &step.nuclides[0];
+        assert!(nuclide.channels.is_empty());
+        assert_eq!(nuclide.removal_rate_per_s, 0.0);
+        assert!(
+            nuclide.removal_rate_per_s.is_sign_positive(),
+            "removal_rate_per_s is negative zero"
+        );
+        let json = serde_json::to_string(&step).unwrap();
+        assert!(!json.contains("-0.0"), "{json}");
+    }
+
+    #[test]
+    fn p140_dep_f3_excluded_covariance_block_is_not_reported_as_zero_uncertainty() {
+        // MT102 carries a negative relative variance: its self block is non-positive-semidefinite,
+        // so the collapse zeroes and excludes it. That is "not covered", not "uncertainty 0".
+        let library = synthetic_library();
+        let covariance = collapse(
+            &library,
+            vec![
+                relative_component(102, 102, -0.04),
+                relative_component(16, 16, 0.09),
+            ],
+        );
+        let rates = vec![loss(0, 102, 0.5), loss(2, 16, 1.0)];
+        let mut tracker = DepletionTracker::new(
+            false,
+            true,
+            vec![tracked(0.25, Some(0.1))],
+            vec![rates],
+            Some(covariance),
+        );
+        let nuclide = &tracker.step(0, 1.0, 1.0, &|_| 1.0e19).nuclides[0];
+        let channel = |name: &str| {
+            nuclide
+                .channels
+                .iter()
+                .find(|channel| channel.channel == name)
+                .unwrap()
+        };
+        // the healthy block is unaffected
+        assert!((channel("MT16").relative_standard_uncertainty.unwrap() - 0.3).abs() < 1e-12);
+        assert_eq!(
+            channel("MT102").relative_standard_uncertainty,
+            None,
+            "an excluded block must not read as uncertainty 0"
+        );
+        // covered: MT16 (1.0) and decay (0.25) of the total 1.75
+        close(nuclide.uncertainty_covered_share.unwrap(), 1.25 / 1.75);
+        assert!(
+            nuclide.removal_rate_relative_standard_uncertainty.is_none(),
+            "the joint total needs every channel covered"
+        );
+    }
+
+    #[test]
+    fn p140_dep_f9a_nan_variance_is_not_clamped_to_zero() {
+        // `f64::max` returns the non-NaN operand, so a NaN variance used to become Some(0.0).
+        let covariance = LossCovariance {
+            index: HashMap::from([((0, 0), 0)]),
+            sigma_b: vec![1.0],
+            covariance_barn2: vec![f64::NAN],
+        };
+        assert_eq!(covariance.variance(0, &[(0, 0.5)]), None);
+        let mut tracker = DepletionTracker::new(
+            false,
+            true,
+            vec![tracked(0.0, None)],
+            vec![vec![loss(0, 102, 0.5)]],
+            Some(covariance),
+        );
+        let nuclide = &tracker.step(0, 1.0, 1.0, &|_| 1.0e19).nuclides[0];
+        assert_eq!(nuclide.channels[0].relative_standard_uncertainty, None);
+        assert!(nuclide.removal_rate_relative_standard_uncertainty.is_none());
+    }
+
+    #[test]
+    fn p140_dep_f9b_zero_removal_omits_the_covered_share() {
+        // A stable nuclide with the flux off: 0 of 0 is undefined, so the key is left out.
+        let mut tracker = DepletionTracker::new(
+            false,
+            true,
+            vec![tracked(0.0, None)],
+            vec![vec![loss(0, 102, 0.5)]],
+            Some(LossCovariance::default()),
+        );
+        let step = tracker.step(0, 0.0, 1.0, &|_| 1.0e20);
+        let nuclide = &step.nuclides[0];
+        assert_eq!(nuclide.removal_rate_per_s, 0.0);
+        assert_eq!(nuclide.uncertainty_covered_share, None);
+        let json = serde_json::to_value(&step).unwrap();
+        assert!(json["nuclides"][0]
+            .get("uncertainty_covered_share")
+            .is_none());
+    }
 }

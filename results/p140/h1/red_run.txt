@@ -1,0 +1,225 @@
+## actinv-core
+test chain::tests::p140_pf_f1_beta_delayed_fission_is_not_spontaneous_fission ... FAILED
+test depletion::tests::p140_dep_f3_excluded_covariance_block_is_not_reported_as_zero_uncertainty ... FAILED
+test depletion::tests::p140_dep_f4_trace_analytic_fraction_is_not_zero_below_machine_epsilon ... FAILED
+test depletion::tests::p140_dep_f4_trace_analytic_fraction_keeps_precision_for_tiny_exponents ... FAILED
+test depletion::tests::p140_dep_f9a_nan_variance_is_not_clamped_to_zero ... FAILED
+test depletion::tests::p140_dep_f9b_zero_removal_omits_the_covered_share ... FAILED
+test depletion::tests::p140_dep_negzero_removal_rate_is_positive_zero ... FAILED
+test pathways::tests::p140_ps_f2_a_tiny_target_does_not_starve_the_routes_of_a_later_source ... FAILED
+test pathways::tests::p140_ps_f5_candidate_cap_drops_are_reported_per_target_and_in_notes ... FAILED
+test pathways::tests::p140_ps_f8_feed_edges_are_labelled_feed ... FAILED
+test pathways::tests::p140_ps_f8_spontaneous_fission_edges_are_labelled_sf ... FAILED
+test photon::tests::p140::p140_ph_f1_endpoint_region_above_the_branch_weighted_energy_is_populated ... FAILED
+test photon::tests::p140::p140_ph_f1_guard_pure_beta_minus_emitter_keeps_er_as_the_energy ... ok
+test photon::tests::p140::p140_ph_f1_multi_particle_beta_codes_count_as_beta_electrons ... FAILED
+test photon::tests::p140::p140_ph_f1_nuclide_without_beta_minus_branching_is_a_missing_input ... FAILED
+test photon::tests::p140::p140_ph_f1_partial_beta_emitter_uses_electron_fraction_and_per_beta_energy ... FAILED
+test photon::tests::p140::p140_ph_f5_point_source_dose_is_withheld_while_gamma_power_is_unrepresented ... FAILED
+test photon::tests::p140::p140_ph_f5_unrepresented_gamma_power_is_counted_as_excluded_power ... FAILED
+test photon::tests::p140::p140_ph_f6_energy_closure_compares_emitted_to_the_analytic_total ... FAILED
+test photon::tests::p140::p140_ph_f6_zero_edge_energy_share_is_reported ... FAILED
+test photon::tests::p140::p140_ph_f7_point_source_dose_refuses_unusable_distances ... FAILED
+test photon::tests::p140::p140_ph_f7_point_source_dose_refuses_unusable_mass ... FAILED
+test power::tests::p140_pf_f5_heating_that_vanishes_during_refinement_names_the_refinement ... FAILED
+test power::tests::p140_pf_f5_negative_and_nan_heating_have_their_own_messages ... FAILED
+test radiological::tests::p140_rad_f2_guard_progeny_without_its_parent_keeps_its_own_row ... ok
+test radiological::tests::p140_rad_f2_progeny_covered_by_a_parent_row_is_not_missing ... FAILED
+test radiological::tests::p140_rad_f2_progeny_with_its_own_row_is_not_counted_twice ... FAILED
+test radiological::tests::p140_rad_f2_require_complete_accepts_parents_with_their_progeny ... FAILED
+test radiological::tests::p140_rad_f3_guard_a_nuclide_absent_from_the_table_without_a_reason_stays_missing ... ok
+test radiological::tests::p140_rad_f3_require_complete_accepts_unlimited_nuclides_in_a1_and_a2 ... FAILED
+test radiological::tests::p140_rad_f3_unlimited_a2_nuclides_are_covered_with_zero_contribution ... FAILED
+test run::depletion_prepared_tests::p140_dep_f1_element_removal_is_a_channel ... FAILED
+test run::depletion_prepared_tests::p140_dep_f1_removal_adds_to_decay_and_reaction_channels ... FAILED
+test run::depletion_prepared_tests::p140_dep_f1_removal_is_a_channel ... FAILED
+test run::depletion_prepared_tests::p140_dep_negzero_cooling_step_removal_rate_is_positive_zero ... FAILED
+test run::gas_prepared_tests::p140_pf_f2_composition_isotopes_outside_the_chain_are_listed_as_uncovered ... FAILED
+test run::gas_prepared_tests::p140_pf_f2_require_complete_refuses_composition_isotopes_outside_the_chain ... FAILED
+test run::gas_prepared_tests::p140_ps_f4_trace_decay_fed_product_is_reported_or_flagged ... FAILED
+test run::gas_prepared_tests::p140_sc_f16_omitted_spectrum_with_a_library_is_not_reported_as_one_group ... FAILED
+test run::gas_prepared_tests::p140_sc_f5_cross_section_override_ignores_spectra_of_cooling_steps ... FAILED
+test run::gas_prepared_tests::p140_sc_f7_partition_acts_on_bulk_isotopes_absent_from_the_chain ... FAILED
+test run::gas_prepared_tests::p140_sc_f9_mode_forced_coupled_only_when_trace_would_have_run ... FAILED
+test run::step_library_tests::p140_sg04_geometry_certificate_method_limits_mention_r_matrix_limited_ranges ... FAILED
+test run::step_library_tests::p140_sg05_step_library_ledger_lists_material_nuclides_without_rows ... FAILED
+test sample_stats::tests::p140_ps_f11_percentile_rank_is_exact_for_decimal_p ... FAILED
+test sample_stats::tests::p140_ps_f1_std_of_a_single_value_is_undefined ... FAILED
+test shielding::tests::p140_sg01_every_arm_keeps_only_levels_inside_its_own_range ... FAILED
+test shielding::tests::p140_sg01_geometry_ledger_counts_the_levels_it_dropped ... FAILED
+test shielding::tests::p140_sg01_resonances_above_the_resolved_range_are_not_shielding_peaks ... FAILED
+test shielding::tests::p140_sg03_choose_element_reports_isotopes_without_files_as_uncovered ... FAILED
+test shielding::tests::p140_sg07_isotope_zai_differing_from_the_mat_za_is_not_accepted_under_the_mat_name ... FAILED
+test shielding::tests::p140_sg07_multi_isotope_material_does_not_silently_drop_isotopes ... FAILED
+test shielding::tests::p140_sg07_natural_element_evaluation_is_keyed_by_isotope_or_refused_clearly ... FAILED
+test spec::p140_schedule_tests::p140_ph_f4_bremsstrahlung_needs_a_photon_producing_output ... FAILED
+test spec::p140_schedule_tests::p140_ph_f4_guard_photon_extras_stay_valid_when_photons_are_produced ... ok
+test spec::p140_schedule_tests::p140_ph_f4_point_source_needs_a_photon_producing_output ... FAILED
+test spec::p140_schedule_tests::p140_rad_f8_unknown_bundled_response_selector_fails_validation ... FAILED
+test spec::p140_schedule_tests::p140_sc_f10_rebin_limits_outside_the_spectrum_are_refused_at_validation ... FAILED
+test spec::p140_schedule_tests::p140_sc_f12_wall_loading_fallback_is_refused_for_non_neutron_projectiles ... FAILED
+test spec::p140_schedule_tests::p140_sc_f16_omitted_base_spectrum_is_not_reported_as_the_placeholder ... FAILED
+test spec::p140_schedule_tests::p140_sc_f1_rebin_leaving_no_destination_flux_is_refused ... FAILED
+test spec::p140_schedule_tests::p140_sc_f1_step_spectrum_rebin_leaving_no_destination_flux_is_refused ... FAILED
+test spec::p140_schedule_tests::p140_sc_f2_zero_wall_loading_needs_no_spectrum_total ... FAILED
+test spec::p140_schedule_tests::p140_sc_f4_kerma_in_a_decay_only_spec_is_refused_at_validation ... FAILED
+test spec::p140_schedule_tests::p140_sc_f6_empty_partition_is_no_partition ... FAILED
+test spec::p140_sg_tests::p140_sg02_step_library_accepts_every_named_neutron_structure ... FAILED
+test spec::p140_sg_tests::p140_sg13_geometry_density_defaults_to_the_material_density ... FAILED
+test spec::p140_sg_tests::p140_sg13_geometry_density_disagreeing_with_the_material_density_is_an_error ... FAILED
+test study::sampling_statistics_tests::p140_ps_f10_response_correlation_is_null_below_three_pairs ... FAILED
+test study::sampling_statistics_tests::p140_ps_f10_two_successes_report_no_correlation_table_and_no_bootstrap ... FAILED
+test study::sampling_statistics_tests::p140_ps_f1_single_success_has_no_std_and_no_first_order_ratio ... FAILED
+test result: FAILED. 4 passed; 67 failed; 0 ignored; 0 measured; 396 filtered out; finished in 1.89s
+FAIL chain::tests::p140_pf_f1_beta_delayed_fission_is_not_spontaneous_fission: without yields: RTYP 2.6 recorded as spontaneous fission: [(1, 3.4657359027997264e-5)]
+FAIL depletion::tests::p140_dep_f3_excluded_covariance_block_is_not_reported_as_zero_uncertainty: assertion `left == right` failed: an excluded block must not read as uncertainty 0   left: Some(0.0)  right: None
+FAIL depletion::tests::p140_dep_f4_trace_analytic_fraction_is_not_zero_below_machine_epsilon: 0e0 vs 1e-20
+FAIL depletion::tests::p140_dep_f4_trace_analytic_fraction_keeps_precision_for_tiny_exponents: 3.00007424e-12 vs 2.9999999999955003e-12
+FAIL depletion::tests::p140_dep_f9a_nan_variance_is_not_clamped_to_zero: assertion `left == right` failed   left: Some(0.0)  right: None
+FAIL depletion::tests::p140_dep_f9b_zero_removal_omits_the_covered_share: assertion `left == right` failed   left: Some(0.0)  right: None
+FAIL depletion::tests::p140_dep_negzero_removal_rate_is_positive_zero: removal_rate_per_s is negative zero
+FAIL pathways::tests::p140_ps_f2_a_tiny_target_does_not_starve_the_routes_of_a_later_source: Ni58 explained fraction with a tiny second target: -0 vs 1
+FAIL pathways::tests::p140_ps_f5_candidate_cap_drops_are_reported_per_target_and_in_notes: assertion `left == right` failed: the target block must say how many of its candidates the cap dropped: {"explained_fraction":0.08333333333333333,"generic":[{"atoms_per_g":8308545811566.671,"edge_types":"b- b-","fraction":0.08333333333333333,"n_paths":1}],"loop_atoms_per_g":-0.0,"paths":[{"atoms_per
+FAIL pathways::tests::p140_ps_f8_feed_edges_are_labelled_feed: assertion `left == right` failed   left: ["edge", "b-"]  right: ["feed", "b-"]
+FAIL pathways::tests::p140_ps_f8_spontaneous_fission_edges_are_labelled_sf: assertion `left == right` failed   left: None  right: Some(["SF"])
+FAIL photon::tests::p140::p140_ph_f1_endpoint_region_above_the_branch_weighted_energy_is_populated: PhotonGroupOut { low_eV: 100000.0, high_eV: 300000.0, centroid_eV: 0.0, photons_s_g: 0.0, photons_s: 0.0, power_W_g: 0.0, power_W: 0.0 }
+FAIL photon::tests::p140::p140_ph_f1_multi_particle_beta_codes_count_as_beta_electrons: assertion failed: close(b.by_nuclide[0].mean_beta_energy_eV, er / f)
+FAIL photon::tests::p140::p140_ph_f1_nuclide_without_beta_minus_branching_is_a_missing_input: modes [(2.0, 1.0)]
+FAIL photon::tests::p140::p140_ph_f1_partial_beta_emitter_uses_electron_fraction_and_per_beta_energy: ER 73408.12: E0 73408.12 vs 190670.44155844155
+FAIL photon::tests::p140::p140_ph_f5_point_source_dose_is_withheld_while_gamma_power_is_unrepresented: dose Some(1.376969387440146e-13) reported with 0.000000000000032043532679999997 W/g of gamma power unrepresented
+FAIL photon::tests::p140::p140_ph_f5_unrepresented_gamma_power_is_counted_as_excluded_power: excluded 0 vs unrepresented 0.000000000000032043532679999997
+FAIL photon::tests::p140::p140_ph_f6_energy_closure_compares_emitted_to_the_analytic_total: no energy_closure in {"by_nuclide":[{"activity_Bq_g":4.0,"contact_gamma_air_dose_proxy_Gy_h":null,"groups":[{"centroid_eV":0.0,"high_eV":10000.0,"low_eV":0.0,"photons_s":0.0,"photons_s_g":0.0,"power_W":0.0,"power_W_g":0.0},{"centroid_eV":55000.00000000001,"high_eV":100000.0,"low_eV":10000.0,"photons
+FAIL photon::tests::p140::p140_ph_f6_zero_edge_energy_share_is_reported: no zero_lower_edge_energy_fraction in {"by_nuclide":[{"activity_Bq_g":2.0,"contact_gamma_air_dose_proxy_Gy_h":null,"groups":[{"centroid_eV":0.0,"high_eV":10000.0,"low_eV":0.0,"photons_s":0.0,"photons_s_g":0.0,"power_W":0.0,"power_W_g":0.0},{"centroid_eV":55000.0,"high_eV":100000.0,"low_eV":10000.0,"
+FAIL photon::tests::p140::p140_ph_f7_point_source_dose_refuses_unusable_distances: distance 0: dose Some(inf)
+FAIL photon::tests::p140::p140_ph_f7_point_source_dose_refuses_unusable_mass: mass 0: dose Some(0.0), per g Some(NaN)
+FAIL power::tests::p140_pf_f5_heating_that_vanishes_during_refinement_names_the_refinement: the message must say a coarser attempt had run: power-driven step: the material has no kerma heating at the start of sub-interval 2 of 2 (heating per unit flux multiplier 0); the kerma table covers none of the populated nuclides or the spectrum is empty
+FAIL power::tests::p140_pf_f5_negative_and_nan_heating_have_their_own_messages: power-driven step: the material has no kerma heating at the start of sub-interval 1 of 1 (heating per unit flux multiplier -1); the kerma table covers none of the populated nuclides or the spectrum is empty
+FAIL radiological::tests::p140_rad_f2_progeny_covered_by_a_parent_row_is_not_missing: progeny reported missing: ["Ba137m1"]
+FAIL radiological::tests::p140_rad_f2_progeny_with_its_own_row_is_not_counted_twice: double counted: 1.001
+FAIL radiological::tests::p140_rad_f2_require_complete_accepts_parents_with_their_progeny: euratom-2013-59-annex-vii-a: radiological response 'annex-vii-table-a-part1' has no coefficient for positive-activity nuclide(s): Ba137m1, Rh106
+FAIL radiological::tests::p140_rad_f3_require_complete_accepts_unlimited_nuclides_in_a1_and_a2: us-49cfr173-a2: radiological response 'a2-u-medium' has no coefficient for positive-activity nuclide(s): Mn53, Ni59
+FAIL radiological::tests::p140_rad_f3_unlimited_a2_nuclides_are_covered_with_zero_contribution: unlimited rows reported missing: ["I129", "Mn53", "Ni59", "Zr93"]
+FAIL run::depletion_prepared_tests::p140_dep_f1_element_removal_is_a_channel: -0 vs 0.001
+FAIL run::depletion_prepared_tests::p140_dep_f1_removal_adds_to_decay_and_reaction_channels: 1.7499999999999998 vs 1.85
+FAIL run::depletion_prepared_tests::p140_dep_f1_removal_is_a_channel: -0 vs 0.001
+FAIL run::depletion_prepared_tests::p140_dep_negzero_cooling_step_removal_rate_is_positive_zero: removal_rate_per_s is negative zero
+FAIL run::gas_prepared_tests::p140_pf_f2_composition_isotopes_outside_the_chain_are_listed_as_uncovered: []
+FAIL run::gas_prepared_tests::p140_pf_f2_require_complete_refuses_composition_isotopes_outside_the_chain: Fe54 has a table row but is not a chain state, so it heats nothing
+FAIL run::gas_prepared_tests::p140_ps_f4_trace_decay_fed_product_is_reported_or_flagged: Ni60 inventory 1.3794570832268768e11: pathways list 0e0 and pathway_closure is 0.0000000000000006269590548717985
+FAIL run::gas_prepared_tests::p140_sc_f16_omitted_spectrum_with_a_library_is_not_reported_as_one_group: the zero-flux placeholder must not leak into the message: spectrum has 1 groups but activation library has 4
+FAIL run::gas_prepared_tests::p140_sc_f5_cross_section_override_ignores_spectra_of_cooling_steps: an override is checked against spectra the schedule irradiates with: "override cross_section 'Fe56' MT 1 cannot set a nonzero value: the reaction collapses to zero under a spectrum of the schedule"
+FAIL run::gas_prepared_tests::p140_sc_f7_partition_acts_on_bulk_isotopes_absent_from_the_chain: removed 7420817648081793000000 vs 0.75 x 10783642708520307000000
+FAIL run::gas_prepared_tests::p140_sc_f9_mode_forced_coupled_only_when_trace_would_have_run: assertion `left == right` failed: burn-up selects coupled with or without the partition   left: Bool(true)  right: false
+FAIL run::step_library_tests::p140_sg04_geometry_certificate_method_limits_mention_r_matrix_limited_ranges: method_limits is stale for LRF=7: [String("sigmoid parameters A1, A2, z0, p are the Martinho et al. fit quoted in the FISPACT-II manual (Eqs. 45-48); the peak cross section is the single-level Breit-Wigner value 4*pi/k^2 * g*Gamma_n/Gamma"), String("Sigma_tot at each resonance counts only the shield
+FAIL run::step_library_tests::p140_sg05_step_library_ledger_lists_material_nuclides_without_rows: no material_nuclides_without_rows list in {"fluence_particles_cm2":5.9999999999999995e+23,"group_structure":null,"isomer_state_absent_from_decay_library_used_ground":{},"library":"synthetic_b.npz","library_sha256":"1111111111111111111111111111111111111111111111111111111111111111","products_no_evalua
+FAIL sample_stats::tests::p140_ps_f11_percentile_rank_is_exact_for_decimal_p: assertion `left == right` failed   left: 34.0  right: 33.0
+FAIL sample_stats::tests::p140_ps_f1_std_of_a_single_value_is_undefined: std_dev of one value is 0
+FAIL shielding::tests::p140_sg01_every_arm_keeps_only_levels_inside_its_own_range: assertion `left == right` failed: Breit-Wigner arm   left: [1e-7, 20.0, 50.0, 150.0, 500.0, 20000.0]  right: [50.0, 500.0]
+FAIL shielding::tests::p140_sg01_geometry_ledger_counts_the_levels_it_dropped: assertion `left == right` failed: the geometry ledger must count levels clipped to [EL, EH]: {"density_g_cm3":19.3,"effective_length_cm":0.015,"factors":{"W186":[{"energy_max_eV":100.0,"energy_min_eV":1.0,"factor":0.43550424256428394,"group":0,"resonances":1},{"energy_max_eV":10000.0,"energy_min_eV"
+FAIL shielding::tests::p140_sg01_resonances_above_the_resolved_range_are_not_shielding_peaks: assertion `left == right` failed: a level above the evaluation's EH must not become a shielding line   left: 3  right: 2
+FAIL shielding::tests::p140_sg03_choose_element_reports_isotopes_without_files_as_uncovered: an element entry must not fail because one isotope has no file: "self_shielding.geometry.choose selects W186, but no resonance file supplies it"
+FAIL shielding::tests::p140_sg07_isotope_zai_differing_from_the_mat_za_is_not_accepted_under_the_mat_name: W184 levels were silently registered as W186
+FAIL shielding::tests::p140_sg07_multi_isotope_material_does_not_silently_drop_isotopes: Zr91 was dropped without a word
+FAIL shielding::tests::p140_sg07_natural_element_evaluation_is_keyed_by_isotope_or_refused_clearly: a multi-isotope refusal must say so: self_shielding.geometry resonance file zr.endf: Zr0 has no usable resolved (LRU=1) resonances
+FAIL spec::p140_schedule_tests::p140_ph_f4_bremsstrahlung_needs_a_photon_producing_output: spec unexpectedly validated: {"decay":{"primary":"decay.endf"},"material":{"basis":"wt_percent","composition":{"FE":100.0}},"options":{"outputs":["activity"]},"photon":{"bremsstrahlung":{"nuclides":["Cl36"]}},"schedule":[{"dt":"1 d","flux":0.0}],"spec":"actinv-spec-1"}
+FAIL spec::p140_schedule_tests::p140_ph_f4_point_source_needs_a_photon_producing_output: spec unexpectedly validated: {"decay":{"primary":"decay.endf"},"material":{"basis":"wt_percent","composition":{"FE":100.0}},"options":{"outputs":["activity"]},"photon":{"point_source":{"distance_m":1.0}},"schedule":[{"dt":"1 d","flux":0.0}],"spec":"actinv-spec-1"}
+FAIL spec::p140_schedule_tests::p140_rad_f8_unknown_bundled_response_selector_fails_validation: spec unexpectedly validated: {"decay":{"primary":"decay.endf"},"material":{"basis":"wt_percent","composition":{"FE":100.0}},"radiological":{"responses":["a2-u-medium","a2-u-medum"],"table":{"path":"bundled:us-49cfr173-a2","sha256":"17578031eeecda97c39c3034571d2060b30fe8d93e30fa048e245a0608a55745"}},
+FAIL spec::p140_schedule_tests::p140_sc_f10_rebin_limits_outside_the_spectrum_are_refused_at_validation: limits outside the spectrum are known at validation: ["base emin: validated", "step emin: validated", "base emax: validated", "step emax: validated"]
+FAIL spec::p140_schedule_tests::p140_sc_f12_wall_loading_fallback_is_refused_for_non_neutron_projectiles: 4.44e13 n cm^-2 s^-1 per MW m^-2 is a 14 MeV neutron equivalence, not a proton one: ()
+FAIL spec::p140_schedule_tests::p140_sc_f16_omitted_base_spectrum_is_not_reported_as_the_placeholder: the zero-flux placeholder must not leak into the message: schedule step spectrum.structure 'fispact-709' must match the base spectrum's 'custom'
+FAIL spec::p140_schedule_tests::p140_sc_f1_rebin_leaving_no_destination_flux_is_refused: a rebin that lands none of the flux on the destination must be refused: ()
+FAIL spec::p140_schedule_tests::p140_sc_f1_step_spectrum_rebin_leaving_no_destination_flux_is_refused: a step spectrum that lands none of its flux must be refused: ()
+FAIL spec::p140_schedule_tests::p140_sc_f2_zero_wall_loading_needs_no_spectrum_total: a zero wall loading is a zero multiplier whatever the spectrum: "a wall-loading step needs a spectrum with positive total flux or a declared wall_loading_MW_m2 reference"
+FAIL spec::p140_schedule_tests::p140_sc_f4_kerma_in_a_decay_only_spec_is_refused_at_validation: a decay-only run has no activation library to take a kerma table from: Spec { spec: "actinv-spec-1", title: "", projectile: Neutron, library: LibraryRef { path: "", sha256: None }, decay: DecayRef { primary: "decay.endf", fallback: None, overrides: None }, material: Material { mass_g: 1.0, basis: "w
+FAIL spec::p140_schedule_tests::p140_sc_f6_empty_partition_is_no_partition: an empty partition is a no-op in the run and must not be refused: ["options.mode trace: schedule partition is not supported with options.mode 'trace': the trace formulation holds the bulk material undepleted; use 'coupled' or 'auto'", "pathways: schedule partition cannot be combined with pathways: t
+FAIL spec::p140_sg_tests::p140_sg02_step_library_accepts_every_named_neutron_structure: fispact-66 on a neutron step library: unknown schedule step spectrum structure 'fispact-66'
+FAIL spec::p140_sg_tests::p140_sg13_geometry_density_defaults_to_the_material_density: geometry.density_g_cm3 may be omitted when material.density_g_cm3 is given: "spec: missing field `density_g_cm3` at line 1 column 368"
+FAIL spec::p140_sg_tests::p140_sg13_geometry_density_disagreeing_with_the_material_density_is_an_error: two different densities for one material must be refused: Spec { spec: "actinv-spec-1", title: "", projectile: Neutron, library: LibraryRef { path: "activation.npz", sha256: None }, decay: DecayRef { primary: "decay.endf", fallback: None, overrides: None }, material: Material { mass_g: 1.0, basis: "
+FAIL study::sampling_statistics_tests::p140_ps_f10_response_correlation_is_null_below_three_pairs: two-pair Pearson is -1.0
+FAIL study::sampling_statistics_tests::p140_ps_f10_two_successes_report_no_correlation_table_and_no_bootstrap: assertion `left == right` failed: {"convergence":{"method":"nonparametric bootstrap, fixed seed","percentile_standard_error":{"16":6.031856578217865,"2.5":6.031856578217865,"5":6.031856578217865,"50":6.031856578217865,"84":5.850929146297799,"95":5.850929146297799,"97.5":5.850929146297799},"resamples
+FAIL study::sampling_statistics_tests::p140_ps_f1_single_success_has_no_std_and_no_first_order_ratio: std of one sample is 0.0
+## actinv-data
+test kerma::tests::p140_pf_f10_damage_rows_without_a_heating_row_are_refused ... FAILED
+test spallation::tests::p140_sg06_splice_reports_library_rows_left_untouched_but_nonzero_above_the_splice ... FAILED
+test result: FAILED. 0 passed; 2 failed; 0 ignored; 0 measured; 203 filtered out; finished in 0.00s
+FAIL kerma::tests::p140_pf_f10_damage_rows_without_a_heating_row_are_refused: a damage row with no heating row is unreachable and must be refused: KermaTable { source: KermaSource { citation: "test", edition: "t", url: "local" }, projectile: "neutron", group_structure: "test-2g", boundaries_eV: [1e-5, 1.0, 1000000.0], temperature_K: None, files: [], declared_uncovered: [], he
+FAIL spallation::tests::p140_sg06_splice_reports_library_rows_left_untouched_but_nonzero_above_the_splice: assertion `left == right` failed: provenance lacks untouched_rows_nonzero_in_spliced_groups: {"effective_splice_eV":1000.0,"first_spliced_group":3,"groups_spliced":3,"requested_splice_eV":1000.0,"rows_added":1,"rows_replaced":1,"schema":"actinv-spallation-residuals-1","table_description":"synthetic 
+## actinv-cli
+test fispact_import::tests::p140_if_f10_a_missing_fluxes_file_is_ignored_by_a_cooling_only_deck ... FAILED
+test fispact_import::tests::p140_if_f10_a_missing_fluxes_file_still_stops_an_irradiating_deck ... ok
+test fispact_import::tests::p140_if_f11_a_strict_failure_removes_a_stale_output ... FAILED
+test fispact_import::tests::p140_if_f11_out_aliasing_the_deck_through_a_path_alias_is_refused ... FAILED
+test fispact_import::tests::p140_if_f11_out_equal_to_deck_is_refused ... FAILED
+test fispact_import::tests::p140_if_f13_single_letter_time_units_are_units ... FAILED
+test fispact_import::tests::p140_if_f14_power_flags_words_after_its_mt_list ... FAILED
+test fispact_import::tests::p140_if_f14_power_reads_its_declared_count_of_mt_numbers ... FAILED
+test fispact_import::tests::p140_if_f14_power_without_an_mt_list_does_not_claim_an_empty_list ... FAILED
+test fispact_import::tests::p140_if_f1_deprecated_keywords_are_recognised ... FAILED
+test fispact_import::tests::p140_if_f1_noheader_and_mcseed_are_recognised ... FAILED
+test fispact_import::tests::p140_if_f1_shipped_fission_deck_tol_and_nohead_are_noted ... FAILED
+test fispact_import::tests::p140_if_f1_three_letter_abbreviations_resolve ... FAILED
+test fispact_import::tests::p140_if_f2_a_valid_partition_stays_mapped_beside_an_unknown_keyword ... FAILED
+test fispact_import::tests::p140_if_f2_unknown_keyword_after_a_words_keyword_gets_its_own_entry ... FAILED
+test fispact_import::tests::p140_if_f3_a_superseded_time_is_unsupported_with_its_duration_and_flux ... FAILED
+test fispact_import::tests::p140_if_f3_a_trailing_time_is_unsupported_with_its_duration_and_flux ... FAILED
+test fispact_import::tests::p140_if_f4_over_after_the_first_step_is_not_reported_as_mapped ... FAILED
+test fispact_import::tests::p140_if_f5_deeply_nested_pulses_are_refused ... FAILED
+test fispact_import::tests::p140_if_f5_nested_huge_pulse_counts_are_refused_not_run ... FAILED
+test fispact_import::tests::p140_if_f6_keywords_inside_a_zero_count_pulse_are_reported ... FAILED
+test fispact_import::tests::p140_if_f7_a_repeated_spectrum_conversion_leaves_no_unsettled_entry ... FAILED
+test fispact_import::tests::p140_if_f7_a_repeated_uncertainty_leaves_no_unsettled_entry ... FAILED
+test fispact_import::tests::p140_if_f7_uncertainty_inside_a_pulse_body_is_settled ... FAILED
+test fispact_import::tests::p140_if_f8_the_spec_and_the_dose_entries_agree ... FAILED
+test fispact_import::tests::p140_if_f9_a_deck_with_a_non_utf8_comment_byte_imports ... FAILED
+test fispact_import::tests::p140_if_f9_a_utf8_bom_is_not_part_of_the_first_keyword ... FAILED
+test fispact_import::tests::p140_if_f9_bare_cr_line_ends_split_lines ... FAILED
+test inspect::tests::p140_sc_f11_inspect_xs_does_not_collapse_a_rebin_spectrum_as_if_on_the_library_grid ... FAILED
+test inspect::tests::p140_sg08_library_report_emits_object_valued_index_fields ... FAILED
+test inspect::tests::p140_sg08_structure_name_recognises_every_named_structure_without_an_index ... FAILED
+test inspect::tests::p140_sg10_custom_spectrum_boundaries_use_the_solvers_tolerance ... FAILED
+test inspect::tests::p140_sg10_named_spectrum_structure_is_compared_with_the_library_boundaries ... FAILED
+test inspect::tests::p140_sg10_za_shaped_integers_are_not_target_indices ... FAILED
+test report::tests::p140_report_f10_depletion_table_is_rendered ... FAILED
+test report::tests::p140_report_f10_nuclide_trimmed_from_the_summary_is_named ... FAILED
+test report::tests::p140_report_f10_tab2_says_when_summary_rows_are_trimmed ... FAILED
+test workflow::tests::p140_sg09_check_files_opens_every_path_bearing_field ... FAILED
+test workflow::tests::p140_sg09_resolve_inputs_rebases_every_path_bearing_field ... FAILED
+test result: FAILED. 1 passed; 38 failed; 0 ignored; 0 measured; 147 filtered out; finished in 10.09s
+FAIL fispact_import::tests::p140_if_f10_a_missing_fluxes_file_is_ignored_by_a_cooling_only_deck: Err("the fluxes file '/nonexistent/p140/fluxes' named by the files file was not found; pass --fluxes FILE")
+FAIL fispact_import::tests::p140_if_f11_a_strict_failure_removes_a_stale_output: the previous OUT.json survived a failed --strict import
+FAIL fispact_import::tests::p140_if_f11_out_aliasing_the_deck_through_a_path_alias_is_refused: Ok("imported /home/connoravila/Documents/actinv/target/preflight-tmp/actinv-p140-if-3469067-f11-alias/deck.i -> /home/connoravila/Documents/actinv/target/preflight-tmp/actinv-p140-if-3469067-f11-alias/sub/../deck.i (1 steps; 5 mapped, 0 approximated, 1 noted, 0 unsupported); report: /home/connoravil
+FAIL fispact_import::tests::p140_if_f11_out_equal_to_deck_is_refused: Ok("imported /home/connoravila/Documents/actinv/target/preflight-tmp/actinv-p140-if-3469067-f11-same/deck.i -> /home/connoravila/Documents/actinv/target/preflight-tmp/actinv-p140-if-3469067-f11-same/deck.i (1 steps; 5 mapped, 0 approximated, 1 noted, 0 unsupported); report: /home/connoravila/Documen
+FAIL fispact_import::tests::p140_if_f13_single_letter_time_units_are_units: assertion `left == right` failed: TIME 5 s: [("S", 6)]   left: 1  right: 0
+FAIL fispact_import::tests::p140_if_f14_power_flags_words_after_its_mt_list: steps that follow take power_W_cm3 = 150 (FISPACT-II's W/cc) with material.density_g_cm3 from DENSITY; the flux amplitude is solved from kerma heating, which needs a hash-pinned kerma.table that no deck provides (see required_additions); the deck normalizes on MT list '1 301 999', ACTINV on the tabl
+FAIL fispact_import::tests::p140_if_f14_power_reads_its_declared_count_of_mt_numbers: steps that follow take power_W_cm3 = 150 (FISPACT-II's W/cc) with material.density_g_cm3 from DENSITY; the flux amplitude is solved from kerma heating, which needs a hash-pinned kerma.table that no deck provides (see required_additions); the deck normalizes on MT list '2 301 444', ACTINV on the tabl
+FAIL fispact_import::tests::p140_if_f14_power_without_an_mt_list_does_not_claim_an_empty_list: steps that follow take power_W_cm3 = 150 (FISPACT-II's W/cc) with material.density_g_cm3 from DENSITY; the flux amplitude is solved from kerma heating, which needs a hash-pinned kerma.table that no deck provides (see required_additions); the deck normalizes on MT list '', ACTINV on the table's total
+FAIL fispact_import::tests::p140_if_f1_deprecated_keywords_are_recognised: COLLAPSE: {"args":"","detail":"not a FISPACT-II keyword; the importer cannot tell what it was meant to do","keyword":"COLLAPSE","line":5,"phase":"initial","status":"unsupported"}
+FAIL fispact_import::tests::p140_if_f1_noheader_and_mcseed_are_recognised: assertion `left == right` failed: NOHEAD: [Object {"args": String(""), "detail": String("not a FISPACT-II keyword; the importer cannot tell what it was meant to do"), "keyword": String("NOHEAD"), "line": Number(5), "phase": String("initial"), "status": String("unsupported")}]   left: String("unsuppo
+FAIL fispact_import::tests::p140_if_f1_shipped_fission_deck_tol_and_nohead_are_noted: assertion `left == right` failed: [Object {"args": String(""), "detail": String("not a FISPACT-II keyword; the importer cannot tell what it was meant to do"), "keyword": String("NOHEAD"), "line": Number(2), "phase": String("library"), "status": String("unsupported")}]   left: String("unsupported")  
+FAIL fispact_import::tests::p140_if_f1_three_letter_abbreviations_resolve: assertion `left == right` failed   left: None  right: Some("TOLERANCE")
+FAIL fispact_import::tests::p140_if_f2_a_valid_partition_stays_mapped_beside_an_unknown_keyword: assertion `left == right` failed   left: ["unsupported"]  right: ["mapped"]
+FAIL fispact_import::tests::p140_if_f2_unknown_keyword_after_a_words_keyword_gets_its_own_entry: assertion `left == right` failed: after 'PATH Co58': [Object {"args": String("t"), "detail": String("title -> spec.title"), "keyword": String("FISPACT"), "line": Number(1), "phase": String("library"), "status": String("mapped")}, Object {"args": String("1E-3 1 FE 100"), "detail": String("material.ma
+FAIL fispact_import::tests::p140_if_f3_a_superseded_time_is_unsupported_with_its_duration_and_flux: no unsupported TIME entry: [Object {"args": String("t"), "detail": String("title -> spec.title"), "keyword": String("FISPACT"), "line": Number(1), "phase": String("library"), "status": String("mapped")}, Object {"args": String("1E-3 1 FE 100"), "detail": String("material.mass_g = 1 g, basis wt_perce
+FAIL fispact_import::tests::p140_if_f3_a_trailing_time_is_unsupported_with_its_duration_and_flux: assertion `left == right` failed: [Object {"args": String("t"), "detail": String("title -> spec.title"), "keyword": String("FISPACT"), "line": Number(1), "phase": String("library"), "status": String("mapped")}, Object {"args": String("1E-3 1 FE 100"), "detail": String("material.mass_g = 1 g, basis w
+FAIL fispact_import::tests::p140_if_f4_over_after_the_first_step_is_not_reported_as_mapped: ALAM after a step is 'mapped', not a from-t=0 mapping: [Object {"args": String("t"), "detail": String("title -> spec.title"), "keyword": String("FISPACT"), "line": Number(1), "phase": String("library"), "status": String("mapped")}, Object {"args": String("1E-3 1 FE 100"), "detail": String("material.
+FAIL fispact_import::tests::p140_if_f5_deeply_nested_pulses_are_refused: a 4000-deep PULSE nest was accepted: there is no nesting limit
+FAIL fispact_import::tests::p140_if_f5_nested_huge_pulse_counts_are_refused_not_run: no answer within 10 s: 1e9 x 1e9 repetitions of a step-free PULSE body were run instead of refused
+FAIL fispact_import::tests::p140_if_f6_keywords_inside_a_zero_count_pulse_are_reported: assertion `left == right` failed   left: []  right: ["unsupported"]
+FAIL fispact_import::tests::p140_if_f7_a_repeated_spectrum_conversion_leaves_no_unsettled_entry: stale placeholder: {"args":"709 1","detail":"resolved when the deck ends","keyword":"GRPCONVERT","line":5,"phase":"initial","status":"noted"}
+FAIL fispact_import::tests::p140_if_f7_a_repeated_uncertainty_leaves_no_unsettled_entry: stale placeholder: {"args":"2","detail":"resolved when the deck ends","keyword":"UNCERTAINTY","line":5,"phase":"initial","status":"noted"}
+FAIL fispact_import::tests::p140_if_f7_uncertainty_inside_a_pulse_body_is_settled: assertion `left == right` failed   left: ["noted"]  right: ["mapped"]
+FAIL fispact_import::tests::p140_if_f8_the_spec_and_the_dose_entries_agree: spec has no photon.point_source yet DOSE 2 is 'mapped' and DOSE 1 is 'noted': [Object {"args": String("t"), "detail": String("title -> spec.title"), "keyword": String("FISPACT"), "line": Number(1), "phase": String("library"), "status": String("mapped")}, Object {"args": String("1E-3 1 FE 100"), "det
+FAIL fispact_import::tests::p140_if_f9_a_deck_with_a_non_utf8_comment_byte_imports: Err("cannot read /home/connoravila/Documents/actinv/target/preflight-tmp/actinv-p140-if-3469067-f9-latin1/deck.i: stream did not contain valid UTF-8")
+FAIL fispact_import::tests::p140_if_f9_a_utf8_bom_is_not_part_of_the_first_keyword: assertion `left == right` failed: [("\u{feff}FISPACT", 1)]   left: 1  right: 0
+FAIL fispact_import::tests::p140_if_f9_bare_cr_line_ends_split_lines: assertion `left == right` failed   left: Null  right: "t"
+FAIL inspect::tests::p140_sc_f11_inspect_xs_does_not_collapse_a_rebin_spectrum_as_if_on_the_library_grid: assertion `left != right` failed: the source spectrum was used as if it were already on the library grid   left: [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1
+FAIL inspect::tests::p140_sg08_library_report_emits_object_valued_index_fields: assertion `left == right` failed: {"energy_range_eV":[1.0,100.0],"energy_structure":"toy","group_count":2,"index":{"groups":"toy","projectile":"neutron","schema":"actinv-library-index-1"},"index_array_lengths":{"targets":2},"index_file":"lib_index.json","projectile":"neutron","projectile_declared":t
+FAIL inspect::tests::p140_sg08_structure_name_recognises_every_named_structure_without_an_index: assertion `left == right` failed: an index-less fispact-66 library is reported as something else   left: "custom"  right: "fispact-66"
+FAIL inspect::tests::p140_sg10_custom_spectrum_boundaries_use_the_solvers_tolerance: assertion failed: spectrum_flux(&spectrum, &toy_library()).is_err()
+FAIL inspect::tests::p140_sg10_named_spectrum_structure_is_compared_with_the_library_boundaries: a fispact-709 spectrum on a different 709-group grid must be refused
+FAIL inspect::tests::p140_sg10_za_shaped_integers_are_not_target_indices: called `Result::unwrap_err()` on an `Ok` value: 26056
+FAIL report::tests::p140_report_f10_depletion_table_is_rendered: `depletion` is a report table: Usage("unknown table 'depletion' (expected tab1, tab2, tab3, tab4, totals, dominant, elements, timeseries)\nusage: actinv report RESULT.json [--tables LIST] [--format csv|tsv|markdown|text] [--out DIR] [--step N|all] [--nuclides LIST]")
+FAIL report::tests::p140_report_f10_nuclide_trimmed_from_the_summary_is_named: tab1: an empty table for a trimmed nuclide without explanation: '1 inventory entries are not in summary.nuclides (min_atoms or include_stable); the table lists the summary rows'
+FAIL report::tests::p140_report_f10_tab2_says_when_summary_rows_are_trimmed: TAB2 trims silently: []
+FAIL workflow::tests::p140_sg09_check_files_opens_every_path_bearing_field: files never opened: ["step-lib.npz", "shield-table.json", "w186.endf", "damage-table.json", "sfy.endf", "nubar-decay.endf", "nubar-table.json"] Activation library: cannot open actinv-data/v1.1.0/activation/tendl-2025-neutron-709g.npz: No such file or directory (os error 2) Primary decay data: cannot
+FAIL workflow::tests::p140_sg09_resolve_inputs_rebases_every_path_bearing_field: paths left relative: ["schedule[1].library.path", "self_shielding.table", "self_shielding.geometry.resonance_files[0]", "damage.table", "fission_yields.spontaneous.files[0]", "fission_yields.spontaneous.nubar_endf", "fission_yields.spontaneous.nubar_table"]

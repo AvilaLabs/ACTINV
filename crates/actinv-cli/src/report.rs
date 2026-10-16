@@ -2204,4 +2204,110 @@ mod tests {
             other => panic!("expected a failure, got {other:?}"),
         }
     }
+
+    // ---- P140 H1 regression tests (hardening pass) ----
+
+    /// `summary.depletion` of one step: Fe56 loses 10 % through (n,g) and (n,2n).
+    fn depletion_json() -> Value {
+        json!({
+            "model": "coupled",
+            "nuclides": [{
+                "nuclide": "Fe56", "Z": 26, "A": 56, "LISO": 0,
+                "initial_atoms_per_g": 1.0e22,
+                "atoms_start_per_g": 1.0e22,
+                "atoms_end_per_g": 9.0e21,
+                "depleted_atoms_per_g": 1.0e21,
+                "depleted_fraction": 0.1,
+                "cumulative_depleted_atoms_per_g": 1.0e21,
+                "cumulative_depleted_fraction": 0.1,
+                "removal_rate_per_s": 0.01,
+                "channels": [
+                    {"channel": "MT102", "kind": "reaction", "mt": 102, "reaction": "(n,g)",
+                     "rate_per_s": 0.006, "share": 0.6},
+                    {"channel": "MT16", "kind": "reaction", "mt": 16, "reaction": "(n,2n)",
+                     "rate_per_s": 0.004, "share": 0.4},
+                ],
+            }],
+        })
+    }
+
+    #[test]
+    fn p140_report_f10_depletion_table_is_rendered() {
+        let scratch = Scratch::new();
+        let mut result = result_json(true);
+        for step in result["steps"].as_array_mut().unwrap() {
+            step["summary"]["depletion"] = depletion_json();
+        }
+        let input = scratch.file("result.json");
+        std::fs::write(&input, serde_json::to_string(&result).unwrap()).unwrap();
+        let out = scratch.file("tables");
+        run(&args(&[
+            &input,
+            "--tables",
+            "depletion",
+            "--format",
+            "csv",
+            "--step",
+            "1",
+            "--out",
+            &out,
+        ]))
+        .expect("`depletion` is a report table");
+        let written = std::fs::read_to_string(scratch.file("tables/depletion.csv")).unwrap();
+        let header = written.lines().next().unwrap();
+        assert!(header.contains("nuclide"), "{header}");
+        assert!(header.contains("depleted_fraction"), "{header}");
+        assert!(written.contains("Fe56"), "{written}");
+        // the fraction (exact {:e} text) and both channels appear
+        assert!(written.contains("1e-1"), "{written}");
+        assert!(written.contains("MT102"), "{written}");
+        assert!(written.contains("MT16"), "{written}");
+    }
+
+    #[test]
+    fn p140_report_f10_tab2_says_when_summary_rows_are_trimmed() {
+        let mut result = result_json(true);
+        // Mn54 is in the inventory and the activity map but not in summary.nuclides
+        result["steps"][0]["summary"]["nuclides"]
+            .as_array_mut()
+            .unwrap()
+            .pop();
+        let tab2 = table(&result, TableKind::Tab2, FIRST, &[]).unwrap();
+        assert_eq!(tab2.rows.len(), 1);
+        assert!(
+            tab2.notes
+                .iter()
+                .any(|note| note.contains("not in summary.nuclides")),
+            "TAB2 trims silently: {:?}",
+            tab2.notes
+        );
+        // nothing trimmed, nothing to say
+        let untrimmed = table(&result_json(true), TableKind::Tab2, FIRST, &[]).unwrap();
+        assert!(untrimmed.notes.is_empty(), "{:?}", untrimmed.notes);
+    }
+
+    #[test]
+    fn p140_report_f10_nuclide_trimmed_from_the_summary_is_named() {
+        let mut result = result_json(true);
+        result["steps"][0]["summary"]["nuclides"]
+            .as_array_mut()
+            .unwrap()
+            .pop();
+        for kind in [TableKind::Tab1, TableKind::Tab2] {
+            let asked = request(&[kind], Format::Csv, FIRST, &["Mn54"]);
+            // Either a refusal or a note, but it must name the nuclide and summary.nuclides.
+            let message = match build_tables(&result, &asked) {
+                Err(error) => error,
+                Ok(mut outcomes) => match outcomes.remove(0).built {
+                    Ok(built) => built.notes.join("\n"),
+                    Err(reason) => reason,
+                },
+            };
+            assert!(
+                message.contains("Mn54") && message.contains("summary.nuclides"),
+                "{}: an empty table for a trimmed nuclide without explanation: '{message}'",
+                kind.name()
+            );
+        }
+    }
 }

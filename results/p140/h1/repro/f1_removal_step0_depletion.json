@@ -1,0 +1,68 @@
+{
+ "case": "f1_removal",
+ "step0_depletion": {
+  "model": "coupled",
+  "nuclides": [
+   {
+    "nuclide": "Fe56",
+    "Z": 26,
+    "A": 56,
+    "LISO": 0,
+    "initial_atoms_per_g": 9.894423530775723e+21,
+    "atoms_start_per_g": 9.894423530775723e+21,
+    "atoms_end_per_g": 3.639954999215343e+21,
+    "depleted_atoms_per_g": 6.25446853156038e+21,
+    "depleted_fraction": 0.6321205588285577,
+    "cumulative_depleted_atoms_per_g": 6.25446853156038e+21,
+    "cumulative_depleted_fraction": 0.6321205588285577,
+    "removal_rate_per_s": -0.0,
+    "channels": []
+   },
+   {
+    "nuclide": "Fe54",
+    "Z": 26,
+    "A": 54,
+    "LISO": 0,
+    "initial_atoms_per_g": 6.30303916313012e+20,
+    "atoms_start_per_g": 6.30303916313012e+20,
+    "atoms_end_per_g": 6.303039163130122e+20,
+    "depleted_atoms_per_g": -262144.0,
+    "depleted_fraction": -4.159009538341787e-16,
+    "cumulative_depleted_atoms_per_g": -262144.0,
+    "cumulative_depleted_fraction": -4.159009538341787e-16,
+    "removal_rate_per_s": -0.0,
+    "channels": []
+   },
+   {
+    "nuclide": "Fe57",
+    "Z": 26,
+    "A": 57,
+    "LISO": 0,
+    "initial_atoms_per_g": 2.285053889935453e+20,
+    "atoms_start_per_g": 2.285053889935453e+20,
+    "atoms_end_per_g": 2.285053889935454e+20,
+    "depleted_atoms_per_g": -98304.0,
+    "depleted_fraction": -4.302042959817321e-16,
+    "cumulative_depleted_atoms_per_g": -98304.0,
+    "cumulative_depleted_fraction": -4.302042959817321e-16,
+    "removal_rate_per_s": -0.0,
+    "channels": []
+   },
+   {
+    "nuclide": "Fe58",
+    "Z": 26,
+    "A": 58,
+    "LISO": 0,
+    "initial_atoms_per_g": 3.0409872438027264e+19,
+    "atoms_start_per_g": 3.0409872438027264e+19,
+    "atoms_end_per_g": 3.040987243802727e+19,
+    "depleted_atoms_per_g": -4096.0,
+    "depleted_fraction": -1.3469310035243654e-16,
+    "cumulative_depleted_atoms_per_g": -4096.0,
+    "cumulative_depleted_fraction": -1.3469310035243654e-16,
+    "removal_rate_per_s": -0.0,
+    "channels": []
+   }
+  ]
+ }
+}

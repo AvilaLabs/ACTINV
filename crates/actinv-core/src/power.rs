@@ -533,4 +533,44 @@ mod tests {
         assert!(json.get("heating_W_cm3").is_none());
         assert!(json.get("damage_energy_eV_per_g_s").is_none());
     }
+
+    #[test]
+    fn p140_pf_f5_negative_and_nan_heating_have_their_own_messages() {
+        let keep = |y: &[f64], _: f64, _: f64| Ok((y.to_vec(), 0.0));
+        // a legal negative table row: the table does cover the nuclide
+        let negative = solve_power_step(&[1.0], 1.0, 1.0, 1e-3, 4, |y| -y[0], keep).unwrap_err();
+        assert!(negative.contains("negative"), "{negative}");
+        assert!(!negative.contains("covers none"), "{negative}");
+        let not_a_number =
+            solve_power_step(&[1.0], 1.0, 1.0, 1e-3, 4, |_| f64::NAN, keep).unwrap_err();
+        assert!(!not_a_number.contains("covers none"), "{not_a_number}");
+        assert!(
+            not_a_number.contains("finite") || not_a_number.contains("NaN"),
+            "{not_a_number}"
+        );
+        // the genuine no-coverage case keeps the coverage wording
+        let dead = solve_power_step(&[0.0], 1.0, 1.0, 1e-3, 4, |y| y[0], keep).unwrap_err();
+        assert!(dead.contains("no kerma heating"), "{dead}");
+    }
+
+    #[test]
+    fn p140_pf_f5_heating_that_vanishes_during_refinement_names_the_refinement() {
+        // one sub-interval completes (and drifts by 50 %), so the solver refines; the two-way
+        // split then reaches zero heating at the start of its second sub-interval
+        let error = solve_power_step(
+            &[1.0],
+            1.0,
+            1.0,
+            1e-3,
+            4,
+            |y| y[0],
+            |_, _, h| Ok((vec![if h > 0.75 { 0.5 } else { 0.0 }], 0.0)),
+        )
+        .unwrap_err();
+        assert!(error.contains("sub-interval 2 of 2"), "{error}");
+        assert!(
+            error.contains("refin"),
+            "the message must say a coarser attempt had run: {error}"
+        );
+    }
 }

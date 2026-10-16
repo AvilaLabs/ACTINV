@@ -1,0 +1,472 @@
+{
+ "case": "f4_trace",
+ "step0_depletion": {
+  "model": "trace_analytic",
+  "nuclides": [
+   {
+    "nuclide": "Fe56",
+    "Z": 26,
+    "A": 56,
+    "LISO": 0,
+    "initial_atoms_per_g": 9.894423530775723e+21,
+    "atoms_start_per_g": 9.894423530775723e+21,
+    "atoms_end_per_g": 9.894423530757014e+21,
+    "depleted_atoms_per_g": 18708692992.0,
+    "depleted_fraction": 1.8908320362281116e-12,
+    "cumulative_depleted_atoms_per_g": 18708692992.0,
+    "cumulative_depleted_fraction": 1.8908320362281116e-12,
+    "removal_rate_per_s": 6.302610080876241e-15,
+    "channels": [
+     {
+      "channel": "MT16",
+      "kind": "reaction",
+      "mt": 16,
+      "reaction": "(n,2n)",
+      "rate_per_s": 3.978339453812658e-15,
+      "share": 0.6312209390652256
+     },
+     {
+      "channel": "MT103",
+      "kind": "reaction",
+      "mt": 103,
+      "reaction": "(n,p)",
+      "rate_per_s": 1.0447099592287324e-15,
+      "share": 0.16575830422996568
+     },
+     {
+      "channel": "MT28",
+      "kind": "reaction",
+      "mt": 28,
+      "reaction": "(n,np)",
+      "rate_per_s": 7.113670348098601e-16,
+      "share": 0.11286864103624826
+     },
+     {
+      "channel": "MT107",
+      "kind": "reaction",
+      "mt": 107,
+      "reaction": "(n,a)",
+      "rate_per_s": 4.660645533371112e-16,
+      "share": 0.07394786403672224
+     },
+     {
+      "channel": "MT104",
+      "kind": "reaction",
+      "mt": 104,
+      "reaction": "(n,d)",
+      "rate_per_s": 6.701110484761882e-17,
+      "share": 0.010632278371614318
+     },
+     {
+      "channel": "MT102",
+      "kind": "reaction",
+      "mt": 102,
+      "reaction": "(n,g)",
+      "rate_per_s": 2.1707966664676496e-17,
+      "share": 0.0034442820333347476
+     },
+     {
+      "channel": "MT22",
+      "kind": "reaction",
+      "mt": 22,
+      "reaction": "(n,na)",
+      "rate_per_s": 1.3378067100594203e-17,
+      "share": 0.002122623314614804
+     },
+     {
+      "channel": "MT105",
+      "kind": "reaction",
+      "mt": 105,
+      "reaction": "(n,t)",
+      "rate_per_s": 3.1901833586190397e-20,
+      "share": 5.0616860597149844e-06
+     },
+     {
+      "channel": "MT111",
+      "kind": "reaction",
+      "mt": 111,
+      "reaction": "(n,2p)",
+      "rate_per_s": 2.100178059974972e-23,
+      "share": 3.332235427902257e-09
+     },
+     {
+      "channel": "MT106",
+      "kind": "reaction",
+      "mt": 106,
+      "reaction": "(n,h)",
+      "rate_per_s": 1.823555635106923e-23,
+      "share": 2.893334050031217e-09
+     },
+     {
+      "channel": "MT112",
+      "kind": "reaction",
+      "mt": 112,
+      "reaction": "(n,pa)",
+      "rate_per_s": 4.062364916888692e-27,
+      "share": 6.445527907897975e-13
+     },
+     {
+      "channel": "MT108",
+      "kind": "reaction",
+      "mt": 108,
+      "reaction": "(n,2a)",
+      "rate_per_s": 2.4582995300115032e-30,
+      "share": 3.900446796590866e-16
+     }
+    ]
+   },
+   {
+    "nuclide": "Fe54",
+    "Z": 26,
+    "A": 54,
+    "LISO": 0,
+    "initial_atoms_per_g": 6.30303916313012e+20,
+    "atoms_start_per_g": 6.30303916313012e+20,
+    "atoms_end_per_g": 6.303039163110381e+20,
+    "depleted_atoms_per_g": 1973813248.0,
+    "depleted_fraction": 3.131526231894448e-12,
+    "cumulative_depleted_atoms_per_g": 1973813248.0,
+    "cumulative_depleted_fraction": 3.131526231894448e-12,
+    "removal_rate_per_s": 1.0438565652215518e-14,
+    "channels": [
+     {
+      "channel": "MT28",
+      "kind": "reaction",
+      "mt": 28,
+      "reaction": "(n,np)",
+      "rate_per_s": 6.153755995063344e-15,
+      "share": 0.5895212235176438
+     },
+     {
+      "channel": "MT103",
+      "kind": "reaction",
+      "mt": 103,
+      "reaction": "(n,p)",
+      "rate_per_s": 2.9814978103589483e-15,
+      "share": 0.28562332313598515
+     },
+     {
+      "channel": "MT107",
+      "kind": "reaction",
+      "mt": 107,
+      "reaction": "(n,a)",
+      "rate_per_s": 9.087242769318621e-16,
+      "share": 0.08705451564976183
+     },
+     {
+      "channel": "MT104",
+      "kind": "reaction",
+      "mt": 104,
+      "reaction": "(n,d)",
+      "rate_per_s": 1.5549221988026305e-16,
+      "share": 0.014895937340515824
+     },
+     {
+      "channel": "MT16",
+      "kind": "reaction",
+      "mt": 16,
+      "reaction": "(n,2n)",
+      "rate_per_s": 1.1833299331741002e-16,
+      "share": 0.011336135371462133
+     },
+     {
+      "channel": "MT111",
+      "kind": "reaction",
+      "mt": 111,
+      "reaction": "(n,2p)",
+      "rate_per_s": 7.908104977134617e-17,
+      "share": 0.007575854040306939
+     },
+     {
+      "channel": "MT102",
+      "kind": "reaction",
+      "mt": 102,
+      "reaction": "(n,g)",
+      "rate_per_s": 2.5274740455788475e-17,
+      "share": 0.002421284810372781
+     },
+     {
+      "channel": "MT22",
+      "kind": "reaction",
+      "mt": 22,
+      "reaction": "(n,na)",
+      "rate_per_s": 1.6277789050255286e-17,
+      "share": 0.0015593894403299012
+     },
+     {
+      "channel": "MT112",
+      "kind": "reaction",
+      "mt": 112,
+      "reaction": "(n,pa)",
+      "rate_per_s": 8.782348251955816e-20,
+      "share": 8.41336687870696e-06
+     },
+     {
+      "channel": "MT106",
+      "kind": "reaction",
+      "mt": 106,
+      "reaction": "(n,h)",
+      "rate_per_s": 3.411142292795452e-20,
+      "share": 3.267826640599285e-06
+     },
+     {
+      "channel": "MT105",
+      "kind": "reaction",
+      "mt": 105,
+      "reaction": "(n,t)",
+      "rate_per_s": 6.83832728476267e-21,
+      "share": 6.551021962784015e-07
+     },
+     {
+      "channel": "MT115",
+      "kind": "reaction",
+      "mt": 115,
+      "reaction": "(n,pd)",
+      "rate_per_s": 4.135729322395248e-24,
+      "share": 3.961970887750719e-10
+     },
+     {
+      "channel": "MT108",
+      "kind": "reaction",
+      "mt": 108,
+      "reaction": "(n,2a)",
+      "rate_per_s": 1.7837112894009485e-26,
+      "share": 1.7087704851694518e-12
+     },
+     {
+      "channel": "MT44",
+      "kind": "reaction",
+      "mt": 44,
+      "reaction": "(n,n2p)",
+      "rate_per_s": 1.6556274647281874e-32,
+      "share": 1.5860679712990944e-18
+     }
+    ]
+   },
+   {
+    "nuclide": "Fe57",
+    "Z": 26,
+    "A": 57,
+    "LISO": 0,
+    "initial_atoms_per_g": 2.285053889935453e+20,
+    "atoms_start_per_g": 2.285053889935453e+20,
+    "atoms_end_per_g": 2.2850538899280108e+20,
+    "depleted_atoms_per_g": 744226816.0,
+    "depleted_fraction": 3.2569333234457e-12,
+    "cumulative_depleted_atoms_per_g": 744226816.0,
+    "cumulative_depleted_fraction": 3.2569333234457e-12,
+    "removal_rate_per_s": 1.0856410087976916e-14,
+    "channels": [
+     {
+      "channel": "MT16",
+      "kind": "reaction",
+      "mt": 16,
+      "reaction": "(n,2n)",
+      "rate_per_s": 9.698756470739752e-15,
+      "share": 0.8933668120625599
+     },
+     {
+      "channel": "MT103",
+      "kind": "reaction",
+      "mt": 103,
+      "reaction": "(n,p)",
+      "rate_per_s": 5.250788267409533e-16,
+      "share": 0.04836578781437698
+     },
+     {
+      "channel": "MT107",
+      "kind": "reaction",
+      "mt": 107,
+      "reaction": "(n,a)",
+      "rate_per_s": 4.356203152715637e-16,
+      "share": 0.04012563193002423
+     },
+     {
+      "channel": "MT28",
+      "kind": "reaction",
+      "mt": 28,
+      "reaction": "(n,np)",
+      "rate_per_s": 9.960543455796818e-17,
+      "share": 0.00917480398684254
+     },
+     {
+      "channel": "MT104",
+      "kind": "reaction",
+      "mt": 104,
+      "reaction": "(n,d)",
+      "rate_per_s": 4.063681747520046e-17,
+      "share": 0.0037431173975460154
+     },
+     {
+      "channel": "MT22",
+      "kind": "reaction",
+      "mt": 22,
+      "reaction": "(n,na)",
+      "rate_per_s": 3.3839061852269393e-17,
+      "share": 0.00311696606687186
+     },
+     {
+      "channel": "MT102",
+      "kind": "reaction",
+      "mt": 102,
+      "reaction": "(n,g)",
+      "rate_per_s": 1.9369236948781285e-17,
+      "share": 0.001784129080591016
+     },
+     {
+      "channel": "MT105",
+      "kind": "reaction",
+      "mt": 105,
+      "reaction": "(n,t)",
+      "rate_per_s": 3.503903501968641e-18,
+      "share": 0.00032274973712066095
+     },
+     {
+      "channel": "MT111",
+      "kind": "reaction",
+      "mt": 111,
+      "reaction": "(n,2p)",
+      "rate_per_s": 1.3905255291315955e-23,
+      "share": 1.2808336437765488e-09
+     },
+     {
+      "channel": "MT108",
+      "kind": "reaction",
+      "mt": 108,
+      "reaction": "(n,2a)",
+      "rate_per_s": 6.4376236030483124e-24,
+      "share": 5.929790373502701e-10
+     },
+     {
+      "channel": "MT106",
+      "kind": "reaction",
+      "mt": 106,
+      "reaction": "(n,h)",
+      "rate_per_s": 3.7122401299317135e-25,
+      "share": 3.419399322472984e-11
+     },
+     {
+      "channel": "MT112",
+      "kind": "reaction",
+      "mt": 112,
+      "reaction": "(n,pa)",
+      "rate_per_s": 1.7435514808284641e-25,
+      "share": 1.6060110724440896e-11
+     },
+     {
+      "channel": "MT24",
+      "kind": "reaction",
+      "mt": 24,
+      "reaction": "(n,2na)",
+      "rate_per_s": 4.0219459765026236e-32,
+      "share": 3.704673961199001e-18
+     }
+    ]
+   },
+   {
+    "nuclide": "Fe58",
+    "Z": 26,
+    "A": 58,
+    "LISO": 0,
+    "initial_atoms_per_g": 3.0409872438027264e+19,
+    "atoms_start_per_g": 3.0409872438027264e+19,
+    "atoms_end_per_g": 3.040987243794683e+19,
+    "depleted_atoms_per_g": 80433152.0,
+    "depleted_fraction": 2.644968411620796e-12,
+    "cumulative_depleted_atoms_per_g": 80433152.0,
+    "cumulative_depleted_fraction": 2.644968411620796e-12,
+    "removal_rate_per_s": 8.816696980819865e-15,
+    "channels": [
+     {
+      "channel": "MT16",
+      "kind": "reaction",
+      "mt": 16,
+      "reaction": "(n,2n)",
+      "rate_per_s": 8.229866467330967e-15,
+      "share": 0.9334410023656808
+     },
+     {
+      "channel": "MT103",
+      "kind": "reaction",
+      "mt": 103,
+      "reaction": "(n,p)",
+      "rate_per_s": 3.130841563958899e-16,
+      "share": 0.03551036823392973
+     },
+     {
+      "channel": "MT107",
+      "kind": "reaction",
+      "mt": 107,
+      "reaction": "(n,a)",
+      "rate_per_s": 2.1784393127851374e-16,
+      "share": 0.02470811141093072
+     },
+     {
+      "channel": "MT22",
+      "kind": "reaction",
+      "mt": 22,
+      "reaction": "(n,na)",
+      "rate_per_s": 1.6517375383414894e-17,
+      "share": 0.0018734198781411382
+     },
+     {
+      "channel": "MT102",
+      "kind": "reaction",
+      "mt": 102,
+      "reaction": "(n,g)",
+      "rate_per_s": 1.651028952102884e-17,
+      "share": 0.0018726161914088542
+     },
+     {
+      "channel": "MT28",
+      "kind": "reaction",
+      "mt": 28,
+      "reaction": "(n,np)",
+      "rate_per_s": 1.5885704690470404e-17,
+      "share": 0.0018017750553329316
+     },
+     {
+      "channel": "MT104",
+      "kind": "reaction",
+      "mt": 104,
+      "reaction": "(n,d)",
+      "rate_per_s": 6.952319508665106e-18,
+      "share": 0.0007885401442047302
+     },
+     {
+      "channel": "MT105",
+      "kind": "reaction",
+      "mt": 105,
+      "reaction": "(n,t)",
+      "rate_per_s": 3.6736710914966744e-20,
+      "share": 4.166720371005718e-06
+     },
+     {
+      "channel": "MT108",
+      "kind": "reaction",
+      "mt": 108,
+      "reaction": "(n,2a)",
+      "rate_per_s": 2.940331988309105e-31,
+      "share": 3.3349586525493625e-17
+     },
+     {
+      "channel": "MT106",
+      "kind": "reaction",
+      "mt": 106,
+      "reaction": "(n,h)",
+      "rate_per_s": 1.9559810923970955e-31,
+      "share": 2.2184964467444006e-17
+     },
+     {
+      "channel": "MT112",
+      "kind": "reaction",
+      "mt": 112,
+      "reaction": "(n,pa)",
+      "rate_per_s": 4.567168314334551e-32,
+      "share": 5.1801352867974485e-18
+     }
+    ]
+   }
+  ]
+ }
+}

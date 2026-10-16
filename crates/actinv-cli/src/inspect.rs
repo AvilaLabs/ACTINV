@@ -1982,4 +1982,140 @@ mod tests {
         .unwrap();
         assert!(missing.contains("not in the library"));
     }
+
+    // ---- P140 regressions (SG-08, SG-10, SC F11): they assert the intended behaviour ----
+
+    /// A one-row library on `bounds`, every group 1 b.
+    fn p140_library(bounds: Vec<f64>) -> Library {
+        let ngroups = bounds.len() - 1;
+        Library {
+            rows: vec![Row {
+                target: 0,
+                mt: 102,
+                zap: 26057,
+                lfs: 0,
+                lmf: 3,
+            }],
+            sig: vec![1.0; ngroups],
+            ngroups,
+            bounds,
+        }
+    }
+
+    /// 709 strictly ascending boundaries over the fispact-709 range, none of them its own.
+    fn p140_log_grid_709() -> Vec<f64> {
+        (0..=709)
+            .map(|i| 1.0e-5 * 1.0e14_f64.powf(i as f64 / 709.0))
+            .collect()
+    }
+
+    #[test]
+    fn p140_sg08_library_report_emits_object_valued_index_fields() {
+        let library = toy_library();
+        let index = LibraryIndex::from_value(json!({
+            "schema": "actinv-library-index-1",
+            "projectile": "neutron",
+            "groups": "toy",
+            "targets": [{"za": 26056, "liso": 0}, {"za": 28058, "liso": 0}],
+            "spallation": {"table_sha256": "feed", "effective_splice_eV": 2.0e8},
+        }));
+        let output = library_report(
+            &library.rows,
+            library.ngroups,
+            &library.bounds,
+            Some(&index),
+            "lib.npz",
+        );
+        // Expected: the splice provenance is reported (HELP promises the index provenance fields).
+        let spallation = &output.json["index_objects"]["spallation"];
+        assert_eq!(spallation["table_sha256"], "feed", "{}", output.json);
+        assert_eq!(spallation["effective_splice_eV"], 2.0e8);
+        let table = render_tables(&output.tables);
+        assert!(table.contains("spallation"), "{table}");
+    }
+
+    #[test]
+    fn p140_sg08_structure_name_recognises_every_named_structure_without_an_index() {
+        for (name, _) in actinv_data::groups::NAMED_STRUCTURES {
+            let named = GroupStructure::named(name).unwrap().unwrap();
+            assert_eq!(
+                structure_name(named.groups(), &named.boundaries_ev, None),
+                name,
+                "an index-less {name} library is reported as something else"
+            );
+        }
+    }
+
+    #[test]
+    fn p140_sg10_named_spectrum_structure_is_compared_with_the_library_boundaries() {
+        let spectrum: Spectrum = serde_json::from_value(json!({
+            "structure": "fispact-709",
+            "flux_per_group": vec![1.0; 709],
+        }))
+        .unwrap();
+        // The genuine fispact-709 grid is accepted.
+        let genuine = p140_library(GroupStructure::fispact_709().unwrap().boundaries_ev);
+        assert!(spectrum_flux(&spectrum, &genuine).is_ok());
+        // A 709-group library on other boundaries must be refused, not collapsed on the wrong energies.
+        let other = p140_library(p140_log_grid_709());
+        let error = spectrum_flux(&spectrum, &other)
+            .err()
+            .expect("a fispact-709 spectrum on a different 709-group grid must be refused");
+        assert!(error.contains("fispact-709"), "{error}");
+    }
+
+    #[test]
+    fn p140_sg10_custom_spectrum_boundaries_use_the_solvers_tolerance() {
+        // The solver refuses boundaries that differ by more than 1e-12 relative; 1e-10 is such a case.
+        let spectrum: Spectrum = serde_json::from_value(json!({
+            "structure": "custom",
+            "boundaries_eV": [1.0, 10.0, 100.0 * (1.0 + 1.0e-10)],
+            "flux_per_group": [1.0, 3.0],
+        }))
+        .unwrap();
+        assert!(spectrum_flux(&spectrum, &toy_library()).is_err());
+        assert!(spectrum_flux(&toy_spectrum(), &toy_library()).is_ok());
+    }
+
+    #[test]
+    fn p140_sg10_za_shaped_integers_are_not_target_indices() {
+        // Without an index file `--target 26056` used to be taken as target index 26056.
+        let error = resolve_target("26056", None).unwrap_err();
+        assert!(error.contains("26056"), "{error}");
+        // Small integers stay valid indices.
+        assert_eq!(resolve_target("7", None).unwrap(), 7);
+    }
+
+    #[test]
+    fn p140_sc_f11_inspect_xs_does_not_collapse_a_rebin_spectrum_as_if_on_the_library_grid() {
+        let library = p140_library(GroupStructure::fispact_709().unwrap().boundaries_ev);
+        // A 709-group transport spectrum on its own boundaries; the run rebins it onto fispact-709.
+        let same_count: Spectrum = serde_json::from_value(json!({
+            "structure": "fispact-709",
+            "boundaries_eV": p140_log_grid_709(),
+            "flux_per_group": vec![1.0; 709],
+            "rebin": {},
+        }))
+        .unwrap();
+        match spectrum_flux(&same_count, &library) {
+            Err(error) => assert!(error.contains("rebin"), "{error}"),
+            Ok(flux) => assert_ne!(
+                flux,
+                same_count.ascending_flux(),
+                "the source spectrum was used as if it were already on the library grid"
+            ),
+        }
+        // A different group count is a rebin too, not a count error about "group fluxes".
+        let short: Spectrum = serde_json::from_value(json!({
+            "structure": "fispact-709",
+            "boundaries_eV": [1.0e-3, 1.0, 1.0e3, 1.0e6],
+            "flux_per_group": [1.0, 2.0, 3.0],
+            "rebin": {},
+        }))
+        .unwrap();
+        match spectrum_flux(&short, &library) {
+            Err(error) => assert!(error.contains("rebin"), "{error}"),
+            Ok(flux) => assert_eq!(flux.len(), 709),
+        }
+    }
 }

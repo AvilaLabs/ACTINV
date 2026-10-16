@@ -4474,4 +4474,83 @@ mod sampling_statistics_tests {
             .get("input_correlations")
             .is_none());
     }
+
+    /// The fixture with only the listed samples succeeding.
+    fn only_samples(fx: &Fixture, keep: &[usize]) -> Vec<Value> {
+        (0..fx.1.len())
+            .map(|i| {
+                if keep.contains(&i) {
+                    fx.1[i].clone()
+                } else {
+                    Value::Null
+                }
+            })
+            .collect()
+    }
+
+    #[test]
+    fn p140_ps_f1_single_success_has_no_std_and_no_first_order_ratio() {
+        let fx = fixture();
+        let values = only_samples(&fx, &[3]);
+        let st = opts(json!({"bootstrap_resamples": 0}));
+        let lvn = json!({"comparisons": {RESP: {"3600": {"first_order_std": 5.0}}}});
+        let a = block(1, &fx, &values, &st, &lvn);
+        let e = &a["responses"][RESP]["3600"];
+        assert_eq!(e["distribution"]["n"], 1);
+        // one value has no unbiased spread: null, not 0
+        assert!(
+            e["distribution"]["std"].is_null(),
+            "std of one sample is {}",
+            e["distribution"]["std"]
+        );
+        // and a spread that does not exist cannot be compared with the first-order one
+        let fo = &e["first_order"];
+        assert!(
+            fo.is_null() || fo["sampled_over_first_order"].is_null(),
+            "first_order for one sample is {fo}"
+        );
+    }
+
+    #[test]
+    fn p140_ps_f10_two_successes_report_no_correlation_table_and_no_bootstrap() {
+        let fx = fixture();
+        let st = opts(json!({"bootstrap_resamples": 32}));
+        let two = block(1, &fx, &only_samples(&fx, &[1, 4]), &st, &Value::Null);
+        let e = &two["responses"][RESP]["3600"];
+        assert_eq!(e["distribution"]["n"], 2);
+        assert_eq!(e["convergence"]["status"], "insufficient_samples", "{e}");
+        // two pairs make every non-tied parameter a perfect +-1 correlation: no table, with a reason
+        let ic = &e["input_correlations"];
+        let rows = ic["top"].as_array().cloned().unwrap_or_default();
+        assert!(
+            rows.is_empty(),
+            "two pairs ranked {} parameters: {ic}",
+            rows.len()
+        );
+        assert!(
+            ic.is_null() || ic.get("status").is_some() || ic.get("reason").is_some(),
+            "an empty table must say why: {ic}"
+        );
+        // three pairs are enough to rank (guards against over-correcting)
+        let three = block(1, &fx, &only_samples(&fx, &[1, 4, 6]), &st, &Value::Null);
+        let rows = three["responses"][RESP]["3600"]["input_correlations"]["top"]
+            .as_array()
+            .unwrap();
+        assert_eq!(rows.len(), 2);
+    }
+
+    #[test]
+    fn p140_ps_f10_response_correlation_is_null_below_three_pairs() {
+        let fx = fixture();
+        let st = opts(json!({"bootstrap_resamples": 0}));
+        let two = block(1, &fx, &only_samples(&fx, &[1, 4]), &st, &Value::Null);
+        // activity and heat are exact negatives; two pairs would print -1
+        let off_diagonal = &two["response_correlation"]["pearson"][0][1];
+        assert!(off_diagonal.is_null(), "two-pair Pearson is {off_diagonal}");
+        let three = block(1, &fx, &only_samples(&fx, &[1, 4, 6]), &st, &Value::Null);
+        let value = three["response_correlation"]["pearson"][0][1]
+            .as_f64()
+            .unwrap();
+        assert!((value + 1.0).abs() < 1e-12);
+    }
 }
