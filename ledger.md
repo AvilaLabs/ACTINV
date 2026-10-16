@@ -3328,3 +3328,12 @@ consumer of the three crates resolves `zip` 9.0.4. GitHub releases `v1.5.0` (lat
 `desktop-v0.4.0-preview.1` carry the repacked archives and the verified desktop assets with checksums. The `actinv-web`
 bundle from run 38915344595 is deployed to `actinv.avilalabs.org`; the AvilaLabs.org page update is PR #32. Record:
 `results/release_v1.5.0.json`.
+
+## Entry 181 — P142 registered: twin waste qualified on the current code (2026-10-16)
+
+The owner directed that the remaining waste program be finished, starting with the twin waste block, which passed its
+P116 science but has no qualifying verdict because P116–P118 closed FAIL on CI plumbing. Registered before any
+evidence or source change: **P142** `dc2ae4c1c31b4b33e8ccf2ffbbceb7cdefc94587a229fbf490a2d96b3f191246`. No production change; the P116 contract, fixture and sealed
+records are reused unchanged, and `check_p116.py --no-write` with the candidate release binary must reproduce the
+sealed G1 report byte for byte (Q1), with the P103–P118 history steps (Q2), a regression pinning
+`audit_unmodelled_decay_branches_to_leakage` (Q3) and green CI (Q4). P116, P117 and P118 stay FAIL.
