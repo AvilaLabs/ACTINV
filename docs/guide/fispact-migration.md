@@ -18,6 +18,46 @@ actinv run fe_5min.json fe_5min_result.json
 
 The [desktop](desktop.md#import-a-fispact-ii-deck) imports a deck from the toolbar (**Import FISPACT-II deck…**) and shows the same per-keyword report as `actinv import-fispact`. A deck that irradiates, imported without a fluxes file, gets a flat placeholder spectrum flagged as a required input. Replace it before running, because the result means nothing until you do.
 
+## Coming from FISPACT-II
+
+This map is by capability, not by keyword; the [keyword translation](#keyword-translation) below says what the importer does with each deck line. **Supported** means ACTINV has an equivalent that does the same job. **Supported differently** means the job gets done, but the input, the output or the numerical treatment is not FISPACT-II's. **Not supported** means ACTINV has nothing equivalent. **Not needed** marks a keyword that exists only for FISPACT-II's own printing, files or solver. A capability can be supported in ACTINV and still be absent from the importer, in which case you add the spec section by hand; the last column says so. "Imported" means the importer maps the deck keywords.
+
+| FISPACT-II capability (keywords) | ACTINV equivalent | Status | Importer and notes |
+| --- | --- | --- | --- |
+| Material and irradiation: `MASS`, `FUEL`, `DENSITY`, `FLUX`, `ZERO`, `TIME`, `PULSE`, `PROJECTILE` | `material`, `spectrum.total`, `schedule`, `projectile`; the **Material** and **Irradiation & cooling** pages | Supported | Imported. Gamma, triton and helion need `--library`; triton and helion have not been run on real data |
+| Wall loading and power: `WALL`, `POWER` | step `wall_loading_MW_m2`, `power_W_cm3` or `power_W_per_g`; a `kerma` table; the step **Drive** on **Irradiation & cooling** | Supported differently | Imported, but a power step needs a kerma table the deck cannot supply. ACTINV holds the power on sub-intervals within a step; `max_substeps: 1` reproduces FISPACT-II's single normalization |
+| Elemental partition: `PARTITION` | `schedule[].partition` | Supported | Imported. Applied at the start of the next step |
+| Group conversion: `GRPCONVERT`, `CNVTYPE`, `LIMGRP` | `spectrum.rebin` | Supported | Imported for FISPACT-II standard structures |
+| Cross-section and half-life changes: `OVER` with `ACROSS`, `ALAM` | `overrides` | Supported differently | Imported. `ADCROSS`, `ADLAM` (error factors) are not imported; overrides are not step-scoped |
+| Change of library mid-run: `GETXS` after the first `TIME` | step `library` | Supported | Not imported: it needs the second library's path |
+| Cooling from decay data alone: `GETDECAY` without `GETXS` | decay-only run | Supported | Imported |
+| Library choice: `GETXS`, `GETDECAY`, `ARRAY`, `COLLAPSE` | `library`, `decay`; `actinv data fetch` | Supported differently | ACTINV uses its own libraries, not the deck's. Library-preparation switches (`LIBVERSION`, `COMPRESSXS`, `FULLXS`, `SAVELINES`) have no counterpart and are noted |
+| Inventory listing, totals, elements, dominant nuclides: `ATOMS`, `HALF`, `NOCOMP`, `NOSORT`, `SORTDOMINANT`, `MIND`, `NOSTABLE` | `summary` section; **Step summary** on **Outputs** | Supported | Imported (`MIND`, `NOSTABLE`, `SORTDOMINANT`) |
+| Tab and plot files: `TAB1` to `TAB4`, `GRAPH`, `NUCGRAPH` | `actinv report`; the **Tables** page | Supported differently | Noted. ACTINV writes one result JSON and renders tables from it afterwards |
+| Depletion rates: `DEPLETION` | `summary.depletion`; `actinv report --tables depletion` | Supported | Not imported (reported as unsupported); add `summary.depletion` by hand |
+| Point-source dose and bremsstrahlung: `DOSE 2`, `BREMSSTRAHLUNG` | `photon.point_source`, `photon.bremsstrahlung`; **Photons & dose** | Supported differently | Imported. The dose is an air kerma rate, and bremsstrahlung is a separate block; both need the photon response described [below](#keywords-that-need-more-than-the-deck) |
+| Photon groups: `GROUP`, `READGG` | `photon.group_structure` (`fispact-24`, `steiner-22`, or custom) | Supported | `GROUP` is imported; `READGG` is not |
+| Approximate gamma spectra for nuclides without spectral data: `SPEK` | none | Not supported | Noted and ignored. ACTINV reports the gamma power that has no spectrum and does not estimate a spectrum for it |
+| Transport index and hazards: `ATWO`, `HAZARDS`, `CLEAR` | `radiological` with `bundled:` tables; `actinv report --tables regulatory`; **Regulatory tables** on **Outputs** | Supported differently | `ATWO` is imported. `HAZARDS` and `CLEAR` are noted: ACTINV chooses no regulation for you. 49 CFR 173.435/173.436 and Euratom 2013/59 Annex VII are bundled; ICRP 119 coefficients are not and come from a local script. These are the regulations' numbers, not FISPACT-II's data files |
+| Geometry self-shielding: `SSFGEOMETRY`, `SSFCHOOSE`, `SSFFUEL`, `SSFMASS` | `self_shielding.geometry` | Supported | Not imported (reported as unsupported); the section needs hash-pinned ENDF resonance files the deck does not name |
+| Dilution override: `SSFDILUTION`, `PROBTABLE` | `self_shielding.dilution_overrides`, `self_shielding.table` | Supported differently | Not imported. ACTINV needs a hash-pinned Bondarenko table; tables are built from evaluations with `actinv build-shielding` |
+| Uncertainty: `UNCERTAINTY`, `NOERROR` | `uncertainty` (MF=33 covariance) | Supported differently | Imported. The default covariance is the TENDL-2025 MF=33 data, not the deck's library. ACTINV propagates full-covariance bands rather than FISPACT-II's pathway sums |
+| Uncertainty controls: `COVARIANCE`, `UNCTYPE`, `ERROR` | `uncertainty.covariance`, `uncertainty.channels`, `overrides` | Supported differently | Not imported |
+| Monte Carlo sampling and sensitivity: `MCSAMPLE`, `SENSITIVITY` | `study.robustness.statistics` | Supported differently | Not imported (reported as unsupported). The statistics are those of an ACTINV robustness study, not a FISPACT-II sampling run |
+| Pathways: `PATH`, `ROUTES`, `LOOKAHEAD`, `PATHRESET`, `GENERIC`, `INDEXPATH`, `RESULT` | `pathways`; **Pathways** page | Supported differently | `PATH` and `ROUTES` are imported as targets with default thresholds; the others are noted, except `RESULT` (unsupported). The result reports a closure for each target |
+| Fission: `READSF`, `FISYIELD`, `CUMFYLD`, `USEFISSION`, `NOFISS`, `FISCHOOSE` | `fission_yields.files`, `fission_yields.spontaneous`, `options.fission`, `actinv inspect yields` | Supported differently | Not imported. Which actinides fission is set by the yield files you supply, with no keyword switch |
+| Displacement damage: `ALLDISPEN`, `ATDISPEN` | `damage` | Supported differently | Not imported. It needs a damage table you build; none ships |
+| High-energy data: `USESPALLATION`, `USEXSEXTRA` | group structures to 1 GeV; `build-library` splice option | Supported differently | Not imported. You build the library with the splice table |
+| Library inspection: `PRINTLIB`, `EXTRACTXS` | `actinv inspect` | Supported | Noted. Works without a run |
+| Cross-section threshold switch, X-ray switch, iron background removal: `XSTHRESHOLD`, `NOXRAY`, `IRON` | none | Not supported | Reported as unsupported |
+| Run control and print switches: `CLOBBER`, `LOGLEVEL`, `MONITOR`, `TOLERANCE`, `NOT1` to `NOT4`, `CULTAB`, `SPLIT`, `JSON` | none | Not needed | Noted. ACTINV uses CRAM, which has no solver tolerance, and writes only the files you name |
+
+After the import, edit the JSON problem rather than the deck: ACTINV runs the problem, not the deck. A converted problem does not reproduce FISPACT-II's numbers by construction, because the data differ. See [Understand the competitive benchmark](benchmarks.md) for the recorded FNS comparison on common data.
+
+### Import in the desktop
+
+The desktop's **Import FISPACT-II deck…** (Ctrl/Cmd+I) runs the same importer and shows the same per-keyword report. It differs from the CLI in one case: a deck that irradiates but comes without a fluxes file converts with a flat placeholder spectrum, flagged as a required input, so you can open the problem and fill in the spectrum. The CLI refuses such a deck. Replace the placeholder before running. See [Import a FISPACT-II deck](desktop.md#import-a-fispact-ii-deck).
+
 ## What is read
 
 | Input | Used for |

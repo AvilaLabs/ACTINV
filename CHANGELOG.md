@@ -1,8 +1,8 @@
 # Changelog
 
-## Unreleased
+## v1.5.0 — 2026-10-16
 
-**Added (GUI only; solver, CLI and Python stay at 1.4.0)**
+**Added (desktop and browser)**
 
 - Desktop 0.3.0-preview.1 and the browser workbench: optional Avila Labs account sign-in. The
   browser has a Sign in button and a first-visit prompt; the desktop uses a device sign-in
