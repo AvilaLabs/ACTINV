@@ -1,0 +1,67 @@
+{
+ "commit": "9f6b78289cde156a68f66ed9885f44bf5f796c5a",
+ "note": "local half of U5 (Amendment B); the verdict also requires CI green on the pushed evidence commit",
+ "pass": true,
+ "schema": "actinv-p145-u5-1",
+ "steps": {
+  "u5_binding_check": {
+   "argv": "cargo check --manifest-path python/Cargo.toml --all-targets --all-features",
+   "exit": 0
+  },
+  "u5_binding_clippy": {
+   "argv": "cargo clippy --manifest-path python/Cargo.toml --all-targets --all-features -- -D warnings",
+   "exit": 0
+  },
+  "u5_binding_fmt": {
+   "argv": "cargo fmt --manifest-path python/Cargo.toml -- --check",
+   "exit": 0
+  },
+  "u5_clippy_native": {
+   "argv": "cargo clippy --workspace --all-targets --all-features -- -D warnings",
+   "exit": 0
+  },
+  "u5_clippy_wasm": {
+   "argv": "cargo clippy --locked -p actinv-gui --lib --no-default-features --target wasm32-unknown-unknown -- -D warnings",
+   "exit": 0
+  },
+  "u5_fmt": {
+   "argv": "cargo fmt --all -- --check",
+   "exit": 0
+  },
+  "u5_handbook": {
+   "argv": "mdbook build -d /home/connoravila/Documents/actinv/target/p145/book && python3 scripts/check_docs.py target/p145/book",
+   "exit": 0
+  },
+  "u5_module_build": {
+   "argv": "cd python && maturin build --release --locked --out /home/connoravila/Documents/actinv/target/p145/dist-evidence-1792189151 && python ../scripts/smoke_python_wheel.py /home/connoravila/Documents/actinv/target/p145/dist-evidence-1792189151",
+   "exit": 0
+  },
+  "u5_module_install": {
+   "argv": "pip install --force-reinstall --no-deps target/p145/dist-evidence-1792189151/*.whl",
+   "exit": 0
+  },
+  "u5_module_tests": {
+   "argv": "python scripts/test_python_objects.py",
+   "exit": 0
+  },
+  "u5_study_regression": {
+   "argv": "python3 controls/check_p136.py --reference target/p145/actinv-reference-2b60db9 --candidate target/release/actinv --workdir target/p145/u5-p136-work --out results/p145/u5_study_regression.json",
+   "exit": 0
+  },
+  "u5_workspace_tests": {
+   "argv": "cargo test --locked --workspace",
+   "exit": 0
+  }
+ },
+ "study_regression": {
+  "G2": true,
+  "G2_differences": 0,
+  "G3": true,
+  "G4": true,
+  "reference_binary_sha256": "216e136c0619680cc00586b432c81ebed3df4e4ea9e721aaa47019f92ca46b69",
+  "verdict": "PASS"
+ },
+ "tests_failed": 0,
+ "tests_passed": 1073,
+ "tree_clean_tracked": true
+}

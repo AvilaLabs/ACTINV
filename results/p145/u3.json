@@ -1,0 +1,140 @@
+{
+ "candidate": {
+  "amendment_b_sha256": "b48aa0c11c02a9121563c729d53b7fe8dc3426b2ecb2ce2ecab2f3735f04ef05",
+  "amendment_sha256": "355ddb6f3d1188c780f322f9cfabe95ce66adc628b2ccd45de523001e2f6bc72",
+  "binary": "target/release/actinv",
+  "binary_sha256": "db2d482f3706e12138a118edbed4368ffd821c4adde4b76898ffc19a98663a56",
+  "commit": "9f6b78289cde156a68f66ed9885f44bf5f796c5a",
+  "protocol_sha256": "7a50a266d7bb68f0745ac159114493b7731479c3bbc6b4b61b72cff6e2bd89f1",
+  "tree_clean": true
+ },
+ "cases": [
+  {
+   "class_a_count": 408,
+   "class_a_count_is_n_minus_exceedances": true,
+   "closed_form_inside_interval": true,
+   "closed_form_probability": 0.8996641923209638,
+   "command": {
+    "argv": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "waste",
+     "uncertainty",
+     "spec.json",
+     "result.json"
+    ],
+    "rc": 0,
+    "seconds": 66.008,
+    "stderr_tail": "",
+    "stdout_bytes": 0
+   },
+   "count_above_1": 3688,
+   "id": "p90",
+   "interval": [
+    0.8841270736027935,
+    0.9151627473000498
+   ],
+   "interval_level": 0.999,
+   "nominal_normalized_sum": 1.8073400554326662,
+   "observed_frequency": 0.900390625,
+   "pass": true,
+   "placement_within_0.15": true,
+   "reported_failed": 0,
+   "reported_fraction_matches": true,
+   "result_sha256": "b64f06ed3a7a69549594bcd8d3c82a7bab63768c79111a289defb28f75d67b4c",
+   "samples": 4096,
+   "sigma2": 0.16,
+   "spec_sha256": "719036c3b027a977a17f17568d43f805ca392ad61a5279f9a0524d10d1e98ec6",
+   "standard_errors_from_closed_form": 0.15474162518572263,
+   "target_probability": 0.9
+  },
+  {
+   "class_a_count": 2076,
+   "class_a_count_is_n_minus_exceedances": true,
+   "closed_form_inside_interval": true,
+   "closed_form_probability": 0.49958651189215864,
+   "command": {
+    "argv": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "waste",
+     "uncertainty",
+     "spec.json",
+     "result.json"
+    ],
+    "rc": 0,
+    "seconds": 66.479,
+    "stderr_tail": "",
+    "stdout_bytes": 0
+   },
+   "count_above_1": 2020,
+   "id": "p50",
+   "interval": [
+    0.46736860024007,
+    0.5189848795431778
+   ],
+   "interval_level": 0.999,
+   "nominal_normalized_sum": 1.1964730729902893,
+   "observed_frequency": 0.4931640625,
+   "pass": true,
+   "placement_within_0.15": true,
+   "reported_failed": 0,
+   "reported_fraction_matches": true,
+   "result_sha256": "a84b6101a22162cab3d07b128c0398328ca44831a8321879ef387bd5fed76393",
+   "samples": 4096,
+   "sigma2": 0.36,
+   "spec_sha256": "cbe5defa88be4a610d6ca4b5200b4c12d919add56526ea96c408442f2547b8ff",
+   "standard_errors_from_closed_form": -0.8220738033002409,
+   "target_probability": 0.5
+  },
+  {
+   "class_a_count": 3717,
+   "class_a_count_is_n_minus_exceedances": true,
+   "closed_form_inside_interval": true,
+   "closed_form_probability": 0.09984226446425111,
+   "command": {
+    "argv": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "waste",
+     "uncertainty",
+     "spec.json",
+     "result.json"
+    ],
+    "rc": 0,
+    "seconds": 64.676,
+    "stderr_tail": "",
+    "stdout_bytes": 0
+   },
+   "count_above_1": 379,
+   "id": "p10",
+   "interval": [
+    0.07826866262284811,
+    0.1083082654214718
+   ],
+   "interval_level": 0.999,
+   "nominal_normalized_sum": 0.4936341139818796,
+   "observed_frequency": 0.092529296875,
+   "pass": true,
+   "placement_within_0.15": true,
+   "reported_failed": 0,
+   "reported_fraction_matches": true,
+   "result_sha256": "faf02b436230328000fd5e8c1056ffa20371a19d494bd98f0d307792ba5e4f30",
+   "samples": 4096,
+   "sigma2": 0.64,
+   "spec_sha256": "aec33a1923b3948205ded3aa30f7a4f2d41585122306286689ccb160961d00cc",
+   "standard_errors_from_closed_form": -1.5611948229026171,
+   "target_probability": 0.1
+  }
+ ],
+ "closed_form": "P(s>1) = Phi((ln s0 - sigma2/2)/sigma)",
+ "interval": "two-sided equal-tailed Clopper-Pearson interval at 99.9 % of the observed count of normalized sums above 1; the closed-form probability evaluated at the nominal sum the run computed must lie inside it",
+ "pass": true,
+ "schema": "actinv-p145-u3-1",
+ "summary": {
+  "cases": 3,
+  "inside": [
+   true,
+   true,
+   true
+  ]
+ },
+ "worktree_clean_after": true
+}

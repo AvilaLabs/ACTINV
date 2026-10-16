@@ -1,0 +1,19 @@
+build_cli	cargo build --release --locked -p actinv-cli	0
+u1_c1	python3 controls/check_p145.py u1 C1	0
+u2_c1	python3 controls/check_p145.py u2 C1	0
+u1_c2	python3 controls/check_p145.py u1 C2	0
+u2_c2	python3 controls/check_p145.py u2 C2	0
+u3	python3 controls/check_p145.py u3	0
+u4	python3 controls/check_p145.py u4	0
+u5_study_regression	python3 controls/check_p136.py --reference target/p145/actinv-reference-2b60db9 --candidate target/release/actinv --workdir target/p145/u5-p136-work --out results/p145/u5_study_regression.json	0
+u5_fmt	cargo fmt --all -- --check	0
+u5_clippy_native	cargo clippy --workspace --all-targets --all-features -- -D warnings	0
+u5_clippy_wasm	cargo clippy --locked -p actinv-gui --lib --no-default-features --target wasm32-unknown-unknown -- -D warnings	0
+u5_workspace_tests	cargo test --locked --workspace	0
+u5_binding_fmt	cargo fmt --manifest-path python/Cargo.toml -- --check	0
+u5_binding_check	cargo check --manifest-path python/Cargo.toml --all-targets --all-features	0
+u5_binding_clippy	cargo clippy --manifest-path python/Cargo.toml --all-targets --all-features -- -D warnings	0
+u5_module_build	cd python && maturin build --release --locked --out /home/connoravila/Documents/actinv/target/p145/dist-evidence-1792189151 && python ../scripts/smoke_python_wheel.py /home/connoravila/Documents/actinv/target/p145/dist-evidence-1792189151	0
+u5_module_install	pip install --force-reinstall --no-deps target/p145/dist-evidence-1792189151/*.whl	0
+u5_module_tests	python scripts/test_python_objects.py	0
+u5_handbook	mdbook build -d /home/connoravila/Documents/actinv/target/p145/book && python3 scripts/check_docs.py target/p145/book	0

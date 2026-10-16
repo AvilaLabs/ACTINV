@@ -3460,3 +3460,22 @@ controls run in CI is wrong; U5 now requires `controls/check_p136.py` G2–G4 wi
 pushed evidence commit `c59facf` succeeded, `controls`, `desktop builds` and `Build browser workbench` among them
 (`results/p144/ci_runs.json`). The browser smoke in CI now opens the three committed waste-family fixtures on every
 push.
+
+## Entry 194 — P145 evidence: U1–U4 and local U5 pass on the candidate (2026-10-16)
+
+Candidate `9f6b782`, clean tracked tree, release binary rebuilt from it; every step ran serially in the bounded scope
+and exited 0 (`results/p145/steps.tsv`, `logs/`). Inputs committed with the candidate (`controls/p145_inputs/`): C1
+`fns_fe_5min` (MF=33, flux 5 %, decay; 100 samples), C2 a stainless-steel-like activated metal (Cr 18, Ni 8, Mn 1.5,
+Co 0.05, Nb 0.005 wt %, one year at about 1.1e14 n/cm2/s; levels set with 20-sample development runs before the
+commit; 100 samples), C3 pure cobalt with a rank-one synthetic Co-59(n,γ) covariance at σ² = 0.16, 0.36, 0.64.
+**U1**: all 100 kept samples of C1 and of C2 equal the `study.robustness` files of the same index byte for byte once
+`ms` is removed (Amendment B). **U2**: an independent tally from the kept samples and the bundled rule pack reproduced
+every count, probability, percentile, fraction above 1 and class (281 checks per case, 0 failures) and the
+Clopper–Pearson ends within 1e-12. C1 is established A at all four targets; C2 is established C at all four, with
+14 of 100 samples B at 32 years (Table 2 B/C sum) and 72 of 100 B at 100 years (Table 1 sum around its Class A limit).
+**U3**: at 4096 samples the closed form P(s > 1) = 0.8997, 0.4996, 0.0998 lay inside the 99.9 % interval of the
+observed 0.9004, 0.4932, 0.0925. **U4**: five refusals with distinct messages and nothing written, zero variance
+reproduces the nominal class, repeats are byte-identical. **U5 (local)**: `check_p136.py` with the pre-P145 release
+binary `216e136c…` as reference passed G2 (0 differences beyond timing), G3 and G4; fmt, clippy `-D warnings` native
+and wasm, workspace tests (1073 passed, 0 failed), the binding's fmt/check/clippy, module build, smoke and tests
+(14) and the handbook build exited 0. CI decides the rest.
