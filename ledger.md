@@ -3437,3 +3437,11 @@ clippy `-D warnings` native and wasm, and workspace tests (1056 passed, 0 failed
 Found during the pre-evidence rehearsal and fixed before the candidate: with external H-3 declared, the page read
 properties only for nuclides active in the run, so a run that made no H-3 left H-3 without properties and every step
 `unknown`. The page now includes H-3 whenever external H-3 is declared (regression test); the steel case classifies A.
+
+## Entry 191 — P145 Amendment A registered: definitions fixed before implementation (2026-10-16)
+
+Registered after the protocol and before any source change, input or run for P145: **P145 Amendment A** `355ddb6f3d1188c780f322f9cfabe95ce66adc628b2ccd45de523001e2f6bc72`.
+It fixes the two-sided equal-tailed Clopper–Pearson interval and the established-class rule (72 samples at least at
+0.95 when every sample agrees; unknown and failed samples are at most no class), what "exactly" means in U2 (values
+equal; Clopper–Pearson ends within 1e-12), and the C3 closed form P(s > 1) = Φ((ln s₀ − σ²/2)/σ) from the sampler's
+own factor, with one material amount per variance chosen before any run. No gate is relaxed.
