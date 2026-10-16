@@ -13,7 +13,7 @@ db5deaf339bbe487e8910e1227a1c08ffc3aa362973b7b2c4981e7e3261d6288  ./.github/work
 df42fa77d9e68460d44687ad98f6bdf2c08e0c75f4a1c070c376f81f290f8a82  ./CHANGELOG.md
 d0af8a4b29e956ff79971b32cdd307814db9d765a4919dcb74df3c3b78181180  ./COMPETITIVE_BENCHMARK.md
 06debfb88cbe4179817b24708768586cc46b4ef0a9c94a4d6de3007a2f1fe8a1  ./CONTRIBUTING.md
-18486354343514a87190591b498416cea7637b92e5568c40d8fc72f4299233fb  ./Cargo.lock
+5bb53cdf37fa09c723aeb1f3236ce7dafec468e065c8d94de14dcbfe02c51281  ./Cargo.lock
 d73772d6a29673669a68e544481856ffc76ae6f984f4387d678c913f9b2f2ea2  ./Cargo.toml
 69bb1d4c16fc5fb2832a33b1b9902022dc18d250a8af98e199e8b9f4d69f7575  ./EXTERNAL_EVIDENCE.md
 cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30  ./LICENSE-APACHE
@@ -710,7 +710,7 @@ d15a10084c4689e550a4ca45b38d4d94d74bf8e90fe3022ecb698b625348b7c7  ./controls/p11
 ab4b27d7397198df7b9dd564a2be2f9d01ba091ea3bf8c42223e21cfe56bee55  ./controls/p120_ci_steps.py
 47302a336d77ce2617425b9b5129f23de74f54e56bc29d1df15f57679122a179  ./controls/p126_njoy_fe56.py
 5a38ffa5fc77dbdfd7f735acdda0d6e4f4f0ffd7f028196c3b6e2c340b13ed58  ./controls/p132_import_all.py
-c3074fa7029b30fe7df783eddfa3df0be30c1abd37cd54b669c35cc24ff27c43  ./controls/p141_zip_evidence.py
+8482c5fb408abf5758298aef3cc0d2946793423f8d2dce3328179a0bdd95d9f0  ./controls/p141_zip_evidence.py
 6408a8070dcf7c1428064b119f8357f86c3fac89ef1f429d75ee964d2d4dd8e3  ./controls/p14_performance.py
 25ac9db80f477bb625e1bac2d27c5a06e487e1ebabcbe7213acd9cc539407829  ./controls/p15_performance.py
 b7ee4c154c41c360ca1cb5a542d5f4b9b0e5d7b93198841c76e5c2c43503c133  ./controls/p16_performance.py
@@ -873,7 +873,7 @@ c5b404a543e73a4c07c7165f135ba44ecb811118565b4005f80a4af5c27942c5  ./controls/tes
 2bfc58401ed2e97a28029ba0b52d646c9f26830209acbb2eef420954b7a636aa  ./controls/test_p120_amendment_c.py
 120f4400b11ec32ae6a950cebc08954ea27446aeff55204bbd18c0cfb88eb0c0  ./controls/test_p121.py
 b1566cb59da3d7e7dbf646c23e0ac6106d89518a66e2b8c23223b44a7d736527  ./controls/test_p16_dependency_history.py
-deb84fb548a92617232e9acd6463c53e4a0f655e7271a1c4ddca7ba2d574d67d  ./crates/actinv-cli/Cargo.toml
+772791e0bc0c0d5986ff7972c006e4ba358d370204529e0448fb1fb87150ec5d  ./crates/actinv-cli/Cargo.toml
 191117ff8aaff8d9981a93c9bb59b418cfe54505dc7363128d2bc5e728a6a62c  ./crates/actinv-cli/data/ACTINV-DATA-NOTICE-v1.0.0.md
 132bacccc3fe16703455cc69efc68feaf811eea4415dc653336638c70f903136  ./crates/actinv-cli/data/ACTINV-DATA-NOTICE-v1.1.0.md
 27b77786b89a6303f0805646fc61e4fbcabaaf695dd92e4e15a87948b3d69430  ./crates/actinv-cli/data/actinv-data-catalog-v1.0.0.json
@@ -966,7 +966,7 @@ f5d25dc6e3e471873e5fbc07c267269eb6da6d940587a6c36ca28635f1922e5f  ./crates/actin
 be9e39811dd496fc2622c5412beba3f5548f8153723a283f872815e652888d7f  ./crates/actinv-core/src/waste_bounds.rs
 de783f5d4eb301e8846839d9e54c9ba3da68824c1e85f7e020cef64bcace2f3c  ./crates/actinv-core/src/waste_composition.rs
 efd2a4aa216652e627f70f854b9bff400228c4dd8cdfeb1070d11ab9841aaed6  ./crates/actinv-core/src/waste_intrusion.rs
-ddd7c20e0b87ffb4ffcab7514746a1138f6712b04052e67580da05a0f6989c29  ./crates/actinv-data/Cargo.toml
+0d11a8fbe5d1e6b7e2c15e100772245a0e3bc9dab1e96b447516441bb45cbcbb  ./crates/actinv-data/Cargo.toml
 951534baf043e5416932d2890843c5d5a10fdbdb8c16a8ebff699945b8e0496e  ./crates/actinv-data/data/actinv-data-catalog-v1.1.0.json
 0fdde02e5db3382c57b9c986756bfc25aa262297a8757f0d4d71e993507d87e7  ./crates/actinv-data/data/fispact_100_groups.json
 58394fdcfbc26e642152af2bd4fe790a0161f4bfd0be746b3a6847c1482c7f99  ./crates/actinv-data/data/fispact_1102_groups.json
@@ -993,7 +993,7 @@ fa5a5d5a1cd0f73f79aa83fa7f2907ce431b0e1c425075cd86bfe6f8a1361e1b  ./crates/actin
 9d0806b6b08dafc106c10b879297d1959f8a917b5cfad6ba5923d7ef8bd3a1b5  ./crates/actinv-data/src/builder.rs
 89125262e92c70fdcf3d583e994f5122c498b0818284a923526bef0d0afc677a  ./crates/actinv-data/src/catalog.rs
 584399c14c25b24db09311622696bd2e5691dd3045cbaec0ce406ba1fefbf024  ./crates/actinv-data/src/composition.rs
-6165db1e3338634fb9320a1b22988836e8f16d68b47bd732715238886c9a26d4  ./crates/actinv-data/src/covariance.rs
+051336cd5521123f5fe4cf4d77514f851526c245d550d193f788604e6e8f765f  ./crates/actinv-data/src/covariance.rs
 4be7dff38361d3e28775ed387b6cd8553768fbac69eea518176a3ffa23b385cf  ./crates/actinv-data/src/decay.rs
 8c9a0ef4a16ea5a54f14f087e9c66a258e7f1d9bee51f49b891318b958e89588  ./crates/actinv-data/src/doppler.rs
 53d7df649c930efa373c97127c817df9a0c1c712c60d97b409a5bd509282e252  ./crates/actinv-data/src/endf.rs
@@ -1001,7 +1001,7 @@ d2305a0b5ba54ac6b16b454cac9a483de9580cad35d0b48bc7c9a6fceee59d69  ./crates/actin
 648ceff33d5a94d0c2b35b55ab1c08bb9e9014de31873d3254a9b9e69dd784e1  ./crates/actinv-data/src/groups.rs
 5d7bd198f50928a3eab915d34d28e417effa74edf1390e5ed766a50356d096fa  ./crates/actinv-data/src/kerma.rs
 46862d01bc47dd89f026d7bee783155285bec1d1ef341d750466f5a9268e4be1  ./crates/actinv-data/src/lib.rs
-d740e372124b938ef609f2e147a8ed6439c6a5e6ae5de4d114ecfa40b21c24b7  ./crates/actinv-data/src/library.rs
+1609538b7ab3a19a0fdbfc8d6e666e8a4b8c6ae72af455003e1a1794cbeb0088  ./crates/actinv-data/src/library.rs
 7041f7a53856f6409ac8d95fd44f683a5c18f496537339668d1953bd49261e6d  ./crates/actinv-data/src/normalize.rs
 43bc4ea5590a4069fb5b503b798222a661a9c14718727bfddd77c55366414762  ./crates/actinv-data/src/prepared.rs
 b80de2abfc574df37e79db771aa164a754d3bad62c8fc2205b732609376b9700  ./crates/actinv-data/src/processing.rs
@@ -1520,7 +1520,7 @@ f16e43ed6d79f0ab1da8505d0b62aa0ee167b5fde29efda5f759fca4e7948936  ./protocols/de
 62fe79af9e628be66dce128fb9a7b49711fc4255f6bdafa9269fb534c5c21abb  ./protocols/protocol_hash.txt
 4a8925d08996b759120238021ff7af4c8ac9f814082ec1aa1183372c81ca0545  ./protocols/w-matcmp.p36.study.json
 7837466957fcd65be7bbe633fa7b07a2ddccab74b034c5ddf195814e0100632d  ./prototypes/p26_campaign.py
-737cecc5de547c600284644569f094df50e06d6d721d52050952c06d433091c4  ./python/Cargo.lock
+6d0bd046ea30692a5d509fc2dccd9fe5fcd44194a09d6c862773a106e397d908  ./python/Cargo.lock
 e7d1ae2315575748c1630974f3b532f1db239e103ad758dc5bd06c1339818995  ./python/Cargo.toml
 cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30  ./python/LICENSE-APACHE
 4f722528d1cb3662dcc69ff215f00088cd74706a21ad5c8fd35b167ce804e5e9  ./python/LICENSE-MIT
@@ -5016,6 +5016,7 @@ fffadbe70bd1867e174e6d97bc4bd5de030e447da386ea9b3a8251770b94f875  ./results/p140
 2ca959be1616cea868696497fc77ab6f960ed3d3c71823f383aa8861e95a72aa  ./results/p140/h4_cand12.json
 d6ab89ffdd14117438f4e75ab9e890f6e7b1d79b46d19db4ede48168162c5af5  ./results/p140/h4_cand12.log
 46375992ba8f70af04179078474e03ddebc56e1f0514dfb8f047469920f3e471  ./results/p140/h4_cand9.json
+22be28f892843ef3ea013a2f7d0bc2ada8086368b150df0bb43883664fe48159  ./results/p141/z1_p11.json
 52690bdfbba3bda122304cde0a5eba425dc0620936ab75e4ca460e7ab042e44e  ./results/p14_performance.json
 db055602666b88ae234489291726d8f1add6d2f5b28b388057f24fda465abc67  ./results/p14_quality.json
 2f5669d71f0959bb25571e189dd9de733ef237e314d78b0e790e778f2f63da0f  ./results/p15_cache_integrity.json

@@ -19,7 +19,7 @@ serde = { version = "1", features = ["derive"] }
 serde_json = { version = "1", features = ["float_roundtrip"] }
 sha2 = "0.10"
 ureq = "=3.4.0"
-zip = { version = "=8.6.0", default-features = false, features = ["deflate-flate2"] }
+zip = { version = "=9.0.4", default-features = false, features = ["deflate-flate2"] }
 
 [[bin]]
 name = "actinv"

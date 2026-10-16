@@ -461,24 +461,22 @@ fn validate_members<R: Read + Seek>(archive: &mut zip::ZipArchive<R>) -> Result<
     let mut names = HashSet::new();
     for index in 0..archive.len() {
         let member = archive.by_index(index).map_err(|error| error.to_string())?;
+        let name = member
+            .name()
+            .map_err(|error| format!("invalid activation-library member name: {error}"))?
+            .into_owned();
         if member.size() >= MAX_ARRAY_BYTES {
             return Err(format!(
                 "{} is {} bytes; a single activation-library array must be below {MAX_ARRAY_BYTES} bytes",
-                member.name(),
+                name,
                 member.size()
             ));
         }
-        if !matches!(member.name(), "rows.npy" | "sig.npy" | "bounds.npy") {
-            return Err(format!(
-                "unexpected activation-library member '{}'",
-                member.name()
-            ));
+        if !matches!(name.as_str(), "rows.npy" | "sig.npy" | "bounds.npy") {
+            return Err(format!("unexpected activation-library member '{}'", name));
         }
-        if !names.insert(member.name().to_string()) {
-            return Err(format!(
-                "duplicate activation-library member '{}'",
-                member.name()
-            ));
+        if !names.insert(name.clone()) {
+            return Err(format!("duplicate activation-library member '{}'", name));
         }
     }
     for required in ["rows.npy", "sig.npy", "bounds.npy"] {
@@ -634,7 +632,7 @@ pub(crate) fn sha256_verified_member<'a, R: Read + Seek>(
 ) -> Result<(Sha256VerifiedMember<'a, R>, u64), String> {
     let index = archive
         .file_names()
-        .position(|candidate| candidate == name)
+        .position(|candidate| matches!(candidate.as_deref(), Ok(candidate) if candidate == name))
         .ok_or_else(|| format!("activation library has no {name}"))?;
     let member = archive
         .by_index_raw(index)
@@ -1028,6 +1026,31 @@ mod tests {
         archive.write_all(&1.0f64.to_le_bytes()).unwrap();
         archive.write_all(&2.0f64.to_le_bytes()).unwrap();
         archive.finish().unwrap().into_inner()
+    }
+
+    fn npz_with_members(names: &[&str]) -> Vec<u8> {
+        use zip::write::SimpleFileOptions;
+        use zip::{CompressionMethod, ZipWriter};
+
+        let mut archive = ZipWriter::new(std::io::Cursor::new(Vec::new()));
+        let options = SimpleFileOptions::default().compression_method(CompressionMethod::Stored);
+        for name in names {
+            archive.start_file(*name, options).unwrap();
+            write_npy_header(&mut archive, "<f8", &[0]).unwrap();
+        }
+        archive.finish().unwrap().into_inner()
+    }
+
+    #[test]
+    fn unexpected_or_missing_members_are_refused_by_name() {
+        let members = ["rows.npy", "sig.npy", "bounds.npy", "extra.npy"];
+        let error = read_npz_bytes(&npz_with_members(&members)).unwrap_err();
+        assert!(
+            error.contains("unexpected activation-library member 'extra.npy'"),
+            "{error}"
+        );
+        let error = read_npz_bytes(&npz_with_members(&["rows.npy", "sig.npy"])).unwrap_err();
+        assert!(error.contains("bounds.npy"), "{error}");
     }
 
     #[test]

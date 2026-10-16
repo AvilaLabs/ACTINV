@@ -2234,24 +2234,22 @@ fn validate_members<R: Read + Seek>(archive: &mut zip::ZipArchive<R>) -> Result<
     let mut names = BTreeSet::new();
     for index in 0..archive.len() {
         let member = archive.by_index(index).map_err(|error| error.to_string())?;
+        let name = member
+            .name()
+            .map_err(|error| format!("invalid covariance-sidecar member name: {error}"))?
+            .into_owned();
         if member.size() >= MAX_ARRAY_BYTES {
             return Err(format!(
                 "{} is {} bytes; one covariance array must be below {MAX_ARRAY_BYTES} bytes",
-                member.name(),
+                name,
                 member.size()
             ));
         }
-        if !required.contains(&member.name()) {
-            return Err(format!(
-                "unexpected covariance-sidecar member '{}'",
-                member.name()
-            ));
+        if !required.contains(&name.as_str()) {
+            return Err(format!("unexpected covariance-sidecar member '{}'", name));
         }
-        if !names.insert(member.name().to_owned()) {
-            return Err(format!(
-                "duplicate covariance-sidecar member '{}'",
-                member.name()
-            ));
+        if !names.insert(name.clone()) {
+            return Err(format!("duplicate covariance-sidecar member '{}'", name));
         }
     }
     for name in required {
@@ -2363,6 +2361,41 @@ pub fn read_npz(path: impl AsRef<Path>) -> Result<CovarianceLibrary, String> {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn unexpected_or_missing_sidecar_members_are_refused_by_name() {
+        use zip::write::SimpleFileOptions;
+        use zip::ZipWriter;
+
+        let archive_of = |names: &[&str]| {
+            let mut archive = ZipWriter::new(std::io::Cursor::new(Vec::new()));
+            for name in names {
+                archive
+                    .start_file(*name, SimpleFileOptions::default())
+                    .unwrap();
+            }
+            let bytes = archive.finish().unwrap().into_inner();
+            zip::ZipArchive::new(std::io::Cursor::new(bytes)).unwrap()
+        };
+        let mut extra = archive_of(&[
+            "components.npy",
+            "grid_offsets.npy",
+            "grid_values.npy",
+            "values.npy",
+            "extra.npy",
+        ]);
+        let error = validate_members(&mut extra).unwrap_err();
+        assert!(
+            error.contains("unexpected covariance-sidecar member 'extra.npy'"),
+            "{error}"
+        );
+        let mut missing = archive_of(&["components.npy", "grid_offsets.npy", "grid_values.npy"]);
+        let error = validate_members(&mut missing).unwrap_err();
+        assert!(
+            error.contains("covariance sidecar has no values.npy"),
+            "{error}"
+        );
+    }
 
     #[test]
     fn oversized_dense_blocks_are_refused_before_allocation() {

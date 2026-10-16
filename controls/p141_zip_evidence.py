@@ -91,8 +91,17 @@ def p11_builds(ref: Path, cand: Path) -> dict:
     for tag, binary in (("ref", ref), ("cand", cand)):
         activation, covariance = WORK / f"p11_{tag}.npz", WORK / f"p11_{tag}.cov.npz"
         a = run(binary, ["build-library", inputs, activation, "--workers", "2", "--continue-on-error", "true"])
-        c = run(binary, ["build-covariance", inputs, activation, covariance, "--workers", "1"])
+        # P141 Amendment B: the sidecar is built from a Fe-56-only directory and its own activation library.
+        fe_inputs = WORK / "p11-fe56"
+        fe_inputs.mkdir(exist_ok=True)
+        if not (fe_inputs / "n-Fe056.tendl").exists():
+            shutil.copyfile(inputs / "n-Fe056.tendl", fe_inputs / "n-Fe056.tendl")
+        fe_activation = WORK / f"fe56_{tag}.npz"
+        f = run(binary, ["build-library", fe_inputs, fe_activation, "--workers", "2", "--continue-on-error", "true"])
+        c = run(binary, ["build-covariance", fe_inputs, fe_activation, covariance, "--workers", "1"])
+        c["returncode"] = c["returncode"] or f["returncode"]
         small[tag] = {"library_rc": a["returncode"], "covariance_rc": c["returncode"],
+                      "fe56_library_sha256": sha(fe_activation) if fe_activation.exists() else None,
                       "library_sha256": sha(activation) if activation.exists() else None,
                       "covariance_sha256": sha(covariance) if covariance.exists() else None,
                       "stderr_tail": a["stderr_tail"] + c["stderr_tail"]}
@@ -100,7 +109,8 @@ def p11_builds(ref: Path, cand: Path) -> dict:
         "library_identical": small["ref"]["library_sha256"] is not None
         and small["ref"]["library_sha256"] == small["cand"]["library_sha256"],
         "covariance_identical": small["ref"]["covariance_sha256"] is not None
-        and small["ref"]["covariance_sha256"] == small["cand"]["covariance_sha256"]}
+        and small["ref"]["covariance_sha256"] == small["cand"]["covariance_sha256"]
+        and small["ref"]["fe56_library_sha256"] == small["cand"]["fe56_library_sha256"]}
 
 
 
