@@ -1,6 +1,7 @@
 //! Outputs: what ACTINV should compute. The body is the shared view; this page supplies the
 //! file chooser and passes the view's tour anchors on.
-use super::{page_for, schedule::ShellPicker};
+use super::page_for;
+use crate::options::PlatformPicker;
 use crate::{
     app::{heading, Desktop},
     views::{
@@ -18,7 +19,7 @@ impl Desktop {
             "Choose what ACTINV should compute besides the inventory, activity and decay heat.",
         );
         let mut marks = Marks::default();
-        let mut picker = ShellPicker::new(&*self.platform, &self.base);
+        let mut picker = PlatformPicker(&*self.platform);
         let shown = ui.scope(|ui| {
             outputs::show(
                 ui,

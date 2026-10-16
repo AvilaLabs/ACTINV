@@ -10,7 +10,6 @@ use serde_json::{json, Value};
 
 /// File chooser for the shared views, answered by the shell's dialogs. The hash is computed here,
 /// so a pinned path and its SHA-256 always agree.
-#[cfg_attr(not(test), allow(dead_code))]
 pub struct PlatformPicker<'a>(pub &'a dyn Platform);
 
 impl Picker for PlatformPicker<'_> {

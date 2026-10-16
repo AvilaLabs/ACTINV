@@ -120,10 +120,8 @@ pub fn contributors(ui: &mut egui::Ui, step: &Value, selected: &mut String) {
 }
 
 /// The cobalt accent of the light theme: selection, run and links.
-#[cfg_attr(target_arch = "wasm32", allow(dead_code))] // browser pages use it from 0.4 phase 5
 pub const BLUE: egui::Color32 = egui::Color32::from_rgb(24, 0, 173);
 
-#[cfg_attr(target_arch = "wasm32", allow(dead_code))] // browser pages use it from 0.4 phase 5
 pub fn heading(ui: &mut egui::Ui, title: &str, subtitle: &str) {
     ui.heading(RichText::new(title).size(27.));
     let color = if ui.visuals().dark_mode {
@@ -135,7 +133,6 @@ pub fn heading(ui: &mut egui::Ui, title: &str, subtitle: &str) {
     ui.add_space(16.);
 }
 
-#[cfg_attr(target_arch = "wasm32", allow(dead_code))] // browser pages use it from 0.4 phase 5
 pub fn text_field(ui: &mut egui::Ui, value: &mut Value) {
     let mut s = value.as_str().unwrap_or("").to_owned();
     if ui
@@ -146,7 +143,6 @@ pub fn text_field(ui: &mut egui::Ui, value: &mut Value) {
     }
 }
 
-#[cfg_attr(target_arch = "wasm32", allow(dead_code))] // browser pages use it from 0.4 phase 5
 pub fn numeric(ui: &mut egui::Ui, value: &mut Value, speed: f64) {
     let mut n = model::number(value);
     if ui
@@ -162,7 +158,6 @@ pub fn numeric(ui: &mut egui::Ui, value: &mut Value, speed: f64) {
     }
 }
 
-#[cfg_attr(target_arch = "wasm32", allow(dead_code))] // browser pages use it from 0.4 phase 5
 pub fn json_tree(ui: &mut egui::Ui, label: &str, value: &Value) {
     match value {
         Value::Object(map) => {
