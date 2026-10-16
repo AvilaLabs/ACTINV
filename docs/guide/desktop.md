@@ -38,7 +38,8 @@ On **Irradiation & cooling**, each row has a **Drive**: a flux multiplier, a wal
 - **Production pathways**, including **Full routes with closure**.
 - **Regulatory tables**.
 - **Geometry self-shielding**.
-- **Uncertainty (MF=33)**.
+- **Uncertainty**, with its channels: MF=33 cross sections, half-lives, fission yields and flux tally statistics. The flux channel takes one relative error per flux group, pasted on the card; with flux alone no covariance file is needed.
+- **Gas production (H and He)**, for neutron activation; it cannot be combined with uncertainty.
 
 A result lacks an output you did not enable; the page that would show it says so and offers a link to **Outputs**.
 

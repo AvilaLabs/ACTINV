@@ -50,6 +50,7 @@ pub struct OutputsState {
     choose: ListDraft,
     uncertainty_ids: IdsDraft,
     table_ids: IdsDraft,
+    relative_error: ListDraft,
 }
 
 impl OutputsState {
@@ -256,6 +257,95 @@ fn set_uncertainty(doc: &mut Value, on: bool) {
             json!({"covariance": {"path": "", "sha256": ""}, "responses": [], "confidence_level": 0.95, "require_complete": false}),
         );
     }
+}
+
+/// `uncertainty.channels` in the solver's order, with their labels. An absent list is MF=33 alone.
+const CHANNELS: [(&str, &str); 4] = [
+    ("cross_section_mf33", "Cross sections (MF=33 covariance)"),
+    ("decay_constants", "Half-lives (decay data)"),
+    ("fission_yields", "Independent fission yields"),
+    ("flux", "Flux tally statistics (relative error per group)"),
+];
+
+fn channels(doc: &Value) -> Vec<String> {
+    if get(doc, "uncertainty.channels").is_array() {
+        strings_at(doc, "uncertainty.channels")
+    } else {
+        vec![CHANNELS[0].0.to_owned()]
+    }
+}
+
+fn flux_only(doc: &Value) -> bool {
+    channels(doc) == ["flux"]
+}
+
+/// Turn one channel on or off. The last channel cannot be removed; MF=33 alone is written as the
+/// absent list, so a default spec is unchanged. Flux-only mode needs no covariance sidecar, so an
+/// unfilled covariance reference is dropped there and restored when MF=33 returns.
+fn set_channel(doc: &mut Value, channel: &str, on: bool) {
+    let current = channels(doc);
+    let chosen: Vec<&str> = CHANNELS
+        .iter()
+        .map(|(id, _)| *id)
+        .filter(|id| {
+            if *id == channel {
+                on
+            } else {
+                current.iter().any(|c| c == id)
+            }
+        })
+        .collect();
+    if chosen.is_empty() {
+        return;
+    }
+    if chosen == [CHANNELS[0].0] {
+        remove(doc, "uncertainty.channels");
+    } else {
+        set(doc, "uncertainty.channels", json!(chosen));
+    }
+    if chosen == ["flux"] {
+        if str_at(doc, "uncertainty.covariance.path").is_empty() {
+            remove(doc, "uncertainty.covariance");
+        }
+    } else if !get(doc, "uncertainty.covariance").is_object() {
+        set(
+            doc,
+            "uncertainty.covariance",
+            json!({"path": "", "sha256": ""}),
+        );
+    }
+}
+
+/// Pasted relative errors: one finite, nonnegative fraction per flux group, with an optional
+/// `relative_error` header.
+fn parse_relative_errors(text: &str, count: usize) -> Result<Vec<f64>, String> {
+    let mut values = Vec::new();
+    for (i, token) in text
+        .split(|c: char| c == ',' || c.is_whitespace())
+        .filter(|s| !s.is_empty())
+        .enumerate()
+    {
+        if i == 0 && token.eq_ignore_ascii_case("relative_error") {
+            continue;
+        }
+        let v: f64 = token
+            .parse()
+            .map_err(|_| format!("Value {} ('{token}') is not a number.", values.len() + 1))?;
+        if !v.is_finite() || v < 0. {
+            return Err(format!(
+                "Group {} must be finite and nonnegative.",
+                values.len() + 1
+            ));
+        }
+        values.push(v);
+    }
+    if values.len() != count {
+        return Err(format!(
+            "Expected {count} values, one per flux group, found {}.",
+            values.len()
+        ));
+    }
+    Ok(values)
 }
 
 fn geometry_on(doc: &Value) -> bool {
@@ -1503,6 +1593,84 @@ fn geometry_card(
     }
 }
 
+/// `spectrum.relative_error`: each group's tally relative standard uncertainty, in the order of
+/// `flux_per_group`. Pasted and applied as a whole, never partly written.
+fn relative_errors(ui: &mut egui::Ui, doc: &mut Value, draft: &mut ListDraft) {
+    let count = get(doc, "spectrum.flux_per_group")
+        .as_array()
+        .map_or(0, Vec::len);
+    match get(doc, "spectrum.relative_error").as_array() {
+        Some(values) => ui.label(format!(
+            "Relative errors: {} of {count} groups given.",
+            values.len()
+        )),
+        None => ui.label(format!(
+            "Relative errors: none given. Paste one fraction per flux group ({count}), in the order of the flux values."
+        )),
+    };
+    ui.horizontal(|ui| {
+        ui.add(
+            egui::TextEdit::multiline(&mut draft.text)
+                .desired_rows(2)
+                .desired_width(320.)
+                .hint_text("0.02 0.03 0.05 \u{2026}"),
+        );
+        ui.vertical(|ui| {
+            if ui.button("Apply").clicked() {
+                match parse_relative_errors(&draft.text, count) {
+                    Ok(values) => {
+                        set(doc, "spectrum.relative_error", json!(values));
+                        draft.text.clear();
+                        draft.note = None;
+                    }
+                    Err(error) => draft.note = Some(error),
+                }
+            }
+            if get(doc, "spectrum.relative_error").is_array() && ui.button("Clear").clicked() {
+                remove(doc, "spectrum.relative_error");
+            }
+        });
+    });
+    if let Some(note) = &draft.note {
+        ui.colored_label(ui.visuals().error_fg_color, note);
+    }
+}
+
+fn gas_card(ui: &mut egui::Ui, doc: &mut Value, problem: &Option<String>) {
+    let enabled = bool_at(doc, "options.gas", false);
+    let mut on = enabled;
+    let projectile = match str_at(doc, "projectile") {
+        "" => "neutron",
+        other => other,
+    };
+    let needs = (projectile != "neutron").then(|| "a neutron projectile".to_owned());
+    let state = status(
+        enabled,
+        needs,
+        enabled && mentions(problem, &["options.gas"]),
+    );
+    card(
+        ui,
+        "Gas production (H and He)",
+        &mut on,
+        true,
+        &state,
+        |ui| {
+            ui.label(
+            "Tracks H1, H2, H3, He3 and He4 from neutron reactions and decay; each step gains a gas \
+             block. Neutron activation only, and not combined with uncertainty.",
+        );
+        },
+    );
+    if on != enabled {
+        if on {
+            set(doc, "options.gas", json!(true));
+        } else {
+            remove(doc, "options.gas");
+        }
+    }
+}
+
 fn uncertainty_card(
     ui: &mut egui::Ui,
     doc: &mut Value,
@@ -1512,27 +1680,51 @@ fn uncertainty_card(
 ) {
     let enabled = get(doc, "uncertainty").is_object();
     let mut on = enabled;
-    let flux_only = get(doc, "uncertainty.channels")
-        .as_array()
-        .is_some_and(|channels| channels.len() == 1 && channels[0].as_str() == Some("flux"));
-    let needs = (str_at(doc, "uncertainty.covariance.path").is_empty() && !flux_only)
-        .then(|| "covariance file".to_owned());
+    let chosen = channels(doc);
+    let wants_flux = chosen.iter().any(|c| c == "flux");
+    let needs = if str_at(doc, "uncertainty.covariance.path").is_empty() && !flux_only(doc) {
+        Some("covariance file".to_owned())
+    } else if wants_flux && !get(doc, "spectrum.relative_error").is_array() {
+        Some("flux relative errors".to_owned())
+    } else {
+        None
+    };
     let state = status(enabled, needs, mentions(problem, &["uncertainty"]));
-    card(ui, "Uncertainty (MF=33)", &mut on, true, &state, |ui| {
-        ui.label("Cross-section uncertainty bands from a covariance sidecar.");
+    card(ui, "Uncertainty", &mut on, true, &state, |ui| {
+        ui.label("Uncertainty bands on the selected responses, from the channels chosen below.");
         if !enabled {
             return;
         }
-        reference(
-            ui,
-            doc,
-            "uncertainty.covariance",
-            picker,
-            "Covariance",
-            "Covariance sidecar",
-            &["json"],
-            false,
-        );
+        ui.horizontal_wrapped(|ui| {
+            ui.label("Channels");
+            for (id, label) in CHANNELS {
+                let mut value = chosen.iter().any(|c| c == id);
+                let last = value && chosen.len() == 1;
+                if ui
+                    .add_enabled(!last, egui::Checkbox::new(&mut value, label))
+                    .changed()
+                {
+                    set_channel(doc, id, value);
+                }
+            }
+        });
+        if flux_only(doc) {
+            ui.weak("Flux-only mode: no covariance sidecar is needed and MF=33 is not propagated.");
+        } else {
+            reference(
+                ui,
+                doc,
+                "uncertainty.covariance",
+                picker,
+                "Covariance",
+                "Covariance sidecar",
+                &["json"],
+                false,
+            );
+        }
+        if wants_flux {
+            relative_errors(ui, doc, &mut st.relative_error);
+        }
         ui.label("Responses, comma separated: heat.total, heat.gamma, activity:Mn56, activity:* (empty = all)");
         ids_editor(ui, doc, "uncertainty.responses", &mut st.uncertainty_ids);
         ui.horizontal_wrapped(|ui| {
@@ -1590,6 +1782,7 @@ pub fn show(
     regulatory_card(ui, document, state, picker, &problem);
     geometry_card(ui, document, state, picker, &problem, &mut action);
     uncertainty_card(ui, document, state, picker, &problem);
+    gas_card(ui, document, &problem);
 
     match &state.problem {
         Some(message) => {
@@ -1615,6 +1808,73 @@ mod tests {
 
     fn decoded() -> Value {
         crate::model::decode_problem(crate::model::EXAMPLE).expect("example decodes")
+    }
+
+    #[test]
+    fn channels_keep_mf33_alone_absent_and_flux_only_drops_the_empty_covariance() {
+        let mut doc = decoded();
+        set_uncertainty(&mut doc, true);
+        assert_eq!(channels(&doc), ["cross_section_mf33"]);
+        set_channel(&mut doc, "flux", true);
+        assert_eq!(
+            doc["uncertainty"]["channels"],
+            json!(["cross_section_mf33", "flux"])
+        );
+        set_channel(&mut doc, "cross_section_mf33", false);
+        assert_eq!(doc["uncertainty"]["channels"], json!(["flux"]));
+        assert!(doc["uncertainty"].get("covariance").is_none());
+        // The last channel stays.
+        set_channel(&mut doc, "flux", false);
+        assert_eq!(doc["uncertainty"]["channels"], json!(["flux"]));
+        set_channel(&mut doc, "cross_section_mf33", true);
+        set_channel(&mut doc, "flux", false);
+        assert!(doc["uncertainty"].get("channels").is_none());
+        assert_eq!(
+            doc["uncertainty"]["covariance"],
+            json!({"path": "", "sha256": ""})
+        );
+    }
+
+    #[test]
+    fn flux_only_uncertainty_with_relative_errors_is_a_valid_spec() {
+        let mut doc = decoded();
+        set_uncertainty(&mut doc, true);
+        set_channel(&mut doc, "flux", true);
+        set_channel(&mut doc, "cross_section_mf33", false);
+        // The missing relative errors are a run-time refusal, so the card's status names them.
+        assert!(get(&doc, "spectrum.relative_error").is_null());
+        let count = doc["spectrum"]["flux_per_group"].as_array().unwrap().len();
+        let text = vec!["0.05"; count].join(" ");
+        let values = parse_relative_errors(&format!("relative_error {text}"), count).unwrap();
+        set(&mut doc, "spectrum.relative_error", json!(values));
+        Spec::from_json(&doc.to_string()).expect("flux-only uncertainty validates");
+    }
+
+    #[test]
+    fn relative_errors_need_one_finite_nonnegative_value_per_group() {
+        assert_eq!(
+            parse_relative_errors("0 0.1,0.2", 3).unwrap(),
+            [0., 0.1, 0.2]
+        );
+        assert!(parse_relative_errors("0.1 0.2", 3).is_err());
+        assert!(parse_relative_errors("0.1 -0.2", 2).is_err());
+        assert!(parse_relative_errors("0.1 x", 2).is_err());
+        assert!(parse_relative_errors("0.1 inf", 2).is_err());
+    }
+
+    #[test]
+    fn gas_is_written_only_when_on_and_its_conflict_is_the_solvers() {
+        let mut doc = decoded();
+        assert!(doc["options"].get("gas").is_none());
+        set(&mut doc, "options.gas", json!(true));
+        Spec::from_json(&doc.to_string()).expect("gas validates for neutrons");
+        set_uncertainty(&mut doc, true);
+        set_channel(&mut doc, "flux", true);
+        set_channel(&mut doc, "cross_section_mf33", false);
+        let error = Spec::from_json(&doc.to_string()).unwrap_err();
+        assert!(mentions(&Some(error.clone()), &["options.gas"]), "{error}");
+        remove(&mut doc, "options.gas");
+        assert!(doc["options"].get("gas").is_none());
     }
 
     #[test]

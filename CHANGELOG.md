@@ -22,6 +22,9 @@
   browser are recorded by file name and SHA-256.
 - **Import FISPACT-II deck** in the toolbar (Ctrl/Cmd+I): the importer's per-keyword report, Strict, required
   additions linked to the page that fixes them.
+- Outputs also covers the 1.4 options that were JSON-only: gas production, and each uncertainty channel (MF=33,
+  half-lives, fission yields, flux tally statistics, with the per-group relative errors pasted on the card; flux
+  alone needs no covariance file). The gamma projectile is on Overview & data.
 - Irradiation & cooling: a Drive per step (flux multiplier, wall loading, power W/cm3 or W/g) with the kerma-table
   and density requirements shown; Material gains an optional density.
 - Fixed: with no `options.outputs` the output switches showed three outputs while the solver computed five, and the

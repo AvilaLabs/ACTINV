@@ -143,46 +143,6 @@ fn browser_pages() -> impl Iterator<Item = Page> {
         .filter(|page| !matches!(page, Page::Sweep | Page::Assimilation))
 }
 
-/// A pasted vector, or a one-column CSV with an optional `flux` header. The same rules as the
-/// desktop's `model::parse_group_values`, which only the native build compiles.
-fn paste_values(text: &str, count: usize) -> Result<Vec<f64>, String> {
-    let mut values = Vec::new();
-    for (i, token) in text
-        .split(|c: char| c == ',' || c.is_whitespace())
-        .filter(|s| !s.is_empty())
-        .enumerate()
-    {
-        if i == 0
-            && matches!(
-                token.to_ascii_lowercase().as_str(),
-                "flux" | "flux_per_group"
-            )
-        {
-            continue;
-        }
-        let v: f64 = token.parse().map_err(|_| {
-            format!(
-                "Value {} ('{token}') is not a number. Paste only one flux column.",
-                values.len() + 1
-            )
-        })?;
-        if !v.is_finite() || v < 0. {
-            return Err(format!(
-                "Group {} must be finite and nonnegative.",
-                values.len() + 1
-            ));
-        }
-        values.push(v);
-    }
-    if values.len() != count {
-        return Err(format!("Expected {count} group values, found {}. Check the group structure and selected column.", values.len()));
-    }
-    if !values.iter().any(|v| *v > 0.) {
-        return Err("The spectrum must contain a positive group value.".into());
-    }
-    Ok(values)
-}
-
 pub struct Workbench {
     page: Page,
     problem: Value,
@@ -824,7 +784,7 @@ impl Workbench {
                             .as_array()
                             .map_or(0, |v| v.len().saturating_sub(1)),
                     };
-                    match paste_values(&this.spectrum_text, count) {
+                    match crate::model::parse_group_values(&this.spectrum_text, count) {
                         Ok(values) => {
                             this.problem["spectrum"]["flux_per_group"] = json!(values);
                             this.report(Ok(format!("Imported {count} group values. Review normalization and energy order before downloading.")));
@@ -1445,10 +1405,13 @@ mod tests {
 
     #[test]
     fn pasted_group_values_follow_the_desktop_rules() {
-        assert_eq!(paste_values("flux\n1\n2\n3", 3).unwrap(), [1., 2., 3.]);
-        assert!(paste_values("1,2", 3).is_err());
-        assert!(paste_values("0,0", 2).is_err());
-        assert!(paste_values("1,x", 2).is_err());
-        assert!(paste_values("1,-1", 2).is_err());
+        assert_eq!(
+            crate::model::parse_group_values("flux\n1\n2\n3", 3).unwrap(),
+            [1., 2., 3.]
+        );
+        assert!(crate::model::parse_group_values("1,2", 3).is_err());
+        assert!(crate::model::parse_group_values("0,0", 2).is_err());
+        assert!(crate::model::parse_group_values("1,x", 2).is_err());
+        assert!(crate::model::parse_group_values("1,-1", 2).is_err());
     }
 }

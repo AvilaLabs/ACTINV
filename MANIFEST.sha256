@@ -10,7 +10,7 @@ db5deaf339bbe487e8910e1227a1c08ffc3aa362973b7b2c4981e7e3261d6288  ./.github/work
 45506fb0fb8f0a34c49c35c97d5e7a4584894562c516f2e77c712134bea58d2e  ./.github/workflows/web.yml
 089ebaddee0fb463b39ba662955716c09c4405a2d831997dcc8674eb68d6a9c3  ./.gitignore
 9d5bea15c985dcb2fbb60fb5fc92c5aceaaee39ded7d93ed469ab7fce8b5f5bf  ./AGENTS.md
-1484b0c7cbacf10ef716941be69567bd595806ea20479dfa863b8cba4cc530f2  ./CHANGELOG.md
+b7e60f0ed7b757d16a7d11f891719d4dc4fba4fad9a390a030606a261c125915  ./CHANGELOG.md
 d0af8a4b29e956ff79971b32cdd307814db9d765a4919dcb74df3c3b78181180  ./COMPETITIVE_BENCHMARK.md
 06debfb88cbe4179817b24708768586cc46b4ef0a9c94a4d6de3007a2f1fe8a1  ./CONTRIBUTING.md
 a660d036fc7139f431df7754f831fcc6e1eb8686e49b04336aefcd83063301b4  ./Cargo.lock
@@ -1037,7 +1037,7 @@ b418f7b5ec2ef7a93bbbf981f865748287a17a71a91baef41a5252d1952869d2  ./crates/actin
 aad6627ac012f86b64d05a78474d823522e26ba04bd6ea2b966a0600198f36fa  ./crates/actinv-gui/src/capture.rs
 83c540fd256c8c15709dc7485ee4a1d1b2818665b0d972a9bb92a57cccf8f7b4  ./crates/actinv-gui/src/lib.rs
 17db9fb348d4ec0852ad869c0228d9e39c5077bfc87f2504654da35893ea41af  ./crates/actinv-gui/src/main.rs
-6685e881e0cb06d826141c229a71aab41808feec0b175ff7724d473c1b999ee0  ./crates/actinv-gui/src/model.rs
+f31954988d32ae04db071383635fb90bc14cca84d0ec3560837cd015bea0c1f1  ./crates/actinv-gui/src/model.rs
 eac7a6b4c1603cbc119247ba525115e3b2a3a4338a5d474a4146fda6c6a7a2cc  ./crates/actinv-gui/src/nav.rs
 a839b0b781873450168624827f606a436e31c6dafe1b7f280d5a418c30d80386  ./crates/actinv-gui/src/options.rs
 241aa25f1535b6a79393db60b8faeee27db8e16a42b1786b668235552ac35a33  ./crates/actinv-gui/src/platform.rs
@@ -1048,14 +1048,14 @@ d303bb67c7b03fa452f04e867243b020ec0c7422329242e542e20a937b40e338  ./crates/actin
 ede75583a780098d17011950c30c69a4fdcf97e4e160abb003b5ad6635bfa2f1  ./crates/actinv-gui/src/views/import.rs
 c8c1ff2fa023d051e6e7564fd5bbbeda23bc7daef1b30fe284a9da5317b43443  ./crates/actinv-gui/src/views/material.rs
 94b6e3319003fcc59c126de90b513f0b85f36d2f87f7b88958d97faf653b8463  ./crates/actinv-gui/src/views/mod.rs
-b2d324a624b64720e8af0d4c187f8a1f34e307919c5bd3f15d7183f375400c96  ./crates/actinv-gui/src/views/outputs.rs
+78f49bff91b378805959ce1b10c911711384ac9b801644cc127e8feb7ede408f  ./crates/actinv-gui/src/views/outputs.rs
 45f3a898f13d4dfcf9fc01b819621aa8499825dcbe8b437e669cfc22cd464376  ./crates/actinv-gui/src/views/pathways.rs
 95c5e0d5f951fd720ee8449ba8bdcb3dc114795323df865812beab77d0227d92  ./crates/actinv-gui/src/views/photons.rs
 1b6e530f153262af0de126431c32d7a13ffdd543c21ea4a3a7faa190e4aad0bd  ./crates/actinv-gui/src/views/steps.rs
 9c6474e2e456a90410a1cc4ec09dc7dc1a9b247d55c9d6565a1c92d7fbe068f0  ./crates/actinv-gui/src/views/tables.rs
 8a9315dcd1cf918424be55006d4c40a1983675a36b2ffcb6a62594c9a9460795  ./crates/actinv-gui/src/visuals.rs
 ba6aba5e56670ea2c29bf14ed71dcca6d387550de3f79b9c7503be355fa9e348  ./crates/actinv-gui/src/web.rs
-77dce6d97865e77dbb08b03e51f703592d309465a59fa151109fe65afc7c3995  ./crates/actinv-gui/src/web_app.rs
+e02c80250d721d0fb4d29ecc43ce458c94679857ef840b9e8b6f1d53b53eb793  ./crates/actinv-gui/src/web_app.rs
 cbc1185941ba34139062108560d2ab8931c94c24ac7281e9c86bc022dd4c7d0a  ./crates/actinv-gui/src/worker.rs
 3b2e1bde3099de437f81a76a2c0ac9315803a83ecc81c005dc69de11305c1016  ./data/clearance_iaea_2004.json
 df5b6970c892117944416a67e40072227cafd7ec677917f71b1b2e7bce1cae23  ./data/cram_coefficients.json
@@ -1136,7 +1136,7 @@ b5c2ae8c6397353384dc7a62ffeb818b27d615860b7e6beaf8a4cc57ba908f61  ./docs/guide/b
 754c7895c63e0e0c45dd4889a2c4b685023a8543012bb00404ead6c1048b8912  ./docs/guide/cli.md
 07928f227e9685aae31bf6abb134ac9e33addb3196a8e28ba932f100547a74c7  ./docs/guide/data-limits.md
 b3075f18d4b5a7c0e3df7c14906e5962184452b544cb4c1326d3529e7e12ccac  ./docs/guide/data.md
-4cee77a230906d7883e3a9f655b9d923c94ae8ce2731e1b300441a074f58664b  ./docs/guide/desktop.md
+eb2d50b59dfb85ffd783c176223f390ef39692a1f282df3c8bae7241db9e862d  ./docs/guide/desktop.md
 297641f99a1f2ba8837770c7307f629fb9d71089bea5dcf24f0415b08ecd1169  ./docs/guide/fispact-migration.md
 35df99e9141bca9146f82addae120b9aae9403e885f1f5e9939693be6043f705  ./docs/guide/index.md
 4d439211e5767c3a07dc3e73db79a96ca6508a9d09203e520710413f262f0aa8  ./docs/guide/install.md

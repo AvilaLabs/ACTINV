@@ -40,7 +40,6 @@ pub fn tutorial_result() -> ResultDocument {
 }
 
 /// A pasted vector, or a one-column CSV with an optional `flux` header.
-#[cfg(not(target_arch = "wasm32"))]
 pub fn parse_group_values(text: &str, count: usize) -> Result<Vec<f64>, String> {
     let mut values = Vec::new();
     for (i, token) in text
