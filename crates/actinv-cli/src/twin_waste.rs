@@ -159,7 +159,10 @@ fn validate_component_membership(
         return Err("waste component names must exactly match twin component names".into());
     }
     let mut assigned = BTreeSet::new();
-    for (component_id, cells) in groups {
+    // Sorted, so a spec with several defects always reports the same one (P143 Amendment A).
+    let mut ordered: Vec<_> = groups.iter().collect();
+    ordered.sort_by(|a, b| a.0.cmp(b.0));
+    for (component_id, cells) in ordered {
         if component_id.trim().is_empty() || cells.is_empty() {
             return Err("twin component names and cell groups must be nonempty".into());
         }
@@ -796,6 +799,32 @@ mod tests {
         )
         .unwrap_err();
         assert!(overlap.contains("overlap"));
+    }
+
+    #[test]
+    fn several_membership_defects_always_report_the_same_refusal() {
+        // P143 Amendment A: component-b overlaps component-a and also has mismatched cell masses; the refusal
+        // reported must not depend on the hash seed of the groups map.
+        let mut extension = synthetic_extension();
+        extension["components"] = serde_json::json!({
+            "component-a": {"mass_g":2.0,"displaced_volume_cm3":1.0,"waste_type":"general",
+                "cell_masses_g":{"cell-a":1.0,"cell-b":1.0},"external_tritium":{"status":"not_applicable"}},
+            "component-b": {"mass_g":2.0,"displaced_volume_cm3":1.0,"waste_type":"general",
+                "cell_masses_g":{"cell-c":2.0},"external_tritium":{"status":"not_applicable"}}
+        });
+        let extension: WasteExtension = serde_json::from_value(extension).unwrap();
+        let input = waste::load_input_bytes(&synthetic_mesh(10.0, 0.0)).unwrap();
+        for _ in 0..64 {
+            let groups = HashMap::from([
+                ("component-b".to_string(), vec!["cell-b".to_string()]),
+                (
+                    "component-a".to_string(),
+                    vec!["cell-a".to_string(), "cell-b".to_string()],
+                ),
+            ]);
+            let error = validate_component_membership(&groups, &extension, &input).unwrap_err();
+            assert_eq!(error, "twin component cell groups overlap");
+        }
     }
 
     #[test]
