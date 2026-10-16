@@ -3282,3 +3282,20 @@ Under Amendment A the two-input P11 activation build exits 0 under both binaries
 activation index has 1 distinct sources"); preserved as `results/failures/p141/z1_p11_attempt2.json`. Registered
 before the next run: **P141 Amendment B** `5d58f357a4018290ee78a01c4ab2bdbc0023250a5d6858d87e4562b7111e1d48`: the sidecar identity uses a Fe-56-only input
 directory; the two-input library identity stands.
+
+## Entry 177 — P141 Z1 under Amendment B; first Z4 replay; Amendment C registered (2026-10-16)
+
+Under Amendment B, both binaries exit 0 for the two-input P11 activation library, the Fe-56 library and the Fe-56
+covariance sidecar, and each pair is byte-identical (`5939355f…`, `5939355f…`, `4260d1c2…`;
+`results/p141/z1_p11.json`). With the proton build and Z2 of entry 175, **Z1 and Z2 hold**. Z3: the existing archive
+tests pass unchanged (`archive_and_extracted_identities_are_both_required`, `declared_shape_must_fit_inside_the_archive_member`,
+`deterministic_npz_round_trip`), and two new regressions show unexpected and missing members are refused by name
+in libraries and covariance sidecars. The protocol's list also names encrypted members and unenclosed paths; no test
+exercises those, and their code is unchanged and compile-checked only. The workspace (1019 tests), fmt, clippy
+`-D warnings` native and wasm, and the Python binding checks pass; the P16 consumer now resolves and builds offline,
+and the P16 step exits 0.
+
+First Z4 replay of every `ci.yml` control step (P18, P18b, P12 payload skipped as local-only): 63 pass; "Native
+desktop build dependencies" fails on `sudo` (runner-only); "P13 verified data-distribution contract" fails because
+`check_p13.py` requires the literal `zip = { version = "=8.6.0"`. Preserved as
+`results/failures/p141/z4_full_replay_attempt1.log`. Registered before the edit: **P141 Amendment C** `de6f15f75c9b4e700c9734615b8abf50bcd4efd8a5ebdb5af208a6eabd73f842`.

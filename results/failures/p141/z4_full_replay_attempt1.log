@@ -1,0 +1,103 @@
+OK   Reject AI attribution trailers in commit messages
+OK   Check tracked-file manifest before building
+OK   Preflight orchestration regression
+OK   Fusion isotope benchmark opening audit (no inventory reproduction claim)
+FAIL Native desktop build dependencies
+   | sudo: A terminal is required to authenticate
+OK   Rust quality gates
+OK   Build workspace
+OK   P103 source-seal integrity (historical)
+OK   P105 waste classification, aggregation, and budget controls
+OK   P107 conservative whole-component waste bounds
+OK   P108 conservative composition response bounds
+OK   P109 preserved failure checkpoint
+OK   P110 native composition basis and witness verification
+OK   P111 draft intrusion screen controls
+OK   P112 draft intrusion screen successor controls
+OK   P113 terminal failure history remains immutable
+OK   P114 terminal failure remains immutable
+OK   P115 terminal failure remains immutable
+OK   P116 unchanged twin verification successor controls
+OK   P117 terminal failure remains immutable
+OK   P118 terminal failure remains immutable
+OK   Unit probe (constant source, analytic answer)
+OK   Python environment
+OK   Desktop and CLI scientific parity
+SKIP P18b authority, provenance, and quarantine seal
+SKIP P18b decimal and official-checker oracle
+SKIP P18b corpus classification evidence integrity
+SKIP P18b conservative-builder runtime reconciliation
+SKIP P18b diagnostic report arithmetic and ledger integrity
+SKIP P18b formal closure preserves the frozen failure verdict
+OK   P20 opening gate — protocol, verdicts, identity baseline, MF=33 census
+OK   P20 census reproduction — aggregates and MF=33 structure walk
+OK   P20 defect exclusion — absent-section identity and named reasons
+OK   P20 correlated sampling oracle — quantiles, variance, floor gating
+OK   P20 decay/yield channels — FD agreement, channel sums, coverage
+OK   P20 closure — re-run all gates, re-derive arithmetic, verdict
+OK   P21 opening gate — protocol, verdicts, identity baseline, profile
+OK   P21 grouping/selection/guard — digests, reuse recount, named errors
+OK   P21 resume/checkpoint — line-digest identity, rejections
+OK   P21 executed scale — memory gates, hardware record, reuse recount
+OK   P21 docs/performance — supersede and claims record
+OK   P21 closure — re-run all gates, re-derive arithmetic, verdict
+OK   P22 opening gate — protocol, verdicts, CB1 seals, executed-evidence binding
+OK   P22 CB1 re-score — numerical/ALARA/FNS comparisons reproduced
+OK   P22 exercises — install, released-binary performance, clean clone, mesh
+OK   P22 held-out — sealed P17 metrics reproduced, failure preserved
+OK   P22 release candidate — scorecard tokens, artifacts, amended identity gate
+OK   P22 closure — re-run all gates, re-derive arithmetic, verdict
+SKIP P18 metadata-only evidence seal
+SKIP P18 physical product-state identity evidence
+SKIP P18 complete corpus audit preserves the frozen G2 failure
+SKIP P18 formal closure preserves the frozen failure verdict
+OK   P16 typed-boundary control and independent verdict
+OK   P15 prepared-cache integrity and verdict
+OK   CRAM coefficient control (G0 — needs no nuclear data)
+OK   Generated sources are reproducible
+OK   Release notes carry every known limitation
+OK   Prior phase verdict evidence remains green
+OK   CB1 competitive scorecard remains reproducible
+OK   P17 open diagnostic evidence and cause ledger
+OK   P17 held-out unseal authorization
+OK   P17 held-out failure evidence and post-failure diagnostics
+OK   P17 formal closure preserves the frozen failure verdict
+OK   P14 performance close remains reproducible
+OK   P12 release metadata and documentation
+OK   Rust release workflow contract
+SKIP P12 release payload evidence
+OK   No undeclared dependencies
+FAIL P13 verified data-distribution contract
+   |  },
+   |  "pass": false,
+   |  "protocol": {
+   |   "actual_sha256": "afbc60cb75411b1f10a558f77f2a512412de2f925bbaccada099ac5fd3c2f92c",
+   |   "expected_sha256": "afbc60cb75411b1f10a558f77f2a512412de2f925bbaccada099ac5fd3c2f92c",
+   |   "ledger_entry": true,
+   |   "pass": true
+   |  },
+   |  "release": {
+   |   "checks": {
+   |    "asset_identities": true,
+   |    "asset_names": true,
+   |    "release": true,
+   |    "release_inventories": true,
+   |    "smoke": true,
+   |    "source_commit": true,
+   |    "workflow": true
+   |   },
+   |   "pass": true,
+   |   "present": true
+   |  },
+   |  "schema": "actinv-p13-verdict-1",
+   |  "source_pass": false,
+   |  "verdict": "P13-FAIL"
+   | }
+OK   Public examples are portable
+OK   CI result tolerance regression
+OK   Fetch the pinned data subset
+OK   Build the Python module
+OK   Python binding Rust quality
+OK   End-to-end spec through both entry points
+OK   P8 flux-import and mesh controls
+FAILED: ['Native desktop build dependencies', 'P13 verified data-distribution contract']
