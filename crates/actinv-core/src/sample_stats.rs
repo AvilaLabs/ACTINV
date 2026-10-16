@@ -394,6 +394,156 @@ pub fn top_correlations(all: &[Option<(f64, f64)>], top: usize) -> Vec<Correlati
     v
 }
 
+/// `ln Γ(x)` for `x > 0` (Lanczos, g = 7, nine terms; relative error near 1e-15).
+fn ln_gamma(x: f64) -> f64 {
+    const G: f64 = 7.0;
+    #[allow(clippy::excessive_precision)]
+    const COEF: [f64; 9] = [
+        0.99999999999980993,
+        676.5203681218851,
+        -1259.1392167224028,
+        771.32342877765313,
+        -176.61502916214059,
+        12.507343278686905,
+        -0.13857109526572012,
+        9.9843695780195716e-6,
+        1.5056327351493116e-7,
+    ];
+    if x < 0.5 {
+        // reflection: Γ(x) Γ(1 - x) = π / sin(πx)
+        return (std::f64::consts::PI / (std::f64::consts::PI * x).sin()).ln() - ln_gamma(1.0 - x);
+    }
+    let x = x - 1.0;
+    let mut a = COEF[0];
+    for (i, c) in COEF.iter().enumerate().skip(1) {
+        a += c / (x + i as f64);
+    }
+    let t = x + G + 0.5;
+    0.5 * (2.0 * std::f64::consts::PI).ln() + (x + 0.5) * t.ln() - t + a.ln()
+}
+
+/// Continued fraction of the incomplete beta function (modified Lentz).
+fn beta_continued_fraction(x: f64, a: f64, b: f64) -> f64 {
+    const TINY: f64 = 1e-300;
+    let qab = a + b;
+    let qap = a + 1.0;
+    let qam = a - 1.0;
+    let mut c = 1.0;
+    let mut d = 1.0 - qab * x / qap;
+    if d.abs() < TINY {
+        d = TINY;
+    }
+    d = 1.0 / d;
+    let mut h = d;
+    for m in 1..=100_000 {
+        let m = m as f64;
+        let m2 = 2.0 * m;
+        let even = m * (b - m) * x / ((qam + m2) * (a + m2));
+        d = 1.0 + even * d;
+        if d.abs() < TINY {
+            d = TINY;
+        }
+        c = 1.0 + even / c;
+        if c.abs() < TINY {
+            c = TINY;
+        }
+        d = 1.0 / d;
+        h *= d * c;
+        let odd = -(a + m) * (qab + m) * x / ((a + m2) * (qap + m2));
+        d = 1.0 + odd * d;
+        if d.abs() < TINY {
+            d = TINY;
+        }
+        c = 1.0 + odd / c;
+        if c.abs() < TINY {
+            c = TINY;
+        }
+        d = 1.0 / d;
+        let delta = d * c;
+        h *= delta;
+        if (delta - 1.0).abs() <= 4.0 * f64::EPSILON {
+            break;
+        }
+    }
+    h
+}
+
+/// Regularized incomplete beta function `I_x(a, b)` for `a, b > 0`, `x` in `[0, 1]`.
+pub fn regularized_beta(x: f64, a: f64, b: f64) -> f64 {
+    if x <= 0.0 {
+        return 0.0;
+    }
+    if x >= 1.0 {
+        return 1.0;
+    }
+    let ln_front = ln_gamma(a + b) - ln_gamma(a) - ln_gamma(b) + a * x.ln() + b * (-x).ln_1p();
+    let front = ln_front.exp();
+    if x < (a + 1.0) / (a + b + 2.0) {
+        front * beta_continued_fraction(x, a, b) / a
+    } else {
+        1.0 - front * beta_continued_fraction(1.0 - x, b, a) / b
+    }
+}
+
+/// The `p` quantile of Beta(`a`, `b`) by bisection on [`regularized_beta`], to the resolution of `f64`.
+pub fn beta_quantile(p: f64, a: f64, b: f64) -> f64 {
+    let (mut lo, mut hi) = (0.0f64, 1.0f64);
+    for _ in 0..200 {
+        let mid = 0.5 * (lo + hi);
+        if mid <= lo || mid >= hi {
+            break;
+        }
+        if regularized_beta(mid, a, b) < p {
+            lo = mid;
+        } else {
+            hi = mid;
+        }
+    }
+    0.5 * (lo + hi)
+}
+
+/// Two-sided equal-tailed Clopper-Pearson interval for `k` successes in `n` trials at `confidence`
+/// (`alpha = 1 - confidence`): the lower end is the `alpha / 2` quantile of Beta(k, n - k + 1) (0 when `k` is
+/// 0), the upper end the `1 - alpha / 2` quantile of Beta(k + 1, n - k) (1 when `k` is `n`). The `k` of 0 or
+/// `n` ends are the closed forms `1 - (alpha / 2)^(1/n)` and `(alpha / 2)^(1/n)`. `n = 0` gives (0, 1).
+pub fn clopper_pearson(k: u64, n: u64, confidence: f64) -> (f64, f64) {
+    if n == 0 {
+        return (0.0, 1.0);
+    }
+    let half = (1.0 - confidence) / 2.0;
+    let (kf, nf) = (k as f64, n as f64);
+    let lower = if k == 0 {
+        0.0
+    } else if k == n {
+        half.powf(1.0 / nf)
+    } else {
+        beta_quantile(half, kf, nf - kf + 1.0)
+    };
+    let upper = if k == n {
+        1.0
+    } else if k == 0 {
+        1.0 - half.powf(1.0 / nf)
+    } else {
+        beta_quantile(1.0 - half, kf + 1.0, nf - kf)
+    };
+    (lower, upper)
+}
+
+/// Fewest trials `n` for which `n` of `n` successes have a Clopper-Pearson lower end of at least
+/// `confidence`, i.e. `(alpha / 2)^(1/n) >= confidence` (72 at 0.95).
+pub fn min_trials_all_successes(confidence: f64) -> u64 {
+    let half = (1.0 - confidence) / 2.0;
+    let holds = |n: u64| half.powf(1.0 / n as f64) >= confidence;
+    let mut n = ((half.ln() / confidence.ln()).ceil().max(1.0)) as u64;
+    while n > 1 && holds(n - 1) {
+        n -= 1;
+    }
+    while !holds(n) {
+        n += 1;
+    }
+    n
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -625,5 +775,99 @@ mod tests {
         assert_eq!(percentile_sorted(&ramp(8), 50.0), 4.0);
         assert_eq!(percentile_sorted(&ramp(8), 0.0), 1.0);
         assert_eq!(percentile_sorted(&ramp(8), 100.0), 8.0);
+    }
+
+    #[test]
+    fn ln_gamma_matches_factorials() {
+        // Γ(n) = (n - 1)!
+        let mut factorial = 1.0f64;
+        for n in 1..=20u32 {
+            if n > 1 {
+                factorial *= f64::from(n - 1);
+            }
+            let got = ln_gamma(f64::from(n));
+            assert!(
+                (got - factorial.ln()).abs() <= 1e-13 * got.abs().max(1.0),
+                "{n}"
+            );
+        }
+        // Γ(1/2) = sqrt(π)
+        assert!((ln_gamma(0.5) - std::f64::consts::PI.sqrt().ln()).abs() < 1e-14);
+    }
+
+    #[test]
+    fn regularized_beta_known_values() {
+        // I_x(1, 1) = x; I_x(1, n) = 1 - (1 - x)^n; I_x(2, 2) = 3x^2 - 2x^3; symmetry I_x(a, b) = 1 - I_(1-x)(b, a)
+        close(regularized_beta(0.3, 1.0, 1.0), 0.3);
+        close(regularized_beta(0.2, 1.0, 5.0), 1.0 - 0.8f64.powi(5));
+        close(regularized_beta(0.4, 2.0, 2.0), 3.0 * 0.16 - 2.0 * 0.064);
+        close(
+            regularized_beta(0.7, 3.5, 6.25),
+            1.0 - regularized_beta(0.3, 6.25, 3.5),
+        );
+        assert_eq!(regularized_beta(0.0, 2.0, 3.0), 0.0);
+        assert_eq!(regularized_beta(1.0, 2.0, 3.0), 1.0);
+    }
+
+    #[test]
+    fn clopper_pearson_extremes_have_closed_forms() {
+        for (n, confidence) in [(20u64, 0.95), (72, 0.95), (500, 0.99), (4096, 0.999)] {
+            let half = (1.0 - confidence) / 2.0;
+            let none = clopper_pearson(0, n, confidence);
+            assert_eq!(none.0, 0.0);
+            close(none.1, 1.0 - half.powf(1.0 / n as f64));
+            let all = clopper_pearson(n, n, confidence);
+            assert_eq!(all.1, 1.0);
+            close(all.0, half.powf(1.0 / n as f64));
+            // the bisection reproduces the closed forms it replaces at the extremes
+            let nf = n as f64;
+            assert!((beta_quantile(half, nf, 1.0) - all.0).abs() < 1e-12);
+            assert!((beta_quantile(1.0 - half, 1.0, nf) - none.1).abs() < 1e-12);
+        }
+    }
+
+    #[test]
+    fn clopper_pearson_mid_value_matches_reference() {
+        // 5 of 20 at 95 %: (0.0865715, 0.4910459), the exact binomial interval of standard references
+        let (lower, upper) = clopper_pearson(5, 20, 0.95);
+        assert!((lower - 0.0865715).abs() < 1e-6, "{lower}");
+        assert!((upper - 0.4910459).abs() < 1e-6, "{upper}");
+        // the two ends are tail areas of the binomial: P(X >= 5 | lower) = P(X <= 5 | upper) = alpha / 2
+        let tail_ge = 1.0 - regularized_beta(1.0 - lower, 16.0, 5.0);
+        close(tail_ge, 0.025);
+        close(regularized_beta(1.0 - upper, 15.0, 6.0), 0.025);
+        assert_eq!(clopper_pearson(3, 0, 0.95), (0.0, 1.0));
+    }
+
+    #[test]
+    fn clopper_pearson_is_monotone() {
+        let mut previous = (-1.0, -1.0);
+        for k in 0..=30u64 {
+            let (lower, upper) = clopper_pearson(k, 30, 0.9);
+            assert!(lower >= 0.0, "k = {k}");
+            assert!(lower <= upper, "k = {k}");
+            assert!(upper <= 1.0, "k = {k}");
+            assert!(lower >= previous.0 && upper >= previous.1, "k = {k}");
+            previous = (lower, upper);
+        }
+        // more samples at the same proportion tighten the interval around it
+        let (l1, u1) = clopper_pearson(10, 20, 0.95);
+        let (l2, u2) = clopper_pearson(100, 200, 0.95);
+        assert!(l2 > l1 && u2 < u1);
+        // a higher confidence level widens it
+        let (l3, u3) = clopper_pearson(10, 20, 0.99);
+        assert!(l3 < l1 && u3 > u1);
+    }
+
+    #[test]
+    fn all_successes_minimum_is_72_at_95_percent() {
+        assert_eq!(min_trials_all_successes(0.95), 72);
+        let half = 0.025f64;
+        assert!(half.powf(1.0 / 72.0) >= 0.95);
+        assert!(half.powf(1.0 / 71.0) < 0.95);
+        // 99 %: ln(0.005) / ln(0.99) = 527.1
+        assert_eq!(min_trials_all_successes(0.99), 528);
+        assert!(clopper_pearson(72, 72, 0.95).0 >= 0.95);
+        assert!(clopper_pearson(71, 71, 0.95).0 < 0.95);
     }
 }

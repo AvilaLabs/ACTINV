@@ -15,6 +15,12 @@ separate. It screens one declared whole container at selected nominal steps.
 See the [draft-screen format](waste.md#screen-a-whole-container-against-the-fusion-draft)
 for caller-supplied WAC/RQ data, coverage and assessment indicators.
 
+`actinv waste uncertainty SPEC.json [OUT.json]` solves a problem once and again for each correlated draw of the
+sampled nuclear-data channels, classifies every solve, and reports class probabilities with Clopper-Pearson intervals
+and the class established at a confidence level. The problem path is relative to the spec file. The probabilities are
+conditional on the sampled channels; see
+[Classification under nuclear-data uncertainty](waste.md#classification-under-nuclear-data-uncertainty).
+
 ## Create, check, and solve
 
 ```text

@@ -1,0 +1,45 @@
+{
+ "components": [
+  {
+   "displaced_volume_cm3": 150.0,
+   "external_tritium": {
+    "activity_bq": {
+     "1": 1000.0,
+     "11": 1000.0,
+     "21": 1000.0,
+     "6": 1000.0
+    },
+    "excludes_activation": true,
+    "source": "P145 C1 declared retention inventory",
+    "status": "declared"
+   },
+   "id": "fe-block",
+   "mass_g": 1000.0,
+   "waste_type": "general"
+  }
+ ],
+ "confidence_level": 0.95,
+ "nuclide_properties": "from_decay_data",
+ "problem": "../../examples/fns_fe_5min.json",
+ "rules": "us-nrc-10cfr61.55-v1",
+ "sampling": {
+  "channels": {
+   "cross_section_mf33": true,
+   "decay_constants": true,
+   "flux_rel_std": 0.05
+  },
+  "covariance": {
+   "path": "../../actinv-data/v1.1.0/uncertainty/tendl-2025-neutron-709g.cov.npz",
+   "sha256": "c19dec86b44ad5d90b66c9ab94d53e18641a1d354a89402a4da7986b6c530cde"
+  },
+  "samples": 100,
+  "seed": 145001
+ },
+ "schema": "actinv-waste-uncertainty-spec-1",
+ "targets": [
+  1,
+  6,
+  11,
+  21
+ ]
+}

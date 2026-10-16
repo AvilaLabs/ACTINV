@@ -14,6 +14,7 @@ actinv waste bounds activity-bounds.json activity-bounds-result.json
 actinv waste composition composition.json composition-result.json
 actinv waste composition solve native-composition.json native-composition-result.json
 actinv waste intrusion-screen intrusion.json intrusion-result.json
+actinv waste uncertainty uncertainty.json uncertainty-result.json
 ```
 
 This is a concentration calculation for research and design screening. It does
@@ -28,8 +29,8 @@ are admitted. The command does not infer time evolution between target steps or
 derive bounds from a `RunResult`. The separate `intrusion-screen` command applies
 the selected draft screen to nominal inventories.
 
-From Python the same commands are `actinv.waste.classify`, `budget`, `bounds`, `composition`, `composition_solve` and
-`intrusion_screen`, and `actinv.twin`; they return the CLI's result. See [Python](python.md#waste-classification-from-python).
+From Python the same commands are `actinv.waste.classify`, `budget`, `bounds`, `composition`, `composition_solve`,
+`intrusion_screen` and `uncertainty`, and `actinv.twin`; they return the CLI's result. See [Python](python.md#waste-classification-from-python).
 
 ## Classify declared waste components in a facility twin
 
@@ -395,6 +396,87 @@ and fixed H-3 properties whenever its upper activity is positive. Use
 `{"status": "required"}` when a needed contribution is unavailable; the whole
 box then remains unknown. Stability always depends on the declared box being
 valid; it does not establish that every physical uncertainty is covered.
+
+## Classification under nuclear-data uncertainty
+
+`actinv waste uncertainty SPEC.json [OUT.json]` asks how likely each class is when the nuclear data are uncertain. It
+solves your problem once at its nominal inputs and then once for each correlated draw of the sampled channels, the
+sampler that `study.robustness` uses (correlated MF=33 cross-section draws through the nearest positive-semidefinite
+factor of the collapsed covariance, decay constants and fission yields at their declared uncertainties, and optionally
+flux and composition). Every solve carries a consistent inventory, so each sample is classified with the nominal
+evaluator and the table sums keep their correlations. The first-order `uncertainty` block cannot give a band on a
+table sum, because it reports no covariance between nuclides.
+
+```json
+{
+  "schema": "actinv-waste-uncertainty-spec-1",
+  "problem": "fns-iron.json",
+  "rules": "us-nrc-10cfr61.55-v1",
+  "targets": [3, 5],
+  "nuclide_properties": "from_decay_data",
+  "components": [{
+    "id": "first-wall-plug",
+    "mass_g": 1000,
+    "density_g_cm3": 7.8,
+    "waste_type": "activated_metal",
+    "external_tritium": {"status": "not_applicable"}
+  }],
+  "sampling": {
+    "channels": {"cross_section_mf33": true, "decay_constants": true},
+    "covariance": {"path": "catalog:tendl-2025-neutron-709g-covariance"},
+    "samples": 512,
+    "seed": 20261016,
+    "keep_samples": "samples"
+  },
+  "confidence_level": 0.95
+}
+```
+
+`problem` is an `actinv-spec-1` file, relative to this one; `rules`, `targets` and `components` are those of the
+nominal waste command, with exactly one component and no mesh cells, and the declared H-3 of `external_tritium` is
+added to every sample without being sampled. `nuclide_properties` is either the object of `actinv-waste-spec-1` or the
+string `"from_decay_data"`, which derives the properties from the decay data for every nuclide with positive activity
+at a target step in the nominal run or any sample. `sampling.channels` and `sampling.covariance` are the objects of
+`study.robustness` (`cross_section_mf33`, `flux_rel_std`, `composition_rel_std`, `decay_constants`,
+`fission_yields`), `samples` is at least 20 and at most 4096, and `confidence_level` defaults to 0.95. With
+`keep_samples`, each sample's perturbed problem and result are written to that folder as `rob_<i>.json` and
+`rob_<i>.out.json`, byte for byte what a `study.robustness` run with the same channels, sample count and seed writes,
+apart from the wall-clock `ms` of each solve.
+The command refuses, and writes nothing, when the problem enables gas production, switches library or projectile
+during the schedule, has power-driven or wall-loading steps, a per-step spectrum or partition, or an `uncertainty`
+block; when no channel is enabled; when `samples` is below 20; for a confidence level outside (0, 1); and for unknown
+keys or another schema.
+
+The `actinv-waste-uncertainty-result-1` result gives, per component and target step:
+
+- `nominal`: the target as `actinv waste` reports it.
+- `samples` and `failed_samples` (`[{sample, error}]`). A sample whose solve or classification fails counts in every
+  denominator as class `unknown`, so a failure can only weaken a class.
+- `classes`: `count`, `probability` and a two-sided Clopper-Pearson interval (`lower`, `upper`) at `confidence_level`
+  for `A`, `B`, `C`, `above_class_c` and `unknown`; and `at_most_class`: the same for P(class at most X), X = `A`,
+  `B`, `C`, `above_class_c`.
+- `established_class` and `needed_samples`. The classes are ordered A, B, C, above Class C. The established class is
+  the first one for which the lower end of the interval of P(class at most X) is at least the confidence level.
+  Even when every sample agrees this needs (α/2)^(1/n) ≥ 1 − α, which is at least **72 samples at confidence 0.95**
+  (`minimum_samples_for_establishment` states the number for your level). When nothing is established the result is
+  `not_established`, and `needed_samples` gives, for the first class whose observed cumulative frequency exceeds the
+  level, the smallest sample count (up to 1 000 000) at which that frequency would establish it, or says that the
+  observed frequency cannot establish a class.
+- `constraints`: for each table constraint (`target_class`, `table`, `column`) the 5th, 50th and 95th nearest-rank
+  percentiles of the normalized sum (the class boundary is 1) over the samples with an inventory, and the count and
+  fraction above 1.
+
+Per component, `earliest_established_step` names the earliest target step at which each class is the established
+class. The `coverage` block lists `channels_sampled`, the MF=33 rows, decay constants and yields the sampled channels
+left uncovered (by name), the nominal run's completeness ledger (recorded when the problem lists `audit` in
+`options.outputs`) and a fixed statement of what the probabilities do not include.
+
+The probabilities are conditional on the sampled channels. They exclude MF=32 and MF=40 covariance, correlation
+between channels, composition, geometry, model and flux-systematic uncertainty, except where a listed channel samples
+it, and measured coverage of these channels on the FNS corpus is below nominal (see
+[Data limitations](https://github.com/AvilaLabs/ACTINV/blob/master/docs/DATA_LIMITATIONS.md)), so the intervals can be
+overconfident. They are not tolerance limits, a budget at a confidence level, a package class or a disposal
+acceptance.
 
 ## Describe a component
 

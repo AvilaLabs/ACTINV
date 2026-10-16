@@ -20,6 +20,7 @@ pub mod waste_composition;
 pub mod waste_composition_solve;
 pub mod waste_composition_verify;
 pub mod waste_intrusion;
+pub mod waste_uncertainty;
 pub mod worker;
 pub mod workflow;
 

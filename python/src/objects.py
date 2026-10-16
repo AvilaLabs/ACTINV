@@ -331,6 +331,9 @@ waste = _types.SimpleNamespace(
     intrusion_screen=_waste_operation(
         "intrusion_screen",
         "Draft intrusion screen of a whole container (`actinv waste intrusion-screen SPEC`)."),
+    uncertainty=_waste_operation(
+        "uncertainty",
+        "Class probabilities under nuclear-data uncertainty (`actinv waste uncertainty SPEC`)."),
     summary=_waste_summary,
 )
 twin = _waste_operation("twin", "Facility twin (`actinv twin SPEC`), with its optional waste block.")

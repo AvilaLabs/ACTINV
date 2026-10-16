@@ -228,7 +228,7 @@ class Waste(unittest.TestCase):
         self.assertEqual(
             sorted(n for n in vars(actinv.waste) if not n.startswith("_")),
             ["bounds", "budget", "classify", "composition", "composition_solve",
-             "intrusion_screen", "summary"])
+             "intrusion_screen", "summary", "uncertainty"])
         self.assertTrue(callable(actinv.twin))
         self.assertIn("waste", actinv.__all__)
         self.assertIn("twin", actinv.__all__)
@@ -332,8 +332,27 @@ class Waste(unittest.TestCase):
         self.assertEqual([r["component"] for r in rows], ["whole-container"])
         self.assertEqual(actinv.waste.summary(screen), rows)
 
-    # Not exercised here: budget, composition_solve and twin need a nuclear-data
-    # library or an activation mesh to produce their inputs.
+    def test_uncertainty_refuses_too_few_samples_before_reading_data(self):
+        spec = {
+            "schema": "actinv-waste-uncertainty-spec-1",
+            "problem": "missing-problem.json",
+            "rules": "us-nrc-10cfr61.55-v1",
+            "targets": [1],
+            "nuclide_properties": "from_decay_data",
+            "components": [{
+                "id": "part", "mass_g": 2.5, "displaced_volume_cm3": 1.0,
+                "waste_type": "activated_metal",
+                "external_tritium": {"status": "not_applicable"},
+            }],
+            "sampling": {"channels": {"decay_constants": True}, "samples": 5, "seed": 1},
+        }
+        with self.assertRaises(ValueError) as caught:
+            actinv.waste.uncertainty(spec, base_dir=self.root)
+        self.assertIn("at least 20", str(caught.exception))
+        self.assertClean("run.json")
+
+    # Not exercised here: budget, composition_solve, uncertainty runs and twin need a
+    # nuclear-data library or an activation mesh to produce their inputs.
 
 
 if __name__ == "__main__":

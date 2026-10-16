@@ -1,0 +1,38 @@
+{
+ "_note": "P145 C2. Co, Nb and Ni levels and the one-year irradiation were set with 20-sample development runs before the candidate commit, so that the 32-year Table 2 B/C sum is near 1 and the 100-year Table 1 sum straddles its Class A limit; nothing is tuned afterwards. Keys starting with an underscore are removed by controls/check_p145.py when it stages the case.",
+ "components": [
+  {
+   "density_g_cm3": 7.9,
+   "external_tritium": {
+    "status": "not_applicable"
+   },
+   "id": "steel-block",
+   "mass_g": 1000.0,
+   "waste_type": "activated_metal"
+  }
+ ],
+ "confidence_level": 0.95,
+ "nuclide_properties": "from_decay_data",
+ "problem": "c2_steel_problem.json",
+ "rules": "us-nrc-10cfr61.55-v1",
+ "sampling": {
+  "channels": {
+   "cross_section_mf33": true,
+   "decay_constants": true,
+   "flux_rel_std": 0.05
+  },
+  "covariance": {
+   "path": "../../actinv-data/v1.1.0/uncertainty/tendl-2025-neutron-709g.cov.npz",
+   "sha256": "c19dec86b44ad5d90b66c9ab94d53e18641a1d354a89402a4da7986b6c530cde"
+  },
+  "samples": 100,
+  "seed": 145002
+ },
+ "schema": "actinv-waste-uncertainty-spec-1",
+ "targets": [
+  10,
+  11,
+  12,
+  13
+ ]
+}

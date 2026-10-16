@@ -1,0 +1,32 @@
+{
+ "components": [
+  {
+   "displaced_volume_cm3": 1000.0,
+   "external_tritium": {
+    "status": "not_applicable"
+   },
+   "id": "co-block",
+   "mass_g": 8.573,
+   "waste_type": "general"
+  }
+ ],
+ "confidence_level": 0.95,
+ "nuclide_properties": "from_decay_data",
+ "problem": "c3_p50_problem.json",
+ "rules": "us-nrc-10cfr61.55-v1",
+ "sampling": {
+  "channels": {
+   "cross_section_mf33": true
+  },
+  "covariance": {
+   "path": "c3_p50.cov.npz",
+   "sha256": "26f0db8b5713d337c869b2fe83914aa2b36a0c46d2572a5a1280ed3b4c7872e1"
+  },
+  "samples": 4096,
+  "seed": 145032
+ },
+ "schema": "actinv-waste-uncertainty-spec-1",
+ "targets": [
+  2
+ ]
+}

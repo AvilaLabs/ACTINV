@@ -401,50 +401,15 @@ impl Study {
                     ));
                 }
             }
-            let ch = &rb.channels;
-            if !ch.flux_rel_std.is_finite() || ch.flux_rel_std < 0.0 {
-                return Err("robustness.channels.flux_rel_std must be finite and \
-                     nonnegative"
-                    .into());
-            }
-            for (element, std) in &ch.composition_rel_std {
-                if !std.is_finite() || *std < 0.0 {
-                    return Err(format!(
-                        "robustness composition std for '{element}' must be \
-                         finite and nonnegative"
-                    ));
-                }
-            }
-            if ch.cross_section_mf33
-                && rb
-                    .covariance
-                    .as_ref()
-                    .map(|c| c.sha256.is_none())
-                    .unwrap_or(true)
-            {
-                return Err("robustness.channels.cross_section_mf33 requires \
-                     robustness.covariance {path, sha256}"
-                    .into());
-            }
-            if ch.fission_yields
-                && !self
-                    .cases
+            validate_channels(
+                &rb.channels,
+                rb.covariance.as_ref(),
+                self.cases
                     .materials
                     .iter()
-                    .any(|m| !m.fission_yields.files.is_empty())
-            {
-                return Err("robustness.channels.fission_yields requires at least one \
-                     material declaring fission_yields.files"
-                    .into());
-            }
-            if !ch.cross_section_mf33
-                && ch.flux_rel_std == 0.0
-                && ch.composition_rel_std.is_empty()
-                && !ch.decay_constants
-                && !ch.fission_yields
-            {
-                return Err("robustness enables no channel".into());
-            }
+                    .any(|m| !m.fission_yields.files.is_empty()),
+                "robustness",
+            )?;
             if let Some(st) = &rb.statistics {
                 if st.percentiles.iter().any(|p| !(0.0..=100.0).contains(p)) {
                     return Err("robustness.statistics.percentiles must be in [0, 100]".into());
@@ -2362,6 +2327,8 @@ struct CovCtx {
     sigma0: Vec<f64>,
     cov: Vec<f64>,
     uncovered: Vec<usize>,
+    /// library-row names of the uncovered rows, in the naming of `labels`
+    uncovered_names: Vec<String>,
     /// parameter identity per collapsed row (statistics output only)
     labels: Vec<Value>,
 }
@@ -2393,32 +2360,50 @@ fn robustness_config_sha(study: &Study, rb: &Robustness) -> String {
     sha256_hex(serde_json::to_vec(&config).unwrap_or_default().as_slice())
 }
 
-/// Evaluate ACT-ROBUST-01 for one case: nominal + `samples` perturbed
-/// solves, per-response sample statistics and coverage accounting.
-fn evaluate_robustness(
-    study: &Study,
-    rb: &Robustness,
-    spec: &Spec,
-    nominal_out: &Value,
-    base: &Path,
-    cdir: &Path,
-    prep: &mut PreparedCache,
-) -> Value {
-    match evaluate_robustness_inner(study, rb, spec, nominal_out, base, cdir, prep) {
-        Ok(v) => v,
-        Err(e) => json!({"status": "gap", "error": e}),
-    }
+/// Seed tag of the primary sample population of a robustness case; the isolated attribution populations use
+/// their own tags.
+pub const SAMPLE_SEED_TAG: u64 = 0x9E37_79B9_7F4A_7C15;
+
+/// Clamp counts a sampling pass accumulates for the channel ledger: nonpositive factors fall back to 1.0,
+/// composition draws at or below zero are clamped.
+#[derive(Default)]
+struct DrawCounts {
+    composition: usize,
+    xs: usize,
+    decay: usize,
+    yields: usize,
 }
 
-fn evaluate_robustness_inner(
-    study: &Study,
-    rb: &Robustness,
+/// Everything a sample draw needs, resolved once per case: the collapsed MF=33 covariance and its sampling
+/// factor, and the decay-constant and fission-yield input sets. `study.robustness` and the waste uncertainty
+/// sampler both draw through it, so a sample index gives the same perturbed spec in both.
+struct SamplingPlan {
+    /// channels the draws are taken for (the study-enabled set)
+    channels: RobustChannels,
+    seed: u64,
+    /// keep the log of every applied factor (statistics output only)
+    track_inputs: bool,
+    cov_ctx: Option<CovCtx>,
+    xs_factor: Option<Vec<f64>>,
+    xs_clipped: f64,
+    xs_rel_diag: Vec<f64>,
+    decay_inputs: Vec<((i32, i32), f64, f64)>,
+    yield_inputs: crate::run::YieldInputs,
+    decay_names: Vec<String>,
+    yield_names: Vec<String>,
+}
+
+/// Resolve the covariance collapse, the decay-constant and fission-yield input sets and the cross-section
+/// sampling factor for `spec`.
+fn build_sampling_plan(
+    channels: &RobustChannels,
+    covariance_ref: Option<&LibraryRef>,
     spec: &Spec,
-    nominal_out: &Value,
     base: &Path,
-    cdir: &Path,
     prep: &mut PreparedCache,
-) -> Result<Value, String> {
+    seed: u64,
+    track_inputs: bool,
+) -> Result<SamplingPlan, String> {
     use actinv_data::{composition, covariance, decay, library};
 
     let physical = spec.physical_inputs()?;
@@ -2426,11 +2411,8 @@ fn evaluate_robustness_inner(
 
     // resolve the covariance collapse over rows active for this material
     let mut cov_ctx: Option<CovCtx> = None;
-    if rb.channels.cross_section_mf33 {
-        let cref = rb
-            .covariance
-            .as_ref()
-            .ok_or("cross_section_mf33 requires robustness.covariance")?;
+    if channels.cross_section_mf33 {
+        let cref = covariance_ref.ok_or("cross_section_mf33 requires robustness.covariance")?;
         let cov_path = resolve_path(base, &cref.path);
         if let Some(want) = &cref.sha256 {
             let got = file_sha256(&cov_path)?;
@@ -2605,24 +2587,43 @@ fn evaluate_robustness_inner(
                 })
             })
             .collect();
+        // the same naming for the rows the covariance does not cover
+        let uncovered_names: Vec<String> = collapsed
+            .uncovered_rows
+            .iter()
+            .map(|&row| {
+                let descriptor = lib.rows[row];
+                let target = lib_targets
+                    .get(descriptor.target)
+                    .map(|&(za, liso)| crate::run::name_of(za, liso))
+                    .unwrap_or_default();
+                let isomer = if descriptor.lfs > 0 {
+                    format!(":lfs{}", descriptor.lfs)
+                } else {
+                    String::new()
+                };
+                format!("xs:{target}:MT{}{isomer}", descriptor.mt)
+            })
+            .collect();
         cov_ctx = Some(CovCtx {
             labels,
             rows: collapsed.row_indices,
             sigma0: collapsed.one_group_barns,
             cov: collapsed.covariance_barn2,
             uncovered: collapsed.uncovered_rows,
+            uncovered_names,
         });
     }
 
     // P43 input sets from the prepared run: radioactive chain nuclides
     // with their declared relative sigma, and the effective fission-yield
     // pairs this case's material selects.
-    let decay_inputs: Vec<((i32, i32), f64, f64)> = if rb.channels.decay_constants {
+    let decay_inputs: Vec<((i32, i32), f64, f64)> = if channels.decay_constants {
         prep.prepared(spec)?.decay_inputs()
     } else {
         Vec::new()
     };
-    let yield_inputs: crate::run::YieldInputs = if rb.channels.fission_yields {
+    let yield_inputs: crate::run::YieldInputs = if channels.fission_yields {
         prep.prepared(spec)?.yield_inputs(spec, &physical)?
     } else {
         Vec::new()
@@ -2641,28 +2642,6 @@ fn evaluate_robustness_inner(
             )
         })
         .collect();
-    let decay_partition = |covered: bool| -> Vec<String> {
-        decay_inputs
-            .iter()
-            .zip(decay_names.iter())
-            .filter(|((_, _, rel), _)| (*rel > 0.0) == covered)
-            .map(|(_, name)| name.clone())
-            .collect()
-    };
-    let yield_partition = |covered: bool| -> Vec<String> {
-        yield_inputs
-            .iter()
-            .zip(yield_names.iter())
-            .filter(|((_, _, rel), _)| (*rel > 0.0) == covered)
-            .map(|(_, name)| name.clone())
-            .collect()
-    };
-
-    let n = rb
-        .resource_limit_runs
-        .map(|m| m.min(rb.samples))
-        .unwrap_or(rb.samples);
-    let truncated = n < rb.samples;
 
     // precompute the xs sampling factor once per case: draws are
     // multiplicative lognormal factors exp(F_rel·z − ½·diag(Σ_rel)) on the
@@ -2694,79 +2673,98 @@ fn evaluate_robustness_inner(
         })
         .map(|(factor, clipped, diag)| (Some(factor), clipped, diag))
         .unwrap_or((None, f64::NAN, Vec::new()));
-    let xs_correlated = xs_factor.is_some();
 
-    let nominal_vals = response_times(nominal_out, &rb.responses);
-    let mut samples_out: Vec<Value> = Vec::new();
-    let mut sample_values: Vec<Value> = vec![Value::Null; n as usize];
-    let mut sample_inputs: Vec<Vec<f64>> = vec![Vec::new(); n as usize];
-    let mut n_failed = 0usize;
-    let mut n_clamped_comp = 0usize;
-    let mut n_clamped_xs = 0usize;
-    let mut n_clamped_decay = 0usize;
-    let mut n_clamped_yield = 0usize;
-    let mut n_applied_rows = 0usize;
-    let mut n_reused_samples = 0usize;
-    let mut sample_digests = Vec::new();
+    Ok(SamplingPlan {
+        channels: channels.clone(),
+        seed,
+        track_inputs,
+        cov_ctx,
+        xs_factor,
+        xs_clipped,
+        xs_rel_diag,
+        decay_inputs,
+        yield_inputs,
+        decay_names,
+        yield_names,
+    })
+}
 
-    // Sample-granular progress: one NDJSON line per finished sample is the
-    // stream-safe resume record (P43). On a resumed run the last line per
-    // index wins; a line is reused only when the re-drawn sample spec hash
-    // and every on-disk artifact digest it records re-verify.
-    let progress_path = cdir.join("rob_samples.ndjson");
-    let mut progress: BTreeMap<usize, Value> = BTreeMap::new();
-    if let Ok(text) = fs::read_to_string(&progress_path) {
-        for line in text.lines() {
-            if let Ok(v) = serde_json::from_str::<Value>(line) {
-                if let Some(i) = v["sample"].as_u64() {
-                    progress.insert(i as usize, v);
-                }
-            }
-        }
+impl SamplingPlan {
+    fn xs_correlated(&self) -> bool {
+        self.xs_factor.is_some()
     }
 
-    // Per-sample streams: sample index i seeds an independent stream, so
-    // the same index in every case shares the drawn z-values (common
-    // random numbers for paired comparisons). Each channel consumes its
-    // own sub-stream tagged off the sample seed in a fixed order —
-    // flux, composition, decay, yield, cross-section — so a
-    // case-dependent draw count (xs rows, yield pairs) can never shift
-    // another channel's stream position, and a joint run reads the same
-    // channel streams as an isolated run on the same tag.
-    let track_inputs = rb.statistics.is_some();
-    let mut draw = |sample_seed: u64, channels: &RobustChannels, sspec: &mut Spec| {
-        // log of every applied factor, in the layout `labels` names below
-        // (statistics only; empty otherwise)
+    fn decay_partition(&self, covered: bool) -> Vec<String> {
+        self.decay_inputs
+            .iter()
+            .zip(self.decay_names.iter())
+            .filter(|((_, _, rel), _)| (*rel > 0.0) == covered)
+            .map(|(_, name)| name.clone())
+            .collect()
+    }
+
+    fn yield_partition(&self, covered: bool) -> Vec<String> {
+        self.yield_inputs
+            .iter()
+            .zip(self.yield_names.iter())
+            .filter(|((_, _, rel), _)| (*rel > 0.0) == covered)
+            .map(|(_, name)| name.clone())
+            .collect()
+    }
+
+    /// Seed of sample `i` in the population tagged `seed_tag`.
+    fn sample_seed(&self, seed_tag: u64, i: u32) -> u64 {
+        self.seed ^ seed_tag ^ (i as u64 + 1).wrapping_mul(0x9E37_79B9_7F4A_7C15)
+    }
+
+    /// Perturb `sspec` for one sample. Returns (flux factor, applied cross-section rows, log of every applied
+    /// factor when `track_inputs`).
+    ///
+    /// Per-sample streams: sample index i seeds an independent stream, so the same index in every case shares
+    /// the drawn z-values (common random numbers for paired comparisons). Each channel consumes its own
+    /// sub-stream tagged off the sample seed in a fixed order — flux, composition, decay, yield,
+    /// cross-section — so a case-dependent draw count (xs rows, yield pairs) can never shift another
+    /// channel's stream position, and a joint run reads the same channel streams as an isolated run on the
+    /// same tag.
+    fn draw(
+        &self,
+        sample_seed: u64,
+        channels: &RobustChannels,
+        sspec: &mut Spec,
+        counts: &mut DrawCounts,
+    ) -> (f64, usize, Vec<f64>) {
+        let track_inputs = self.track_inputs;
+        // log of every applied factor, in the layout `labels` names (statistics only; empty otherwise)
         let mut ln_factors: Vec<f64> = Vec::new();
         let stream = |tag: u64| Rng(sample_seed ^ tag);
         // draw stage: consume z's for every study-enabled channel, each
         // from its own tagged stream
-        let flux_z = if rb.channels.flux_rel_std > 0.0 {
+        let flux_z = if self.channels.flux_rel_std > 0.0 {
             stream(0x1000_0000_0000_0001).normal()
         } else {
             0.0
         };
         let comp_z: Vec<f64> = {
             let mut r = stream(0x2000_0000_0000_0002);
-            (0..rb.channels.composition_rel_std.len())
+            (0..self.channels.composition_rel_std.len())
                 .map(|_| r.normal())
                 .collect()
         };
-        let decay_z: Vec<f64> = if rb.channels.decay_constants {
+        let decay_z: Vec<f64> = if self.channels.decay_constants {
             let mut r = stream(0x3000_0000_0000_0003);
-            (0..decay_inputs.len()).map(|_| r.normal()).collect()
+            (0..self.decay_inputs.len()).map(|_| r.normal()).collect()
         } else {
             Vec::new()
         };
-        let yield_z: Vec<f64> = if rb.channels.fission_yields {
+        let yield_z: Vec<f64> = if self.channels.fission_yields {
             let mut r = stream(0x4000_0000_0000_0004);
-            (0..yield_inputs.len()).map(|_| r.normal()).collect()
+            (0..self.yield_inputs.len()).map(|_| r.normal()).collect()
         } else {
             Vec::new()
         };
-        let xs_z: Vec<f64> = if rb.channels.cross_section_mf33 && xs_factor.is_some() {
+        let xs_z: Vec<f64> = if self.channels.cross_section_mf33 && self.xs_factor.is_some() {
             let mut r = stream(0x5000_0000_0000_0005);
-            let m = cov_ctx.as_ref().map(|c| c.rows.len()).unwrap_or(0);
+            let m = self.cov_ctx.as_ref().map(|c| c.rows.len()).unwrap_or(0);
             (0..m).map(|_| r.normal()).collect()
         } else {
             Vec::new()
@@ -2796,14 +2794,14 @@ fn evaluate_robustness_inner(
         }
         let mut decay_factors = BTreeMap::new();
         if channels.decay_constants {
-            for (((za, liso), _, rel), z) in decay_inputs.iter().zip(decay_z.iter()) {
+            for (((za, liso), _, rel), z) in self.decay_inputs.iter().zip(decay_z.iter()) {
                 if *rel <= 0.0 {
                     continue; // uncovered input: factor 1.0, listed in coverage
                 }
                 let s2 = (1.0 + rel * rel).ln();
                 let f = (-0.5 * s2 + s2.sqrt() * z).exp();
                 if !(f.is_finite() && f > 0.0) {
-                    n_clamped_decay += 1;
+                    counts.decay += 1;
                     if track_inputs {
                         ln_factors.push(0.0);
                     }
@@ -2817,14 +2815,14 @@ fn evaluate_robustness_inner(
         }
         let mut yield_factors = BTreeMap::new();
         if channels.fission_yields {
-            for ((key, _, rel), z) in yield_inputs.iter().zip(yield_z.iter()) {
+            for ((key, _, rel), z) in self.yield_inputs.iter().zip(yield_z.iter()) {
                 if *rel <= 0.0 {
                     continue;
                 }
                 let s2 = (1.0 + rel * rel).ln();
                 let f = (-0.5 * s2 + s2.sqrt() * z).exp();
                 if !(f.is_finite() && f > 0.0) {
-                    n_clamped_yield += 1;
+                    counts.yields += 1;
                     if track_inputs {
                         ln_factors.push(0.0);
                     }
@@ -2845,7 +2843,7 @@ fn evaluate_robustness_inner(
         }
         let mut rate_factors: Vec<(usize, f64)> = Vec::new();
         if channels.cross_section_mf33 {
-            if let (Some(ctx), Some(f)) = (&cov_ctx, &xs_factor) {
+            if let (Some(ctx), Some(f)) = (&self.cov_ctx, &self.xs_factor) {
                 for (i2, &row) in ctx.rows.iter().enumerate() {
                     if ctx.sigma0[i2] <= 0.0 {
                         continue;
@@ -2854,9 +2852,9 @@ fn evaluate_robustness_inner(
                     for (j, &zv) in xs_z.iter().enumerate() {
                         delta += f[i2 * ctx.rows.len() + j] * zv;
                     }
-                    let factor = (delta - 0.5 * xs_rel_diag[i2]).exp();
+                    let factor = (delta - 0.5 * self.xs_rel_diag[i2]).exp();
                     if !(factor.is_finite() && factor > 0.0) {
-                        n_clamped_xs += 1;
+                        counts.xs += 1;
                         if track_inputs {
                             ln_factors.push(0.0);
                         }
@@ -2869,7 +2867,7 @@ fn evaluate_robustness_inner(
                 }
             }
         }
-        n_clamped_comp += perturb_spec(
+        counts.composition += perturb_spec(
             sspec,
             &rate_factors,
             flux_factor,
@@ -2878,7 +2876,212 @@ fn evaluate_robustness_inner(
             &yield_factors,
         );
         (flux_factor, rate_factors.len(), ln_factors)
-    };
+    }
+
+    /// The inputs the sampled channels did and did not cover, for a pass that applied at most
+    /// `n_applied_rows` cross-section rows to a sample.
+    fn coverage(&self, counts: &DrawCounts, n_applied_rows: usize) -> Value {
+        let (covered_rows, uncovered_rows, uncovered_names) = self
+            .cov_ctx
+            .as_ref()
+            .map(|c| (c.rows.len(), c.uncovered.clone(), c.uncovered_names.clone()))
+            .unwrap_or_default();
+        json!({
+            "channels_enabled": self.channels.enabled_names(),
+            "cross_section_mf33": {
+                "enabled": self.channels.cross_section_mf33,
+                "correlated": self.xs_correlated(),
+                "negative_eigenvalue_mass_clipped_relative": if self.xs_clipped.is_nan() {
+                    Value::Null
+                } else {
+                    json!(self.xs_clipped)
+                },
+                "covered_rows": covered_rows,
+                "n_applied_rows": n_applied_rows,
+                "uncovered_rows": uncovered_rows,
+                "uncovered_row_names": uncovered_names,
+                "n_clamped_nonpositive_draws": counts.xs,
+            },
+            "flux_rel_std": self.channels.flux_rel_std,
+            "composition_rel_std": self.channels.composition_rel_std,
+            "n_composition_clamps": counts.composition,
+            "decay_constants": {
+                "enabled": self.channels.decay_constants,
+                "n_active": self.decay_inputs.len(),
+                "covered": self.decay_partition(true),
+                "uncovered": self.decay_partition(false),
+                "n_clamped_nonpositive_draws": counts.decay,
+            },
+            "fission_yields": {
+                "enabled": self.channels.fission_yields,
+                "n_active": self.yield_inputs.len(),
+                "covered": self.yield_partition(true),
+                "uncovered": self.yield_partition(false),
+                "n_clamped_nonpositive_draws": counts.yields,
+            },
+        })
+    }
+}
+
+/// Bytes of a sample's perturbed-spec file (`rob_<i>.json`).
+pub fn sample_spec_text(spec: &Spec) -> String {
+    let text = serde_json::to_string_pretty(&serde_json::to_value(spec).unwrap_or_default())
+        .unwrap_or_default();
+    format!("{text}\n")
+}
+
+/// Bytes of a sample's result file (`rob_<i>.out.json`), from the result serialized with `serde_json::to_value`.
+pub fn sample_result_text(result: &Value) -> String {
+    let text = serde_json::to_string_pretty(result).unwrap_or_default();
+    format!("{text}\n")
+}
+
+/// Checks on a robustness channel set shared by `study.robustness.channels` and every other consumer of the
+/// sampler. `prefix` names the block in messages; `yield_files_declared` says whether any material declares
+/// `fission_yields.files`.
+pub fn validate_channels(
+    ch: &RobustChannels,
+    covariance: Option<&LibraryRef>,
+    yield_files_declared: bool,
+    prefix: &str,
+) -> Result<(), String> {
+    if !ch.flux_rel_std.is_finite() || ch.flux_rel_std < 0.0 {
+        return Err(format!(
+            "{prefix}.channels.flux_rel_std must be finite and nonnegative"
+        ));
+    }
+    for (element, std) in &ch.composition_rel_std {
+        if !std.is_finite() || *std < 0.0 {
+            return Err(format!(
+                "{prefix} composition std for '{element}' must be finite and nonnegative"
+            ));
+        }
+    }
+    if ch.cross_section_mf33 && covariance.map(|c| c.sha256.is_none()).unwrap_or(true) {
+        return Err(format!(
+            "{prefix}.channels.cross_section_mf33 requires {prefix}.covariance {{path, sha256}}"
+        ));
+    }
+    if ch.fission_yields && !yield_files_declared {
+        return Err(format!(
+            "{prefix}.channels.fission_yields requires at least one material declaring \
+             fission_yields.files"
+        ));
+    }
+    if !ch.cross_section_mf33
+        && ch.flux_rel_std == 0.0
+        && ch.composition_rel_std.is_empty()
+        && !ch.decay_constants
+        && !ch.fission_yields
+    {
+        return Err(format!("{prefix} enables no channel"));
+    }
+    Ok(())
+}
+
+/// Draw `samples` perturbed copies of `spec` and solve each, with exactly the perturbation, per-sample seeds
+/// and prepared-solve path of `study.robustness` (population tag [`SAMPLE_SEED_TAG`], stream index `i`), but
+/// without its channel-attribution re-draws or first-order comparison.
+///
+/// `visit(i, perturbed_spec, result)` receives every sample in index order, `result` being the
+/// `serde_json::to_value` of the solved `RunResult` or that sample's error; it may stop the pass by returning
+/// an error. [`sample_spec_text`] and [`sample_result_text`] give the bytes `study.robustness` writes for
+/// `rob_<i>.json` and `rob_<i>.out.json`. `base` resolves relative covariance, library and self-shielding
+/// paths as it does for a study case. Returns the coverage of the sampled channels (see
+/// `SamplingPlan::coverage`).
+pub fn run_samples(
+    channels: &RobustChannels,
+    covariance: Option<&LibraryRef>,
+    spec: &Spec,
+    base: &Path,
+    samples: u32,
+    seed: u64,
+    mut visit: impl FnMut(usize, &Spec, Result<Value, String>) -> Result<(), String>,
+) -> Result<Value, String> {
+    let mut prep = PreparedCache::default();
+    let plan = build_sampling_plan(channels, covariance, spec, base, &mut prep, seed, false)?;
+    let mut counts = DrawCounts::default();
+    let mut n_applied_rows = 0usize;
+    for i in 0..samples {
+        let mut sspec = spec.clone();
+        let sample_seed = plan.sample_seed(SAMPLE_SEED_TAG, i);
+        let (_, n_rows, _) = plan.draw(sample_seed, channels, &mut sspec, &mut counts);
+        n_applied_rows = n_applied_rows.max(n_rows);
+        let result = prep
+            .run_prepared(&sspec)
+            .map(|rr| serde_json::to_value(&rr).unwrap_or_default());
+        visit(i as usize, &sspec, result)?;
+    }
+    Ok(plan.coverage(&counts, n_applied_rows))
+}
+
+/// Evaluate ACT-ROBUST-01 for one case: nominal + `samples` perturbed
+/// solves, per-response sample statistics and coverage accounting.
+fn evaluate_robustness(
+    study: &Study,
+    rb: &Robustness,
+    spec: &Spec,
+    nominal_out: &Value,
+    base: &Path,
+    cdir: &Path,
+    prep: &mut PreparedCache,
+) -> Value {
+    match evaluate_robustness_inner(study, rb, spec, nominal_out, base, cdir, prep) {
+        Ok(v) => v,
+        Err(e) => json!({"status": "gap", "error": e}),
+    }
+}
+
+fn evaluate_robustness_inner(
+    study: &Study,
+    rb: &Robustness,
+    spec: &Spec,
+    nominal_out: &Value,
+    base: &Path,
+    cdir: &Path,
+    prep: &mut PreparedCache,
+) -> Result<Value, String> {
+    let plan = build_sampling_plan(
+        &rb.channels,
+        rb.covariance.as_ref(),
+        spec,
+        base,
+        prep,
+        rb.seed,
+        rb.statistics.is_some(),
+    )?;
+
+    let n = rb
+        .resource_limit_runs
+        .map(|m| m.min(rb.samples))
+        .unwrap_or(rb.samples);
+    let truncated = n < rb.samples;
+
+    let nominal_vals = response_times(nominal_out, &rb.responses);
+    let mut samples_out: Vec<Value> = Vec::new();
+    let mut sample_values: Vec<Value> = vec![Value::Null; n as usize];
+    let mut sample_inputs: Vec<Vec<f64>> = vec![Vec::new(); n as usize];
+    let mut n_failed = 0usize;
+    let mut counts = DrawCounts::default();
+    let mut n_applied_rows = 0usize;
+    let mut n_reused_samples = 0usize;
+    let mut sample_digests = Vec::new();
+
+    // Sample-granular progress: one NDJSON line per finished sample is the
+    // stream-safe resume record (P43). On a resumed run the last line per
+    // index wins; a line is reused only when the re-drawn sample spec hash
+    // and every on-disk artifact digest it records re-verify.
+    let progress_path = cdir.join("rob_samples.ndjson");
+    let mut progress: BTreeMap<usize, Value> = BTreeMap::new();
+    if let Ok(text) = fs::read_to_string(&progress_path) {
+        for line in text.lines() {
+            if let Ok(v) = serde_json::from_str::<Value>(line) {
+                if let Some(i) = v["sample"].as_u64() {
+                    progress.insert(i as usize, v);
+                }
+            }
+        }
+    }
 
     let mut draw_samples = |channels: &RobustChannels,
                             prefix: &str,
@@ -2893,18 +3096,16 @@ fn evaluate_robustness_inner(
         let mut failed = 0usize;
         for i in 0..n {
             let mut sspec = spec.clone();
-            let sample_seed =
-                rb.seed ^ seed_tag ^ (i as u64 + 1).wrapping_mul(0x9E37_79B9_7F4A_7C15);
-            let (flux_factor, n_rows, ln_factors) = draw(sample_seed, channels, &mut sspec);
+            let sample_seed = plan.sample_seed(seed_tag, i);
+            let (flux_factor, n_rows, ln_factors) =
+                plan.draw(sample_seed, channels, &mut sspec, &mut counts);
             n_applied_rows = n_applied_rows.max(n_rows);
             if let Some(iv) = inputs.as_deref_mut() {
                 iv[i as usize] = ln_factors;
             }
             let spath = cdir.join(format!("{prefix}{i}.json"));
-            let stext =
-                serde_json::to_string_pretty(&serde_json::to_value(&sspec).unwrap_or_default())
-                    .unwrap_or_default();
-            let spec_sha = format!("{:x}", Sha256::digest(format!("{stext}\n").as_bytes()));
+            let stext = sample_spec_text(&sspec);
+            let spec_sha = format!("{:x}", Sha256::digest(stext.as_bytes()));
             // resume check: a recorded line is reused only when the
             // re-drawn spec hash and the on-disk artifacts re-verify
             if keep_outs {
@@ -2950,13 +3151,12 @@ fn evaluate_robustness_inner(
                     }
                 }
             }
-            let _ = fs::write(&spath, format!("{stext}\n"));
+            let _ = fs::write(&spath, &stext);
             match prep.run_prepared(&sspec) {
                 Ok(rr) => {
                     let ov = serde_json::to_value(&rr).unwrap_or_default();
                     let opath = cdir.join(format!("{prefix}{i}.out.json"));
-                    let otext = serde_json::to_string_pretty(&ov).unwrap_or_default();
-                    let _ = fs::write(&opath, format!("{otext}\n"));
+                    let _ = fs::write(&opath, sample_result_text(&ov));
                     if keep_outs {
                         let out_sha = file_sha256(&opath).ok();
                         sample_digests.push(json!({
@@ -3024,7 +3224,7 @@ fn evaluate_robustness_inner(
     draw_samples(
         &rb.channels,
         "rob_",
-        0x9E37_79B9_7F4A_7C15,
+        SAMPLE_SEED_TAG,
         true,
         &mut samples_out,
         Some(&mut sample_values),
@@ -3395,7 +3595,7 @@ fn evaluate_robustness_inner(
                 "element": element,
             }));
         }
-        for ((_, _, rel), name) in decay_inputs.iter().zip(&decay_names) {
+        for ((_, _, rel), name) in plan.decay_inputs.iter().zip(&plan.decay_names) {
             if *rel > 0.0 {
                 labels.push(json!({
                     "channel": "decay_constants",
@@ -3404,7 +3604,7 @@ fn evaluate_robustness_inner(
                 }));
             }
         }
-        for ((_, _, rel), name) in yield_inputs.iter().zip(&yield_names) {
+        for ((_, _, rel), name) in plan.yield_inputs.iter().zip(&plan.yield_names) {
             if *rel > 0.0 {
                 labels.push(json!({
                     "channel": "fission_yields",
@@ -3413,9 +3613,10 @@ fn evaluate_robustness_inner(
                 }));
             }
         }
-        if let Some(ctx) = cov_ctx
+        if let Some(ctx) = plan
+            .cov_ctx
             .as_ref()
-            .filter(|_| xs_correlated && rb.channels.cross_section_mf33)
+            .filter(|_| plan.xs_correlated() && rb.channels.cross_section_mf33)
         {
             for (i2, label) in ctx.labels.iter().enumerate() {
                 if ctx.sigma0[i2] > 0.0 {
@@ -3435,10 +3636,12 @@ fn evaluate_robustness_inner(
         )
     });
 
-    let (covered_rows, uncovered_rows) = cov_ctx
+    let (covered_rows, uncovered_rows) = plan
+        .cov_ctx
         .as_ref()
         .map(|c| (c.rows.len(), c.uncovered.clone()))
         .unwrap_or_default();
+    let xs_correlated = plan.xs_correlated();
     let mut record = json!({
         "local_vs_nonlinear": local_vs_nonlinear,
         "channel_attribution": attribution,
@@ -3456,10 +3659,10 @@ fn evaluate_robustness_inner(
                 "enabled": rb.channels.cross_section_mf33,
                 "correlated": xs_correlated,
                 "sampling": "correlated lognormal multiplicative factors on the nearest-PSD relative covariance",
-                "negative_eigenvalue_mass_clipped_relative": if xs_clipped.is_nan() {
+                "negative_eigenvalue_mass_clipped_relative": if plan.xs_clipped.is_nan() {
                     Value::Null
                 } else {
-                    json!(xs_clipped)
+                    json!(plan.xs_clipped)
                 },
                 "independence_assumption": if xs_correlated {
                     Value::Null
@@ -3469,26 +3672,26 @@ fn evaluate_robustness_inner(
                 "covered_rows": covered_rows,
                 "n_applied_rows": n_applied_rows,
                 "uncovered_rows": uncovered_rows,
-                "n_clamped_nonpositive_draws": n_clamped_xs,
+                "n_clamped_nonpositive_draws": counts.xs,
             },
             "flux_rel_std": rb.channels.flux_rel_std,
             "composition_rel_std": rb.channels.composition_rel_std,
-            "n_composition_clamps": n_clamped_comp,
+            "n_composition_clamps": counts.composition,
             "decay_constants": {
                 "enabled": rb.channels.decay_constants,
                 "sampling": "per-nuclide mean-preserving lognormal factors; relative sigma = declared d_half_life/half_life",
-                "n_active": decay_inputs.len(),
-                "covered": decay_partition(true),
-                "uncovered": decay_partition(false),
-                "n_clamped_nonpositive_draws": n_clamped_decay,
+                "n_active": plan.decay_inputs.len(),
+                "covered": plan.decay_partition(true),
+                "uncovered": plan.decay_partition(false),
+                "n_clamped_nonpositive_draws": counts.decay,
             },
             "fission_yields": {
                 "enabled": rb.channels.fission_yields,
                 "sampling": "per-(parent,product) mean-preserving lognormal factors on effective independent yields; relative sigma = declared sigma_yield/yield",
-                "n_active": yield_inputs.len(),
-                "covered": yield_partition(true),
-                "uncovered": yield_partition(false),
-                "n_clamped_nonpositive_draws": n_clamped_yield,
+                "n_active": plan.yield_inputs.len(),
+                "covered": plan.yield_partition(true),
+                "uncovered": plan.yield_partition(false),
+                "n_clamped_nonpositive_draws": counts.yields,
             },
         },
         "responses": response_stats,

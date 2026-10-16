@@ -195,7 +195,7 @@ enum WasteFailure {
 /// file into a private temporary directory, and return that file's text. The
 /// CLI and Python results therefore come from one code path. `command` is one
 /// of classify, budget, bounds, composition, composition_solve,
-/// intrusion_screen, twin. Nothing is printed. A refusal raises ValueError
+/// intrusion_screen, uncertainty, twin. Nothing is printed. A refusal raises ValueError
 /// carrying the command's message exactly.
 #[pyfunction]
 fn _waste(py: Python<'_>, command: &str, spec_path: &str) -> PyResult<String> {
@@ -207,6 +207,7 @@ fn _waste(py: Python<'_>, command: &str, spec_path: &str) -> PyResult<String> {
         "composition" => actinv_cli::waste_composition::run_quiet,
         "composition_solve" => actinv_cli::waste_composition_solve::run,
         "intrusion_screen" => actinv_cli::waste_intrusion::run,
+        "uncertainty" => actinv_cli::waste_uncertainty::run,
         "twin" => actinv_cli::twin::run,
         other => {
             return Err(pyo3::exceptions::PyValueError::new_err(format!(

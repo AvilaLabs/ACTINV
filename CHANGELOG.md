@@ -8,6 +8,12 @@
   `actinv.twin`, take a spec path or a dictionary with `base_dir` and return the result the CLI writes (or its exact
   text with `text=True`); `actinv.waste.summary` flattens a classification result to one row per component and target
   step. Refusals raise `ValueError`; calls print nothing (P143).
+- `actinv waste uncertainty SPEC [OUT]` (and `actinv.waste.uncertainty`): Part 61 class probabilities under
+  nuclear-data uncertainty. The problem is re-solved for each correlated draw of the `study.robustness` channels
+  (MF=33 cross sections, decay constants, fission yields, flux, composition) and every sample is classified with the
+  nominal evaluator. The result gives class frequencies with two-sided Clopper-Pearson intervals, the class
+  established at a confidence level (at least 72 samples at 0.95), nearest-rank percentiles of each table sum, and
+  the coverage of the sampled channels. The probabilities are conditional on the sampled channels (P145).
 
 **Added (desktop and browser)**
 
