@@ -203,6 +203,12 @@ default specs, and the P140 identity comparison found no other difference.
   data resolve against `ACTINV_DATA_DIR` or `actinv-data` beside the problem in the desktop app's input
   resolution, and `check_files` names an unknown catalog id.
 
+### Dependencies (P141)
+
+- `zip` moves to 9.0.4 because upstream yanked 8.6.0 and every earlier release after security advisories about
+  archive extraction, which ACTINV does not use. A full TENDL-2025 proton build, a neutron activation library and a
+  covariance sidecar are byte-identical to the 8.6.0 builds, and the three shipped libraries read identically.
+
 ### Hardening pass (P140)
 
 P140 reviewed seven module groups with reviewers who had not implemented them: 90 findings, three

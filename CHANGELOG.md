@@ -2,6 +2,12 @@
 
 ## v1.5.0 — 2026-10-16
 
+**Changed (dependencies)**
+
+- `zip` 9.0.4. Upstream yanked 8.6.0 and every earlier release on 2026-10-16 after security advisories about archive
+  extraction; ACTINV calls no extraction API. Library and covariance builds are byte-identical to 8.6.0 builds, and
+  all three shipped libraries read identically (P141). `cargo install actinv-cli` works again without `--locked`.
+
 **Added (desktop and browser)**
 
 - Desktop 0.3.0-preview.1 and the browser workbench: optional Avila Labs account sign-in. The

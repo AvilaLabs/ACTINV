@@ -3299,3 +3299,9 @@ First Z4 replay of every `ci.yml` control step (P18, P18b, P12 payload skipped a
 desktop build dependencies" fails on `sudo` (runner-only); "P13 verified data-distribution contract" fails because
 `check_p13.py` requires the literal `zip = { version = "=8.6.0"`. Preserved as
 `results/failures/p141/z4_full_replay_attempt1.log`. Registered before the edit: **P141 Amendment C** `de6f15f75c9b4e700c9734615b8abf50bcd4efd8a5ebdb5af208a6eabd73f842`.
+
+## Entry 178 — P141 Amendment C applied; Z4 local (2026-10-16)
+
+`controls/check_p13.py` now requires `zip = { version = "=9.0.4"`; the exact-pin requirement is unchanged. The CI
+steps P16, P15 and P13 — the three that run `check_p13.py` — each exit 0. Every other control step passed in the
+first Z4 replay (entry 177) and is unaffected by this edit. P141 Z4 now waits only on CI for the pushed commit.

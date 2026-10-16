@@ -124,7 +124,7 @@ def source_contract():
         and catalog.get("catalog_version") == "1.0.0" and sha256(CATALOG) == "27b77786b89a6303f0805646fc61e4fbcabaaf695dd92e4e15a87948b3d69430",
         "notice_identity": sha256(NOTICE) == "191117ff8aaff8d9981a93c9bb59b418cfe54505dc7363128d2bc5e728a6a62c",
         "no_unsafe": re.search(r"\bunsafe\b", source) is None,
-        "pinned_network_dependencies": 'ureq = "=3.4.0"' in cargo and 'zip = { version = "=8.6.0"' in cargo,
+        "pinned_network_dependencies": 'ureq = "=3.4.0"' in cargo and 'zip = { version = "=9.0.4"' in cargo,
         "strict_ci_gates": all(token in ci for token in (
             "cargo fmt --all -- --check",
             "cargo check --workspace --all-targets --all-features",
