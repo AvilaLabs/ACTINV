@@ -1,0 +1,100 @@
+{
+ "anomalies": [],
+ "assumptions": {
+  "endpoint_tol": 1e-12,
+  "percentiles_include_unknown": true
+ },
+ "candidate": {
+  "amendment_b_sha256": "b48aa0c11c02a9121563c729d53b7fe8dc3426b2ecb2ce2ecab2f3735f04ef05",
+  "amendment_sha256": "355ddb6f3d1188c780f322f9cfabe95ce66adc628b2ccd45de523001e2f6bc72",
+  "binary": "target/release/actinv",
+  "binary_sha256": "db2d482f3706e12138a118edbed4368ffd821c4adde4b76898ffc19a98663a56",
+  "commit": "64a3e0cf38431c70a0d8dc00fff9318f43540c10",
+  "protocol_sha256": "7a50a266d7bb68f0745ac159114493b7731479c3bbc6b4b61b72cff6e2bd89f1",
+  "tree_clean": true
+ },
+ "case": "C1",
+ "check_report": {
+  "checks": 281,
+  "failed": 0,
+  "failures": [],
+  "missing_fields": []
+ },
+ "command": null,
+ "pass": true,
+ "recount_seconds": 9.0,
+ "result_sha256": "246e15cb18c4daad5d29d2b33c80a9b4142ff13b21dc9dc1e20f780502783146",
+ "reused_u1_run": true,
+ "rule_pack": "crates/actinv-core/data/waste_us_nrc_61_55_v1.json",
+ "rule_pack_sha256": "890268af81a53815b8e11c238e4a1694eabb79664a1ca087fd7fe22b9fabe5d7",
+ "schema": "actinv-p145-u2-1",
+ "source_problem_sha256": "ed55ed00f6c00fc4a2351e18332e98e7feb33d9b7ca65e7ba861e0e5e8feef39",
+ "spec": "c1_fns_fe.json",
+ "spec_sha256": "0d53ea10114ffd04c687d14b1d3cd91a3bfc340725bd0c3662b98d6a3e6c1edc",
+ "summary": {
+  "case": "C1",
+  "checks": 281,
+  "failed": 0,
+  "missing_fields": 0
+ },
+ "tally": {
+  "fe-block@1": {
+   "counts": {
+    "A": 100,
+    "B": 0,
+    "C": 0,
+    "above_class_c": 0,
+    "unknown": 0
+   },
+   "established": "A",
+   "failed": 0,
+   "near_threshold": [],
+   "needed": null,
+   "needed_note": null
+  },
+  "fe-block@11": {
+   "counts": {
+    "A": 100,
+    "B": 0,
+    "C": 0,
+    "above_class_c": 0,
+    "unknown": 0
+   },
+   "established": "A",
+   "failed": 0,
+   "near_threshold": [],
+   "needed": null,
+   "needed_note": null
+  },
+  "fe-block@21": {
+   "counts": {
+    "A": 100,
+    "B": 0,
+    "C": 0,
+    "above_class_c": 0,
+    "unknown": 0
+   },
+   "established": "A",
+   "failed": 0,
+   "near_threshold": [],
+   "needed": null,
+   "needed_note": null
+  },
+  "fe-block@6": {
+   "counts": {
+    "A": 100,
+    "B": 0,
+    "C": 0,
+    "above_class_c": 0,
+    "unknown": 0
+   },
+   "established": "A",
+   "failed": 0,
+   "near_threshold": [],
+   "needed": null,
+   "needed_note": null
+  }
+ },
+ "targets_with_failed_samples": 0,
+ "worktree_clean_after": true
+}

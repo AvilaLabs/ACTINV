@@ -1,0 +1,64 @@
+{
+ "candidate": {
+  "amendment_b_sha256": "b48aa0c11c02a9121563c729d53b7fe8dc3426b2ecb2ce2ecab2f3735f04ef05",
+  "amendment_sha256": "355ddb6f3d1188c780f322f9cfabe95ce66adc628b2ccd45de523001e2f6bc72",
+  "binary": "target/release/actinv",
+  "binary_sha256": "db2d482f3706e12138a118edbed4368ffd821c4adde4b76898ffc19a98663a56",
+  "commit": "64a3e0cf38431c70a0d8dc00fff9318f43540c10",
+  "protocol_sha256": "7a50a266d7bb68f0745ac159114493b7731479c3bbc6b4b61b72cff6e2bd89f1",
+  "tree_clean": true
+ },
+ "case": "C2",
+ "failed_in_both": [],
+ "identical_except_ms": 100,
+ "keep_dir_files": 200,
+ "mismatched": [],
+ "mismatched_count": 0,
+ "only_in_study": [],
+ "only_in_uncertainty": [],
+ "pass": true,
+ "samples": 100,
+ "schema": "actinv-p145-u1-1",
+ "source_problem_sha256": "ce2269daa338a5ec6eeabba41784025b5f1ba4ba3b5516cb4d430c146a9526a5",
+ "spec": "c2_steel.json",
+ "spec_sha256": "2d4c3284b62f9c1751eea865b829304639849e38ba474387509a49c83c938297",
+ "staged_problem_sha256": "5b4d4911ce38490767d6087a56b77ed70602fb8c6c894923905fc33e8216d5e6",
+ "staged_spec_sha256": "8ff89e2f0ecb29b755c397bc054db9625a049d2cdd7a6a09380ad69f08d344ce",
+ "strict_identical": 0,
+ "study": {
+  "argv": [
+   "/home/connoravila/Documents/actinv/target/release/actinv",
+   "study",
+   "run",
+   "study.json",
+   "study_out"
+  ],
+  "rc": 0,
+  "seconds": 45.707,
+  "stderr_tail": "",
+  "stdout_bytes": 38
+ },
+ "study_sha256": "b31a75e46221ef1e469ccea3dbd272b901247a0f3a619ffc30f0c6cfefe23d6e",
+ "summary": {
+  "case": "C2",
+  "identical_except_ms": 100,
+  "mismatched": 0,
+  "samples": 100,
+  "strict_identical": 0
+ },
+ "uncertainty": {
+  "argv": [
+   "/home/connoravila/Documents/actinv/target/release/actinv",
+   "waste",
+   "uncertainty",
+   "spec.json",
+   "result.json"
+  ],
+  "rc": 0,
+  "seconds": 18.016,
+  "stderr_tail": "",
+  "stdout_bytes": 0
+ },
+ "uncertainty_result_sha256": "ac3ab1b80597abf86033341cd8528417cbfbf439957eb0e5cc0d1dfc9a15c8c3",
+ "worktree_clean_after": true
+}

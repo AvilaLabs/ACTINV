@@ -3488,3 +3488,13 @@ synthetic C3 covariance sidecars (`.npz`). `check_p145.py verdict`: P145-FAIL (U
 `results/failures/p145/` (`evidence_attempt1/`, formerly `results/p145/`, and `ci_attempt1/`). Registered before
 the repair: **P145 Amendment C** `ae51db8fd14983aed2a41f02968e4e46291f397ceb6588bb87566e106633123e` (untrack the sidecars, generate them at check time against their pinned
 SHA-256, rerun U1–U5 in full, run the P13 step locally before pushing; the one repair round is consumed).
+
+## Entry 196 — P145 evidence attempt 2 stopped: U3 checker still read an untracked sidecar (2026-10-16)
+
+Repair candidate `64a3e0c`. Amendment C requires the checker to generate the C3 sidecars and verify their pinned
+SHA-256 when it stages a case; `stage_case` did so, but `u3()` still read σ² from `controls/p145_inputs/*.cov.npz`,
+which no longer exists, and exited 1 with FileNotFoundError before any U3 solve (U3 measured nothing). The other
+steps that finished exited 0; the run was stopped during the workspace tests. The partial attempt is preserved in
+`results/failures/p145/evidence_attempt2/`. The fix, part of the Amendment C repair rather than a new amendment,
+reads σ² from the generated and SHA-verified copy in the U3 staging folder; no gate, input or threshold changes.
+The evidence reruns U1–U5 in full, including the P13 step, on the new candidate.

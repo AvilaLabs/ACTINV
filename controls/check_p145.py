@@ -1174,7 +1174,7 @@ def u3() -> int:
                         "reported_failed": None if failed is MISSING else failed,
                         "class_a_count": None if class_a is MISSING else class_a})
             if s0 is not MISSING and count is not MISSING and failed == 0 and samples == n and s0 > 0.0:
-                sigma2 = covariance_sigma2(INPUTS / entry["covariance"])
+                sigma2 = covariance_sigma2(stage / entry["covariance"])  # the generated, SHA-verified copy
                 closed = phi((math.log(s0) - sigma2 / 2.0) / math.sqrt(sigma2))
                 low, high = cp_interval(count, n, level)
                 placed = abs(closed - entry["target_probability"]) <= 0.15

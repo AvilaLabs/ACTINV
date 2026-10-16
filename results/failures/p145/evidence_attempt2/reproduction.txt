@@ -1,0 +1,7 @@
+P145 evidence attempt 2 on repair candidate 64a3e0c (Amendment C), partial run, stopped by the coordinator.
+build_cli, U1 C1/C2, U2 C1/C2, U4, the U5 study regression, fmt and both clippy steps exited 0; the U5 workspace
+tests were still running when the run was stopped. U3 exited 1 before running any solve: check_p145.py u3() read
+sigma2 from controls/p145_inputs/<case>.cov.npz, a file Amendment C untracked, instead of the copy stage_case
+generates and verifies in the staging folder (FileNotFoundError at check_p145.py line 1177, logs/u3.log). The
+Amendment C repair was incomplete in this one read; U3 measured nothing.
+Reproduce: git checkout 64a3e0c && python3 controls/check_p145.py u3   (on a clone with no local sidecars)
