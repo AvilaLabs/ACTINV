@@ -3372,3 +3372,12 @@ Python the overlap. Repeated CLI runs report either (9 and 15 of 24): `validate_
 `HashMap`, so the first of two defects reported depends on the hash seed. W1 fails as written; preserved as
 `results/failures/p143/w1_attempt1/`. Registered before the repair: **P143 Amendment A** `41ae7ccb9accb9a66e267c0ed1b034a7ccad9f67bc8422a6f2a3498fad60636e` (sorted
 component order, regression test, full W1 rerun; criterion unchanged; the one repair round is consumed).
+
+## Entry 186 — P142 verdict: twin waste qualified on the current code (2026-10-16)
+
+**P142-PASS** (`results/p142_verdict.json`). Candidate `5ee489c`, clean tree, release binary
+`07bb7e1e46316baabfa82c7af7e81270bdd0238d80e2ac8c22110760f9a9ac53`. Q1: `check_p116.py --no-write` reproduced the
+sealed `results/g1_p116_twin_waste.json`. Q2: the fourteen ci.yml steps P103–P118 exited 0. Q3: the new regression test
+for the unmodelled-decay-branch audit reason, workspace tests (1023 passed, 0 failed), fmt and clippy native and wasm
+exited 0. Q4: all five workflows on the pushed evidence commit `2b2c51e` succeeded, `controls` included
+(`results/p142/ci_runs.json`). No production change.
