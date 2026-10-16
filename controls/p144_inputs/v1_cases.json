@@ -1,0 +1,23 @@
+{
+ "schema": "actinv-p144-v1-cases-1",
+ "note": "Fixed before any V1 run. Each case: the problem, its run result (written by `actinv run`), and the Waste class page inputs the driver sets; every step stays selected. The input base folder is the repository root, where the problems' relative data paths resolve (as for `actinv run` from the root).",
+ "cases": {
+  "fns_fe_5min": {
+   "problem": "examples/fns_fe_5min.json",
+   "activated_metal": false,
+   "volume_cm3": 0.127,
+   "external_h3": null,
+   "base_dir": "."
+  },
+  "ra_steel": {
+   "problem": "examples/optimize_ra_steel/base_spec.json",
+   "activated_metal": true,
+   "volume_cm3": 0.128,
+   "external_h3": {
+    "source": "declared external H-3 (P144 V1 case)",
+    "bq_every_step": 1000.0
+   },
+   "base_dir": "."
+  }
+ }
+}

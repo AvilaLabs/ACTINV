@@ -92,6 +92,39 @@ try {
   assert.match(hooks.unknownTable.error, /unknown table/);
   assert.match(hooks.missingStep.error, /step 9 is not in the result/);
 
+  // The Waste class page reads the three result schemas the CLI writes (fixtures are control outputs of
+  // P105, P112 and P116 with the checkout prefix removed from paths), shows each step's class, and turns
+  // anything else into a message. ACTINV_WEB_WASTE_FILES adds result files, separated by the path delimiter.
+  const { readFileSync } = await import("node:fs");
+  const { delimiter, dirname, join } = await import("node:path");
+  const fixtures = join(dirname(new URL(import.meta.url).pathname), "smoke-fixtures");
+  const wasteFiles = {
+    waste: join(fixtures, "waste-result.json"),
+    intrusion_screen: join(fixtures, "intrusion-screen-result.json"),
+    twin: join(fixtures, "twin-result.json"),
+  };
+  const extra = (process.env.ACTINV_WEB_WASTE_FILES || "").split(delimiter).filter(Boolean);
+  const texts = [...Object.values(wasteFiles), ...extra].map(path => readFileSync(path, "utf8"));
+  const views = await page.evaluate(({ texts, malformed }) => {
+    const { waste_view } = window.wasmBindings;
+    return { opened: texts.map(text => JSON.parse(waste_view(text))), malformed: malformed.map(text => JSON.parse(waste_view(text))) };
+  }, { texts, malformed: ["{ not json", JSON.stringify({ schema: "actinv-waste-result-1" }), JSON.stringify({ steps: [] })] });
+  const expectedClasses = text => {
+    const doc = JSON.parse(text);
+    const waste = doc.waste_classification || doc.classification || doc;
+    return waste.components.map(component => component.targets.map(target => target.class));
+  };
+  views.opened.forEach((view, index) => {
+    assert.equal(view.error, undefined, `waste file ${index} opens: ${view.error}`);
+    assert.deepEqual(view.components.map(component => component.steps.map(step => step.class)), expectedClasses(texts[index]));
+  });
+  assert.deepEqual(views.opened.slice(0, 3).map(view => view.source), Object.keys(wasteFiles));
+  for (const view of views.malformed) assert.equal(typeof view.error, "string", "a malformed waste file is a message");
+  if (process.env.ACTINV_WEB_WASTE_REPORT) {
+    const { writeFileSync } = await import("node:fs");
+    writeFileSync(process.env.ACTINV_WEB_WASTE_REPORT, JSON.stringify({ files: [...Object.values(wasteFiles), ...extra], views }, null, 1) + "\n");
+  }
+
   await context.close();
   assert.deepEqual(errors, [], "WebAssembly starts without runtime errors");
 

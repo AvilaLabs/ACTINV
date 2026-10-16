@@ -93,6 +93,17 @@ pub fn report_csv(result_json: &str, table: &str, step: u32) -> String {
     }
 }
 
+/// Test hook (`web/smoke.mjs`): open a waste result exactly as the Waste class page does. Returns
+/// `{"source", "components": [{"id", "steps": [{"step", "class"}]}]}` as JSON text, or `{"error"}`
+/// with the message the page shows.
+#[wasm_bindgen]
+pub fn waste_view(text: &str) -> String {
+    match crate::views::waste::read_result(text) {
+        Ok(view) => view.classes().to_string(),
+        Err(error) => json!({"error": error}).to_string(),
+    }
+}
+
 #[wasm_bindgen(start)]
 pub async fn start() -> Result<(), JsValue> {
     console_error_panic_hook::set_once();

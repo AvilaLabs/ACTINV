@@ -8,6 +8,7 @@ pub mod pathways;
 pub mod photons;
 pub mod steps;
 pub mod tables;
+pub mod waste;
 
 use eframe::egui;
 

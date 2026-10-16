@@ -14,8 +14,15 @@ For a real calculation, open or drop a result JSON produced by ACTINV. Use **Com
 - **Photons & dose** shows decay photon groups, dose rates, bremsstrahlung and dose against cooling time, and downloads the groups of the selected step as CSV. A result with no photon source links to **Outputs**.
 - **Pathways** shows first products and full production routes, when the result recorded them.
 - **Ledger & certificate** shows missing data, diagnostics and the calculation details.
+- **Waste class** reads waste results and edits waste specs; see [Read waste results and edit waste specs](#read-waste-results-and-edit-waste-specs).
 
 An inventory CSV download contains the selected time step. A result JSON download retains the complete imported result.
+
+### Read waste results and edit waste specs
+
+**Waste class** opens an `actinv-waste-result-1` file, an intrusion-screen result, or a twin result that has `waste_classification`, and shows what the desktop page shows: for each selected step the class, status, coverage, governing table and column with its sum and margin, and the binding nuclides, a class strip against cooling time, and the earliest selected step within Class A, B and C. All of it is read from the file. The browser does not classify: the evaluator is not built for the web, so run a spec with the desktop app or `actinv waste` and open the result here. A file that is not one of these three, or is not valid JSON, shows an error message and changes nothing.
+
+The same page opens an `actinv-waste-spec-1` file (or starts from a skeleton), lets you edit it as JSON, checks its structure and downloads it as `waste-spec.json`. The `input` member names the run result the spec reads, so keep that result next to the spec when you run it. Dropping a waste file on the window opens it. See [Component waste classes](waste.md) for the document formats.
 
 ## Edit a problem
 

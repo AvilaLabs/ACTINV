@@ -1,0 +1,686 @@
+{
+  "classification": {
+    "components": [
+      {
+        "displaced_volume_cm3": 1.0,
+        "external_tritium": {
+          "status": "not_applicable"
+        },
+        "id": "component-1",
+        "mass_g": 1.0,
+        "status": "nominal",
+        "targets": [
+          {
+            "calculated_only_class": "A",
+            "class": "A",
+            "coverage": "complete",
+            "evaluation": {
+              "binding_constraints": [
+                {
+                  "column": 1,
+                  "contributor_count": 1,
+                  "contributors": [
+                    "Xe135"
+                  ],
+                  "normalized_margin": 0.9999999613899614,
+                  "normalized_sum": 3.861003861003861e-8,
+                  "passes": true,
+                  "source_sum_fraction": 3.861003861003861e-8,
+                  "strict": false,
+                  "table": 2,
+                  "target_class": "A"
+                }
+              ],
+              "calculated_only_class": "A",
+              "class": "A",
+              "constraints": [
+                {
+                  "column": null,
+                  "contributor_count": 0,
+                  "contributors": [],
+                  "normalized_margin": 1.0,
+                  "normalized_sum": 0.0,
+                  "passes": true,
+                  "source_sum_fraction": 0.0,
+                  "strict": false,
+                  "table": 1,
+                  "target_class": "A"
+                },
+                {
+                  "column": 1,
+                  "contributor_count": 1,
+                  "contributors": [
+                    "Xe135"
+                  ],
+                  "normalized_margin": 0.9999999613899614,
+                  "normalized_sum": 3.861003861003861e-8,
+                  "passes": true,
+                  "source_sum_fraction": 3.861003861003861e-8,
+                  "strict": false,
+                  "table": 2,
+                  "target_class": "A"
+                },
+                {
+                  "column": null,
+                  "contributor_count": 0,
+                  "contributors": [],
+                  "normalized_margin": 1.0,
+                  "normalized_sum": 0.0,
+                  "passes": true,
+                  "source_sum_fraction": 0.0,
+                  "strict": false,
+                  "table": 1,
+                  "target_class": "B"
+                },
+                {
+                  "column": 2,
+                  "contributor_count": 0,
+                  "contributors": [],
+                  "normalized_margin": 1.0,
+                  "normalized_sum": 0.0,
+                  "passes": true,
+                  "source_sum_fraction": 0.0,
+                  "strict": false,
+                  "table": 2,
+                  "target_class": "B"
+                },
+                {
+                  "column": null,
+                  "contributor_count": 0,
+                  "contributors": [],
+                  "normalized_margin": 1.0,
+                  "normalized_sum": 0.0,
+                  "passes": true,
+                  "source_sum_fraction": 0.0,
+                  "strict": false,
+                  "table": 1,
+                  "target_class": "C"
+                },
+                {
+                  "column": 3,
+                  "contributor_count": 0,
+                  "contributors": [],
+                  "normalized_margin": 1.0,
+                  "normalized_sum": 0.0,
+                  "passes": true,
+                  "source_sum_fraction": 0.0,
+                  "strict": false,
+                  "table": 2,
+                  "target_class": "C"
+                }
+              ],
+              "coverage": "complete",
+              "row_fractions": [
+                {
+                  "column": 1,
+                  "concentration": 0.000027027027027027027,
+                  "fraction": 3.861003861003861e-8,
+                  "limit": 700.0,
+                  "nuclide": "Xe135",
+                  "row_id": "half_life_lt5y",
+                  "table": 2,
+                  "unit": "Ci/m3"
+                },
+                {
+                  "column": 2,
+                  "concentration": 0.000027027027027027027,
+                  "fraction": null,
+                  "limit": null,
+                  "nuclide": "Xe135",
+                  "row_id": "half_life_lt5y",
+                  "table": 2,
+                  "unit": "Ci/m3"
+                },
+                {
+                  "column": 3,
+                  "concentration": 0.000027027027027027027,
+                  "fraction": null,
+                  "limit": null,
+                  "nuclide": "Xe135",
+                  "row_id": "half_life_lt5y",
+                  "table": 2,
+                  "unit": "Ci/m3"
+                }
+              ],
+              "unknown_nuclides": [],
+              "unlisted_activity_bq": 0.0,
+              "unlisted_nuclides": []
+            },
+            "external_tritium_activity_bq": 0.0,
+            "external_tritium_status": "not_applicable",
+            "inventory_activity_bq": {
+              "Xe135": 1.0
+            },
+            "status": "nominal",
+            "step": 1,
+            "t_s": 0.0,
+            "unknown_reason": null
+          }
+        ],
+        "waste_type": "general"
+      }
+    ],
+    "input": "case-input.json",
+    "input_kind": "run",
+    "input_sha256": "5c69ece1b68c1267e7217814a08e6e58ca806bb882f52abb3250fb47980af3b8",
+    "rule_pack": {
+      "id": "us-nrc-10cfr61.55-v1",
+      "sha256": "890268af81a53815b8e11c238e4a1694eabb79664a1ca087fd7fe22b9fabe5d7",
+      "source_as_of": "2026-10-01",
+      "source_url": "https://www.ecfr.gov/current/title-10/chapter-I/part-61/subpart-D/section-61.55",
+      "version": 1
+    },
+    "rule_pack_sha256": "890268af81a53815b8e11c238e4a1694eabb79664a1ca087fd7fe22b9fabe5d7",
+    "rules": "us-nrc-10cfr61.55-v1",
+    "schema": "actinv-waste-result-1",
+    "status": "nominal",
+    "targets": [
+      1
+    ],
+    "waste_sha256": "4a6bf5aa0badb2ca2b0e8a5305072301731b1cc3c046f72a32b9dafb2d2bde07"
+  },
+  "draft_intrusion_screen": {
+    "disposal_acceptance": "not_assessed",
+    "dot_rq": {
+      "applicability_basis": "caller_declared",
+      "coverage": null,
+      "source": null,
+      "supplied": false,
+      "unit": "Bq"
+    },
+    "draft_pack": {
+      "ci_bq": 37000000000.0,
+      "id": "us-nrc-nureg1556-v22-draft-2026-02-v1",
+      "printed_defects_preserved": [
+        "Table 8-5 Cs-137 Class C is 460 Ci/m3; 10 CFR 61.55 Table 2 gives 4600.",
+        "Table 8-5 activated-metal Nb-94 limits are 0.2/0.2/2 Ci/m3; Part 61 Nb-94 Class C is 0.2.",
+        "Section 8.11 prose and Appendix Q refer to the intrusion table as Table 8-4; the displayed table is 8-5 and Table 8-4 is the tritium bioassay table.",
+        "Appendix Q prints 'the activity or is 0.01 or more'.",
+        "The draft cites 49 CFR 172.101, Appendix A but gives the unrelated quoted title 'Office of Hazardous Materials Transportation Color Tolerance Charts and Tables'."
+      ],
+      "row_interpretations": {
+        "activated_metal": "For C-14, Ni-59, Ni-63 and Nb-94, the general row applies to general waste and the activated-metal row replaces it for activated metal; both variants are not applied together. The other 17 rows use all waste forms.",
+        "alpha_transuranic_gt5y": "Fixed eight-member aggregate from printed footnote g; Cm-242 and Np-237 are separate rows and excluded.",
+        "no_numeric_limit": "JSON null is the printed 'No limit' cell; it is not a numeric bound.",
+        "row_matching": "For individual rows, selector is the canonical nuclide. For aggregates, selector identifies the frozen membership rule; members enumerate any fixed explicit membership.",
+        "short_half_life": "Sum all positive matching inventory activity with half-life strictly less than 5 Julian years (5 * 365.25 days); named rows remain separate constraints and are not added to this group constraint."
+      },
+      "schema": "actinv-waste-draft-pack-1",
+      "sha256": "071c238917ac0f3cb3436df958e78ac5868f1de4ed39b0c25781e8f2b7a4ffc7",
+      "source_adams": "ML24092A377",
+      "source_as_of": "2026-10-03",
+      "source_locations": [
+        "Section 8.11, printed pages 8-70–8-71; presence criteria page 8-69; Appendix Q, printed pages Q-5–Q-6"
+      ],
+      "source_page": "https://www.nrc.gov/regulations-legislation/nureg-series-publications/publications-prepared-by-nrc-staff/consolidated-guidance-about-materials-licenses-nureg-1556/v22",
+      "source_pdf_sha256": "2deae800fc1a2ac3a7134481e81b75c90df98a1c9dade4393816719b55d27359",
+      "source_status": "draft_report_for_comment",
+      "source_text_sha256": "ef1a98961cef3465461400395f384cb1296a8ead9e505ef6a53975041544f3ca",
+      "source_title": "NUREG-1556, Volume 22, Program-Specific Guidance About Possession Licenses for Fusion Machines, February 2026 draft",
+      "source_url": "https://www.nrc.gov/docs/ML2409/ML24092A377.pdf",
+      "table_caption": "Radionuclides Considered Quantitatively During the Development of 10 CFR 61.55 with Constraints Below Which a Site-Specific Intrusion Assessment Is Not Needed",
+      "table_id": "8-5",
+      "version": 1,
+      "year_s": 31557600.0
+    },
+    "interpretations": {
+      "alpha_group": "fixed_eight",
+      "criterion_1": "concentration_strictly_over_1_percent_site_wac",
+      "criterion_2": "consensus_either_or_both",
+      "criterion_3": "individual_rq_inclusive_mixture_only_indeterminate",
+      "criterion_4": "complete_container_share_at_least_1_percent",
+      "metal_rows": "paired_variant_replacement",
+      "presence_or": "three_valued_any_true",
+      "row_arithmetic": "all_known_matching_inventory",
+      "row_equality": "indeterminate",
+      "selected_column": "computed_nominal_class_only",
+      "short_group": "strict_lt5_julian_years_all_named_included",
+      "source_gaps": "visible_when_presence_true",
+      "unlisted_form": "review_indicated"
+    },
+    "intrusion_dose": "not_calculated",
+    "inventory_coverage": "complete",
+    "legal_compliance": "not_determined",
+    "package_basis": "single_component_container",
+    "site_wac": {
+      "membership_coverage": null,
+      "source": null,
+      "supplied": false
+    },
+    "targets": [
+      {
+        "assessment_indicator": "not_indicated_by_implemented_checks",
+        "container_denominator_complete": true,
+        "container_total_activity_bq": 1.0,
+        "denominator_missing_reasons": [],
+        "dot_rq_mixture_complete": false,
+        "dot_rq_mixture_ratio": -0.0,
+        "dot_rq_mixture_ratios": {},
+        "external_tritium_activity_bq": 0.0,
+        "inventory_activity_bq": {
+          "Xe135": 1.0
+        },
+        "inventory_coverage": "complete",
+        "known_total_activity_bq": 1.0,
+        "nominal_class": "A",
+        "nuclides": [
+          {
+            "activity_bq": 1.0,
+            "activity_share": 1.0,
+            "concentration_bq_cm3": 1.0,
+            "nuclide": "Xe135",
+            "part61_listing": "listed",
+            "predicates": {
+              "container_share": {
+                "evidence": {
+                  "activity_bq": 1.0,
+                  "container_denominator_complete": true,
+                  "container_total_activity_bq": 1.0,
+                  "threshold_bq": 0.01
+                },
+                "reasons": [
+                  "complete container share comparison"
+                ],
+                "status": "true"
+              },
+              "dot_rq": {
+                "evidence": {
+                  "activity_bq": 1.0,
+                  "individual_ratio": null,
+                  "individual_rq_bq": null,
+                  "known_mixture_ratio": -0.0,
+                  "mixture_complete": false,
+                  "source": null
+                },
+                "reasons": [
+                  "individual RQ missing"
+                ],
+                "status": "indeterminate"
+              },
+              "unlisted_concentration": {
+                "evidence": {
+                  "concentration_bq_cm3": 1.0,
+                  "interpretation": "consensus_either_or_both",
+                  "part61_listing": "listed",
+                  "threshold_bq_cm3": 260000.0,
+                  "wac_listing": "unknown"
+                },
+                "reasons": [
+                  "at or below 260000 Bq/cm3"
+                ],
+                "status": "false"
+              },
+              "wac_fraction": {
+                "evidence": {
+                  "concentration": null,
+                  "source": null,
+                  "threshold": null,
+                  "unit": null,
+                  "wac_limit": null
+                },
+                "reasons": [
+                  "numeric WAC limit absent"
+                ],
+                "status": "indeterminate"
+              }
+            },
+            "presence": "true",
+            "wac_concentration": null,
+            "wac_listing": "unknown"
+          }
+        ],
+        "rows": [
+          {
+            "applicability": "true",
+            "assessment_indicator": "not_indicated_by_implemented_checks",
+            "contributions_bq": {
+              "Xe135": 1.0
+            },
+            "known_activity_bq": 1.0,
+            "known_concentration": 0.000027027027027027027,
+            "limit": 700.0,
+            "members": [
+              "Xe135"
+            ],
+            "membership_complete": true,
+            "presence": "true",
+            "relation": "below",
+            "row_id": "short_half_life_lt5y_sum",
+            "selected_class": "A",
+            "status": "false",
+            "unit": "Ci/m3"
+          },
+          {
+            "applicability": "false",
+            "assessment_indicator": "not_indicated_by_implemented_checks",
+            "contributions_bq": {},
+            "known_activity_bq": 0.0,
+            "known_concentration": 0.0,
+            "limit": 40.0,
+            "members": [],
+            "membership_complete": true,
+            "presence": "false",
+            "relation": "below",
+            "row_id": "H-3",
+            "selected_class": "A",
+            "status": "false",
+            "unit": "Ci/m3"
+          },
+          {
+            "applicability": "false",
+            "assessment_indicator": "not_indicated_by_implemented_checks",
+            "contributions_bq": {},
+            "known_activity_bq": 0.0,
+            "known_concentration": 0.0,
+            "limit": 0.8,
+            "members": [],
+            "membership_complete": true,
+            "presence": "false",
+            "relation": "below",
+            "row_id": "C-14",
+            "selected_class": "A",
+            "status": "false",
+            "unit": "Ci/m3"
+          },
+          {
+            "applicability": "false",
+            "assessment_indicator": "not_indicated_by_implemented_checks",
+            "contributions_bq": {},
+            "known_activity_bq": 0.0,
+            "known_concentration": 0.0,
+            "limit": 110.0,
+            "members": [],
+            "membership_complete": true,
+            "presence": "false",
+            "relation": "below",
+            "row_id": "Cl-36",
+            "selected_class": "A",
+            "status": "false",
+            "unit": "Ci/m3"
+          },
+          {
+            "applicability": "false",
+            "assessment_indicator": "not_indicated_by_implemented_checks",
+            "contributions_bq": {},
+            "known_activity_bq": 0.0,
+            "known_concentration": 0.0,
+            "limit": 700.0,
+            "members": [],
+            "membership_complete": true,
+            "presence": "false",
+            "relation": "below",
+            "row_id": "Co-60",
+            "selected_class": "A",
+            "status": "false",
+            "unit": "Ci/m3"
+          },
+          {
+            "applicability": "false",
+            "assessment_indicator": "not_indicated_by_implemented_checks",
+            "contributions_bq": {},
+            "known_activity_bq": 0.0,
+            "known_concentration": 0.0,
+            "limit": 2.2,
+            "members": [],
+            "membership_complete": true,
+            "presence": "false",
+            "relation": "below",
+            "row_id": "Ni-59",
+            "selected_class": "A",
+            "status": "false",
+            "unit": "Ci/m3"
+          },
+          {
+            "applicability": "false",
+            "assessment_indicator": "not_indicated_by_implemented_checks",
+            "contributions_bq": {},
+            "known_activity_bq": 0.0,
+            "known_concentration": 0.0,
+            "limit": 3.5,
+            "members": [],
+            "membership_complete": true,
+            "presence": "false",
+            "relation": "below",
+            "row_id": "Ni-63",
+            "selected_class": "A",
+            "status": "false",
+            "unit": "Ci/m3"
+          },
+          {
+            "applicability": "false",
+            "assessment_indicator": "not_indicated_by_implemented_checks",
+            "contributions_bq": {},
+            "known_activity_bq": 0.0,
+            "known_concentration": 0.0,
+            "limit": 0.04,
+            "members": [],
+            "membership_complete": true,
+            "presence": "false",
+            "relation": "below",
+            "row_id": "Sr-90",
+            "selected_class": "A",
+            "status": "false",
+            "unit": "Ci/m3"
+          },
+          {
+            "applicability": "false",
+            "assessment_indicator": "not_indicated_by_implemented_checks",
+            "contributions_bq": {},
+            "known_activity_bq": 0.0,
+            "known_concentration": 0.0,
+            "limit": 0.02,
+            "members": [],
+            "membership_complete": true,
+            "presence": "false",
+            "relation": "below",
+            "row_id": "Nb-94",
+            "selected_class": "A",
+            "status": "false",
+            "unit": "Ci/m3"
+          },
+          {
+            "applicability": "false",
+            "assessment_indicator": "not_indicated_by_implemented_checks",
+            "contributions_bq": {},
+            "known_activity_bq": 0.0,
+            "known_concentration": 0.0,
+            "limit": 0.3,
+            "members": [],
+            "membership_complete": true,
+            "presence": "false",
+            "relation": "below",
+            "row_id": "Tc-99",
+            "selected_class": "A",
+            "status": "false",
+            "unit": "Ci/m3"
+          },
+          {
+            "applicability": "false",
+            "assessment_indicator": "not_indicated_by_implemented_checks",
+            "contributions_bq": {},
+            "known_activity_bq": 0.0,
+            "known_concentration": 0.0,
+            "limit": 0.008,
+            "members": [],
+            "membership_complete": true,
+            "presence": "false",
+            "relation": "below",
+            "row_id": "I-129",
+            "selected_class": "A",
+            "status": "false",
+            "unit": "Ci/m3"
+          },
+          {
+            "applicability": "false",
+            "assessment_indicator": "not_indicated_by_implemented_checks",
+            "contributions_bq": {},
+            "known_activity_bq": 0.0,
+            "known_concentration": 0.0,
+            "limit": 84.0,
+            "members": [],
+            "membership_complete": true,
+            "presence": "false",
+            "relation": "below",
+            "row_id": "Cs-135",
+            "selected_class": "A",
+            "status": "false",
+            "unit": "Ci/m3"
+          },
+          {
+            "applicability": "false",
+            "assessment_indicator": "not_indicated_by_implemented_checks",
+            "contributions_bq": {},
+            "known_activity_bq": 0.0,
+            "known_concentration": 0.0,
+            "limit": 1.0,
+            "members": [],
+            "membership_complete": true,
+            "presence": "false",
+            "relation": "below",
+            "row_id": "Cs-137",
+            "selected_class": "A",
+            "status": "false",
+            "unit": "Ci/m3"
+          },
+          {
+            "applicability": "false",
+            "assessment_indicator": "not_indicated_by_implemented_checks",
+            "contributions_bq": {},
+            "known_activity_bq": 0.0,
+            "known_concentration": 0.0,
+            "limit": 0.06,
+            "members": [],
+            "membership_complete": true,
+            "presence": "false",
+            "relation": "below",
+            "row_id": "Eu-152",
+            "selected_class": "A",
+            "status": "false",
+            "unit": "Ci/m3"
+          },
+          {
+            "applicability": "false",
+            "assessment_indicator": "not_indicated_by_implemented_checks",
+            "contributions_bq": {},
+            "known_activity_bq": 0.0,
+            "known_concentration": 0.0,
+            "limit": 0.02,
+            "members": [],
+            "membership_complete": true,
+            "presence": "false",
+            "relation": "below",
+            "row_id": "Eu-154",
+            "selected_class": "A",
+            "status": "false",
+            "unit": "Ci/m3"
+          },
+          {
+            "applicability": "false",
+            "assessment_indicator": "not_indicated_by_implemented_checks",
+            "contributions_bq": {},
+            "known_activity_bq": 0.0,
+            "known_concentration": 0.0,
+            "limit": 0.04,
+            "members": [],
+            "membership_complete": true,
+            "presence": "false",
+            "relation": "below",
+            "row_id": "U-235",
+            "selected_class": "A",
+            "status": "false",
+            "unit": "Ci/m3"
+          },
+          {
+            "applicability": "false",
+            "assessment_indicator": "not_indicated_by_implemented_checks",
+            "contributions_bq": {},
+            "known_activity_bq": 0.0,
+            "known_concentration": 0.0,
+            "limit": 0.05,
+            "members": [],
+            "membership_complete": true,
+            "presence": "false",
+            "relation": "below",
+            "row_id": "U-238",
+            "selected_class": "A",
+            "status": "false",
+            "unit": "Ci/m3"
+          },
+          {
+            "applicability": "false",
+            "assessment_indicator": "not_indicated_by_implemented_checks",
+            "contributions_bq": {},
+            "known_activity_bq": 0.0,
+            "known_concentration": 0.0,
+            "limit": 10.0,
+            "members": [],
+            "membership_complete": true,
+            "presence": "false",
+            "relation": "below",
+            "row_id": "Np-237",
+            "selected_class": "A",
+            "status": "false",
+            "unit": "nCi/g"
+          },
+          {
+            "applicability": "false",
+            "assessment_indicator": "not_indicated_by_implemented_checks",
+            "contributions_bq": {},
+            "known_activity_bq": 0.0,
+            "known_concentration": 0.0,
+            "limit": 350.0,
+            "members": [],
+            "membership_complete": true,
+            "presence": "false",
+            "relation": "below",
+            "row_id": "Pu-241",
+            "selected_class": "A",
+            "status": "false",
+            "unit": "nCi/g"
+          },
+          {
+            "applicability": "false",
+            "assessment_indicator": "not_indicated_by_implemented_checks",
+            "contributions_bq": {},
+            "known_activity_bq": 0.0,
+            "known_concentration": 0.0,
+            "limit": 10.0,
+            "members": [],
+            "membership_complete": true,
+            "presence": "false",
+            "relation": "below",
+            "row_id": "alpha_transuranic_gt5y",
+            "selected_class": "A",
+            "status": "false",
+            "unit": "nCi/g"
+          },
+          {
+            "applicability": "false",
+            "assessment_indicator": "not_indicated_by_implemented_checks",
+            "contributions_bq": {},
+            "known_activity_bq": 0.0,
+            "known_concentration": 0.0,
+            "limit": 2000.0,
+            "members": [],
+            "membership_complete": true,
+            "presence": "false",
+            "relation": "below",
+            "row_id": "Cm-242",
+            "selected_class": "A",
+            "status": "false",
+            "unit": "nCi/g"
+          }
+        ],
+        "step": 1,
+        "t_s": 0.0,
+        "unbounded_inventory_reasons": []
+      }
+    ],
+    "unbounded_inventory_reasons": [],
+    "waste_form": "equipment"
+  },
+  "generated_waste_spec_json": "{\"components\":[{\"displaced_volume_cm3\":1.0,\"external_tritium\":{\"status\":\"not_applicable\"},\"id\":\"component-1\",\"mass_g\":1.0,\"waste_type\":\"general\"}],\"input\":\"case-input.json\",\"nuclide_properties\":{\"Xe135\":{\"alpha_emitting\":false,\"half_life_s\":157787999.0,\"z\":54}},\"rules\":\"us-nrc-10cfr61.55-v1\",\"schema\":\"actinv-waste-spec-1\",\"targets\":[1]}",
+  "generated_waste_spec_sha256": "4a6bf5aa0badb2ca2b0e8a5305072301731b1cc3c046f72a32b9dafb2d2bde07",
+  "input_sha256": "c333d345f57cfc72111ade3b219d73e64e7a75b608c633f89d74bca413a532d6",
+  "schema": "actinv-waste-intrusion-screen-result-1"
+}

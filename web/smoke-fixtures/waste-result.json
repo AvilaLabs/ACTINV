@@ -1,0 +1,295 @@
+{
+  "components": [
+    {
+      "displaced_volume_cm3": 0.12820512820512822,
+      "external_tritium": {
+        "status": "not_applicable"
+      },
+      "id": "p105-nb-component",
+      "mass_g": 1.0,
+      "status": "nominal",
+      "targets": [
+        {
+          "calculated_only_class": "A",
+          "class": "A",
+          "coverage": "complete",
+          "evaluation": {
+            "binding_constraints": [
+              {
+                "column": null,
+                "contributor_count": 1,
+                "contributors": [
+                  "Nb94"
+                ],
+                "normalized_margin": 0.9526421456571096,
+                "normalized_sum": 0.0473578543428904,
+                "passes": true,
+                "source_sum_fraction": 0.004735785434289041,
+                "strict": false,
+                "table": 1,
+                "target_class": "A"
+              }
+            ],
+            "calculated_only_class": "A",
+            "class": "A",
+            "constraints": [
+              {
+                "column": null,
+                "contributor_count": 1,
+                "contributors": [
+                  "Nb94"
+                ],
+                "normalized_margin": 0.9526421456571096,
+                "normalized_sum": 0.0473578543428904,
+                "passes": true,
+                "source_sum_fraction": 0.004735785434289041,
+                "strict": false,
+                "table": 1,
+                "target_class": "A"
+              },
+              {
+                "column": 1,
+                "contributor_count": 0,
+                "contributors": [],
+                "normalized_margin": 1.0,
+                "normalized_sum": 0.0,
+                "passes": true,
+                "source_sum_fraction": 0.0,
+                "strict": false,
+                "table": 2,
+                "target_class": "A"
+              },
+              {
+                "column": null,
+                "contributor_count": 1,
+                "contributors": [
+                  "Nb94"
+                ],
+                "normalized_margin": 0.9526421456571096,
+                "normalized_sum": 0.0473578543428904,
+                "passes": true,
+                "source_sum_fraction": 0.004735785434289041,
+                "strict": false,
+                "table": 1,
+                "target_class": "B"
+              },
+              {
+                "column": 2,
+                "contributor_count": 0,
+                "contributors": [],
+                "normalized_margin": 1.0,
+                "normalized_sum": 0.0,
+                "passes": true,
+                "source_sum_fraction": 0.0,
+                "strict": false,
+                "table": 2,
+                "target_class": "B"
+              },
+              {
+                "column": null,
+                "contributor_count": 1,
+                "contributors": [
+                  "Nb94"
+                ],
+                "normalized_margin": 0.995264214565711,
+                "normalized_sum": 0.004735785434289041,
+                "passes": true,
+                "source_sum_fraction": 0.004735785434289041,
+                "strict": false,
+                "table": 1,
+                "target_class": "C"
+              },
+              {
+                "column": 3,
+                "contributor_count": 0,
+                "contributors": [],
+                "normalized_margin": 1.0,
+                "normalized_sum": 0.0,
+                "passes": true,
+                "source_sum_fraction": 0.0,
+                "strict": false,
+                "table": 2,
+                "target_class": "C"
+              }
+            ],
+            "coverage": "complete",
+            "row_fractions": [
+              {
+                "column": null,
+                "concentration": 0.0009471570868578083,
+                "fraction": 0.004735785434289041,
+                "limit": 0.2,
+                "nuclide": "Nb94",
+                "row_id": "Nb-94_activated_metal",
+                "table": 1,
+                "unit": "Ci/m3"
+              }
+            ],
+            "unknown_nuclides": [],
+            "unlisted_activity_bq": 0.0,
+            "unlisted_nuclides": []
+          },
+          "external_tritium_activity_bq": 0.0,
+          "external_tritium_status": "not_applicable",
+          "inventory_activity_bq": {
+            "Nb94": 4.492924642787039
+          },
+          "status": "nominal",
+          "step": 1,
+          "t_s": 1000000.0,
+          "unknown_reason": null
+        },
+        {
+          "calculated_only_class": "A",
+          "class": "A",
+          "coverage": "complete",
+          "evaluation": {
+            "binding_constraints": [
+              {
+                "column": null,
+                "contributor_count": 1,
+                "contributors": [
+                  "Nb94"
+                ],
+                "normalized_margin": 0.9526424739156041,
+                "normalized_sum": 0.04735752608439591,
+                "passes": true,
+                "source_sum_fraction": 0.0047357526084395914,
+                "strict": false,
+                "table": 1,
+                "target_class": "A"
+              }
+            ],
+            "calculated_only_class": "A",
+            "class": "A",
+            "constraints": [
+              {
+                "column": null,
+                "contributor_count": 1,
+                "contributors": [
+                  "Nb94"
+                ],
+                "normalized_margin": 0.9526424739156041,
+                "normalized_sum": 0.04735752608439591,
+                "passes": true,
+                "source_sum_fraction": 0.0047357526084395914,
+                "strict": false,
+                "table": 1,
+                "target_class": "A"
+              },
+              {
+                "column": 1,
+                "contributor_count": 0,
+                "contributors": [],
+                "normalized_margin": 1.0,
+                "normalized_sum": 0.0,
+                "passes": true,
+                "source_sum_fraction": 0.0,
+                "strict": false,
+                "table": 2,
+                "target_class": "A"
+              },
+              {
+                "column": null,
+                "contributor_count": 1,
+                "contributors": [
+                  "Nb94"
+                ],
+                "normalized_margin": 0.9526424739156041,
+                "normalized_sum": 0.04735752608439591,
+                "passes": true,
+                "source_sum_fraction": 0.0047357526084395914,
+                "strict": false,
+                "table": 1,
+                "target_class": "B"
+              },
+              {
+                "column": 2,
+                "contributor_count": 0,
+                "contributors": [],
+                "normalized_margin": 1.0,
+                "normalized_sum": 0.0,
+                "passes": true,
+                "source_sum_fraction": 0.0,
+                "strict": false,
+                "table": 2,
+                "target_class": "B"
+              },
+              {
+                "column": null,
+                "contributor_count": 1,
+                "contributors": [
+                  "Nb94"
+                ],
+                "normalized_margin": 0.9952642473915604,
+                "normalized_sum": 0.0047357526084395914,
+                "passes": true,
+                "source_sum_fraction": 0.0047357526084395914,
+                "strict": false,
+                "table": 1,
+                "target_class": "C"
+              },
+              {
+                "column": 3,
+                "contributor_count": 0,
+                "contributors": [],
+                "normalized_margin": 1.0,
+                "normalized_sum": 0.0,
+                "passes": true,
+                "source_sum_fraction": 0.0,
+                "strict": false,
+                "table": 2,
+                "target_class": "C"
+              }
+            ],
+            "coverage": "complete",
+            "row_fractions": [
+              {
+                "column": null,
+                "concentration": 0.0009471505216879185,
+                "fraction": 0.0047357526084395914,
+                "limit": 0.2,
+                "nuclide": "Nb94",
+                "row_id": "Nb-94_activated_metal",
+                "table": 1,
+                "unit": "Ci/m3"
+              }
+            ],
+            "unknown_nuclides": [],
+            "unlisted_activity_bq": 0.0,
+            "unlisted_nuclides": []
+          },
+          "external_tritium_activity_bq": 0.0,
+          "external_tritium_status": "not_applicable",
+          "inventory_activity_bq": {
+            "Nb94": 4.4928935003144845
+          },
+          "status": "nominal",
+          "step": 2,
+          "t_s": 2000000.0,
+          "unknown_reason": null
+        }
+      ],
+      "waste_type": "activated_metal"
+    }
+  ],
+  "input": "target/p105-g2-controls/g3_component_run.out.json",
+  "input_kind": "run",
+  "input_sha256": "db519823062311d347c4933d6ab7a932d67c58a466d01608dace33534e29eb6a",
+  "rule_pack": {
+    "id": "us-nrc-10cfr61.55-v1",
+    "sha256": "890268af81a53815b8e11c238e4a1694eabb79664a1ca087fd7fe22b9fabe5d7",
+    "source_as_of": "2026-10-01",
+    "source_url": "https://www.ecfr.gov/current/title-10/chapter-I/part-61/subpart-D/section-61.55",
+    "version": 1
+  },
+  "rule_pack_sha256": "890268af81a53815b8e11c238e4a1694eabb79664a1ca087fd7fe22b9fabe5d7",
+  "rules": "us-nrc-10cfr61.55-v1",
+  "schema": "actinv-waste-result-1",
+  "status": "nominal",
+  "targets": [
+    1,
+    2
+  ],
+  "waste_sha256": "21813cf0be09fcb6999a7c190f91563befc0cb92fcbacb70b0637596ccd8f829"
+}

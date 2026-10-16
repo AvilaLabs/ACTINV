@@ -14,6 +14,7 @@ mod schedule;
 mod spectrum;
 mod sweep;
 mod tables;
+pub(super) mod waste;
 
 use super::Desktop;
 use crate::{nav::Page, views::Target};
@@ -44,6 +45,7 @@ impl Desktop {
             Page::Photons => self.photons(ui),
             Page::Pathways => self.pathways(ui),
             Page::Ledger => self.ledger(ui),
+            Page::Waste => self.waste_page(ui),
             Page::Sweep => self.sweep_page(ui),
             Page::Assimilation => self.assimilation(ui),
             Page::Advanced => self.advanced(ui),

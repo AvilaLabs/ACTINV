@@ -11,9 +11,9 @@ import sys
 import tempfile
 
 ROOT = Path(__file__).resolve().parents[1]
-# One screenshot per page (13), then one per setup-tour step (9), then one per results-tour step (7).
+# One screenshot per page (14), then one per setup-tour step (9), then one per results-tour step (7).
 # Keep in step with `Capture::total()` in crates/actinv-gui/src/capture.rs, which derives the same sum.
-EXPECTED_SCREENSHOTS = 13 + 9 + 7
+EXPECTED_SCREENSHOTS = 14 + 9 + 7
 sys.path.insert(0, str(ROOT / "controls"))
 from p11_fixtures import make_fixture, specification
 

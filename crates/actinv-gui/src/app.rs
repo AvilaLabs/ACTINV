@@ -107,6 +107,8 @@ pub struct Desktop {
     outputs: OutputsState,
     material_view: crate::views::material::MaterialState,
     steps: crate::views::steps::StepsState,
+    /// The Waste class page: its inputs, loaded properties, overrides and last classification.
+    waste: pages::waste::WasteState,
     /// The import dialog; `Some` while it is open.
     import: Option<ImportState>,
     /// A converted deck waiting for the unsaved-changes guard, and the folder its deck came from.
@@ -256,7 +258,7 @@ impl Desktop {
             transport:crate::transport::Import::default(), imported:None,
             sweep:SweepUi::default(),
             assay_text:String::new(), assay_pending:None,
-            tables:TablesState::default(), photons:PhotonsState::default(), pathways:PathwaysState::default(), outputs:OutputsState::default(), material_view:Default::default(), steps:Default::default(),
+            tables:TablesState::default(), photons:PhotonsState::default(), pathways:PathwaysState::default(), outputs:OutputsState::default(), material_view:Default::default(), steps:Default::default(), waste:Default::default(),
             import:None, import_spec:None, import_base:None,
         }
     }
@@ -619,7 +621,7 @@ if self.job.is_some(){ui.spinner();}});
             .min_size(165.)
             .resizable(true)
             .show(ui, |ui| {
-                // Thirteen pages and the foot do not fit the minimum window height; scroll then.
+                // Fourteen pages and the foot do not fit the minimum window height; scroll then.
                 egui::ScrollArea::vertical()
                     .auto_shrink([false, false])
                     .show(ui, |ui| {
@@ -1033,7 +1035,7 @@ mod ui_tests {
     }
     #[test]
     fn every_page_renders_in_both_themes_at_minimum_size_with_and_without_a_result() {
-        assert_eq!(Page::ALL.len(), 13);
+        assert_eq!(Page::ALL.len(), 14);
         for theme in [egui::ThemePreference::Light, egui::ThemePreference::Dark] {
             for with_result in [false, true] {
                 let ctx = egui::Context::default();

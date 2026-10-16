@@ -9,6 +9,17 @@
   text with `text=True`); `actinv.waste.summary` flattens a classification result to one row per component and target
   step. Refusals raise `ValueError`; calls print nothing (P143).
 
+**Added (desktop and browser)**
+
+- Waste classification in the desktop and the browser workbench (P144; the look is unchanged). The desktop gains
+  a **Waste class** page in the EXPLORE group: from the loaded result it builds an ordinary `actinv-waste-spec-1`
+  document, fills the nuclide properties from the run's decay data (marked overrides allowed), classifies it with
+  the CLI's own evaluator in process, and shows each selected step's class, governing table and column, sum,
+  margin and binding nuclides, a class-by-cooling-time strip and the earliest step within each class. Save the
+  spec with its result input and the result exactly as `actinv waste` writes it. The browser workbench opens waste
+  results, intrusion-screen results and twin results with `waste_classification`, shows the same tables, and
+  opens, edits and downloads waste specs; it never classifies. Fourteen desktop pages.
+
 ## v1.5.0 — 2026-10-16
 
 **Changed (dependencies)**

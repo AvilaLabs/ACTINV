@@ -35,6 +35,7 @@ pub enum Page {
     Photons,
     Pathways,
     Ledger,
+    Waste,
     Sweep,
     Assimilation,
     Advanced,
@@ -42,7 +43,7 @@ pub enum Page {
 
 impl Page {
     /// Every page in sidebar order. Pages of one group are contiguous.
-    pub const ALL: [Page; 13] = [
+    pub const ALL: [Page; 14] = [
         Page::Overview,
         Page::Material,
         Page::Schedule,
@@ -53,6 +54,7 @@ impl Page {
         Page::Photons,
         Page::Pathways,
         Page::Ledger,
+        Page::Waste,
         Page::Sweep,
         Page::Assimilation,
         Page::Advanced,
@@ -70,6 +72,7 @@ impl Page {
             Page::Photons => "Photons & dose",
             Page::Pathways => "Pathways",
             Page::Ledger => "Ledger & certificate",
+            Page::Waste => "Waste class",
             Page::Sweep => "Sweep",
             Page::Assimilation => "Assimilation",
             Page::Advanced => "Advanced JSON",
@@ -81,9 +84,12 @@ impl Page {
             Page::Overview | Page::Material | Page::Schedule | Page::Spectrum | Page::Outputs => {
                 Group::Setup
             }
-            Page::Charts | Page::Tables | Page::Photons | Page::Pathways | Page::Ledger => {
-                Group::Results
-            }
+            Page::Charts
+            | Page::Tables
+            | Page::Photons
+            | Page::Pathways
+            | Page::Ledger
+            | Page::Waste => Group::Results,
             Page::Sweep | Page::Assimilation | Page::Advanced => Group::Tools,
         }
     }
@@ -115,6 +121,7 @@ mod tests {
                 "Photons & dose",
                 "Pathways",
                 "Ledger & certificate",
+                "Waste class",
                 "Sweep",
                 "Assimilation",
                 "Advanced JSON",
@@ -126,10 +133,10 @@ mod tests {
     fn groups_are_contiguous_and_match_the_sidebar_sections() {
         let groups: Vec<_> = Page::ALL.iter().map(|p| p.group()).collect();
         let mut expected = vec![Group::Setup; 5];
-        expected.extend([Group::Results; 5]);
+        expected.extend([Group::Results; 6]);
         expected.extend([Group::Tools; 3]);
         assert_eq!(groups, expected);
-        assert_eq!(Page::ALL.len(), 13);
+        assert_eq!(Page::ALL.len(), 14);
         assert_eq!(Group::Setup.caption(), Some("CALCULATION"));
         assert_eq!(Group::Results.caption(), Some("EXPLORE"));
         assert_eq!(Group::Tools.caption(), Some("TOOLS"));
@@ -152,7 +159,8 @@ mod tests {
                 Page::Tables,
                 Page::Photons,
                 Page::Pathways,
-                Page::Ledger
+                Page::Ledger,
+                Page::Waste
             ]
         );
     }

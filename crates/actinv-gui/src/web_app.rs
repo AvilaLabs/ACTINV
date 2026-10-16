@@ -9,6 +9,7 @@ use crate::{
         photons::{self, PhotonsAction, PhotonsState},
         steps::{self, StepsAction, StepsState},
         tables::{self, TablesAction, TablesState},
+        waste::{self, Detected},
         Marks, Picker, Pinned, Target,
     },
     visuals::{self, BLUE},
@@ -50,6 +51,10 @@ enum FileKind {
     Import(ImportSlot),
     /// A one-column spectrum text file for the Spectrum page.
     Spectrum,
+    /// A waste result, an intrusion-screen result or a twin result with `waste_classification`.
+    WasteResult,
+    /// An `actinv-waste-spec-1` document for the editor on the Waste class page.
+    WasteSpec,
 }
 
 /// A file choice a shared view asked for while it was drawn.
@@ -168,6 +173,10 @@ pub struct Workbench {
     tables: TablesState,
     photons: PhotonsState,
     pathways: PathwaysState,
+    /// The waste result on the Waste class page: its file name and what it parsed to.
+    waste_result: Option<(String, waste::WasteView)>,
+    /// The waste spec in the editor on the Waste class page.
+    waste_spec: String,
     /// The deck import dialog while it is open.
     import: Option<ImportState>,
     dark: bool,
@@ -213,6 +222,8 @@ impl Workbench {
             tables: TablesState::default(),
             photons: PhotonsState::default(),
             pathways: PathwaysState::default(),
+            waste_result: None,
+            waste_spec: String::new(),
             import: None,
             dark: false,
             suite: avila_account::ui_web::WebSuite::new(&cc.egui_ctx, "actinv"),
@@ -320,16 +331,22 @@ impl Workbench {
                     "Read {name}. Check and apply the group values below."
                 ));
             }
-            FileKind::Auto | FileKind::Problem | FileKind::Result | FileKind::Compare => {}
+            FileKind::Auto
+            | FileKind::Problem
+            | FileKind::Result
+            | FileKind::Compare
+            | FileKind::WasteResult
+            | FileKind::WasteSpec => {}
         }
         let text = std::str::from_utf8(bytes).map_err(|_| "Choose an ACTINV JSON text file")?;
         let kind = if matches!(kind, FileKind::Auto) {
             let value: Value =
                 serde_json::from_str(text).map_err(|error| format!("Invalid JSON: {error}"))?;
-            if value.get("steps").is_some() {
-                FileKind::Result
-            } else {
-                FileKind::Problem
+            match waste::detect(&value) {
+                Some(Detected::Spec) => FileKind::WasteSpec,
+                Some(Detected::Result) => FileKind::WasteResult,
+                None if value.get("steps").is_some() => FileKind::Result,
+                None => FileKind::Problem,
             }
         } else {
             kind
@@ -367,6 +384,19 @@ impl Workbench {
                 }
                 self.page = Page::Charts;
                 Ok(format!("Opened {name}."))
+            }
+            FileKind::WasteResult => {
+                self.waste_result = Some((name.clone(), waste::read_result(text)?));
+                self.page = Page::Waste;
+                Ok(format!("Opened {name}."))
+            }
+            FileKind::WasteSpec => {
+                waste::check_spec(text)?;
+                self.waste_spec = text.to_owned();
+                self.page = Page::Waste;
+                Ok(format!(
+                    "Opened {name}. Edit it below, then download it and run it with `actinv waste`."
+                ))
             }
             // handled above
             FileKind::Pin(_) | FileKind::Import(_) | FileKind::Spectrum => Ok(String::new()),
@@ -1163,6 +1193,75 @@ impl Workbench {
         }
     }
 
+    /// The waste class page: a viewer for waste results and an editor for waste specs. The
+    /// browser never classifies; the evaluator runs in the desktop app and the CLI.
+    fn waste_page(&mut self, ui: &mut egui::Ui) {
+        visuals::heading(
+            ui,
+            "Waste class",
+            "Read the Part 61 classes in a waste result, and edit a waste spec to run with the desktop app or `actinv waste`. The browser does not classify.",
+        );
+        ui.horizontal_wrapped(|ui| {
+            if ui.button("Open waste result…").clicked() {
+                self.pick(FileKind::WasteResult, &["json"], ui.ctx());
+            }
+            if ui.button("Open waste spec…").clicked() {
+                self.pick(FileKind::WasteSpec, &["json"], ui.ctx());
+            }
+        });
+        ui.add_space(8.);
+        match &self.waste_result {
+            Some((name, parsed)) => {
+                ui.label(RichText::new(name).strong());
+                waste::show(ui, parsed);
+            }
+            None => {
+                ui.group(|ui| {
+                    ui.add_space(30.);
+                    ui.heading("Your waste result will appear here");
+                    ui.label("Open an actinv-waste-result-1 file, an intrusion-screen result or a twin result with waste_classification. Dropping the file on the window works too.");
+                    ui.add_space(30.);
+                });
+            }
+        }
+        ui.add_space(16.);
+        self.waste_spec_editor(ui);
+    }
+
+    fn waste_spec_editor(&mut self, ui: &mut egui::Ui) {
+        ui.strong("Waste spec");
+        ui.label("An actinv-waste-spec-1 document names the run result it reads in `input`; keep that result next to the spec when you run it.");
+        ui.horizontal_wrapped(|ui| {
+            if ui
+                .add_enabled(
+                    self.waste_spec.trim().is_empty(),
+                    egui::Button::new("Start from a skeleton"),
+                )
+                .clicked()
+            {
+                self.waste_spec = waste::SPEC_SKELETON.to_owned();
+            }
+            if ui.button("Check spec").clicked() {
+                let checked = waste::check_spec(&self.waste_spec);
+                self.report(checked.map(|()| {
+                    "The waste spec has the expected structure. ACTINV checks the rest when it runs the spec.".into()
+                }));
+            }
+            if ui.button("Download spec").clicked() {
+                let saved = waste::check_spec(&self.waste_spec)
+                    .and_then(|()| web::download("waste-spec.json", self.waste_spec.as_bytes()));
+                self.report(saved.map(|()| "Download started.".into()));
+            }
+        });
+        ui.add(
+            egui::TextEdit::multiline(&mut self.waste_spec)
+                .code_editor()
+                .hint_text("Open an actinv-waste-spec-1 file, or start from a skeleton.")
+                .desired_rows(18)
+                .desired_width(f32::INFINITY),
+        );
+    }
+
     fn advanced_page(&mut self, ui: &mut egui::Ui) {
         visuals::heading(
             ui,
@@ -1277,8 +1376,14 @@ impl eframe::App for Workbench {
                                 }
                                 group = Some(page.group());
                             }
-                            // pages that read a result are dimmed until one is open
-                            let label = if page.needs_result() && self.result.is_none() {
+                            // pages that read a result are dimmed until one is open; the waste page
+                            // reads a waste result, not a run result
+                            let missing = if page == Page::Waste {
+                                self.waste_result.is_none()
+                            } else {
+                                self.result.is_none()
+                            };
+                            let label = if page.needs_result() && missing {
                                 RichText::new(page.label()).weak()
                             } else {
                                 RichText::new(page.label())
@@ -1327,6 +1432,7 @@ impl eframe::App for Workbench {
                     Page::Photons => self.photons_page(ui),
                     Page::Pathways => self.pathways_page(ui),
                     Page::Ledger => self.ledger_page(ui),
+                    Page::Waste => self.waste_page(ui),
                     Page::Advanced => self.advanced_page(ui),
                     // the browser never runs the solver
                     Page::Sweep | Page::Assimilation => self.overview(ui),

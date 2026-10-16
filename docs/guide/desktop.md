@@ -52,8 +52,17 @@ The pages under **EXPLORE** read one result. A bar at the top of each has **Open
 - **Photons & dose** shows decay photon groups, dose rates, bremsstrahlung and dose against cooling time. **Export photon groups (CSV)** saves the groups of the selected step. A result with no photon source links to **Outputs**.
 - **Pathways** shows how a nuclide is produced. **Full routes** lists the routes for each target with the part of the inventory they explain and the residual; **First products (trace)** ranks the first products and needs trace mode.
 - **Ledger & certificate** shows incomplete inputs and calculation details.
+- **Waste class** classifies the loaded result as waste; see [Classify a result as waste](#classify-a-result-as-waste).
 
 Export the **full result JSON** to preserve the complete calculation. Inventory CSV contains the selected time step; saving the problem or exporting CSV does not save the full result.
+
+### Classify a result as waste
+
+**Waste class** builds an ordinary `actinv-waste-spec-1` document from the loaded result and classifies it with the evaluator that `actinv waste` runs, against the bundled U.S. NRC 10 CFR 61.55 tables. It describes one homogeneous component, the irradiated material, so the component mass is the material mass of the problem. Choose the waste type (general or activated metal) and the displaced volume, or, when the problem declares a material density, derive the volume from it. Select the steps to classify; all are selected at first. If retained H-3 is not in the activation inventory, declare it with its source and a whole-component activity in Bq for each selected step; otherwise it is marked not applicable.
+
+Press **Load from decay data** to fill the table of nuclide properties (Z, half-life, alpha emission) for every nuclide with positive activity at a selected step, and for H-3 when external H-3 is declared. The values come from the decay data of the problem that is open, and load again after changing the selection, the external H-3 declaration or the problem. A nuclide without a decay record stays blank and leaves its class unknown, as the CLI does. **Override** replaces a nuclide's properties with your own entry, which the table marks as an override; the saved spec then holds only the entered values.
+
+**Classify** runs in the background. For each selected step the page shows the class, status, coverage, the governing table and column with its sum and margin, and the binding nuclides, a strip of the classes against cooling time, and the earliest selected step within Class A, B and C. These are read from the result; the page computes nothing else. **Save spec…** writes `waste-spec.json` and the `result.json` it reads into a folder you choose (it will not replace existing files), so `actinv waste waste-spec.json` there writes the same result. **Save result…** writes the evaluator's result exactly as the CLI writes it. The classification is nominal screening, not disposal acceptance; see [Component waste classes](waste.md).
 
 ## Other tools
 
