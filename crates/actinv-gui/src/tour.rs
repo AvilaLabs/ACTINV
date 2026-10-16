@@ -1,28 +1,29 @@
+use crate::nav::Page;
 use eframe::egui::{self, Color32, Id, Order, Rect, Stroke, StrokeKind, Vec2};
 use std::collections::BTreeMap;
 
 pub struct TourStep {
     pub target: &'static str,
-    pub page: usize,
+    pub page: Page,
     pub title: &'static str,
     pub text: &'static str,
 }
 pub const SETUP: &[TourStep] = &[
-    TourStep { target:"open",page:0,title:"1. Open a calculation",text:"Click Open problem to load an ACTINV JSON file. Or keep the bundled iron example as your starting point. Next lets you explore without opening a file." },
-    TourStep { target:"inputs",page:0,title:"2. Locate your nuclear data",text:"Choose the activation library and decay data. Relative paths use the input base folder shown here. ACTINV checks files before running; hashes remain part of the solver certificate." },
-    TourStep { target:"material",page:1,title:"3. Define the material",text:"Edit the mass, composition basis, and isotope amounts. Add an element or isotope using its symbol, such as FE or Fe56. Validation checks the composition before a solve." },
-    TourStep { target:"schedule",page:2,title:"4. Set irradiation and cooling",text:"Each row is a duration and flux multiplier. Zero means cooling. Drag rows by their handle to reorder them, or use the arrow buttons. The timeline previews the sequence." },
-    TourStep { target:"spectrum",page:3,title:"5. Inspect the incident spectrum",text:"The plot shows the supplied group values. Edit the JSON for custom energy boundaries or advanced settings. Spectrum normalization is always explicit." },
-    TourStep { target:"validate",page:3,title:"6. Validate your inputs",text:"Click Validate to check the scientific specification and file locations. Any error appears in the status area with an explanation. Validation does not run the solver." },
-    TourStep { target:"run",page:3,title:"7. Run the calculation",text:"Click Run when your data are ready. The solver runs in the background. The result opens when it completes; you can then inspect plots, inventories, and the ledger." },
+    TourStep { target:"open",page:Page::Overview,title:"1. Open a calculation",text:"Click Open problem to load an ACTINV JSON file. Or keep the bundled iron example as your starting point. Next lets you explore without opening a file." },
+    TourStep { target:"inputs",page:Page::Overview,title:"2. Locate your nuclear data",text:"Choose the activation library and decay data. Relative paths use the input base folder shown here. ACTINV checks files before running; hashes remain part of the solver certificate." },
+    TourStep { target:"material",page:Page::Material,title:"3. Define the material",text:"Edit the mass, composition basis, and isotope amounts. Add an element or isotope using its symbol, such as FE or Fe56. Validation checks the composition before a solve." },
+    TourStep { target:"schedule",page:Page::Schedule,title:"4. Set irradiation and cooling",text:"Each row is a duration and flux multiplier. Zero means cooling. Drag rows by their handle to reorder them, or use the arrow buttons. The timeline previews the sequence." },
+    TourStep { target:"spectrum",page:Page::Spectrum,title:"5. Inspect the incident spectrum",text:"The plot shows the supplied group values. Edit the JSON for custom energy boundaries or advanced settings. Spectrum normalization is always explicit." },
+    TourStep { target:"validate",page:Page::Spectrum,title:"6. Validate your inputs",text:"Click Validate to check the scientific specification and file locations. Any error appears in the status area with an explanation. Validation does not run the solver." },
+    TourStep { target:"run",page:Page::Spectrum,title:"7. Run the calculation",text:"Click Run when your data are ready. The solver runs in the background. The result opens when it completes; you can then inspect plots, inventories, and the ledger." },
 ];
 pub const RESULTS: &[TourStep] = &[
-    TourStep {target:"result_open",page:4,title:"1. Open or compare results",text:"Open an existing ACTINV result JSON, or run a calculation. Add a comparison result to overlay another calculation. No demonstration values are substituted for your results."},
-    TourStep {target:"chart",page:4,title:"2. Explore time histories",text:"Choose activity, total decay heat, or inventory. Drag to pan and scroll to zoom. Click a time on the chart to select the nearest computed step. Reset view restores the bounds."},
-    TourStep {target:"inventory",page:4,title:"3. Follow a nuclide",text:"Filter the inventory by name and click a row. Its activity or inventory becomes the plotted history. Total decay heat remains a whole-material quantity. Clear selection returns to totals."},
-    TourStep {target:"details",page:5,title:"4. Inspect spectra and pathways",text:"Select a computed step to see photon groups and recorded production pathways. Missing optional outputs are explained here; request them in the problem before rerunning."},
-    TourStep {target:"ledger",page:6,title:"5. Read the evidence",text:"Expand ledger entries to inspect unaccounted data and approximations. The certificate records the solver's input provenance. These belong alongside the plotted answer."},
-    TourStep {target:"export",page:4,title:"6. Export the result",text:"Save the complete original result as JSON, or export the selected inventory as CSV. The JSON retains all steps, optional responses, the ledger, and the certificate."},
+    TourStep {target:"result_open",page:Page::Results,title:"1. Open or compare results",text:"Open an existing ACTINV result JSON, or run a calculation. Add a comparison result to overlay another calculation. No demonstration values are substituted for your results."},
+    TourStep {target:"chart",page:Page::Results,title:"2. Explore time histories",text:"Choose activity, total decay heat, or inventory. Drag to pan and scroll to zoom. Click a time on the chart to select the nearest computed step. Reset view restores the bounds."},
+    TourStep {target:"inventory",page:Page::Results,title:"3. Follow a nuclide",text:"Filter the inventory by name and click a row. Its activity or inventory becomes the plotted history. Total decay heat remains a whole-material quantity. Clear selection returns to totals."},
+    TourStep {target:"details",page:Page::Details,title:"4. Inspect spectra and pathways",text:"Select a computed step to see photon groups and recorded production pathways. Missing optional outputs are explained here; request them in the problem before rerunning."},
+    TourStep {target:"ledger",page:Page::Ledger,title:"5. Read the evidence",text:"Expand ledger entries to inspect unaccounted data and approximations. The certificate records the solver's input provenance. These belong alongside the plotted answer."},
+    TourStep {target:"export",page:Page::Results,title:"6. Export the result",text:"Save the complete original result as JSON, or export the selected inventory as CSV. The JSON retains all steps, optional responses, the ledger, and the certificate."},
 ];
 #[derive(Default)]
 pub struct Tour {
@@ -148,7 +149,8 @@ mod tests {
         for steps in [SETUP, RESULTS] {
             assert!(!steps.is_empty());
             for step in steps {
-                assert!(step.page <= 6);
+                assert!(Page::ALL.contains(&step.page));
+                assert_ne!(step.page, Page::Advanced);
                 assert!(!step.target.is_empty());
                 assert!(!step.text.is_empty());
             }

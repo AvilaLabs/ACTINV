@@ -3,6 +3,7 @@
 #![forbid(unsafe_code)]
 pub mod activation;
 pub mod builder;
+pub mod catalog;
 pub mod composition;
 pub mod covariance;
 pub mod decay;

@@ -3,7 +3,9 @@
 mod app;
 mod capture;
 mod model;
+mod nav;
 mod options;
+mod platform;
 mod smoke;
 mod sweep;
 mod tour;

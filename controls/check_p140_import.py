@@ -44,7 +44,7 @@ Usage:
       [--pypact ~/nuclear-data/ext-decks/pypact] [--keep-all]
   check_p140_import.py --self-check [--workdir target/p140-import]
       generates every synthetic deck, lists the counts per category and cross-checks the keyword table against
-      crates/actinv-cli/src/fispact_import.rs; runs nothing.
+      crates/actinv-core/src/fispact_import.rs; runs nothing.
 
 Run inside the required systemd cgroup. Exit 0 on PASS, 1 on FAIL, 2 on a missing input.
 """
@@ -62,7 +62,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 PROTOCOL = ROOT / "protocols" / "ACTINV-P140_PROTOCOL.md"
-IMPORT_RS = ROOT / "crates" / "actinv-cli" / "src" / "fispact_import.rs"
+IMPORT_RS = ROOT / "crates" / "actinv-core" / "src" / "fispact_import.rs"
 DEFAULT_FNS = Path("~/nuclear-data/conderc-fns/fns").expanduser()
 DEFAULT_FISSION = Path("~/nuclear-data/conderc-fission/fission/Fispact-II/Inputs").expanduser()
 DEFAULT_PYPACT = Path("~/nuclear-data/ext-decks/pypact").expanduser()

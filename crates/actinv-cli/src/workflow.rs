@@ -1,16 +1,68 @@
 //! Shared user workflow helpers. The scientific specification and solver stay authoritative.
-use actinv_core::spec::Spec;
+use crate::DataCatalog;
+use actinv_core::spec::{LibraryRef, Spec};
 use std::path::{Path, PathBuf};
 
 pub const IRON_EXAMPLE: &str = include_str!("../data/iron-example.json");
 
+/// Installed-data root for `catalog:` references in a problem whose inputs resolve against
+/// `base`: `$ACTINV_DATA_DIR`, else the `actinv-data` folder beside the problem.
+pub fn catalog_data_root(base: &Path) -> PathBuf {
+    match std::env::var_os("ACTINV_DATA_DIR") {
+        Some(value) if !value.is_empty() => {
+            let root = PathBuf::from(value);
+            match std::env::current_dir() {
+                Ok(cwd) if root.is_relative() => cwd.join(root),
+                _ => root,
+            }
+        }
+        _ => base.join("actinv-data"),
+    }
+}
+
+/// Where a `catalog:<artifact-id>` reference points under the installed-data root, with the
+/// catalog's SHA-256 for it. `None` for any other path and for an id the catalog does not list.
+fn catalog_target(path: &str, catalog: &DataCatalog, data_root: &Path) -> Option<(String, String)> {
+    let artifact = catalog.artifact(path.strip_prefix("catalog:")?).ok()?;
+    let target = data_root
+        .join(format!("v{}", catalog.catalog_version))
+        .join(&artifact.path);
+    Some((
+        target.to_string_lossy().into_owned(),
+        artifact.sha256.clone(),
+    ))
+}
+
+/// Make every input path absolute: relative paths join `base`, `catalog:<id>` references point
+/// into the installed data (see [`catalog_data_root`]) and a library reference without a SHA-256
+/// takes the catalog's, as `resolve_catalog_json` does for problem text.
 pub fn resolve_inputs(spec: &mut Spec, base: &Path) {
+    resolve_inputs_under(spec, base, &catalog_data_root(base));
+}
+
+fn resolve_inputs_under(spec: &mut Spec, base: &Path, data_root: &Path) {
+    let catalog = crate::embedded_catalog().ok();
+    let target = |path: &str| {
+        catalog
+            .as_ref()
+            .and_then(|catalog| catalog_target(path, catalog, data_root))
+    };
     let resolve = |path: &mut String| {
-        if !path.is_empty() && Path::new(path).is_relative() {
+        if let Some((resolved, _)) = target(path.as_str()) {
+            *path = resolved;
+        } else if !path.is_empty() && !path.starts_with("catalog:") && Path::new(path).is_relative()
+        {
             *path = base.join(&*path).to_string_lossy().into_owned();
         }
     };
-    resolve(&mut spec.library.path);
+    let resolve_library = |library: &mut LibraryRef| {
+        let from_catalog = target(&library.path);
+        resolve(&mut library.path);
+        if library.sha256.is_none() {
+            library.sha256 = from_catalog.map(|(_, sha256)| sha256);
+        }
+    };
+    resolve_library(&mut spec.library);
     resolve(&mut spec.decay.primary);
     if let Some(path) = &mut spec.decay.fallback {
         resolve(path);
@@ -20,7 +72,7 @@ pub fn resolve_inputs(spec: &mut Spec, base: &Path) {
     }
     for step in &mut spec.schedule {
         if let Some(library) = &mut step.library {
-            resolve(&mut library.path);
+            resolve_library(library);
         }
     }
     if let Some(shielding) = &mut spec.self_shielding {
@@ -147,6 +199,12 @@ pub fn check_files(spec: &Spec, hashes: bool) -> Result<(), String> {
     let mut errors = Vec::new();
     for (label, path, hash) in inputs {
         if path.is_empty() {
+            continue;
+        }
+        if path.starts_with("catalog:") {
+            errors.push(format!(
+                "{label}: unresolved catalog reference {path}; it names no artifact in the data catalog"
+            ));
             continue;
         }
         if let Some(name) = actinv_core::radiological::bundled_name(path) {
@@ -276,6 +334,64 @@ mod tests {
         let e = check_files(&s, false).unwrap_err();
         assert!(e.contains("_index.json"));
         assert!(e.contains("actinv data fetch"));
+    }
+
+    #[test]
+    fn catalog_references_resolve_under_the_data_root_with_the_catalog_hash() {
+        let catalog = crate::embedded_catalog().unwrap();
+        let mut spec = new_example(Path::new("actinv-data")).unwrap();
+        spec.library.sha256 = None;
+        resolve_inputs_under(&mut spec, Path::new("/project"), Path::new("/data"));
+        let library = catalog.artifact("tendl-2025-neutron-709g").unwrap();
+        assert_eq!(
+            spec.library.path,
+            format!("/data/v{}/{}", catalog.catalog_version, library.path)
+        );
+        assert_eq!(
+            spec.library.sha256.as_deref(),
+            Some(library.sha256.as_str())
+        );
+        let decay = catalog.artifact("endfb-viii-0-decay").unwrap();
+        assert_eq!(
+            spec.decay.primary,
+            format!("/data/v{}/{}", catalog.catalog_version, decay.path)
+        );
+        let fallback = spec.decay.fallback.as_deref().unwrap();
+        assert!(fallback.starts_with("/data/v"), "{fallback}");
+        // a declared hash is kept, and a plain relative path still joins the base
+        let mut spec = new_example(Path::new("actinv-data")).unwrap();
+        spec.library.sha256 = Some("ab".repeat(32));
+        spec.decay.overrides = Some("overrides.json".into());
+        resolve_inputs_under(&mut spec, Path::new("/project"), Path::new("/data"));
+        assert_eq!(spec.library.sha256, Some("ab".repeat(32)));
+        assert_eq!(
+            spec.decay.overrides.as_deref(),
+            Some("/project/overrides.json")
+        );
+    }
+
+    #[test]
+    fn unknown_catalog_references_stay_put_and_check_files_names_them() {
+        let mut spec = new_example(Path::new("actinv-data")).unwrap();
+        spec.library.path = "catalog:no-such-artifact".into();
+        spec.library.sha256 = None;
+        resolve_inputs_under(&mut spec, Path::new("/project"), Path::new("/data"));
+        assert_eq!(spec.library.path, "catalog:no-such-artifact");
+        assert!(spec.library.sha256.is_none());
+        let error = check_files(&spec, false).unwrap_err();
+        assert!(
+            error.contains("unresolved catalog reference catalog:no-such-artifact"),
+            "{error}"
+        );
+    }
+
+    #[test]
+    fn catalog_data_root_is_the_environment_override_or_beside_the_problem() {
+        let root = catalog_data_root(Path::new("/project"));
+        match std::env::var_os("ACTINV_DATA_DIR") {
+            Some(value) if !value.is_empty() => assert!(root.is_absolute()),
+            _ => assert_eq!(root, Path::new("/project/actinv-data")),
+        }
     }
 
     // ---- P140 regressions (SG-09, power/fission F8): they assert the intended behaviour ----

@@ -1055,15 +1055,23 @@ fn group_boundaries_json(path: &Path) -> Result<Vec<f64>, String> {
 }
 
 fn parse_fispact_fluxes(path: &Path, groups: usize) -> Result<(Vec<f64>, f64, String), String> {
-    let file = File::open(path)
+    let text = std::fs::read_to_string(path)
         .map_err(|error| format!("cannot read FISPACT fluxes {}: {error}", path.display()))?;
-    let mut lines = BufReader::new(file).lines();
+    parse_fispact_fluxes_text(&text, groups)
+}
+
+/// Parse the text of a FISPACT-II fluxes file of `groups` values (highest energy first) with its
+/// first-wall loading and identifying title. No file access, so the browser can pass picker bytes.
+pub fn parse_fispact_fluxes_text(
+    text: &str,
+    groups: usize,
+) -> Result<(Vec<f64>, f64, String), String> {
+    let mut lines = text.lines();
     let mut flux = Vec::with_capacity(groups);
     while flux.len() < groups {
         let line = lines
             .next()
-            .ok_or("FISPACT fluxes ended before all group values")?
-            .map_err(|error| error.to_string())?;
+            .ok_or("FISPACT fluxes ended before all group values")?;
         if line.trim().is_empty() {
             return Err("FISPACT fluxes contains a blank line before wall loading".into());
         }
@@ -1087,8 +1095,7 @@ fn parse_fispact_fluxes(path: &Path, groups: usize) -> Result<(Vec<f64>, f64, St
     }
     let wall_line = lines
         .next()
-        .ok_or("FISPACT fluxes has no first-wall loading")?
-        .map_err(|error| error.to_string())?;
+        .ok_or("FISPACT fluxes has no first-wall loading")?;
     let wall_tokens: Vec<&str> = wall_line.split_whitespace().collect();
     if wall_tokens.len() != 1 {
         return Err("FISPACT first-wall loading must occupy its own line".into());
@@ -1102,8 +1109,7 @@ fn parse_fispact_fluxes(path: &Path, groups: usize) -> Result<(Vec<f64>, f64, St
     }
     let title = lines
         .next()
-        .ok_or("FISPACT fluxes has no identifying title")?
-        .map_err(|error| error.to_string())?;
+        .ok_or("FISPACT fluxes has no identifying title")?;
     if title.trim().is_empty() {
         return Err("FISPACT fluxes identifying title is blank".into());
     }
@@ -1111,11 +1117,11 @@ fn parse_fispact_fluxes(path: &Path, groups: usize) -> Result<(Vec<f64>, f64, St
         return Err("FISPACT spectrum title exceeds 100 characters".into());
     }
     for line in lines {
-        if !line.map_err(|error| error.to_string())?.trim().is_empty() {
+        if !line.trim().is_empty() {
             return Err("FISPACT fluxes contains data after its title".into());
         }
     }
-    Ok((flux, wall_loading, title))
+    Ok((flux, wall_loading, title.to_string()))
 }
 
 /// Read a FISPACT-II fluxes file of `groups` values (highest energy first) with its first-wall
@@ -2634,6 +2640,37 @@ mod tests {
         let error = parse_fispact_fluxes(&path, 2).unwrap_err();
         std::fs::remove_file(path).unwrap();
         assert_eq!(error, "FISPACT fluxes identifying title is blank");
+    }
+
+    #[test]
+    fn fispact_text_parser_matches_the_path_reader() {
+        let text = "1.0 2.0D0\n3.0\n0.5\nA title\n\n";
+        let (flux, wall, title) = parse_fispact_fluxes_text(text, 3).unwrap();
+        assert_eq!(flux, vec![1.0, 2.0, 3.0]);
+        assert_eq!(wall, 0.5);
+        assert_eq!(title, "A title");
+
+        let path = std::env::temp_dir().join(format!(
+            "actinv-fispact-text-parity-{}.fluxes",
+            std::process::id()
+        ));
+        std::fs::write(&path, text).unwrap();
+        let from_path = read_fispact_fluxes(&path, 3).unwrap();
+        std::fs::remove_file(path).unwrap();
+        assert_eq!(from_path, (flux, wall, title));
+
+        assert_eq!(
+            parse_fispact_fluxes_text("1.0\n2.0\n0.0\n\n", 2).unwrap_err(),
+            "FISPACT fluxes identifying title is blank"
+        );
+        assert_eq!(
+            parse_fispact_fluxes_text("1.0\n", 2).unwrap_err(),
+            "FISPACT fluxes ended before all group values"
+        );
+        assert_eq!(
+            parse_fispact_fluxes_text("1.0\n2.0\n0.0\nt\nextra\n", 2).unwrap_err(),
+            "FISPACT fluxes contains data after its title"
+        );
     }
 
     #[test]

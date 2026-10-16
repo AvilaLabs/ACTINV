@@ -62,7 +62,7 @@ equivalent. Statuses follow the parity tracker above and are not raised past its
 name takes the status of the capability it belongs to. *Not applicable* marks a keyword that exists only because of
 FISPACT-II's own architecture (deck syntax, log and print switches, library preparation, solver tolerances). "Not
 mapped by import-fispact" means the capability exists in ACTINV but the importer reports the keyword `unsupported` and
-you add the spec section by hand. Sources: `crates/actinv-cli/src/fispact_import.rs`,
+you add the spec section by hand. Sources: `crates/actinv-core/src/fispact_import.rs`,
 `docs/guide/fispact-migration.md`, `docs/guide/specification.md`, `docs/guide/cli.md`, ledger entries 146–166.
 
 | keyword | ACTINV equivalent | status | note |

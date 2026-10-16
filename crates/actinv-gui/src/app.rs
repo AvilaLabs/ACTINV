@@ -1,29 +1,21 @@
 use crate::{
     model::{self, ResultDocument},
+    nav::{Group, Page},
+    platform::{self, Dialog, Platform},
     tour::Tour,
 };
 use actinv_core::spec::Spec;
 use eframe::egui::{self, Color32, RichText, Vec2};
-use egui_extras::{Column, TableBuilder};
-use egui_plot::{Line, Plot};
-use serde_json::{json, Value};
+use serde_json::Value;
 use std::{
     path::PathBuf,
     sync::mpsc::{self, Receiver},
     time::{Duration, Instant},
 };
 
-const BLUE: Color32 = Color32::from_rgb(24, 0, 173);
-const PAGES: [&str; 8] = [
-    "Overview & data",
-    "Material",
-    "Irradiation & cooling",
-    "Spectrum",
-    "Results",
-    "Spectra & pathways",
-    "Ledger & certificate",
-    "Advanced JSON",
-];
+mod pages;
+
+use crate::visuals::{heading, json_tree, numeric, text_field, BLUE};
 enum JobOutput {
     Calculation(Value),
     Data(Value),
@@ -57,7 +49,7 @@ pub struct Desktop {
     saved_base: PathBuf,
     path: Option<PathBuf>,
     base: PathBuf,
-    page: usize,
+    page: Page,
     status: String,
     error: bool,
     logo: egui::TextureHandle,
@@ -87,6 +79,8 @@ pub struct Desktop {
     scene_view: egui::Rect,
     pathway_node: String,
     capture: Option<crate::capture::Capture>,
+    /// File dialogs; native `rfd` in the application, scripted in tests.
+    platform: Box<dyn Platform>,
     suite: avila_account::ui_desktop::DesktopSuite,
     result_unsaved: bool,
     result_guard: Option<ResultAction>,
@@ -235,14 +229,14 @@ impl Desktop {
         let saved = document.clone();
         Self {
             document, saved, saved_base:model::working_directory(), path:None,
-            base:model::working_directory(), page:0,
+            base:model::working_directory(), page:Page::Overview,
             status:"Start with the iron example, or open your own problem. Choose your installed nuclear data below.".into(),
             error:false, logo, result:None, comparison:None, job:None,
             step:0, metric:0, selected:String::new(), filter:String::new(), ledger_filter:String::new(),
             descending:true, reset_plot:false, isotope:String::new(), amount:0.,
             raw:String::new(), raw_dirty:false, raw_source:Value::Null, tour:Tour::default(), help:false,
             pending:None, undo:vec![], redo:vec![], allow_close:false,
-            downloaded:None, scene_view:egui::Rect::ZERO, pathway_node:String::new(), capture:crate::capture::Capture::from_env(), suite:avila_account::ui_desktop::DesktopSuite::new(ctx,"actinv"),
+            downloaded:None, scene_view:egui::Rect::ZERO, pathway_node:String::new(), capture:crate::capture::Capture::from_env(), platform:Box::new(platform::Native), suite:avila_account::ui_desktop::DesktopSuite::new(ctx,"actinv"),
             result_unsaved:false, result_guard:None, result_load:None, spectrum_text:String::new(), log_time:false,
             theme:"Light".into(),
             transport:crate::transport::Import::default(), imported:None,
@@ -275,9 +269,9 @@ impl Desktop {
     fn perform(&mut self, p: Pending) {
         match p {
             Pending::Open => {
-                if let Some(path) = rfd::FileDialog::new()
-                    .add_filter("ACTINV problem", &["json"])
-                    .pick_file()
+                if let Some(path) = self
+                    .platform
+                    .pick_file(Dialog::new().filter("ACTINV problem", &["json"]))
                 {
                     let result = std::fs::read_to_string(&path)
                         .map_err(|e| e.to_string())
@@ -293,7 +287,7 @@ impl Desktop {
                             self.raw_dirty = false;
                             self.undo.clear();
                             self.redo.clear();
-                            self.page = 0;
+                            self.page = Page::Overview;
                             self.report(Ok("Problem opened. Relative input paths use the problem's folder; change Input base if needed.".into()));
                         }
                         Err(e) => self.report(Err(e)),
@@ -310,7 +304,7 @@ impl Desktop {
                 self.raw_dirty = false;
                 self.undo.clear();
                 self.redo.clear();
-                self.page = 0;
+                self.page = Page::Overview;
             }
             Pending::Close => {}
         }
@@ -321,10 +315,11 @@ impl Desktop {
             return false;
         }
         let path = self.path.clone().or_else(|| {
-            rfd::FileDialog::new()
-                .add_filter("JSON", &["json"])
-                .set_file_name("problem.json")
-                .save_file()
+            self.platform.save_file(
+                Dialog::new()
+                    .filter("JSON", &["json"])
+                    .file_name("problem.json"),
+            )
         });
         if let Some(path) = path {
             // Save resolved paths so Save As cannot silently change input meaning.
@@ -404,9 +399,9 @@ impl Desktop {
             self.result_guard = Some(ResultAction::Open);
             return;
         }
-        if let Some(path) = rfd::FileDialog::new()
-            .add_filter("ACTINV result", &["json"])
-            .pick_file()
+        if let Some(path) = self
+            .platform
+            .pick_file(Dialog::new().filter("ACTINV result", &["json"]))
         {
             // Results can be hundreds of MB: read, parse and validate them off the UI
             // thread so the window keeps repainting; `logic` installs the outcome.
@@ -444,7 +439,7 @@ impl Desktop {
                     self.selected.clear();
                 }
                 self.reset_plot = true;
-                self.page = 4;
+                self.page = Page::Results;
                 self.report(Ok("Result loaded.".into()));
             }
             Err(e) => self.report(Err(e)),
@@ -454,10 +449,11 @@ impl Desktop {
         let Some(result) = &self.result else {
             return;
         };
-        if let Some(path) = rfd::FileDialog::new()
-            .set_file_name(if csv { "inventory.csv" } else { "result.json" })
-            .save_file()
-        {
+        if let Some(path) = self.platform.save_file(Dialog::new().file_name(if csv {
+            "inventory.csv"
+        } else {
+            "result.json"
+        })) {
             let r = if csv {
                 model::inventory_csv(result, self.step)
                     .and_then(|csv| std::fs::write(path, csv).map_err(|e| e.to_string()))
@@ -501,18 +497,20 @@ if self.job.is_some(){ui.spinner();}});
             .resizable(true)
             .show(ui, |ui| {
                 ui.add_space(16.);
-                ui.label(RichText::new("CALCULATION").small().color(accent));
-                for (i, label) in PAGES.iter().enumerate() {
-                    if i == 4 {
-                        ui.add_space(18.);
-                        ui.label(RichText::new("EXPLORE").small().color(accent));
+                let mut group = None;
+                for page in Page::ALL {
+                    if group != Some(page.group()) {
+                        if group.is_some() {
+                            ui.add_space(18.);
+                        }
+                        if let Some(caption) = page.group().caption() {
+                            ui.label(RichText::new(caption).small().color(accent));
+                        }
+                        group = Some(page.group());
                     }
-                    if i == 7 {
-                        ui.add_space(18.);
-                    }
-                    let r = ui.selectable_label(self.page == i, *label);
+                    let r = ui.selectable_label(self.page == page, page.label());
                     if r.clicked() {
-                        self.page = i;
+                        self.page = page;
                     }
                 }
                 ui.add_space(24.);
@@ -549,1389 +547,6 @@ if self.job.is_some(){ui.spinner();}});
                         .weak(),
                 );
             });
-    }
-    fn setup(&mut self, ui: &mut egui::Ui) {
-        heading(
-            ui,
-            "Set up a calculation",
-            "Choose your evaluated data, then define the material and irradiation history.",
-        );
-        ui.group(|ui| {
-            ui.strong("Welcome to ACTINV");
-            ui.label("Explore a small teaching result offline, or use the complete iron problem below for your first real calculation.");
-            if ui.button("Try offline results tutorial").clicked() {
-                if self.result_unsaved { self.result_guard = Some(ResultAction::Tutorial); }
-                else { self.result = Some(model::tutorial_result()); self.step = 0; self.selected.clear(); self.comparison = None; self.page = 4; self.reset_plot = true; self.tour.start(true); }
-            }
-            ui.label("Standard data: about 139 MiB download, 229 MiB installed. Each calculation run uses a private cache (about 282 MiB for the iron example).");
-        });
-        ui.label("Calculation title");
-        text_field(ui, &mut self.document["title"]);
-        ui.add_space(12.);
-        let response=egui::Frame::group(ui.style()).inner_margin(16.).show(ui,|ui| {
-            ui.heading("Nuclear data");
-            ui.label("Paths are resolved against the input base folder. Existing CLI examples commonly use the repository root.");
-            ui.horizontal(|ui|{ui.label("Input base");let mut base=self.base.to_string_lossy().into_owned();if ui.add(egui::TextEdit::singleline(&mut base).desired_width((ui.available_width()-220.).max(150.))).changed(){self.base=PathBuf::from(base);}
-if ui.button("Choose folder").clicked(){if let Some(p)=rfd::FileDialog::new().pick_folder(){self.base=p;}}});
-            path_field(ui,"Activation library (.npz)",&mut self.document["library"]["path"]);
-            ui.collapsing("Activation library SHA-256 pin",|ui|{
-                ui.label("A declared hash must match the chosen library. Update or remove the pin when intentionally switching libraries. The solver always records the computed hash.");
-                let mut hash=self.document["library"]["sha256"].as_str().unwrap_or("").to_owned();
-                if ui.add(egui::TextEdit::singleline(&mut hash).desired_width(500.).hint_text("Optional SHA-256")).changed(){if hash.trim().is_empty(){self.document["library"].as_object_mut().unwrap().remove("sha256");}else{self.document["library"]["sha256"]=hash.into();}}
-            });
-            path_field(ui,"Primary decay data",&mut self.document["decay"]["primary"]);
-            if self.document["decay"]["fallback"].is_string(){path_field(ui,"Fallback decay data",&mut self.document["decay"]["fallback"]);if ui.small_button("Remove fallback").clicked(){self.document["decay"].as_object_mut().unwrap().remove("fallback");}}
-            else if ui.small_button("Add fallback decay data").clicked(){self.document["decay"]["fallback"]="".into();}
-            if ui.add_enabled(self.job.is_none(),egui::Button::new("Download standard neutron data · 139 MiB…")).clicked() {
-                if let Some(folder)=rfd::FileDialog::new().set_title("Choose the parent folder for actinv-data").pick_folder() {
-                    let (tx,rx)=mpsc::channel();let ctx=ui.ctx().clone();
-                    std::thread::spawn(move||{let output=actinv_cli::fetch_bundle(None,folder.join("actinv-data"),false).map(|s|JobOutput::Data(s.problem_fragment));let _=tx.send(output);ctx.request_repaint();});
-                    self.job=Some(Job{rx:Some(rx),handle:None,started:Instant::now(),kind:JobKind::Data,cancelled:false});self.status="Downloading and verifying standard neutron data… Files are checked before installation; cancellation is unavailable while files are being verified.".into();self.error=false;
-                }
-            }
-            if let Some(fragment)=&self.downloaded {
-                ui.label("Verified neutron data are ready. Applying paths keeps your material and spectrum; use a compatible neutron 709-group spectrum.");
-                if ui.button("Use downloaded library & decay paths").clicked(){
-                    self.document["library"]=fragment["library"].clone();self.document["decay"]=fragment["decay"].clone();
-                    self.document["projectile"]=fragment["projectile"].clone();
-                }
-            }
-            ui.collapsing("Need the standard nuclear data?",|ui|{ui.label("Run this once in a terminal, then select the downloaded files above:");ui.code("actinv data fetch");ui.label("The standard download includes neutron activation and decay data. Data are versioned separately from the application.");});
-        });
-        self.tour
-            .mark("inputs", response.response.rect.intersect(ui.clip_rect()));
-        ui.add_space(16.);
-        ui.horizontal(|ui| {
-            ui.label("Projectile");
-            let p = self.document["projectile"]
-                .as_str()
-                .unwrap_or("neutron")
-                .to_owned();
-            egui::ComboBox::from_id_salt("projectile")
-                .selected_text(&p)
-                .show_ui(ui, |ui| {
-                    for v in ["neutron", "proton", "deuteron", "triton", "helion", "alpha"] {
-                        if ui.selectable_label(p == v, v).clicked() {
-                            self.document["projectile"] = v.into();
-                        }
-                    }
-                });
-        });
-        ui.add_space(16.);
-        ui.collapsing("Calculation options & requested outputs",|ui|{
-            if self.document["options"].is_null(){self.document["options"]=json!({});}
-            let mut mode=self.document["options"]["mode"].as_str().unwrap_or("auto").to_owned();
-            ui.horizontal(|ui|{ui.label("Solver mode");egui::ComboBox::from_id_salt("mode").selected_text(&mode).show_ui(ui,|ui|{for m in ["auto","trace","coupled"]{if ui.selectable_value(&mut mode,m.into(),m).changed(){self.document["options"]["mode"]=mode.clone().into();}}});});
-            ui.label("Trace mode supports ranked production pathways. Auto chooses an appropriate mode based on the problem.");
-            let mut temperature=self.document["options"]["temperature_K"].as_f64().unwrap_or(293.6);
-            ui.horizontal(|ui|{ui.label("Temperature (K)");if ui.add(egui::DragValue::new(&mut temperature).custom_parser(model::parse_finite).speed(1.).range(0.0..=f64::MAX)).changed(){self.document["options"]["temperature_K"]=json!(temperature);}});
-            let mut outputs=self.document["options"]["outputs"].as_array().cloned().unwrap_or_else(||vec![json!("inventory"),json!("activity"),json!("heat")]);
-            ui.horizontal_wrapped(|ui|{for (key,label) in [("inventory","Inventory"),("activity","Activity"),("heat","Decay heat"),("photons","Photon spectrum"),("pathways","Production pathways")]{let mut enabled=outputs.iter().any(|v|v.as_str()==Some(key));if ui.checkbox(&mut enabled,label).changed(){outputs.retain(|v|v.as_str()!=Some(key));if enabled{outputs.push(json!(key));}self.document["options"]["outputs"]=json!(outputs);}}});
-        });
-        if ui.button("Continue to material >").clicked() {
-            self.page = 1;
-        }
-        crate::options::show(ui, &mut self.document);
-    }
-    fn material(&mut self, ui: &mut egui::Ui) {
-        heading(ui,"Define the material","Use element symbols for natural composition, or individual isotope names for enrichment.");
-        let group = ui.scope(|ui| {
-            ui.horizontal(|ui| {
-                ui.label("Mass (g)");
-                numeric(ui, &mut self.document["material"]["mass_g"], 0.1);
-                ui.label("Composition basis");
-                let basis = self.document["material"]["basis"]
-                    .as_str()
-                    .unwrap_or("wt_percent")
-                    .to_owned();
-                egui::ComboBox::from_id_salt("basis")
-                    .selected_text(basis_label(&basis))
-                    .show_ui(ui, |ui| {
-                        for b in ["wt_percent", "atom_fraction", "atoms_per_g"] {
-                            if ui.selectable_label(b == basis, basis_label(b)).clicked() {
-                                self.document["material"]["basis"] = b.into();
-                            }
-                        }
-                    });
-            });
-            ui.add_space(12.);
-            let mut remove = None;
-            if let Some(composition) = self.document["material"]["composition"].as_object_mut() {
-                TableBuilder::new(ui)
-                    .id_salt("material-table")
-                    .striped(true)
-                    .column(Column::remainder())
-                    .column(Column::initial(180.))
-                    .column(Column::initial(80.))
-                    .header(28., |mut h| {
-                        h.col(|ui| {
-                            ui.strong("Element / isotope");
-                        });
-                        h.col(|ui| {
-                            ui.strong("Amount");
-                        });
-                        h.col(|_| {});
-                    })
-                    .body(|mut body| {
-                        for (key, value) in composition.iter_mut() {
-                            body.row(34., |mut row| {
-                                row.col(|ui| {
-                                    ui.label(key);
-                                });
-                                row.col(|ui| {
-                                    numeric(ui, value, 0.1);
-                                });
-                                row.col(|ui| {
-                                    if ui.small_button("Remove").clicked() {
-                                        remove = Some(key.clone());
-                                    }
-                                });
-                            });
-                        }
-                    });
-                if let Some(key) = remove {
-                    composition.remove(&key);
-                }
-                let total: f64 = composition.values().map(model::number).sum();
-                ui.label(format!("Composition total: {total:.6}"));
-                if self.document["material"]["basis"].as_str() == Some("wt_percent") && (total - 100.).abs() > 1e-6 {
-                    ui.colored_label(ui.visuals().error_fg_color, "Weight percentages do not total 100%. Values are used as entered; ACTINV does not silently normalize them.");
-                }
-            }
-            ui.horizontal(|ui| {
-                ui.add(
-                    egui::TextEdit::singleline(&mut self.isotope)
-                        .hint_text("e.g. Fe56")
-                        .desired_width(150.),
-                );
-                ui.add(egui::DragValue::new(&mut self.amount).custom_parser(model::parse_finite).speed(0.1));
-                if ui.button("Add element / isotope").clicked() {
-                    let key = self.isotope.trim();
-                    if key.is_empty() {
-                        self.report(Err("Enter an element or isotope name.".into()));
-                    } else if let Some(map) =
-                        self.document["material"]["composition"].as_object_mut()
-                    {
-                        if map.contains_key(key) {
-                            self.status =
-                                "That isotope is already listed. Edit its amount in the table."
-                                    .into();
-                            self.error = true;
-                        } else {
-                            map.insert(key.into(), json!(self.amount));
-                            self.isotope.clear();
-                        }
-                    }
-                }
-            });
-        });
-        self.tour
-            .mark("material", group.response.rect.intersect(ui.clip_rect()));
-        ui.add_space(20.);
-        if ui.button("Continue to irradiation & cooling >").clicked() {
-            self.page = 2;
-        }
-    }
-    fn schedule(&mut self, ui: &mut egui::Ui) {
-        heading(ui,"Irradiation & cooling","Durations accept units such as 5 min, 2 h, or 10 y. A zero flux multiplier is cooling.");
-        let r = ui.scope(|ui| {
-            let mut swap = None;
-            let mut remove = None;
-            if let Some(steps) = self.document["schedule"].as_array_mut() {
-                let count = steps.len();
-                egui::ScrollArea::vertical()
-                    .id_salt("schedule-rows")
-                    .max_height(285.)
-                    .show(ui, |ui| {
-                        for (i, step) in steps.iter_mut().enumerate() {
-                            let (drop, payload) = ui.dnd_drop_zone::<usize, _>(
-                                egui::Frame::group(ui.style()),
-                                |ui| {
-                                    ui.horizontal_wrapped(|ui| {
-                                        ui.dnd_drag_source(
-                                            egui::Id::new(("schedule-drag", i)),
-                                            i,
-                                            |ui| {
-                                                ui.label("::").on_hover_text("Drag to reorder");
-                                            },
-                                        );
-                                        ui.label(format!("{:02}", i + 1));
-                                        let mut dt = step["dt"].as_str().unwrap_or("").to_owned();
-                                        if ui
-                                            .add(
-                                                egui::TextEdit::singleline(&mut dt)
-                                                    .desired_width(90.),
-                                            )
-                                            .changed()
-                                        {
-                                            step["dt"] = dt.into();
-                                        }
-                                        ui.label("× flux");
-                                        numeric(ui, &mut step["flux"], 0.1);
-                                        ui.label(if model::number(&step["flux"]) == 0. {
-                                            "Cooling"
-                                        } else {
-                                            "Irradiation"
-                                        });
-                                        if ui.add_enabled(i > 0, egui::Button::new("Up")).clicked()
-                                        {
-                                            swap = Some((i, i - 1));
-                                        }
-                                        if ui
-                                            .add_enabled(i + 1 < count, egui::Button::new("Down"))
-                                            .clicked()
-                                        {
-                                            swap = Some((i, i + 1));
-                                        }
-                                        if ui.small_button("Remove").clicked() {
-                                            remove = Some(i);
-                                        }
-                                    });
-                                },
-                            );
-                            let _ = drop;
-                            if let Some(source) = payload {
-                                swap = Some((*source, i));
-                            }
-                        }
-                    });
-                if let Some((a, b)) = swap {
-                    if a < steps.len() && b < steps.len() {
-                        steps.swap(a, b);
-                    }
-                }
-                if let Some(i) = remove {
-                    steps.remove(i);
-                }
-                ui.horizontal(|ui| {
-                    if ui.button("+ Irradiation").clicked() {
-                        steps.push(json!({"dt":"5 min","flux":1.}));
-                    }
-                    if ui.button("+ Cooling").clicked() {
-                        steps.push(json!({"dt":"1 h","flux":0.}));
-                    }
-                });
-                ui.add_space(15.);
-                ui.label("Schedule preview · block widths proportional to duration");
-                let durations: Vec<_> = steps
-                    .iter()
-                    .map(|s| {
-                        actinv_core::spec::parse_duration(s["dt"].as_str().unwrap_or(""))
-                            .unwrap_or(0.)
-                            .max(0.)
-                    })
-                    .collect();
-                let total: f64 = durations.iter().sum();
-                let (rect, _) = ui.allocate_exact_size(
-                    Vec2::new(ui.available_width(), 42.),
-                    egui::Sense::hover(),
-                );
-                let mut x = rect.left();
-                for (i, d) in durations.iter().enumerate() {
-                    let width = if total > 0. {
-                        rect.width() * (*d / total) as f32
-                    } else {
-                        0.
-                    };
-                    let r =
-                        egui::Rect::from_min_size(egui::pos2(x, rect.top()), Vec2::new(width, 42.));
-                    ui.painter().rect_filled(
-                        r.shrink(1.),
-                        3.,
-                        if model::number(&steps[i]["flux"]) == 0. {
-                            Color32::from_rgb(146, 169, 198)
-                        } else {
-                            BLUE
-                        },
-                    );
-                    if width > 24. {
-                        ui.painter().text(
-                            r.center(),
-                            egui::Align2::CENTER_CENTER,
-                            format!("{}", i + 1),
-                            egui::FontId::proportional(13.),
-                            Color32::WHITE,
-                        );
-                    }
-                    x += width;
-                }
-                ui.label(format!(
-                    "Total duration: {total:.4e} s · cobalt = irradiation · slate = cooling"
-                ));
-            }
-        });
-        self.tour
-            .mark("schedule", r.response.rect.intersect(ui.clip_rect()));
-        ui.add_space(16.);
-        if ui.button("Continue to spectrum >").clicked() {
-            self.page = 3;
-        }
-    }
-    fn spectrum(&mut self, ui: &mut egui::Ui) {
-        let accent = crate::visuals::accent(ui);
-        heading(
-            ui,
-            "Incident spectrum",
-            "Review group values and explicitly choose the normalization used by the solver.",
-        );
-        let r=ui.scope(|ui|{
-            ui.horizontal(|ui|{ui.label("Group structure");text_field(ui,&mut self.document["spectrum"]["structure"]);});
-            let mut normalized=self.document["spectrum"]["total"].is_number();if ui.checkbox(&mut normalized,"Normalize group values to a total flux (particles / cm^2 / s)").changed(){if normalized{self.document["spectrum"]["total"]=json!(1e12);}else{self.document["spectrum"].as_object_mut().unwrap().remove("total");}}
-            if normalized {numeric(ui,&mut self.document["spectrum"]["total"],1e10);}else{ui.label("Group values are absolute group fluxes (particles / cm^2 / s).");}
-            let mut descending=self.document["spectrum"]["descending"].as_bool().unwrap_or(false);if ui.checkbox(&mut descending,"Input groups are highest-energy first").changed(){self.document["spectrum"]["descending"]=descending.into();}
-            let points:Vec<[f64;2]>=self.document["spectrum"]["flux_per_group"].as_array().map(|a|a.iter().enumerate().map(|(i,v)|[i as f64+1.,model::number(v)]).collect()).unwrap_or_default();
-            Plot::new("incident").height(260.).allow_scroll(false).x_axis_label("Input group index").y_axis_label(if normalized{"Relative group weight"}else{"Group flux / cm^2 / s"}).show(ui,|p|p.line(Line::new("Incident spectrum",points).color(accent)));
-            ui.collapsing("Edit group values",|ui|{if let Some(values)=self.document["spectrum"]["flux_per_group"].as_array_mut(){egui::ScrollArea::vertical().max_height(200.).show_rows(ui,28.,values.len(),|ui,range|{for i in range {ui.horizontal(|ui|{ui.label(format!("Group {}",i+1));numeric(ui,&mut values[i],1.);});}});}});
-            ui.label("Custom boundaries and optional photon, uncertainty, or response settings are available in Advanced JSON.");
-            ui.collapsing("Import or paste group values", |ui| {
-                ui.label("Paste one flux column from a spreadsheet, or open a one-column CSV/text file. Optional header: flux. Set normalization and energy order above explicitly.");
-                if ui.button("Open CSV / text").clicked() {
-                    if let Some(path) = rfd::FileDialog::new().add_filter("Spectrum", &["csv","txt"]).pick_file() {
-                        match std::fs::read_to_string(path) { Ok(s) => self.spectrum_text = s, Err(e) => self.report(Err(e.to_string())) }
-                    }
-                }
-                ui.add(egui::TextEdit::multiline(&mut self.spectrum_text).desired_rows(5).hint_text("flux\n1.2e10\n3.4e9\n…"));
-                if ui.button("Check and apply group values").clicked() {
-                    let named = self.document["spectrum"]["structure"].as_str().map(actinv_data::groups::GroupStructure::named);
-                    let count = match named {
-                        Some(Ok(Some(group))) => group.groups(),
-                        _ => self.document["spectrum"]["boundaries_eV"].as_array().map_or(0, |v| v.len().saturating_sub(1)),
-                    };
-                    match model::parse_group_values(&self.spectrum_text,count) {
-                        Ok(values) => { self.document["spectrum"]["flux_per_group"] = json!(values); self.report(Ok(format!("Imported {count} group values. Review normalization and energy order before running."))); },
-                        Err(e) => self.report(Err(e)),
-                    }
-                }
-            });
-        });
-        if self.document["spectrum"]["structure"].as_str() == Some("custom") {
-            crate::options::boundaries(
-                ui,
-                &mut self.document["spectrum"]["boundaries_eV"],
-                "incident-boundaries",
-            );
-        }
-        egui::CollapsingHeader::new("Spectrum by physical energy")
-            .open(self.capture.as_ref().map(|_| true))
-            .show(ui, |ui| crate::visuals::spectrum(ui, &self.document));
-        let request = ui
-            .add_enabled_ui(self.job.is_none(), |ui| {
-                self.transport.show(ui, &self.document)
-            })
-            .inner;
-        if let Some(request) = request {
-            let (tx, rx) = mpsc::channel();
-            let ctx = ui.ctx().clone();
-            std::thread::spawn(move || {
-                let _ = tx.send(crate::transport::run(request).map(JobOutput::Spectrum));
-                ctx.request_repaint();
-            });
-            self.job = Some(Job {
-                rx: Some(rx),
-                handle: None,
-                started: Instant::now(),
-                kind: JobKind::Transport,
-                cancelled: false,
-            });
-            self.report(Ok(
-                "Reading transport data and checking the complete stream…".into(),
-            ));
-        }
-        if let Some(preview) = &self.imported {
-            ui.label(&preview.description);
-            if ui.button("Apply imported absolute spectrum").clicked() {
-                self.document["spectrum"] = preview.spectrum.clone();
-                self.imported = None;
-            }
-        }
-        self.tour
-            .mark("spectrum", r.response.rect.intersect(ui.clip_rect()));
-    }
-    fn results(&mut self, ui: &mut egui::Ui) {
-        let accent = crate::visuals::accent(ui);
-        heading(
-            ui,
-            "Explore the inventory",
-            "Select a time and a nuclide to connect the table with its history.",
-        );
-        ui.horizontal(|ui| {
-            let open = ui.button("Open result");
-            self.tour.mark("result_open", open.rect);
-            if open.clicked() {
-                self.open_result(ui.ctx(), false);
-            }
-            if ui
-                .add_enabled(self.result.is_some(), egui::Button::new("Add comparison"))
-                .clicked()
-            {
-                self.open_result(ui.ctx(), true);
-            }
-            if self.comparison.is_some() && ui.button("Remove comparison").clicked() {
-                self.comparison = None;
-            }
-            let export = ui.add_enabled(self.result.is_some(), egui::Button::new("Export JSON"));
-            self.tour.mark("export", export.rect);
-            if export.clicked() {
-                self.export(false);
-            }
-            if ui
-                .add_enabled(
-                    self.result.is_some(),
-                    egui::Button::new("Export inventory CSV"),
-                )
-                .clicked()
-            {
-                self.export(true);
-            }
-        });
-        let Some(result) = &self.result else {
-            let r=ui.group(|ui|{ui.add_space(30.);ui.heading("Your results will appear here");ui.label("Run a calculation or open a result JSON to explore activity, decay heat, and nuclide inventory.");ui.add_space(30.);});
-            self.tour.mark("chart", r.response.rect);
-            self.tour.mark("inventory", r.response.rect);
-            return;
-        };
-        ui.label(RichText::new(&result.label).strong());
-        if self.result_unsaved {
-            ui.colored_label(
-                BLUE,
-                "Unsaved result — Export JSON preserves every step and its evidence.",
-            );
-        }
-        ui.label("Results describe the inputs at the time of the calculation. Editing the problem does not update this result.");
-        if let Some(title) = result.value["spec_title"].as_str() {
-            ui.label(title);
-        }
-        if let Some(other) = &self.comparison {
-            ui.label(format!("Comparison: {} · absolute physical time; normalization is as recorded in each result",other.label));
-        }
-        ui.horizontal(|ui| {
-            for (i, label) in ["Activity (Bq/g)", "Total heat (W/g)", "Inventory (atoms/g)"]
-                .iter()
-                .enumerate()
-            {
-                if ui.selectable_value(&mut self.metric, i, *label).changed() {
-                    self.reset_plot = true;
-                }
-            }
-            if ui.small_button("Reset view").clicked() {
-                self.reset_plot = true;
-            }
-        });
-        ui.horizontal(|ui| {
-            ui.label("Computed step");
-            if ui
-                .checkbox(&mut self.log_time, "Logarithmic time")
-                .changed()
-            {
-                self.reset_plot = true;
-            }
-            ui.add(
-                egui::Slider::new(&mut self.step, 0..=result.steps().len() - 1)
-                    .custom_formatter(|v, _| format!("{}", v as usize + 1)),
-            );
-            ui.label(format!(
-                "t = {:.5e} s",
-                model::number(&result.steps()[self.step]["t_s"])
-            ));
-            if !self.selected.is_empty() {
-                ui.label(format!("Selected: {}", self.selected));
-                if ui.small_button("Clear selection").clicked() {
-                    self.selected.clear();
-                    self.reset_plot = true;
-                }
-            }
-        });
-        let log_time = self.log_time;
-        let plot_time = |t: f64| if log_time { t.log10() } else { t };
-        if log_time {
-            ui.label("Time axis shows log10(seconds); zero-time points are omitted. Tables and exports retain physical time.");
-        }
-        let primary: Vec<[f64; 2]> = result
-            .steps()
-            .iter()
-            .filter(|s| !log_time || model::number(&s["t_s"]) > 0.)
-            .map(|s| {
-                [
-                    plot_time(model::number(&s["t_s"])),
-                    model::metric(s, self.metric, &self.selected),
-                ]
-            })
-            .collect();
-        let mut plot = Plot::new("history")
-            .height(240.)
-            .allow_scroll(false)
-            .x_axis_label(if log_time {
-                "log10(Time / s)"
-            } else {
-                "Time (s)"
-            })
-            .legend(egui_plot::Legend::default());
-        if self.reset_plot {
-            plot = plot.reset();
-            self.reset_plot = false;
-        }
-        let response_key = match self.metric {
-            1 => Some("heat.total".to_owned()),
-            0 if !self.selected.is_empty() => Some(format!("activity:{}", self.selected)),
-            _ => None,
-        };
-        let band = response_key.as_ref().and_then(|key| {
-            result
-                .steps()
-                .iter()
-                .filter(|s| !log_time || model::number(&s["t_s"]) > 0.)
-                .map(|s| {
-                    let b = &s["uncertainty"]["responses"][key]["normal_interval"];
-                    Some((
-                        plot_time(s["t_s"].as_f64()?),
-                        b[0].as_f64()?,
-                        b[1].as_f64()?,
-                    ))
-                })
-                .collect::<Option<Vec<_>>>()
-        });
-        if band.is_some() {
-            ui.label("Shaded band: recorded MF=33 normal interval. Confidence and coverage are in Spectra & pathways.");
-        }
-        let chart = plot.show(ui, |p| {
-            if let Some(band) = &band {
-                let xs: Vec<_> = band.iter().map(|b| b.0).collect();
-                let lower: Vec<_> = band.iter().map(|b| b.1).collect();
-                let upper: Vec<_> = band.iter().map(|b| b.2).collect();
-                p.add(
-                    egui_plot::FilledArea::new("MF=33 normal interval", &xs, &lower, &upper)
-                        .fill_color(accent.gamma_multiply(0.2)),
-                );
-            }
-
-            p.line(
-                Line::new(
-                    if self.selected.is_empty() || self.metric == 1 {
-                        "Whole material"
-                    } else {
-                        &self.selected
-                    },
-                    primary,
-                )
-                .color(accent)
-                .width(2.),
-            );
-            if let Some(other) = &self.comparison {
-                let points: Vec<[f64; 2]> = other
-                    .steps()
-                    .iter()
-                    .filter(|s| !log_time || model::number(&s["t_s"]) > 0.)
-                    .map(|s| {
-                        [
-                            plot_time(model::number(&s["t_s"])),
-                            model::metric(s, self.metric, &self.selected),
-                        ]
-                    })
-                    .collect();
-                p.line(
-                    Line::new(&other.label, points)
-                        .color(Color32::from_rgb(192, 96, 25))
-                        .style(egui_plot::LineStyle::dashed_dense()),
-                );
-            }
-            if !log_time || model::number(&result.steps()[self.step]["t_s"]) > 0. {
-                p.vline(
-                    egui_plot::VLine::new(
-                        "Selected step",
-                        plot_time(model::number(&result.steps()[self.step]["t_s"])),
-                    )
-                    .color(Color32::GRAY),
-                );
-            }
-            if p.response().clicked() {
-                p.pointer_coordinate().map(|c| c.x)
-            } else {
-                None
-            }
-        });
-        self.tour.mark("chart", chart.response.rect);
-        if let Some(time) = chart.inner {
-            self.step = result
-                .steps()
-                .iter()
-                .enumerate()
-                .filter(|(_, s)| !log_time || model::number(&s["t_s"]) > 0.)
-                .min_by(|(_, a), (_, b)| {
-                    (plot_time(model::number(&a["t_s"])) - time)
-                        .abs()
-                        .total_cmp(&(plot_time(model::number(&b["t_s"])) - time).abs())
-                })
-                .map(|(i, _)| i)
-                .unwrap_or(0);
-        }
-        let step = &result.steps()[self.step];
-        egui::CollapsingHeader::new("Which nuclides dominate activity?")
-            .open(self.capture.as_ref().map(|_| true))
-            .show(ui, |ui| {
-                crate::visuals::contributors(ui, step, &mut self.selected)
-            });
-        ui.horizontal(|ui| {
-            ui.label(format!("Activity  {:.4e} Bq/g", model::metric(step, 0, "")));
-            ui.separator();
-            ui.label(format!("Heat  {:.4e} W/g", model::metric(step, 1, "")));
-            ui.separator();
-            ui.label(format!(
-                "Inventory  {:.4e} atoms/g",
-                model::metric(step, 2, "")
-            ));
-        });
-        let table = ui.scope(|ui| {
-            ui.horizontal(|ui| {
-                ui.add(egui::TextEdit::singleline(&mut self.filter).hint_text("Filter nuclides…"));
-                ui.checkbox(&mut self.descending, "Highest activity first");
-            });
-            // This runs every frame: lower-case the filter once and compare borrowed names.
-            let filter = self.filter.to_lowercase();
-            let mut rows: Vec<_> = step["inventory"]
-                .as_array()
-                .map(|a| {
-                    a.iter()
-                        .filter(|r| {
-                            r["nuclide"]
-                                .as_str()
-                                .unwrap_or("")
-                                .to_lowercase()
-                                .contains(&filter)
-                        })
-                        .collect()
-                })
-                .unwrap_or_default();
-            rows.sort_by(|a, b| {
-                fn name(v: &Value) -> &str {
-                    v["nuclide"].as_str().unwrap_or("")
-                }
-                if self.descending {
-                    model::number(&step["activity_Bq_per_g"][name(b)])
-                        .total_cmp(&model::number(&step["activity_Bq_per_g"][name(a)]))
-                } else {
-                    name(a).cmp(name(b))
-                }
-            });
-            TableBuilder::new(ui)
-                .id_salt("inventory-table")
-                .striped(true)
-                .resizable(true)
-                .column(Column::initial(220.).at_least(120.))
-                .columns(Column::remainder().at_least(165.), 2)
-                .max_scroll_height(250.)
-                .header(28., |mut h| {
-                    for label in ["Nuclide", "Atoms / g", "Activity (Bq / g)"] {
-                        h.col(|ui| {
-                            ui.strong(label);
-                        });
-                    }
-                })
-                .body(|body| {
-                    body.rows(27., rows.len(), |mut row| {
-                        let v = rows[row.index()];
-                        let name = v["nuclide"].as_str().unwrap_or("");
-                        row.set_selected(self.selected == name);
-                        row.col(|ui| {
-                            if ui.selectable_label(self.selected == name, name).clicked() {
-                                self.selected = name.into();
-                                self.reset_plot = true;
-                            }
-                        });
-                        row.col(|ui| {
-                            ui.monospace(format!("{:.6e}", model::number(&v["atoms_per_g"])));
-                        });
-                        row.col(|ui| {
-                            ui.monospace(format!(
-                                "{:.6e}",
-                                model::number(&step["activity_Bq_per_g"][name])
-                            ));
-                        });
-                    });
-                });
-        });
-        self.tour
-            .mark("inventory", table.response.rect.intersect(ui.clip_rect()));
-        self.sweep_panel(ui);
-    }
-
-    /// Interactive parameter sweep (P48). Every point is a full generated
-    /// spec solved through the same isolated worker path as a manual run;
-    /// the plot binds each rendered value to its spec digest.
-    fn sweep_panel(&mut self, ui: &mut egui::Ui) {
-        ui.separator();
-        heading(
-            ui,
-            "Sweep a parameter",
-            "Each point is a complete solver run on a generated spec — the same qualified path as a manual Run. Results stay bound to their parameters.",
-        );
-        const AXES: [&str; 3] = [
-            "Composition fraction (wt%)",
-            "Flux normalization (×)",
-            "Cooling step duration (s)",
-        ];
-        let axis_obj = match self.sweep.axis {
-            0 => crate::sweep::SweepAxis::CompositionFraction {
-                element: self.sweep.element.clone(),
-            },
-            1 => crate::sweep::SweepAxis::FluxNormalization,
-            _ => crate::sweep::SweepAxis::CoolingTimeS {
-                step_index: self.sweep.step_index,
-            },
-        };
-        ui.horizontal(|ui| {
-            egui::ComboBox::from_id_salt("sweep-axis")
-                .selected_text(AXES[self.sweep.axis])
-                .show_ui(ui, |ui| {
-                    for (i, a) in AXES.iter().enumerate() {
-                        ui.selectable_value(&mut self.sweep.axis, i, *a);
-                    }
-                });
-            match self.sweep.axis {
-                0 => {
-                    let mut elems: Vec<String> = self.document["material"]["composition"]
-                        .as_object()
-                        .map(|m| m.keys().cloned().collect())
-                        .unwrap_or_default();
-                    elems.sort();
-                    if self.sweep.element.is_empty() {
-                        self.sweep.element = elems.first().cloned().unwrap_or_default();
-                    }
-                    egui::ComboBox::from_id_salt("sweep-element")
-                        .selected_text(&self.sweep.element)
-                        .show_ui(ui, |ui| {
-                            for e in &elems {
-                                ui.selectable_value(&mut self.sweep.element, e.clone(), e);
-                            }
-                        });
-                }
-                2 => {
-                    let n = self.document["schedule"]
-                        .as_array()
-                        .map(|s| s.len())
-                        .unwrap_or(0);
-                    egui::ComboBox::from_id_salt("sweep-step")
-                        .selected_text(format!("cooling step {}", self.sweep.step_index + 1))
-                        .show_ui(ui, |ui| {
-                            for i in 0..n {
-                                ui.selectable_value(
-                                    &mut self.sweep.step_index,
-                                    i,
-                                    format!("step {}", i + 1),
-                                );
-                            }
-                        });
-                }
-                _ => {}
-            }
-        });
-        ui.horizontal(|ui| {
-            ui.label("from");
-            ui.add(egui::DragValue::new(&mut self.sweep.lo).speed(0.05));
-            ui.label("to");
-            ui.add(egui::DragValue::new(&mut self.sweep.hi).speed(0.05));
-            ui.label("points");
-            ui.add(
-                egui::DragValue::new(&mut self.sweep.count)
-                    .range(2..=crate::sweep::MAX_SWEEP_POINTS),
-            );
-            egui::ComboBox::from_id_salt("sweep-response")
-                .selected_text(self.sweep.response.label())
-                .show_ui(ui, |ui| {
-                    for r in [
-                        crate::sweep::SweepResponse::TotalActivityBqPerG,
-                        crate::sweep::SweepResponse::TotalHeatWPerG,
-                    ] {
-                        ui.selectable_value(&mut self.sweep.response, r, r.label());
-                    }
-                });
-            ui.label("at step");
-            let nsteps = self
-                .result
-                .as_ref()
-                .and_then(|r| r.value["steps"].as_array().map(|s| s.len()))
-                .unwrap_or(1);
-            egui::ComboBox::from_id_salt("sweep-steprow")
-                .selected_text(format!("{}", self.sweep.step_row + 1))
-                .show_ui(ui, |ui| {
-                    for i in 0..nsteps {
-                        ui.selectable_value(&mut self.sweep.step_row, i, format!("{}", i + 1));
-                    }
-                });
-        });
-        ui.horizontal(|ui| {
-            if self.sweep.running {
-                if ui.button("Cancel sweep").clicked() {
-                    if let Some(h) = &self.sweep.handle {
-                        h.request_cancel();
-                    }
-                    self.sweep.running = false;
-                    self.report(Ok(
-                        "Sweep cancellation requested; the current worker is stopping and the queue is abandoned."
-                            .into(),
-                    ));
-                }
-                ui.spinner();
-                ui.label(format!(
-                    "{} point(s) finished",
-                    self.sweep.points.len()
-                ));
-            } else if ui.button("Run sweep").clicked() {
-                self.run_sweep();
-            }
-            ui.checkbox(
-                &mut self.sweep.screened,
-                "certified screening (warm cache — each point emits the P65 certificate)",
-            );
-            let live_resp = ui.checkbox(
-                &mut self.sweep.live,
-                "live (slider — solves only the newest position, certified)",
-            );
-            ui.checkbox(
-                &mut self.sweep.frontier,
-                "frontier (activity vs heat Pareto of landed points)",
-            );
-            if live_resp.changed() {
-                if self.sweep.live {
-                    // Entering live mode supersedes any batch sweep and
-                    // clears the plotted curve for a fresh generation.
-                    if let Some(h) = &self.sweep.handle {
-                        h.request_cancel();
-                    }
-                    self.sweep.handle = None;
-                    self.sweep.running = false;
-                    self.sweep.generation += 1;
-                    self.sweep.points.clear();
-                    self.sweep.live_value = self.sweep.lo
-                        .clamp(self.sweep.lo.min(self.sweep.hi),
-                               self.sweep.lo.max(self.sweep.hi));
-                } else {
-                    self.sweep.live_handle = None; // drop cancels+joins
-                }
-            }
-        });
-        if self.sweep.live {
-            let axis = match self.sweep.axis {
-                0 => crate::sweep::SweepAxis::CompositionFraction {
-                    element: self.sweep.element.clone(),
-                },
-                1 => crate::sweep::SweepAxis::FluxNormalization,
-                _ => crate::sweep::SweepAxis::CoolingTimeS {
-                    step_index: self.sweep.step_index,
-                },
-            };
-            let (lo, hi) = (
-                self.sweep.lo.min(self.sweep.hi),
-                self.sweep.lo.max(self.sweep.hi),
-            );
-            let slider = egui::Slider::new(&mut self.sweep.live_value, lo..=hi)
-                .logarithmic(lo > 0.0)
-                .text(axis.label());
-            if ui.add(slider).changed() {
-                if self.sweep.live_handle.is_none() {
-                    match crate::sweep::spawn_sweep_live(crate::sweep::SCREEN_BMIN) {
-                        Ok(h) => self.sweep.live_handle = Some(h),
-                        Err(e) => self.report(Err(format!("live probe: {e}"))),
-                    }
-                }
-                if let Some(h) = &self.sweep.live_handle {
-                    match crate::sweep::sweep_specs(&self.document, &axis, &[self.sweep.live_value])
-                    {
-                        Ok(mut pts) => {
-                            if let Some(p) = pts.pop() {
-                                h.submit(self.sweep.generation, p);
-                            }
-                        }
-                        Err(e) => self.report(Err(format!("live spec: {e}"))),
-                    }
-                }
-            }
-        }
-        if self.sweep.points.is_empty() {
-            ui.label("No completed points yet.");
-        } else {
-            let accent = crate::visuals::accent(ui);
-            let mut pts: Vec<[f64; 2]> = Vec::new();
-            let mut failures = 0usize;
-            for p in &self.sweep.points {
-                match &p.result {
-                    Ok(v) => {
-                        if let Some(y) = self.sweep.response.extract(v, self.sweep.step_row) {
-                            pts.push([p.param, y]);
-                        }
-                    }
-                    Err(_) => failures += 1,
-                }
-            }
-            pts.sort_by(|a, b| a[0].total_cmp(&b[0]));
-            egui_plot::Plot::new("sweep-plot")
-                .height(220.)
-                .allow_scroll(false)
-                .x_axis_label(axis_obj.label())
-                .y_axis_label(self.sweep.response.label())
-                .show(ui, |p| {
-                    p.line(egui_plot::Line::new("sweep", pts.clone()).color(accent));
-                    p.points(
-                        egui_plot::Points::new("sweep points", pts.clone())
-                            .radius(4.)
-                            .color(accent),
-                    );
-                });
-            if self.sweep.frontier {
-                // Live Pareto view: (activity, heat) per landed point at
-                // the selected step row; nondominated staircase live.
-                let mut pairs: Vec<(f64, f64, String)> = Vec::new();
-                for p in &self.sweep.points {
-                    if let Ok(v) = &p.result {
-                        let a = crate::sweep::SweepResponse::TotalActivityBqPerG
-                            .extract(v, self.sweep.step_row);
-                        let h = crate::sweep::SweepResponse::TotalHeatWPerG
-                            .extract(v, self.sweep.step_row);
-                        if let (Some(a), Some(h)) = (a, h) {
-                            pairs.push((a, h, p.label.clone()));
-                        }
-                    }
-                }
-                if pairs.len() >= 2 {
-                    let nd = crate::sweep::nondominated(
-                        &pairs.iter().map(|(a, h, _)| (*a, *h)).collect::<Vec<_>>(),
-                    );
-                    let mut front: Vec<[f64; 2]> = pairs
-                        .iter()
-                        .zip(&nd)
-                        .filter(|(_, d)| **d)
-                        .map(|((a, h, _), _)| [*a, *h])
-                        .collect();
-                    front.sort_by(|x, y| x[0].total_cmp(&y[0]));
-                    let all: Vec<[f64; 2]> = pairs.iter().map(|(a, h, _)| [*a, *h]).collect();
-                    egui_plot::Plot::new("sweep-frontier")
-                        .height(200.)
-                        .allow_scroll(false)
-                        .x_axis_label("total activity Bq/g")
-                        .y_axis_label("total heat W/g")
-                        .legend(egui_plot::Legend::default())
-                        .show(ui, |p| {
-                            p.points(
-                                egui_plot::Points::new("landed", all)
-                                    .radius(4.)
-                                    .color(egui::Color32::from_gray(140)),
-                            );
-                            p.points(
-                                egui_plot::Points::new("nondominated", front.clone())
-                                    .radius(5.5)
-                                    .color(accent),
-                            );
-                            p.line(egui_plot::Line::new("frontier", front.clone()).color(accent));
-                        });
-                    ui.monospace(format!(
-                        "{} of {} landed points nondominated — nominal frontier at step {}",
-                        front.len(),
-                        pairs.len(),
-                        self.sweep.step_row + 1
-                    ));
-                } else {
-                    ui.label("frontier needs ≥2 landed points with heat + activity");
-                }
-            }
-            let last = self.sweep.points.last();
-            ui.label(format!(
-                "{} point(s) plotted · {} failed · generation {}",
-                pts.len(),
-                failures,
-                self.sweep.generation
-            ));
-            if let Some(p) = last {
-                let tier = match (p.cache_hit, p.screen_kept_states) {
-                    (Some(hit), Some(kept)) => format!(
-                        "screened · {} states kept · cache {}",
-                        kept,
-                        if hit { "warm" } else { "cold" }
-                    ),
-                    _ => "isolated worker".to_string(),
-                };
-                ui.monospace(format!(
-                    "latest: {} · {} ms · {} · spec sha256 {}… — every rendered point is bound to the spec that produced it",
-                    p.label,
-                    p.elapsed_ms,
-                    tier,
-                    &p.spec_sha256[..16]
-                ));
-            }
-        }
-        self.assay_panel(ui);
-    }
-
-    /// Assay panel: fold an `actinv-assay-1` document (scalar, entries,
-    /// or mixture) into the loaded result's certified bands through the
-    /// same fusion path the CLI `assimilate` command runs. Preview
-    /// shows the per-response update before Apply commits it.
-    fn assay_panel(&mut self, ui: &mut egui::Ui) {
-        if self.result.is_none() {
-            return;
-        }
-        ui.add_space(8.);
-        ui.group(|ui| {
-            ui.label(RichText::new("Fold a measurement into these bands").strong());
-            ui.label(
-                "Paste an actinv-assay-1 assay — scalar fields, an `entries` list (multi-nuclide count), or a `mixture` (linear-combination measurement) — then preview the Kalman update before applying it.",
-            );
-            ui.horizontal(|ui| {
-                if ui.button("Load assay file…").clicked() {
-                    if let Some(p) =
-                        rfd::FileDialog::new().add_filter("JSON", &["json"]).pick_file()
-                    {
-                        match std::fs::read_to_string(&p) {
-                            Ok(text) => {
-                                self.assay_text = text;
-                                self.assay_pending = None;
-                            }
-                            Err(e) => self
-                                .report(Err(format!("cannot read {}: {e}", p.display()))),
-                        }
-                    }
-                }
-                let preview = ui.add_enabled(
-                    !self.assay_text.trim().is_empty(),
-                    egui::Button::new("Preview fusion"),
-                );
-                if preview.clicked() {
-                    self.assay_pending = None;
-                    let res = &self.result.as_ref().expect("checked").value;
-                    let fused = serde_json::from_str::<Value>(&self.assay_text)
-                        .map_err(|e| e.to_string())
-                        .and_then(|a| {
-                            actinv_cli::assimilate::fuse_document(res, &a, "workbench")
-                        });
-                    match fused {
-                        Ok(pending) => {
-                            self.assay_pending = Some(pending);
-                        }
-                        Err(e) => self.report(Err(format!("assay fusion: {e}"))),
-                    }
-                }
-                let apply = ui.add_enabled(
-                    self.assay_pending.is_some(),
-                    egui::Button::new("Apply to result"),
-                );
-                if apply.clicked() {
-                    if let Some((_, updated)) = self.assay_pending.take() {
-                        let label = format!(
-                            "{} · assay fused",
-                            self.result
-                                .as_ref()
-                                .map(|r| r.label.as_str())
-                                .unwrap_or_default()
-                        );
-                        match ResultDocument::parse(updated, label) {
-                            Ok(doc) => {
-                                self.result = Some(doc);
-                                self.result_unsaved = true;
-                                self.report(Ok(
-                                    "Assay applied — the certified bands now carry the measurement."
-                                        .into(),
-                                ));
-                            }
-                            Err(e) => {
-                                self.report(Err(format!("fused result rejected: {e}")))
-                            }
-                        }
-                    }
-                }
-            });
-            ui.add(
-                egui::TextEdit::multiline(&mut self.assay_text)
-                    .hint_text(
-                        "{\n  \"schema\": \"actinv-assay-1\",\n  \"response\": \"heat.total\",\n  \"time_s\": 3600,\n  \"value\": 1.2e-6,\n  \"standard_uncertainty\": 3e-8\n}",
-                    )
-                    .desired_rows(5)
-                    .font(egui::TextStyle::Monospace),
-            );
-            if let Some((summary, _)) = &self.assay_pending {
-                let verdict = summary["verdict"].as_str().unwrap_or("assimilated");
-                let color = match verdict {
-                    "consistent" => Color32::from_rgb(0, 120, 60),
-                    "marginal" => Color32::from_rgb(160, 110, 0),
-                    "conflict" => Color32::from_rgb(180, 30, 30),
-                    _ => BLUE,
-                };
-                ui.horizontal(|ui| {
-                    ui.colored_label(color, RichText::new(verdict).strong());
-                    if let Some(mc) = summary["measured_combination"].as_object() {
-                        ui.label(format!(
-                            "measured {:.4e} · forward {:.4e} · innovation {:.3} ln",
-                            mc["value"].as_f64().unwrap_or(f64::NAN),
-                            mc["forward_value"].as_f64().unwrap_or(f64::NAN),
-                            mc["innovation_ln"].as_f64().unwrap_or(f64::NAN),
-                        ));
-                    }
-                });
-                let rows: Vec<Value> = if let Some(u) = summary["updates"].as_array() {
-                    u.iter()
-                        .map(|u| {
-                            json!({
-                                "response": u["response"],
-                                "prior": u["prior"]["nominal"],
-                                "posterior": u["update"]["posterior"],
-                                "gain": u["update"]["kalman_gain"],
-                                "verdict": u["verdict"],
-                            })
-                        })
-                        .collect()
-                } else if let Some(ts) = summary["terms"].as_array() {
-                    ts.iter()
-                        .map(|t| {
-                            json!({
-                                "response": t["response"],
-                                "share": t["share_of_combination"],
-                                "prior": t["prior_nominal"],
-                                "posterior": t["posterior"],
-                                "gain": t["kalman_gain"],
-                                "verdict": summary["verdict"],
-                            })
-                        })
-                        .collect()
-                } else {
-                    Vec::new()
-                };
-                TableBuilder::new(ui)
-                    .striped(true)
-                    .column(Column::auto())
-                    .column(Column::auto())
-                    .column(Column::auto())
-                    .column(Column::auto())
-                    .column(Column::auto())
-                    .column(Column::auto())
-                    .header(18.0, |mut h| {
-                        for c in
-                            ["response", "share", "prior", "posterior", "gain", "verdict"]
-                        {
-                            h.col(|ui| {
-                                ui.label(RichText::new(c).strong());
-                            });
-                        }
-                    })
-                    .body(|mut b| {
-                        for row in &rows {
-                            b.row(16.0, |mut r| {
-                                r.col(|ui| {
-                                    ui.monospace(row["response"].as_str().unwrap_or(""));
-                                });
-                                r.col(|ui| {
-                                    let s = row["share"].as_f64();
-                                    ui.monospace(
-                                        s.map(|v| format!("{v:.3}"))
-                                            .unwrap_or_else(|| "—".into()),
-                                    );
-                                });
-                                for k in ["prior", "posterior", "gain"] {
-                                    r.col(|ui| {
-                                        let v = row[k].as_f64();
-                                        ui.monospace(
-                                            v.map(|v| format!("{v:.4e}"))
-                                                .unwrap_or_else(|| "—".into()),
-                                        );
-                                    });
-                                }
-                                r.col(|ui| {
-                                    ui.monospace(row["verdict"].as_str().unwrap_or(""));
-                                });
-                            });
-                        }
-                    });
-                if summary["induced_correlations"].is_object() {
-                    ui.label(
-                        "Mixture terms are correlated after this update — the emitted record carries the induced matrix.",
-                    );
-                }
-            }
-        });
-    }
-
-    fn run_sweep(&mut self) {
-        use crate::sweep::SweepAxis;
-        let axis = match self.sweep.axis {
-            0 => SweepAxis::CompositionFraction {
-                element: self.sweep.element.clone(),
-            },
-            1 => SweepAxis::FluxNormalization,
-            _ => SweepAxis::CoolingTimeS {
-                step_index: self.sweep.step_index,
-            },
-        };
-        let (lo, hi) = (self.sweep.lo, self.sweep.hi);
-        let n = self.sweep.count.max(2);
-        let values: Vec<f64> = (0..n)
-            .map(|i| lo + (hi - lo) * i as f64 / (n - 1) as f64)
-            .collect();
-        let base = &self.document;
-        match crate::sweep::sweep_specs(base, &axis, &values) {
-            Err(e) => self.report(Err(format!("sweep setup: {e}"))),
-            Ok(points) => {
-                // Supersede any running sweep: dropping the old handle
-                // cancels its worker and joins the supervisor; the new
-                // generation makes any late point inadmissible.
-                self.sweep.handle = None;
-                self.sweep.generation += 1;
-                self.sweep.points.clear();
-                let cache = std::env::temp_dir().join(format!(
-                    "actinv-sweep-{}-{}",
-                    std::process::id(),
-                    self.sweep.generation
-                ));
-                let launched = if self.sweep.screened {
-                    crate::sweep::spawn_sweep_screened(
-                        points,
-                        self.sweep.generation,
-                        crate::sweep::SCREEN_BMIN,
-                    )
-                    .map(|h| (h, "certified-screening"))
-                } else {
-                    crate::sweep::spawn_sweep(points, self.sweep.generation, cache)
-                        .map(|h| (h, "isolated-worker"))
-                };
-                match launched {
-                    Ok((h, tier)) => {
-                        self.sweep.handle = Some(h);
-                        self.sweep.running = true;
-                        self.report(Ok(format!(
-                            "Sweep running: {} generated specs through the {} path.",
-                            n, tier
-                        )));
-                    }
-                    Err(e) => self.report(Err(format!("sweep launch: {e}"))),
-                }
-            }
-        }
-    }
-
-    fn details(&mut self, ui: &mut egui::Ui) {
-        let accent = crate::visuals::accent(ui);
-        heading(
-            ui,
-            "Spectra & production pathways",
-            "Explore optional outputs recorded by the calculation.",
-        );
-        let r=ui.scope(|ui|{
-            let Some(result)=&self.result else{ui.label("Open a result in Results, or run a calculation first.");return;};
-            ui.add(egui::Slider::new(&mut self.step,0..=result.steps().len()-1).text("Computed step").custom_formatter(|v,_|format!("{}",v as usize+1)));let step=&result.steps()[self.step];
-            ui.heading("Decay photon source");
-            if step["photon_source"].is_null(){ui.label("No photon source was requested. Add \"photons\" to options.outputs in Advanced JSON, then run again.");}else{
-                if let Some(groups)=step["photon_source"]["groups"].as_array(){
-                    if groups.iter().any(|g|model::number(&g["photons_s_g"])>0.) {
-                    let bars:Vec<_>=groups.iter().map(|g|egui_plot::Bar::new(model::number(&g["centroid_eV"])/1e6,model::number(&g["photons_s_g"])).width((model::number(&g["high_eV"])-model::number(&g["low_eV"]))/1e6)).collect();
-                    Plot::new("photon-groups").height(230.).allow_scroll(false).x_axis_label("Photon energy (MeV)").y_axis_label("Photons / s / g per group").show(ui,|p|p.bar_chart(egui_plot::BarChart::new("Decay photons",bars).color(accent)));
-                }
-                    else {ui.label("No grouped photon emission is recorded at this step. Review the photon source details and ledger for missing evaluated spectra or unrepresented emission.");}
-                }
-                json_tree(ui,"Photon source",&step["photon_source"]);
-            }
-            ui.separator();ui.heading("Production pathways");
-            if let Some(pathways)=result.value["pathways"].as_array().and_then(|p|p.get(self.step)).and_then(Value::as_object){
-                if pathways.is_empty(){ui.label("No production pathways were recorded for this step. Pathway decomposition is available in trace mode.");}
-                if !pathways.contains_key(&self.selected){self.selected=pathways.keys().next().cloned().unwrap_or_default();self.scene_view=egui::Rect::ZERO;}
-                egui::ComboBox::from_id_salt("pathway-isotope").selected_text(if self.selected.is_empty(){"Choose a nuclide"}else{&self.selected}).show_ui(ui,|ui|{for key in pathways.keys(){ui.selectable_value(&mut self.selected,key.clone(),key);}});
-                if let Some(paths)=pathways.get(&self.selected).and_then(Value::as_array){
-                    ui.horizontal(|ui|{ui.label("Drag to pan; scroll to zoom.");if ui.small_button("Fit pathways").clicked(){self.scene_view=egui::Rect::ZERO;}});
-                    ui.allocate_ui(Vec2::new(ui.available_width(),240.),|ui|{
-                        egui::Scene::new().zoom_range(0.2..=2.).show(ui,&mut self.scene_view,|ui|{
-                    let (rect,_)=ui.allocate_exact_size(Vec2::new(700.,(paths.len().min(12) as f32*52.).max(70.)),egui::Sense::hover());
-                    for (i,path) in paths.iter().take(12).enumerate(){
-                        draw_pathway(ui,rect,i,path,&self.selected,&mut self.pathway_node);
-                    }
-                        });
-                    });
-                    if !self.pathway_node.is_empty(){
-                        let atom=step["inventory"].as_array().and_then(|rows|rows.iter().find(|r|r["nuclide"].as_str()==Some(&self.pathway_node))).and_then(|r|r["atoms_per_g"].as_f64());
-                        ui.group(|ui|{ui.strong(format!("{} at step {}",self.pathway_node,self.step+1));if let Some(atoms)=atom{ui.label(format!("{atoms:.6e} atoms/g"));}else{ui.label("No inventory entry was recorded for this node at this step.");}
-if let Some(activity)=step["activity_Bq_per_g"][&self.pathway_node].as_f64(){ui.label(format!("{activity:.6e} Bq/g"));}});
-                    }
-                    ui.label("Source > first product > selected nuclide. Intermediate chain members are not enumerated in this result format. Diagram shows up to 12 ranked contributions.");json_tree(ui,"All contributions",&Value::Array(paths.clone()));
-                }
-            }else{ui.label("No pathway output is present.");}
-            for key in ["uncertainty","radiological"]{if !step[key].is_null(){json_tree(ui,key,&step[key]);}}
-        });
-        self.tour
-            .mark("details", r.response.rect.intersect(ui.clip_rect()));
-    }
-    fn ledger(&mut self, ui: &mut egui::Ui) {
-        heading(
-            ui,
-            "Ledger & certificate",
-            "Inspect missing data, approximations, and the provenance behind the answer.",
-        );
-        let r = ui.scope(|ui| {
-            if let Some(result) = &self.result {
-                ui.add(egui::TextEdit::singleline(&mut self.ledger_filter).hint_text("Filter evidence by field or value…").desired_width(360.));
-                if self.ledger_filter.is_empty(){
-                    json_tree(ui, "Ledger", &result.value["ledger"]);
-                    json_tree(ui, "Certificate", &result.value["certificate"]);
-                }else{
-                    let query=self.ledger_filter.to_lowercase();let mut found=false;
-                    for section in ["ledger","certificate"]{ui.heading(section);if let Some(entries)=result.value[section].as_object(){for (key,value) in entries{if key.to_lowercase().contains(&query)||value.to_string().to_lowercase().contains(&query){found=true;json_tree(ui,key,value);}}}}
-                    if !found{ui.label("No matching evidence fields. Try a nuclide name, a file hash, or a category such as decay.");}
-                }
-            } else {
-                ui.label("Run a calculation or open a result to inspect its evidence.");
-            }
-        });
-        self.tour
-            .mark("ledger", r.response.rect.intersect(ui.clip_rect()));
-    }
-    fn advanced(&mut self, ui: &mut egui::Ui) {
-        heading(ui,"Advanced specification","Edit every ACTINV option. Apply checks the schema; Validate checks the scientific inputs.");
-        if !self.raw_dirty && self.raw_source != self.document {
-            self.raw = serde_json::to_string_pretty(&self.document).unwrap_or_default();
-            self.raw_source = self.document.clone();
-        }
-        ui.horizontal(|ui| {
-            if ui
-                .add_enabled(self.raw_dirty, egui::Button::new("Apply JSON edits"))
-                .clicked()
-            {
-                match model::decode_problem(&self.raw) {
-                    Ok(v) => {
-                        self.document = v;
-                        self.raw_dirty = false;
-                        self.report(Ok("JSON edits applied.".into()));
-                    }
-                    Err(e) => self.report(Err(e)),
-                }
-            }
-            if ui
-                .add_enabled(self.raw_dirty, egui::Button::new("Discard JSON edits"))
-                .clicked()
-            {
-                self.raw_dirty = false;
-            }
-            ui.label("Other editors pause while JSON edits are pending.");
-        });
-        egui::ScrollArea::both().show(ui, |ui| {
-            let theme =
-                egui_extras::syntax_highlighting::CodeTheme::from_memory(ui.ctx(), ui.style());
-            let mut layouter = |ui: &egui::Ui, text: &dyn egui::TextBuffer, wrap_width: f32| {
-                let mut job = egui_extras::syntax_highlighting::highlight(
-                    ui.ctx(),
-                    ui.style(),
-                    &theme,
-                    text.as_str(),
-                    "json",
-                );
-                job.wrap.max_width = wrap_width;
-                ui.fonts_mut(|f| f.layout_job(job))
-            };
-            if ui
-                .add(
-                    egui::TextEdit::multiline(&mut self.raw)
-                        .font(egui::TextStyle::Monospace)
-                        .code_editor()
-                        .desired_rows(28)
-                        .desired_width(f32::INFINITY)
-                        .layouter(&mut layouter),
-                )
-                .changed()
-            {
-                self.raw_dirty = true;
-            }
-        });
     }
 }
 impl eframe::App for Desktop {
@@ -2025,7 +640,7 @@ impl eframe::App for Desktop {
                 match result {
                     Ok(JobOutput::Spectrum(preview)) => {
                         self.imported = Some(preview);
-                        self.page = 3;
+                        self.page = Page::Spectrum;
                         self.report(Ok(
                             "Transport spectrum ready. Review the preview and apply explicitly."
                                 .into(),
@@ -2033,7 +648,7 @@ impl eframe::App for Desktop {
                     }
                     Ok(JobOutput::Data(fragment)) => {
                         self.downloaded = Some(fragment);
-                        self.page = 0;
+                        self.page = Page::Overview;
                         self.report(Ok(
                         "Data downloaded and verified. Use the installed paths below when ready."
                             .into(),
@@ -2047,7 +662,7 @@ impl eframe::App for Desktop {
                                 self.step = 0;
                                 self.selected.clear();
                                 self.reset_plot = true;
-                                self.page = 4;
+                                self.page = Page::Results;
                                 self.report(Ok(
                                 "Calculation complete. Explore the results and review the ledger."
                                     .into(),
@@ -2150,8 +765,8 @@ impl Desktop {
         egui::CentralPanel::default().show(ui,|ui|{
             egui::ScrollArea::vertical().id_salt(("page",self.page)).show(ui,|ui|{
                 ui.add_space(12.);
-                if self.raw_dirty && self.page<4{ui.colored_label(BLUE,"Apply or discard your pending edits in Advanced JSON to resume editing here.");}
-                ui.add_enabled_ui(!self.raw_dirty||self.page>=4,|ui|{match self.page {0=>self.setup(ui),1=>self.material(ui),2=>self.schedule(ui),3=>self.spectrum(ui),4=>self.results(ui),5=>self.details(ui),6=>self.ledger(ui),_=>self.advanced(ui)}});
+                if self.raw_dirty && self.page.group()==Group::Setup{ui.colored_label(BLUE,"Apply or discard your pending edits in Advanced JSON to resume editing here.");}
+                ui.add_enabled_ui(!self.raw_dirty||self.page.group()!=Group::Setup,|ui|{self.page_body(ui);});
             });
         });
         if before != self.document {
@@ -2191,7 +806,7 @@ impl Desktop {
                         match action {
                             ResultAction::Run => self.run(&ctx),
                             ResultAction::Open => self.open_result(&ctx, false),
-                            ResultAction::Tutorial => { self.result = Some(model::tutorial_result()); self.step=0; self.selected.clear(); self.comparison=None; self.page=4; self.reset_plot=true; self.tour.start(true); },
+                            ResultAction::Tutorial => { self.result = Some(model::tutorial_result()); self.step=0; self.selected.clear(); self.comparison=None; self.page=Page::Results; self.reset_plot=true; self.tour.start(true); },
                             ResultAction::Close => { if self.dirty() || self.job.is_some() { self.pending = Some(Pending::Close); } else { self.allow_close=true; ctx.send_viewport_cmd(egui::ViewportCommand::Close); } },
                         }
                     }
@@ -2203,122 +818,8 @@ impl Desktop {
         }
     }
 }
-fn basis_label(basis: &str) -> &str {
-    match basis {
-        "wt_percent" => "Weight percent (%)",
-        "atom_fraction" => "Atomic ratios",
-        "atoms_per_g" => "Atoms per gram",
-        _ => basis,
-    }
-}
-fn draw_pathway(
-    ui: &mut egui::Ui,
-    rect: egui::Rect,
-    index: usize,
-    path: &Value,
-    selected: &str,
-    inspected: &mut String,
-) {
-    let source = path["from"].as_str().unwrap_or("?");
-    let first = path["first_product"].as_str().unwrap_or("?");
-    let names = if first == selected {
-        vec![source, selected]
-    } else {
-        vec![source, first, selected]
-    };
-    let y = rect.top() + 26. + index as f32 * 52.;
-    let xs: Vec<_> = (0..names.len())
-        .map(|i| rect.left() + 65. + (rect.width() - 130.) * i as f32 / (names.len() - 1) as f32)
-        .collect();
-    for i in 0..names.len() - 1 {
-        let from = egui::pos2(xs[i] + 47., y);
-        let to = egui::pos2(xs[i + 1] - 50., y);
-        ui.painter()
-            .line_segment([from, to], egui::Stroke::new(1.5, BLUE));
-        ui.painter().add(egui::Shape::convex_polygon(
-            vec![to, to + Vec2::new(-9., -5.), to + Vec2::new(-9., 5.)],
-            BLUE,
-            egui::Stroke::NONE,
-        ));
-        if i == 1 {
-            ui.painter().text(
-                egui::pos2((from.x + to.x) / 2., y - 12.),
-                egui::Align2::CENTER_CENTER,
-                "via chain",
-                egui::FontId::proportional(10.),
-                Color32::DARK_GRAY,
-            );
-        }
-    }
-    for (i, (x, name)) in xs.into_iter().zip(names).enumerate() {
-        let node = egui::Rect::from_center_size(egui::pos2(x, y), Vec2::new(95., 32.));
-        if ui
-            .interact(
-                node,
-                egui::Id::new(("pathway-node", index, i)),
-                egui::Sense::click(),
-            )
-            .on_hover_text("Click to inspect this nuclide at the selected step")
-            .clicked()
-        {
-            *inspected = name.into();
-        }
-        ui.painter()
-            .rect_filled(node, 5., Color32::from_rgb(229, 226, 250));
-        ui.painter().text(
-            node.center(),
-            egui::Align2::CENTER_CENTER,
-            name,
-            egui::FontId::proportional(14.),
-            BLUE,
-        );
-    }
-    ui.painter().text(
-        egui::pos2(rect.center().x, y + 20.),
-        egui::Align2::CENTER_TOP,
-        format!(
-            "{:.2}% of product atoms",
-            100. * model::number(&path["fraction"])
-        ),
-        egui::FontId::proportional(10.),
-        Color32::DARK_GRAY,
-    );
-}
 
-fn heading(ui: &mut egui::Ui, title: &str, subtitle: &str) {
-    ui.heading(RichText::new(title).size(27.));
-    let color = if ui.visuals().dark_mode {
-        Color32::from_rgb(175, 184, 205)
-    } else {
-        Color32::from_rgb(85, 93, 112)
-    };
-    ui.label(RichText::new(subtitle).color(color));
-    ui.add_space(16.);
-}
-fn text_field(ui: &mut egui::Ui, value: &mut Value) {
-    let mut s = value.as_str().unwrap_or("").to_owned();
-    if ui
-        .add(egui::TextEdit::singleline(&mut s).desired_width(230.))
-        .changed()
-    {
-        *value = s.into();
-    }
-}
-fn numeric(ui: &mut egui::Ui, value: &mut Value, speed: f64) {
-    let mut n = model::number(value);
-    if ui
-        .add(
-            egui::DragValue::new(&mut n)
-                .custom_parser(model::parse_finite)
-                .speed(speed)
-                .range(0.0..=f64::MAX),
-        )
-        .changed()
-    {
-        *value = json!(n);
-    }
-}
-fn path_field(ui: &mut egui::Ui, label: &str, value: &mut Value) {
+fn path_field(ui: &mut egui::Ui, label: &str, value: &mut Value, platform: &dyn Platform) {
     ui.label(label);
     ui.horizontal(|ui| {
         let mut s = value.as_str().unwrap_or("").to_owned();
@@ -2332,58 +833,11 @@ fn path_field(ui: &mut egui::Ui, label: &str, value: &mut Value) {
             *value = s.into();
         }
         if ui.button("Browse…").clicked() {
-            if let Some(p) = rfd::FileDialog::new().pick_file() {
+            if let Some(p) = platform.pick_file(Dialog::new()) {
                 *value = p.to_string_lossy().into_owned().into();
             }
         }
     });
-}
-fn json_tree(ui: &mut egui::Ui, label: &str, value: &Value) {
-    match value {
-        Value::Object(map) => {
-            egui::CollapsingHeader::new(format!(
-                "{} · {} entries",
-                label.replace('_', " "),
-                map.len()
-            ))
-            .id_salt(label)
-            .default_open(label == "Ledger")
-            .show(ui, |ui| {
-                for (k, v) in map {
-                    json_tree(ui, k, v);
-                }
-            });
-        }
-        Value::Array(items) => {
-            egui::CollapsingHeader::new(format!(
-                "{} · {} items",
-                label.replace('_', " "),
-                items.len()
-            ))
-            .id_salt(label)
-            .show(ui, |ui| {
-                egui::ScrollArea::vertical().max_height(260.).show_rows(
-                    ui,
-                    24.,
-                    items.len(),
-                    |ui, range| {
-                        for i in range {
-                            ui.horizontal_wrapped(|ui| {
-                                ui.monospace(format!("[{i}] {}", items[i]));
-                            });
-                        }
-                    },
-                );
-            });
-        }
-        _ => {
-            ui.horizontal_wrapped(|ui| {
-                ui.strong(label.replace('_', " "))
-                    .on_hover_text(format!("Result field: {label}"));
-                ui.label(value.to_string());
-            });
-        }
-    }
 }
 
 #[cfg(test)]
@@ -2425,7 +879,7 @@ mod ui_tests {
     fn every_page_and_setup_walkthrough_renders_at_minimum_size() {
         let ctx = egui::Context::default();
         let mut app = Desktop::from_context(&ctx);
-        for page in 0..8 {
+        for page in Page::ALL {
             app.page = page;
             for _ in 0..2 {
                 let mut output = ctx.run_ui(
@@ -2468,5 +922,79 @@ mod ui_tests {
                 step.target
             );
         }
+    }
+    /// Answers every dialog with a fixed path and counts the requests.
+    struct Scripted {
+        answer: Option<PathBuf>,
+        asked: std::rc::Rc<std::cell::Cell<usize>>,
+    }
+    impl Scripted {
+        fn answer(&self) -> Option<PathBuf> {
+            self.asked.set(self.asked.get() + 1);
+            self.answer.clone()
+        }
+    }
+    impl Platform for Scripted {
+        fn pick_file(&self, _: Dialog<'_>) -> Option<PathBuf> {
+            self.answer()
+        }
+        fn pick_folder(&self, _: Dialog<'_>) -> Option<PathBuf> {
+            self.answer()
+        }
+        fn save_file(&self, _: Dialog<'_>) -> Option<PathBuf> {
+            self.answer()
+        }
+    }
+    fn scripted_app(
+        ctx: &egui::Context,
+        answer: Option<PathBuf>,
+    ) -> (Desktop, std::rc::Rc<std::cell::Cell<usize>>) {
+        let asked = std::rc::Rc::new(std::cell::Cell::new(0));
+        let mut app = Desktop::from_context(ctx);
+        app.platform = Box::new(Scripted {
+            answer,
+            asked: asked.clone(),
+        });
+        app.page = Page::Ledger;
+        (app, asked)
+    }
+    #[test]
+    fn a_cancelled_open_dialog_changes_nothing() {
+        let ctx = egui::Context::default();
+        let (mut app, asked) = scripted_app(&ctx, None);
+        let before = app.document.clone();
+        app.perform(Pending::Open);
+        assert_eq!(asked.get(), 1, "Open must ask the platform exactly once");
+        assert_eq!(app.page, Page::Ledger);
+        assert_eq!(app.document, before);
+        assert!(!app.error);
+    }
+    #[test]
+    fn an_unreadable_problem_file_is_reported_and_keeps_the_page() {
+        let ctx = egui::Context::default();
+        let missing = std::env::temp_dir()
+            .join(format!("actinv-gui-missing-{}", std::process::id()))
+            .join("problem.json");
+        let (mut app, asked) = scripted_app(&ctx, Some(missing));
+        let before = app.document.clone();
+        app.perform(Pending::Open);
+        assert_eq!(asked.get(), 1);
+        assert!(app.error);
+        assert_eq!(app.page, Page::Ledger);
+        assert_eq!(app.document, before);
+    }
+    #[test]
+    fn opening_a_problem_through_the_platform_returns_to_the_overview() {
+        let ctx = egui::Context::default();
+        let path =
+            std::env::temp_dir().join(format!("actinv-gui-open-{}.json", std::process::id()));
+        std::fs::write(&path, model::EXAMPLE).expect("write fixture");
+        let (mut app, _) = scripted_app(&ctx, Some(path.clone()));
+        app.perform(Pending::Open);
+        std::fs::remove_file(&path).ok();
+        assert!(!app.error, "{}", app.status);
+        assert_eq!(app.page, Page::Overview);
+        assert_eq!(app.path.as_deref(), Some(path.as_path()));
+        assert!(!app.dirty());
     }
 }

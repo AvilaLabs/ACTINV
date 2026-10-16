@@ -3216,3 +3216,11 @@ manifest refreshed: 50 steps, among them P10, P15 and P110–P117 against their 
 
 P140 verdict: H1–H4 pass (entries 168 and 169; H2 and H4 on `cand12` above); H5 (CI green on the pushed commit) is
 pending.
+
+## Entry 171 — P140 PASS (2026-10-15)
+
+H5: every workflow triggered by the push of `542fc7d` (the P140 repairs on `cand12`, Amendments B–E, entries 169 and
+170) is green: controls 38845572229, fns-iron 38845572185, fusion-isotope 38845572240, desktop builds 38845572170,
+Build browser workbench 38845572213, Build handbook 38845572173. With H1–H4 (entries 168–170), **P140: PASS**.
+Carried forward to the owner: the SG-01 resolved-range clip changes TENDL-2025 W-186 self-shielding above 4.4 keV, and
+whether FISPACT-II clips at EH is not known (entry 170).

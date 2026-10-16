@@ -6,6 +6,7 @@
 //! re-derives physics; the one-group collapse is the library's own `ReactionLibrary::one_group`.
 
 use actinv_core::chain::{rtyp_digits, step_of};
+use actinv_core::report::{render_table, Table};
 use actinv_core::spec::Spectrum;
 use actinv_data::composition::{material_key, symbol_of, MaterialKey};
 use actinv_data::decay::{self, Nuclide};
@@ -70,14 +71,6 @@ struct Request {
     command: Command,
     table: bool,
     out: Option<String>,
-}
-
-/// A fixed-width table: left-aligned columns separated by two spaces.
-#[derive(Debug, Clone, PartialEq)]
-pub(crate) struct Table {
-    pub(crate) title: String,
-    pub(crate) headers: Vec<String>,
-    pub(crate) rows: Vec<Vec<String>>,
 }
 
 struct Output {
@@ -311,44 +304,6 @@ fn execute(command: &Command) -> Result<Output, String> {
 }
 
 // ---- formatting ----
-
-pub(crate) fn render_table(table: &Table) -> String {
-    let mut widths: Vec<usize> = table
-        .headers
-        .iter()
-        .map(|header| header.chars().count())
-        .collect();
-    for row in &table.rows {
-        for (column, cell) in row.iter().enumerate().take(widths.len()) {
-            widths[column] = widths[column].max(cell.chars().count());
-        }
-    }
-    let line = |cells: &[String]| -> String {
-        let mut text = String::new();
-        for (column, &width) in widths.iter().enumerate() {
-            if column > 0 {
-                text.push_str("  ");
-            }
-            let cell = cells.get(column).map(String::as_str).unwrap_or("");
-            text.push_str(&format!("{cell:<width$}"));
-        }
-        text.trim_end().to_string()
-    };
-    let mut out = String::new();
-    if !table.title.is_empty() {
-        out.push_str(&table.title);
-        out.push('\n');
-    }
-    out.push_str(&line(&table.headers));
-    out.push('\n');
-    let rule: Vec<String> = widths.iter().map(|&width| "-".repeat(width)).collect();
-    out.push_str(&line(&rule));
-    for row in &table.rows {
-        out.push('\n');
-        out.push_str(&line(row));
-    }
-    out
-}
 
 fn render_tables(tables: &[Table]) -> String {
     tables

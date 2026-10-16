@@ -10,6 +10,16 @@
   account. Handbook page "Avila Labs account (optional)".
 - Tool launcher, new application icon and tool marks (window icon, favicon, installer icons).
 
+**Added (library structure for the 0.4 interface)**
+
+- `actinv report --tables regulatory`: a new opt-in table of the non-dose radiological responses (clearance and
+  waste indices, A2 and activity limits) per step, with activity coverage. The default table set is unchanged.
+- The report tables and the FISPACT-II deck importer moved into `actinv-core` (`actinv_core::report`,
+  `actinv_core::fispact_import`), and the data catalog into `actinv-data` (`actinv_data::catalog`), so the browser
+  workbench can use them. `actinv report`, `actinv inspect` and `actinv import-fispact` output is byte-identical.
+- Problems that name `catalog:` data now resolve against `ACTINV_DATA_DIR` or `actinv-data` beside the problem in
+  the desktop app's input resolution, and `check_files` names an unknown catalog id.
+
 **Fixed (2026-10-15)**
 
 - Trace mode held radioactive initial material constant (P133): `auto` now also weighs bulk decay over the

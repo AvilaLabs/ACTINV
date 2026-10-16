@@ -1,7 +1,10 @@
 //! Scientific views derived only from the currently supplied or calculated values.
 use eframe::egui;
+use egui::{Color32, RichText};
 use egui_plot::{Bar, BarChart, Line, Plot};
-use serde_json::Value;
+use serde_json::{json, Value};
+
+use crate::model;
 pub fn accent(ui: &egui::Ui) -> egui::Color32 {
     if ui.visuals().dark_mode {
         egui::Color32::from_rgb(165, 178, 255)
@@ -114,4 +117,96 @@ pub fn contributors(ui: &mut egui::Ui, step: &Value, selected: &mut String) {
     });
     let covered: f64 = entries.iter().map(|e| e.1).sum();
     ui.label(format!("Top {} account for {:.2}% of activity; remaining nuclides {:.2}%. Select a nuclide to follow its history.",entries.len(),100.*covered/total,100.*(total-covered).max(0.)/total));
+}
+
+/// The cobalt accent of the light theme: selection, run and links.
+#[cfg_attr(target_arch = "wasm32", allow(dead_code))] // browser pages use it from 0.4 phase 5
+pub const BLUE: egui::Color32 = egui::Color32::from_rgb(24, 0, 173);
+
+#[cfg_attr(target_arch = "wasm32", allow(dead_code))] // browser pages use it from 0.4 phase 5
+pub fn heading(ui: &mut egui::Ui, title: &str, subtitle: &str) {
+    ui.heading(RichText::new(title).size(27.));
+    let color = if ui.visuals().dark_mode {
+        Color32::from_rgb(175, 184, 205)
+    } else {
+        Color32::from_rgb(85, 93, 112)
+    };
+    ui.label(RichText::new(subtitle).color(color));
+    ui.add_space(16.);
+}
+
+#[cfg_attr(target_arch = "wasm32", allow(dead_code))] // browser pages use it from 0.4 phase 5
+pub fn text_field(ui: &mut egui::Ui, value: &mut Value) {
+    let mut s = value.as_str().unwrap_or("").to_owned();
+    if ui
+        .add(egui::TextEdit::singleline(&mut s).desired_width(230.))
+        .changed()
+    {
+        *value = s.into();
+    }
+}
+
+#[cfg_attr(target_arch = "wasm32", allow(dead_code))] // browser pages use it from 0.4 phase 5
+pub fn numeric(ui: &mut egui::Ui, value: &mut Value, speed: f64) {
+    let mut n = model::number(value);
+    if ui
+        .add(
+            egui::DragValue::new(&mut n)
+                .custom_parser(model::parse_finite)
+                .speed(speed)
+                .range(0.0..=f64::MAX),
+        )
+        .changed()
+    {
+        *value = json!(n);
+    }
+}
+
+#[cfg_attr(target_arch = "wasm32", allow(dead_code))] // browser pages use it from 0.4 phase 5
+pub fn json_tree(ui: &mut egui::Ui, label: &str, value: &Value) {
+    match value {
+        Value::Object(map) => {
+            egui::CollapsingHeader::new(format!(
+                "{} · {} entries",
+                label.replace('_', " "),
+                map.len()
+            ))
+            .id_salt(label)
+            .default_open(label == "Ledger")
+            .show(ui, |ui| {
+                for (k, v) in map {
+                    json_tree(ui, k, v);
+                }
+            });
+        }
+        Value::Array(items) => {
+            egui::CollapsingHeader::new(format!(
+                "{} · {} items",
+                label.replace('_', " "),
+                items.len()
+            ))
+            .id_salt(label)
+            .show(ui, |ui| {
+                egui::ScrollArea::vertical().max_height(260.).show_rows(
+                    ui,
+                    24.,
+                    items.len(),
+                    |ui, range| {
+                        for i in range {
+                            ui.horizontal_wrapped(|ui| {
+                                ui.monospace(format!("[{i}] {}", items[i]));
+                            });
+                        }
+                    },
+                );
+            });
+        }
+        _ => {
+            ui.horizontal_wrapped(|ui| {
+                ui.strong(label.replace('_', " "))
+                    .on_hover_text(format!("Result field: {label}"));
+                ui.label(value.to_string());
+            });
+        }
+    }
 }

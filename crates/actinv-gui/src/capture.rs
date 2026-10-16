@@ -1,5 +1,9 @@
 //! Opt-in native screenshot smoke harness. No fixture is loaded in ordinary use.
-use crate::{model::ResultDocument, tour::Tour};
+use crate::{
+    model::ResultDocument,
+    nav::Page,
+    tour::{Tour, RESULTS, SETUP},
+};
 use eframe::egui;
 use std::path::PathBuf;
 
@@ -20,10 +24,28 @@ impl Capture {
             loaded: false,
         })
     }
+    /// One shot per page, then one per setup-tour step, then one per results-tour step.
+    pub fn total() -> usize {
+        Page::ALL.len() + SETUP.len() + RESULTS.len()
+    }
+    /// The page to show and the tour step to open (if any) for a screenshot index.
+    fn plan(shot: usize) -> (Page, Option<(bool, usize)>) {
+        let pages = Page::ALL.len();
+        let results_from = pages + SETUP.len();
+        let page = Page::ALL[shot.min(pages - 1)];
+        let tour = if shot >= results_from {
+            Some((true, (shot - results_from).min(RESULTS.len() - 1)))
+        } else if shot >= pages {
+            Some((false, (shot - pages).min(SETUP.len() - 1)))
+        } else {
+            None
+        };
+        (page, tour)
+    }
     pub fn prepare(
         &mut self,
         ctx: &egui::Context,
-        page: &mut usize,
+        page: &mut Page,
         tour: &mut Tour,
         result: &mut Option<ResultDocument>,
     ) {
@@ -40,11 +62,10 @@ impl Capture {
                 );
             }
         }
-        *page = self.shot.min(7);
-        if self.shot >= 15 {
-            tour.active = Some((true, (self.shot - 15).min(5)));
-        } else if self.shot >= 8 {
-            tour.active = Some((false, (self.shot - 8).min(6)));
+        let (shown, step) = Self::plan(self.shot);
+        *page = shown;
+        if step.is_some() {
+            tour.active = step;
         }
         ctx.request_repaint();
     }
@@ -72,7 +93,7 @@ impl Capture {
             self.shot += 1;
             self.waiting = false;
             self.frame = 0;
-            if self.shot == 21 {
+            if self.shot == Self::total() {
                 ctx.send_viewport_cmd(egui::ViewportCommand::Close);
             }
         }
@@ -81,5 +102,40 @@ impl Capture {
             self.waiting = true;
             ctx.send_viewport_cmd(egui::ViewportCommand::Screenshot(Default::default()));
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn shot_count_covers_every_page_and_both_tours() {
+        // `scripts/desktop_smoke.py` expects this many screenshots.
+        assert_eq!(Capture::total(), 21);
+        assert_eq!(
+            Capture::total(),
+            Page::ALL.len() + SETUP.len() + RESULTS.len()
+        );
+    }
+
+    #[test]
+    fn shots_walk_the_pages_then_the_setup_tour_then_the_results_tour() {
+        let pages = Page::ALL.len();
+        for (shot, page) in Page::ALL.into_iter().enumerate() {
+            assert_eq!(Capture::plan(shot), (page, None));
+        }
+        let last = Page::ALL[pages - 1];
+        assert_eq!(Capture::plan(pages), (last, Some((false, 0))));
+        let results_from = pages + SETUP.len();
+        assert_eq!(
+            Capture::plan(results_from - 1),
+            (last, Some((false, SETUP.len() - 1)))
+        );
+        assert_eq!(Capture::plan(results_from), (last, Some((true, 0))));
+        assert_eq!(
+            Capture::plan(Capture::total() - 1),
+            (last, Some((true, RESULTS.len() - 1)))
+        );
     }
 }
