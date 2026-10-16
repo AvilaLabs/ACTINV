@@ -1,0 +1,54 @@
+{
+ "candidate": {
+  "binary": "target/release/actinv",
+  "binary_sha256": "216e136c0619680cc00586b432c81ebed3df4e4ea9e721aaa47019f92ca46b69",
+  "commit": "e4e21be6134548df45706ac98ab82d4ea2214958",
+  "protocol_sha256": "259dff9fb83e311c0410ad03d8fe18f98a65b2d63a2446222297c71ff0104dbe",
+  "recorder_sha256": "6c06c8ef3d8b0f075f349a2d25164dc7ce78d97ec802b80b85f1c4edb98ffdab",
+  "tree_clean": true
+ },
+ "ci": {
+  "commit": "6856da5aaea4c58ee4b30640c956c0d13e49bdc8",
+  "runs": [
+   {
+    "conclusion": "success",
+    "name": "Build handbook",
+    "run_id": 38967761156
+   },
+   {
+    "conclusion": "success",
+    "name": "fusion-isotope",
+    "run_id": 38967761154
+   },
+   {
+    "conclusion": "success",
+    "name": "Build browser workbench",
+    "run_id": 38967761217
+   },
+   {
+    "conclusion": "success",
+    "name": "fns-iron",
+    "run_id": 38967761176
+   },
+   {
+    "conclusion": "success",
+    "name": "desktop builds",
+    "run_id": 38967761207
+   },
+   {
+    "conclusion": "success",
+    "name": "controls",
+    "run_id": 38967761161
+   }
+  ]
+ },
+ "gates": {
+  "W1": true,
+  "W2": true,
+  "W3": true,
+  "W4": true
+ },
+ "protocol_sha256": "259dff9fb83e311c0410ad03d8fe18f98a65b2d63a2446222297c71ff0104dbe",
+ "schema": "actinv-p143-verdict-1",
+ "verdict": "P143-PASS"
+}

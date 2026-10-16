@@ -3407,3 +3407,10 @@ evaluator and report class probabilities with Clopper–Pearson intervals, the c
 percentiles of each table's normalized sum and the earliest established step, with coverage and exclusions stated in
 the result. U1 same samples as `study.robustness`; U2 independent tallies; U3 lognormal closed-form calibration at
 4096 samples; U4 refusals and invariance; U5 quality and CI.
+
+## Entry 189 — P143 verdict: waste operations in the Python API (2026-10-16)
+
+**P143-PASS** (`results/p143_verdict.json`). W1 (after Amendment A), W2 and W3 as entry 187; W4's local gates as entry
+187, and all six workflows on the pushed evidence commit `6856da5` succeeded, `controls` included
+(`results/p143/ci_runs.json`). `actinv.waste` (six operations plus `summary`) and `actinv.twin` return the CLI's own
+output bytes.
