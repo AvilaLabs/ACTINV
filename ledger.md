@@ -3346,3 +3346,11 @@ Candidate `5ee489c`, release binary `07bb7e1e46316baabfa82c7af7e81270bdd0238d80e
 matches. **Q2:** the fourteen CI steps P103–P118 each exit 0 and leave no tracked change. **Q3:** fmt, clippy
 `-D warnings` native and wasm, and the workspace tests (1023 passed, 0 failed) exit 0, including
 `unmodelled_decay_branches_are_an_audit_reason`. Q4 (CI on the pushed commit) is pending.
+
+## Entry 183 — P143 registered: waste operations in the Python API (2026-10-16)
+
+Registered before any source change for the phase: **P143** `259dff9fb83e311c0410ad03d8fe18f98a65b2d63a2446222297c71ff0104dbe`. `actinv.waste` gains the six native waste
+operations and `actinv.twin` the facility twin, each running the CLI's own entry point and returning its exact output
+bytes. W1 reruns the P105, P107, P108, P110, P112 and P116 CI steps through a recording wrapper that compares every
+waste/twin invocation with the Python result byte for byte (refusals by message); W2 dict input; W3 quiet and no
+leftover files; W4 quality and CI.
