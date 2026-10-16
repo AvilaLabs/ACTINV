@@ -220,19 +220,19 @@ created.
 - [x] Write `docs/RELEASE_NOTES_v1.5.0.md`, `docs/releases/desktop-v0.4.0-preview.1.md` and the handbook
   page "What's new in 1.5"; extend "Move a FISPACT-II deck to ACTINV" with the capability map.
 - [x] Rename the changelog's Unreleased section to v1.5.0 with the release date.
-- [ ] Pre-tag gates: `cargo publish --dry-run` for `actinv-data`, `actinv-core` and `actinv-cli`,
+- [x] Pre-tag gates: `cargo publish --dry-run` for `actinv-data`, `actinv-core` and `actinv-cli`,
   and every `include_str!`/`include_bytes!` in `crates/` resolving inside its package; local CI
   replay green.
-- [ ] Push the release commit and the `v1.5.0` tag in one atomic push; confirm `controls` and every
+- [x] Push the release commit and the `v1.5.0` tag in one atomic push; confirm `controls` and every
   other workflow green on the release commit.
-- [ ] Approve the `crates.io` and `pypi` environment gates; confirm all three crates and the
+- [x] Approve the `crates.io` and `pypi` environment gates; confirm all three crates and the
   wheel/sdist set land at 1.5.0.
-- [ ] Attach packaged platform archives and `SHA256SUMS` to the `v1.5.0` GitHub release; paste the
+- [x] Attach packaged platform archives and `SHA256SUMS` to the `v1.5.0` GitHub release; paste the
   release notes.
-- [ ] Desktop: attach the `desktop builds` artifacts and checksums from the release commit to a
+- [x] Desktop: attach the `desktop builds` artifacts and checksums from the release commit to a
   `desktop-v0.4.0-preview.1` GitHub pre-release and paste its notes.
-- [ ] Production smoke from PyPI and crates.io; record the release in `results/release_v1.5.0.json`.
-- [ ] Handbook and website: deploy the `actinv-web` bundle CI built from the release commit with
+- [x] Production smoke from PyPI and crates.io; record the release in `results/release_v1.5.0.json`.
+- [x] Handbook and website: deploy the `actinv-web` bundle CI built from the release commit with
   `npx wrangler@4 deploy --config wrangler.jsonc` and check `/`, `/download/` and `/docs/` live;
-  open the AvilaLabs.org PR for `/actinv` and `/actinv/docs` and check them after it deploys.
-- [ ] Remind the owner to rerun FARIS restart/cooling runs affected by P133.
+  open the AvilaLabs.org PR for `/actinv` and `/actinv/docs` and check them after it deploys (PR #32 open; merge with the owner).
+- [x] Remind the owner to rerun FARIS restart/cooling runs affected by P133.

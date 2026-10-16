@@ -3305,3 +3305,26 @@ desktop build dependencies" fails on `sudo` (runner-only); "P13 verified data-di
 `controls/check_p13.py` now requires `zip = { version = "=9.0.4"`; the exact-pin requirement is unchanged. The CI
 steps P16, P15 and P13 — the three that run `check_p13.py` — each exit 0. Every other control step passed in the
 first Z4 replay (entry 177) and is unaffected by this edit. P141 Z4 now waits only on CI for the pushed commit.
+
+## Entry 179 — P120 Amendment C and P141 PASS (2026-10-16)
+
+CI is green on `1c151d0`, the pushed commit carrying entries 172–178 and their records: `controls` 38915344500,
+`desktop builds` 38915344584, `Build browser workbench` 38915344595, `fns-iron` 38915344451 and `fusion-isotope`
+38915344621 completed success; the handbook workflow is path-filtered and was not triggered. This is C4 of P120
+Amendment C and the CI part of P141 Z4. With entries 172–173 this records **P120 Amendment C PASS**: P110's sealed
+records replay under solver 1.5.0 with only the version token mapped. With entries 174–178 it records **P141-PASS**
+under Amendments A, B and C (the failed attempts stay preserved), with the Z3 caveat of entry 177: no test exercises
+encrypted members or unenclosed paths.
+
+## Entry 180 — v1.5.0 published (2026-10-16)
+
+On the owner's choice the `v1.5.0` tag was deleted and re-pushed at `1c151d0` (tag object `feceed7`); the first tag at
+`79a2d36` published nothing (entry 172). The tag-triggered `release artifacts` 38919745531, `publish Rust crates`
+38919745567 and `publish Python package` 38919745461 completed success after the `crates.io` and `pypi` gates were
+approved on the owner's approval. `actinv-data`, `actinv-core` and `actinv-cli` 1.5.0 are on crates.io and five
+wheels plus the sdist on PyPI. Production smoke: `pip install actinv==1.5.0` in a fresh venv and
+`cargo install --locked actinv-cli --version 1.5.0` into a clean root both report 1.5.0, and a lockfile-less
+consumer of the three crates resolves `zip` 9.0.4. GitHub releases `v1.5.0` (latest) and the pre-release
+`desktop-v0.4.0-preview.1` carry the repacked archives and the verified desktop assets with checksums. The `actinv-web`
+bundle from run 38915344595 is deployed to `actinv.avilalabs.org`; the AvilaLabs.org page update is PR #32. Record:
+`results/release_v1.5.0.json`.

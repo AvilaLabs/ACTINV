@@ -1102,7 +1102,7 @@ ef75e1c4e590b8a47ec011a3d46ae11ac56fc32a80319e0c63b23c9b0728ac91  ./docs/P41_TEN
 a556994c6546b47f35f3559ae5854586f1ef49b035c800acc3cf7862d6a56b1c  ./docs/PYPI_RELEASE.md
 27da2990913ba71b6dd45f39b3f0e974f1dd6835dd61e130dd90008d616d8db7  ./docs/QUALIFICATION.md
 348ff7eb3a53adef7a431191bf429ab6dc3be291ac80978795d270abe627330a  ./docs/QUANTITIES.md
-7a53ee0154fe96173dd66b34eb5fecbe38b200db9bb27ffef1d861eca84f39b7  ./docs/RELEASE_CHECKLIST.md
+964930f22526c8e23703b3cc554d7a96dfdf3ed4f78cf0c9a3137c090dfbd2c0  ./docs/RELEASE_CHECKLIST.md
 7480766801e1a921e007f2baa5f78c204c23ffab9fc18e03f0f24ed9fa296aed  ./docs/RELEASE_NOTES_v0.1.md
 a535a3613f3e05acf780e61ec46fdec9be355bd0c08b3bb1b88b7406bff3d8a2  ./docs/RELEASE_NOTES_v0.2.md
 f0a32b0cdc308b42b1a3f2b9c30ffed929ca93e8bc5a4fbdb3287d7912b597d9  ./docs/RELEASE_NOTES_v0.5.md
@@ -1244,7 +1244,7 @@ f9d2b037ba5d8a42d81f740cef8e2ae625655c4b3192ecc1d59e63283e2e6f20  ./examples/stu
 cfd86c2c5ac15d76ec2358c6bd196a6362b46bcc889160c06439975dc5ae8f3a  ./interchange/INTERCHANGE.md
 057dd636e1814f93c0869d4839887ff28a361f5c845f24153c4e93cbee1918d1  ./interchange/actinv_core_adapter.py
 4c42c2d68d375681621d6d3828b6daab4e2fdfc37f23cacbfc3b5a1c3fd3beec  ./interchange/run_case.py
-0726e18acca36cb017f25fb48665b15317b007ad0a0732a3a05132e525986c92  ./ledger.md
+7a4f8ba26e3891112460d5aff3e652afd7d4c827a23ac6e78116657aa0b3f35c  ./ledger.md
 588e9f4f4ff74df627a1a15306214db678531d7334f2f6e95a1603eabd1f1c55  ./packaging/actinv.ico
 9897482011f194d9495fc80965177f0632ae4166917a7f240d80c0fc3c8fb83e  ./packaging/actinv.png
 672d3d389d4025f0cfaecf758f1a424c2f3ffcde56c80042d4ba7299f8931539  ./packaging/desktop.json
@@ -5469,6 +5469,7 @@ f6d34b9d6bad0d892f904ad7f1a49b4a795309ced71311d8bf8c0fb1ede43db7  ./results/rele
 580fe8793c040b1bfe9070e8f1ce398fa91e5cf7277a6f5b1fed1b706d43bbbd  ./results/release_v1.3.0.json
 5c8d39cf6d08091016a94c02a431fe45b4be2dd18f2310f63baafe3bac2c04f8  ./results/release_v1.3.1.json
 ae5929eac7869dced63feabcaf4f95b88c45a8f7a519664d623b2edf9a504482  ./results/release_v1.4.0.json
+dfa854c60cca5d2cdd5dd9410c12e5bbf0081f6af292c66377fc5089f222b704  ./results/release_v1.5.0.json
 b2fa431b0d73afd7b3fe8cb523300722f509f55b4b8c0ef61d236699d6efd9f2  ./results/session_cb1.json
 6b7bb6069d172812b4600c384732cf4f81df02aa852fddcae10fd6e7a48b71c4  ./results/session_p13.json
 13ca8c1ed7f0e3d4629d117ff1a14f4967737af4beaec1389f449352bde2b4f7  ./results/session_p14.json

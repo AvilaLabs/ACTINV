@@ -1,0 +1,124 @@
+{
+ "release": "v1.5.0",
+ "tag": {
+  "name": "v1.5.0",
+  "object": "feceed7cf439f63133eafac7180eede89ea65a6d",
+  "commit": "1c151d089fac63960bbf5265f6283f03475d33c0",
+  "message": "ACTINV 1.5.0",
+  "signed": false,
+  "moved": "first pushed at the release commit 79a2d36963af061b34cfe3d8ff50d17874f273cc (tag object 1adc0e6); controls run 38901865435 failed in P110 and the publish workflows stopped at their green-controls gate, so nothing was published from it. After the P120 Amendment C and P141 repairs the tag was deleted and re-pushed at 1c151d0 on the owner's choice"
+ },
+ "first_attempt": {
+  "commit": "79a2d36963af061b34cfe3d8ff50d17874f273cc",
+  "controls": 38901865435,
+  "conclusion": "failure",
+  "failed_step": "P110 native composition basis and witness verification",
+  "records": [
+   "results/failures/release_v1.5.0/",
+   "ledger entries 172-178"
+  ],
+  "published": "nothing"
+ },
+ "pre_tag_gates": {
+  "cargo_publish_dry_run": "cargo publish --dry-run --locked for actinv-data, actinv-core and actinv-cli packaged and verify-built at 1.5.0 (on 79a2d36)",
+  "sdist": "maturin sdist includes every non-test include_str!/include_bytes! target outside the gui crate, which the wheel does not build",
+  "local_ci_replay": "every ci.yml control step exits 0 on the repair head except the known local-only steps (P18, P18b, P12 release payload, native desktop build dependencies needing sudo); see ledger entries 173, 177, 178"
+ },
+ "workflows": {
+  "controls": 38915344500,
+  "desktop_builds": 38915344584,
+  "browser_workbench": 38915344595,
+  "fns_iron": 38915344451,
+  "fusion_isotope": 38915344621,
+  "handbook": "not triggered (path filter)",
+  "release_artifacts": 38919745531,
+  "publish_crates": 38919745567,
+  "publish_pypi": 38919745461,
+  "all_conclusion": "success"
+ },
+ "environment_approvals": "crates.io (actinv-data, actinv-core, actinv-cli) and pypi approved via the API on the maintainer's explicit approval",
+ "github_release": {
+  "url": "https://github.com/AvilaLabs/ACTINV/releases/tag/v1.5.0",
+  "id": "RE_kwDOUDaWv84YvcCG",
+  "published_at": "2026-10-16T15:05:15Z",
+  "notes": "docs/RELEASE_NOTES_v1.5.0.md (relative links made absolute to the v1.5.0 tag)",
+  "assets_sha256": {
+   "actinv-1.5.0-linux-x86_64.tar.gz": "caf661ebd4b47b4f6be3367f384be266f57d1077f00415710dc4ac18feb92c3e",
+   "actinv-1.5.0-macos-aarch64.tar.gz": "39d8902d32bda1a8fbe4f2904ca15de9a76aeea8e30d79cc42b27ec1131b143c",
+   "actinv-1.5.0-macos-x86_64.tar.gz": "f3953d19b0a90a33f4284e0ba0d9b2325447695231d62bf5dce5ece1025e66d6",
+   "actinv-1.5.0-windows-x86_64.zip": "6cbf3d40299c0337ed6684f45416459e7069d8016abf23d8d310fa1ad46cb983"
+  },
+  "sha256sums_asset": "SHA256SUMS",
+  "archives": "repacked from the release-artifacts run in the v1.4.0 layout; executable bits restored; the linux-x86_64 binary reports actinv 1.5.0"
+ },
+ "desktop_release": {
+  "url": "https://github.com/AvilaLabs/ACTINV/releases/tag/desktop-v0.4.0-preview.1",
+  "id": "RE_kwDOUDaWv84Yvblr",
+  "published_at": "2026-10-16T15:03:27Z",
+  "prerelease": true,
+  "source_run": 38915344584,
+  "notes": "docs/releases/desktop-v0.4.0-preview.1.md (relative links made absolute to the v1.5.0 tag)",
+  "assets_sha256": {
+   "ACTINV-Desktop-0.4.0-preview.1-linux-x86_64.AppImage": "2d94dbd1f6cc61fc56f1ae4d463974f3db54aeb970f7c31efd0356d2199cee5a",
+   "ACTINV-Desktop-0.4.0-preview.1-macos-aarch64.dmg": "eb43127723bcbc0ec8cedbedf8cbc36b4b8d4b7699a4f355c44f5dda28bdf26f",
+   "ACTINV-Desktop-0.4.0-preview.1-macos-x86_64.dmg": "214f68269670dd387f848d0fe674146def1962378942fde863d9d4636d349c2c",
+   "ACTINV-Desktop-0.4.0-preview.1-windows-x86_64-portable.zip": "b97febb1748bbe4ecf49ebabf3d68b01238c2b92f81c8817fba443a6dd330af7",
+   "ACTINV-Desktop-0.4.0-preview.1-windows-x86_64-setup.exe": "bd25d47c700182be70b4c0c50b91f390de6ce9b28d058daa66b62aba8f0a3fb7",
+   "BUILD-REPORTS.zip": "b2fa485691e451afd19fc1787d5a5786274e7be5b3e2317203f82baa2866033d",
+   "DESKTOP_INSTALL.md": "5d7aa5a3ba3dbcf56f5c2a3d9acb7279c22906fe24e1016bcd7f030cdd7e31d3",
+   "LICENSE-APACHE": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+   "LICENSE-MIT": "4f722528d1cb3662dcc69ff215f00088cd74706a21ad5c8fd35b167ce804e5e9",
+   "RELEASE-VERIFICATION.json": "dddff273474a9cb695c9db0aaa2b6dc39c39bbf74894df8d4f492ad444ee9515",
+   "actinv.png": "aec3b5ca3c83eddd977c8a37e7fac382f902f2f0ecabb2e3aec4f5550f98f01c",
+   "install-linux.sh": "371becebd005e36a596da0a9c2b9ceae85acdb870a659b55ca3fc1350c783e7e"
+  },
+  "verification": "every asset's digest equals its per-platform build report; model checks pass on all four platforms; native rendering with 29 captures on linux-x86_64 (AppImage) and both macOS targets (installed); Windows native rendering not available on the hosted runner (OpenGL below 2.0), model checks passed"
+ },
+ "published": {
+  "pypi": {
+   "package": "actinv",
+   "version": "1.5.0",
+   "files": {
+    "actinv-1.5.0-cp39-abi3-macosx_10_12_x86_64.whl": "da698305a8d894a6ff1863481498898c77a2ab3c38f39f44bf1ff06fe1961c24",
+    "actinv-1.5.0-cp39-abi3-macosx_11_0_arm64.whl": "af71c7e763fdc3b68b044b1b33b8e1b38fc9a8408d7eadeb2be3b4d7a5994505",
+    "actinv-1.5.0-cp39-abi3-manylinux_2_17_aarch64.manylinux2014_aarch64.whl": "476ed6d9ed0c2541fce9718f0cc634c716ee379c2c776104474f7819875b6b8d",
+    "actinv-1.5.0-cp39-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl": "c71614230adf15f11f8a8e14005479be309e883102414052b887b25dd9dc1358",
+    "actinv-1.5.0-cp39-abi3-win_amd64.whl": "d5d30fce5a354fe019ec667de126e0f0c8e636f639d90d92a1a3c67e523bc0d3",
+    "actinv-1.5.0.tar.gz": "8084e04cd0c7af275a46dae601cb69c1e0448529cc5390b2adf89e55396791c0"
+   },
+   "verified_via": "pypi.org/pypi/actinv/1.5.0/json; fresh venv pip install actinv==1.5.0: actinv --version -> actinv 1.5.0, import actinv -> 1.5.0, actinv.budget present"
+  },
+  "crates_io": {
+   "actinv-data": {
+    "version": "1.5.0",
+    "created_at": "2026-10-16T15:01:49.861601Z",
+    "checksum": "08ab479b8230255ab34c67eb4322e0639a1affa3cbc3bd06ad8b914e314bc472",
+    "yanked": false
+   },
+   "actinv-core": {
+    "version": "1.5.0",
+    "created_at": "2026-10-16T15:03:21.219062Z",
+    "checksum": "e6fa4428319132e5a2cb7e524ce5c3261b05fdbec1dc3dd95714828c2d39722b",
+    "yanked": false
+   },
+   "actinv-cli": {
+    "version": "1.5.0",
+    "created_at": "2026-10-16T15:04:30.750468Z",
+    "checksum": "f02d5c53ad7ef350bed27ea0d3eacb6665fef404bfa6cfd8e550e23c07e73456",
+    "yanked": false
+   }
+  },
+  "crates_smoke": "cargo install --locked actinv-cli --version 1.5.0 into a clean root: actinv --version -> actinv 1.5.0",
+  "unlocked_resolution": "a lockfile-less consumer of actinv-core, actinv-data and actinv-cli =1.5.0 resolves zip 9.0.4 (the yank that broke 8.6.0 resolution, P141)"
+ },
+ "website": {
+  "url": "https://actinv.avilalabs.org/",
+  "bundle": "actinv-web artifact of Build browser workbench run 38915344595 at 1c151d0",
+  "worker_version_id": "f24242d7-2112-464c-8f6b-6d48a118f6ff",
+  "checked": "/, /download/, /download/releases.json and /docs/ return 200; handbook reads ACTINV 1.5.0 and What's new in 1.5; the migration page has the FISPACT-II capability table; the download page points at desktop-v0.4.0-preview.1, whose four installers return 200"
+ },
+ "avilalabs_org": {
+  "pull_request": "https://github.com/AvilaLabs/AvilaLabs.org/pull/32",
+  "status": "open; Workers Builds check success; merge left to the owner"
+ }
+}
