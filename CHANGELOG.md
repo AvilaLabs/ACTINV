@@ -10,6 +10,22 @@
   account. Handbook page "Avila Labs account (optional)".
 - Tool launcher, new application icon and tool marks (window icon, favicon, installer icons).
 
+**Changed (desktop 0.4 interface; the look is unchanged)**
+
+- Thirteen pages in three groups. Setup gains **Outputs**, one place for everything a run computes (step summary
+  and depletion, decay photons and dose, production pathways and routes, regulatory tables, geometry
+  self-shielding, uncertainty), with the solver's own conflict message. Results: **Charts** (the old Results page),
+  **Tables** (the `actinv report` tables per step, CSV identical to the CLI), **Photons & dose**, **Pathways** (first
+  products and full routes with closure), Ledger & certificate, with one shared result bar. Tools: Sweep,
+  Assimilation, Advanced JSON.
+- **Import FISPACT-II deck** in the toolbar (Ctrl/Cmd+I): the importer's per-keyword report, Strict, required
+  additions linked to the page that fixes them.
+- Irradiation & cooling: a Drive per step (flux multiplier, wall loading, power W/cm3 or W/g) with the kerma-table
+  and density requirements shown; Material gains an optional density.
+- Fixed: with no `options.outputs` the output switches showed three outputs while the solver computed five, and the
+  first click turned photons and pathways off; wall-loading and power steps were labelled Cooling and could not be
+  edited.
+
 **Added (library structure for the 0.4 interface)**
 
 - `actinv report --tables regulatory`: a new opt-in table of the non-dose radiological responses (clearance and

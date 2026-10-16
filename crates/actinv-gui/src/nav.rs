@@ -18,7 +18,7 @@ impl Group {
         match self {
             Group::Setup => Some("CALCULATION"),
             Group::Results => Some("EXPLORE"),
-            Group::Tools => None,
+            Group::Tools => Some("TOOLS"),
         }
     }
 }
@@ -29,22 +29,32 @@ pub enum Page {
     Material,
     Schedule,
     Spectrum,
-    Results,
-    Details,
+    Outputs,
+    Charts,
+    Tables,
+    Photons,
+    Pathways,
     Ledger,
+    Sweep,
+    Assimilation,
     Advanced,
 }
 
 impl Page {
     /// Every page in sidebar order. Pages of one group are contiguous.
-    pub const ALL: [Page; 8] = [
+    pub const ALL: [Page; 13] = [
         Page::Overview,
         Page::Material,
         Page::Schedule,
         Page::Spectrum,
-        Page::Results,
-        Page::Details,
+        Page::Outputs,
+        Page::Charts,
+        Page::Tables,
+        Page::Photons,
+        Page::Pathways,
         Page::Ledger,
+        Page::Sweep,
+        Page::Assimilation,
         Page::Advanced,
     ];
 
@@ -54,19 +64,34 @@ impl Page {
             Page::Material => "Material",
             Page::Schedule => "Irradiation & cooling",
             Page::Spectrum => "Spectrum",
-            Page::Results => "Results",
-            Page::Details => "Spectra & pathways",
+            Page::Outputs => "Outputs",
+            Page::Charts => "Charts",
+            Page::Tables => "Tables",
+            Page::Photons => "Photons & dose",
+            Page::Pathways => "Pathways",
             Page::Ledger => "Ledger & certificate",
+            Page::Sweep => "Sweep",
+            Page::Assimilation => "Assimilation",
             Page::Advanced => "Advanced JSON",
         }
     }
 
     pub fn group(self) -> Group {
         match self {
-            Page::Overview | Page::Material | Page::Schedule | Page::Spectrum => Group::Setup,
-            Page::Results | Page::Details | Page::Ledger => Group::Results,
-            Page::Advanced => Group::Tools,
+            Page::Overview | Page::Material | Page::Schedule | Page::Spectrum | Page::Outputs => {
+                Group::Setup
+            }
+            Page::Charts | Page::Tables | Page::Photons | Page::Pathways | Page::Ledger => {
+                Group::Results
+            }
+            Page::Sweep | Page::Assimilation | Page::Advanced => Group::Tools,
         }
+    }
+
+    /// Pages that read the loaded result and show an empty state without one. The sidebar dims
+    /// them while no result is loaded.
+    pub fn needs_result(self) -> bool {
+        self.group() == Group::Results
     }
 }
 
@@ -84,9 +109,14 @@ mod tests {
                 "Material",
                 "Irradiation & cooling",
                 "Spectrum",
-                "Results",
-                "Spectra & pathways",
+                "Outputs",
+                "Charts",
+                "Tables",
+                "Photons & dose",
+                "Pathways",
                 "Ledger & certificate",
+                "Sweep",
+                "Assimilation",
                 "Advanced JSON",
             ]
         );
@@ -95,22 +125,14 @@ mod tests {
     #[test]
     fn groups_are_contiguous_and_match_the_sidebar_sections() {
         let groups: Vec<_> = Page::ALL.iter().map(|p| p.group()).collect();
-        assert_eq!(
-            groups,
-            [
-                Group::Setup,
-                Group::Setup,
-                Group::Setup,
-                Group::Setup,
-                Group::Results,
-                Group::Results,
-                Group::Results,
-                Group::Tools,
-            ]
-        );
+        let mut expected = vec![Group::Setup; 5];
+        expected.extend([Group::Results; 5]);
+        expected.extend([Group::Tools; 3]);
+        assert_eq!(groups, expected);
+        assert_eq!(Page::ALL.len(), 13);
         assert_eq!(Group::Setup.caption(), Some("CALCULATION"));
         assert_eq!(Group::Results.caption(), Some("EXPLORE"));
-        assert_eq!(Group::Tools.caption(), None);
+        assert_eq!(Group::Tools.caption(), Some("TOOLS"));
     }
 
     #[test]
@@ -118,5 +140,20 @@ mod tests {
         for page in Page::ALL {
             assert_eq!(Page::ALL.iter().filter(|p| **p == page).count(), 1);
         }
+    }
+
+    #[test]
+    fn only_result_pages_need_a_result() {
+        let needing: Vec<_> = Page::ALL.into_iter().filter(|p| p.needs_result()).collect();
+        assert_eq!(
+            needing,
+            [
+                Page::Charts,
+                Page::Tables,
+                Page::Photons,
+                Page::Pathways,
+                Page::Ledger
+            ]
+        );
     }
 }

@@ -16,6 +16,8 @@ actinv validate fe_5min.json
 actinv run fe_5min.json fe_5min_result.json
 ```
 
+The [desktop](desktop.md#import-a-fispact-ii-deck) imports a deck from the toolbar (**Import FISPACT-II deck…**) and shows the same per-keyword report as `actinv import-fispact`. A deck that irradiates, imported without a fluxes file, gets a flat placeholder spectrum flagged as a required input. Replace it before running, because the result means nothing until you do.
+
 ## What is read
 
 | Input | Used for |

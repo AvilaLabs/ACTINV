@@ -1,6 +1,6 @@
-//! Assay fusion panel, rendered beneath the parameter sweep.
+//! Assimilation: fold a measurement into the loaded result's certified bands.
 use crate::{
-    app::{Desktop, BLUE},
+    app::{heading, Desktop, BLUE},
     model::ResultDocument,
     platform::Dialog,
 };
@@ -13,11 +13,24 @@ impl Desktop {
     /// or mixture) into the loaded result's certified bands through the
     /// same fusion path the CLI `assimilate` command runs. Preview
     /// shows the per-response update before Apply commits it.
-    pub(super) fn assay_panel(&mut self, ui: &mut egui::Ui) {
+    pub(super) fn assimilation(&mut self, ui: &mut egui::Ui) {
+        heading(
+            ui,
+            "Assimilation",
+            "Fold a measured value into the uncertainty bands of the loaded result.",
+        );
         if self.result.is_none() {
+            ui.group(|ui| {
+                ui.add_space(30.);
+                ui.heading("Your results will appear here");
+                ui.label("Run a calculation or open a result JSON, then fold a measurement into its bands.");
+                if ui.button("Open result").clicked() {
+                    self.open_result(ui.ctx(), false);
+                }
+                ui.add_space(30.);
+            });
             return;
         }
-        ui.add_space(8.);
         ui.group(|ui| {
             ui.label(RichText::new("Fold a measurement into these bands").strong());
             ui.label(

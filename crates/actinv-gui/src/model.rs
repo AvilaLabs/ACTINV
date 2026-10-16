@@ -224,6 +224,103 @@ pub fn inventory_csv(result: &ResultDocument, index: usize) -> Result<String, St
     Ok(csv)
 }
 
+/// What drives a schedule step's irradiation. A valid step carries exactly one of these keys (a
+/// power step echoed by the solver also carries `flux: 0`, which `drive_of` ignores).
+#[derive(Clone, Copy, PartialEq, Eq, Debug)]
+pub enum Drive {
+    Flux,
+    WallLoading,
+    PowerPerCm3,
+    PowerPerGram,
+}
+
+impl Drive {
+    pub const ALL: [Drive; 4] = [
+        Drive::Flux,
+        Drive::WallLoading,
+        Drive::PowerPerCm3,
+        Drive::PowerPerGram,
+    ];
+    /// The schedule-step field this drive writes.
+    pub fn key(self) -> &'static str {
+        match self {
+            Drive::Flux => "flux",
+            Drive::WallLoading => "wall_loading_MW_m2",
+            Drive::PowerPerCm3 => "power_W_cm3",
+            Drive::PowerPerGram => "power_W_per_g",
+        }
+    }
+    pub fn label(self) -> &'static str {
+        match self {
+            Drive::Flux => "Flux multiplier",
+            Drive::WallLoading => "Wall loading",
+            Drive::PowerPerCm3 => "Power W/cm3",
+            Drive::PowerPerGram => "Power W/g",
+        }
+    }
+    /// Unit shown beside the value; empty for the dimensionless flux multiplier.
+    pub fn unit(self) -> &'static str {
+        match self {
+            Drive::Flux => "",
+            Drive::WallLoading => "MW/m2",
+            Drive::PowerPerCm3 => "W/cm3",
+            Drive::PowerPerGram => "W/g",
+        }
+    }
+    pub fn is_power(self) -> bool {
+        matches!(self, Drive::PowerPerCm3 | Drive::PowerPerGram)
+    }
+}
+
+fn declares(step: &Value, key: &str) -> bool {
+    step.get(key).is_some_and(|v| !v.is_null())
+}
+
+/// The drive a schedule step declares. A power or wall key wins over `flux`, so the `flux: 0` that
+/// the solver echoes beside a power target does not hide it.
+pub fn drive_of(step: &Value) -> Drive {
+    if declares(step, "power_W_cm3") {
+        Drive::PowerPerCm3
+    } else if declares(step, "power_W_per_g") {
+        Drive::PowerPerGram
+    } else if declares(step, "wall_loading_MW_m2") {
+        Drive::WallLoading
+    } else {
+        Drive::Flux
+    }
+}
+
+/// The number the step's drive carries (0 when it is missing).
+pub fn drive_value(step: &Value) -> f64 {
+    number(&step[drive_of(step).key()])
+}
+
+/// Make `drive` the step's only driver, set to `value`. Only the four driver keys change: the
+/// step object is edited in place, never rebuilt, so `dt`, `partition`, `feed`, `removal`,
+/// `spectrum`, `library` and `projectile` survive.
+pub fn set_drive(step: &mut Value, drive: Drive, value: f64) {
+    if !step.is_object() {
+        *step = Value::Object(Default::default());
+    }
+    let map = step.as_object_mut().expect("step is an object");
+    for other in Drive::ALL {
+        if other != drive {
+            map.remove(other.key());
+        }
+    }
+    let value = if value.is_finite() { value } else { 0. };
+    map.insert(drive.key().into(), Value::from(value));
+}
+
+/// A step is cooling when it irradiates nothing: a flux multiplier or a wall loading of zero. A
+/// power target is validated positive, so a power step always irradiates.
+pub fn is_cooling(step: &Value) -> bool {
+    match drive_of(step) {
+        Drive::Flux | Drive::WallLoading => drive_value(step) == 0.,
+        Drive::PowerPerCm3 | Drive::PowerPerGram => false,
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -368,5 +465,140 @@ mod integration_control {
         let reloaded: Value =
             serde_json::from_str(&std::fs::read_to_string(output).unwrap()).unwrap();
         assert_eq!(result.value, reloaded);
+    }
+}
+
+#[cfg(test)]
+mod drive_tests {
+    use super::*;
+    use serde_json::json;
+
+    fn rich_step() -> Value {
+        json!({
+            "dt": "1 h",
+            "flux": 1.5,
+            "partition": {"Fe": 0.5},
+            "feed": {"Co60": 1e3},
+            "removal": {"Mn": 1e-4},
+            "spectrum": {"structure": "fispact-709", "flux_per_group": [1.0, 2.0]},
+            "library": {"path": "other.npz", "sha256": "a".repeat(64)},
+            "projectile": "neutron"
+        })
+    }
+
+    fn drivers(step: &Value) -> Vec<&'static str> {
+        Drive::ALL
+            .iter()
+            .map(|d| d.key())
+            .filter(|k| step.get(*k).is_some())
+            .collect()
+    }
+
+    #[test]
+    fn drive_of_reads_the_declared_key_and_ignores_the_echoed_zero_flux() {
+        assert_eq!(drive_of(&json!({"dt": "1 s", "flux": 2.})), Drive::Flux);
+        assert_eq!(
+            drive_of(&json!({"dt": "1 s", "wall_loading_MW_m2": 1.})),
+            Drive::WallLoading
+        );
+        assert_eq!(
+            drive_of(&json!({"dt": "1 s", "flux": 0., "power_W_cm3": 7.})),
+            Drive::PowerPerCm3
+        );
+        assert_eq!(
+            drive_of(&json!({"dt": "1 s", "flux": 0., "power_W_per_g": 7.})),
+            Drive::PowerPerGram
+        );
+        assert_eq!(
+            drive_of(&json!({"dt": "1 s", "flux": 0., "power_W_per_g": null})),
+            Drive::Flux
+        );
+        assert_eq!(drive_value(&json!({"flux": 0., "power_W_cm3": 7.})), 7.);
+    }
+
+    #[test]
+    fn every_drive_transition_keeps_one_driver_and_every_other_field() {
+        for from in Drive::ALL {
+            for to in Drive::ALL {
+                let mut step = rich_step();
+                set_drive(&mut step, from, 2.);
+                let before = step.clone();
+                set_drive(&mut step, to, 3.);
+                assert_eq!(drivers(&step), vec![to.key()], "{from:?} -> {to:?}");
+                assert_eq!(drive_of(&step), to);
+                assert_eq!(drive_value(&step), 3.);
+                for key in [
+                    "dt",
+                    "partition",
+                    "feed",
+                    "removal",
+                    "spectrum",
+                    "library",
+                    "projectile",
+                ] {
+                    assert_eq!(step[key], before[key], "{key} survives {from:?} -> {to:?}");
+                }
+            }
+        }
+    }
+
+    #[test]
+    fn set_drive_edits_in_place_and_never_stores_a_non_finite_number() {
+        let mut step = rich_step();
+        let keys_before: Vec<_> = step.as_object().unwrap().keys().cloned().collect();
+        set_drive(&mut step, Drive::Flux, 4.);
+        assert_eq!(
+            step.as_object()
+                .unwrap()
+                .keys()
+                .cloned()
+                .collect::<Vec<_>>(),
+            keys_before
+        );
+        set_drive(&mut step, Drive::WallLoading, f64::NAN);
+        assert_eq!(step["wall_loading_MW_m2"], json!(0.));
+    }
+
+    #[test]
+    fn cooling_follows_the_drive_not_only_the_flux_key() {
+        assert!(is_cooling(&json!({"dt": "1 s", "flux": 0.})));
+        assert!(!is_cooling(&json!({"dt": "1 s", "flux": 0.1})));
+        assert!(is_cooling(&json!({"dt": "1 s", "wall_loading_MW_m2": 0.})));
+        assert!(!is_cooling(
+            &json!({"dt": "1 s", "wall_loading_MW_m2": 1.5})
+        ));
+        assert!(!is_cooling(
+            &json!({"dt": "1 s", "flux": 0., "power_W_cm3": 7.})
+        ));
+        assert!(!is_cooling(&json!({"dt": "1 s", "power_W_per_g": 1.})));
+    }
+
+    #[test]
+    fn exactly_one_driver_survives_the_core_parser_for_every_drive() {
+        for drive in Drive::ALL {
+            let mut doc = decode_problem(EXAMPLE).unwrap();
+            doc["kerma"] = json!({"table": {"path": "kerma.json", "sha256": "0".repeat(64)}});
+            doc["material"]["density_g_cm3"] = json!(7.874);
+            doc["schedule"][0]["partition"] = json!({"Fe": 0.5});
+            // start from a different drive each time so the old driver must be removed
+            let start = if drive == Drive::Flux {
+                Drive::WallLoading
+            } else {
+                Drive::Flux
+            };
+            set_drive(&mut doc["schedule"][0], start, 1.);
+            set_drive(&mut doc["schedule"][0], drive, 1.);
+            assert_eq!(drivers(&doc["schedule"][0]), vec![drive.key()]);
+            let spec = Spec::from_json(&doc.to_string())
+                .unwrap_or_else(|e| panic!("{drive:?} step is refused: {e}"));
+            assert!(
+                spec.schedule[0].has_partition(),
+                "{drive:?} keeps the partition"
+            );
+            assert_eq!(spec.schedule[0].is_power_driven(), drive.is_power());
+            // the solver's own echo reads back to the same driver
+            let echoed = serde_json::to_value(&spec).unwrap();
+            assert_eq!(drive_of(&echoed["schedule"][0]), drive);
+        }
     }
 }

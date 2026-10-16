@@ -3,6 +3,13 @@ use crate::{
     nav::{Group, Page},
     platform::{self, Dialog, Platform},
     tour::Tour,
+    views::{
+        import::{ImportAction, ImportSlot, ImportState},
+        outputs::OutputsState,
+        pathways::PathwaysState,
+        photons::PhotonsState,
+        tables::TablesState,
+    },
 };
 use actinv_core::spec::Spec;
 use eframe::egui::{self, Color32, RichText, Vec2};
@@ -59,12 +66,8 @@ pub struct Desktop {
     step: usize,
     metric: usize,
     selected: String,
-    filter: String,
     ledger_filter: String,
-    descending: bool,
     reset_plot: bool,
-    isotope: String,
-    amount: f64,
     raw: String,
     raw_dirty: bool,
     /// The document `raw` was last rendered from; re-render only when it changes.
@@ -76,8 +79,6 @@ pub struct Desktop {
     redo: Vec<Value>,
     allow_close: bool,
     downloaded: Option<Value>,
-    scene_view: egui::Rect,
-    pathway_node: String,
     capture: Option<crate::capture::Capture>,
     /// File dialogs; native `rfd` in the application, scripted in tests.
     platform: Box<dyn Platform>,
@@ -99,6 +100,18 @@ pub struct Desktop {
     /// awaiting Apply.
     assay_text: String,
     assay_pending: Option<(Value, Value)>,
+    /// Per-page state of the shared views.
+    tables: TablesState,
+    photons: PhotonsState,
+    pathways: PathwaysState,
+    outputs: OutputsState,
+    material_view: crate::views::material::MaterialState,
+    steps: crate::views::steps::StepsState,
+    /// The import dialog; `Some` while it is open.
+    import: Option<ImportState>,
+    /// A converted deck waiting for the unsaved-changes guard, and the folder its deck came from.
+    import_spec: Option<Value>,
+    import_base: Option<PathBuf>,
 }
 
 /// Editable sweep-panel state — no numerics here; every point's spec is
@@ -163,6 +176,7 @@ enum ResultAction {
 #[derive(Clone, Copy)]
 enum Pending {
     Open,
+    ImportDeck,
     Example,
     Close,
 }
@@ -232,16 +246,18 @@ impl Desktop {
             base:model::working_directory(), page:Page::Overview,
             status:"Start with the iron example, or open your own problem. Choose your installed nuclear data below.".into(),
             error:false, logo, result:None, comparison:None, job:None,
-            step:0, metric:0, selected:String::new(), filter:String::new(), ledger_filter:String::new(),
-            descending:true, reset_plot:false, isotope:String::new(), amount:0.,
+            step:0, metric:0, selected:String::new(), ledger_filter:String::new(),
+            reset_plot:false,
             raw:String::new(), raw_dirty:false, raw_source:Value::Null, tour:Tour::default(), help:false,
             pending:None, undo:vec![], redo:vec![], allow_close:false,
-            downloaded:None, scene_view:egui::Rect::ZERO, pathway_node:String::new(), capture:crate::capture::Capture::from_env(), platform:Box::new(platform::Native), suite:avila_account::ui_desktop::DesktopSuite::new(ctx,"actinv"),
+            downloaded:None, capture:crate::capture::Capture::from_env(), platform:Box::new(platform::Native), suite:avila_account::ui_desktop::DesktopSuite::new(ctx,"actinv"),
             result_unsaved:false, result_guard:None, result_load:None, spectrum_text:String::new(), log_time:false,
             theme:"Light".into(),
             transport:crate::transport::Import::default(), imported:None,
             sweep:SweepUi::default(),
             assay_text:String::new(), assay_pending:None,
+            tables:TablesState::default(), photons:PhotonsState::default(), pathways:PathwaysState::default(), outputs:OutputsState::default(), material_view:Default::default(), steps:Default::default(),
+            import:None, import_spec:None, import_base:None,
         }
     }
     fn dirty(&self) -> bool {
@@ -292,6 +308,33 @@ impl Desktop {
                         }
                         Err(e) => self.report(Err(e)),
                     }
+                }
+            }
+            Pending::ImportDeck => {
+                let Some(spec) = self.import_spec.take() else {
+                    return;
+                };
+                match model::decode_problem(&spec.to_string()) {
+                    Ok(doc) => {
+                        self.document = doc;
+                        // A converted deck is a new, unsaved problem: no file, no clean copy.
+                        self.saved = Value::Null;
+                        self.path = None;
+                        self.base = self
+                            .import_base
+                            .take()
+                            .unwrap_or_else(model::working_directory);
+                        self.saved_base = self.base.clone();
+                        self.raw_dirty = false;
+                        self.undo.clear();
+                        self.redo.clear();
+                        self.import = None;
+                        self.page = Page::Overview;
+                        self.report(Ok("Deck imported as a new problem. Add anything the report listed as required, then save it.".into()));
+                    }
+                    Err(e) => self.report(Err(format!(
+                        "The converted deck is not a valid ACTINV problem: {e}"
+                    ))),
                 }
             }
             Pending::Example => {
@@ -439,7 +482,7 @@ impl Desktop {
                     self.selected.clear();
                 }
                 self.reset_plot = true;
-                self.page = Page::Results;
+                self.page = Page::Charts;
                 self.report(Ok("Result loaded.".into()));
             }
             Err(e) => self.report(Err(e)),
@@ -466,6 +509,83 @@ impl Desktop {
             self.report(r.map(|()| "Export saved.".into()));
         }
     }
+    /// Write text a view produced (a table, a report) to a file the user picks.
+    fn save_text(&mut self, file_name: &str, contents: &str) {
+        if let Some(path) = self.platform.save_file(Dialog::new().file_name(file_name)) {
+            let saved = std::fs::write(&path, contents).map_err(|e| e.to_string());
+            self.report(saved.map(|()| "Export saved.".into()));
+        }
+    }
+    /// Ask for one of the import dialog's files and hand its text to the dialog. Files are read
+    /// leniently: a stray non-UTF-8 byte in a deck must not stop the conversion.
+    fn choose_import_file(&mut self, slot: ImportSlot, state: &mut ImportState) {
+        let dialog = match slot {
+            ImportSlot::Deck => Dialog::new().title("Choose a FISPACT-II input deck"),
+            ImportSlot::Fluxes => Dialog::new().title("Choose a FISPACT-II fluxes file"),
+            ImportSlot::Files => Dialog::new().title("Choose a FISPACT-II files file"),
+        };
+        let Some(path) = self.platform.pick_file(dialog) else {
+            return;
+        };
+        match std::fs::read(&path) {
+            Ok(bytes) => {
+                let text = String::from_utf8_lossy(&bytes).into_owned();
+                let name = path
+                    .file_name()
+                    .unwrap_or_default()
+                    .to_string_lossy()
+                    .into_owned();
+                state.set_file(slot, name, text);
+                if matches!(slot, ImportSlot::Deck) {
+                    self.import_base = path.parent().map(PathBuf::from);
+                }
+            }
+            Err(e) => self.report(Err(format!("cannot read {}: {e}", path.display()))),
+        }
+    }
+    /// The import dialog: the shared view in a window, and what its actions need from the shell.
+    fn import_dialog(&mut self, ctx: &egui::Context) {
+        let Some(mut state) = self.import.take() else {
+            return;
+        };
+        let mut action = ImportAction::None;
+        let height = (ctx.content_rect().height() - 140.).max(200.);
+        egui::Window::new("Import FISPACT-II deck")
+            .collapsible(false)
+            .default_width(780.)
+            .show(ctx, |ui| {
+                egui::ScrollArea::vertical()
+                    .max_height(height)
+                    .show(ui, |ui| {
+                        action = crate::views::import::show(ui, &mut state);
+                    });
+            });
+        let mut use_deck = false;
+        let mut keep = true;
+        match action {
+            ImportAction::None => {}
+            ImportAction::Choose(slot) => self.choose_import_file(slot, &mut state),
+            ImportAction::Use(spec) => {
+                self.import_spec = Some(spec);
+                use_deck = true;
+            }
+            ImportAction::SaveReport {
+                file_name,
+                contents,
+            } => self.save_text(&file_name, &contents),
+            ImportAction::Open(target) => self.page = pages::page_for(target),
+            ImportAction::Close => keep = false,
+        }
+        if keep {
+            self.import = Some(state);
+        } else {
+            self.import_spec = None;
+            self.import_base = None;
+        }
+        if use_deck {
+            self.request(Pending::ImportDeck);
+        }
+    }
     fn toolbar(&mut self, ui: &mut egui::Ui) {
         let accent = crate::visuals::accent(ui);
         let bar = egui::Panel::top("toolbar").show(ui,|ui| {
@@ -473,7 +593,10 @@ impl Desktop {
                 ui.image((self.logo.id(),Vec2::splat(44.)));
                 ui.vertical(|ui|{ui.label(RichText::new("ACTINV").size(24.).strong());ui.label(RichText::new("AVILA LABS  /  ACTIVATION & INVENTORY").size(10.).color(accent));});
                 ui.separator();
-                let open=ui.button("Open problem").on_hover_text("Load an ACTINV specification (Ctrl+O)");self.tour.mark("open",open.rect);if open.clicked(){self.request(Pending::Open);}
+                // Below 1100 px the two file buttons shorten so the toolbar still fits the minimum window.
+                let compact=ui.ctx().content_rect().width()<1100.;
+                let open=ui.button(if compact{"Open"}else{"Open problem"}).on_hover_text("Load an ACTINV specification (Ctrl+O)");self.tour.mark("open",open.rect);if open.clicked(){self.request(Pending::Open);}
+                let import=ui.button(if compact{"Import deck…"}else{"Import FISPACT-II deck…"}).on_hover_text("Convert a FISPACT-II input deck into an ACTINV problem (Ctrl+I)");self.tour.mark("import",import.rect);if import.clicked(){self.import.get_or_insert_with(ImportState::default);}
                 if ui.button(if self.dirty(){"Save •"}else{"Save"}).on_hover_text("Save problem (Ctrl+S)").clicked(){self.save_problem();}
                 let valid=ui.button("Validate");self.tour.mark("validate",valid.rect);if valid.clicked(){let r=self.validate().map(|_|"Specification and input locations are valid. File hashes and evaluated data are checked during the solve.".into());self.report(r);}
                 let run=ui.add_enabled(self.job.is_none(),egui::Button::new(RichText::new("▶ Run").color(Color32::WHITE)).fill(BLUE));self.tour.mark("run",run.rect);if run.clicked(){self.run(ui.ctx());}
@@ -496,56 +619,70 @@ if self.job.is_some(){ui.spinner();}});
             .min_size(165.)
             .resizable(true)
             .show(ui, |ui| {
-                ui.add_space(16.);
-                let mut group = None;
-                for page in Page::ALL {
-                    if group != Some(page.group()) {
-                        if group.is_some() {
-                            ui.add_space(18.);
+                // Thirteen pages and the foot do not fit the minimum window height; scroll then.
+                egui::ScrollArea::vertical()
+                    .auto_shrink([false, false])
+                    .show(ui, |ui| {
+                        ui.add_space(16.);
+                        let mut group = None;
+                        for page in Page::ALL {
+                            if group != Some(page.group()) {
+                                if group.is_some() {
+                                    ui.add_space(18.);
+                                }
+                                if let Some(caption) = page.group().caption() {
+                                    ui.label(RichText::new(caption).small().color(accent));
+                                }
+                                group = Some(page.group());
+                            }
+                            // Result pages dim until a result is loaded; they stay clickable
+                            // and explain themselves.
+                            let text = if page.needs_result() && self.result.is_none() {
+                                RichText::new(page.label()).weak()
+                            } else {
+                                RichText::new(page.label())
+                            };
+                            let r = ui.selectable_label(self.page == page, text);
+                            if r.clicked() {
+                                self.page = page;
+                            }
                         }
-                        if let Some(caption) = page.group().caption() {
-                            ui.label(RichText::new(caption).small().color(accent));
+                        ui.add_space(24.);
+                        ui.separator();
+                        if ui.button("Load iron example").clicked() {
+                            self.request(Pending::Example);
                         }
-                        group = Some(page.group());
-                    }
-                    let r = ui.selectable_label(self.page == page, page.label());
-                    if r.clicked() {
-                        self.page = page;
-                    }
-                }
-                ui.add_space(24.);
-                ui.separator();
-                if ui.button("Load iron example").clicked() {
-                    self.request(Pending::Example);
-                }
-                if ui
-                    .add_enabled(
-                        !self.undo.is_empty() && !self.raw_dirty,
-                        egui::Button::new("Undo edit"),
-                    )
-                    .clicked()
-                {
-                    if let Some(v) = self.undo.pop() {
-                        self.redo.push(std::mem::replace(&mut self.document, v));
-                    }
-                }
-                if ui
-                    .add_enabled(
-                        !self.redo.is_empty() && !self.raw_dirty,
-                        egui::Button::new("Redo edit"),
-                    )
-                    .clicked()
-                {
-                    if let Some(v) = self.redo.pop() {
-                        self.undo.push(std::mem::replace(&mut self.document, v));
-                    }
-                }
-                ui.add_space(12.);
-                ui.label(
-                    RichText::new("Same solver. Traceable inputs.\nEvery data gap stays visible.")
-                        .small()
-                        .weak(),
-                );
+                        if ui
+                            .add_enabled(
+                                !self.undo.is_empty() && !self.raw_dirty,
+                                egui::Button::new("Undo edit"),
+                            )
+                            .clicked()
+                        {
+                            if let Some(v) = self.undo.pop() {
+                                self.redo.push(std::mem::replace(&mut self.document, v));
+                            }
+                        }
+                        if ui
+                            .add_enabled(
+                                !self.redo.is_empty() && !self.raw_dirty,
+                                egui::Button::new("Redo edit"),
+                            )
+                            .clicked()
+                        {
+                            if let Some(v) = self.redo.pop() {
+                                self.undo.push(std::mem::replace(&mut self.document, v));
+                            }
+                        }
+                        ui.add_space(12.);
+                        ui.label(
+                            RichText::new(
+                                "Same solver. Traceable inputs.\nEvery data gap stays visible.",
+                            )
+                            .small()
+                            .weak(),
+                        );
+                    });
             });
     }
 }
@@ -662,7 +799,7 @@ impl eframe::App for Desktop {
                                 self.step = 0;
                                 self.selected.clear();
                                 self.reset_plot = true;
-                                self.page = Page::Results;
+                                self.page = Page::Charts;
                                 self.report(Ok(
                                 "Calculation complete. Explore the results and review the ledger."
                                     .into(),
@@ -702,6 +839,9 @@ impl Desktop {
         }
         if ctx.input_mut(|i| i.consume_key(egui::Modifiers::COMMAND, egui::Key::O)) {
             self.request(Pending::Open);
+        }
+        if ctx.input_mut(|i| i.consume_key(egui::Modifiers::COMMAND, egui::Key::I)) {
+            self.import.get_or_insert_with(ImportState::default);
         }
         if ctx.input(|i| i.key_pressed(egui::Key::F1)) {
             self.help = true;
@@ -782,7 +922,7 @@ impl Desktop {
             ui.horizontal(|ui| { ui.label("Interface size"); let mut zoom=ctx.zoom_factor(); if ui.add(egui::Slider::new(&mut zoom,0.8..=2.).text("Scale")).changed() { ctx.set_zoom_factor(zoom); } });
             if ui.button("Start: create and run a calculation").clicked(){self.help=false;self.tour.start(false);}
             if ui.button("Start: understand and export results").clicked(){self.help=false;self.tour.start(true);}
-            ui.separator();ui.label("Shortcuts: Ctrl/Cmd+O opens a problem; Ctrl/Cmd+S saves; F1 opens Help.");ui.hyperlink_to("ACTINV specification guide","https://github.com/AvilaLabs/ACTINV/blob/master/docs/SPEC.md");ui.hyperlink_to("Data setup","https://github.com/AvilaLabs/ACTINV/blob/master/docs/DATA.md");ui.hyperlink_to("Qualification and limitations","https://github.com/AvilaLabs/ACTINV/blob/master/docs/QUALIFICATION.md");if ui.button("Close help").clicked(){self.help=false;}
+            ui.separator();ui.label("Shortcuts: Ctrl/Cmd+O opens a problem; Ctrl/Cmd+I imports a FISPACT-II deck; Ctrl/Cmd+S saves; F1 opens Help.");ui.hyperlink_to("ACTINV specification guide","https://github.com/AvilaLabs/ACTINV/blob/master/docs/SPEC.md");ui.hyperlink_to("Data setup","https://github.com/AvilaLabs/ACTINV/blob/master/docs/DATA.md");ui.hyperlink_to("Qualification and limitations","https://github.com/AvilaLabs/ACTINV/blob/master/docs/QUALIFICATION.md");if ui.button("Close help").clicked(){self.help=false;}
         });
         }
         if let Some(pending) = self.pending {
@@ -792,6 +932,7 @@ impl Desktop {
             if ui.button("Save and continue").clicked()&&self.save_problem(){self.pending=None;if matches!(pending,Pending::Close){self.stop_calculation_for_close();self.allow_close=true;ctx.send_viewport_cmd(egui::ViewportCommand::Close);}else{self.perform(pending);}}
         });});
         }
+        self.import_dialog(&ctx);
         self.tour.show(&ctx);
         if let Some(action) = self.result_guard {
             egui::Modal::new(egui::Id::new("unsaved-result")).show(&ctx, |ui| {
@@ -806,7 +947,7 @@ impl Desktop {
                         match action {
                             ResultAction::Run => self.run(&ctx),
                             ResultAction::Open => self.open_result(&ctx, false),
-                            ResultAction::Tutorial => { self.result = Some(model::tutorial_result()); self.step=0; self.selected.clear(); self.comparison=None; self.page=Page::Results; self.reset_plot=true; self.tour.start(true); },
+                            ResultAction::Tutorial => { self.result = Some(model::tutorial_result()); self.step=0; self.selected.clear(); self.comparison=None; self.page=Page::Charts; self.reset_plot=true; self.tour.start(true); },
                             ResultAction::Close => { if self.dirty() || self.job.is_some() { self.pending = Some(Pending::Close); } else { self.allow_close=true; ctx.send_viewport_cmd(egui::ViewportCommand::Close); } },
                         }
                     }
@@ -875,53 +1016,160 @@ mod ui_tests {
         assert!(ctx.style_of(egui::Theme::Dark).visuals.dark_mode);
         assert!(!ctx.style_of(egui::Theme::Light).visuals.dark_mode);
     }
+    /// One frame of the whole window at the minimum size the application allows.
+    fn frame_at_minimum_size(ctx: &egui::Context, app: &mut Desktop) {
+        let mut output = ctx.run_ui(
+            egui::RawInput {
+                screen_rect: Some(egui::Rect::from_min_size(
+                    egui::Pos2::ZERO,
+                    Vec2::new(900., 640.),
+                )),
+                ..Default::default()
+            },
+            |ui| app.render(ui),
+        );
+        assert!(!output.shapes.is_empty());
+        output.textures_delta.clear();
+    }
+    #[test]
+    fn every_page_renders_in_both_themes_at_minimum_size_with_and_without_a_result() {
+        assert_eq!(Page::ALL.len(), 13);
+        for theme in [egui::ThemePreference::Light, egui::ThemePreference::Dark] {
+            for with_result in [false, true] {
+                let ctx = egui::Context::default();
+                let mut app = Desktop::from_context(&ctx);
+                ctx.set_theme(theme);
+                if with_result {
+                    app.result = Some(model::tutorial_result());
+                }
+                for page in Page::ALL {
+                    app.page = page;
+                    for _ in 0..2 {
+                        frame_at_minimum_size(&ctx, &mut app);
+                    }
+                    assert_eq!(app.page, page, "rendering must not navigate away");
+                }
+            }
+        }
+    }
     #[test]
     fn every_page_and_setup_walkthrough_renders_at_minimum_size() {
+        for with_result in [false, true] {
+            let ctx = egui::Context::default();
+            let mut app = Desktop::from_context(&ctx);
+            if with_result {
+                app.result = Some(model::tutorial_result());
+            }
+            for page in Page::ALL {
+                app.page = page;
+                for _ in 0..2 {
+                    frame_at_minimum_size(&ctx, &mut app);
+                }
+            }
+            for (results, steps) in [(false, crate::tour::SETUP), (true, crate::tour::RESULTS)] {
+                for (index, step) in steps.iter().enumerate() {
+                    app.tour.active = Some((results, index));
+                    for _ in 0..2 {
+                        frame_at_minimum_size(&ctx, &mut app);
+                    }
+                    assert_eq!(app.page, step.page, "step {} opens its page", step.target);
+                    let rect = app.tour.anchors.get(step.target).unwrap_or_else(|| {
+                        panic!(
+                            "walkthrough target {} exists on {:?}",
+                            step.target, step.page
+                        )
+                    });
+                    assert!(
+                        rect.intersects(ctx.content_rect()),
+                        "target {} must be visible",
+                        step.target
+                    );
+                }
+            }
+            app.tour.active = None;
+        }
+    }
+    #[test]
+    fn the_sidebar_lists_every_page_in_three_captioned_groups() {
+        let captions: Vec<_> = [Group::Setup, Group::Results, Group::Tools]
+            .into_iter()
+            .map(|g| g.caption())
+            .collect();
+        assert_eq!(
+            captions,
+            [Some("CALCULATION"), Some("EXPLORE"), Some("TOOLS")]
+        );
         let ctx = egui::Context::default();
         let mut app = Desktop::from_context(&ctx);
-        for page in Page::ALL {
-            app.page = page;
-            for _ in 0..2 {
-                let mut output = ctx.run_ui(
-                    egui::RawInput {
-                        screen_rect: Some(egui::Rect::from_min_size(
-                            egui::Pos2::ZERO,
-                            Vec2::new(900., 640.),
-                        )),
-                        ..Default::default()
-                    },
-                    |ui| app.render(ui),
-                );
-                assert!(!output.shapes.is_empty());
-                output.textures_delta.clear();
-            }
-        }
-        for (index, step) in crate::tour::SETUP.iter().enumerate() {
-            app.tour.active = Some((false, index));
-            for _ in 0..2 {
-                let mut output = ctx.run_ui(
-                    egui::RawInput {
-                        screen_rect: Some(egui::Rect::from_min_size(
-                            egui::Pos2::ZERO,
-                            Vec2::new(900., 640.),
-                        )),
-                        ..Default::default()
-                    },
-                    |ui| app.render(ui),
-                );
-                output.textures_delta.clear();
-            }
-            let rect = app
-                .tour
-                .anchors
-                .get(step.target)
-                .expect("walkthrough target exists");
-            assert!(
-                rect.intersects(ctx.content_rect()),
-                "target {} must be visible",
-                step.target
-            );
-        }
+        frame_at_minimum_size(&ctx, &mut app);
+        assert_eq!(app.page, Page::Overview);
+    }
+    #[test]
+    fn an_idle_import_dialog_stays_open_and_changes_nothing() {
+        let ctx = egui::Context::default();
+        let mut app = Desktop::from_context(&ctx);
+        let before = app.document.clone();
+        app.import = Some(ImportState::default());
+        frame_at_minimum_size(&ctx, &mut app);
+        assert!(app.import.is_some(), "an idle dialog stays open");
+        assert_eq!(app.document, before);
+        assert!(!app.dirty());
+    }
+    #[test]
+    fn an_imported_deck_replaces_the_problem_as_a_new_unsaved_one() {
+        let ctx = egui::Context::default();
+        let (mut app, _) = scripted_app(&ctx, None);
+        let folder = std::env::temp_dir();
+        app.path = Some(folder.join("old.json"));
+        app.import = Some(ImportState::default());
+        app.import_spec = Some(serde_json::from_str(model::EXAMPLE).unwrap());
+        app.import_base = Some(folder.clone());
+        app.undo.push(Value::Null);
+        app.perform(Pending::ImportDeck);
+        assert!(!app.error, "{}", app.status);
+        assert_eq!(app.document, model::decode_problem(model::EXAMPLE).unwrap());
+        assert_eq!(app.page, Page::Overview);
+        assert!(app.path.is_none());
+        assert_eq!(app.base, folder);
+        assert!(app.import.is_none() && app.import_spec.is_none());
+        assert!(app.undo.is_empty() && app.redo.is_empty());
+        assert!(app.dirty(), "an imported deck is not saved yet");
+    }
+    #[test]
+    fn an_import_that_is_not_a_valid_problem_is_refused_and_changes_nothing() {
+        let ctx = egui::Context::default();
+        let (mut app, _) = scripted_app(&ctx, None);
+        let before = app.document.clone();
+        app.import_spec = Some(serde_json::json!({"not": "a problem"}));
+        app.perform(Pending::ImportDeck);
+        assert!(app.error);
+        assert_eq!(app.document, before);
+        assert_eq!(app.page, Page::Ledger);
+    }
+    #[test]
+    fn importing_asks_before_discarding_unsaved_edits() {
+        let ctx = egui::Context::default();
+        let (mut app, _) = scripted_app(&ctx, None);
+        app.document["title"] = "edited".into();
+        app.import_spec = Some(serde_json::from_str(model::EXAMPLE).unwrap());
+        app.request(Pending::ImportDeck);
+        assert!(matches!(app.pending, Some(Pending::ImportDeck)));
+        assert_eq!(app.document["title"], "edited");
+    }
+    #[test]
+    fn saving_a_view_export_writes_the_chosen_file_and_a_cancel_writes_nothing() {
+        let ctx = egui::Context::default();
+        let path =
+            std::env::temp_dir().join(format!("actinv-gui-export-{}.csv", std::process::id()));
+        let (mut app, asked) = scripted_app(&ctx, Some(path.clone()));
+        app.save_text("table.csv", "a,b\n1,2\n");
+        assert_eq!(asked.get(), 1);
+        assert_eq!(std::fs::read_to_string(&path).unwrap(), "a,b\n1,2\n");
+        std::fs::remove_file(&path).ok();
+        let (mut app, asked) = scripted_app(&ctx, None);
+        app.save_text("table.csv", "a,b\n");
+        assert_eq!(asked.get(), 1);
+        assert!(!app.error);
     }
     /// Answers every dialog with a fixed path and counts the requests.
     struct Scripted {

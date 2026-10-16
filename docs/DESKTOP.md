@@ -42,7 +42,7 @@ The material editor uses readable composition basis names and flags weight total
 them. Spectrum accepts pasted numeric vectors and one-column CSV/text files (optional `flux` header), with explicit
 normalization and energy ordering. Count, sign and finite-value checks run before replacing existing values.
 
-Results offer logarithmic time (zero-time points are omitted from that plot only). A newly computed result is marked
+Charts offer logarithmic time (zero-time points are omitted from that plot only). A newly computed result is marked
 unsaved until full JSON export; closing or replacing it prompts to export or explicitly discard it. Saving a problem
 or CSV is not equivalent to saving the complete result.
 
@@ -50,11 +50,11 @@ The top-right appearance menu offers **Light**, **Dark**, and **System**, rememb
 The existing light layout is retained; dark mode uses lighter plot and text accents. Help includes an interface-size control.
 
 Expand **Spectrum by physical energy** to view group-integrated flux against logarithmic energy, with the configured
-ordering and total normalization applied. In Results, **Which nuclides dominate activity?** shows the ten largest
+ordering and total normalization applied. In Charts, **Which nuclides dominate activity?** shows the ten largest
 contributors at the selected step; select a nuclide to follow its history. These views derive from existing inputs/results,
 not additional physics approximations.
 
-Overview also provides structured optional uncertainty, radiological, photon-response and fission-yield inputs.
+Outputs provides structured optional uncertainty, radiological, photon-response, step-summary, pathway and self-shielding inputs; Overview & data keeps the fission-yield inputs.
 Spectrum can import OpenMC, MCNP MESHTAL/MCTAL, FISPACT fluxes or canonical NDJSON through the existing readers.
 Choose a single cell, explicitly supply transport source normalization, and review before applying. Group conversion
 requires explicit permission and rejects loss outside the destination energy range. Retain the exported NDJSON alongside
@@ -64,12 +64,14 @@ the problem for upstream source provenance; single-material result certificates 
 2. Choose installed activation and decay files, or use **Download standard neutron data**. Downloads run in the background through the existing verified data installer. Apply the installed paths explicitly when the download completes.
 3. Check **Input base**: relative data paths are interpreted relative to this folder. Opening a JSON sets it to that JSON's directory. Repository examples often need the repository root instead. Saving to a different directory resolves input references so their meaning is preserved.
 4. Edit **Material**, **Irradiation & cooling**, and **Spectrum**. The composition basis names match the core schema. A zero schedule multiplier means cooling. Reorder rows by their handle or Up/Down buttons.
-5. Choose optional outputs under **Calculation options & requested outputs**. Advanced JSON exposes the complete schema, including covariance and radiological tables. Apply or discard JSON edits before continuing in the structured editors.
+5. Choose optional outputs on **Outputs**. Advanced JSON exposes the complete schema, including covariance and radiological tables. Apply or discard JSON edits before continuing in the structured editors.
 6. Click **Validate**, then **Run**. Validation checks the specification and file locations; the solver checks hashes and evaluated data when running. Background work shows truthful preparing/solving stages and elapsed time; it does not invent a completion percentage. **Cancel calculation** terminates the isolated solver process; no partial output is published, and the previous result/problem remain unchanged. Every calculation run uses a private prepared-data cache, so each run pays its own preparation cost and cancellation cannot strand a shared cache lock. Data download and transport import show their actual download/verification or reading/checking stages and intentionally do not offer cancellation.
-7. In **Results**, choose a metric and computed step, or click the plot to select the nearest step. Filter and select a nuclide to follow its activity/inventory. Heat is always whole-material heat. Add a comparison to overlay a second result on physical time.
-8. Inspect **Spectra & pathways** and **Ledger & certificate**, then export full JSON or the selected inventory as CSV.
+7. In **Charts**, choose a metric and computed step, or click the plot to select the nearest step. Filter and select a nuclide to follow its activity/inventory. Heat is always whole-material heat. Add a comparison to overlay a second result on physical time. The result bar at the top of every page under EXPLORE (Open result, Add comparison, Export JSON, Export inventory CSV and the Computed step slider) is shared, so the step is the same on every page.
+8. Inspect **Tables** (the `actinv report` tables, with CSV export identical to that command's output), **Photons & dose**, **Pathways** and **Ledger & certificate**, then export full JSON or the selected inventory as CSV.
 
-**Help** (or F1) offers setup and result walkthroughs. Tours dim the surrounding workspace, highlight the relevant control, and show an explanation with Back/Next/Exit. The highlighted control stays usable. Escape dismisses a tour. Ctrl/Cmd+O opens a problem and Ctrl/Cmd+S saves it.
+To start from a FISPACT-II deck, choose **Import FISPACT-II deck…** in the toolbar (Ctrl/Cmd+I). Each step on **Irradiation & cooling** has a **Drive** (flux multiplier, wall loading, power W/cm3 or power W/g).
+
+**Help** (or F1) offers setup and result walkthroughs. Tours dim the surrounding workspace, highlight the relevant control, and show an explanation with Back/Next/Exit. The highlighted control stays usable. Escape dismisses a tour. Ctrl/Cmd+O opens a problem, Ctrl/Cmd+I imports a FISPACT-II deck and Ctrl/Cmd+S saves the problem.
 
 ## Scientific presentation
 
@@ -96,7 +98,7 @@ python3 controls/check_desktop.py
 
 The independent control requires NumPy (as do the existing P11 fixtures). It generates temporary nuclear data and compares the desktop worker against the CLI, including scientific arrays, the ledger, and input certificates.
 
-For native visual checks, set `ACTINV_GUI_CAPTURE_DIR` to a temporary directory when launching the GUI. Optionally set `ACTINV_GUI_CAPTURE_RESULT` to a real ACTINV result JSON. This opt-in harness captures eight pages and all thirteen setup/result tour steps, then closes. It never loads a fixture in ordinary use.
+For native visual checks, set `ACTINV_GUI_CAPTURE_DIR` to a temporary directory when launching the GUI. Optionally set `ACTINV_GUI_CAPTURE_RESULT` to a real ACTINV result JSON. This opt-in harness captures all thirteen pages and every setup (nine) and result (seven) tour step, then closes. It never loads a fixture in ordinary use.
 
 Local implementation evidence is recorded in [scientific parity](../results/desktop-interface-v1.json) and
 [desktop verification](../results/desktop-ui-verification-v1.json). The latter records 126 passing workspace tests,

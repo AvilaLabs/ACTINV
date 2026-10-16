@@ -1,16 +1,28 @@
-//! Parameter sweep, rendered beneath the Results page.
-use crate::app::{heading, Desktop};
+//! Sweep: generate and solve a family of problems along one parameter.
+use crate::app::{heading, Desktop, BLUE};
 use eframe::egui;
+use serde_json::Value;
+
+/// Whether any step is driven by something other than a flux multiplier (a wall loading or a
+/// power density). The sweep scales `spectrum.total`, which does not move those drives.
+fn has_non_flux_drive(document: &Value) -> bool {
+    document["schedule"].as_array().is_some_and(|steps| {
+        steps.iter().any(|s| {
+            ["wall_loading_MW_m2", "power_W_cm3", "power_W_per_g"]
+                .iter()
+                .any(|key| !s[*key].is_null())
+        })
+    })
+}
 
 impl Desktop {
     /// Interactive parameter sweep (P48). Every point is a full generated
     /// spec solved through the same isolated worker path as a manual run;
     /// the plot binds each rendered value to its spec digest.
-    pub(super) fn sweep_panel(&mut self, ui: &mut egui::Ui) {
-        ui.separator();
+    pub(super) fn sweep_page(&mut self, ui: &mut egui::Ui) {
         heading(
             ui,
-            "Sweep a parameter",
+            "Sweep",
             "Each point is a complete solver run on a generated spec — the same qualified path as a manual Run. Results stay bound to their parameters.",
         );
         const AXES: [&str; 3] = [
@@ -73,6 +85,13 @@ impl Desktop {
                 _ => {}
             }
         });
+        let flux_blocked = self.sweep.axis == 1 && has_non_flux_drive(&self.document);
+        if flux_blocked {
+            ui.colored_label(
+                BLUE,
+                "This problem has wall-loading or power-driven steps. The flux axis scales the spectrum total, which does not move those drives, so it is not offered here. Vary the drive in the problem and use the command line (actinv run) for such studies, or sweep composition or a cooling time.",
+            );
+        }
         ui.horizontal(|ui| {
             ui.label("from");
             ui.add(egui::DragValue::new(&mut self.sweep.lo).speed(0.05));
@@ -124,16 +143,22 @@ impl Desktop {
                     "{} point(s) finished",
                     self.sweep.points.len()
                 ));
-            } else if ui.button("Run sweep").clicked() {
+            } else if ui
+                .add_enabled(!flux_blocked, egui::Button::new("Run sweep"))
+                .clicked()
+            {
                 self.run_sweep();
             }
             ui.checkbox(
                 &mut self.sweep.screened,
                 "certified screening (warm cache — each point emits the P65 certificate)",
             );
-            let live_resp = ui.checkbox(
-                &mut self.sweep.live,
-                "live (slider — solves only the newest position, certified)",
+            let live_resp = ui.add_enabled(
+                !flux_blocked || self.sweep.live,
+                egui::Checkbox::new(
+                    &mut self.sweep.live,
+                    "live (slider — solves only the newest position, certified)",
+                ),
             );
             ui.checkbox(
                 &mut self.sweep.frontier,
@@ -306,7 +331,6 @@ impl Desktop {
                 ));
             }
         }
-        self.assay_panel(ui);
     }
 
     fn run_sweep(&mut self) {
@@ -364,5 +388,22 @@ impl Desktop {
                 }
             }
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use serde_json::json;
+
+    #[test]
+    fn only_wall_and_power_steps_block_the_flux_axis() {
+        let flux = json!({"schedule": [{"dt": "1 h", "flux": 1.0}, {"dt": "1 d", "flux": 0.0}]});
+        assert!(!has_non_flux_drive(&flux));
+        for key in ["wall_loading_MW_m2", "power_W_cm3", "power_W_per_g"] {
+            let doc = json!({"schedule": [{"dt": "1 h", key: 1.5}]});
+            assert!(has_non_flux_drive(&doc), "{key}");
+        }
+        assert!(!has_non_flux_drive(&json!({})));
     }
 }

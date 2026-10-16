@@ -57,8 +57,9 @@ unavailable, run `./ACTINV-Desktop-…AppImage --appimage-extract`, then launch
 3. Load the iron example or open your problem. Choose the input base folder and
    confirm the library and decay paths.
 4. Review material, irradiation/cooling, and spectrum; then **Validate** and **Run**.
-5. Explore **Results** and export JSON or CSV. Use **Help** for highlighted
-   walkthroughs of setup and results.
+5. Explore **Charts**, **Tables**, **Photons & dose** and **Pathways**, and
+   export JSON or CSV. Use **Help** for highlighted walkthroughs of setup and
+   results.
 
 ## Verification and preview limits
 
@@ -68,7 +69,7 @@ and a `SHA256SUMS-*.txt` for integrity checks. On Windows use `Get-FileHash`;
 on macOS use `shasum -a 256`; on Linux use `sha256sum -c SHA256SUMS-*.txt`.
 
 Automated package checks exercise real executables with temporary synthetic
-inputs. Screenshot automation covers eight pages and thirteen Help steps when
+inputs. Screenshot automation covers thirteen pages and sixteen Help steps when
 the runner supports rendering. It does not simulate native file-picker clicks,
 browser download warnings, or every desktop/driver combination. See the exact
 verification files and release notes before treating a platform as tested.

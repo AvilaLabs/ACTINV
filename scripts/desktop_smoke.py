@@ -11,6 +11,9 @@ import sys
 import tempfile
 
 ROOT = Path(__file__).resolve().parents[1]
+# One screenshot per page (13), then one per setup-tour step (9), then one per results-tour step (7).
+# Keep in step with `Capture::total()` in crates/actinv-gui/src/capture.rs, which derives the same sum.
+EXPECTED_SCREENSHOTS = 13 + 9 + 7
 sys.path.insert(0, str(ROOT / "controls"))
 from p11_fixtures import make_fixture, specification
 
@@ -52,7 +55,7 @@ def main():
             native_code = -1
         (output / "native.log").write_bytes(native_log)
         captures = sorted((output / "captures").glob("*.png"))
-        rendered = native_code == 0 and len(captures) == 21
+        rendered = native_code == 0 and len(captures) == EXPECTED_SCREENSHOTS
         evidence = {
             "launch_target_sha256": hashlib.sha256(binary.read_bytes()).hexdigest(),
             "model_open_save_data_paths_solve_json_csv": True,

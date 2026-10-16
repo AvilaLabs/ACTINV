@@ -10,6 +10,7 @@ mod smoke;
 mod sweep;
 mod tour;
 mod transport;
+mod views;
 mod visuals;
 mod worker;
 
