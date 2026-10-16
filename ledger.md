@@ -3245,3 +3245,13 @@ GHSA-vv5m-jxxh-4627, GHSA-4v9h-p7m9-rh26, GHSA-4684-h2q9-2vcp; ACTINV calls no e
 Registered before any edit: **P120 Amendment C** `101f83f57e3d6c2df67e0c34e6db37744a88759b5da2df37c9d305d55917b117`.
 G0 reads the 23 control files from `f31e0f1`'s Git objects; G1 maps the exact token `actinv-core <current>` to
 `actinv-core 1.4.0` before hashing, and nothing else.
+
+## Entry 173 — P120 Amendment C evidence C1–C3 (2026-10-16)
+
+`controls/check_p110.py` changed as registered: G0 hashes the 23 frozen controls from the Git objects at `f31e0f1`;
+G1 maps only the exact token `actinv-core <workspace version>` to `actinv-core 1.4.0` (read from `f31e0f1`'s
+`Cargo.toml`) before computing `output_sha256`. C1 is the preserved record of entry 172. C2: the six regressions of
+`controls/test_p120_amendment_c.py` pass (`results/p120/amendment_c/c2_regressions.log`). C3: with the 1.5.0 release
+binary (SHA-256 `54f613420cb2fce3cacea310554b24c82ffbb7e81aaefd259946ee77a025ce6f`), `check_p110.py --no-write` reproduces the sealed
+G0, G1 and G2 records byte for byte, and the fourteen CI history steps P103–P118 each exit 0 as `ci.yml` lists them
+(`results/p120/amendment_c/ci_steps_p103_p118.log`). C4 (CI green on the pushed commit) is pending.

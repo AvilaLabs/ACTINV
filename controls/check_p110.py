@@ -43,6 +43,9 @@ G0 = ROOT / "results/g0_p110_composition_solve.json"
 G1 = ROOT / "results/g1_p110_composition_solve.json"
 G2 = ROOT / "results/g2_p110_composition_solve.json"
 ACTINV = Path(os.environ.get("ACTINV_BIN", ROOT / "target/release/actinv"))
+# P120 Amendment C: the commit P110 was sealed at, whose Git objects G0 hashes and whose
+# workspace version G1's output digests carry.
+P110_SEAL_COMMIT = "f31e0f13af2f5ca69b86bc68a46e02bdcbd3f4a3"
 
 
 def sha_bytes(data: bytes) -> str:
@@ -51,6 +54,42 @@ def sha_bytes(data: bytes) -> str:
 
 def sha(path: Path) -> str | None:
     return sha_bytes(path.read_bytes()) if path.is_file() else None
+
+
+def _git_blob(commit: str, path: str) -> bytes:
+    from check_p107_history import _git_blob as read_blob
+    return read_blob(commit, path, root=ROOT)
+
+
+def _control_hashes(names, commit: str = P110_SEAL_COMMIT) -> dict:
+    """P120 Amendment C item 1: the frozen controls as sealed, from Git objects, not the working tree."""
+    hashes = {}
+    for name in sorted(names):
+        try: hashes[name] = sha_bytes(_git_blob(commit, name))
+        except ValueError: hashes[name] = None
+    return hashes
+
+
+def _workspace_version(cargo_toml: str) -> str:
+    section = cargo_toml.split("[workspace.package]", 1)[-1]
+    for line in section.splitlines():
+        key, _, value = line.partition("=")
+        if key.strip() == "version":
+            return value.strip().strip('"')
+    raise ValueError("workspace version not found")
+
+
+def _versions() -> tuple[str, str]:
+    current = _workspace_version((ROOT / "Cargo.toml").read_text(encoding="utf-8"))
+    sealed = _workspace_version(_git_blob(P110_SEAL_COMMIT, "Cargo.toml").decode("utf-8"))
+    return current, sealed
+
+
+def map_version_token(output: bytes, current: str, sealed: str) -> bytes:
+    """P120 Amendment C item 2: only the exact solver token is mapped, and only for the digest."""
+    if current == sealed:
+        return output
+    return output.replace(f"actinv-core {current}".encode(), f"actinv-core {sealed}".encode())
 
 
 def _registered() -> bool:
@@ -190,7 +229,7 @@ def _g0_base() -> dict:
               "controls/p108_composition_control.py", "controls/p106_bounds_control.py",
               "controls/check_p107.py", "controls/p105_budget_control.py", "controls/check_p105.py",
               "controls/fixtures/p110/cases.json", "results/tables/abundance_mass.json"}
-    hashes = {name: sha(ROOT / name) for name in sorted(frozen)}
+    hashes = _control_hashes(frozen)
     preserved_pre_repair={name:sha(ROOT/name) for name in PRE_REPAIR_ARTIFACTS}
     pre_repair_matches=all(preserved_pre_repair[name]==want
                            for name,want in PRE_REPAIR_ARTIFACTS.items())
@@ -549,6 +588,7 @@ def run_g1(*, no_write: bool=False) -> int:
     fixture=oracle.write_fixture(ROOT)
     cases=oracle.generate_cases(); rows=json.loads(PACK.read_text())["rows"]
     records=[]; errors=[]; repeats=[]; case_evidence=[]
+    current_version,sealed_version=_versions()
     for case in cases:
         try:
             actual,raw,wrapper,output,request=_run_one(case,fixture,work)
@@ -621,7 +661,7 @@ def run_g1(*, no_write: bool=False) -> int:
                                 for w in native.get("native_verification",{}).get("verified_witnesses",[])
                                 for t in w.get("targets",[])),default=0.0)
             case_evidence.append({"id":case["id"],"input_sha256":hashlib.sha256(raw).hexdigest(),
-                "output_sha256":hashlib.sha256(output_bytes).hexdigest(),
+                "output_sha256":hashlib.sha256(map_version_token(output_bytes,current_version,sealed_version)).hexdigest(),
                 "generated_response_input_sha256":actual.get("generated_response_input_sha256"),
                 "selected_steps":[{"step":t.get("step"),"lower_class":t.get("lower",{}).get("class"),
                     "upper_class":t.get("upper",{}).get("class"),"class_envelope":t.get("class_envelope")}

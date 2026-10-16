@@ -1,0 +1,15 @@
+OK   P103 source-seal integrity (historical)
+OK   P105 waste classification, aggregation, and budget controls
+OK   P107 conservative whole-component waste bounds
+OK   P108 conservative composition response bounds
+OK   P109 preserved failure checkpoint
+OK   P110 native composition basis and witness verification
+OK   P111 draft intrusion screen controls
+OK   P112 draft intrusion screen successor controls
+OK   P113 terminal failure history remains immutable
+OK   P114 terminal failure remains immutable
+OK   P115 terminal failure remains immutable
+OK   P116 unchanged twin verification successor controls
+OK   P117 terminal failure remains immutable
+OK   P118 terminal failure remains immutable
+FAILED: []
