@@ -1,0 +1,53 @@
+{
+ "ci": {
+  "commit": "c59facfb2fd7b69d2962391feecc4ed44adff4f6",
+  "runs": [
+   {
+    "conclusion": "success",
+    "name": "fusion-isotope",
+    "run_id": 38970902362
+   },
+   {
+    "conclusion": "success",
+    "name": "fns-iron",
+    "run_id": 38970901681
+   },
+   {
+    "conclusion": "success",
+    "name": "Build handbook",
+    "run_id": 38970901674
+   },
+   {
+    "conclusion": "success",
+    "name": "Build browser workbench",
+    "run_id": 38970901677
+   },
+   {
+    "conclusion": "success",
+    "name": "desktop builds",
+    "run_id": 38970901675
+   },
+   {
+    "conclusion": "success",
+    "name": "controls",
+    "run_id": 38970901683
+   }
+  ]
+ },
+ "ci_green": true,
+ "commit": "2f2dcba8ba70123c10d61f02c4d892ed37071658",
+ "gates": {
+  "V1": true,
+  "V2": true,
+  "V3": true,
+  "V4": true,
+  "V5": true
+ },
+ "protocol_sha256": "3e6bc737429e8eebf0d067c9d9321707b38079765a868e0fb10826ee26daf050",
+ "schema": "actinv-p144-verdict-1",
+ "v1_specs": [
+  "/home/connoravila/Documents/actinv/target/p144/v1/fns_fe_5min/waste-spec.json",
+  "/home/connoravila/Documents/actinv/target/p144/v1/ra_steel/waste-spec.json"
+ ],
+ "verdict": "P144-PASS"
+}

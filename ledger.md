@@ -3453,3 +3453,10 @@ carry the wall-clock `ms` of each solve, so U1 compares kept samples with `study
 after removing that one member, as the P30 and P136 controls do. The protocol's statement that the P30/P43/P136
 controls run in CI is wrong; U5 now requires `controls/check_p136.py` G2–G4 with the pre-P145 release binary
 (`216e136c…`) as reference.
+
+## Entry 193 — P144 verdict: waste classification in the desktop and the browser workbench (2026-10-16)
+
+**P144-PASS** (`results/p144_verdict.json`). V1–V4 and the local half of V5 as entry 190; all six workflows on the
+pushed evidence commit `c59facf` succeeded, `controls`, `desktop builds` and `Build browser workbench` among them
+(`results/p144/ci_runs.json`). The browser smoke in CI now opens the three committed waste-family fixtures on every
+push.
