@@ -1,0 +1,197 @@
+{
+ "actinv_version": "1.5.0",
+ "pass": true,
+ "schema": "actinv-p143-w2-w3-1",
+ "w2": {
+  "cases": {
+   "bounds": {
+    "bad_schema_refused": true,
+    "leftovers": [],
+    "pass": true,
+    "same_bytes": true,
+    "source": "fixture",
+    "spec": "target/preflight-tmp/p143-w2-bounds-w7wdy9bc/spec.json"
+   },
+   "budget": {
+    "bad_schema_refused": true,
+    "leftovers": [],
+    "pass": true,
+    "same_bytes": true,
+    "source": "campaign",
+    "spec": "target/p105-g2-controls/budget.json"
+   },
+   "classify": {
+    "bad_schema_refused": true,
+    "leftovers": [],
+    "pass": true,
+    "same_bytes": true,
+    "source": "campaign",
+    "spec": "target/p105-g2-controls/g3_component_waste.json"
+   },
+   "composition": {
+    "bad_schema_refused": true,
+    "leftovers": [],
+    "pass": true,
+    "same_bytes": true,
+    "source": "fixture",
+    "spec": "target/preflight-tmp/p143-w2-composition-1zfcbomo/spec.json"
+   },
+   "composition_solve": {
+    "bad_schema_refused": true,
+    "leftovers": [],
+    "pass": true,
+    "same_bytes": true,
+    "source": "campaign",
+    "spec": "target/p110-controls/requests/ranged_volume_1.json"
+   },
+   "intrusion_screen": {
+    "bad_schema_refused": true,
+    "leftovers": [],
+    "pass": true,
+    "same_bytes": true,
+    "source": "campaign",
+    "spec": "target/p112-controls/case-000-wac_below/spec.json"
+   },
+   "twin": {
+    "bad_schema_refused": true,
+    "leftovers": [],
+    "pass": true,
+    "same_bytes": true,
+    "source": "campaign",
+    "spec": "target/p116-controls/inputs/class_a/twin.json"
+   }
+  },
+  "pass": true
+ },
+ "w3": {
+  "cases": {
+   "bounds": [
+    {
+     "outcome": "ok",
+     "pass": true,
+     "spec": "target/preflight-tmp/p143-w2-bounds-ebtff8vd/spec.json",
+     "stray_bytes": 0,
+     "success_case": true,
+     "tmp_left": []
+    },
+    {
+     "outcome": "refused",
+     "pass": true,
+     "spec": "target/preflight-tmp/p143-w2-bounds-a7lqw_oh/spec.json",
+     "stray_bytes": 0,
+     "success_case": false,
+     "tmp_left": []
+    }
+   ],
+   "budget": [
+    {
+     "outcome": "ok",
+     "pass": true,
+     "spec": "target/p105-g2-controls/budget.json",
+     "stray_bytes": 0,
+     "success_case": true,
+     "tmp_left": []
+    },
+    {
+     "outcome": "refused",
+     "pass": true,
+     "spec": "target/p105-g2-controls/refuse_nonlinear.json",
+     "stray_bytes": 0,
+     "success_case": false,
+     "tmp_left": []
+    }
+   ],
+   "classify": [
+    {
+     "outcome": "ok",
+     "pass": true,
+     "spec": "target/p105-g2-controls/g3_component_waste.json",
+     "stray_bytes": 0,
+     "success_case": true,
+     "tmp_left": []
+    },
+    {
+     "outcome": "refused",
+     "pass": true,
+     "spec": "target/preflight-tmp/p143-w2-classify-ndt44pre/spec.json",
+     "stray_bytes": 0,
+     "success_case": false,
+     "tmp_left": []
+    }
+   ],
+   "composition": [
+    {
+     "outcome": "ok",
+     "pass": true,
+     "spec": "target/preflight-tmp/p143-w2-composition-lc3w2f_5/spec.json",
+     "stray_bytes": 0,
+     "success_case": true,
+     "tmp_left": []
+    },
+    {
+     "outcome": "refused",
+     "pass": true,
+     "spec": "target/preflight-tmp/p143-w2-composition-yx_tirqf/spec.json",
+     "stray_bytes": 0,
+     "success_case": false,
+     "tmp_left": []
+    }
+   ],
+   "composition_solve": [
+    {
+     "outcome": "ok",
+     "pass": true,
+     "spec": "target/p110-controls/requests/ranged_volume_1.json",
+     "stray_bytes": 0,
+     "success_case": true,
+     "tmp_left": []
+    },
+    {
+     "outcome": "refused",
+     "pass": true,
+     "spec": "target/p110-controls/refusal.json",
+     "stray_bytes": 0,
+     "success_case": false,
+     "tmp_left": []
+    }
+   ],
+   "intrusion_screen": [
+    {
+     "outcome": "ok",
+     "pass": true,
+     "spec": "target/p112-controls/case-000-wac_below/spec.json",
+     "stray_bytes": 0,
+     "success_case": true,
+     "tmp_left": []
+    },
+    {
+     "outcome": "refused",
+     "pass": true,
+     "spec": "target/p112-controls/refusal-00-outer_schema/spec.json",
+     "stray_bytes": 0,
+     "success_case": false,
+     "tmp_left": []
+    }
+   ],
+   "twin": [
+    {
+     "outcome": "ok",
+     "pass": true,
+     "spec": "target/p116-controls/inputs/class_a/twin.json",
+     "stray_bytes": 0,
+     "success_case": true,
+     "tmp_left": []
+    },
+    {
+     "outcome": "refused",
+     "pass": true,
+     "spec": "target/p116-controls/g1/refusals/missing_waste_component/twin.json",
+     "stray_bytes": 0,
+     "success_case": false,
+     "tmp_left": []
+    }
+   ]
+  },
+  "pass": true
+ }
+}

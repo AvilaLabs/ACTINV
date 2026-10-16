@@ -3381,3 +3381,20 @@ sealed `results/g1_p116_twin_waste.json`. Q2: the fourteen ci.yml steps P103–P
 for the unmodelled-decay-branch audit reason, workspace tests (1023 passed, 0 failed), fmt and clippy native and wasm
 exited 0. Q4: all five workflows on the pushed evidence commit `2b2c51e` succeeded, `controls` included
 (`results/p142/ci_runs.json`). No production change.
+
+## Entry 187 — P143 evidence: W1 rerun after Amendment A, W2, W3 and local W4 pass (2026-10-16)
+
+Candidate `e4e21be` (Amendment A repair), clean tree, release binary
+`216e136c0619680cc00586b432c81ebed3df4e4ea9e721aaa47019f92ca46b69`, wheel built from the same commit. **W1**: the six
+campaign steps exited 0 through the recorder and all 773 waste/twin invocations matched the Python calls (byte-equal
+outputs, equal refusal messages), the P116 G2 overlap refusal included (`results/p143/w1.json`, `w1_parity.jsonl`).
+**W2/W3** (`controls/p143_w2_w3.py`, `results/p143/w2_w3.json`): for all seven functions the dict form returned the
+path form's bytes, a bad schema was refused, and no `.actinv-waste-*` file was left; a success and a refusal per
+function wrote nothing to descriptors 1 or 2 and left TMPDIR empty. The first W2/W3 run found no input on disk for
+`bounds` and `composition` (and no classify refusal), because the P105/P107/P108 checkers delete their work folders;
+it measured nothing for those and is kept as `results/p143/w2_w3_first_run_missing_inputs.json`. The harness then
+fell back to the Python unit tests' self-contained specs for exactly those cases (marked `fixture` in the record).
+**W4 (local)**: fmt, clippy `-D warnings` native and wasm, workspace tests (1024 passed, 0 failed, the Amendment A
+regression test included), the binding's fmt/check/clippy, module build, smoke and `test_python_objects.py` (13 tests)
+all exited 0 on `31bc50a`, whose code equals the candidate's (`results/p143/w4.json`). CI on the pushed evidence
+commit decides the rest of W4.

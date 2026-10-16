@@ -1,0 +1,94 @@
+{
+ "by_function": {
+  "bounds": {
+   "match": 29
+  },
+  "budget": {
+   "match": 5
+  },
+  "classify": {
+   "match": 91
+  },
+  "composition": {
+   "match": 42
+  },
+  "composition_solve": {
+   "match": 122
+  },
+  "intrusion_screen": {
+   "match": 174
+  },
+  "twin": {
+   "match": 310
+  }
+ },
+ "candidate": {
+  "binary": "target/release/actinv",
+  "binary_sha256": "216e136c0619680cc00586b432c81ebed3df4e4ea9e721aaa47019f92ca46b69",
+  "commit": "e4e21be6134548df45706ac98ab82d4ea2214958",
+  "protocol_sha256": "259dff9fb83e311c0410ad03d8fe18f98a65b2d63a2446222297c71ff0104dbe",
+  "recorder_sha256": "6c06c8ef3d8b0f075f349a2d25164dc7ce78d97ec802b80b85f1c4edb98ffdab",
+  "tree_clean": true
+ },
+ "compared_refusals": {
+  "bounds": 27,
+  "budget": 3,
+  "classify": 21,
+  "composition": 40,
+  "composition_solve": 86,
+  "intrusion_screen": 52,
+  "twin": 100
+ },
+ "compared_successes": {
+  "bounds": 2,
+  "budget": 2,
+  "classify": 70,
+  "composition": 2,
+  "composition_solve": 36,
+  "intrusion_screen": 122,
+  "twin": 210
+ },
+ "functions_without_success": [],
+ "mismatches": [],
+ "not_compared": {},
+ "parity_log": "results/p143/w1_parity.jsonl",
+ "parity_log_sha256": "a3d83158768d98e2c76c270c9476832e188e3687abb828242c76ba87119909f8",
+ "pass": true,
+ "python": "/home/connoravila/Documents/actinv/target/ci-local/venv/bin/python",
+ "records": 773,
+ "schema": "actinv-p143-w1-1",
+ "steps": [
+  {
+   "exit": 0,
+   "log_sha256": "6c14f55a87665188b5c89735c31b0cdd54cd5c9529c72daca842ff2d05acded7",
+   "step": "P105 waste classification, aggregation, and budget controls"
+  },
+  {
+   "exit": 0,
+   "log_sha256": "2fa1e9ca6db03a549ea312cd1f96d7b65549d8d034f3ce0b944902bf13e5be0b",
+   "step": "P107 conservative whole-component waste bounds"
+  },
+  {
+   "exit": 0,
+   "log_sha256": "ac983f8b33724f88ebb3bc62fc74c4af2d99a66113128ed4730c2b6f90f7212b",
+   "step": "P108 conservative composition response bounds"
+  },
+  {
+   "exit": 0,
+   "log_sha256": "b8ea93050948d018c71a984c34242bfad7473fc8a708914126a78d1ac3354dca",
+   "step": "P110 native composition basis and witness verification"
+  },
+  {
+   "exit": 0,
+   "log_sha256": "bc6777fa649e5122b64ad93678ddab001d97bdfc8f1c75883f9ed6d52fb37672",
+   "step": "P112 draft intrusion screen successor controls"
+  },
+  {
+   "exit": 0,
+   "log_sha256": "3bfecfac85310ac7203851c464db91a6e22eccdded0598f2ddff900cc404ded4",
+   "step": "P116 unchanged twin verification successor controls"
+  }
+ ],
+ "stray_output_records": 0,
+ "worktree_clean_after": true
+}

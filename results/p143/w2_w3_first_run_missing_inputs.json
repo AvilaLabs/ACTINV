@@ -1,0 +1,169 @@
+{
+ "actinv_version": "1.5.0",
+ "pass": false,
+ "schema": "actinv-p143-w2-w3-1",
+ "w2": {
+  "cases": {
+   "bounds": {
+    "pass": false,
+    "reason": "no usable case"
+   },
+   "budget": {
+    "bad_schema_refused": true,
+    "leftovers": [],
+    "pass": true,
+    "same_bytes": true,
+    "spec": "target/p105-g2-controls/budget.json"
+   },
+   "classify": {
+    "bad_schema_refused": true,
+    "leftovers": [],
+    "pass": true,
+    "same_bytes": true,
+    "spec": "target/p105-g2-controls/g3_component_waste.json"
+   },
+   "composition": {
+    "pass": false,
+    "reason": "no usable case"
+   },
+   "composition_solve": {
+    "bad_schema_refused": true,
+    "leftovers": [],
+    "pass": true,
+    "same_bytes": true,
+    "spec": "target/p110-controls/requests/ranged_volume_1.json"
+   },
+   "intrusion_screen": {
+    "bad_schema_refused": true,
+    "leftovers": [],
+    "pass": true,
+    "same_bytes": true,
+    "spec": "target/p112-controls/case-000-wac_below/spec.json"
+   },
+   "twin": {
+    "bad_schema_refused": true,
+    "leftovers": [],
+    "pass": true,
+    "same_bytes": true,
+    "spec": "target/p116-controls/inputs/class_a/twin.json"
+   }
+  },
+  "pass": false
+ },
+ "w3": {
+  "cases": {
+   "bounds": [
+    {
+     "pass": false,
+     "reason": "no case in the campaigns",
+     "success_case": true
+    },
+    {
+     "pass": true,
+     "reason": "no case in the campaigns",
+     "success_case": false
+    }
+   ],
+   "budget": [
+    {
+     "outcome": "ok",
+     "pass": true,
+     "spec": "target/p105-g2-controls/budget.json",
+     "stray_bytes": 0,
+     "success_case": true,
+     "tmp_left": []
+    },
+    {
+     "outcome": "refused",
+     "pass": true,
+     "spec": "target/p105-g2-controls/refuse_nonlinear.json",
+     "stray_bytes": 0,
+     "success_case": false,
+     "tmp_left": []
+    }
+   ],
+   "classify": [
+    {
+     "outcome": "ok",
+     "pass": true,
+     "spec": "target/p105-g2-controls/g3_component_waste.json",
+     "stray_bytes": 0,
+     "success_case": true,
+     "tmp_left": []
+    },
+    {
+     "pass": true,
+     "reason": "no case in the campaigns",
+     "success_case": false
+    }
+   ],
+   "composition": [
+    {
+     "pass": false,
+     "reason": "no case in the campaigns",
+     "success_case": true
+    },
+    {
+     "pass": true,
+     "reason": "no case in the campaigns",
+     "success_case": false
+    }
+   ],
+   "composition_solve": [
+    {
+     "outcome": "ok",
+     "pass": true,
+     "spec": "target/p110-controls/requests/ranged_volume_1.json",
+     "stray_bytes": 0,
+     "success_case": true,
+     "tmp_left": []
+    },
+    {
+     "outcome": "refused",
+     "pass": true,
+     "spec": "target/p110-controls/refusal.json",
+     "stray_bytes": 0,
+     "success_case": false,
+     "tmp_left": []
+    }
+   ],
+   "intrusion_screen": [
+    {
+     "outcome": "ok",
+     "pass": true,
+     "spec": "target/p112-controls/case-000-wac_below/spec.json",
+     "stray_bytes": 0,
+     "success_case": true,
+     "tmp_left": []
+    },
+    {
+     "outcome": "refused",
+     "pass": true,
+     "spec": "target/p112-controls/refusal-00-outer_schema/spec.json",
+     "stray_bytes": 0,
+     "success_case": false,
+     "tmp_left": []
+    }
+   ],
+   "twin": [
+    {
+     "outcome": "ok",
+     "pass": true,
+     "spec": "target/p116-controls/inputs/class_a/twin.json",
+     "stray_bytes": 0,
+     "success_case": true,
+     "tmp_left": []
+    },
+    {
+     "outcome": "refused",
+     "pass": true,
+     "spec": "target/p116-controls/g1/refusals/missing_waste_component/twin.json",
+     "stray_bytes": 0,
+     "success_case": false,
+     "tmp_left": []
+    }
+   ]
+  },
+  "pass": false
+ }
+}

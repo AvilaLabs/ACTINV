@@ -1,0 +1,52 @@
+{
+ "candidate": "e4e21be6134548df45706ac98ab82d4ea2214958",
+ "code_changed_since_candidate": [],
+ "commit": "31bc50aefd8ca14fbd759ca76f5d1281c3249672",
+ "gates": {
+  "binding_check": {
+   "argv": "cargo check --manifest-path python/Cargo.toml --all-targets --all-features",
+   "exit": 0
+  },
+  "binding_clippy": {
+   "argv": "cargo clippy --manifest-path python/Cargo.toml --all-targets --all-features -- -D warnings",
+   "exit": 0
+  },
+  "binding_fmt": {
+   "argv": "cargo fmt --manifest-path python/Cargo.toml -- --check",
+   "exit": 0
+  },
+  "clippy_native": {
+   "argv": "cargo clippy --workspace --all-targets --all-features -- -D warnings",
+   "exit": 0
+  },
+  "clippy_wasm": {
+   "argv": "cargo clippy --locked -p actinv-gui --lib --no-default-features --target wasm32-unknown-unknown -- -D warnings",
+   "exit": 0
+  },
+  "fmt": {
+   "argv": "cargo fmt --all -- --check",
+   "exit": 0
+  },
+  "module_build": {
+   "argv": "cd python && maturin build --release --locked --out ../target/p143/dist && python ../scripts/smoke_python_wheel.py ../target/p143/dist",
+   "exit": 0
+  },
+  "module_install": {
+   "argv": "pip install --force-reinstall --no-deps target/p143/dist/*.whl",
+   "exit": 0
+  },
+  "module_tests": {
+   "argv": "python scripts/test_python_objects.py",
+   "exit": 0
+  },
+  "workspace_tests": {
+   "argv": "cargo test --locked --workspace",
+   "exit": 0
+  }
+ },
+ "pass": true,
+ "regression_test_ok": true,
+ "schema": "actinv-p143-w4-1",
+ "tests_failed": 0,
+ "tests_passed": 1024
+}
