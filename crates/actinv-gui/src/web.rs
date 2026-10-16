@@ -1,3 +1,6 @@
+use crate::views::import;
+use actinv_core::report;
+use serde_json::{json, Value};
 use wasm_bindgen::prelude::*;
 use wasm_bindgen::JsCast;
 
@@ -33,6 +36,61 @@ pub fn download(name: &str, bytes: &[u8]) -> Result<(), String> {
     })();
     let _ = web_sys::Url::revoke_object_url(&url);
     result
+}
+
+/// Test hook (`web/smoke.mjs`): convert a FISPACT-II deck exactly as the import dialog does.
+/// Returns `{"spec", "report", "placeholder"}` as JSON text, or `{"error"}`. `fluxes` is the text
+/// of a fluxes file; without it a decay-only deck converts and an irradiating one gets the
+/// placeholder spectrum.
+#[wasm_bindgen]
+pub fn convert_deck(deck: &str, fluxes: Option<String>) -> String {
+    let deck = import::Slot {
+        name: "deck.i".into(),
+        text: deck.into(),
+    };
+    let fluxes = fluxes.map(|text| import::Slot {
+        name: "fluxes".into(),
+        text,
+    });
+    match import::convert_deck(&deck, fluxes.as_ref(), None) {
+        Ok(done) => {
+            json!({"spec": done.spec, "report": done.report, "placeholder": done.placeholder})
+                .to_string()
+        }
+        Err(error) => json!({"error": error}).to_string(),
+    }
+}
+
+/// Test hook (`web/smoke.mjs`): one report table of a result as CSV, the text `actinv report
+/// --format csv --tables <table>` writes. `step` is the result's own step number; 0 takes every
+/// step. A failure comes back as `{"error"}` JSON, which no CSV can begin with.
+#[wasm_bindgen]
+pub fn report_csv(result_json: &str, table: &str, step: u32) -> String {
+    let fail = |message: String| json!({"error": message}).to_string();
+    let Some(kind) = report::TableKind::from_name(table) else {
+        return fail(format!("unknown table '{table}'"));
+    };
+    let result: Value = match serde_json::from_str(result_json) {
+        Ok(result) => result,
+        Err(error) => return fail(format!("invalid result JSON: {error}")),
+    };
+    let request = report::Request {
+        tables: vec![kind],
+        step: if step == 0 {
+            report::StepSelect::All
+        } else {
+            report::StepSelect::One(u64::from(step))
+        },
+        nuclides: Vec::new(),
+    };
+    match report::build(&result, &request) {
+        Ok(outcomes) => match outcomes.into_iter().next().map(|outcome| outcome.built) {
+            Some(Ok(built)) => report::render(&built, report::Format::Csv),
+            Some(Err(reason)) => fail(reason),
+            None => fail("no table was built".into()),
+        },
+        Err(error) => fail(error),
+    }
 }
 
 #[wasm_bindgen(start)]

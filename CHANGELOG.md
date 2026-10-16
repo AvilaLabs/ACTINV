@@ -18,6 +18,8 @@
   **Tables** (the `actinv report` tables per step, CSV identical to the CLI), **Photons & dose**, **Pathways** (first
   products and full routes with closure), Ledger & certificate, with one shared result bar. Tools: Sweep,
   Assimilation, Advanced JSON.
+- The browser workbench gains the same pages and controls (it still never runs the solver). Files pinned in the
+  browser are recorded by file name and SHA-256.
 - **Import FISPACT-II deck** in the toolbar (Ctrl/Cmd+I): the importer's per-keyword report, Strict, required
   additions linked to the page that fixes them.
 - Irradiation & cooling: a Drive per step (flux multiplier, wall loading, power W/cm3 or W/g) with the kerma-table

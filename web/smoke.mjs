@@ -24,6 +24,74 @@ try {
   const canvas = await page.locator("#actinv-canvas").boundingBox();
   assert.ok(canvas.width > 1000 && canvas.height > 700, "workbench fills the viewport");
   if (process.env.ACTINV_WEB_SCREENSHOT) await page.screenshot({ path: process.env.ACTINV_WEB_SCREENSHOT });
+
+  // The workbench is a canvas, so no control is reachable. The wasm module exports two hooks that
+  // run the moved importer and report code in the browser; Trunk exposes its bindings on window.
+  await page.waitForFunction(() => window.wasmBindings
+    && typeof window.wasmBindings.convert_deck === "function"
+    && typeof window.wasmBindings.report_csv === "function");
+  const deckHead = "FISPACT\n* t\nMASS 1E-3 1\n FE 100\n";
+  const hooks = await page.evaluate(({ decks, result }) => {
+    const { convert_deck, report_csv } = window.wasmBindings;
+    return {
+      cooling: JSON.parse(convert_deck(decks.cooling, undefined)),
+      irradiating: JSON.parse(convert_deck(decks.irradiating, undefined)),
+      unsupported: JSON.parse(convert_deck(decks.unsupported, undefined)),
+      totalsOne: report_csv(result, "totals", 1),
+      totalsAll: report_csv(result, "totals", 0),
+      unknownTable: JSON.parse(report_csv(result, "no-such-table", 1)),
+      missingStep: JSON.parse(report_csv(result, "totals", 9)),
+    };
+  }, {
+    decks: {
+      cooling: `${deckHead}FLUX 0\nTIME 1 DAYS ATOMS\nEND\n`,
+      irradiating: `${deckHead}FLUX 1E10\nTIME 1 HOURS ATOMS\nEND\n`,
+      unsupported: `${deckHead}FROBNICATE\nFLUX 0\nTIME 1 DAYS ATOMS\nEND\n`,
+    },
+    result: JSON.stringify({
+      spec_title: "smoke",
+      steps: [[1, 10, 1], [2, 20, 0.5]].map(([step, t_s, k]) => ({
+        step,
+        t_s,
+        inventory: [
+          { nuclide: "Fe56", Z: 26, A: 56, LISO: 0, atoms_per_g: 1e22 },
+          { nuclide: "Co60", Z: 27, A: 60, LISO: 0, atoms_per_g: 2e15 * k },
+        ],
+        activity_Bq_per_g: { Co60: 8e4 * k, Mn54: 2e4 * k },
+        heat_W_per_g: { total: 0.75 * k, alpha: 0, beta: 0.25 * k, gamma: 0.5 * k },
+      })),
+    }),
+  });
+  // a decay-only deck converts without fluxes; every keyword is counted once
+  const cooling = hooks.cooling;
+  assert.equal(cooling.error, undefined, "decay-only deck converts");
+  assert.equal(cooling.report.schema, "actinv-fispact-import-report-1");
+  const counted = Object.values(cooling.report.counts).reduce((a, b) => a + b, 0);
+  assert.equal(counted, cooling.report.entries.length, "keyword counts add up to the report rows");
+  assert.equal(cooling.report.counts.unsupported, 0);
+  assert.ok(cooling.report.counts.mapped >= 3, "FISPACT, MASS and TIME are mapped");
+  assert.equal(cooling.spec.schedule.length, 1, "one TIME interval is one schedule step");
+  assert.equal(cooling.placeholder, false);
+  // an irradiating deck without a fluxes file gets the placeholder spectrum and a requirement
+  const irradiating = hooks.irradiating;
+  assert.equal(irradiating.error, undefined, "irradiating deck converts on a placeholder spectrum");
+  assert.equal(irradiating.placeholder, true);
+  assert.equal(irradiating.report.spectrum.placeholder, true);
+  assert.ok(irradiating.report.required_additions.some(item => item.field === "spectrum"));
+  // an unknown keyword is reported, never dropped
+  const unsupported = hooks.unsupported;
+  assert.ok(unsupported.report.counts.unsupported >= 1, "unsupported keyword is counted");
+  assert.ok(unsupported.report.entries.some(row => row.keyword === "FROBNICATE" && row.status === "unsupported"));
+  // the report CSV is the one `actinv report --format csv` writes
+  const totalsHeader = "step,time_s,activity_Bq_per_g,heat_total_W_per_g,heat_alpha_W_per_g,heat_beta_W_per_g,heat_gamma_W_per_g";
+  assert.deepEqual(hooks.totalsOne.split("\n"), [totalsHeader, "1,1e1,1e5,7.5e-1,0e0,2.5e-1,5e-1"]);
+  const all = hooks.totalsAll.split("\n");
+  assert.equal(all.length, 3, "all steps: header and two rows");
+  assert.equal(all[0], totalsHeader);
+  assert.ok(all[2].startsWith("2,2e1,5e4,"), all[2]);
+  assert.match(hooks.unknownTable.error, /unknown table/);
+  assert.match(hooks.missingStep.error, /step 9 is not in the result/);
+
   await context.close();
   assert.deepEqual(errors, [], "WebAssembly starts without runtime errors");
 
@@ -59,7 +127,7 @@ try {
     }
     await context.close();
   }
-  console.log("Browser startup and four download scenarios passed.");
+  console.log("Browser startup, import and report hooks, and four download scenarios passed.");
 } finally {
   await browser.close();
 }

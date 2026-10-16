@@ -12,6 +12,8 @@ pub mod tables;
 use eframe::egui;
 
 /// A file chosen for a spec field: the path as the spec should record it, and its SHA-256.
+// The browser's picker answers `None` and writes the pin itself, so it never builds one.
+#[cfg_attr(target_arch = "wasm32", allow(dead_code))]
 pub struct Pinned {
     pub path: String,
     pub sha256: String,
