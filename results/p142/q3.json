@@ -1,0 +1,26 @@
+{
+ "commit": "5ee489c5566199a9cf013369c36ac92370f5bda3",
+ "gates": {
+  "clippy_native": {
+   "argv": "cargo clippy --locked --workspace --all-targets -- -D warnings",
+   "exit": 0
+  },
+  "clippy_wasm": {
+   "argv": "cargo clippy --locked -p actinv-gui --lib --no-default-features --target wasm32-unknown-unknown -- -D warnings",
+   "exit": 0
+  },
+  "fmt": {
+   "argv": "cargo fmt --all -- --check",
+   "exit": 0
+  },
+  "workspace_tests": {
+   "argv": "cargo test --locked --workspace",
+   "exit": 0
+  }
+ },
+ "pass": true,
+ "regression_test_ok": true,
+ "schema": "actinv-p142-q3-1",
+ "tests_failed": 0,
+ "tests_passed": 1023
+}

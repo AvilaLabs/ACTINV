@@ -1,0 +1,20 @@
+{
+ "argv": [
+  "python3",
+  "controls/check_p116.py",
+  "--no-write"
+ ],
+ "candidate": {
+  "binary": "target/release/actinv",
+  "binary_sha256": "07bb7e1e46316baabfa82c7af7e81270bdd0238d80e2ac8c22110760f9a9ac53",
+  "commit": "5ee489c5566199a9cf013369c36ac92370f5bda3",
+  "protocol_sha256": "dc2ae4c1c31b4b33e8ccf2ffbbceb7cdefc94587a229fbf490a2d96b3f191246",
+  "tree_clean": true
+ },
+ "exit": 0,
+ "log_sha256": "0a4826b33f5617c6e4e1ea2e2248a4195fc46d60d40a4d378cc6e90eb54ff5e5",
+ "pass": true,
+ "schema": "actinv-p142-q1-1",
+ "sealed_g1_sha256": "74f6eab80ee223c81b6f7391f3f4147d7fa38ffeac55485f3d2a05e8618a65b9",
+ "sealed_g1_unchanged": true
+}

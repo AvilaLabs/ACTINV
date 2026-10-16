@@ -3337,3 +3337,12 @@ evidence or source change: **P142** `dc2ae4c1c31b4b33e8ccf2ffbbceb7cdefc94587a22
 records are reused unchanged, and `check_p116.py --no-write` with the candidate release binary must reproduce the
 sealed G1 report byte for byte (Q1), with the P103–P118 history steps (Q2), a regression pinning
 `audit_unmodelled_decay_branches_to_leakage` (Q3) and green CI (Q4). P116, P117 and P118 stay FAIL.
+
+## Entry 182 — P142 Q1–Q3 recorded (2026-10-16)
+
+Candidate `5ee489c`, release binary `07bb7e1e46316baabfa82c7af7e81270bdd0238d80e2ac8c22110760f9a9ac53`; records in
+`results/p142/`. **Q1:** `check_p116.py --no-write` exits 0: G0 from pinned objects, the full 35-request /
+138-target G1 campaign (mutations, refusals, byte repeats) reproduces the sealed P116 G1 report byte for byte, and G2
+matches. **Q2:** the fourteen CI steps P103–P118 each exit 0 and leave no tracked change. **Q3:** fmt, clippy
+`-D warnings` native and wasm, and the workspace tests (1023 passed, 0 failed) exit 0, including
+`unmodelled_decay_branches_are_an_audit_reason`. Q4 (CI on the pushed commit) is pending.

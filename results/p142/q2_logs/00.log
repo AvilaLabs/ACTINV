@@ -1,0 +1,97 @@
+{
+  "checks": {
+    "approved_source_identities": {
+      "actual": {
+        "core_mirror_sha256": "890268af81a53815b8e11c238e4a1694eabb79664a1ca087fd7fe22b9fabe5d7",
+        "pack_sha256": "890268af81a53815b8e11c238e4a1694eabb79664a1ca087fd7fe22b9fabe5d7",
+        "protocol_sha256": "22bbaada0e757b0c1ffd5a914ca4835c12ebc6af2c61eb971c48f6e36150983e",
+        "source_review_sha256": "4d316aacee158dbcc36daf4bd191d84ee7c511d471555ec3084115dabaeefd64",
+        "source_xml_sha256": "7c08a6cb64d21e082ecf62a94fc3ef0be42c64fb68443658eff393ddc0bc0864"
+      },
+      "expected": {
+        "core_mirror_sha256": "890268af81a53815b8e11c238e4a1694eabb79664a1ca087fd7fe22b9fabe5d7",
+        "pack_sha256": "890268af81a53815b8e11c238e4a1694eabb79664a1ca087fd7fe22b9fabe5d7",
+        "protocol_sha256": "22bbaada0e757b0c1ffd5a914ca4835c12ebc6af2c61eb971c48f6e36150983e",
+        "source_review_sha256": "4d316aacee158dbcc36daf4bd191d84ee7c511d471555ec3084115dabaeefd64",
+        "source_xml_sha256": "7c08a6cb64d21e082ecf62a94fc3ef0be42c64fb68443658eff393ddc0bc0864"
+      },
+      "pass": true
+    },
+    "core_mirror_bytes": {
+      "identical": true,
+      "pass": true,
+      "sha256": "890268af81a53815b8e11c238e4a1694eabb79664a1ca087fd7fe22b9fabe5d7"
+    },
+    "pack_identity_and_units": {
+      "ci_bq": 37000000000,
+      "ecfr_source_url": "https://www.ecfr.gov/current/title-10/chapter-I/part-61/subpart-D/section-61.55",
+      "id": "us-nrc-10cfr61.55-v1",
+      "pass": true,
+      "schema": "actinv-waste-rules-1",
+      "source_as_of": "2026-10-01",
+      "source_sha256_matches_xml": true,
+      "source_url": "https://www.govinfo.gov/content/pkg/CFR-2025-title10-vol2/xml/CFR-2025-title10-vol2-sec61-55.xml",
+      "version": 1,
+      "year_s": 31557600
+    },
+    "persisted_seal": {
+      "pass": true,
+      "same_inputs": true,
+      "same_result": true,
+      "sealed": true,
+      "verdict": "P103-G0-SEALED"
+    },
+    "source_footnotes": {
+      "pass": true,
+      "table1_nci_g_note_present": true,
+      "table1_units_note": "1 Units are nanocuries per gram.",
+      "table2_default_class_b_note_present": true,
+      "table2_no_class_b_c_limit_note_present": true,
+      "table2_no_limit_note": "1 There are no limits established for these radionuclides in Class B or C wastes. Practical considerations such as the effects of external radiation and internal heat generation on transportation, handling, and disposal will limit the concentrations for these wastes. These wastes shall be Class B unless the concentrations of other nuclides in Table 2 determine the waste to be Class C independent of these nuclides.",
+      "table2_unbounded_rows_have_footnote_markers": true
+    },
+    "source_review_decisions": {
+      "decisions": {
+        "cm242_table2_aggregate": "including Cm-242 even though it has a Table 1 row",
+        "equal_five_year_boundary": "exactly five is neither",
+        "external_tritium_no_implicit_zero": "No implicit zero",
+        "metal_variants_replace_general": "Metal variants replace their general rows",
+        "pu241_dedicated_precedence": "A dedicated nuclide row takes precedence over a generic category",
+        "short_lived_named_row_precedence": "without a dedicated Table 2 row",
+        "single_component_volume_basis": "declared single component under (a)(8); it does not qualify full CA BTP conformity",
+        "unknown_metadata_fails_closed": "Missing metadata on any active nuclide yields an unknown class"
+      },
+      "pass": true,
+      "protocol_anchors_present": {
+        "cm242_table2_aggregate": true,
+        "equal_five_year_boundary": true,
+        "external_tritium_no_implicit_zero": true,
+        "metal_variants_replace_general": true,
+        "pu241_dedicated_precedence": true,
+        "short_lived_named_row_precedence": true,
+        "single_component_volume_basis": true,
+        "unknown_metadata_fails_closed": true
+      }
+    },
+    "source_table_rows": {
+      "expected_row_count": 16,
+      "pack_matches_independent_transcription": true,
+      "pass": true,
+      "rows_match_independent_transcription": true,
+      "source_row_count": 16
+    }
+  },
+  "input_sha256": {
+    "core_mirror_sha256": "890268af81a53815b8e11c238e4a1694eabb79664a1ca087fd7fe22b9fabe5d7",
+    "pack_sha256": "890268af81a53815b8e11c238e4a1694eabb79664a1ca087fd7fe22b9fabe5d7",
+    "protocol_sha256": "22bbaada0e757b0c1ffd5a914ca4835c12ebc6af2c61eb971c48f6e36150983e",
+    "source_review_sha256": "4d316aacee158dbcc36daf4bd191d84ee7c511d471555ec3084115dabaeefd64",
+    "source_xml_sha256": "7c08a6cb64d21e082ecf62a94fc3ef0be42c64fb68443658eff393ddc0bc0864"
+  },
+  "protocol": "ACTINV-P103",
+  "schema": "actinv-p103-g0-seal-1",
+  "sealed": true,
+  "verdict": "P103-G0-SEALED"
+}
+P103 retained failure integrity: PASS
+P104 retained failure integrity: PASS

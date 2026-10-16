@@ -1,0 +1,84 @@
+{
+ "candidate": {
+  "binary": "target/release/actinv",
+  "binary_sha256": "07bb7e1e46316baabfa82c7af7e81270bdd0238d80e2ac8c22110760f9a9ac53",
+  "commit": "5ee489c5566199a9cf013369c36ac92370f5bda3",
+  "protocol_sha256": "dc2ae4c1c31b4b33e8ccf2ffbbceb7cdefc94587a229fbf490a2d96b3f191246",
+  "tree_clean": true
+ },
+ "pass": true,
+ "schema": "actinv-p142-q2-1",
+ "steps": [
+  {
+   "exit": 0,
+   "log_sha256": "9239e44d9fbd721df52b4bf52fda7c0ff27e00634b5333c84488b9633e992349",
+   "step": "P103 source-seal integrity (historical)"
+  },
+  {
+   "exit": 0,
+   "log_sha256": "422adfffed16a0289e1f6a9cb01ed0eb2cf72d4edc4cc9796da959b45e98bcf6",
+   "step": "P105 waste classification, aggregation, and budget controls"
+  },
+  {
+   "exit": 0,
+   "log_sha256": "2acb22b85e36c7dd9143c094e36adda42ecbaa2cf41bdfb5d57815a4a26b4b73",
+   "step": "P107 conservative whole-component waste bounds"
+  },
+  {
+   "exit": 0,
+   "log_sha256": "ac983f8b33724f88ebb3bc62fc74c4af2d99a66113128ed4730c2b6f90f7212b",
+   "step": "P108 conservative composition response bounds"
+  },
+  {
+   "exit": 0,
+   "log_sha256": "fcb4eeda28b8fc7b1c4fd23328694684801e7ac1106ce548a5d7de8f5fe4a385",
+   "step": "P109 preserved failure checkpoint"
+  },
+  {
+   "exit": 0,
+   "log_sha256": "120ea4259578218fde6b9cc010ee29a924cd96d0fb5d183584d9b9dc92280718",
+   "step": "P110 native composition basis and witness verification"
+  },
+  {
+   "exit": 0,
+   "log_sha256": "d1d18c1d5576d7b43bbb2b88d28896528aade6502665915ab8b7c45272f54334",
+   "step": "P111 draft intrusion screen controls"
+  },
+  {
+   "exit": 0,
+   "log_sha256": "bc6777fa649e5122b64ad93678ddab001d97bdfc8f1c75883f9ed6d52fb37672",
+   "step": "P112 draft intrusion screen successor controls"
+  },
+  {
+   "exit": 0,
+   "log_sha256": "4e628caa63a7954190943984a009651928ac689bce59de64c2581aa39371439e",
+   "step": "P113 terminal failure history remains immutable"
+  },
+  {
+   "exit": 0,
+   "log_sha256": "a13be5ca0fa03eda9619c61ebe95704b4b3ca86f86b3d5b84a1099d468080b84",
+   "step": "P114 terminal failure remains immutable"
+  },
+  {
+   "exit": 0,
+   "log_sha256": "6a7f559d6b88112af9983f39b6764b74ec4ed9ceace1edf1729419ea6ceb0e7a",
+   "step": "P115 terminal failure remains immutable"
+  },
+  {
+   "exit": 0,
+   "log_sha256": "c8da83be37d50199e78bf3974f949af3ff5418f33407417211cdcb188143dcc7",
+   "step": "P116 unchanged twin verification successor controls"
+  },
+  {
+   "exit": 0,
+   "log_sha256": "21afacb1391f34dcd800db31294772dba5a5c8644396f3adafbf4ecb92e6b770",
+   "step": "P117 terminal failure remains immutable"
+  },
+  {
+   "exit": 0,
+   "log_sha256": "02be7256c151cb7570b47953041bc95f40055f3565d9bc4ceb0a2556456be751",
+   "step": "P118 terminal failure remains immutable"
+  }
+ ],
+ "worktree_clean_after": true
+}
