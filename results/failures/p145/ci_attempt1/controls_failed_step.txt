@@ -1,0 +1,7 @@
+  "no_bulk_data_tracked": false,
+ "forbidden_tracked_files": [
+  "controls/p145_inputs/c3_p10.cov.npz",
+  "controls/p145_inputs/c3_p50.cov.npz",
+  "controls/p145_inputs/c3_p90.cov.npz"
+ "pass": false,
+##[error]Process completed with exit code 1.

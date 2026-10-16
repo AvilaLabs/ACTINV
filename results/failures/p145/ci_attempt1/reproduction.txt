@@ -1,0 +1,7 @@
+P145 evidence commit 51a42cd: the CI workflow "controls" (run 38976281764) failed in step
+"P13 verified data-distribution contract". controls/g1_p13_data_distribution.py refuses any tracked .npz, .zip or
+.endf file that is not a reviewed archive; the candidate 9f6b782 tracked the three synthetic C3 covariance sidecars
+controls/p145_inputs/c3_p{10,50,90}.cov.npz. The other five workflows succeeded. check_p145.py verdict gave
+P145-FAIL with U1-U4 true and U5 false (p145_verdict.json here). The local evidence ran only the gates P145 names and
+not the P13 step, so the failure first appeared in CI.
+Reproduce: git checkout 51a42cd && python3 controls/g1_p13_data_distribution.py

@@ -1,0 +1,67 @@
+{
+ "amendment_sha256": "355ddb6f3d1188c780f322f9cfabe95ce66adc628b2ccd45de523001e2f6bc72",
+ "candidate": {
+  "amendment_b_sha256": "b48aa0c11c02a9121563c729d53b7fe8dc3426b2ecb2ce2ecab2f3735f04ef05",
+  "amendment_sha256": "355ddb6f3d1188c780f322f9cfabe95ce66adc628b2ccd45de523001e2f6bc72",
+  "binary": "target/release/actinv",
+  "binary_sha256": "db2d482f3706e12138a118edbed4368ffd821c4adde4b76898ffc19a98663a56",
+  "commit": "9f6b78289cde156a68f66ed9885f44bf5f796c5a",
+  "protocol_sha256": "7a50a266d7bb68f0745ac159114493b7731479c3bbc6b4b61b72cff6e2bd89f1",
+  "tree_clean": true
+ },
+ "ci": {
+  "commit": "51a42cd4e56f0cf46db0ed5d659ccce52f2a2714",
+  "runs": [
+   {
+    "conclusion": "success",
+    "name": "Build browser workbench",
+    "run_id": 38976281774
+   },
+   {
+    "conclusion": "success",
+    "name": "fusion-isotope",
+    "run_id": 38976281771
+   },
+   {
+    "conclusion": "success",
+    "name": "Build handbook",
+    "run_id": 38976281726
+   },
+   {
+    "conclusion": "success",
+    "name": "fns-iron",
+    "run_id": 38976281746
+   },
+   {
+    "conclusion": "success",
+    "name": "desktop builds",
+    "run_id": 38976281781
+   },
+   {
+    "conclusion": "failure",
+    "name": "controls",
+    "run_id": 38976281764
+   }
+  ]
+ },
+ "evidence_candidates_consistent": true,
+ "gate_file_sha256": {
+  "u1_c1": "f45086a2befa712b27453d30352d524bd0ef04aa6cab92e2e4798574c1659c9f",
+  "u1_c2": "29202e19c838e6268d65b009b864626bdc15c85728bfcfd997b768f4efc276c2",
+  "u2_c1": "50202a402ffc87de1bf1afcdf12dcae2e00c55e185861a636b7c4b72448fdebb",
+  "u2_c2": "ff7f68c3cab4964d53d07723b747e6665bfb5c730fbc66dd45584066dac137ba",
+  "u3": "874d579d27ca8ccc74d1c77c356aafcd219af9de1703b28f6270783f9ff71a9d",
+  "u4": "d5a34527ff13d02e027562c652566c68c4f30af75e849eb34bc7fd4f60d45d6a",
+  "u5": "17fc2cd6810a782beb14fda61d149fdf98d7ef60dd164a45405b7145595adcfd"
+ },
+ "gates": {
+  "U1": true,
+  "U2": true,
+  "U3": true,
+  "U4": true,
+  "U5": false
+ },
+ "protocol_sha256": "7a50a266d7bb68f0745ac159114493b7731479c3bbc6b4b61b72cff6e2bd89f1",
+ "schema": "actinv-p145-verdict-1",
+ "verdict": "P145-FAIL"
+}

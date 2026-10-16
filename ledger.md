@@ -3479,3 +3479,12 @@ reproduces the nominal class, repeats are byte-identical. **U5 (local)**: `check
 binary `216e136c…` as reference passed G2 (0 differences beyond timing), G3 and G4; fmt, clippy `-D warnings` native
 and wasm, workspace tests (1073 passed, 0 failed), the binding's fmt/check/clippy, module build, smoke and tests
 (14) and the handbook build exited 0. CI decides the rest.
+
+## Entry 195 — P145 evidence attempt 1 fails U5 in CI; Amendment C registered (2026-10-16)
+
+Evidence commit `51a42cd` (candidate `9f6b782`): U1–U4 and the local half of U5 passed (entry 194), and five of six
+workflows succeeded, but `controls` failed its P13 data-distribution step because the candidate tracked the three
+synthetic C3 covariance sidecars (`.npz`). `check_p145.py verdict`: P145-FAIL (U5). The attempt is moved to
+`results/failures/p145/` (`evidence_attempt1/`, formerly `results/p145/`, and `ci_attempt1/`). Registered before
+the repair: **P145 Amendment C** `ae51db8fd14983aed2a41f02968e4e46291f397ceb6588bb87566e106633123e` (untrack the sidecars, generate them at check time against their pinned
+SHA-256, rerun U1–U5 in full, run the P13 step locally before pushing; the one repair round is consumed).
