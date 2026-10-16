@@ -1,0 +1,112 @@
+{
+ "by_function": {
+  "bounds": {
+   "match": 29
+  },
+  "budget": {
+   "match": 5
+  },
+  "classify": {
+   "match": 91
+  },
+  "composition": {
+   "match": 42
+  },
+  "composition_solve": {
+   "match": 122
+  },
+  "intrusion_screen": {
+   "match": 174
+  },
+  "twin": {
+   "match": 309,
+   "mismatch": 1
+  }
+ },
+ "candidate": {
+  "binary": "target/release/actinv",
+  "binary_sha256": "917e52e602ea2c274194b2c82ad7cc6228449afe926026f6d4f1e0e2072da394",
+  "commit": "4e544b23a4bf49e1e89ded9d08604253bba96471",
+  "protocol_sha256": "259dff9fb83e311c0410ad03d8fe18f98a65b2d63a2446222297c71ff0104dbe",
+  "recorder_sha256": "6c06c8ef3d8b0f075f349a2d25164dc7ce78d97ec802b80b85f1c4edb98ffdab",
+  "tree_clean": true
+ },
+ "compared_refusals": {
+  "bounds": 27,
+  "budget": 3,
+  "classify": 21,
+  "composition": 40,
+  "composition_solve": 86,
+  "intrusion_screen": 52,
+  "twin": 99
+ },
+ "compared_successes": {
+  "bounds": 2,
+  "budget": 2,
+  "classify": 70,
+  "composition": 2,
+  "composition_solve": 36,
+  "intrusion_screen": 122,
+  "twin": 210
+ },
+ "functions_without_success": [],
+ "mismatches": [
+  {
+   "argv": [
+    "twin",
+    "/home/connoravila/Documents/actinv/target/p116-controls/g2/refusals/overlap/twin.json",
+    "/home/connoravila/Documents/actinv/target/p116-controls/g2/refusals/overlap/out.json"
+   ],
+   "cli_exit": 1,
+   "cli_sha256": "f9787e412898aee4da7578f77933348a13b0a226408984b7dd89a0c142943508",
+   "cwd": "/home/connoravila/Documents/actinv",
+   "detail": "first difference at byte 0; lengths cli=81 python=35",
+   "function": "twin",
+   "py_sha256": "ac2185272d68fa56243799b3e1646994e4adf025e4a0e7c9a2971657270ba764",
+   "py_stray_bytes": 0,
+   "reason": "refusal",
+   "status": "mismatch"
+  }
+ ],
+ "not_compared": {},
+ "parity_log": "results/p143/w1_parity.jsonl",
+ "parity_log_sha256": "8601b3f6298457e5d707b8707ca6f056e2413e7df867a535359a59ee7f796bf1",
+ "pass": false,
+ "python": "/home/connoravila/Documents/actinv/target/ci-local/venv/bin/python",
+ "records": 773,
+ "schema": "actinv-p143-w1-1",
+ "steps": [
+  {
+   "exit": 0,
+   "log_sha256": "8e439373ebb39b3ff47e3180680a7456915c71fb1a8ae7b5587c9e0de54774f0",
+   "step": "P105 waste classification, aggregation, and budget controls"
+  },
+  {
+   "exit": 0,
+   "log_sha256": "db752cf0bc42ff304afea645949fdbad732e4a8c37a4ef42d8290b5356089656",
+   "step": "P107 conservative whole-component waste bounds"
+  },
+  {
+   "exit": 0,
+   "log_sha256": "8acf3a635e12c86505d24b4c2b0702acd65619dfbf3454acbd380945d78acbf1",
+   "step": "P108 conservative composition response bounds"
+  },
+  {
+   "exit": 0,
+   "log_sha256": "eef8742ab2603ac63cb682ddc7680d0fe1743a32a46388769b621de95dd48238",
+   "step": "P110 native composition basis and witness verification"
+  },
+  {
+   "exit": 0,
+   "log_sha256": "ed981a9aba22c022bed5d84d68c7da366a9485711ebf67073126495d4c7a3b20",
+   "step": "P112 draft intrusion screen successor controls"
+  },
+  {
+   "exit": 0,
+   "log_sha256": "47eee4e753f7d65dba7cedd4d448f6c77d9fd835eea9a3f4a228220bf99aa125",
+   "step": "P116 unchanged twin verification successor controls"
+  }
+ ],
+ "stray_output_records": 0,
+ "worktree_clean_after": true
+}

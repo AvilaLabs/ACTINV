@@ -3362,3 +3362,13 @@ ordinary `actinv-waste-spec-1` from the current run (nuclide properties from the
 `derive_properties`) and classifies it with the CLI's evaluator in process; the browser gains a waste result viewer
 and spec editor, without classifying. The look is unchanged. V1 CLI parity of the saved result, V2 properties against
 an independent ENDF-6 reader, V3 browser smoke, V4 look unchanged, V5 quality and CI.
+
+## Entry 185 — P143 W1 attempt 1 fails on one twin refusal; Amendment A registered (2026-10-16)
+
+Candidate `4e544b2`, release binary `917e52e602ea2c274194b2c82ad7cc6228449afe926026f6d4f1e0e2072da394`. W1 compared 773
+waste/twin invocations of the six campaigns; all six steps exited 0 and 772 matched, with successes for all seven
+Python functions. One refusal differed: P116 G2 `refusals/overlap`, where the CLI reported the cell-mass mismatch and
+Python the overlap. Repeated CLI runs report either (9 and 15 of 24): `validate_component_membership` iterates a
+`HashMap`, so the first of two defects reported depends on the hash seed. W1 fails as written; preserved as
+`results/failures/p143/w1_attempt1/`. Registered before the repair: **P143 Amendment A** `41ae7ccb9accb9a66e267c0ed1b034a7ccad9f67bc8422a6f2a3498fad60636e` (sorted
+component order, regression test, full W1 rerun; criterion unchanged; the one repair round is consumed).
