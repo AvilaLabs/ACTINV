@@ -51,4 +51,7 @@ a placement check fails, rescale the mass by (observed s0 / target s0), regenera
 ## Files
 
 - `c3_cases.json` lists the three cases, their sidecar hashes and the closed-form text.
-- `c3_*.cov.npz` are written deterministically (stored zip members, fixed timestamps).
+- `c3_*.cov.npz` are not tracked (the P13 data-distribution control refuses tracked `.npz` files). They are
+  written deterministically (stored zip members, fixed timestamps) by `controls/p145_c3_make.py`, and
+  `controls/check_p145.py` generates each into its staging folder and checks it against the pinned SHA-256
+  (P145 Amendment C).
