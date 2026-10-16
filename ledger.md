@@ -3445,3 +3445,11 @@ It fixes the two-sided equal-tailed Clopper–Pearson interval and the establish
 0.95 when every sample agrees; unknown and failed samples are at most no class), what "exactly" means in U2 (values
 equal; Clopper–Pearson ends within 1e-12), and the C3 closed form P(s > 1) = Φ((ln s₀ − σ²/2)/σ) from the sampler's
 own factor, with one material amount per variance chosen before any run. No gate is relaxed.
+
+## Entry 192 — P145 Amendment B registered: U1 without wall-clock time; study regression run locally (2026-10-16)
+
+Registered after implementation and before any P145 evidence run: **P145 Amendment B** `b48aa0c11c02a9121563c729d53b7fe8dc3426b2ecb2ce2ecab2f3735f04ef05`. Run results
+carry the wall-clock `ms` of each solve, so U1 compares kept samples with `study.robustness` files byte for byte
+after removing that one member, as the P30 and P136 controls do. The protocol's statement that the P30/P43/P136
+controls run in CI is wrong; U5 now requires `controls/check_p136.py` G2–G4 with the pre-P145 release binary
+(`216e136c…`) as reference.
