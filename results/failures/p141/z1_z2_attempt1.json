@@ -1,0 +1,154 @@
+{
+ "candidate_sha256": "e059cdb4d4e58da3d88fb02dccc6a25c7cf7d53554c145cd174cd2c488841c2d",
+ "pass": false,
+ "reference_sha256": "54f613420cb2fce3cacea310554b24c82ffbb7e81aaefd259946ee77a025ce6f",
+ "schema": "actinv-p141-z1-z2-1",
+ "z1": {
+  "p11_inputs": {
+   "cand": {
+    "covariance_rc": 1,
+    "covariance_sha256": null,
+    "library_rc": 1,
+    "library_sha256": null,
+    "stderr_tail": "/home/connoravila/Documents/actinv/target/p141/work/p11-inputs/n-Ni058.tendl: /home/connoravila/Documents/actinv/target/p141/work/p11-inputs/n-Ni058.tendl: MT103/MF=10 ZAP=27058 group 2: emitted state sum 7.35056110388422194e-7 barn exceeds runtime total 7.04588661376139325e-7 barn by relative excess 4.324147e-2 (outside the frozen 0.001 standard envelope and the mechanism-gated 0.03 interpolation-artifact envelope); MAT=2825 ZA=28058 source_sha256=26c8ae72a203187fae84f9a11c3997086cd70153386e04cf204b4122ab368916; construction fails closed and no state row is emitted, scaled or relabeled\ncannot open /home/connoravila/Documents/actinv/target/p141/work/p11_cand.npz for hashing: No such file or directory (os error 2)\n"
+   },
+   "covariance_identical": false,
+   "library_identical": false,
+   "ref": {
+    "covariance_rc": 1,
+    "covariance_sha256": null,
+    "library_rc": 1,
+    "library_sha256": null,
+    "stderr_tail": "/home/connoravila/Documents/actinv/target/p141/work/p11-inputs/n-Ni058.tendl: /home/connoravila/Documents/actinv/target/p141/work/p11-inputs/n-Ni058.tendl: MT103/MF=10 ZAP=27058 group 2: emitted state sum 7.35056110388422194e-7 barn exceeds runtime total 7.04588661376139325e-7 barn by relative excess 4.324147e-2 (outside the frozen 0.001 standard envelope and the mechanism-gated 0.03 interpolation-artifact envelope); MAT=2825 ZA=28058 source_sha256=26c8ae72a203187fae84f9a11c3997086cd70153386e04cf204b4122ab368916; construction fails closed and no state row is emitted, scaled or relabeled\ncannot open /home/connoravila/Documents/actinv/target/p141/work/p11_ref.npz for hashing: No such file or directory (os error 2)\n"
+   }
+  },
+  "proton_full": {
+   "cand": {
+    "npz_sha256": "afbffaf09c9318a620befb96357838d9591652f3a3fbc87b6a6e924c854c635a",
+    "returncode": 0,
+    "stderr_tail": " input: /home/connoravila/nuclear-data/tendl-2025/files/p/p-Zr090.tendl: /home/connoravila/nuclear-data/tendl-2025/files/p/p-Zr090.tendl: MT103/MF=10 ZAP=40090 group 63: emitted state sum 3.22740887623054798e-9 barn exceeds runtime total 1.58451930454214486e-10 barn by relative excess 1.936838e1 (outside the frozen 0.001 standard envelope); MAT=4025 ZA=40090 source_sha256=4a9247ffe94bb90ec0687e41a7a154bc54b873a8891ae9bb4139f980c6a0b7ce; construction fails closed and no state row is emitted, scaled or relabeled\nindex -> /home/connoravila/Documents/actinv/target/p141/work/proton_cand_index.json\n"
+   },
+   "npz_identical": true,
+   "ref": {
+    "npz_sha256": "afbffaf09c9318a620befb96357838d9591652f3a3fbc87b6a6e924c854c635a",
+    "returncode": 0,
+    "stderr_tail": "d input: /home/connoravila/nuclear-data/tendl-2025/files/p/p-Zr090.tendl: /home/connoravila/nuclear-data/tendl-2025/files/p/p-Zr090.tendl: MT103/MF=10 ZAP=40090 group 63: emitted state sum 3.22740887623054798e-9 barn exceeds runtime total 1.58451930454214486e-10 barn by relative excess 1.936838e1 (outside the frozen 0.001 standard envelope); MAT=4025 ZA=40090 source_sha256=4a9247ffe94bb90ec0687e41a7a154bc54b873a8891ae9bb4139f980c6a0b7ce; construction fails closed and no state row is emitted, scaled or relabeled\nindex -> /home/connoravila/Documents/actinv/target/p141/work/proton_ref_index.json\n"
+   },
+   "shipped_sha256": "0da7a35b37fd3b305ac2166ec092cdfb78123e76f8647d8808915e2c708d9790"
+  }
+ },
+ "z1_pass": false,
+ "z2": {
+  "activation/tendl-2025-neutron-709g.npz": {
+   "inspect library": {
+    "cand": {
+     "bytes": 39118,
+     "returncode": 0,
+     "sha256": "299cf4d0c91bed17d4bcc9c9f7e97e880b1dee42abc565b3599bd3ec7a1ef1d2"
+    },
+    "identical": true,
+    "ref": {
+     "bytes": 39118,
+     "returncode": 0,
+     "sha256": "299cf4d0c91bed17d4bcc9c9f7e97e880b1dee42abc565b3599bd3ec7a1ef1d2"
+    }
+   },
+   "inspect xs": {
+    "cand": {
+     "bytes": 57293115,
+     "returncode": 0,
+     "sha256": "5ebce1fff26e38323301e8497b294840f758d3315213d337ec5ea65fa7d766eb"
+    },
+    "identical": true,
+    "ref": {
+     "bytes": 57293115,
+     "returncode": 0,
+     "sha256": "5ebce1fff26e38323301e8497b294840f758d3315213d337ec5ea65fa7d766eb"
+    }
+   }
+  },
+  "activation/tendl-2025-patched-neutron-709g.npz": {
+   "inspect library": {
+    "cand": {
+     "bytes": 23644,
+     "returncode": 0,
+     "sha256": "79e7a6aca64d1148aa5ae4d59f927f4918783e54bf7a1fe245cc2aaf1d70e1d6"
+    },
+    "identical": true,
+    "ref": {
+     "bytes": 23644,
+     "returncode": 0,
+     "sha256": "79e7a6aca64d1148aa5ae4d59f927f4918783e54bf7a1fe245cc2aaf1d70e1d6"
+    }
+   },
+   "inspect xs": {
+    "cand": {
+     "bytes": 29667205,
+     "returncode": 0,
+     "sha256": "457ad1b75d38d472b541b62983094fe51a50e293a9bd6b9879dfbdb0fc0ee37e"
+    },
+    "identical": true,
+    "ref": {
+     "bytes": 29667205,
+     "returncode": 0,
+     "sha256": "457ad1b75d38d472b541b62983094fe51a50e293a9bd6b9879dfbdb0fc0ee37e"
+    }
+   }
+  },
+  "activation/tendl-2025-proton-162g.npz": {
+   "inspect library": {
+    "cand": {
+     "bytes": 39124,
+     "returncode": 0,
+     "sha256": "fcf5338b8bc2c942cb82f224d65199c6ecec3492b4387d166126a4f7e3b398c5"
+    },
+    "identical": true,
+    "ref": {
+     "bytes": 39124,
+     "returncode": 0,
+     "sha256": "fcf5338b8bc2c942cb82f224d65199c6ecec3492b4387d166126a4f7e3b398c5"
+    }
+   },
+   "inspect xs": {
+    "cand": {
+     "bytes": 179678725,
+     "returncode": 0,
+     "sha256": "885dbf27009bcf7c1c0542817a7e531d150e0978ab0007a70b138ac356e9c565"
+    },
+    "identical": true,
+    "ref": {
+     "bytes": 179678725,
+     "returncode": 0,
+     "sha256": "885dbf27009bcf7c1c0542817a7e531d150e0978ab0007a70b138ac356e9c565"
+    }
+   }
+  },
+  "fns_fe_5min": {
+   "first_difference": "/ms",
+   "identical_apart_from_timing": true,
+   "raw_identical": false,
+   "returncodes": [
+    0,
+    0
+   ],
+   "stderr_tails": [
+    "21 steps, 51 of 3873 states, 1126.8 ms -> /home/connoravila/Documents/actinv/target/p141/work/fns_fe_5min_ref_result.json\n",
+    "21 steps, 51 of 3873 states, 840.9 ms -> /home/connoravila/Documents/actinv/target/p141/work/fns_fe_5min_cand_result.json\n"
+   ]
+  },
+  "fns_fe_5min_uncertainty": {
+   "first_difference": "/ms",
+   "identical_apart_from_timing": true,
+   "raw_identical": false,
+   "returncodes": [
+    0,
+    0
+   ],
+   "stderr_tails": [
+    "21 steps, 51 of 3873 states, 8053.6 ms -> /home/connoravila/Documents/actinv/target/p141/work/fns_fe_5min_uncertainty_ref_result.json\n",
+    "21 steps, 51 of 3873 states, 8420.5 ms -> /home/connoravila/Documents/actinv/target/p141/work/fns_fe_5min_uncertainty_cand_result.json\n"
+   ]
+  }
+ },
+ "z2_pass": true
+}

@@ -3262,3 +3262,15 @@ Registered before any manifest or source change: **P141** `7b9a9b5e665e949db57c7
 `zip` 8.6.0 (entry 172) breaks the P16 consumer build and `cargo install` without `--locked`. Reference binary
 for Z1/Z2: the 1.5.0 release build with `zip` 8.6.0, saved as `target/p141/ref-actinv`, SHA-256
 `54f613420cb2fce3cacea310554b24c82ffbb7e81aaefd259946ee77a025ce6f`.
+
+## Entry 175 — P141 first Z1/Z2 run; Amendment A registered (2026-10-16)
+
+First run of `controls/p141_zip_evidence.py` (reference `zip` 8.6.0 binary `54f61342…ce6f`, candidate `zip` 9.0.4
+binary `e059cdb4…1c2d`). Z1 proton: the full TENDL-2025 proton build (P99 G2 invocation) exits 0 under both binaries
+and the two `.npz` files are byte-identical. Z2: `actinv inspect library` and `actinv inspect xs` over the shipped
+neutron, patched-neutron and proton libraries are byte-identical (57.3 MB, 29.7 MB and 179.7 MB of output), and the
+FNS Fe run and an MF=33 uncertainty run with the shipped covariance sidecar are identical apart from the `ms` field.
+Z1 P11: both binaries exit 1 before writing, because the harness omitted `--continue-on-error true` and
+`n-Ni058.tendl` fails the MT103/MF=10 state-sum check closed. Verdict of this run as written: Z1 fails; preserved as
+`results/failures/p141/z1_z2_attempt1.json` with its log. Registered before the rerun: **P141 Amendment A**
+`2ec62abd0cac27d9d6b9bb272b6f0c2366f7d74f4b13db146265060fff28963d` (the P11 builds add the flag; criterion unchanged).
