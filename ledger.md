@@ -3224,3 +3224,24 @@ H5: every workflow triggered by the push of `542fc7d` (the P140 repairs on `cand
 Build browser workbench 38845572213, Build handbook 38845572173. With H1–H4 (entries 168–170), **P140: PASS**.
 Carried forward to the owner: the SG-01 resolved-range clip changes TENDL-2025 W-186 self-shielding above 4.4 keV, and
 whether FISPACT-II clips at EH is not known (entry 170).
+
+## Entry 172 — v1.5.0 release commit red in P110; P120 Amendment C registered (2026-10-16)
+
+The release commit `79a2d36` and tag `v1.5.0` were pushed atomically on the owner's approval. `controls` run
+38901865435 failed in "P110 native composition basis and witness verification": G1's nine `output_sha256` values
+differ from the sealed record. The tag-gated `publish Rust crates` and `publish Python package` runs stopped at the
+green-controls gate; nothing was published, and no GitHub Release exists. With the 1.5.0 release binary, replacing
+`actinv-core 1.5.0` by `actinv-core 1.4.0` in each output reproduces every sealed digest exactly, and no other byte
+differs (`results/failures/release_v1.5.0/p110_version_binding.json`; the step's CI log is preserved beside it).
+P110 was sealed at `f31e0f1` under workspace version 1.4.0, so its raw output hash forbade any release. G0 also
+hashes its 23 frozen control files from the working tree; they equal the Git objects at `f31e0f1` (0 mismatches).
+
+A local run of every CI step after P110 with the 1.5.0 release binary (P18, P18b and P12 payload skipped as known
+local-only) passed except P16: its lockfile-less consumer build cannot resolve `zip = "=8.6.0"`, which upstream
+yanked at 2026-10-16T03:32Z together with every other `zip` release except 9.0.3 and 9.0.4 (advisories
+GHSA-vv5m-jxxh-4627, GHSA-4v9h-p7m9-rh26, GHSA-4684-h2q9-2vcp; ACTINV calls no extraction API). CI's P16 passed at
+05:00Z only through its cached index. That is not a P110 matter and gets its own protocol.
+
+Registered before any edit: **P120 Amendment C** `101f83f57e3d6c2df67e0c34e6db37744a88759b5da2df37c9d305d55917b117`.
+G0 reads the 23 control files from `f31e0f1`'s Git objects; G1 maps the exact token `actinv-core <current>` to
+`actinv-core 1.4.0` before hashing, and nothing else.

@@ -1242,7 +1242,7 @@ f9d2b037ba5d8a42d81f740cef8e2ae625655c4b3192ecc1d59e63283e2e6f20  ./examples/stu
 cfd86c2c5ac15d76ec2358c6bd196a6362b46bcc889160c06439975dc5ae8f3a  ./interchange/INTERCHANGE.md
 057dd636e1814f93c0869d4839887ff28a361f5c845f24153c4e93cbee1918d1  ./interchange/actinv_core_adapter.py
 4c42c2d68d375681621d6d3828b6daab4e2fdfc37f23cacbfc3b5a1c3fd3beec  ./interchange/run_case.py
-a8ba178b4f4d9d7c4d09e8e13bed38380d13e6f05e55a9813df4f567888e8749  ./ledger.md
+248e2c711ccf89adbbb6a972b9838bffeb928e53ff40b0b12a4c6d1a4a061af9  ./ledger.md
 588e9f4f4ff74df627a1a15306214db678531d7334f2f6e95a1603eabd1f1c55  ./packaging/actinv.ico
 9897482011f194d9495fc80965177f0632ae4166917a7f240d80c0fc3c8fb83e  ./packaging/actinv.png
 672d3d389d4025f0cfaecf758f1a424c2f3ffcde56c80042d4ba7299f8931539  ./packaging/desktop.json
@@ -1337,6 +1337,7 @@ c2a58d8cf33851291b57683401d8561e9fef660993a7f1caf1a59ec08c2a5494  ./protocols/AC
 fb9964d523e9bad8e2175ff24b5ca0e14982d9bfdf46962664a00a10925cc2d4  ./protocols/ACTINV-P11_PROTOCOL.md
 9ace890c85e3b5053cb4c214fb135841abcdd090506992bf6c1e73bdd52e729a  ./protocols/ACTINV-P120_AMENDMENT_A.md
 79b8ba4303e83576f51a2d0c9545b2951219bf18c6335297fa00d2fa09279c06  ./protocols/ACTINV-P120_AMENDMENT_B.md
+101f83f57e3d6c2df67e0c34e6db37744a88759b5da2df37c9d305d55917b117  ./protocols/ACTINV-P120_AMENDMENT_C.md
 9453d6677f9e40da563b7162a9bb6a8ce674eac4e1d30dc53b22045d244be628  ./protocols/ACTINV-P120_PROTOCOL.md
 0dd6a81e165562871db30d3adbc9ec3974cab0369a2d9fd943c48aa5dbd1e9ea  ./protocols/ACTINV-P121_PROTOCOL.md
 63d6da8c1cfbcd5e49ac71e8e44ad48b7abc7791d28ba680f52a5a681d8e64ec  ./protocols/ACTINV-P122_PROTOCOL.md
@@ -1511,7 +1512,7 @@ f16e43ed6d79f0ab1da8505d0b62aa0ee167b5fde29efda5f759fca4e7948936  ./protocols/de
 08d360c85b47152e78b4fa20b79d6f807778d2c630854bd09b2c047ca0e99c9f  ./protocols/desktop-interface-v1.md
 0f52d7bf346d077afb6cd52a4999101b92050a20dbc9e2d713bf1ff5f3efda6b  ./protocols/desktop-packaging-v1.md
 308e889c622fe811b63ae66e97bb37d9f5ec6a96ae850f2c201b86af5c994aab  ./protocols/desktop-packaging-v2.md
-aa86c234ef6291090d8190a781179919627af6c2635407e80ca36ab086a9916a  ./protocols/protocol_hash.txt
+133e0175571f9cc9490e83a0e2093c1e69f40e4c50dd8f85f66b20298170be2b  ./protocols/protocol_hash.txt
 4a8925d08996b759120238021ff7af4c8ac9f814082ec1aa1183372c81ca0545  ./protocols/w-matcmp.p36.study.json
 7837466957fcd65be7bbe633fa7b07a2ddccab74b034c5ddf195814e0100632d  ./prototypes/p26_campaign.py
 737cecc5de547c600284644569f094df50e06d6d721d52050952c06d433091c4  ./python/Cargo.lock
@@ -2670,6 +2671,8 @@ d450bd6b0d645e6dae75f8c0421057dee68403609b313d93c6b953e9c110e3dd  ./results/fail
 f30347aeb6644fef69c5e4d576f66d1038631ae46a11eeaef9e0350a10e88947  ./results/failures/p135_initial/run.log
 d2f25ae4a2a28a7cb28f8d897aabb2591bb487a787682635b3024adf44babcc2  ./results/failures/p139_initial/p139_lrf7.json
 c5addd0a138c581134b4792e868773eb1abf2295141ad287421cc27d4a3a6874  ./results/failures/p139_initial/run.log
+ce17e69da6bd9b226eb9c639e14f744717f935639ecc2270d5cbc5438455aad8  ./results/failures/release_v1.5.0/controls_38901865435_p110.log
+62203a8bc8d43bb090fae8755703bfba7fa0839cec3cc8248d8fa4cbfda141d8  ./results/failures/release_v1.5.0/p110_version_binding.json
 ece2f3a6e6032d1a3436230dd60ef49b39e7b754cf4d04937188ee00b5f1d54d  ./results/fns-iron-001/comparison.csv
 5b345c66d28a87736a0e9f1c2fb4267114f6548f3726a83f81c78fcfaed666da  ./results/fns-iron-001/comparison.json
 72e6325e473ba905dca20cee147cab6411d18f75d06c53302d52f36d6f7dac8a  ./results/fns-iron-001/comparison.md

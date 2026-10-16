@@ -1,0 +1,735 @@
+build-and-control	P110 native composition basis and witness verification	﻿2026-10-16T12:42:10.4363921Z ##[group]Run python controls/test_p110_seal.py
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:10.4364307Z [36;1mpython controls/test_p110_seal.py[0m
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:10.4364643Z [36;1mpython controls/test_p110_native_identity.py[0m
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:10.4364987Z [36;1mpython controls/check_p110.py --no-write[0m
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:10.4365317Z [36;1mpython controls/check_p110_verdict.py[0m
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:10.4401761Z shell: /usr/bin/bash -e {0}
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:10.4402077Z env:
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:10.4402306Z   ACTINV_CI_DATA: /tmp/actinv-ci-data
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:10.4402586Z   ACTINV_CI_OUT: /tmp/actinv-ci
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:10.4402851Z   ACTINV_P8_WORK: /tmp/actinv-p8
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:10.4403148Z   ACTINV_P9_WORK: /tmp/actinv-p9
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:10.4403418Z   ACTINV_P9_RESULTS: /tmp/actinv-p9-results
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:10.4403708Z   ACTINV_P10_WORK: /tmp/actinv-p10
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:10.4403974Z   CARGO_HOME: /home/runner/.cargo
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:10.4404228Z   CARGO_INCREMENTAL: 0
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:10.4404472Z   CARGO_TERM_COLOR: always
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:10.4404781Z   CACHE_ON_FAILURE: false
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:10.4405016Z   ACTINV_BIN: target/release/actinv
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:10.4405270Z ##[endgroup]
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:10.5634844Z .........
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:10.5635657Z ----------------------------------------------------------------------
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:10.5636659Z Ran 9 tests in 0.014s
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:10.5637052Z 
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:10.5637275Z OK
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:10.6440321Z ......
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:10.6441171Z ----------------------------------------------------------------------
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:10.6442149Z Ran 6 tests in 0.010s
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:10.6442536Z 
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:10.6442766Z OK
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0915140Z {
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0915765Z   "abundance_mass_pinned": true,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0916572Z   "abundance_mass_sha256": "285b38a823dcee398a1dcab798c3b5a17d6b7ae5817edc663ed502314367a87b",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0917337Z   "case_count": 9,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0917712Z   "case_fixture_contract": {
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0918243Z     "case_checks": {
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0919025Z       "caller_incomplete": true,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0919341Z       "high_fixed_volume_7": true,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0919611Z       "low_fixed_external_h3": true,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0919890Z       "missing_fe58_target": true,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0920149Z       "missing_nb94_decay": true,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0920399Z       "ranged_volume_1": true,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0920665Z       "ranged_volume_point_1": true,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0920933Z       "required_external_h3": true,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0921215Z       "zero_response_reference": true
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0921469Z     },
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0921665Z     "fixture_header": true,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0921898Z     "h3_box": true,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0922130Z     "native_data_population": true,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0922385Z     "pass": true
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0922587Z   },
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0922779Z   "case_fixture_matches": true,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0923021Z   "control_hashes": {
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0923433Z     "controls/check_p105.py": "fad7a5e78f3f4b29941a3f4c340f875f5a31095ba429fa6c7857a47084810ef1",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0924044Z     "controls/check_p107.py": "c472ac563bc7e8d8873473b30360f13a670874178cf957e2393cfe15d645667c",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0924623Z     "controls/check_p108.py": "349e957ef1382aa435cccbe7c3e85ee9a596240546dd4f6246756237d0a9ca6a",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0925235Z     "controls/check_p108_verdict.py": "731d3585724b6df9a0d26b67eda58f218b121452d7ce4f23e16909406a337928",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0925844Z     "controls/check_p109.py": "708c562fd89fec95852e9fd21af00108b282bbf05ebd35b25037710cd6304aed",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0926462Z     "controls/check_p109_history.py": "1d62c163bcb33f8fd28fa7e19a3144bedc334b0b3d34fc87f7d5977adfd64133",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0927101Z     "controls/check_p109_verdict.py": "0882ac5946f6b7b7c63d793fce4d2a8523298a4533aa0560f982af4f51f605dd",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0927703Z     "controls/check_p110.py": "3df5c10164f20c018c97b05dc46f167fe480e91102a2e906c072e46c701f4698",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0929068Z     "controls/check_p110_verdict.py": "374ac019c406451fc08334984e3a1b8918f4d0d6c9d81eed9f2de0128b76d235",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0929718Z     "controls/fixtures/p110/cases.json": "13954344a38ce2daf1f48b8626dceb5d09d5cf7e7d548a16d7a13d00810a91d2",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0930391Z     "controls/p105_budget_control.py": "b9b69dc424a37d45b41b165276884c3d032d32ea968e3fd0f4c85add653c41bb",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0931026Z     "controls/p106_bounds_control.py": "b50425a970a5776cb65f603d1c0aa452c564441be14f7ce5110eb6092c56f142",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0931691Z     "controls/p108_composition_control.py": "72b5196afecd9d94f92bb4e81b8ddbb3f24ca6af6cf6a8f52a4a51e7eb1c5852",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0932403Z     "controls/p109_composition_solve_control.py": "75e913aafd625e3a64b096e270ec5c06c38147eb4adf1d0dfb8e099c415d1c10",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0933095Z     "controls/p109_native_identity.py": "5f5b1561baed3f610b5ac04299e72e09f6c475f85dfd93711f244b77e1b48f52",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0933771Z     "controls/p110_composition_solve_control.py": "98f8dccb1d68cab052b7921e8fb98e23c752d4086ac01309026f43da49e673d5",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0934458Z     "controls/p110_native_identity.py": "8c8d42c5705f1c285acc6bd0cbd182b98fcb59f49ef0153a660a9396df74295e",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0935109Z     "controls/test_p109_history.py": "c3ad168cdb20d214f9ea63a28ea141056dcc53a718a7ffdcad6aca57c9ef2eb1",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0935756Z     "controls/test_p109_native_identity.py": "895899ae402c2f323e7c9707328cabc4bced26c876956dd65966c7379d3d0548",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0936395Z     "controls/test_p109_seal.py": "16c9d3695d138b40f17b018336cc6180b64cdc94e2c367176c2b33a36904ea77",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0937042Z     "controls/test_p110_native_identity.py": "dc6bea5f6cdfe40d814a5a10ed7e847f6c3d59ab3abd7e0ee2e576baf2df9b48",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0937704Z     "controls/test_p110_seal.py": "62bc441b7ec94aefcb41d8d62d707a13bf19ca46641d6e52e7d10f659a3d7b64",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0938679Z     "results/tables/abundance_mass.json": "285b38a823dcee398a1dcab798c3b5a17d6b7ae5817edc663ed502314367a87b"
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0939281Z   },
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0939491Z   "endpoint_count": 36,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0939722Z   "expected_labels": {
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0939943Z     "expected": {
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0940160Z       "caller_incomplete": [
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0940395Z         "unknown",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0940619Z         "unknown"
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0940817Z       ],
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0941012Z       "high_fixed_volume_7": [
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0941248Z         "A",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0956264Z         "A"
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0956658Z       ],
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0956878Z       "low_fixed_external_h3": [
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0957155Z         "A",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0957364Z         "B"
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0957550Z       ],
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0957760Z       "missing_fe58_target": [
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0958271Z         "unknown",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0958565Z         "unknown"
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0958850Z       ],
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0959155Z       "missing_nb94_decay": [
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0959520Z         "unknown",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0959797Z         "unknown"
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0959992Z       ],
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0960193Z       "ranged_volume_1": [
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0960423Z         "A",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0960613Z         "C"
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0960800Z       ],
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0961000Z       "ranged_volume_point_1": [
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0961237Z         "C",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0961433Z         "above_class_c"
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0961642Z       ],
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0961837Z       "required_external_h3": [
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0962075Z         "unknown",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0962280Z         "unknown"
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0962478Z       ],
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0962684Z       "zero_response_reference": [
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0962934Z         "A",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0963131Z         "A"
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0963321Z       ]
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0963504Z     },
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0963698Z     "labels": [
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0963894Z       {
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0964110Z         "id": "ranged_volume_1",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0964699Z         "lower_class": "A",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0964941Z         "upper_class": "C"
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0965165Z       },
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0965353Z       {
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0965559Z         "id": "high_fixed_volume_7",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0965823Z         "lower_class": "A",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0966063Z         "upper_class": "A"
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0966290Z       },
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0966483Z       {
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0966683Z         "id": "ranged_volume_point_1",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0966947Z         "lower_class": "C",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0967192Z         "upper_class": "above_class_c"
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0967448Z       },
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0967634Z       {
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0968046Z         "id": "low_fixed_external_h3",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0968317Z         "lower_class": "A",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0968558Z         "upper_class": "B"
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0968784Z       },
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0968969Z       {
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0969181Z         "id": "required_external_h3",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0969465Z         "lower_class": "unknown",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0969738Z         "upper_class": "unknown"
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0969969Z       },
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0970148Z       {
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0970355Z         "id": "caller_incomplete",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0970616Z         "lower_class": "unknown",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0970862Z         "upper_class": "unknown"
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0971092Z       },
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0971271Z       {
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0971465Z         "id": "missing_fe58_target",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0971729Z         "lower_class": "unknown",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0971983Z         "upper_class": "unknown"
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0972217Z       },
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0972402Z       {
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0972608Z         "id": "missing_nb94_decay",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0972866Z         "lower_class": "unknown",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0973116Z         "upper_class": "unknown"
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0973340Z       },
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0973512Z       {
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0973871Z         "id": "zero_response_reference",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0974144Z         "lower_class": "A",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0974378Z         "upper_class": "A"
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0974596Z       }
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0974776Z     ],
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0974965Z     "pass": true
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0975171Z   },
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0975353Z   "generated": {
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0975551Z     "base_specs": {
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0975755Z       "complete": {
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0976040Z         "path": "target/p110-controls/base_run.complete.json",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0976495Z         "sha256": "95dc5b1a83caaa13a6e30be7b1f5ddb5f05cfa287e1e6a14ac1462abf0477e48"
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0976883Z       },
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0977075Z       "omit_fe58_target": {
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0977390Z         "path": "target/p110-controls/base_run.omit_fe58_target.json",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0977990Z         "sha256": "94f83f33777c9b542c26efddd7975b01227b78570a8e7b1e93f04995845a0a5a"
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0978362Z       },
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0978563Z       "omit_nb94_decay": {
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0978867Z         "path": "target/p110-controls/base_run.omit_nb94_decay.json",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0979324Z         "sha256": "3e5b654e03432c1dcb6ecbda957cfa949306c3a6d26b0295e8d816871155c340"
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0979696Z       }
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0979878Z     },
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0980068Z     "complete": {
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0980296Z       "decay_record_count": 12,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0980540Z       "paths": {
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0980775Z         "decay": "target/p110-controls/decay.endf",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0981111Z         "index": "target/p110-controls/native_index.json",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0981457Z         "library": "target/p110-controls/native.npz"
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0981735Z       },
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0981925Z       "row_count": 11,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0982139Z       "sha256": {
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0982476Z         "decay": "e9699647fab6e4edd2efb378ae5607bc45a7d27702e68433f07a5de240929434",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0982970Z         "index": "d825352a54d9e99cebec18f33155918412c2876526988487bac759e83ef4592d",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0983581Z         "library": "99c312c293829cfec2f33188464ed4e962207f0689c5a861455a04cc421e5500"
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0983956Z       },
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0984168Z       "target_count": 10
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0984390Z     },
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0984581Z     "omit_fe58_target": {
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0984826Z       "decay_record_count": 12,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0985065Z       "paths": {
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0985328Z         "decay": "target/p110-controls/decay.omit_fe58.endf",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0985697Z         "index": "target/p110-controls/native.omit_fe58_index.json",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0986069Z         "library": "target/p110-controls/native.omit_fe58.npz"
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0986363Z       },
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0986557Z       "row_count": 10,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0986760Z       "sha256": {
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0987078Z         "decay": "e9699647fab6e4edd2efb378ae5607bc45a7d27702e68433f07a5de240929434",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0987567Z         "index": "c1e17c7e2688943b8de13097f9e018c4026ddfe53649f49b0efe88c1791e9acf",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0988273Z         "library": "47f3fb3e3570c4f67f7bc9ba541c02c0d6fd5128aa00825d3484a02a15cdd929"
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0988646Z       },
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0988839Z       "target_count": 9
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0989050Z     },
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0989253Z     "omit_nb94_decay": {
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0989488Z       "decay_record_count": 11,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0989721Z       "paths": {
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0989995Z         "decay": "target/p110-controls/decay.omit_nb94_decay.endf",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0990412Z         "index": "target/p110-controls/native.omit_nb94_decay_index.json",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0990818Z         "library": "target/p110-controls/native.omit_nb94_decay.npz"
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0991155Z       },
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0991341Z       "row_count": 11,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0991548Z       "sha256": {
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0991884Z         "decay": "04795215b9b232acdf63ce48d27bc21b6def0258adc52c5e7cea44e6da81ea5a",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0992582Z         "index": "d825352a54d9e99cebec18f33155918412c2876526988487bac759e83ef4592d",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0993329Z         "library": "99c312c293829cfec2f33188464ed4e962207f0689c5a861455a04cc421e5500"
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0993905Z       },
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0994181Z       "target_count": 10
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0994517Z     }
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0994813Z   },
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0995103Z   "generated_sha256": {
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0995600Z     "target/p110-controls/base_run.complete.json": "95dc5b1a83caaa13a6e30be7b1f5ddb5f05cfa287e1e6a14ac1462abf0477e48",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0996370Z     "target/p110-controls/base_run.omit_fe58_target.json": "94f83f33777c9b542c26efddd7975b01227b78570a8e7b1e93f04995845a0a5a",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0997320Z     "target/p110-controls/base_run.omit_nb94_decay.json": "3e5b654e03432c1dcb6ecbda957cfa949306c3a6d26b0295e8d816871155c340",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0998401Z     "target/p110-controls/decay.endf": "e9699647fab6e4edd2efb378ae5607bc45a7d27702e68433f07a5de240929434",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0999105Z     "target/p110-controls/decay.omit_fe58.endf": "e9699647fab6e4edd2efb378ae5607bc45a7d27702e68433f07a5de240929434",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.0999837Z     "target/p110-controls/decay.omit_nb94_decay.endf": "04795215b9b232acdf63ce48d27bc21b6def0258adc52c5e7cea44e6da81ea5a",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1000529Z     "target/p110-controls/native.npz": "99c312c293829cfec2f33188464ed4e962207f0689c5a861455a04cc421e5500",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1001206Z     "target/p110-controls/native.omit_fe58.npz": "47f3fb3e3570c4f67f7bc9ba541c02c0d6fd5128aa00825d3484a02a15cdd929",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1001936Z     "target/p110-controls/native.omit_fe58_index.json": "c1e17c7e2688943b8de13097f9e018c4026ddfe53649f49b0efe88c1791e9acf",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1002661Z     "target/p110-controls/native.omit_nb94_decay.npz": "99c312c293829cfec2f33188464ed4e962207f0689c5a861455a04cc421e5500",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1003412Z     "target/p110-controls/native.omit_nb94_decay_index.json": "d825352a54d9e99cebec18f33155918412c2876526988487bac759e83ef4592d",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1004285Z     "target/p110-controls/native_index.json": "d825352a54d9e99cebec18f33155918412c2876526988487bac759e83ef4592d"
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1004736Z   },
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1004938Z   "historical_p108_verified": true,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1005220Z   "historical_p109_evidence": {
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1005475Z     "artifact_blobs_verified": true,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1005807Z     "checkpoint_commit": "495d6bf99248d3b99af43ca82894631c3e6b8c87",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1006151Z     "derived_verdict": "P109-FAIL",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1006436Z     "derived_verdict_matches_persisted": true,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1006719Z     "expected_artifact_sha256": {
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1007195Z       "results/g0_p109_composition_solve.json": "cad2351bf53e7f0165c6a899bcd8b97ba302d73effbb3e52bd220dcf598c1c09",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1008261Z       "results/g1_p109_composition_solve.json": "a74fc950793785af5fa667eca793aca5934fc54ab366435004f88093b2451986",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1009076Z       "results/g3_p109_quality.json": "d7b42c419704e21dcbe1fadfa3a3970a55b390851890e910598272571fcb1e36",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1009858Z       "results/p109_verdict.json": "b6d370e3e560d0d7f780b0a7bb6344413fee87eb69eab865ac9e5ac58b449398"
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1010296Z     },
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1010546Z     "g2_absent": true,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1010850Z     "historical_source_verification": false,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1011122Z     "pass": true,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1011508Z     "persisted_verdict_sha256": "b6d370e3e560d0d7f780b0a7bb6344413fee87eb69eab865ac9e5ac58b449398",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1011955Z     "rust_source_count": 97,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1012215Z     "rust_sources_materialized": true
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1012464Z   },
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1012659Z   "historical_p109_verified": true,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1012920Z   "p109_amendment_registered": true,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1013541Z   "p109_amendment_sha256": "0778cb569a3ce347fc271a182477fe05b66955ffdc37571a271aba64dbb4bf3c",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1014182Z   "p109_format_failure_log_matches": true,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1014727Z   "p109_format_failure_log_sha256": "0a9ee2fb99edbbcd617c3db2763bf981948c4fc48d20f76f4c02052f12b00c10",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1015194Z   "pack_mirror_identical": true,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1015585Z   "pack_sha256": "890268af81a53815b8e11c238e4a1694eabb79664a1ca087fd7fe22b9fabe5d7",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1015972Z   "pass": true,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1016193Z   "persisted_seal_matches": true,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1016442Z   "phase": "P110",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1016841Z   "predecessor_p109_fail_sha256": "b6d370e3e560d0d7f780b0a7bb6344413fee87eb69eab865ac9e5ac58b449398",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1017296Z   "protocol_registered": true,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1017684Z   "protocol_sha256": "8ad8870d42d30f3f8c330021b15e7f4f570032deba1ee5b79f57b9411e40e7f9",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1018295Z   "repair_amendment_registered": true,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1018744Z   "repair_amendment_sha256": "a240a0e1b7e194f8d548beb7d7a7f694e6089a9e53a052659a03f77374b6aa10",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1019188Z   "repair_evidence_matches": true,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1019461Z   "repair_evidence_sha256": {
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1019917Z     "results/g0_p110_before_amendment.json": "8b8796f2724ba6f6c4c8dcadda41c1f0fc6171165b6f963b35ebfd60d9276dc2",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1020626Z     "results/p110_child_invocation_failure.log": "428c56482e8a59a74d33dacbd734a3c7444f373a44c2e5151ab294136b279466",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1021519Z     "results/p110_control_failure.log": "70fa3b77bc9fa70fc4859b2babee1cd94d5e339e3e17533945e016592c768139",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1022302Z     "results/p110_initial_oracle_diagnostic.log": "d982f22213590625260244389211db73157525701551a26d33d7236089e6a03f",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1023170Z     "results/p110_oracle_before_amendment.py": "36b442caa1cd19c8eec14797f9b117d091bfb123fb7786dd7932145cd7a1f12c"
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1023764Z   },
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1023951Z   "repair_rounds": 1,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1024220Z   "schema": "actinv-p110-composition-solve-g0-1",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1024656Z   "synthetic_artifact_review": {
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1024913Z     "failures": [],
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1025123Z     "pass": true,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1025323Z     "variants": {
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1025526Z       "complete": {
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1025756Z         "decay_sections": [
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1025980Z           2601,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1026172Z           2602,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1026359Z           2603,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1026546Z           2604,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1026738Z           1401,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1026923Z           1402,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1027107Z           1403,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1027293Z           4101,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1027487Z           4102,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1027666Z           4201,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1027968Z           1001,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1028266Z           2001
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1028463Z         ],
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1028816Z         "decay_sha256": "e9699647fab6e4edd2efb378ae5607bc45a7d27702e68433f07a5de240929434",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1029375Z         "index_sha256": "d825352a54d9e99cebec18f33155918412c2876526988487bac759e83ef4592d",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1029911Z         "library_sha256": "99c312c293829cfec2f33188464ed4e962207f0689c5a861455a04cc421e5500",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1030321Z         "row_count": 11,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1030569Z         "target_mats": [
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1030782Z           2601,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1030972Z           2602,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1031156Z           2603,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1031350Z           2604,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1031537Z           1401,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1031720Z           1402,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1031905Z           1403,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1032103Z           4101,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1032284Z           4102,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1032468Z           4201
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1032661Z         ]
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1032842Z       },
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1033044Z       "omit_fe58_target": {
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1033278Z         "decay_sections": [
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1033500Z           2601,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1033825Z           2602,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1034018Z           2603,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1034202Z           2604,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1034392Z           1401,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1034586Z           1402,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1034782Z           1403,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1034988Z           4101,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1035187Z           4102,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1035379Z           4201,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1035565Z           1001,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1035758Z           2001
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1035945Z         ],
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1036274Z         "decay_sha256": "e9699647fab6e4edd2efb378ae5607bc45a7d27702e68433f07a5de240929434",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1036806Z         "index_sha256": "c1e17c7e2688943b8de13097f9e018c4026ddfe53649f49b0efe88c1791e9acf",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1037349Z         "library_sha256": "47f3fb3e3570c4f67f7bc9ba541c02c0d6fd5128aa00825d3484a02a15cdd929",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1037749Z         "row_count": 10,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1038066Z         "target_mats": [
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1038292Z           2601,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1038490Z           2602,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1038687Z           2603,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1038876Z           1401,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1039059Z           1402,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1039248Z           1403,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1039444Z           4101,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1039625Z           4102,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1039804Z           4201
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1039993Z         ]
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1040170Z       },
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1040370Z       "omit_nb94_decay": {
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1040600Z         "decay_sections": [
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1040814Z           2601,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1040999Z           2602,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1041193Z           2603,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1041381Z           2604,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1041562Z           1401,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1041746Z           1402,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1041929Z           1403,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1042125Z           4101,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1042309Z           4201,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1042490Z           1001,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1042783Z           2001
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1042985Z         ],
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1043318Z         "decay_sha256": "04795215b9b232acdf63ce48d27bc21b6def0258adc52c5e7cea44e6da81ea5a",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1043845Z         "index_sha256": "d825352a54d9e99cebec18f33155918412c2876526988487bac759e83ef4592d",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1044380Z         "library_sha256": "99c312c293829cfec2f33188464ed4e962207f0689c5a861455a04cc421e5500",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1044805Z         "row_count": 11,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1045038Z         "target_mats": [
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1045262Z           2601,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1045459Z           2602,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1045651Z           2603,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1045843Z           2604,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1046026Z           1401,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1046225Z           1402,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1046413Z           1403,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1046604Z           4101,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1046781Z           4102,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1046967Z           4201
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1047156Z         ]
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1047338Z       }
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1047516Z     }
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1047691Z   },
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.1047964Z   "target_count": 18
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8405240Z }
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8405708Z {
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8406007Z   "case_count": 9,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8406381Z   "case_evidence": [
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8406746Z     {
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8407077Z       "basis_solve_count": 3,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8407513Z       "full_witness_solve_count": 2,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8408487Z       "generated_response_input_sha256": "88874ea868b8d0c174c9b818a528be4dc920494b3c683e5c9fcddf1c998ae197",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8409339Z       "id": "ranged_volume_1",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8409918Z       "input_sha256": "f2ddbe12697404df891e57827fb6df8a56cfe87d7e828d365bb3feb5d8859628",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8410385Z       "maximum_activity_l1_error_bq_per_g": 9.094947017729282e-13,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8410738Z       "maximum_atom_l1_error_per_g": 8208384.000001907,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8411162Z       "output_sha256": "116574c316f5cada59ca370a03dc132f9f4eb5a218d7455cd127965328590ee3",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8411820Z       "selected_steps": [
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8412048Z         {
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8412246Z           "class_envelope": [
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8412474Z             "A",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8412678Z             "B",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8412867Z             "C"
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8413060Z           ],
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8413259Z           "lower_class": "A",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8413491Z           "step": 1,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8413708Z           "upper_class": "C"
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8413931Z         },
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8414110Z         {
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8414302Z           "class_envelope": [
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8414532Z             "A",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8414724Z             "B",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8414913Z             "C"
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8415102Z           ],
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8415305Z           "lower_class": "A",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8415525Z           "step": 2,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8415751Z           "upper_class": "C"
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8415974Z         }
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8416150Z       ]
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8416338Z     },
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8416514Z     {
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8416706Z       "basis_solve_count": 3,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8416949Z       "full_witness_solve_count": 1,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8417411Z       "generated_response_input_sha256": "37d62d08bd9ae745fddd9e9658a34cff443203674347a34300375d41523db72d",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8418764Z       "id": "high_fixed_volume_7",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8419423Z       "input_sha256": "0e5ce1885ad4cbbc7f36c077c17bd79ba779797401dcd48066e4aac78165eb88",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8420053Z       "maximum_activity_l1_error_bq_per_g": 9.094947017729282e-13,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8420420Z       "maximum_atom_l1_error_per_g": 8208384.000001907,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8420851Z       "output_sha256": "ab0ea7cba40e83825524badd007d4e136921047416b0f0e20a2776f6556bbb96",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8421268Z       "selected_steps": [
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8421650Z         {
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8421851Z           "class_envelope": [
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8422080Z             "A"
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8422274Z           ],
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8422476Z           "lower_class": "A",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8422702Z           "step": 1,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8422920Z           "upper_class": "A"
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8423140Z         },
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8423318Z         {
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8423507Z           "class_envelope": [
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8423735Z             "A"
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8423931Z           ],
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8424129Z           "lower_class": "A",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8424351Z           "step": 2,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8424567Z           "upper_class": "A"
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8424798Z         }
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8424980Z       ]
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8425165Z     },
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8425349Z     {
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8425554Z       "basis_solve_count": 3,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8425794Z       "full_witness_solve_count": 2,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8426258Z       "generated_response_input_sha256": "7dbd32135204442f0b4ff0dca5aef90cdfe3201dded601e47b62223e4e931c28",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8426743Z       "id": "ranged_volume_point_1",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8427155Z       "input_sha256": "89d2de0f8f72fb180c19da27d8adb2bf8da39734a708effbeb0f85bb89cf68af",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8427626Z       "maximum_activity_l1_error_bq_per_g": 9.094947017729282e-13,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8428129Z       "maximum_atom_l1_error_per_g": 8208384.000001907,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8428555Z       "output_sha256": "72dc8441dbfc6cac5d1717dc74941684c56671c6282da8ce793009ac368f2977",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8428968Z       "selected_steps": [
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8429189Z         {
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8429388Z           "class_envelope": [
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8429622Z             "C",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8429847Z             "above_class_c"
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8430083Z           ],
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8430283Z           "lower_class": "C",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8430506Z           "step": 1,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8430956Z           "upper_class": "above_class_c"
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8431227Z         },
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8431409Z         {
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8431599Z           "class_envelope": [
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8431822Z             "C",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8432034Z             "above_class_c"
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8432252Z           ],
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8432452Z           "lower_class": "C",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8432679Z           "step": 2,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8432896Z           "upper_class": "above_class_c"
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8433151Z         }
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8433324Z       ]
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8433496Z     },
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8433668Z     {
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8433860Z       "basis_solve_count": 3,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8434096Z       "full_witness_solve_count": 1,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8434545Z       "generated_response_input_sha256": "e9e008d05113d5095f698d83ca076de9acc47e95c8d3c015fe4b54e9294438f3",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8435007Z       "id": "low_fixed_external_h3",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8435398Z       "input_sha256": "fd93f159e1e1ea37864dc9c5add91d45254a9e06e7fe4b7ea727c40663c833a6",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8435914Z       "maximum_activity_l1_error_bq_per_g": 6.821210263296962e-13,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8436266Z       "maximum_atom_l1_error_per_g": 4038656.0937508345,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8436691Z       "output_sha256": "a53d7a2101509564fb4e73d6f40de79b20c1c3b88ec3ed9c7f408535be97f605",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8437098Z       "selected_steps": [
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8437318Z         {
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8437510Z           "class_envelope": [
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8437734Z             "A",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8438066Z             "B"
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8438273Z           ],
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8438476Z           "lower_class": "A",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8438708Z           "step": 1,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8438922Z           "upper_class": "B"
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8439155Z         },
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8439336Z         {
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8439525Z           "class_envelope": [
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8439760Z             "A",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8440095Z             "B"
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8440308Z           ],
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8440511Z           "lower_class": "A",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8440743Z           "step": 2,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8440958Z           "upper_class": "B"
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8441197Z         }
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8441375Z       ]
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8441547Z     },
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8441717Z     {
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8441903Z       "basis_solve_count": 3,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8442149Z       "full_witness_solve_count": 2,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8442598Z       "generated_response_input_sha256": "487b1c82e5138d38712ca945f7c3c0a62cd97a312d80e3bff36fc4fcc9b3f0be",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8443058Z       "id": "required_external_h3",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8443449Z       "input_sha256": "c55715c7c48f126ba03c9edbe7a29afc6d1f023d7af35698ec617498d09df153",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8443911Z       "maximum_activity_l1_error_bq_per_g": 9.094947017729282e-13,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8444249Z       "maximum_atom_l1_error_per_g": 8208384.000001907,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8444662Z       "output_sha256": "929e0a2c31c84644540c40235769509b69aa2e451a0130ee2f9d8a0c89a8c022",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8445050Z       "selected_steps": [
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8445271Z         {
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8445463Z           "class_envelope": [
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8445688Z             "unknown"
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8445891Z           ],
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8446097Z           "lower_class": "unknown",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8446342Z           "step": 1,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8446557Z           "upper_class": "unknown"
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8446790Z         },
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8446974Z         {
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8447164Z           "class_envelope": [
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8447390Z             "unknown"
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8447594Z           ],
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8447915Z           "lower_class": "unknown",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8448241Z           "step": 2,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8448458Z           "upper_class": "unknown"
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8448696Z         }
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8448873Z       ]
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8449165Z     },
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8449341Z     {
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8449537Z       "basis_solve_count": 3,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8449786Z       "full_witness_solve_count": 2,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8450288Z       "generated_response_input_sha256": "4bac6c8ebf29a8d97a474b4af2cae6fea30e33918f909fbf6bc0e7c51d416225",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8450787Z       "id": "caller_incomplete",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8451169Z       "input_sha256": "595f4964a5026a114db97ddbc3ca1a91a111a3f5441574318f2ebec1334b95be",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8451620Z       "maximum_activity_l1_error_bq_per_g": 9.094947017729282e-13,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8451967Z       "maximum_atom_l1_error_per_g": 8208384.000001907,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8452400Z       "output_sha256": "d8eba9311233fbd83958a9526d082796cf12c7cd0ddb087eb55536b6216542d6",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8452796Z       "selected_steps": [
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8453013Z         {
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8453202Z           "class_envelope": [
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8453437Z             "unknown"
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8453645Z           ],
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8453843Z           "lower_class": "unknown",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8454081Z           "step": 1,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8454300Z           "upper_class": "unknown"
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8454528Z         },
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8454702Z         {
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8454888Z           "class_envelope": [
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8455110Z             "unknown"
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8455313Z           ],
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8455513Z           "lower_class": "unknown",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8455746Z           "step": 2,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8455957Z           "upper_class": "unknown"
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8456196Z         }
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8456373Z       ]
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8456551Z     },
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8456726Z     {
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8456913Z       "basis_solve_count": 3,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8457159Z       "full_witness_solve_count": 2,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8457612Z       "generated_response_input_sha256": "f904caaa2b5def5120e87f752ba18d48f6523656efc83a595c363b8e0047c72a",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8458427Z       "id": "missing_fe58_target",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8458799Z       "input_sha256": "96c27d172416e09388e050194886e29401da86e86f664fc58c107221e0b31038",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8459253Z       "maximum_activity_l1_error_bq_per_g": 9.094947017729282e-13,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8459606Z       "maximum_atom_l1_error_per_g": 8208384.000001907,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8460037Z       "output_sha256": "59e30c6c35ccc2ab10147805076cc92cd685a35459b41c6ab965e60fd7f6b06c",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8460449Z       "selected_steps": [
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8460668Z         {
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8460862Z           "class_envelope": [
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8461087Z             "unknown"
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8461288Z           ],
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8461500Z           "lower_class": "unknown",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8461746Z           "step": 1,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8461969Z           "upper_class": "unknown"
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8462198Z         },
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8462390Z         {
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8462590Z           "class_envelope": [
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8462810Z             "unknown"
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8463007Z           ],
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8463203Z           "lower_class": "unknown",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8463509Z           "step": 2,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8463717Z           "upper_class": "unknown"
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8463949Z         }
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8464123Z       ]
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8464294Z     },
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8464469Z     {
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8464663Z       "basis_solve_count": 3,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8464904Z       "full_witness_solve_count": 1,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8465350Z       "generated_response_input_sha256": "79ff437e4be011c011ad2771b82378194908b39e389e05aafd554312e3056a17",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8465807Z       "id": "missing_nb94_decay",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8466194Z       "input_sha256": "9bf174fe530d7b1723f248e9bd686570979bbc7bd1073132d4c43af4cb2d3733",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8466619Z       "maximum_activity_l1_error_bq_per_g": -0.0,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8466918Z       "maximum_atom_l1_error_per_g": 5963776.0,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8467494Z       "output_sha256": "64f840432d0f0bfed0b327be838033205253cef7531a883c7c338c54e600a4dc",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8468047Z       "selected_steps": [
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8468269Z         {
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8468461Z           "class_envelope": [
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8468690Z             "unknown"
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8468891Z           ],
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8469105Z           "lower_class": "unknown",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8469349Z           "step": 1,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8469569Z           "upper_class": "unknown"
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8469802Z         },
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8469986Z         {
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8470176Z           "class_envelope": [
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8470402Z             "unknown"
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8470598Z           ],
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8470806Z           "lower_class": "unknown",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8471045Z           "step": 2,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8471265Z           "upper_class": "unknown"
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8471497Z         }
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8471683Z       ]
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8471865Z     },
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8472039Z     {
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8472225Z       "basis_solve_count": 2,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8472466Z       "full_witness_solve_count": 1,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8472918Z       "generated_response_input_sha256": "fc95c78674e314e14e5401c2b3f42395a013262b7ced88a499bc743426e6e9bf",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8473379Z       "id": "zero_response_reference",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8473771Z       "input_sha256": "f3c65497fa231a404f0bc34b9833e92782344fcb0de64c56c5a3297feed11367",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8474191Z       "maximum_activity_l1_error_bq_per_g": -0.0,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8474491Z       "maximum_atom_l1_error_per_g": 0.0,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8474893Z       "output_sha256": "574fbfb45c11018eaebb521dffed90a3b7db2667e80f977c762b71c996286be1",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8475296Z       "selected_steps": [
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8475504Z         {
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8475695Z           "class_envelope": [
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8475916Z             "A"
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8476221Z           ],
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8476419Z           "lower_class": "A",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8476648Z           "step": 1,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8476866Z           "upper_class": "A"
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8477084Z         },
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8477266Z         {
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8477452Z           "class_envelope": [
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8477678Z             "A"
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8478011Z           ],
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8478230Z           "lower_class": "A",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8478460Z           "step": 2,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8478671Z           "upper_class": "A"
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8478900Z         }
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8479078Z       ]
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8479257Z     }
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8479434Z   ],
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8479630Z   "endpoint_count": 36,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8479846Z   "failures": [],
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8480075Z   "independent_comparison_count": 9,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8480344Z   "mutations_rejected": {
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8480594Z     "ranged_volume_1:basis_activity": true,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8480895Z     "ranged_volume_1:basis_atoms": true,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8481194Z     "ranged_volume_1:basis_duplicate_element": true,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8481514Z     "ranged_volume_1:basis_duplicate_step": true,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8481823Z     "ranged_volume_1:basis_missing_step": true,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8482120Z     "ranged_volume_1:basis_step": true,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8482394Z     "ranged_volume_1:class_envelope": true,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8482675Z     "ranged_volume_1:component_id": true,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8482966Z     "ranged_volume_1:generated_input_sha": true,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8483265Z     "ranged_volume_1:native_pass": true,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8483544Z     "ranged_volume_1:outer_input_sha": true,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8483825Z     "ranged_volume_1:outer_schema": true,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8484102Z     "ranged_volume_1:projection_lower": true,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8484404Z     "ranged_volume_1:projection_upper": true,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8484698Z     "ranged_volume_1:projection_witness": true,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8485117Z     "ranged_volume_1:rules_sha": true,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8485387Z     "ranged_volume_1:target_time": true,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8485666Z     "ranged_volume_1:weight_bounds": true,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8485947Z     "ranged_volume_1:witness_activity": true,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8486229Z     "ranged_volume_1:witness_atoms": true,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8486504Z     "ranged_volume_1:witness_class": true,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8486788Z     "ranged_volume_1:witness_count": true,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8487060Z     "ranged_volume_1:witness_pass": true
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8487311Z   },
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8487488Z   "pass": false,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8487706Z   "persisted_result_matches": false,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8488124Z   "phase": "P110",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8488487Z   "protocol_sha256": "8ad8870d42d30f3f8c330021b15e7f4f570032deba1ee5b79f57b9411e40e7f9",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8488900Z   "refusal_controls": {
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8489118Z     "checks": {
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8489345Z       "absent_target": true,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8489589Z       "bad_external": true,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8489829Z       "blank_assumptions": true,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8490082Z       "blank_source": true,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8490322Z       "both_geometries": true,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8490571Z       "complete_with_reason": true,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8490836Z       "duplicate_bound_coordinate": true,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8491112Z       "duplicate_component_id": true,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8491380Z       "duplicate_component_mass": true,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8491676Z       "duplicate_embedded_base_spec_key": true,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8491965Z       "duplicate_external_key": true,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8492225Z       "duplicate_outer_key": true,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8492488Z       "duplicate_path_base_spec_key": true,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8492772Z       "duplicate_target": true,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8493033Z       "empty_bounds": true,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8493270Z       "empty_component_id": true,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8493624Z       "infeasible_sum": true,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8493892Z       "malformed_bounds": true,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8494148Z       "missing_external_step": true,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8494408Z       "missing_reason": true,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8494644Z       "negative_h3": true,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8494885Z       "negative_mass": true,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8495123Z       "negative_weight": true,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8495373Z       "noncanonical_external_step": true,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8495636Z       "null_volume": true,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8495862Z       "reversed_weight": true,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8496112Z       "too_many_components": true,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8496363Z       "unknown_element": true,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8496601Z       "unknown_waste_type": true,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8496859Z       "unsupported_component_key": true,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8497132Z       "unsupported_cram_order": true,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8497388Z       "unsupported_damage": true,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8497630Z       "unsupported_gas": true,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8498451Z       "unsupported_screen": true,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8498916Z       "unsupported_top_key": true,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8499192Z       "unsupported_uncertainty": true,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8499455Z       "wrong_base_spec": true,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8499702Z       "wrong_projectile": true,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8499972Z       "wrong_rules": true,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8500200Z       "wrong_schema": true,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8500431Z       "zero_density": true,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8500655Z       "zero_mass": true,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8500882Z       "zero_target": true
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8501104Z     },
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8501291Z     "pass": true
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8501480Z   },
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8501672Z   "repeat_byte_identical": true,
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8501967Z   "schema": "actinv-p110-composition-solve-g1-1",
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8502258Z   "target_count": 18
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8502462Z }
+build-and-control	P110 native composition basis and witness verification	2026-10-16T12:42:11.8529712Z ##[error]Process completed with exit code 1.

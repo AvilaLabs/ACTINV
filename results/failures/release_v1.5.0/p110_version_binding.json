@@ -1,0 +1,93 @@
+{
+ "all_match_after_swap": true,
+ "binary_version": "actinv 1.5.0",
+ "cases": [
+  {
+   "id": "caller_incomplete",
+   "matches_sealed_after_swap": true,
+   "other_1_5_0_occurrences": 0,
+   "output_sha256_1_5_0": "d8eba9311233fbd83958a9526d082796cf12c7cd0ddb087eb55536b6216542d6",
+   "sealed_output_sha256": "d409ecff40d5e312adb59144199d3874ddaefb2f0b49f178ce3746b674b54bc0",
+   "sha256_after_token_swap": "d409ecff40d5e312adb59144199d3874ddaefb2f0b49f178ce3746b674b54bc0",
+   "version_token_occurrences": 5
+  },
+  {
+   "id": "high_fixed_volume_7",
+   "matches_sealed_after_swap": true,
+   "other_1_5_0_occurrences": 0,
+   "output_sha256_1_5_0": "ab0ea7cba40e83825524badd007d4e136921047416b0f0e20a2776f6556bbb96",
+   "sealed_output_sha256": "728fb2a94ca61f5ceec506f4aa4ce8b52298a5c5d75ff4e7e6f439f6144a810a",
+   "sha256_after_token_swap": "728fb2a94ca61f5ceec506f4aa4ce8b52298a5c5d75ff4e7e6f439f6144a810a",
+   "version_token_occurrences": 4
+  },
+  {
+   "id": "low_fixed_external_h3",
+   "matches_sealed_after_swap": true,
+   "other_1_5_0_occurrences": 0,
+   "output_sha256_1_5_0": "a53d7a2101509564fb4e73d6f40de79b20c1c3b88ec3ed9c7f408535be97f605",
+   "sealed_output_sha256": "dc2636b2266e8c483c15f65020e3d967028275aeafb4962a7894cf8ceb513423",
+   "sha256_after_token_swap": "dc2636b2266e8c483c15f65020e3d967028275aeafb4962a7894cf8ceb513423",
+   "version_token_occurrences": 4
+  },
+  {
+   "id": "missing_fe58_target",
+   "matches_sealed_after_swap": true,
+   "other_1_5_0_occurrences": 0,
+   "output_sha256_1_5_0": "59e30c6c35ccc2ab10147805076cc92cd685a35459b41c6ab965e60fd7f6b06c",
+   "sealed_output_sha256": "27ffda3eeab6035149542da0d93aa8a941435dcdc7d4fe7ff567dcc8231c6a04",
+   "sha256_after_token_swap": "27ffda3eeab6035149542da0d93aa8a941435dcdc7d4fe7ff567dcc8231c6a04",
+   "version_token_occurrences": 5
+  },
+  {
+   "id": "missing_nb94_decay",
+   "matches_sealed_after_swap": true,
+   "other_1_5_0_occurrences": 0,
+   "output_sha256_1_5_0": "64f840432d0f0bfed0b327be838033205253cef7531a883c7c338c54e600a4dc",
+   "sealed_output_sha256": "3066f8f27b8636dc3df7cd3044cc86af4309d2ab716f3194c5d0ad7c916c31b0",
+   "sha256_after_token_swap": "3066f8f27b8636dc3df7cd3044cc86af4309d2ab716f3194c5d0ad7c916c31b0",
+   "version_token_occurrences": 4
+  },
+  {
+   "id": "ranged_volume_1",
+   "matches_sealed_after_swap": true,
+   "other_1_5_0_occurrences": 0,
+   "output_sha256_1_5_0": "116574c316f5cada59ca370a03dc132f9f4eb5a218d7455cd127965328590ee3",
+   "sealed_output_sha256": "9083a3e6031734ca77c02e47618840307def1e22fe1b7a2a67bf33b19ed9dca5",
+   "sha256_after_token_swap": "9083a3e6031734ca77c02e47618840307def1e22fe1b7a2a67bf33b19ed9dca5",
+   "version_token_occurrences": 5
+  },
+  {
+   "id": "ranged_volume_point_1",
+   "matches_sealed_after_swap": true,
+   "other_1_5_0_occurrences": 0,
+   "output_sha256_1_5_0": "72dc8441dbfc6cac5d1717dc74941684c56671c6282da8ce793009ac368f2977",
+   "sealed_output_sha256": "6f4de67a65d63f1b25fd951ff774f333d77a250a2d14f3f15e0959f5eebad074",
+   "sha256_after_token_swap": "6f4de67a65d63f1b25fd951ff774f333d77a250a2d14f3f15e0959f5eebad074",
+   "version_token_occurrences": 5
+  },
+  {
+   "id": "required_external_h3",
+   "matches_sealed_after_swap": true,
+   "other_1_5_0_occurrences": 0,
+   "output_sha256_1_5_0": "929e0a2c31c84644540c40235769509b69aa2e451a0130ee2f9d8a0c89a8c022",
+   "sealed_output_sha256": "2a6ba453b58e6a9284f7f4b6535e4c4136a616a1db841c749ab39454b5b29a3f",
+   "sha256_after_token_swap": "2a6ba453b58e6a9284f7f4b6535e4c4136a616a1db841c749ab39454b5b29a3f",
+   "version_token_occurrences": 5
+  },
+  {
+   "id": "zero_response_reference",
+   "matches_sealed_after_swap": true,
+   "other_1_5_0_occurrences": 0,
+   "output_sha256_1_5_0": "574fbfb45c11018eaebb521dffed90a3b7db2667e80f977c762b71c996286be1",
+   "sealed_output_sha256": "5018aad05d3e8ecb5abcf18f5ee3d76bd2d53ca9117d213acda27b9c3f1ab13e",
+   "sha256_after_token_swap": "5018aad05d3e8ecb5abcf18f5ee3d76bd2d53ca9117d213acda27b9c3f1ab13e",
+   "version_token_occurrences": 3
+  }
+ ],
+ "ci_run": 38901865435,
+ "commit": "79a2d36963af061b34cfe3d8ff50d17874f273cc",
+ "failed_field": "g1 persisted_result_matches",
+ "failed_step": "P110 native composition basis and witness verification",
+ "schema": "actinv-release-v1.5.0-p110-version-binding-1",
+ "token_swap": "b'actinv-core 1.5.0' -> b'actinv-core 1.4.0'"
+}
