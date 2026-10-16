@@ -32,10 +32,20 @@ pub fn variance(x: &[f64]) -> f64 {
     (ss - comp * comp / x.len() as f64) / (x.len() - 1) as f64
 }
 
-/// Sample standard deviation (see [`variance`]).
+/// Sample standard deviation (see [`variance`]). `NaN` for fewer than two values: one value has no
+/// spread estimate, and `NaN.max(0.0)` would otherwise turn it into 0.
 pub fn std_dev(x: &[f64]) -> f64 {
-    variance(x).max(0.0).sqrt()
+    let v = variance(x);
+    if v.is_nan() {
+        f64::NAN
+    } else {
+        v.max(0.0).sqrt()
+    }
 }
+
+/// Fewest samples for which correlations and bootstrap standard errors are reported: with two
+/// pairs every non-tied parameter correlates perfectly, and two values bootstrap to nothing.
+pub const MIN_SAMPLES: usize = 3;
 
 /// Moment skewness `g1 = m3 / m2^(3/2)` with population central moments (divisor `n`).
 /// `None` for fewer than three values or a constant sample.
@@ -58,12 +68,42 @@ pub fn sorted(x: &[f64]) -> Vec<f64> {
 }
 
 /// Exact order-statistic percentile (nearest rank, Hyndman-Fan type 1): the smallest sample
-/// value `x_(k)` with `k / n >= p / 100`, i.e. `k = max(1, ceil(n p / 100))`. Always returns a
-/// value that occurs in the sample. `sorted` must be ascending and non-empty; `p` in `[0, 100]`.
+/// value `x_(k)` with `k / n >= p / 100`, i.e. `k = max(1, ceil(n p / 100))`, the rank computed
+/// in exact integer arithmetic on the decimal value of `p`. Always returns a value that occurs
+/// in the sample. `sorted` must be ascending and non-empty; `p` in `[0, 100]`.
 pub fn percentile_sorted(sorted: &[f64], p: f64) -> f64 {
     let n = sorted.len();
-    let k = ((n as f64 * p) / 100.0).ceil().max(1.0) as usize;
-    sorted[k.min(n) - 1]
+    sorted[percentile_rank(n, p).min(n) - 1]
+}
+
+/// `max(1, ceil(n p / 100))` with `p` taken as the shortest decimal that rounds to the same
+/// `f64` (so 2.2 is 2.2, not 2.20000000000000017...), scaled to an integer.
+fn percentile_rank(n: usize, p: f64) -> usize {
+    if p.is_nan() || p <= 0.0 {
+        return 1;
+    }
+    // shortest round-trip digits: "d.ddde-x" style, normalised to digits * 10^-scale
+    let text = format!("{p:e}");
+    let (mantissa, exponent) = text.split_once('e').unwrap_or((text.as_str(), "0"));
+    let exponent: i32 = exponent.parse().unwrap_or(0);
+    let (whole, frac) = mantissa.split_once('.').unwrap_or((mantissa, ""));
+    let digits: u128 = format!("{whole}{frac}").parse().unwrap_or(0);
+    // p = digits * 10^(exponent - frac.len())
+    let power = exponent - frac.len() as i32;
+    // k = ceil(n * digits * 10^power / 100) = ceil(n * digits / 10^(2 - power))
+    let numerator = n as u128 * digits;
+    let shift = 2 - power;
+    let k = if shift <= 0 {
+        // p is a large integer multiple of 10^|shift|: never exceeds 100 in range, keep it exact anyway
+        numerator.saturating_mul(10u128.pow(shift.unsigned_abs().min(30)))
+    } else if shift > 38 {
+        // the quotient is below 1 for any realistic n: ceil of a positive number
+        u128::from(numerator > 0)
+    } else {
+        let divisor = 10u128.pow(shift as u32);
+        numerator / divisor + u128::from(!numerator.is_multiple_of(divisor))
+    };
+    (k.min(n as u128) as usize).max(1)
 }
 
 /// Fixed-width histogram over `[min, max]`; the last bin is closed on the right.
@@ -164,14 +204,18 @@ pub fn complete_pairs(x: &[Option<f64>], y: &[Option<f64>]) -> (Vec<f64>, Vec<f6
 }
 
 /// Pairwise-complete Pearson matrix over aligned series (`None` entries are missing samples).
-/// Entry `[i][j]` is `None` when fewer than two complete pairs exist or either side is constant.
+/// Entry `[i][j]` is `None` when fewer than [`MIN_SAMPLES`] complete pairs exist or either side is constant.
 pub fn pearson_matrix(series: &[Vec<Option<f64>>]) -> Vec<Vec<Option<f64>>> {
     let k = series.len();
     let mut out = vec![vec![None; k]; k];
     for i in 0..k {
         for j in i..k {
             let (a, b) = complete_pairs(&series[i], &series[j]);
-            let r = pearson(&a, &b);
+            let r = if a.len() < MIN_SAMPLES {
+                None
+            } else {
+                pearson(&a, &b)
+            };
             out[i][j] = r;
             out[j][i] = r;
         }
@@ -241,7 +285,7 @@ pub struct BootstrapSe {
 
 /// Nonparametric bootstrap: `resamples` with-replacement draws of the sample (fixed `seed`), the
 /// standard error of each statistic being the sample std of its replicates. `None` for fewer
-/// than two values or fewer than two resamples.
+/// than [`MIN_SAMPLES`] values or fewer than two resamples.
 pub fn bootstrap_se(
     x: &[f64],
     percentiles: &[f64],
@@ -249,7 +293,7 @@ pub fn bootstrap_se(
     seed: u64,
 ) -> Option<BootstrapSe> {
     let n = x.len();
-    if n < 2 || resamples < 2 {
+    if n < MIN_SAMPLES || resamples < 2 {
         return None;
     }
     let mut rng = SplitMix(seed);

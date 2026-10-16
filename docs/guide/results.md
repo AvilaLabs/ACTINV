@@ -23,11 +23,11 @@ For a sample of known mass in grams, multiply the per-gram activity or heat by t
 
 Photon sources, dose-response quantities, pathways, uncertainty, radiological responses, and damage observables depend on the requested options and required data. An absent field means that output was not emitted; it is not a zero result.
 
-Photon group values represent source strength integrated over each energy group. Contact gamma dose is a semi-infinite-slab screening proxy; use separate transport for geometry-dependent dose. Photon power below the response's lowest energy (1 keV for the NIST response) is left out of the proxy and shown as `dose_response_power_coverage` below one and as `dose_response_subthreshold_power_W_g`. The proxy is still reported when that power is at most `1e-4` of the step's photon power, because the missing low-energy response then changes it by at most about `1e-3`; above that share it is `null`. Radiological indices use your selected coefficient table (including the `a2` transport index, which needs your A2 table). NRT dpa uses the supplied damage-energy table and displacement energies. Kerma heating uses the supplied kerma table. [Scope and qualification](qualification.md) explains these boundaries.
+Photon group values represent source strength integrated over each energy group. Contact gamma dose is a semi-infinite-slab screening proxy; use separate transport for geometry-dependent dose. Photon power below the response's lowest energy (1 keV for the NIST response) is left out of the proxy and shown as `dose_response_power_coverage` below one and as `dose_response_subthreshold_power_W_g`. The proxy is still reported when that power is at most `1e-4` of the step's photon power, because the missing low-energy response then changes it by at most about `1e-3`; above that share it is `null`. Radiological indices use your selected coefficient table, including the `a2` transport index (A1 and A2 tables are [bundled](specification.md#bundled-regulatory-tables), or supply your own). A nuclide a table lists as unlimited, or a progeny whose listed parent is present, is counted as covered with zero contribution and named in `unlimited_active_nuclides` or `covered_by_parent` instead of `missing_active_nuclides`. NRT dpa uses the supplied damage-energy table and displacement energies. Kerma heating uses the supplied kerma table. [Scope and qualification](qualification.md) explains these boundaries.
 
-Two photon components are emitted only when the specification asks for them. With `photon.point_source`, `photon_source.point_source_dose` holds the dose rate in Sv/h at the configured distance from the step's photon source treated as a point source of `material.mass_g` (1 g by default, FISPACT-II's convention), plus the same dose per gram. It is the manual's Eq. (63): group-centroid energies, air energy absorption, optional air transmission, no build-up. A `null` dose carries an `unavailable_reason`, and `subthreshold_power_W` and `excluded_power_W` show the power it could not use. With `photon.bremsstrahlung`, `photon_source.bremsstrahlung` is a separate source and dose for the listed beta emitters, following the manual's thin-target approximation from each nuclide's mean beta energy and the material's mean atomic number. It is never merged into the decay-photon groups or dose proxies, so the total dose from both is the sum of the two fields. Nuclides whose inputs are missing are named in `missing_inputs`, and `inputs_complete` is then `false`. Both are screening estimates with the limits described under [photon options](specification.md#photon-options), not transport results.
+Two photon components are emitted only when the specification asks for them. With `photon.point_source`, `photon_source.point_source_dose` holds the absorbed dose rate in air at the configured distance from the step's photon source treated as a point source of `material.mass_g` (1 g by default, FISPACT-II's convention), plus the same dose per gram. The field names say `Sv_h`, but the quantity is the air kerma rate, numerically Gy/h (the contact proxy calls the same quantity `Gy_h`); no quality factor or conversion to ambient dose equivalent H\*(10) is applied, and H\*(10) is roughly 1.1 to 1.4 times the air kerma between 0.1 and 3 MeV. It is the manual's Eq. (63): group-centroid energies, air energy absorption, optional air transmission, no build-up. A `null` dose carries an `unavailable_reason`, and `subthreshold_power_W` and `excluded_power_W` show the power it could not use; decay-record gamma energy with no photon spectrum also makes it `null` and counts as excluded power. With `photon.bremsstrahlung`, `photon_source.bremsstrahlung` is a separate source and dose for the listed beta emitters, following the manual's thin-target approximation from each nuclide's beta-minus electrons per decay (`electrons_per_decay`, from its decay branching), their mean energy and the material's mean atomic number. Group energy follows the manual's bin-midpoint rule, so `energy_closure` (emitted over the analytic `a Z E0^2 / 2` per electron) is not 1, and `zero_lower_edge_energy_fraction` is the share of that energy in the empty zero-lower-edge group. It is never merged into the decay-photon groups or dose proxies, so the total dose from both is the sum of the two fields. Nuclides whose inputs are missing are named in `missing_inputs`, and `inputs_complete` is then `false`. Both are screening estimates with the limits described under [photon options](specification.md#photon-options), not transport results.
 
-The `pathways` array identifies a source and first product with ranked contributions in trace mode. It does not enumerate every intermediate member of a reaction chain; the opt-in [`pathway_routes`](#read-the-pathway-routes) analysis does.
+The `pathways` array identifies a source and first product with ranked contributions in trace mode, including production fed by the decay of a radioactive bulk nuclide. `pathway_closure` is the worst relative difference between a nuclide's listed chains and its inventory, and is 1 when a nuclide in the inventory has no chain at all. The array does not enumerate every intermediate member of a reaction chain; the opt-in [`pathway_routes`](#read-the-pathway-routes) analysis does.
 
 ## Read the pathway routes
 
@@ -45,6 +45,8 @@ first product only, in trace mode; `pathway_routes` enumerates the whole reactio
 | `explained_fraction` | `paths / total`. |
 | `loop_atoms_per_g` | Portion of the reported routes carried by loop walks. |
 | `paths_dropped_by_cap` | Routes that passed the floors but fell outside `max_paths`. |
+| `candidates_dropped_by_cap` | Candidate routes beyond `8 x max_paths` that were never integrated (smallest upper bound dropped first). Absent when none. |
+| `search_truncated`, `truncated_sources` | The route search for this target ran out of its tree-node budget, and the sources whose tree was cut short. Absent when the search finished. |
 | `paths[]` | Routes ranked by contribution (see below). |
 | `generic[]` | Routes grouped by their edge-type sequence, for example `(n,g) b-`, with `n_paths`, `atoms_per_g` and `fraction`. |
 
@@ -52,12 +54,16 @@ Each route in `paths[]` gives its `source`, the `nuclides` from source to target
 reaction such as `(n,g)`, `(n,2n)`, `fission`, or a decay mode: `b-`, `b+/EC`, `IT`, `a`, `n`, `p`), `atoms_per_g`
 at the final step, `fraction` of the target's total, and `is_loop`. Loop walks add `loop_gain` and `base_path`;
 `by_step: true` adds `atoms_per_g_by_step`. Reaction names follow neutron conventions; other projectiles use the ENDF
-`MTnnn` number. An edge that the label tables do not cover is named `edge`.
+`MTnnn` number. Spontaneous-fission products are `SF`, atoms from a schedule `feed` are `feed`, and an edge into the
+removal sink is `removal`; an edge that the label tables do not cover is named `edge`. Labels come from the decay and
+reaction tables, not from this run's rates, so a library reaction is named even if its collapsed rate is zero here.
 
 The residual is the accounting check. It is small when the floors keep the routes that matter and `max_depth` is
 long enough; a large residual means the target is fed by many small routes, by chains longer than `max_depth`, or
 by loops beyond `loop_floor`. Lower `path_floor` and raise `max_depth` and `max_paths` to chase it, and read
-`search_truncated`, `explored_walks` and `candidates_dropped_by_cap` for the search's own limits. In a coupled run a
+`search_truncated`, `explored_walks` and `candidates_dropped_by_cap` (per target, and in the top-level `notes`) for the
+search's own limits. A walk that revisits a nuclide must also pass `loop_floor`, so the residual can exceed
+`path_floor` unless `loop_floor` is near zero. In a coupled run a
 source that is also the target has a one-node route (the surviving initial atoms).
 Contributions are exact for the routes listed, but the dense integration works to the absolute precision of its
 largest term, so a route carrying under about 1e-10 of the largest term in its own chain is below the method's
@@ -70,6 +76,10 @@ quantity is per gram of initial material, except the `absolute` and `per_cm3` to
 same population rule as the rest of the output: constant bulk atoms in trace mode (plus the tracked population of a
 reservoir nuclide), the evolved state elsewhere, and bulk nuclides absent from the chain at their constant atoms.
 The leakage, unit and removal sinks are not nuclide states.
+
+In trace mode the initial material is held constant, so `nuclides` shows each initial nuclide at its constant bulk
+atoms: an initial radionuclide keeps a constant activity and heat there, and `mass_g` is not a closure test. The
+[depletion table](#depletion-table) gives the analytic view of the same step.
 
 `nuclides` lists one row per nuclide, descending by `atoms`:
 
@@ -114,36 +124,47 @@ much of each initial-material nuclide the step removed and which channels remove
 `model` is `coupled` when the solver evolves the initial nuclides, and `trace_analytic` in trace mode, where the
 reservoir is held constant in the inventory and is instead depleted analytically,
 N(t) = N(0) exp(−∫ removal rate dt), the same first-order law as the ledger's `max_burnup_fraction`. Analytic
-depletion has no ingrowth from other nuclides. Initial nuclides absent from the decay library carry no rates and
-are listed under `ledger.depletion.initial_nuclides_absent_from_decay_library`.
+depletion has no ingrowth from other nuclides. An initial nuclide absent from the decay library has no row at
+all; the ledger lists it under `ledger.depletion.initial_nuclides_absent_from_decay_library`, written as
+`<ZA>_<LISO>` (for example `26056_0` for Fe-56, `47110_1` for Ag-110m), not in the `Fe56` style of the table.
 
-`nuclides` has one row per initial nuclide, largest first:
+`nuclides` has one row per initial nuclide that is in the decay library, largest first:
 
 | Field | Meaning |
 | --- | --- |
 | `nuclide`, `Z`, `A`, `LISO` | Name and identity |
 | `initial_atoms_per_g`, `atoms_start_per_g`, `atoms_end_per_g` | Atoms per gram of initial material at t = 0, at the start of the step and at its end |
-| `depleted_atoms_per_g`, `depleted_fraction` | Start minus end, and that over the start, for this step. Net of ingrowth from other nuclides and of a partition or removal applied at the step start |
+| `depleted_atoms_per_g`, `depleted_fraction` | Start minus end, and that over the start, for this step. Net of ingrowth from other nuclides (a `feed` into an initial nuclide, or production from another nuclide, shows up as negative depletion with no channel) and of a partition applied at the step start |
 | `cumulative_depleted_atoms_per_g`, `cumulative_depleted_fraction` | Initial minus end, and that over the initial atoms |
-| `removal_rate_per_s` | Total removal rate per atom: decay plus every reaction channel |
+| `removal_rate_per_s` | Total removal rate per atom: decay, the schedule's first-order `removal` and every reaction channel. Exactly `0` when nothing removes the nuclide |
 | `channels` | The removal split, descending by rate |
 | `removal_rate_relative_standard_uncertainty` | With MF=33 covariance and only when every channel is covered |
-| `uncertainty_covered_share` | With MF=33 covariance: the share of the removal carried by channels that have an uncertainty |
+| `uncertainty_covered_share` | With MF=33 covariance and a nonzero removal rate: the share of the removal carried by channels that have an uncertainty |
 
-Each channel has `channel` (`decay` or `MT<n>`), `kind`, `mt`, `reaction` (the conventional name such as `(n,g)` for
+Each channel has `channel` (`decay`, `removal` or `MT<n>`), `kind` (`decay`, `removal` or `reaction`), `mt`, `reaction` (the conventional name such as `(n,g)` for
 a neutron projectile), `rate_per_s`, `share` and, with covariance, `relative_standard_uncertainty`.
 
 The rates are the solver's own, not a recomputation. A reaction channel is the sum of the nuclide's loss rows with
 that MT, collapsed under the step's spectrum with self-shielding, `options.rate_scale` and named overrides applied,
 times the flux multiplier the step ran at (the time-weighted mean for a power-driven step). The decay channel is
-the effective decay constant after `decay_scale` and half-life overrides. The channels therefore sum to
-`removal_rate_per_s`, the diagonal of the step matrix, and the shares sum to one. A reaction whose loss row is
-absent from the library is not listed. Fission appears as `MT18`.
+the effective decay constant after `decay_scale` and half-life overrides. The `removal` channel is the
+first-order rate a schedule step's `removal` map declares for the nuclide (a nuclide or element selector), not
+scaled by the flux multiplier and present even in a step with no flux. The channels therefore sum to
+`removal_rate_per_s`, the diagonal of the step matrix, and the shares sum to one. A `feed` is a source, not a
+removal, so it has no channel. In trace mode the `removal` of an initial nuclide that is not also fed is not applied
+to the reservoir (the ledger names these exemptions), so it has no channel; a fed, removable reservoir nuclide
+does. A reaction whose loss row is absent from the library is not listed. Fission appears as `MT18`. The analytic
+fractions of trace mode are computed with `expm1`, so they keep full precision at the tiny exponents trace mode
+runs at.
 
 The uncertainty of a reaction channel is the flux-weighted collapse of the MF=33 covariance for its loss rows, the
 same collapse the uncertainty bands use: for weights w<sub>g</sub> = σ<sub>g</sub>φ<sub>g</sub> / Σσφ it is
 √(wᵀCw) on the relative covariance. A decay channel takes the half-life uncertainty of the decay data, or a
-`half_life_uncertainty` override. The total includes the correlation between a nuclide's reaction channels from the
+`half_life_uncertainty` override, whatever `uncertainty.channels` lists (the bands add decay-constant uncertainty
+only when `decay_constants` is a listed channel, so the table and the bands can differ there). A `removal` channel
+is an exact input and carries an uncertainty of 0. A reaction channel with a loss row the covariance does not cover,
+or whose covariance block was excluded as defective (asymmetric or not positive semidefinite, as in the ledger's
+`excluded_blocks`), has no uncertainty and is not counted in `uncertainty_covered_share`. The total includes the correlation between a nuclide's reaction channels from the
 cross-MT covariance blocks. Fission-yield, flux and composition uncertainty do not enter a removal rate.
 
 ## Fission count, burn-up and spontaneous-fission neutrons
@@ -189,8 +210,10 @@ a zero result.
 | `n_contributing_nuclides`, `other_heating_W_per_g` | Nuclides with nonzero heating, and the heating of those not listed | W/g |
 | `covered_atom_fraction` | Share of the step's atoms carried by nuclides with a kerma row; the rest contribute nothing | |
 
-Heating comes only from nuclides with a table row. A transmutation product without a row adds no heating, so
-`covered_atom_fraction` below one is a lower bound on the heating, not a zero.
+Heating comes only from nuclides with a table row, and an element row (`Fe`) is applied to every isotope and
+transmutation product of that element, so a high `covered_atom_fraction` says the rows exist, not that they are
+nuclide-specific. A transmutation product without a row adds no heating, so `covered_atom_fraction` below one is a
+lower bound on the heating, not a zero.
 
 | `power` field | Meaning |
 | --- | --- |
@@ -200,12 +223,14 @@ Heating comes only from nuclides with a table row. A transmutation product witho
 | `flux_multiplier_per_substep`, `flux_per_substep_cm2_s` | The achieved multiplier in each sub-interval and the resulting total flux (particles cm-2 s-1) |
 | `mean_flux_multiplier` | Time-weighted mean multiplier; this is the step's top-level `flux`, and drives `flux_weighted_time_s` and fluence |
 | `max_power_drift` | Largest relative departure of a sub-interval's end power from the request |
-| `converged` | `max_power_drift <= tolerance`. `false` means `max_substeps` was reached first |
+| `converged` | `max_power_drift <= tolerance`. `false` means `max_substeps` was reached first; `actinv run` prints a warning on stderr for each such step |
 | `refinement[]` | Each attempt, coarsest first: `substeps` tried and its `max_power_drift` |
 | `estimated_flux_multiplier` | The start-of-run estimate used for pruning and the burnup-mode choice before the solve |
 
-The ledger's `kerma` entry records the table hash, `require_complete`, the material nuclides without a row, the
-heating model and units, and for power runs the number of power steps, total sub-intervals, worst drift and the
+The ledger's `kerma` entry records the table hash, `require_complete`, the material nuclides without a row (a
+composition isotope with no decay record counts as without one: it is not a chain state and heats nothing), for a
+table with damage-energy rows `damage_energy_uncovered_composition_targets` (chain nuclides with a heating row and
+no damage row, which add nothing to `damage_energy_eV_per_g_s`), the heating model and units, and for power runs the number of power steps, total sub-intervals, worst drift and the
 step numbers that did not converge. The certificate's `kerma` entry carries the table's provenance and
 `inputs.kerma_table` its computed hash. The schedule ledger's `flux_weighted_time_s` and `fluence_n_cm2` use the
 achieved multipliers of power-driven steps.

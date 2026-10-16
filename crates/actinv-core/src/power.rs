@@ -96,12 +96,35 @@ where
         for k in 0..n {
             let rate = heating_per_unit(&y);
             if !rate.is_finite() || rate <= 0.0 {
-                return Err(format!(
-                    "power-driven step: the material has no kerma heating at the start of \
-                     sub-interval {} of {n} (heating per unit flux multiplier {rate}); the kerma \
-                     table covers none of the populated nuclides or the spectrum is empty",
-                    k + 1
-                ));
+                let refined = if n > 1 {
+                    format!(
+                        "; the {n}-way refinement of this step began after a coarser attempt of \
+                         {} sub-interval(s) had run",
+                        n / 2
+                    )
+                } else {
+                    String::new()
+                };
+                let location = format!("at the start of sub-interval {} of {n}", k + 1);
+                return Err(if rate.is_nan() || rate.is_infinite() {
+                    format!(
+                        "power-driven step: the kerma heating {location} is not finite \
+                         (heating per unit flux multiplier {rate}){refined}"
+                    )
+                } else if rate < 0.0 {
+                    format!(
+                        "power-driven step: the net kerma heating {location} is negative \
+                         (heating per unit flux multiplier {rate}): the table rows of the \
+                         populated nuclides sum below zero under this spectrum, so no positive \
+                         flux delivers a positive power{refined}"
+                    )
+                } else {
+                    format!(
+                        "power-driven step: the material has no kerma heating {location} \
+                         (heating per unit flux multiplier {rate}); the kerma table covers none \
+                         of the populated nuclides or the spectrum is empty{refined}"
+                    )
+                });
             }
             let multiplier = target / rate;
             let (next, clipped) = propagate(&y, multiplier, h)?;

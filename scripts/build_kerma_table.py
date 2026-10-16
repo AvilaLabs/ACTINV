@@ -329,6 +329,13 @@ def build_table(
     for name, row in damage.items():
         if any(not math.isfinite(v) or v < 0.0 for v in row):
             raise TapeError(f"target {name} MT=444 has a negative or nonfinite group value")
+    if damage and len(damage) < len(targets):
+        missing = sorted(set(targets) - set(damage))
+        print(
+            f"warning: {len(missing)} of {len(targets)} targets have no MT=444 damage-energy row "
+            f"and will add nothing to damage energy: {', '.join(missing)}",
+            file=sys.stderr,
+        )
     table: dict = {
         "format": FORMAT,
         "source": {

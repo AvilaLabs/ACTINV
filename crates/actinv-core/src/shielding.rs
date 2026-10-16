@@ -668,25 +668,44 @@ impl ResonanceLine {
     }
 }
 
+/// The usable resolved lines of one MF=2 isotope and how many otherwise usable levels were dropped for
+/// lying outside the range whose parameters list them.
+#[derive(Debug, Default)]
+struct ResolvedLines {
+    lines: Vec<ResonanceLine>,
+    outside_range: usize,
+}
+
 /// The resolved (LRU=1) Breit-Wigner, Reich-Moore and R-matrix-limited
-/// resonances of the MF=2 isotope whose ZA is `za`. R-matrix-limited (LRF=7)
+/// resonances of the MF=2 isotope whose ZAI is `zai`, each kept only when it lies in
+/// `[EL, EH]` of the range that lists it (an LRF=7 spin group routinely carries poles above EH that
+/// feed the in-range cross section but are not resolved peaks). R-matrix-limited (LRF=7)
 /// spin groups give Gamma_n, Gamma_gamma and Gamma by summing the neutron,
 /// capture and all channel widths; a feature that cannot be read that way is
 /// an error rather than silently dropped.
-fn resolved_lines(evaluation: &ResonanceEvaluation, za: i32) -> Result<Vec<ResonanceLine>, String> {
-    let mut out = Vec::new();
+fn resolved_lines(evaluation: &ResonanceEvaluation, zai: i32) -> Result<ResolvedLines, String> {
+    let mut out = ResolvedLines::default();
     for isotope in evaluation
         .isotopes
         .iter()
-        .filter(|isotope| isotope.zai == za || evaluation.isotopes.len() == 1)
+        .filter(|isotope| isotope.zai == zai)
     {
         for range in &isotope.ranges {
+            let mut keep = |line: Option<ResonanceLine>| {
+                if let Some(line) = line {
+                    if (range.energy_min..=range.energy_max).contains(&line.energy_ev) {
+                        out.lines.push(line);
+                    } else {
+                        out.outside_range += 1;
+                    }
+                }
+            };
             match &range.data {
                 RangeData::BreitWigner(resolved) => {
                     for group in &resolved.groups {
                         for resonance in &group.resonances {
                             let total = legacy_effective_total_width(group, resonance);
-                            out.extend(ResonanceLine::from_widths(
+                            keep(ResonanceLine::from_widths(
                                 resonance.energy,
                                 resonance.spin,
                                 resolved.spin,
@@ -706,7 +725,7 @@ fn resolved_lines(evaluation: &ResonanceEvaluation, za: i32) -> Result<Vec<Reson
                                 + resonance.capture
                                 + resonance.fission_a.abs()
                                 + resonance.fission_b.abs();
-                            out.extend(ResonanceLine::from_widths(
+                            keep(ResonanceLine::from_widths(
                                 resonance.energy,
                                 resonance.spin,
                                 resolved.spin,
@@ -726,7 +745,7 @@ fn resolved_lines(evaluation: &ResonanceEvaluation, za: i32) -> Result<Vec<Reson
                         )
                     })?;
                     for resonance in resonances {
-                        out.extend(ResonanceLine::from_widths(
+                        keep(ResonanceLine::from_widths(
                             resonance.energy,
                             resonance.spin,
                             resonance.target_spin,
@@ -796,8 +815,12 @@ pub struct GeometryReport {
     /// nuclide -> per-group applied factors with their energy ranges.
     pub factors: BTreeMap<String, Vec<GeometryGroupFactor>>,
     /// Nuclides with resonance data that took no part (not in the material
-    /// or not chosen).
+    /// or not chosen), and MF=2 isotopes with no usable resolved resonance.
     pub resonance_data_unused: Vec<String>,
+    /// nuclide -> usable levels dropped because they lie outside the `[EL, EH]` of the range that lists
+    /// them (R-matrix poles above the resolved range); empty maps are not serialized.
+    #[serde(skip_serializing_if = "BTreeMap::is_empty")]
+    pub resonances_outside_range: BTreeMap<String, usize>,
 }
 
 /// Parsed geometry-mode inputs: the target size and the resolved resonances
@@ -808,16 +831,24 @@ pub struct PreparedGeometry {
     length_cm: f64,
     height_cm: Option<f64>,
     effective_length_cm: f64,
-    density_g_cm3: f64,
+    /// The geometry's own density; `None` takes the material's at plan time.
+    density_g_cm3: Option<f64>,
     capture_only: bool,
     choose: Vec<(String, ChooseEntry)>,
     lines: BTreeMap<(i32, i32), Vec<ResonanceLine>>,
+    /// Levels dropped per nuclide for lying outside their range's `[EL, EH]`.
+    outside_range: BTreeMap<(i32, i32), usize>,
+    /// MF=2 isotopes of a multi-isotope evaluation without any usable resolved resonance.
+    isotopes_without_lines: Vec<(i32, i32)>,
 }
 
 impl PreparedGeometry {
     /// `files` holds (label, ENDF-6 text) per declared resonance file; the
     /// caller has already verified each file's hash. Every evaluation must
-    /// carry MF=2/MT=151 with resolved resonances.
+    /// carry MF=2/MT=151 with resolved resonances. A geometry without its own
+    /// density takes `material.density_g_cm3` when planned. Each MF=2 isotope is
+    /// keyed by its own ZAI (the MAT's isomer number applies to the isotope that
+    /// is the MAT's own ZA); the MAT's ZA never selects among isotopes.
     pub fn from_evaluations(
         geometry: &crate::spec::SelfShieldingGeometry,
         files: &[(String, String)],
@@ -825,10 +856,8 @@ impl PreparedGeometry {
         let shape = GeometryShape::parse(&geometry.shape)?;
         let effective_length_cm =
             shape.effective_length_cm(geometry.length_cm, geometry.height_cm)?;
-        if !geometry.density_g_cm3.is_finite() || geometry.density_g_cm3 <= 0.0 {
-            return Err(
-                "self_shielding.geometry.density_g_cm3 must be a positive finite number".into(),
-            );
+        if geometry.density_g_cm3.is_some() {
+            geometry.effective_density(None)?;
         }
         let capture_only = match geometry.reactions.as_str() {
             "all" => false,
@@ -854,30 +883,50 @@ impl PreparedGeometry {
             choose.push((raw.clone(), entry));
         }
         let mut lines: BTreeMap<(i32, i32), Vec<ResonanceLine>> = BTreeMap::new();
+        let mut outside_range = BTreeMap::new();
+        let mut isotopes_without_lines = Vec::new();
         for (label, text) in files {
             let evaluations =
                 parse_evaluations(text, Some(Projectile::Neutron)).map_err(|error| {
                     format!("self_shielding.geometry resonance file {label}: {error}")
                 })?;
             for evaluation in &evaluations {
-                let key = (evaluation.metadata.za, evaluation.metadata.liso);
-                let name = name_of(key.0, key.1);
+                let mat_name = name_of(evaluation.metadata.za, evaluation.metadata.liso);
                 let Some(resonance) = &evaluation.resonance else {
                     return Err(format!(
-                        "self_shielding.geometry resonance file {label}: {name} has no MF=2/MT=151 resonance parameters; geometry self-shielding needs resolved resonance data"
+                        "self_shielding.geometry resonance file {label}: {mat_name} has no MF=2/MT=151 resonance parameters; geometry self-shielding needs resolved resonance data"
                     ));
                 };
-                let found = resolved_lines(resonance, evaluation.metadata.za).map_err(|error| {
-                    format!("self_shielding.geometry resonance file {label}: {name}: {error}")
-                })?;
-                if found.is_empty() {
-                    return Err(format!(
-                        "self_shielding.geometry resonance file {label}: {name} has no usable resolved (LRU=1) resonances"
-                    ));
+                let mut any_lines = false;
+                for isotope in &resonance.isotopes {
+                    let liso = if isotope.zai == evaluation.metadata.za {
+                        evaluation.metadata.liso
+                    } else {
+                        0
+                    };
+                    let key = (isotope.zai, liso);
+                    let name = name_of(key.0, key.1);
+                    let found = resolved_lines(resonance, isotope.zai).map_err(|error| {
+                        format!("self_shielding.geometry resonance file {label}: {name}: {error}")
+                    })?;
+                    if found.lines.is_empty() {
+                        isotopes_without_lines.push(key);
+                        continue;
+                    }
+                    any_lines = true;
+                    if lines.insert(key, found.lines).is_some() {
+                        return Err(format!(
+                            "self_shielding.geometry resonance files supply {name} more than once"
+                        ));
+                    }
+                    if found.outside_range > 0 {
+                        outside_range.insert(key, found.outside_range);
+                    }
                 }
-                if lines.insert(key, found).is_some() {
+                if !any_lines {
                     return Err(format!(
-                        "self_shielding.geometry resonance files supply {name} more than once"
+                        "self_shielding.geometry resonance file {label}: {mat_name} has no usable resolved (LRU=1) resonances in any of its {} MF=2 isotope(s)",
+                        resonance.isotopes.len()
                     ));
                 }
             }
@@ -891,6 +940,8 @@ impl PreparedGeometry {
             capture_only,
             choose,
             lines,
+            outside_range,
+            isotopes_without_lines,
         })
     }
 
@@ -910,6 +961,20 @@ impl PreparedGeometry {
         boundaries_ev: &[f64],
         require_complete: bool,
     ) -> Result<ShieldPlan, String> {
+        self.plan_for_material(composition_atoms, boundaries_ev, None, require_complete)
+    }
+
+    /// [`Self::plan`] for a material of known density: a geometry without its own density takes
+    /// `material_density_g_cm3`, and the two must agree when both are given.
+    pub fn plan_for_material(
+        &self,
+        composition_atoms: &BTreeMap<(i32, i32), f64>,
+        boundaries_ev: &[f64],
+        material_density_g_cm3: Option<f64>,
+        require_complete: bool,
+    ) -> Result<ShieldPlan, String> {
+        let density_g_cm3 =
+            crate::spec::resolve_geometry_density(self.density_g_cm3, material_density_g_cm3)?;
         if boundaries_ev.len() < 2
             || boundaries_ev
                 .iter()
@@ -933,13 +998,19 @@ impl PreparedGeometry {
         let mut applied: BTreeMap<String, BTreeMap<usize, [f64; 4]>> = BTreeMap::new();
         let mut factors: BTreeMap<String, Vec<GeometryGroupFactor>> = BTreeMap::new();
         let mut densities = BTreeMap::new();
+        let mut dropped = BTreeMap::new();
         for (&key, &atoms_per_gram) in composition_atoms {
             if !self.is_chosen(key) {
                 continue;
             }
             let name = name_of(key.0, key.1);
             let Some(lines) = self.lines.get(&key) else {
-                if self.choose.is_empty() {
+                // An isotope selected through an element entry, or by the absence of `choose`, is
+                // reported uncovered; only a nuclide named explicitly must have a file.
+                let named_explicitly = self.choose.iter().any(|(_, entry)| {
+                    matches!(entry, ChooseEntry::Nuclide(za, liso) if (*za, *liso) == key)
+                });
+                if !named_explicitly {
                     uncovered.push(name);
                     continue;
                 }
@@ -947,7 +1018,7 @@ impl PreparedGeometry {
                     "self_shielding.geometry.choose selects {name}, but no resonance file supplies it"
                 ));
             };
-            let number_density = atoms_per_gram * self.density_g_cm3;
+            let number_density = atoms_per_gram * density_g_cm3;
             // group -> (sum of w*G, sum of w, resonance count)
             let mut sums: BTreeMap<usize, (f64, f64, usize)> = BTreeMap::new();
             for line in lines {
@@ -1003,6 +1074,9 @@ impl PreparedGeometry {
             );
             applied.insert(name.clone(), rows);
             factors.insert(name.clone(), report_rows);
+            if let Some(&count) = self.outside_range.get(&key) {
+                dropped.insert(name.clone(), count);
+            }
             densities.insert(name, number_density);
         }
         if require_complete && !uncovered.is_empty() {
@@ -1011,12 +1085,17 @@ impl PreparedGeometry {
                 uncovered.join(", ")
             ));
         }
-        let unused: Vec<String> = self
+        let mut unused: Vec<String> = self
             .lines
             .keys()
             .filter(|&&key| !composition_atoms.contains_key(&key) || !self.is_chosen(key))
             .map(|&(za, liso)| name_of(za, liso))
             .collect();
+        unused.extend(
+            self.isotopes_without_lines
+                .iter()
+                .map(|&(za, liso)| name_of(za, liso)),
+        );
         Ok(ShieldPlan {
             covered,
             uncovered_targets: uncovered,
@@ -1031,11 +1110,12 @@ impl PreparedGeometry {
                 length_cm: self.length_cm,
                 height_cm: self.height_cm,
                 effective_length_cm: self.effective_length_cm,
-                density_g_cm3: self.density_g_cm3,
+                density_g_cm3,
                 reactions: if self.capture_only { "capture" } else { "all" }.into(),
                 number_density_per_cm3: densities,
                 factors,
                 resonance_data_unused: unused,
+                resonances_outside_range: dropped,
             }),
         })
     }
@@ -1045,12 +1125,14 @@ impl ShieldPlan {
     /// The plan for a `self_shielding` section: the Bondarenko table (with
     /// any dilution overrides) or the sigmoid-curve geometry, never both.
     /// `boundaries_ev` are the activation library's group boundaries.
+    #[allow(clippy::too_many_arguments)]
     pub fn build(
         table: Option<&PreparedShieldTable>,
         geometry: Option<&PreparedGeometry>,
         options: &crate::spec::SelfShieldingOptions,
         composition_atoms: &BTreeMap<(i32, i32), f64>,
         boundaries_ev: &[f64],
+        material_density_g_cm3: Option<f64>,
         temperature_K: f64,
         require_complete: bool,
     ) -> Result<ShieldPlan, String> {
@@ -1063,9 +1145,12 @@ impl ShieldPlan {
                 temperature_K,
                 require_complete,
             ),
-            (None, Some(geometry)) => {
-                geometry.plan(composition_atoms, boundaries_ev, require_complete)
-            }
+            (None, Some(geometry)) => geometry.plan_for_material(
+                composition_atoms,
+                boundaries_ev,
+                material_density_g_cm3,
+                require_complete,
+            ),
             _ => Err("self_shielding needs exactly one of table or geometry".into()),
         }
     }
@@ -1406,9 +1491,11 @@ mod tests {
             length_cm,
             height_cm: None,
             effective_length_cm: 1.5 * length_cm,
-            density_g_cm3: 19.3,
+            density_g_cm3: Some(19.3),
             capture_only,
             choose: Vec::new(),
+            outside_range: BTreeMap::new(),
+            isotopes_without_lines: Vec::new(),
             lines: BTreeMap::from([(
                 (74184, 0),
                 vec![
@@ -1524,7 +1611,7 @@ mod tests {
             shape: "foil".into(),
             length_cm: 0.01,
             height_cm: None,
-            density_g_cm3: 19.3,
+            density_g_cm3: Some(19.3),
             resonance_files: Vec::new(),
             choose: None,
             reactions: "all".into(),
@@ -1658,7 +1745,7 @@ mod tests {
                 resonance(40.0, [0.01, 0.9, 0.0]),
             ],
         );
-        let lines = resolved_lines(&evaluation, 74183).unwrap();
+        let lines = resolved_lines(&evaluation, 74183).unwrap().lines;
         assert_eq!(lines.len(), 2);
         let legacy = |energy: f64, neutron: f64, capture: f64, fission: f64| LegacyResonance {
             energy,
@@ -1681,7 +1768,7 @@ mod tests {
                 resonances: vec![legacy(10.0, 0.4, 0.02, 0.05), legacy(40.0, 0.9, 0.01, 0.0)],
             }],
         }));
-        let expected = resolved_lines(&breit_wigner, 74183).unwrap();
+        let expected = resolved_lines(&breit_wigner, 74183).unwrap().lines;
         assert_eq!(expected.len(), 2);
         for (got, want) in lines.iter().zip(&expected) {
             assert_line_close(got, want);
@@ -1725,8 +1812,8 @@ mod tests {
                 })
                 .collect(),
         );
-        let from_listed = resolved_lines(&listed, 74183).unwrap();
-        let from_reduced = resolved_lines(&reduced, 74183).unwrap();
+        let from_listed = resolved_lines(&listed, 74183).unwrap().lines;
+        let from_reduced = resolved_lines(&reduced, 74183).unwrap().lines;
         assert_eq!(from_listed.len(), 2);
         assert_eq!(from_reduced.len(), 2);
         for (got, want) in from_reduced.iter().zip(&from_listed) {
@@ -2012,6 +2099,7 @@ mod tests {
         ] {
             let mut energies: Vec<f64> = resolved_lines(&evaluation(ranges), 74183)
                 .unwrap()
+                .lines
                 .iter()
                 .map(|line| line.energy_ev)
                 .collect();

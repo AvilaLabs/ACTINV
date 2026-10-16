@@ -18,7 +18,7 @@
   {
    "id": "a2-u-fast",
    "kind": "a2",
-   "basis": "A2 for radioactive material other than special form, TBq converted to Bq. The index is the number of A2 per gram of material (FISPACT-II ATWO), so multiply by the consignment mass in grams. Uranium rows use the fast lung-absorption values; unlimited and element-level rows are omitted.",
+   "basis": "A2 for radioactive material other than special form, TBq converted to Bq. The index is the number of A2 per gram of material (FISPACT-II ATWO), so multiply by the consignment mass in grams. Uranium rows use the fast lung-absorption values; unlimited rows are listed under unlimited (zero contribution) and element-level rows are omitted. covered_by_parent lists progeny included in a parent's value (from the 173.436 footnote (b) lists).",
    "coefficients": {
     "Ac225": 6000000000.0,
     "Ac227": 90000000.0,
@@ -371,12 +371,155 @@
     "Zr88": 3000000000000.0,
     "Zr95": 800000000000.0,
     "Zr97": 400000000000.0
+   },
+   "unlimited": [
+    "Ca41",
+    "Hf182",
+    "I129",
+    "Mn53",
+    "Ni59",
+    "Pb205",
+    "Pd107",
+    "Rb87",
+    "Re187",
+    "Sm147",
+    "Tc97",
+    "Th232",
+    "U235",
+    "U236",
+    "U238",
+    "Zr93"
+   ],
+   "covered_by_parent": {
+    "Ac228": [
+     "Ra228"
+    ],
+    "Ag108": [
+     "Ag108m1"
+    ],
+    "Am242": [
+     "Am242m1"
+    ],
+    "Ba137m1": [
+     "Cs137"
+    ],
+    "Bi210": [
+     "Pb210",
+     "Ra226"
+    ],
+    "Bi211": [
+     "Ra223"
+    ],
+    "Bi212": [
+     "Pb212",
+     "Ra224",
+     "Th228"
+    ],
+    "Bi214": [
+     "Ra226",
+     "Rn222"
+    ],
+    "La140": [
+     "Ba140"
+    ],
+    "Nb97": [
+     "Zr97"
+    ],
+    "Np239": [
+     "Am243"
+    ],
+    "Pa234m1": [
+     "Th234"
+    ],
+    "Pb210": [
+     "Ra226"
+    ],
+    "Pb211": [
+     "Ra223"
+    ],
+    "Pb212": [
+     "Ra224",
+     "Th228"
+    ],
+    "Pb214": [
+     "Ra226",
+     "Rn222"
+    ],
+    "Po210": [
+     "Pb210",
+     "Ra226"
+    ],
+    "Po212": [
+     "Bi212",
+     "Pb212",
+     "Ra224",
+     "Th228"
+    ],
+    "Po214": [
+     "Ra226",
+     "Rn222",
+     "U230"
+    ],
+    "Po215": [
+     "Ra223"
+    ],
+    "Po216": [
+     "Ra224",
+     "Th228"
+    ],
+    "Po218": [
+     "Ra226",
+     "Rn222"
+    ],
+    "Pr144": [
+     "Ce144"
+    ],
+    "Ra222": [
+     "U230"
+    ],
+    "Ra224": [
+     "Th228"
+    ],
+    "Rh106": [
+     "Ru106"
+    ],
+    "Rn218": [
+     "U230"
+    ],
+    "Rn219": [
+     "Ra223"
+    ],
+    "Rn220": [
+     "Ra224",
+     "Th228"
+    ],
+    "Rn222": [
+     "Ra226"
+    ],
+    "Th226": [
+     "U230"
+    ],
+    "Th231": [
+     "U235"
+    ],
+    "Tl207": [
+     "Ra223"
+    ],
+    "Tl208": [
+     "Bi212",
+     "Pb212",
+     "Ra224",
+     "Th228"
+    ],
+    "Y90": [
+     "Sr90"
+    ]
    }
   },
   {
    "id": "a2-u-medium",
    "kind": "a2",
-   "basis": "A2 for radioactive material other than special form, TBq converted to Bq. The index is the number of A2 per gram of material (FISPACT-II ATWO), so multiply by the consignment mass in grams. Uranium rows use the medium lung-absorption values; unlimited and element-level rows are omitted.",
+   "basis": "A2 for radioactive material other than special form, TBq converted to Bq. The index is the number of A2 per gram of material (FISPACT-II ATWO), so multiply by the consignment mass in grams. Uranium rows use the medium lung-absorption values; unlimited rows are listed under unlimited (zero contribution) and element-level rows are omitted. covered_by_parent lists progeny included in a parent's value (from the 173.436 footnote (b) lists).",
    "coefficients": {
     "Ac225": 6000000000.0,
     "Ac227": 90000000.0,
@@ -730,12 +873,154 @@
     "Zr88": 3000000000000.0,
     "Zr95": 800000000000.0,
     "Zr97": 400000000000.0
+   },
+   "unlimited": [
+    "Ca41",
+    "Hf182",
+    "I129",
+    "Mn53",
+    "Ni59",
+    "Pb205",
+    "Pd107",
+    "Rb87",
+    "Re187",
+    "Sm147",
+    "Tc97",
+    "Th232",
+    "U235",
+    "U238",
+    "Zr93"
+   ],
+   "covered_by_parent": {
+    "Ac228": [
+     "Ra228"
+    ],
+    "Ag108": [
+     "Ag108m1"
+    ],
+    "Am242": [
+     "Am242m1"
+    ],
+    "Ba137m1": [
+     "Cs137"
+    ],
+    "Bi210": [
+     "Pb210",
+     "Ra226"
+    ],
+    "Bi211": [
+     "Ra223"
+    ],
+    "Bi212": [
+     "Pb212",
+     "Ra224",
+     "Th228"
+    ],
+    "Bi214": [
+     "Ra226",
+     "Rn222"
+    ],
+    "La140": [
+     "Ba140"
+    ],
+    "Nb97": [
+     "Zr97"
+    ],
+    "Np239": [
+     "Am243"
+    ],
+    "Pa234m1": [
+     "Th234"
+    ],
+    "Pb210": [
+     "Ra226"
+    ],
+    "Pb211": [
+     "Ra223"
+    ],
+    "Pb212": [
+     "Ra224",
+     "Th228"
+    ],
+    "Pb214": [
+     "Ra226",
+     "Rn222"
+    ],
+    "Po210": [
+     "Pb210",
+     "Ra226"
+    ],
+    "Po212": [
+     "Bi212",
+     "Pb212",
+     "Ra224",
+     "Th228"
+    ],
+    "Po214": [
+     "Ra226",
+     "Rn222",
+     "U230"
+    ],
+    "Po215": [
+     "Ra223"
+    ],
+    "Po216": [
+     "Ra224",
+     "Th228"
+    ],
+    "Po218": [
+     "Ra226",
+     "Rn222"
+    ],
+    "Pr144": [
+     "Ce144"
+    ],
+    "Ra222": [
+     "U230"
+    ],
+    "Ra224": [
+     "Th228"
+    ],
+    "Rh106": [
+     "Ru106"
+    ],
+    "Rn218": [
+     "U230"
+    ],
+    "Rn219": [
+     "Ra223"
+    ],
+    "Rn220": [
+     "Ra224",
+     "Th228"
+    ],
+    "Rn222": [
+     "Ra226"
+    ],
+    "Th226": [
+     "U230"
+    ],
+    "Th231": [
+     "U235"
+    ],
+    "Tl207": [
+     "Ra223"
+    ],
+    "Tl208": [
+     "Bi212",
+     "Pb212",
+     "Ra224",
+     "Th228"
+    ],
+    "Y90": [
+     "Sr90"
+    ]
    }
   },
   {
    "id": "a2-u-slow",
    "kind": "a2",
-   "basis": "A2 for radioactive material other than special form, TBq converted to Bq. The index is the number of A2 per gram of material (FISPACT-II ATWO), so multiply by the consignment mass in grams. Uranium rows use the slow lung-absorption values; unlimited and element-level rows are omitted.",
+   "basis": "A2 for radioactive material other than special form, TBq converted to Bq. The index is the number of A2 per gram of material (FISPACT-II ATWO), so multiply by the consignment mass in grams. Uranium rows use the slow lung-absorption values; unlimited rows are listed under unlimited (zero contribution) and element-level rows are omitted. covered_by_parent lists progeny included in a parent's value (from the 173.436 footnote (b) lists).",
    "coefficients": {
     "Ac225": 6000000000.0,
     "Ac227": 90000000.0,
@@ -1089,6 +1374,148 @@
     "Zr88": 3000000000000.0,
     "Zr95": 800000000000.0,
     "Zr97": 400000000000.0
+   },
+   "unlimited": [
+    "Ca41",
+    "Hf182",
+    "I129",
+    "Mn53",
+    "Ni59",
+    "Pb205",
+    "Pd107",
+    "Rb87",
+    "Re187",
+    "Sm147",
+    "Tc97",
+    "Th232",
+    "U235",
+    "U238",
+    "Zr93"
+   ],
+   "covered_by_parent": {
+    "Ac228": [
+     "Ra228"
+    ],
+    "Ag108": [
+     "Ag108m1"
+    ],
+    "Am242": [
+     "Am242m1"
+    ],
+    "Ba137m1": [
+     "Cs137"
+    ],
+    "Bi210": [
+     "Pb210",
+     "Ra226"
+    ],
+    "Bi211": [
+     "Ra223"
+    ],
+    "Bi212": [
+     "Pb212",
+     "Ra224",
+     "Th228"
+    ],
+    "Bi214": [
+     "Ra226",
+     "Rn222"
+    ],
+    "La140": [
+     "Ba140"
+    ],
+    "Nb97": [
+     "Zr97"
+    ],
+    "Np239": [
+     "Am243"
+    ],
+    "Pa234m1": [
+     "Th234"
+    ],
+    "Pb210": [
+     "Ra226"
+    ],
+    "Pb211": [
+     "Ra223"
+    ],
+    "Pb212": [
+     "Ra224",
+     "Th228"
+    ],
+    "Pb214": [
+     "Ra226",
+     "Rn222"
+    ],
+    "Po210": [
+     "Pb210",
+     "Ra226"
+    ],
+    "Po212": [
+     "Bi212",
+     "Pb212",
+     "Ra224",
+     "Th228"
+    ],
+    "Po214": [
+     "Ra226",
+     "Rn222",
+     "U230"
+    ],
+    "Po215": [
+     "Ra223"
+    ],
+    "Po216": [
+     "Ra224",
+     "Th228"
+    ],
+    "Po218": [
+     "Ra226",
+     "Rn222"
+    ],
+    "Pr144": [
+     "Ce144"
+    ],
+    "Ra222": [
+     "U230"
+    ],
+    "Ra224": [
+     "Th228"
+    ],
+    "Rh106": [
+     "Ru106"
+    ],
+    "Rn218": [
+     "U230"
+    ],
+    "Rn219": [
+     "Ra223"
+    ],
+    "Rn220": [
+     "Ra224",
+     "Th228"
+    ],
+    "Rn222": [
+     "Ra226"
+    ],
+    "Th226": [
+     "U230"
+    ],
+    "Th231": [
+     "U235"
+    ],
+    "Tl207": [
+     "Ra223"
+    ],
+    "Tl208": [
+     "Bi212",
+     "Pb212",
+     "Ra224",
+     "Th228"
+    ],
+    "Y90": [
+     "Sr90"
+    ]
    }
   }
  ]

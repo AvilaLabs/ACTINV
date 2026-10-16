@@ -5,7 +5,9 @@
 //! cascade code, replaces or extends the activation library's rows in every group at and above a splice energy.
 //! Groups below the splice are never touched. Nothing is fetched or invented here: the table is the only source
 //! of the spliced values, and its identity, the effective splice energy and the rows it changed are recorded in
-//! the library index.
+//! the library index. Library rows the table does not replace keep their values even when they are nonzero in a
+//! spliced group (a residual-arithmetic production row of the same channel is not the table's `lmf=10` row); the
+//! splice reports them so a double count is visible.
 //!
 //! Table format `actinv-spallation-residuals-1` (JSON, unknown fields rejected):
 //!
@@ -36,7 +38,7 @@ use crate::activation::Projectile;
 use crate::library::{Library, Row};
 use serde::Deserialize;
 use sha2::{Digest, Sha256};
-use std::collections::{BTreeSet, HashMap};
+use std::collections::{BTreeSet, HashMap, HashSet};
 use std::path::Path;
 
 pub const SPALLATION_SCHEMA: &str = "actinv-spallation-residuals-1";
@@ -290,7 +292,9 @@ impl SpallationTable {
             groups_spliced: ngroups - first_boundary,
             targets: Vec::new(),
             targets_not_in_library: Vec::new(),
+            untouched_nonzero_rows: Vec::new(),
         };
+        let mut replaced_rows: HashSet<usize> = HashSet::new();
         // Rows to append per library target, in table order.
         let mut additions: Vec<Vec<(Row, &[f64])>> = vec![Vec::new(); target_keys.len()];
         for table_target in &self.targets {
@@ -340,11 +344,29 @@ impl SpallationTable {
                         spliced.rows_added += 1;
                     } else {
                         for index in existing {
+                            replaced_rows.insert(index);
                             library.sig[index * ngroups + first_boundary..(index + 1) * ngroups]
                                 .copy_from_slice(sigma);
                             spliced.rows_replaced += 1;
                         }
                     }
+                }
+            }
+            for &index in &rows_by_target[target] {
+                let row = library.rows[index];
+                let spliced_values =
+                    &library.sig[index * ngroups + first_boundary..(index + 1) * ngroups];
+                if !replaced_rows.contains(&index)
+                    && spliced_values.iter().any(|value| *value != 0.0)
+                {
+                    report.untouched_nonzero_rows.push(UntouchedRow {
+                        za: table_target.za,
+                        liso: table_target.liso,
+                        mt: row.mt,
+                        zap: row.zap,
+                        lfs: row.lfs,
+                        lmf: row.lmf,
+                    });
                 }
             }
             report.targets.push(spliced);
@@ -406,7 +428,23 @@ pub struct SpliceReport {
     pub groups_spliced: usize,
     pub targets: Vec<SplicedTarget>,
     pub targets_not_in_library: Vec<(i32, i32)>,
+    /// Rows of spliced targets that the splice left alone although they are nonzero in a spliced group.
+    pub untouched_nonzero_rows: Vec<UntouchedRow>,
 }
+
+/// A library row the splice did not replace that still carries cross section above the splice.
+#[derive(Clone, Debug, PartialEq)]
+pub struct UntouchedRow {
+    pub za: i32,
+    pub liso: i32,
+    pub mt: i32,
+    pub zap: i32,
+    pub lfs: i32,
+    pub lmf: i32,
+}
+
+/// Rows listed by name in the index `spallation` block; the count covers all of them.
+const UNTOUCHED_ROWS_LISTED: usize = 50;
 
 impl SpliceReport {
     /// The `spallation` block of the library index.
@@ -430,6 +468,21 @@ impl SpliceReport {
             .iter()
             .map(|(za, liso)| serde_json::json!({"za": za, "liso": liso}))
             .collect();
+        let untouched: Vec<serde_json::Value> = self
+            .untouched_nonzero_rows
+            .iter()
+            .take(UNTOUCHED_ROWS_LISTED)
+            .map(|row| {
+                serde_json::json!({
+                    "za": row.za,
+                    "liso": row.liso,
+                    "mt": row.mt,
+                    "zap": row.zap,
+                    "lfs": row.lfs,
+                    "lmf": row.lmf,
+                })
+            })
+            .collect();
         serde_json::json!({
             "schema": SPALLATION_SCHEMA,
             "table_path": splice.source_path,
@@ -444,6 +497,11 @@ impl SpliceReport {
             "rows_added": rows_added,
             "targets": targets,
             "targets_not_in_library": absent,
+            "untouched_rows_nonzero_in_spliced_groups": {
+                "count": self.untouched_nonzero_rows.len(),
+                "rows": untouched,
+                "note": "library rows of spliced targets the table did not replace but that are nonzero at or above the splice; a production row of a channel the table also supplies is then counted twice",
+            },
         })
     }
 }

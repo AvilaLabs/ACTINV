@@ -14,9 +14,9 @@
   "licence": "EU legal act; reuse with attribution to the source (Commission Decision 2011/833/EU). Source: Publications Office of the European Union, OJ L 13, 17.1.2014. The values originate with the IAEA basic safety standards (exemption and clearance levels)."
  },
  "tables": {
-  "euratom-2013-59-annex-vii-a.json": "8e200d52f8532c369ed9509c8eb8665f314205ff09a471836046e465be63c193",
-  "euratom-2013-59-annex-vii-b-concentration.json": "08ffa3c557d9a06ff4e5cc2463738cd1a3fd630246f384b3b4a0bc696811700c",
-  "euratom-2013-59-annex-vii-b-activity.json": "e1d72c8fe1958a94b8c0359009fbfd0b9708dbe7b6dc41ec0287c5c2e9d949aa"
+  "euratom-2013-59-annex-vii-a.json": "e6baf00514e94d8c62275796d65e60a35c663d7acb2f7ca79d03f57841ee6540",
+  "euratom-2013-59-annex-vii-b-concentration.json": "3b53f844e5701c58e46b16d1a5059b921696a3586d75313d4a584cf1214cda13",
+  "euratom-2013-59-annex-vii-b-activity.json": "9a6a904c4cd7115ca2476d225b3c18cc50618ab68c1d46a9d859e64d1241539a"
  },
  "notes": {
   "table_a_part1_note_1": "(1) Parent radionuclides, and their progeny whose dose contributions are taken into account in the dose calculation (thus requiring only the exemption level of the parent radionuclide to be considered), are listed in the following table.",
@@ -2709,13 +2709,19 @@
    "row_text": "Ce-144 | 10",
    "nuclide": "Ce144",
    "footnotes": [],
-   "flags": [],
+   "flags": [
+    "progeny_list_parent_not_marked"
+   ],
    "values": {
     "activity_concentration_kBq_per_kg": {
      "text": "10",
      "number": 10.0
     }
-   }
+   },
+   "progeny_included": [
+    "Pr-144",
+    "Pr-144 m"
+   ]
   },
   {
    "table": "Table A Part 1",
@@ -6330,7 +6336,9 @@
    "row_text": "Ag-108 m | 1 × 10^{1} | 1 × 10^{6}",
    "nuclide": "Ag108m1",
    "footnotes": [],
-   "flags": [],
+   "flags": [
+    "progeny_list_parent_not_marked"
+   ],
    "values": {
     "activity_concentration_kBq_per_kg": {
      "text": "1 × 10^{1}",
@@ -6340,7 +6348,10 @@
      "text": "1 × 10^{6}",
      "number": 1000000.0
     }
-   }
+   },
+   "progeny_included": [
+    "Ag-108"
+   ]
   },
   {
    "table": "Table B",
@@ -8963,7 +8974,9 @@
    "row_text": "U-230 | 1 × 10^{1} | 1 × 10^{5}",
    "nuclide": "U230",
    "footnotes": [],
-   "flags": [],
+   "flags": [
+    "progeny_list_parent_not_marked"
+   ],
    "values": {
     "activity_concentration_kBq_per_kg": {
      "text": "1 × 10^{1}",
@@ -8973,7 +8986,13 @@
      "text": "1 × 10^{5}",
      "number": 100000.0
     }
-   }
+   },
+   "progeny_included": [
+    "Th-226",
+    "Ra-222",
+    "Rn-218",
+    "Po-214"
+   ]
   },
   {
    "table": "Table B",

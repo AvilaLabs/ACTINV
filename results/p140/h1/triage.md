@@ -51,3 +51,10 @@ import-fispact (review_import_fispact.md): F1 A, F2 A, F3 A (keep documented def
 
 ## H2 (cand9)
 PASS: 151/151 (133 pass, 18 refused-ok, all documented conflicts); record target/p140/p140_matrix_cand9.json.
+
+## H3 (cand9, unrepaired) — FAIL, recorded before repair
+4635 synthetic + 132 FNS + 2 fission + 6 pypact decks. Failures: pulse_nested_empty_1e9 (timeout; = import F5),
+pulse_depth_100000 (stack overflow abort; = import F5), over_10000_subkeywords (timeout; NEW defect -> sent to importer
+repair, regression test p140_if_h3_over_many_subkeywords_is_linear), pypact test5 synthetic-fluxes validate failed
+because the tendl-2025-proton catalog bundle was not installed (environment; documented: catalog references must
+resolve to installed artifacts) -> bundle fetched. Record target/p140/p140_import_cand9.json.

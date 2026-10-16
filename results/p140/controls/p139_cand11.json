@@ -1,0 +1,1727 @@
+{
+  "awri_source": "pair",
+  "candidate": {
+    "path": "/home/connoravila/Documents/actinv/target/cand11-actinv",
+    "sha256": "179e96a06dd0bee02f3e71452492ee058b6f4ca123063a5eab7ed365235e4536"
+  },
+  "checker_sha256": "1760cd09f0a677b8b317f9fb5e6c524cc0e01f4062c00449a7628bf3b0f4bbb2",
+  "data_files": {
+    "endfb_viii0": {
+      "bytes": 8600160,
+      "path": "/home/connoravila/nuclear-data/endfb-viii.0-n-test/n_7443_74-W-186.dat",
+      "sha256": "67b1ab026ceab34a564516189852c5f65727acdd3cf4e7d9f911b6c92fb6ff8b"
+    },
+    "endfb_viii1": {
+      "bytes": 8599996,
+      "path": "/home/connoravila/nuclear-data/endfb-viii.1-fns-arm/pristine/W186.endf",
+      "sha256": "ff90d82f9db72da1b1922157a4d06f3022a1888e0b99a0d2072d8f9208fb784d"
+    },
+    "synthetic_ifg0": {
+      "bytes": 17010,
+      "path": "/home/connoravila/Documents/actinv/target/p140/controls/p139-work/p139_synthetic_w186_ifg0.endf",
+      "sha256": "37129a41a86027c0c745c2a0b7802df6a833a64464bdae420046a818143fac73"
+    },
+    "synthetic_ifg1": {
+      "bytes": 17010,
+      "path": "/home/connoravila/Documents/actinv/target/p140/controls/p139-work/p139_synthetic_w186_ifg1.endf",
+      "sha256": "af2267bd1ae30e9c68da0d78c5c4c20c1f7a13e3b61d233da5d3b5fddc2e7c70"
+    },
+    "tendl_2025": {
+      "bytes": 4233789,
+      "path": "/home/connoravila/nuclear-data/tendl-2025/files/n/n-W186.tendl",
+      "sha256": "ff8cb04fa35fc4fb5e84d6b406238f05c0797f6fc873f5555e869999e508e083"
+    }
+  },
+  "external_gates": {
+    "G0": "protocol hash committed before evidence: recorded by the coordinator",
+    "G1": "fmt, clippy -D warnings, workspace tests: recorded by the coordinator",
+    "G6": "CI green and run-output baselines unchanged: recorded by the coordinator"
+  },
+  "gates": {
+    "G2": {
+      "pass": false,
+      "specs": {
+        "fns_fe_5min": {
+          "bytes_equal_after_masking_ms": false,
+          "candidate_ms": 854.575921,
+          "candidate_output_sha256": "f6c6fc7e51a658905cb28037a992b0cf18d9ff62e6929d860f849e6df243b5a9",
+          "first_differences": [
+            "/ledger/spontaneous_fission_branches_to_leakage",
+            "/ledger/unmodelled_decay_branches_to_leakage"
+          ],
+          "parsed_equal_without_ms": false,
+          "pass": false,
+          "raw_bytes_identical": false,
+          "reference_ms": 872.316818,
+          "reference_output_sha256": "ccc3e109e976a59ba28ac25d42b390f67a098f57b8bd05ccd178744716a7c1a7",
+          "spec": "/home/connoravila/Documents/actinv/examples/fns_fe_5min.json",
+          "spec_sha256": "ed55ed00f6c00fc4a2351e18332e98e7feb33d9b7ca65e7ba861e0e5e8feef39"
+        },
+        "shielding_demo": {
+          "bytes_equal_after_masking_ms": false,
+          "candidate_ms": 1593.1754799999999,
+          "candidate_output_sha256": "444dd41ad7115e7bcbd5008bb5e253d20407ea9131e8ed73d1086b999ce59777",
+          "first_differences": [
+            "/ledger/spontaneous_fission_branches_to_leakage",
+            "/ledger/unmodelled_decay_branches_to_leakage",
+            "/pathway_closure",
+            "/pathways/0/Hf182/0/atoms_per_g",
+            "/pathways/0/Hf183/0/fraction",
+            "/pathways/0/Hf184/0/fraction",
+            "/pathways/0/Hf184/1/fraction",
+            "/pathways/0/Hf184m1/0/fraction",
+            "/pathways/0/Hf184m1/1/fraction",
+            "/pathways/0/Ta183/0/fraction"
+          ],
+          "parsed_equal_without_ms": false,
+          "pass": false,
+          "raw_bytes_identical": false,
+          "reference_ms": 1749.877283,
+          "reference_output_sha256": "5dfec79b77ebeb86ccf37edf8afbc2e81226b6435a3d5ad72012fedabdba6136",
+          "spec": "/home/connoravila/Documents/actinv/examples/shielding_demo.json",
+          "spec_sha256": "5da1f8e0d1028bba93a51c5b21125d6145aaf24d0f1a65c2c90acf735616afb1"
+        },
+        "tendl_w186_foil_0p01": {
+          "bytes_equal_after_masking_ms": false,
+          "candidate_ms": 1342.84925,
+          "candidate_output_sha256": "51ec20157c47c0a934b7f331d13ac15b33b8e8656bc7ad5e75676759c3db2eae",
+          "first_differences": [
+            "/certificate/shielding/applied_factors/W186/432",
+            "/certificate/shielding/applied_factors/W186/433",
+            "/certificate/shielding/applied_factors/W186/434",
+            "/certificate/shielding/applied_factors/W186/435",
+            "/certificate/shielding/applied_factors/W186/436",
+            "/certificate/shielding/applied_factors/W186/437",
+            "/certificate/shielding/applied_factors/W186/438",
+            "/certificate/shielding/applied_factors/W186/439",
+            "/certificate/shielding/applied_factors/W186/440",
+            "/certificate/shielding/applied_factors/W186/441"
+          ],
+          "parsed_equal_without_ms": false,
+          "pass": false,
+          "raw_bytes_identical": false,
+          "reference_ms": 1340.378162,
+          "reference_output_sha256": "3d3a2ac5aa4f238a06c51cf4fe77222c1e0ca9753a3ada3f4e65a64f0a6b5582",
+          "spec": "/home/connoravila/Documents/actinv/target/p140/controls/p139-work/tendl_w186_foil_0p01.json",
+          "spec_sha256": "2e9878f4d2032201893821c9c3324cf253fbb434bb9c28187a1a32770bfd2d54"
+        },
+        "tendl_w186_foil_0p1": {
+          "bytes_equal_after_masking_ms": false,
+          "candidate_ms": 1381.2433369999999,
+          "candidate_output_sha256": "25dc6b2ae78de6246daec43cca1abc47e1174c11ca467e5a25e038d20d77f689",
+          "first_differences": [
+            "/certificate/shielding/applied_factors/W186/432",
+            "/certificate/shielding/applied_factors/W186/433",
+            "/certificate/shielding/applied_factors/W186/434",
+            "/certificate/shielding/applied_factors/W186/435",
+            "/certificate/shielding/applied_factors/W186/436",
+            "/certificate/shielding/applied_factors/W186/437",
+            "/certificate/shielding/applied_factors/W186/438",
+            "/certificate/shielding/applied_factors/W186/439",
+            "/certificate/shielding/applied_factors/W186/440",
+            "/certificate/shielding/applied_factors/W186/441"
+          ],
+          "parsed_equal_without_ms": false,
+          "pass": false,
+          "raw_bytes_identical": false,
+          "reference_ms": 1352.372495,
+          "reference_output_sha256": "efb95ab0bd62df4be0371cdc04ff9508d7f02d8a0ada210e2d6dbd93f811edce",
+          "spec": "/home/connoravila/Documents/actinv/target/p140/controls/p139-work/tendl_w186_foil_0p1.json",
+          "spec_sha256": "e4f12e6f6257a2497f5ed4ead6367342622eb414f453b8ba8a6659b82155e988"
+        }
+      }
+    },
+    "G3": {
+      "awri_source": "pair",
+      "awri_used": {
+        "head": 184.357,
+        "pair_MB_over_MA": 184.3462
+      },
+      "energy_range_eV": [
+        18.84338,
+        9940.221
+      ],
+      "file": {
+        "head_awr": 184.357,
+        "path": "/home/connoravila/nuclear-data/endfb-viii.1-fns-arm/pristine/W186.endf",
+        "sha256": "ff90d82f9db72da1b1922157a4d06f3022a1888e0b99a0d2072d8f9208fb784d"
+      },
+      "ifg": 0,
+      "krm": 3,
+      "material": {
+        "decay_awr": 184.3569,
+        "source": "/home/connoravila/Documents/actinv/actinv-data/v1.1.0/decay/endf-b-viii-0_decay.dat"
+      },
+      "monotonic_with_thickness": {
+        "groups_compared": 57,
+        "min_thick": 0.07528021760714422,
+        "min_thin": 0.1525225400045306,
+        "pass": true,
+        "same_group_set": true,
+        "strictly_lower_in": 57,
+        "violations": []
+      },
+      "particle_pairs": [
+        {
+          "class": "capture",
+          "ia": 1.0,
+          "ib": 0.0,
+          "ma": 0.0,
+          "mb": 185.3462,
+          "mt": 102,
+          "pnt": 0
+        },
+        {
+          "class": "neutron",
+          "ia": 0.5,
+          "ib": 0.0,
+          "ma": 1.0,
+          "mb": 184.3462,
+          "mt": 2,
+          "pnt": 1
+        }
+      ],
+      "pass": true,
+      "ranges": [
+        {
+          "ev": [
+            1e-05,
+            10000.0
+          ],
+          "ifg": 0,
+          "krm": 3,
+          "lrf": 7,
+          "outside_range": 6,
+          "pairs": 2,
+          "resonances": 175,
+          "spin_groups": 3
+        }
+      ],
+      "resonances_skipped": {
+        "no_neutron_or_capture_width": 0,
+        "non_positive_energy": 3,
+        "outside_range": 3
+      },
+      "resonances_total": 175,
+      "resonances_usable": 169,
+      "spin_groups": [
+        {
+          "channels": [
+            "capture",
+            "neutron"
+          ],
+          "j": 0.5,
+          "resonances": 80
+        },
+        {
+          "channels": [
+            "capture",
+            "neutron"
+          ],
+          "j": -0.5,
+          "resonances": 47
+        },
+        {
+          "channels": [
+            "capture",
+            "neutron"
+          ],
+          "j": -1.5,
+          "resonances": 48
+        }
+      ],
+      "target_spin": 0.0,
+      "thicknesses": {
+        "0.01": {
+          "all_in_range": true,
+          "alternative_awri_head_worst_relative_error": 2.8349025931418235e-07,
+          "applied_factor_mismatches": [],
+          "effective_length_cm": {
+            "expected": 0.015,
+            "ledger": 0.015
+          },
+          "factor_range": [
+            0.1525225400045306,
+            0.9721871962052164
+          ],
+          "group_bound_mismatches": [],
+          "groups_independent": 57,
+          "groups_ledger": 57,
+          "number_density_per_cm3": {
+            "independent": 6.250314916878466e+22,
+            "ledger": 6.250314916878466e+22,
+            "relative_difference": 0.0
+          },
+          "pass": true,
+          "problems": [],
+          "resonance_count_mismatches": [],
+          "resonances_counted": 169,
+          "spec": "/home/connoravila/Documents/actinv/target/p140/controls/p139-work/viii1_w186_foil_0p01.json",
+          "spec_sha256": "8f7c6fa4c2e4b602563a1fe8109c4ef4ad69b264771841295ac333ac5a24622f",
+          "thickness_cm": 0.01,
+          "worst_group": null,
+          "worst_relative_error": 0.0,
+          "worst_relative_error_using_ledger_density": 0.0
+        },
+        "0.1": {
+          "all_in_range": true,
+          "alternative_awri_head_worst_relative_error": 3.135774304956714e-07,
+          "applied_factor_mismatches": [],
+          "effective_length_cm": {
+            "expected": 0.15000000000000002,
+            "ledger": 0.15000000000000002
+          },
+          "factor_range": [
+            0.07528021760714422,
+            0.8463009009388671
+          ],
+          "group_bound_mismatches": [],
+          "groups_independent": 57,
+          "groups_ledger": 57,
+          "number_density_per_cm3": {
+            "independent": 6.250314916878466e+22,
+            "ledger": 6.250314916878466e+22,
+            "relative_difference": 0.0
+          },
+          "pass": true,
+          "problems": [],
+          "resonance_count_mismatches": [],
+          "resonances_counted": 169,
+          "spec": "/home/connoravila/Documents/actinv/target/p140/controls/p139-work/viii1_w186_foil_0p1.json",
+          "spec_sha256": "35f3fd0eb476609bf1cf114397ffda9c9ab4d43aaaabb01cb0322a20a7f9b346",
+          "thickness_cm": 0.1,
+          "worst_group": null,
+          "worst_relative_error": 0.0,
+          "worst_relative_error_using_ledger_density": 0.0
+        }
+      }
+    },
+    "G4": {
+      "files": {
+        "ifg0": {
+          "build": {
+            "awri": "1.844022+2",
+            "channels": [
+              "capture",
+              "neutron",
+              "competitive"
+            ],
+            "competitive_pair": true,
+            "fission_pair": false,
+            "head_awr": "1.843569+2",
+            "ifg": 0,
+            "inexact_field_count": 0,
+            "inexact_fields": [],
+            "max_quantisation_error": null,
+            "pairs": [
+              102,
+              2,
+              51
+            ],
+            "resonances": 173,
+            "spin_groups": [
+              {
+                "j": 0.5,
+                "l": 0,
+                "resonances": 121
+              },
+              {
+                "j": 1.5,
+                "l": 1,
+                "resonances": 52
+              }
+            ]
+          },
+          "bytes": 17010,
+          "path": "/home/connoravila/Documents/actinv/target/p140/controls/p139-work/p139_synthetic_w186_ifg0.endf",
+          "sha256": "37129a41a86027c0c745c2a0b7802df6a833a64464bdae420046a818143fac73",
+          "thicknesses": {
+            "0.01": {
+              "group_bound_mismatches": [],
+              "groups": 35,
+              "groups_lrf2": 35,
+              "pass": true,
+              "problems": [],
+              "python_model_vs_candidate_lrf2_worst": 0.0,
+              "resonance_count_mismatches": [],
+              "spec": "/home/connoravila/Documents/actinv/target/p140/controls/p139-work/syn_ifg0_w186_foil_0p01.json",
+              "spec_sha256": "1b3bda9758782faac1a29e70d2a0dcd1d1ec3149615301f08a2832e3e6a3d83c",
+              "worst_group": 424,
+              "worst_relative_difference": 2.3359567952446595e-16
+            },
+            "0.1": {
+              "group_bound_mismatches": [],
+              "groups": 35,
+              "groups_lrf2": 35,
+              "pass": true,
+              "problems": [],
+              "python_model_vs_candidate_lrf2_worst": 0.0,
+              "resonance_count_mismatches": [],
+              "spec": "/home/connoravila/Documents/actinv/target/p140/controls/p139-work/syn_ifg0_w186_foil_0p1.json",
+              "spec_sha256": "df3214fd41b33455339ff76ac40b96d3b61661403987e7f269cd79b4f2c3e96b",
+              "worst_group": 427,
+              "worst_relative_difference": 1.920324297851012e-16
+            }
+          },
+          "tolerance": 1e-12
+        },
+        "ifg1": {
+          "build": {
+            "awri": "1.844022+2",
+            "channels": [
+              "capture",
+              "neutron",
+              "competitive"
+            ],
+            "competitive_pair": true,
+            "fission_pair": false,
+            "head_awr": "1.843569+2",
+            "ifg": 1,
+            "inexact_field_count": 0,
+            "inexact_fields": [],
+            "max_quantisation_error": {
+              "capture": 6.641788063180051e-10,
+              "competitive": 1.8799018833808593e-08,
+              "fission": 0.0,
+              "neutron": 9.125803223001321e-10
+            },
+            "pairs": [
+              102,
+              2,
+              51
+            ],
+            "resonances": 173,
+            "spin_groups": [
+              {
+                "j": 0.5,
+                "l": 0,
+                "resonances": 121
+              },
+              {
+                "j": 1.5,
+                "l": 1,
+                "resonances": 52
+              }
+            ]
+          },
+          "bytes": 17010,
+          "path": "/home/connoravila/Documents/actinv/target/p140/controls/p139-work/p139_synthetic_w186_ifg1.endf",
+          "sha256": "af2267bd1ae30e9c68da0d78c5c4c20c1f7a13e3b61d233da5d3b5fddc2e7c70",
+          "thicknesses": {
+            "0.01": {
+              "group_bound_mismatches": [],
+              "groups": 35,
+              "groups_lrf2": 35,
+              "pass": true,
+              "problems": [],
+              "python_model_vs_candidate_lrf2_worst": 0.0,
+              "resonance_count_mismatches": [],
+              "spec": "/home/connoravila/Documents/actinv/target/p140/controls/p139-work/syn_ifg1_w186_foil_0p01.json",
+              "spec_sha256": "bf1de9644434cb9a18c4d456daad9bf38a6cdf6d9764a75d5e34d60488558869",
+              "worst_group": 361,
+              "worst_relative_difference": 1.2004257200432765e-10
+            },
+            "0.1": {
+              "group_bound_mismatches": [],
+              "groups": 35,
+              "groups_lrf2": 35,
+              "pass": true,
+              "problems": [],
+              "python_model_vs_candidate_lrf2_worst": 0.0,
+              "resonance_count_mismatches": [],
+              "spec": "/home/connoravila/Documents/actinv/target/p140/controls/p139-work/syn_ifg1_w186_foil_0p1.json",
+              "spec_sha256": "37977be557c01c916d8d78269e491ea8231f9dd8a6aa01e311a55ff183b05cda",
+              "worst_group": 361,
+              "worst_relative_difference": 1.3812327714799534e-10
+            }
+          },
+          "tolerance": 1e-09
+        }
+      },
+      "material": {
+        "decay_awr": 184.3569,
+        "source": "/home/connoravila/Documents/actinv/actinv-data/v1.1.0/decay/endf-b-viii-0_decay.dat"
+      },
+      "pass": true,
+      "source": {
+        "path": "/home/connoravila/nuclear-data/tendl-2025/files/n/n-W186.tendl",
+        "sha256": "ff8cb04fa35fc4fb5e84d6b406238f05c0797f6fc873f5555e869999e508e083"
+      }
+    },
+    "G5": {
+      "pass": null,
+      "report_only": true,
+      "table_file": "/home/connoravila/Documents/actinv/target/p140/controls/p139-work/p139_g5_table.txt",
+      "thicknesses": {
+        "0.01": {
+          "summary": {
+            "groups_common": 35,
+            "groups_tendl2025": 35,
+            "groups_tendl2025_only": 0,
+            "groups_viii0": 57,
+            "groups_viii1": 57,
+            "groups_viii1_only": 22,
+            "max_abs_relative_difference": 0.05423077168705181,
+            "mean_factor_tendl2025": 0.7894759337648525,
+            "mean_factor_viii1": 0.852812063429712,
+            "median_abs_relative_difference": 0.004900294812654806,
+            "min_factor_tendl2025": 0.15250000282050163,
+            "min_factor_viii0": 0.1525225400045306,
+            "min_factor_viii1": 0.1525225400045306
+          },
+          "table": [
+            {
+              "energy_max_eV": 19.05461,
+              "energy_min_eV": 18.19701,
+              "factor_tendl2025": 0.15250000282050163,
+              "factor_viii0": 0.1525225400045306,
+              "factor_viii1": 0.1525225400045306,
+              "group": 313,
+              "relative_difference_viii1_vs_tendl": 0.00014778481057146456,
+              "resonances_tendl2025": 1,
+              "resonances_viii1": 1
+            },
+            {
+              "energy_max_eV": 173.7801,
+              "energy_min_eV": 165.9587,
+              "factor_tendl2025": 0.47659954293153545,
+              "factor_viii0": 0.48408248367646683,
+              "factor_viii1": 0.48408248367646683,
+              "group": 361,
+              "relative_difference_viii1_vs_tendl": 0.015700688042846755,
+              "resonances_tendl2025": 1,
+              "resonances_viii1": 1
+            },
+            {
+              "energy_max_eV": 218.7762,
+              "energy_min_eV": 208.9296,
+              "factor_tendl2025": 0.4883700378291341,
+              "factor_viii0": 0.49951051092685755,
+              "factor_viii1": 0.49951051092685755,
+              "group": 366,
+              "relative_difference_viii1_vs_tendl": 0.022811540911158834,
+              "resonances_tendl2025": 1,
+              "resonances_viii1": 1
+            },
+            {
+              "energy_max_eV": 288.4032,
+              "energy_min_eV": 275.4229,
+              "factor_tendl2025": 0.5422263130215845,
+              "factor_viii0": 0.5535159955998707,
+              "factor_viii1": 0.5535159955998707,
+              "group": 372,
+              "relative_difference_viii1_vs_tendl": 0.02082097881855617,
+              "resonances_tendl2025": 1,
+              "resonances_viii1": 1
+            },
+            {
+              "energy_max_eV": 416.8694,
+              "energy_min_eV": 398.1072,
+              "factor_tendl2025": 0.5597232476954834,
+              "factor_viii0": 0.5576564631908743,
+              "factor_viii1": 0.5576564631908743,
+              "group": 380,
+              "relative_difference_viii1_vs_tendl": -0.0036925114565432644,
+              "resonances_tendl2025": 1,
+              "resonances_viii1": 1
+            },
+            {
+              "energy_max_eV": 524.8075,
+              "energy_min_eV": 501.1872,
+              "factor_tendl2025": 0.6008729390659704,
+              "factor_viii0": 0.6020299304907493,
+              "factor_viii1": 0.6020299304907493,
+              "group": 385,
+              "relative_difference_viii1_vs_tendl": 0.0019255176087266724,
+              "resonances_tendl2025": 1,
+              "resonances_viii1": 1
+            },
+            {
+              "energy_max_eV": 549.5409,
+              "energy_min_eV": 524.8075,
+              "factor_tendl2025": 0.6564836456061358,
+              "factor_viii0": 0.6686887680475052,
+              "factor_viii1": 0.6686887680475052,
+              "group": 386,
+              "relative_difference_viii1_vs_tendl": 0.01859166259975955,
+              "resonances_tendl2025": 1,
+              "resonances_viii1": 1
+            },
+            {
+              "energy_max_eV": 660.6934,
+              "energy_min_eV": 630.9573,
+              "factor_tendl2025": null,
+              "factor_viii0": 0.9532058781611117,
+              "factor_viii1": 0.9532058781611117,
+              "group": 390,
+              "resonances_tendl2025": null,
+              "resonances_viii1": 1
+            },
+            {
+              "energy_max_eV": 691.831,
+              "energy_min_eV": 660.6934,
+              "factor_tendl2025": 0.6926757550204885,
+              "factor_viii0": 0.7081481508599752,
+              "factor_viii1": 0.7081481508599752,
+              "group": 391,
+              "relative_difference_viii1_vs_tendl": 0.022337140757913522,
+              "resonances_tendl2025": 1,
+              "resonances_viii1": 1
+            },
+            {
+              "energy_max_eV": 724.436,
+              "energy_min_eV": 691.831,
+              "factor_tendl2025": 0.7653211193646029,
+              "factor_viii0": 0.791857227235168,
+              "factor_viii1": 0.791857227235168,
+              "group": 392,
+              "relative_difference_viii1_vs_tendl": 0.03467316816318408,
+              "resonances_tendl2025": 2,
+              "resonances_viii1": 1
+            },
+            {
+              "energy_max_eV": 758.5776,
+              "energy_min_eV": 724.436,
+              "factor_tendl2025": null,
+              "factor_viii0": 0.946626214294649,
+              "factor_viii1": 0.946626214294649,
+              "group": 393,
+              "resonances_tendl2025": null,
+              "resonances_viii1": 1
+            },
+            {
+              "energy_max_eV": 794.3282,
+              "energy_min_eV": 758.5776,
+              "factor_tendl2025": null,
+              "factor_viii0": 0.9595706544967503,
+              "factor_viii1": 0.9595706544967503,
+              "group": 394,
+              "resonances_tendl2025": null,
+              "resonances_viii1": 1
+            },
+            {
+              "energy_max_eV": 831.7638,
+              "energy_min_eV": 794.3282,
+              "factor_tendl2025": 0.7434213423847222,
+              "factor_viii0": 0.7273683357193195,
+              "factor_viii1": 0.7273683357193195,
+              "group": 395,
+              "relative_difference_viii1_vs_tendl": -0.021593416478881907,
+              "resonances_tendl2025": 1,
+              "resonances_viii1": 1
+            },
+            {
+              "energy_max_eV": 1000.0,
+              "energy_min_eV": 954.9926,
+              "factor_tendl2025": 0.786772161121378,
+              "factor_viii0": 0.7943519924675142,
+              "factor_viii1": 0.7943519924675142,
+              "group": 399,
+              "relative_difference_viii1_vs_tendl": 0.009634086868722837,
+              "resonances_tendl2025": 1,
+              "resonances_viii1": 1
+            },
+            {
+              "energy_max_eV": 1096.478,
+              "energy_min_eV": 1047.129,
+              "factor_tendl2025": 0.7726124452381755,
+              "factor_viii0": 0.7838676703511163,
+              "factor_viii1": 0.7838676703511163,
+              "group": 401,
+              "relative_difference_viii1_vs_tendl": 0.01456775021203686,
+              "resonances_tendl2025": 1,
+              "resonances_viii1": 2
+            },
+            {
+              "energy_max_eV": 1148.154,
+              "energy_min_eV": 1096.478,
+              "factor_tendl2025": 0.7668223277500354,
+              "factor_viii0": 0.7648904129339968,
+              "factor_viii1": 0.7648904129339968,
+              "group": 402,
+              "relative_difference_viii1_vs_tendl": -0.002519377365689278,
+              "resonances_tendl2025": 1,
+              "resonances_viii1": 1
+            },
+            {
+              "energy_max_eV": 1202.264,
+              "energy_min_eV": 1148.154,
+              "factor_tendl2025": 0.8155351518834778,
+              "factor_viii0": 0.8204795269721536,
+              "factor_viii1": 0.8204795269721536,
+              "group": 403,
+              "relative_difference_viii1_vs_tendl": 0.006062736936914142,
+              "resonances_tendl2025": 1,
+              "resonances_viii1": 1
+            },
+            {
+              "energy_max_eV": 1445.44,
+              "energy_min_eV": 1380.384,
+              "factor_tendl2025": 0.772741252061798,
+              "factor_viii0": 0.7730341029018235,
+              "factor_viii1": 0.7730341029018235,
+              "group": 407,
+              "relative_difference_viii1_vs_tendl": 0.00037897658400419494,
+              "resonances_tendl2025": 1,
+              "resonances_viii1": 1
+            },
+            {
+              "energy_max_eV": 1513.561,
+              "energy_min_eV": 1445.44,
+              "factor_tendl2025": 0.8587836262615305,
+              "factor_viii0": 0.856765634525566,
+              "factor_viii1": 0.856765634525566,
+              "group": 408,
+              "relative_difference_viii1_vs_tendl": -0.0023498255838310046,
+              "resonances_tendl2025": 2,
+              "resonances_viii1": 2
+            },
+            {
+              "energy_max_eV": 1659.587,
+              "energy_min_eV": 1584.893,
+              "factor_tendl2025": 0.9187074895539198,
+              "factor_viii0": 0.968529705667103,
+              "factor_viii1": 0.968529705667103,
+              "group": 410,
+              "relative_difference_viii1_vs_tendl": 0.05423077168705181,
+              "resonances_tendl2025": 1,
+              "resonances_viii1": 1
+            },
+            {
+              "energy_max_eV": 1737.801,
+              "energy_min_eV": 1659.587,
+              "factor_tendl2025": 0.9199650548241358,
+              "factor_viii0": 0.9635294506626754,
+              "factor_viii1": 0.9635294506626754,
+              "group": 411,
+              "relative_difference_viii1_vs_tendl": 0.04735440287660436,
+              "resonances_tendl2025": 1,
+              "resonances_viii1": 1
+            },
+            {
+              "energy_max_eV": 1819.701,
+              "energy_min_eV": 1737.801,
+              "factor_tendl2025": 0.8479623806843567,
+              "factor_viii0": 0.8269054170923196,
+              "factor_viii1": 0.8269054170923196,
+              "group": 412,
+              "relative_difference_viii1_vs_tendl": -0.024832426616665338,
+              "resonances_tendl2025": 2,
+              "resonances_viii1": 1
+            },
+            {
+              "energy_max_eV": 1905.461,
+              "energy_min_eV": 1819.701,
+              "factor_tendl2025": null,
+              "factor_viii0": 0.9627893509465333,
+              "factor_viii1": 0.9627893509465333,
+              "group": 413,
+              "resonances_tendl2025": null,
+              "resonances_viii1": 1
+            },
+            {
+              "energy_max_eV": 1995.262,
+              "energy_min_eV": 1905.461,
+              "factor_tendl2025": 0.8629431529842679,
+              "factor_viii0": 0.866317505131875,
+              "factor_viii1": 0.866317505131875,
+              "group": 414,
+              "relative_difference_viii1_vs_tendl": 0.003910283239327793,
+              "resonances_tendl2025": 1,
+              "resonances_viii1": 1
+            },
+            {
+              "energy_max_eV": 2089.296,
+              "energy_min_eV": 1995.262,
+              "factor_tendl2025": 0.8582245742088678,
+              "factor_viii0": 0.8580423572899876,
+              "factor_viii1": 0.8580423572899876,
+              "group": 415,
+              "relative_difference_viii1_vs_tendl": -0.0002123184587765725,
+              "resonances_tendl2025": 2,
+              "resonances_viii1": 2
+            },
+            {
+              "energy_max_eV": 2187.762,
+              "energy_min_eV": 2089.296,
+              "factor_tendl2025": 0.8250877968967427,
+              "factor_viii0": 0.824806393128115,
+              "factor_viii1": 0.824806393128115,
+              "group": 416,
+              "relative_difference_viii1_vs_tendl": -0.0003410591814424172,
+              "resonances_tendl2025": 1,
+              "resonances_viii1": 1
+            },
+            {
+              "energy_max_eV": 2398.833,
+              "energy_min_eV": 2290.868,
+              "factor_tendl2025": 0.8389618374543935,
+              "factor_viii0": 0.8576606248007627,
+              "factor_viii1": 0.8576606248007627,
+              "group": 418,
+              "relative_difference_viii1_vs_tendl": 0.022288007048217713,
+              "resonances_tendl2025": 2,
+              "resonances_viii1": 2
+            },
+            {
+              "energy_max_eV": 2630.268,
+              "energy_min_eV": 2511.886,
+              "factor_tendl2025": 0.8950784547871429,
+              "factor_viii0": 0.897161248572476,
+              "factor_viii1": 0.897161248572476,
+              "group": 420,
+              "relative_difference_viii1_vs_tendl": 0.002326939917047232,
+              "resonances_tendl2025": 3,
+              "resonances_viii1": 4
+            },
+            {
+              "energy_max_eV": 2754.229,
+              "energy_min_eV": 2630.268,
+              "factor_tendl2025": 0.9487913641294112,
+              "factor_viii0": 0.9500680018552226,
+              "factor_viii1": 0.9500680018552226,
+              "group": 421,
+              "relative_difference_viii1_vs_tendl": 0.0013455410473542176,
+              "resonances_tendl2025": 1,
+              "resonances_viii1": 1
+            },
+            {
+              "energy_max_eV": 2884.032,
+              "energy_min_eV": 2754.229,
+              "factor_tendl2025": 0.889429995907003,
+              "factor_viii0": 0.8993868576401273,
+              "factor_viii1": 0.8993868576401273,
+              "group": 422,
+              "relative_difference_viii1_vs_tendl": 0.011194654755229703,
+              "resonances_tendl2025": 3,
+              "resonances_viii1": 3
+            },
+            {
+              "energy_max_eV": 3019.952,
+              "energy_min_eV": 2884.032,
+              "factor_tendl2025": 0.877326997826516,
+              "factor_viii0": 0.8759588019657738,
+              "factor_viii1": 0.8759588019657738,
+              "group": 423,
+              "relative_difference_viii1_vs_tendl": -0.0015595050239326676,
+              "resonances_tendl2025": 3,
+              "resonances_viii1": 3
+            },
+            {
+              "energy_max_eV": 3162.278,
+              "energy_min_eV": 3019.952,
+              "factor_tendl2025": 0.9505509921118862,
+              "factor_viii0": 0.9458930120160765,
+              "factor_viii1": 0.9458930120160765,
+              "group": 424,
+              "relative_difference_viii1_vs_tendl": -0.004900294812654806,
+              "resonances_tendl2025": 3,
+              "resonances_viii1": 3
+            },
+            {
+              "energy_max_eV": 3311.311,
+              "energy_min_eV": 3162.278,
+              "factor_tendl2025": 0.965191105910449,
+              "factor_viii0": 0.9666005166331961,
+              "factor_viii1": 0.9666005166331961,
+              "group": 425,
+              "relative_difference_viii1_vs_tendl": 0.0014602400644975542,
+              "resonances_tendl2025": 1,
+              "resonances_viii1": 1
+            },
+            {
+              "energy_max_eV": 3467.369,
+              "energy_min_eV": 3311.311,
+              "factor_tendl2025": 0.9331240717902543,
+              "factor_viii0": 0.9290777668627395,
+              "factor_viii1": 0.9290777668627395,
+              "group": 426,
+              "relative_difference_viii1_vs_tendl": -0.004336298944417659,
+              "resonances_tendl2025": 4,
+              "resonances_viii1": 4
+            },
+            {
+              "energy_max_eV": 3630.781,
+              "energy_min_eV": 3467.369,
+              "factor_tendl2025": 0.8924049957576947,
+              "factor_viii0": 0.9038921937478474,
+              "factor_viii1": 0.9038921937478474,
+              "group": 427,
+              "relative_difference_viii1_vs_tendl": 0.012872180282226512,
+              "resonances_tendl2025": 4,
+              "resonances_viii1": 4
+            },
+            {
+              "energy_max_eV": 3801.894,
+              "energy_min_eV": 3630.781,
+              "factor_tendl2025": 0.9163440666771764,
+              "factor_viii0": 0.9162898764154267,
+              "factor_viii1": 0.9162898764154267,
+              "group": 428,
+              "relative_difference_viii1_vs_tendl": -5.9137461266258154e-05,
+              "resonances_tendl2025": 5,
+              "resonances_viii1": 5
+            },
+            {
+              "energy_max_eV": 3981.072,
+              "energy_min_eV": 3801.894,
+              "factor_tendl2025": 0.9442033533702152,
+              "factor_viii0": 0.9410582913117788,
+              "factor_viii1": 0.9410582913117788,
+              "group": 429,
+              "relative_difference_viii1_vs_tendl": -0.003330916001527161,
+              "resonances_tendl2025": 2,
+              "resonances_viii1": 2
+            },
+            {
+              "energy_max_eV": 4168.694,
+              "energy_min_eV": 3981.072,
+              "factor_tendl2025": 0.9437543788659908,
+              "factor_viii0": 0.9334815809848122,
+              "factor_viii1": 0.9334815809848122,
+              "group": 430,
+              "relative_difference_viii1_vs_tendl": -0.010885033342597423,
+              "resonances_tendl2025": 4,
+              "resonances_viii1": 4
+            },
+            {
+              "energy_max_eV": 4365.158,
+              "energy_min_eV": 4168.694,
+              "factor_tendl2025": 0.9521447079728611,
+              "factor_viii0": 0.9495295959955855,
+              "factor_viii1": 0.9495295959955855,
+              "group": 431,
+              "relative_difference_viii1_vs_tendl": -0.002746548875793505,
+              "resonances_tendl2025": 3,
+              "resonances_viii1": 3
+            },
+            {
+              "energy_max_eV": 4570.882,
+              "energy_min_eV": 4365.158,
+              "factor_tendl2025": null,
+              "factor_viii0": 0.9273413829585432,
+              "factor_viii1": 0.9273413829585432,
+              "group": 432,
+              "resonances_tendl2025": null,
+              "resonances_viii1": 6
+            },
+            {
+              "energy_max_eV": 4786.301,
+              "energy_min_eV": 4570.882,
+              "factor_tendl2025": null,
+              "factor_viii0": 0.9336770225050849,
+              "factor_viii1": 0.9336770225050849,
+              "group": 433,
+              "resonances_tendl2025": null,
+              "resonances_viii1": 3
+            },
+            {
+              "energy_max_eV": 5011.872,
+              "energy_min_eV": 4786.301,
+              "factor_tendl2025": null,
+              "factor_viii0": 0.9320262216613694,
+              "factor_viii1": 0.9320262216613694,
+              "group": 434,
+              "resonances_tendl2025": null,
+              "resonances_viii1": 5
+            },
+            {
+              "energy_max_eV": 5248.075,
+              "energy_min_eV": 5011.872,
+              "factor_tendl2025": null,
+              "factor_viii0": 0.9481102596672327,
+              "factor_viii1": 0.9481102596672327,
+              "group": 435,
+              "resonances_tendl2025": null,
+              "resonances_viii1": 5
+            },
+            {
+              "energy_max_eV": 5495.409,
+              "energy_min_eV": 5248.075,
+              "factor_tendl2025": null,
+              "factor_viii0": 0.9395822459033566,
+              "factor_viii1": 0.9395822459033566,
+              "group": 436,
+              "resonances_tendl2025": null,
+              "resonances_viii1": 6
+            },
+            {
+              "energy_max_eV": 5754.399,
+              "energy_min_eV": 5495.409,
+              "factor_tendl2025": null,
+              "factor_viii0": 0.9360503379747185,
+              "factor_viii1": 0.9360503379747185,
+              "group": 437,
+              "resonances_tendl2025": null,
+              "resonances_viii1": 4
+            },
+            {
+              "energy_max_eV": 6025.596,
+              "energy_min_eV": 5754.399,
+              "factor_tendl2025": null,
+              "factor_viii0": 0.9463524252197818,
+              "factor_viii1": 0.9463524252197818,
+              "group": 438,
+              "resonances_tendl2025": null,
+              "resonances_viii1": 5
+            },
+            {
+              "energy_max_eV": 6309.573,
+              "energy_min_eV": 6025.596,
+              "factor_tendl2025": null,
+              "factor_viii0": 0.9264438670780403,
+              "factor_viii1": 0.9264438670780403,
+              "group": 439,
+              "resonances_tendl2025": null,
+              "resonances_viii1": 8
+            },
+            {
+              "energy_max_eV": 6606.934,
+              "energy_min_eV": 6309.573,
+              "factor_tendl2025": null,
+              "factor_viii0": 0.9621158964783885,
+              "factor_viii1": 0.9621158964783885,
+              "group": 440,
+              "resonances_tendl2025": null,
+              "resonances_viii1": 5
+            },
+            {
+              "energy_max_eV": 6918.31,
+              "energy_min_eV": 6606.934,
+              "factor_tendl2025": null,
+              "factor_viii0": 0.9377300557879237,
+              "factor_viii1": 0.9377300557879237,
+              "group": 441,
+              "resonances_tendl2025": null,
+              "resonances_viii1": 6
+            },
+            {
+              "energy_max_eV": 7244.36,
+              "energy_min_eV": 6918.31,
+              "factor_tendl2025": null,
+              "factor_viii0": 0.9521699419160379,
+              "factor_viii1": 0.9521699419160379,
+              "group": 442,
+              "resonances_tendl2025": null,
+              "resonances_viii1": 6
+            },
+            {
+              "energy_max_eV": 7585.776,
+              "energy_min_eV": 7244.36,
+              "factor_tendl2025": null,
+              "factor_viii0": 0.9434700261948473,
+              "factor_viii1": 0.9434700261948473,
+              "group": 443,
+              "resonances_tendl2025": null,
+              "resonances_viii1": 7
+            },
+            {
+              "energy_max_eV": 7943.282,
+              "energy_min_eV": 7585.776,
+              "factor_tendl2025": null,
+              "factor_viii0": 0.9535775350299622,
+              "factor_viii1": 0.9535775350299622,
+              "group": 444,
+              "resonances_tendl2025": null,
+              "resonances_viii1": 5
+            },
+            {
+              "energy_max_eV": 8317.638,
+              "energy_min_eV": 7943.282,
+              "factor_tendl2025": null,
+              "factor_viii0": 0.9347965316476511,
+              "factor_viii1": 0.9347965316476511,
+              "group": 445,
+              "resonances_tendl2025": null,
+              "resonances_viii1": 7
+            },
+            {
+              "energy_max_eV": 8709.636,
+              "energy_min_eV": 8317.638,
+              "factor_tendl2025": null,
+              "factor_viii0": 0.951660091560552,
+              "factor_viii1": 0.951660091560552,
+              "group": 446,
+              "resonances_tendl2025": null,
+              "resonances_viii1": 5
+            },
+            {
+              "energy_max_eV": 9120.108,
+              "energy_min_eV": 8709.636,
+              "factor_tendl2025": null,
+              "factor_viii0": 0.9331616274945889,
+              "factor_viii1": 0.9331616274945889,
+              "group": 447,
+              "resonances_tendl2025": null,
+              "resonances_viii1": 7
+            },
+            {
+              "energy_max_eV": 9549.926,
+              "energy_min_eV": 9120.108,
+              "factor_tendl2025": null,
+              "factor_viii0": 0.9721871962052164,
+              "factor_viii1": 0.9721871962052164,
+              "group": 448,
+              "resonances_tendl2025": null,
+              "resonances_viii1": 6
+            },
+            {
+              "energy_max_eV": 10000.0,
+              "energy_min_eV": 9549.926,
+              "factor_tendl2025": null,
+              "factor_viii0": 0.9446839086338592,
+              "factor_viii1": 0.9446839086338592,
+              "group": 449,
+              "resonances_tendl2025": null,
+              "resonances_viii1": 5
+            }
+          ]
+        },
+        "0.1": {
+          "summary": {
+            "groups_common": 35,
+            "groups_tendl2025": 35,
+            "groups_tendl2025_only": 0,
+            "groups_viii0": 57,
+            "groups_viii1": 57,
+            "groups_viii1_only": 22,
+            "max_abs_relative_difference": 0.2924109438641525,
+            "mean_factor_tendl2025": 0.46697265739875277,
+            "mean_factor_viii1": 0.579054963208968,
+            "median_abs_relative_difference": 0.018263265444485643,
+            "min_factor_tendl2025": 0.07527615641073385,
+            "min_factor_viii0": 0.07528021760714422,
+            "min_factor_viii1": 0.07528021760714422
+          },
+          "table": [
+            {
+              "energy_max_eV": 19.05461,
+              "energy_min_eV": 18.19701,
+              "factor_tendl2025": 0.07527615641073385,
+              "factor_viii0": 0.07528021760714422,
+              "factor_viii1": 0.07528021760714422,
+              "group": 313,
+              "relative_difference_viii1_vs_tendl": 5.395063462345729e-05,
+              "resonances_tendl2025": 1,
+              "resonances_viii1": 1
+            },
+            {
+              "energy_max_eV": 173.7801,
+              "energy_min_eV": 165.9587,
+              "factor_tendl2025": 0.16106753896041967,
+              "factor_viii0": 0.16400915817894385,
+              "factor_viii1": 0.16400915817894385,
+              "group": 361,
+              "relative_difference_viii1_vs_tendl": 0.018263265444485643,
+              "resonances_tendl2025": 1,
+              "resonances_viii1": 1
+            },
+            {
+              "energy_max_eV": 218.7762,
+              "energy_min_eV": 208.9296,
+              "factor_tendl2025": 0.16572384466956508,
+              "factor_viii0": 0.17028204097451896,
+              "factor_viii1": 0.17028204097451896,
+              "group": 366,
+              "relative_difference_viii1_vs_tendl": 0.027504770445329813,
+              "resonances_tendl2025": 1,
+              "resonances_viii1": 1
+            },
+            {
+              "energy_max_eV": 288.4032,
+              "energy_min_eV": 275.4229,
+              "factor_tendl2025": 0.1892644994990093,
+              "factor_viii0": 0.1947227020409414,
+              "factor_viii1": 0.1947227020409414,
+              "group": 372,
+              "relative_difference_viii1_vs_tendl": 0.028839019236994567,
+              "resonances_tendl2025": 1,
+              "resonances_viii1": 1
+            },
+            {
+              "energy_max_eV": 416.8694,
+              "energy_min_eV": 398.1072,
+              "factor_tendl2025": 0.1978100841206325,
+              "factor_viii0": 0.19677512283267434,
+              "factor_viii1": 0.19677512283267434,
+              "group": 380,
+              "relative_difference_viii1_vs_tendl": -0.005232095686926646,
+              "resonances_tendl2025": 1,
+              "resonances_viii1": 1
+            },
+            {
+              "energy_max_eV": 524.8075,
+              "energy_min_eV": 501.1872,
+              "factor_tendl2025": 0.2199873745804555,
+              "factor_viii0": 0.22065756545683046,
+              "factor_viii1": 0.22065756545683046,
+              "group": 385,
+              "relative_difference_viii1_vs_tendl": 0.0030464969985350334,
+              "resonances_tendl2025": 1,
+              "resonances_viii1": 1
+            },
+            {
+              "energy_max_eV": 549.5409,
+              "energy_min_eV": 524.8075,
+              "factor_tendl2025": 0.2556316156316167,
+              "factor_viii0": 0.26451786730192106,
+              "factor_viii1": 0.26451786730192106,
+              "group": 386,
+              "relative_difference_viii1_vs_tendl": 0.0347619430732312,
+              "resonances_tendl2025": 1,
+              "resonances_viii1": 1
+            },
+            {
+              "energy_max_eV": 660.6934,
+              "energy_min_eV": 630.9573,
+              "factor_tendl2025": null,
+              "factor_viii0": 0.7582978829397677,
+              "factor_viii1": 0.7582978829397677,
+              "group": 390,
+              "resonances_tendl2025": null,
+              "resonances_viii1": 1
+            },
+            {
+              "energy_max_eV": 691.831,
+              "energy_min_eV": 660.6934,
+              "factor_tendl2025": 0.2833129567271264,
+              "factor_viii0": 0.2964775012885199,
+              "factor_viii1": 0.2964775012885199,
+              "group": 391,
+              "relative_difference_viii1_vs_tendl": 0.046466440199107985,
+              "resonances_tendl2025": 1,
+              "resonances_viii1": 1
+            },
+            {
+              "energy_max_eV": 724.436,
+              "energy_min_eV": 691.831,
+              "factor_tendl2025": 0.3548292448326951,
+              "factor_viii0": 0.3864982393400626,
+              "factor_viii1": 0.3864982393400626,
+              "group": 392,
+              "relative_difference_viii1_vs_tendl": 0.08925136518073552,
+              "resonances_tendl2025": 2,
+              "resonances_viii1": 1
+            },
+            {
+              "energy_max_eV": 758.5776,
+              "energy_min_eV": 724.436,
+              "factor_tendl2025": null,
+              "factor_viii0": 0.7325194140645712,
+              "factor_viii1": 0.7325194140645712,
+              "group": 393,
+              "resonances_tendl2025": null,
+              "resonances_viii1": 1
+            },
+            {
+              "energy_max_eV": 794.3282,
+              "energy_min_eV": 758.5776,
+              "factor_tendl2025": null,
+              "factor_viii0": 0.7847857296200111,
+              "factor_viii1": 0.7847857296200111,
+              "group": 394,
+              "resonances_tendl2025": null,
+              "resonances_viii1": 1
+            },
+            {
+              "energy_max_eV": 831.7638,
+              "energy_min_eV": 794.3282,
+              "factor_tendl2025": 0.33007934720985616,
+              "factor_viii0": 0.31411940007623906,
+              "factor_viii1": 0.31411940007623906,
+              "group": 395,
+              "relative_difference_viii1_vs_tendl": -0.04835185014914053,
+              "resonances_tendl2025": 1,
+              "resonances_viii1": 1
+            },
+            {
+              "energy_max_eV": 1000.0,
+              "energy_min_eV": 954.9926,
+              "factor_tendl2025": 0.37990090837844087,
+              "factor_viii0": 0.38980065240365663,
+              "factor_viii1": 0.38980065240365663,
+              "group": 399,
+              "relative_difference_viii1_vs_tendl": 0.02605875323507799,
+              "resonances_tendl2025": 1,
+              "resonances_viii1": 1
+            },
+            {
+              "energy_max_eV": 1096.478,
+              "energy_min_eV": 1047.129,
+              "factor_tendl2025": 0.36242514240288676,
+              "factor_viii0": 0.3814138040189437,
+              "factor_viii1": 0.3814138040189437,
+              "group": 401,
+              "relative_difference_viii1_vs_tendl": 0.052393334221135145,
+              "resonances_tendl2025": 1,
+              "resonances_viii1": 2
+            },
+            {
+              "energy_max_eV": 1148.154,
+              "energy_min_eV": 1096.478,
+              "factor_tendl2025": 0.3556347161201817,
+              "factor_viii0": 0.35341248040264095,
+              "factor_viii1": 0.35341248040264095,
+              "group": 402,
+              "relative_difference_viii1_vs_tendl": -0.006248646762566883,
+              "resonances_tendl2025": 1,
+              "resonances_viii1": 1
+            },
+            {
+              "energy_max_eV": 1202.264,
+              "energy_min_eV": 1148.154,
+              "factor_tendl2025": 0.41972719633825367,
+              "factor_viii0": 0.4272380650579587,
+              "factor_viii1": 0.4272380650579587,
+              "group": 403,
+              "relative_difference_viii1_vs_tendl": 0.017894643914501296,
+              "resonances_tendl2025": 1,
+              "resonances_viii1": 1
+            },
+            {
+              "energy_max_eV": 1445.44,
+              "energy_min_eV": 1380.384,
+              "factor_tendl2025": 0.36257846617069706,
+              "factor_viii0": 0.36292743038630665,
+              "factor_viii1": 0.36292743038630665,
+              "group": 407,
+              "relative_difference_viii1_vs_tendl": 0.0009624515744001886,
+              "resonances_tendl2025": 1,
+              "resonances_viii1": 1
+            },
+            {
+              "energy_max_eV": 1513.561,
+              "energy_min_eV": 1445.44,
+              "factor_tendl2025": 0.49458494977480444,
+              "factor_viii0": 0.49226171722716106,
+              "factor_viii1": 0.49226171722716106,
+              "group": 408,
+              "relative_difference_viii1_vs_tendl": -0.004697337734804108,
+              "resonances_tendl2025": 2,
+              "resonances_viii1": 2
+            },
+            {
+              "energy_max_eV": 1659.587,
+              "energy_min_eV": 1584.893,
+              "factor_tendl2025": 0.6382948924889136,
+              "factor_viii0": 0.8249393044652645,
+              "factor_viii1": 0.8249393044652645,
+              "group": 410,
+              "relative_difference_viii1_vs_tendl": 0.2924109438641525,
+              "resonances_tendl2025": 1,
+              "resonances_viii1": 1
+            },
+            {
+              "energy_max_eV": 1737.801,
+              "energy_min_eV": 1659.587,
+              "factor_tendl2025": 0.642082266595146,
+              "factor_viii0": 0.8020940176125629,
+              "factor_viii1": 0.8020940176125629,
+              "group": 411,
+              "relative_difference_viii1_vs_tendl": 0.249207553832521,
+              "resonances_tendl2025": 1,
+              "resonances_viii1": 1
+            },
+            {
+              "energy_max_eV": 1819.701,
+              "energy_min_eV": 1737.801,
+              "factor_tendl2025": 0.4760872855192417,
+              "factor_viii0": 0.43732519125261454,
+              "factor_viii1": 0.43732519125261454,
+              "group": 412,
+              "relative_difference_viii1_vs_tendl": -0.08141804128281119,
+              "resonances_tendl2025": 2,
+              "resonances_viii1": 1
+            },
+            {
+              "energy_max_eV": 1905.461,
+              "energy_min_eV": 1819.701,
+              "factor_tendl2025": null,
+              "factor_viii0": 0.7988073812695873,
+              "factor_viii1": 0.7988073812695873,
+              "group": 413,
+              "resonances_tendl2025": null,
+              "resonances_viii1": 1
+            },
+            {
+              "energy_max_eV": 1995.262,
+              "energy_min_eV": 1905.461,
+              "factor_tendl2025": 0.5017795519112931,
+              "factor_viii0": 0.5086040117057302,
+              "factor_viii1": 0.5086040117057302,
+              "group": 414,
+              "relative_difference_viii1_vs_tendl": 0.01360051394769389,
+              "resonances_tendl2025": 1,
+              "resonances_viii1": 1
+            },
+            {
+              "energy_max_eV": 2089.296,
+              "energy_min_eV": 1995.262,
+              "factor_tendl2025": 0.49436197535038084,
+              "factor_viii0": 0.4965365315489699,
+              "factor_viii1": 0.4965365315489699,
+              "group": 415,
+              "relative_difference_viii1_vs_tendl": 0.00439871249613768,
+              "resonances_tendl2025": 2,
+              "resonances_viii1": 2
+            },
+            {
+              "energy_max_eV": 2187.762,
+              "energy_min_eV": 2089.296,
+              "factor_tendl2025": 0.43443357508431646,
+              "factor_viii0": 0.4339886362471568,
+              "factor_viii1": 0.4339886362471568,
+              "group": 416,
+              "relative_difference_viii1_vs_tendl": -0.0010241815151449227,
+              "resonances_tendl2025": 1,
+              "resonances_viii1": 1
+            },
+            {
+              "energy_max_eV": 2398.833,
+              "energy_min_eV": 2290.868,
+              "factor_tendl2025": 0.4573163015663903,
+              "factor_viii0": 0.49669379702155003,
+              "factor_viii1": 0.49669379702155003,
+              "group": 418,
+              "relative_difference_viii1_vs_tendl": 0.08610560200956044,
+              "resonances_tendl2025": 2,
+              "resonances_viii1": 2
+            },
+            {
+              "energy_max_eV": 2630.268,
+              "energy_min_eV": 2511.886,
+              "factor_tendl2025": 0.5736360078701257,
+              "factor_viii0": 0.5825534724890957,
+              "factor_viii1": 0.5825534724890957,
+              "group": 420,
+              "relative_difference_viii1_vs_tendl": 0.015545510561793378,
+              "resonances_tendl2025": 3,
+              "resonances_viii1": 4
+            },
+            {
+              "energy_max_eV": 2754.229,
+              "energy_min_eV": 2630.268,
+              "factor_tendl2025": 0.7408311513342196,
+              "factor_viii0": 0.7458095261560608,
+              "factor_viii1": 0.7458095261560608,
+              "group": 421,
+              "relative_difference_viii1_vs_tendl": 0.006719985806313924,
+              "resonances_tendl2025": 1,
+              "resonances_viii1": 1
+            },
+            {
+              "energy_max_eV": 2884.032,
+              "energy_min_eV": 2754.229,
+              "factor_tendl2025": 0.5622529100236885,
+              "factor_viii0": 0.5895072852434192,
+              "factor_viii1": 0.5895072852434192,
+              "group": 422,
+              "relative_difference_viii1_vs_tendl": 0.048473515625881716,
+              "resonances_tendl2025": 3,
+              "resonances_viii1": 3
+            },
+            {
+              "energy_max_eV": 3019.952,
+              "energy_min_eV": 2884.032,
+              "factor_tendl2025": 0.5422656552396543,
+              "factor_viii0": 0.5389583670497285,
+              "factor_viii1": 0.5389583670497285,
+              "group": 423,
+              "relative_difference_viii1_vs_tendl": -0.006099018364834677,
+              "resonances_tendl2025": 3,
+              "resonances_viii1": 3
+            },
+            {
+              "energy_max_eV": 3162.278,
+              "energy_min_eV": 3019.952,
+              "factor_tendl2025": 0.7512910245707343,
+              "factor_viii0": 0.7341349900223432,
+              "factor_viii1": 0.7341349900223432,
+              "group": 424,
+              "relative_difference_viii1_vs_tendl": -0.02283540463989112,
+              "resonances_tendl2025": 3,
+              "resonances_viii1": 3
+            },
+            {
+              "energy_max_eV": 3311.311,
+              "energy_min_eV": 3162.278,
+              "factor_tendl2025": 0.8095606373626734,
+              "factor_viii0": 0.8159905410008875,
+              "factor_viii1": 0.8159905410008875,
+              "group": 425,
+              "relative_difference_viii1_vs_tendl": 0.007942460813264126,
+              "resonances_tendl2025": 1,
+              "resonances_viii1": 1
+            },
+            {
+              "energy_max_eV": 3467.369,
+              "energy_min_eV": 3311.311,
+              "factor_tendl2025": 0.6883184785995932,
+              "factor_viii0": 0.6757241281783049,
+              "factor_viii1": 0.6757241281783049,
+              "group": 426,
+              "relative_difference_viii1_vs_tendl": -0.018297271993789763,
+              "resonances_tendl2025": 4,
+              "resonances_viii1": 4
+            },
+            {
+              "energy_max_eV": 3630.781,
+              "energy_min_eV": 3467.369,
+              "factor_tendl2025": 0.578143507254259,
+              "factor_viii0": 0.6025520993384057,
+              "factor_viii1": 0.6025520993384057,
+              "group": 427,
+              "relative_difference_viii1_vs_tendl": 0.04221891585372792,
+              "resonances_tendl2025": 4,
+              "resonances_viii1": 4
+            },
+            {
+              "energy_max_eV": 3801.894,
+              "energy_min_eV": 3630.781,
+              "factor_tendl2025": 0.6419604168318359,
+              "factor_viii0": 0.6398754520786245,
+              "factor_viii1": 0.6398754520786245,
+              "group": 428,
+              "relative_difference_viii1_vs_tendl": -0.0032478088968491176,
+              "resonances_tendl2025": 5,
+              "resonances_viii1": 5
+            },
+            {
+              "energy_max_eV": 3981.072,
+              "energy_min_eV": 3801.894,
+              "factor_tendl2025": 0.7256364805535843,
+              "factor_viii0": 0.7142106213216628,
+              "factor_viii1": 0.7142106213216628,
+              "group": 429,
+              "relative_difference_viii1_vs_tendl": -0.015745982372888406,
+              "resonances_tendl2025": 2,
+              "resonances_viii1": 2
+            },
+            {
+              "energy_max_eV": 4168.694,
+              "energy_min_eV": 3981.072,
+              "factor_tendl2025": 0.7233026555656336,
+              "factor_viii0": 0.6872172453671733,
+              "factor_viii1": 0.6872172453671733,
+              "group": 430,
+              "relative_difference_viii1_vs_tendl": -0.049889779777237096,
+              "resonances_tendl2025": 4,
+              "resonances_viii1": 4
+            },
+            {
+              "energy_max_eV": 4365.158,
+              "energy_min_eV": 4168.694,
+              "factor_tendl2025": 0.7546541934072897,
+              "factor_viii0": 0.7442801104589252,
+              "factor_viii1": 0.7442801104589252,
+              "group": 431,
+              "relative_difference_viii1_vs_tendl": -0.01374680355451967,
+              "resonances_tendl2025": 3,
+              "resonances_viii1": 3
+            },
+            {
+              "energy_max_eV": 4570.882,
+              "energy_min_eV": 4365.158,
+              "factor_tendl2025": null,
+              "factor_viii0": 0.6816666654009145,
+              "factor_viii1": 0.6816666654009145,
+              "group": 432,
+              "resonances_tendl2025": null,
+              "resonances_viii1": 6
+            },
+            {
+              "energy_max_eV": 4786.301,
+              "energy_min_eV": 4570.882,
+              "factor_tendl2025": null,
+              "factor_viii0": 0.6882426460484,
+              "factor_viii1": 0.6882426460484,
+              "group": 433,
+              "resonances_tendl2025": null,
+              "resonances_viii1": 3
+            },
+            {
+              "energy_max_eV": 5011.872,
+              "energy_min_eV": 4786.301,
+              "factor_tendl2025": null,
+              "factor_viii0": 0.6956596484509026,
+              "factor_viii1": 0.6956596484509026,
+              "group": 434,
+              "resonances_tendl2025": null,
+              "resonances_viii1": 5
+            },
+            {
+              "energy_max_eV": 5248.075,
+              "energy_min_eV": 5011.872,
+              "factor_tendl2025": null,
+              "factor_viii0": 0.7504468404070136,
+              "factor_viii1": 0.7504468404070136,
+              "group": 435,
+              "resonances_tendl2025": null,
+              "resonances_viii1": 5
+            },
+            {
+              "energy_max_eV": 5495.409,
+              "energy_min_eV": 5248.075,
+              "factor_tendl2025": null,
+              "factor_viii0": 0.7096378506339085,
+              "factor_viii1": 0.7096378506339085,
+              "group": 436,
+              "resonances_tendl2025": null,
+              "resonances_viii1": 6
+            },
+            {
+              "energy_max_eV": 5754.399,
+              "energy_min_eV": 5495.409,
+              "factor_tendl2025": null,
+              "factor_viii0": 0.7208100975093163,
+              "factor_viii1": 0.7208100975093163,
+              "group": 437,
+              "resonances_tendl2025": null,
+              "resonances_viii1": 4
+            },
+            {
+              "energy_max_eV": 6025.596,
+              "energy_min_eV": 5754.399,
+              "factor_tendl2025": null,
+              "factor_viii0": 0.7499880605561363,
+              "factor_viii1": 0.7499880605561363,
+              "group": 438,
+              "resonances_tendl2025": null,
+              "resonances_viii1": 5
+            },
+            {
+              "energy_max_eV": 6309.573,
+              "energy_min_eV": 6025.596,
+              "factor_tendl2025": null,
+              "factor_viii0": 0.6730180401417616,
+              "factor_viii1": 0.6730180401417616,
+              "group": 439,
+              "resonances_tendl2025": null,
+              "resonances_viii1": 8
+            },
+            {
+              "energy_max_eV": 6606.934,
+              "energy_min_eV": 6309.573,
+              "factor_tendl2025": null,
+              "factor_viii0": 0.7989577215469134,
+              "factor_viii1": 0.7989577215469134,
+              "group": 440,
+              "resonances_tendl2025": null,
+              "resonances_viii1": 5
+            },
+            {
+              "energy_max_eV": 6918.31,
+              "energy_min_eV": 6606.934,
+              "factor_tendl2025": null,
+              "factor_viii0": 0.7117310220184256,
+              "factor_viii1": 0.7117310220184256,
+              "group": 441,
+              "resonances_tendl2025": null,
+              "resonances_viii1": 6
+            },
+            {
+              "energy_max_eV": 7244.36,
+              "energy_min_eV": 6918.31,
+              "factor_tendl2025": null,
+              "factor_viii0": 0.7549595944299101,
+              "factor_viii1": 0.7549595944299101,
+              "group": 442,
+              "resonances_tendl2025": null,
+              "resonances_viii1": 6
+            },
+            {
+              "energy_max_eV": 7585.776,
+              "energy_min_eV": 7244.36,
+              "factor_tendl2025": null,
+              "factor_viii0": 0.7342595038178148,
+              "factor_viii1": 0.7342595038178148,
+              "group": 443,
+              "resonances_tendl2025": null,
+              "resonances_viii1": 7
+            },
+            {
+              "energy_max_eV": 7943.282,
+              "energy_min_eV": 7585.776,
+              "factor_tendl2025": null,
+              "factor_viii0": 0.7647624919469734,
+              "factor_viii1": 0.7647624919469734,
+              "group": 444,
+              "resonances_tendl2025": null,
+              "resonances_viii1": 5
+            },
+            {
+              "energy_max_eV": 8317.638,
+              "energy_min_eV": 7943.282,
+              "factor_tendl2025": null,
+              "factor_viii0": 0.7056700996395944,
+              "factor_viii1": 0.7056700996395944,
+              "group": 445,
+              "resonances_tendl2025": null,
+              "resonances_viii1": 7
+            },
+            {
+              "energy_max_eV": 8709.636,
+              "energy_min_eV": 8317.638,
+              "factor_tendl2025": null,
+              "factor_viii0": 0.7523779441711262,
+              "factor_viii1": 0.7523779441711262,
+              "group": 446,
+              "resonances_tendl2025": null,
+              "resonances_viii1": 5
+            },
+            {
+              "energy_max_eV": 9120.108,
+              "energy_min_eV": 8709.636,
+              "factor_tendl2025": null,
+              "factor_viii0": 0.6871092579113186,
+              "factor_viii1": 0.6871092579113186,
+              "group": 447,
+              "resonances_tendl2025": null,
+              "resonances_viii1": 7
+            },
+            {
+              "energy_max_eV": 9549.926,
+              "energy_min_eV": 9120.108,
+              "factor_tendl2025": null,
+              "factor_viii0": 0.8463009009388671,
+              "factor_viii1": 0.8463009009388671,
+              "group": 448,
+              "resonances_tendl2025": null,
+              "resonances_viii1": 6
+            },
+            {
+              "energy_max_eV": 10000.0,
+              "energy_min_eV": 9549.926,
+              "factor_tendl2025": null,
+              "factor_viii0": 0.7447348162949944,
+              "factor_viii1": 0.7447348162949944,
+              "group": 449,
+              "resonances_tendl2025": null,
+              "resonances_viii1": 5
+            }
+          ]
+        }
+      }
+    }
+  },
+  "gates_run": [
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "protocol": "ACTINV-P139",
+  "protocol_path": "protocols/ACTINV-P139_PROTOCOL.md",
+  "protocol_sha256": "f970397d0e68eb9ddc8c99bf297f1ccf7dc70b83e90c6a043368cdc1afd601f2",
+  "reference": {
+    "path": "/home/connoravila/Documents/actinv/target/ref0c3a573-actinv",
+    "sha256": "f7f38c0241f62396c20e05b5a3c04726f7d55b3feb2ab215163e87d10f31fbae"
+  },
+  "specs": {
+    "fns_fe_5min": "ed55ed00f6c00fc4a2351e18332e98e7feb33d9b7ca65e7ba861e0e5e8feef39",
+    "shielding_demo": "5da1f8e0d1028bba93a51c5b21125d6145aaf24d0f1a65c2c90acf735616afb1"
+  },
+  "synthetic_head": "evaluation",
+  "timeout_s": 3600,
+  "verdict": "FAIL"
+}

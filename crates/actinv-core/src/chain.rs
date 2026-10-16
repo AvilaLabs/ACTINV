@@ -138,16 +138,17 @@ pub fn build_with_spontaneous(
             }
             let rate = l * md.br * scale;
             let digits = rtyp_digits(md.rtyp);
+            // RTYP 6 alone is spontaneous fission; a 6 after another transition (2.6, beta-delayed fission)
+            // fissions the daughter, not the parent, and is an unmodelled mode booked to leakage.
+            let spontaneous = digits.as_slice() == [6];
             let (mut zz, mut aa) = (z, a);
             let mut bad = false;
             let mut sf_products: Option<&BTreeMap<(i32, i32), f64>> = None;
-            for (position, d) in digits.into_iter().enumerate() {
-                if d == 6 {
+            for d in digits {
+                if d == 6 && spontaneous {
                     // Spontaneous fission. Only a branch that is the whole mode has yields to route.
                     led.sf_decay.push((k, rate));
-                    sf_products = sf_yields
-                        .and_then(|yields| yields.get(key))
-                        .filter(|_| position == 0);
+                    sf_products = sf_yields.and_then(|yields| yields.get(key));
                     if sf_products.is_none() {
                         led.sf_branches += 1;
                         if sf_yields.is_some() {
@@ -1469,6 +1470,8 @@ mod tests {
             assert_eq!(chain.ledger.sf_branches, 0, "{label}");
             assert!(chain.ledger.sf_uncovered.is_empty(), "{label}");
             assert!(chain.ledger.sf_routed.is_empty(), "{label}");
+            // P140 Amendment B: the branch is counted where the result ledger reports it.
+            assert_eq!(chain.ledger.unknown_modes, 1, "{label}");
             // The delayed-fission branch is an unmodelled mode: it goes to leakage, and the EC branch
             // still feeds the daughter.
             let column = entries(&chain, parent);

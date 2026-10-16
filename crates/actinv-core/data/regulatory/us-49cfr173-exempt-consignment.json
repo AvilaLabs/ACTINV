@@ -18,7 +18,7 @@
   {
    "id": "exempt-consignment-u-fast",
    "kind": "activity_limit",
-   "basis": "Activity limit for an exempt consignment, Bq. The index is the fraction of that limit per gram of material, so multiply by the consignment mass in grams. Uranium rows use the fast lung-absorption values; element-level rows are omitted. Parent rows marked (b) include their listed progeny.",
+   "basis": "Activity limit for an exempt consignment, Bq. The index is the fraction of that limit per gram of material, so multiply by the consignment mass in grams. Uranium rows use the fast lung-absorption values; element-level rows are omitted. Parent rows marked (b) include their listed progeny, which covered_by_parent lists (zero contribution while the parent is present).",
    "coefficients": {
     "Ac225": 10000.0,
     "Ac227": 1000.0,
@@ -387,12 +387,178 @@
     "Zr93": 10000000.0,
     "Zr95": 1000000.0,
     "Zr97": 100000.0
+   },
+   "covered_by_parent": {
+    "Ac225": [
+     "Th229"
+    ],
+    "Ac228": [
+     "Ra228"
+    ],
+    "Ag108": [
+     "Ag108m1"
+    ],
+    "Am242": [
+     "Am242m1"
+    ],
+    "At217": [
+     "Th229"
+    ],
+    "Ba137m1": [
+     "Cs137"
+    ],
+    "Bi210": [
+     "Pb210",
+     "Ra226"
+    ],
+    "Bi211": [
+     "Ra223"
+    ],
+    "Bi212": [
+     "Pb212",
+     "Ra224",
+     "Th228",
+     "U232"
+    ],
+    "Bi213": [
+     "Th229"
+    ],
+    "Bi214": [
+     "Ra226",
+     "Rn222"
+    ],
+    "Fr221": [
+     "Th229"
+    ],
+    "La140": [
+     "Ba140"
+    ],
+    "Nb93m1": [
+     "Zr93"
+    ],
+    "Nb97": [
+     "Zr97"
+    ],
+    "Np239": [
+     "Am243"
+    ],
+    "Pa233": [
+     "Np237"
+    ],
+    "Pa234m1": [
+     "Th234",
+     "U238"
+    ],
+    "Pb209": [
+     "Th229"
+    ],
+    "Pb210": [
+     "Ra226"
+    ],
+    "Pb211": [
+     "Ra223"
+    ],
+    "Pb212": [
+     "Ra224",
+     "Th228",
+     "U232"
+    ],
+    "Pb214": [
+     "Ra226",
+     "Rn222"
+    ],
+    "Po210": [
+     "Pb210",
+     "Ra226"
+    ],
+    "Po212": [
+     "Bi212",
+     "Pb212",
+     "Ra224",
+     "Th228",
+     "U232"
+    ],
+    "Po213": [
+     "Th229"
+    ],
+    "Po214": [
+     "Ra226",
+     "Rn222",
+     "U230"
+    ],
+    "Po215": [
+     "Ra223"
+    ],
+    "Po216": [
+     "Ra224",
+     "Th228",
+     "U232"
+    ],
+    "Po218": [
+     "Ra226",
+     "Rn222"
+    ],
+    "Pr144": [
+     "Ce144"
+    ],
+    "Ra222": [
+     "U230"
+    ],
+    "Ra224": [
+     "Th228",
+     "U232"
+    ],
+    "Ra225": [
+     "Th229"
+    ],
+    "Rh106": [
+     "Ru106"
+    ],
+    "Rn218": [
+     "U230"
+    ],
+    "Rn219": [
+     "Ra223"
+    ],
+    "Rn220": [
+     "Ra224",
+     "Th228",
+     "U232"
+    ],
+    "Rn222": [
+     "Ra226"
+    ],
+    "Th226": [
+     "U230"
+    ],
+    "Th228": [
+     "U232"
+    ],
+    "Th231": [
+     "U235"
+    ],
+    "Th234": [
+     "U238"
+    ],
+    "Tl207": [
+     "Ra223"
+    ],
+    "Tl208": [
+     "Bi212",
+     "Pb212",
+     "Ra224",
+     "Th228",
+     "U232"
+    ],
+    "Y90": [
+     "Sr90"
+    ]
    }
   },
   {
    "id": "exempt-consignment-u-medium",
    "kind": "activity_limit",
-   "basis": "Activity limit for an exempt consignment, Bq. The index is the fraction of that limit per gram of material, so multiply by the consignment mass in grams. Uranium rows use the medium lung-absorption values; element-level rows are omitted. Parent rows marked (b) include their listed progeny.",
+   "basis": "Activity limit for an exempt consignment, Bq. The index is the fraction of that limit per gram of material, so multiply by the consignment mass in grams. Uranium rows use the medium lung-absorption values; element-level rows are omitted. Parent rows marked (b) include their listed progeny, which covered_by_parent lists (zero contribution while the parent is present).",
    "coefficients": {
     "Ac225": 10000.0,
     "Ac227": 1000.0,
@@ -761,12 +927,158 @@
     "Zr93": 10000000.0,
     "Zr95": 1000000.0,
     "Zr97": 100000.0
+   },
+   "covered_by_parent": {
+    "Ac225": [
+     "Th229"
+    ],
+    "Ac228": [
+     "Ra228"
+    ],
+    "Ag108": [
+     "Ag108m1"
+    ],
+    "Am242": [
+     "Am242m1"
+    ],
+    "At217": [
+     "Th229"
+    ],
+    "Ba137m1": [
+     "Cs137"
+    ],
+    "Bi210": [
+     "Pb210",
+     "Ra226"
+    ],
+    "Bi211": [
+     "Ra223"
+    ],
+    "Bi212": [
+     "Pb212",
+     "Ra224",
+     "Th228"
+    ],
+    "Bi213": [
+     "Th229"
+    ],
+    "Bi214": [
+     "Ra226",
+     "Rn222"
+    ],
+    "Fr221": [
+     "Th229"
+    ],
+    "La140": [
+     "Ba140"
+    ],
+    "Nb93m1": [
+     "Zr93"
+    ],
+    "Nb97": [
+     "Zr97"
+    ],
+    "Np239": [
+     "Am243"
+    ],
+    "Pa233": [
+     "Np237"
+    ],
+    "Pa234m1": [
+     "Th234",
+     "U238"
+    ],
+    "Pb209": [
+     "Th229"
+    ],
+    "Pb210": [
+     "Ra226"
+    ],
+    "Pb211": [
+     "Ra223"
+    ],
+    "Pb212": [
+     "Ra224",
+     "Th228"
+    ],
+    "Pb214": [
+     "Ra226",
+     "Rn222"
+    ],
+    "Po210": [
+     "Pb210",
+     "Ra226"
+    ],
+    "Po212": [
+     "Bi212",
+     "Pb212",
+     "Ra224",
+     "Th228"
+    ],
+    "Po213": [
+     "Th229"
+    ],
+    "Po214": [
+     "Ra226",
+     "Rn222"
+    ],
+    "Po215": [
+     "Ra223"
+    ],
+    "Po216": [
+     "Ra224",
+     "Th228"
+    ],
+    "Po218": [
+     "Ra226",
+     "Rn222"
+    ],
+    "Pr144": [
+     "Ce144"
+    ],
+    "Ra224": [
+     "Th228"
+    ],
+    "Ra225": [
+     "Th229"
+    ],
+    "Rh106": [
+     "Ru106"
+    ],
+    "Rn219": [
+     "Ra223"
+    ],
+    "Rn220": [
+     "Ra224",
+     "Th228"
+    ],
+    "Rn222": [
+     "Ra226"
+    ],
+    "Th231": [
+     "U235"
+    ],
+    "Th234": [
+     "U238"
+    ],
+    "Tl207": [
+     "Ra223"
+    ],
+    "Tl208": [
+     "Bi212",
+     "Pb212",
+     "Ra224",
+     "Th228"
+    ],
+    "Y90": [
+     "Sr90"
+    ]
    }
   },
   {
    "id": "exempt-consignment-u-slow",
    "kind": "activity_limit",
-   "basis": "Activity limit for an exempt consignment, Bq. The index is the fraction of that limit per gram of material, so multiply by the consignment mass in grams. Uranium rows use the slow lung-absorption values; element-level rows are omitted. Parent rows marked (b) include their listed progeny.",
+   "basis": "Activity limit for an exempt consignment, Bq. The index is the fraction of that limit per gram of material, so multiply by the consignment mass in grams. Uranium rows use the slow lung-absorption values; element-level rows are omitted. Parent rows marked (b) include their listed progeny, which covered_by_parent lists (zero contribution while the parent is present).",
    "coefficients": {
     "Ac225": 10000.0,
     "Ac227": 1000.0,
@@ -1135,6 +1447,152 @@
     "Zr93": 10000000.0,
     "Zr95": 1000000.0,
     "Zr97": 100000.0
+   },
+   "covered_by_parent": {
+    "Ac225": [
+     "Th229"
+    ],
+    "Ac228": [
+     "Ra228"
+    ],
+    "Ag108": [
+     "Ag108m1"
+    ],
+    "Am242": [
+     "Am242m1"
+    ],
+    "At217": [
+     "Th229"
+    ],
+    "Ba137m1": [
+     "Cs137"
+    ],
+    "Bi210": [
+     "Pb210",
+     "Ra226"
+    ],
+    "Bi211": [
+     "Ra223"
+    ],
+    "Bi212": [
+     "Pb212",
+     "Ra224",
+     "Th228"
+    ],
+    "Bi213": [
+     "Th229"
+    ],
+    "Bi214": [
+     "Ra226",
+     "Rn222"
+    ],
+    "Fr221": [
+     "Th229"
+    ],
+    "La140": [
+     "Ba140"
+    ],
+    "Nb93m1": [
+     "Zr93"
+    ],
+    "Nb97": [
+     "Zr97"
+    ],
+    "Np239": [
+     "Am243"
+    ],
+    "Pa233": [
+     "Np237"
+    ],
+    "Pa234m1": [
+     "Th234",
+     "U238"
+    ],
+    "Pb209": [
+     "Th229"
+    ],
+    "Pb210": [
+     "Ra226"
+    ],
+    "Pb211": [
+     "Ra223"
+    ],
+    "Pb212": [
+     "Ra224",
+     "Th228"
+    ],
+    "Pb214": [
+     "Ra226",
+     "Rn222"
+    ],
+    "Po210": [
+     "Pb210",
+     "Ra226"
+    ],
+    "Po212": [
+     "Bi212",
+     "Pb212",
+     "Ra224",
+     "Th228"
+    ],
+    "Po213": [
+     "Th229"
+    ],
+    "Po214": [
+     "Ra226",
+     "Rn222"
+    ],
+    "Po215": [
+     "Ra223"
+    ],
+    "Po216": [
+     "Ra224",
+     "Th228"
+    ],
+    "Po218": [
+     "Ra226",
+     "Rn222"
+    ],
+    "Pr144": [
+     "Ce144"
+    ],
+    "Ra224": [
+     "Th228"
+    ],
+    "Ra225": [
+     "Th229"
+    ],
+    "Rh106": [
+     "Ru106"
+    ],
+    "Rn219": [
+     "Ra223"
+    ],
+    "Rn220": [
+     "Ra224",
+     "Th228"
+    ],
+    "Rn222": [
+     "Ra226"
+    ],
+    "Th231": [
+     "U235"
+    ],
+    "Th234": [
+     "U238"
+    ],
+    "Tl207": [
+     "Ra223"
+    ],
+    "Tl208": [
+     "Bi212",
+     "Pb212",
+     "Ra224",
+     "Th228"
+    ],
+    "Y90": [
+     "Sr90"
+    ]
    }
   }
  ]

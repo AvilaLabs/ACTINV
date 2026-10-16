@@ -22,7 +22,11 @@ key involved in the case. On every successful run:
   repeat        a second run of the same spec is byte-identical apart from `"ms"`.
 
 The baseline default-options runs (`auto`, all four materials and examples/fns_fe_5min.json itself) must also be
-byte-identical to the REFERENCE binary's apart from `"ms"`.
+byte-identical to the REFERENCE binary's apart from `"ms"` (`reference_identical`), or, under P140 Amendment B,
+`reference_compatible`: identical once `ms`, the ledger keys `spontaneous_fission_branches_to_leakage` and
+`unmodelled_decay_branches_to_leakage` and, for W, SS316 and U only, `pathways` and `pathway_closure` are masked; the
+spontaneous-fission count may only fall, by at most the unmodelled count (absent reads as 0, Amendment E); a
+numeric `pathway_closure` may not grow.
 
 Informational extras (cross-checks the protocol does not list: summary against the step's activity, depletion rate
 sums, route totals against the inventory, honoured mode, negative sinks) are recorded per case and counted but do not
@@ -982,6 +986,56 @@ def mask_ms(data):
     return MS.sub(b'"ms":0', data)
 
 
+# P140 Amendment B: materials with radioactive bulk nuclides, whose pathway attribution repair 5 changes.
+DECAY_FED_MATERIALS = ("w", "ss316", "u")
+AMENDMENT_B_LEDGER = ("spontaneous_fission_branches_to_leakage", "unmodelled_decay_branches_to_leakage")
+
+
+def reference_compatible(case_id, data_ref, data_cand):
+    """(pass, problems) of the Amendment B comparison of a baseline result with the reference's."""
+    ref, cand = json.loads(data_ref), json.loads(data_cand)
+    problems = []
+    sf_ref = ref.get("ledger", {}).get(AMENDMENT_B_LEDGER[0])
+    sf_cand = cand.get("ledger", {}).get(AMENDMENT_B_LEDGER[0])
+    # Amendment E: the key is emitted only when nonzero, so absence reads as 0.
+    unmodelled = cand.get("ledger", {}).get(AMENDMENT_B_LEDGER[1], 0)
+    if not isinstance(unmodelled, int):
+        problems.append(f"candidate ledger lacks an integer {AMENDMENT_B_LEDGER[1]}: {unmodelled!r}")
+    elif not (isinstance(sf_ref, int) and isinstance(sf_cand, int)):
+        problems.append(f"spontaneous-fission counts not integers: reference {sf_ref!r}, candidate {sf_cand!r}")
+    elif sf_cand > sf_ref or sf_ref - sf_cand > unmodelled:
+        problems.append(f"spontaneous-fission count {sf_ref} -> {sf_cand} is not a fall of at most the "
+                        f"unmodelled count {unmodelled}")
+    decay_fed = case_id.split(".", 1)[0] in DECAY_FED_MATERIALS
+    if decay_fed:
+        c_ref, c_cand = ref.get("pathway_closure"), cand.get("pathway_closure")
+        if isinstance(c_ref, (int, float)) and isinstance(c_cand, (int, float)) and c_cand > c_ref:
+            problems.append(f"pathway_closure grew: {c_ref} -> {c_cand}")
+    for doc in (ref, cand):
+        doc.pop("ms", None)
+        for key in AMENDMENT_B_LEDGER:
+            doc.get("ledger", {}).pop(key, None)
+        if decay_fed:
+            doc.pop("pathways", None)
+            doc.pop("pathway_closure", None)
+    strip_ms(ref)
+    strip_ms(cand)
+    if ref != cand:
+        diff = [k for k in sorted(set(ref) | set(cand)) if ref.get(k) != cand.get(k)]
+        problems.append(f"differs outside the Amendment B fields in: {diff[:10]}")
+    return not problems, problems
+
+
+def strip_ms(node):
+    if isinstance(node, dict):
+        node.pop("ms", None)
+        for value in node.values():
+            strip_ms(value)
+    elif isinstance(node, list):
+        for value in node:
+            strip_ms(value)
+
+
 def first_difference(a, b):
     la, lb = a.splitlines(), b.splitlines()
     for i, (x, y) in enumerate(zip(la, lb), start=1):
@@ -1081,10 +1135,15 @@ def run_case(case, reference, candidate, args, workdir):
         else:
             data_ref = out_ref.read_bytes()
             same = mask_ms(data_a) == mask_ms(data_ref)
-            invariants["reference_identical"] = {"applicable": True, "pass": same}
-            if not same:
-                invariants["reference_identical"]["first_difference"] = first_difference(mask_ms(data_ref),
-                                                                                       mask_ms(data_a))
+            if same:
+                invariants["reference_identical"] = {"applicable": True, "pass": True}
+            else:
+                compatible, problems = reference_compatible(case.id, data_ref, data_a)
+                invariants["reference_compatible"] = {
+                    "applicable": True, "pass": compatible, "amendment": "P140 Amendment B",
+                    "first_difference": first_difference(mask_ms(data_ref), mask_ms(data_a))}
+                if problems:
+                    invariants["reference_compatible"]["problems"] = problems
     ok = all(v["pass"] for v in invariants.values())
     record["outcome"] = "pass" if ok else "fail"
     if ok and case.conflicts:

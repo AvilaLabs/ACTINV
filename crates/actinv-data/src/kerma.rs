@@ -219,6 +219,24 @@ impl KermaTable {
             groups,
             false,
         )?;
+        // A damage row is read only through a heating row of the same state (the fold returns
+        // nothing for a state the heating rows do not cover), so one without it can never act.
+        for name in &damage_energy.names {
+            let covered = match composition::material_key(name) {
+                Ok(MaterialKey::Nuclide { za, liso, .. }) => heating.lookup(za, liso).is_some(),
+                Ok(MaterialKey::Element(symbol)) => composition::z_of(&symbol).is_some_and(|z| {
+                    heating.elements.contains_key(&z)
+                        || heating.nuclides.keys().any(|(za, _)| za / 1000 == z)
+                }),
+                Err(_) => true,
+            };
+            if !covered {
+                return Err(format!(
+                    "kerma table damage_energy_target '{name}' has no heating row in targets, so \
+                     it could never contribute"
+                ));
+            }
+        }
         Ok(Self {
             source: table.source,
             projectile: table.projectile,
@@ -239,6 +257,11 @@ impl KermaTable {
     /// True when a heating row (nuclide, else element) covers this state.
     pub fn covers(&self, za: i32, liso: i32) -> bool {
         self.heating.lookup(za, liso).is_some()
+    }
+
+    /// True when a damage-energy row (nuclide, else element) covers this state.
+    pub fn covers_damage_energy(&self, za: i32, liso: i32) -> bool {
+        self.damage_energy.lookup(za, liso).is_some()
     }
 
     /// True when the table carries any MT=444 damage-energy rows.

@@ -14,9 +14,10 @@
   "licence": "US Government work (17 U.S.C. 105), public domain. The values mirror IAEA SSR-6 (Rev.1) Table 2 as published in 49 CFR."
  },
  "tables": {
-  "us-49cfr173-a1.json": "701070bc986f8c13dccbf2fd1933fb501531dd9283ce75d39815f7e4f7a5eeee",
-  "us-49cfr173-a2.json": "17578031eeecda97c39c3034571d2060b30fe8d93e30fa048e245a0608a55745"
+  "us-49cfr173-a1.json": "2756c39b2b5be94167bf2243748537aa87dfde1d053a7974b47365af715b4ea3",
+  "us-49cfr173-a2.json": "aa41476f589fe621ecf7a421d27af2566f7cb48914a8889a05b83f6f022b79bc"
  },
+ "progeny_provenance": "49 CFR 173.435 footnote (a) refers to the IAEA SSR-6 list of parents whose A1/A2 include daughter nuclides with half-lives under 10 days; the CFR does not reproduce that list. The tables' covered_by_parent maps use the 49 CFR 173.436 footnote (b) progeny lists for the parents that carry footnote (a); rows flagged progeny_from_173_436_footnote_b are those, and rows flagged parent_with_progeny_not_in_173_436_list have progeny that this converter does not know.",
  "footnotes": {
   "a": [
    "A1 and/or A2 values for these parent radionuclides include contributions from daughter nuclides with half-lives less than 10 days as listed in footnote (a) to Table 2 in the “IAEA Regulations for the Safe Transport of Radioactive Material, SSR-6” (IBR, see § 171.7 of this subchapter)."
@@ -54,7 +55,8 @@
    ],
    "flags": [
     "footnote_a",
-    "parent_with_progeny_not_listed_in_cfr"
+    "parent_with_progeny_not_listed_in_cfr",
+    "parent_with_progeny_not_in_173_436_list"
    ],
    "kind": "nuclide",
    "nuclide": "Ac225",
@@ -103,7 +105,8 @@
    ],
    "flags": [
     "footnote_a",
-    "parent_with_progeny_not_listed_in_cfr"
+    "parent_with_progeny_not_listed_in_cfr",
+    "parent_with_progeny_not_in_173_436_list"
    ],
    "kind": "nuclide",
    "nuclide": "Ac227",
@@ -240,7 +243,8 @@
    ],
    "flags": [
     "footnote_a",
-    "parent_with_progeny_not_listed_in_cfr"
+    "parent_with_progeny_not_listed_in_cfr",
+    "progeny_from_173_436_footnote_b"
    ],
    "kind": "nuclide",
    "nuclide": "Ag108m1",
@@ -280,7 +284,10 @@
      "number": 26.0
     }
    },
-   "omitted_from_tables": null
+   "omitted_from_tables": null,
+   "progeny_included": [
+    "Ag-108"
+   ]
   },
   {
    "label": "Ag-110m (a)",
@@ -289,7 +296,8 @@
    ],
    "flags": [
     "footnote_a",
-    "parent_with_progeny_not_listed_in_cfr"
+    "parent_with_progeny_not_listed_in_cfr",
+    "parent_with_progeny_not_in_173_436_list"
    ],
    "kind": "nuclide",
    "nuclide": "Ag110m1",
@@ -470,7 +478,8 @@
    ],
    "flags": [
     "footnote_a",
-    "parent_with_progeny_not_listed_in_cfr"
+    "parent_with_progeny_not_listed_in_cfr",
+    "progeny_from_173_436_footnote_b"
    ],
    "kind": "nuclide",
    "nuclide": "Am242m1",
@@ -510,7 +519,10 @@
      "number": 10.0
     }
    },
-   "omitted_from_tables": null
+   "omitted_from_tables": null,
+   "progeny_included": [
+    "Am-242"
+   ]
   },
   {
    "label": "Am-243 (a)",
@@ -519,7 +531,8 @@
    ],
    "flags": [
     "footnote_a",
-    "parent_with_progeny_not_listed_in_cfr"
+    "parent_with_progeny_not_listed_in_cfr",
+    "progeny_from_173_436_footnote_b"
    ],
    "kind": "nuclide",
    "nuclide": "Am243",
@@ -559,7 +572,10 @@
      "number": 0.2
     }
    },
-   "omitted_from_tables": null
+   "omitted_from_tables": null,
+   "progeny_included": [
+    "Np-239"
+   ]
   },
   {
    "label": "Ar-37",
@@ -920,7 +936,8 @@
    ],
    "flags": [
     "footnote_a",
-    "parent_with_progeny_not_listed_in_cfr"
+    "parent_with_progeny_not_listed_in_cfr",
+    "parent_with_progeny_not_in_173_436_list"
    ],
    "kind": "nuclide",
    "nuclide": "At211",
@@ -1189,7 +1206,8 @@
    ],
    "flags": [
     "footnote_a",
-    "parent_with_progeny_not_listed_in_cfr"
+    "parent_with_progeny_not_listed_in_cfr",
+    "parent_with_progeny_not_in_173_436_list"
    ],
    "kind": "nuclide",
    "nuclide": "Ba131",
@@ -1326,7 +1344,8 @@
    ],
    "flags": [
     "footnote_a",
-    "parent_with_progeny_not_listed_in_cfr"
+    "parent_with_progeny_not_listed_in_cfr",
+    "progeny_from_173_436_footnote_b"
    ],
    "kind": "nuclide",
    "nuclide": "Ba140",
@@ -1366,7 +1385,10 @@
      "number": 73000.0
     }
    },
-   "omitted_from_tables": null
+   "omitted_from_tables": null,
+   "progeny_included": [
+    "La-140"
+   ]
   },
   {
    "label": "Be-7",
@@ -1639,7 +1661,8 @@
    ],
    "flags": [
     "footnote_a",
-    "parent_with_progeny_not_listed_in_cfr"
+    "parent_with_progeny_not_listed_in_cfr",
+    "parent_with_progeny_not_in_173_436_list"
    ],
    "kind": "nuclide",
    "nuclide": "Bi210m1",
@@ -1688,7 +1711,8 @@
    ],
    "flags": [
     "footnote_a",
-    "parent_with_progeny_not_listed_in_cfr"
+    "parent_with_progeny_not_listed_in_cfr",
+    "progeny_from_173_436_footnote_b"
    ],
    "kind": "nuclide",
    "nuclide": "Bi212",
@@ -1728,7 +1752,11 @@
      "number": 15000000.0
     }
    },
-   "omitted_from_tables": null
+   "omitted_from_tables": null,
+   "progeny_included": [
+    "Tl-208 (0.36)",
+    "Po-212 (0.64)"
+   ]
   },
   {
    "label": "Bk-247",
@@ -1781,7 +1809,8 @@
    ],
    "flags": [
     "footnote_a",
-    "parent_with_progeny_not_listed_in_cfr"
+    "parent_with_progeny_not_listed_in_cfr",
+    "parent_with_progeny_not_in_173_436_list"
    ],
    "kind": "nuclide",
    "nuclide": "Bk249",
@@ -2144,7 +2173,8 @@
    ],
    "flags": [
     "footnote_a",
-    "parent_with_progeny_not_listed_in_cfr"
+    "parent_with_progeny_not_listed_in_cfr",
+    "parent_with_progeny_not_in_173_436_list"
    ],
    "kind": "nuclide",
    "nuclide": "Ca47",
@@ -2281,7 +2311,8 @@
    ],
    "flags": [
     "footnote_a",
-    "parent_with_progeny_not_listed_in_cfr"
+    "parent_with_progeny_not_listed_in_cfr",
+    "parent_with_progeny_not_in_173_436_list"
    ],
    "kind": "nuclide",
    "nuclide": "Cd115",
@@ -2506,7 +2537,8 @@
    ],
    "flags": [
     "footnote_a",
-    "parent_with_progeny_not_listed_in_cfr"
+    "parent_with_progeny_not_listed_in_cfr",
+    "progeny_from_173_436_footnote_b"
    ],
    "kind": "nuclide",
    "nuclide": "Ce144",
@@ -2546,7 +2578,10 @@
      "number": 3200.0
     }
    },
-   "omitted_from_tables": null
+   "omitted_from_tables": null,
+   "progeny_included": [
+    "Pr-144"
+   ]
   },
   {
    "label": "Cf-248",
@@ -2775,7 +2810,8 @@
    ],
    "flags": [
     "footnote_a",
-    "parent_with_progeny_not_listed_in_cfr"
+    "parent_with_progeny_not_listed_in_cfr",
+    "parent_with_progeny_not_in_173_436_list"
    ],
    "kind": "nuclide",
    "nuclide": "Cf253",
@@ -3264,7 +3300,8 @@
    ],
    "flags": [
     "footnote_a",
-    "parent_with_progeny_not_listed_in_cfr"
+    "parent_with_progeny_not_listed_in_cfr",
+    "parent_with_progeny_not_in_173_436_list"
    ],
    "kind": "nuclide",
    "nuclide": "Cm247",
@@ -3973,7 +4010,8 @@
    ],
    "flags": [
     "footnote_a",
-    "parent_with_progeny_not_listed_in_cfr"
+    "parent_with_progeny_not_listed_in_cfr",
+    "progeny_from_173_436_footnote_b"
    ],
    "kind": "nuclide",
    "nuclide": "Cs137",
@@ -4013,7 +4051,10 @@
      "number": 87.0
     }
    },
-   "omitted_from_tables": null
+   "omitted_from_tables": null,
+   "progeny_included": [
+    "Ba-137m"
+   ]
   },
   {
    "label": "Cu-64",
@@ -4198,7 +4239,8 @@
    ],
    "flags": [
     "footnote_a",
-    "parent_with_progeny_not_listed_in_cfr"
+    "parent_with_progeny_not_listed_in_cfr",
+    "parent_with_progeny_not_in_173_436_list"
    ],
    "kind": "nuclide",
    "nuclide": "Dy166",
@@ -4823,7 +4865,8 @@
    ],
    "flags": [
     "footnote_a",
-    "parent_with_progeny_not_listed_in_cfr"
+    "parent_with_progeny_not_listed_in_cfr",
+    "parent_with_progeny_not_in_173_436_list"
    ],
    "kind": "nuclide",
    "nuclide": "Fe52",
@@ -4960,7 +5003,8 @@
    ],
    "flags": [
     "footnote_a",
-    "parent_with_progeny_not_listed_in_cfr"
+    "parent_with_progeny_not_listed_in_cfr",
+    "parent_with_progeny_not_in_173_436_list"
    ],
    "kind": "nuclide",
    "nuclide": "Fe60",
@@ -5141,7 +5185,8 @@
    ],
    "flags": [
     "footnote_a",
-    "parent_with_progeny_not_listed_in_cfr"
+    "parent_with_progeny_not_listed_in_cfr",
+    "parent_with_progeny_not_in_173_436_list"
    ],
    "kind": "nuclide",
    "nuclide": "Gd146",
@@ -5322,7 +5367,8 @@
    ],
    "flags": [
     "footnote_a",
-    "parent_with_progeny_not_listed_in_cfr"
+    "parent_with_progeny_not_listed_in_cfr",
+    "parent_with_progeny_not_in_173_436_list"
    ],
    "kind": "nuclide",
    "nuclide": "Ge68",
@@ -5459,7 +5505,8 @@
    ],
    "flags": [
     "footnote_a",
-    "parent_with_progeny_not_listed_in_cfr"
+    "parent_with_progeny_not_listed_in_cfr",
+    "parent_with_progeny_not_in_173_436_list"
    ],
    "kind": "nuclide",
    "nuclide": "Hf172",
@@ -5646,7 +5693,8 @@
    ],
    "flags": [
     "footnote_a",
-    "parent_with_progeny_not_listed_in_cfr"
+    "parent_with_progeny_not_listed_in_cfr",
+    "parent_with_progeny_not_in_173_436_list"
    ],
    "kind": "nuclide",
    "nuclide": "Hg194",
@@ -5695,7 +5743,8 @@
    ],
    "flags": [
     "footnote_a",
-    "parent_with_progeny_not_listed_in_cfr"
+    "parent_with_progeny_not_listed_in_cfr",
+    "parent_with_progeny_not_in_173_436_list"
    ],
    "kind": "nuclide",
    "nuclide": "Hg195m1",
@@ -6366,7 +6415,8 @@
    ],
    "flags": [
     "footnote_a",
-    "parent_with_progeny_not_listed_in_cfr"
+    "parent_with_progeny_not_listed_in_cfr",
+    "parent_with_progeny_not_in_173_436_list"
    ],
    "kind": "nuclide",
    "nuclide": "I135",
@@ -6503,7 +6553,8 @@
    ],
    "flags": [
     "footnote_a",
-    "parent_with_progeny_not_listed_in_cfr"
+    "parent_with_progeny_not_listed_in_cfr",
+    "parent_with_progeny_not_in_173_436_list"
    ],
    "kind": "nuclide",
    "nuclide": "In114m1",
@@ -6596,7 +6647,8 @@
    ],
    "flags": [
     "footnote_a",
-    "parent_with_progeny_not_listed_in_cfr"
+    "parent_with_progeny_not_listed_in_cfr",
+    "parent_with_progeny_not_in_173_436_list"
    ],
    "kind": "nuclide",
    "nuclide": "Ir189",
@@ -7441,7 +7493,8 @@
    ],
    "flags": [
     "footnote_a",
-    "parent_with_progeny_not_listed_in_cfr"
+    "parent_with_progeny_not_listed_in_cfr",
+    "parent_with_progeny_not_in_173_436_list"
    ],
    "kind": "nuclide",
    "nuclide": "Mg28",
@@ -7718,7 +7771,8 @@
    "flags": [
     "footnote_a",
     "footnote_i",
-    "parent_with_progeny_not_listed_in_cfr"
+    "parent_with_progeny_not_listed_in_cfr",
+    "parent_with_progeny_not_in_173_436_list"
    ],
    "kind": "nuclide",
    "nuclide": "Mo99",
@@ -8705,7 +8759,8 @@
    ],
    "flags": [
     "footnote_a",
-    "parent_with_progeny_not_listed_in_cfr"
+    "parent_with_progeny_not_listed_in_cfr",
+    "parent_with_progeny_not_in_173_436_list"
    ],
    "kind": "nuclide",
    "nuclide": "Os194",
@@ -8842,7 +8897,8 @@
    ],
    "flags": [
     "footnote_a",
-    "parent_with_progeny_not_listed_in_cfr"
+    "parent_with_progeny_not_listed_in_cfr",
+    "parent_with_progeny_not_in_173_436_list"
    ],
    "kind": "nuclide",
    "nuclide": "Pa230",
@@ -9161,7 +9217,8 @@
    ],
    "flags": [
     "footnote_a",
-    "parent_with_progeny_not_listed_in_cfr"
+    "parent_with_progeny_not_listed_in_cfr",
+    "progeny_from_173_436_footnote_b"
    ],
    "kind": "nuclide",
    "nuclide": "Pb210",
@@ -9201,7 +9258,11 @@
      "number": 76.0
     }
    },
-   "omitted_from_tables": null
+   "omitted_from_tables": null,
+   "progeny_included": [
+    "Bi-210",
+    "Po-210"
+   ]
   },
   {
    "label": "Pb-212 (a)",
@@ -9210,7 +9271,8 @@
    ],
    "flags": [
     "footnote_a",
-    "parent_with_progeny_not_listed_in_cfr"
+    "parent_with_progeny_not_listed_in_cfr",
+    "progeny_from_173_436_footnote_b"
    ],
    "kind": "nuclide",
    "nuclide": "Pb212",
@@ -9250,7 +9312,12 @@
      "number": 1400000.0
     }
    },
-   "omitted_from_tables": null
+   "omitted_from_tables": null,
+   "progeny_included": [
+    "Bi-212",
+    "Tl-208 (0.36)",
+    "Po-212 (0.64)"
+   ]
   },
   {
    "label": "Pd-103 (a)",
@@ -9259,7 +9326,8 @@
    ],
    "flags": [
     "footnote_a",
-    "parent_with_progeny_not_listed_in_cfr"
+    "parent_with_progeny_not_listed_in_cfr",
+    "parent_with_progeny_not_in_173_436_list"
    ],
    "kind": "nuclide",
    "nuclide": "Pd103",
@@ -9578,7 +9646,8 @@
    ],
    "flags": [
     "footnote_a",
-    "parent_with_progeny_not_listed_in_cfr"
+    "parent_with_progeny_not_listed_in_cfr",
+    "parent_with_progeny_not_in_173_436_list"
    ],
    "kind": "nuclide",
    "nuclide": "Pm148m1",
@@ -9847,7 +9916,8 @@
    ],
    "flags": [
     "footnote_a",
-    "parent_with_progeny_not_listed_in_cfr"
+    "parent_with_progeny_not_listed_in_cfr",
+    "parent_with_progeny_not_in_173_436_list"
    ],
    "kind": "nuclide",
    "nuclide": "Pt188",
@@ -10380,7 +10450,8 @@
    ],
    "flags": [
     "footnote_a",
-    "parent_with_progeny_not_listed_in_cfr"
+    "parent_with_progeny_not_listed_in_cfr",
+    "parent_with_progeny_not_in_173_436_list"
    ],
    "kind": "nuclide",
    "nuclide": "Pu241",
@@ -10473,7 +10544,8 @@
    ],
    "flags": [
     "footnote_a",
-    "parent_with_progeny_not_listed_in_cfr"
+    "parent_with_progeny_not_listed_in_cfr",
+    "parent_with_progeny_not_in_173_436_list"
    ],
    "kind": "nuclide",
    "nuclide": "Pu244",
@@ -10522,7 +10594,8 @@
    ],
    "flags": [
     "footnote_a",
-    "parent_with_progeny_not_listed_in_cfr"
+    "parent_with_progeny_not_listed_in_cfr",
+    "progeny_from_173_436_footnote_b"
    ],
    "kind": "nuclide",
    "nuclide": "Ra223",
@@ -10562,7 +10635,14 @@
      "number": 51000.0
     }
    },
-   "omitted_from_tables": null
+   "omitted_from_tables": null,
+   "progeny_included": [
+    "Rn-219",
+    "Po-215",
+    "Pb-211",
+    "Bi-211",
+    "Tl-207"
+   ]
   },
   {
    "label": "Ra-224 (a)",
@@ -10571,7 +10651,8 @@
    ],
    "flags": [
     "footnote_a",
-    "parent_with_progeny_not_listed_in_cfr"
+    "parent_with_progeny_not_listed_in_cfr",
+    "progeny_from_173_436_footnote_b"
    ],
    "kind": "nuclide",
    "nuclide": "Ra224",
@@ -10611,7 +10692,15 @@
      "number": 160000.0
     }
    },
-   "omitted_from_tables": null
+   "omitted_from_tables": null,
+   "progeny_included": [
+    "Rn-220",
+    "Po-216",
+    "Pb-212",
+    "Bi-212",
+    "Tl-208 (0.36)",
+    "Po-212 (0.64)"
+   ]
   },
   {
    "label": "Ra-225 (a)",
@@ -10620,7 +10709,8 @@
    ],
    "flags": [
     "footnote_a",
-    "parent_with_progeny_not_listed_in_cfr"
+    "parent_with_progeny_not_listed_in_cfr",
+    "parent_with_progeny_not_in_173_436_list"
    ],
    "kind": "nuclide",
    "nuclide": "Ra225",
@@ -10669,7 +10759,8 @@
    ],
    "flags": [
     "footnote_a",
-    "parent_with_progeny_not_listed_in_cfr"
+    "parent_with_progeny_not_listed_in_cfr",
+    "progeny_from_173_436_footnote_b"
    ],
    "kind": "nuclide",
    "nuclide": "Ra226",
@@ -10709,7 +10800,17 @@
      "number": 1.0
     }
    },
-   "omitted_from_tables": null
+   "omitted_from_tables": null,
+   "progeny_included": [
+    "Rn-222",
+    "Po-218",
+    "Pb-214",
+    "Bi-214",
+    "Po-214",
+    "Pb-210",
+    "Bi-210",
+    "Po-210"
+   ]
   },
   {
    "label": "Ra-228 (a)",
@@ -10718,7 +10819,8 @@
    ],
    "flags": [
     "footnote_a",
-    "parent_with_progeny_not_listed_in_cfr"
+    "parent_with_progeny_not_listed_in_cfr",
+    "progeny_from_173_436_footnote_b"
    ],
    "kind": "nuclide",
    "nuclide": "Ra228",
@@ -10758,7 +10860,10 @@
      "number": 270.0
     }
    },
-   "omitted_from_tables": null
+   "omitted_from_tables": null,
+   "progeny_included": [
+    "Ac-228"
+   ]
   },
   {
    "label": "Rb-81",
@@ -10811,7 +10916,8 @@
    ],
    "flags": [
     "footnote_a",
-    "parent_with_progeny_not_listed_in_cfr"
+    "parent_with_progeny_not_listed_in_cfr",
+    "parent_with_progeny_not_in_173_436_list"
    ],
    "kind": "nuclide",
    "nuclide": "Rb83",
@@ -11277,7 +11383,8 @@
    ],
    "flags": [
     "footnote_a",
-    "parent_with_progeny_not_listed_in_cfr"
+    "parent_with_progeny_not_listed_in_cfr",
+    "parent_with_progeny_not_in_173_436_list"
    ],
    "kind": "nuclide",
    "nuclide": "Re189",
@@ -11643,7 +11750,8 @@
    ],
    "flags": [
     "footnote_a",
-    "parent_with_progeny_not_listed_in_cfr"
+    "parent_with_progeny_not_listed_in_cfr",
+    "progeny_from_173_436_footnote_b"
    ],
    "kind": "nuclide",
    "nuclide": "Rn222",
@@ -11683,7 +11791,13 @@
      "number": 150000.0
     }
    },
-   "omitted_from_tables": null
+   "omitted_from_tables": null,
+   "progeny_included": [
+    "Po-218",
+    "Pb-214",
+    "Bi-214",
+    "Po-214"
+   ]
   },
   {
    "label": "Ru-97",
@@ -11736,7 +11850,8 @@
    ],
    "flags": [
     "footnote_a",
-    "parent_with_progeny_not_listed_in_cfr"
+    "parent_with_progeny_not_listed_in_cfr",
+    "parent_with_progeny_not_in_173_436_list"
    ],
    "kind": "nuclide",
    "nuclide": "Ru103",
@@ -11829,7 +11944,8 @@
    ],
    "flags": [
     "footnote_a",
-    "parent_with_progeny_not_listed_in_cfr"
+    "parent_with_progeny_not_listed_in_cfr",
+    "progeny_from_173_436_footnote_b"
    ],
    "kind": "nuclide",
    "nuclide": "Ru106",
@@ -11869,7 +11985,10 @@
      "number": 3300.0
     }
    },
-   "omitted_from_tables": null
+   "omitted_from_tables": null,
+   "progeny_included": [
+    "Rh-106"
+   ]
   },
   {
    "label": "S-35",
@@ -12632,7 +12751,8 @@
    ],
    "flags": [
     "footnote_a",
-    "parent_with_progeny_not_listed_in_cfr"
+    "parent_with_progeny_not_listed_in_cfr",
+    "parent_with_progeny_not_in_173_436_list"
    ],
    "kind": "nuclide",
    "nuclide": "Sn113",
@@ -12769,7 +12889,8 @@
    ],
    "flags": [
     "footnote_a",
-    "parent_with_progeny_not_listed_in_cfr"
+    "parent_with_progeny_not_listed_in_cfr",
+    "parent_with_progeny_not_in_173_436_list"
    ],
    "kind": "nuclide",
    "nuclide": "Sn121m1",
@@ -12906,7 +13027,8 @@
    ],
    "flags": [
     "footnote_a",
-    "parent_with_progeny_not_listed_in_cfr"
+    "parent_with_progeny_not_listed_in_cfr",
+    "parent_with_progeny_not_in_173_436_list"
    ],
    "kind": "nuclide",
    "nuclide": "Sn126",
@@ -12955,7 +13077,8 @@
    ],
    "flags": [
     "footnote_a",
-    "parent_with_progeny_not_listed_in_cfr"
+    "parent_with_progeny_not_listed_in_cfr",
+    "parent_with_progeny_not_in_173_436_list"
    ],
    "kind": "nuclide",
    "nuclide": "Sr82",
@@ -13180,7 +13303,8 @@
    ],
    "flags": [
     "footnote_a",
-    "parent_with_progeny_not_listed_in_cfr"
+    "parent_with_progeny_not_listed_in_cfr",
+    "progeny_from_173_436_footnote_b"
    ],
    "kind": "nuclide",
    "nuclide": "Sr90",
@@ -13220,7 +13344,10 @@
      "number": 140.0
     }
    },
-   "omitted_from_tables": null
+   "omitted_from_tables": null,
+   "progeny_included": [
+    "Y-90"
+   ]
   },
   {
    "label": "Sr-91 (a)",
@@ -13229,7 +13356,8 @@
    ],
    "flags": [
     "footnote_a",
-    "parent_with_progeny_not_listed_in_cfr"
+    "parent_with_progeny_not_listed_in_cfr",
+    "parent_with_progeny_not_in_173_436_list"
    ],
    "kind": "nuclide",
    "nuclide": "Sr91",
@@ -13278,7 +13406,8 @@
    ],
    "flags": [
     "footnote_a",
-    "parent_with_progeny_not_listed_in_cfr"
+    "parent_with_progeny_not_listed_in_cfr",
+    "parent_with_progeny_not_in_173_436_list"
    ],
    "kind": "nuclide",
    "nuclide": "Sr92",
@@ -13639,7 +13768,8 @@
    ],
    "flags": [
     "footnote_a",
-    "parent_with_progeny_not_listed_in_cfr"
+    "parent_with_progeny_not_listed_in_cfr",
+    "parent_with_progeny_not_in_173_436_list"
    ],
    "kind": "nuclide",
    "nuclide": "Tc95m1",
@@ -13732,7 +13862,8 @@
    ],
    "flags": [
     "footnote_a",
-    "parent_with_progeny_not_listed_in_cfr"
+    "parent_with_progeny_not_listed_in_cfr",
+    "parent_with_progeny_not_in_173_436_list"
    ],
    "kind": "nuclide",
    "nuclide": "Tc96m1",
@@ -14227,7 +14358,8 @@
    ],
    "flags": [
     "footnote_a",
-    "parent_with_progeny_not_listed_in_cfr"
+    "parent_with_progeny_not_listed_in_cfr",
+    "parent_with_progeny_not_in_173_436_list"
    ],
    "kind": "nuclide",
    "nuclide": "Te127m1",
@@ -14320,7 +14452,8 @@
    ],
    "flags": [
     "footnote_a",
-    "parent_with_progeny_not_listed_in_cfr"
+    "parent_with_progeny_not_listed_in_cfr",
+    "parent_with_progeny_not_in_173_436_list"
    ],
    "kind": "nuclide",
    "nuclide": "Te129m1",
@@ -14369,7 +14502,8 @@
    ],
    "flags": [
     "footnote_a",
-    "parent_with_progeny_not_listed_in_cfr"
+    "parent_with_progeny_not_listed_in_cfr",
+    "parent_with_progeny_not_in_173_436_list"
    ],
    "kind": "nuclide",
    "nuclide": "Te131m1",
@@ -14418,7 +14552,8 @@
    ],
    "flags": [
     "footnote_a",
-    "parent_with_progeny_not_listed_in_cfr"
+    "parent_with_progeny_not_listed_in_cfr",
+    "parent_with_progeny_not_in_173_436_list"
    ],
    "kind": "nuclide",
    "nuclide": "Te132",
@@ -14511,7 +14646,8 @@
    ],
    "flags": [
     "footnote_a",
-    "parent_with_progeny_not_listed_in_cfr"
+    "parent_with_progeny_not_listed_in_cfr",
+    "progeny_from_173_436_footnote_b"
    ],
    "kind": "nuclide",
    "nuclide": "Th228",
@@ -14551,7 +14687,16 @@
      "number": 820.0
     }
    },
-   "omitted_from_tables": null
+   "omitted_from_tables": null,
+   "progeny_included": [
+    "Ra-224",
+    "Rn-220",
+    "Po-216",
+    "Pb-212",
+    "Bi-212",
+    "Tl-208 (0.36)",
+    "Po-212 (0.64)"
+   ]
   },
   {
    "label": "Th-229",
@@ -14742,7 +14887,8 @@
    ],
    "flags": [
     "footnote_a",
-    "parent_with_progeny_not_listed_in_cfr"
+    "parent_with_progeny_not_listed_in_cfr",
+    "progeny_from_173_436_footnote_b"
    ],
    "kind": "nuclide",
    "nuclide": "Th234",
@@ -14782,7 +14928,10 @@
      "number": 23000.0
     }
    },
-   "omitted_from_tables": null
+   "omitted_from_tables": null,
+   "progeny_included": [
+    "Pa-234m"
+   ]
   },
   {
    "label": "Th(nat)",
@@ -14844,7 +14993,8 @@
    ],
    "flags": [
     "footnote_a",
-    "parent_with_progeny_not_listed_in_cfr"
+    "parent_with_progeny_not_listed_in_cfr",
+    "parent_with_progeny_not_in_173_436_list"
    ],
    "kind": "nuclide",
    "nuclide": "Ti44",
@@ -15204,7 +15354,8 @@
     "lung_absorption:fast",
     "footnote_a",
     "footnote_d",
-    "parent_with_progeny_not_listed_in_cfr"
+    "parent_with_progeny_not_listed_in_cfr",
+    "progeny_from_173_436_footnote_b"
    ],
    "kind": "lung",
    "nuclide": "U230",
@@ -15245,7 +15396,13 @@
      "number": 27000.0
     }
    },
-   "omitted_from_tables": null
+   "omitted_from_tables": null,
+   "progeny_included": [
+    "Th-226",
+    "Ra-222",
+    "Rn-218",
+    "Po-214"
+   ]
   },
   {
    "label": "U-230 (medium lung absorption) (a)(e)",
@@ -15257,7 +15414,8 @@
     "lung_absorption:medium",
     "footnote_a",
     "footnote_e",
-    "parent_with_progeny_not_listed_in_cfr"
+    "parent_with_progeny_not_listed_in_cfr",
+    "progeny_from_173_436_footnote_b"
    ],
    "kind": "lung",
    "nuclide": "U230",
@@ -15298,7 +15456,13 @@
      "number": 27000.0
     }
    },
-   "omitted_from_tables": null
+   "omitted_from_tables": null,
+   "progeny_included": [
+    "Th-226",
+    "Ra-222",
+    "Rn-218",
+    "Po-214"
+   ]
   },
   {
    "label": "U-230 (slow lung absorption) (a)(f)",
@@ -15310,7 +15474,8 @@
     "lung_absorption:slow",
     "footnote_a",
     "footnote_f",
-    "parent_with_progeny_not_listed_in_cfr"
+    "parent_with_progeny_not_listed_in_cfr",
+    "progeny_from_173_436_footnote_b"
    ],
    "kind": "lung",
    "nuclide": "U230",
@@ -15351,7 +15516,13 @@
      "number": 27000.0
     }
    },
-   "omitted_from_tables": null
+   "omitted_from_tables": null,
+   "progeny_included": [
+    "Th-226",
+    "Ra-222",
+    "Rn-218",
+    "Po-214"
+   ]
   },
   {
    "label": "U-232 (fast lung absorption) (d)",
@@ -15819,7 +15990,8 @@
     "footnote_d",
     "footnote_e",
     "footnote_f",
-    "parent_with_progeny_not_listed_in_cfr"
+    "parent_with_progeny_not_listed_in_cfr",
+    "progeny_from_173_436_footnote_b"
    ],
    "kind": "lung",
    "nuclide": "U235",
@@ -15863,7 +16035,10 @@
    "omitted_from_tables": {
     "a1_TBq": "unlimited",
     "a2_TBq": "unlimited"
-   }
+   },
+   "progeny_included": [
+    "Th-231"
+   ]
   },
   {
    "label": "U-236 (fast lung absorption) (d)",
@@ -16336,7 +16511,8 @@
    ],
    "flags": [
     "footnote_a",
-    "parent_with_progeny_not_listed_in_cfr"
+    "parent_with_progeny_not_listed_in_cfr",
+    "parent_with_progeny_not_in_173_436_list"
    ],
    "kind": "nuclide",
    "nuclide": "W178",
@@ -16517,7 +16693,8 @@
    ],
    "flags": [
     "footnote_a",
-    "parent_with_progeny_not_listed_in_cfr"
+    "parent_with_progeny_not_listed_in_cfr",
+    "parent_with_progeny_not_in_173_436_list"
    ],
    "kind": "nuclide",
    "nuclide": "W188",
@@ -16566,7 +16743,8 @@
    ],
    "flags": [
     "footnote_a",
-    "parent_with_progeny_not_listed_in_cfr"
+    "parent_with_progeny_not_listed_in_cfr",
+    "parent_with_progeny_not_in_173_436_list"
    ],
    "kind": "nuclide",
    "nuclide": "Xe122",
@@ -16835,7 +17013,8 @@
    ],
    "flags": [
     "footnote_a",
-    "parent_with_progeny_not_listed_in_cfr"
+    "parent_with_progeny_not_listed_in_cfr",
+    "parent_with_progeny_not_in_173_436_list"
    ],
    "kind": "nuclide",
    "nuclide": "Y87",
@@ -17324,7 +17503,8 @@
    ],
    "flags": [
     "footnote_a",
-    "parent_with_progeny_not_listed_in_cfr"
+    "parent_with_progeny_not_listed_in_cfr",
+    "parent_with_progeny_not_in_173_436_list"
    ],
    "kind": "nuclide",
    "nuclide": "Zn69m1",
@@ -17467,7 +17647,8 @@
    ],
    "flags": [
     "footnote_a",
-    "parent_with_progeny_not_listed_in_cfr"
+    "parent_with_progeny_not_listed_in_cfr",
+    "parent_with_progeny_not_in_173_436_list"
    ],
    "kind": "nuclide",
    "nuclide": "Zr95",
@@ -17516,7 +17697,8 @@
    ],
    "flags": [
     "footnote_a",
-    "parent_with_progeny_not_listed_in_cfr"
+    "parent_with_progeny_not_listed_in_cfr",
+    "progeny_from_173_436_footnote_b"
    ],
    "kind": "nuclide",
    "nuclide": "Zr97",
@@ -17556,7 +17738,10 @@
      "number": 1900000.0
     }
    },
-   "omitted_from_tables": null
+   "omitted_from_tables": null,
+   "progeny_included": [
+    "Nb-97"
+   ]
   }
  ]
 }

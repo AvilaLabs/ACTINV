@@ -17,10 +17,20 @@ Outputs, in the existing `actinv-radiological-table-1` format:
 
 Uranium rows depend on lung-absorption type (fast/medium/slow).  ACTINV never picks
 one: each table carries three responses (`...-u-fast`, `-u-medium`, `-u-slow`) that
-differ only in their uranium coefficients.  Rows with no finite limit ("Unlimited"),
-element-level rows ("U (nat)", "Rb(nat)") and anything that is not a single nuclide
-cannot be a coefficient; they are listed in the rows sidecar with the reason and
+differ only in their uranium coefficients.  Rows with no finite limit ("Unlimited") are
+not coefficients: each response lists them under `unlimited`, and ACTINV counts their
+activity as covered with zero contribution (an unlimited A1/A2 limit contributes nothing
+to the sum).  Element-level rows ("U (nat)", "Rb(nat)") and anything that is not a single
+nuclide cannot be a coefficient; they are listed in the rows sidecar with the reason and
 ACTINV reports their activity as uncovered, never as zero.
+
+Progeny.  A parent row that includes its short-lived progeny is described by the response's
+`covered_by_parent` map (progeny -> parents): while the parent has activity, the progeny
+contributes nothing, because the parent's value already includes it.  173.436 footnote (b)
+lists the parents and progeny in the CFR text.  173.435 footnote (a) only refers to the
+IAEA SSR-6 list, which the CFR does not reproduce; for 173.435 the converter uses the
+173.436 footnote (b) lists for the parents carrying footnote (a), and each such row says
+so in the rows sidecar (`progeny_from_173_436_footnote_b`).
 
 Usage:
   python3 -I scripts/regulatory/convert_cfr_173435.py XML_DIR OUT_DIR
@@ -116,7 +126,9 @@ SECTIONS = {
                 "basis": (
                     "A1 for special form radioactive material, TBq converted to Bq. The index is the number of "
                     "A1 per gram of material, so multiply by the consignment mass in grams. Uranium rows use the {variant} "
-                    "lung-absorption values; unlimited and element-level rows are omitted."
+                    "lung-absorption values; unlimited rows are listed under unlimited (zero contribution) and "
+                    "element-level rows are omitted. covered_by_parent lists progeny included in a parent's value "
+                    "(from the 173.436 footnote (b) lists)."
                 ),
             },
             {
@@ -130,7 +142,9 @@ SECTIONS = {
                     "A2 for radioactive material other than special form, TBq converted to Bq. The index is the "
                     "number of A2 per gram of material (FISPACT-II ATWO), so multiply by the consignment mass in "
                     "grams. Uranium rows use the {variant} "
-                    "lung-absorption values; unlimited and element-level rows are omitted."
+                    "lung-absorption values; unlimited rows are listed under unlimited (zero contribution) and "
+                    "element-level rows are omitted. covered_by_parent lists progeny included in a parent's value "
+                    "(from the 173.436 footnote (b) lists)."
                 ),
             },
         ],
@@ -156,7 +170,7 @@ SECTIONS = {
                 "basis": (
                     "Activity concentration for exempt material, Bq/g converted to Bq/kg (x1000). Uranium rows "
                     "use the {variant} lung-absorption values; element-level rows are omitted. Parent rows "
-                    "marked (b) include their listed progeny; see the rows sidecar."
+                    "marked (b) include their listed progeny, which covered_by_parent lists (zero contribution while the parent is present)."
                 ),
             },
             {
@@ -169,7 +183,7 @@ SECTIONS = {
                 "basis": (
                     "Activity limit for an exempt consignment, Bq. The index is the fraction of that limit per "
                     "gram of material, so multiply by the consignment mass in grams. Uranium rows use the {variant} lung-absorption values; "
-                    "element-level rows are omitted. Parent rows marked (b) include their listed progeny."
+                    "element-level rows are omitted. Parent rows marked (b) include their listed progeny, which covered_by_parent lists (zero contribution while the parent is present)."
                 ),
             },
         ],
@@ -328,10 +342,29 @@ def build_records(section: str, spec: dict, rows, footnotes) -> list[dict]:
     return records
 
 
-def annotate_173_435(records, footnotes) -> None:
+def parent_key(parent: str) -> str | None:
+    """ACTINV key of a progeny-list parent such as 'Ag-108m'; None for 'Th-nat' style entries."""
+    parsed = C.parse_nuclide(parent)
+    return parsed[0] if parsed else None
+
+
+def annotate_173_435(records, footnotes, progeny_436: dict[str, dict]) -> list[str]:
+    """Flag footnote (a) parents and attach the 173.436 footnote (b) progeny of the same parent.
+
+    Returns the 173.436 progeny-list parents with no footnote (a) row here.
+    """
+    by_key = {parent_key(name): entry for name, entry in progeny_436.items() if parent_key(name)}
+    matched = set()
     for record in records:
         if "a" in record["footnotes"]:
             record["flags"].append("parent_with_progeny_not_listed_in_cfr")
+            entry = by_key.get(record.get("nuclide"))
+            if entry is not None and record["kind"] != "element":
+                record["progeny_included"] = entry["progeny"]
+                record["flags"].append("progeny_from_173_436_footnote_b")
+                matched.add(record["nuclide"])
+            else:
+                record["flags"].append("parent_with_progeny_not_in_173_436_list")
         if "i" in record["footnotes"]:
             note = " ".join(footnotes["i"])
             value = re.search(r"A2\s*=\s*([0-9.]+)\s*TBq", note)
@@ -341,6 +374,7 @@ def annotate_173_435(records, footnotes) -> None:
                 "a2_TBq_domestic_use": float(value.group(1)),
                 "source_text": note,
             }
+    return sorted(name for name, _ in progeny_436.items() if parent_key(name) not in matched)
 
 
 def annotate_173_436(records, footnotes) -> list[str]:
@@ -376,6 +410,31 @@ def coefficients(records, column: str, variant: str, shift: int) -> dict[str, fl
     return out
 
 
+def unlimited_nuclides(records, column: str, variant: str) -> list[str]:
+    """Nuclides whose `column` cell reads "Unlimited" for this uranium variant."""
+    out = []
+    for record in records:
+        if record["kind"] == "element" or record["values"][column]["text"] != "Unlimited":
+            continue
+        if record["kind"] == "lung" and record["variant"] not in (variant, "all"):
+            continue
+        out.append(record["nuclide"])
+    return sorted(out)
+
+
+def progeny_of_parents(records, variant: str) -> dict[str, list[str]]:
+    """Parent key -> progeny keys from the rows that carry a progeny list, for this variant."""
+    out: dict[str, list[str]] = {}
+    for record in records:
+        if record["kind"] == "element" or "progeny_included" not in record:
+            continue
+        if record["kind"] == "lung" and record["variant"] not in (variant, "all"):
+            continue
+        keys, _skipped = C.progeny_keys(record["progeny_included"])
+        out[record["nuclide"]] = keys
+    return out
+
+
 def main(argv: list[str]) -> int:
     parser = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     parser.add_argument("xml_dir", type=Path, help="directory with 49CFR173.435.xml and 49CFR173.436.xml")
@@ -395,12 +454,16 @@ def main(argv: list[str]) -> int:
             return 1
         shas[name] = digest
 
+    # The 173.436 progeny lists also describe the 173.435 parents, so read that section first.
+    _rows, footnotes_436, _history = read_section(args.xml_dir / SECTIONS["173.436"]["xml"])
+    progeny_436 = parse_progeny(footnotes_436["b"])
+
     for section, spec in SECTIONS.items():
         rows, footnotes, history = read_section(args.xml_dir / spec["xml"])
         records = build_records(section, spec, rows, footnotes)
         orphan_parents = []
         if section == "173.435":
-            annotate_173_435(records, footnotes)
+            orphan_parents = annotate_173_435(records, footnotes, progeny_436)
         else:
             orphan_parents = annotate_173_436(records, footnotes)
 
@@ -427,14 +490,24 @@ def main(argv: list[str]) -> int:
         for table in spec["tables"]:
             responses = []
             for variant in VARIANTS:
-                responses.append(
-                    {
-                        "id": f"{table['id']}-u-{variant}",
-                        "kind": table["kind"],
-                        "basis": table["basis"].format(variant=variant),
-                        "coefficients": coefficients(records, table["column"], variant, table["shift"]),
-                    }
-                )
+                values = coefficients(records, table["column"], variant, table["shift"])
+                unlimited = unlimited_nuclides(records, table["column"], variant)
+                if set(unlimited) & set(values):
+                    raise ValueError(f"{table['file']}: nuclide both finite and unlimited in {variant}")
+                parents = progeny_of_parents(records, variant)
+                covered = C.covered_by_parent(parents, set(values) | set(unlimited))
+                C.check_acyclic(covered, f"{table['file']} {variant}")
+                response = {
+                    "id": f"{table['id']}-u-{variant}",
+                    "kind": table["kind"],
+                    "basis": table["basis"].format(variant=variant),
+                    "coefficients": values,
+                }
+                if unlimited:
+                    response["unlimited"] = unlimited
+                if covered:
+                    response["covered_by_parent"] = covered
+                responses.append(response)
             document = {
                 "format": C.TABLE_FORMAT,
                 "title": table["title"],
@@ -443,7 +516,14 @@ def main(argv: list[str]) -> int:
             }
             table_hashes[table["file"]] = C.dump_json(args.out_dir / table["file"], document)
             counts = [len(response["coefficients"]) for response in responses]
-            print(f"{table['file']}: sha256 {table_hashes[table['file']]} coefficients {counts}")
+            extras = [
+                (len(response.get("unlimited", [])), len(response.get("covered_by_parent", {})))
+                for response in responses
+            ]
+            print(
+                f"{table['file']}: sha256 {table_hashes[table['file']]} coefficients {counts} "
+                f"(unlimited, covered_by_parent) {extras}"
+            )
 
         sidecar = {
             "format": C.ROWS_FORMAT,
@@ -453,6 +533,19 @@ def main(argv: list[str]) -> int:
             ),
             "source": source,
             "tables": table_hashes,
+            **(
+                {
+                    "progeny_provenance": (
+                        "49 CFR 173.435 footnote (a) refers to the IAEA SSR-6 list of parents whose A1/A2 include "
+                        "daughter nuclides with half-lives under 10 days; the CFR does not reproduce that list. The "
+                        "tables' covered_by_parent maps use the 49 CFR 173.436 footnote (b) progeny lists for the parents "
+                        "that carry footnote (a); rows flagged progeny_from_173_436_footnote_b are those, and rows flagged "
+                        "parent_with_progeny_not_in_173_436_list have progeny that this converter does not know."
+                    )
+                }
+                if section == "173.435"
+                else {}
+            ),
             "footnotes": footnotes,
             "rows": [
                 {key: value for key, value in record.items() if not key.startswith("_")}

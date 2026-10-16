@@ -15,6 +15,27 @@ pub fn resolve_inputs(spec: &mut Spec, base: &Path) {
     if let Some(path) = &mut spec.decay.fallback {
         resolve(path);
     }
+    if let Some(path) = &mut spec.decay.overrides {
+        resolve(path);
+    }
+    for step in &mut spec.schedule {
+        if let Some(library) = &mut step.library {
+            resolve(&mut library.path);
+        }
+    }
+    if let Some(shielding) = &mut spec.self_shielding {
+        if let Some(table) = &mut shielding.table {
+            resolve(&mut table.path);
+        }
+        if let Some(geometry) = &mut shielding.geometry {
+            for file in &mut geometry.resonance_files {
+                resolve(&mut file.path);
+            }
+        }
+    }
+    if let Some(damage) = &mut spec.damage {
+        resolve(&mut damage.table.path);
+    }
     if let Some(r) = &mut spec.photon.response {
         resolve(&mut r.path);
     }
@@ -35,6 +56,17 @@ pub fn resolve_inputs(spec: &mut Spec, base: &Path) {
     for r in &mut spec.fission_yields.files {
         resolve(&mut r.path);
     }
+    if let Some(spontaneous) = &mut spec.fission_yields.spontaneous {
+        for r in &mut spontaneous.files {
+            resolve(&mut r.path);
+        }
+        if let Some(r) = &mut spontaneous.nubar_endf {
+            resolve(&mut r.path);
+        }
+        if let Some(r) = &mut spontaneous.nubar_table {
+            resolve(&mut r.path);
+        }
+    }
 }
 
 pub fn check_files(spec: &Spec, hashes: bool) -> Result<(), String> {
@@ -48,6 +80,35 @@ pub fn check_files(spec: &Spec, hashes: bool) -> Result<(), String> {
     ];
     if let Some(p) = &spec.decay.fallback {
         inputs.push(("Fallback decay data", p, None));
+    }
+    if let Some(p) = &spec.decay.overrides {
+        inputs.push(("Decay overrides", p, None));
+    }
+    for step in &spec.schedule {
+        if let Some(library) = &step.library {
+            inputs.push((
+                "Schedule step library",
+                &library.path,
+                library.sha256.as_deref(),
+            ));
+        }
+    }
+    if let Some(shielding) = &spec.self_shielding {
+        if let Some(table) = &shielding.table {
+            inputs.push(("Self-shielding table", &table.path, Some(&table.sha256)));
+        }
+        if let Some(geometry) = &shielding.geometry {
+            for file in &geometry.resonance_files {
+                inputs.push(("Resonance file", &file.path, Some(&file.sha256)));
+            }
+        }
+    }
+    if let Some(damage) = &spec.damage {
+        inputs.push((
+            "Damage table",
+            &damage.table.path,
+            Some(&damage.table.sha256),
+        ));
     }
     if let Some(r) = &spec.photon.response {
         inputs.push(("Photon response", &r.path, Some(&r.sha256)));
@@ -67,6 +128,21 @@ pub fn check_files(spec: &Spec, hashes: bool) -> Result<(), String> {
     }
     for r in &spec.fission_yields.files {
         inputs.push(("Fission yields", &r.path, Some(&r.sha256)));
+    }
+    if let Some(spontaneous) = &spec.fission_yields.spontaneous {
+        for r in &spontaneous.files {
+            inputs.push(("Spontaneous-fission yields", &r.path, Some(&r.sha256)));
+        }
+        if let Some(r) = &spontaneous.nubar_endf {
+            inputs.push((
+                "Spontaneous-fission nu-bar (ENDF)",
+                &r.path,
+                Some(&r.sha256),
+            ));
+        }
+        if let Some(r) = &spontaneous.nubar_table {
+            inputs.push(("Spontaneous-fission nu-bar table", &r.path, Some(&r.sha256)));
+        }
     }
     let mut errors = Vec::new();
     for (label, path, hash) in inputs {
@@ -94,12 +170,20 @@ pub fn check_files(spec: &Spec, hashes: bool) -> Result<(), String> {
             }
         }
     }
-    for path in std::iter::once(spec.library.path.as_str()).chain(
-        spec.uncertainty
-            .as_ref()
-            .and_then(|u| u.covariance.as_ref())
-            .map(|c| c.path.as_str()),
-    ) {
+    for path in std::iter::once(spec.library.path.as_str())
+        .chain(
+            spec.uncertainty
+                .as_ref()
+                .and_then(|u| u.covariance.as_ref())
+                .map(|c| c.path.as_str()),
+        )
+        .chain(
+            spec.schedule
+                .iter()
+                .filter_map(|step| step.library.as_ref())
+                .map(|library| library.path.as_str()),
+        )
+    {
         if path.is_empty() {
             continue;
         }

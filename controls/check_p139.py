@@ -508,6 +508,13 @@ def all_resonances(parsed, awri_source="pair", za=W186_ZA):
                 summary.append({"lrf": rng["lrf"], "ev": [rng["el"], rng["eh"]], "resonances": len(rows)})
             else:
                 raise ValueError(f"resolved range {rng['el']}-{rng['eh']} eV has LRF={rng['lrf']}")
+            # P140 Amendment A repair 4 (SG-01): a level outside its range's [EL, EH] feeds the in-range cross
+            # section but is not a resolved peak, so it is not a shielding line.
+            for r in rows:
+                r["outside_range"] = not (rng["el"] <= r["E"] <= rng["eh"])
+                if r["outside_range"]:
+                    r["usable"] = False
+            summary[-1]["outside_range"] = sum(1 for r in rows if r["outside_range"])
             out.extend(rows)
     return out, summary
 
@@ -869,7 +876,10 @@ def gate_g3(runner, candidate, files, workdir, awri_source):
            "awri_used": {"pair_MB_over_MA": ent["mb"] / ent["ma"], "head": parsed["awr"]},
            "resonances_total": len(rows), "resonances_usable": len(lines),
            "resonances_skipped": {"non_positive_energy": sum(1 for r in rows if r["E"] <= 0.0),
-                                  "no_neutron_or_capture_width": sum(1 for r in rows if r["E"] > 0.0 and not r["usable"])},
+                                  "outside_range": sum(1 for r in rows if r["E"] > 0.0 and r["outside_range"]),
+                                  "no_neutron_or_capture_width": sum(1 for r in rows if r["E"] > 0.0
+                                                                     and not r["outside_range"]
+                                                                     and not r["usable"])},
            "energy_range_eV": [min(r["E"] for r in lines), max(r["E"] for r in lines)]}
     bounds = group_bounds()
     n_indep, material = number_density()

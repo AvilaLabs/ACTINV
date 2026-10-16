@@ -1,0 +1,2701 @@
+{
+ "amendment": "P140 Amendment D",
+ "summary": {
+  "pairs": 533,
+  "identical": 256,
+  "compatible": 275,
+  "fail": 2
+ },
+ "rows": [
+  {
+   "pair": "p123-work/g2_fns_fe_5min_reference.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p123-work/g2_fns_photon_installed_reference.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p123-work/g2_fns_radiological_legacy_reference.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p126-work/g2_reference.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p127-work/g2_reference.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p129-work/fns_fe_5min.reference.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p129-work/shielding_demo.reference.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": true,
+   "problems": []
+  },
+  {
+   "pair": "p129-work-b/fns_fe_5min.reference.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p129-work-b/shielding_demo.reference.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": true,
+   "problems": []
+  },
+  {
+   "pair": "p134-work/fns_fe_5min.ref.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p134-work/shielding_demo.ref.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": true,
+   "problems": []
+  },
+  {
+   "pair": "p135-work/fns_fe_5min.ref.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p135-work/shielding_demo.ref.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": true,
+   "problems": []
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe__fns_709__pulse_5min/attr_composition_0.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe__fns_709__pulse_5min/attr_composition_0.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe__fns_709__pulse_5min/attr_composition_1.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe__fns_709__pulse_5min/attr_composition_1.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe__fns_709__pulse_5min/attr_composition_10.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe__fns_709__pulse_5min/attr_composition_10.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe__fns_709__pulse_5min/attr_composition_11.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe__fns_709__pulse_5min/attr_composition_11.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe__fns_709__pulse_5min/attr_composition_12.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe__fns_709__pulse_5min/attr_composition_12.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe__fns_709__pulse_5min/attr_composition_13.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe__fns_709__pulse_5min/attr_composition_13.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe__fns_709__pulse_5min/attr_composition_14.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe__fns_709__pulse_5min/attr_composition_14.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe__fns_709__pulse_5min/attr_composition_15.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe__fns_709__pulse_5min/attr_composition_15.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe__fns_709__pulse_5min/attr_composition_2.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe__fns_709__pulse_5min/attr_composition_2.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe__fns_709__pulse_5min/attr_composition_3.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe__fns_709__pulse_5min/attr_composition_3.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe__fns_709__pulse_5min/attr_composition_4.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe__fns_709__pulse_5min/attr_composition_4.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe__fns_709__pulse_5min/attr_composition_5.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe__fns_709__pulse_5min/attr_composition_5.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe__fns_709__pulse_5min/attr_composition_6.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe__fns_709__pulse_5min/attr_composition_6.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe__fns_709__pulse_5min/attr_composition_7.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe__fns_709__pulse_5min/attr_composition_7.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe__fns_709__pulse_5min/attr_composition_8.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe__fns_709__pulse_5min/attr_composition_8.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe__fns_709__pulse_5min/attr_composition_9.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe__fns_709__pulse_5min/attr_composition_9.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe__fns_709__pulse_5min/attr_cross_section_mf33_0.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe__fns_709__pulse_5min/attr_cross_section_mf33_0.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe__fns_709__pulse_5min/attr_cross_section_mf33_1.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe__fns_709__pulse_5min/attr_cross_section_mf33_1.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe__fns_709__pulse_5min/attr_cross_section_mf33_10.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe__fns_709__pulse_5min/attr_cross_section_mf33_10.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe__fns_709__pulse_5min/attr_cross_section_mf33_11.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe__fns_709__pulse_5min/attr_cross_section_mf33_11.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe__fns_709__pulse_5min/attr_cross_section_mf33_12.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe__fns_709__pulse_5min/attr_cross_section_mf33_12.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe__fns_709__pulse_5min/attr_cross_section_mf33_13.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe__fns_709__pulse_5min/attr_cross_section_mf33_13.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe__fns_709__pulse_5min/attr_cross_section_mf33_14.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe__fns_709__pulse_5min/attr_cross_section_mf33_14.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe__fns_709__pulse_5min/attr_cross_section_mf33_15.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe__fns_709__pulse_5min/attr_cross_section_mf33_15.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe__fns_709__pulse_5min/attr_cross_section_mf33_2.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe__fns_709__pulse_5min/attr_cross_section_mf33_2.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe__fns_709__pulse_5min/attr_cross_section_mf33_3.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe__fns_709__pulse_5min/attr_cross_section_mf33_3.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe__fns_709__pulse_5min/attr_cross_section_mf33_4.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe__fns_709__pulse_5min/attr_cross_section_mf33_4.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe__fns_709__pulse_5min/attr_cross_section_mf33_5.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe__fns_709__pulse_5min/attr_cross_section_mf33_5.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe__fns_709__pulse_5min/attr_cross_section_mf33_6.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe__fns_709__pulse_5min/attr_cross_section_mf33_6.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe__fns_709__pulse_5min/attr_cross_section_mf33_7.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe__fns_709__pulse_5min/attr_cross_section_mf33_7.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe__fns_709__pulse_5min/attr_cross_section_mf33_8.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe__fns_709__pulse_5min/attr_cross_section_mf33_8.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe__fns_709__pulse_5min/attr_cross_section_mf33_9.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe__fns_709__pulse_5min/attr_cross_section_mf33_9.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe__fns_709__pulse_5min/attr_flux_0.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe__fns_709__pulse_5min/attr_flux_0.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe__fns_709__pulse_5min/attr_flux_1.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe__fns_709__pulse_5min/attr_flux_1.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe__fns_709__pulse_5min/attr_flux_10.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe__fns_709__pulse_5min/attr_flux_10.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe__fns_709__pulse_5min/attr_flux_11.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe__fns_709__pulse_5min/attr_flux_11.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe__fns_709__pulse_5min/attr_flux_12.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe__fns_709__pulse_5min/attr_flux_12.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe__fns_709__pulse_5min/attr_flux_13.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe__fns_709__pulse_5min/attr_flux_13.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe__fns_709__pulse_5min/attr_flux_14.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe__fns_709__pulse_5min/attr_flux_14.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe__fns_709__pulse_5min/attr_flux_15.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe__fns_709__pulse_5min/attr_flux_15.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe__fns_709__pulse_5min/attr_flux_2.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe__fns_709__pulse_5min/attr_flux_2.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe__fns_709__pulse_5min/attr_flux_3.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe__fns_709__pulse_5min/attr_flux_3.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe__fns_709__pulse_5min/attr_flux_4.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe__fns_709__pulse_5min/attr_flux_4.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe__fns_709__pulse_5min/attr_flux_5.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe__fns_709__pulse_5min/attr_flux_5.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe__fns_709__pulse_5min/attr_flux_6.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe__fns_709__pulse_5min/attr_flux_6.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe__fns_709__pulse_5min/attr_flux_7.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe__fns_709__pulse_5min/attr_flux_7.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe__fns_709__pulse_5min/attr_flux_8.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe__fns_709__pulse_5min/attr_flux_8.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe__fns_709__pulse_5min/attr_flux_9.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe__fns_709__pulse_5min/attr_flux_9.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe__fns_709__pulse_5min/out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe__fns_709__pulse_5min/rob_0.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe__fns_709__pulse_5min/rob_0.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe__fns_709__pulse_5min/rob_1.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe__fns_709__pulse_5min/rob_1.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe__fns_709__pulse_5min/rob_10.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe__fns_709__pulse_5min/rob_10.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe__fns_709__pulse_5min/rob_11.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe__fns_709__pulse_5min/rob_11.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe__fns_709__pulse_5min/rob_12.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe__fns_709__pulse_5min/rob_12.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe__fns_709__pulse_5min/rob_13.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe__fns_709__pulse_5min/rob_13.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe__fns_709__pulse_5min/rob_14.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe__fns_709__pulse_5min/rob_14.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe__fns_709__pulse_5min/rob_15.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe__fns_709__pulse_5min/rob_15.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe__fns_709__pulse_5min/rob_2.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe__fns_709__pulse_5min/rob_2.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe__fns_709__pulse_5min/rob_3.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe__fns_709__pulse_5min/rob_3.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe__fns_709__pulse_5min/rob_4.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe__fns_709__pulse_5min/rob_4.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe__fns_709__pulse_5min/rob_5.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe__fns_709__pulse_5min/rob_5.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe__fns_709__pulse_5min/rob_6.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe__fns_709__pulse_5min/rob_6.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe__fns_709__pulse_5min/rob_7.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe__fns_709__pulse_5min/rob_7.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe__fns_709__pulse_5min/rob_8.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe__fns_709__pulse_5min/rob_8.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe__fns_709__pulse_5min/rob_9.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe__fns_709__pulse_5min/rob_9.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe_co100wppm__fns_709__pulse_5min/attr_composition_0.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe_co100wppm__fns_709__pulse_5min/attr_composition_0.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe_co100wppm__fns_709__pulse_5min/attr_composition_1.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe_co100wppm__fns_709__pulse_5min/attr_composition_1.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe_co100wppm__fns_709__pulse_5min/attr_composition_10.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe_co100wppm__fns_709__pulse_5min/attr_composition_10.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe_co100wppm__fns_709__pulse_5min/attr_composition_11.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe_co100wppm__fns_709__pulse_5min/attr_composition_11.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe_co100wppm__fns_709__pulse_5min/attr_composition_12.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe_co100wppm__fns_709__pulse_5min/attr_composition_12.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe_co100wppm__fns_709__pulse_5min/attr_composition_13.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe_co100wppm__fns_709__pulse_5min/attr_composition_13.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe_co100wppm__fns_709__pulse_5min/attr_composition_14.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe_co100wppm__fns_709__pulse_5min/attr_composition_14.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe_co100wppm__fns_709__pulse_5min/attr_composition_15.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe_co100wppm__fns_709__pulse_5min/attr_composition_15.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe_co100wppm__fns_709__pulse_5min/attr_composition_2.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe_co100wppm__fns_709__pulse_5min/attr_composition_2.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe_co100wppm__fns_709__pulse_5min/attr_composition_3.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe_co100wppm__fns_709__pulse_5min/attr_composition_3.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe_co100wppm__fns_709__pulse_5min/attr_composition_4.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe_co100wppm__fns_709__pulse_5min/attr_composition_4.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe_co100wppm__fns_709__pulse_5min/attr_composition_5.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe_co100wppm__fns_709__pulse_5min/attr_composition_5.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe_co100wppm__fns_709__pulse_5min/attr_composition_6.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe_co100wppm__fns_709__pulse_5min/attr_composition_6.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe_co100wppm__fns_709__pulse_5min/attr_composition_7.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe_co100wppm__fns_709__pulse_5min/attr_composition_7.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe_co100wppm__fns_709__pulse_5min/attr_composition_8.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe_co100wppm__fns_709__pulse_5min/attr_composition_8.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe_co100wppm__fns_709__pulse_5min/attr_composition_9.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe_co100wppm__fns_709__pulse_5min/attr_composition_9.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe_co100wppm__fns_709__pulse_5min/attr_cross_section_mf33_0.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe_co100wppm__fns_709__pulse_5min/attr_cross_section_mf33_0.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe_co100wppm__fns_709__pulse_5min/attr_cross_section_mf33_1.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe_co100wppm__fns_709__pulse_5min/attr_cross_section_mf33_1.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe_co100wppm__fns_709__pulse_5min/attr_cross_section_mf33_10.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe_co100wppm__fns_709__pulse_5min/attr_cross_section_mf33_10.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe_co100wppm__fns_709__pulse_5min/attr_cross_section_mf33_11.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe_co100wppm__fns_709__pulse_5min/attr_cross_section_mf33_11.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe_co100wppm__fns_709__pulse_5min/attr_cross_section_mf33_12.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe_co100wppm__fns_709__pulse_5min/attr_cross_section_mf33_12.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe_co100wppm__fns_709__pulse_5min/attr_cross_section_mf33_13.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe_co100wppm__fns_709__pulse_5min/attr_cross_section_mf33_13.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe_co100wppm__fns_709__pulse_5min/attr_cross_section_mf33_14.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe_co100wppm__fns_709__pulse_5min/attr_cross_section_mf33_14.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe_co100wppm__fns_709__pulse_5min/attr_cross_section_mf33_15.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe_co100wppm__fns_709__pulse_5min/attr_cross_section_mf33_15.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe_co100wppm__fns_709__pulse_5min/attr_cross_section_mf33_2.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe_co100wppm__fns_709__pulse_5min/attr_cross_section_mf33_2.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe_co100wppm__fns_709__pulse_5min/attr_cross_section_mf33_3.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe_co100wppm__fns_709__pulse_5min/attr_cross_section_mf33_3.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe_co100wppm__fns_709__pulse_5min/attr_cross_section_mf33_4.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe_co100wppm__fns_709__pulse_5min/attr_cross_section_mf33_4.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe_co100wppm__fns_709__pulse_5min/attr_cross_section_mf33_5.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe_co100wppm__fns_709__pulse_5min/attr_cross_section_mf33_5.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe_co100wppm__fns_709__pulse_5min/attr_cross_section_mf33_6.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe_co100wppm__fns_709__pulse_5min/attr_cross_section_mf33_6.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe_co100wppm__fns_709__pulse_5min/attr_cross_section_mf33_7.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe_co100wppm__fns_709__pulse_5min/attr_cross_section_mf33_7.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe_co100wppm__fns_709__pulse_5min/attr_cross_section_mf33_8.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe_co100wppm__fns_709__pulse_5min/attr_cross_section_mf33_8.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe_co100wppm__fns_709__pulse_5min/attr_cross_section_mf33_9.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe_co100wppm__fns_709__pulse_5min/attr_cross_section_mf33_9.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe_co100wppm__fns_709__pulse_5min/attr_flux_0.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe_co100wppm__fns_709__pulse_5min/attr_flux_0.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe_co100wppm__fns_709__pulse_5min/attr_flux_1.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe_co100wppm__fns_709__pulse_5min/attr_flux_1.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe_co100wppm__fns_709__pulse_5min/attr_flux_10.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe_co100wppm__fns_709__pulse_5min/attr_flux_10.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe_co100wppm__fns_709__pulse_5min/attr_flux_11.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe_co100wppm__fns_709__pulse_5min/attr_flux_11.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe_co100wppm__fns_709__pulse_5min/attr_flux_12.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe_co100wppm__fns_709__pulse_5min/attr_flux_12.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe_co100wppm__fns_709__pulse_5min/attr_flux_13.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe_co100wppm__fns_709__pulse_5min/attr_flux_13.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe_co100wppm__fns_709__pulse_5min/attr_flux_14.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe_co100wppm__fns_709__pulse_5min/attr_flux_14.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe_co100wppm__fns_709__pulse_5min/attr_flux_15.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe_co100wppm__fns_709__pulse_5min/attr_flux_15.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe_co100wppm__fns_709__pulse_5min/attr_flux_2.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe_co100wppm__fns_709__pulse_5min/attr_flux_2.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe_co100wppm__fns_709__pulse_5min/attr_flux_3.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe_co100wppm__fns_709__pulse_5min/attr_flux_3.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe_co100wppm__fns_709__pulse_5min/attr_flux_4.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe_co100wppm__fns_709__pulse_5min/attr_flux_4.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe_co100wppm__fns_709__pulse_5min/attr_flux_5.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe_co100wppm__fns_709__pulse_5min/attr_flux_5.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe_co100wppm__fns_709__pulse_5min/attr_flux_6.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe_co100wppm__fns_709__pulse_5min/attr_flux_6.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe_co100wppm__fns_709__pulse_5min/attr_flux_7.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe_co100wppm__fns_709__pulse_5min/attr_flux_7.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe_co100wppm__fns_709__pulse_5min/attr_flux_8.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe_co100wppm__fns_709__pulse_5min/attr_flux_8.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe_co100wppm__fns_709__pulse_5min/attr_flux_9.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe_co100wppm__fns_709__pulse_5min/attr_flux_9.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe_co100wppm__fns_709__pulse_5min/out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe_co100wppm__fns_709__pulse_5min/rob_0.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe_co100wppm__fns_709__pulse_5min/rob_0.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe_co100wppm__fns_709__pulse_5min/rob_1.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe_co100wppm__fns_709__pulse_5min/rob_1.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe_co100wppm__fns_709__pulse_5min/rob_10.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe_co100wppm__fns_709__pulse_5min/rob_10.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe_co100wppm__fns_709__pulse_5min/rob_11.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe_co100wppm__fns_709__pulse_5min/rob_11.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe_co100wppm__fns_709__pulse_5min/rob_12.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe_co100wppm__fns_709__pulse_5min/rob_12.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe_co100wppm__fns_709__pulse_5min/rob_13.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe_co100wppm__fns_709__pulse_5min/rob_13.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe_co100wppm__fns_709__pulse_5min/rob_14.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe_co100wppm__fns_709__pulse_5min/rob_14.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe_co100wppm__fns_709__pulse_5min/rob_15.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe_co100wppm__fns_709__pulse_5min/rob_15.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe_co100wppm__fns_709__pulse_5min/rob_2.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe_co100wppm__fns_709__pulse_5min/rob_2.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe_co100wppm__fns_709__pulse_5min/rob_3.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe_co100wppm__fns_709__pulse_5min/rob_3.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe_co100wppm__fns_709__pulse_5min/rob_4.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe_co100wppm__fns_709__pulse_5min/rob_4.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe_co100wppm__fns_709__pulse_5min/rob_5.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe_co100wppm__fns_709__pulse_5min/rob_5.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe_co100wppm__fns_709__pulse_5min/rob_6.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe_co100wppm__fns_709__pulse_5min/rob_6.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe_co100wppm__fns_709__pulse_5min/rob_7.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe_co100wppm__fns_709__pulse_5min/rob_7.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe_co100wppm__fns_709__pulse_5min/rob_8.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe_co100wppm__fns_709__pulse_5min/rob_8.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe_co100wppm__fns_709__pulse_5min/rob_9.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work/default-ref-1792114240-3616492/cases/fe_co100wppm__fns_709__pulse_5min/rob_9.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe__fns_709__pulse_5min/attr_composition_0.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe__fns_709__pulse_5min/attr_composition_0.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe__fns_709__pulse_5min/attr_composition_1.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe__fns_709__pulse_5min/attr_composition_1.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe__fns_709__pulse_5min/attr_composition_10.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe__fns_709__pulse_5min/attr_composition_10.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe__fns_709__pulse_5min/attr_composition_11.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe__fns_709__pulse_5min/attr_composition_11.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe__fns_709__pulse_5min/attr_composition_12.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe__fns_709__pulse_5min/attr_composition_12.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe__fns_709__pulse_5min/attr_composition_13.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe__fns_709__pulse_5min/attr_composition_13.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe__fns_709__pulse_5min/attr_composition_14.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe__fns_709__pulse_5min/attr_composition_14.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe__fns_709__pulse_5min/attr_composition_15.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe__fns_709__pulse_5min/attr_composition_15.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe__fns_709__pulse_5min/attr_composition_2.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe__fns_709__pulse_5min/attr_composition_2.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe__fns_709__pulse_5min/attr_composition_3.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe__fns_709__pulse_5min/attr_composition_3.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe__fns_709__pulse_5min/attr_composition_4.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe__fns_709__pulse_5min/attr_composition_4.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe__fns_709__pulse_5min/attr_composition_5.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe__fns_709__pulse_5min/attr_composition_5.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe__fns_709__pulse_5min/attr_composition_6.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe__fns_709__pulse_5min/attr_composition_6.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe__fns_709__pulse_5min/attr_composition_7.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe__fns_709__pulse_5min/attr_composition_7.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe__fns_709__pulse_5min/attr_composition_8.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe__fns_709__pulse_5min/attr_composition_8.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe__fns_709__pulse_5min/attr_composition_9.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe__fns_709__pulse_5min/attr_composition_9.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe__fns_709__pulse_5min/attr_cross_section_mf33_0.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe__fns_709__pulse_5min/attr_cross_section_mf33_0.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe__fns_709__pulse_5min/attr_cross_section_mf33_1.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe__fns_709__pulse_5min/attr_cross_section_mf33_1.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe__fns_709__pulse_5min/attr_cross_section_mf33_10.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe__fns_709__pulse_5min/attr_cross_section_mf33_10.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe__fns_709__pulse_5min/attr_cross_section_mf33_11.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe__fns_709__pulse_5min/attr_cross_section_mf33_11.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe__fns_709__pulse_5min/attr_cross_section_mf33_12.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe__fns_709__pulse_5min/attr_cross_section_mf33_12.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe__fns_709__pulse_5min/attr_cross_section_mf33_13.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe__fns_709__pulse_5min/attr_cross_section_mf33_13.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe__fns_709__pulse_5min/attr_cross_section_mf33_14.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe__fns_709__pulse_5min/attr_cross_section_mf33_14.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe__fns_709__pulse_5min/attr_cross_section_mf33_15.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe__fns_709__pulse_5min/attr_cross_section_mf33_15.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe__fns_709__pulse_5min/attr_cross_section_mf33_2.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe__fns_709__pulse_5min/attr_cross_section_mf33_2.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe__fns_709__pulse_5min/attr_cross_section_mf33_3.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe__fns_709__pulse_5min/attr_cross_section_mf33_3.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe__fns_709__pulse_5min/attr_cross_section_mf33_4.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe__fns_709__pulse_5min/attr_cross_section_mf33_4.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe__fns_709__pulse_5min/attr_cross_section_mf33_5.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe__fns_709__pulse_5min/attr_cross_section_mf33_5.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe__fns_709__pulse_5min/attr_cross_section_mf33_6.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe__fns_709__pulse_5min/attr_cross_section_mf33_6.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe__fns_709__pulse_5min/attr_cross_section_mf33_7.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe__fns_709__pulse_5min/attr_cross_section_mf33_7.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe__fns_709__pulse_5min/attr_cross_section_mf33_8.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe__fns_709__pulse_5min/attr_cross_section_mf33_8.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe__fns_709__pulse_5min/attr_cross_section_mf33_9.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe__fns_709__pulse_5min/attr_cross_section_mf33_9.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe__fns_709__pulse_5min/attr_flux_0.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe__fns_709__pulse_5min/attr_flux_0.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe__fns_709__pulse_5min/attr_flux_1.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe__fns_709__pulse_5min/attr_flux_1.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe__fns_709__pulse_5min/attr_flux_10.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe__fns_709__pulse_5min/attr_flux_10.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe__fns_709__pulse_5min/attr_flux_11.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe__fns_709__pulse_5min/attr_flux_11.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe__fns_709__pulse_5min/attr_flux_12.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe__fns_709__pulse_5min/attr_flux_12.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe__fns_709__pulse_5min/attr_flux_13.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe__fns_709__pulse_5min/attr_flux_13.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe__fns_709__pulse_5min/attr_flux_14.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe__fns_709__pulse_5min/attr_flux_14.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe__fns_709__pulse_5min/attr_flux_15.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe__fns_709__pulse_5min/attr_flux_15.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe__fns_709__pulse_5min/attr_flux_2.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe__fns_709__pulse_5min/attr_flux_2.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe__fns_709__pulse_5min/attr_flux_3.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe__fns_709__pulse_5min/attr_flux_3.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe__fns_709__pulse_5min/attr_flux_4.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe__fns_709__pulse_5min/attr_flux_4.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe__fns_709__pulse_5min/attr_flux_5.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe__fns_709__pulse_5min/attr_flux_5.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe__fns_709__pulse_5min/attr_flux_6.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe__fns_709__pulse_5min/attr_flux_6.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe__fns_709__pulse_5min/attr_flux_7.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe__fns_709__pulse_5min/attr_flux_7.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe__fns_709__pulse_5min/attr_flux_8.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe__fns_709__pulse_5min/attr_flux_8.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe__fns_709__pulse_5min/attr_flux_9.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe__fns_709__pulse_5min/attr_flux_9.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe__fns_709__pulse_5min/out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe__fns_709__pulse_5min/rob_0.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe__fns_709__pulse_5min/rob_0.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe__fns_709__pulse_5min/rob_1.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe__fns_709__pulse_5min/rob_1.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe__fns_709__pulse_5min/rob_10.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe__fns_709__pulse_5min/rob_10.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe__fns_709__pulse_5min/rob_11.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe__fns_709__pulse_5min/rob_11.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe__fns_709__pulse_5min/rob_12.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe__fns_709__pulse_5min/rob_12.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe__fns_709__pulse_5min/rob_13.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe__fns_709__pulse_5min/rob_13.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe__fns_709__pulse_5min/rob_14.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe__fns_709__pulse_5min/rob_14.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe__fns_709__pulse_5min/rob_15.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe__fns_709__pulse_5min/rob_15.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe__fns_709__pulse_5min/rob_2.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe__fns_709__pulse_5min/rob_2.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe__fns_709__pulse_5min/rob_3.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe__fns_709__pulse_5min/rob_3.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe__fns_709__pulse_5min/rob_4.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe__fns_709__pulse_5min/rob_4.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe__fns_709__pulse_5min/rob_5.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe__fns_709__pulse_5min/rob_5.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe__fns_709__pulse_5min/rob_6.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe__fns_709__pulse_5min/rob_6.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe__fns_709__pulse_5min/rob_7.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe__fns_709__pulse_5min/rob_7.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe__fns_709__pulse_5min/rob_8.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe__fns_709__pulse_5min/rob_8.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe__fns_709__pulse_5min/rob_9.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe__fns_709__pulse_5min/rob_9.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe_co100wppm__fns_709__pulse_5min/attr_composition_0.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe_co100wppm__fns_709__pulse_5min/attr_composition_0.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe_co100wppm__fns_709__pulse_5min/attr_composition_1.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe_co100wppm__fns_709__pulse_5min/attr_composition_1.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe_co100wppm__fns_709__pulse_5min/attr_composition_10.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe_co100wppm__fns_709__pulse_5min/attr_composition_10.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe_co100wppm__fns_709__pulse_5min/attr_composition_11.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe_co100wppm__fns_709__pulse_5min/attr_composition_11.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe_co100wppm__fns_709__pulse_5min/attr_composition_12.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe_co100wppm__fns_709__pulse_5min/attr_composition_12.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe_co100wppm__fns_709__pulse_5min/attr_composition_13.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe_co100wppm__fns_709__pulse_5min/attr_composition_13.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe_co100wppm__fns_709__pulse_5min/attr_composition_14.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe_co100wppm__fns_709__pulse_5min/attr_composition_14.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe_co100wppm__fns_709__pulse_5min/attr_composition_15.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe_co100wppm__fns_709__pulse_5min/attr_composition_15.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe_co100wppm__fns_709__pulse_5min/attr_composition_2.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe_co100wppm__fns_709__pulse_5min/attr_composition_2.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe_co100wppm__fns_709__pulse_5min/attr_composition_3.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe_co100wppm__fns_709__pulse_5min/attr_composition_3.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe_co100wppm__fns_709__pulse_5min/attr_composition_4.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe_co100wppm__fns_709__pulse_5min/attr_composition_4.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe_co100wppm__fns_709__pulse_5min/attr_composition_5.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe_co100wppm__fns_709__pulse_5min/attr_composition_5.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe_co100wppm__fns_709__pulse_5min/attr_composition_6.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe_co100wppm__fns_709__pulse_5min/attr_composition_6.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe_co100wppm__fns_709__pulse_5min/attr_composition_7.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe_co100wppm__fns_709__pulse_5min/attr_composition_7.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe_co100wppm__fns_709__pulse_5min/attr_composition_8.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe_co100wppm__fns_709__pulse_5min/attr_composition_8.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe_co100wppm__fns_709__pulse_5min/attr_composition_9.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe_co100wppm__fns_709__pulse_5min/attr_composition_9.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe_co100wppm__fns_709__pulse_5min/attr_cross_section_mf33_0.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe_co100wppm__fns_709__pulse_5min/attr_cross_section_mf33_0.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe_co100wppm__fns_709__pulse_5min/attr_cross_section_mf33_1.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe_co100wppm__fns_709__pulse_5min/attr_cross_section_mf33_1.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe_co100wppm__fns_709__pulse_5min/attr_cross_section_mf33_10.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe_co100wppm__fns_709__pulse_5min/attr_cross_section_mf33_10.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe_co100wppm__fns_709__pulse_5min/attr_cross_section_mf33_11.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe_co100wppm__fns_709__pulse_5min/attr_cross_section_mf33_11.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe_co100wppm__fns_709__pulse_5min/attr_cross_section_mf33_12.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe_co100wppm__fns_709__pulse_5min/attr_cross_section_mf33_12.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe_co100wppm__fns_709__pulse_5min/attr_cross_section_mf33_13.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe_co100wppm__fns_709__pulse_5min/attr_cross_section_mf33_13.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe_co100wppm__fns_709__pulse_5min/attr_cross_section_mf33_14.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe_co100wppm__fns_709__pulse_5min/attr_cross_section_mf33_14.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe_co100wppm__fns_709__pulse_5min/attr_cross_section_mf33_15.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe_co100wppm__fns_709__pulse_5min/attr_cross_section_mf33_15.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe_co100wppm__fns_709__pulse_5min/attr_cross_section_mf33_2.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe_co100wppm__fns_709__pulse_5min/attr_cross_section_mf33_2.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe_co100wppm__fns_709__pulse_5min/attr_cross_section_mf33_3.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe_co100wppm__fns_709__pulse_5min/attr_cross_section_mf33_3.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe_co100wppm__fns_709__pulse_5min/attr_cross_section_mf33_4.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe_co100wppm__fns_709__pulse_5min/attr_cross_section_mf33_4.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe_co100wppm__fns_709__pulse_5min/attr_cross_section_mf33_5.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe_co100wppm__fns_709__pulse_5min/attr_cross_section_mf33_5.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe_co100wppm__fns_709__pulse_5min/attr_cross_section_mf33_6.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe_co100wppm__fns_709__pulse_5min/attr_cross_section_mf33_6.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe_co100wppm__fns_709__pulse_5min/attr_cross_section_mf33_7.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe_co100wppm__fns_709__pulse_5min/attr_cross_section_mf33_7.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe_co100wppm__fns_709__pulse_5min/attr_cross_section_mf33_8.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe_co100wppm__fns_709__pulse_5min/attr_cross_section_mf33_8.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe_co100wppm__fns_709__pulse_5min/attr_cross_section_mf33_9.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe_co100wppm__fns_709__pulse_5min/attr_cross_section_mf33_9.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe_co100wppm__fns_709__pulse_5min/attr_flux_0.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe_co100wppm__fns_709__pulse_5min/attr_flux_0.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe_co100wppm__fns_709__pulse_5min/attr_flux_1.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe_co100wppm__fns_709__pulse_5min/attr_flux_1.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe_co100wppm__fns_709__pulse_5min/attr_flux_10.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe_co100wppm__fns_709__pulse_5min/attr_flux_10.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe_co100wppm__fns_709__pulse_5min/attr_flux_11.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe_co100wppm__fns_709__pulse_5min/attr_flux_11.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe_co100wppm__fns_709__pulse_5min/attr_flux_12.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe_co100wppm__fns_709__pulse_5min/attr_flux_12.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe_co100wppm__fns_709__pulse_5min/attr_flux_13.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe_co100wppm__fns_709__pulse_5min/attr_flux_13.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe_co100wppm__fns_709__pulse_5min/attr_flux_14.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe_co100wppm__fns_709__pulse_5min/attr_flux_14.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe_co100wppm__fns_709__pulse_5min/attr_flux_15.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe_co100wppm__fns_709__pulse_5min/attr_flux_15.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe_co100wppm__fns_709__pulse_5min/attr_flux_2.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe_co100wppm__fns_709__pulse_5min/attr_flux_2.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe_co100wppm__fns_709__pulse_5min/attr_flux_3.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe_co100wppm__fns_709__pulse_5min/attr_flux_3.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe_co100wppm__fns_709__pulse_5min/attr_flux_4.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe_co100wppm__fns_709__pulse_5min/attr_flux_4.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe_co100wppm__fns_709__pulse_5min/attr_flux_5.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe_co100wppm__fns_709__pulse_5min/attr_flux_5.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe_co100wppm__fns_709__pulse_5min/attr_flux_6.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe_co100wppm__fns_709__pulse_5min/attr_flux_6.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe_co100wppm__fns_709__pulse_5min/attr_flux_7.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe_co100wppm__fns_709__pulse_5min/attr_flux_7.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe_co100wppm__fns_709__pulse_5min/attr_flux_8.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe_co100wppm__fns_709__pulse_5min/attr_flux_8.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe_co100wppm__fns_709__pulse_5min/attr_flux_9.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe_co100wppm__fns_709__pulse_5min/attr_flux_9.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe_co100wppm__fns_709__pulse_5min/out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe_co100wppm__fns_709__pulse_5min/rob_0.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe_co100wppm__fns_709__pulse_5min/rob_0.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe_co100wppm__fns_709__pulse_5min/rob_1.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe_co100wppm__fns_709__pulse_5min/rob_1.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe_co100wppm__fns_709__pulse_5min/rob_10.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe_co100wppm__fns_709__pulse_5min/rob_10.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe_co100wppm__fns_709__pulse_5min/rob_11.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe_co100wppm__fns_709__pulse_5min/rob_11.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe_co100wppm__fns_709__pulse_5min/rob_12.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe_co100wppm__fns_709__pulse_5min/rob_12.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe_co100wppm__fns_709__pulse_5min/rob_13.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe_co100wppm__fns_709__pulse_5min/rob_13.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe_co100wppm__fns_709__pulse_5min/rob_14.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe_co100wppm__fns_709__pulse_5min/rob_14.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe_co100wppm__fns_709__pulse_5min/rob_15.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe_co100wppm__fns_709__pulse_5min/rob_15.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe_co100wppm__fns_709__pulse_5min/rob_2.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe_co100wppm__fns_709__pulse_5min/rob_2.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe_co100wppm__fns_709__pulse_5min/rob_3.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe_co100wppm__fns_709__pulse_5min/rob_3.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe_co100wppm__fns_709__pulse_5min/rob_4.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe_co100wppm__fns_709__pulse_5min/rob_4.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe_co100wppm__fns_709__pulse_5min/rob_5.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe_co100wppm__fns_709__pulse_5min/rob_5.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe_co100wppm__fns_709__pulse_5min/rob_6.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe_co100wppm__fns_709__pulse_5min/rob_6.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe_co100wppm__fns_709__pulse_5min/rob_7.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe_co100wppm__fns_709__pulse_5min/rob_7.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe_co100wppm__fns_709__pulse_5min/rob_8.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe_co100wppm__fns_709__pulse_5min/rob_8.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe_co100wppm__fns_709__pulse_5min/rob_9.json",
+   "outcome": "identical"
+  },
+  {
+   "pair": "p136-work-b/default-ref-1792114570-3623463/cases/fe_co100wppm__fns_709__pulse_5min/rob_9.out.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p139-work/fns_fe_5min.reference.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": false,
+   "problems": []
+  },
+  {
+   "pair": "p139-work/shielding_demo.reference.json",
+   "outcome": "compatible",
+   "decay_fed_exemption": true,
+   "problems": []
+  },
+  {
+   "pair": "p139-work/tendl_w186_foil_0p01.reference.json",
+   "outcome": "FAIL",
+   "decay_fed_exemption": true,
+   "problems": [
+    "differs outside the Amendment B fields in: ['certificate', 'ledger', 'steps']"
+   ]
+  },
+  {
+   "pair": "p139-work/tendl_w186_foil_0p1.reference.json",
+   "outcome": "FAIL",
+   "decay_fed_exemption": true,
+   "problems": [
+    "differs outside the Amendment B fields in: ['certificate', 'ledger', 'steps']"
+   ]
+  }
+ ]
+}

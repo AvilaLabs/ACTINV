@@ -18,7 +18,7 @@
   {
    "id": "annex-vii-table-b-concentration",
    "kind": "clearance_index",
-   "basis": "Exemption activity concentration for moderate amounts of material, kBq/kg converted to Bq/kg (x1000). Parent rows marked (2) include listed progeny; K-40 carries the potassium-salts note. U-240 is listed twice in the source; the nuclide-alone row is used.",
+   "basis": "Exemption activity concentration for moderate amounts of material, kBq/kg converted to Bq/kg (x1000). Parent rows marked (2) include listed progeny, which covered_by_parent lists (zero contribution while the parent is present); K-40 carries the potassium-salts note. U-240 is listed twice in the source; the nuclide-alone row is used.",
    "coefficients": {
     "H3": 1000000000.0,
     "Be7": 1000000.0,
@@ -316,6 +316,176 @@
     "Es254m1": 100000.0,
     "Fm254": 10000000.0,
     "Fm255": 1000000.0
+   },
+   "covered_by_parent": {
+    "Ac225": [
+     "Th229"
+    ],
+    "Ac228": [
+     "Ra228"
+    ],
+    "Ag108": [
+     "Ag108m1"
+    ],
+    "Am242": [
+     "Am242m1"
+    ],
+    "At217": [
+     "Th229"
+    ],
+    "Ba137m1": [
+     "Cs137"
+    ],
+    "Bi210": [
+     "Pb210",
+     "Ra226"
+    ],
+    "Bi211": [
+     "Ra223"
+    ],
+    "Bi212": [
+     "Pb212",
+     "Ra224",
+     "Th228",
+     "U232"
+    ],
+    "Bi213": [
+     "Th229"
+    ],
+    "Bi214": [
+     "Ra226",
+     "Rn222"
+    ],
+    "Fr221": [
+     "Th229"
+    ],
+    "La140": [
+     "Ba140"
+    ],
+    "Nb93m1": [
+     "Zr93"
+    ],
+    "Nb97": [
+     "Zr97"
+    ],
+    "Np239": [
+     "Am243"
+    ],
+    "Pa233": [
+     "Np237"
+    ],
+    "Pa234m1": [
+     "Th234",
+     "U238"
+    ],
+    "Pb209": [
+     "Th229"
+    ],
+    "Pb210": [
+     "Ra226"
+    ],
+    "Pb211": [
+     "Ra223"
+    ],
+    "Pb212": [
+     "Ra224",
+     "Th228",
+     "U232"
+    ],
+    "Pb214": [
+     "Ra226",
+     "Rn222"
+    ],
+    "Po210": [
+     "Pb210",
+     "Ra226"
+    ],
+    "Po212": [
+     "Bi212",
+     "Pb212",
+     "Ra224",
+     "Th228",
+     "U232"
+    ],
+    "Po213": [
+     "Th229"
+    ],
+    "Po214": [
+     "Ra226",
+     "Rn222",
+     "Th226",
+     "U230"
+    ],
+    "Po215": [
+     "Ra223"
+    ],
+    "Po216": [
+     "Ra224",
+     "Rn220",
+     "Th228",
+     "U232"
+    ],
+    "Po218": [
+     "Ra226",
+     "Rn222"
+    ],
+    "Pr144": [
+     "Ce144"
+    ],
+    "Ra222": [
+     "Th226",
+     "U230"
+    ],
+    "Ra224": [
+     "Th228",
+     "U232"
+    ],
+    "Ra225": [
+     "Th229"
+    ],
+    "Rh106": [
+     "Ru106"
+    ],
+    "Rn218": [
+     "Th226",
+     "U230"
+    ],
+    "Rn219": [
+     "Ra223"
+    ],
+    "Rn220": [
+     "Ra224",
+     "Th228",
+     "U232"
+    ],
+    "Rn222": [
+     "Ra226"
+    ],
+    "Th226": [
+     "U230"
+    ],
+    "Th228": [
+     "U232"
+    ],
+    "Th231": [
+     "U235"
+    ],
+    "Th234": [
+     "U238"
+    ],
+    "Tl207": [
+     "Ra223"
+    ],
+    "Tl208": [
+     "Bi212",
+     "Pb212",
+     "Ra224",
+     "Th228",
+     "U232"
+    ],
+    "Y90": [
+     "Sr90"
+    ]
    }
   }
  ]

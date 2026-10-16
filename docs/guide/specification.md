@@ -103,6 +103,29 @@ any step spectrum) holding `convention`, `cnvtype`, `destination_structure`, `so
 relative closure of source against destination plus outside flux; checked to `1e-12`) and `exact_grid`. A spectrum
 without `rebin` is unchanged and adds nothing to the ledger.
 
+A conversion that leaves no flux in the destination structure (a source wholly below or above its range) is an
+error naming the spectrum, because every irradiating step would silently become pure decay; a partial loss is not
+refused, so read `outside_destination_below` and `outside_destination_above`. `emin_eV` and `emax_eV` are checked
+when the spec is validated: a limit at or above the whole supplied spectrum (`emin_eV`) or at or below it
+(`emax_eV`) is an error, while a limit that falls outside the spectrum on the other side leaves that side
+unchanged, as the FISPACT-II manual allows. A source group that straddles a limit keeps all of its flux inside the
+shortened group (`LIMGRP` moves its boundary to the limit, it does not split the group), so the part of that group
+beyond the limit is redistributed but is not counted in `limit_flux_moved_from_below` or
+`limit_flux_moved_from_above`, which report only the groups wholly beyond the limit; the total is conserved either
+way.
+
+A fragment (group boundaries in eV, flux in n cm^-2 s^-1, merged into a complete problem):
+
+```json
+"spectrum": {
+  "structure": "fispact-709",
+  "boundaries_eV": [1.0e-3, 1.0, 1.0e3, 1.0e6, 2.0e7],
+  "flux_per_group": [1.0e9, 4.0e9, 5.0e9, 1.0e9],
+  "descending": false,
+  "rebin": {"convention": "equal_lethargy", "emin_eV": 1.0e-2, "emax_eV": 1.5e7}
+}
+```
+
 ## Wall loading (`wall_loading_MW_m2`)
 
 A schedule step gives exactly one of `flux` (a multiplier on the spectrum's total) and `wall_loading_MW_m2` (first
@@ -112,10 +135,30 @@ spectrum declares `spectrum.wall_loading_MW_m2` (the loading its group fluxes co
 `wall / spectrum.wall_loading_MW_m2`. Without a reference, ACTINV uses the manual's closing statement of section
 4.91, "a current C, of 4.44 x 10^13 n cm^-2 s^-1 is equivalent to 1 MW m^-2" (a 14 MeV neutron current), and sets
 the step's total flux to `wall x 4.44e13` n cm^-2 s^-1 with the spectrum's shape; that needs a spectrum with a
-positive total. The constant is `spec::WALL_CURRENT_PER_MW_M2`. A step spectrum uses its own reference. The ledger
+positive total. The constant is `spec::WALL_CURRENT_PER_MW_M2`. A step spectrum uses its own reference. A zero
+loading is a cooling step on any spectrum, with or without a reference. The 14 MeV equivalence describes a neutron
+current, so without `spectrum.wall_loading_MW_m2` a wall step is refused for a proton, deuteron, triton, helion,
+alpha or gamma projectile; declare the reference loading instead.
+
+The two bases differ in what they do with flux that `rebin` places outside the destination structure. With a
+reference the multiplier is `wall / reference` applied to the converted spectrum, so flux lost outside the
+destination lowers the step flux. Without one the multiplier is `wall x 4.44e13` over the converted spectrum's sum,
+so the step flux is `wall x 4.44e13` whatever was lost. Also without a reference, the step flux does not depend on
+`spectrum.total` (only the shape is used), so a scan that scales `spectrum.total` changes nothing for such steps;
+with a reference it scales them. The ledger
 gains `wall_loading`, one record per wall step: `step`, `wall_loading_MW_m2`, `basis`
 (`spectrum_reference_wall_loading` or `14_MeV_current_equivalence`), `reference_wall_loading_MW_m2`,
 `current_per_MW_m2_cm2_s`, `flux_multiplier` and `step_total_flux_cm2_s`.
+
+A fragment (the reference loading belongs to the spectrum's group fluxes):
+
+```json
+"spectrum": {"wall_loading_MW_m2": 4.15},
+"schedule": [
+  {"dt": "1 y", "wall_loading_MW_m2": 2.0},
+  {"dt": "10 y", "flux": 0}
+]
+```
 
 ## Partition (`schedule[].partition`)
 
@@ -123,13 +166,32 @@ gains `wall_loading`, one record per wall step: `step`, `wall_loading_MW_m2`, `b
 (FISPACT-II section 4.54 `PARTITION`: a value of 0.01 for Ar reduces Ar by a factor of 100). Every nuclide and
 isomeric state of the element is scaled; the removed atoms move to the removal sink that `removal` also uses and are
 reported as `removed_atoms_per_g`. Fractions must lie in [0, 1] and keys must be elements. The split is applied
-before the step evolves and also acts on the uncertainty tangents and the comparison solution.
+before the step evolves and also acts on the uncertainty tangents and the comparison solution. An empty
+`partition: {}` is no partition. A composition isotope of the element that has no decay record is not a chain state,
+but the partition scales it too (its atoms move to the sink and the step summary shows the kept share).
 
 A partition removes bulk atoms, which the `trace` formulation cannot represent (it holds the bulk undepleted), so
 `options.mode: "trace"` with a partition is an error, and `auto` selects `coupled`. The ledger gains `partition`:
 `applied` (per step and element: `step`, `element`, `fraction_kept`, `removed_atoms_per_g`), `mode`,
-`mode_forced_coupled` and `removed_atoms_per_g_final`. Partition is not accepted by mesh specs, study specs, reverse
-solves or the waste-composition solve, and is refused together with `pathways` and schedule `library` overrides.
+`mode_forced_coupled` (true only when `auto` would otherwise have chosen `trace`: burn-up or the decay of a
+radioactive bulk nuclide already select `coupled`), `numerical_floor_atoms_per_g_max` and `removed_atoms_per_g_final`.
+Partition is not accepted by mesh specs, study specs, reverse solves or the waste-composition solve, and is refused
+together with `pathways` and schedule `library` overrides.
+
+The coupled formulation carries the bulk material as a state, so its CRAM numerical scale `alpha0 x max(N)` (see the
+[numerical floor diagnostic](#numerical-floor-diagnostic)) can sit above trace-level activation products; populations
+below it are reported, not removed. A partition that moves an otherwise `trace` run onto `coupled` therefore changes
+the precision at which trace products are resolved. `numerical_floor_atoms_per_g_max` is the worst step's scale in the
+ledger's `partition` entry; compare it with the products you care about, or set `options.mode` explicitly.
+
+A fragment:
+
+```json
+"schedule": [
+  {"dt": "1 y", "flux": 1.0},
+  {"dt": "1 d", "flux": 0, "partition": {"Ar": 0.01, "Fe": 0.5}}
+]
+```
 
 ## Named data overrides (`overrides`)
 
@@ -150,7 +212,22 @@ correlations of the covariance row. A name that matches no library row or decay 
 value overrides cannot be combined with `uncertainty` (the MF=33 collapse is anchored to the library value), and an
 absolute `cross_section` cannot be combined with `self_shielding`. Duplicate overrides, and a `cross_section` and a
 `cross_section_scale` on the same reaction, are rejected. A cross-section override's ledger entry records the
-one-group collapsed value before and after.
+one-group collapsed value before and after, under the base spectrum only.
+
+An absolute `cross_section` is one barn value imposed under every spectrum of the schedule: a step with its own
+spectrum gets the same number as the base spectrum (the product branching still follows each spectrum). It cannot
+set a nonzero value on a reaction that collapses to zero under a spectrum, so the check is made against the base
+spectrum when a step uses it and against the spectrum of every step that irradiates; the spectrum of a cooling step
+never reads the cross section and is not checked.
+
+A fragment (names are resolved against the library and decay data when the problem is run):
+
+```json
+"overrides": [
+  {"nuclide": "Fe56", "kind": "cross_section_scale", "mt": 16, "value": 0.8},
+  {"nuclide": "Co60", "kind": "half_life", "value": 5.27, "units": "y"}
+]
+```
 
 ## Decay-only runs
 
@@ -158,8 +235,11 @@ A spec whose every step has zero flux needs no activation library: omit `library
 and `spectrum`. The decay data and the material are read as usual and the schedule is a pure decay/cooling
 history. A spec that omits `library` with any irradiating step is rejected with a message naming the step rule.
 Everything that needs a library is rejected for a decay-only spec: `uncertainty`, `self_shielding`, `damage`,
-`fission_yields` files, `options.rate_scale`, `options.yield_scale`, `library.sha256` and cross-section overrides.
-`half_life` and `half_life_uncertainty` overrides remain allowed. The ledger and certificate carry
+`fission_yields` files, `kerma`, `options.rate_scale`, `options.yield_scale`, `library.sha256` and cross-section
+overrides. `half_life` overrides remain allowed; `half_life_uncertainty` needs an `uncertainty` section, which a
+decay-only run does not support, so it is refused. A spec that gives a step `spectrum` but no base `spectrum`, or a
+library but no `spectrum`, is refused with a message saying that a spectrum is required. The ledger and certificate
+carry
 `decay_only: true` and the library and library-index inputs are `null`. Runs that supply a library are unchanged.
 Mesh specs still require a library.
 
@@ -193,10 +273,12 @@ Fissioning parents without a matching file remain explicit leakage and never bor
 
 ### Spontaneous fission
 
-Without further input, a decay state's spontaneous-fission branch (RTYP digit 6) is booked to leakage and counted
+Without further input, a decay state's spontaneous-fission branch (RTYP 6) is booked to leakage and counted
 in the ledger's `spontaneous_fission_branches_to_leakage`. `fission_yields.spontaneous` routes it to products
-instead, and supplies the neutron multiplicity for a spontaneous-fission neutron source. Every input is hash-pinned
-and optional, but the object must declare at least one:
+instead, and supplies the neutron multiplicity for a spontaneous-fission neutron source. A fission after another
+transition (RTYP 2.6, β-delayed fission) is not spontaneous fission of the parent: it is always booked to leakage and
+counted in `unmodelled_decay_branches_to_leakage`. Every input is hash-pinned and optional, but the object must
+declare at least one:
 
 ```json
 "fission_yields": {
@@ -218,7 +300,9 @@ and optional, but the object must declare at least one:
   `ledger.spontaneous_fission.uncovered_to_leakage`; no other parent's yields are borrowed. Only a branch that is the
   whole decay mode is routed.
 - `nubar_endf` names an ENDF file whose MF=1 MT=452 (total, preferred) or MT=456 (prompt) section gives each state's
-  spontaneous-fission neutron multiplicity, taken at `E = 0` (a polynomial's constant term, or the lowest tabulated
+  spontaneous-fission neutron multiplicity. The total includes the delayed neutrons that follow the fission (for
+  Cf-252, 3.7676 total against 3.7590 prompt), so the neutron source is about 0.2 % above the prompt-neutron source
+  at fission time there, and differs by each nuclide's own delayed fraction elsewhere. The multiplicity is taken at `E = 0` (a polynomial's constant term, or the lowest tabulated
   point, recorded in the ledger). The ENDF/B-VIII.0 decay sublibrary carries these values (Cf-252: 3.7676). Do not name a
   neutron sublibrary: its MF=1 is the induced-fission multiplicity.
 - `nubar_table` names a JSON document `{"source": "<citation>", "nubar": {"Cf252": 3.7676, ...}}`. The citation is
@@ -238,7 +322,8 @@ With any `nubar_*` input every step gains `fission.spontaneous_neutron_source` (
 
 `energy_per_fission_MeV` defaults to 200, a conventional round figure and not a nuclide-specific energy; it affects
 only the MWd/kg burn-up and must be finite and positive. The option works without fission-yield files: every library
-fission (MT=18) row is counted, whether or not yields exist for it. Both this option and
+fission (MT=18) row whose target nuclide is a state of the decay chain is counted, whether or not yields exist for it
+(a row whose target has no decay record is listed under `targets_absent_from_decay_library` and is not counted). Both this option and
 `fission_yields.spontaneous` are refused by the native waste composition solve. The count integrates one flux
 multiplier per step, so `options.fission` is refused with power-driven steps (whose multiplier is solved per
 sub-interval) and with schedule `library` overrides (the count reads the base library's MT=18 rates).
@@ -362,8 +447,49 @@ table response in table order; otherwise only the named unique IDs are evaluated
 Each step reports the selected value, unit, covered and missing activity, activity-coverage fraction, contributing
 nuclide count, and sorted active nuclides without a coefficient. Missing coefficients are not treated as zero.
 `require_complete: true` rejects the entire calculation when any selected response lacks a coefficient for positive
-activity. The certificate retains the table hash, source metadata, kind, basis, and coefficient count. See the
-[qualification boundary](qualification.md) before using a regulatory table.
+activity. The certificate retains the table hash, source metadata, kind, basis, and coefficient count.
+
+A response may also carry two optional lists for what a coefficient cannot say. Tables without them are read exactly as
+before, so existing hash-pinned tables are unaffected.
+
+- `unlimited`: canonical nuclides whose source limit is "Unlimited". They have no coefficient (listing one that has a
+  coefficient is an error). Their activity counts as covered and contributes zero, because an unlimited A1 or A2 limit
+  adds nothing to `sum(A_i / limit_i)`. The step lists the active ones in `unlimited_active_nuclides`; they are not in
+  `missing_active_nuclides`, so `require_complete: true` accepts them.
+- `covered_by_parent`: a map from a progeny to the parents whose value already includes it. While any listed parent
+  has positive activity, the progeny's activity counts as covered and contributes zero, even when the progeny has a
+  coefficient of its own, so a decay chain holding both is not counted twice. The step lists these as
+  `covered_by_parent` pairs of `nuclide` and `parent`. With no listed parent present the progeny is evaluated like any
+  other nuclide: its own coefficient, or missing. Every parent must itself have a coefficient or be `unlimited`, a
+  nuclide may not be its own parent, and the map may not contain a cycle.
+
+Both keys are omitted from the step output when nothing in them is active, and the certificate gives
+`unlimited_count` and `covered_by_parent_count` only for a response that uses them.
+
+```json
+{
+  "format": "actinv-radiological-table-1",
+  "title": "Example only",
+  "source": {
+    "citation": "Issuing authority and publication",
+    "edition": "2026",
+    "url": "https://example.invalid/source",
+    "jurisdiction": "example"
+  },
+  "responses": [
+    {
+      "id": "a2-example",
+      "kind": "a2",
+      "basis": "A2 in Bq",
+      "coefficients": {"Co60": 4.0e11, "Cs137": 6.0e11},
+      "unlimited": ["Mn53"],
+      "covered_by_parent": {"Ba137m1": ["Cs137"]}
+    }
+  ]
+}
+```
+
+See the [qualification boundary](qualification.md) before using a regulatory table.
 
 A table's `source` may also carry the optional strings `scope`, `retrieved`, `source_file`, `source_sha256`,
 `converter`, `licence`, and `row_provenance`. When present they are nonempty and are kept in the certificate.
@@ -406,12 +532,24 @@ How to read the tables:
 - **Uranium.** The transport tables list uranium by lung-absorption type. Each carries three responses that differ only
   in the uranium rows: `...-u-fast`, `...-u-medium`, `...-u-slow`. An empty `responses` list returns all three; choose
   one deliberately.
-- **Unlimited and element-level rows.** Rows with no finite limit ("Unlimited"), and element-level rows such as
-  `U (nat)` or `Rb(nat)`, cannot be coefficients. They are in the sidecar. ACTINV reports their activity as uncovered
-  and never as zero, so `require_complete: true` rejects a run that contains them.
-- **Parents with progeny.** Rows marked as including progeny (footnote (a) in 173.435, (b) in 173.436, (1) or (2) in the
-  Directive) keep the parent's value. The sidecar lists the progeny when the source does. If your inventory contains the
-  progeny too, they are counted again; remove them from the inventory or accept the conservative result.
+- **Unlimited rows.** Rows with no finite limit ("Unlimited" in 49 CFR 173.435: Mn-53, Ni-59, Zr-93, I-129, Th-232 and
+  others) are listed in the response's `unlimited` list. Their activity is covered and contributes zero, so an
+  activation inventory that holds them still satisfies `require_complete: true`. A few uranium rows are unlimited in only
+  one lung-absorption response, as in the source (U-236 in `-u-fast`).
+- **Element-level rows.** Rows such as `U (nat)` or `Rb(nat)` cannot be coefficients. They are in the sidecar. ACTINV
+  reports their activity as uncovered and never as zero, so `require_complete: true` rejects a run that needs them.
+- **Parents with progeny.** Rows marked as including progeny (footnote (b) in 173.436, (1) or (2) in the Directive) keep
+  the parent's value, and the table's `covered_by_parent` map lists the progeny of each such parent. While the parent
+  has activity, a listed progeny (Ba-137m under Cs-137, Rh-106 under Ru-106, Pa-234m under Th-234) is covered with zero
+  contribution instead of being reported as missing; a progeny that has its own row (Y-90 under Sr-90) is not summed a
+  second time. The inventory does not need editing. If the progeny is present without its parent, it uses its own row
+  or is missing, as for any nuclide. 49 CFR 173.435 footnote (a) only refers to the IAEA SSR-6 list of such parents,
+  which the CFR does not reproduce; for those tables the converter uses the 173.436 footnote (b) progeny lists for the
+  parents that carry footnote (a). Footnote (a) parents that the 173.436 list does not name have no `covered_by_parent`
+  entry, so their progeny can still appear as missing; the rows sidecar marks them `parent_with_progeny_not_in_173_436_list`.
+- **Notes kept in the sidecar only.** The A2 of Mo-99 in the table is 0.6 TBq; 49 CFR 173.435 footnote (i) gives 0.74 TBq
+  for domestic use. The Directive's Table B K-40 entry carries the note on potassium salts below 1000 kg. Neither is
+  in the coefficient tables; read the sidecar rows when either applies.
 - **Source anomalies** are recorded rather than corrected: the Directive's Table B lists U-240 twice (the nuclide-alone
   row is used), and its parent/progeny marks disagree with its progeny lists for a few nuclides.
 - **Isomer labels.** Three CFR rows use lifetimes (`Eu-150`, `Np-236`, `Ta-178`). They are mapped to ACTINV isomer
@@ -490,7 +628,11 @@ step that names a power, the problem, its result and its ledger are byte-for-byt
 
 `kerma.table` is a hash-pinned `actinv-kerma-table-1` file; the declared SHA-256 is recomputed before the run.
 `require_complete: true` rejects the run when a material nuclide has no heating row (otherwise such nuclides add no
-heating and are named in the ledger's `kerma.uncovered_composition_targets`). `power_tolerance` (default `0.001`,
+heating and are named in the ledger's `kerma.uncovered_composition_targets`). Heating is summed over the decay
+chain's states, so coverage is judged there too: a composition isotope with no decay record is not a chain state and
+heats nothing, whichever table row would match it, so it is listed as uncovered (and rejected by `require_complete`).
+A `kerma` section is refused in a decay-only spec, which has no activation library whose group structure the table
+must match. `power_tolerance` (default `0.001`,
 open interval (0, 1)), `max_substeps` (default 64, 1 to 4096) and `top` (default 10, the number of contributors listed
 per step) are described below.
 
@@ -503,7 +645,7 @@ per step) are described below.
 | `projectile`, `group_structure`, `boundaries_eV` | The projectile must match the problem; `boundaries_eV` must equal the activation library's boundaries exactly. |
 | `units` | `kerma_barn_eV_per_group`. |
 | `targets` | Canonical explicit nuclide (`Fe56`, `Ta180m1`) or element (`Fe`) keys, each with one finite barn·eV value per group. A nuclide row wins over its element's row. |
-| `damage_energy_targets` | Optional, same keys; nonnegative barn·eV damage-energy production. |
+| `damage_energy_targets` | Optional, same keys; nonnegative barn·eV damage-energy production. Every key must be covered by a `targets` row (a damage row is read through the heating row of the same state); one without is an error. |
 | `temperature_K`, `files`, `uncovered` | Optional provenance: the table's temperature, per-file SHA-256s, and the evaluations that had no kerma section. |
 
 A `targets` row is the group average of NJOY HEATR's total heating kerma, ENDF MT=301, in eV·barn per atom; the
@@ -512,8 +654,11 @@ optional `damage_energy_targets` rows are the group-averaged total damage-energy
 (particles cm⁻² s⁻¹) deposits `k_i = sum_g K_ig * phi_g * 1e-24 * 1.602176634e-19` watts. Whether the photon energy
 of a capture is counted as heating depends on HEATR's `local` flag when the table was made (default 0: gamma rays
 are transported and their energy is not deposited at the reaction site); ACTINV reads the table as given and cannot
-see that choice, so state it in the table's `source.edition`. A negative group value (energy-balance kerma can go
-negative where an evaluation's photon-production data are inconsistent) is accepted and named in the certificate's
+see that choice, so state it in the table's `source.edition`. An element row (`Fe`) gives every
+isotope of that element without a row of its own, and every transmutation product of it, the natural-element
+value, and counts them as covered, so `covered_atom_fraction` is a statement about rows, not about the quality of
+their data; an isomer does not fall back to its ground-state row, only to the element row. A negative group value
+(energy-balance kerma can go negative where an evaluation's photon-production data are inconsistent) is accepted and named in the certificate's
 `targets_with_negative_group_values`; a negative damage-energy value is an error. A table is built from NJOY output
 with `scripts/build_kerma_table.py` (below).
 
@@ -524,7 +669,8 @@ needs `material.density_g_cm3` (finite, positive; otherwise unused) and is conve
 gram-based inventories need no density. A power-driven step requires a `kerma` section, uses the step's own
 `spectrum` when it has one, and may combine with `feed`/`removal`. It is refused with `uncertainty`,
 `options.screen`, `options.fission`, `pathways`, schedule `library` overrides, the reverse and study tools and mesh
-specs, and its pathway attribution is not emitted. It does combine with `partition`.
+specs. It does combine with `partition`, and in trace mode the first-product `pathways` table is built from the
+multipliers each sub-interval applied.
 
 The flux multiplier on the step's spectrum is chosen so that the instantaneous heating
 `sum_i N_i(t) * k_i(spectrum) * multiplier` equals the requested power, with `N_i` the evolving atoms per gram of
@@ -536,9 +682,32 @@ power is compared with the request. If the largest relative departure (the *powe
 the number of sub-intervals doubles (up to `max_substeps`) and the step is solved again from its start. A cap of 1
 reproduces FISPACT-II's start-of-step normalization. The achieved multipliers, the total flux in each sub-interval
 and the worst drift are reported (see [results](results.md#kerma-heating-and-power-driven-steps)); a step that hits
-`max_substeps` above the tolerance is reported with `converged: false` and listed in the ledger, not hidden. The
-drift measures the interval end only, which bounds the interior when power varies monotonically across a
-sub-interval.
+`max_substeps` above the tolerance is reported with `converged: false` and listed in the ledger, not hidden;
+`actinv run` also prints a warning on stderr naming each such step (the result file is unchanged). The default
+tolerance and cap do not converge a strongly burning case (for B-10 under a power target, 64 sub-intervals leave a
+drift of about 1.5 % and about 1024 are needed), so check `converged`. The drift measures the interval end only,
+which bounds the interior when power varies monotonically across a sub-interval.
+
+A power step needs heating from the material it starts with. The flux used for pruning, and the first sub-interval's
+multiplier, come from the composition at the start of the run, so a power step is refused before the schedule starts
+when that starting material has no kerma heating under the step's spectrum, even if an earlier step would breed a
+nuclide that has a row. Start such a schedule with a flux-driven step on a material that has heating, or add a row
+for the starting material. A heating that turns negative (a legal negative table row) or non-finite during a step is
+reported as such, and a heating that vanishes in a refined attempt names the sub-interval and says that a coarser
+attempt had run.
+
+A fragment (the kerma table pattern above supplies `kerma`; `power_W_per_g` needs no density):
+
+```json
+"kerma": {
+  "table": {"path": "/data/kerma/fe_kerma.json", "sha256": "64 hexadecimal digits"},
+  "max_substeps": 256
+},
+"schedule": [
+  {"dt": "30 d", "power_W_per_g": 0.05},
+  {"dt": "1 d", "flux": 0}
+]
+```
 
 Rate pruning and the automatic burnup-mode choice are decided before the schedule is solved, so for a power-driven
 step they use the flux amplitude implied by the starting composition (reported per step as
@@ -624,7 +793,13 @@ correlation of the response with each sampled input parameter, ranked by `|spear
 case-level `response_correlation` matrix gives the Pearson correlation between all requested responses.
 
 Percentiles are exact order statistics (nearest rank): the smallest sample value `x_(k)` with
-`k/n >= p/100`, `k = max(1, ceil(n p/100))`; there is no interpolation. Spearman uses average ranks for ties.
+`k/n >= p/100`, `k = max(1, ceil(n p/100))` computed in exact arithmetic on the decimal `p`; there is no
+interpolation. Spearman uses average ranks for ties. One sample has no standard deviation (`std` is `null`), and
+correlations, the response matrix and the bootstrap need at least three samples; below that they report
+`{"status": "insufficient_samples"}` with the count. The `first_order` std is compared only when
+`cross_section_mf33` is the sole enabled channel (the first-order propagation carries that channel only);
+otherwise the study's `local_vs_nonlinear` has `status: "not_comparable"` with the enabled channels, and each
+`first_order` says the same.
 The sampled input is the natural log of each applied multiplicative factor. Without `statistics` the
 robustness record is unchanged. See [the study reference](https://github.com/AvilaLabs/ACTINV/blob/master/docs/STUDY.md)
 for every field.
@@ -649,6 +824,16 @@ the computed one. A nuclide the table does not cover, or a group the table does 
 error. The ledger and certificate list the applied overrides under `dilution_overrides`; the reported
 `sigma0_eff_b` remains the computed value.
 
+A fragment with the section it belongs to (the table supplies the covered nuclides and groups):
+
+```json
+"self_shielding": {
+  "table": {"path": "shielding_table.json", "sha256": "..."},
+  "dilution": "composition",
+  "dilution_overrides": {"Fe56": {"300": 100.0, "301": 80.0}, "Fe54": {"194": 2.5}}
+}
+```
+
 ### Geometry self-shielding (resolved resonances)
 
 `self_shielding.geometry` selects FISPACT-II's `SSFGEOMETRY` model instead of the Bondarenko table: the
@@ -668,19 +853,44 @@ and `dilution_overrides`, as `SSFGEOMETRY` and `PROBTABLE` are exclusive.
 }
 ```
 
+A fragment that takes the density from the material (the geometry omits `density_g_cm3`):
+
+```json
+"material": {"basis": "wt_percent", "composition": {"FE": 100.0}, "density_g_cm3": 7.874},
+"self_shielding": {
+  "geometry": {
+    "shape": "wire",
+    "length_cm": 0.05,
+    "resonance_files": [{"path": "n_Fe056.endf", "sha256": "..."}]
+  }
+}
+```
+
 - `shape` is `"foil"` (`length_cm` = thickness), `"wire"` or `"sphere"` (`length_cm` = radius), or `"cylinder"`
   (`length_cm` = radius plus `height_cm`). Dimensions must be finite and positive; `height_cm` is required for,
   and only for, a cylinder. The effective length is `y = 1.5 t` (foil), `2 r` (wire), `r` (sphere),
-  `1.65 r h / (r + h)` (cylinder).
-- `density_g_cm3` converts the declared material (atoms per gram) to number densities. FISPACT-II instead takes
-  atoms per unit area or length from `SSFFUEL`/`SSFMASS`; ACTINV uses the run's own material and a density.
+  `1.65 r h / (r + h)` (cylinder). These are the rules of the manual's Table 25 as quoted; they are not limits of one
+  another (a long thin cylinder tends to `1.65 r`, the wire is `2 r`; a wide flat one tends to `1.65 h`, the foil is
+  `1.5 t`), so choose the shape that describes the target rather than reading one as the limit of another.
+- `density_g_cm3` converts the declared material (atoms per gram) to number densities. It may be omitted when
+  `material.density_g_cm3` is declared; the geometry then uses that value. When both are given they must agree to
+  `1e-9` relative, and one of the two is required. FISPACT-II instead takes atoms per unit area or length from
+  `SSFFUEL`/`SSFMASS`; ACTINV uses the run's own material and a density.
 - `resonance_files` are hash-pinned ENDF-6 neutron evaluations, one nuclide each, carrying MF=2/MT=151 resolved
   resonance parameters (Breit-Wigner, Reich-Moore or R-matrix-limited, LRF=1, 2, 3 or 7). An empty list, an
   evaluation without MF=2, or one without a resolved range is an error. An LRF=7 feature that cannot be read as
   the widths below (an unknown channel reference, a KRM other than 3) is an error rather than a dropped resonance.
+  A file may hold several MF=2 isotopes (a natural-element evaluation): each is keyed by its own ZAI, never
+  by the material's ZA, and an isotope with no usable resolved resonance is listed in `resonance_data_unused`.
+  Only levels inside the `[EL, EH]` of the range that lists them count as resonance peaks: R-matrix spin groups carry
+  poles above the resolved range (W-186 lists three near 10.1-10.4 keV with `EH` = 10 keV) that feed the in-range
+  cross section but are not peaks, so they are dropped and counted per nuclide in the ledger's
+  `shielding.geometry.resonances_outside_range` (omitted when none).
 - `choose` restricts the correction to listed nuclides or elements (`SSFCHOOSE`); every entry must be in the
-  material and supplied by a resonance file. Without it every material nuclide that a file supplies is shielded;
-  other material nuclides are named in `shielding_uncovered` (an error under `require_shielding_complete`).
+  material. A nuclide entry must be supplied by a resonance file (otherwise the run is refused). An element entry
+  shields the isotopes that a file supplies and names the others in `shielding_uncovered`, as when `choose` is
+  absent (an error under `require_shielding_complete`). Without `choose` every material nuclide that a file
+  supplies is shielded; other material nuclides are named in `shielding_uncovered`.
 - `reactions` is `"all"` (default; FISPACT-II applies the factor to every reaction of the shielded nuclide) or
   `"capture"` (MT 102 only).
 
@@ -766,7 +976,7 @@ unchanged and no `summary` key is written.
 | `elements` | `true` | Emit the per-element table. |
 | `dominant_top` | `10` | Entries kept in each dominant-contributor list; 1 to 256. |
 | `min_atoms` | `0` | FISPACT `MIND`: omit nuclide-table rows whose absolute atoms (`atoms × material.mass_g`) fall below this. Finite and not negative. |
-| `include_stable` | `true` | `false` is FISPACT `NOSTABLE`: omit stable nuclides from the nuclide table. |
+| `include_stable` | `true` | `false` is FISPACT `NOSTABLE`: omit stable nuclides from the nuclide table. A state with no decay record (a light stand-in, a bulk nuclide missing from the chain, or any state with `decay_data: false`) is not called stable and stays in the table. |
 | `depletion` | `false` | `true` is FISPACT `DEPLETION`: add `summary.depletion`, the per-step depletion table of every initial-material nuclide. |
 
 `min_atoms` and `include_stable` trim the nuclide table only. Totals, the element table and the dominant rankings
@@ -777,7 +987,9 @@ accepted by the mesh specification and applies to every cell.
 and certificate carry no `depletion` entry. It works with trace and coupled mode, with per-step spectra, and with
 schedule library switches (each step reports the rates of the library it ran on). With an `uncertainty` section that
 supplies MF=33 covariance, each reaction channel also carries the relative standard uncertainty of its one-group
-rate. [Read your results](results.md#depletion-table) describes the emitted fields.
+rate. A schedule step's `removal` appears as its own `removal` channel, and a `feed` into an initial nuclide as
+negative depletion with no channel. The decay channel's half-life uncertainty is reported whatever
+`uncertainty.channels` lists. [Read your results](results.md#depletion-table) describes the emitted fields.
 
 ```json
 {
@@ -793,7 +1005,9 @@ rate. [Read your results](results.md#depletion-table) describes the emitted fiel
 The optional `pathways` object asks for a full source-to-target route analysis (FISPACT-II's `ROUTES` and
 `UNCERTAINTY` pathway tables). It is opt-in: without it the result is byte-identical to a run that never heard of
 it, and it is independent of the older `options.outputs` entry `pathways`, which keeps the trace-mode
-first-product table.
+first-product table. That table (the result's `pathways` array) now also attributes production fed by the decay of
+radioactive bulk nuclides (for example Ar-40 from natural K-40), listing the decaying bulk nuclide as `from`; a
+nuclide in the inventory that no listed chain explains makes `pathway_closure` 1.
 
 ```json
 "pathways": {
@@ -828,7 +1042,22 @@ used. The solve is a dense matrix exponential of the small bidiagonal system, so
 and equal rates are harmless. The analysis is linear in the source atoms and works in both trace and coupled
 modes. A route is at most `max_depth` edges long; the search discards a branch as soon as an upper bound on what
 it can still deliver falls below the smallest target's `path_floor`, so default settings stay fast on large
-networks.
+networks. The search tree is capped at 2,000,000 nodes. If the shared search exceeds that, every target is searched
+again on its own floor and the budget is divided evenly among the sources, so one tiny target or one wide source
+cannot starve the others; a target whose search still ran out of budget reports `search_truncated: true` and the
+`truncated_sources`, and the `notes` name it. At most `8 x max_paths` candidate routes per target are integrated, the
+largest upper bounds first; the number cut is `candidates_dropped_by_cap` on the target (and in the `notes`).
+
+The `loop_floor` test is applied after, and in addition to, `path_floor`: a loop walk is dropped when it raises its
+loop-erased path by less than `loop_floor` even if it alone carries more than `path_floor` of the target. With the
+default `loop_floor` of 0.01 the residual can therefore exceed `path_floor`; set `loop_floor` near 0 to account for
+every walk above `path_floor`.
+
+Edge labels name the decay mode or reaction that connects two nuclides. Spontaneous-fission products are labelled
+`SF`, atoms supplied by a schedule `feed` are `feed`, and an edge into the removal sink is `removal`. Labels come from
+the decay and reaction tables, not from the run's rates: a reaction that has a row in the library is named even when
+its collapsed rate is zero in this spectrum, and when a decay and a reaction connect the same pair the label joins
+them (`(n,n')/IT`).
 
 The target inventory is the sum over every walk through the graph of that walk's chain contribution. Walks that
 never repeat a nuclide are reported as ordinary routes. A walk that revisits a nuclide (for example a
@@ -885,6 +1114,12 @@ UKAEA-CCFE-RE(21)02): 0, 0.01, 0.10, 0.20, 0.40, 1.00, 1.50, then 0.5 MeV steps 
 counted in the overflow diagnostics and, as for any structure that omits source photons, make the contact and
 point-source doses `null`. Combining `steiner-22` with `group_boundaries_eV` is an error.
 
+```json
+"photon": {
+  "group_structure": "steiner-22"
+}
+```
+
 ### Point-source dose (`photon.point_source`)
 
 Absent by default; when present every step's `photon_source` gains `point_source_dose`. It is the FISPACT-II `DOSE 2`
@@ -906,25 +1141,46 @@ transmission needs an `air_mass_attenuation` curve (NIST table 4 mu/rho) in the 
 `scripts/build_photon_response.py --air-attenuation`. A response without that curve gives a `null` dose and an
 `unavailable_reason` when `air_attenuation` is `true`; set it `false` to ask for the unattenuated dose. The dose is
 `null` with a reason under the same conditions as the contact proxy: no response, power above the response's top
-energy or outside the group structure, or a sub-threshold share above `1e-4`.
+energy or outside the group structure, or a sub-threshold share above `1e-4`. It is also `null` while a nuclide has
+decay-record gamma energy but no photon spectrum (`unrepresented_gamma_power_W_g` above zero in `photon_source`): that
+power never reaches the groups, so the sum would be low by an unknown amount; it is added to `excluded_power_W`. A
+dose is never reported for a non-finite or non-positive distance, mass or air density.
+
+`point_source` and `bremsstrahlung` need the photon source, which is built only when `options.outputs` is absent or
+contains `photons` or `dose`. A specification that sets either with an `options.outputs` list lacking both is
+rejected.
+
+The fragment below belongs inside a complete problem; it is not a standalone input.
+
+```json
+"photon": {
+  "point_source": {"distance_m": 1.0, "air_attenuation": false}
+}
+```
 
 ### Bremsstrahlung (`photon.bremsstrahlung`)
 
 Absent by default. `nuclides` lists canonical nuclide names (`Cl36`, `Ar42`, `K42`), as FISPACT-II's
 `BREMSSTRAHLUNG` keyword does; duplicates, elements and non-canonical spellings are errors. Each listed nuclide with
-positive activity at a step is treated as emitting one beta-minus per decay at its mean beta energy `E0`. Manual
-Eqs. (65)-(67) then give, per electron and group `[E_i, E_i+1]` (keV, `a = 2.76e-6` per keV), `aZ[E0 ln(E_i+1/E_i) -
+positive activity at a step is treated as emitting `f` beta-minus electrons per decay, each at its mean beta energy
+`E0`. Manual Eqs. (65)-(67) then give, per electron and group `[E_i, E_i+1]` (keV, `a = 2.76e-6` per keV), `aZ[E0 ln(E_i+1/E_i) -
 (E_i+1 - E_i)]` photons when `E0 >= E_i+1`, `aZ[E0 ln(E0/E_i) - (E0 - E_i)]` when `E_i < E0 < E_i+1`, and none when
-`E0 <= E_i`, carrying the bin-midpoint energy `(E_i + E_i+1)/2`. The same expressions are applied to the continuous
-beta spectrum through its mean energy, as the manual does. The result is a separate `photon_source.bremsstrahlung`
+`E0 <= E_i`, carrying the bin-midpoint energy `(E_i + E_i+1)/2`, all multiplied by `f`. The same expressions are
+applied to the continuous beta spectrum through its mean energy, as the manual does. The result is a separate `photon_source.bremsstrahlung`
 block with its own groups, per-nuclide groups, contact dose (the `B/2 mu_a/mu_m` slab formula, in Gy/h) and, when
 `point_source` is set, point-source dose. It is never added to the decay-photon groups, powers or dose proxies; add
 the two doses yourself if you want the total.
 
-Inputs are never inferred. `E0` is the average energy of the decay record's beta-minus (STYP 1) spectrum; the
-light-particle mean energy, which also counts conversion and Auger electrons, is not substituted. `Z` is the atom-fraction
+Inputs are never inferred. The decay record's beta-minus (STYP 1) spectrum gives `ER`, the average beta-minus energy
+per decay of the parent, which already includes the branching ratio. `f` is the summed branching ratio of the decay
+modes whose RTYP carries a beta-minus electron (the digit 1 in its decimal spelling: 1.0, or 1.5 for beta-minus followed
+by neutron emission; RTYP 10 does not count), and `E0 = ER / f` is the mean energy of one electron. Cu-64 (38.5 %
+beta-minus) therefore uses 0.385 electrons of 190.7 keV, not one electron of 73.4 keV; a pure beta-minus emitter has
+`f = 1` and `E0 = ER`. Each nuclide reports `electrons_per_decay` and `mean_beta_energy_eV`. The light-particle mean
+energy, which also counts conversion and Auger electrons, is not substituted. `Z` is the atom-fraction
 mean atomic number of the declared `material` (Eq. 68; the manual says atom fractions even though mass fractions are
-used elsewhere), taken from the initial composition. A nuclide that lacks `E0`, or any nuclide when `Z` is unavailable
+used elsewhere), taken from the initial composition. A nuclide that lacks `ER` or has no beta-minus decay mode (`f` of
+zero), or any nuclide when `Z` is unavailable
 (a material element without natural-isotope data), is listed in `missing_inputs` with the missing input, contributes
 nothing, and sets `inputs_complete` to `false`; the totals then cover only the nuclides that were evaluated. Listed
 nuclides without activity appear in `requested_nuclides_without_activity`.
@@ -932,8 +1188,29 @@ nuclides without activity appear in `requested_nuclides_without_activity`.
 Approximations: this is the manual's thin approximation, not electron transport. Eq. (66) diverges in a group whose
 lower edge is 0 eV, such as the first group of both built-in structures; the manual does not say how FISPACT-II
 treats it, so ACTINV leaves that group empty and reports the exact energy the model places there as
-`zero_lower_edge_group_power_W_g`. FISPACT-II selects candidates by half-life and mean-energy criteria (appendix C.7.5)
-for its `PRINTLIB 4` listing; ACTINV applies no such filter and evaluates exactly the nuclides you list.
+`zero_lower_edge_group_power_W_g`. The block also reports how complete the grouped photons are, against the manual's
+analytic emitted energy `a Z E0^2 / 2` per electron (Eq. 65 integrated over energy):
+
+- `zero_lower_edge_energy_fraction`: the share of that energy in the zero-lower-edge group, which the grouped photons
+  lack. For a first edge of 10 keV it is 19 % at `E0 = 100 keV`, 8 % at 250 keV and 4 % at 500 keV. The contact proxy
+  absorbs some of this, but the point-source dose does not, so treat it as a lower bound when the fraction is large.
+- `energy_closure`: the energy placed in the groups plus the zero-edge energy, over the same analytic total. Eq. (67)
+  gives every photon of a group the bin-midpoint energy, as FISPACT-II does, and ACTINV keeps that rule. A group holding
+  many low-energy photons is therefore over-credited and the closure is above 1 (about 1.6 for `E0 = 120 keV` with
+  10, 100 and 200 keV edges), while photons beyond the last group edge make it fall below 1. The rule is a documented
+  approximation, not a measurement of the emitted energy.
+
+Both are `null` when no nuclide was evaluated. FISPACT-II selects candidates by half-life and mean-energy criteria
+(appendix C.7.5) for its `PRINTLIB 4` listing; ACTINV applies no such filter and evaluates exactly the nuclides you
+list.
+
+The fragment below belongs inside a complete problem; it is not a standalone input.
+
+```json
+"photon": {
+  "bremsstrahlung": {"nuclides": ["Cl36", "K42"]}
+}
+```
 
 ## Options and result
 
@@ -974,11 +1251,40 @@ steps on that library keep it as their default spectrum, and may replace it for 
 index projectile, group structure, and temperature: a neutron library must match `options.temperature_K`, any other
 projectile's index must say 0 K), and its path joins the prepared-data fingerprint.
 
+A fragment that irradiates under the base library, then switches to a second neutron library with its own spectrum
+(here on `custom` boundaries equal to that library's) and cools:
+
+```json
+"schedule": [
+  {"dt": "300 s", "flux": 1.0},
+  {"dt": "1 h", "flux": 1.0,
+   "library": {"path": "tendl-2025-neutron-high.npz"},
+   "spectrum": {"structure": "custom", "boundaries_eV": [1.0e-5, 1.0, 1.0e6, 2.0e7],
+                "flux_per_group": [1.0e9, 5.0e9, 1.0e9]}},
+  {"dt": "1 d", "flux": 0.0}
+]
+```
+
+A fragment that switches to a proton library, which needs the matching `projectile` on the switching step:
+
+```json
+"schedule": [
+  {"dt": "300 s", "flux": 1.0},
+  {"dt": "1 h", "flux": 1.0,
+   "library": {"path": "tendl-2025-proton-162g.npz"},
+   "projectile": "proton",
+   "spectrum": {"structure": "custom", "boundaries_eV": [1.0e5, 1.0e6, 1.0e7, 1.0e8],
+                "flux_per_group": [1.0e8, 5.0e8, 1.0e8]}},
+  {"dt": "1 d", "flux": 0.0}
+]
+```
+
 All libraries share the one decay chain, so the state vector is the same through a switch: the inventory at the end
 of one step is the initial inventory of the next, and only the collapsed rate triplets change. A product that the
 decay chain does not know leaks exactly as in a single-library run; each overriding library's unmapped products,
 products without decay data, isomer fallbacks and absent targets are listed under `ledger.step_libraries`, together
-with the steps it served and its fluence, and the library and index hashes appear under
+with the steps it served, its fluence and `material_nuclides_without_rows` (initial-material nuclides with no row in
+that library: they do not react on the steps it serves), and the library and index hashes appear under
 `certificate.inputs.step_libraries`. The cumulative `fluence_*` fields add every step's own spectrum total whatever
 its projectile; the per-library fluence is the one to read across a switch. Pathway attribution covers the base
 library only and is suppressed (named in `ledger.step_libraries.pathways_suppressed`). Overrides cannot be combined
@@ -1057,7 +1363,7 @@ the published first, second, middle, penultimate and last values. Boundaries are
 | `fispact-616` (RED/LLNL) | 616 | 20 MeV | neutron |
 | `fispact-709` (CCFE) | 709 | 1 GeV | neutron (default) |
 | `fispact-1102` (UKAEA) | 1102 | 1 GeV | neutron |
-| `fispact-162` (CCFE) | 162 | 1 GeV (5 keV floor) | proton, deuteron, alpha, gamma |
+| `fispact-162` (CCFE) | 162 | 1 GeV (5 keV floor) | proton, deuteron, triton, helion, alpha, gamma |
 
 An `xN` suffix (`fispact-1102x2`) refines each group log-uniformly into `N` subgroups, as it does for 709. A spectrum
 on any of these structures must supply exactly the structure's group count, and its library must have been built on
@@ -1111,7 +1417,11 @@ The table is JSON with schema `actinv-spallation-residuals-1` (unknown fields ar
 The index gains a `spallation` block (omitted without the option, leaving the index unchanged) with the table path
 and SHA-256, its description, the requested and effective splice energies, the first spliced group, the rows
 replaced and added in total and per target, and the skipped targets. Each affected target's ledger carries a line with
-the same counts.
+the same counts. Library rows that the table does not replace keep their values even when they are nonzero at or
+above the splice (a production row of the library has a different `lmf` from the table's MF=10 row, so the table's row
+is appended beside it and the production is counted twice); the block lists them as
+`untouched_rows_nonzero_in_spliced_groups` (a count and the first 50 rows), and `build-library` warns on standard
+error when the count is not zero.
 
 ### Triton and helion projectiles
 

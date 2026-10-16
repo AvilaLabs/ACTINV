@@ -637,6 +637,12 @@ fn load_index(library_path: &str) -> Result<Option<LibraryIndex>, String> {
 /// A target given as a nuclide name (needs the library index) or as a raw target index.
 fn resolve_target(spec: &str, targets: Option<&[(i32, i32)]>) -> Result<usize, String> {
     if let Ok(index) = spec.parse::<usize>() {
+        // A ZA (26056) is not a target index; name the nuclide instead.
+        if index >= 1000 && targets.is_none() {
+            return Err(format!(
+                "target '{spec}' looks like a ZA, not a target index; name the nuclide (e.g. Fe56)"
+            ));
+        }
         if let Some(targets) = targets {
             if index >= targets.len() {
                 return Err(format!(
@@ -659,24 +665,23 @@ fn resolve_target(spec: &str, targets: Option<&[(i32, i32)]>) -> Result<usize, S
         .ok_or_else(|| format!("target '{spec}' is not in the library"))
 }
 
-/// The energy-structure name: the index's `groups`, else a named structure matched bitwise on the
-/// boundaries, else `custom`.
+fn same_boundaries_bitwise(left: &[f64], right: &[f64]) -> bool {
+    left.len() == right.len()
+        && left
+            .iter()
+            .zip(right)
+            .all(|(left, right)| left.to_bits() == right.to_bits())
+}
+
+/// The energy-structure name: the index's `groups`, else any FISPACT-II named structure matched bitwise
+/// on the boundaries, else `custom`.
 fn structure_name(ngroups: usize, bounds: &[f64], index: Option<&LibraryIndex>) -> String {
     if let Some(name) = index.and_then(|index| index.text("groups")) {
         return name.to_string();
     }
-    for (groups, name) in [(709, "fispact-709"), (162, "fispact-162")] {
-        if ngroups != groups {
-            continue;
-        }
-        if let Ok(Some(named)) = GroupStructure::resolve_named(name) {
-            if named.boundaries_ev.len() == bounds.len()
-                && named
-                    .boundaries_ev
-                    .iter()
-                    .zip(bounds)
-                    .all(|(left, right)| left.to_bits() == right.to_bits())
-            {
+    for (name, _) in actinv_data::groups::NAMED_STRUCTURES {
+        if let Ok(Some(named)) = GroupStructure::named(name) {
+            if named.groups() == ngroups && same_boundaries_bitwise(&named.boundaries_ev, bounds) {
                 return name.to_string();
             }
         }
@@ -728,37 +733,67 @@ fn load_spectrum(path: &str) -> Result<Spectrum, String> {
         .map_err(|error| format!("{path} is neither a spectrum nor a run spec: {error}"))
 }
 
-/// Ascending group fluxes of `spectrum`, checked against the library's group structure.
+/// Ascending group fluxes of `spectrum` on the library's groups, checked against the library's group
+/// structure as the solver checks it: a named structure must have the library's boundaries bitwise, a
+/// custom one within the solver's 1e-12 relative tolerance, and a `rebin` spectrum is converted onto its
+/// (named) destination structure, which must be the library's.
 fn spectrum_flux(spectrum: &Spectrum, library: &Library) -> Result<Vec<f64>, String> {
-    if spectrum.flux_per_group.len() != library.ngroups {
+    let named = if spectrum.structure == "custom" {
+        None
+    } else {
+        Some(
+            GroupStructure::resolve_named(&spectrum.structure)?
+                .ok_or_else(|| format!("unknown spectrum.structure '{}'", spectrum.structure))?,
+        )
+    };
+    if let Some(named) = &named {
+        if !same_boundaries_bitwise(&named.boundaries_ev, &library.bounds) {
+            return Err(format!(
+                "spectrum structure '{}' is not the library's group structure (its {} boundaries differ from the library's {})",
+                spectrum.structure,
+                named.boundaries_ev.len(),
+                library.bounds.len()
+            ));
+        }
+    }
+    let flux = if spectrum.rebin.is_some() {
+        spectrum.resolved_flux("spectrum")?.0
+    } else {
+        if spectrum.flux_per_group.len() != library.ngroups {
+            return Err(format!(
+                "spectrum has {} group fluxes; the library has {} groups",
+                spectrum.flux_per_group.len(),
+                library.ngroups
+            ));
+        }
+        if spectrum.structure == "custom" {
+            let bounds = spectrum
+                .boundaries_eV
+                .as_ref()
+                .ok_or("custom spectrum needs boundaries_eV")?;
+            if bounds.len() != library.bounds.len()
+                || bounds.iter().zip(&library.bounds).any(|(left, right)| {
+                    (left - right).abs() > 1e-12 * left.abs().max(right.abs()).max(1.0)
+                })
+            {
+                return Err(
+                    "spectrum boundaries_eV differ from the library group boundaries".into(),
+                );
+            }
+        }
+        spectrum.ascending_flux()
+    };
+    if flux.len() != library.ngroups {
         return Err(format!(
-            "spectrum has {} group fluxes; the library has {} groups",
-            spectrum.flux_per_group.len(),
+            "spectrum has {} group fluxes after rebin; the library has {} groups",
+            flux.len(),
             library.ngroups
         ));
     }
-    if spectrum
-        .flux_per_group
-        .iter()
-        .any(|flux| !flux.is_finite() || *flux < 0.0)
-    {
+    if flux.iter().any(|flux| !flux.is_finite() || *flux < 0.0) {
         return Err("spectrum group fluxes must be finite and nonnegative".into());
     }
-    if spectrum.structure == "custom" {
-        let bounds = spectrum
-            .boundaries_eV
-            .as_ref()
-            .ok_or("custom spectrum needs boundaries_eV")?;
-        if bounds.len() != library.bounds.len()
-            || bounds
-                .iter()
-                .zip(&library.bounds)
-                .any(|(left, right)| (left - right).abs() > 1e-9 * right.abs())
-        {
-            return Err("spectrum boundaries_eV differ from the library group boundaries".into());
-        }
-    }
-    Ok(spectrum.ascending_flux())
+    Ok(flux)
 }
 
 fn xs_report(
@@ -956,13 +991,16 @@ fn library_report(
     }
     let mut scalars = Map::new();
     let mut arrays = Map::new();
+    let mut objects = Map::new();
     if let Some(doc) = index.and_then(|index| index.doc.as_object()) {
         for (key, value) in doc {
             match value {
                 Value::Array(items) => {
                     arrays.insert(key.clone(), json!(items.len()));
                 }
-                Value::Object(_) => {}
+                Value::Object(_) => {
+                    objects.insert(key.clone(), value.clone());
+                }
                 other => {
                     scalars.insert(key.clone(), other.clone());
                 }
@@ -997,6 +1035,7 @@ fn library_report(
         "projectile_declared": projectile.is_some(),
         "index": scalars,
         "index_array_lengths": arrays,
+        "index_objects": objects,
         "target_names": target_names,
     });
     let mut table_rows: Vec<Vec<String>> = vec![
@@ -1041,6 +1080,9 @@ fn library_report(
                 other => other.to_string(),
             },
         ]);
+    }
+    for (key, value) in &objects {
+        table_rows.push(vec![format!("index.{key}"), value.to_string()]);
     }
     Output {
         json,
@@ -2059,8 +2101,7 @@ mod tests {
         // A 709-group library on other boundaries must be refused, not collapsed on the wrong energies.
         let other = p140_library(p140_log_grid_709());
         let error = spectrum_flux(&spectrum, &other)
-            .err()
-            .expect("a fispact-709 spectrum on a different 709-group grid must be refused");
+            .expect_err("a fispact-709 spectrum on a different 709-group grid must be refused");
         assert!(error.contains("fispact-709"), "{error}");
     }
 

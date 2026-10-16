@@ -529,6 +529,12 @@ fn build_library(args: &[String]) {
         summary.sha256_npz
     );
     eprintln!("index -> {}", summary.index.display());
+    if summary.spliced_rows_untouched_nonzero > 0 {
+        eprintln!(
+            "warning: the spallation splice left {} library row(s) untouched that are nonzero at or above the splice; see the index's spallation.untouched_rows_nonzero_in_spliced_groups",
+            summary.spliced_rows_untouched_nonzero
+        );
+    }
 }
 
 fn build_damage(args: &[String]) {
@@ -1120,6 +1126,18 @@ pub fn main_from(a: Vec<String>) {
                 die("usage: actinv run SPEC.json [OUT.json]", 2);
             }
             let r = run(&spec, "cli").unwrap_or_else(|e| die(e, 1));
+            // the result stays as computed; an unconverged power step is flagged on stderr only
+            for step in &r.steps {
+                if let Some(power) = step.power.as_ref().filter(|power| !power.converged) {
+                    eprintln!(
+                        "warning: power-driven step {} did not converge: power drift {:.3e} \
+                         exceeds the tolerance {:.3e} at the cap of {} sub-intervals; raise \
+                         kerma.max_substeps or loosen kerma.power_tolerance (power.converged is \
+                         false in the result)",
+                        step.step, power.max_power_drift, power.tolerance, power.max_substeps
+                    );
+                }
+            }
             let serialization_started = profile.then(std::time::Instant::now);
             let js = serde_json::to_string_pretty(&r).expect("serialise result");
             let serialization_ms = serialization_started

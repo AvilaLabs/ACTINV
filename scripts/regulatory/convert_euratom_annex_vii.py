@@ -11,18 +11,23 @@ Outputs, in the existing `actinv-radiological-table-1` format:
       Table B column 2: exemption concentration for moderate amounts, kBq/kg -> Bq/kg.
   euratom-2013-59-annex-vii-b-activity.json
       Table B column 3: total activity for exemption, Bq.  The coefficient is an
-      activity (Bq), not a concentration, so the index is the fraction of the limit
-      per kg of material; multiply by the mass in kg.
+      activity (Bq), not a concentration, and ACTINV evaluates it per gram of
+      material (activity input is Bq/g), so the index is the fraction of the limit
+      per gram; multiply by the mass in grams.
   euratom-2013-59-annex-vii.rows.json
       Every row of Tables A (Parts 1 and 2) and B with the original text, the
       footnote markers, the parent/progeny lists and anomalies of the source.
 
 Footnote markers.  In Table A Part 1 "(1)" marks a parent whose listed progeny are
 already covered by the parent's value; in Table B "(1)" is the potassium-salts note
-and "(2)" is the parent/progeny marker.  Parent rows keep their value in the table and
-are flagged in the sidecar with their progeny; ACTINV does not remove progeny
-activity, so a decay chain that holds both parent and progeny counts them twice
-unless the analyst excludes the progeny.
+and "(2)" is the parent/progeny marker.  Parent rows keep their value in the table, and the
+progeny of the progeny lists are written to the response's `covered_by_parent` map
+(progeny -> parents): while the parent has activity the progeny contributes nothing,
+because the parent's value already includes it.  A progeny with its own row (Y-90 under
+Sr-90) is covered the same way, so a decay chain holding both is not counted twice.  A
+parent named in a progeny list but not marked in the data table (Ce-144 in Table A,
+Ag-108m and U-230 in Table B) is treated as a parent and flagged in the sidecar.  The U-240
+row used in Table B is the nuclide-alone one, so it covers no progeny.
 
 Table A Part 2 (natural U-238 / Th-232 series, K-40) is not nuclide-keyed and is
 outside the scope of "artificial radionuclides"; it is recorded in the sidecar only.
@@ -302,7 +307,25 @@ def main(argv: list[str]) -> int:
             sidecar_rows.append(record)
         for key in [k for k in progeny if k not in marked]:
             anomalies.append(f"{name}: progeny list names {progeny[key]['source_parent']!r} but the data row is not marked")
+            if key in out:
+                record = out[key][0]
+                record["progeny_included"] = progeny[key]["progeny"]
+                record["flags"].append("progeny_list_parent_not_marked")
         return out
+
+    def covered_for(name, table):
+        """progeny -> parents for the parent rows kept in `table`; non-nuclide progeny go to the anomalies."""
+        parents = {}
+        for key, (record, _values) in table.items():
+            if "progeny_included" not in record:
+                continue
+            keys, skipped = C.progeny_keys(record["progeny_included"])
+            parents[key] = keys
+            for piece in skipped:
+                anomalies.append(f"{name}: progeny {piece!r} of {key} is not a single nuclide and is not in covered_by_parent")
+        covered = C.covered_by_parent(parents, set(table))
+        C.check_acyclic(covered, name)
+        return covered
 
     table_a = read_table(
         "Table A Part 1", data["A1"], ["activity_concentration_kBq_per_kg"], progeny_a, "1", {}
@@ -341,14 +364,18 @@ def main(argv: list[str]) -> int:
         row_provenance=SIDECAR,
     )
 
-    def table_doc(title, citation, scope, kind, basis, coefficients):
+    covered_a = covered_for("Table A Part 1", table_a)
+    covered_b = covered_for("Table B", table_b)
+
+    def table_doc(title, citation, scope, kind, basis, coefficients, covered):
+        response = {"id": basis[0], "kind": kind, "basis": basis[1], "coefficients": coefficients}
+        if covered:
+            response["covered_by_parent"] = covered
         return {
             "format": C.TABLE_FORMAT,
             "title": title,
             "source": C.source_block(citation=citation, scope=scope, **source_common),
-            "responses": [
-                {"id": basis[0], "kind": kind, "basis": basis[1], "coefficients": coefficients}
-            ],
+            "responses": [response],
         }
 
     docs = {
@@ -361,11 +388,13 @@ def main(argv: list[str]) -> int:
             (
                 "annex-vii-table-a-part1",
                 "Activity concentration for exemption or clearance of solid material, kBq/kg converted to Bq/kg "
-                "(x1000). Parent rows marked (1) include listed short-lived progeny; the rows sidecar lists them.",
+                "(x1000). Parent rows marked (1) include listed short-lived progeny, which covered_by_parent lists "
+                "(zero contribution while the parent is present).",
             ),
             {key: C.scaled_float(values["activity_concentration_kBq_per_kg"][0],
                                  values["activity_concentration_kBq_per_kg"][1], 3)
              for key, (_record, values) in table_a.items()},
+            covered_a,
         ),
         "euratom-2013-59-annex-vii-b-concentration.json": table_doc(
             "Directive 2013/59/Euratom Annex VII Table B column 2 (exemption, moderate amounts)",
@@ -376,11 +405,13 @@ def main(argv: list[str]) -> int:
             (
                 "annex-vii-table-b-concentration",
                 "Exemption activity concentration for moderate amounts of material, kBq/kg converted to Bq/kg "
-                "(x1000). Parent rows marked (2) include listed progeny; K-40 carries the potassium-salts note. U-240 is listed twice in the source; the nuclide-alone row is used.",
+                "(x1000). Parent rows marked (2) include listed progeny, which covered_by_parent lists (zero contribution "
+                "while the parent is present); K-40 carries the potassium-salts note. U-240 is listed twice in the source; the nuclide-alone row is used.",
             ),
             {key: C.scaled_float(values["activity_concentration_kBq_per_kg"][0],
                                  values["activity_concentration_kBq_per_kg"][1], 3)
              for key, (_record, values) in table_b.items()},
+            covered_b,
         ),
         "euratom-2013-59-annex-vii-b-activity.json": table_doc(
             "Directive 2013/59/Euratom Annex VII Table B column 3 (exemption, total activity)",
@@ -391,16 +422,21 @@ def main(argv: list[str]) -> int:
             (
                 "annex-vii-table-b-activity",
                 "Total activity value for exemption, Bq. The index is the fraction of the limit per gram of "
-                "material, so multiply by the mass in grams. Parent rows marked (2) include listed progeny. U-240 is listed twice in the source; the nuclide-alone row is used.",
+                "material, so multiply by the mass in grams. Parent rows marked (2) include listed progeny, which covered_by_parent lists "
+                "(zero contribution while the parent is present). U-240 is listed twice in the source; the nuclide-alone row is used.",
             ),
             {key: C.scaled_float(values["activity_Bq"][0], values["activity_Bq"][1])
              for key, (_record, values) in table_b.items()},
+            covered_b,
         ),
     }
     hashes = {}
     for name, doc in docs.items():
         hashes[name] = C.dump_json(args.out_dir / name, doc)
-        print(f"{name}: sha256 {hashes[name]} coefficients {len(doc['responses'][0]['coefficients'])}")
+        print(
+            f"{name}: sha256 {hashes[name]} coefficients {len(doc['responses'][0]['coefficients'])} "
+            f"covered_by_parent {len(doc['responses'][0].get('covered_by_parent', {}))}"
+        )
 
     sidecar = {
         "format": C.ROWS_FORMAT,

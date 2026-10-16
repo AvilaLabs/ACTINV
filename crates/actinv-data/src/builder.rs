@@ -189,6 +189,9 @@ pub struct BuildSummary {
     pub cache_hits: usize,
     pub sha256_npz: String,
     pub builder_fingerprint: String,
+    /// Library rows a spallation splice left untouched although they are nonzero at or above the
+    /// splice energy (zero without a splice).
+    pub spliced_rows_untouched_nonzero: usize,
 }
 
 #[derive(Clone, Debug)]
@@ -3470,6 +3473,7 @@ pub fn build_library(
         ngroups: options.groups.groups(),
         bounds: options.groups.boundaries_ev.clone(),
     };
+    let mut spliced_untouched = 0;
     let spallation = match &options.spallation {
         Some(splice) => {
             let keys: Vec<(i32, i32)> = targets.iter().map(|t| (t.za, t.liso)).collect();
@@ -3486,7 +3490,18 @@ pub fn build_library(
                     spliced.rows_added,
                     splice.source_sha256
                 ));
+                let untouched = report
+                    .untouched_nonzero_rows
+                    .iter()
+                    .filter(|row| (row.za, row.liso) == (spliced.za, spliced.liso))
+                    .count();
+                if untouched > 0 {
+                    target.ledger.push(format!(
+                        "spallation splice left {untouched} row(s) untouched that are nonzero at or above the splice; a production row of a channel the table also supplies is counted twice"
+                    ));
+                }
             }
+            spliced_untouched = report.untouched_nonzero_rows.len();
             Some(report.provenance(splice))
         }
         None => None,
@@ -3550,6 +3565,7 @@ pub fn build_library(
         cache_hits,
         sha256_npz: npz_hash,
         builder_fingerprint: fingerprint,
+        spliced_rows_untouched_nonzero: spliced_untouched,
     })
 }
 

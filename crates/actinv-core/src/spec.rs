@@ -356,8 +356,11 @@ pub struct SelfShieldingGeometry {
     /// Cylinder height in cm; required for "cylinder", rejected otherwise.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub height_cm: Option<f64>,
-    /// Material density in g/cm^3: number density = atoms_per_gram * density.
-    pub density_g_cm3: f64,
+    /// Material density in g/cm^3: number density = atoms_per_gram * density. May be omitted when
+    /// `material.density_g_cm3` is declared (the geometry then takes that value); when both are given they
+    /// must agree to 1e-9 relative.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub density_g_cm3: Option<f64>,
     /// Hash-pinned ENDF-6 neutron evaluations (one nuclide each) carrying
     /// MF=2/MT=151 resolved resonance parameters.
     pub resonance_files: Vec<HashedFileRef>,
@@ -375,16 +378,45 @@ fn geometry_reactions_all() -> String {
     "all".into()
 }
 
+/// The target density of geometry self-shielding: the geometry's own value, else the material's.
+/// Both given must agree to 1e-9 relative; one of the two is required.
+pub fn resolve_geometry_density(own: Option<f64>, material: Option<f64>) -> Result<f64, String> {
+    let valid = |value: f64| value.is_finite() && value > 0.0;
+    match (own, material) {
+        (Some(own), _) if !valid(own) => {
+            Err("self_shielding.geometry.density_g_cm3 must be a positive finite number".into())
+        }
+        (None, Some(material)) if !valid(material) => {
+            Err("material.density_g_cm3 must be finite and positive".into())
+        }
+        (Some(own), Some(material)) => {
+            if (own - material).abs() > 1e-9 * own.abs().max(material.abs()) {
+                Err(format!(
+                    "self_shielding.geometry.density_g_cm3 {own} disagrees with material.density_g_cm3 {material}; give one of them or make them equal"
+                ))
+            } else {
+                Ok(own)
+            }
+        }
+        (Some(value), None) | (None, Some(value)) => Ok(value),
+        (None, None) => {
+            Err("self_shielding.geometry needs density_g_cm3 (or material.density_g_cm3)".into())
+        }
+    }
+}
+
 impl SelfShieldingGeometry {
-    fn validate(&self) -> Result<(), String> {
+    /// The density that turns the declared composition into number densities: the geometry's own,
+    /// else the material's. Both given must agree to 1e-9 relative; one of the two is required.
+    pub fn effective_density(&self, material_density_g_cm3: Option<f64>) -> Result<f64, String> {
+        resolve_geometry_density(self.density_g_cm3, material_density_g_cm3)
+    }
+
+    fn validate(&self, material_density_g_cm3: Option<f64>) -> Result<(), String> {
         let shape = crate::shielding::GeometryShape::parse(&self.shape)?;
         // Dimensions: finite and positive, height only for a cylinder.
         shape.effective_length_cm(self.length_cm, self.height_cm)?;
-        if !self.density_g_cm3.is_finite() || self.density_g_cm3 <= 0.0 {
-            return Err(
-                "self_shielding.geometry.density_g_cm3 must be a positive finite number".into(),
-            );
-        }
+        self.effective_density(material_density_g_cm3)?;
         if self.resonance_files.is_empty() {
             return Err(
                 "self_shielding.geometry needs resonance data: resonance_files is empty".into(),
@@ -723,6 +755,19 @@ fn placeholder_spectrum() -> Spectrum {
 }
 
 impl Spectrum {
+    /// Whether this is the zero-flux stand-in an omitted `spectrum` deserializes to.
+    pub(crate) fn is_placeholder(&self) -> bool {
+        let stand_in = placeholder_spectrum();
+        self.structure == stand_in.structure
+            && self.flux_per_group == stand_in.flux_per_group
+            && self.boundaries_eV == stand_in.boundaries_eV
+            && self.total.is_none()
+            && !self.descending
+            && self.relative_error.is_none()
+            && self.rebin.is_none()
+            && self.wall_loading_MW_m2.is_none()
+    }
+
     /// A positive declared `total` needs a group shape to scale; an all-zero shape
     /// would silently discard it and turn the run into pure decay.
     fn check_total_has_shape(&self, label: &str) -> Result<(), String> {
@@ -737,8 +782,9 @@ impl Spectrum {
     }
 
     /// Structure check of a schedule-step spectrum against the projectile of the library the step runs on:
-    /// the named structure must suit the projectile (fispact-709 is the neutron grid, fispact-162 every other
-    /// projectile's), the flux count must match it, and a custom structure needs matching ascending boundaries.
+    /// the named structure must suit the projectile (the FISPACT-II standard structures such as fispact-709 are
+    /// neutron grids, fispact-162 every other projectile's), the flux count must match it, and a custom
+    /// structure needs matching ascending boundaries.
     fn check_structure_for(&self, projectile: Projectile, label: &str) -> Result<(), String> {
         if self.structure == "custom" {
             let boundaries = self
@@ -777,10 +823,16 @@ impl Spectrum {
             }
         }
         let factor = refine.unwrap_or(1);
+        // The same registry as the base spectrum: every FISPACT-II standard neutron structure, and the
+        // CCFE-162 grid for the other projectiles.
         let (groups, neutron_grid) = match base_name {
-            "fispact-709" => (709 * factor, true),
             "fispact-162" => (162 * factor, false),
-            value => return Err(format!("unknown {label} structure '{value}'")),
+            value => match actinv_data::groups::GroupStructure::named(value)? {
+                Some(base) if actinv_data::groups::GroupStructure::is_neutron_named(value) => {
+                    (base.groups() * factor, true)
+                }
+                _ => return Err(format!("unknown {label} structure '{value}'")),
+            },
         };
         if neutron_grid != projectile.is_neutron() {
             return Err(format!(
@@ -834,7 +886,7 @@ impl Spectrum {
     /// `ascending_flux()`; with it, the supplied spectrum is first clipped to the `LIMGRP`
     /// limits, then distributed onto the named destination structure under the declared
     /// convention. The second element is the conversion record the ledger carries.
-    pub(crate) fn resolved_flux(
+    pub fn resolved_flux(
         &self,
         scope: &str,
     ) -> Result<(Vec<f64>, Option<serde_json::Value>), String> {
@@ -872,6 +924,13 @@ impl Spectrum {
             other => return Err(format!("unknown {scope}.rebin.convention '{other}'")),
         }
         .map_err(|error| format!("{scope}.rebin: {error}"))?;
+        if converted.source_total > 0.0 && converted.destination_total <= 0.0 {
+            return Err(format!(
+                "{scope}.rebin: none of the supplied flux lands in the destination structure '{}' \
+                 ({} below it, {} above it); the run would be pure decay",
+                self.structure, converted.underflow, converted.overflow
+            ));
+        }
         let record = serde_json::json!({
             "scope": scope,
             "convention": rebin.convention,
@@ -952,6 +1011,15 @@ impl Spectrum {
                 "{label}.boundaries_eV must be finite, positive and strictly ascending"
             ));
         }
+        // the limits are a pure function of the declared source groups: a limit that lies at or
+        // beyond the whole spectrum is known now, not at run time
+        crate::flux::clip_spectrum_range(
+            boundaries,
+            &self.flux_per_group,
+            rebin.emin_eV,
+            rebin.emax_eV,
+        )
+        .map_err(|error| format!("{label}.rebin: {error}"))?;
         Ok(())
     }
 }
@@ -972,12 +1040,25 @@ pub const WALL_CURRENT_PER_MW_M2: f64 = 4.44e13;
 /// `(wall / reference)` times the sum of the spectrum's group fluxes, so the multiplier on the
 /// spectrum is `wall / reference` ("If a wall loading of 2.0 MW m-2 was input then a flux value of
 /// (2.0/4.15) x 1.80 x 10^15 n cm-2 s-1 would be used"). Without one, the step flux is
-/// `wall * WALL_CURRENT_PER_MW_M2` and the multiplier is that over the spectrum's `total`.
+/// `wall * WALL_CURRENT_PER_MW_M2` and the multiplier is that over the spectrum's group sum, so the
+/// step flux no longer depends on the spectrum's `total` (only its shape matters), and flux the
+/// `rebin` places outside the destination structure is renormalised away.
 pub(crate) fn wall_flux_multiplier(
     wall: f64,
     reference: Option<f64>,
     total: f64,
 ) -> Result<(f64, &'static str), String> {
+    // a zero loading is a cooling step whatever the spectrum
+    if wall == 0.0 {
+        return Ok((
+            0.0,
+            if reference.is_some() {
+                "spectrum_reference_wall_loading"
+            } else {
+                "14_MeV_current_equivalence"
+            },
+        ));
+    }
     match reference {
         Some(reference) => Ok((wall / reference, "spectrum_reference_wall_loading")),
         None if total > 0.0 => Ok((
@@ -1117,7 +1198,8 @@ impl TryFrom<StepWire> for Step {
             power_W_cm3: wire.power_W_cm3,
             power_W_per_g: wire.power_W_per_g,
             wall_loading_MW_m2: wire.wall_loading_MW_m2,
-            partition: wire.partition,
+            // an empty map names no element: the step has no partition
+            partition: wire.partition.filter(|partition| !partition.is_empty()),
         })
     }
 }
@@ -1152,6 +1234,13 @@ impl Step {
         self.flux > 0.0
             || self.wall_loading_MW_m2.is_some_and(|wall| wall > 0.0)
             || self.is_power_driven()
+    }
+
+    /// Whether the step splits any element off: an empty `partition` map is no partition.
+    pub fn has_partition(&self) -> bool {
+        self.partition
+            .as_ref()
+            .is_some_and(|partition| !partition.is_empty())
     }
 }
 
@@ -1615,6 +1704,10 @@ impl Spec {
                     ));
                 }
             }
+            // The bundled table is in memory, so a mistyped selector fails here, not mid-run.
+            if let Some(name) = crate::radiological::bundled_name(&radiological.table.path) {
+                crate::radiological::validate_bundled_selectors(name, &radiological.responses)?;
+            }
         }
         if let Some(damage) = &self.damage {
             if damage.table.path.is_empty()
@@ -1703,7 +1796,7 @@ impl Spec {
                 );
             }
         }
-        if self.pathways.is_some() && self.schedule.iter().any(|step| step.partition.is_some()) {
+        if self.pathways.is_some() && self.schedule.iter().any(Step::has_partition) {
             return Err(
                 "schedule partition cannot be combined with pathways: the routes analysis \
                  integrates the step matrices and does not see the instantaneous split"
@@ -1798,7 +1891,11 @@ impl Spec {
             if let Some(step_spectrum) = &st.spectrum {
                 step_spectrum.check_rebin("schedule step spectrum")?;
             }
-            if let Some(partition) = &st.partition {
+            if let Some(partition) = st
+                .partition
+                .as_ref()
+                .filter(|partition| !partition.is_empty())
+            {
                 let mut elements = std::collections::HashSet::new();
                 for (key, kept) in partition {
                     match actinv_data::composition::material_key(key) {
@@ -1985,6 +2082,18 @@ impl Spec {
             if outputs.iter().any(|o| o == "damage") && self.damage.is_none() {
                 return Err("options.outputs 'damage' requires a damage section".into());
             }
+            // The photon source (and with it every photon extra) is built only for these outputs.
+            if !outputs.iter().any(|o| o == "photons" || o == "dose") {
+                if self.photon.point_source.is_some() {
+                    return Err(
+                        "photon.point_source needs options.outputs to include 'photons' or 'dose'"
+                            .into(),
+                    );
+                }
+                if self.photon.bremsstrahlung.is_some() {
+                    return Err("photon.bremsstrahlung needs options.outputs to include 'photons' or 'dose'".into());
+                }
+            }
         }
         if let Some(pathways) = &self.pathways {
             pathways.validate()?;
@@ -2037,7 +2146,7 @@ impl Spec {
                             .into(),
                     );
                 }
-                geometry.validate()?;
+                geometry.validate(self.material.density_g_cm3)?;
             }
             for (name, groups) in &shielding.dilution_overrides {
                 match actinv_data::composition::material_key(name)
@@ -2365,11 +2474,17 @@ impl Spec {
                 "options.rate_scale and options.yield_scale are not available: {NOTE}"
             ));
         }
-        if let Some(item) = self
-            .overrides
-            .iter()
-            .find(|item| item.kind != "half_life" && item.kind != "half_life_uncertainty")
-        {
+        if self.kerma.is_some() {
+            return Err(format!("kerma is not available: {NOTE}"));
+        }
+        if let Some(item) = self.overrides.iter().find(|item| item.kind != "half_life") {
+            if item.kind == "half_life_uncertainty" {
+                return Err(
+                    "override kind 'half_life_uncertainty' needs an uncertainty section, which \
+                     a decay-only run does not support"
+                        .into(),
+                );
+            }
             return Err(format!(
                 "override kind '{}' is not available: {NOTE}",
                 item.kind
@@ -2565,6 +2680,14 @@ impl Spec {
                                 "schedule step spectrum",
                             )?,
                             None => {
+                                if self.spectrum.is_placeholder() {
+                                    return Err(format!(
+                                        "schedule step {} declares a spectrum but the spec has no \
+                                         base spectrum: declare spectrum with structure '{}'",
+                                        index + 1,
+                                        s.structure
+                                    ));
+                                }
                                 if s.structure != self.spectrum.structure {
                                     return Err(format!(
                                         "schedule step spectrum.structure '{}' must match the base spectrum's '{}'",
@@ -2598,6 +2721,21 @@ impl Spec {
                             .spectrum
                             .unwrap_or(&self.spectrum)
                             .wall_loading_MW_m2;
+                        let projectile = match context.library {
+                            Some(slot) => step_libraries[slot].projectile,
+                            None => self.projectile,
+                        };
+                        // the 4.44e13 cm^-2 s^-1 per MW m^-2 stand-in is a 14 MeV neutron current
+                        if wall > 0.0 && reference.is_none() && !projectile.is_neutron() {
+                            return Err(format!(
+                                "schedule step {}: wall_loading_MW_m2 without a reference \
+                                 spectrum.wall_loading_MW_m2 assumes a 14 MeV neutron current, \
+                                 which does not describe a {} projectile; declare \
+                                 spectrum.wall_loading_MW_m2",
+                                index + 1,
+                                projectile.name()
+                            ));
+                        }
                         let (multiplier, basis) = wall_flux_multiplier(wall, reference, total)?;
                         wall_conversions.push(serde_json::json!({
                             "step": index + 1,
@@ -2711,7 +2849,7 @@ impl Spec {
         } else if self.kerma.is_some() {
             // the kerma table is on the base spectrum's group structure
             Some("kerma")
-        } else if self.schedule.iter().any(|step| step.partition.is_some()) {
+        } else if self.schedule.iter().any(Step::has_partition) {
             Some("schedule partition")
         } else if self.options.fission.is_some() {
             // the fission count integrates the base library's MT=18 rates

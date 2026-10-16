@@ -3075,3 +3075,144 @@ handbook and browser workflows are path-filtered and were not triggered. With th
 records **P135-PASS** under Amendment A (its initial G2 record stays preserved; the joint-total uncertainty is not
 evaluable on Fe), **P136-PASS** (input correlations against MF=33, decay and yield parameters not recomputable from
 the record) and **P138-PASS**.
+
+## Entry 168 — P140 H1, and H2–H4 on the unrepaired candidate (2026-10-15)
+
+Protocol `protocols/ACTINV-P140_PROTOCOL.md`. Candidate `cand9`, release build of `233e3e8`, SHA-256
+`0b62b47c…1170`; reference release build of `2f3daa4`, SHA-256 `3d34d7ca…`. Records in `results/p140/`.
+
+- **H1:** seven reviews, one per module group, none by an implementer: 90 findings, recorded with the
+  coordinator's decisions in `results/p140/h1/`. Three were rejected with reasons (depletion uncertainty missing
+  in trace mode: the `cand9` trace run carries it; a one-ulp histogram edge; single-letter `TIME` units: an
+  unknown unit already yields an `unsupported` entry). Every accepted behavioural finding was reproduced by a
+  `p140_*` regression test written to assert the correct behaviour: on the unrepaired code 107 fail with the
+  message of their defect and 5 guard tests pass (`results/p140/h1/red_run.txt`); three defects were also
+  reproduced with the `cand9` binary (`results/p140/h1/repro/`).
+- **H2:** PASS, 151 cases: 133 pass, 18 documented refusals (`h2_cand9.json`).
+- **H4:** PASS, 85 of 85 gating items, after two checker defects were corrected (output directories not created;
+  `tab3` expected from A2-only responses). Ten parity features had no fenced handbook fragment.
+- **H3:** FAIL (`h3_cand9_unrepaired.json`): `PULSE` nested 1e9 × 1e9 times without steps runs instead of being
+  refused; `PULSE` nested 100,000 deep overflows the stack; 10,000 `OVER` sub-keywords time out; pypact test5
+  was refused because the proton library was not installed (environment; installed with `actinv data fetch`).
+
+Amendment A (`protocols/ACTINV-P140_AMENDMENT_A.md`, SHA-256 `74303741…7a86`) was registered after the
+reproductions and before any repair.
+
+## Entry 169 — P140 repairs; H2 failure on `cand10`; Amendments B and C; H2–H4 on `cand11` (2026-10-15)
+
+The Amendment A repairs were written by six agents, one per module group, without running any build; the
+coordinator built and tested them. Both runs are recorded:
+
+- `cand10` (Amendment A repairs, SHA-256 `c8e8b077…1c66`): all 112 `p140_*` tests pass (39 actinv-cli, 71
+  actinv-core, 2 actinv-data); the workspace suite passes, 904 tests; fmt and clippy `-D warnings` clean after
+  three lints and five `.err().expect()` test calls were corrected; an overlapping agent edit that left a stale
+  duplicate block in `study.rs` was removed before the first compile.
+- **H2 on `cand10`: FAIL** (`results/p140/h2_cand10.json`): 128 pass, 18 documented refusals, 5 fail, all
+  `reference_identical` on the default-option baselines. Inventories and every other field are byte-identical;
+  only the ledger count `spontaneous_fission_branches_to_leakage` (129 → 126, repair 4) and, for W, SS316 and U,
+  the pathway attribution (repair 5) differ. Repair 5 now attributes trace production fed by decay of radioactive
+  bulk nuclides: Mo-100 double-β decay is the leading Ru-100 route in SS316 (1.38e-5 atoms/g, consistent with
+  N·λ·t by hand), and the natural-U pathway closure gap falls from 0.99999999999995 to 4.2e-15. The three
+  reclassified branches reached leakage with no ledger count.
+- **Amendment B** (`ACTINV-P140_AMENDMENT_B.md`, SHA-256 `baee990f…39a6`), registered before the change it
+  names: the ledger gains `unmodelled_decay_branches_to_leakage` (always emitted; certificate defect class when
+  nonzero), and the H2 baseline criterion becomes `reference_compatible` (identical once `ms`, the two ledger
+  counts and, for W, SS316 and U only, the pathways are masked; the SF count may only fall, by at most the
+  unmodelled count; closure may not grow). `controls/check_p140_matrix.py` implements it; on the `cand10` files
+  it fails all five (the key is absent) and passes all five with the key injected as 3, and fails with 2.
+- **Amendment C** (`ACTINV-P140_AMENDMENT_C.md`, SHA-256 `8ff85c36…c673`) records the `cand9` H3 failures and
+  the `OVER` repair (`sub_entry` cloned the parent's ~20,000-word argument list per sub-keyword). Deviation: that
+  repair was written before Amendment C was registered; it was registered before H3 ran on a repaired candidate.
+- `cand11` (Amendments A–C, SHA-256 `179e96a0…4536`): 904 workspace tests pass, fmt and clippy clean.
+- **H2 on `cand11`: PASS**, 151 cases: 133 pass, 18 documented refusals; the five baselines pass
+  `reference_compatible` (`results/p140/h2_cand11.json`).
+- **H4 on `cand11`:** the first run failed on one unclassified block: a documentation repair had glued text to a
+  closing code fence in `specification.md` (the radiological table example). That record was overwritten by the
+  rerun and is not preserved; the failure message was "unparsable: Extra data: line 21 column 1". After the
+  fence was restored: **PASS**, 97 of 97 gating items, every one of the 21 parity features exercised by a fenced
+  fragment (`h4_cand11.json`).
+- **H3 on `cand11`:** the first run failed (`results/p140/h3_cand11_first.json`): 72 abbreviation decks, the 2
+  CoNDERC fission decks, 1 combination and 5 lexical decks. Each failure was the checker's port of the importer
+  parser disagreeing with a registered repair 6 behaviour, not an importer defect: the fission decks spell
+  `TOLERANCE` as `TOL`, which the repaired importer resolves (a three-letter abbreviation used by real FISPACT-II
+  inputs); a bare CR now ends a line; a leading BOM is stripped; invalid UTF-8 is read lossily and flagged
+  `deck.lossy_utf8`. `controls/check_p140_import.py` was updated to the repaired rules (three-letter resolution
+  except time units, bare-CR lines, BOM, the unknown-word rule of the six word-list keywords, lossy UTF-8 checked
+  against `deck.lossy_utf8`, and the 17 keywords repair 6 added, in source order so `--self-check` passes).
+  Rerun: **PASS** — 132 FNS, 2 fission and 6 pypact decks import (the 6 pypact refusals are the expected strict
+  runs), 5,426 synthetic decks behave as specified, no panic (`h3_cand11.json`).
+
+Other checker changes for the repaired behaviour, made before their runs: `check_p135.py` accepts an absent
+`uncertainty_covered_share` when nothing is removed (repair 1); `check_p139.py` clips resolved levels to their
+range's [EL, EH] and counts them (repair 4, SG-01: W-186 has 3 levels above EH = 10 keV); `check_p123.py`
+follows the bremsstrahlung electrons-per-decay model and the `unlimited` / `covered_by_parent` lists (repair 2).
+
+Parking: `actinv waste-verify` does not yet list `unmodelled_decay_branches_to_leakage` among its ledger reasons;
+the bremsstrahlung group-energy rule keeps FISPACT-II's midpoint rule (Eq. 67), which overshoots the energy in
+the group holding E0, now reported by `energy_closure`.
+
+## Entry 170 — P140 controls reruns under Amendments A and D; re-seated baselines (2026-10-15)
+
+Amendment D (`ACTINV-P140_AMENDMENT_D.md`, SHA-256 `a8dc3016…ff60`) was registered after the P123 rerun and
+before the others finished. The controls checkers named by Amendment A were rerun on `cand11`; records are in
+`results/p140/controls/` as produced, and the original P123–P139 records are not overwritten.
+
+- Every checker fails its reference-identity gate G2, as Amendment D predicted, and every other gate passes:
+  P123 (G3–G6), P126 (G0, G1, G3–G5), P127 (G3–G5), P129 (G3, G4), P134 (G3, G4), P135 (G3–G5), P136 (G3, G4),
+  P139 (G3, G4). P138 passes as written, including its P132 rerun.
+- Two first runs failed on gates other than G2 and are preserved: P129 (`p129_cand11.json`, G3) and P136
+  (`p136_cand11.json`, G3). P129's port of the resolved-resonance lines did not apply the SG-01 [EL, EH] clip of
+  repair 4; P136 rejected the `first_order` block `{"status": "not_comparable", ...}` that repair 3 now emits when
+  `local_vs_nonlinear` is not comparable. Both checkers were updated to the repaired behaviour and rerun:
+  `p129_cand11_b.json` and `p136_cand11_b.json`, G3 and G4 pass.
+- Amendment D evaluation (`amendment_d_pairs.json`): 533 candidate/reference pairs, 256 identical, 275
+  `reference_compatible`, **2 fail**. Both failures are P139's TENDL-2025 W-186 foils (0.01 cm and 0.1 cm), whose
+  steps, ledger and certificate differ beyond the Amendment B fields. The cause is the SG-01 clip: TENDL-2025
+  W-186 has a resolved range ending at EH = 4341 eV but lists levels to 17.3 keV; 108 of its 172 levels lie above
+  EH and are now dropped, so the 27 groups 432–461 above 4365 eV are no longer self-shielded (their factors were
+  as low as 0.71 at 0.1 cm and 0.94 at 0.01 cm). The 35 groups below are bit-identical. Under ENDF/B-VIII.1 the
+  clip removes one group above 10 keV (P139 G5: shielded groups TENDL 62 → 35, VIII.1 58 → 57). Amendment A
+  predicted W-186 geometry changes "above 10 keV", which is true of ENDF/B-VIII.1 but understates TENDL-2025;
+  entry 169's "3 levels above EH = 10 keV" likewise describes only ENDF/B-VIII.1. By Amendment D's own text these
+  two pairs are failures; they are explained, not excused. Whether FISPACT-II's self-shielding also stops at EH is
+  not known (no FISPACT-II foil factors are available), so the clip is a judgement for the owner, not a parity
+  result.
+- Decay-fed attribution in the reruns: the shielding demo (natural W, with W-186 α decay to Hf-182, ENDF/B-VIII.0
+  T½ 5.36e27 s) has pathway closure 4.5e-16, down from 0.979, and the attributed Hf-182 equals its inventory
+  (1.5397e-3 atoms/g).
+
+Three frozen baselines change on `cand11` only because of Amendment B's always-emitted ledger key
+`unmodelled_decay_branches_to_leakage`, each with the value 0; removing the key from the new output recovers the
+recorded value exactly in every case:
+
+- `controls/g6_p10_projectile_runtime.py`, legacy neutron normalized hash: f2342695… instead of e6157b59….
+- `results/p15_cache_integrity.json`, `normalized_result_sha256`: 1dc1d8d9… instead of 9853ccc8… (diff-gated in CI).
+- `results/g1_p110_composition_solve.json`: the nine `case_evidence[*].output_sha256` of `actinv waste composition
+  solve`; with the key lines removed (9–15 per output) all nine hash to the recorded values.
+
+The P10 constant and the P15 record were first re-seated, following the precedent of earlier ledger-key additions,
+and the P110 records regenerated. Rerunning the P110 step then showed `check_p110_verdict.py` failing on its
+persisted evidence hashes, and the chain does not stop there: `check_p110.py` is hash-frozen in the P110 G0 seal,
+and `results/p110_verdict.json` is hash-bound into the G0 seals of P111–P117. Re-seating would rewrite sealed records
+of closed phases. All three re-seats were reverted before any commit, and **Amendment E**
+(`ACTINV-P140_AMENDMENT_E.md`, SHA-256 `a87c21e0…1b58`) was registered before the change it names: the key is
+emitted only when nonzero, as `decay_branching_sums_off_unity` already is, and `reference_compatible` reads an
+absent key as 0.
+
+Local run of the CI control steps from P103 onward on `cand11`-equivalent workspace binaries (P18 and P18b skipped as
+before: memory and the local Python 3.14 gzip difference). Ten steps failed on the first pass and each was traced:
+P110, P15 and P10 to the key above; P20, P21, P22 and P17 to a manifest not yet refreshed for the staged files
+(they pass once it is); P11 and P12 data-independent to a stale `prepared_probe` built before the repairs; P10's PyO3
+comparison to a local wheel that `pip install` did not replace (same version). P12 release payload evidence fails
+only on the untracked local `.claude/worktrees` directory, as in earlier entries.
+
+`cand12` (Amendment E, SHA-256 `fc054382…bc2a`): 904 workspace tests pass, fmt and clippy `-D warnings` clean.
+**H2 on `cand12`: PASS**, 151 cases: 133 pass, 18 documented refusals (`results/p140/h2_cand12.json`). With the
+shipped decay data the unmodelled count is 3 in every run, so the key is still emitted; every case's result size
+is within 8 bytes of `cand11`'s (the `ms` field), so the carry-over condition of Amendment E holds. **H4 on
+`cand12`: PASS**, 97 of 97 (`h4_cand12.json`). The local CI control steps P110 through P17 formal closure (P18 and
+P18b skipped) and the Python module build through P12 data-independent all pass on `cand12` binaries with the
+manifest refreshed: 50 steps, among them P10, P15 and P110–P117 against their committed records, unchanged.
+
+P140 verdict: H1–H4 pass (entries 168 and 169; H2 and H4 on `cand12` above); H5 (CI green on the pushed commit) is
+pending.

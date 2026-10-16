@@ -1,0 +1,23 @@
+  ... 500/5426 synthetic decks
+  ... 1000/5426 synthetic decks
+  ... 1500/5426 synthetic decks
+  ... 2000/5426 synthetic decks
+  ... 2500/5426 synthetic decks
+  ... 3000/5426 synthetic decks
+  ... 3500/5426 synthetic decks
+  ... 4000/5426 synthetic decks
+  ... 4500/5426 synthetic decks
+  ... 5000/5426 synthetic decks
+P140 H3 fns: 132 decks, expected 132; 132 imported, 0 refused with an error, 0 FAILED
+P140 H3 fission: 2 decks, expected 2; 2 imported, 0 refused with an error, 0 FAILED
+P140 H3 pypact: 6 decks, expected 6 (12 runs); 6 imported, 6 refused with an error, 0 FAILED
+P140 H3 synthetic/keyword_valid: 111 decks; 111 imported, 0 refused with an error, 0 FAILED
+P140 H3 synthetic/keyword_malformed: 3996 decks; 3723 imported, 273 refused with an error, 0 FAILED
+P140 H3 synthetic/keyword_wrong_phase: 222 decks; 218 imported, 4 refused with an error, 0 FAILED
+P140 H3 synthetic/keyword_abbrev: 930 decks; 924 imported, 6 refused with an error, 0 FAILED
+P140 H3 synthetic/combo: 68 decks; 42 imported, 26 refused with an error, 0 FAILED
+P140 H3 synthetic/lexical: 58 decks; 45 imported, 13 refused with an error, 0 FAILED
+P140 H3 synthetic/cli: 27 decks; 7 imported, 20 refused with an error, 0 FAILED
+P140 H3 synthetic/stress: 14 decks; 6 imported, 8 refused with an error, 0 FAILED
+P140 H3 pypact: Apache-2.0, commit e28091c1; panics 0; strict checked on 5216 imported decks (3278 refused as expected)
+P140 H3 verdict: P140-H3-PASS (/home/connoravila/Documents/actinv/target/p140/p140_import_cand11.json)

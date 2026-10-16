@@ -689,7 +689,12 @@ def check_uncertainty(result, spec, ex, cov, initial):
             total = math.fsum(expected.values())
             reported_share = row.get("uncertainty_covered_share")
             want_share = covered_rate / total if total > 0.0 else 0.0
-            if reported_share is None:
+            if total <= 0.0:
+                # P140 Amendment A repair 1: the share is omitted when nothing is removed.
+                if reported_share is not None:
+                    found.fail(check="covered_share_present_without_removal", reported=reported_share, **where)
+                found.count("covered_share_absent_without_removal")
+            elif reported_share is None:
                 found.fail(check="covered_share_missing", **where)
             else:
                 close(found, "uncovered_share", reported_share, want_share, UNCERTAINTY_TOL, where, floor=1e-15)

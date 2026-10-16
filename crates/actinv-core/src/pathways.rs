@@ -28,7 +28,9 @@ use std::collections::{BTreeMap, BTreeSet, HashMap, HashSet};
 
 /// Longest route a spec may ask for (edges). The dense exponential is O(depth^3) per step per route.
 const MAX_DEPTH_LIMIT: usize = 64;
-/// Hard cap on search-tree nodes visited; hitting it is reported as `search_truncated`.
+/// Hard cap on search-tree nodes visited; hitting it is reported as `search_truncated`. The shared first pass
+/// spends it over all sources and targets; when it runs out, every target is searched again on its own floor
+/// with this budget, divided fairly among the sources.
 const EXPLORE_LIMIT: usize = 2_000_000;
 /// Candidate routes integrated per target, as a multiple of `max_paths` (the best by upper bound are kept).
 const CANDIDATE_FACTOR: usize = 8;
@@ -547,11 +549,14 @@ pub fn decay_edge_labels(
             continue;
         }
         let (z, a) = (nuclide.za / 1000, nuclide.za % 1000);
+        let mut spontaneous_fission = false;
+        let mut decay_rows: BTreeSet<usize> = BTreeSet::new();
         for mode in &nuclide.modes {
             if mode.br <= 0.0 {
                 continue;
             }
             let digits = chain::rtyp_digits(mode.rtyp);
+            spontaneous_fission |= digits.first() == Some(&6);
             let (mut zz, mut aa) = (z, a);
             let mut names: Vec<&'static str> = Vec::new();
             let mut resolved = true;
@@ -570,9 +575,11 @@ pub fn decay_edge_labels(
             }
             if let Some(row) = he4.filter(|_| digits.contains(&4)) {
                 labels.entry((row, k)).or_default().insert("a".to_owned());
+                decay_rows.insert(row);
             }
             if let Some(row) = h1.filter(|_| digits.contains(&7)) {
                 labels.entry((row, k)).or_default().insert("p".to_owned());
+                decay_rows.insert(row);
             }
             if !resolved {
                 continue;
@@ -585,6 +592,22 @@ pub fn decay_edge_labels(
             if let Some(&j) = daughter {
                 if j != k {
                     labels.entry((j, k)).or_default().insert(names.join(","));
+                    decay_rows.insert(j);
+                }
+            }
+        }
+        // Spontaneous-fission products (P125) enter the matrix as edges from this state; any edge the
+        // other modes do not explain is a fission product.
+        if spontaneous_fission {
+            for &(row, column, rate) in &network.decay {
+                if column == k
+                    && row != k
+                    && row != network.leak
+                    && row != network.unit
+                    && rate > 0.0
+                    && !decay_rows.contains(&row)
+                {
+                    labels.entry((row, k)).or_default().insert("SF".to_owned());
                 }
             }
         }
@@ -841,8 +864,11 @@ struct Candidate {
 struct Search<'a> {
     graph: &'a Graph,
     max_depth: usize,
+    /// branches whose bound falls under this are pruned
     floor_min: f64,
     target_floor: &'a HashMap<usize, f64>,
+    /// tree nodes this search may visit
+    limit: usize,
     explored: usize,
     truncated: bool,
     found: Vec<Candidate>,
@@ -850,7 +876,7 @@ struct Search<'a> {
 
 impl Search<'_> {
     fn dfs(&mut self, walk: &mut Vec<usize>, bound: f64) {
-        if self.explored >= EXPLORE_LIMIT {
+        if self.explored >= self.limit {
             self.truncated = true;
             return;
         }
@@ -921,6 +947,14 @@ impl Evaluator<'_> {
 
 // ---- report ------------------------------------------------------------------------------------------------
 
+fn is_zero(n: &usize) -> bool {
+    *n == 0
+}
+
+fn is_false(flag: &bool) -> bool {
+    !*flag
+}
+
 #[derive(Debug, Serialize)]
 pub struct PathRoute {
     pub source: String,
@@ -965,6 +999,16 @@ pub struct TargetPaths {
     pub loop_atoms_per_g: f64,
     /// Routes that passed the floors but fell outside `max_paths`.
     pub paths_dropped_by_cap: usize,
+    /// Candidate routes of this target beyond `8 * max_paths` that were never integrated (smallest upper
+    /// bound dropped first). Omitted when none.
+    #[serde(skip_serializing_if = "is_zero")]
+    pub candidates_dropped_by_cap: usize,
+    /// The route search for this target ran out of budget, so routes may be missing. Omitted when it did not.
+    #[serde(skip_serializing_if = "is_false")]
+    pub search_truncated: bool,
+    /// Sources whose search tree for this target was cut short by the budget. Omitted when none.
+    #[serde(skip_serializing_if = "Vec::is_empty")]
+    pub truncated_sources: Vec<String>,
     pub paths: Vec<PathRoute>,
     pub generic: Vec<GenericPath>,
 }
@@ -1001,12 +1045,19 @@ fn node_label(input: &PathwayInput, node: usize) -> &str {
     }
 }
 
+/// Label of an edge without a decay or reaction label: the declared feed and the removal sink name themselves.
 fn edge_label(input: &PathwayInput, from: usize, to: usize) -> String {
-    input
-        .labels
-        .get(&(to, from))
-        .cloned()
-        .unwrap_or_else(|| UNKNOWN_EDGE.to_owned())
+    if let Some(label) = input.labels.get(&(to, from)) {
+        return label.clone();
+    }
+    let n_tracked = input.node_names.len();
+    if from >= n_tracked && input.reservoirs[from - n_tracked] == "feed" {
+        "feed".to_owned()
+    } else if to < n_tracked && input.node_names[to] == "removed" {
+        "removal".to_owned()
+    } else {
+        UNKNOWN_EDGE.to_owned()
+    }
 }
 
 /// Enumerate and integrate the routes into each target.
@@ -1101,24 +1152,77 @@ pub fn analyse(input: &PathwayInput, options: &PathwayOptions) -> Result<Pathway
     // ---- search: a route's atoms are bounded by the product of its edge weights, so a branch dies as soon as
     // the bound falls under the smallest target floor
     let floor_min = target_floor.values().copied().fold(f64::INFINITY, f64::min);
-    let mut search = Search {
-        graph: &graph,
-        max_depth: options.max_depth,
-        floor_min,
-        target_floor: &target_floor,
-        explored: 0,
-        truncated: false,
-        found: Vec::new(),
-    };
+    let mut explored = 0usize;
+    let mut found: Vec<Candidate> = Vec::new();
+    // per target node: the sources whose tree was cut short by the budget
+    let mut truncated_by_target: BTreeMap<usize, Vec<String>> = BTreeMap::new();
     if floor_min.is_finite() {
+        let mut search = Search {
+            graph: &graph,
+            max_depth: options.max_depth,
+            floor_min,
+            target_floor: &target_floor,
+            limit: EXPLORE_LIMIT,
+            explored: 0,
+            truncated: false,
+            found: Vec::new(),
+        };
         for (node, atoms, _) in &sources {
             let mut walk = vec![*node];
             search.dfs(&mut walk, *atoms);
         }
+        explored = search.explored;
+        let shared_truncated = search.truncated;
+        found = search.found;
+        if shared_truncated {
+            // The shared floor is the smallest target's and the budget is spent source by source, so one
+            // tiny target or one wide source can starve the rest. Search every target again on its own
+            // floor, with the budget divided fairly among the sources.
+            notes.push(format!(
+                "the shared route search stopped after {EXPLORE_LIMIT} tree nodes; each target was searched again on its own floor with a per-source budget"
+            ));
+            explored = 0;
+            found.clear();
+            let mut nodes: Vec<(usize, f64)> = target_floor.iter().map(|(&n, &f)| (n, f)).collect();
+            nodes.sort_by_key(|(node, _)| *node);
+            for (target, floor) in nodes {
+                let floors = HashMap::from([(target, floor)]);
+                let mut remaining = EXPLORE_LIMIT;
+                for (index, (node, atoms, name)) in sources.iter().enumerate() {
+                    let share = remaining / (sources.len() - index);
+                    let mut one = Search {
+                        graph: &graph,
+                        max_depth: options.max_depth,
+                        floor_min: floor,
+                        target_floor: &floors,
+                        limit: share,
+                        explored: 0,
+                        truncated: false,
+                        found: Vec::new(),
+                    };
+                    let mut walk = vec![*node];
+                    one.dfs(&mut walk, *atoms);
+                    remaining -= one.explored;
+                    explored += one.explored;
+                    found.append(&mut one.found);
+                    if one.truncated {
+                        truncated_by_target
+                            .entry(target)
+                            .or_default()
+                            .push(name.clone());
+                    }
+                }
+            }
+        }
     }
-    let explored = search.explored;
-    let truncated = search.truncated;
-    let mut found = search.found;
+    let truncated = !truncated_by_target.is_empty();
+    for (&node, names) in &truncated_by_target {
+        notes.push(format!(
+            "target '{}': the route search stopped after its budget of {EXPLORE_LIMIT} tree nodes (sources cut short: {}); raise path_floor or lower max_depth",
+            input.node_names[node],
+            names.join(", ")
+        ));
+    }
     found.sort_by(|a, b| {
         b.bound
             .partial_cmp(&a.bound)
@@ -1127,16 +1231,24 @@ pub fn analyse(input: &PathwayInput, options: &PathwayOptions) -> Result<Pathway
     });
     let candidate_cap = options.max_paths.saturating_mul(CANDIDATE_FACTOR);
     let mut per_target: HashMap<usize, usize> = HashMap::new();
+    let mut dropped_by_target: BTreeMap<usize, usize> = BTreeMap::new();
     let mut kept: Vec<Candidate> = Vec::new();
     let mut candidates_dropped = 0usize;
     for candidate in found {
         let count = per_target.entry(candidate.target).or_insert(0);
         if *count >= candidate_cap {
             candidates_dropped += 1;
+            *dropped_by_target.entry(candidate.target).or_insert(0) += 1;
         } else {
             *count += 1;
             kept.push(candidate);
         }
+    }
+    for (&node, &count) in &dropped_by_target {
+        notes.push(format!(
+            "target '{}': {count} candidate routes beyond the cap of {candidate_cap} (8 x max_paths) were not integrated, smallest upper bound first; raise max_paths",
+            input.node_names[node]
+        ));
     }
     // longest first: a long walk's chain system carries all of its prefixes
     kept.sort_by(|a, b| {
@@ -1276,14 +1388,22 @@ pub fn analyse(input: &PathwayInput, options: &PathwayOptions) -> Result<Pathway
             explained_fraction: share(paths_sum),
             loop_atoms_per_g: loop_sum,
             paths_dropped_by_cap: paths_dropped,
+            candidates_dropped_by_cap: name_to_node
+                .get(name.as_str())
+                .and_then(|node| dropped_by_target.get(node))
+                .copied()
+                .unwrap_or(0),
+            search_truncated: name_to_node
+                .get(name.as_str())
+                .is_some_and(|node| truncated_by_target.contains_key(node)),
+            truncated_sources: name_to_node
+                .get(name.as_str())
+                .and_then(|node| truncated_by_target.get(node))
+                .cloned()
+                .unwrap_or_default(),
             paths,
             generic,
         });
-    }
-    if truncated {
-        notes.push(format!(
-            "the route search stopped after {EXPLORE_LIMIT} tree nodes; raise path_floor or lower max_depth"
-        ));
     }
     Ok(PathwayReport {
         schema: "actinv-pathways-1",

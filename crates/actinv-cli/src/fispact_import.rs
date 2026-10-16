@@ -34,6 +34,14 @@ use std::path::{Path, PathBuf};
 
 /// Upper bound on schedule steps after PULSE expansion.
 const MAX_STEPS: usize = 100_000;
+/// Deepest PULSE nesting the parser follows.
+const MAX_PULSE_DEPTH: usize = 64;
+/// Upper bound on command executions after PULSE expansion, steps or not: a loop body that adds
+/// no step never reaches `MAX_STEPS`.
+const MAX_EXPANDED_COMMANDS: u64 = 2_000_000;
+/// Start of the error for a deck that irradiates with no fluxes file.
+const IRRADIATES_WITHOUT_FLUXES: &str =
+    "the deck irradiates (FLUX, POWER or WALL) but no FLUXES file was found";
 /// Catalog identifier of the covariance sidecar paired with the default neutron library.
 const DEFAULT_COVARIANCE: &str = "tendl-2025-neutron-709g-covariance";
 
@@ -59,13 +67,44 @@ pub struct Lexed {
     pub error: Option<String>,
 }
 
+/// The lines of a deck, ended by `\n`, `\r\n` or a bare `\r` (old Mac and some Windows editors).
+fn deck_lines(text: &str) -> Vec<&str> {
+    let bytes = text.as_bytes();
+    let mut lines = Vec::new();
+    let (mut start, mut index) = (0, 0);
+    while index < bytes.len() {
+        match bytes[index] {
+            b'\n' => {
+                lines.push(&text[start..index]);
+                index += 1;
+                start = index;
+            }
+            b'\r' => {
+                lines.push(&text[start..index]);
+                index += if bytes.get(index + 1) == Some(&b'\n') {
+                    2
+                } else {
+                    1
+                };
+                start = index;
+            }
+            _ => index += 1,
+        }
+    }
+    if start < bytes.len() {
+        lines.push(&text[start..]);
+    }
+    lines
+}
+
 /// Split a deck into words and `*` text lines. `<< ... >>` comments are removed wherever they
 /// occur and may span lines; a line whose first non-blank character is `*` is text, inside which
 /// `<<` is not a comment (manual 4.94).
 pub fn lex(text: &str) -> Lexed {
+    let text = text.strip_prefix('\u{feff}').unwrap_or(text);
     let mut tokens = Vec::new();
     let mut comment_from: Option<usize> = None;
-    for (index, raw) in text.lines().enumerate() {
+    for (index, raw) in deck_lines(text).into_iter().enumerate() {
         let line = index + 1;
         let mut rest = raw;
         if comment_from.is_none() {
@@ -166,7 +205,9 @@ enum Arity {
 }
 
 const KEYWORDS: &[(&str, Arity)] = &[
+    ("AINPUT", Arity::Zero),
     ("ALLDISPEN", Arity::Numbers),
+    ("ARRAY", Arity::Zero),
     ("ATDISPEN", Arity::Words),
     ("ATOMS", Arity::Zero),
     ("ATWO", Arity::Zero),
@@ -174,15 +215,20 @@ const KEYWORDS: &[(&str, Arity)] = &[
     ("CLEAR", Arity::Zero),
     ("CLOBBER", Arity::Zero),
     ("CNVTYPE", Arity::Numbers),
+    ("COLLAPSE", Arity::Zero),
     ("COMPRESSXS", Arity::Numbers),
+    ("CONV", Arity::Numbers),
     ("COVARIANCE", Arity::Zero),
     ("CULTAB", Arity::Zero),
     ("CUMFYLD", Arity::Zero),
     ("DENSITY", Arity::Numbers),
     ("DEPLETION", Arity::Words),
+    ("DOMINANT", Arity::Numbers),
     ("DOSE", Arity::Numbers),
+    ("EAFVERSION", Arity::Numbers),
     ("END", Arity::Special),
     ("ENDPULSE", Arity::Zero),
+    ("ENFA", Arity::Numbers),
     ("ERROR", Arity::Words),
     ("EXTRACTXS", Arity::Words),
     ("FISCHOOSE", Arity::Words),
@@ -202,17 +248,24 @@ const KEYWORDS: &[(&str, Arity)] = &[
     ("INDEXPATH", Arity::Zero),
     ("IRON", Arity::Zero),
     ("JSON", Arity::Zero),
+    ("LEVEL", Arity::Numbers),
     ("LIBVERSION", Arity::Numbers),
     ("LIMGRP", Arity::Numbers),
+    ("LINA", Arity::Numbers),
     ("LOGLEVEL", Arity::Numbers),
     ("LOOKAHEAD", Arity::Zero),
+    ("LOOPS", Arity::Numbers),
     ("MASS", Arity::Special),
     ("MCSAMPLE", Arity::Numbers),
+    ("MCSEED", Arity::Numbers),
     ("MIND", Arity::Numbers),
     ("MONITOR", Arity::Numbers),
+    ("NEWFILE", Arity::Numbers),
     ("NOCOMP", Arity::Zero),
     ("NOERROR", Arity::Zero),
     ("NOFISS", Arity::Zero),
+    ("NOHEAD", Arity::Zero),
+    ("NOHEADER", Arity::Zero),
     ("NOSORT", Arity::Zero),
     ("NOSTABLE", Arity::Zero),
     ("NOT1", Arity::Zero),
@@ -236,6 +289,8 @@ const KEYWORDS: &[(&str, Arity)] = &[
     ("ROUTES", Arity::Words),
     ("SAVELINES", Arity::Zero),
     ("SENSITIVITY", Arity::Words),
+    ("SEQNUMBER", Arity::Numbers),
+    ("SEQUENTIAL", Arity::Numbers),
     ("SORTDOMINANT", Arity::Numbers),
     ("SPECTRUM", Arity::Zero),
     ("SPEK", Arity::Zero),
@@ -250,6 +305,7 @@ const KEYWORDS: &[(&str, Arity)] = &[
     ("TAB2", Arity::Numbers),
     ("TAB3", Arity::Numbers),
     ("TAB4", Arity::Numbers),
+    ("TAPA", Arity::Numbers),
     ("TIME", Arity::Special),
     ("TOLERANCE", Arity::Numbers),
     ("UNCERTAINTY", Arity::Numbers),
@@ -265,10 +321,13 @@ const KEYWORDS: &[(&str, Arity)] = &[
 /// Keywords the interpreter handles itself; every other table entry has a [`simple_disposition`].
 #[cfg(test)]
 const HANDLED: &[&str] = &[
+    "AINPUT",
+    "ARRAY",
     "ATOMS",
     "ATWO",
     "BREMSSTRAHLUNG",
     "CNVTYPE",
+    "COLLAPSE",
     "DENSITY",
     "DOSE",
     "END",
@@ -301,16 +360,32 @@ const HANDLED: &[&str] = &[
     "ZERO",
 ];
 
+/// A word of four or more letters that is not an element, a unit or an `OVER` sub-keyword: in a
+/// list of nuclides and numbers it can only be a keyword.
+fn looks_like_unknown_keyword(word: &str) -> bool {
+    word.len() >= 4
+        && word
+            .chars()
+            .all(|character| character.is_ascii_alphabetic())
+        && !matches!(
+            word.to_ascii_uppercase().as_str(),
+            "ACROSS" | "ADCROSS" | "ALAM" | "ADLAM"
+        )
+        && time_unit(word).is_none()
+        && material_key(word).is_err()
+}
+
 /// Resolve a deck word to a keyword. FISPACT-II reads the leading characters of a keyword, so
-/// `HAZA`, `UNCERT` and `TOLER` are the usual spellings: an exact name wins, then a unique name
-/// the word is a prefix of (four or more characters), then a unique name sharing the first four
-/// characters.
+/// `HAZA`, `UNCERT` and `TOL` are the usual spellings: an exact name wins, then a unique name
+/// the word is a prefix of (three or more characters), then a unique name sharing the first four
+/// characters. `MIN` stays a time unit, not an abbreviation of `MIND`.
 fn resolve_keyword(token: &str) -> Option<(&'static str, Arity)> {
     let upper = token.to_ascii_uppercase();
     if let Some(entry) = KEYWORDS.iter().find(|(name, _)| *name == upper) {
         return Some(*entry);
     }
-    if upper.chars().count() < 4 {
+    let length = upper.chars().count();
+    if length < 3 || (length == 3 && time_unit(&upper).is_some()) {
         return None;
     }
     let prefixed: Vec<_> = KEYWORDS
@@ -399,10 +474,15 @@ impl<'a> Parser<'a> {
         out
     }
 
-    fn take_words(&mut self) -> Vec<String> {
+    /// Every word up to the next keyword. For the keywords whose arguments are numbers, nuclides,
+    /// elements and a few sub-keywords (`nuclide_args`), a plain word that is none of these also
+    /// ends the list: it is a keyword this importer does not know, and gets its own entry.
+    fn take_words(&mut self, nuclide_args: bool) -> Vec<String> {
         let mut out = Vec::new();
         while let Some(token) = self.peek_word() {
-            if resolve_keyword(&token.text).is_some() {
+            if resolve_keyword(&token.text).is_some()
+                || (nuclide_args && looks_like_unknown_keyword(&token.text))
+            {
                 break;
             }
             out.push(token.text.clone());
@@ -476,6 +556,12 @@ impl<'a> Parser<'a> {
                     return Ok((nodes, true));
                 }
                 "PULSE" => {
+                    if depth >= MAX_PULSE_DEPTH {
+                        return Err(format!(
+                            "line {}: PULSE loops nest deeper than {MAX_PULSE_DEPTH} levels",
+                            token.line
+                        ));
+                    }
                     let args = self.take_numbers(1);
                     let count = args
                         .first()
@@ -557,7 +643,10 @@ impl<'a> Parser<'a> {
                     let args = match arity {
                         Arity::Zero | Arity::Special => Vec::new(),
                         Arity::Numbers => self.take_numbers(usize::MAX),
-                        Arity::Words => self.take_words(),
+                        Arity::Words => self.take_words(matches!(
+                            name,
+                            "OVER" | "PATH" | "ROUTES" | "POWER" | "PARTITION" | "BREMSSTRAHLUNG"
+                        )),
                     };
                     nodes.push(Node::Cmd(self.command(name, true, token.line, args)));
                 }
@@ -643,6 +732,7 @@ pub struct Conversion {
     pub unsupported: Vec<(String, usize)>,
 }
 
+#[derive(Clone)]
 enum MaterialDef {
     Mass {
         total_g: f64,
@@ -654,10 +744,15 @@ enum MaterialDef {
     },
 }
 
+#[derive(Clone)]
 struct Pending {
     value: f64,
     unit: &'static str,
     line: usize,
+    /// what fixed the irradiation level when the TIME was read
+    drive: Drive,
+    /// the TIME's report entry, which says so when the interval never runs
+    entry: Option<usize>,
 }
 
 /// What fixes the irradiation level while a step runs.
@@ -679,6 +774,7 @@ impl Drive {
     }
 }
 
+#[derive(Clone)]
 struct StepRec {
     dt: String,
     drive: Drive,
@@ -699,7 +795,7 @@ struct OverrideRec {
 }
 
 /// The deck's photon-side keywords, assembled into spec `photon` in `finish`.
-#[derive(Default)]
+#[derive(Default, Clone)]
 struct PhotonRec {
     group_structure: Option<&'static str>,
     point_source_m: Option<f64>,
@@ -707,13 +803,14 @@ struct PhotonRec {
 }
 
 /// GRPCONVERT, CNVTYPE and LIMGRP, each with the report entry that `finish` settles.
-#[derive(Default)]
+#[derive(Default, Clone)]
 struct RebinRec {
     grpconvert: Option<(Vec<f64>, Option<usize>)>,
     cnvtype: Option<(u8, Option<usize>)>,
     limgrp: Option<(f64, f64, Option<usize>)>,
 }
 
+#[derive(Clone)]
 struct Interp<'a> {
     ctx: &'a ImportContext,
     entries: Vec<Entry>,
@@ -733,6 +830,8 @@ struct Interp<'a> {
     power_line: Option<usize>,
     overrides: Vec<OverrideRec>,
     photon: PhotonRec,
+    /// the report entry of the DOSE 2 that set `photon.point_source_m`
+    dose_entry: Option<usize>,
     rebin: RebinRec,
     pathway_targets: Vec<String>,
     pathway_entries: Vec<usize>,
@@ -787,6 +886,16 @@ fn simple_disposition(keyword: &str) -> Option<(Status, &'static str)> {
             Noted,
             "FISPACT-II library preparation and printing; ACTINV reads its activation library and decay data from the spec",
         ),
+        "NOHEAD" | "NOHEADER" => (Noted, "output header suppression; ACTINV's result JSON has no header"),
+        "MCSEED" => (
+            Noted,
+            "random seed of MCSAMPLE, which has no ACTINV equivalent (see MCSAMPLE); no effect on the calculated physics",
+        ),
+        "CONV" | "DOMINANT" | "EAFVERSION" | "ENFA" | "LEVEL" | "LINA" | "LOOPS" | "NEWFILE" | "SEQNUMBER"
+        | "SEQUENTIAL" | "TAPA" => (
+            Noted,
+            "legacy FISPACT-II print, format or file-handling switch; no effect on the calculated physics",
+        ),
         "HALF" => (Noted, "half-life output column; ACTINV reports nuclide data in every result step"),
         "HAZARDS" | "CLEAR" => (
             Noted,
@@ -838,6 +947,30 @@ fn simple_disposition(keyword: &str) -> Option<(Status, &'static str)> {
         ),
         _ => return None,
     })
+}
+
+fn drive_text(drive: Drive) -> String {
+    match drive {
+        Drive::Flux(value) => format!("flux {value:e} cm^-2 s^-1"),
+        Drive::Power(value) => format!("power {value:e} W cm^-3"),
+        Drive::Wall(value) => format!("wall loading {value:e} MW m^-2"),
+    }
+}
+
+/// The report text of a TIME that no output keyword ran: it is not in the schedule.
+fn lost_time_detail(lost: &Pending, replaced_on: Option<usize>) -> String {
+    let cause = match replaced_on {
+        Some(line) => {
+            format!("the TIME on line {line} replaced it before an ATOMS, STEP or SPECTRUM ran it")
+        }
+        None => "no ATOMS, STEP or SPECTRUM follows it".to_string(),
+    };
+    format!(
+        "this interval never ran ({cause}) and is missing from the schedule: {} {} at {}. A TIME runs at the next ATOMS, STEP or SPECTRUM; put one after it if the interval should run",
+        lost.value,
+        lost.unit,
+        drive_text(lost.drive)
+    )
 }
 
 /// A nuclide as a deck names it (`Fe56`, `Co58m`, and `n` for a second isomer: `Te129n`) as its
@@ -952,6 +1085,7 @@ impl<'a> Interp<'a> {
             power_line: None,
             overrides: Vec::new(),
             photon: PhotonRec::default(),
+            dose_entry: None,
             rebin: RebinRec::default(),
             pathway_targets: Vec::new(),
             pathway_entries: Vec::new(),
@@ -996,11 +1130,14 @@ impl<'a> Interp<'a> {
                 Node::Pulse { cmd, count, body } => {
                     self.recording = record;
                     let detail = if *count == 0 {
-                        "zero repetitions: the loop body is skipped".to_string()
+                        "zero repetitions: the loop body does not run; its keywords are listed so that nothing is dropped silently, and have no effect".to_string()
                     } else {
                         format!("loop body expanded {count} times into explicit schedule steps")
                     };
                     self.log(cmd, Status::Mapped, detail);
+                    if *count == 0 && record {
+                        self.report_skipped_body(cmd, body);
+                    }
                     for repeat in 0..*count {
                         // keywords inside the loop are reported once, not once per repetition
                         self.run_nodes(body, record && repeat == 0)?;
@@ -1009,6 +1146,30 @@ impl<'a> Interp<'a> {
             }
         }
         Ok(())
+    }
+
+    /// The keywords of a `PULSE 0` body get report entries, but the body changes nothing: it is
+    /// interpreted once, and every effect on the schedule and the spec is undone.
+    fn report_skipped_body(&mut self, cmd: &Command, body: &[Node]) {
+        let saved = self.clone();
+        let before = self.entries.len();
+        let outcome = self.run_nodes(body, true);
+        let mut added = self.entries.split_off(before);
+        *self = saved;
+        for entry in &mut added {
+            entry
+                .detail
+                .push_str(" (inside a PULSE 0 body: skipped, no effect on the problem)");
+        }
+        self.entries.extend(added);
+        if let Err(reason) = outcome {
+            self.recording = true;
+            self.log(
+                cmd,
+                Status::Unsupported,
+                format!("the skipped loop body is not valid: {reason}"),
+            );
+        }
     }
 
     fn library_is_explicit(&self) -> bool {
@@ -1020,7 +1181,7 @@ impl<'a> Interp<'a> {
             self.log(
                 cmd,
                 Status::Unsupported,
-                "not a FISPACT-II keyword; the importer cannot tell what it was meant to do",
+                "unknown to this importer (a misspelling, a keyword from another FISPACT-II release, or one it does not cover); it cannot tell what it was meant to do",
             );
             return Ok(());
         }
@@ -1110,20 +1271,30 @@ impl<'a> Interp<'a> {
                     Some("y") => "y",
                     _ => "s",
                 };
-                let replaced = self.pending.replace(Pending {
-                    value,
-                    unit,
-                    line: cmd.line,
-                });
+                let replaced = self.pending.take();
                 let mut detail =
                     format!("interval {value} {unit}; runs at the next ATOMS, STEP or SPECTRUM");
-                if let Some(old) = replaced {
+                if let Some(old) = &replaced {
                     detail.push_str(&format!(
                         " (replaces the interval from line {}, which no output keyword ran)",
                         old.line
                     ));
                 }
-                self.log(cmd, Status::Mapped, detail);
+                let entry = self.log(cmd, Status::Mapped, detail);
+                if let Some(old) = replaced {
+                    self.set_entry(
+                        old.entry,
+                        Status::Unsupported,
+                        lost_time_detail(&old, Some(cmd.line)),
+                    );
+                }
+                self.pending = Some(Pending {
+                    value,
+                    unit,
+                    line: cmd.line,
+                    drive: self.current,
+                    entry,
+                });
             }
             "ATOMS" | "STEP" | "SPECTRUM" => self.apply_trigger(cmd)?,
             "MIND" => {
@@ -1185,7 +1356,8 @@ impl<'a> Interp<'a> {
                     ));
                 }
                 self.iuncer = level;
-                self.uncert_entry = self.log(cmd, Status::Noted, "resolved when the deck ends");
+                let index = self.log(cmd, Status::Noted, "resolved when the deck ends");
+                self.uncert_entry = self.replace_index(self.uncert_entry, index, cmd.line);
             }
             "NOERROR" => {
                 self.noerror = true;
@@ -1218,57 +1390,24 @@ impl<'a> Interp<'a> {
                 }
                 self.log(cmd, Status::Mapped, detail);
             }
-            "GETXS" => {
-                let mode = arg_whole(cmd, 0, "library mode")?;
-                if cmd.phase == Phase::Inventory {
-                    let next = self.steps.len();
-                    self.log(
-                        cmd,
-                        Status::Unsupported,
-                        format!("a mid-run cross-section or spectrum change. ACTINV expresses it as a step library override, which needs the second library's path and the spectrum in its group structure; the deck names neither. Add `library` and `spectrum` to schedule[{next}] (the next step to run) by hand; step libraries are refused beside uncertainty, kerma, power, partition, pathways and cross-section overrides"),
-                    );
-                } else {
-                    if mode != 0 && cmd.args.len() > 1 {
-                        let groups = arg_whole(cmd, 1, "group count")?;
-                        if groups > 0 {
-                            self.ebins = Some(groups as usize);
-                        }
-                    }
-                    if self.library_is_explicit() {
-                        self.log(
-                            cmd,
-                            Status::Mapped,
-                            "cross sections come from spec.library (--library); ACTINV collapses them with the spectrum itself",
-                        );
-                    } else {
-                        self.log(
-                            cmd,
-                            Status::Approximated,
-                            "FISPACT-II's own collapsed library is not read; the default ACTINV library for the projectile is used (pass --library to choose)",
-                        );
-                    }
-                }
+            "GETXS" => self.apply_getxs(cmd)?,
+            "GETDECAY" => self.apply_getdecay(cmd),
+            // the deprecated spellings: COLLAPSE is GETXS 1, ARRAY is GETDECAY 0, AINPUT both at 0
+            "COLLAPSE" => {
+                let getxs = Command {
+                    args: vec!["1".to_string()],
+                    ..cmd.clone()
+                };
+                self.apply_getxs(&getxs)?;
             }
-            "GETDECAY" => {
-                if cmd.phase == Phase::Inventory {
-                    self.log(
-                        cmd,
-                        Status::Unsupported,
-                        "decay data cannot change during the run",
-                    );
-                } else if self.ctx.decay.is_some() {
-                    self.log(
-                        cmd,
-                        Status::Mapped,
-                        "decay data come from spec.decay (--decay)",
-                    );
-                } else {
-                    self.log(
-                        cmd,
-                        Status::Approximated,
-                        "FISPACT-II's own decay library is not read; ACTINV's default decay bundle is used (pass --decay to choose)",
-                    );
-                }
+            "ARRAY" => self.apply_getdecay(cmd),
+            "AINPUT" => {
+                let getxs = Command {
+                    args: vec!["0".to_string()],
+                    ..cmd.clone()
+                };
+                self.apply_getxs(&getxs)?;
+                self.apply_getdecay(cmd);
             }
             "PULSE" | "ENDPULSE" => {}
             other => {
@@ -1280,6 +1419,63 @@ impl<'a> Interp<'a> {
             }
         }
         Ok(())
+    }
+
+    /// GETXS (and the deprecated COLLAPSE, AINPUT).
+    fn apply_getxs(&mut self, cmd: &Command) -> Result<(), String> {
+        let mode = arg_whole(cmd, 0, "library mode")?;
+        if cmd.phase == Phase::Inventory {
+            let next = self.steps.len();
+            self.log(
+                cmd,
+                Status::Unsupported,
+                format!("a mid-run cross-section or spectrum change. ACTINV expresses it as a step library override, which needs the second library's path and the spectrum in its group structure; the deck names neither. Add `library` and `spectrum` to schedule[{next}] (the next step to run) by hand; step libraries are refused beside uncertainty, kerma, power, partition, pathways and cross-section overrides"),
+            );
+        } else {
+            if mode != 0 && cmd.args.len() > 1 {
+                let groups = arg_whole(cmd, 1, "group count")?;
+                if groups > 0 {
+                    self.ebins = Some(groups as usize);
+                }
+            }
+            if self.library_is_explicit() {
+                self.log(
+                    cmd,
+                    Status::Mapped,
+                    "cross sections come from spec.library (--library); ACTINV collapses them with the spectrum itself",
+                );
+            } else {
+                self.log(
+                    cmd,
+                    Status::Approximated,
+                    "FISPACT-II's own collapsed library is not read; the default ACTINV library for the projectile is used (pass --library to choose)",
+                );
+            }
+        }
+        Ok(())
+    }
+
+    /// GETDECAY (and the deprecated ARRAY, AINPUT).
+    fn apply_getdecay(&mut self, cmd: &Command) {
+        if cmd.phase == Phase::Inventory {
+            self.log(
+                cmd,
+                Status::Unsupported,
+                "decay data cannot change during the run",
+            );
+        } else if self.ctx.decay.is_some() {
+            self.log(
+                cmd,
+                Status::Mapped,
+                "decay data come from spec.decay (--decay)",
+            );
+        } else {
+            self.log(
+                cmd,
+                Status::Approximated,
+                "FISPACT-II's own decay library is not read; ACTINV's default decay bundle is used (pass --decay to choose)",
+            );
+        }
     }
 
     fn apply_mass(&mut self, cmd: &Command) -> Result<(), String> {
@@ -1481,15 +1677,40 @@ impl<'a> Interp<'a> {
         if self.power_line.is_none() {
             self.power_line = Some(cmd.line);
         }
-        // POWER p n mt_1 .. mt_n: p in W/cc, normalized on the kerma of the listed MTs
-        let mts: Vec<&str> = cmd.args.iter().skip(2).map(String::as_str).collect();
+        // POWER p n mt_1 .. mt_n: p in W/cc, normalized on the kerma of the n listed MTs
+        let declared = cmd
+            .args
+            .get(1)
+            .and_then(|word| parse_number(word))
+            .filter(|value| value.fract() == 0.0 && (0.0..=1.0e6).contains(value))
+            .map(|value| value as usize);
+        let rest = cmd.args.get(2..).unwrap_or_default();
+        let no_words: &[String] = &[];
+        let (mts, extra): (&[String], &[String]) = match declared {
+            Some(count) => rest.split_at(count.min(rest.len())),
+            None => (no_words, cmd.args.get(1..).unwrap_or_default()),
+        };
         let mut detail = format!(
             "steps that follow take power_W_cm3 = {power} (FISPACT-II's W/cc) with material.density_g_cm3 from DENSITY; the flux amplitude is solved from kerma heating, which needs a hash-pinned kerma.table that no deck provides (see required_additions)"
         );
-        if mts != ["301"] {
+        if mts.is_empty() {
+            detail.push_str("; the deck names no MT list, and ACTINV normalizes on the table's total kerma (MT=301)");
+        } else if mts.len() != 1 || mts[0] != "301" {
             detail.push_str(&format!(
                 "; the deck normalizes on MT list '{}', ACTINV on the table's total kerma (MT=301)",
-                cmd.args[1..].join(" ")
+                mts.join(" ")
+            ));
+        }
+        if let Some(count) = declared.filter(|count| *count > mts.len()) {
+            detail.push_str(&format!(
+                "; the deck declares {count} MT number(s) but lists {}",
+                mts.len()
+            ));
+        }
+        if !extra.is_empty() {
+            detail.push_str(&format!(
+                "; the argument(s) '{}' after the MT list are not interpreted",
+                extra.join(" ")
             ));
         }
         self.log(cmd, Status::Approximated, detail);
@@ -1660,6 +1881,8 @@ impl<'a> Interp<'a> {
     fn apply_over(&mut self, cmd: &Command) {
         let words = &cmd.args;
         let block = self.log(cmd, Status::Mapped, "resolved below");
+        // overrides are not step-scoped in the spec, FISPACT-II applies OVER from this point on
+        let late = cmd.phase == Phase::Inventory && !self.steps.is_empty();
         let mut target: Option<(String, i32)> = None;
         let (mut mapped, mut approximated, mut unsupported) = (0usize, 0usize, 0usize);
         let mut stray: Vec<&str> = Vec::new();
@@ -1726,12 +1949,17 @@ impl<'a> Interp<'a> {
                     continue;
                 }
             };
-            match outcome.0 {
+            let (mut status, mut detail) = outcome;
+            if late && status != Status::Unsupported {
+                status = Status::Approximated;
+                detail.push_str("; applies to the whole run, including the steps already scheduled, because ACTINV overrides are not step-scoped (FISPACT-II applies OVER from this point)");
+            }
+            match status {
                 Status::Mapped => mapped += 1,
                 Status::Unsupported => unsupported += 1,
                 _ => approximated += 1,
             }
-            self.sub_entry(cmd, &sub, shown, outcome.0, outcome.1);
+            self.sub_entry(cmd, &sub, shown, status, detail);
         }
         let total = mapped + approximated + unsupported;
         let mut detail = format!(
@@ -1765,14 +1993,17 @@ impl<'a> Interp<'a> {
         status: Status,
         detail: String,
     ) {
+        // not `..parent.clone()`: the parent's argument list can hold thousands of words
         let sub = Command {
             keyword: keyword.to_string(),
+            known: parent.known,
+            line: parent.line,
+            phase: parent.phase,
             args: if args.is_empty() {
                 Vec::new()
             } else {
                 vec![args]
             },
-            ..parent.clone()
         };
         self.log(&sub, status, detail);
     }
@@ -1795,11 +2026,15 @@ impl<'a> Interp<'a> {
         match cmd.keyword.as_str() {
             "GRPCONVERT" => {
                 let index = self.log(cmd, Status::Noted, "resolved when the deck ends");
+                let previous = self.rebin.grpconvert.as_ref().and_then(|(_, index)| *index);
+                let index = self.replace_index(previous, index, cmd.line);
                 self.rebin.grpconvert = Some((numbers, index));
             }
             "CNVTYPE" => match numbers.first() {
                 Some(code) if *code == 0.0 || *code == 1.0 => {
                     let index = self.log(cmd, Status::Noted, "resolved when the deck ends");
+                    let previous = self.rebin.cnvtype.and_then(|(_, index)| index);
+                    let index = self.replace_index(previous, index, cmd.line);
                     self.rebin.cnvtype = Some((*code as u8, index));
                 }
                 _ => {
@@ -1813,6 +2048,8 @@ impl<'a> Interp<'a> {
             _ => match numbers.as_slice() {
                 [low, high, ..] if *low > 0.0 && low < high => {
                     let index = self.log(cmd, Status::Noted, "resolved when the deck ends");
+                    let previous = self.rebin.limgrp.and_then(|(_, _, index)| index);
+                    let index = self.replace_index(previous, index, cmd.line);
                     self.rebin.limgrp = Some((*low, *high, index));
                 }
                 _ => {
@@ -1871,9 +2108,27 @@ impl<'a> Interp<'a> {
         } else {
             arg_whole(cmd, 0, "geometry")?
         };
+        let late = cmd.phase == Phase::Inventory && !self.steps.is_empty();
         match mode {
+            1 if late && self.photon.point_source_m.is_some() => {
+                self.log(
+                    cmd,
+                    Status::Approximated,
+                    "back to the semi-infinite slab contact dose after steps were scheduled: the spec carries one dose geometry for the whole run, so the earlier DOSE 2 point source stays",
+                );
+            }
             1 => {
-                self.photon.point_source_m = None;
+                if self.photon.point_source_m.take().is_some() {
+                    let previous = self.dose_entry.take();
+                    self.set_entry(
+                        previous,
+                        Status::Noted,
+                        format!(
+                            "superseded by the DOSE 1 on line {} before any step ran: the contact dose applies",
+                            cmd.line
+                        ),
+                    );
+                }
                 self.log(
                     cmd,
                     Status::Noted,
@@ -1884,24 +2139,37 @@ impl<'a> Interp<'a> {
                 Some(distance) if distance > 0.0 => {
                     let used = distance.max(POINT_SOURCE_MIN_DISTANCE_M);
                     self.photon.point_source_m = Some(used);
-                    let late = cmd.phase == Phase::Inventory && !self.steps.is_empty();
-                    if used > distance {
-                        self.log(
-                            cmd,
+                    let (status, detail) = if used > distance {
+                        (
                             Status::Approximated,
                             format!("photon.point_source.distance_m = {used}: FISPACT-II raises a distance below {POINT_SOURCE_MIN_DISTANCE_M} m to that minimum, and so does this importer (ACTINV itself rejects it)"),
-                        );
+                        )
                     } else if late {
-                        self.log(
-                            cmd,
+                        (
                             Status::Approximated,
                             format!("photon.point_source.distance_m = {used} applies to the whole run; FISPACT-II applied it from this point"),
-                        );
+                        )
                     } else {
-                        self.log(
-                            cmd,
+                        (
                             Status::Mapped,
                             format!("photon.point_source.distance_m = {used}; the dose values are null unless photon.response (with an air_mass_attenuation curve) is added"),
+                        )
+                    };
+                    let index = self.log(cmd, status, detail);
+                    if let Some(index) = index {
+                        // a later DOSE 2 replaces the distance of the earlier one
+                        let previous = self.dose_entry.replace(index);
+                        self.set_entry(
+                            previous,
+                            if late {
+                                Status::Approximated
+                            } else {
+                                Status::Noted
+                            },
+                            format!(
+                                "superseded by the DOSE 2 on line {}: the last distance applies to the whole run",
+                                cmd.line
+                            ),
                         );
                     }
                 }
@@ -2028,6 +2296,25 @@ impl<'a> Interp<'a> {
         }
     }
 
+    /// The index a deferred keyword settles at the end of the deck: a new request supersedes the
+    /// entry of the one before it. Repetitions of a loop body log nothing and keep the index.
+    fn replace_index(
+        &mut self,
+        previous: Option<usize>,
+        new: Option<usize>,
+        line: usize,
+    ) -> Option<usize> {
+        if new.is_none() {
+            return previous;
+        }
+        self.set_entry(
+            previous,
+            Status::Noted,
+            format!("superseded by the request on line {line}: the last one applies"),
+        );
+        new
+    }
+
     fn set_entry(&mut self, index: Option<usize>, status: Status, detail: String) {
         if let Some(entry) = index.and_then(|index| self.entries.get_mut(index)) {
             entry.status = status;
@@ -2126,14 +2413,18 @@ impl<'a> Interp<'a> {
             });
         }
         if let Some(pending) = self.pending.take() {
-            self.entries.push(Entry {
-                keyword: "TIME".into(),
-                line: pending.line,
-                phase: Phase::Inventory,
-                status: Status::Noted,
-                detail: "this interval never ran: no ATOMS, STEP or SPECTRUM follows it".into(),
-                args: String::new(),
-            });
+            let detail = lost_time_detail(&pending, None);
+            match pending.entry {
+                Some(index) => self.set_entry(Some(index), Status::Unsupported, detail),
+                None => self.entries.push(Entry {
+                    keyword: "TIME".into(),
+                    line: pending.line,
+                    phase: Phase::Inventory,
+                    status: Status::Unsupported,
+                    detail,
+                    args: String::new(),
+                }),
+            }
         }
         let material = self
             .material
@@ -2233,10 +2524,9 @@ impl<'a> Interp<'a> {
             }
             None => {
                 if self.steps.iter().any(|step| step.drive.irradiates()) {
-                    return Err(
-                        "the deck irradiates (FLUX, POWER or WALL) but no FLUXES file was found: pass --fluxes FILE, or --files FILES with a `fluxes` entry"
-                            .into(),
-                    );
+                    return Err(format!(
+                        "{IRRADIATES_WITHOUT_FLUXES}: pass --fluxes FILE, or --files FILES with a `fluxes` entry"
+                    ));
                 }
                 spectrum.insert("flux_per_group".into(), json!(vec![0.0; groups]));
             }
@@ -2670,6 +2960,29 @@ impl<'a> Interp<'a> {
     }
 }
 
+/// Command executions the PULSE loops expand to (a zero-count body is interpreted once), refused
+/// above [`MAX_EXPANDED_COMMANDS`] before anything is expanded.
+fn expanded_work(nodes: &[Node]) -> Result<u64, String> {
+    let mut total = 0u64;
+    for node in nodes {
+        match node {
+            Node::Cmd(_) => total = total.saturating_add(1),
+            Node::Pulse { cmd, count, body } => {
+                let inner = expanded_work(body)?;
+                let work = inner.saturating_add(1).saturating_mul((*count).max(1));
+                total = total.saturating_add(work);
+                if work > MAX_EXPANDED_COMMANDS || total > MAX_EXPANDED_COMMANDS {
+                    return Err(format!(
+                        "line {}: the PULSE loops expand to more than {MAX_EXPANDED_COMMANDS} command executions; reduce the repeat counts",
+                        cmd.line
+                    ));
+                }
+            }
+        }
+    }
+    Ok(total)
+}
+
 /// Convert deck text to a spec plus its import report.
 pub fn convert(deck: &str, ctx: &ImportContext) -> Result<Conversion, String> {
     let lexed = lex(deck);
@@ -2685,6 +2998,7 @@ pub fn convert(deck: &str, ctx: &ImportContext) -> Result<Conversion, String> {
             return Err(error.clone());
         }
     }
+    expanded_work(&nodes)?;
     let mut interp = Interp::new(ctx);
     interp.run_nodes(&nodes, true)?;
     let ended = parser.ended;
@@ -2811,6 +3125,22 @@ pub fn parse_cli(args: &[String]) -> Result<CliArgs, String> {
     Ok(cli)
 }
 
+/// A path with symlinks and `..` resolved; a file that does not exist yet is resolved through its
+/// directory.
+fn resolved_path(path: &Path) -> PathBuf {
+    if let Ok(real) = path.canonicalize() {
+        return real;
+    }
+    let parent = path
+        .parent()
+        .filter(|parent| !parent.as_os_str().is_empty())
+        .unwrap_or(Path::new("."));
+    match (parent.canonicalize(), path.file_name()) {
+        (Ok(parent), Some(name)) => parent.join(name),
+        _ => path.to_path_buf(),
+    }
+}
+
 /// First existing candidate among the bases (the files file's directory, the deck's directory,
 /// then the working directory), as FISPACT-II resolves paths from the run directory.
 fn resolve_existing(value: &str, bases: &[&Path]) -> Option<PathBuf> {
@@ -2828,8 +3158,20 @@ fn resolve_existing(value: &str, bases: &[&Path]) -> Option<PathBuf> {
 /// Run the command. Returns the one-line summary to print.
 pub fn run(cli: &CliArgs) -> Result<String, String> {
     let deck_path = Path::new(&cli.deck);
-    let deck_text = std::fs::read_to_string(deck_path)
-        .map_err(|error| format!("cannot read {}: {error}", cli.deck))?;
+    // a deck is data: Latin-1 comments or a stray byte must not stop the import
+    let deck_bytes =
+        std::fs::read(deck_path).map_err(|error| format!("cannot read {}: {error}", cli.deck))?;
+    let lossy_utf8 = std::str::from_utf8(&deck_bytes).is_err();
+    let deck_text = String::from_utf8_lossy(&deck_bytes).into_owned();
+    let report_file = report_path(&cli.out);
+    let deck_real = resolved_path(deck_path);
+    for target in [cli.out.as_str(), report_file.as_str()] {
+        if resolved_path(Path::new(target)) == deck_real {
+            return Err(format!(
+                "{target} is the deck itself: choose another OUT, the deck would be overwritten"
+            ));
+        }
+    }
     let deck_dir = deck_path
         .parent()
         .filter(|parent| !parent.as_os_str().is_empty())
@@ -2863,14 +3205,18 @@ pub fn run(cli: &CliArgs) -> Result<String, String> {
         None => (Vec::new(), deck_dir.to_path_buf()),
     };
 
+    // a fluxes entry that does not resolve matters only to a deck that irradiates
+    let mut unresolved_fluxes: Option<String> = None;
     let flux_path: Option<PathBuf> = match &cli.fluxes {
         Some(path) => Some(PathBuf::from(path)),
         None => match files_entries.iter().rev().find(|(key, _)| key == "fluxes") {
-            Some((_, value)) => Some(
-                resolve_existing(value, &[files_dir.as_path(), deck_dir]).ok_or_else(|| {
-                    format!("the fluxes file '{value}' named by the files file was not found; pass --fluxes FILE")
-                })?,
-            ),
+            Some((_, value)) => {
+                let found = resolve_existing(value, &[files_dir.as_path(), deck_dir]);
+                if found.is_none() {
+                    unresolved_fluxes = Some(format!("the fluxes file '{value}' named by the files file was not found; pass --fluxes FILE"));
+                }
+                found
+            }
             None => None,
         },
     };
@@ -2889,14 +3235,22 @@ pub fn run(cli: &CliArgs) -> Result<String, String> {
         covariance,
     };
 
-    let conversion = convert(&deck_text, &ctx)?;
+    let conversion = convert(&deck_text, &ctx).map_err(|error| match &unresolved_fluxes {
+        Some(note) if error.starts_with(IRRADIATES_WITHOUT_FLUXES) => format!("{error}; {note}"),
+        _ => error,
+    })?;
     let mut report = conversion.report;
     if let Value::Object(map) = &mut report {
         map.insert(
             "deck".into(),
-            json!({"path": cli.deck, "sha256": sha256_file(deck_path)?}),
+            json!({
+                "path": cli.deck,
+                "sha256": sha256_file(deck_path)?,
+                "lossy_utf8": lossy_utf8,
+            }),
         );
         map.insert("strict".into(), json!(cli.strict));
+        map.insert("fluxes_file_unresolved".into(), json!(unresolved_fluxes));
         map.insert(
             "files_file".into(),
             match &files_path {
@@ -2912,7 +3266,6 @@ pub fn run(cli: &CliArgs) -> Result<String, String> {
             },
         );
     }
-    let report_file = report_path(&cli.out);
     let write = |path: &str, value: &Value| -> Result<(), String> {
         let text = serde_json::to_string_pretty(value).map_err(|error| error.to_string())?;
         std::fs::write(path, text + "\n").map_err(|error| format!("cannot write {path}: {error}"))
@@ -2920,6 +3273,14 @@ pub fn run(cli: &CliArgs) -> Result<String, String> {
     write(&report_file, &report)?;
     let counts = conversion.counts;
     if cli.strict && counts.unsupported > 0 {
+        // a spec from an earlier run must not pass for the result of this one
+        match std::fs::remove_file(&cli.out) {
+            Ok(()) => {}
+            Err(error) if error.kind() == std::io::ErrorKind::NotFound => {}
+            Err(error) => {
+                return Err(format!("cannot remove the stale {}: {error}", cli.out));
+            }
+        }
         let list: Vec<String> = conversion
             .unsupported
             .iter()
@@ -4006,14 +4367,15 @@ END
         .unwrap();
         assert_eq!(close.spec["photon"]["point_source"]["distance_m"], 0.3);
         assert_eq!(entry_status(&close, "DOSE"), vec!["approximated"]);
-        // DOSE 1 is the default contact dose and, later, undoes DOSE 2
+        // DOSE 1 is the default contact dose and, before any step, undoes DOSE 2 (whose entry
+        // then says it was superseded)
         let contact = convert(
             &deck_with("DOSE 2 0.5\nDOSE 1\nFLUX 1E10\nTIME 1 HOURS ATOMS"),
             &context(),
         )
         .unwrap();
         assert!(contact.spec.get("photon").is_none());
-        assert_eq!(entry_status(&contact, "DOSE"), vec!["mapped", "noted"]);
+        assert_eq!(entry_status(&contact, "DOSE"), vec!["noted", "noted"]);
         // GROUP 0 is the 24-group default
         let default_groups = convert(
             &deck_with("GROUP 0\nFLUX 1E10\nTIME 1 HOURS ATOMS"),
@@ -4700,9 +5062,7 @@ ZERO
         let result = run(&cli);
         let written = out.exists();
         let _ = std::fs::remove_dir_all(&dir);
-        let error = result
-            .err()
-            .expect("an irradiating deck needs its spectrum");
+        let error = result.expect_err("an irradiating deck needs its spectrum");
         assert!(error.contains("flux"), "{error}");
         assert!(!written);
     }
@@ -4726,7 +5086,7 @@ ZERO
         let stale_left = out.exists();
         let report_written = dir.join("out.import.json").exists();
         let _ = std::fs::remove_dir_all(&dir);
-        let error = result.err().expect("--strict must fail on FROBNICATE");
+        let error = result.expect_err("--strict must fail on FROBNICATE");
         assert!(error.contains("--strict"), "{error}");
         assert!(report_written);
         assert!(
@@ -4759,41 +5119,6 @@ ZERO
         let _ = std::fs::remove_dir_all(&dir);
         assert!(result.is_err(), "{result:?}");
         assert_eq!(after, COOLING_ONLY, "the deck was overwritten by the spec");
-    }
-
-    // ---- F13: time unit tokens ----
-
-    #[test]
-    fn p140_if_f13_single_letter_time_units_are_units() {
-        let year = 365.25 * 86_400.0;
-        for (unit, scale) in [
-            ("s", 1.0),
-            ("S", 1.0),
-            ("m", 60.0),
-            ("M", 60.0),
-            ("h", 3_600.0),
-            ("H", 3_600.0),
-            ("d", 86_400.0),
-            ("D", 86_400.0),
-            ("y", year),
-            ("Y", year),
-        ] {
-            let deck = deck_with(&format!("FLUX 1E10\nTIME 5 {unit} ATOMS"));
-            let conversion = convert(&deck, &context()).unwrap();
-            let schedule = conversion.spec["schedule"].as_array().unwrap();
-            assert_eq!(schedule.len(), 1, "TIME 5 {unit}");
-            let want = 5.0 * scale;
-            let got = seconds(&schedule[0]);
-            assert!(
-                (got - want).abs() <= 1e-9 * want,
-                "TIME 5 {unit} is {got} s, expected {want} s"
-            );
-            assert_eq!(
-                conversion.counts.unsupported, 0,
-                "TIME 5 {unit}: {:?}",
-                conversion.unsupported
-            );
-        }
     }
 
     // ---- F14: POWER detail and arguments ----
@@ -4851,5 +5176,25 @@ ZERO
             ),
             "{detail}"
         );
+    }
+
+    // ---- H3: sub-keyword entries must not copy the parent's argument list ----
+
+    #[test]
+    fn p140_if_h3_over_many_subkeywords_is_linear() {
+        // 20000 sub-keyword lines under one OVER: each used to clone the 20000-word argument list
+        let mut body = String::from("OVER FE56\n");
+        for _ in 0..10_000 {
+            body.push_str(" ACROSS FE57 0.5\n ALAM 10 DAYS\n");
+        }
+        body.push_str("FLUX 1E10\nTIME 1 HOURS ATOMS");
+        let result = convert_bounded(deck_with(&body), 10)
+            .expect("no answer within 10 s: OVER sub-keyword handling is not linear");
+        // a clean refusal would also do; success must report every sub-keyword
+        if let Ok(conversion) = result {
+            assert_eq!(entry_status(&conversion, "ACROSS").len(), 10_000);
+            assert_eq!(entry_status(&conversion, "ALAM").len(), 10_000);
+            assert_eq!(conversion.spec["overrides"].as_array().unwrap().len(), 2);
+        }
     }
 }

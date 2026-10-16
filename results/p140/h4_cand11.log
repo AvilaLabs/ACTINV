@@ -1,0 +1,110 @@
+PASS support:run-gate-spec                                     examples/fns_fe_5min.json run examples/fns_fe_5min.json into the workdir (the RESULT.j
+PASS support:run-rich-spec                                     target/p140-docs/merged/rich_spec.json run the gate spec with the handbook's summary (with depletio
+PASS json:problems:11                                          docs/guide/problems.md:11-17 validate + validate --files
+PASS json:problems:41                                          docs/guide/problems.md:41-46 validate + validate --files
+PASS json:specification:119                                    docs/guide/specification.md:119-127 validate + validate --files
+PASS json:specification:155                                    docs/guide/specification.md:155-161 validate + validate --files
+PASS json:specification:189                                    docs/guide/specification.md:189-194 validate + validate --files
+PASS json:specification:225                                    docs/guide/specification.md:225-230 validate + validate --files
+PASS json:specification:250                                    docs/guide/specification.md:250-261 validate + validate --files
+PASS json:specification:283                                    docs/guide/specification.md:283-291 validate (no --files: files not shipped)
+PASS json:specification:319                                    docs/guide/specification.md:319-321 validate + validate --files
+INFO json:specification:418                                    docs/guide/specification.md:418-437 parsed only
+INFO json:specification:469                                    docs/guide/specification.md:469-490 parsed only
+PASS json:specification:503                                    docs/guide/specification.md:503-508 validate + validate --files
+PASS json:specification:615                                    docs/guide/specification.md:615-627 validate (no --files: files not shipped)
+PASS json:specification:701                                    docs/guide/specification.md:701-710 validate (no --files: files not shipped)
+PASS json:specification:777                                    docs/guide/specification.md:777-785 study validate
+PASS json:specification:816                                    docs/guide/specification.md:816-818 validate + validate --files
+PASS json:specification:829                                    docs/guide/specification.md:829-835 validate (no --files: files not shipped)
+PASS json:specification:843                                    docs/guide/specification.md:843-854 validate (no --files: files not shipped)
+PASS json:specification:858                                    docs/guide/specification.md:858-867 validate (no --files: files not shipped)
+PASS json:specification:994                                    docs/guide/specification.md:994-999 validate + validate --files
+PASS json:specification:1012                                   docs/guide/specification.md:1012-1021 validate + validate --files
+PASS json:specification:1117                                   docs/guide/specification.md:1117-1121 validate + validate --files
+PASS json:specification:1155                                   docs/guide/specification.md:1155-1159 validate + validate --files
+PASS json:specification:1209                                   docs/guide/specification.md:1209-1213 validate + validate --files
+PASS json:specification:1257                                   docs/guide/specification.md:1257-1266 validate (no --files: files not shipped)
+PASS json:specification:1270                                   docs/guide/specification.md:1270-1280 validate + validate --files
+INFO json:specification:1384                                   docs/guide/specification.md:1384-1398 parsed only
+INFO json:specification:1581                                   docs/guide/specification.md:1581-1617 parsed only
+INFO json:waste:42                                             docs/guide/waste.md:42-66 parsed only
+INFO json:waste:99                                             docs/guide/waste.md:99-136 parsed only
+INFO json:waste:194                                            docs/guide/waste.md:194-228 parsed only
+INFO json:waste:292                                            docs/guide/waste.md:292-314 parsed only
+INFO json:waste:327                                            docs/guide/waste.md:327-353 parsed only
+INFO json:waste:379                                            docs/guide/waste.md:379-388 parsed only
+INFO json:waste:409                                            docs/guide/waste.md:409-426 parsed only
+INFO json:waste:439                                            docs/guide/waste.md:439-446 parsed only
+PASS derived:bundled:us-49cfr173-a1                            docs/guide/specification.md:515 validate + validate --files
+PASS derived:bundled:us-49cfr173-a2                            docs/guide/specification.md:515 validate + validate --files
+PASS derived:bundled:us-49cfr173-exempt-concentration          docs/guide/specification.md:516 validate + validate --files
+PASS derived:bundled:us-49cfr173-exempt-consignment            docs/guide/specification.md:517 validate + validate --files
+PASS derived:bundled:euratom-2013-59-annex-vii-a               docs/guide/specification.md:518 validate + validate --files
+PASS derived:bundled:euratom-2013-59-annex-vii-b-concentration docs/guide/specification.md:519 validate + validate --files
+PASS derived:bundled:euratom-2013-59-annex-vii-b-activity      docs/guide/specification.md:520 validate + validate --files
+PASS derived:summary.depletion                                 docs/guide/specification.md:980 validate + validate --files
+PASS derived:radiological-minimal-table                        docs/guide/specification.md:418-437 validate + validate --files
+PASS cmd:new                                                   docs/guide/cli.md:21 new, then validate / --files / --hashes (quick-start.md and 
+PASS cmd:import-fispact:default                                docs/guide/cli.md:123 import-fispact DECK.i OUT.json (no options), then validate a
+PASS cmd:import-fispact:explicit-inputs                        docs/guide/cli.md:123 import-fispact with --fluxes --files --library --decay, then
+PASS cmd:import-fispact:covariance                             docs/guide/cli.md:123 import-fispact with --covariance (paired with --library), th
+PASS cmd:import-fispact:strict                                 docs/guide/cli.md:123 import-fispact --strict: fails exactly when the (non-strict)
+PASS cmd:import-fispact:strict-unsupported                     docs/guide/cli.md:123 copy of the gate deck with a PROBTABLE line added after FISP
+PASS cmd:walkthrough:fispact-migration:14                      docs/guide/fispact-migration.md:14 run the shown sequence with DECK -> the FNS Fe 5-minute deck
+PASS cmd:report:base:all                                       docs/guide/cli.md:67-68 report on the base result (all); exit 0 iff a requested tabl
+PASS cmd:report:base:tsv-tab1-tab2-step1                       docs/guide/cli.md:67-68 report on the base result (tsv-tab1-tab2-step1); exit 0 iff 
+PASS cmd:report:base:markdown-totals-tab2                      docs/guide/cli.md:67-68 report on the base result (markdown-totals-tab2); exit 0 iff
+PASS cmd:report:base:text-totals                               docs/guide/cli.md:67-68 report on the base result (text-totals); exit 0 iff a reques
+PASS cmd:report:base:timeseries-doc-nuclides                   docs/guide/cli.md:67-68 report on the base result (timeseries-doc-nuclides); exit 0 
+PASS cmd:report:base:timeseries-present-nuclides               docs/guide/cli.md:67-68 report on the base result (timeseries-present-nuclides); exi
+PASS cmd:report:base:dominant-elements                         docs/guide/cli.md:67-68 report on the base result (dominant-elements); exit 0 iff a 
+PASS cmd:report:base:tab3                                      docs/guide/cli.md:67-68 report on the base result (tab3); exit 0 iff a requested tab
+PASS cmd:report:base:tab4                                      docs/guide/cli.md:67-68 report on the base result (tab4); exit 0 iff a requested tab
+PASS cmd:report:base:out-dir                                   docs/guide/cli.md:67-68 report on the base result with --out DIR (one file per table
+PASS cmd:report:rich:all                                       docs/guide/cli.md:67-68 report on the rich result (all); exit 0 iff a requested tabl
+PASS cmd:report:rich:tsv-tab1-tab2-step1                       docs/guide/cli.md:67-68 report on the rich result (tsv-tab1-tab2-step1); exit 0 iff 
+PASS cmd:report:rich:markdown-totals-tab2                      docs/guide/cli.md:67-68 report on the rich result (markdown-totals-tab2); exit 0 iff
+PASS cmd:report:rich:text-totals                               docs/guide/cli.md:67-68 report on the rich result (text-totals); exit 0 iff a reques
+PASS cmd:report:rich:timeseries-doc-nuclides                   docs/guide/cli.md:67-68 report on the rich result (timeseries-doc-nuclides); exit 0 
+PASS cmd:report:rich:timeseries-present-nuclides               docs/guide/cli.md:67-68 report on the rich result (timeseries-present-nuclides); exi
+PASS cmd:report:rich:dominant-elements                         docs/guide/cli.md:67-68 report on the rich result (dominant-elements); exit 0 iff a 
+PASS cmd:report:rich:tab3                                      docs/guide/cli.md:67-68 report on the rich result (tab3); exit 0 iff a requested tab
+PASS cmd:report:rich:tab4                                      docs/guide/cli.md:67-68 report on the rich result (tab4); exit 0 iff a requested tab
+PASS cmd:report:rich:out-dir                                   docs/guide/cli.md:67-68 report on the rich result with --out DIR (one file per table
+PASS cmd:inspect:decay:nuclides                                docs/guide/cli.md:47 inspect decay actinv-data/v1.1.0/decay/endf-b-viii-0_decay.d
+PASS cmd:inspect:decay:isomer-table                            docs/guide/cli.md:47 inspect decay actinv-data/v1.1.0/decay/endf-b-viii-0_decay.d
+PASS cmd:inspect:decay:all-to-file                             docs/guide/cli.md:47 inspect decay actinv-data/v1.1.0/decay/endf-b-viii-0_decay.d
+PASS cmd:inspect:xs:library                                    docs/guide/cli.md:48 inspect xs actinv-data/v1.1.0/activation/tendl-2025-neutron-
+PASS cmd:inspect:xs:target                                     docs/guide/cli.md:48 inspect xs actinv-data/v1.1.0/activation/tendl-2025-neutron-
+PASS cmd:inspect:xs:target-mt                                  docs/guide/cli.md:48 inspect xs actinv-data/v1.1.0/activation/tendl-2025-neutron-
+PASS cmd:inspect:xs:target-mt-table                            docs/guide/cli.md:48 inspect xs actinv-data/v1.1.0/activation/tendl-2025-neutron-
+PASS cmd:inspect:xs:mt-to-file                                 docs/guide/cli.md:48 inspect xs actinv-data/v1.1.0/activation/tendl-2025-neutron-
+PASS cmd:inspect:xs:spectrum-run-spec                          docs/guide/cli.md:48 inspect xs actinv-data/v1.1.0/activation/tendl-2025-neutron-
+PASS cmd:inspect:xs:spectrum-object                            docs/guide/cli.md:48 inspect xs actinv-data/v1.1.0/activation/tendl-2025-neutron-
+PASS cmd:inspect:yields:one-evaluation                         docs/guide/cli.md:49 inspect yields /home/connoravila/nuclear-data/endfb-viii.0-n
+PASS cmd:inspect:yields:parent                                 docs/guide/cli.md:49 inspect yields /home/connoravila/nuclear-data/endfb-viii.0-n
+PASS cmd:inspect:yields:energy                                 docs/guide/cli.md:49 inspect yields /home/connoravila/nuclear-data/endfb-viii.0-n
+PASS cmd:inspect:yields:energy-table                           docs/guide/cli.md:49 inspect yields /home/connoravila/nuclear-data/endfb-viii.0-n
+PASS cmd:inspect:yields:cumulative                             docs/guide/cli.md:49 inspect yields /home/connoravila/nuclear-data/endfb-viii.0-n
+PASS cmd:inspect:library:json                                  docs/guide/cli.md:50 inspect library actinv-data/v1.1.0/activation/tendl-2025-neu
+PASS cmd:inspect:library:table                                 docs/guide/cli.md:50 inspect library actinv-data/v1.1.0/activation/tendl-2025-neu
+PASS cmd:inspect:groups:fispact-66                             docs/guide/cli.md:51 inspect groups fispact-66
+PASS cmd:inspect:groups:fispact-69                             docs/guide/cli.md:51 inspect groups fispact-69
+PASS cmd:inspect:groups:fispact-100                            docs/guide/cli.md:51 inspect groups fispact-100
+PASS cmd:inspect:groups:fispact-172                            docs/guide/cli.md:51 inspect groups fispact-172
+PASS cmd:inspect:groups:fispact-175                            docs/guide/cli.md:51 inspect groups fispact-175
+PASS cmd:inspect:groups:fispact-211                            docs/guide/cli.md:51 inspect groups fispact-211
+PASS cmd:inspect:groups:fispact-315                            docs/guide/cli.md:51 inspect groups fispact-315
+PASS cmd:inspect:groups:fispact-351                            docs/guide/cli.md:51 inspect groups fispact-351
+PASS cmd:inspect:groups:fispact-586                            docs/guide/cli.md:51 inspect groups fispact-586
+PASS cmd:inspect:groups:fispact-616                            docs/guide/cli.md:51 inspect groups fispact-616
+PASS cmd:inspect:groups:fispact-709                            docs/guide/cli.md:51 inspect groups fispact-709
+PASS cmd:inspect:groups:fispact-1102                           docs/guide/cli.md:51 inspect groups fispact-1102
+PASS cmd:inspect:groups:fispact-162                            docs/guide/cli.md:51 inspect groups fispact-162
+PASS cmd:inspect:groups:fispact-709x4                          docs/guide/cli.md:51 inspect groups fispact-709x4
+PASS cmd:inspect:groups:fispact-1102x2                         docs/guide/cli.md:51 inspect groups fispact-1102x2
+PASS cmd:inspect:groups:json-file                              docs/guide/cli.md:51 inspect groups target/p140-docs/docs/custom_groups.json
+PASS cmd:inspect:groups:table                                  docs/guide/cli.md:51 inspect groups fispact-162 --table
+PASS cmd:inspect:groups:to-file                                docs/guide/cli.md:51 inspect groups fispact-709 --out target/p140-docs/inspect/gr
+H4 PASS: 97/97 gating items pass, 0 fail, 0 unclassified; record target/p140/p140_docs_cand11.json

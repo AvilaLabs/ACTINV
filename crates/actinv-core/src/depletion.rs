@@ -7,8 +7,11 @@
 //! activation-library loss rows with one MT, collapsed by `chain::reaction_rates` under the
 //! step's spectrum (shielding, `rate_scale` and every other rate switch included) and multiplied
 //! by the flux multiplier the step ran at; the decay channel is the effective decay constant the
-//! solver used. The channels therefore sum exactly to the nuclide's total removal rate, the
-//! diagonal of the step matrix, and the shares sum to one.
+//! solver used; the removal channel is the first-order `removal` rate the schedule step declares
+//! for the nuclide (not flux-scaled, and exact: it carries no uncertainty). The channels therefore
+//! sum exactly to the nuclide's total removal rate, the diagonal of the step matrix, and the
+//! shares sum to one. A `feed` into a tracked nuclide is a source, not a removal: it appears only
+//! as negative depletion, with no channel.
 //!
 //! With an MF=33 covariance each reaction channel also carries the relative standard uncertainty
 //! of its one-group rate: the covariance block of the loss rows collapsed under the step's flux
@@ -19,14 +22,14 @@ use crate::pathways::reaction_label;
 use crate::run::name_of;
 use actinv_data::covariance::CollapsedCovariance;
 use serde::Serialize;
-use std::collections::{BTreeMap, HashMap};
+use std::collections::{BTreeMap, HashMap, HashSet};
 
 /// One removal channel of one nuclide, in one step.
 #[derive(Debug, Clone, Serialize)]
 pub struct DepletionChannel {
-    /// `decay`, or `MT<n>` for a reaction channel.
+    /// `decay`, `removal` (the schedule's first-order removal), or `MT<n>` for a reaction channel.
     pub channel: String,
-    /// `decay` or `reaction`.
+    /// `decay`, `removal` or `reaction`.
     pub kind: &'static str,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub mt: Option<i32>,
@@ -55,23 +58,25 @@ pub struct DepletionNuclide {
     pub atoms_start_per_g: f64,
     pub atoms_end_per_g: f64,
     /// `atoms_start_per_g - atoms_end_per_g` over this step: net of ingrowth from other
-    /// nuclides, and of a partition or removal applied at the step start.
+    /// nuclides and of a feed (negative when ingrowth exceeds the removal), and of a partition
+    /// applied at the step start.
     pub depleted_atoms_per_g: f64,
     pub depleted_fraction: f64,
     /// `initial_atoms_per_g - atoms_end_per_g`.
     pub cumulative_depleted_atoms_per_g: f64,
     pub cumulative_depleted_fraction: f64,
-    /// Total removal rate per atom (s^-1): decay plus every reaction channel.
+    /// Total removal rate per atom (s^-1): decay, the declared removal and every reaction
+    /// channel.
     pub removal_rate_per_s: f64,
     /// Relative standard uncertainty of `removal_rate_per_s`, including the correlation between
     /// reaction channels; present only when every channel is covered.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub removal_rate_relative_standard_uncertainty: Option<f64>,
     /// Share of `removal_rate_per_s` carried by channels with an uncertainty; present with
-    /// MF=33 covariance.
+    /// MF=33 covariance and a nonzero removal rate.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub uncertainty_covered_share: Option<f64>,
-    /// Descending by rate, ties decay first then by MT.
+    /// Descending by rate, ties decay, then removal, then by MT.
     pub channels: Vec<DepletionChannel>,
 }
 
@@ -113,7 +118,20 @@ pub struct LossCovariance {
 
 impl LossCovariance {
     /// Select the parameters of a joint collapse whose library row `wanted` accepts.
-    pub fn from_collapsed(collapsed: &CollapsedCovariance, wanted: impl Fn(usize) -> bool) -> Self {
+    /// `row_key` gives a library row's (target, MT); a parameter whose self block the collapse
+    /// excluded (zeroed as asymmetric or not positive semidefinite) is left out of the index, so
+    /// it reads as not covered rather than as an uncertainty of zero.
+    pub fn from_collapsed(
+        collapsed: &CollapsedCovariance,
+        wanted: impl Fn(usize) -> bool,
+        row_key: impl Fn(usize) -> (usize, i32),
+    ) -> Self {
+        let excluded: HashSet<(usize, i32)> = collapsed
+            .excluded_blocks
+            .iter()
+            .filter(|block| block.mt == block.mt1)
+            .map(|block| (block.target, block.mt))
+            .collect();
         let total = collapsed.row_indices.len();
         let selected: Vec<usize> = (0..total)
             .filter(|&parameter| wanted(collapsed.row_indices[parameter]))
@@ -129,6 +147,9 @@ impl LossCovariance {
             index: selected
                 .iter()
                 .enumerate()
+                .filter(|&(_, &parameter)| {
+                    !excluded.contains(&row_key(collapsed.row_indices[parameter]))
+                })
                 .map(|(a, &parameter)| {
                     (
                         (
@@ -168,7 +189,8 @@ impl LossCovariance {
                 variance += wa * wb * self.covariance_barn2[a * n + b];
             }
         }
-        Some(variance.max(0.0))
+        // `f64::max` would turn a NaN into 0: an undefined variance is not a zero one.
+        (!variance.is_nan()).then_some(variance.max(0.0))
     }
 }
 
@@ -183,9 +205,23 @@ pub struct DepletionTracker {
     /// rates of the tracked columns.
     losses: Vec<HashMap<usize, Vec<LossRate>>>,
     covariance: Option<LossCovariance>,
+    /// Sum over steps so far of (total removal rate x seconds) per tracked nuclide; the analytic
+    /// model's cumulative depletion is -expm1 of it.
+    exponent: Vec<f64>,
+    /// Declared first-order removal rate (s^-1) per chain column for the next step.
+    removal: HashMap<usize, f64>,
+}
+
+/// Channel kinds, in tie-break order.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
+enum Kind {
+    Decay,
+    Removal,
+    Reaction,
 }
 
 struct Channel {
+    kind: Kind,
     mt: Option<i32>,
     rate: f64,
     /// (library row, rate) of each loss row summed into a reaction channel.
@@ -209,6 +245,7 @@ impl DepletionTracker {
                 .then_with(|| a.key.cmp(&b.key))
         });
         let previous = tracked.iter().map(|t| t.initial_atoms).collect();
+        let exponent = vec![0.0; tracked.len()];
         let losses = slot_rates
             .into_iter()
             .map(|rates| {
@@ -228,7 +265,15 @@ impl DepletionTracker {
             previous,
             losses,
             covariance,
+            exponent,
+            removal: HashMap::new(),
         }
+    }
+
+    /// The first-order removal rates (s^-1, chain column -> rate) the next `step` runs under: the
+    /// diagonal terms the schedule's `removal` adds. They apply to that step only.
+    pub fn set_removal(&mut self, rates: HashMap<usize, f64>) {
+        self.removal = rates;
     }
 
     /// The table of one step run under spectrum slot `slot` at flux multiplier `multiplier` for
@@ -242,7 +287,13 @@ impl DepletionTracker {
         end_atoms: &dyn Fn(usize) -> f64,
     ) -> StepDepletion {
         let mut nuclides = Vec::with_capacity(self.tracked.len());
-        for (tracked, previous) in self.tracked.iter().zip(self.previous.iter_mut()) {
+        let removal = std::mem::take(&mut self.removal);
+        for ((tracked, previous), exponent) in self
+            .tracked
+            .iter()
+            .zip(self.previous.iter_mut())
+            .zip(self.exponent.iter_mut())
+        {
             let mut by_mt: BTreeMap<i32, Vec<(usize, f64)>> = BTreeMap::new();
             if multiplier > 0.0 {
                 let recorded = self
@@ -262,27 +313,46 @@ impl DepletionTracker {
             let mut channels: Vec<Channel> = Vec::with_capacity(by_mt.len() + 1);
             if tracked.lambda > 0.0 {
                 channels.push(Channel {
+                    kind: Kind::Decay,
                     mt: None,
                     rate: tracked.lambda,
                     rows: Vec::new(),
                 });
             }
+            let declared = removal.get(&tracked.column).copied().unwrap_or(0.0);
+            if declared > 0.0 {
+                channels.push(Channel {
+                    kind: Kind::Removal,
+                    mt: None,
+                    rate: declared,
+                    rows: Vec::new(),
+                });
+            }
             for (mt, rows) in by_mt {
                 channels.push(Channel {
+                    kind: Kind::Reaction,
                     mt: Some(mt),
                     rate: rows.iter().map(|row| row.1).sum(),
                     rows,
                 });
             }
-            channels.sort_by(|a, b| b.rate.total_cmp(&a.rate).then_with(|| a.mt.cmp(&b.mt)));
-            let total: f64 = channels.iter().map(|channel| channel.rate).sum();
+            channels.sort_by(|a, b| {
+                b.rate
+                    .total_cmp(&a.rate)
+                    .then_with(|| a.kind.cmp(&b.kind))
+                    .then_with(|| a.mt.cmp(&b.mt))
+            });
+            // `+ 0.0` turns the empty sum's -0.0 into 0.0.
+            let total: f64 = channels.iter().map(|channel| channel.rate).sum::<f64>() + 0.0;
 
             let covariance = self.covariance.as_ref();
             let relative = |channel: &Channel| -> Option<f64> {
                 let covariance = covariance?;
-                match channel.mt {
-                    None => tracked.lambda_relative,
-                    Some(_) => covariance
+                match channel.kind {
+                    Kind::Decay => tracked.lambda_relative,
+                    // a declared schedule rate is exact
+                    Kind::Removal => Some(0.0),
+                    Kind::Reaction => covariance
                         .variance(slot, &channel.rows)
                         .map(|variance| variance.sqrt() / channel.rate),
                 }
@@ -298,7 +368,7 @@ impl DepletionTracker {
                         .sum();
                     let all_rows: Vec<(usize, f64)> = channels
                         .iter()
-                        .filter(|channel| channel.mt.is_some())
+                        .filter(|channel| channel.kind == Kind::Reaction)
                         .flat_map(|channel| channel.rows.iter().copied())
                         .collect();
                     // Reaction channels of one nuclide are correlated through the cross-MT
@@ -308,7 +378,7 @@ impl DepletionTracker {
                             let decay = channels
                                 .iter()
                                 .zip(&uncertainties)
-                                .filter(|(channel, _)| channel.mt.is_none())
+                                .filter(|(channel, _)| channel.kind == Kind::Decay)
                                 .map(|(channel, relative)| {
                                     (channel.rate * relative.unwrap_or(0.0)).powi(2)
                                 })
@@ -320,19 +390,32 @@ impl DepletionTracker {
                     };
                     (joint, Some(covered / total))
                 }
-                Some(_) => (None, Some(0.0)),
-                None => (None, None),
+                // 0 of 0 is undefined: nothing removes the nuclide, so there is no share to cover
+                _ => (None, None),
             };
 
             let start = *previous;
-            let end = if self.analytic {
-                start * (-total * dt_s).exp()
-            } else {
-                end_atoms(tracked.column)
-            };
-            *previous = end;
             let fraction =
                 |depleted: f64, base: f64| if base > 0.0 { depleted / base } else { 0.0 };
+            // Trace mode sits at burnups below 1e-6, where `start - start exp(-x)` keeps almost no
+            // digits: the analytic fractions come from expm1, the evolved state from subtraction.
+            let (end, depleted_fraction, cumulative_fraction) = if self.analytic {
+                *exponent += total * dt_s;
+                let step_fraction = -f64::exp_m1(-(total * dt_s));
+                (
+                    start - start * step_fraction,
+                    if start > 0.0 { step_fraction } else { 0.0 },
+                    -f64::exp_m1(-*exponent),
+                )
+            } else {
+                let end = end_atoms(tracked.column);
+                (
+                    end,
+                    fraction(start - end, start),
+                    fraction(tracked.initial_atoms - end, tracked.initial_atoms),
+                )
+            };
+            *previous = end;
             nuclides.push(DepletionNuclide {
                 nuclide: name_of(tracked.key.0, tracked.key.1),
                 Z: tracked.key.0 / 1000,
@@ -341,13 +424,18 @@ impl DepletionTracker {
                 initial_atoms_per_g: tracked.initial_atoms,
                 atoms_start_per_g: start,
                 atoms_end_per_g: end,
-                depleted_atoms_per_g: start - end,
-                depleted_fraction: fraction(start - end, start),
-                cumulative_depleted_atoms_per_g: tracked.initial_atoms - end,
-                cumulative_depleted_fraction: fraction(
-                    tracked.initial_atoms - end,
-                    tracked.initial_atoms,
-                ),
+                depleted_atoms_per_g: if self.analytic {
+                    start * depleted_fraction
+                } else {
+                    start - end
+                },
+                depleted_fraction,
+                cumulative_depleted_atoms_per_g: if self.analytic {
+                    tracked.initial_atoms * cumulative_fraction
+                } else {
+                    tracked.initial_atoms - end
+                },
+                cumulative_depleted_fraction: cumulative_fraction,
                 removal_rate_per_s: total,
                 removal_rate_relative_standard_uncertainty: total_relative,
                 uncertainty_covered_share: covered_share,
@@ -355,14 +443,15 @@ impl DepletionTracker {
                     .iter()
                     .zip(uncertainties)
                     .map(|(channel, relative)| DepletionChannel {
-                        channel: match channel.mt {
-                            None => "decay".to_owned(),
-                            Some(mt) => format!("MT{mt}"),
+                        channel: match (channel.kind, channel.mt) {
+                            (Kind::Decay, _) => "decay".to_owned(),
+                            (Kind::Removal, _) => "removal".to_owned(),
+                            (Kind::Reaction, mt) => format!("MT{}", mt.unwrap_or_default()),
                         },
-                        kind: if channel.mt.is_none() {
-                            "decay"
-                        } else {
-                            "reaction"
+                        kind: match channel.kind {
+                            Kind::Decay => "decay",
+                            Kind::Removal => "removal",
+                            Kind::Reaction => "reaction",
                         },
                         mt: channel.mt,
                         reaction: channel.mt.map(|mt| reaction_label(mt, self.neutron)),
@@ -582,7 +671,11 @@ mod tests {
         let collapsed = covariance
             .collapse_weighted_multi(library, &[&phi[..]], &[0, 1, 2, 3], &|_, _| 1.0)
             .expect("collapse succeeds");
-        LossCovariance::from_collapsed(&collapsed, |row| library.rows[row].zap == -1)
+        LossCovariance::from_collapsed(
+            &collapsed,
+            |row| library.rows[row].zap == -1,
+            |row| (library.rows[row].target, library.rows[row].mt),
+        )
     }
 
     #[test]

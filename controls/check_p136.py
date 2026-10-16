@@ -508,6 +508,17 @@ def verify_case(outdir, case, study, statistics):
                     dev_want = (sd - lin["first_order_std"]) / se if se and se > 0 else None
                     expect(f"{tag} deviation_in_std_standard_errors", fo["deviation_in_std_standard_errors"],
                            dev_want)
+            elif isinstance(rb.get("local_vs_nonlinear"), dict) \
+                    and rb["local_vs_nonlinear"].get("status") == "not_comparable":
+                # P140 Amendment A repair 5 (PS F3): with channels beyond cross_section_mf33 the first-order MF=33
+                # spread is not comparable with the sampled one, and each entry says so with the enabled channels.
+                counts["consistency_checks"] += 1
+                channels = rb["local_vs_nonlinear"].get("enabled_channels")
+                expect_eq(f"{tag} first_order not comparable", fo,
+                          {"status": "not_comparable", "enabled_channels": channels})
+                if not (isinstance(channels, list) and "cross_section_mf33" in channels and len(channels) > 1):
+                    bad.append({"field": f"{tag} enabled_channels", "recorded": channels,
+                                "expected": "cross_section_mf33 and at least one other channel"})
             else:
                 expect_eq(f"{tag} first_order absent", fo, None)
 

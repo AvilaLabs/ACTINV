@@ -1,0 +1,102 @@
+  FAIL fission fission__U2352E4s: 1 keyword occurrence(s) without an entry: TOL@19
+  FAIL fission fission__U235pulse: 1 keyword occurrence(s) without an entry: TOL@20
+  FAIL synthetic/keyword_abbrev abbrev_ALLDISPEN_00_ALL: 1 keyword occurrence(s) without an entry: ALL@5
+  FAIL synthetic/keyword_abbrev abbrev_ATDISPEN_00_ATD: 2 keyword occurrence(s) without an entry: ATD@5, FE56@5
+  FAIL synthetic/keyword_abbrev abbrev_ATOMS_00_ATO: 1 keyword occurrence(s) without an entry: ATO@9
+  FAIL synthetic/keyword_abbrev abbrev_ATWO_00_ATW: 1 keyword occurrence(s) without an entry: ATW@5
+  FAIL synthetic/keyword_abbrev abbrev_BREMSSTRAHLUNG_00_BRE: 3 keyword occurrence(s) without an entry: BRE@5, SR90@5, Y90@5
+  FAIL synthetic/keyword_abbrev abbrev_CLEAR_00_CLE: 1 keyword occurrence(s) without an entry: CLE@5
+  FAIL synthetic/keyword_abbrev abbrev_CLOBBER_00_CLO: 1 keyword occurrence(s) without an entry: CLO@1
+  FAIL synthetic/keyword_abbrev abbrev_CNVTYPE_00_CNV: 1 keyword occurrence(s) without an entry: CNV@1
+  FAIL synthetic/keyword_abbrev abbrev_COMPRESSXS_00_COM: 1 keyword occurrence(s) without an entry: COM@1
+  FAIL synthetic/keyword_abbrev abbrev_COVARIANCE_00_COV: 1 keyword occurrence(s) without an entry: COV@1
+  ... 500/4635 synthetic decks
+  FAIL synthetic/keyword_abbrev abbrev_CULTAB_00_CUL: 1 keyword occurrence(s) without an entry: CUL@5
+  FAIL synthetic/keyword_abbrev abbrev_CUMFYLD_00_CUM: 1 keyword occurrence(s) without an entry: CUM@5
+  FAIL synthetic/keyword_abbrev abbrev_DENSITY_00_DEN: 1 keyword occurrence(s) without an entry: DEN@5
+  FAIL synthetic/keyword_abbrev abbrev_DEPLETION_00_DEP: 1 keyword occurrence(s) without an entry: DEP@5
+  FAIL synthetic/keyword_abbrev abbrev_DOSE_00_DOS: 1 keyword occurrence(s) without an entry: DOS@5
+  FAIL synthetic/keyword_abbrev abbrev_ERROR_00_ERR: 1 keyword occurrence(s) without an entry: ERR@5
+  FAIL synthetic/keyword_abbrev abbrev_EXTRACTXS_00_EXT: 1 keyword occurrence(s) without an entry: EXT@1
+  ... 1000/4635 synthetic decks
+  FAIL synthetic/keyword_abbrev abbrev_FLUX_00_FLU: 1 keyword occurrence(s) without an entry: FLU@8
+  FAIL synthetic/keyword_abbrev abbrev_FUEL_00_FUE: 2 keyword occurrence(s) without an entry: FUE@3, FE56@4
+  FAIL synthetic/keyword_abbrev abbrev_FULLXS_00_FUL: 1 keyword occurrence(s) without an entry: FUL@1
+  FAIL synthetic/keyword_abbrev abbrev_GENERIC_00_GEN: 1 keyword occurrence(s) without an entry: GEN@5
+  FAIL synthetic/keyword_abbrev abbrev_GRAPH_00_GRA: 1 keyword occurrence(s) without an entry: GRA@5
+  FAIL synthetic/keyword_abbrev abbrev_GROUP_00_GRO: 1 keyword occurrence(s) without an entry: GRO@5
+  FAIL synthetic/keyword_abbrev abbrev_GRPCONVERT_00_GRP: 1 keyword occurrence(s) without an entry: GRP@1
+  FAIL synthetic/keyword_abbrev abbrev_HALF_00_HAL: 1 keyword occurrence(s) without an entry: HAL@5
+  ... 1500/4635 synthetic decks
+  FAIL synthetic/keyword_abbrev abbrev_HAZARDS_00_HAZ: 1 keyword occurrence(s) without an entry: HAZ@5
+  FAIL synthetic/keyword_abbrev abbrev_INDEXPATH_00_IND: 1 keyword occurrence(s) without an entry: IND@1
+  FAIL synthetic/keyword_abbrev abbrev_IRON_00_IRO: 1 keyword occurrence(s) without an entry: IRO@5
+  FAIL synthetic/keyword_abbrev abbrev_JSON_00_JSO: 1 keyword occurrence(s) without an entry: JSO@1
+  FAIL synthetic/keyword_abbrev abbrev_LIBVERSION_00_LIB: 1 keyword occurrence(s) without an entry: LIB@1
+  FAIL synthetic/keyword_abbrev abbrev_LIMGRP_00_LIM: 1 keyword occurrence(s) without an entry: LIM@1
+  FAIL synthetic/keyword_abbrev abbrev_LOGLEVEL_00_LOG: 1 keyword occurrence(s) without an entry: LOG@1
+  FAIL synthetic/keyword_abbrev abbrev_MASS_00_MAS: 2 keyword occurrence(s) without an entry: MAS@3, FE@4
+  ... 2000/4635 synthetic decks
+  FAIL synthetic/keyword_abbrev abbrev_MONITOR_00_MON: 1 keyword occurrence(s) without an entry: MON@1
+  FAIL synthetic/keyword_abbrev abbrev_NOCOMP_00_NOC: 1 keyword occurrence(s) without an entry: NOC@5
+  FAIL synthetic/keyword_abbrev abbrev_NOERROR_00_NOE: 1 keyword occurrence(s) without an entry: NOE@5
+  FAIL synthetic/keyword_abbrev abbrev_NOFISS_00_NOF: 1 keyword occurrence(s) without an entry: NOF@5
+  ... 2500/4635 synthetic decks
+  FAIL synthetic/keyword_abbrev abbrev_NOXRAY_00_NOX: 1 keyword occurrence(s) without an entry: NOX@5
+  FAIL synthetic/keyword_abbrev abbrev_NUCGRAPH_00_NUC: 1 keyword occurrence(s) without an entry: NUC@5
+  FAIL synthetic/keyword_abbrev abbrev_OVER_00_OVE: 4 keyword occurrence(s) without an entry: OVE@5, FE56@5, FE57@5, DAYS@5
+  FAIL synthetic/keyword_abbrev abbrev_PARTITION_00_PAR: 2 keyword occurrence(s) without an entry: PAR@8, FE@8
+  FAIL synthetic/keyword_abbrev abbrev_POWER_00_POW: 1 keyword occurrence(s) without an entry: POW@8
+  FAIL synthetic/keyword_abbrev abbrev_PRINTLIB_00_PRI: 1 keyword occurrence(s) without an entry: PRI@1
+  FAIL synthetic/keyword_abbrev abbrev_PULSE_00_PUL: exit 0, but the importer's parser rules refuse the deck: line 11: ENDPULSE without a matching PULSE
+  ... 3000/4635 synthetic decks
+  FAIL synthetic/keyword_abbrev abbrev_RESULT_00_RES: 1 keyword occurrence(s) without an entry: RES@5
+  FAIL synthetic/keyword_abbrev abbrev_ROUTES_00_ROU: 2 keyword occurrence(s) without an entry: ROU@5, MN54@5
+  FAIL synthetic/keyword_abbrev abbrev_SAVELINES_00_SAV: 1 keyword occurrence(s) without an entry: SAV@1
+  FAIL synthetic/keyword_abbrev abbrev_SENSITIVITY_00_SEN: 1 keyword occurrence(s) without an entry: SEN@5
+  FAIL synthetic/keyword_abbrev abbrev_SORTDOMINANT_00_SOR: 1 keyword occurrence(s) without an entry: SOR@5
+  FAIL synthetic/keyword_abbrev abbrev_SPLIT_00_SPL: 1 keyword occurrence(s) without an entry: SPL@5
+  ... 3500/4635 synthetic decks
+  FAIL synthetic/keyword_abbrev abbrev_STEP_00_STE: 1 keyword occurrence(s) without an entry: STE@9
+  FAIL synthetic/keyword_abbrev abbrev_TIME_00_TIM: 2 keyword occurrence(s) without an entry: TIM@8, HOURS@8
+  FAIL synthetic/keyword_abbrev abbrev_TOLERANCE_00_TOL: 1 keyword occurrence(s) without an entry: TOL@1
+  ... 4000/4635 synthetic decks
+  FAIL synthetic/keyword_abbrev abbrev_WALL_00_WAL: 1 keyword occurrence(s) without an entry: WAL@8
+  FAIL synthetic/keyword_abbrev abbrev_XSTHRESHOLD_00_XST: 1 keyword occurrence(s) without an entry: XST@1
+  FAIL synthetic/keyword_abbrev abbrev_ZERO_00_ZER: 1 keyword occurrence(s) without an entry: ZER@9
+  FAIL synthetic/keyword_abbrev ambiguous_06_NOF: 1 keyword occurrence(s) without an entry: NOF@5
+  FAIL synthetic/keyword_abbrev ambiguous_08_NOC: 1 keyword occurrence(s) without an entry: NOC@5
+  FAIL synthetic/keyword_abbrev ambiguous_10_NOE: 1 keyword occurrence(s) without an entry: NOE@5
+  FAIL synthetic/keyword_abbrev ambiguous_23_GRP: 1 keyword occurrence(s) without an entry: GRP@5
+  FAIL synthetic/keyword_abbrev ambiguous_40_ZER: 1 keyword occurrence(s) without an entry: ZER@5
+  FAIL synthetic/keyword_abbrev ambiguous_50_TOL: 1 keyword occurrence(s) without an entry: TOL@5
+  FAIL synthetic/keyword_abbrev ambiguous_57_HAZ: 1 keyword occurrence(s) without an entry: HAZ@5
+  FAIL synthetic/keyword_abbrev ambiguous_59_COV: 1 keyword occurrence(s) without an entry: COV@5
+  FAIL synthetic/keyword_abbrev ambiguous_60_CLE: 1 keyword occurrence(s) without an entry: CLE@5
+  FAIL synthetic/keyword_abbrev ambiguous_62_CLO: 1 keyword occurrence(s) without an entry: CLO@5
+  FAIL synthetic/keyword_abbrev ambiguous_67_TIM: FLUX at line 6: phase ['inventory'] but the deck puts it in initial; 1 keyword occurrence(s) without an entry: TIM@5
+  FAIL synthetic/keyword_abbrev ambiguous_69_STE: 1 keyword occurrence(s) without an entry: STE@5
+  FAIL synthetic/keyword_abbrev ambiguous_71_ATO: 1 keyword occurrence(s) without an entry: ATO@5
+  FAIL synthetic/keyword_abbrev ambiguous_72_ATW: 1 keyword occurrence(s) without an entry: ATW@5
+  FAIL synthetic/keyword_abbrev ambiguous_79_POW: 1 keyword occurrence(s) without an entry: POW@5
+  FAIL synthetic/keyword_abbrev ambiguous_82_RES: 1 keyword occurrence(s) without an entry: RES@5
+  ... 4500/4635 synthetic decks
+  FAIL synthetic/combo fuel_fission: 1 keyword occurrence(s) without an entry: TOL@18
+  FAIL synthetic/lexical lone_cr: 8 keyword occurrence(s) without an entry: FISPACT@1, *@1, T@1, MASS@1, FLUX@1, TIME@1, ATOMS@1, END@1
+  FAIL synthetic/lexical bom_first: 1 keyword occurrence(s) without an entry: ﻿CLOBBER@1
+  FAIL synthetic/lexical invalid_utf8_latin1: exit 0 on a deck that is not valid UTF-8
+  FAIL synthetic/lexical invalid_utf8_ff: exit 0 on a deck that is not valid UTF-8
+  FAIL synthetic/lexical invalid_utf8_truncated: exit 0 on a deck that is not valid UTF-8
+P140 H3 fns: 132 decks, expected 132; 132 imported, 0 refused with an error, 0 FAILED
+P140 H3 fission: 2 decks, expected 2; 0 imported, 0 refused with an error, 2 FAILED
+P140 H3 pypact: 6 decks, expected 6 (12 runs); 6 imported, 6 refused with an error, 0 FAILED
+P140 H3 synthetic/keyword_valid: 94 decks; 94 imported, 0 refused with an error, 0 FAILED
+P140 H3 synthetic/keyword_malformed: 3384 decks; 3111 imported, 273 refused with an error, 0 FAILED
+P140 H3 synthetic/keyword_wrong_phase: 188 decks; 184 imported, 4 refused with an error, 0 FAILED
+P140 H3 synthetic/keyword_abbrev: 802 decks; 724 imported, 6 refused with an error, 72 FAILED
+P140 H3 synthetic/combo: 68 decks; 41 imported, 26 refused with an error, 1 FAILED
+P140 H3 synthetic/lexical: 58 decks; 40 imported, 13 refused with an error, 5 FAILED
+P140 H3 synthetic/cli: 27 decks; 7 imported, 20 refused with an error, 0 FAILED
+P140 H3 synthetic/stress: 14 decks; 6 imported, 8 refused with an error, 0 FAILED
+P140 H3 pypact: Apache-2.0, commit e28091c1; panics 0; strict checked on 4425 imported decks (2892 refused as expected)
+P140 H3 verdict: P140-H3-FAIL (/home/connoravila/Documents/actinv/target/p140/p140_import_cand11.json)

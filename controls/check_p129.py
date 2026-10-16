@@ -211,7 +211,7 @@ def parse_mf2_file(path):
 
 def resonance_lines(parsed, za):
     """Usable resolved resonances in file order: dicts with E, J, SPI, AWRI, GN, GG and Gamma. A resonance is
-    unusable (skipped, as the solver does) when E <= 0 or GN <= 0 or GG <= 0. Gamma is the listed total GT, raised
+    unusable (skipped, as the solver does) when E <= 0 or GN <= 0 or GG <= 0 or E lies outside its range's [EL, EH]. Gamma is the listed total GT, raised
     to the component sum when rounding leaves it below it (LRF=1/2), or GN+GG+|GFA|+|GFB| (Reich-Moore)."""
     isotopes = [iso for iso in parsed["isotopes"] if iso["zai"] == za]
     if not isotopes and len(parsed["isotopes"]) == 1:
@@ -230,6 +230,10 @@ def resonance_lines(parsed, za):
                     else:
                         gamma = r["GN"] + r["GG"] + abs(r["GFA"]) + abs(r["GFB"])
                     if r["E"] <= 0.0 or r["GN"] <= 0.0 or r["GG"] <= 0.0 or group["awri"] <= 0.0:
+                        continue
+                    # P140 Amendment A repair 4 (SG-01): a level outside its range's [EL, EH] shapes the in-range
+                    # cross section but is not a resolved peak, so it is not a shielding line.
+                    if not rng["el"] <= r["E"] <= rng["eh"]:
                         continue
                     out.append({"E": r["E"], "J": r["J"], "SPI": rng["spi"], "AWRI": group["awri"],
                                 "GN": r["GN"], "GG": r["GG"], "GAMMA": gamma})

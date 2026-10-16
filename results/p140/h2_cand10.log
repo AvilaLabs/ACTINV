@@ -1,0 +1,152 @@
+FAIL       fns_fe_5min.example.baseline.auto  3.5s failed: reference_identical
+FAIL       fe.baseline.auto  3.1s failed: reference_identical
+PASS       fe.baseline.trace  2.0s
+PASS       fe.baseline.coupled  1.7s
+PASS       fe.summary_depletion.trace  2.0s
+PASS       fe.summary_depletion.coupled  1.8s
+PASS       fe.summary_filtered.trace  2.0s
+PASS       fe.summary_filtered.coupled  1.7s
+PASS       fe.photon.trace  2.0s
+PASS       fe.photon.coupled  1.7s
+PASS       fe.power.trace  1.7s
+PASS       fe.power.coupled  1.6s
+PASS       fe.wall_loading.trace  2.0s
+PASS       fe.wall_loading.coupled  1.7s
+REFUSED-OK fe.partition.trace  0.0s names options.mode,partition,trace
+PASS       fe.partition.coupled  1.7s
+PASS       fe.overrides.trace  2.0s
+PASS       fe.overrides.coupled  1.7s
+PASS       fe.pathways.trace  2.0s
+PASS       fe.pathways.coupled  1.7s
+PASS       fe.geometry.trace  3.5s
+PASS       fe.geometry.coupled  2.9s
+PASS       fe.uncertainty.trace  10.2s
+PASS       fe.uncertainty.coupled  9.9s
+PASS       fe.fission_count.trace  1.9s
+PASS       fe.fission_count.coupled  1.6s
+PASS       fe.gas.trace  2.0s
+PASS       fe.gas.coupled  1.6s
+PASS       fe.all_A.trace  3.5s
+PASS       fe.all_A.coupled  3.1s
+REFUSED-OK fe.all_B.trace  0.0s names options.mode,partition,trace
+PASS       fe.all_B.coupled  2.9s
+PASS       fe.all_C.trace  10.3s
+PASS       fe.all_C.coupled  10.2s
+FAIL       w.baseline.auto  5.4s failed: reference_identical
+PASS       w.baseline.trace  3.8s
+PASS       w.baseline.coupled  2.0s
+PASS       w.summary_depletion.trace  3.8s
+PASS       w.summary_depletion.coupled  2.0s
+PASS       w.summary_filtered.trace  3.7s
+PASS       w.summary_filtered.coupled  2.0s
+PASS       w.photon.trace  3.6s
+PASS       w.photon.coupled  2.0s
+PASS       w.power.trace  2.5s
+PASS       w.power.coupled  1.6s
+PASS       w.wall_loading.trace  3.7s
+PASS       w.wall_loading.coupled  2.0s
+REFUSED-OK w.partition.trace  0.0s names options.mode,partition,trace
+PASS       w.partition.coupled  2.0s
+PASS       w.overrides.trace  3.7s
+PASS       w.overrides.coupled  2.1s
+PASS       w.pathways.trace  4.0s
+PASS       w.pathways.coupled  2.2s
+PASS       w.geometry.trace  5.7s
+PASS       w.geometry.coupled  3.9s
+PASS       w.uncertainty.trace  19.2s
+PASS       w.uncertainty.coupled  17.9s
+PASS       w.fission_count.trace  3.5s
+PASS       w.fission_count.coupled  1.9s
+PASS       w.gas.trace  4.0s
+PASS       w.gas.coupled  1.9s
+PASS       w.all_A.trace  5.5s
+PASS       w.all_A.coupled  3.5s
+REFUSED-OK w.all_B.trace  0.0s names options.mode,partition,trace
+PASS       w.all_B.coupled  3.0s
+PASS       w.all_C.trace  18.9s
+PASS       w.all_C.coupled  18.9s
+FAIL       ss316.baseline.auto  32.5s failed: reference_identical
+PASS       ss316.baseline.trace  22.6s
+PASS       ss316.baseline.coupled  3.1s
+PASS       ss316.summary_depletion.trace  22.0s
+PASS       ss316.summary_depletion.coupled  3.2s
+PASS       ss316.summary_filtered.trace  22.5s
+PASS       ss316.summary_filtered.coupled  3.2s
+PASS       ss316.photon.trace  22.4s
+PASS       ss316.photon.coupled  3.2s
+PASS       ss316.power.trace  11.6s
+PASS       ss316.power.coupled  2.1s
+PASS       ss316.wall_loading.trace  22.1s
+PASS       ss316.wall_loading.coupled  3.0s
+REFUSED-OK ss316.partition.trace  0.0s names options.mode,partition,trace
+PASS       ss316.partition.coupled  3.3s
+PASS       ss316.overrides.trace  22.6s
+PASS       ss316.overrides.coupled  3.1s
+PASS       ss316.pathways.trace  22.2s
+PASS       ss316.pathways.coupled  3.1s
+PASS       ss316.geometry.trace  23.8s
+PASS       ss316.geometry.coupled  4.4s
+PASS       ss316.uncertainty.trace  149.8s
+PASS       ss316.uncertainty.coupled  132.1s
+PASS       ss316.fission_count.trace  21.7s
+PASS       ss316.fission_count.coupled  3.0s
+PASS       ss316.gas.trace  27.7s
+PASS       ss316.gas.coupled  3.0s
+PASS       ss316.all_A.trace  29.4s
+PASS       ss316.all_A.coupled  4.5s
+REFUSED-OK ss316.all_B.trace  0.0s names options.mode,partition,trace
+PASS       ss316.all_B.coupled  3.3s
+PASS       ss316.all_C.trace  134.7s
+PASS       ss316.all_C.coupled  122.7s
+FAIL       u.baseline.auto  4.1s failed: reference_identical
+PASS       u.baseline.trace  2.9s
+PASS       u.baseline.coupled  2.4s
+PASS       u.summary_depletion.trace  2.9s
+PASS       u.summary_depletion.coupled  2.4s
+PASS       u.summary_filtered.trace  2.9s
+PASS       u.summary_filtered.coupled  2.5s
+PASS       u.photon.trace  2.8s
+PASS       u.photon.coupled  2.3s
+PASS       u.power.trace  1.8s
+PASS       u.power.coupled  1.7s
+PASS       u.wall_loading.trace  2.7s
+PASS       u.wall_loading.coupled  2.3s
+REFUSED-OK u.partition.trace  0.0s names options.mode,partition,trace
+PASS       u.partition.coupled  2.3s
+PASS       u.overrides.trace  2.7s
+PASS       u.overrides.coupled  2.3s
+PASS       u.pathways.trace  2.8s
+PASS       u.pathways.coupled  2.3s
+PASS       u.geometry.trace  4.0s
+PASS       u.geometry.coupled  3.5s
+PASS       u.uncertainty.trace  12.0s
+PASS       u.uncertainty.coupled  11.8s
+PASS       u.fission_count.trace  2.7s
+PASS       u.fission_count.coupled  2.3s
+PASS       u.gas.trace  2.8s
+PASS       u.gas.coupled  2.3s
+PASS       u.all_A.trace  4.4s
+PASS       u.all_A.coupled  3.7s
+REFUSED-OK u.all_B.trace  0.0s names options.mode,partition,trace
+PASS       u.all_B.coupled  3.0s
+PASS       u.all_C.trace  12.3s
+PASS       u.all_C.coupled  12.2s
+PASS       fe_long.baseline.trace  4.2s
+PASS       fe_long.baseline.coupled  2.4s
+PASS       fe_long.summary_depletion.trace  4.3s
+PASS       fe_long.summary_depletion.coupled  2.4s
+PASS       ss316_long.baseline.trace  125.7s
+PASS       ss316_long.baseline.coupled  7.5s
+PASS       ss316_long.summary_depletion.trace  129.6s
+PASS       ss316_long.summary_depletion.coupled  8.0s
+REFUSED-OK fe.refuse_power_pathways.coupled  0.0s names pathways,power
+REFUSED-OK fe.refuse_power_uncertainty.coupled  0.0s names power,uncertainty
+REFUSED-OK fe.refuse_power_fission.coupled  0.0s names fission,power
+REFUSED-OK fe.refuse_power_screen.coupled  0.0s names power,screen
+REFUSED-OK fe.refuse_partition_pathways.coupled  0.0s names partition,pathways
+REFUSED-OK fe.refuse_scale_override_uncertainty.coupled  0.0s names override,uncertainty
+REFUSED-OK fe.refuse_abs_override_uncertainty.coupled  0.0s names override,uncertainty
+REFUSED-OK fe.refuse_abs_override_geometry.coupled  1.7s names override,self_shielding
+REFUSED-OK fe.refuse_gas_uncertainty.coupled  0.0s names gas,uncertainty
+REFUSED-OK fe.refuse_wall_power_same_step.coupled  0.0s names power,wall_loading
+P140 H2: FAIL - 151 of 151 cases: 128 pass, 18 refused-ok, 5 fail, 0 skipped; 0 documented refusals not raised; 0 cases with informational flags (/home/connoravila/Documents/actinv/target/p140/p140_matrix_cand10.json)

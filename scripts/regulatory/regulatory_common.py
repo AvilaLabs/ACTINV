@@ -58,6 +58,55 @@ def parse_nuclide(raw: str) -> tuple[str, int, int, int] | None:
     return canonical, Z_OF[symbol], mass_number, state
 
 
+_BRANCHING = re.compile(r"\s*\(\d+(?:\.\d+)?\)\s*$")
+
+
+def progeny_keys(pieces: list[str]) -> tuple[list[str], list[str]]:
+    """ACTINV keys of progeny written as 'Ba-137 m' or 'Tl-208 (0.36)'.
+
+    Returns (keys without repeats, source spellings that are not a single nuclide such as 'Th-nat').
+    """
+    keys: list[str] = []
+    skipped: list[str] = []
+    for piece in pieces:
+        parsed = parse_nuclide(_BRANCHING.sub("", piece))
+        if parsed is None:
+            skipped.append(piece)
+        elif parsed[0] not in keys:
+            keys.append(parsed[0])
+    return keys, skipped
+
+
+def covered_by_parent(parents: dict[str, list[str]], available: set[str]) -> dict[str, list[str]]:
+    """Invert parent -> progeny lists into progeny -> sorted parents, for parents the response can evaluate.
+
+    `available` is the set of nuclides the response gives a coefficient or marks unlimited; a progeny
+    claimed by a parent the response cannot see would be a claim nothing supports.
+    """
+    out: dict[str, set[str]] = {}
+    for parent, progeny in parents.items():
+        if parent not in available:
+            continue
+        for key in progeny:
+            if key != parent:
+                out.setdefault(key, set()).add(parent)
+    return {key: sorted(out[key]) for key in sorted(out)}
+
+
+def check_acyclic(covered: dict[str, list[str]], where: str) -> None:
+    """A progeny covered by a parent that is itself covered by that progeny would cancel both."""
+    for progeny, parents in covered.items():
+        seen: set[str] = set()
+        stack = list(parents)
+        while stack:
+            node = stack.pop()
+            if node == progeny:
+                raise ValueError(f"{where}: covered_by_parent cycle through {progeny}")
+            if node not in seen:
+                seen.add(node)
+                stack.extend(covered.get(node, []))
+
+
 def za_key(z: int, a: int, state: int) -> int:
     """FISPACT-style identifier: ZZAAAS (S = isomer state)."""
     return z * 10000 + a * 10 + state

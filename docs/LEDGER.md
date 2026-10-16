@@ -38,6 +38,9 @@ can distinguish “checked and empty” from “not evaluated.” Rates are per 
 - `decay_daughters_missing`, `spontaneous_fission_branches_to_leakage` — missing/unsupported decay daughters routed to
   leakage. A branch whose daughter resolves to the parent itself (an isomeric transition from the ground state to an
   isomer the library lacks) is counted here too.
+- `unmodelled_decay_branches_to_leakage` — present only when nonzero; decay branches with an elementary mode the chain
+  does not model, routed to leakage. A fission after another transition (RTYP 2.6, β-delayed fission) is counted here, not as spontaneous
+  fission of the parent.
 - `decay_branching_sums_off_unity` — present only when a radioactive state's positive branching ratios sum further than
   1e-5 from 1; maps the state to that sum. A shortfall is routed to leakage and an excess is scaled away, so decay
   neither destroys nor creates atoms. The default ENDF/B-VIII.0 data never triggers it; JEFF-3.3 and UKDD-2020 used

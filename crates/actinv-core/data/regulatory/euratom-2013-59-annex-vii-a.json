@@ -18,7 +18,7 @@
   {
    "id": "annex-vii-table-a-part1",
    "kind": "clearance_index",
-   "basis": "Activity concentration for exemption or clearance of solid material, kBq/kg converted to Bq/kg (x1000). Parent rows marked (1) include listed short-lived progeny; the rows sidecar lists them.",
+   "basis": "Activity concentration for exemption or clearance of solid material, kBq/kg converted to Bq/kg (x1000). Parent rows marked (1) include listed short-lived progeny, which covered_by_parent lists (zero contribution while the parent is present).",
    "coefficients": {
     "H3": 100000.0,
     "Be7": 10000.0,
@@ -277,6 +277,137 @@
     "Es254m1": 10000.0,
     "Fm254": 10000000.0,
     "Fm255": 100000.0
+   },
+   "covered_by_parent": {
+    "Ag109m1": [
+     "Cd109",
+     "Pd109"
+    ],
+    "Ag110": [
+     "Ag110m1"
+    ],
+    "Ba137m1": [
+     "Cs137"
+    ],
+    "Bi212": [
+     "U232"
+    ],
+    "Bk250": [
+     "Es254"
+    ],
+    "Fm254": [
+     "Es254m1"
+    ],
+    "I132": [
+     "Te132"
+    ],
+    "In113m1": [
+     "Sn113"
+    ],
+    "In114": [
+     "In114m1"
+    ],
+    "In115m1": [
+     "Cd115",
+     "Cd115m1"
+    ],
+    "Mn52m1": [
+     "Fe52"
+    ],
+    "Nb95": [
+     "Zr95"
+    ],
+    "Nb97": [
+     "Zr97"
+    ],
+    "Nb97m1": [
+     "Nb97",
+     "Zr97"
+    ],
+    "Np238": [
+     "Am242m1"
+    ],
+    "Np239": [
+     "Am243"
+    ],
+    "Np240": [
+     "Pu244",
+     "U240"
+    ],
+    "Np240m1": [
+     "Pu244",
+     "U240"
+    ],
+    "Pa233": [
+     "Np237"
+    ],
+    "Pb212": [
+     "U232"
+    ],
+    "Po216": [
+     "U232"
+    ],
+    "Pr144": [
+     "Ce144"
+    ],
+    "Pr144m1": [
+     "Ce144"
+    ],
+    "Pu243": [
+     "Cm247"
+    ],
+    "Ra224": [
+     "U232"
+    ],
+    "Rh103m1": [
+     "Pd103",
+     "Ru103"
+    ],
+    "Rh105m1": [
+     "Ru105"
+    ],
+    "Rh106": [
+     "Ru106"
+    ],
+    "Rn220": [
+     "U232"
+    ],
+    "Tc101": [
+     "Mo101"
+    ],
+    "Tc99m1": [
+     "Mo99"
+    ],
+    "Te125m1": [
+     "Sb125"
+    ],
+    "Te127": [
+     "Te127m1"
+    ],
+    "Te129": [
+     "Te129m1"
+    ],
+    "Te131": [
+     "Te131m1"
+    ],
+    "Th228": [
+     "U232"
+    ],
+    "Tl208": [
+     "U232"
+    ],
+    "U240": [
+     "Pu244"
+    ],
+    "Y90": [
+     "Sr90"
+    ],
+    "Y91m1": [
+     "Sr91"
+    ],
+    "Zn69": [
+     "Zn69m1"
+    ]
    }
   }
  ]

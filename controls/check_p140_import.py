@@ -84,8 +84,12 @@ CATEGORIES = ("keyword_valid", "keyword_malformed", "keyword_wrong_phase", "keyw
 # (name, arity, own phase, plausible arguments). The arities are those of KEYWORDS in fispact_import.rs
 # (--self-check compares the names and arities with the source); the phase is where a deck normally has the keyword.
 
+# Entries AINPUT, ARRAY, COLLAPSE, CONV, DOMINANT, EAFVERSION, ENFA, LEVEL, LINA, LOOPS, MCSEED, NEWFILE, NOHEAD,
+# NOHEADER, SEQNUMBER, SEQUENTIAL and TAPA were added for P140 Amendment A repair 6 (F1).
 KEYWORD_TABLE = [
+    ("AINPUT", "Zero", "library", ""),
     ("ALLDISPEN", "Numbers", "initial", "1"),
+    ("ARRAY", "Zero", "library", ""),
     ("ATDISPEN", "Words", "initial", "FE56 40.0"),
     ("ATOMS", "Zero", "inventory", ""),
     ("ATWO", "Zero", "initial", ""),
@@ -93,15 +97,20 @@ KEYWORD_TABLE = [
     ("CLEAR", "Zero", "initial", ""),
     ("CLOBBER", "Zero", "library", ""),
     ("CNVTYPE", "Numbers", "library", "0"),
+    ("COLLAPSE", "Zero", "library", ""),
     ("COMPRESSXS", "Numbers", "library", "1"),
+    ("CONV", "Numbers", "initial", "1"),
     ("COVARIANCE", "Zero", "library", ""),
     ("CULTAB", "Zero", "initial", ""),
     ("CUMFYLD", "Zero", "initial", ""),
     ("DENSITY", "Numbers", "initial", "7.875"),
     ("DEPLETION", "Words", "initial", "1"),
+    ("DOMINANT", "Numbers", "initial", "1"),
     ("DOSE", "Numbers", "initial", "2 1.0"),
+    ("EAFVERSION", "Numbers", "library", "1"),
     ("END", "Special", "inventory", ""),
     ("ENDPULSE", "Zero", "inventory", ""),
+    ("ENFA", "Numbers", "library", "1"),
     ("ERROR", "Words", "initial", "1"),
     ("EXTRACTXS", "Words", "library", "1"),
     ("FISCHOOSE", "Words", "initial", "1 U235"),
@@ -121,17 +130,24 @@ KEYWORD_TABLE = [
     ("INDEXPATH", "Zero", "library", ""),
     ("IRON", "Zero", "initial", ""),
     ("JSON", "Zero", "library", ""),
+    ("LEVEL", "Numbers", "initial", "1"),
     ("LIBVERSION", "Numbers", "library", "1"),
     ("LIMGRP", "Numbers", "library", "1.0E+5 1.4E+7"),
+    ("LINA", "Numbers", "initial", "1"),
     ("LOGLEVEL", "Numbers", "library", "1"),
     ("LOOKAHEAD", "Zero", "initial", ""),
+    ("LOOPS", "Numbers", "initial", "1"),
     ("MASS", "Special", "initial", "1.0E-3 1"),
     ("MCSAMPLE", "Numbers", "initial", "10"),
+    ("MCSEED", "Numbers", "initial", "1"),
     ("MIND", "Numbers", "initial", "1.E3"),
     ("MONITOR", "Numbers", "library", "1"),
+    ("NEWFILE", "Numbers", "library", "1"),
     ("NOCOMP", "Zero", "initial", ""),
     ("NOERROR", "Zero", "initial", ""),
     ("NOFISS", "Zero", "initial", ""),
+    ("NOHEAD", "Zero", "initial", ""),
+    ("NOHEADER", "Zero", "initial", ""),
     ("NOSORT", "Zero", "initial", ""),
     ("NOSTABLE", "Zero", "initial", ""),
     ("NOT1", "Zero", "initial", ""),
@@ -155,6 +171,8 @@ KEYWORD_TABLE = [
     ("ROUTES", "Words", "initial", "MN54"),
     ("SAVELINES", "Zero", "library", ""),
     ("SENSITIVITY", "Words", "initial", "1"),
+    ("SEQNUMBER", "Numbers", "initial", "1"),
+    ("SEQUENTIAL", "Numbers", "initial", "1"),
     ("SORTDOMINANT", "Numbers", "initial", "100 20"),
     ("SPECTRUM", "Zero", "inventory", ""),
     ("SPEK", "Zero", "library", ""),
@@ -169,6 +187,7 @@ KEYWORD_TABLE = [
     ("TAB2", "Numbers", "initial", "1"),
     ("TAB3", "Numbers", "initial", "1"),
     ("TAB4", "Numbers", "initial", "1"),
+    ("TAPA", "Numbers", "library", "1"),
     ("TIME", "Special", "inventory", "2 HOURS"),
     ("TOLERANCE", "Numbers", "library", "0 1e1 2e-8"),
     ("UNCERTAINTY", "Numbers", "initial", "2"),
@@ -212,16 +231,22 @@ def rust_strip(text):
 
 
 def rust_lines(text):
-    """str::lines: split at \\n, dropping one \\r before it; a lone \\r is not a line break."""
-    if text == "":
-        return []
-    parts = text.split("\n")
-    if parts[-1] == "":
-        parts.pop()
-        terminated = len(parts)
-    else:
-        terminated = len(parts) - 1
-    return [p[:-1] if i < terminated and p.endswith("\r") else p for i, p in enumerate(parts)]
+    """fispact_import::deck_lines (P140 Amendment A repair 6): a line ends at \\n, \\r\\n or a lone \\r."""
+    lines, start, index = [], 0, 0
+    while index < len(text):
+        if text[index] == "\n":
+            lines.append(text[start:index])
+            index += 1
+            start = index
+        elif text[index] == "\r":
+            lines.append(text[start:index])
+            index += 2 if text[index + 1:index + 2] == "\n" else 1
+            start = index
+        else:
+            index += 1
+    if start < len(text):
+        lines.append(text[start:])
+    return lines
 
 
 def ascii_upper(text):
@@ -231,6 +256,8 @@ def ascii_upper(text):
 def lex(text):
     """Tokens (text, line, star) and the unterminated-comment error, as fispact_import::lex."""
     tokens, comment_from = [], None
+    if text.startswith("\ufeff"):  # a leading byte-order mark is not part of the first word
+        text = text[1:]
     for index, raw in enumerate(rust_lines(text)):
         line, rest = index + 1, raw
         if comment_from is None:
@@ -295,7 +322,8 @@ def resolve_keyword(token):
     upper = ascii_upper(token)
     if upper in KEYWORD_ARITY:
         return upper
-    if len(upper) < 4:
+    # P140 Amendment A repair 6: three characters suffice, except a three-letter time unit (MIN is not MIND)
+    if len(upper) < 3 or (len(upper) == 3 and time_unit(upper) is not None):
         return None
     prefixed = [name for name, _ in KEYWORDS if name.startswith(upper)]
     if len(prefixed) == 1:
@@ -303,6 +331,17 @@ def resolve_keyword(token):
     head = upper[:4]
     sharing = [name for name, _ in KEYWORDS if len(name) >= 4 and name.startswith(head)]
     return sharing[0] if len(sharing) == 1 else None
+
+
+# P140 Amendment A repair 6 (F2): in these keywords' word lists an unknown all-letter word ends the list.
+NUCLIDE_ARG_KEYWORDS = ("OVER", "PATH", "ROUTES", "POWER", "PARTITION", "BREMSSTRAHLUNG")
+
+
+def looks_like_unknown_keyword(word):
+    """fispact_import::looks_like_unknown_keyword: four or more ASCII letters, not a sub-keyword or time unit (no
+    element symbol has four letters)."""
+    return (len(word) >= 4 and word.isascii() and word.isalpha()
+            and ascii_upper(word) not in ("ACROSS", "ADCROSS", "ALAM", "ADLAM") and time_unit(word) is None)
 
 
 class Model:
@@ -340,12 +379,14 @@ def parse_model(text):
                 break
         return out
 
-    def take_words():
+    def take_words(nuclide_args=False):
         nonlocal pos
         out = []
         while True:
             token = peek()
             if token is None or resolve_keyword(token[0]) is not None:
+                break
+            if nuclide_args and looks_like_unknown_keyword(token[0]):
                 break
             out.append(token[0])
             pos += 1
@@ -412,7 +453,7 @@ def parse_model(text):
             if arity == "Numbers":
                 take_numbers(1 << 60)
             elif arity == "Words":
-                take_words()
+                take_words(name in NUCLIDE_ARG_KEYWORDS)
             blocks[-1].append(("cmd", line, name, phase))
     if pulses:
         raise ModelError(f"line {pulses[-1][0]}: PULSE is not closed by ENDPULSE before the deck ends")
@@ -1120,13 +1161,14 @@ def judge_deck(ctx, d, data, deck_path, out_path, extra, timeout):
     # the checker's own view of the deck
     model, model_error, undecodable = None, None, False
     try:
-        text = data.decode("utf-8")
-        try:
-            model = parse_model(text)
-        except ModelError as error:
-            model_error = str(error)
+        data.decode("utf-8")
     except UnicodeDecodeError:
         undecodable = True
+    # P140 Amendment A repair 6: the importer reads the deck with invalid UTF-8 replaced (U+FFFD) and says so
+    try:
+        model = parse_model(data.decode("utf-8", errors="replace"))
+    except ModelError as error:
+        model_error = str(error)
     code, stdout, stderr, fragment = judge_run(ctx, deck_path, out_path, extra, timeout, failures)
     row.update(fragment)
     if fragment.get("outcome") in ("timeout", "panic"):
@@ -1138,8 +1180,9 @@ def judge_deck(ctx, d, data, deck_path, out_path, extra, timeout):
         row["outcome"] = "imported"
         spec, spec_error = load_json(spec_path)
         report, report_error = load_json(report_path)
-        if undecodable:
-            failures.append("exit 0 on a deck that is not valid UTF-8")
+        if report is not None and (report.get("deck") or {}).get("lossy_utf8") is not undecodable:
+            failures.append(f"deck.lossy_utf8 is {(report.get('deck') or {}).get('lossy_utf8')!r} for a deck that is "
+                            f"{'not ' if undecodable else ''}valid UTF-8")
         if spec_error:
             failures.append(f"spec not written or not JSON: {spec_error}")
         if report_error:

@@ -1,0 +1,607 @@
+{
+ "candidate_sha256": "179e96a06dd0bee02f3e71452492ee058b6f4ca123063a5eab7ed365235e4536",
+ "checker_sha256": "5d91960a2c59311ad88a1b25360a3cdc9a3607e8afd3d4e90defbde617675ab8",
+ "gates": {
+  "G0": {
+   "external": true,
+   "note": "protocol SHA-256 in protocols/protocol_hash.txt (external)",
+   "pass": null
+  },
+  "G1": {
+   "external": true,
+   "note": "fmt, clippy -D warnings, workspace tests (external)",
+   "pass": null
+  },
+  "G2": {
+   "cases": {
+    "fns_fe_5min": {
+     "identical_apart_from_ms": false,
+     "spec_sha256": "ed55ed00f6c00fc4a2351e18332e98e7feb33d9b7ca65e7ba861e0e5e8feef39"
+    },
+    "shielding_demo": {
+     "identical_apart_from_ms": false,
+     "spec_sha256": "5da1f8e0d1028bba93a51c5b21125d6145aaf24d0f1a65c2c90acf735616afb1"
+    },
+    "summary_without_depletion": {
+     "no_depletion_key_anywhere": true
+    }
+   },
+   "pass": false
+  },
+  "G3": {
+   "cases": {
+    "fns_scaled": {
+     "compared": 352,
+     "counts": {
+      "channels_checked": 100,
+      "cumulative_fraction_bookkeeping": 16,
+      "cumulative_is_initial_minus_end": 16,
+      "depleted_fraction_bookkeeping": 16,
+      "depleted_is_start_minus_end": 16,
+      "end_equals_inventory": 16,
+      "initial_atoms": 4,
+      "initial_atoms_constant": 12,
+      "reaction_channel_vs_collapse": 100,
+      "removal_rate": 16,
+      "removal_rate_is_channel_sum": 16,
+      "share": 100,
+      "share_sum_minus_1": 8,
+      "start_is_previous_end": 16
+     },
+     "failures": [],
+     "fe56_analytic_cumulative_fraction_no_ingrowth": 0.0005670740599730167,
+     "fe56_cumulative_depleted_fraction_by_step": [
+      0.0003639526594224422,
+      0.0003612302033752988,
+      0.0005418416817863151,
+      0.0005208283589498621
+     ],
+     "measurable": true,
+     "measurable_threshold": 0.0001,
+     "mode": "coupled",
+     "n_failures": 0,
+     "nuclides": [
+      "Fe54",
+      "Fe56",
+      "Fe57",
+      "Fe58"
+     ],
+     "pass": true,
+     "steps": 4,
+     "worst_relative": {
+      "cumulative_fraction_bookkeeping": 0.0,
+      "cumulative_is_initial_minus_end": 0.0,
+      "depleted_fraction_bookkeeping": 0.0,
+      "depleted_is_start_minus_end": 0.0,
+      "end_equals_inventory": 0.0,
+      "initial_atoms": 0.0,
+      "initial_atoms_constant": 0.0,
+      "reaction_channel_vs_collapse": 4.270589568088657e-16,
+      "removal_rate": 4.057228624483111e-16,
+      "removal_rate_is_channel_sum": 3.9010729163241486e-16,
+      "share": 6.076926744147614e-16,
+      "share_sum_minus_1": 3.3306690738754696e-16,
+      "start_is_previous_end": 0.0
+     }
+    },
+    "fns_unscaled": {
+     "compared": 860,
+     "counts": {
+      "channels_checked": 50,
+      "cumulative_fraction_bookkeeping": 84,
+      "cumulative_is_initial_minus_end": 84,
+      "depleted_fraction_bookkeeping": 84,
+      "depleted_is_start_minus_end": 84,
+      "end_equals_inventory": 84,
+      "initial_atoms": 4,
+      "initial_atoms_constant": 80,
+      "reaction_channel_vs_collapse": 50,
+      "removal_rate": 84,
+      "removal_rate_is_channel_sum": 84,
+      "share": 50,
+      "share_sum_minus_1": 4,
+      "start_is_previous_end": 84
+     },
+     "failures": [],
+     "mode": "coupled",
+     "n_failures": 0,
+     "nuclides": [
+      "Fe54",
+      "Fe56",
+      "Fe57",
+      "Fe58"
+     ],
+     "pass": true,
+     "steps": 21,
+     "worst_relative": {
+      "cumulative_fraction_bookkeeping": 0.0,
+      "cumulative_is_initial_minus_end": 0.0,
+      "depleted_fraction_bookkeeping": 0.0,
+      "depleted_is_start_minus_end": 0.0,
+      "end_equals_inventory": 0.0,
+      "initial_atoms": 0.0,
+      "initial_atoms_constant": 0.0,
+      "reaction_channel_vs_collapse": 4.772755766013999e-16,
+      "removal_rate": 3.578940761771106e-16,
+      "removal_rate_is_channel_sum": 2.5032832274191324e-16,
+      "share": 6.147760653624569e-16,
+      "share_sum_minus_1": 2.220446049250313e-16,
+      "start_is_previous_end": 0.0
+     }
+    },
+    "radioactive_initial": {
+     "compared": 291,
+     "counts": {
+      "channels_checked": 88,
+      "cumulative_fraction_bookkeeping": 12,
+      "cumulative_is_initial_minus_end": 12,
+      "decay_channel_vs_ln2_over_half_life": 8,
+      "depleted_fraction_bookkeeping": 12,
+      "depleted_is_start_minus_end": 12,
+      "end_equals_inventory": 12,
+      "initial_atoms_constant": 9,
+      "reaction_channel_vs_collapse": 80,
+      "removal_rate": 12,
+      "removal_rate_is_channel_sum": 12,
+      "share": 88,
+      "share_sum_minus_1": 10,
+      "start_is_previous_end": 12
+     },
+     "decay_channels_compared": 8,
+     "failures": [],
+     "mode": "coupled",
+     "n_failures": 0,
+     "nuclides": [
+      "Fe55",
+      "Fe56",
+      "Mn54"
+     ],
+     "pass": true,
+     "steps": 4,
+     "worst_relative": {
+      "cumulative_fraction_bookkeeping": 0.0,
+      "cumulative_is_initial_minus_end": 0.0,
+      "decay_channel_vs_ln2_over_half_life": 0.0,
+      "depleted_fraction_bookkeeping": 0.0,
+      "depleted_is_start_minus_end": 0.0,
+      "end_equals_inventory": 0.0,
+      "initial_atoms_constant": 0.0,
+      "reaction_channel_vs_collapse": 1.6928973099346938e-15,
+      "removal_rate": 1.9182104205536347e-16,
+      "removal_rate_is_channel_sum": 1.9182104205536347e-16,
+      "share": 1.9596323236248776e-15,
+      "share_sum_minus_1": 2.220446049250313e-16,
+      "start_is_previous_end": 0.0
+     }
+    }
+   },
+   "pass": true
+  },
+  "G4": {
+   "cases": {
+    "fns_auto": {
+     "compared": 1028,
+     "counts": {
+      "analytic_atoms_end": 84,
+      "analytic_cumulative_fraction_resolution_limited": 84,
+      "analytic_step_fraction_resolution_limited": 84,
+      "channels_checked": 50,
+      "cumulative_fraction_bookkeeping": 84,
+      "cumulative_is_initial_minus_end": 84,
+      "depleted_fraction_bookkeeping": 84,
+      "depleted_is_start_minus_end": 84,
+      "initial_atoms": 4,
+      "initial_atoms_constant": 80,
+      "reaction_channel_vs_collapse": 50,
+      "removal_rate": 84,
+      "removal_rate_is_channel_sum": 84,
+      "resolution_limited": 168,
+      "share": 50,
+      "share_sum_minus_1": 4,
+      "start_is_previous_end": 84
+     },
+     "failures": [],
+     "mode": "trace",
+     "n_failures": 0,
+     "pass": true,
+     "resolution_limited": 168,
+     "steps": 21,
+     "strict_fractions": 0,
+     "worst_relative": {
+      "analytic_atoms_end": 0.0,
+      "analytic_cumulative_fraction_resolution_limited": 4.581044175073075e-16,
+      "analytic_step_fraction_resolution_limited": 4.581044175073075e-16,
+      "cumulative_fraction_bookkeeping": 2.5920846531077996e-05,
+      "cumulative_is_initial_minus_end": 2.5920846531118535e-05,
+      "depleted_fraction_bookkeeping": 0.0,
+      "depleted_is_start_minus_end": 2.5920846531118535e-05,
+      "initial_atoms": 0.0,
+      "initial_atoms_constant": 0.0,
+      "reaction_channel_vs_collapse": 4.772755766013999e-16,
+      "removal_rate": 3.578940761771106e-16,
+      "removal_rate_is_channel_sum": 2.5032832274191324e-16,
+      "share": 6.147760653624569e-16,
+      "share_sum_minus_1": 2.220446049250313e-16,
+      "start_is_previous_end": 0.0
+     }
+    },
+    "fns_scaled_trace": {
+     "compared": 384,
+     "counts": {
+      "analytic_atoms_end": 16,
+      "analytic_cumulative_fraction": 16,
+      "analytic_step_fraction": 8,
+      "analytic_step_fraction_resolution_limited": 8,
+      "channels_checked": 100,
+      "cumulative_fraction_bookkeeping": 16,
+      "cumulative_is_initial_minus_end": 16,
+      "depleted_fraction_bookkeeping": 16,
+      "depleted_is_start_minus_end": 16,
+      "initial_atoms": 4,
+      "initial_atoms_constant": 12,
+      "reaction_channel_vs_collapse": 100,
+      "removal_rate": 16,
+      "removal_rate_is_channel_sum": 16,
+      "resolution_limited": 8,
+      "share": 100,
+      "share_sum_minus_1": 8,
+      "start_is_previous_end": 16,
+      "strict_fraction": 24
+     },
+     "failures": [],
+     "mode": "trace",
+     "n_failures": 0,
+     "pass": true,
+     "resolution_limited": 8,
+     "steps": 4,
+     "strict_fractions": 24,
+     "worst_relative": {
+      "analytic_atoms_end": 2.081459321384745e-16,
+      "analytic_cumulative_fraction": 5.772991640214021e-16,
+      "analytic_step_fraction": 5.194879112359843e-16,
+      "analytic_step_fraction_resolution_limited": 0.0,
+      "cumulative_fraction_bookkeeping": 2.0474764153420047e-13,
+      "cumulative_is_initial_minus_end": 2.047488546505027e-13,
+      "depleted_fraction_bookkeeping": 0.0,
+      "depleted_is_start_minus_end": 2.6933077647339645e-13,
+      "initial_atoms": 0.0,
+      "initial_atoms_constant": 0.0,
+      "reaction_channel_vs_collapse": 4.270589568088657e-16,
+      "removal_rate": 4.057228624483111e-16,
+      "removal_rate_is_channel_sum": 3.9010729163241486e-16,
+      "share": 6.076926744147614e-16,
+      "share_sum_minus_1": 3.3306690738754696e-16,
+      "start_is_previous_end": 0.0
+     }
+    }
+   },
+   "pass": true
+  },
+  "G5": {
+   "compared": 92,
+   "counts": {
+    "channel_relative_uncertainty": 84,
+    "covered_share_absent_without_removal": 8,
+    "joint_total_absent_as_expected": 16,
+    "uncovered_channels_without_uncertainty": 16,
+    "uncovered_share": 8
+   },
+   "covariance_sha256": "c19dec86b44ad5d90b66c9ab94d53e18641a1d354a89402a4da7986b6c530cde",
+   "failures": [],
+   "joint_total_evaluations": 0,
+   "joint_total_not_evaluable": "every nuclide has at least one channel without an MF=33 self-covariance, so the candidate reports no joint total and the cross-MT sum cannot be compared",
+   "n_failures": 0,
+   "n_unresolved": 0,
+   "pass": true,
+   "per_nuclide": {
+    "Fe54": {
+     "covered_mts": [
+      16,
+      17,
+      22,
+      24,
+      28,
+      32,
+      33,
+      34,
+      41,
+      45,
+      102,
+      103,
+      104,
+      105,
+      106,
+      107,
+      112,
+      115,
+      116,
+      117
+     ],
+     "loss_mts": [
+      16,
+      17,
+      22,
+      24,
+      28,
+      29,
+      32,
+      33,
+      34,
+      41,
+      44,
+      45,
+      102,
+      103,
+      104,
+      105,
+      106,
+      107,
+      108,
+      111,
+      112,
+      115,
+      116,
+      117
+     ],
+     "uncovered_mts": [
+      29,
+      44,
+      108,
+      111
+     ]
+    },
+    "Fe56": {
+     "covered_mts": [
+      11,
+      16,
+      17,
+      22,
+      24,
+      28,
+      32,
+      33,
+      34,
+      41,
+      45,
+      102,
+      103,
+      104,
+      105,
+      106,
+      107,
+      112,
+      115,
+      116,
+      117
+     ],
+     "loss_mts": [
+      11,
+      16,
+      17,
+      22,
+      24,
+      28,
+      29,
+      32,
+      33,
+      34,
+      41,
+      44,
+      45,
+      102,
+      103,
+      104,
+      105,
+      106,
+      107,
+      108,
+      111,
+      112,
+      115,
+      116,
+      117
+     ],
+     "uncovered_mts": [
+      29,
+      44,
+      108,
+      111
+     ]
+    },
+    "Fe57": {
+     "covered_mts": [
+      11,
+      16,
+      17,
+      22,
+      24,
+      28,
+      32,
+      33,
+      34,
+      41,
+      42,
+      45,
+      102,
+      103,
+      104,
+      105,
+      106,
+      107,
+      112,
+      115,
+      116,
+      117
+     ],
+     "loss_mts": [
+      11,
+      16,
+      17,
+      22,
+      24,
+      28,
+      29,
+      32,
+      33,
+      34,
+      37,
+      41,
+      42,
+      44,
+      45,
+      102,
+      103,
+      104,
+      105,
+      106,
+      107,
+      108,
+      111,
+      112,
+      115,
+      116,
+      117
+     ],
+     "uncovered_mts": [
+      29,
+      37,
+      44,
+      108,
+      111
+     ]
+    },
+    "Fe58": {
+     "covered_mts": [
+      11,
+      16,
+      17,
+      22,
+      24,
+      25,
+      28,
+      32,
+      33,
+      34,
+      41,
+      42,
+      45,
+      102,
+      103,
+      104,
+      105,
+      106,
+      107,
+      112,
+      115,
+      116,
+      117
+     ],
+     "loss_mts": [
+      11,
+      16,
+      17,
+      22,
+      24,
+      25,
+      28,
+      29,
+      32,
+      33,
+      34,
+      41,
+      42,
+      44,
+      45,
+      102,
+      103,
+      104,
+      105,
+      106,
+      107,
+      108,
+      111,
+      112,
+      115,
+      116,
+      117
+     ],
+     "uncovered_mts": [
+      29,
+      44,
+      108,
+      111
+     ]
+    }
+   },
+   "table_consistency": {
+    "compared": 352,
+    "counts": {
+     "channels_checked": 100,
+     "cumulative_fraction_bookkeeping": 16,
+     "cumulative_is_initial_minus_end": 16,
+     "depleted_fraction_bookkeeping": 16,
+     "depleted_is_start_minus_end": 16,
+     "end_equals_inventory": 16,
+     "initial_atoms": 4,
+     "initial_atoms_constant": 12,
+     "reaction_channel_vs_collapse": 100,
+     "removal_rate": 16,
+     "removal_rate_is_channel_sum": 16,
+     "share": 100,
+     "share_sum_minus_1": 8,
+     "start_is_previous_end": 16
+    },
+    "failures": [],
+    "n_failures": 0,
+    "worst_relative": {
+     "cumulative_fraction_bookkeeping": 0.0,
+     "cumulative_is_initial_minus_end": 0.0,
+     "depleted_fraction_bookkeeping": 0.0,
+     "depleted_is_start_minus_end": 0.0,
+     "end_equals_inventory": 0.0,
+     "initial_atoms": 0.0,
+     "initial_atoms_constant": 0.0,
+     "reaction_channel_vs_collapse": 4.772755766013999e-16,
+     "removal_rate": 3.578940761771106e-16,
+     "removal_rate_is_channel_sum": 2.5032832274191324e-16,
+     "share": 6.147760653624569e-16,
+     "share_sum_minus_1": 2.220446049250313e-16,
+     "start_is_previous_end": 0.0
+    }
+   },
+   "tolerance": 1e-06,
+   "unresolved": [],
+   "worst_relative": {
+    "channel_relative_uncertainty": 5.071013481314895e-16,
+    "uncovered_share": 2.237396236572743e-16
+   }
+  },
+  "G6": {
+   "external": true,
+   "note": "CI green on the pushed commit; committed baselines unchanged (external)",
+   "pass": null
+  }
+ },
+ "inputs": {
+  "decay_fallback": {
+   "path": "/home/connoravila/Documents/actinv/actinv-data/v1.1.0/decay/jeff-3-3_decay.dat",
+   "sha256": "850b8b7f85f8d88b6ad826c4cd341aaaffabd525c8ecf3c588a0ad437bf5d123"
+  },
+  "decay_primary": {
+   "path": "/home/connoravila/Documents/actinv/actinv-data/v1.1.0/decay/endf-b-viii-0_decay.dat",
+   "sha256": "6f04cf009086c179021f243a58dadc2d5bb078de5ba39c4fe46ccad77d228ddb"
+  },
+  "library": {
+   "path": "/home/connoravila/Documents/actinv/actinv-data/v1.1.0/activation/tendl-2025-neutron-709g.npz",
+   "sha256": "ec4c72bf598dc8ad3d533d9cfafdcf493e2d1f949a3e4db6251495659b68cc44"
+  },
+  "library_index": {
+   "path": "/home/connoravila/Documents/actinv/actinv-data/v1.1.0/activation/tendl-2025-neutron-709g_index.json",
+   "sha256": "8bd19b4001c246758e739cd0067a0087e1ce5c2157438dae97bd52e1d3beb3fb"
+  }
+ },
+ "protocol": "protocols/ACTINV-P135_PROTOCOL.md",
+ "protocol_sha256": "401dd2c9c5b50902394fee29e3e2a2c4c23cd7de37530716a193629b3f9feb74",
+ "reference_sha256": "3d34d7ca5887be03e19b81f8ae06d784ed53ec1310a69764ed70b8672bc42b5f",
+ "verdict": "FAIL"
+}

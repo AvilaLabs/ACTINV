@@ -3669,6 +3669,14 @@ impl PreparedRun {
             // library's structure
             let spectrum_groups = physical.flux.values().len();
             if lib.group_count() != spectrum_groups {
+                if spec.spectrum.is_placeholder() {
+                    return Err(format!(
+                        "spectrum is required when a library is given: the spec declares no \
+                         spectrum, and activation library '{}' has {} groups",
+                        self.library_path,
+                        lib.group_count()
+                    ));
+                }
                 return Err(format!(
                     "spectrum has {} groups but activation library has {}",
                     spectrum_groups,
@@ -3735,6 +3743,7 @@ impl PreparedRun {
                     &prepared.options,
                     &bulk_inv,
                     lib.boundaries_ev(),
+                    spec.material.density_g_cm3,
                     self.temperature_K.get(),
                     spec.options.require_shielding_complete,
                 )?)
@@ -3865,7 +3874,7 @@ impl PreparedRun {
         let override_view = (!cross_overrides.is_empty())
             .then(|| crate::overrides::OverriddenLibrary::new(lib, &cross_overrides));
         if let Some(view) = &override_view {
-            view.check_spectrum(phi)?;
+            // the base spectrum is checked below, once it is known that a step irradiates with it
             for entry in &cross_overrides.entries {
                 let (before, after) = view.before_after(entry, phi);
                 override_ledger.push(serde_json::json!({
@@ -4057,6 +4066,24 @@ impl PreparedRun {
                 step_spectrum_id.push(None);
             }
         }
+        // An absolute cross-section override needs the reaction to collapse to a positive value
+        // under every spectrum an irradiating step uses; a cooling step never reads the cross
+        // section, so its spectrum is not checked.
+        let step_irradiates =
+            |step: &PhysicalStep| step.multiplier().get() > 0.0 || step.power_w_per_g.is_some();
+        let mut extra_irradiated = vec![false; extra_spectra.len()];
+        let mut base_irradiated = false;
+        for (step, id) in sched.iter().zip(&step_spectrum_id) {
+            if step_irradiates(step) {
+                match id {
+                    Some(id) => extra_irradiated[*id] = true,
+                    None => base_irradiated = true,
+                }
+            }
+        }
+        if let (Some(view), true) = (&override_view, base_irradiated) {
+            view.check_spectrum(phi)?;
+        }
         // ---- kerma and power (P126): the heating table, the heating of one atom under each
         // spectrum, and for power-driven steps the start-of-run flux amplitude that pruning and
         // the burnup-mode decision need before the schedule is solved. The step loop
@@ -4070,18 +4097,43 @@ impl PreparedRun {
             )?),
             None => None,
         };
+        // Heating is summed over chain states, so coverage is judged there: a composition isotope
+        // with no decay record is not a chain state and heats nothing, whatever row matches it.
         let kerma_uncovered: Vec<String> = match &kerma_loaded {
             Some(loaded) => bulk_inv
                 .keys()
-                .filter(|(za, liso)| !loaded.table.covers(*za, *liso))
+                .filter(|&&(za, liso)| {
+                    !ch.index.contains_key(&(za, liso)) || !loaded.table.covers(za, liso)
+                })
                 .map(|(za, liso)| name_of(*za, *liso))
                 .collect(),
             None => Vec::new(),
         };
+        // Chain-state composition nuclides with a heating row but no damage-energy row add nothing
+        // to the damage-energy figure; listed only when the table carries damage rows at all.
+        let kerma_damage_uncovered: Option<Vec<String>> = kerma_loaded
+            .as_ref()
+            .filter(|loaded| loaded.table.has_damage_energy())
+            .map(|loaded| {
+                bulk_inv
+                    .keys()
+                    .filter(|&&(za, liso)| {
+                        ch.index.contains_key(&(za, liso))
+                            && loaded.table.covers(za, liso)
+                            && !loaded.table.covers_damage_energy(za, liso)
+                    })
+                    .map(|(za, liso)| name_of(*za, *liso))
+                    .collect()
+            });
         if let Some(loaded) = &kerma_loaded {
             if loaded.options.require_complete && !kerma_uncovered.is_empty() {
+                let absent_note = if bulk_inv.keys().any(|key| !ch.index.contains_key(key)) {
+                    " (a nuclide with no decay record is not a chain state and contributes no heating)"
+                } else {
+                    ""
+                };
                 return Err(format!(
-                    "kerma: material nuclides lack table coverage: {}",
+                    "kerma: material nuclides lack table coverage: {}{absent_note}",
                     kerma_uncovered.join(", ")
                 ));
             }
@@ -4168,7 +4220,9 @@ impl PreparedRun {
         let mut fission_rates_extra: Vec<BTreeMap<usize, f64>> = Vec::new();
         // Loss rates of the depletion table's nuclides under each override spectrum.
         let mut loss_rates_extra: Vec<Vec<chain::LossRate>> = Vec::new();
-        for (extra_phi, extra_slot) in extra_spectra.iter().zip(&extra_libraries) {
+        for (extra_index, (extra_phi, extra_slot)) in
+            extra_spectra.iter().zip(&extra_libraries).enumerate()
+        {
             let (extra_lib, extra_targets): (&ActivationLibrary, &[(i32, i32)]) = match extra_slot {
                 Some(slot) => (
                     &self.step_libraries[*slot].library,
@@ -4197,7 +4251,9 @@ impl PreparedRun {
                 react_extra.push(assembly.triplets.clone());
                 react_extra_assembly.push(assembly);
             } else if let Some(view) = &override_view {
-                view.check_spectrum(extra_phi)?;
+                if extra_irradiated[extra_index] {
+                    view.check_spectrum(extra_phi)?;
+                }
                 react_extra.push(chain::reaction_rates(
                     view,
                     lib_targets,
@@ -4307,6 +4363,11 @@ impl PreparedRun {
             m => m,
         }
         .to_string();
+        // the partition changed the formulation only when `auto` would otherwise have run trace
+        let partition_forced_coupled = has_partition
+            && spec.options.mode == "auto"
+            && !bulk_decays
+            && led.burnup_fraction_max < 1e-6;
         if bulk_decays && mode == "trace" {
             let (za, liso) = bulk_decay_nuclide.expect("set with the fraction");
             return Err(format!(
@@ -4452,6 +4513,9 @@ impl PreparedRun {
         // in rsubs order (0 = base, 1.. = step overrides)
         let mut sources: Vec<Vec<PathwaySource>> = Vec::new();
         let mut d_src: Vec<(usize, usize, f64)> = Vec::new();
+        // (product row fed, decaying bulk state, rate) for the first-product table: the decay of a
+        // radioactive bulk nuclide feeds its daughters through the unit state in every interval
+        let mut decay_fed: Vec<(usize, (i32, i32), f64)> = Vec::new();
         // r_srcs[0] is the base spectrum; one entry per distinct step override follows
         let mut r_srcs: Vec<Vec<(usize, usize, f64)>> = Vec::new();
         let r_src: Vec<(usize, usize, f64)>;
@@ -4474,6 +4538,7 @@ impl PreparedRun {
                 if bulk.contains_key(c) {
                     if r != c && (!bulk.contains_key(r) || tracked_reservoir.contains(r)) {
                         d_src.push((*r, ch.unit, v * bulk[c]));
+                        decay_fed.push((*r, ch.keys[*c], v * bulk[c]));
                         if want_routes {
                             unit_origin_decay.push((*r, *c, v * bulk[c]));
                         }
@@ -5215,15 +5280,21 @@ impl PreparedRun {
                 if want_depletion {
                     let tracked_columns: BTreeSet<usize> =
                         depletion_columns.iter().map(|c| c.0).collect();
-                    depletion_covariance =
-                        Some(LossCovariance::from_collapsed(&collapsed, |row| {
+                    depletion_covariance = Some(LossCovariance::from_collapsed(
+                        &collapsed,
+                        |row| {
                             let descriptor = lib.rows()[row];
                             descriptor.zap == -1
                                 && lib_targets
                                     .get(descriptor.target)
                                     .and_then(|key| ch.index.get(key))
                                     .is_some_and(|column| tracked_columns.contains(column))
-                        }));
+                        },
+                        |row| {
+                            let descriptor = lib.rows()[row];
+                            (descriptor.target, descriptor.mt)
+                        },
+                    ));
                 }
                 // Restricted runs contract the quadratic form over nonzero
                 // covariance entries only — MF=33 blocks are block-sparse, so
@@ -5528,6 +5599,13 @@ impl PreparedRun {
         let mut achieved_multiplier: Vec<f64> =
             sched.iter().map(|step| step.multiplier().get()).collect();
         let mut partition_records: Vec<serde_json::Value> = Vec::new();
+        // Composition isotopes with no decay record are not chain states: they sit unchanged in
+        // the bulk inventory, but a partition still takes its fraction of them.
+        let mut absent_atoms: BTreeMap<(i32, i32), f64> = bulk_inv
+            .iter()
+            .filter(|(key, _)| !ch.index.contains_key(*key))
+            .map(|(&key, &atoms)| (key, atoms))
+            .collect();
         for (si, schedule_step) in sched.iter().enumerate() {
             let dt = schedule_step.duration();
             let scheduled_fl = schedule_step.multiplier();
@@ -5544,7 +5622,15 @@ impl PreparedRun {
                         .filter(|&(_, &g)| g < ch.keys.len() && ch.keys[g].0 / 1000 == z)
                         .map(|(k, _)| k)
                         .collect();
-                    let removed_atoms = partition_move(&mut y, &members, sink_position, kept);
+                    let mut removed_atoms = partition_move(&mut y, &members, sink_position, kept);
+                    for (&(za, _), atoms) in absent_atoms.iter_mut() {
+                        if za / 1000 == z {
+                            let moved = *atoms * (1.0 - kept);
+                            *atoms -= moved;
+                            y[sink_position] += moved;
+                            removed_atoms += moved;
+                        }
+                    }
                     if let Some(runtime) = uncertainty_runtime.as_mut() {
                         for tangent in runtime.tangents.iter_mut() {
                             partition_move(tangent, &members, sink_position, kept);
@@ -5942,16 +6028,11 @@ impl PreparedRun {
                             initial: initial(&key),
                         })
                         .collect();
-                    states.extend(
-                        bulk_inv
-                            .iter()
-                            .filter(|(key, _)| !ch.index.contains_key(*key))
-                            .map(|(&key, &atoms)| StateAtoms {
-                                key,
-                                atoms,
-                                initial: initial(&key),
-                            }),
-                    );
+                    states.extend(absent_atoms.iter().map(|(&key, &atoms)| StateAtoms {
+                        key,
+                        atoms,
+                        initial: initial(&key),
+                    }));
                     let leakage_atoms = if pos[ch.leak] != usize::MAX {
                         y.get(pos[ch.leak]).copied().unwrap_or(0.0)
                     } else {
@@ -5970,6 +6051,14 @@ impl PreparedRun {
             };
             if let (Some(tracker), Some(summary)) = (depletion.as_mut(), step_summary.as_mut()) {
                 let slot = step_spectrum_id[si].map_or(0, |id| id + 1);
+                // the step's declared removal: the diagonal terms `-rate` of its removal edges
+                let mut declared: HashMap<usize, f64> = HashMap::new();
+                for &(row, column, rate) in &step_removal[si] {
+                    if row == column {
+                        *declared.entry(column).or_insert(0.0) -= rate;
+                    }
+                }
+                tracker.set_removal(declared);
                 summary.depletion =
                     Some(tracker.step(slot, fl.get(), dt.get(), &|column| atoms_of(column, &y)));
             }
@@ -6263,7 +6352,7 @@ impl PreparedRun {
             want_paths && mode == "trace" && (has_feed || has_removal || has_step_library);
         if mode == "trace"
             && want_paths
-            && sources.iter().any(|list| !list.is_empty())
+            && (sources.iter().any(|list| !list.is_empty()) || !decay_fed.is_empty())
             && !pathways_suppressed
         {
             // one unit state per (row fed, bulk nuclide), carrying its rate under every spectrum
@@ -6277,7 +6366,22 @@ impl PreparedRun {
                 }
             }
             let labels: Vec<_> = agg.into_iter().collect();
-            let ns = labels.len();
+            let n_react = labels.len();
+            // decay of a radioactive bulk nuclide feeds its daughters in every interval, flux or not,
+            // so those unit states carry their rate unscaled
+            let mut decay_agg: BTreeMap<(usize, (i32, i32)), f64> = BTreeMap::new();
+            for (row, from, rate) in &decay_fed {
+                if pos[*row] != usize::MAX {
+                    *decay_agg.entry((*row, *from)).or_insert(0.0) += rate;
+                }
+            }
+            let decay_labels: Vec<_> = decay_agg.into_iter().collect();
+            let origins: Vec<(usize, (i32, i32))> = labels
+                .iter()
+                .map(|(origin, _)| *origin)
+                .chain(decay_labels.iter().map(|(origin, _)| *origin))
+                .collect();
+            let ns = origins.len();
             let mp = m + ns; // one extra unit state per source
             let ptrip: Vec<(usize, usize, C64)> = dsub
                 .iter()
@@ -6319,7 +6423,10 @@ impl PreparedRun {
                             }
                         }
                     }
-                    // during cooling the feeds are absent; each unit state stays exactly 1 so a
+                    for (d, ((row, _), rate)) in decay_labels.iter().enumerate() {
+                        trip.push((pos[*row], m + n_react + d, C64::new(*rate, 0.0)));
+                    }
+                    // during cooling the reaction feeds are absent; each unit state stays exactly 1 so a
                     // later irradiation sources again
                     let a = Csc::from_triplets(mp, &trip);
                     cols = crate::cram::step_multi(&a, &cols, h, &c)?;
@@ -6332,7 +6439,7 @@ impl PreparedRun {
                 // report at every step, ranked, keeping chains above 1e-6 of the nuclide
                 let mut per: BTreeMap<String, Vec<Pathway>> = BTreeMap::new();
                 for (k, col) in cols.iter().enumerate() {
-                    let ((row, from), _) = &labels[k];
+                    let (row, from) = &origins[k];
                     for (idx, v) in col.iter().enumerate().take(m) {
                         if *v <= 0.0 {
                             continue;
@@ -6351,13 +6458,42 @@ impl PreparedRun {
                             });
                     }
                 }
-                // closure is measured on the complete decomposition, before any chain is dropped for reporting
-                for n in &steps[pathways.len()].inventory {
-                    if let Some(v) = per.get(&n.nuclide) {
-                        let sum: f64 = v.iter().map(|p| p.atoms_per_g).sum();
-                        if n.atoms_per_g > 0.0 {
+                // a bulk nuclide that is also a reaction parent can feed one product by decay and by
+                // reaction: one chain per (from, first product)
+                if !decay_labels.is_empty() {
+                    for chains in per.values_mut() {
+                        let mut merged: Vec<Pathway> = Vec::with_capacity(chains.len());
+                        for p in chains.drain(..) {
+                            match merged
+                                .iter_mut()
+                                .find(|q| q.from == p.from && q.first_product == p.first_product)
+                            {
+                                Some(q) => q.atoms_per_g += p.atoms_per_g,
+                                None => merged.push(p),
+                            }
+                        }
+                        *chains = merged;
+                    }
+                }
+                // closure is measured on the complete decomposition, before any chain is dropped for reporting;
+                // a nuclide present in the inventory with no chain at all is a gap of 1 (noise-level
+                // inventories, under 1e-12 of the largest, are not)
+                let inventory = &steps[pathways.len()].inventory;
+                let largest = inventory
+                    .iter()
+                    .map(|n| n.atoms_per_g)
+                    .fold(0.0f64, f64::max);
+                for n in inventory {
+                    if n.atoms_per_g <= 0.0 {
+                        continue;
+                    }
+                    match per.get(&n.nuclide) {
+                        Some(v) => {
+                            let sum: f64 = v.iter().map(|p| p.atoms_per_g).sum();
                             closure = closure.max((sum - n.atoms_per_g).abs() / n.atoms_per_g);
                         }
+                        None if n.atoms_per_g > 1e-12 * largest => closure = closure.max(1.0),
+                        None => {}
                     }
                 }
                 for v in per.values_mut() {
@@ -6471,6 +6607,8 @@ impl PreparedRun {
         let isomer_pathway_shares = isomer_requested.then(|| {
             let reason = if mode != "trace" {
                 "pathway attribution requires trace mode"
+            } else if pathways_suppressed && has_step_library {
+                "pathway attribution suppressed for schedules that switch activation library"
             } else if pathways_suppressed {
                 "pathway attribution suppressed for feed/removal schedules"
             } else {
@@ -6833,6 +6971,14 @@ impl PreparedRun {
                          "decay_scale": spec.options.decay_scale.as_ref().map(|m| m.len()).unwrap_or(0),
                          "yield_scale": spec.options.yield_scale.as_ref().map(|m| m.len()).unwrap_or(0)},
         });
+        // Inserted here, not in the literal above, which is at the json! recursion limit; keys serialise sorted.
+        // Present only when nonzero (P140 Amendment E), like decay_branching_sums_off_unity.
+        if ch.ledger.unknown_modes > 0 {
+            ledger.as_object_mut().expect("ledger is an object").insert(
+                "unmodelled_decay_branches_to_leakage".into(),
+                serde_json::json!(ch.ledger.unknown_modes),
+            );
+        }
         if !spec.projectile.is_neutron() {
             ledger.as_object_mut().expect("ledger is an object").insert(
                 "projectile".into(),
@@ -6864,6 +7010,18 @@ impl PreparedRun {
                         })
                         .sum();
                     let rates = step_library_ledgers[slot].as_ref();
+                    // Initial-material nuclides this library has no row for: they do not react on its steps.
+                    let targets_with_rows: BTreeSet<(i32, i32)> = step_library
+                        .library
+                        .rows()
+                        .iter()
+                        .filter_map(|row| step_library.library_targets.get(row.target).copied())
+                        .collect();
+                    let material_nuclides_without_rows: Vec<String> = bulk_inv
+                        .keys()
+                        .filter(|key| !targets_with_rows.contains(key))
+                        .map(|&(za, liso)| name_of(za, liso))
+                        .collect();
                     serde_json::json!({
                         "library": step_library.reference.path,
                         "library_sha256": step_library.library_sha,
@@ -6871,6 +7029,7 @@ impl PreparedRun {
                         "group_structure": step_library.group_structure,
                         "steps": steps_on,
                         "fluence_particles_cm2": fluence,
+                        "material_nuclides_without_rows": material_nuclides_without_rows,
                         "products_no_evaluated_decay_data": rates.map(|ledger| &ledger.products_no_decay_data),
                         "products_unmapped_to_leakage": rates.map(|ledger| &ledger.products_unmapped),
                         "isomer_state_absent_from_decay_library_used_ground": rates.map(|ledger| &ledger.isomer_fell_back_to_ground),
@@ -6963,7 +7122,12 @@ impl PreparedRun {
                     serde_json::json!({
                         "applied": partition_records,
                         "mode": mode,
-                        "mode_forced_coupled": spec.options.mode == "auto",
+                        "mode_forced_coupled": partition_forced_coupled,
+                        "numerical_floor_atoms_per_g_max": steps
+                            .iter()
+                            .map(|step| step.numerical_floor_atoms_per_g)
+                            .fold(0.0f64, f64::max),
+                        "numerical_floor_note": "the coupled formulation carries the bulk material as a state, so its CRAM scale alpha0 * max(N) (see numerical_floor) can exceed trace-level activation products; populations below it are reported, not removed",
                         "removed_atoms_per_g_final": steps
                             .last()
                             .and_then(|step| step.removed_atoms_per_g),
@@ -7144,6 +7308,12 @@ impl PreparedRun {
                     "instances": ch.ledger.sf_branches,
                 }));
             }
+            if ch.ledger.unknown_modes > 0 {
+                decay_defects.push(serde_json::json!({
+                    "class": "unmodelled_decay_branches_to_leakage",
+                    "instances": ch.ledger.unknown_modes,
+                }));
+            }
             let mut unquantified: Vec<serde_json::Value> = Vec::new();
             if !led.targets_absent_from_decay_lib.is_empty() {
                 unquantified.push(serde_json::json!({
@@ -7221,14 +7391,32 @@ impl PreparedRun {
                     step.radiological.as_ref().map(|radiological| {
                         serde_json::json!({
                             "step": step.step,
-                            "responses": radiological.responses.iter().map(|response| serde_json::json!({
-                                "id": &response.id,
-                                "covered_activity_Bq_per_g": response.covered_activity_Bq_per_g,
-                                "missing_activity_Bq_per_g": response.missing_activity_Bq_per_g,
-                                "activity_coverage_fraction": response.activity_coverage_fraction,
-                                "contributing_nuclide_count": response.contributing_nuclide_count,
-                                "missing_active_nuclides": &response.missing_active_nuclides,
-                            })).collect::<Vec<_>>(),
+                            "responses": radiological.responses.iter().map(|response| {
+                                let mut entry = serde_json::json!({
+                                    "id": &response.id,
+                                    "covered_activity_Bq_per_g": response.covered_activity_Bq_per_g,
+                                    "missing_activity_Bq_per_g": response.missing_activity_Bq_per_g,
+                                    "activity_coverage_fraction": response.activity_coverage_fraction,
+                                    "contributing_nuclide_count": response.contributing_nuclide_count,
+                                    "missing_active_nuclides": &response.missing_active_nuclides,
+                                });
+                                // Present only when a table lists unlimited nuclides or covered
+                                // progeny and one is active, so other ledgers keep their bytes.
+                                let object = entry.as_object_mut().expect("entry is an object");
+                                if !response.unlimited_active_nuclides.is_empty() {
+                                    object.insert(
+                                        "unlimited_active_nuclides".into(),
+                                        serde_json::json!(&response.unlimited_active_nuclides),
+                                    );
+                                }
+                                if !response.covered_by_parent.is_empty() {
+                                    object.insert(
+                                        "covered_by_parent".into(),
+                                        serde_json::json!(&response.covered_by_parent),
+                                    );
+                                }
+                                entry
+                            }).collect::<Vec<_>>(),
                         })
                     })
                 })
@@ -7247,6 +7435,9 @@ impl PreparedRun {
                     "coverage_per_step": coverage_per_step,
                 }),
             );
+            if prepared.table.has_exemptions() {
+                ledger["radiological"]["exemption_semantics"] = "a nuclide the table lists as unlimited, or a progeny whose listed parent has positive activity, is counted as covered activity with zero contribution and is reported separately; it is never in missing_active_nuclides".into();
+            }
             if prepared.table.has_a2() {
                 ledger["radiological"]["formula"]["a2"] = "sum(activity_Bq_per_g / A2_Bq)".into();
             }
@@ -7317,6 +7508,10 @@ impl PreparedRun {
                     },
                 }),
             );
+            if let Some(uncovered) = &kerma_damage_uncovered {
+                ledger["kerma"]["damage_energy_uncovered_composition_targets"] =
+                    serde_json::json!(uncovered);
+            }
         }
         if let (Some(prepared), Some(plan)) = (&self.shielding, &shield_plan) {
             let (model, channel_map) = if plan.geometry.is_some() {
@@ -7570,9 +7765,9 @@ impl PreparedRun {
         }
         if let Some(brems) = &spec.photon.bremsstrahlung {
             certificate["photon"]["bremsstrahlung"] = serde_json::json!({
-                "model": "FISPACT-II manual appendix C.7.4, Eqs. 65-68: one beta-minus per decay at the mean beta energy, atom-fraction Z_eff",
+                "model": "FISPACT-II manual appendix C.7.4, Eqs. 65-68: beta-minus electrons per decay f (summed branching ratio of the beta-minus modes) at the mean energy ER/f of one electron (ER: the STYP=1 average energy per decay of the parent), atom-fraction Z_eff; the Eq. 67 bin-midpoint energy rule, with energy_closure and zero_lower_edge_energy_fraction reported",
                 "nuclides": &brems.nuclides,
-                "mean_beta_energy": "STYP=1 spectrum average energy of the decay record; never inferred",
+                "mean_beta_energy": "STYP=1 spectrum average energy per decay of the decay record divided by the beta-minus electrons per decay from its decay modes; never inferred",
             });
         }
         if let (Some(options), Some(runtime)) = (&spec.uncertainty, &uncertainty_runtime) {
@@ -7772,7 +7967,7 @@ impl PreparedRun {
                     serde_json::json!([
                         "sigmoid parameters A1, A2, z0, p are the Martinho et al. fit quoted in the FISPACT-II manual (Eqs. 45-48); the peak cross section is the single-level Breit-Wigner value 4*pi/k^2 * g*Gamma_n/Gamma",
                         "Sigma_tot at each resonance counts only the shielded nuclide's own peak; the other mixture components are neglected (resonances are assumed not to overlap)",
-                        "only Breit-Wigner and Reich-Moore resolved resonances are used; the unresolved range is not shielded",
+                        "Breit-Wigner, Reich-Moore and R-matrix-limited (LRF=7) resolved resonances are used, each as a single level (LRF=7: neutron, capture and all-channel width sums; closed channels contribute nothing; IFG=1 amplitudes become widths 2*P*gamma^2); only levels inside the [EL, EH] of the range that lists them count, and the unresolved range is not shielded",
                         "damage-energy observables are not shielded",
                         "number densities use the declared material and density, not evolved inventories",
                     ]),
@@ -10828,6 +11023,11 @@ mod fission_prepared_tests {
         close(atoms(step, "Sr94"), 0.5 * n0, 1e-9);
         assert!(step.leakage_atoms_per_g <= 1e-9 * n0);
         assert_eq!(result.ledger["spontaneous_fission_branches_to_leakage"], 0);
+        // P140 Amendment E: the unmodelled-mode count is absent when zero.
+        assert!(result
+            .ledger
+            .get("unmodelled_decay_branches_to_leakage")
+            .is_none());
         assert_eq!(
             result.ledger["spontaneous_fission"]["routed_to_products"],
             serde_json::json!(["Cf252"])

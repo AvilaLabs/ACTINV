@@ -11,7 +11,7 @@ use actinv_data::decay::{ContinuousRadiation, Nuclide};
 use serde::{Deserialize, Serialize};
 
 use crate::run::EV;
-use crate::spec::{BremsstrahlungOptions, PointSourceOptions};
+use crate::spec::{BremsstrahlungOptions, PointSourceOptions, POINT_SOURCE_MIN_DISTANCE_M};
 
 pub const FISPACT_24_BOUNDARIES_EV: [f64; 25] = [
     0.0, 1.0e4, 2.0e4, 5.0e4, 1.0e5, 2.0e5, 3.0e5, 4.0e5, 6.0e5, 8.0e5, 1.0e6, 1.22e6, 1.44e6,
@@ -176,6 +176,12 @@ pub struct PointSourceDoseOut {
 pub struct BremsstrahlungNuclideOut {
     pub nuclide: String,
     pub activity_Bq_g: f64,
+    /// Beta-minus electrons per decay: the summed branching ratio of the decay modes whose
+    /// RTYP carries a beta-minus electron.
+    #[serde(default)]
+    pub electrons_per_decay: f64,
+    /// Mean energy of one beta-minus electron: the STYP=1 average energy per decay divided by
+    /// `electrons_per_decay`.
     pub mean_beta_energy_eV: f64,
     pub photons_s_g: f64,
     pub power_W_g: f64,
@@ -208,6 +214,17 @@ pub struct BremsstrahlungOut {
     /// Energy the model emits into a group whose lower edge is 0 eV; Eq. (66) diverges there,
     /// so that group is left empty and its exact energy is reported instead.
     pub zero_lower_edge_group_power_W_g: f64,
+    /// Share of the analytic emitted energy `a Z E0^2 / 2` per electron that the zero-lower-edge
+    /// group holds and the grouped photons therefore lack; `None` when nothing was emitted.
+    #[serde(default)]
+    pub zero_lower_edge_energy_fraction: Option<f64>,
+    /// Photon energy emitted into the groups plus the zero-lower-edge energy, over the analytic
+    /// total `a Z E0^2 / 2` per electron. Eq. (67) gives each group's photons its bin midpoint,
+    /// so this is not 1 in general: above 1 where the midpoint exceeds the photons' mean
+    /// energy, below 1 where the spectrum extends past the last group. `None` when nothing was
+    /// emitted.
+    #[serde(default)]
+    pub energy_closure: Option<f64>,
     pub contact_gamma_air_dose_proxy_Gy_h: Option<f64>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub point_source_gamma_air_dose_Sv_h: Option<f64>,
@@ -972,7 +989,9 @@ fn point_source_dose(
         excluded += ungrouped_W_g * mass_g;
     }
     let total_W = reference_power_W_g * mass_g;
-    let complete = excluded == 0.0 && subthreshold <= SUBTHRESHOLD_POWER_TOLERANCE * total_W;
+    let complete = excluded == 0.0
+        && subthreshold <= SUBTHRESHOLD_POWER_TOLERANCE * total_W
+        && dose.is_finite();
     Ok(PointDoseTerms {
         dose_Sv_h: complete.then_some(dose),
         subthreshold_W: subthreshold,
@@ -983,6 +1002,9 @@ fn point_source_dose(
 /// Add the FISPACT-II `DOSE 2` point-source dose to a built step source. `mass_g` is the
 /// material mass the source rates were scaled by (`material.mass_g`, 1 g by default). When
 /// `bremsstrahlung` has been added to `source` first, its point-source dose is filled too.
+/// A distance below `POINT_SOURCE_MIN_DISTANCE_M` or a non-finite or non-positive distance,
+/// mass or (with air attenuation) air density gives no dose and says why. The dose is also
+/// withheld while decay-record gamma power has no photon spectrum to place it in the groups.
 pub fn add_point_source_dose(
     source: &mut PhotonSourceOut,
     response: Option<&PhotonResponse>,
@@ -1000,22 +1022,70 @@ pub fn add_point_source_dose(
         excluded_power_W: 0.0,
         unavailable_reason: None,
     };
+    let unusable =
+        if !(options.distance_m.is_finite() && options.distance_m >= POINT_SOURCE_MIN_DISTANCE_M) {
+            Some(format!(
+                "photon.point_source distance {} m must be finite and at least \
+             {POINT_SOURCE_MIN_DISTANCE_M} m",
+                options.distance_m
+            ))
+        } else if !(mass_g.is_finite() && mass_g > 0.0) {
+            Some(format!(
+                "the source mass {mass_g} g must be finite and positive"
+            ))
+        } else if options.air_attenuation
+            && !(options.air_density_g_cm3.is_finite() && options.air_density_g_cm3 > 0.0)
+        {
+            Some(format!(
+                "the air density {} g/cm3 must be finite and positive",
+                options.air_density_g_cm3
+            ))
+        } else {
+            None
+        };
+    if let Some(reason) = unusable {
+        out.unavailable_reason = Some(reason);
+        for n in &mut source.by_nuclide {
+            n.point_source_gamma_air_dose_Sv_h = None;
+        }
+        if let Some(b) = source.bremsstrahlung.as_mut() {
+            b.point_source_gamma_air_dose_Sv_h = None;
+            for n in &mut b.by_nuclide {
+                n.point_source_gamma_air_dose_Sv_h = None;
+            }
+        }
+        source.point_source_dose = Some(out);
+        return;
+    }
     match response {
         None => out.unavailable_reason = Some("no photon.response was supplied".into()),
         Some(r) => {
             match point_source_dose(&source.groups, source.source_power_W_g, mass_g, r, options) {
                 Err(reason) => out.unavailable_reason = Some(reason),
                 Ok(terms) => {
+                    // Gamma power the decay record carries but no spectrum places in a group
+                    // never reaches the sum, exactly like power outside the response.
+                    let unrepresented_W = source.unrepresented_gamma_power_W_g * mass_g;
                     out.subthreshold_power_W = terms.subthreshold_W;
-                    out.excluded_power_W = terms.excluded_W;
-                    out.gamma_air_dose_Sv_h = terms.dose_Sv_h;
-                    out.gamma_air_dose_Sv_h_per_g = terms.dose_Sv_h.map(|d| d / mass_g);
+                    out.excluded_power_W = terms.excluded_W + unrepresented_W;
+                    let dose = terms.dose_Sv_h.filter(|_| unrepresented_W <= 0.0);
+                    out.gamma_air_dose_Sv_h = dose;
+                    out.gamma_air_dose_Sv_h_per_g = dose.map(|d| d / mass_g);
+                    let mut reasons = Vec::new();
                     if terms.dose_Sv_h.is_none() {
-                        out.unavailable_reason = Some(
+                        reasons.push(
                             "photon power outside the response's energy range or the group \
-                             structure exceeds the tolerance"
-                                .into(),
+                             structure exceeds the tolerance",
                         );
+                    }
+                    if unrepresented_W > 0.0 {
+                        reasons.push(
+                            "decay-record gamma power without a photon spectrum is not \
+                             represented in the groups",
+                        );
+                    }
+                    if !reasons.is_empty() {
+                        out.unavailable_reason = Some(reasons.join("; "));
                     }
                     for n in &mut source.by_nuclide {
                         if let Ok(t) =
@@ -1066,9 +1136,29 @@ fn bremsstrahlung_energy_below_keV(z: f64, e0_keV: f64, hi_keV: f64) -> f64 {
     BREMSSTRAHLUNG_A_PER_KEV * z * (e0_keV * top - 0.5 * top * top)
 }
 
-/// Mean beta-minus energy per decay (eV): the decay record's STYP=1 spectrum average energy.
-/// `None` when the record carries no such spectrum; the electron/light-particle mean energy
-/// is not substituted because it also counts conversion and Auger electrons.
+/// Whether a decay mode's RTYP carries a beta-minus electron: the digit 1 in its decimal
+/// spelling (1.0 beta-minus; 1.5 beta-minus then neutron). RTYP 10 (unknown origin) does not.
+fn rtyp_has_beta_minus(rtyp: f64) -> bool {
+    let spelled = format!("{rtyp}");
+    let integer_part = spelled.split('.').next().unwrap_or("");
+    integer_part != "10" && spelled.contains('1')
+}
+
+/// Beta-minus electrons per decay of the parent: the summed branching ratio of the decay modes
+/// whose RTYP carries one. Zero when the record has no such mode.
+fn beta_minus_electrons_per_decay(nu: &Nuclide) -> f64 {
+    nu.modes
+        .iter()
+        .filter(|m| rtyp_has_beta_minus(m.rtyp) && m.br.is_finite() && m.br > 0.0)
+        .map(|m| m.br)
+        .sum()
+}
+
+/// The decay record's STYP=1 spectrum average energy (eV): the beta-minus energy per decay of
+/// the parent (ENDF list item ER), already weighted by the branching ratio. Divide by
+/// `beta_minus_electrons_per_decay` for the mean energy of one electron. `None` when the record
+/// carries no such spectrum; the electron/light-particle mean energy is not substituted because
+/// it also counts conversion and Auger electrons.
 fn mean_beta_energy_eV(nu: &Nuclide) -> Option<f64> {
     let total: f64 = nu
         .spectra
@@ -1146,9 +1236,11 @@ fn contact_dose_from_groups(
 
 /// Add the FISPACT-II `BREMSSTRAHLUNG` correction (manual appendix C.7.4) to a built step source
 /// as the separate `bremsstrahlung` component. Each requested nuclide with positive activity
-/// emits one beta-minus per decay at its mean beta energy `E0`; Eqs. (66)-(67) give the photons
-/// and mean-energy intensity in every group of the source's structure for the material's
-/// `z_eff`. A nuclide lacking `E0`, or every nuclide when `z_eff` is unavailable, is listed in
+/// emits `f` beta-minus electrons per decay (the summed branching ratio of its beta-minus
+/// modes), each at the mean beta energy `E0 = ER / f` where ER is the decay record's STYP=1
+/// average energy per decay of the parent; Eqs. (66)-(67) give the photons and mean-energy
+/// intensity in every group of the source's structure for the material's `z_eff`. A nuclide
+/// lacking ER or `f`, or every nuclide when `z_eff` is unavailable, is listed in
 /// `missing_inputs` and contributes nothing. The decay-photon fields of `source` are untouched.
 #[allow(clippy::too_many_arguments)]
 pub fn add_bremsstrahlung(
@@ -1167,37 +1259,52 @@ pub fn add_bremsstrahlung(
     let mut aggregate_count = vec![0.0; ng];
     let mut aggregate_moment = vec![0.0; ng];
     let mut zero_edge_power = 0.0;
+    let mut analytic_power = 0.0;
     let mut by_nuclide = Vec::new();
     let mut missing_inputs = Vec::new();
     for &(name, nu, activity) in active {
         if activity <= 0.0 || nu.lambda() <= 0.0 || !options.nuclides.iter().any(|n| n == name) {
             continue;
         }
-        let e0_eV = mean_beta_energy_eV(nu);
+        let per_decay_eV = mean_beta_energy_eV(nu);
+        let electrons = beta_minus_electrons_per_decay(nu);
         let mut reasons = Vec::new();
-        if e0_eV.is_none() {
+        if per_decay_eV.is_none() {
             reasons.push(
                 "mean beta-minus energy (the decay record has no STYP=1 spectrum average energy)"
+                    .to_string(),
+            );
+        }
+        if electrons <= 0.0 {
+            reasons.push(
+                "beta-minus electrons per decay (the decay record has no beta-minus decay mode)"
                     .to_string(),
             );
         }
         if let Err(reason) = z_eff {
             reasons.push(format!("material Z_eff: {reason}"));
         }
-        let (Some(e0_eV), Ok(z)) = (e0_eV, z_eff) else {
+        let (Some(per_decay_eV), true, Ok(z)) = (per_decay_eV, electrons > 0.0, z_eff) else {
             missing_inputs.push(BremsstrahlungMissingInput {
                 nuclide: name.into(),
                 missing: reasons.join("; "),
             });
             continue;
         };
+        // ER is the beta-minus energy per decay of the parent, already multiplied by the
+        // branching ratio: f electrons per decay of E0 = ER / f each.
+        let e0_eV = per_decay_eV / electrons;
         let e0_keV = e0_eV / 1000.0;
+        // The Eq. (65) total, a Z E0^2 / 2 per electron, that the groups should add up to.
+        let analytic_keV = bremsstrahlung_energy_below_keV(*z, e0_keV, e0_keV);
+        analytic_power += activity * electrons * analytic_keV * 1000.0 * EV;
         let mut groups = Vec::with_capacity(ng);
         let (mut photons, mut moment_total) = (0.0, 0.0);
         for g in 0..ng {
             let (lo, hi) = (boundaries[g], boundaries[g + 1]);
             if lo <= 0.0 {
                 zero_edge_power += activity
+                    * electrons
                     * bremsstrahlung_energy_below_keV(*z, e0_keV, hi / 1000.0)
                     * 1000.0
                     * EV;
@@ -1206,7 +1313,7 @@ pub fn add_bremsstrahlung(
             }
             let per_electron =
                 bremsstrahlung_photons_per_electron(*z, e0_keV, lo / 1000.0, hi / 1000.0);
-            let rate = activity * per_electron;
+            let rate = activity * electrons * per_electron;
             // Eq. (67): the group's energy is its photon number times the bin midpoint.
             let moment_rate = rate * 0.5 * (lo + hi);
             aggregate_count[g] += rate;
@@ -1225,6 +1332,7 @@ pub fn add_bremsstrahlung(
         by_nuclide.push(BremsstrahlungNuclideOut {
             nuclide: name.into(),
             activity_Bq_g: activity,
+            electrons_per_decay: electrons,
             mean_beta_energy_eV: e0_eV,
             photons_s_g: photons,
             power_W_g: moment_total * EV,
@@ -1274,6 +1382,9 @@ pub fn add_bremsstrahlung(
         power_W_g: power,
         power_W: power * mass_g,
         zero_lower_edge_group_power_W_g: zero_edge_power,
+        zero_lower_edge_energy_fraction: (analytic_power > 0.0)
+            .then(|| zero_edge_power / analytic_power),
+        energy_closure: (analytic_power > 0.0).then(|| (power + zero_edge_power) / analytic_power),
         contact_gamma_air_dose_proxy_Gy_h: contact,
         point_source_gamma_air_dose_Sv_h: None,
         inputs_complete: missing_inputs.is_empty(),
@@ -1774,7 +1885,7 @@ mod tests {
         };
         use crate::run::EV;
         use crate::spec::{BremsstrahlungOptions, PointSourceOptions};
-        use actinv_data::decay::{DiscreteRadiation, Nuclide, Spectrum};
+        use actinv_data::decay::{DiscreteRadiation, Mode, Nuclide, Spectrum};
         use std::collections::BTreeMap;
 
         // Group 0 is 0.5-1.5 MeV, so a 1 MeV line sits on its midpoint and on a tabulated energy.
@@ -1862,7 +1973,19 @@ mod tests {
                 half_life: 1.0,
                 d_half_life: 0.0,
                 energies: vec![0.0, 0.0, gamma_lines.iter().map(|&(e, i)| e * i).sum()],
-                modes: Vec::new(),
+                // A beta-minus emitter decays by beta-minus alone; the bremsstrahlung model needs
+                // the branching ratio.
+                modes: beta_mean_eV
+                    .map(|_| Mode {
+                        rtyp: 1.0,
+                        rfs: 0.0,
+                        q: 0.0,
+                        dq: 0.0,
+                        br: 1.0,
+                        dbr: 0.0,
+                    })
+                    .into_iter()
+                    .collect(),
                 spectra,
             }
         }

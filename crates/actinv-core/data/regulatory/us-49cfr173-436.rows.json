@@ -14,8 +14,8 @@
   "licence": "US Government work (17 U.S.C. 105), public domain. The values mirror IAEA SSR-6 (Rev.1) Table 2 as published in 49 CFR."
  },
  "tables": {
-  "us-49cfr173-exempt-concentration.json": "18230278610960b8f43e000e70c941b7296b37cffe206cc93f2bbb19e5aaa83d",
-  "us-49cfr173-exempt-consignment.json": "985f01b46f887361da829cea0ebbe7f0be8ffb31bd0494ddc84dd24c496f289c"
+  "us-49cfr173-exempt-concentration.json": "5e8f46c6259a402bc4f85918d8d3287bf67d8775eb07b48cb822e438d9f9113a",
+  "us-49cfr173-exempt-consignment.json": "da82281abf6f4fd011ca3a051eeb4fbe3bab9e8291d422daf774b769b9e91f6f"
  },
  "footnotes": {
   "a": [

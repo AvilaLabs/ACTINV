@@ -270,7 +270,9 @@ def parse_decay_section(lines):
     if not (math.isfinite(za) and za > 0 and math.isfinite(awr) and awr > 0):
         raise ValueError(f"invalid decay HEAD ZA/AWR {za}/{awr}")
     energy_head, energies, nxt = read_list(lines, 1)
-    mode_head, _mode_values, nxt = read_list(lines, nxt)
+    mode_head, mode_values, nxt = read_list(lines, nxt)
+    # six numbers per decay mode: RTYP, RFS, Q, DQ, BR, DBR
+    modes = [(mode_values[i], mode_values[i + 4]) for i in range(0, len(mode_values) - 5, 6)]
     spectra = []
     for _ in range(nsp):
         head, values, nxt = read_list(lines, nxt)
@@ -292,7 +294,7 @@ def parse_decay_section(lines):
     if nxt != len(lines):
         raise ValueError(f"MF=8/MT=457 section has {len(lines) - nxt} unconsumed record line(s)")
     return {"za": int(round(za)), "liso": liso, "awr": awr, "nst": nst, "half_life": energy_head[0],
-            "energies": energies, "spectra": spectra}
+            "energies": energies, "modes": modes, "spectra": spectra}
 
 
 def scan_decay_file(path, needed):
@@ -355,6 +357,23 @@ def mean_beta_energy_eV(rec):
     return total if math.isfinite(total) and total > 0.0 else None
 
 
+def beta_minus_electrons_per_decay(rec):
+    """Summed branching ratio of the decay modes whose RTYP spelling contains the digit 1 (1.0, 1.5, ...),
+    except RTYP 10 (unknown origin). The STYP=1 average energy is per decay of the parent, so this is the
+    electron count that goes with it."""
+    total = 0.0
+    for rtyp, br in rec.get("modes", []):
+        spelled = format(rtyp, "g")
+        if spelled.split(".")[0] != "10" and "1" in spelled and math.isfinite(br) and br > 0.0:
+            total += br
+    return total
+
+
+def brems_ready(rec):
+    """True when the bremsstrahlung model has both its inputs: an ER and a beta-minus electron count."""
+    return mean_beta_energy_eV(rec) is not None and beta_minus_electrons_per_decay(rec) > 0.0
+
+
 # ------------------------------------------------------------------------------ response curves, Eq. 63
 
 
@@ -385,12 +404,14 @@ def load_response(path):
             "mu": (mu["energy_eV"], mu["values_cm2_g"]) if mu else None}
 
 
-def dose_terms(groups, reference_power_W_g, mass_g, resp, r, air, rho):
+def dose_terms(groups, reference_power_W_g, mass_g, resp, r, air, rho, unrepresented_W_g=0.0):
     """Manual Eq. (63) over `groups`, each at its centroid, no build-up:
         D = sum_i mu_en(E_i) exp(-mu(E_i) r) P_i / (4 pi r^2)
     with mu_en [cm2/g -> 0.1 m2/kg], mu = (mu/rho) rho [per cm -> 100 per m], P_i = power_W_g * mass, and a factor
     3600 for Sv/h. Returns the raw sum, whether the dose is reportable, the excluded/sub-threshold power and the
-    per-group contributions (for the ratio check). `unavailable` when air transmission lacks its curve."""
+    per-group contributions (for the ratio check). `unavailable` when air transmission lacks its curve.
+    `unrepresented_W_g` is decay-record gamma power with no photon spectrum: it never reaches the groups, so it is
+    excluded power and withholds the dose."""
     if air and resp["mu"] is None:
         return {"unavailable": True}
     e_lo = resp["mu_en"][0][0]
@@ -425,6 +446,7 @@ def dose_terms(groups, reference_power_W_g, mass_g, resp, r, air, rho):
     ungrouped = max(reference_power_W_g - grouped, 0.0)
     if ungrouped > UNGROUPED_TOL * reference_power_W_g:
         excluded += ungrouped * mass_g
+    excluded += unrepresented_W_g * mass_g
     total_W = reference_power_W_g * mass_g
     complete = excluded == 0.0 and subthreshold <= SUBTHRESHOLD_TOL * total_W
     return {"unavailable": False, "dose_raw": dose, "dose": dose if complete else None, "complete": complete,
@@ -470,7 +492,7 @@ def check_point_source_run(accs, label, result, resp, point, mass_g):
             continue
         accs.check("source_power_W_scales_with_mass", tag, ps["source_power_W"], ps["source_power_W_g"] * mass_g)
         terms = dose_terms(ps["groups"], ps["source_power_W_g"], mass_g, resp, point["distance_m"], point["air"],
-                           point["rho"])
+                           point["rho"], ps["unrepresented_gamma_power_W_g"])
         check_point_source_block(accs, tag, ps.get("point_source_dose"), terms, point, mass_g)
         nuclide_terms = {}
         for n in ps["by_nuclide"]:
@@ -640,35 +662,39 @@ def brems_expected(step_act, requested, records, z, boundaries, mass_g):
     by_nuclide, missing = {}, {}
     agg_count, agg_moment = [0.0] * ng, [0.0] * ng
     zero_edge = 0.0
+    analytic = 0.0
     for name in requested:
         activity = step_act.get(name, 0.0)
         if activity <= 0.0:
             continue
         rec = records.get(key_of(name))
-        e0 = mean_beta_energy_eV(rec) if rec else None
-        if e0 is None:
-            missing[name] = "beta"
+        er = mean_beta_energy_eV(rec) if rec else None
+        f = beta_minus_electrons_per_decay(rec) if rec else 0.0
+        if er is None or f <= 0.0:
+            missing[name] = "beta" if er is None else "modes"
             continue
+        e0 = er / f  # ER is per decay of the parent: f electrons of ER / f each
         e0_keV = e0 / 1000.0
+        analytic += activity * f * brems_energy_below_keV(z, e0_keV, e0_keV) * 1000.0 * EV_J
         groups = []
         photons = moment_total = 0.0
         for g in range(ng):
             lo, hi = boundaries[g], boundaries[g + 1]
             if lo <= 0.0:
-                zero_edge += activity * brems_energy_below_keV(z, e0_keV, hi / 1000.0) * 1000.0 * EV_J
+                zero_edge += activity * f * brems_energy_below_keV(z, e0_keV, hi / 1000.0) * 1000.0 * EV_J
                 groups.append((0.0, 0.0))
                 continue
-            rate = activity * brems_photons_per_electron(z, e0_keV, lo / 1000.0, hi / 1000.0)
+            rate = activity * f * brems_photons_per_electron(z, e0_keV, lo / 1000.0, hi / 1000.0)
             moment = rate * 0.5 * (lo + hi)  # Eq. (67): the bin-midpoint energy
             agg_count[g] += rate
             agg_moment[g] += moment
             photons += rate
             moment_total += moment
             groups.append((rate, moment))
-        by_nuclide[name] = {"e0_eV": e0, "activity": activity, "groups": groups, "photons_s_g": photons,
-                            "power_W_g": moment_total * EV_J}
+        by_nuclide[name] = {"e0_eV": e0, "electrons": f, "activity": activity, "groups": groups,
+                            "photons_s_g": photons, "power_W_g": moment_total * EV_J}
     return {"by_nuclide": by_nuclide, "missing": missing, "agg_count": agg_count, "agg_moment": agg_moment,
-            "zero_edge_W_g": zero_edge, "photons_s_g": sum(agg_count), "power_W_g": sum(agg_moment) * EV_J,
+            "zero_edge_W_g": zero_edge, "analytic_W_g": analytic, "photons_s_g": sum(agg_count), "power_W_g": sum(agg_moment) * EV_J,
             "without_activity": [n for n in requested if step_act.get(n, 0.0) <= 0.0]}
 
 
@@ -707,8 +733,9 @@ def check_brems_run(accs, label, result, requested, records, z_expected, mass_g,
         accs.check("brems.missing_input_nuclides", tag, sorted(m["nuclide"] for m in b["missing_inputs"]),
                    sorted(exp["missing"]))
         for m in b["missing_inputs"]:
-            accs.check("brems.missing_input_names_beta_energy", f"{tag}/{m['nuclide']}",
-                       "mean beta-minus energy" in m["missing"], True)
+            reason = ("mean beta-minus energy" if exp["missing"].get(m["nuclide"]) == "beta"
+                      else "beta-minus electrons per decay")
+            accs.check("brems.missing_input_names_the_input", f"{tag}/{m['nuclide']}", reason in m["missing"], True)
         accs.check("brems.inputs_complete", tag, b["inputs_complete"], not exp["missing"])
         accs.check("brems.nuclide_set", tag, sorted(n["nuclide"] for n in b["by_nuclide"]),
                    sorted(exp["by_nuclide"]))
@@ -718,6 +745,14 @@ def check_brems_run(accs, label, result, requested, records, z_expected, mass_g,
         accs.check("brems.power_W", tag, b["power_W"], exp["power_W_g"] * mass_g)
         accs.check("brems.zero_lower_edge_group_power_W_g", tag, b["zero_lower_edge_group_power_W_g"],
                    exp["zero_edge_W_g"])
+        if exp["analytic_W_g"] > 0.0:
+            accs.check("brems.zero_lower_edge_energy_fraction", tag, b["zero_lower_edge_energy_fraction"],
+                       exp["zero_edge_W_g"] / exp["analytic_W_g"])
+            accs.check("brems.energy_closure", tag, b["energy_closure"],
+                       (exp["power_W_g"] + exp["zero_edge_W_g"]) / exp["analytic_W_g"])
+        else:
+            accs.check("brems.diagnostics_absent", tag,
+                       [b["zero_lower_edge_energy_fraction"], b["energy_closure"]], [None, None])
         if boundaries[0] <= 0.0:
             accs.check("brems.zero_edge_group_empty", tag,
                        [b["groups"][0]["photons_s_g"], b["groups"][0]["power_W_g"]], [0.0, 0.0])
@@ -730,6 +765,7 @@ def check_brems_run(accs, label, result, requested, records, z_expected, mass_g,
             n_nuclide_steps += 1
             w = f"{tag}/{n['nuclide']}"
             accs.check("brems.nuclide.activity_Bq_g", w, n["activity_Bq_g"], e["activity"])
+            accs.check("brems.nuclide.electrons_per_decay", w, n["electrons_per_decay"], e["electrons"])
             accs.check("brems.nuclide.mean_beta_energy_eV", w, n["mean_beta_energy_eV"], e["e0_eV"])
             accs.check("brems.nuclide.photons_s_g", w, n["photons_s_g"], e["photons_s_g"])
             accs.check("brems.nuclide.power_W_g", w, n["power_W_g"], e["power_W_g"])
@@ -765,25 +801,39 @@ def strip_brems(result):
 # ------------------------------------------------------------------------------ A2 index
 
 
-def a2_expected(activity, coefficients, kind):
+def a2_expected(activity, response, kind):
     """sum of the kind's contribution over the nuclides with a coefficient, in sorted-name order, plus the
-    covered/missing bookkeeping. waste_index/clearance_index: 1000 act / limit; a2: act / A2."""
+    covered/missing bookkeeping. waste_index/clearance_index: 1000 act / limit; a2: act / A2. A nuclide listed
+    `unlimited`, or a progeny whose listed parent has positive activity (`covered_by_parent`, checked first),
+    is covered with zero contribution and reported separately."""
     factor = 1.0 if kind == "a2" else 1000.0
+    coefficients = response["coefficients"]
+    unlimited_set = set(response.get("unlimited", []))
+    covered_map = response.get("covered_by_parent", {})
     terms, covered, missing_act, missing = [], 0.0, 0.0, []
+    unlimited, progeny = [], []
     total = math.fsum(activity.values())
     for name in sorted(activity):
         act = activity[name]
         if act <= 0.0:
             continue
+        parent = next((p for p in covered_map.get(name, []) if activity.get(p, 0.0) > 0.0), None)
         limit = coefficients.get(name)
-        if limit is None:
+        if parent is not None:
+            covered += act
+            progeny.append([name, parent])
+        elif name in unlimited_set:
+            covered += act
+            unlimited.append(name)
+        elif limit is None:
             missing_act += act
             missing.append(name)
         else:
             terms.append(factor * act / limit)
             covered += act
     return {"value": math.fsum(terms), "covered": covered, "missing_activity": missing_act, "missing": missing,
-            "contributing": len(terms), "coverage": covered / total if total > 0.0 else 1.0}
+            "contributing": len(terms), "coverage": covered / total if total > 0.0 else 1.0,
+            "unlimited": unlimited, "progeny": progeny}
 
 
 def check_a2_run(accs, label, result, table_doc, response_ids):
@@ -803,7 +853,7 @@ def check_a2_run(accs, label, result, table_doc, response_ids):
             if resp is None:
                 continue
             kind = resp["kind"]
-            exp = a2_expected(step["activity_Bq_per_g"], resp["coefficients"], kind)
+            exp = a2_expected(step["activity_Bq_per_g"], resp, kind)
             w = f"{tag}/{emitted['id']}"
             accs.check("a2.value", w, emitted["value"], exp["value"])
             accs.check("a2.unit", w, emitted["unit"], unit_of.get(kind, emitted["unit"]))
@@ -814,6 +864,10 @@ def check_a2_run(accs, label, result, table_doc, response_ids):
             accs.check("a2.contributing_nuclide_count", w, emitted["contributing_nuclide_count"],
                        exp["contributing"])
             accs.check("a2.missing_active_nuclides", w, emitted["missing_active_nuclides"], exp["missing"])
+            accs.check("a2.unlimited_active_nuclides", w, emitted.get("unlimited_active_nuclides", []),
+                       exp["unlimited"])
+            accs.check("a2.covered_by_parent", w,
+                       [[c["nuclide"], c["parent"]] for c in emitted.get("covered_by_parent", [])], exp["progeny"])
             for name in exp["missing"]:
                 entry = listed.setdefault(emitted["id"], {})
                 entry[name] = max(entry.get(name, 0.0), step["activity_Bq_per_g"][name])
@@ -1260,15 +1314,15 @@ def gate_g4(runner, cand_bin, base_spec, workdir, built_air, g3_runs):
     # one active nuclide without a beta spectrum (it must be listed as a missing input), one inactive request
     names = set(active) | set(fixed) | {"Cl36", "Fe53"}
     records = load_decay(primary, fallback, {key_of(n) for n in names})
-    beta = sorted(n for n in names if records.get(key_of(n)) and mean_beta_energy_eV(records[key_of(n)])
+    beta = sorted(n for n in names if records.get(key_of(n)) and brems_ready(records[key_of(n)])
                   and (n in fixed or active.get(n, 0.0) >= MIN_BREMS_ACTIVITY_BQ_G))
-    no_beta_active = sorted((n for n in active if records.get(key_of(n)) and not mean_beta_energy_eV(records[key_of(n)])
+    no_beta_active = sorted((n for n in active if records.get(key_of(n)) and not brems_ready(records[key_of(n)])
                              and active[n] >= MIN_BREMS_ACTIVITY_BQ_G), key=lambda n: -active[n])
     inactive = [n for n in ("Cl36", "K42", "Ar42") if active.get(n, 0.0) <= 0.0][:1]
     requested = beta + no_beta_active[:1] + inactive
     out["requested_nuclides"] = requested
     out["named_nuclides_with_styp1_spectrum"] = {n: bool(records.get(key_of(n))
-                                                         and mean_beta_energy_eV(records[key_of(n)]))
+                                                         and brems_ready(records[key_of(n)]))
                                                  for n in fixed}
     out["named_nuclides_peak_activity_Bq_g"] = {n: active.get(n, 0.0) for n in fixed}
     out["expected_missing_input_candidate"] = no_beta_active[:1]

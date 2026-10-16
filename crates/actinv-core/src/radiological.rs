@@ -5,7 +5,7 @@ use actinv_data::composition::{self, MaterialKey};
 use serde::de::{Error as _, MapAccess, Visitor};
 use serde::{Deserialize, Deserializer, Serialize};
 use sha2::{Digest, Sha256};
-use std::collections::{BTreeMap, HashSet};
+use std::collections::{BTreeMap, BTreeSet, HashSet};
 use std::fmt;
 
 const TABLE_FORMAT: &str = "actinv-radiological-table-1";
@@ -78,6 +78,12 @@ pub fn bundled_sha256(name: &str) -> Result<String, String> {
         "{:x}",
         Sha256::digest(bundled_table(name)?.as_bytes())
     ))
+}
+
+/// Check `selectors` against a bundled table's response IDs, so a typo fails at validation
+/// instead of when the run builds the table. An empty list selects every response.
+pub fn validate_bundled_selectors(name: &str, selectors: &[String]) -> Result<(), String> {
+    PreparedRadiologicalTable::from_json(bundled_table(name)?, selectors).map(|_| ())
 }
 
 /// Text and SHA-256 of a bundled table. A declared digest that differs is an error, as for a
@@ -259,6 +265,96 @@ struct ResponseWire {
     kind: RadiologicalKind,
     basis: String,
     coefficients: Coefficients,
+    /// Nuclides whose source limit is "unlimited": no coefficient, zero contribution, covered.
+    #[serde(default)]
+    unlimited: Vec<String>,
+    /// Progeny -> parents whose value already includes the progeny: while a listed parent has
+    /// positive activity the progeny contributes nothing and counts as covered.
+    #[serde(default)]
+    covered_by_parent: BTreeMap<String, Vec<String>>,
+}
+
+/// A nuclide name in a table list or map key: canonical, and not an element.
+fn canonical_nuclide(raw: &str, what: &str) -> Result<String, String> {
+    match composition::material_key(raw).map_err(|error| format!("{what} '{raw}': {error}"))? {
+        MaterialKey::Nuclide { canonical, .. } if canonical == raw => Ok(canonical),
+        MaterialKey::Nuclide { canonical, .. } => Err(format!(
+            "{what} '{raw}' is not canonical; use '{canonical}'"
+        )),
+        MaterialKey::Element(_) => Err(format!("{what} '{raw}' is an element, not a nuclide")),
+    }
+}
+
+/// A response's `unlimited` nuclides and its `covered_by_parent` map (progeny -> parents).
+type Exemptions = (BTreeSet<String>, BTreeMap<String, Vec<String>>);
+
+/// Validate a response's `unlimited` list and `covered_by_parent` map.
+fn prepare_exemptions(response: &ResponseWire) -> Result<Exemptions, String> {
+    let id = &response.id;
+    let mut unlimited = BTreeSet::new();
+    for raw in &response.unlimited {
+        let name = canonical_nuclide(
+            raw,
+            &format!("radiological response '{id}' unlimited entry"),
+        )?;
+        if response.coefficients.0.contains_key(&name) {
+            return Err(format!(
+                "radiological response '{id}' lists '{name}' as unlimited and gives it a coefficient"
+            ));
+        }
+        if !unlimited.insert(name.clone()) {
+            return Err(format!(
+                "radiological response '{id}' lists '{name}' as unlimited more than once"
+            ));
+        }
+    }
+    let mut covered = BTreeMap::new();
+    for (raw_progeny, raw_parents) in &response.covered_by_parent {
+        let what = format!("radiological response '{id}' covered_by_parent");
+        let progeny = canonical_nuclide(raw_progeny, &format!("{what} progeny"))?;
+        if raw_parents.is_empty() {
+            return Err(format!(
+                "{what} progeny '{progeny}' needs at least one parent"
+            ));
+        }
+        let mut parents = Vec::with_capacity(raw_parents.len());
+        for raw in raw_parents {
+            let parent = canonical_nuclide(raw, &format!("{what} parent of '{progeny}'"))?;
+            if parent == progeny {
+                return Err(format!("{what}: '{progeny}' cannot be its own parent"));
+            }
+            if !response.coefficients.0.contains_key(&parent) && !unlimited.contains(&parent) {
+                return Err(format!(
+                    "{what}: parent '{parent}' of '{progeny}' has neither a coefficient nor an unlimited entry"
+                ));
+            }
+            if parents.contains(&parent) {
+                return Err(format!(
+                    "{what}: parent '{parent}' of '{progeny}' is listed more than once"
+                ));
+            }
+            parents.push(parent);
+        }
+        covered.insert(progeny, parents);
+    }
+    // A progeny covered by a parent that it covers in turn would cancel both.
+    for progeny in covered.keys() {
+        let mut seen = BTreeSet::new();
+        let mut stack: Vec<&String> = covered[progeny].iter().collect();
+        while let Some(node) = stack.pop() {
+            if node == progeny {
+                return Err(format!(
+                    "radiological response '{id}' covered_by_parent has a cycle through '{progeny}'"
+                ));
+            }
+            if seen.insert(node) {
+                if let Some(parents) = covered.get(node) {
+                    stack.extend(parents.iter());
+                }
+            }
+        }
+    }
+    Ok((unlimited, covered))
 }
 
 #[derive(Debug, Deserialize)]
@@ -276,6 +372,8 @@ struct PreparedResponse {
     kind: RadiologicalKind,
     basis: String,
     coefficients: BTreeMap<String, f64>,
+    unlimited: BTreeSet<String>,
+    covered_by_parent: BTreeMap<String, Vec<String>>,
 }
 
 /// A parsed table reduced to the selected response IDs in source-file order.
@@ -296,6 +394,20 @@ pub struct RadiologicalResponseOut {
     pub activity_coverage_fraction: f64,
     pub contributing_nuclide_count: usize,
     pub missing_active_nuclides: Vec<String>,
+    /// Positive-activity nuclides whose source limit is "unlimited": covered, zero contribution.
+    #[serde(skip_serializing_if = "Vec::is_empty")]
+    pub unlimited_active_nuclides: Vec<String>,
+    /// Positive-activity progeny covered by a parent with positive activity: covered, zero
+    /// contribution.
+    #[serde(skip_serializing_if = "Vec::is_empty")]
+    pub covered_by_parent: Vec<CoveredProgenyOut>,
+}
+
+/// One progeny whose activity the named parent's value already includes.
+#[derive(Debug, Serialize)]
+pub struct CoveredProgenyOut {
+    pub nuclide: String,
+    pub parent: String,
 }
 
 #[derive(Debug, Serialize)]
@@ -338,6 +450,7 @@ impl PreparedRadiologicalTable {
         }
 
         let mut response_ids = HashSet::new();
+        let mut exemptions = Vec::with_capacity(table.responses.len());
         for response in &table.responses {
             if response.id.trim().is_empty() {
                 return Err("radiological response id must be nonempty".into());
@@ -354,6 +467,7 @@ impl PreparedRadiologicalTable {
                     response.id
                 ));
             }
+            exemptions.push(prepare_exemptions(response)?);
         }
 
         let mut selected_ids = HashSet::new();
@@ -376,13 +490,20 @@ impl PreparedRadiologicalTable {
         let responses = table
             .responses
             .into_iter()
-            .filter(|response| selectors.is_empty() || selected_ids.contains(response.id.as_str()))
-            .map(|response| PreparedResponse {
-                id: response.id,
-                kind: response.kind,
-                basis: response.basis,
-                coefficients: response.coefficients.0,
+            .zip(exemptions)
+            .filter(|(response, _)| {
+                selectors.is_empty() || selected_ids.contains(response.id.as_str())
             })
+            .map(
+                |(response, (unlimited, covered_by_parent))| PreparedResponse {
+                    id: response.id,
+                    kind: response.kind,
+                    basis: response.basis,
+                    coefficients: response.coefficients.0,
+                    unlimited,
+                    covered_by_parent,
+                },
+            )
             .collect();
         Ok(Self {
             title: table.title,
@@ -416,11 +537,28 @@ impl PreparedRadiologicalTable {
             let mut missing_activity = 0.0;
             let mut contributing_nuclide_count = 0usize;
             let mut missing_active_nuclides = Vec::new();
+            let mut unlimited_active_nuclides = Vec::new();
+            let mut covered_by_parent = Vec::new();
             for (nuclide, activity) in activity_Bq_per_g {
                 if *activity <= 0.0 {
                     continue;
                 }
-                if let Some(coefficient) = response.coefficients.get(nuclide) {
+                // A parent's value already includes its listed progeny, even one with its own row.
+                let parent = response.covered_by_parent.get(nuclide).and_then(|parents| {
+                    parents
+                        .iter()
+                        .find(|parent| activity_Bq_per_g.get(*parent).is_some_and(|a| *a > 0.0))
+                });
+                if let Some(parent) = parent {
+                    covered_activity += activity;
+                    covered_by_parent.push(CoveredProgenyOut {
+                        nuclide: nuclide.clone(),
+                        parent: parent.clone(),
+                    });
+                } else if response.unlimited.contains(nuclide) {
+                    covered_activity += activity;
+                    unlimited_active_nuclides.push(nuclide.clone());
+                } else if let Some(coefficient) = response.coefficients.get(nuclide) {
                     value += response.kind.contribution(*activity, *coefficient);
                     covered_activity += activity;
                     contributing_nuclide_count += 1;
@@ -456,6 +594,8 @@ impl PreparedRadiologicalTable {
                 },
                 contributing_nuclide_count,
                 missing_active_nuclides,
+                unlimited_active_nuclides,
+                covered_by_parent,
             });
         }
         Ok(RadiologicalStepOut { responses: outputs })
@@ -471,6 +611,13 @@ impl PreparedRadiologicalTable {
         self.has_kind(RadiologicalKind::ActivityLimit)
     }
 
+    /// True when a selected response lists unlimited nuclides or progeny covered by a parent.
+    pub fn has_exemptions(&self) -> bool {
+        self.responses.iter().any(|response| {
+            !response.unlimited.is_empty() || !response.covered_by_parent.is_empty()
+        })
+    }
+
     fn has_kind(&self, kind: RadiologicalKind) -> bool {
         self.responses.iter().any(|response| response.kind == kind)
     }
@@ -480,15 +627,30 @@ impl PreparedRadiologicalTable {
             "format": TABLE_FORMAT,
             "title": self.title,
             "source": self.source,
-            "responses": self.responses.iter().map(|response| serde_json::json!({
-                "id": response.id,
-                "kind": response.kind.name(),
-                "basis": response.basis,
-                "coefficient_count": response.coefficients.len(),
-                "coefficient_unit": response.kind.coefficient_unit(),
-                "output_unit": response.kind.output_unit(),
-                "formula": response.kind.formula(),
-            })).collect::<Vec<_>>(),
+            "responses": self.responses.iter().map(|response| {
+                let mut entry = serde_json::json!({
+                    "id": response.id,
+                    "kind": response.kind.name(),
+                    "basis": response.basis,
+                    "coefficient_count": response.coefficients.len(),
+                    "coefficient_unit": response.kind.coefficient_unit(),
+                    "output_unit": response.kind.output_unit(),
+                    "formula": response.kind.formula(),
+                });
+                // Counts appear only for tables that use the lists, so other certificates keep
+                // their bytes.
+                let object = entry.as_object_mut().expect("response metadata is an object");
+                if !response.unlimited.is_empty() {
+                    object.insert("unlimited_count".into(), response.unlimited.len().into());
+                }
+                if !response.covered_by_parent.is_empty() {
+                    object.insert(
+                        "covered_by_parent_count".into(),
+                        response.covered_by_parent.len().into(),
+                    );
+                }
+                entry
+            }).collect::<Vec<_>>(),
         })
     }
 }
@@ -698,13 +860,15 @@ mod tests {
         assert!(prepared.has_a2());
         assert_eq!(result.responses[0].value, 2.0 / 4.0e11);
         assert_eq!(result.responses[0].unit, "A2_per_g_material");
-        // Uranium rows are explicit per lung-absorption response; U-236 fast is unlimited.
+        // Uranium rows are explicit per lung-absorption response; U-236 fast is unlimited, which
+        // is covered with zero contribution, not missing.
         let uranium = BTreeMap::from([("U236".to_owned(), 1.0)]);
         let fast = PreparedRadiologicalTable::from_json(&text, &["a2-u-fast".to_owned()]).unwrap();
-        assert_eq!(
-            fast.evaluate(&uranium, false).unwrap().responses[0].missing_active_nuclides,
-            vec!["U236".to_owned()]
-        );
+        let fast_out = &fast.evaluate(&uranium, true).unwrap().responses[0];
+        assert!(fast_out.missing_active_nuclides.is_empty());
+        assert_eq!(fast_out.unlimited_active_nuclides, vec!["U236".to_owned()]);
+        assert_eq!(fast_out.value, 0.0);
+        assert_eq!(fast_out.activity_coverage_fraction, 1.0);
         assert!(prepared.evaluate(&uranium, true).is_ok());
     }
 
@@ -891,6 +1055,124 @@ mod tests {
             );
             assert_eq!(result.responses[0].value, 2.0 / 4.0e11, "{name}");
         }
+    }
+
+    fn exemption_table(extra: &str) -> String {
+        format!(
+            r#"{{
+  "format": "actinv-radiological-table-1",
+  "title": "exemption fixture",
+  "source": {{
+    "citation": "fixture",
+    "edition": "1",
+    "url": "https://example.invalid/fixture",
+    "jurisdiction": "test"
+  }},
+  "responses": [
+    {{"id":"a2", "kind":"a2", "basis":"A2 in Bq",
+      "coefficients":{{"Co60":4.0,"Cs137":6.0,"Sr90":3.0,"Y90":3.0}}{extra}}}
+  ]
+}}"#
+        )
+    }
+
+    #[test]
+    fn unlimited_and_covered_progeny_are_covered_with_zero_contribution() {
+        let text = exemption_table(
+            r#","unlimited":["Mn53"],"covered_by_parent":{"Ba137m1":["Cs137"],"Y90":["Sr90"]}"#,
+        );
+        let prepared = PreparedRadiologicalTable::from_json(&text, &[]).unwrap();
+        assert!(prepared.has_exemptions());
+        let activity = inventory(&[
+            ("Ba137m1", 0.5),
+            ("Co60", 2.0),
+            ("Cs137", 3.0),
+            ("Mn53", 1.0),
+            ("Sr90", 6.0),
+            ("Y90", 6.0),
+        ]);
+        let out = &prepared.evaluate(&activity, true).unwrap().responses[0];
+        assert_eq!(out.value, 2.0 / 4.0 + 3.0 / 6.0 + 6.0 / 3.0);
+        assert_eq!(out.contributing_nuclide_count, 3);
+        assert_eq!(out.activity_coverage_fraction, 1.0);
+        assert!(out.missing_active_nuclides.is_empty());
+        assert_eq!(out.unlimited_active_nuclides, vec!["Mn53".to_owned()]);
+        let pairs: Vec<_> = out
+            .covered_by_parent
+            .iter()
+            .map(|c| (c.nuclide.as_str(), c.parent.as_str()))
+            .collect();
+        assert_eq!(pairs, vec![("Ba137m1", "Cs137"), ("Y90", "Sr90")]);
+        let json = serde_json::to_value(out).unwrap();
+        assert_eq!(json["unlimited_active_nuclides"][0], "Mn53");
+        assert_eq!(json["covered_by_parent"][1]["parent"], "Sr90");
+        // A progeny covers only while a parent is present; its own row applies otherwise.
+        let alone = inventory(&[("Y90", 6.0), ("Ba137m1", 1.0)]);
+        let out = &prepared.evaluate(&alone, false).unwrap().responses[0];
+        assert_eq!(out.value, 6.0 / 3.0);
+        assert_eq!(out.missing_active_nuclides, vec!["Ba137m1".to_owned()]);
+        assert!(out.covered_by_parent.is_empty());
+        // Certificate counts appear only for tables that use the lists.
+        let metadata = prepared.certificate_metadata();
+        assert_eq!(metadata["responses"][0]["unlimited_count"], 1);
+        assert_eq!(metadata["responses"][0]["covered_by_parent_count"], 2);
+        let plain = PreparedRadiologicalTable::from_json(&exemption_table(""), &[]).unwrap();
+        assert!(!plain.has_exemptions());
+        let metadata = plain.certificate_metadata();
+        assert!(metadata["responses"][0].get("unlimited_count").is_none());
+        assert!(metadata["responses"][0]
+            .get("covered_by_parent_count")
+            .is_none());
+        let out = plain.evaluate(&alone, false).unwrap();
+        let json = serde_json::to_value(&out.responses[0]).unwrap();
+        assert!(json.get("unlimited_active_nuclides").is_none());
+        assert!(json.get("covered_by_parent").is_none());
+    }
+
+    #[test]
+    fn exemption_lists_are_validated_at_parse_time() {
+        for (extra, message) in [
+            (r#","unlimited":["Co60"]"#, "gives it a coefficient"),
+            (r#","unlimited":["Mn53","Mn53"]"#, "more than once"),
+            (r#","unlimited":["mn53"]"#, "not canonical"),
+            (r#","unlimited":["Mn"]"#, "element"),
+            (
+                r#","covered_by_parent":{"Ba137m1":[]}"#,
+                "at least one parent",
+            ),
+            (
+                r#","covered_by_parent":{"Ba137m1":["Ba137m1"]}"#,
+                "own parent",
+            ),
+            (
+                r#","covered_by_parent":{"Ba137m1":["Rn222"]}"#,
+                "neither a coefficient nor an unlimited entry",
+            ),
+            (
+                r#","covered_by_parent":{"Y90":["Sr90","Sr90"]}"#,
+                "more than once",
+            ),
+            (
+                r#","covered_by_parent":{"Sr90":["Y90"],"Y90":["Sr90"]}"#,
+                "cycle",
+            ),
+        ] {
+            let error =
+                PreparedRadiologicalTable::from_json(&exemption_table(extra), &[]).unwrap_err();
+            assert!(error.contains(message), "{extra}: {error}");
+        }
+    }
+
+    #[test]
+    fn bundled_selectors_are_checked_by_name() {
+        assert!(validate_bundled_selectors("us-49cfr173-a2", &[]).is_ok());
+        assert!(validate_bundled_selectors("us-49cfr173-a2", &["a2-u-fast".to_owned()]).is_ok());
+        assert!(
+            validate_bundled_selectors("us-49cfr173-a2", &["a2-u-medum".to_owned()])
+                .unwrap_err()
+                .contains("a2-u-medum")
+        );
+        assert!(validate_bundled_selectors("no-such-table", &[]).is_err());
     }
 
     #[test]

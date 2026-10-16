@@ -172,21 +172,30 @@ Opt-in. Declaring `"statistics": {}` adds a `sampling_statistics` block to each 
 
 Per `(response, time)` the block reports, under `responses.<response>.<time_s>`:
 
-- `distribution`: `n`, `mean`, `std` (unbiased, divisor `n-1`), `skewness` (moment skewness
+- `distribution`: `n` (finite values only, so it can be below `samples_succeeded`), `mean`, `std` (unbiased,
+  divisor `n-1`; `null` for a single value), `skewness` (moment skewness
   `m3/m2^1.5`, population moments; `null` below three samples or for a constant sample), `min`,
   `max`, `percentiles` and, when requested, `histogram {bin_edges, counts}` (the last bin is closed
   on the right). Percentiles are exact order statistics (nearest rank, Hyndman-Fan type 1): the
-  smallest sample value `x_(k)` with `k/n >= p/100`, `k = max(1, ceil(n p / 100))`. They are never
-  interpolated, so every reported percentile is a value that occurred in the sample.
+  smallest sample value `x_(k)` with `k/n >= p/100`, `k = max(1, ceil(n p / 100))`, the rank computed in
+  exact arithmetic on the decimal `p`. They are never interpolated, so every reported percentile is a value
+  that occurred in the sample. The percentile maps are JSON objects, so their keys appear in string order
+  (`"16"`, `"2.5"`, `"5"`, `"50"`, ...), not the requested order, and a repeated `p` appears once.
 - `convergence`: a fixed-seed nonparametric bootstrap gives `std_standard_error`,
   `std_relative_standard_error` and a `percentile_standard_error` for every requested percentile.
   Read it as "how much would this number move with another `samples` draws": a relative standard
   error of the std near `1/sqrt(2(n-1))` is what a normal response gives, and a tail percentile
-  with a large standard error says `samples` is too small for that tail.
+  with a large standard error says `samples` is too small for that tail. The bootstrap seed depends on the
+  position of the `(response, time)` series, so reordering `robustness.responses` changes the standard errors
+  (not the statistics). Fewer than three values give `{"status": "insufficient_samples", "n", "minimum"}`.
 - `first_order`: the P11 first-order std for the same response and time (`std`), next to the
   `sampled_std`, their ratio and the gap in bootstrap standard errors
-  (`deviation_in_std_standard_errors`). `null` when the first-order comparison was not computed
-  (no `cross_section_mf33`, `first_order_comparison: false` or a truncated run).
+  (`deviation_in_std_standard_errors`). The first-order propagation carries `cross_section_mf33` only, so
+  it is compared with the sampled std only when that is the sole enabled channel; with any other channel
+  enabled the study's `local_vs_nonlinear` reads `{"status": "not_comparable", "enabled_channels": [...]}`
+  and `first_order` repeats that status (read `channel_attribution.cross_section_mf33` instead). `null`
+  when the comparison was not computed (no `cross_section_mf33`, `first_order_comparison: false`, a
+  truncated run, or a single sample).
 - `input_correlations`: for every sampled input parameter the Pearson and Spearman correlation
   with the response, ranked by `|spearman|` (ties by `|pearson|`, then input order) and cut to
   `correlation_top`. Spearman is Pearson on average ranks, so ties share their mean rank. A
@@ -195,11 +204,17 @@ Per `(response, time)` the block reports, under `responses.<response>.<time_s>`:
   `xs:<target>:MT<mt>` with `target`, `mt`, `product_zap` and `product_lfs` (the sampled
   quantity is the spectrum-collapsed one-group value of that row, so there is no group index).
   The sampled variable is the natural log of the applied multiplicative factor. Parameters that
-  never vary (zero declared uncertainty) are omitted and counted in `n_constant_parameters`;
-  failed samples are dropped pairwise (`n_pairs`).
+  never vary (zero declared uncertainty) are omitted from the labels; `n_constant_parameters` counts the
+  parameters whose correlation is undefined, which is every parameter when the response itself is constant
+  over the samples. Failed samples are dropped pairwise (`n_pairs`). With fewer than three pairs the entry is
+  `{"status": "insufficient_samples", "n_pairs", "minimum"}` (two pairs would rank every parameter at +-1).
+  If the logged input layout does not match the parameter labels, the whole `input_correlations` key is
+  omitted.
 
 `response_correlation` holds the Pearson matrix over all `(response, time)` series, labeled
-`<response>@<time_s>`, using the samples where both are defined (`null` where undefined).
+`<response>@<time_s>`, using the samples where both are defined (`null` where undefined: fewer than three
+common samples, or a constant series). A response that is non-finite for a sample is dropped from its
+`distribution` (the older `responses` block keeps it as NaN).
 A correlation over `n` samples carries a sampling error of about `1/sqrt(n)`; small correlations
 from a few dozen samples are noise. Everything is deterministic given the seed; the bootstrap
 stream is tagged away from the sampling streams.

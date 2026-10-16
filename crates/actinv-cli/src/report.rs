@@ -1,8 +1,8 @@
 //! `actinv report` — render an existing result JSON as FISPACT-style tables (P132b).
 //!
-//! The FISPACT-II `TAB1`-`TAB4`, `GRAPH` and `NUCGRAPH` analog. It is a pure function of the
+//! The FISPACT-II `TAB1`-`TAB4`, `GRAPH`, `NUCGRAPH` and DEPLETION analog. It is a pure function of the
 //! result file: no solver, no data files. Each table is built from fields the result carries
-//! (the P122 `summary`, `inventory`, `activity_Bq_per_g`, `heat_W_per_g`, `photon_source`,
+//! (the P122 `summary` and its depletion table, `inventory`, `activity_Bq_per_g`, `heat_W_per_g`, `photon_source`,
 //! `radiological`); a column whose source is absent is left out and named in a note, never
 //! filled in. Every quantity keeps the result's own basis: `_per_g` columns are per gram of
 //! initial material, the unsuffixed absolute columns scale them by `summary` `material.mass_g`.
@@ -20,11 +20,12 @@ pub const HELP: &str = "Render a result JSON from `actinv run` as FISPACT-style 
 Nothing is recomputed.\n\
 --tables LIST    comma-separated: tab1 (atoms, grams), tab2 (activity, heat),\n\
                  tab3 (ingestion/inhalation dose), tab4 (photon groups), totals,\n\
-                 dominant, elements, timeseries (default: all)\n\
+                 dominant, elements, timeseries (default: all of these) and\n\
+                 depletion (per-nuclide depletion table; only when asked for)\n\
 --format F       csv (default), tsv, markdown or text; csv and tsv carry exact {:e} values\n\
 --out DIR        write one file per table (tab1.csv, ...) instead of standard output\n\
 --step N|all     one-based step number, or every step (default)\n\
---nuclides LIST  comma-separated, e.g. Co60,Mn54: restrict tab1/tab2 and add\n\
+--nuclides LIST  comma-separated, e.g. Co60,Mn54: restrict tab1/tab2/depletion and add\n\
                  timeseries columns\n\
 Per-gram columns (`_per_g`) are per gram of initial material; absolute columns need\n\
 the result's `summary` section. A column the result cannot supply is omitted and\n\
@@ -48,8 +49,10 @@ enum TableKind {
     Dominant,
     Elements,
     Timeseries,
+    Depletion,
 }
 
+/// The tables a report without `--tables` builds.
 const ALL_TABLES: [TableKind; 8] = [
     TableKind::Tab1,
     TableKind::Tab2,
@@ -59,6 +62,20 @@ const ALL_TABLES: [TableKind; 8] = [
     TableKind::Dominant,
     TableKind::Elements,
     TableKind::Timeseries,
+];
+
+/// Every table `--tables` accepts. The depletion table is left out of the default set: it exists
+/// only for runs that asked for `summary.depletion`, and the default output stays as it was.
+const NAMED_TABLES: [TableKind; 9] = [
+    TableKind::Tab1,
+    TableKind::Tab2,
+    TableKind::Tab3,
+    TableKind::Tab4,
+    TableKind::Totals,
+    TableKind::Dominant,
+    TableKind::Elements,
+    TableKind::Timeseries,
+    TableKind::Depletion,
 ];
 
 impl TableKind {
@@ -72,6 +89,7 @@ impl TableKind {
             Self::Dominant => "dominant",
             Self::Elements => "elements",
             Self::Timeseries => "timeseries",
+            Self::Depletion => "depletion",
         }
     }
 
@@ -85,11 +103,12 @@ impl TableKind {
             Self::Dominant => "Dominant nuclides",
             Self::Elements => "Elements",
             Self::Timeseries => "Time series (GRAPH, NUCGRAPH)",
+            Self::Depletion => "Depletion of the initial nuclides",
         }
     }
 
     fn from_name(name: &str) -> Option<Self> {
-        ALL_TABLES.into_iter().find(|kind| kind.name() == name)
+        NAMED_TABLES.into_iter().find(|kind| kind.name() == name)
     }
 }
 
@@ -231,7 +250,7 @@ fn parse_request(args: &[String]) -> Result<Request, String> {
             let mut kinds = Vec::new();
             for name in parse_names(text, "table")? {
                 let kind = TableKind::from_name(&name.to_ascii_lowercase()).ok_or_else(|| {
-                    let known: Vec<&str> = ALL_TABLES.iter().map(|kind| kind.name()).collect();
+                    let known: Vec<&str> = NAMED_TABLES.iter().map(|kind| kind.name()).collect();
                     format!("unknown table '{name}' (expected {})", known.join(", "))
                 })?;
                 kinds.push(kind);
@@ -375,6 +394,47 @@ fn omitted_note(columns: &[&str], hint: &str) -> Option<String> {
     })
 }
 
+/// Names in the step's `summary.nuclides`.
+fn summary_names<'a>(step: &StepView<'a>) -> BTreeSet<&'a str> {
+    step.value
+        .pointer("/summary/nuclides")
+        .and_then(Value::as_array)
+        .into_iter()
+        .flatten()
+        .filter_map(|entry| entry.get("nuclide").and_then(Value::as_str))
+        .collect()
+}
+
+/// Requested nuclides the result carries (inventory or activity) but `summary.nuclides` lacks:
+/// the summary trimmed them (`min_atoms` or `include_stable`), so the summary tables have no row.
+fn trimmed_requested(steps: &[StepView], nuclides: &[String]) -> Vec<String> {
+    let mut names = BTreeSet::new();
+    for step in steps {
+        let listed = summary_names(step);
+        for nuclide in nuclides {
+            let carried = names_of_inventory(step).contains(&nuclide.as_str())
+                || step
+                    .value
+                    .get("activity_Bq_per_g")
+                    .is_some_and(|map| map.get(nuclide.as_str()).is_some());
+            if carried && !listed.contains(nuclide.as_str()) {
+                names.insert(nuclide.clone());
+            }
+        }
+    }
+    names.into_iter().collect()
+}
+
+fn trimmed_requested_note(names: &[String]) -> Option<String> {
+    (!names.is_empty()).then(|| {
+        format!(
+            "requested nuclides in the result's inventory but not in summary.nuclides \
+             (min_atoms or include_stable trimmed them), so they have no rows: {}",
+            names.join(", ")
+        )
+    })
+}
+
 fn by_atoms_then_name<T>(rows: &mut [T], key: impl Fn(&T) -> (f64, &str)) {
     rows.sort_by(|a, b| {
         let (atoms_a, name_a) = key(a);
@@ -485,6 +545,9 @@ fn tab1(steps: &[StepView], nuclides: &[String]) -> Result<Built, String> {
              include_stable); the table lists the summary rows"
         ));
     }
+    if summary {
+        notes.extend(trimmed_requested_note(&trimmed_requested(steps, nuclides)));
+    }
     Ok(Ok(ReportTable {
         kind: TableKind::Tab1,
         headers: header,
@@ -504,10 +567,23 @@ struct ActivityRow {
 fn tab2(steps: &[StepView], nuclides: &[String]) -> Result<Built, String> {
     let summary = has_summary_nuclides(steps);
     let multipliers = mass_multipliers(steps);
+    let mut trimmed = 0usize;
     let mut table_rows = Vec::new();
     for (index, step) in steps.iter().enumerate() {
         let mut rows: Vec<ActivityRow> = Vec::new();
         if summary {
+            let listed = summary_names(step);
+            trimmed += step
+                .value
+                .get("activity_Bq_per_g")
+                .and_then(Value::as_object)
+                .into_iter()
+                .flatten()
+                .filter(|(name, value)| {
+                    value.as_f64().is_some_and(|activity| activity > 0.0)
+                        && !listed.contains(name.as_str())
+                })
+                .count();
             let context = format!("step {} summary.nuclides entry", step.step);
             for entry in step
                 .value
@@ -610,7 +686,16 @@ fn tab2(steps: &[StepView], nuclides: &[String]) -> Result<Built, String> {
     } else {
         omitted.push("heat_W");
     }
-    let notes = omitted_note(&omitted, SUMMARY_HINT).into_iter().collect();
+    let mut notes: Vec<String> = omitted_note(&omitted, SUMMARY_HINT).into_iter().collect();
+    if trimmed > 0 {
+        notes.push(format!(
+            "{trimmed} nuclides with activity are not in summary.nuclides (min_atoms or \
+             include_stable); the table lists the summary rows"
+        ));
+    }
+    if summary {
+        notes.extend(trimmed_requested_note(&trimmed_requested(steps, nuclides)));
+    }
     Ok(Ok(ReportTable {
         kind: TableKind::Tab2,
         headers: header,
@@ -1214,6 +1299,128 @@ fn elements(steps: &[StepView]) -> Result<Built, String> {
 
 // ---- assembly ----
 
+// ---- depletion ----
+
+/// One row per initial nuclide per step from `summary.depletion`, with the removal channels
+/// ranked as the result lists them ("MT102 60%; decay 40%").
+fn depletion(steps: &[StepView], nuclides: &[String]) -> Result<Built, String> {
+    let mut rows = Vec::new();
+    let mut without = Vec::new();
+    let mut uncertainty = false;
+    let mut listed: BTreeSet<String> = BTreeSet::new();
+    for step in steps {
+        let Some(block) = step.value.pointer("/summary/depletion") else {
+            without.push(step.step.to_string());
+            continue;
+        };
+        let context = format!("step {} summary.depletion", step.step);
+        let model = text(block, "model", &context)?.to_string();
+        let entries = block
+            .get("nuclides")
+            .and_then(Value::as_array)
+            .ok_or_else(|| format!("{context} lacks 'nuclides'"))?;
+        for entry in entries {
+            let context = format!("step {} summary.depletion nuclide", step.step);
+            let name = text(entry, "nuclide", &context)?.to_string();
+            listed.insert(name.clone());
+            if !nuclides.is_empty() && !nuclides.contains(&name) {
+                continue;
+            }
+            let relative = entry
+                .get("removal_rate_relative_standard_uncertainty")
+                .and_then(Value::as_f64);
+            uncertainty |= relative.is_some();
+            let channels = entry
+                .get("channels")
+                .and_then(Value::as_array)
+                .ok_or_else(|| format!("{context} '{name}' lacks 'channels'"))?
+                .iter()
+                .map(|channel| {
+                    let label = text(channel, "channel", &context)?;
+                    let share = num(channel, "share", &context)?;
+                    Ok(format!("{label} {:.4}%", share * 100.0))
+                })
+                .collect::<Result<Vec<_>, String>>()?
+                .join("; ");
+            let mut cells = head(step);
+            cells.push(Cell::Text(name));
+            cells.push(Cell::Text(model.clone()));
+            for key in [
+                "initial_atoms_per_g",
+                "atoms_start_per_g",
+                "atoms_end_per_g",
+                "depleted_atoms_per_g",
+                "depleted_fraction",
+                "cumulative_depleted_atoms_per_g",
+                "cumulative_depleted_fraction",
+                "removal_rate_per_s",
+            ] {
+                cells.push(Cell::Num(num(entry, key, &context)?));
+            }
+            cells.push(relative.map_or(Cell::Empty, Cell::Num));
+            cells.push(Cell::Text(channels));
+            rows.push(cells);
+        }
+    }
+    if without.len() == steps.len() {
+        return Ok(Err(
+            "the result has no `summary.depletion` table (set `summary.depletion` to true in the spec)"
+                .into(),
+        ));
+    }
+    let mut header = headers(&[
+        "step",
+        "time_s",
+        "nuclide",
+        "model",
+        "initial_atoms_per_g",
+        "atoms_start_per_g",
+        "atoms_end_per_g",
+        "depleted_atoms_per_g",
+        "depleted_fraction",
+        "cumulative_depleted_atoms_per_g",
+        "cumulative_depleted_fraction",
+        "removal_rate_per_s",
+        "removal_rate_relative_standard_uncertainty",
+        "channels",
+    ]);
+    let mut notes = Vec::new();
+    if !uncertainty {
+        // the column is empty throughout: leave it out
+        let position = header
+            .iter()
+            .position(|name| name == "removal_rate_relative_standard_uncertainty")
+            .expect("header has the column");
+        header.remove(position);
+        for row in &mut rows {
+            row.remove(position);
+        }
+    }
+    if !without.is_empty() {
+        notes.push(format!(
+            "steps without a depletion table: {}",
+            without.join(", ")
+        ));
+    }
+    let absent: Vec<&str> = nuclides
+        .iter()
+        .filter(|name| !listed.contains(name.as_str()))
+        .map(String::as_str)
+        .collect();
+    if !absent.is_empty() {
+        notes.push(format!(
+            "not in the depletion table (it follows the initial-material nuclides only): {}",
+            absent.join(", ")
+        ));
+    }
+    Ok(Ok(ReportTable {
+        kind: TableKind::Depletion,
+        headers: header,
+        rows,
+        notes,
+    }))
+}
+
 fn check_nuclides(steps: &[StepView], nuclides: &[String]) -> Result<(), String> {
     for nuclide in nuclides {
         let present = steps.iter().any(|step| {
@@ -1247,6 +1454,7 @@ fn build_tables(result: &Value, request: &Request) -> Result<Vec<Outcome>, Strin
             TableKind::Dominant => dominant(&steps)?,
             TableKind::Elements => elements(&steps)?,
             TableKind::Timeseries => timeseries(&steps, &request.nuclides),
+            TableKind::Depletion => depletion(&steps, &request.nuclides)?,
         };
         outcomes.push(Outcome { kind, built });
     }

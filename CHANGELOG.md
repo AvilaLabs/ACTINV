@@ -19,6 +19,58 @@
   production after a cooling gap; `pathway_closure` showed the error. It now uses the solve's own matrices, and
   power-driven steps report pathways over their realized sub-intervals.
 
+**Changed (P140 hardening pass; affects default results)**
+
+- The ledger gains `unmodelled_decay_branches_to_leakage`, the decay branches with a mode the chain does not model
+  (present only when nonzero).
+  A fission after another transition (RTYP 2.6, beta-delayed fission) is counted there and is no longer counted as
+  spontaneous fission of the parent, so `spontaneous_fission_branches_to_leakage` falls (129 to 126 on the shipped
+  data). Inventories are unchanged.
+- Pathway attribution (`pathways`, trace mode) now includes production fed by the decay of a radioactive bulk
+  nuclide, and `pathway_closure` is 1 when a nuclide in the inventory has no chain at all. Results change only for
+  materials with such a nuclide: Mo-100 double-beta decay is the leading Ru-100 route in SS316, W-186 alpha decay
+  feeds Hf-182 in tungsten (the shipped shielding example's closure falls from 0.98 to 5e-16), and the natural-uranium
+  closure falls from 1.0 to 4e-15. Inventories are unchanged.
+
+**Fixed (P140 hardening pass; opt-in features)**
+
+- Geometry self-shielding uses a resolved resonance only inside its range's [EL, EH] and reports the others as
+  `resonances_outside_range`. TENDL-2025 W-186 (resolved to 4341 eV) loses its factors above that energy; ENDF/B-VIII.1
+  W-186 loses one group above 10 keV. `geometry.density_g_cm3` defaults to the material density and a disagreement is
+  refused. Multi-isotope MF=2 files are keyed by isotope.
+- `summary.depletion`: a declared removal is a channel of the table; trace fractions use a cumulative exponent (FNS Fe
+  fractions moved by 2.6e-5 relative); no uncertainty is invented for an excluded covariance block. `actinv report`
+  gains a `depletion` table and says when the summary trimmed a row.
+- Schedule controls and power: refusals for a rebin that lands no flux or reaches outside the spectrum, the 14 MeV
+  wall-loading fallback for non-neutron projectiles, `kerma` in decay-only runs and damage rows without heating; an
+  empty partition is no partition and a partition moves composition isotopes outside the chain; power steps that do
+  not converge warn on stderr.
+- Sampling statistics: one sample has no standard deviation, correlations and bootstrap errors need at least three
+  samples, and `first_order` reads `not_comparable` when channels beyond `cross_section_mf33` are sampled. The route
+  search no longer lets one source starve others and reports truncation per target.
+- `actinv import-fispact`: three-letter keyword abbreviations (`TOL`, as in the CoNDERC fission decks), NOHEAD, MCSEED and the legacy
+  switches; an unknown word ends a nuclide list; superseded `TIME` lines, `OVER` after a step and `DOSE 1` after
+  `DOSE 2` are reported as they act; deeply nested or huge `PULSE` loops are refused before expansion; 10,000 `OVER`
+  sub-keywords import in linear time; BOM, bare CR and non-UTF-8 bytes are handled.
+- `actinv inspect` knows every named group structure, honours `rebin`, and compares boundaries at the solver
+  tolerance; `resolve_inputs` and `--files` checks cover every path-bearing field.
+
+**Fixed (P140, photon outputs and regulatory tables; all opt-in features, defaults unchanged)**
+
+- `photon.bremsstrahlung` used the decay record's STYP 1 average energy (per decay of the parent) as the energy of
+  one electron per decay. It now uses `f` electrons per decay (the beta-minus branching) of energy `ER / f`; a nuclide
+  with no beta-minus mode is a missing input. Partial beta emitters such as Cu-64 (about 2.6 times more energy) and K-40
+  change; pure beta-minus emitters do not. New `electrons_per_decay`, `zero_lower_edge_energy_fraction` and
+  `energy_closure` fields.
+- The point-source dose is `null` while decay-record gamma power has no photon spectrum, and for a distance, mass or air
+  density that is non-finite or out of range. `photon.point_source` and `photon.bremsstrahlung` are refused when
+  `options.outputs` excludes both `photons` and `dose`.
+- Radiological tables: optional per-response `unlimited` and `covered_by_parent` lists. Unlimited A1/A2 rows and
+  progeny included in a parent's value are covered with zero contribution instead of being reported missing or counted
+  twice, so `require_complete` works for activation inventories. The bundled tables were regenerated, so their SHA-256
+  values changed; specs that declare a bundled hash must use the new one. A misspelled `radiological.responses`
+  selector for a bundled table now fails at validation.
+
 **Added (FISPACT-II parity program, 2026-10-15; all opt-in, default results unchanged)**
 
 - Step summary (`summary`, `material.density_g_cm3`; P122):

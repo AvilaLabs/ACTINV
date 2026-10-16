@@ -34,6 +34,20 @@ class Common(unittest.TestCase):
         self.assertIsNone(COMMON.parse_nuclide("Xx-12"))
         self.assertIsNone(COMMON.parse_nuclide("U (nat)"))
 
+    def test_progeny_keys_and_covered_by_parent(self):
+        keys, skipped = COMMON.progeny_keys(["Ba-137 m", "Tl-208 (0.36)", "Po-212 (0.64)", "Th-nat", "Tl-208"])
+        self.assertEqual(keys, ["Ba137m1", "Tl208", "Po212"])
+        self.assertEqual(skipped, ["Th-nat"])
+        parents = {"Sr90": ["Y90"], "Cs137": ["Ba137m1"], "Ra226": ["Rn222", "Pb210"], "Rn222": ["Pb210"], "Gone": ["X1"]}
+        covered = COMMON.covered_by_parent(parents, {"Sr90", "Cs137", "Ra226", "Rn222", "Y90"})
+        self.assertEqual(
+            covered,
+            {"Ba137m1": ["Cs137"], "Pb210": ["Ra226", "Rn222"], "Rn222": ["Ra226"], "Y90": ["Sr90"]},
+        )
+        COMMON.check_acyclic(covered, "t")
+        with self.assertRaises(ValueError):
+            COMMON.check_acyclic({"A1": ["B1"], "B1": ["A1"]}, "t")
+
     def test_scaled_float_is_exact_decimal(self):
         self.assertEqual(COMMON.scaled_float("4.0", -1, 12), 4e11)
         self.assertEqual(COMMON.scaled_float("1", 2, 3), 1e5)
@@ -62,6 +76,23 @@ class Cfr(unittest.TestCase):
         self.assertEqual(CFR.parse_label("Rb(nat)")["kind"], "element")
         with self.assertRaises(ValueError):
             CFR.parse_label("Mystery material")
+
+    def test_unlimited_rows_become_an_unlimited_list_per_variant(self):
+        def row(nuclide, kind, text, variant=None):
+            record = {"kind": kind, "nuclide": nuclide, "values": {"a2_TBq": {"text": text}}}
+            if variant:
+                record["variant"] = variant
+            return record
+
+        records = [
+            row("Mn53", "nuclide", "Unlimited"),
+            row("Co60", "nuclide", "0.4"),
+            row("U236", "lung", "Unlimited", "fast"),
+            row("U236", "lung", "1.0", "medium"),
+            row("U238", "lung", "Unlimited", "all"),
+        ]
+        self.assertEqual(CFR.unlimited_nuclides(records, "a2_TBq", "fast"), ["Mn53", "U236", "U238"])
+        self.assertEqual(CFR.unlimited_nuclides(records, "a2_TBq", "medium"), ["Mn53", "U238"])
 
     def test_progeny_footnote(self):
         lines = ["intro", "Pb-212 Bi-212, Tl-208 (0.36), Po-212 (0.64)", "Ra-224 Rn-220, Po-216,"]

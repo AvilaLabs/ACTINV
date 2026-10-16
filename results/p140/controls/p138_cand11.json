@@ -1,0 +1,1481 @@
+{
+ "candidate_sha256": "179e96a06dd0bee02f3e71452492ee058b6f4ca123063a5eab7ed365235e4536",
+ "checker_sha256": "77d8ce60b204031448b3e0ae1500699e6d5707171b7c1271612e5e45985b749c",
+ "gates": {
+  "G1": {
+   "external": "fmt, clippy -D warnings and workspace tests are not run here"
+  },
+  "G2": {
+   "argv": [
+    "/usr/bin/python3",
+    "/home/connoravila/Documents/actinv/controls/check_p132.py",
+    "--candidate",
+    "/home/connoravila/Documents/actinv/target/cand11-actinv",
+    "--workdir",
+    "/home/connoravila/Documents/actinv/target/p140/controls/p138-work/run-1792114393-3618786/p132",
+    "--out",
+    "/home/connoravila/Documents/actinv/target/p140/controls/p138-work/run-1792114393-3618786/p132/p132_import.json",
+    "--timeout",
+    "3600"
+   ],
+   "exit_code": 0,
+   "p132_gates": {
+    "G2": true,
+    "G3": true,
+    "G4": true
+   },
+   "p132_record": {
+    "path": "/home/connoravila/Documents/actinv/target/p140/controls/p138-work/run-1792114393-3618786/p132/p132_import.json",
+    "sha256": "825493def24c09545d49e54ea412931079f0ff00f6039d88c0106e63c2f5f469"
+   },
+   "p132_verdict": "P132-PASS",
+   "pass": true,
+   "stderr_tail": "",
+   "stdout_tail": "P132 G2: PASS\nP132 G3: PASS\nP132 G4: PASS\nP132 verdict: P132-PASS (/home/connoravila/Documents/actinv/target/p140/controls/p138-work/run-1792114393-3618786/p132/p132_import.json)\n",
+   "wall_s": 95.1
+  },
+  "G3": {
+   "ambiguities": [
+    "PARTITION: FISPACT-II applies the split when it reads the keyword, ACTINV at the start of the next step; the decks here put the keyword directly before the cooling TIME it precedes, where the two agree.",
+    "OVER ACROSS: FISPACT-II sets one channel (target to the named daughter); ACTINV sets the whole ENDF reaction (MT=103 here) and keeps its product branching. The hand spec states the ACTINV meaning, and the importer must say `approximated`.",
+    "LIMGRP: the importer reads the two numbers as energies in eV; whether FISPACT-II means energies or group numbers is not settled by the manual text the importer cites, so the extra variant is report-only.",
+    "POWER: p is W/cc normalized on the kerma of the listed MTs; ACTINV normalizes on the table's total (MT=301). The synthetic table is not evaluated data, so the check is equivalence of the two specs, not heating accuracy.",
+    "DOSE 2: with the installed response (no air attenuation curve) the point-source dose is null with a stated reason, so the check covers the configuration and the withheld-dose path, not a dose value.",
+    "ATWO: the table is the US 49 CFR 173 A2 table, not FISPACT-II's own A2 file (status `approximated`).",
+    "BREMSSTRAHLUNG: reported in a separate block and not added to the decay-photon dose (status `approximated`).",
+    "PATH/ROUTES: numeric arguments are not interpreted; ACTINV's route search thresholds keep their defaults."
+   ],
+   "base_run_ok": true,
+   "inputs": {
+    "cooling_s": [
+     66.0,
+     16.0,
+     16.0
+    ],
+    "deck": {
+     "path": "/home/connoravila/nuclear-data/conderc-fns/fns/Fe/TENDL-2017_1996exp_5min.i",
+     "sha256": "fdb943333dd293cdda057fad49df8bf152000cf3f48fa64b12afd54a57eda071"
+    },
+    "density_g_cm3": 7.875,
+    "flux_total": 11160000000.0,
+    "fluxes": {
+     "path": "/home/connoravila/nuclear-data/conderc-fns/fns/Fe/1996exp_5min_fluxes",
+     "sha256": "6c2a23393bd71bc5ac957ee53ca6b6ea747b8b0ed87d19361053f37505937d66"
+    },
+    "fluxes_175": {
+     "path": "/home/connoravila/Documents/actinv/target/p140/controls/p138-work/run-1792114393-3618786/inputs/fluxes_175",
+     "sha256": "d3f7bd5945bf974b4420d76d97bcd68f5a3b064121ea1ea334340f44343debc4"
+    },
+    "fluxes_50": {
+     "path": "/home/connoravila/Documents/actinv/target/p140/controls/p138-work/run-1792114393-3618786/inputs/fluxes_50",
+     "sha256": "54f6f73ef15f8182ac4a39076ab0154d1f018ab4dcc007b2ac516954af881551"
+    },
+    "gate_spec": {
+     "path": "/home/connoravila/Documents/actinv/examples/fns_fe_5min.json",
+     "sha256": "ed55ed00f6c00fc4a2351e18332e98e7feb33d9b7ca65e7ba861e0e5e8feef39"
+    },
+    "kerma_table": {
+     "path": "/home/connoravila/Documents/actinv/target/p140/controls/p138-work/run-1792114393-3618786/inputs/synthetic_fe_kerma.json",
+     "sha256": "b3dfc0ec3fc45c708386febb687ad0d1af2aa72ea508b42882608ff4a85334bf"
+    },
+    "photon_response": {
+     "path": "/home/connoravila/nuclear-data/photon-response/nist-xcom-air-fe.json",
+     "sha256": "4f00824ac66ef941cddbe20b93966523b7f0ff2271b35cdf8be538c48e404307"
+    },
+    "wall_loading_MW_m2_of_file": 1.0
+   },
+   "pass": true,
+   "tolerance": {
+    "echo_paths": [
+     "/ms",
+     "/spec_title",
+     "/certificate/library",
+     "/certificate/library_sha256_declared",
+     "/certificate/decay_primary",
+     "/certificate/decay_fallback",
+     "/certificate/inputs/library/path",
+     "/certificate/inputs/library_index/path",
+     "/certificate/inputs/decay_primary/path",
+     "/certificate/inputs/decay_fallback/path"
+    ],
+    "float_relative": 1e-12,
+    "wall_twin_echo_paths": [
+     "/ledger/wall_loading",
+     "/certificate/wall_loading"
+    ]
+   },
+   "variants": {
+    "atwo": {
+     "comparisons": {
+      "a2_table": {
+       "exact": true,
+       "identical_apart_from_echoes": true,
+       "n_differences": 9,
+       "n_echo": 9,
+       "n_other": 0,
+       "other": [],
+       "worst_tolerated_relative": 0.0
+      }
+     },
+     "gating": true,
+     "import": {
+      "deck": {
+       "path": "/home/connoravila/Documents/actinv/target/p140/controls/p138-work/run-1792114393-3618786/v_atwo.i",
+       "sha256": "c2c1f7225126463e837ed7ce55ac16a0a92a57a8aaf019c19f5fde36a7cea338"
+      },
+      "exit_code": 0,
+      "fluxes": {
+       "path": "/home/connoravila/nuclear-data/conderc-fns/fns/Fe/1996exp_5min_fluxes",
+       "sha256": "6c2a23393bd71bc5ac957ee53ca6b6ea747b8b0ed87d19361053f37505937d66"
+      },
+      "spec_file": {
+       "path": "/home/connoravila/Documents/actinv/target/p140/controls/p138-work/run-1792114393-3618786/v_atwo.imported.json",
+       "sha256": "91efe7b6a61fb28f2f744d5c5bc08df0e734bf9fefce13e787b025c1159e248d"
+      },
+      "stderr_tail": "",
+      "stdout_tail": "> /home/connoravila/Documents/actinv/target/p140/controls/p138-work/run-1792114393-3618786/v_atwo.imported.json (4 steps; 13 mapped, 3 approximated, 10 noted, 0 unsupported); report: /home/connoravila/Documents/actinv/target/p140/controls/p138-work/run-1792114393-3618786/v_atwo.imported.import.json\n"
+     },
+     "imported_run_ok": true,
+     "keywords": [
+      "ATWO"
+     ],
+     "name": "atwo",
+     "pass": true,
+     "report_counts": {
+      "approximated": 3,
+      "mapped": 13,
+      "noted": 10,
+      "unsupported": 0
+     },
+     "sensitivity": {
+      "a2_table": {
+       "keyword_changes_result": true,
+       "n_differences_from_base": 7
+      }
+     },
+     "statuses": [
+      {
+       "detail": "radiological.table = bundled:us-49cfr173-a2, the A2 transport values of 49 CFR 173.435 (IAEA SSR-6 Rev.1, 2018), not FISPACT-II's own A2 file; the index sum(A_i/A2_i) is reported per gram, with one response per uranium absorption type (choose with radiological.responses)",
+       "keyword": "ATWO",
+       "line": 15,
+       "status": "approximated"
+      }
+     ]
+    },
+    "bremsstrahlung": {
+     "comparisons": {
+      "nuclides": {
+       "exact": true,
+       "identical_apart_from_echoes": true,
+       "n_differences": 9,
+       "n_echo": 9,
+       "n_other": 0,
+       "other": [],
+       "worst_tolerated_relative": 0.0
+      }
+     },
+     "gating": true,
+     "import": {
+      "deck": {
+       "path": "/home/connoravila/Documents/actinv/target/p140/controls/p138-work/run-1792114393-3618786/v_bremsstrahlung.i",
+       "sha256": "742d8fd14882653276aa6e4d2d74ea146400bf9f4d74f48301b2aaede5b55735"
+      },
+      "exit_code": 0,
+      "fluxes": {
+       "path": "/home/connoravila/nuclear-data/conderc-fns/fns/Fe/1996exp_5min_fluxes",
+       "sha256": "6c2a23393bd71bc5ac957ee53ca6b6ea747b8b0ed87d19361053f37505937d66"
+      },
+      "spec_file": {
+       "path": "/home/connoravila/Documents/actinv/target/p140/controls/p138-work/run-1792114393-3618786/v_bremsstrahlung.imported.json",
+       "sha256": "350fa29d222c56182da9f2c6c0912a232fd600c75d603e4e366c73aacd8e6e25"
+      },
+      "stderr_tail": "",
+      "stdout_tail": "Documents/actinv/target/p140/controls/p138-work/run-1792114393-3618786/v_bremsstrahlung.imported.json (4 steps; 13 mapped, 3 approximated, 10 noted, 0 unsupported); report: /home/connoravila/Documents/actinv/target/p140/controls/p138-work/run-1792114393-3618786/v_bremsstrahlung.imported.import.json\n"
+     },
+     "imported_run_ok": true,
+     "keywords": [
+      "BREMSSTRAHLUNG"
+     ],
+     "name": "bremsstrahlung",
+     "pass": true,
+     "report_counts": {
+      "approximated": 3,
+      "mapped": 13,
+      "noted": 10,
+      "unsupported": 0
+     },
+     "sensitivity": {
+      "nuclides": {
+       "keyword_changes_result": true,
+       "n_differences_from_base": 338
+      }
+     },
+     "statuses": [
+      {
+       "detail": "photon.bremsstrahlung.nuclides = [Mn56]; ACTINV reports the bremsstrahlung photons and their dose in a separate photon_source.bremsstrahlung block and does not add them to the decay-photon dose",
+       "keyword": "BREMSSTRAHLUNG",
+       "line": 15,
+       "status": "approximated"
+      }
+     ]
+    },
+    "cnvtype1": {
+     "comparisons": {
+      "rebin_equal_energy": {
+       "exact": true,
+       "identical_apart_from_echoes": true,
+       "n_differences": 9,
+       "n_echo": 9,
+       "n_other": 0,
+       "other": [],
+       "worst_tolerated_relative": 0.0
+      }
+     },
+     "gating": false,
+     "import": {
+      "deck": {
+       "path": "/home/connoravila/Documents/actinv/target/p140/controls/p138-work/run-1792114393-3618786/v_cnvtype1.i",
+       "sha256": "c5f46a07c430a72760f4b484514202bbec5139f72d27293d49a1917e618d7d6b"
+      },
+      "exit_code": 0,
+      "fluxes": {
+       "path": "/home/connoravila/Documents/actinv/target/p140/controls/p138-work/run-1792114393-3618786/inputs/fluxes_175",
+       "sha256": "d3f7bd5945bf974b4420d76d97bcd68f5a3b064121ea1ea334340f44343debc4"
+      },
+      "spec_file": {
+       "path": "/home/connoravila/Documents/actinv/target/p140/controls/p138-work/run-1792114393-3618786/v_cnvtype1.imported.json",
+       "sha256": "be248bf97b477177e28556f9518b3acaec907469e437e988074c6b560fe80fcd"
+      },
+      "stderr_tail": "",
+      "stdout_tail": "connoravila/Documents/actinv/target/p140/controls/p138-work/run-1792114393-3618786/v_cnvtype1.imported.json (4 steps; 15 mapped, 2 approximated, 10 noted, 0 unsupported); report: /home/connoravila/Documents/actinv/target/p140/controls/p138-work/run-1792114393-3618786/v_cnvtype1.imported.import.json\n"
+     },
+     "imported_run_ok": true,
+     "keywords": [
+      "GRPCONVERT",
+      "CNVTYPE"
+     ],
+     "name": "cnvtype1",
+     "pass": true,
+     "report_counts": {
+      "approximated": 2,
+      "mapped": 15,
+      "noted": 10,
+      "unsupported": 0
+     },
+     "sensitivity": {
+      "rebin_equal_energy": {
+       "keyword_changes_result": true,
+       "n_differences_from_base": 399
+      }
+     },
+     "statuses": [
+      {
+       "detail": "spectrum.rebin: the 175-group spectrum (a FISPACT-II standard structure, its boundaries taken from the vendored ebins file) is converted to the library's 709 groups inside the run; the group counts come from the fluxes file, not from the keyword's arguments",
+       "keyword": "GRPCONVERT",
+       "line": 15,
+       "status": "mapped"
+      },
+      {
+       "detail": "spectrum.rebin.convention = \"equal_energy\"",
+       "keyword": "CNVTYPE",
+       "line": 16,
+       "status": "mapped"
+      }
+     ]
+    },
+    "dose2": {
+     "comparisons": {
+      "point_source": {
+       "exact": true,
+       "identical_apart_from_echoes": true,
+       "n_differences": 9,
+       "n_echo": 9,
+       "n_other": 0,
+       "other": [],
+       "worst_tolerated_relative": 0.0
+      }
+     },
+     "gating": true,
+     "import": {
+      "deck": {
+       "path": "/home/connoravila/Documents/actinv/target/p140/controls/p138-work/run-1792114393-3618786/v_dose2.i",
+       "sha256": "463cbf9b5b619668248a5c1f2dd5581b96e751a72a60f338d38246de1ea8a7ab"
+      },
+      "exit_code": 0,
+      "fluxes": {
+       "path": "/home/connoravila/nuclear-data/conderc-fns/fns/Fe/1996exp_5min_fluxes",
+       "sha256": "6c2a23393bd71bc5ac957ee53ca6b6ea747b8b0ed87d19361053f37505937d66"
+      },
+      "spec_file": {
+       "path": "/home/connoravila/Documents/actinv/target/p140/controls/p138-work/run-1792114393-3618786/v_dose2.imported.json",
+       "sha256": "14c3961ca287b58d4439637bd86e273dc7adc872a2e411f50914aceb06b85842"
+      },
+      "stderr_tail": "",
+      "stdout_tail": "/home/connoravila/Documents/actinv/target/p140/controls/p138-work/run-1792114393-3618786/v_dose2.imported.json (4 steps; 14 mapped, 2 approximated, 10 noted, 0 unsupported); report: /home/connoravila/Documents/actinv/target/p140/controls/p138-work/run-1792114393-3618786/v_dose2.imported.import.json\n"
+     },
+     "imported_run_ok": true,
+     "keywords": [
+      "DOSE"
+     ],
+     "name": "dose2",
+     "pass": true,
+     "report_counts": {
+      "approximated": 2,
+      "mapped": 14,
+      "noted": 10,
+      "unsupported": 0
+     },
+     "sensitivity": {
+      "point_source": {
+       "keyword_changes_result": true,
+       "n_differences_from_base": 338
+      }
+     },
+     "statuses": [
+      {
+       "detail": "photon.point_source.distance_m = 1; the dose values are null unless photon.response (with an air_mass_attenuation curve) is added",
+       "keyword": "DOSE",
+       "line": 15,
+       "status": "mapped"
+      }
+     ]
+    },
+    "group1": {
+     "comparisons": {
+      "steiner_22": {
+       "exact": true,
+       "identical_apart_from_echoes": true,
+       "n_differences": 9,
+       "n_echo": 9,
+       "n_other": 0,
+       "other": [],
+       "worst_tolerated_relative": 0.0
+      }
+     },
+     "gating": true,
+     "import": {
+      "deck": {
+       "path": "/home/connoravila/Documents/actinv/target/p140/controls/p138-work/run-1792114393-3618786/v_group1.i",
+       "sha256": "4acf05242b5eb5ee4c1f2eb8cba30de7046be0e70b4b60301585bd7cdcf95d61"
+      },
+      "exit_code": 0,
+      "fluxes": {
+       "path": "/home/connoravila/nuclear-data/conderc-fns/fns/Fe/1996exp_5min_fluxes",
+       "sha256": "6c2a23393bd71bc5ac957ee53ca6b6ea747b8b0ed87d19361053f37505937d66"
+      },
+      "spec_file": {
+       "path": "/home/connoravila/Documents/actinv/target/p140/controls/p138-work/run-1792114393-3618786/v_group1.imported.json",
+       "sha256": "cce2877e3bf91e0ac6265dc6cf65c0ae8f6d841bc3a7928ae18dd4289b4eac75"
+      },
+      "stderr_tail": "",
+      "stdout_tail": "ome/connoravila/Documents/actinv/target/p140/controls/p138-work/run-1792114393-3618786/v_group1.imported.json (4 steps; 14 mapped, 2 approximated, 10 noted, 0 unsupported); report: /home/connoravila/Documents/actinv/target/p140/controls/p138-work/run-1792114393-3618786/v_group1.imported.import.json\n"
+     },
+     "imported_run_ok": true,
+     "keywords": [
+      "GROUP"
+     ],
+     "name": "group1",
+     "pass": true,
+     "report_counts": {
+      "approximated": 2,
+      "mapped": 14,
+      "noted": 10,
+      "unsupported": 0
+     },
+     "sensitivity": {
+      "steiner_22": {
+       "keyword_changes_result": true,
+       "n_differences_from_base": 398
+      }
+     },
+     "statuses": [
+      {
+       "detail": "photon.group_structure = \"steiner-22\"",
+       "keyword": "GROUP",
+       "line": 15,
+       "status": "mapped"
+      }
+     ]
+    },
+    "grpconvert": {
+     "comparisons": {
+      "rebin_equal_lethargy": {
+       "exact": true,
+       "identical_apart_from_echoes": true,
+       "n_differences": 9,
+       "n_echo": 9,
+       "n_other": 0,
+       "other": [],
+       "worst_tolerated_relative": 0.0
+      }
+     },
+     "gating": true,
+     "import": {
+      "deck": {
+       "path": "/home/connoravila/Documents/actinv/target/p140/controls/p138-work/run-1792114393-3618786/v_grpconvert.i",
+       "sha256": "4e9d4bb3d065bf5400c42012f23d7b6c56ef0309c86a02236bcb7daca63cc0f6"
+      },
+      "exit_code": 0,
+      "fluxes": {
+       "path": "/home/connoravila/Documents/actinv/target/p140/controls/p138-work/run-1792114393-3618786/inputs/fluxes_175",
+       "sha256": "d3f7bd5945bf974b4420d76d97bcd68f5a3b064121ea1ea334340f44343debc4"
+      },
+      "spec_file": {
+       "path": "/home/connoravila/Documents/actinv/target/p140/controls/p138-work/run-1792114393-3618786/v_grpconvert.imported.json",
+       "sha256": "6558d495b95f7d23cb4d5e394df5ee008791914a1754fe2e3a2ab7ff9cfa79bb"
+      },
+      "stderr_tail": "",
+      "stdout_tail": "oravila/Documents/actinv/target/p140/controls/p138-work/run-1792114393-3618786/v_grpconvert.imported.json (4 steps; 14 mapped, 2 approximated, 10 noted, 0 unsupported); report: /home/connoravila/Documents/actinv/target/p140/controls/p138-work/run-1792114393-3618786/v_grpconvert.imported.import.json\n"
+     },
+     "imported_run_ok": true,
+     "keywords": [
+      "GRPCONVERT"
+     ],
+     "name": "grpconvert",
+     "pass": true,
+     "report_counts": {
+      "approximated": 2,
+      "mapped": 14,
+      "noted": 10,
+      "unsupported": 0
+     },
+     "sensitivity": {
+      "rebin_equal_lethargy": {
+       "keyword_changes_result": true,
+       "n_differences_from_base": 399
+      }
+     },
+     "statuses": [
+      {
+       "detail": "spectrum.rebin: the 175-group spectrum (a FISPACT-II standard structure, its boundaries taken from the vendored ebins file) is converted to the library's 709 groups inside the run; the group counts come from the fluxes file, not from the keyword's arguments",
+       "keyword": "GRPCONVERT",
+       "line": 15,
+       "status": "mapped"
+      }
+     ]
+    },
+    "limgrp": {
+     "comparisons": {
+      "rebin_limits_in_eV": {
+       "exact": true,
+       "identical_apart_from_echoes": true,
+       "n_differences": 9,
+       "n_echo": 9,
+       "n_other": 0,
+       "other": [],
+       "worst_tolerated_relative": 0.0
+      }
+     },
+     "gating": false,
+     "import": {
+      "deck": {
+       "path": "/home/connoravila/Documents/actinv/target/p140/controls/p138-work/run-1792114393-3618786/v_limgrp.i",
+       "sha256": "f349d1d1ad8ec18bc8660bde9df06f25344fefaa4725d4d22caa890c35191f90"
+      },
+      "exit_code": 0,
+      "fluxes": {
+       "path": "/home/connoravila/Documents/actinv/target/p140/controls/p138-work/run-1792114393-3618786/inputs/fluxes_175",
+       "sha256": "d3f7bd5945bf974b4420d76d97bcd68f5a3b064121ea1ea334340f44343debc4"
+      },
+      "spec_file": {
+       "path": "/home/connoravila/Documents/actinv/target/p140/controls/p138-work/run-1792114393-3618786/v_limgrp.imported.json",
+       "sha256": "5958d8234e83ee9ec1c1531de84bc2a2bf638996ffbcb16b32c9d4951b5b3929"
+      },
+      "stderr_tail": "",
+      "stdout_tail": "ome/connoravila/Documents/actinv/target/p140/controls/p138-work/run-1792114393-3618786/v_limgrp.imported.json (4 steps; 14 mapped, 3 approximated, 10 noted, 0 unsupported); report: /home/connoravila/Documents/actinv/target/p140/controls/p138-work/run-1792114393-3618786/v_limgrp.imported.import.json\n"
+     },
+     "imported_run_ok": true,
+     "keywords": [
+      "GRPCONVERT",
+      "LIMGRP"
+     ],
+     "name": "limgrp",
+     "pass": true,
+     "report_counts": {
+      "approximated": 3,
+      "mapped": 14,
+      "noted": 10,
+      "unsupported": 0
+     },
+     "sensitivity": {
+      "rebin_limits_in_eV": {
+       "keyword_changes_result": true,
+       "n_differences_from_base": 412
+      }
+     },
+     "statuses": [
+      {
+       "detail": "spectrum.rebin: the 175-group spectrum (a FISPACT-II standard structure, its boundaries taken from the vendored ebins file) is converted to the library's 709 groups inside the run; the group counts come from the fluxes file, not from the keyword's arguments",
+       "keyword": "GRPCONVERT",
+       "line": 15,
+       "status": "mapped"
+      },
+      {
+       "detail": "spectrum.rebin.emin_eV = 1, emax_eV = 10000000: the two limits are read as energies in eV, lower then upper",
+       "keyword": "LIMGRP",
+       "line": 16,
+       "status": "approximated"
+      }
+     ]
+    },
+    "over_across": {
+     "comparisons": {
+      "cross_section_override": {
+       "exact": true,
+       "identical_apart_from_echoes": true,
+       "n_differences": 9,
+       "n_echo": 9,
+       "n_other": 0,
+       "other": [],
+       "worst_tolerated_relative": 0.0
+      }
+     },
+     "gating": true,
+     "import": {
+      "deck": {
+       "path": "/home/connoravila/Documents/actinv/target/p140/controls/p138-work/run-1792114393-3618786/v_over_across.i",
+       "sha256": "e0528dd6885f3dbb0f450ea2b2f3ae66ab3c6bea1d0b3a5ad03dff61f8e5f974"
+      },
+      "exit_code": 0,
+      "fluxes": {
+       "path": "/home/connoravila/nuclear-data/conderc-fns/fns/Fe/1996exp_5min_fluxes",
+       "sha256": "6c2a23393bd71bc5ac957ee53ca6b6ea747b8b0ed87d19361053f37505937d66"
+      },
+      "spec_file": {
+       "path": "/home/connoravila/Documents/actinv/target/p140/controls/p138-work/run-1792114393-3618786/v_over_across.imported.json",
+       "sha256": "2e18988ca631dc6b66d217c25ed7e6765b0ff5087ceb33c54be9e6794da5e646"
+      },
+      "stderr_tail": "",
+      "stdout_tail": "avila/Documents/actinv/target/p140/controls/p138-work/run-1792114393-3618786/v_over_across.imported.json (4 steps; 13 mapped, 4 approximated, 10 noted, 0 unsupported); report: /home/connoravila/Documents/actinv/target/p140/controls/p138-work/run-1792114393-3618786/v_over_across.imported.import.json\n"
+     },
+     "imported_run_ok": true,
+     "keywords": [
+      "OVER",
+      "ACROSS"
+     ],
+     "name": "over_across",
+     "pass": true,
+     "report_counts": {
+      "approximated": 4,
+      "mapped": 13,
+      "noted": 10,
+      "unsupported": 0
+     },
+     "sensitivity": {
+      "cross_section_override": {
+       "keyword_changes_result": true,
+       "n_differences_from_base": 398
+      }
+     },
+     "statuses": [
+      {
+       "detail": "1 sub-keyword(s): 0 mapped, 1 approximated, 0 unsupported (each is reported under its own name)",
+       "keyword": "OVER",
+       "line": 15,
+       "status": "approximated"
+      },
+      {
+       "detail": "overrides: cross_section Fe54 MT 103 = 0.5 b (daughter Mn54); FISPACT-II sets the channel to that daughter, ACTINV sets the collapsed MT row with its product branching kept",
+       "keyword": "ACROSS",
+       "line": 15,
+       "status": "approximated"
+      }
+     ]
+    },
+    "over_alam": {
+     "comparisons": {
+      "half_life_override": {
+       "exact": true,
+       "identical_apart_from_echoes": true,
+       "n_differences": 9,
+       "n_echo": 9,
+       "n_other": 0,
+       "other": [],
+       "worst_tolerated_relative": 0.0
+      }
+     },
+     "gating": true,
+     "import": {
+      "deck": {
+       "path": "/home/connoravila/Documents/actinv/target/p140/controls/p138-work/run-1792114393-3618786/v_over_alam.i",
+       "sha256": "5fdbfd3e9482cef8d74c168954d86f7054fd848e0552e8c006f6af002354442c"
+      },
+      "exit_code": 0,
+      "fluxes": {
+       "path": "/home/connoravila/nuclear-data/conderc-fns/fns/Fe/1996exp_5min_fluxes",
+       "sha256": "6c2a23393bd71bc5ac957ee53ca6b6ea747b8b0ed87d19361053f37505937d66"
+      },
+      "spec_file": {
+       "path": "/home/connoravila/Documents/actinv/target/p140/controls/p138-work/run-1792114393-3618786/v_over_alam.imported.json",
+       "sha256": "5ed0fa926395132bf42e5174ecfaed30ff3a0a08fada264971a870269842043c"
+      },
+      "stderr_tail": "",
+      "stdout_tail": "nnoravila/Documents/actinv/target/p140/controls/p138-work/run-1792114393-3618786/v_over_alam.imported.json (4 steps; 15 mapped, 2 approximated, 10 noted, 0 unsupported); report: /home/connoravila/Documents/actinv/target/p140/controls/p138-work/run-1792114393-3618786/v_over_alam.imported.import.json\n"
+     },
+     "imported_run_ok": true,
+     "keywords": [
+      "OVER",
+      "ALAM"
+     ],
+     "name": "over_alam",
+     "pass": true,
+     "report_counts": {
+      "approximated": 2,
+      "mapped": 15,
+      "noted": 10,
+      "unsupported": 0
+     },
+     "sensitivity": {
+      "half_life_override": {
+       "keyword_changes_result": true,
+       "n_differences_from_base": 398
+      }
+     },
+     "statuses": [
+      {
+       "detail": "1 sub-keyword(s): 1 mapped, 0 approximated, 0 unsupported (each is reported under its own name)",
+       "keyword": "OVER",
+       "line": 15,
+       "status": "mapped"
+      },
+      {
+       "detail": "overrides: half_life Mn54 = 100 d",
+       "keyword": "ALAM",
+       "line": 15,
+       "status": "mapped"
+      }
+     ]
+    },
+    "partition": {
+     "comparisons": {
+      "partition_field": {
+       "exact": true,
+       "identical_apart_from_echoes": true,
+       "n_differences": 9,
+       "n_echo": 9,
+       "n_other": 0,
+       "other": [],
+       "worst_tolerated_relative": 0.0
+      }
+     },
+     "gating": true,
+     "import": {
+      "deck": {
+       "path": "/home/connoravila/Documents/actinv/target/p140/controls/p138-work/run-1792114393-3618786/v_partition.i",
+       "sha256": "8533c77f52874299e14f71c6de3b8ed909cd5ff3940d2c336383c25fe00f4513"
+      },
+      "exit_code": 0,
+      "fluxes": {
+       "path": "/home/connoravila/nuclear-data/conderc-fns/fns/Fe/1996exp_5min_fluxes",
+       "sha256": "6c2a23393bd71bc5ac957ee53ca6b6ea747b8b0ed87d19361053f37505937d66"
+      },
+      "spec_file": {
+       "path": "/home/connoravila/Documents/actinv/target/p140/controls/p138-work/run-1792114393-3618786/v_partition.imported.json",
+       "sha256": "a179b3013508dc444dd14b5e237442af7d0ba08146f1adb240e263c40b757c1d"
+      },
+      "stderr_tail": "",
+      "stdout_tail": "nnoravila/Documents/actinv/target/p140/controls/p138-work/run-1792114393-3618786/v_partition.imported.json (4 steps; 14 mapped, 2 approximated, 10 noted, 0 unsupported); report: /home/connoravila/Documents/actinv/target/p140/controls/p138-work/run-1792114393-3618786/v_partition.imported.import.json\n"
+     },
+     "imported_run_ok": true,
+     "keywords": [
+      "PARTITION"
+     ],
+     "name": "partition",
+     "pass": true,
+     "report_counts": {
+      "approximated": 2,
+      "mapped": 14,
+      "noted": 10,
+      "unsupported": 0
+     },
+     "sensitivity": {
+      "partition_field": {
+       "keyword_changes_result": true,
+       "n_differences_from_base": 399
+      }
+     },
+     "statuses": [
+      {
+       "detail": "schedule partition (fraction of each element's atoms kept: Cr 0.5, Mn 0.1) at the start of the next step; the removed atoms go to the removal sink",
+       "keyword": "PARTITION",
+       "line": 21,
+       "status": "mapped"
+      }
+     ]
+    },
+    "path": {
+     "comparisons": {
+      "pathways_targets": {
+       "exact": true,
+       "identical_apart_from_echoes": true,
+       "n_differences": 9,
+       "n_echo": 9,
+       "n_other": 0,
+       "other": [],
+       "worst_tolerated_relative": 0.0
+      }
+     },
+     "gating": true,
+     "import": {
+      "deck": {
+       "path": "/home/connoravila/Documents/actinv/target/p140/controls/p138-work/run-1792114393-3618786/v_path.i",
+       "sha256": "2c1676c05451072e6e7c10d1d1dc44158d25dc62ffb95de69e5729ef0e06bfb3"
+      },
+      "exit_code": 0,
+      "fluxes": {
+       "path": "/home/connoravila/nuclear-data/conderc-fns/fns/Fe/1996exp_5min_fluxes",
+       "sha256": "6c2a23393bd71bc5ac957ee53ca6b6ea747b8b0ed87d19361053f37505937d66"
+      },
+      "spec_file": {
+       "path": "/home/connoravila/Documents/actinv/target/p140/controls/p138-work/run-1792114393-3618786/v_path.imported.json",
+       "sha256": "285908be3f5e9c0ad6dfb1e0c88e7da51de6cf4866767ede7cb4e60a438fb03f"
+      },
+      "stderr_tail": "",
+      "stdout_tail": "> /home/connoravila/Documents/actinv/target/p140/controls/p138-work/run-1792114393-3618786/v_path.imported.json (4 steps; 13 mapped, 3 approximated, 10 noted, 0 unsupported); report: /home/connoravila/Documents/actinv/target/p140/controls/p138-work/run-1792114393-3618786/v_path.imported.import.json\n"
+     },
+     "imported_run_ok": true,
+     "keywords": [
+      "PATH"
+     ],
+     "name": "path",
+     "pass": true,
+     "report_counts": {
+      "approximated": 3,
+      "mapped": 13,
+      "noted": 10,
+      "unsupported": 0
+     },
+     "sensitivity": {
+      "pathways_targets": {
+       "keyword_changes_result": true,
+       "n_differences_from_base": 1
+      }
+     },
+     "statuses": [
+      {
+       "detail": "pathways section with the nuclides named as targets (none named selects the dominant ones); ACTINV's route search thresholds keep their defaults",
+       "keyword": "PATH",
+       "line": 15,
+       "status": "approximated"
+      }
+     ]
+    },
+    "power": {
+     "comparisons": {
+      "power_with_kerma": {
+       "exact": true,
+       "identical_apart_from_echoes": true,
+       "n_differences": 9,
+       "n_echo": 9,
+       "n_other": 0,
+       "other": [],
+       "worst_tolerated_relative": 0.0
+      }
+     },
+     "gating": true,
+     "import": {
+      "deck": {
+       "path": "/home/connoravila/Documents/actinv/target/p140/controls/p138-work/run-1792114393-3618786/v_power.i",
+       "sha256": "c8d85a5caf9341a0c4e82ef02ac32d81fb3a5e3b47a19f8d843f7fa42427ea6f"
+      },
+      "exit_code": 0,
+      "fluxes": {
+       "path": "/home/connoravila/nuclear-data/conderc-fns/fns/Fe/1996exp_5min_fluxes",
+       "sha256": "6c2a23393bd71bc5ac957ee53ca6b6ea747b8b0ed87d19361053f37505937d66"
+      },
+      "spec_file": {
+       "path": "/home/connoravila/Documents/actinv/target/p140/controls/p138-work/run-1792114393-3618786/v_power.imported.json",
+       "sha256": "4b58ea90a424a1b6f5b83ee1b128ac37f77c98cdc9daf6075bbc11c29f62bb5a"
+      },
+      "stderr_tail": "",
+      "stdout_tail": "2114393-3618786/v_power.imported.json (4 steps; 12 mapped, 3 approximated, 10 noted, 0 unsupported); 1 section(s) must be added before it validates (see required_additions); report: /home/connoravila/Documents/actinv/target/p140/controls/p138-work/run-1792114393-3618786/v_power.imported.import.json\n"
+     },
+     "imported_run_ok": true,
+     "keywords": [
+      "POWER"
+     ],
+     "name": "power",
+     "pass": true,
+     "report_counts": {
+      "approximated": 3,
+      "mapped": 12,
+      "noted": 10,
+      "unsupported": 0
+     },
+     "sensitivity": {
+      "power_with_kerma": {
+       "keyword_changes_result": true,
+       "n_differences_from_base": 399
+      }
+     },
+     "statuses": [
+      {
+       "detail": "steps that follow take power_W_cm3 = 0.0005 (FISPACT-II's W/cc) with material.density_g_cm3 from DENSITY; the flux amplitude is solved from kerma heating, which needs a hash-pinned kerma.table that no deck provides (see required_additions)",
+       "keyword": "POWER",
+       "line": 15,
+       "status": "approximated"
+      }
+     ]
+    },
+    "wall": {
+     "comparisons": {
+      "explicit_multiplier": {
+       "exact": true,
+       "identical_apart_from_echoes": true,
+       "n_differences": 10,
+       "n_echo": 10,
+       "n_other": 0,
+       "other": [],
+       "worst_tolerated_relative": 0.0
+      },
+      "wall_loading_field": {
+       "exact": true,
+       "identical_apart_from_echoes": true,
+       "n_differences": 9,
+       "n_echo": 9,
+       "n_other": 0,
+       "other": [],
+       "worst_tolerated_relative": 0.0
+      }
+     },
+     "gating": true,
+     "import": {
+      "deck": {
+       "path": "/home/connoravila/Documents/actinv/target/p140/controls/p138-work/run-1792114393-3618786/v_wall.i",
+       "sha256": "731833d932cc4ffc02fdb2cd0566d88590fd7d51f7a368ed388cba6606afb2bc"
+      },
+      "exit_code": 0,
+      "fluxes": {
+       "path": "/home/connoravila/nuclear-data/conderc-fns/fns/Fe/1996exp_5min_fluxes",
+       "sha256": "6c2a23393bd71bc5ac957ee53ca6b6ea747b8b0ed87d19361053f37505937d66"
+      },
+      "spec_file": {
+       "path": "/home/connoravila/Documents/actinv/target/p140/controls/p138-work/run-1792114393-3618786/v_wall.imported.json",
+       "sha256": "5bc35bcf2373d406f2637df86c3ddd8c0bea6903879a59d4befdddff743952a2"
+      },
+      "stderr_tail": "",
+      "stdout_tail": "> /home/connoravila/Documents/actinv/target/p140/controls/p138-work/run-1792114393-3618786/v_wall.imported.json (4 steps; 13 mapped, 2 approximated, 10 noted, 0 unsupported); report: /home/connoravila/Documents/actinv/target/p140/controls/p138-work/run-1792114393-3618786/v_wall.imported.import.json\n"
+     },
+     "imported_run_ok": true,
+     "keywords": [
+      "WALL"
+     ],
+     "name": "wall",
+     "pass": true,
+     "report_counts": {
+      "approximated": 2,
+      "mapped": 13,
+      "noted": 10,
+      "unsupported": 0
+     },
+     "sensitivity": {
+      "explicit_multiplier": {
+       "keyword_changes_result": true,
+       "n_differences_from_base": 399
+      },
+      "wall_loading_field": {
+       "keyword_changes_result": true,
+       "n_differences_from_base": 399
+      }
+     },
+     "statuses": [
+      {
+       "detail": "schedule wall_loading_MW_m2; the step multiplier is wall / 1, the first-wall loading of the fluxes file (spectrum.wall_loading_MW_m2), as in FISPACT-II section 4.91",
+       "keyword": "WALL",
+       "line": 15,
+       "status": "mapped"
+      }
+     ]
+    }
+   }
+  },
+  "G4": {
+   "mapped_but_differs": [],
+   "missing_reason": [],
+   "negative_controls": [
+    {
+     "exit_code": 0,
+     "name": "adlam",
+     "pass": true,
+     "problems": [],
+     "statuses": {
+      "ADLAM": [
+       "unsupported"
+      ]
+     }
+    },
+    {
+     "exit_code": 0,
+     "name": "adcross",
+     "pass": true,
+     "problems": [],
+     "statuses": {
+      "ADCROSS": [
+       "unsupported"
+      ]
+     }
+    },
+    {
+     "exit_code": 0,
+     "name": "across_ambiguous",
+     "pass": true,
+     "problems": [],
+     "statuses": {
+      "ACROSS": [
+       "unsupported"
+      ]
+     }
+    },
+    {
+     "exit_code": 0,
+     "name": "across_isomer",
+     "pass": true,
+     "problems": [],
+     "statuses": {
+      "ACROSS": [
+       "unsupported"
+      ]
+     }
+    },
+    {
+     "exit_code": 0,
+     "name": "partition_trailing",
+     "pass": true,
+     "problems": [],
+     "statuses": {
+      "PARTITION": [
+       "unsupported"
+      ]
+     }
+    },
+    {
+     "exit_code": 0,
+     "name": "brems_no_nuclides",
+     "pass": true,
+     "problems": [],
+     "statuses": {
+      "BREMSSTRAHLUNG": [
+       "unsupported"
+      ]
+     }
+    },
+    {
+     "exit_code": 0,
+     "name": "dose3",
+     "pass": true,
+     "problems": [],
+     "statuses": {
+      "DOSE": [
+       "unsupported"
+      ]
+     }
+    },
+    {
+     "exit_code": 0,
+     "name": "group2",
+     "pass": true,
+     "problems": [],
+     "statuses": {
+      "GROUP": [
+       "unsupported"
+      ]
+     }
+    },
+    {
+     "exit_code": 0,
+     "name": "path_beside_power",
+     "pass": true,
+     "problems": [],
+     "statuses": {
+      "PATH": [
+       "unsupported"
+      ]
+     }
+    },
+    {
+     "exit_code": 0,
+     "name": "uncert_beside_across",
+     "pass": true,
+     "problems": [],
+     "statuses": {
+      "UNCERTAINTY": [
+       "unsupported"
+      ]
+     }
+    },
+    {
+     "exit_code": 1,
+     "name": "grpconvert_50_groups",
+     "pass": true,
+     "stderr_tail": "GRPCONVERT: no FISPACT-II standard group structure has 50 groups, so the boundaries of the supplied spectrum are unknown; give the spectrum in 709 (neutron) or 162 (charged-particle) groups\n"
+    },
+    {
+     "exit_code": 1,
+     "name": "175_groups_without_grpconvert",
+     "pass": true,
+     "stderr_tail": "/home/connoravila/Documents/actinv/target/p140/controls/p138-work/run-1792114393-3618786/inputs/fluxes_175 has 175 groups; ACTINV reads 709-group (neutron) or 162-group (charged-particle) spectra, so convert the spectrum first (or add GRPCONVERT to the deck for a FISPACT-II standard structure)\n"
+    }
+   ],
+   "pass": true,
+   "statuses": {
+    "atwo": [
+     {
+      "keyword": "ATWO",
+      "line": 15,
+      "status": "approximated"
+     }
+    ],
+    "bremsstrahlung": [
+     {
+      "keyword": "BREMSSTRAHLUNG",
+      "line": 15,
+      "status": "approximated"
+     }
+    ],
+    "cnvtype1": [
+     {
+      "keyword": "GRPCONVERT",
+      "line": 15,
+      "status": "mapped"
+     },
+     {
+      "keyword": "CNVTYPE",
+      "line": 16,
+      "status": "mapped"
+     }
+    ],
+    "dose2": [
+     {
+      "keyword": "DOSE",
+      "line": 15,
+      "status": "mapped"
+     }
+    ],
+    "group1": [
+     {
+      "keyword": "GROUP",
+      "line": 15,
+      "status": "mapped"
+     }
+    ],
+    "grpconvert": [
+     {
+      "keyword": "GRPCONVERT",
+      "line": 15,
+      "status": "mapped"
+     }
+    ],
+    "limgrp": [
+     {
+      "keyword": "GRPCONVERT",
+      "line": 15,
+      "status": "mapped"
+     },
+     {
+      "keyword": "LIMGRP",
+      "line": 16,
+      "status": "approximated"
+     }
+    ],
+    "over_across": [
+     {
+      "keyword": "OVER",
+      "line": 15,
+      "status": "approximated"
+     },
+     {
+      "keyword": "ACROSS",
+      "line": 15,
+      "status": "approximated"
+     }
+    ],
+    "over_alam": [
+     {
+      "keyword": "OVER",
+      "line": 15,
+      "status": "mapped"
+     },
+     {
+      "keyword": "ALAM",
+      "line": 15,
+      "status": "mapped"
+     }
+    ],
+    "partition": [
+     {
+      "keyword": "PARTITION",
+      "line": 21,
+      "status": "mapped"
+     }
+    ],
+    "path": [
+     {
+      "keyword": "PATH",
+      "line": 15,
+      "status": "approximated"
+     }
+    ],
+    "power": [
+     {
+      "keyword": "POWER",
+      "line": 15,
+      "status": "approximated"
+     }
+    ],
+    "wall": [
+     {
+      "keyword": "WALL",
+      "line": 15,
+      "status": "mapped"
+     }
+    ]
+   },
+   "variants_missing": []
+  },
+  "G5": {
+   "external": "CI on the pushed commit is not run here"
+  }
+ },
+ "protocol": "protocols/ACTINV-P138_PROTOCOL.md",
+ "protocol_sha256": "5b55325dadb7cfff915ebaa876e20dc520121648cfd7637e8823d0662efb598e",
+ "runs": {
+  "base_hand": {
+   "exit_code": 0,
+   "output": {
+    "path": "/home/connoravila/Documents/actinv/target/p140/controls/p138-work/run-1792114393-3618786/base_hand.result.json",
+    "sha256": "28df36f6b2f4dcc67e5286d27fb9f8c08a3677d106971f52b8093dbcf74366b4"
+   },
+   "spec": {
+    "path": "/home/connoravila/Documents/actinv/target/p140/controls/p138-work/run-1792114393-3618786/base_hand.spec.json",
+    "sha256": "0a17348110faf228f91015528666bfec33d0498e86a8f0e8b82bfea6b9df7931"
+   },
+   "wall_s": 0.97
+  },
+  "v_atwo_hand_a2_table": {
+   "exit_code": 0,
+   "output": {
+    "path": "/home/connoravila/Documents/actinv/target/p140/controls/p138-work/run-1792114393-3618786/v_atwo_hand_a2_table.result.json",
+    "sha256": "d06940a6683dd4a3834d54eebe0b246379ea80ef96bc131f72295987d38150e6"
+   },
+   "spec": {
+    "path": "/home/connoravila/Documents/actinv/target/p140/controls/p138-work/run-1792114393-3618786/v_atwo_hand_a2_table.spec.json",
+    "sha256": "56050868c1e5051270dddd68ad4c04097cf3e2f7956ba7c30915345c98cc15b4"
+   },
+   "wall_s": 0.77
+  },
+  "v_atwo_imported": {
+   "exit_code": 0,
+   "output": {
+    "path": "/home/connoravila/Documents/actinv/target/p140/controls/p138-work/run-1792114393-3618786/v_atwo_imported.result.json",
+    "sha256": "682d10f13c0d4544d5dadcd7501e6f2c66f0f9ef9adc9589733645222638990b"
+   },
+   "spec": {
+    "path": "/home/connoravila/Documents/actinv/target/p140/controls/p138-work/run-1792114393-3618786/v_atwo_imported.spec.json",
+    "sha256": "6ea358342e47b83a1e76b03d641ccfd71bf109a90179702e7c6c1e77b5123d4b"
+   },
+   "wall_s": 0.766
+  },
+  "v_bremsstrahlung_hand_nuclides": {
+   "exit_code": 0,
+   "output": {
+    "path": "/home/connoravila/Documents/actinv/target/p140/controls/p138-work/run-1792114393-3618786/v_bremsstrahlung_hand_nuclides.result.json",
+    "sha256": "1cea0cb0647de81a2b1b855bdbf6718e0b81719ce2878cf01345a83eb1fd56c6"
+   },
+   "spec": {
+    "path": "/home/connoravila/Documents/actinv/target/p140/controls/p138-work/run-1792114393-3618786/v_bremsstrahlung_hand_nuclides.spec.json",
+    "sha256": "875714d58599884b64e3a016d3ad4e9f13c3d9289196959adcd8d1a86f73750f"
+   },
+   "wall_s": 0.767
+  },
+  "v_bremsstrahlung_imported": {
+   "exit_code": 0,
+   "output": {
+    "path": "/home/connoravila/Documents/actinv/target/p140/controls/p138-work/run-1792114393-3618786/v_bremsstrahlung_imported.result.json",
+    "sha256": "fee65f4a34fc5cb4a135fdfbecde6c8050fbf075687f6a5ec769efffedd9a502"
+   },
+   "spec": {
+    "path": "/home/connoravila/Documents/actinv/target/p140/controls/p138-work/run-1792114393-3618786/v_bremsstrahlung_imported.spec.json",
+    "sha256": "350fa29d222c56182da9f2c6c0912a232fd600c75d603e4e366c73aacd8e6e25"
+   },
+   "wall_s": 0.772
+  },
+  "v_cnvtype1_hand_rebin_equal_energy": {
+   "exit_code": 0,
+   "output": {
+    "path": "/home/connoravila/Documents/actinv/target/p140/controls/p138-work/run-1792114393-3618786/v_cnvtype1_hand_rebin_equal_energy.result.json",
+    "sha256": "ca1f47085aff8903419469d1b5f75f70a7834af20d9eb5f5aa55f155b5744ff2"
+   },
+   "spec": {
+    "path": "/home/connoravila/Documents/actinv/target/p140/controls/p138-work/run-1792114393-3618786/v_cnvtype1_hand_rebin_equal_energy.spec.json",
+    "sha256": "836b9931cbf3dd5e62a448ab656c4e0ebf4ebb05ad94b2f8a4ad5aa16b6203af"
+   },
+   "wall_s": 0.781
+  },
+  "v_cnvtype1_imported": {
+   "exit_code": 0,
+   "output": {
+    "path": "/home/connoravila/Documents/actinv/target/p140/controls/p138-work/run-1792114393-3618786/v_cnvtype1_imported.result.json",
+    "sha256": "6ee8a898ba3a22a3c3e1a8482c96555a6fced2820642b414765982fed3cc31ea"
+   },
+   "spec": {
+    "path": "/home/connoravila/Documents/actinv/target/p140/controls/p138-work/run-1792114393-3618786/v_cnvtype1_imported.spec.json",
+    "sha256": "2720fca2714684ef761faa4e5e9b77bfc2bb615b91d11baff05649626bdaa787"
+   },
+   "wall_s": 0.814
+  },
+  "v_dose2_hand_point_source": {
+   "exit_code": 0,
+   "output": {
+    "path": "/home/connoravila/Documents/actinv/target/p140/controls/p138-work/run-1792114393-3618786/v_dose2_hand_point_source.result.json",
+    "sha256": "63fe73a9e51c62aa77427a6f35031e6eb3b916f3acfe4d9cb180d4856b642e8b"
+   },
+   "spec": {
+    "path": "/home/connoravila/Documents/actinv/target/p140/controls/p138-work/run-1792114393-3618786/v_dose2_hand_point_source.spec.json",
+    "sha256": "9cc28933a327be507a27b522b25b68d2117eac6b9968c0eed43683023c968b93"
+   },
+   "wall_s": 0.765
+  },
+  "v_dose2_imported": {
+   "exit_code": 0,
+   "output": {
+    "path": "/home/connoravila/Documents/actinv/target/p140/controls/p138-work/run-1792114393-3618786/v_dose2_imported.result.json",
+    "sha256": "686a723e9a976a43cf9131b261af0294f0608a89ed3820a7e10fdb067c716cc6"
+   },
+   "spec": {
+    "path": "/home/connoravila/Documents/actinv/target/p140/controls/p138-work/run-1792114393-3618786/v_dose2_imported.spec.json",
+    "sha256": "14c3961ca287b58d4439637bd86e273dc7adc872a2e411f50914aceb06b85842"
+   },
+   "wall_s": 0.766
+  },
+  "v_group1_hand_steiner_22": {
+   "exit_code": 0,
+   "output": {
+    "path": "/home/connoravila/Documents/actinv/target/p140/controls/p138-work/run-1792114393-3618786/v_group1_hand_steiner_22.result.json",
+    "sha256": "e617ee4b75aeb68d701ff76d0fc39736998f53d4c0cb55f209b327faf2abbb39"
+   },
+   "spec": {
+    "path": "/home/connoravila/Documents/actinv/target/p140/controls/p138-work/run-1792114393-3618786/v_group1_hand_steiner_22.spec.json",
+    "sha256": "7ba36995f32dd917e1d1b11b04f1037c6a3278dd36cbee76809cc62435a737ec"
+   },
+   "wall_s": 0.764
+  },
+  "v_group1_imported": {
+   "exit_code": 0,
+   "output": {
+    "path": "/home/connoravila/Documents/actinv/target/p140/controls/p138-work/run-1792114393-3618786/v_group1_imported.result.json",
+    "sha256": "129d0790d9a1aa3114a0817d3b4ee398f6e4a7769091f8cc4132fe31244572d7"
+   },
+   "spec": {
+    "path": "/home/connoravila/Documents/actinv/target/p140/controls/p138-work/run-1792114393-3618786/v_group1_imported.spec.json",
+    "sha256": "cce2877e3bf91e0ac6265dc6cf65c0ae8f6d841bc3a7928ae18dd4289b4eac75"
+   },
+   "wall_s": 0.764
+  },
+  "v_grpconvert_hand_rebin_equal_lethargy": {
+   "exit_code": 0,
+   "output": {
+    "path": "/home/connoravila/Documents/actinv/target/p140/controls/p138-work/run-1792114393-3618786/v_grpconvert_hand_rebin_equal_lethargy.result.json",
+    "sha256": "3a610772ba195f4d65115a9b387d6ed6cccd74b341ce893622f76405b178a08c"
+   },
+   "spec": {
+    "path": "/home/connoravila/Documents/actinv/target/p140/controls/p138-work/run-1792114393-3618786/v_grpconvert_hand_rebin_equal_lethargy.spec.json",
+    "sha256": "85b96b629de03dccd47c74ad5481cc98098ba3e04f5b98cad375ec20dbebf849"
+   },
+   "wall_s": 0.799
+  },
+  "v_grpconvert_imported": {
+   "exit_code": 0,
+   "output": {
+    "path": "/home/connoravila/Documents/actinv/target/p140/controls/p138-work/run-1792114393-3618786/v_grpconvert_imported.result.json",
+    "sha256": "ad9b17bc30aa2d0f571396705492dd71e81009a83e2ad44be91737fd20002af6"
+   },
+   "spec": {
+    "path": "/home/connoravila/Documents/actinv/target/p140/controls/p138-work/run-1792114393-3618786/v_grpconvert_imported.spec.json",
+    "sha256": "97cd7a46479de7c4029abeffc49f00f9d3b5f03dcc77909249028897a4037da1"
+   },
+   "wall_s": 0.792
+  },
+  "v_limgrp_hand_rebin_limits_in_eV": {
+   "exit_code": 0,
+   "output": {
+    "path": "/home/connoravila/Documents/actinv/target/p140/controls/p138-work/run-1792114393-3618786/v_limgrp_hand_rebin_limits_in_eV.result.json",
+    "sha256": "8c284410e91efb3c2529aee65463d76051f1614a200cad605d24ca60d9675de8"
+   },
+   "spec": {
+    "path": "/home/connoravila/Documents/actinv/target/p140/controls/p138-work/run-1792114393-3618786/v_limgrp_hand_rebin_limits_in_eV.spec.json",
+    "sha256": "e3c79b97e963aebf44e14c4506933d38f301f4152635192da66b318eb0152619"
+   },
+   "wall_s": 0.769
+  },
+  "v_limgrp_imported": {
+   "exit_code": 0,
+   "output": {
+    "path": "/home/connoravila/Documents/actinv/target/p140/controls/p138-work/run-1792114393-3618786/v_limgrp_imported.result.json",
+    "sha256": "c167a8ee31451ce23ad90e65dd29fc062300d7a2baa33597f272d07e56eadf9c"
+   },
+   "spec": {
+    "path": "/home/connoravila/Documents/actinv/target/p140/controls/p138-work/run-1792114393-3618786/v_limgrp_imported.spec.json",
+    "sha256": "2abc8e8c0b87b3cfeef7c5285759f9b4fa194d8138ea1c8aa0bab8636d940b5d"
+   },
+   "wall_s": 0.758
+  },
+  "v_over_across_hand_cross_section_override": {
+   "exit_code": 0,
+   "output": {
+    "path": "/home/connoravila/Documents/actinv/target/p140/controls/p138-work/run-1792114393-3618786/v_over_across_hand_cross_section_override.result.json",
+    "sha256": "42de96a93a2f2337bebd54fc5ddeb7658ef9bdcd356fba41acca9331cda7c810"
+   },
+   "spec": {
+    "path": "/home/connoravila/Documents/actinv/target/p140/controls/p138-work/run-1792114393-3618786/v_over_across_hand_cross_section_override.spec.json",
+    "sha256": "a281e0f1cb6773aba91d8f57139cda1344d39ffa50b589310c471253b9e0850e"
+   },
+   "wall_s": 0.782
+  },
+  "v_over_across_imported": {
+   "exit_code": 0,
+   "output": {
+    "path": "/home/connoravila/Documents/actinv/target/p140/controls/p138-work/run-1792114393-3618786/v_over_across_imported.result.json",
+    "sha256": "2be7d50a7cd041c7700af0072a5fdd1a875e406c3cac3494c9f0a4cddf2fc4b2"
+   },
+   "spec": {
+    "path": "/home/connoravila/Documents/actinv/target/p140/controls/p138-work/run-1792114393-3618786/v_over_across_imported.spec.json",
+    "sha256": "bb5b24f9f7e09e8cc69d2b29ea500ac2ac52f50ee93ee6682d42d41708ba4d64"
+   },
+   "wall_s": 0.766
+  },
+  "v_over_alam_hand_half_life_override": {
+   "exit_code": 0,
+   "output": {
+    "path": "/home/connoravila/Documents/actinv/target/p140/controls/p138-work/run-1792114393-3618786/v_over_alam_hand_half_life_override.result.json",
+    "sha256": "32db904dbd40f58f15bad30663a464fe82abe4e70bde5ab362dc2b8211d231aa"
+   },
+   "spec": {
+    "path": "/home/connoravila/Documents/actinv/target/p140/controls/p138-work/run-1792114393-3618786/v_over_alam_hand_half_life_override.spec.json",
+    "sha256": "ec08b51c50f19ccb1e773ecea8a861ada8642712ff12474b8726f0c8b6a545cb"
+   },
+   "wall_s": 0.778
+  },
+  "v_over_alam_imported": {
+   "exit_code": 0,
+   "output": {
+    "path": "/home/connoravila/Documents/actinv/target/p140/controls/p138-work/run-1792114393-3618786/v_over_alam_imported.result.json",
+    "sha256": "d5026e7ce601f27976e8baa836fc8daddca7e3ee90567dbee6f5099e8ffe937e"
+   },
+   "spec": {
+    "path": "/home/connoravila/Documents/actinv/target/p140/controls/p138-work/run-1792114393-3618786/v_over_alam_imported.spec.json",
+    "sha256": "8365eb4a7989f140495485f1c909da8aa82948e87bcaf4990d72324ed15800e9"
+   },
+   "wall_s": 0.781
+  },
+  "v_partition_hand_partition_field": {
+   "exit_code": 0,
+   "output": {
+    "path": "/home/connoravila/Documents/actinv/target/p140/controls/p138-work/run-1792114393-3618786/v_partition_hand_partition_field.result.json",
+    "sha256": "0d630b6f14c0c1566eaf07fd55dad55c3bcf2760bad0d7ff843e6a56174ab8dd"
+   },
+   "spec": {
+    "path": "/home/connoravila/Documents/actinv/target/p140/controls/p138-work/run-1792114393-3618786/v_partition_hand_partition_field.spec.json",
+    "sha256": "c27b3d396ee41caf16772e00f2c87bfab984fdd91aef21565576d31901eb5a8d"
+   },
+   "wall_s": 0.752
+  },
+  "v_partition_imported": {
+   "exit_code": 0,
+   "output": {
+    "path": "/home/connoravila/Documents/actinv/target/p140/controls/p138-work/run-1792114393-3618786/v_partition_imported.result.json",
+    "sha256": "59c9bdb5df22c237c881d2ed00cdd932c648df722b67d5c1e8462f26a9e85f44"
+   },
+   "spec": {
+    "path": "/home/connoravila/Documents/actinv/target/p140/controls/p138-work/run-1792114393-3618786/v_partition_imported.spec.json",
+    "sha256": "daaedd8f8df2ed8ccb2aa0fe4ab9f792139265657839b180f225fda02897674c"
+   },
+   "wall_s": 0.732
+  },
+  "v_path_hand_pathways_targets": {
+   "exit_code": 0,
+   "output": {
+    "path": "/home/connoravila/Documents/actinv/target/p140/controls/p138-work/run-1792114393-3618786/v_path_hand_pathways_targets.result.json",
+    "sha256": "508c165e470fb66de78b181904ac251ac813b9e6188e3ac1f19ccc626a7abdc9"
+   },
+   "spec": {
+    "path": "/home/connoravila/Documents/actinv/target/p140/controls/p138-work/run-1792114393-3618786/v_path_hand_pathways_targets.spec.json",
+    "sha256": "fabec81a8a7ac44f836fa904ea5d66820341ebb2eda57c8ea7bb91101a81e376"
+   },
+   "wall_s": 0.809
+  },
+  "v_path_imported": {
+   "exit_code": 0,
+   "output": {
+    "path": "/home/connoravila/Documents/actinv/target/p140/controls/p138-work/run-1792114393-3618786/v_path_imported.result.json",
+    "sha256": "5f7cba2b947c03ed03cd142a52a3cdb5607eff093e1f5ac3159d391f0722adf1"
+   },
+   "spec": {
+    "path": "/home/connoravila/Documents/actinv/target/p140/controls/p138-work/run-1792114393-3618786/v_path_imported.spec.json",
+    "sha256": "f031924b7c35f6cf5488ae53d7047105bb9e0b1a00ef11e01cf7d5d68810f139"
+   },
+   "wall_s": 0.821
+  },
+  "v_power_hand_power_with_kerma": {
+   "exit_code": 0,
+   "output": {
+    "path": "/home/connoravila/Documents/actinv/target/p140/controls/p138-work/run-1792114393-3618786/v_power_hand_power_with_kerma.result.json",
+    "sha256": "c791377367480e0c2075eca23297414df5c161d63ca0bf159ac784dcd3cee145"
+   },
+   "spec": {
+    "path": "/home/connoravila/Documents/actinv/target/p140/controls/p138-work/run-1792114393-3618786/v_power_hand_power_with_kerma.spec.json",
+    "sha256": "1ece0fc3cca6a30b91950ad63d99b5dfa06149438bc79ff8fa30a80345caf80c"
+   },
+   "wall_s": 0.763
+  },
+  "v_power_imported": {
+   "exit_code": 0,
+   "output": {
+    "path": "/home/connoravila/Documents/actinv/target/p140/controls/p138-work/run-1792114393-3618786/v_power_imported.result.json",
+    "sha256": "beacb9fb5c0ab1c39bc26db3121190cea8eab6357709a514bf4727ff18dfb646"
+   },
+   "spec": {
+    "path": "/home/connoravila/Documents/actinv/target/p140/controls/p138-work/run-1792114393-3618786/v_power_imported.spec.json",
+    "sha256": "4b58ea90a424a1b6f5b83ee1b128ac37f77c98cdc9daf6075bbc11c29f62bb5a"
+   },
+   "wall_s": 0.761
+  },
+  "v_wall_hand_explicit_multiplier": {
+   "exit_code": 0,
+   "output": {
+    "path": "/home/connoravila/Documents/actinv/target/p140/controls/p138-work/run-1792114393-3618786/v_wall_hand_explicit_multiplier.result.json",
+    "sha256": "1060699efeced296e0e96d5ce7b51cbd30c2a27283aad43af8ee5ba46fcd3ae6"
+   },
+   "spec": {
+    "path": "/home/connoravila/Documents/actinv/target/p140/controls/p138-work/run-1792114393-3618786/v_wall_hand_explicit_multiplier.spec.json",
+    "sha256": "cc5e1a7a4c212a999887b1f68c4ea4e43b687fbfd4bef771f72cbb45913c66a9"
+   },
+   "wall_s": 0.781
+  },
+  "v_wall_hand_wall_loading_field": {
+   "exit_code": 0,
+   "output": {
+    "path": "/home/connoravila/Documents/actinv/target/p140/controls/p138-work/run-1792114393-3618786/v_wall_hand_wall_loading_field.result.json",
+    "sha256": "48210e6649e5eb6e8c26777cb73e3218db175fa909241dff5fc1e1a4177402f2"
+   },
+   "spec": {
+    "path": "/home/connoravila/Documents/actinv/target/p140/controls/p138-work/run-1792114393-3618786/v_wall_hand_wall_loading_field.spec.json",
+    "sha256": "186d2b2679758036d7050d93a644b6207ab2d3892adf8b95928b3b3ec7ef3d85"
+   },
+   "wall_s": 0.812
+  },
+  "v_wall_imported": {
+   "exit_code": 0,
+   "output": {
+    "path": "/home/connoravila/Documents/actinv/target/p140/controls/p138-work/run-1792114393-3618786/v_wall_imported.result.json",
+    "sha256": "438e31d873113477198458fc1a9d97c0d317a0688b57ede58506b0fdac16ed0d"
+   },
+   "spec": {
+    "path": "/home/connoravila/Documents/actinv/target/p140/controls/p138-work/run-1792114393-3618786/v_wall_imported.spec.json",
+    "sha256": "61f6e28acc0914d89314fcf9e10431bd5b2aabac2927db0d3a9520754a2df4c6"
+   },
+   "wall_s": 0.797
+  }
+ },
+ "verdict": "PASS",
+ "workdir": "/home/connoravila/Documents/actinv/target/p140/controls/p138-work/run-1792114393-3618786"
+}

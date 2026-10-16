@@ -1,0 +1,688 @@
+{
+ "candidate_binary": {
+  "path": "/home/connoravila/Documents/actinv/target/cand11-actinv",
+  "sha256": "179e96a06dd0bee02f3e71452492ee058b6f4ca123063a5eab7ed365235e4536"
+ },
+ "checker": {
+  "path": "/home/connoravila/Documents/actinv/controls/check_p127.py",
+  "sha256": "5a8eb79ae475393ff78e6e52d930ab7a6c2b5c92ea30c3c5eefb55029d0a04d3"
+ },
+ "data_inputs": {
+  "decay_fallback": {
+   "path": "/home/connoravila/Documents/actinv/actinv-data/v1.1.0/decay/jeff-3-3_decay.dat",
+   "sha256": "850b8b7f85f8d88b6ad826c4cd341aaaffabd525c8ecf3c588a0ad437bf5d123"
+  },
+  "decay_primary": {
+   "path": "/home/connoravila/Documents/actinv/actinv-data/v1.1.0/decay/endf-b-viii-0_decay.dat",
+   "sha256": "6f04cf009086c179021f243a58dadc2d5bb078de5ba39c4fe46ccad77d228ddb"
+  },
+  "library": {
+   "path": "/home/connoravila/Documents/actinv/actinv-data/v1.1.0/activation/tendl-2025-neutron-709g.npz",
+   "sha256": "ec4c72bf598dc8ad3d533d9cfafdcf493e2d1f949a3e4db6251495659b68cc44"
+  },
+  "library_index": {
+   "path": "/home/connoravila/Documents/actinv/actinv-data/v1.1.0/activation/tendl-2025-neutron-709g_index.json",
+   "sha256": "8bd19b4001c246758e739cd0067a0087e1ce5c2157438dae97bd52e1d3beb3fb"
+  }
+ },
+ "fispact_out": {
+  "path": "/home/connoravila/nuclear-data/conderc-fns/fns/Fe/TENDL-2017_1996exp_5min.out",
+  "sha256": "29b21cd8936fd99095ecc99b761b7995459c61e2f2fd49654f7b4fa537db8b26"
+ },
+ "gate_spec": {
+  "matches_protocol_sha256": true,
+  "path": "/home/connoravila/Documents/actinv/examples/fns_fe_5min.json",
+  "sha256": "ed55ed00f6c00fc4a2351e18332e98e7feb33d9b7ca65e7ba861e0e5e8feef39"
+ },
+ "gates": {
+  "G2": {
+   "byte_identical_after_ms_mask": false,
+   "bytes_candidate": 10823528,
+   "bytes_reference": 10823481,
+   "first_difference": {
+    "candidate": ": 0\n    },\n    \"spontaneous_fission_branches_to_leakage\": 126,\n    \"targets_absent_from_decay_library\": [\n      \"89237_0",
+    "offset": 10817974,
+    "reference": ": 0\n    },\n    \"spontaneous_fission_branches_to_leakage\": 129,\n    \"targets_absent_from_decay_library\": [\n      \"89237_0"
+   },
+   "ms_masked_candidate": 1,
+   "ms_masked_reference": 1,
+   "no_pathway_routes_key_in_either": true,
+   "pass": false,
+   "spec_sha256_matches_protocol": true
+  },
+  "G3": {
+   "bulk_atoms_per_g": {
+    "Fe54": 6.30303916313012e+20,
+    "Fe56": 9.894423530775723e+21,
+    "Fe57": 2.285053889935453e+20,
+    "Fe58": 3.0409872438027264e+19
+   },
+   "comparisons": {
+    "fail": 0,
+    "resolution_only": 0,
+    "strict": 154
+   },
+   "conservation_gap_loss_vs_products": {
+    "note": "diagnostic only: relative gap between the ZAP=-1 loss rows and the product rows (leak included)",
+    "worst": 1.1169507926303961e-13,
+    "worst_nuclides": {
+     "Fe54": 1.1169507926303961e-13,
+     "Fe55": 3.366986892596174e-16,
+     "Fe56": 2.5032832274191324e-16,
+     "Mn54": 2.9265106163284454e-16,
+     "Mn56": 2.7381952277233797e-16
+    }
+   },
+   "conventions": "see the module docstring: full removal = lambda + multiplier * sum of ZAP=-1 rows; edge rate = all decay branches + reaction rows between the pair; trace reservoir = bulk atoms x per-atom edge rate with a zero diagonal",
+   "decay": {
+    "chain_keys": 3871,
+    "fallback_keys": 3852,
+    "from_fallback": 0,
+    "from_primary": 7,
+    "needed_without_record": [],
+    "primary_keys": 3821
+   },
+   "failures": [],
+   "library": "/home/connoravila/Documents/actinv/actinv-data/v1.1.0/activation/tendl-2025-neutron-709g.npz",
+   "library_groups": 709,
+   "library_rows": 167735,
+   "mode": "trace",
+   "mpmath_dps": 40,
+   "n_failures": 0,
+   "nodes_with_fission_rows": [],
+   "pass": true,
+   "per_target": [
+    {
+     "routes": 2,
+     "target": "Mn56",
+     "worst_relative_any_step": 4.0148680260731775e-16,
+     "worst_relative_final": 4.0148680260731775e-16
+    },
+    {
+     "routes": 2,
+     "target": "Mn54",
+     "worst_relative_any_step": 6.344033547003193e-16,
+     "worst_relative_final": 6.344033547003193e-16
+    },
+    {
+     "routes": 1,
+     "target": "Cr51",
+     "worst_relative_any_step": 3.472368934476784e-16,
+     "worst_relative_final": 3.472368934476784e-16
+    },
+    {
+     "routes": 2,
+     "target": "Fe55",
+     "worst_relative_any_step": 5.846229148734552e-16,
+     "worst_relative_final": 5.846229148734552e-16
+    }
+   ],
+   "problems": [],
+   "schedule_steps": 21,
+   "spectrum_total_flux": 11160000000.0,
+   "tolerance": {
+    "relative": 1e-08,
+    "resolution_fraction_of_chain_peak": 1e-10
+   }
+  },
+  "G4": {
+   "closure_tolerance": 1e-12,
+   "explained_min": 0.999,
+   "failed_targets": [],
+   "final_inventory_atoms_per_g": 21506707542.185368,
+   "material_atoms_per_g": 1.0783642708520307e+22,
+   "pass": true,
+   "reading": "`total atoms` for the 1e-6 significance cut is the sum of the final inventory's tracked atoms (in trace mode the constant bulk is not in the inventory); against the material's own atoms every target here would be below 1e-6 and the explained-fraction test vacuous",
+   "targets": [
+    {
+     "closure_relative": 0.0,
+     "explained_fraction": 0.9999998919398054,
+     "explained_fraction_recomputed": 0.9999998919398054,
+     "inventory_atoms_per_g": 2382720902.573092,
+     "listed_sum_vs_reported_sum": 0.0,
+     "loop_sum_vs_reported": 0.0,
+     "pass": true,
+     "routes": 2,
+     "routes_dropped_by_cap": 0,
+     "share_of_final_inventory": 0.11078966401060643,
+     "significant": true,
+     "target": "Mn56",
+     "total_atoms_per_g": 2382720902.573092,
+     "total_vs_inventory": 0.0
+    },
+    {
+     "closure_relative": 0.0,
+     "explained_fraction": 0.999999999988625,
+     "explained_fraction_recomputed": 0.999999999988625,
+     "inventory_atoms_per_g": 563817853.9962554,
+     "listed_sum_vs_reported_sum": 0.0,
+     "loop_sum_vs_reported": 0.0,
+     "pass": true,
+     "routes": 2,
+     "routes_dropped_by_cap": 0,
+     "share_of_final_inventory": 0.02621590742750036,
+     "significant": true,
+     "target": "Mn54",
+     "total_atoms_per_g": 563817853.9962554,
+     "total_vs_inventory": 0.0
+    },
+    {
+     "closure_relative": 0.0,
+     "explained_fraction": 0.999999999999773,
+     "explained_fraction_recomputed": 0.999999999999773,
+     "inventory_atoms_per_g": 171654124.02926418,
+     "listed_sum_vs_reported_sum": 0.0,
+     "loop_sum_vs_reported": 0.0,
+     "pass": true,
+     "routes": 1,
+     "routes_dropped_by_cap": 0,
+     "share_of_final_inventory": 0.0079814227116152,
+     "significant": true,
+     "target": "Cr51",
+     "total_atoms_per_g": 171654124.02926418,
+     "total_vs_inventory": 0.0
+    },
+    {
+     "closure_relative": 0.0,
+     "explained_fraction": 0.9999999999999939,
+     "explained_fraction_recomputed": 0.9999999999999939,
+     "inventory_atoms_per_g": 11813454198.00928,
+     "listed_sum_vs_reported_sum": 0.0,
+     "loop_sum_vs_reported": 0.0,
+     "pass": true,
+     "routes": 2,
+     "routes_dropped_by_cap": 0,
+     "share_of_final_inventory": 0.5492916186653494,
+     "significant": true,
+     "target": "Fe55",
+     "total_atoms_per_g": 11813454198.00928,
+     "total_vs_inventory": 0.0
+    }
+   ]
+  },
+  "G5": {
+   "bad": [],
+   "comparisons_within_1e-8": 154,
+   "comparisons_within_floor_only": 0,
+   "coupled_floor_atoms_per_g_final_step": 2102420.2552543287,
+   "declared_mode": "trace",
+   "other_mode": "coupled",
+   "pass": true,
+   "rule": "a route present in both modes passes if its final value and every by-step value agree at 1e-8 relative, or differ by no more than the coupled run's numerical_floor_atoms_per_g at that step (the check_p122.py coupled-floor rule). A route present in one mode only must carry a fraction below 2.0 x path_floor.",
+   "targets": [
+    {
+     "explained_declared": 0.9999998919398054,
+     "explained_other": 0.9999998919398082,
+     "routes_declared": 2,
+     "routes_in_both": 2,
+     "routes_other": 2,
+     "target": "Mn56",
+     "total_declared": 2382720902.573092,
+     "total_other": 2382720902.570819,
+     "total_relative_difference": 9.53986146971558e-13,
+     "worst_relative_difference": 1.6347945856570987e-12
+    },
+    {
+     "explained_declared": 0.999999999988625,
+     "explained_other": 0.9999999999886264,
+     "routes_declared": 2,
+     "routes_in_both": 2,
+     "routes_other": 2,
+     "target": "Mn54",
+     "total_declared": 563817853.9962554,
+     "total_other": 563817853.9953717,
+     "total_relative_difference": 1.5673474282100518e-12,
+     "worst_relative_difference": 1.5661304149701872e-12
+    },
+    {
+     "explained_declared": 0.999999999999773,
+     "explained_other": 0.9999999999997741,
+     "routes_declared": 1,
+     "routes_in_both": 1,
+     "routes_other": 1,
+     "target": "Cr51",
+     "total_declared": 171654124.02926418,
+     "total_other": 171654124.02899507,
+     "total_relative_difference": 1.5677745739159115e-12,
+     "worst_relative_difference": 1.5666305987940229e-12
+    },
+    {
+     "explained_declared": 0.9999999999999939,
+     "explained_other": 0.9999999999999919,
+     "routes_declared": 2,
+     "routes_in_both": 2,
+     "routes_other": 2,
+     "target": "Fe55",
+     "total_declared": 11813454198.00928,
+     "total_other": 11813454197.998133,
+     "total_relative_difference": 9.435466734221213e-13,
+     "worst_relative_difference": 1.5658150403360716e-12
+    }
+   ],
+   "unmatched": []
+  },
+  "G6": {
+   "fispact": {
+    "first_line": 329,
+    "found": true,
+    "last_line": 442,
+    "settings": {
+     "flux": 11160000000.0,
+     "irradiation_s": 300.0,
+     "loop_floor_percent": 1.0,
+     "max_depth": 10.0,
+     "path_floor_percent": 0.5
+    },
+    "sources": [
+     "Fe54",
+     "Fe56",
+     "Fe57",
+     "Fe58"
+    ],
+    "target_list": [
+     "Mn56",
+     "Fe53",
+     "Mn57",
+     "Mn58",
+     "Cr55",
+     "Mn58m1",
+     "Mn54",
+     "Cr51",
+     "Fe55",
+     "Fe59",
+     "Mn53",
+     "H3"
+    ],
+    "uncertainty_table_atoms": {
+     "Cr50": 2328640.0,
+     "Cr51": 171865000.0,
+     "Cr55": 1253330.0,
+     "Fe53": 18379800.0,
+     "Fe55": 15932700000.0,
+     "Fe59": 152317.0,
+     "H3": 419190.0,
+     "Mn53": 1264320000.0,
+     "Mn54": 564586000.0,
+     "Mn56": 3084690000.0,
+     "Mn57": 16585400.0,
+     "Mn58": 370759.0,
+     "Mn58m1": 15214.6,
+     "V50": 10219.4
+    }
+   },
+   "fispact_file": "/home/connoravila/nuclear-data/conderc-fns/fns/Fe/TENDL-2017_1996exp_5min.out",
+   "fispact_targets": [
+    {
+     "n_paths": 2,
+     "percent_of_inventory": 100.0,
+     "target": "Mn56"
+    },
+    {
+     "n_paths": 1,
+     "percent_of_inventory": 100.0,
+     "target": "Fe53"
+    },
+    {
+     "n_paths": 1,
+     "percent_of_inventory": 99.516,
+     "target": "Mn57"
+    },
+    {
+     "n_paths": 1,
+     "percent_of_inventory": 99.995,
+     "target": "Mn58"
+    },
+    {
+     "n_paths": 1,
+     "percent_of_inventory": 99.993,
+     "target": "Cr55"
+    },
+    {
+     "n_paths": 1,
+     "percent_of_inventory": 100.0,
+     "target": "Mn58m1"
+    },
+    {
+     "n_paths": 1,
+     "percent_of_inventory": 99.977,
+     "target": "Mn54"
+    },
+    {
+     "n_paths": 1,
+     "percent_of_inventory": 100.0,
+     "target": "Cr51"
+    },
+    {
+     "n_paths": 1,
+     "percent_of_inventory": 99.974,
+     "target": "Fe55"
+    },
+    {
+     "n_paths": 1,
+     "percent_of_inventory": 100.0,
+     "target": "Fe59"
+    },
+    {
+     "n_paths": 1,
+     "percent_of_inventory": 99.684,
+     "target": "Mn53"
+    },
+    {
+     "n_paths": 2,
+     "percent_of_inventory": 99.738,
+     "target": "H3"
+    }
+   ],
+   "note": "report only, no verdict: FISPACT-II ran TENDL-2017 cross sections, ACTINV the library of the spec (TENDL-2025); FISPACT-II's path floor is 0.5 % where this run uses 1e-4 %; percentages are each code's own share of its own target inventory. FISPACT-II analyses the irradiation phase, so ACTINV's end-of-irradiation share (step 1) is the like-for-like column; the end-of-schedule share is also given",
+   "report_only": true,
+   "targets": [
+    {
+     "actinv_atoms_per_g_end_of_irradiation": 3076077384.116373,
+     "actinv_explained_fraction": 0.9999998919398054,
+     "actinv_explained_fraction_end_of_irradiation": 0.9999998921836122,
+     "actinv_routes": 2,
+     "actinv_top": [
+      {
+       "edges": [
+        "(n,p)"
+       ],
+       "fraction": 0.9969092782026658,
+       "is_loop": false,
+       "route": [
+        "Fe56",
+        "Mn56"
+       ]
+      },
+      {
+       "edges": [
+        "(n,d)/(n,np)"
+       ],
+       "fraction": 0.003090613737139534,
+       "is_loop": false,
+       "route": [
+        "Fe57",
+        "Mn56"
+       ]
+      }
+     ],
+     "actinv_total_atoms_per_g": 2382720902.573092,
+     "fispact_atoms_uncertainty_table": 3084690000.0,
+     "fispact_found": true,
+     "fispact_percent_of_inventory": 100.0,
+     "paths": [
+      {
+       "actinv_edges": [
+        "(n,p)"
+       ],
+       "actinv_matches_route": true,
+       "actinv_percent": 99.69092782026658,
+       "actinv_percent_end_of_irradiation": 99.69092784457192,
+       "fispact_edge_types": [
+        "R"
+       ],
+       "fispact_nuclides": [
+        "Fe56",
+        "Mn56"
+       ],
+       "fispact_percent": 99.415,
+       "fispact_reactions": [
+        "100.00% (n,p)"
+       ]
+      },
+      {
+       "actinv_edges": [
+        "(n,d)/(n,np)"
+       ],
+       "actinv_matches_route": true,
+       "actinv_percent": 0.3090613737139534,
+       "actinv_percent_end_of_irradiation": 0.3090613737893046,
+       "fispact_edge_types": [
+        "R"
+       ],
+       "fispact_nuclides": [
+        "Fe57",
+        "Mn56"
+       ],
+       "fispact_percent": 0.585,
+       "fispact_reactions": [
+        "87.63% (n,np)",
+        "12.37% (n,d)"
+       ]
+      }
+     ],
+     "target": "Mn56"
+    },
+    {
+     "actinv_atoms_per_g_end_of_irradiation": 563867444.5009806,
+     "actinv_explained_fraction": 0.999999999988625,
+     "actinv_explained_fraction_end_of_irradiation": 0.9999999999886268,
+     "actinv_routes": 2,
+     "actinv_top": [
+      {
+       "edges": [
+        "(n,p)"
+       ],
+       "fraction": 0.9998320620953879,
+       "is_loop": false,
+       "route": [
+        "Fe54",
+        "Mn54"
+       ]
+      },
+      {
+       "edges": [
+        "(n,2np)/(n,nd)/(n,t)"
+       ],
+       "fraction": 0.00016793789323710318,
+       "is_loop": false,
+       "route": [
+        "Fe56",
+        "Mn54"
+       ]
+      }
+     ],
+     "actinv_total_atoms_per_g": 563817853.9962554,
+     "fispact_atoms_uncertainty_table": 564586000.0,
+     "fispact_found": true,
+     "fispact_percent_of_inventory": 99.977,
+     "paths": [
+      {
+       "actinv_edges": [
+        "(n,p)"
+       ],
+       "actinv_matches_route": true,
+       "actinv_percent": 99.98320620953879,
+       "actinv_percent_end_of_irradiation": 99.98320620953898,
+       "fispact_edge_types": [
+        "R"
+       ],
+       "fispact_nuclides": [
+        "Fe54",
+        "Mn54"
+       ],
+       "fispact_percent": 99.977,
+       "fispact_reactions": [
+        "100.00% (n,p)"
+       ]
+      }
+     ],
+     "target": "Mn54"
+    },
+    {
+     "actinv_atoms_per_g_end_of_irradiation": 171824276.7191101,
+     "actinv_explained_fraction": 0.999999999999773,
+     "actinv_explained_fraction_end_of_irradiation": 0.9999999999997736,
+     "actinv_routes": 1,
+     "actinv_top": [
+      {
+       "edges": [
+        "(n,a)/(n,nh)/(n,pt)"
+       ],
+       "fraction": 0.999999999999773,
+       "is_loop": false,
+       "route": [
+        "Fe54",
+        "Cr51"
+       ]
+      }
+     ],
+     "actinv_total_atoms_per_g": 171654124.02926418,
+     "fispact_atoms_uncertainty_table": 171865000.0,
+     "fispact_found": true,
+     "fispact_percent_of_inventory": 100.0,
+     "paths": [
+      {
+       "actinv_edges": [
+        "(n,a)/(n,nh)/(n,pt)"
+       ],
+       "actinv_matches_route": true,
+       "actinv_percent": 99.99999999997729,
+       "actinv_percent_end_of_irradiation": 99.99999999997736,
+       "fispact_edge_types": [
+        "R"
+       ],
+       "fispact_nuclides": [
+        "Fe54",
+        "Cr51"
+       ],
+       "fispact_percent": 100.0,
+       "fispact_reactions": [
+        "100.00% (n,a)"
+       ]
+      }
+     ],
+     "target": "Cr51"
+    },
+    {
+     "actinv_atoms_per_g_end_of_irradiation": 11813777697.298882,
+     "actinv_explained_fraction": 0.9999999999999939,
+     "actinv_explained_fraction_end_of_irradiation": 0.9999999999999933,
+     "actinv_routes": 2,
+     "actinv_top": [
+      {
+       "edges": [
+        "(n,2n)"
+       ],
+       "fraction": 0.999595453312894,
+       "is_loop": false,
+       "route": [
+        "Fe56",
+        "Fe55"
+       ]
+      },
+      {
+       "edges": [
+        "(n,g)"
+       ],
+       "fraction": 0.00040454668709987834,
+       "is_loop": false,
+       "route": [
+        "Fe54",
+        "Fe55"
+       ]
+      }
+     ],
+     "actinv_total_atoms_per_g": 11813454198.00928,
+     "fispact_atoms_uncertainty_table": 15932700000.0,
+     "fispact_found": true,
+     "fispact_percent_of_inventory": 99.974,
+     "paths": [
+      {
+       "actinv_edges": [
+        "(n,2n)"
+       ],
+       "actinv_matches_route": true,
+       "actinv_percent": 99.9595453312894,
+       "actinv_percent_end_of_irradiation": 99.95954533128935,
+       "fispact_edge_types": [
+        "R"
+       ],
+       "fispact_nuclides": [
+        "Fe56",
+        "Fe55"
+       ],
+       "fispact_percent": 99.974,
+       "fispact_reactions": [
+        "100.00% (n,2n)"
+       ]
+      }
+     ],
+     "target": "Fe55"
+    }
+   ]
+  }
+ },
+ "isotope_table": {
+  "path": "/home/connoravila/Documents/actinv/crates/actinv-data/src/tables.rs",
+  "sha256": "888923a68d6a7841c75883615f7cc738fc4a06ca5ec4f1e13ce3ea9146146d2f"
+ },
+ "mode_selection": {
+  "declared": "auto",
+  "declared_resolved": "trace",
+  "other": "coupled"
+ },
+ "protocol": "ACTINV-P127",
+ "protocol_file": {
+  "path": "/home/connoravila/Documents/actinv/protocols/ACTINV-P127_PROTOCOL.md",
+  "sha256": "ab0248062d7b170d201142e2aaac838e565d9b2522e757fe06866699151ccdc4"
+ },
+ "reference_binary": {
+  "path": "/home/connoravila/Documents/actinv/target/ref-build/release/actinv",
+  "sha256": "3d34d7ca5887be03e19b81f8ae06d784ed53ec1310a69764ed70b8672bc42b5f"
+ },
+ "runs": {
+  "g2_candidate": {
+   "binary": "/home/connoravila/Documents/actinv/target/cand11-actinv",
+   "cwd": "/home/connoravila/Documents/actinv",
+   "exit_code": 0,
+   "output": {
+    "path": "/home/connoravila/Documents/actinv/target/p140/controls/p127-work/g2_candidate.json",
+    "sha256": "b197bd5109eb9914dcd124caa4048a5f846809f94cc9a47fc2b9c226839a6fca"
+   },
+   "spec": {
+    "path": "/home/connoravila/Documents/actinv/examples/fns_fe_5min.json",
+    "sha256": "ed55ed00f6c00fc4a2351e18332e98e7feb33d9b7ca65e7ba861e0e5e8feef39"
+   }
+  },
+  "g2_reference": {
+   "binary": "/home/connoravila/Documents/actinv/target/ref-build/release/actinv",
+   "cwd": "/home/connoravila/Documents/actinv",
+   "exit_code": 0,
+   "output": {
+    "path": "/home/connoravila/Documents/actinv/target/p140/controls/p127-work/g2_reference.json",
+    "sha256": "f0537289ec521f786613b22dafa5bab65de7cb640464d8ac4525f69c9fe8aee7"
+   },
+   "spec": {
+    "path": "/home/connoravila/Documents/actinv/examples/fns_fe_5min.json",
+    "sha256": "ed55ed00f6c00fc4a2351e18332e98e7feb33d9b7ca65e7ba861e0e5e8feef39"
+   }
+  },
+  "pathways_declared": {
+   "binary": "/home/connoravila/Documents/actinv/target/cand11-actinv",
+   "cwd": "/home/connoravila/Documents/actinv/target/p140/controls/p127-work",
+   "exit_code": 0,
+   "output": {
+    "path": "/home/connoravila/Documents/actinv/target/p140/controls/p127-work/pathways_declared.json",
+    "sha256": "835116032028a1e153bc2767fb299d4156180970073b5eef8118edb915e4722d"
+   },
+   "spec": {
+    "path": "/home/connoravila/Documents/actinv/target/p140/controls/p127-work/declared.spec.json",
+    "sha256": "a039d8c52f520a4f5cba36355d069bf85bda8f40b6c3aac56b9a612884bf5865"
+   }
+  },
+  "pathways_other": {
+   "binary": "/home/connoravila/Documents/actinv/target/cand11-actinv",
+   "cwd": "/home/connoravila/Documents/actinv/target/p140/controls/p127-work",
+   "exit_code": 0,
+   "output": {
+    "path": "/home/connoravila/Documents/actinv/target/p140/controls/p127-work/pathways_other.json",
+    "sha256": "90256b8ad05c73c4934956615d527e17037c0c56e7768e4febc528c2dac0649a"
+   },
+   "spec": {
+    "path": "/home/connoravila/Documents/actinv/target/p140/controls/p127-work/other.spec.json",
+    "sha256": "a9a35dce6c5ebf5e6b121bfc95447b05c541f3c483847791af7f792eb519b798"
+   }
+  }
+ },
+ "verdict": "FAIL"
+}

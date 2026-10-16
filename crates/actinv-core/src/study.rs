@@ -132,6 +132,22 @@ pub struct RobustChannels {
     pub fission_yields: bool,
 }
 
+impl RobustChannels {
+    /// Names of the channels that perturb anything, in declaration order.
+    pub fn enabled_names(&self) -> Vec<&'static str> {
+        [
+            ("cross_section_mf33", self.cross_section_mf33),
+            ("flux_rel_std", self.flux_rel_std > 0.0),
+            ("composition_rel_std", !self.composition_rel_std.is_empty()),
+            ("decay_constants", self.decay_constants),
+            ("fission_yields", self.fission_yields),
+        ]
+        .into_iter()
+        .filter_map(|(name, on)| on.then_some(name))
+        .collect()
+    }
+}
+
 /// ACT-ROBUST-01 block: sample count, seed, channels, responses.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
@@ -2544,6 +2560,7 @@ fn evaluate_robustness_inner(
                     options,
                     &isotopes,
                     &lib.bounds,
+                    spec.material.density_g_cm3,
                     spec.options.temperature_K,
                     spec.options.require_shielding_complete,
                 )?)
@@ -3025,8 +3042,12 @@ fn evaluate_robustness_inner(
             let m = vals.len();
             let (mean, std) = if m > 0 {
                 let mean = vals.iter().sum::<f64>() / m as f64;
-                let var =
-                    vals.iter().map(|v| (v - mean).powi(2)).sum::<f64>() / (m - 1).max(1) as f64;
+                // one value has no unbiased spread: NaN (serialized null), not 0
+                let var = if m >= 2 {
+                    vals.iter().map(|v| (v - mean).powi(2)).sum::<f64>() / (m - 1) as f64
+                } else {
+                    f64::NAN
+                };
                 (mean, var.sqrt())
             } else {
                 (f64::NAN, f64::NAN)
@@ -3254,7 +3275,18 @@ fn evaluate_robustness_inner(
             "reason": "robustness.first_order_comparison is false",
         });
     }
-    if rb.channels.cross_section_mf33 && !truncated && rb.first_order_comparison {
+    // The first-order propagation carries the MF=33 channel only, so it is comparable with the sampled
+    // spread only when that is the sole channel sampled.
+    let enabled_channels = rb.channels.enabled_names();
+    let xs_only = enabled_channels == ["cross_section_mf33"];
+    if rb.first_order_comparison && rb.channels.cross_section_mf33 && !xs_only {
+        local_vs_nonlinear = json!({
+            "status": "not_comparable",
+            "reason": "the first-order propagation carries cross_section_mf33 only, but the sampled spread includes the other enabled channels; compare with channel_attribution.cross_section_mf33 instead",
+            "enabled_channels": enabled_channels,
+        });
+    }
+    if xs_only && !truncated && rb.first_order_comparison {
         if let Some(cov_ref) = &rb.covariance {
             let mut uspec = spec.clone();
             uspec.options.rate_scale = None;
@@ -3565,7 +3597,11 @@ fn sampling_statistics_block(
                             "percentile_standard_error": pct_map(&b.percentile_se),
                         })
                     }
-                    None => json!({"status": "insufficient_samples"}),
+                    None => json!({
+                        "status": "insufficient_samples",
+                        "n": vals.len(),
+                        "minimum": ss::MIN_SAMPLES,
+                    }),
                 };
                 entry.insert("convergence".into(), conv);
             }
@@ -3584,38 +3620,49 @@ fn sampling_statistics_block(
                         "deviation_in_std_standard_errors":
                             std_se.filter(|e| *e > 0.0).map(|e| (smp - l) / e),
                     }),
+                    _ if local_vs_nonlinear["status"] == "not_comparable" => json!({
+                        "status": "not_comparable",
+                        "enabled_channels": local_vs_nonlinear["enabled_channels"],
+                    }),
                     _ => Value::Null,
                 },
             );
 
             if let Some(r) = &ranked {
                 let ok: Vec<usize> = (0..n).filter(|&i| y[i].is_some()).collect();
-                let all = if ok.len() == n {
-                    r.correlate(&vals)
-                } else {
-                    r.subset(&ok).correlate(&vals)
-                };
-                let top = ss::top_correlations(&all, st.correlation_top as usize);
-                let rows: Vec<Value> = top
-                    .iter()
-                    .map(|c| {
-                        json!({
-                            "parameter": labels[c.parameter],
-                            "pearson": c.pearson,
-                            "spearman": c.spearman,
-                        })
+                let table = if ok.len() < ss::MIN_SAMPLES {
+                    // two pairs make every non-tied parameter a perfect +-1 correlation
+                    json!({
+                        "status": "insufficient_samples",
+                        "n_pairs": ok.len(),
+                        "minimum": ss::MIN_SAMPLES,
                     })
-                    .collect();
-                entry.insert(
-                    "input_correlations".into(),
+                } else {
+                    let all = if ok.len() == n {
+                        r.correlate(&vals)
+                    } else {
+                        r.subset(&ok).correlate(&vals)
+                    };
+                    let top = ss::top_correlations(&all, st.correlation_top as usize);
+                    let rows: Vec<Value> = top
+                        .iter()
+                        .map(|c| {
+                            json!({
+                                "parameter": labels[c.parameter],
+                                "pearson": c.pearson,
+                                "spearman": c.spearman,
+                            })
+                        })
+                        .collect();
                     json!({
                         "ranked_by": "abs_spearman",
                         "n_pairs": ok.len(),
                         "n_parameters": labels.len(),
                         "n_constant_parameters": all.iter().filter(|c| c.is_none()).count(),
                         "top": rows,
-                    }),
-                );
+                    })
+                };
+                entry.insert("input_correlations".into(), table);
             }
 
             series_labels.push(format!("{response}@{tkey}"));
@@ -3635,14 +3682,14 @@ fn sampling_statistics_block(
         "input_parameters": labels.len(),
         "definitions": {
             "percentile": "exact order statistic (nearest rank): the smallest sample value x_(k) with k/n >= p/100, k = max(1, ceil(n*p/100)); no interpolation",
-            "std": "unbiased sample standard deviation (divisor n-1), two-pass",
+            "std": "unbiased sample standard deviation (divisor n-1), two-pass; null for a single value",
             "skewness": "moment skewness m3/m2^1.5 with population central moments (divisor n)",
             "input": "natural log of the applied multiplicative factor (flux and composition factors are the draws before composition renormalization); parameters constant over the sample are omitted",
             "pearson_spearman": "Pearson on the values and on average ranks (ties share the mean rank) over the samples where the response is defined",
         },
         "responses": by_response,
         "response_correlation": {
-            "method": "Pearson over the samples where both responses are defined; null when undefined",
+            "method": "Pearson over the samples where both responses are defined; null when undefined (fewer than 3 common samples, or a constant series)",
             "labels": series_labels,
             "pearson": matrix,
         },
