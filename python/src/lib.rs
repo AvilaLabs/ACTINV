@@ -142,6 +142,94 @@ fn budget(
         .map_err(|e| pyo3::exceptions::PyRuntimeError::new_err(e.to_string()))
 }
 
+/// Private scratch directory for one waste call, removed on drop so an error
+/// or panic cannot leave it behind.
+struct ScratchDir(std::path::PathBuf);
+
+impl ScratchDir {
+    fn create() -> Result<Self, String> {
+        static NEXT: std::sync::atomic::AtomicU64 = std::sync::atomic::AtomicU64::new(0);
+        let nanos = std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .map(|d| d.as_nanos())
+            .unwrap_or(0);
+        for _ in 0..16 {
+            let serial = NEXT.fetch_add(1, std::sync::atomic::Ordering::Relaxed);
+            let path = std::env::temp_dir().join(format!(
+                "actinv-waste-{}-{serial}-{nanos}",
+                std::process::id()
+            ));
+            let mut builder = std::fs::DirBuilder::new();
+            #[cfg(unix)]
+            std::os::unix::fs::DirBuilderExt::mode(&mut builder, 0o700);
+            match builder.create(&path) {
+                Ok(()) => return Ok(Self(path)),
+                Err(e) if e.kind() == std::io::ErrorKind::AlreadyExists => continue,
+                Err(e) => {
+                    return Err(format!(
+                        "cannot create temporary directory {}: {e}",
+                        path.display()
+                    ))
+                }
+            }
+        }
+        Err("cannot create a unique temporary directory".into())
+    }
+}
+
+impl Drop for ScratchDir {
+    fn drop(&mut self) {
+        let _ = std::fs::remove_dir_all(&self.0);
+    }
+}
+
+/// Outcome of a waste call: the command refused the input (its message,
+/// verbatim) or the binding itself failed.
+enum WasteFailure {
+    Refused(String),
+    Internal(String),
+}
+
+/// _waste(command: str, spec_path: str) -> str — run one native waste command
+/// or the facility twin through the CLI's own entry point, writing its output
+/// file into a private temporary directory, and return that file's text. The
+/// CLI and Python results therefore come from one code path. `command` is one
+/// of classify, budget, bounds, composition, composition_solve,
+/// intrusion_screen, twin. Nothing is printed. A refusal raises ValueError
+/// carrying the command's message exactly.
+#[pyfunction]
+fn _waste(py: Python<'_>, command: &str, spec_path: &str) -> PyResult<String> {
+    type Entry = fn(&str, Option<&str>) -> Result<serde_json::Value, String>;
+    let entry: Entry = match command {
+        "classify" => actinv_cli::waste::run,
+        "budget" => actinv_cli::waste_budget::run,
+        "bounds" => actinv_cli::waste_bounds::run,
+        "composition" => actinv_cli::waste_composition::run_quiet,
+        "composition_solve" => actinv_cli::waste_composition_solve::run,
+        "intrusion_screen" => actinv_cli::waste_intrusion::run,
+        "twin" => actinv_cli::twin::run,
+        other => {
+            return Err(pyo3::exceptions::PyValueError::new_err(format!(
+                "unknown waste command '{other}'"
+            )))
+        }
+    };
+    py.detach(|| {
+        let scratch = ScratchDir::create().map_err(WasteFailure::Internal)?;
+        let output = scratch.0.join("result.json");
+        let output = output.to_str().ok_or_else(|| {
+            WasteFailure::Internal("temporary directory path is not valid UTF-8".into())
+        })?;
+        entry(spec_path, Some(output)).map_err(WasteFailure::Refused)?;
+        std::fs::read_to_string(output)
+            .map_err(|e| WasteFailure::Internal(format!("cannot read result {output}: {e}")))
+    })
+    .map_err(|failure| match failure {
+        WasteFailure::Refused(message) => pyo3::exceptions::PyValueError::new_err(message),
+        WasteFailure::Internal(message) => pyo3::exceptions::PyRuntimeError::new_err(message),
+    })
+}
+
 /// optimize(optspec_path: str, outdir=None, resume=False) -> str — run the
 /// P49/P56 design search for an actinv-optimize-1 file and return the result
 /// summary JSON (the full ledger lands in `outdir`).
@@ -184,6 +272,7 @@ fn actinv(m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(decide, m)?)?;
     m.add_function(wrap_pyfunction!(budget, m)?)?;
     m.add_function(wrap_pyfunction!(optimize, m)?)?;
+    m.add_function(wrap_pyfunction!(_waste, m)?)?;
     m.add_function(wrap_pyfunction!(reverse, m)?)?;
     m.add_function(wrap_pyfunction!(validate, m)?)?;
     m.add_function(wrap_pyfunction!(_example_json, m)?)?;

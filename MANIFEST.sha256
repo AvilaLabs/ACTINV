@@ -10,7 +10,7 @@ db5deaf339bbe487e8910e1227a1c08ffc3aa362973b7b2c4981e7e3261d6288  ./.github/work
 45506fb0fb8f0a34c49c35c97d5e7a4584894562c516f2e77c712134bea58d2e  ./.github/workflows/web.yml
 089ebaddee0fb463b39ba662955716c09c4405a2d831997dcc8674eb68d6a9c3  ./.gitignore
 9d5bea15c985dcb2fbb60fb5fc92c5aceaaee39ded7d93ed469ab7fce8b5f5bf  ./AGENTS.md
-6e7f3007c069a9b52c38324de26981c5a2ffb878465f602647b3d04d21258eb1  ./CHANGELOG.md
+4a022aafba19cda953117bc5044954f415294ee0d8e4249480d516f83f0e5386  ./CHANGELOG.md
 d0af8a4b29e956ff79971b32cdd307814db9d765a4919dcb74df3c3b78181180  ./COMPETITIVE_BENCHMARK.md
 06debfb88cbe4179817b24708768586cc46b4ef0a9c94a4d6de3007a2f1fe8a1  ./CONTRIBUTING.md
 5bb53cdf37fa09c723aeb1f3236ce7dafec468e065c8d94de14dcbfe02c51281  ./Cargo.lock
@@ -263,6 +263,7 @@ e876e393811f604afae3ba11626b1dead61ac94514eab5d7721c4908778705e3  ./controls/che
 a0498b480ab79acf0071d4424520578e6d03c77a67e80463d571ec44e35cf838  ./controls/check_p140_import.py
 8687cbe16f379ced1071e003f8208ab78a2a5177d5583f3c9f9a33d85efda00e  ./controls/check_p140_matrix.py
 13ec1e49f75795d154e31cdb5cbad859992e74bfa72fda3338b89e46329c63a6  ./controls/check_p142.py
+852525902b59ef70412ad74f6c9592b78b10c88665ff9f9f1014c786eaa69c03  ./controls/check_p143.py
 24ad768ce772812470b385d32bd6ac3bd897c226e0af9c648131cf1916eb31e3  ./controls/check_p15.py
 3923f2a5d61580af1c60924581c01e90532131d1b0019da991717a8e46d60de3  ./controls/check_p16.py
 5f0afe1712eb9b0a3077aec2e9515ee1192d728b35726ce2c78466b0e8a564d3  ./controls/check_p17.py
@@ -712,6 +713,7 @@ ab4b27d7397198df7b9dd564a2be2f9d01ba091ea3bf8c42223e21cfe56bee55  ./controls/p12
 47302a336d77ce2617425b9b5129f23de74f54e56bc29d1df15f57679122a179  ./controls/p126_njoy_fe56.py
 5a38ffa5fc77dbdfd7f735acdda0d6e4f4f0ffd7f028196c3b6e2c340b13ed58  ./controls/p132_import_all.py
 8482c5fb408abf5758298aef3cc0d2946793423f8d2dce3328179a0bdd95d9f0  ./controls/p141_zip_evidence.py
+6c06c8ef3d8b0f075f349a2d25164dc7ce78d97ec802b80b85f1c4edb98ffdab  ./controls/p143_recorder.py
 6408a8070dcf7c1428064b119f8357f86c3fac89ef1f429d75ee964d2d4dd8e3  ./controls/p14_performance.py
 25ac9db80f477bb625e1bac2d27c5a06e487e1ebabcbe7213acd9cc539407829  ./controls/p15_performance.py
 b7ee4c154c41c360ca1cb5a542d5f4b9b0e5d7b93198841c76e5c2c43503c133  ./controls/p16_performance.py
@@ -897,10 +899,10 @@ e125e4a03e44d4175d9c82a10cd143888aecdcdf97084a2f2a5c92bd73416d5b  ./crates/actin
 18acc9564e52f5286f33a4b6edc33c0a00ee5ba903f0c3bcb031d92568ff8c15  ./crates/actinv-cli/src/waste.rs
 86e3199305a8a8526bfd95dbdedb587de932118d9a71027884ebb215801315e4  ./crates/actinv-cli/src/waste_bounds.rs
 23a41809157ce20357d4a0b4cdf805f79ba83aed28e8ca437f3262da68c162da  ./crates/actinv-cli/src/waste_budget.rs
-5f24307f0b6674dff0a692bfe74dd694c025e151e12c77640b6d102ed5e3cb30  ./crates/actinv-cli/src/waste_composition.rs
+43a6dda19d960d7ebe408d56aec5d743e2fa7619acf1f3f5620f0c872fffd65b  ./crates/actinv-cli/src/waste_composition.rs
 715be9eeeaeb36a494e05c5ea66a7a3869b3a26fef63764cba46ea2f60d21195  ./crates/actinv-cli/src/waste_composition_solve.rs
 34d079b9f66c2910e1406fedfb32c1d8b43d4245588da68ef4cf1446368be3fe  ./crates/actinv-cli/src/waste_composition_verify.rs
-32fd0c623960581995bea73744fadd52c07f1f3d0e9b7d9cbe03a03edfe1688c  ./crates/actinv-cli/src/waste_intrusion.rs
+172d7465bd7f9ebc4cd2a473afe9bb7aabd0a5b45d40f74a7fba51e9a82f1dd9  ./crates/actinv-cli/src/waste_intrusion.rs
 1e99fbd1109027fbb2587686c9fcbbee1c8805bfe45134888181f40e252f4d51  ./crates/actinv-cli/src/worker.rs
 cbc58c3f0fd29b9280cca4bb248fe6935a02a590281f033e9030cbc4f3494e8f  ./crates/actinv-cli/src/workflow.rs
 d88714714fb240cca43c69b78652a0473b363f3a394c53500fb2e4dd047e9cf4  ./crates/actinv-cli/tests/data_command.rs
@@ -1146,7 +1148,7 @@ eb2d50b59dfb85ffd783c176223f390ef39692a1f282df3c8bae7241db9e862d  ./docs/guide/d
 4ceb9329fccf55ae0e0c2d8bda73437b69f31311273461fafa0f4b6a6e97060e  ./docs/guide/install.md
 989c944f098054d01032bcb52b008c3b7a25c6e2f9dad23d547cd664e5f42eb1  ./docs/guide/method.md
 e2b5e857553bd5bfcac04a7a8882f88ea316acff8594c16a61239957ba3fc860  ./docs/guide/problems.md
-8f7877eb0993c9e06a1d2af54e2fcb9c99762a923d26854da34fa3977bfdade5  ./docs/guide/python.md
+9695509f5fa1e718fc48acb7e7197f5308f824b3eb19a9c3fa5325a8b0d88b13  ./docs/guide/python.md
 fe3c97eb7c2e3a8da854b114b8fb547138a2d84fd23401a76797d9c6db2197b3  ./docs/guide/qualification.md
 6b827c7dfc13e20fc0f2e663472859ce2b9779179b56b4ef49b2df29f2629ae6  ./docs/guide/quick-start.md
 6d5b9079606e735b32d3feb13f3508880181825a36494ded2aecf0b8b18d8747  ./docs/guide/releases.md
@@ -1154,7 +1156,7 @@ fe3c97eb7c2e3a8da854b114b8fb547138a2d84fd23401a76797d9c6db2197b3  ./docs/guide/q
 0bbd19550e87bb4261a29363c45d3aa675a60787384fb8649c7de2950baa872b  ./docs/guide/specification.md
 e7d781c721fd6bd9d9177f96d870b20b104975585c54e3f01be77697e356cf7a  ./docs/guide/troubleshooting.md
 ac4c91f970b5e192efe4efdec60bafd00c6569ec6e672e2ef061610c66df0081  ./docs/guide/validation.md
-43bc31f0f8973caf089cf44fced3f28f1a3c6d35e8fc4bca50225f5e62eb8ed9  ./docs/guide/waste.md
+8ac03a0ee68e4a98e47b4e4a907dffbb13ce5b90411d898cfffcdd461cf9d527  ./docs/guide/waste.md
 9a661a35cddb6a288261c7fa71b4397d1d30cf7e80b44c2325291a5bc30b11e7  ./docs/guide/whats-new.md
 5eddb13ab599f9342a6645c91eb408f308ce31f281eee02a4b436b19194000d3  ./docs/guide/workflows.md
 de9fd921aaaee00a9a4003f5e0ce1a9e310b243fb35240cc9ca458f7570de562  ./docs/history/COMPETITIVE_BENCHMARK_ARCHIVE.md
@@ -1531,8 +1533,8 @@ cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30  ./python/LICEN
 4f722528d1cb3662dcc69ff215f00088cd74706a21ad5c8fd35b167ce804e5e9  ./python/LICENSE-MIT
 cd5078787371e1623a8dfccf6abb1edfd9db37402866aff77f90473b9b56a728  ./python/README.md
 f786e2218057999f3cc73340fed8731e702cea1521b59244fd113ae50e490693  ./python/pyproject.toml
-640dc9ec8f4d63f0e6a2f850ed29fb936d9319b585d5e9dc2eeb48ad1eb87b0a  ./python/src/lib.rs
-151fd74872edb12c410461d28ab844ae201c215f89ddd40e60fe309d4e7620cb  ./python/src/objects.py
+38239b1c67013e711511d7c0b98a054f7edf48d4a61601380154f9c0e09a7423  ./python/src/lib.rs
+bb2c453e144245014d29e31e983b754b32d5b7938014356069cadbbc62498e10  ./python/src/objects.py
 afa42192b4756d6ac1d4bad8e73534cfd173f32cfcb328bcd1233d61830b3bdf  ./requirements-ci.txt
 ab44f14636011a5dbd53564d9e66684bc098b7b1fb80acf250850333f74a1d89  ./results/FNS_ENDF8_HEADTOHEAD.md
 0aea13e7a4a250b0c60000674e7086d0b7afe67d05025e7c8746a237628a55e9  ./results/FNS_LIBRARIES.md
@@ -5628,7 +5630,7 @@ e78a811fa44629c1fcdf2adcc7c8f80c74216dcc4dbfec58506396b6bc75421d  ./scripts/run_
 d8fd5dbf96e759a7d245fae6949aa69186cda1fa51e038adda406684df8f21c6  ./scripts/test_package_desktop.py
 16e412fe8990ead31b6f251a5b0394c617f7fd111cfc4dd21ccc6a21e67154c9  ./scripts/test_preflight.py
 bbb82141744a08bcad22211e3b24981d7af4e06bcddb473fbc403999e97df8af  ./scripts/test_prepare_web.py
-47e6d6a1373586506564a42c8684d3dafbc1ede88d081dad89a247e9871fa59d  ./scripts/test_python_objects.py
+5e9c4c607b243d92fd018e8b760c2c03360bde9e7e351c61bd8a0c70569b155f  ./scripts/test_python_objects.py
 1b517b675328ef6c27049bbd1ece3fd8258782283a984165952c61a134b7f1f4  ./scripts/test_run_p115_gate.py
 e9090787569cb63a4646dcc1350fc4a1494b73023f3a8300089ec10a39b61175  ./scripts/test_run_p116_gate.py
 ca49f491ed03f6e7c1192873beaab76b42b594299eed60a15a499102c04d4539  ./scripts/test_run_p117_gate.py

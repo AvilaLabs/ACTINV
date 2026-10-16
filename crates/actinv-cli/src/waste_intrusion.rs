@@ -440,7 +440,7 @@ fn write_screen(doc: &Value, output: Option<&str>) -> Result<(), String> {
     }
 }
 
-pub(crate) fn run(path: &str, output: Option<&str>) -> Result<Value, String> {
+pub fn run(path: &str, output: Option<&str>) -> Result<Value, String> {
     let outer_path = Path::new(path);
     let base = resolve_base(outer_path);
     let outer_bytes = read_regular_bounded(outer_path, MAX_OUTER_BYTES, "intrusion screen spec")?;

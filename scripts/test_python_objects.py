@@ -1,5 +1,7 @@
 """Regression checks for the mapping API against the unchanged native JSON API."""
+import contextlib
 import json
+import os
 from pathlib import Path
 import sys
 import tempfile
@@ -100,6 +102,238 @@ class Objects(unittest.TestCase):
             path.write_bytes(json.dumps(_budget_fixture(root), indent=3).encode() + b"\n\n")
             doc = actinv.budget(path, verify=False)
             self.assertEqual(doc["budget_sha256"], hashlib.sha256(path.read_bytes()).hexdigest())
+
+
+# Smallest real waste inputs: artificial single-nuclide components, as the
+# P105 / P107 / P108 checkers build them. None needs a nuclear-data library.
+_C14 = {"z": 6, "half_life_s": 3.0e8, "alpha_emitting": False}
+_RUN_RESULT = {"entry_point": "cli", "mode": "coupled",
+               "steps": [{"step": 1, "t_s": 0.0, "activity_Bq_per_g": {"C14": 1.0}}]}
+
+
+def _classify_spec():
+    return {
+        "schema": "actinv-waste-spec-1", "rules": "us-nrc-10cfr61.55-v1",
+        "input": "run.json", "targets": [1], "nuclide_properties": {"C14": _C14},
+        "components": [{"id": "part", "mass_g": 1.0, "displaced_volume_cm3": 1.0,
+                        "waste_type": "general",
+                        "external_tritium": {"status": "not_applicable"}}],
+    }
+
+
+def _bounds_spec():
+    return {
+        "schema": "actinv-waste-bounds-spec-1", "rules": "us-nrc-10cfr61.55-v1",
+        "components": [{
+            "id": "part", "mass_g": 1.0, "displaced_volume_cm3": 1.0,
+            "waste_type": "general", "nuclide_properties": {"C14": _C14},
+            "external_tritium": {"status": "not_applicable"},
+            "targets": [{"step": 1, "t_s": 0.0,
+                         "activity_bounds_bq": {"C14": {"lower_bq": 0.0, "upper_bq": 1.0}},
+                         "inventory_coverage": "complete", "unbounded_inventory_reasons": [],
+                         "bounds_source": "artificial", "bounds_assumptions": "rectangular"}]}],
+    }
+
+
+def _composition_spec():
+    return {
+        "schema": "actinv-waste-composition-spec-1", "rules": "us-nrc-10cfr61.55-v1",
+        "response_model": "fixed_rate_affine_activity",
+        "components": [{
+            "id": "part", "mass_g": 1.0, "displaced_volume_cm3": 1.0,
+            "waste_type": "general", "nuclide_properties": {"C14": _C14},
+            "external_tritium": {"status": "not_applicable"},
+            "composition_wt_percent_bounds": {
+                "Si": {"lower_wt_percent": 0.0, "upper_wt_percent": 50.0},
+                "Fe": {"lower_wt_percent": 50.0, "upper_wt_percent": 100.0}},
+            "targets": [{"step": 1, "t_s": 0.0,
+                         "element_activity_bq_per_g": {"Si": {}, "Fe": {"C14": 1.0}},
+                         "inventory_coverage": "complete", "unbounded_inventory_reasons": [],
+                         "bounds_source": "artificial",
+                         "bounds_assumptions": "fixed affine response model"}]}],
+    }
+
+
+def _intrusion_spec():
+    waste = _classify_spec()
+    waste["components"][0].update(id="whole-container", mass_g=1000.0,
+                                  displaced_volume_cm3=128.2)
+    return {
+        "schema": "actinv-waste-intrusion-screen-spec-1",
+        "draft_rules": "us-nrc-nureg1556-v22-draft-2026-02-v1",
+        "package_basis": "single_component_container", "waste_form": "equipment",
+        "inventory_coverage": "complete", "unbounded_inventory_reasons": [],
+        "waste_spec": waste,
+    }
+
+
+def _text(spec):
+    return json.dumps(spec, allow_nan=False)
+
+
+class _Captured:
+    data = b""
+
+
+@contextlib.contextmanager
+def _captured_fds():
+    """Redirect file descriptors 1 and 2 into a temporary file; whatever any
+    code (Rust included) writes there ends up in `.data` on exit."""
+    sys.stdout.flush()
+    sys.stderr.flush()
+    captured = _Captured()
+    with tempfile.TemporaryFile() as sink:
+        saved = (os.dup(1), os.dup(2))
+        try:
+            os.dup2(sink.fileno(), 1)
+            os.dup2(sink.fileno(), 2)
+            yield captured
+        finally:
+            os.dup2(saved[0], 1)
+            os.dup2(saved[1], 2)
+            os.close(saved[0])
+            os.close(saved[1])
+            sink.seek(0)
+            captured.data = sink.read()
+
+
+class Waste(unittest.TestCase):
+    def setUp(self):
+        stack = contextlib.ExitStack()
+        self.addCleanup(stack.close)
+        self.root = Path(stack.enter_context(
+            tempfile.TemporaryDirectory(prefix="actinv-python-waste-")))
+        # The native binding makes its private directory under TMPDIR; point it
+        # at an empty directory so a leftover is visible.
+        self.scratch = Path(stack.enter_context(
+            tempfile.TemporaryDirectory(prefix="actinv-python-waste-tmp-")))
+        saved = os.environ.get("TMPDIR")
+        os.environ["TMPDIR"] = str(self.scratch)
+        stack.callback(lambda: os.environ.pop("TMPDIR", None) if saved is None
+                       else os.environ.__setitem__("TMPDIR", saved))
+        (self.root / "run.json").write_text(_text(_RUN_RESULT), encoding="utf-8")
+
+    def assertClean(self, *names):
+        """Only the named files remain in the base directory; no private
+        temporary directory remains under TMPDIR."""
+        self.assertEqual(sorted(p.name for p in self.root.iterdir()), sorted(names))
+        self.assertEqual(list(self.scratch.iterdir()), [])
+
+    def path_for(self, name, spec):
+        path = self.root / name
+        path.write_text(_text(spec), encoding="utf-8")
+        return path
+
+    def test_namespace(self):
+        self.assertEqual(
+            sorted(n for n in vars(actinv.waste) if not n.startswith("_")),
+            ["bounds", "budget", "classify", "composition", "composition_solve",
+             "intrusion_screen", "summary"])
+        self.assertTrue(callable(actinv.twin))
+        self.assertIn("waste", actinv.__all__)
+        self.assertIn("twin", actinv.__all__)
+        # The P79 impurity budget is a different function.
+        self.assertIsNot(actinv.budget, actinv.waste.budget)
+
+    def test_dict_and_path_forms_match_byte_for_byte(self):
+        cases = [("classify", _classify_spec(), "actinv-waste-result-1"),
+                 ("bounds", _bounds_spec(), "actinv-waste-bounds-result-1"),
+                 ("composition", _composition_spec(), "actinv-waste-composition-result-1"),
+                 ("intrusion_screen", _intrusion_spec(), "actinv-waste-intrusion-screen-result-1")]
+        for name, spec, schema in cases:
+            with self.subTest(name):
+                function = getattr(actinv.waste, name)
+                path = self.path_for(f"{name}.json", spec)
+                from_path = function(path, text=True)
+                from_dict = function(spec, base_dir=self.root, text=True)
+                self.assertEqual(from_dict, from_path)
+                self.assertEqual(function(str(path)), json.loads(from_path))
+                self.assertEqual(json.loads(from_path)["schema"], schema)
+                self.assertClean("run.json", f"{name}.json")
+                path.unlink()
+
+    def test_dict_form_resolves_paths_against_base_dir(self):
+        other = self.root / "other"
+        other.mkdir()
+        run = dict(_RUN_RESULT, steps=[{"step": 1, "t_s": 0.0, "activity_Bq_per_g": {"C14": 2.0}}])
+        (other / "run.json").write_text(_text(run), encoding="utf-8")
+        here = actinv.waste.classify(_classify_spec(), base_dir=self.root)
+        there = actinv.waste.classify(_classify_spec(), base_dir=other)
+        by_path = actinv.waste.classify(self.path_for("spec.json", _classify_spec()))
+        self.assertEqual(here["input_sha256"], by_path["input_sha256"])
+        self.assertNotEqual(here["input_sha256"], there["input_sha256"])
+        self.assertEqual(list(other.iterdir()), [other / "run.json"])
+
+    def test_refusal_raises_value_error_and_leaves_nothing(self):
+        bad = _bounds_spec()
+        bad["components"][0]["targets"][0]["activity_bounds_bq"]["C14"]["lower_bq"] = -1.0
+        with self.assertRaises(ValueError) as caught:
+            actinv.waste.bounds(bad, base_dir=self.root)
+        self.assertTrue(str(caught.exception))
+        self.assertClean("run.json")
+        path = self.path_for("bad.json", bad)
+        with self.assertRaises(ValueError) as from_path:
+            actinv.waste.bounds(path)
+        self.assertEqual(str(from_path.exception), str(caught.exception))
+        self.assertClean("run.json", "bad.json")
+        with self.assertRaises(ValueError):
+            actinv.waste.classify(self.root / "missing.json")
+        with self.assertRaises(ValueError):
+            actinv.waste.composition(dict(_composition_spec(), schema="nope"),
+                                     base_dir=self.root)
+        self.assertClean("run.json", "bad.json")
+
+    def test_unserializable_mapping_leaves_nothing(self):
+        with self.assertRaises(ValueError):
+            actinv.waste.classify({"schema": float("nan")}, base_dir=self.root)
+        self.assertClean("run.json")
+
+    def test_calls_are_quiet(self):
+        spec = _classify_spec()
+        path = self.path_for("spec.json", spec)
+        bad = _bounds_spec()
+        bad["components"][0]["targets"][0]["activity_bounds_bq"]["C14"]["lower_bq"] = -1.0
+        with _captured_fds() as captured:
+            actinv.waste.classify(path)
+            actinv.waste.classify(spec, base_dir=self.root, text=True)
+            actinv.waste.bounds(_bounds_spec(), base_dir=self.root)
+            actinv.waste.composition(_composition_spec(), base_dir=self.root)
+            with self.assertRaises(ValueError):
+                actinv.waste.bounds(bad, base_dir=self.root)
+        self.assertEqual(captured.data, b"")
+        self.assertClean("run.json", "spec.json")
+
+    def test_summary_flattens_classification(self):
+        result = actinv.waste.classify(self.path_for("spec.json", _classify_spec()))
+        rows = actinv.waste.summary(result)
+        target = result["components"][0]["targets"][0]
+        self.assertEqual(len(rows), 1)
+        row = rows[0]
+        self.assertEqual(row["component"], "part")
+        self.assertEqual(row["step"], 1)
+        self.assertEqual(row["class"], target["class"])
+        self.assertEqual(row["status"], target["status"])
+        self.assertEqual(row["coverage"], target["coverage"])
+        binding = target["evaluation"]["binding_constraints"]
+        self.assertEqual(row["binding_constraint_count"], len(binding))
+        if binding:
+            self.assertEqual(row["binding_table"], binding[0]["table"])
+            self.assertEqual(row["binding_column"], binding[0]["column"])
+            self.assertEqual(row["binding_normalized_margin"], binding[0]["normalized_margin"])
+            self.assertTrue(set(binding[0]["contributors"]) <= set(row["binding_nuclides"]))
+        self.assertEqual(actinv.waste.summary({"classification": result}), rows)
+        self.assertEqual(actinv.waste.summary({"waste_classification": result}), rows)
+        with self.assertRaises(ValueError):
+            actinv.waste.summary({"schema": "something-else"})
+
+    def test_summary_of_intrusion_screen_classification(self):
+        screen = actinv.waste.intrusion_screen(_intrusion_spec(), base_dir=self.root)
+        rows = actinv.waste.summary(screen["classification"])
+        self.assertEqual([r["component"] for r in rows], ["whole-container"])
+        self.assertEqual(actinv.waste.summary(screen), rows)
+
+    # Not exercised here: budget, composition_solve and twin need a nuclear-data
+    # library or an activation mesh to produce their inputs.
 
 
 if __name__ == "__main__":

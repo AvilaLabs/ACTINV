@@ -68,3 +68,34 @@ problem["schedule"] = (
 ```
 
 Feed units are atoms s⁻¹ g⁻¹ and removal units are s⁻¹. Other helpers include `reverse`, `decide`, and `optimize`; 1.4.0 adds `actinv.budget(budget, base_dir=None, verify=True)`. A failed budget verification is returned in the document rather than raised as an exception. See the [Python package reference](https://github.com/AvilaLabs/ACTINV/blob/master/python/README.md), [Advanced workflows](workflows.md).
+
+## Waste classification from Python
+
+The waste commands and the facility twin are available as functions. Each runs the command line's own code, so the result is the document the CLI would write.
+
+| Python | CLI |
+|---|---|
+| `actinv.waste.classify(spec)` | `actinv waste SPEC` |
+| `actinv.waste.budget(spec)` | `actinv waste budget SPEC` |
+| `actinv.waste.bounds(spec)` | `actinv waste bounds SPEC` |
+| `actinv.waste.composition(spec)` | `actinv waste composition SPEC` |
+| `actinv.waste.composition_solve(spec)` | `actinv waste composition solve SPEC` |
+| `actinv.waste.intrusion_screen(spec)` | `actinv waste intrusion-screen SPEC` |
+| `actinv.twin(spec)` | `actinv twin SPEC` |
+
+`spec` is a path, or a dictionary together with `base_dir`, the folder its relative paths resolve against (default: the current directory). A path is used as it is, and relative paths inside the file resolve against the file's folder. A dictionary is written to a temporary file in `base_dir` for the duration of the call and removed afterwards, also on error. Each call returns the result as a dictionary, or with `text=True` the exact JSON text the CLI writes to an output file. A refusal raises `ValueError` with the CLI's message. Calls print nothing; `actinv waste composition` also prints an intermediate bounds report to standard output, which `actinv.waste.composition` leaves out (the result is the same). `actinv.waste.budget` is `actinv waste budget` (impurity limits for a requested class); the impurity budget `actinv.budget` is unchanged.
+
+```python
+import json
+from pathlib import Path
+import actinv
+
+result = actinv.waste.classify("component.json")
+for row in actinv.waste.summary(result):
+    print(row["component"], row["step"], row["class"], row["binding_table"], row["binding_nuclides"])
+
+spec = json.loads(Path("case/bounds.json").read_text(encoding="utf-8"))
+bounds = actinv.waste.bounds(spec, base_dir="case")
+```
+
+`actinv.waste.summary(result)` takes a classification result (also the `classification` member of an intrusion-screen result, or a twin's `waste_classification`) and returns one flat dictionary per component and target step: class, status, coverage, the governing table, column and margin, and the binding nuclides. It reads the result and computes nothing new. The scope is that of [Component waste classes](waste.md): nominal screening, not disposal acceptance or intrusion dose.

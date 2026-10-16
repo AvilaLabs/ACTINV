@@ -1,5 +1,14 @@
 # Changelog
 
+## Unreleased
+
+**Added**
+
+- Python: `actinv.waste.classify`, `budget`, `bounds`, `composition`, `composition_solve` and `intrusion_screen`, and
+  `actinv.twin`, take a spec path or a dictionary with `base_dir` and return the result the CLI writes (or its exact
+  text with `text=True`); `actinv.waste.summary` flattens a classification result to one row per component and target
+  step. Refusals raise `ValueError`; calls print nothing (P143).
+
 ## v1.5.0 — 2026-10-16
 
 **Changed (dependencies)**

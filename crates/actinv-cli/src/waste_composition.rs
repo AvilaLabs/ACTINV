@@ -325,6 +325,14 @@ pub fn run(path: &str, output: Option<&str>) -> Result<Value, String> {
     run_doc(&text, output)
 }
 
+/// As `run`, but without the intermediate P107 bounds report the command prints to stdout; the result and the
+/// output file are the same. The Python binding uses this so a call prints nothing (P143).
+pub fn run_quiet(path: &str, output: Option<&str>) -> Result<Value, String> {
+    let text = std::fs::read_to_string(path)
+        .map_err(|error| format!("cannot read waste composition spec {path}: {error}"))?;
+    run_doc_inner(&text, output, false)
+}
+
 pub(crate) fn run_doc(text: &str, output: Option<&str>) -> Result<Value, String> {
     run_doc_inner(text, output, true)
 }

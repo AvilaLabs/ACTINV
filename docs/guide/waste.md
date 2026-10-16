@@ -28,6 +28,9 @@ are admitted. The command does not infer time evolution between target steps or
 derive bounds from a `RunResult`. The separate `intrusion-screen` command applies
 the selected draft screen to nominal inventories.
 
+From Python the same commands are `actinv.waste.classify`, `budget`, `bounds`, `composition`, `composition_solve` and
+`intrusion_screen`, and `actinv.twin`; they return the CLI's result. See [Python](python.md#waste-classification-from-python).
+
 ## Classify declared waste components in a facility twin
 
 `actinv twin` can optionally add nominal Part 61 classifications for components

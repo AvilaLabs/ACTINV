@@ -2,6 +2,8 @@
 import copy as _copy
 import json as _json
 import os as _os
+import tempfile as _tempfile
+import types as _types
 from pathlib import Path as _Path
 
 
@@ -216,9 +218,128 @@ def optimize(optspec_path, *, outdir=None, resume=False):
                                       resume))
 
 
+def _waste_run(command, spec, base_dir, text):
+    """Run one native waste command (or the twin) on a path or a mapping.
+
+    A path goes to the native binding unchanged, so the command resolves the
+    paths inside the spec against that file's directory, as on the command
+    line. A mapping is written to a uniquely named file inside `base_dir`
+    (default: the current directory) for the duration of the call and removed
+    afterwards, also on error, so its relative paths resolve against
+    `base_dir`."""
+    if isinstance(spec, (_os.PathLike, str)):
+        out = _waste(command, _os.fspath(spec))
+    else:
+        body = _json.dumps(dict(spec), allow_nan=False)
+        fd, name = _tempfile.mkstemp(
+            prefix=".actinv-waste-", suffix=".json",
+            dir=_os.getcwd() if base_dir is None else _os.fspath(base_dir))
+        try:
+            with _os.fdopen(fd, "w", encoding="utf-8") as handle:
+                handle.write(body)
+            out = _waste(command, name)
+        finally:
+            try:
+                _os.unlink(name)
+            except FileNotFoundError:
+                pass
+    return out if text else _json.loads(out)
+
+
+def _waste_operation(command, summary):
+    def operation(spec, *, base_dir=None, text=False):
+        return _waste_run(command, spec, base_dir, text)
+    operation.__name__ = command
+    operation.__qualname__ = "waste." + command
+    operation.__doc__ = (
+        summary + """
+
+    `spec` is a path, or a mapping together with `base_dir` (the directory its
+    relative paths resolve against; default: the current directory). Returns
+    the result as a dict, or with text=True the exact JSON text the command
+    line writes to an output file. A refusal raises ValueError carrying the
+    command's message. Nothing is printed.""")
+    return operation
+
+
+def _waste_summary(result):
+    """Flatten an actinv-waste-result-1 classification result to one dict per
+    component and target step.
+
+    Accepts the result itself (`waste.classify`), the `classification` member
+    of an intrusion-screen result, or a twin's `waste_classification`. Only
+    fields already in the result are read; the governing table, column and
+    margin are those of the first entry of the target's
+    `evaluation.binding_constraints` and `binding_nuclides` lists the
+    contributors of all its binding constraints. Fields the result lacks are
+    None."""
+    if isinstance(result, dict) and result.get("schema") != "actinv-waste-result-1":
+        for key in ("classification", "waste_classification"):
+            if isinstance(result.get(key), dict):
+                result = result[key]
+                break
+    if not isinstance(result, dict) or result.get("schema") != "actinv-waste-result-1":
+        raise ValueError("summary needs an actinv-waste-result-1 classification result")
+    rows = []
+    for component in result.get("components") or []:
+        for target in component.get("targets") or []:
+            binding = (target.get("evaluation") or {}).get("binding_constraints") or []
+            governing = binding[0] if binding else {}
+            nuclides = []
+            for constraint in binding:
+                for name in constraint.get("contributors") or []:
+                    if name not in nuclides:
+                        nuclides.append(name)
+            rows.append({
+                "component": component.get("id"),
+                "waste_type": component.get("waste_type"),
+                "component_status": component.get("status"),
+                "step": target.get("step"),
+                "t_s": target.get("t_s"),
+                "class": target.get("class"),
+                "calculated_only_class": target.get("calculated_only_class"),
+                "status": target.get("status"),
+                "coverage": target.get("coverage"),
+                "unknown_reason": target.get("unknown_reason"),
+                "external_tritium_status": target.get("external_tritium_status"),
+                "binding_target_class": governing.get("target_class"),
+                "binding_table": governing.get("table"),
+                "binding_column": governing.get("column"),
+                "binding_normalized_sum": governing.get("normalized_sum"),
+                "binding_normalized_margin": governing.get("normalized_margin"),
+                "binding_strict": governing.get("strict"),
+                "binding_passes": governing.get("passes"),
+                "binding_constraint_count": len(binding),
+                "binding_nuclides": nuclides,
+            })
+    return rows
+
+
+waste = _types.SimpleNamespace(
+    classify=_waste_operation(
+        "classify", "Nominal Part 61 classification (`actinv waste SPEC`)."),
+    budget=_waste_operation(
+        "budget", "Impurity limits for a requested class (`actinv waste budget SPEC`)."),
+    bounds=_waste_operation(
+        "bounds", "Classes admitted by declared activity intervals (`actinv waste bounds SPEC`)."),
+    composition=_waste_operation(
+        "composition",
+        "Classes over declared composition bounds (`actinv waste composition SPEC`)."),
+    composition_solve=_waste_operation(
+        "composition_solve",
+        "Composition bounds from native witness runs (`actinv waste composition solve SPEC`)."),
+    intrusion_screen=_waste_operation(
+        "intrusion_screen",
+        "Draft intrusion screen of a whole container (`actinv waste intrusion-screen SPEC`)."),
+    summary=_waste_summary,
+)
+twin = _waste_operation("twin", "Facility twin (`actinv twin SPEC`), with its optional waste block.")
+twin.__qualname__ = "twin"
+
+
 # Maturin's top-level package re-exports the extension using __all__. PyO3
 # registers native functions there, but dynamically defined classes need exports too.
 __all__ = ["__version__", "_cli", "cram_step", "broaden", "run", "run_json",
            "reverse", "reverse_json", "validate", "Material", "Spectrum",
            "Schedule", "Problem", "Result", "solve", "decide", "optimize",
-           "decide_json", "optimize_json", "budget", "budget_json"]
+           "decide_json", "optimize_json", "budget", "budget_json", "waste", "twin"]
