@@ -3274,3 +3274,11 @@ Z1 P11: both binaries exit 1 before writing, because the harness omitted `--cont
 `n-Ni058.tendl` fails the MT103/MF=10 state-sum check closed. Verdict of this run as written: Z1 fails; preserved as
 `results/failures/p141/z1_z2_attempt1.json` with its log. Registered before the rerun: **P141 Amendment A**
 `2ec62abd0cac27d9d6b9bb272b6f0c2366f7d74f4b13db146265060fff28963d` (the P11 builds add the flag; criterion unchanged).
+
+## Entry 176 — P141 Amendment A rerun; Amendment B registered (2026-10-16)
+
+Under Amendment A the two-input P11 activation build exits 0 under both binaries with byte-identical `.npz`
+(`5939355f…`); Ni-58 is skipped identically. `build-covariance` refuses under both ("covariance input has 2 files but
+activation index has 1 distinct sources"); preserved as `results/failures/p141/z1_p11_attempt2.json`. Registered
+before the next run: **P141 Amendment B** `5d58f357a4018290ee78a01c4ab2bdbc0023250a5d6858d87e4562b7111e1d48`: the sidecar identity uses a Fe-56-only input
+directory; the two-input library identity stands.

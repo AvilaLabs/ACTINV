@@ -1,0 +1,27 @@
+{
+ "amendment": "P141 Amendment A",
+ "candidate_sha256": "e059cdb4d4e58da3d88fb02dccc6a25c7cf7d53554c145cd174cd2c488841c2d",
+ "pass": false,
+ "reference_sha256": "54f613420cb2fce3cacea310554b24c82ffbb7e81aaefd259946ee77a025ce6f",
+ "schema": "actinv-p141-z1-p11-1",
+ "z1": {
+  "p11_inputs": {
+   "cand": {
+    "covariance_rc": 1,
+    "covariance_sha256": null,
+    "library_rc": 0,
+    "library_sha256": "5939355f00e90b76a1ccfe267f9e65972bc4e8b055f4432dc10c98bfae446dbf",
+    "stderr_tail": "l: /home/connoravila/Documents/actinv/target/p141/work/p11-inputs/n-Ni058.tendl: MT103/MF=10 ZAP=27058 group 2: emitted state sum 7.35056110388422194e-7 barn exceeds runtime total 7.04588661376139325e-7 barn by relative excess 4.324147e-2 (outside the frozen 0.001 standard envelope and the mechanism-gated 0.03 interpolation-artifact envelope); MAT=2825 ZA=28058 source_sha256=26c8ae72a203187fae84f9a11c3997086cd70153386e04cf204b4122ab368916; construction fails closed and no state row is emitted, scaled or relabeled\nindex -> /home/connoravila/Documents/actinv/target/p141/work/p11_cand_index.json\ncovariance input has 2 files but activation index has 1 distinct sources\n"
+   },
+   "covariance_identical": false,
+   "library_identical": true,
+   "ref": {
+    "covariance_rc": 1,
+    "covariance_sha256": null,
+    "library_rc": 0,
+    "library_sha256": "5939355f00e90b76a1ccfe267f9e65972bc4e8b055f4432dc10c98bfae446dbf",
+    "stderr_tail": "dl: /home/connoravila/Documents/actinv/target/p141/work/p11-inputs/n-Ni058.tendl: MT103/MF=10 ZAP=27058 group 2: emitted state sum 7.35056110388422194e-7 barn exceeds runtime total 7.04588661376139325e-7 barn by relative excess 4.324147e-2 (outside the frozen 0.001 standard envelope and the mechanism-gated 0.03 interpolation-artifact envelope); MAT=2825 ZA=28058 source_sha256=26c8ae72a203187fae84f9a11c3997086cd70153386e04cf204b4122ab368916; construction fails closed and no state row is emitted, scaled or relabeled\nindex -> /home/connoravila/Documents/actinv/target/p141/work/p11_ref_index.json\ncovariance input has 2 files but activation index has 1 distinct sources\n"
+   }
+  }
+ }
+}

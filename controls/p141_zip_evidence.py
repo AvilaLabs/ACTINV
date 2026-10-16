@@ -79,13 +79,53 @@ def first_difference(a, b, path=""):
     return None if a == b else (path or "/")
 
 
+def p11_builds(ref: Path, cand: Path) -> dict:
+    """Z1b: the two pinned P11 inputs, activation library then covariance sidecar."""
+    inputs = WORK / "p11-inputs"
+    inputs.mkdir()
+    for name, digest in P11_INPUTS.items():
+        shutil.copyfile(NEUTRON / name, inputs / name)
+        if sha(inputs / name) != digest:
+            raise SystemExit(f"{name} does not match its pinned digest")
+    small = {}
+    for tag, binary in (("ref", ref), ("cand", cand)):
+        activation, covariance = WORK / f"p11_{tag}.npz", WORK / f"p11_{tag}.cov.npz"
+        a = run(binary, ["build-library", inputs, activation, "--workers", "2", "--continue-on-error", "true"])
+        c = run(binary, ["build-covariance", inputs, activation, covariance, "--workers", "1"])
+        small[tag] = {"library_rc": a["returncode"], "covariance_rc": c["returncode"],
+                      "library_sha256": sha(activation) if activation.exists() else None,
+                      "covariance_sha256": sha(covariance) if covariance.exists() else None,
+                      "stderr_tail": a["stderr_tail"] + c["stderr_tail"]}
+    return {**small,
+        "library_identical": small["ref"]["library_sha256"] is not None
+        and small["ref"]["library_sha256"] == small["cand"]["library_sha256"],
+        "covariance_identical": small["ref"]["covariance_sha256"] is not None
+        and small["ref"]["covariance_sha256"] == small["cand"]["covariance_sha256"]}
+
+
+
 def main() -> int:
     ref, cand = Path(sys.argv[1]).resolve(), Path(sys.argv[2]).resolve()
+    p11_only = "--p11-only" in sys.argv[3:]  # P141 Amendment A: repeat only the P11 part of Z1
     if WORK.exists():
         shutil.rmtree(WORK)
     WORK.mkdir(parents=True)
     report = {"schema": "actinv-p141-z1-z2-1", "reference_sha256": sha(ref), "candidate_sha256": sha(cand),
               "z1": {}, "z2": {}}
+
+    if p11_only:
+        report = {"schema": "actinv-p141-z1-p11-1", "amendment": "P141 Amendment A",
+                  "reference_sha256": sha(ref), "candidate_sha256": sha(cand), "z1": {}}
+        report["z1"]["p11_inputs"] = p11_builds(ref, cand)
+        p11 = report["z1"]["p11_inputs"]
+        report["pass"] = bool(p11["library_identical"] and p11["covariance_identical"]
+                              and all(p11[t]["library_rc"] == 0 and p11[t]["covariance_rc"] == 0
+                                      for t in ("ref", "cand")))
+        out = RESULT.with_name("z1_p11.json")
+        out.parent.mkdir(parents=True, exist_ok=True)
+        out.write_text(json.dumps(report, indent=1, sort_keys=True) + "\n")
+        print(json.dumps({"pass": report["pass"]}))
+        return 0 if report["pass"] else 1
 
     # Z1a: full TENDL-2025 proton build, as P99 G2.
     proton = {}
@@ -101,27 +141,7 @@ def main() -> int:
                                    and proton["ref"]["npz_sha256"] == proton["cand"]["npz_sha256"],
                                    "shipped_sha256": sha(DATA / LIBRARIES[2])}
 
-    # Z1b: the two pinned P11 inputs, activation library then covariance sidecar.
-    inputs = WORK / "p11-inputs"
-    inputs.mkdir()
-    for name, digest in P11_INPUTS.items():
-        shutil.copyfile(NEUTRON / name, inputs / name)
-        if sha(inputs / name) != digest:
-            raise SystemExit(f"{name} does not match its pinned digest")
-    small = {}
-    for tag, binary in (("ref", ref), ("cand", cand)):
-        activation, covariance = WORK / f"p11_{tag}.npz", WORK / f"p11_{tag}.cov.npz"
-        a = run(binary, ["build-library", inputs, activation, "--workers", "2"])
-        c = run(binary, ["build-covariance", inputs, activation, covariance, "--workers", "1"])
-        small[tag] = {"library_rc": a["returncode"], "covariance_rc": c["returncode"],
-                      "library_sha256": sha(activation) if activation.exists() else None,
-                      "covariance_sha256": sha(covariance) if covariance.exists() else None,
-                      "stderr_tail": a["stderr_tail"] + c["stderr_tail"]}
-    report["z1"]["p11_inputs"] = {**small,
-        "library_identical": small["ref"]["library_sha256"] is not None
-        and small["ref"]["library_sha256"] == small["cand"]["library_sha256"],
-        "covariance_identical": small["ref"]["covariance_sha256"] is not None
-        and small["ref"]["covariance_sha256"] == small["cand"]["covariance_sha256"]}
+    report["z1"]["p11_inputs"] = p11_builds(ref, cand)
 
     # Z2: reads of every shipped library, and two runs.
     for library in LIBRARIES:
