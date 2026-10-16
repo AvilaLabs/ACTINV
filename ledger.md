@@ -3354,3 +3354,11 @@ operations and `actinv.twin` the facility twin, each running the CLI's own entry
 bytes. W1 reruns the P105, P107, P108, P110, P112 and P116 CI steps through a recording wrapper that compares every
 waste/twin invocation with the Python result byte for byte (refusals by message); W2 dict input; W3 quiet and no
 leftover files; W4 quality and CI.
+
+## Entry 184 — P144 registered: waste classification in the desktop and the browser workbench (2026-10-16)
+
+Registered before any source change for the phase: **P144** `3e6bc737429e8eebf0d067c9d9321707b38079765a868e0fb10826ee26daf050`. The desktop gains a Waste page that builds an
+ordinary `actinv-waste-spec-1` from the current run (nuclide properties from the run's decay data via the existing
+`derive_properties`) and classifies it with the CLI's evaluator in process; the browser gains a waste result viewer
+and spec editor, without classifying. The look is unchanged. V1 CLI parity of the saved result, V2 properties against
+an independent ENDF-6 reader, V3 browser smoke, V4 look unchanged, V5 quality and CI.
