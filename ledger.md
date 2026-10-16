@@ -3498,3 +3498,12 @@ steps that finished exited 0; the run was stopped during the workspace tests. Th
 `results/failures/p145/evidence_attempt2/`. The fix, part of the Amendment C repair rather than a new amendment,
 reads σ² from the generated and SHA-verified copy in the U3 staging folder; no gate, input or threshold changes.
 The evidence reruns U1–U5 in full, including the P13 step, on the new candidate.
+
+## Entry 197 — P145 evidence attempt 3: U1–U5 pass locally on the completed repair (2026-10-16)
+
+Candidate `0ea4a18`, clean tracked tree, no local C3 sidecars (every one generated and SHA-verified at check time),
+release binary rebuilt from it; all twenty steps ran serially in the bounded scope and exited 0
+(`results/p145/steps.tsv`, `logs/`). U1 and U2 for C1 and C2, U3 (closed form 0.8997, 0.4996, 0.0998 inside the
+99.9 % intervals at 4096 samples), U4 and the `check_p136.py` study regression pass with the same results as
+attempt 1; workspace tests 1073 passed, 0 failed; fmt, clippy native and wasm, binding checks, module build, smoke
+and tests, handbook build and, new under Amendment C, the P13 data-distribution step exited 0. CI decides the rest.

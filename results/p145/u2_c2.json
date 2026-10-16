@@ -1,0 +1,100 @@
+{
+ "anomalies": [],
+ "assumptions": {
+  "endpoint_tol": 1e-12,
+  "percentiles_include_unknown": true
+ },
+ "candidate": {
+  "amendment_b_sha256": "b48aa0c11c02a9121563c729d53b7fe8dc3426b2ecb2ce2ecab2f3735f04ef05",
+  "amendment_sha256": "355ddb6f3d1188c780f322f9cfabe95ce66adc628b2ccd45de523001e2f6bc72",
+  "binary": "target/release/actinv",
+  "binary_sha256": "db2d482f3706e12138a118edbed4368ffd821c4adde4b76898ffc19a98663a56",
+  "commit": "0ea4a18cdc29399efac211ce349a02b8905693fe",
+  "protocol_sha256": "7a50a266d7bb68f0745ac159114493b7731479c3bbc6b4b61b72cff6e2bd89f1",
+  "tree_clean": true
+ },
+ "case": "C2",
+ "check_report": {
+  "checks": 281,
+  "failed": 0,
+  "failures": [],
+  "missing_fields": []
+ },
+ "command": null,
+ "pass": true,
+ "recount_seconds": 4.0,
+ "result_sha256": "ac3ab1b80597abf86033341cd8528417cbfbf439957eb0e5cc0d1dfc9a15c8c3",
+ "reused_u1_run": true,
+ "rule_pack": "crates/actinv-core/data/waste_us_nrc_61_55_v1.json",
+ "rule_pack_sha256": "890268af81a53815b8e11c238e4a1694eabb79664a1ca087fd7fe22b9fabe5d7",
+ "schema": "actinv-p145-u2-1",
+ "source_problem_sha256": "ce2269daa338a5ec6eeabba41784025b5f1ba4ba3b5516cb4d430c146a9526a5",
+ "spec": "c2_steel.json",
+ "spec_sha256": "2d4c3284b62f9c1751eea865b829304639849e38ba474387509a49c83c938297",
+ "summary": {
+  "case": "C2",
+  "checks": 281,
+  "failed": 0,
+  "missing_fields": 0
+ },
+ "tally": {
+  "steel-block@10": {
+   "counts": {
+    "A": 0,
+    "B": 0,
+    "C": 100,
+    "above_class_c": 0,
+    "unknown": 0
+   },
+   "established": "C",
+   "failed": 0,
+   "near_threshold": [],
+   "needed": null,
+   "needed_note": null
+  },
+  "steel-block@11": {
+   "counts": {
+    "A": 0,
+    "B": 0,
+    "C": 100,
+    "above_class_c": 0,
+    "unknown": 0
+   },
+   "established": "C",
+   "failed": 0,
+   "near_threshold": [],
+   "needed": null,
+   "needed_note": null
+  },
+  "steel-block@12": {
+   "counts": {
+    "A": 0,
+    "B": 14,
+    "C": 86,
+    "above_class_c": 0,
+    "unknown": 0
+   },
+   "established": "C",
+   "failed": 0,
+   "near_threshold": [],
+   "needed": null,
+   "needed_note": null
+  },
+  "steel-block@13": {
+   "counts": {
+    "A": 0,
+    "B": 72,
+    "C": 28,
+    "above_class_c": 0,
+    "unknown": 0
+   },
+   "established": "C",
+   "failed": 0,
+   "near_threshold": [],
+   "needed": null,
+   "needed_note": null
+  }
+ },
+ "targets_with_failed_samples": 0,
+ "worktree_clean_after": true
+}

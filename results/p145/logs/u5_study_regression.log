@@ -1,0 +1,12 @@
+P136 G2: PASS
+P136 G3: PASS
+P136 G4: PASS
+  G2: 264 files, 131 byte-identical, 130 out files equal apart from ms, 0 other differences
+  G3/explicit/fe__fns_709__pulse_5min: 24 distribution fields, 60 percentiles, 32 bins, 16 matrix entries, 16 consistency checks, 0 mismatches
+  G3/explicit/fe_co100wppm__fns_709__pulse_5min: 24 distribution fields, 60 percentiles, 32 bins, 16 matrix entries, 16 consistency checks, 0 mismatches
+  G3/default/fe__fns_709__pulse_5min: 24 distribution fields, 28 percentiles, 20 bins, 16 matrix entries, 4 consistency checks, 0 mismatches
+  G3/default/fe_co100wppm__fns_709__pulse_5min: 24 distribution fields, 28 percentiles, 20 bins, 16 matrix entries, 4 consistency checks, 0 mismatches
+  G3 gap: input correlations against MF33/decay/yield parameters are not recomputable from the record
+  G4/explicit: 2 cases repeated, 0 differences
+  G4/default: 2 cases repeated, 0 differences
+P136: PASS (/home/connoravila/Documents/actinv/results/p145/u5_study_regression.json)
