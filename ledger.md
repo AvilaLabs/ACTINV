@@ -3255,3 +3255,10 @@ G1 maps only the exact token `actinv-core <workspace version>` to `actinv-core 1
 binary (SHA-256 `54f613420cb2fce3cacea310554b24c82ffbb7e81aaefd259946ee77a025ce6f`), `check_p110.py --no-write` reproduces the sealed
 G0, G1 and G2 records byte for byte, and the fourteen CI history steps P103–P118 each exit 0 as `ci.yml` lists them
 (`results/p120/amendment_c/ci_steps_p103_p118.log`). C4 (CI green on the pushed commit) is pending.
+
+## Entry 174 — P141 registered: move `zip` to 9.0.4 (2026-10-16)
+
+Registered before any manifest or source change: **P141** `7b9a9b5e665e949db57c7d9c76dce99da7e28619adcbc9e442d28168a0b0cf56`, at base `fe3596d`. Upstream's yank of
+`zip` 8.6.0 (entry 172) breaks the P16 consumer build and `cargo install` without `--locked`. Reference binary
+for Z1/Z2: the 1.5.0 release build with `zip` 8.6.0, saved as `target/p141/ref-actinv`, SHA-256
+`54f613420cb2fce3cacea310554b24c82ffbb7e81aaefd259946ee77a025ce6f`.
