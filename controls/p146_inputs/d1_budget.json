@@ -1,0 +1,29 @@
+{
+ "_note": "P146 D1. A Class A impurity budget for a stainless-steel-like activated metal (Fe balance; Cr 18, Ni 8, Mn 1.5 wt% matrix; Co 0.05, N 0.05, Nb 0.01 wt% specification levels) at the 33-year and 101-year cooling steps (12 and 13) of the P145 C2 schedule. nuclide_properties is the token from_decay_data: controls/check_p146.py replaces it by the properties of every radionuclide of the primary and fallback decay files named by the base spec (half-life, Z, alpha emission by the P145 rule) when it stages the case, because a budget needs the properties of every nuclide an element solve produces. Keys starting with an underscore are removed by the checker.",
+ "balance": "Fe",
+ "base_spec": "d1_problem.json",
+ "density_g_cm3": 7.9,
+ "external_tritium": {
+  "status": "not_applicable"
+ },
+ "impurities": {
+  "Co": 0.05,
+  "N": 0.05,
+  "Nb": 0.01
+ },
+ "mass_g": 1000.0,
+ "matrix": {
+  "Cr": 18.0,
+  "Mn": 1.5,
+  "Ni": 8.0
+ },
+ "nuclide_properties": "from_decay_data",
+ "rules": "us-nrc-10cfr61.55-v1",
+ "schema": "actinv-waste-budget-1",
+ "target_class": "A",
+ "targets": [
+  12,
+  13
+ ],
+ "waste_type": "activated_metal"
+}

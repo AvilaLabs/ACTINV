@@ -14,6 +14,12 @@
   nominal evaluator. The result gives class frequencies with two-sided Clopper-Pearson intervals, the class
   established at a confidence level (at least 72 samples at 0.95), nearest-rank percentiles of each table sum, and
   the coverage of the sampled channels. The probabilities are conditional on the sampled channels (P145).
+- `actinv waste budget uncertainty SPEC [OUT]` (and `actinv.waste.budget_uncertainty`): impurity budgets under
+  nuclear-data uncertainty. Each sample draws the `study.robustness` channels once and applies the same factors to
+  every element solve of the class budget; the budget at a confidence level is the order-statistic bound of the
+  per-sample suprema of each impurity and of the joint specification scale factor (at least 72 samples at 0.95),
+  with binding-constraint tallies, a verification re-solve around the reported rank, and the coverage of the sampled
+  channels. Upper bounds only: a positive lower bound leaves the budget not established (P146).
 
 **Added (desktop and browser)**
 

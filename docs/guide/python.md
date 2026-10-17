@@ -82,6 +82,7 @@ The waste commands and the facility twin are available as functions. Each runs t
 | `actinv.waste.composition_solve(spec)` | `actinv waste composition solve SPEC` |
 | `actinv.waste.intrusion_screen(spec)` | `actinv waste intrusion-screen SPEC` |
 | `actinv.waste.uncertainty(spec)` | `actinv waste uncertainty SPEC` |
+| `actinv.waste.budget_uncertainty(spec)` | `actinv waste budget uncertainty SPEC` |
 | `actinv.twin(spec)` | `actinv twin SPEC` |
 
 `spec` is a path, or a dictionary together with `base_dir`, the folder its relative paths resolve against (default: the current directory). A path is used as it is, and relative paths inside the file resolve against the file's folder. A dictionary is written to a temporary file in `base_dir` for the duration of the call and removed afterwards, also on error. Each call returns the result as a dictionary, or with `text=True` the exact JSON text the CLI writes to an output file. A refusal raises `ValueError` with the CLI's message. Calls print nothing; `actinv waste composition` also prints an intermediate bounds report to standard output, which `actinv.waste.composition` leaves out (the result is the same). `actinv.waste.budget` is `actinv waste budget` (impurity limits for a requested class); the impurity budget `actinv.budget` is unchanged.

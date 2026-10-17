@@ -286,6 +286,17 @@ pub(crate) fn solve_doc(
     title: &str,
     cache: &mut actinv_core::run::PreparedCache,
 ) -> Result<(Value, u64), String> {
+    let spec = element_spec(base, composition, title)?;
+    solve_spec(&spec, title, cache)
+}
+
+/// The run spec `solve_doc` solves for a composition: the base spec with its material replaced and the
+/// budget's solver settings. A caller may edit it (a sample's drawn factors, say) before `solve_spec`.
+pub(crate) fn element_spec(
+    base: &Value,
+    composition: &BTreeMap<String, f64>,
+    title: &str,
+) -> Result<actinv_core::spec::Spec, String> {
     let mut doc = base.clone();
     let mass = base
         .pointer("/material/mass_g")
@@ -297,10 +308,18 @@ pub(crate) fn solve_doc(
     doc["options"]["prune"] = Value::from("reach");
     doc["options"]["outputs"] = json!(["ledger"]);
     let text = serde_json::to_string(&doc).map_err(|e| e.to_string())?;
-    let spec = actinv_core::spec::Spec::from_json(&crate::resolve_catalog_json(&text)?)
-        .map_err(|e| format!("{title}: {e}"))?;
+    actinv_core::spec::Spec::from_json(&crate::resolve_catalog_json(&text)?)
+        .map_err(|e| format!("{title}: {e}"))
+}
+
+/// Solve a run spec through the shared prepared-run cache.
+pub(crate) fn solve_spec(
+    spec: &actinv_core::spec::Spec,
+    title: &str,
+    cache: &mut actinv_core::run::PreparedCache,
+) -> Result<(Value, u64), String> {
     let t0 = std::time::Instant::now();
-    let result = actinv_core::run::run_with_cache(&spec, "budget", cache)
+    let result = actinv_core::run::run_with_cache(spec, "budget", cache)
         .map_err(|e| format!("{title}: {e}"))?;
     let ms = t0.elapsed().as_millis() as u64;
     Ok((serde_json::to_value(result).map_err(|e| e.to_string())?, ms))

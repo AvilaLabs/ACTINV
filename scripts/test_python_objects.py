@@ -227,8 +227,8 @@ class Waste(unittest.TestCase):
     def test_namespace(self):
         self.assertEqual(
             sorted(n for n in vars(actinv.waste) if not n.startswith("_")),
-            ["bounds", "budget", "classify", "composition", "composition_solve",
-             "intrusion_screen", "summary", "uncertainty"])
+            ["bounds", "budget", "budget_uncertainty", "classify", "composition",
+             "composition_solve", "intrusion_screen", "summary", "uncertainty"])
         self.assertTrue(callable(actinv.twin))
         self.assertIn("waste", actinv.__all__)
         self.assertIn("twin", actinv.__all__)
@@ -351,8 +351,67 @@ class Waste(unittest.TestCase):
         self.assertIn("at least 20", str(caught.exception))
         self.assertClean("run.json")
 
-    # Not exercised here: budget, composition_solve, uncertainty runs and twin need a
-    # nuclear-data library or an activation mesh to produce their inputs.
+    @staticmethod
+    def _budget_uncertainty_spec(**sampling):
+        return {
+            "schema": "actinv-waste-budget-uncertainty-spec-1",
+            "budget": {
+                "schema": "actinv-waste-budget-1",
+                "base_spec": {
+                    "spec": "actinv-spec-1",
+                    "library": {"path": "missing-activation.npz"},
+                    "decay": {"primary": "missing-decay.endf"},
+                    "material": {"basis": "wt_percent", "composition": {"FE": 100.0}},
+                    "spectrum": {"structure": "custom", "boundaries_eV": [1.0, 2.0],
+                                 "flux_per_group": [1.0]},
+                    "schedule": [{"dt": "1 s", "flux": 1.0}, {"dt": "1 d", "flux": 0.0}],
+                },
+                "balance": "Fe",
+                "matrix": {"Cr": 18.0},
+                "impurities": {"Co": 0.01},
+                "targets": [2],
+                "rules": "us-nrc-10cfr61.55-v1",
+                "target_class": "A",
+                "mass_g": 2.5,
+                "displaced_volume_cm3": 1.0,
+                "waste_type": "activated_metal",
+                "nuclide_properties": {},
+                "external_tritium": {"status": "not_applicable"},
+            },
+            "sampling": dict({"channels": {"decay_constants": True}, "samples": 100, "seed": 1},
+                             **sampling),
+        }
+
+    def test_budget_uncertainty_refuses_before_reading_data(self):
+        refusals = [
+            (dict(samples=5), "samples must be between 20 and 4096"),
+            (dict(samples=50), "at least 72 are needed"),
+            (dict(channels={"composition_rel_std": {"Fe": 0.1}}),
+             "composition channel is refused"),
+            (dict(channels={}), "sampling enables no channel"),
+        ]
+        for sampling, message in refusals:
+            with self.subTest(message):
+                with self.assertRaises(ValueError) as caught:
+                    actinv.waste.budget_uncertainty(
+                        self._budget_uncertainty_spec(**sampling), base_dir=self.root)
+                self.assertIn(message, str(caught.exception))
+                self.assertClean("run.json")
+        spec = self._budget_uncertainty_spec(samples=100, keep_samples="kept")
+        spec["confidence_level"] = 1.5
+        with self.assertRaises(ValueError) as caught:
+            actinv.waste.budget_uncertainty(spec, base_dir=self.root)
+        self.assertIn("confidence_level must be in (0, 1)", str(caught.exception))
+        self.assertClean("run.json")
+        # the same refusal from a path
+        path = self.path_for("budget-uncertainty.json", spec)
+        with self.assertRaises(ValueError) as from_path:
+            actinv.waste.budget_uncertainty(path)
+        self.assertEqual(str(from_path.exception), str(caught.exception))
+        self.assertClean("run.json", "budget-uncertainty.json")
+
+    # Not exercised here: budget, composition_solve, uncertainty and budget_uncertainty
+    # runs and twin need a nuclear-data library or an activation mesh to produce their inputs.
 
 
 if __name__ == "__main__":

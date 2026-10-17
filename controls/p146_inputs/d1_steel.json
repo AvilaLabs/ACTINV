@@ -1,0 +1,19 @@
+{
+ "_note": "P146 D1. Nuclear-data uncertainty of the d1_budget.json impurity budget: MF=33 cross sections (TENDL-2025 709-group sidecar, the file and SHA-256 of P145 C2), decay constants and the flux at 5 % relative standard deviation. 200 samples, seed 146001, 95 % confidence. Keys starting with an underscore are removed by controls/check_p146.py when it stages the case.",
+ "budget": "d1_budget.json",
+ "confidence_level": 0.95,
+ "sampling": {
+  "channels": {
+   "cross_section_mf33": true,
+   "decay_constants": true,
+   "flux_rel_std": 0.05
+  },
+  "covariance": {
+   "path": "../../actinv-data/v1.1.0/uncertainty/tendl-2025-neutron-709g.cov.npz",
+   "sha256": "c19dec86b44ad5d90b66c9ab94d53e18641a1d354a89402a4da7986b6c530cde"
+  },
+  "samples": 200,
+  "seed": 146001
+ },
+ "schema": "actinv-waste-budget-uncertainty-spec-1"
+}

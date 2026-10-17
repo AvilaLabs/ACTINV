@@ -17,57 +17,77 @@ const VERIFY_ABS: f64 = 1e-12;
 
 #[derive(Debug, Deserialize)]
 #[serde(deny_unknown_fields)]
-struct WasteBudgetSpec {
+pub(crate) struct WasteBudgetSpec {
     schema: String,
     base_spec: Value,
-    balance: String,
+    pub(crate) balance: String,
     #[serde(default)]
-    matrix: BTreeMap<String, f64>,
-    impurities: BTreeMap<String, f64>,
-    targets: Vec<u64>,
+    pub(crate) matrix: BTreeMap<String, f64>,
+    pub(crate) impurities: BTreeMap<String, f64>,
+    pub(crate) targets: Vec<u64>,
     rules: String,
-    target_class: WasteClass,
-    mass_g: f64,
+    pub(crate) target_class: WasteClass,
+    pub(crate) mass_g: f64,
     #[serde(default)]
     displaced_volume_cm3: Option<f64>,
     #[serde(default)]
     density_g_cm3: Option<f64>,
-    waste_type: WasteType,
-    nuclide_properties: BTreeMap<String, NuclideProperties>,
-    external_tritium: waste::ExternalTritium,
+    pub(crate) waste_type: WasteType,
+    pub(crate) nuclide_properties: BTreeMap<String, NuclideProperties>,
+    pub(crate) external_tritium: waste::ExternalTritium,
 }
 
 #[derive(Clone, Copy, Debug, Eq, Ord, PartialEq, PartialOrd)]
-struct ConstraintKey {
-    step: u64,
-    table: u8,
-    column: Option<u8>,
+pub(crate) struct ConstraintKey {
+    pub(crate) step: u64,
+    pub(crate) table: u8,
+    pub(crate) column: Option<u8>,
 }
 
 #[derive(Clone, Debug, PartialEq)]
-struct Edge {
-    value: f64,
-    open: bool,
-    binding: Option<ConstraintKey>,
-    contributors: Vec<String>,
-    contributor_count: usize,
+pub(crate) struct Edge {
+    pub(crate) value: f64,
+    pub(crate) open: bool,
+    pub(crate) binding: Option<ConstraintKey>,
+    pub(crate) contributors: Vec<String>,
+    pub(crate) contributor_count: usize,
 }
 
 #[derive(Clone, Debug)]
-struct Interval {
-    lower: Edge,
-    upper: Edge,
-    feasible: bool,
-    status: &'static str,
-    no_response: bool,
+pub(crate) struct Interval {
+    pub(crate) lower: Edge,
+    pub(crate) upper: Edge,
+    pub(crate) feasible: bool,
+    pub(crate) status: &'static str,
+    pub(crate) no_response: bool,
 }
 
 #[derive(Clone)]
-struct Basis {
+pub(crate) struct Basis {
     /// Per-nuclide activity for a pure element in Bq/g, indexed by selected step.
     activities: BTreeMap<u64, BTreeMap<String, f64>>,
     /// Class-constraint normalized sums for a 100 wt% pure element.
     sums: BTreeMap<ConstraintKey, f64>,
+}
+
+/// A budget document that passed every check that needs no solve.
+pub(crate) struct Setup {
+    pub(crate) b: WasteBudgetSpec,
+    pub(crate) rules: RulePack,
+    pub(crate) geometry: WasteGeometry,
+    pub(crate) base: Value,
+    base_text: String,
+    base_label: String,
+    pub(crate) matrix_total: f64,
+    pub(crate) impurity_total: f64,
+}
+
+/// The upper-supremum intervals of a budget: each impurity with the others at specification (and, when
+/// asked for, alone), and the joint specification scale factor.
+pub(crate) struct Intervals {
+    /// (impurity, "others_at_spec" or "sole", interval), in the order the nominal command computes them
+    pub(crate) by_impurity: Vec<(String, &'static str, Interval)>,
+    pub(crate) joint: Interval,
 }
 
 fn sha256(bytes: &[u8]) -> String {
@@ -141,7 +161,7 @@ fn canonicalize_constituents(b: &mut WasteBudgetSpec) -> Result<(), String> {
     Ok(())
 }
 
-fn full_composition(
+pub(crate) fn full_composition(
     balance: &str,
     matrix: &BTreeMap<String, f64>,
     impurities: &BTreeMap<String, f64>,
@@ -196,7 +216,7 @@ fn constraints(
     Ok(out)
 }
 
-fn step_activities(step: &Value) -> Result<BTreeMap<String, f64>, String> {
+pub(crate) fn step_activities(step: &Value) -> Result<BTreeMap<String, f64>, String> {
     let values = step
         .get("activity_Bq_per_g")
         .and_then(Value::as_object)
@@ -236,7 +256,10 @@ fn scaled_activities(
     Ok(result)
 }
 
-fn external_at(external: &waste::ExternalTritium, step: u64) -> Result<(f64, bool), String> {
+pub(crate) fn external_at(
+    external: &waste::ExternalTritium,
+    step: u64,
+) -> Result<(f64, bool), String> {
     waste::external_tritium_at(external, step)
 }
 
@@ -507,7 +530,9 @@ pub fn run(path: &str, output: Option<&str>) -> Result<Value, String> {
     Ok(result)
 }
 
-fn run_doc(text: &str, dir: &Path) -> Result<Value, String> {
+/// Every refusal of the nominal budget that needs no solve: the document, its constituents, the rule pack and
+/// the base spec.
+pub(crate) fn setup(text: &str, dir: &Path) -> Result<Setup, String> {
     let mut b: WasteBudgetSpec = serde_json::from_str(text)
         .map_err(|error| format!("cannot parse waste budget: {error}"))?;
     canonicalize_constituents(&mut b)?;
@@ -560,75 +585,106 @@ fn run_doc(text: &str, dir: &Path) -> Result<Value, String> {
             return Err("class budget refuses required-but-undeclared external tritium".into());
         }
     }
+    Ok(Setup {
+        b,
+        rules,
+        geometry,
+        base,
+        base_text,
+        base_label,
+        matrix_total,
+        impurity_total,
+    })
+}
 
-    let elements: BTreeSet<String> = std::iter::once(b.balance.clone())
+/// The constituents the budget solves one pure-element run for: balance, matrix and impurities.
+pub(crate) fn basis_elements(b: &WasteBudgetSpec) -> BTreeSet<String> {
+    std::iter::once(b.balance.clone())
         .chain(b.matrix.keys().cloned())
         .chain(b.impurities.keys().cloned())
+        .collect()
+}
+
+/// The basis of one pure element from its solved run, and the record the result carries for it.
+pub(crate) fn element_basis(
+    s: &Setup,
+    element: &str,
+    run: &Value,
+) -> Result<(Basis, Value), String> {
+    let b = &s.b;
+    let mut activities = BTreeMap::new();
+    let mut sums = BTreeMap::new();
+    let mut times = BTreeMap::new();
+    for &step in &b.targets {
+        let row = budget::step_of(run, step)?;
+        let activity = step_activities(row)?;
+        let time = row
+            .get("t_s")
+            .and_then(Value::as_f64)
+            .ok_or("element solve step lacks t_s")?;
+        let total_bq: BTreeMap<String, f64> = activity
+            .iter()
+            .map(|(key, value)| (key.clone(), value * b.mass_g))
+            .collect();
+        let evaluation = evaluate_component(
+            &s.rules,
+            b.waste_type,
+            s.geometry,
+            &total_bq,
+            &b.nuclide_properties,
+        )?;
+        if evaluation.coverage != actinv_core::waste::Coverage::Complete {
+            return Err(format!(
+                "basis {element} has incomplete property coverage at step {step}: {:?}",
+                evaluation.unknown_nuclides
+            ));
+        }
+        let cs = constraints(&evaluation, b.target_class, step)?;
+        sums.extend(cs);
+        activities.insert(step, activity);
+        times.insert(step, time);
+    }
+    let normalized_sums: BTreeMap<String, f64> = sums
+        .iter()
+        .map(|(key, value)| {
+            (
+                format!(
+                    "{}:{}:{}",
+                    key.step,
+                    key.table,
+                    key.column
+                        .map_or_else(|| "all".into(), |column| column.to_string())
+                ),
+                *value,
+            )
+        })
         .collect();
-    let mut cache = actinv_core::run::PreparedCache::new();
+    let record = json!({"element":element,"mode":run.get("mode"),"steps":activities,"times_s":times,"class_constraint_normalized_sums":normalized_sums});
+    Ok((Basis { activities, sums }, record))
+}
+
+/// The basis of every element of the budget. `solve(element, composition)` returns the solved run of the
+/// element's 100 wt% composition.
+fn compute_basis(
+    s: &Setup,
+    mut solve: impl FnMut(&str, &BTreeMap<String, f64>) -> Result<Value, String>,
+) -> Result<(BTreeMap<String, Basis>, Vec<Value>), String> {
     let mut basis: BTreeMap<String, Basis> = BTreeMap::new();
     let mut solve_records = Vec::new();
-    for element in &elements {
+    for element in &basis_elements(&s.b) {
         let composition = BTreeMap::from([(element.clone(), 100.0)]);
-        let (run, _ms) = budget::solve_doc(
-            &base,
-            &composition,
-            &format!("waste budget basis {element}"),
-            &mut cache,
-        )?;
-        let mut activities = BTreeMap::new();
-        let mut sums = BTreeMap::new();
-        let mut times = BTreeMap::new();
-        for &step in &b.targets {
-            let row = budget::step_of(&run, step)?;
-            let activity = step_activities(row)?;
-            let time = row
-                .get("t_s")
-                .and_then(Value::as_f64)
-                .ok_or("element solve step lacks t_s")?;
-            let total_bq: BTreeMap<String, f64> = activity
-                .iter()
-                .map(|(key, value)| (key.clone(), value * b.mass_g))
-                .collect();
-            let evaluation = evaluate_component(
-                &rules,
-                b.waste_type,
-                geometry,
-                &total_bq,
-                &b.nuclide_properties,
-            )?;
-            if evaluation.coverage != actinv_core::waste::Coverage::Complete {
-                return Err(format!(
-                    "basis {element} has incomplete property coverage at step {step}: {:?}",
-                    evaluation.unknown_nuclides
-                ));
-            }
-            let cs = constraints(&evaluation, b.target_class, step)?;
-            sums.extend(cs);
-            activities.insert(step, activity);
-            times.insert(step, time);
-        }
-        let normalized_sums: BTreeMap<String, f64> = sums
-            .iter()
-            .map(|(key, value)| {
-                (
-                    format!(
-                        "{}:{}:{}",
-                        key.step,
-                        key.table,
-                        key.column
-                            .map_or_else(|| "all".into(), |column| column.to_string())
-                    ),
-                    *value,
-                )
-            })
-            .collect();
-        solve_records.push(json!({"element":element,"mode":run.get("mode"),"steps":activities,"times_s":times,"class_constraint_normalized_sums":normalized_sums}));
-        basis.insert(element.clone(), Basis { activities, sums });
+        let run = solve(element, &composition)?;
+        let (pure, record) = element_basis(s, element, &run)?;
+        solve_records.push(record);
+        basis.insert(element.clone(), pure);
     }
+    Ok((basis, solve_records))
+}
 
-    // External retained/fuel tritium is a fixed affine activity, not an element-basis response.
-    // Store it as a separate evaluated offset in each class constraint.
+/// External retained/fuel tritium is a fixed affine activity, not an element-basis response. It is stored as
+/// a separate evaluated offset in each class constraint.
+pub(crate) fn external_basis(s: &Setup) -> Result<BTreeMap<ConstraintKey, f64>, String> {
+    let b = &s.b;
     let mut external_basis = BTreeMap::new();
     for &step in &b.targets {
         let (h3, unknown) = external_at(&b.external_tritium, step)?;
@@ -640,9 +696,9 @@ fn run_doc(text: &str, dir: &Path) -> Result<Value, String> {
             activities.insert("H-3".to_string(), h3);
         }
         let evaluation = evaluate_component(
-            &rules,
+            &s.rules,
             b.waste_type,
-            geometry,
+            s.geometry,
             &activities,
             &b.nuclide_properties,
         )?;
@@ -653,10 +709,24 @@ fn run_doc(text: &str, dir: &Path) -> Result<Value, String> {
         }
         external_basis.extend(constraints(&evaluation, b.target_class, step)?);
     }
-    // Include the external offset only once in each composed prediction. The external-basis evaluation above
-    // is kept distinct from all pure-element bases so no elemental weighting can duplicate it.
+    Ok(external_basis)
+}
+
+/// The intervals of every impurity and of the joint specification scale factor, composed from the basis sums.
+/// `with_sole` also computes each impurity alone (every other impurity at zero). Include the external offset
+/// only once in each composed prediction: the external basis is kept distinct from all pure-element bases so
+/// no elemental weighting can duplicate it.
+pub(crate) fn intervals_from_basis(
+    s: &Setup,
+    basis: &BTreeMap<String, Basis>,
+    external_basis: &BTreeMap<ConstraintKey, f64>,
+    with_sole: bool,
+) -> Result<Intervals, String> {
+    let b = &s.b;
+    let rules = &s.rules;
+    let geometry = s.geometry;
+    let (matrix_total, impurity_total) = (s.matrix_total, s.impurity_total);
     let matrix_comp = full_composition(&b.balance, &b.matrix, &BTreeMap::new())?;
-    let at_spec_comp = full_composition(&b.balance, &b.matrix, &b.impurities)?;
     let no_external = |composition: &BTreeMap<String, f64>| -> BTreeMap<ConstraintKey, f64> {
         let mut out = BTreeMap::new();
         for step in &b.targets {
@@ -676,7 +746,7 @@ fn run_doc(text: &str, dir: &Path) -> Result<Value, String> {
     };
     let matrix_sums = no_external(&matrix_comp);
     let add_external = |values: &mut BTreeMap<ConstraintKey, f64>| {
-        for (key, value) in &external_basis {
+        for (key, value) in external_basis {
             *values.entry(*key).or_default() += value;
         }
     };
@@ -720,17 +790,20 @@ fn run_doc(text: &str, dir: &Path) -> Result<Value, String> {
                 &b.balance,
                 &others,
                 impurity,
-                &rules,
+                rules,
                 b.waste_type,
                 geometry,
                 &b.nuclide_properties,
                 &b.external_tritium,
-                &basis,
+                basis,
                 &b.targets,
                 false,
             )
         })?;
         all_intervals.push((impurity.clone(), "others_at_spec", interval));
+        if !with_sole {
+            continue;
+        }
 
         let sole_base = full_composition(&b.balance, &b.matrix, &BTreeMap::new())?;
         let sole_sums_raw = no_external(&sole_base);
@@ -757,12 +830,12 @@ fn run_doc(text: &str, dir: &Path) -> Result<Value, String> {
                 &b.balance,
                 &BTreeMap::new(),
                 impurity,
-                &rules,
+                rules,
                 b.waste_type,
                 geometry,
                 &b.nuclide_properties,
                 &b.external_tritium,
-                &basis,
+                basis,
                 &b.targets,
                 false,
             )
@@ -799,12 +872,12 @@ fn run_doc(text: &str, dir: &Path) -> Result<Value, String> {
                 &b.balance,
                 &b.impurities,
                 "",
-                &rules,
+                rules,
                 b.waste_type,
                 geometry,
                 &b.nuclide_properties,
                 &b.external_tritium,
-                &basis,
+                basis,
                 &b.targets,
                 true,
             )
@@ -829,6 +902,42 @@ fn run_doc(text: &str, dir: &Path) -> Result<Value, String> {
             status: "no_response",
             no_response: true,
         }
+    };
+    Ok(Intervals {
+        by_impurity: all_intervals,
+        joint,
+    })
+}
+
+pub(crate) fn run_doc(text: &str, dir: &Path) -> Result<Value, String> {
+    let s = setup(text, dir)?;
+    let b = &s.b;
+    let rules = &s.rules;
+    let geometry = s.geometry;
+    let base = &s.base;
+    let (base_text, base_label) = (&s.base_text, &s.base_label);
+    let (matrix_total, impurity_total) = (s.matrix_total, s.impurity_total);
+
+    let mut cache = actinv_core::run::PreparedCache::new();
+    let (basis, solve_records) = compute_basis(&s, |element, composition| {
+        budget::solve_doc(
+            base,
+            composition,
+            &format!("waste budget basis {element}"),
+            &mut cache,
+        )
+        .map(|(run, _ms)| run)
+    })?;
+    let external_basis = external_basis(&s)?;
+    let at_spec_comp = full_composition(&b.balance, &b.matrix, &b.impurities)?;
+    let Intervals {
+        by_impurity: all_intervals,
+        joint,
+    } = intervals_from_basis(&s, &basis, &external_basis, true)?;
+    let joint_cap = if impurity_total > 0.0 {
+        (100.0 - matrix_total) / impurity_total
+    } else {
+        0.0
     };
 
     // Verification points are inward of every upper edge (including the positive-balance bound); an
@@ -878,7 +987,7 @@ fn run_doc(text: &str, dir: &Path) -> Result<Value, String> {
     let mut all_verified = true;
     for (id, composition) in &verification_inputs {
         let (run, _ms) = budget::solve_doc(
-            &base,
+            base,
             composition,
             &format!("waste class verify {id}"),
             &mut cache,
@@ -900,7 +1009,7 @@ fn run_doc(text: &str, dir: &Path) -> Result<Value, String> {
                 merge_activity(&mut activity_bq, "H3", h3)?;
             }
             let evaluation = evaluate_component(
-                &rules,
+                rules,
                 b.waste_type,
                 geometry,
                 &activity_bq,
@@ -916,7 +1025,7 @@ fn run_doc(text: &str, dir: &Path) -> Result<Value, String> {
                 merge_activity(&mut predicted_activity, "H3", h3)?;
             }
             let predicted = evaluate_component(
-                &rules,
+                rules,
                 b.waste_type,
                 geometry,
                 &predicted_activity,
@@ -990,7 +1099,7 @@ fn run_doc(text: &str, dir: &Path) -> Result<Value, String> {
     Ok(doc)
 }
 
-fn class_at_most(value: WasteClass, target: WasteClass) -> bool {
+pub(crate) fn class_at_most(value: WasteClass, target: WasteClass) -> bool {
     use WasteClass::*;
     matches!((value, target), (A, A | B | C) | (B, B | C) | (C, C))
 }
@@ -1027,7 +1136,7 @@ fn interval_json(
     out
 }
 
-fn merge_activity(
+pub(crate) fn merge_activity(
     activity: &mut BTreeMap<String, f64>,
     raw_key: &str,
     addition: f64,

@@ -1,0 +1,17 @@
+{
+ "_note": "P146 D2, relative variance 0.16 of the Co-59(n,gamma) cross section. The sidecar d2_v16.cov.npz is not tracked: controls/check_p146.py generates it with controls/p145_c3_make.py into the staging folder and refuses to continue unless its SHA-256 is the one pinned here (P145 Amendment C). Keys starting with an underscore are removed by the checker.",
+ "budget": "d2_budget.json",
+ "confidence_level": 0.95,
+ "sampling": {
+  "channels": {
+   "cross_section_mf33": true
+  },
+  "covariance": {
+   "path": "d2_v16.cov.npz",
+   "sha256": "845f9dc1bfd49cc77069e10e94171dad1f5df3545a8962878a25ea11ea538ca9"
+  },
+  "samples": 1024,
+  "seed": 146011
+ },
+ "schema": "actinv-waste-budget-uncertainty-spec-1"
+}

@@ -3015,6 +3015,73 @@ pub fn run_samples(
     Ok(plan.coverage(&counts, n_applied_rows))
 }
 
+/// The factors one sample draws, apart from the spec they were drawn for: the flux multiplier and the
+/// `options.rate_scale`, `decay_scale` and `yield_scale` maps `perturb_spec` writes (an empty map is an absent
+/// option). A block drawn from one spec's plan can be applied to another spec with [`apply_factor_block`], so
+/// several solves share one draw of the data.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct FactorBlock {
+    pub flux_factor: f64,
+    pub rate_scale: BTreeMap<String, f64>,
+    pub decay_scale: BTreeMap<String, f64>,
+    pub yield_scale: BTreeMap<String, f64>,
+}
+
+impl FactorBlock {
+    /// The block a perturbed spec carries: its three option maps, with the flux multiplier it was drawn with.
+    pub fn from_spec(spec: &Spec, flux_factor: f64) -> Self {
+        FactorBlock {
+            flux_factor,
+            rate_scale: spec.options.rate_scale.clone().unwrap_or_default(),
+            decay_scale: spec.options.decay_scale.clone().unwrap_or_default(),
+            yield_scale: spec.options.yield_scale.clone().unwrap_or_default(),
+        }
+    }
+}
+
+/// The factor blocks for samples `0..samples` of `spec`, drawn exactly as [`run_samples`] draws them (same
+/// plan, same per-sample seed, same draw onto a clone of `spec`), without solving anything, and the coverage of
+/// the sampled channels `run_samples` returns for the same arguments. The composition channel does not enter a
+/// block: a block carries no composition factors.
+pub fn draw_factor_blocks(
+    channels: &RobustChannels,
+    covariance: Option<&LibraryRef>,
+    spec: &Spec,
+    base: &Path,
+    samples: u32,
+    seed: u64,
+) -> Result<(Vec<FactorBlock>, Value), String> {
+    let mut prep = PreparedCache::default();
+    let plan = build_sampling_plan(channels, covariance, spec, base, &mut prep, seed, false)?;
+    let mut counts = DrawCounts::default();
+    let mut n_applied_rows = 0usize;
+    let mut blocks = Vec::with_capacity(samples as usize);
+    for i in 0..samples {
+        let mut sspec = spec.clone();
+        let sample_seed = plan.sample_seed(SAMPLE_SEED_TAG, i);
+        let (flux_factor, n_rows, _) = plan.draw(sample_seed, channels, &mut sspec, &mut counts);
+        n_applied_rows = n_applied_rows.max(n_rows);
+        blocks.push(FactorBlock::from_spec(&sspec, flux_factor));
+    }
+    Ok((blocks, plan.coverage(&counts, n_applied_rows)))
+}
+
+/// Apply a factor block to `spec` as `perturb_spec` applies the factors it draws: the three option maps are set
+/// (absent when empty) and the spectrum is multiplied by the flux factor, the declared total when there is one
+/// and the group fluxes otherwise.
+pub fn apply_factor_block(block: &FactorBlock, spec: &mut Spec) {
+    spec.options.rate_scale = (!block.rate_scale.is_empty()).then(|| block.rate_scale.clone());
+    spec.options.decay_scale = (!block.decay_scale.is_empty()).then(|| block.decay_scale.clone());
+    spec.options.yield_scale = (!block.yield_scale.is_empty()).then(|| block.yield_scale.clone());
+    if let Some(total) = &mut spec.spectrum.total {
+        *total *= block.flux_factor;
+    } else {
+        for g in &mut spec.spectrum.flux_per_group {
+            *g *= block.flux_factor;
+        }
+    }
+}
+
 /// Evaluate ACT-ROBUST-01 for one case: nominal + `samples` perturbed
 /// solves, per-response sample statistics and coverage accounting.
 fn evaluate_robustness(
@@ -4340,6 +4407,104 @@ mod robustness_tests {
             "schedule": [{"dt": "5 s", "flux": 1.0}]
         }))
         .unwrap()
+    }
+
+    /// A spec whose sampling plan needs no data file under the flux channel alone.
+    fn flux_only_spec() -> Spec {
+        let mut spec = min_spec();
+        spec.spectrum.structure = "custom".into();
+        spec.spectrum.boundaries_eV = Some(vec![1.0, 2.0]);
+        spec
+    }
+
+    #[test]
+    fn factor_blocks_equal_what_run_samples_applies() {
+        let spec = flux_only_spec();
+        let channels = RobustChannels {
+            flux_rel_std: 0.2,
+            ..RobustChannels::default()
+        };
+        let (blocks, coverage) =
+            draw_factor_blocks(&channels, None, &spec, Path::new("."), 6, 77).unwrap();
+        let mut visited: Vec<Spec> = Vec::new();
+        let sampled_coverage = run_samples(
+            &channels,
+            None,
+            &spec,
+            Path::new("."),
+            6,
+            77,
+            |index, sample_spec, _result| {
+                assert_eq!(index, visited.len());
+                visited.push(sample_spec.clone());
+                Ok(())
+            },
+        )
+        .unwrap();
+        assert_eq!(coverage, sampled_coverage);
+        assert_eq!(blocks.len(), 6);
+        assert_eq!(visited.len(), 6);
+        for (index, (block, sampled)) in blocks.iter().zip(&visited).enumerate() {
+            // the block is what the perturbed spec carries
+            assert_eq!(FactorBlock::from_spec(sampled, block.flux_factor), *block);
+            // and applying it to the unperturbed spec reproduces the sampled spec
+            let mut applied = spec.clone();
+            apply_factor_block(block, &mut applied);
+            assert_eq!(
+                serde_json::to_value(&applied).unwrap(),
+                serde_json::to_value(sampled).unwrap(),
+                "sample {index}"
+            );
+            assert!(block.flux_factor > 0.0 && block.flux_factor != 1.0);
+            assert!(block.rate_scale.is_empty() && block.decay_scale.is_empty());
+        }
+        // a different seed draws different factors; the same seed draws the same ones
+        let (other, _) = draw_factor_blocks(&channels, None, &spec, Path::new("."), 6, 78).unwrap();
+        let (again, _) = draw_factor_blocks(&channels, None, &spec, Path::new("."), 6, 77).unwrap();
+        assert_ne!(other, blocks);
+        assert_eq!(again, blocks);
+    }
+
+    #[test]
+    fn apply_factor_block_sets_options_and_scales_the_spectrum() {
+        let block = FactorBlock {
+            flux_factor: 2.0,
+            rate_scale: BTreeMap::from([("12".to_string(), 0.9)]),
+            decay_scale: BTreeMap::from([("Co60".to_string(), 1.1)]),
+            yield_scale: BTreeMap::new(),
+        };
+        // group fluxes are scaled when the spectrum declares no total
+        let mut spec = flux_only_spec();
+        apply_factor_block(&block, &mut spec);
+        assert_eq!(spec.spectrum.flux_per_group, vec![2.0]);
+        assert_eq!(spec.spectrum.total, None);
+        assert_eq!(spec.options.rate_scale, Some(block.rate_scale.clone()));
+        assert_eq!(spec.options.decay_scale, Some(block.decay_scale.clone()));
+        assert_eq!(spec.options.yield_scale, None);
+        assert_eq!(FactorBlock::from_spec(&spec, 2.0), block);
+        // the declared total is scaled instead when there is one
+        let mut with_total = flux_only_spec();
+        with_total.spectrum.total = Some(5.0);
+        apply_factor_block(&block, &mut with_total);
+        assert_eq!(with_total.spectrum.total, Some(10.0));
+        assert_eq!(with_total.spectrum.flux_per_group, vec![1.0]);
+        // and perturb_spec makes the same change
+        let mut perturbed = flux_only_spec();
+        perturb_spec(
+            &mut perturbed,
+            &[(12, 0.9)],
+            2.0,
+            &BTreeMap::new(),
+            &block.decay_scale,
+            &BTreeMap::new(),
+        );
+        assert_eq!(
+            serde_json::to_value(&perturbed).unwrap(),
+            serde_json::to_value(&spec).unwrap()
+        );
+        // the block round-trips through JSON
+        let text = serde_json::to_string(&block).unwrap();
+        assert_eq!(serde_json::from_str::<FactorBlock>(&text).unwrap(), block);
     }
 
     #[test]

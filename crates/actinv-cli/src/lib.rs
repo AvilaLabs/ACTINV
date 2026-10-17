@@ -16,6 +16,7 @@ pub mod twin_waste;
 pub mod waste;
 pub mod waste_bounds;
 pub mod waste_budget;
+pub mod waste_budget_uncertainty;
 pub mod waste_composition;
 pub mod waste_composition_solve;
 pub mod waste_composition_verify;

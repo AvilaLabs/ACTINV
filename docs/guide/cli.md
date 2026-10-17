@@ -21,6 +21,12 @@ and the class established at a confidence level. The problem path is relative to
 conditional on the sampled channels; see
 [Classification under nuclear-data uncertainty](waste.md#classification-under-nuclear-data-uncertainty).
 
+`actinv waste budget uncertainty SPEC.json [OUT.json]` draws the sampled nuclear-data channels once per sample, applies
+the same factors to every element solve of the class impurity budget, and reports, per impurity and for the joint
+specification scale factor, the budget at a confidence level as an order statistic of the per-sample suprema (at least
+72 samples at 0.95), with a verification re-solve around it. The budget path is relative to the spec file. See
+[Budgets under nuclear-data uncertainty](waste.md#budgets-under-nuclear-data-uncertainty).
+
 ## Create, check, and solve
 
 ```text

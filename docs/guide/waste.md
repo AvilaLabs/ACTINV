@@ -10,6 +10,7 @@ whole-component activity intervals and reports a conservative class superset.
 ```sh
 actinv waste component.json component-waste.json
 actinv waste budget class-budget.json class-budget-result.json
+actinv waste budget uncertainty budget-uncertainty.json budget-uncertainty-result.json
 actinv waste bounds activity-bounds.json activity-bounds-result.json
 actinv waste composition composition.json composition-result.json
 actinv waste composition solve native-composition.json native-composition-result.json
@@ -30,7 +31,7 @@ derive bounds from a `RunResult`. The separate `intrusion-screen` command applie
 the selected draft screen to nominal inventories.
 
 From Python the same commands are `actinv.waste.classify`, `budget`, `bounds`, `composition`, `composition_solve`,
-`intrusion_screen` and `uncertainty`, and `actinv.twin`; they return the CLI's result. See [Python](python.md#waste-classification-from-python).
+`intrusion_screen`, `uncertainty` and `budget_uncertainty`, and `actinv.twin`; they return the CLI's result. See [Python](python.md#waste-classification-from-python).
 
 ## Classify declared waste components in a facility twin
 
@@ -565,3 +566,80 @@ Single-nuclide equality is accepted where the regulation says “does not exceed
 mixture sums use its strict less-than rule. Separate tables remain separate
 constraints, and entries with no Class B/C limit retain the rule's Class B
 fallback. The selected pack and its interpretation are recorded in each result.
+
+## Budgets under nuclear-data uncertainty
+
+`actinv waste budget uncertainty SPEC.json [OUT.json]` asks how large an impurity can be when the nuclear data are
+uncertain. The nominal budget above solves each element once and gives, per impurity, the supremum of its weight
+percent for which every table constraint at every target stays inside the target class. Each correlated draw of the
+data gives its own element responses and therefore its own supremum. The command draws the sampled channels once per
+sample, from the sampling plan of the full budget material, and applies the same factors (cross-section rate scales,
+decay-constant scales, yield scales and flux factor) to every element solve of that sample, so the element responses
+of one sample come from one data set. It then applies the nominal interval algorithm to each sample's responses.
+
+An impurity level x keeps the class in a fraction F(x) of data draws. The budget at confidence γ is the k-th smallest
+per-sample supremum, with k the largest index for which the lower end of the two-sided Clopper-Pearson interval at γ
+of (n − k + 1)/n is at least γ. Any x below it keeps the class with probability at least γ, at confidence γ, as long
+as the samples represent the data uncertainty. This is the order-statistic (Wilks) tolerance bound: it is exact for
+any distribution of the supremum and needs no normality and no first-order expansion. It is reported as an open bound,
+not an attained maximum. The same k applies to every impurity and to the joint specification scale factor.
+
+Some sample count is needed before any budget exists. With k = 1 the bound is the smallest supremum, which needs
+(α/2)^(1/n) ≥ γ: **72 samples at confidence 0.95**. A spec with fewer samples is refused, and the refusal names the
+minimum (`order_statistic.minimum_samples` states it for your level).
+
+```json
+{
+  "schema": "actinv-waste-budget-uncertainty-spec-1",
+  "budget": "class-budget.json",
+  "confidence_level": 0.95,
+  "sampling": {
+    "channels": {"cross_section_mf33": true, "decay_constants": true, "flux_rel_std": 0.05},
+    "covariance": {"path": "catalog:tendl-2025-neutron-709g-covariance"},
+    "samples": 200,
+    "seed": 146001,
+    "keep_samples": "samples"
+  }
+}
+```
+
+`budget` is the path of an `actinv-waste-budget-1` document, relative to this file, or that document embedded.
+`sampling` is the block of `actinv waste uncertainty`: `samples` from 20 to 4096, a `seed`, the `channels` and
+`covariance` of `study.robustness`, and an optional `keep_samples` folder, relative to this file. The composition
+channel is refused, because composition is what the budget solves for. The command also refuses everything
+`actinv waste budget` refuses, and a base spec that enables gas production, declares its own rate, decay or yield
+scales, or switches library, projectile or spectrum during the schedule. Every refusal is made before any solve, and
+nothing is written.
+
+The `actinv-waste-budget-uncertainty-1` result carries:
+
+- `nominal`: the complete `actinv waste budget` result, unchanged.
+- `order_statistic`: `k`, `n` and `minimum_samples`.
+- `quantities`: one entry per impurity and one for `joint_scale_factor`, with the unit (`wt_pct` or `scale_factor`),
+  the `status`, the `budget`, the `nominal_supremum` for comparison, the per-sample suprema
+  (`suprema_by_sample`, `suprema_sorted`), `sample_status` counts (`bound`, `capped`, `failed`, `infeasible`,
+  `no_response`) and the `binding_tally`: how many samples were bound by each table, column and step. A sample
+  whose solve fails or whose interval is infeasible counts as a supremum of 0, so it can only lower the budget. A
+  supremum limited only by the balance (no constraint binds) is `capped` and enters the order statistic at the cap.
+- `status`: `established`, `not_established` or `unbounded`. The order statistic bounds the upper end only. When the
+  nominal budget, or any sample, has a positive lower bound for an impurity (the class needs at least some of it),
+  the budget is `not_established` with reason `positive_lower_bound` and the count of such samples; two-sided
+  budgets are not claimed. An impurity with no response in any constraint is `unbounded`.
+- `verification`: for each established quantity, the samples at sorted ranks k − 2 to k + 2 are re-solved with the full
+  material, the impurity (alone, the others at specification) or the joint scale factor at 0.99 and 1.01 times that
+  sample's own supremum and with that sample's own factors, and classified with the waste evaluator; every sample at
+  rank k or above is re-solved at 0.99 times the reported budget. A row records the classes at the target steps and
+  whether they are all at most the target class. `verification_pass` is true when each 0.99 point is inside the class
+  and each 1.01 point is outside it.
+- `failed_samples`, `coverage` (the channels sampled, the inputs they left uncovered and a fixed statement) and
+  `not_claimed`.
+
+With `keep_samples`, each sample writes `sample_NNNN.json`: its factor block, each element's solved activities and
+class-constraint sums with the factors actually applied to that solve, and the sample's intervals.
+
+The budgets are conditional on the sampled channels, and each sample assumes the activation response is linear in
+composition, as the nominal budget does. Composition, geometry and model uncertainty are not sampled. Measured coverage
+of these channels on the FNS corpus is below nominal (see
+[Data limitations](https://github.com/AvilaLabs/ACTINV/blob/master/docs/DATA_LIMITATIONS.md)), so a budget can be
+optimistic. A budget is not a composition tolerance, a procurement specification, a package class or a disposal
+acceptance.

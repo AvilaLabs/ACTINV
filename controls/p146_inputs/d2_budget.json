@@ -1,0 +1,22 @@
+{
+ "_note": "P146 D2. A Class A budget for a cobalt impurity (0.05 wt% specification level) in an aluminium balance under a thermal Maxwellian, 30 d irradiation and 1 d cooling. Aluminium has no response in the governing sum: its only thermal product, Al-28 (2.24 min), is gone a day after shutdown (about 640 half-lives), and no other Al reaction has a nonzero rate in the thermal groups. The Table 2 Column 1 sum of the single target step is therefore the Co-60 sum alone, linear in the Co weight percent, with nominal supremum x0 = 100 / (normalized sum of pure cobalt), about 0.27 wt% at this density and far below the 100 wt% balance cap. nuclide_properties is expanded from the decay files by controls/check_p146.py (see d1_budget.json). Keys starting with an underscore are removed by the checker.",
+ "balance": "Al",
+ "base_spec": "d2_problem.json",
+ "density_g_cm3": 2.7,
+ "external_tritium": {
+  "status": "not_applicable"
+ },
+ "impurities": {
+  "Co": 0.05
+ },
+ "mass_g": 1000.0,
+ "matrix": {},
+ "nuclide_properties": "from_decay_data",
+ "rules": "us-nrc-10cfr61.55-v1",
+ "schema": "actinv-waste-budget-1",
+ "target_class": "A",
+ "targets": [
+  2
+ ],
+ "waste_type": "general"
+}
