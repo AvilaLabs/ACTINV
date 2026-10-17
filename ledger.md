@@ -3526,3 +3526,14 @@ per impurity and for the joint scale factor the order-statistic (Wilks) budget a
 Clopper–Pearson conventions; one-sided budgets only. B1 one data set per sample; B2 independent recomputation; B3
 verification at 0.99 and 1.01 of per-sample suprema; B4 Beta calibration against the lognormal closed form; B5
 refusals and invariance; B6 study and P105 regression, P13, quality and CI.
+
+## Entry 200 — P146 Amendment A registered before the evidence (2026-10-16)
+
+Registered after implementation and before the candidate commit and any evidence run: **P146 Amendment A**
+`df96453f5d7fa9d05b6b806284befd3a8703429754184d8b5db4fcf731f019b3`. It fixes how B3 treats a supremum capped by the balance limit (the 1.01
+point is not a composition, so it is skipped and listed); realizes B5's zero variance as the flux channel alone at
+1e-14; records that the checker expands the committed budgets' `from_decay_data` properties token at staging; sets
+D1's irradiation amplitude (250 instead of 1e4) and targets (C2 steps 12 and 13) so that a nominal Class A budget
+exists; and defines the nominal comparison as exact JSON-value equality. It discloses the development runs made before
+it (D1 at 20 samples; the committed D2 σ² = 0.36 case through B1, B2, B3 and B5). No input was changed after them and
+no gate is relaxed.
