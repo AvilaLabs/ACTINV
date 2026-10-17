@@ -3599,3 +3599,15 @@ transuranic group's concentration for its concern level and Factor of 10, treats
 waste form evaluated under each rule-row set its items carry, and gives empty targets their own refusal. It discloses
 the development runs on uncommitted code (last run: E1 62/62 battery and 6/6 activation packages, E2–E5 every case,
 pass flags false only on the dirty tree) and the command and checker fixes they found. No gate is relaxed.
+
+## Entry 206 — P147 evidence attempt 1 fails E6 on the P103 step's exit code; Amendment B registered (2026-10-17)
+
+Candidate `4752d0e`. E1 passed (62 of 62 battery packages over every branch, 6 of 6 activation packages), as did E2
+(77 data checks, 8 cases), E3 (51 boundary cases), E4 (24 reductions) and E5 (24 refusals with distinct messages,
+byte-identical repeat). Every E6 step exited 0 (workspace tests 1131 passed, 0 failed; committed controls unchanged
+since registration) except `e6_p103_check`. That step ran `check_p103.py --no-write`, which exits 1 by design:
+the committed P103 G1 record is itself a recorded failure, superseded by P105, and the recomputation matched it
+exactly (`persisted_result_matches: true`, G0 sealed). Judging it by exit code was an error in the evidence step, but
+the E6 record failed, so P147 fails E6. Preserved in `results/failures/p147/evidence_attempt1/`. Registered before
+the repair: **P147 Amendment B** `fc709580fda8267a9bb69bf755f6f458c65b7fe9c81bc004966f79ec1724ed7c` (the step passes on G0 sealed and identity with the committed G1 record; the
+repair adds only that subcommand and its selftest cases; E1–E6 rerun in full; the one repair round is consumed).

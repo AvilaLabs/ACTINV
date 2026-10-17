@@ -1,0 +1,925 @@
+{
+ "activation_runs": [],
+ "all_pass": [
+  {
+   "case": "p1_co60",
+   "checks": 12,
+   "classify": {
+    "argv": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "waste",
+     "classify.json",
+     "classify_out.json"
+    ],
+    "rc": 0,
+    "seconds": 0.002,
+    "stderr_tail": "",
+    "stdout_bytes": 0
+   },
+   "expected_class": {
+    "1": "A",
+    "2": "A"
+   },
+   "failed": 0,
+   "failures": [],
+   "missing_fields": [],
+   "notes": {},
+   "package": {
+    "argv": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "waste",
+     "package",
+     "spec.json",
+     "out.json"
+    ],
+    "rc": 0,
+    "seconds": 0.004,
+    "stderr_tail": "",
+    "stdout_bytes": 0
+   },
+   "pass": true
+  },
+  {
+   "case": "p2_cs_class_b",
+   "checks": 12,
+   "classify": {
+    "argv": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "waste",
+     "classify.json",
+     "classify_out.json"
+    ],
+    "rc": 0,
+    "seconds": 0.002,
+    "stderr_tail": "",
+    "stdout_bytes": 0
+   },
+   "expected_class": {
+    "1": "B",
+    "2": "B"
+   },
+   "failed": 0,
+   "failures": [],
+   "missing_fields": [],
+   "notes": {},
+   "package": {
+    "argv": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "waste",
+     "package",
+     "spec.json",
+     "out.json"
+    ],
+    "rc": 0,
+    "seconds": 0.004,
+    "stderr_tail": "",
+    "stdout_bytes": 0
+   },
+   "pass": true
+  },
+  {
+   "case": "p3_class_c",
+   "checks": 12,
+   "classify": {
+    "argv": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "waste",
+     "classify.json",
+     "classify_out.json"
+    ],
+    "rc": 0,
+    "seconds": 0.003,
+    "stderr_tail": "",
+    "stdout_bytes": 0
+   },
+   "expected_class": {
+    "1": "C",
+    "2": "A"
+   },
+   "failed": 0,
+   "failures": [],
+   "missing_fields": [],
+   "notes": {},
+   "package": {
+    "argv": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "waste",
+     "package",
+     "spec.json",
+     "out.json"
+    ],
+    "rc": 0,
+    "seconds": 0.004,
+    "stderr_tail": "",
+    "stdout_bytes": 0
+   },
+   "pass": true
+  }
+ ],
+ "candidate": {
+  "amendments_sha256": {
+   "ACTINV-P147_AMENDMENT_A.md": "db28b5cf79bddd72ef06b02e954f33203f1f1369f4495d54dc5f97d1f92418a2"
+  },
+  "binary": "target/release/actinv",
+  "binary_sha256": "14cbadb91a2aaf406af8c7909421b4c2a08da0fa9f60d3fe588e8beb04006355",
+  "commit": "4752d0ea693a529aa2df8fdd124022bd8eab213f",
+  "protocol_sha256": "da238b312800646e12b2e924ea90dbb327fcf4f969a5aee7dfdd6e315fde9212",
+  "tree_clean": true
+ },
+ "pass": true,
+ "reading": "a one-item package equals `actinv waste` of the same component: the class, and the CFR Table 1 sum (the Class C normalized sum) and the Table 2 sum of the component's class column, bit for bit",
+ "schema": "actinv-p147-e4-1",
+ "single_item": [
+  {
+   "case": "s1_class_a",
+   "checks": 7,
+   "classify": {
+    "argv": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "waste",
+     "classify.json",
+     "classify_out.json"
+    ],
+    "rc": 0,
+    "seconds": 0.002,
+    "stderr_tail": "",
+    "stdout_bytes": 0
+   },
+   "failed": 0,
+   "failures": [],
+   "missing_fields": [],
+   "notes": {
+    "s1_class_a step 1 table1_sum relative difference": 0.0,
+    "s1_class_a step 1 table2_sum relative difference": 0.0,
+    "s1_class_a step 2 table1_sum relative difference": 0.0,
+    "s1_class_a step 2 table2_sum relative difference": 0.0
+   },
+   "package": {
+    "argv": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "waste",
+     "package",
+     "spec.json",
+     "out.json"
+    ],
+    "rc": 0,
+    "seconds": 0.003,
+    "stderr_tail": "",
+    "stdout_bytes": 0
+   },
+   "pass": true
+  },
+  {
+   "case": "s2_class_c_table1",
+   "checks": 7,
+   "classify": {
+    "argv": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "waste",
+     "classify.json",
+     "classify_out.json"
+    ],
+    "rc": 0,
+    "seconds": 0.002,
+    "stderr_tail": "",
+    "stdout_bytes": 0
+   },
+   "failed": 0,
+   "failures": [],
+   "missing_fields": [],
+   "notes": {
+    "s2_class_c_table1 step 1 table1_sum relative difference": 0.0,
+    "s2_class_c_table1 step 1 table2_sum relative difference": 0.0,
+    "s2_class_c_table1 step 2 table1_sum relative difference": 0.0,
+    "s2_class_c_table1 step 2 table2_sum relative difference": 0.0
+   },
+   "package": {
+    "argv": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "waste",
+     "package",
+     "spec.json",
+     "out.json"
+    ],
+    "rc": 0,
+    "seconds": 0.003,
+    "stderr_tail": "",
+    "stdout_bytes": 0
+   },
+   "pass": true
+  },
+  {
+   "case": "s3_class_b",
+   "checks": 7,
+   "classify": {
+    "argv": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "waste",
+     "classify.json",
+     "classify_out.json"
+    ],
+    "rc": 0,
+    "seconds": 0.002,
+    "stderr_tail": "",
+    "stdout_bytes": 0
+   },
+   "failed": 0,
+   "failures": [],
+   "missing_fields": [],
+   "notes": {
+    "s3_class_b step 1 table1_sum relative difference": 0.0,
+    "s3_class_b step 1 table2_sum relative difference": 0.0,
+    "s3_class_b step 2 table1_sum relative difference": 0.0,
+    "s3_class_b step 2 table2_sum relative difference": 0.0
+   },
+   "package": {
+    "argv": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "waste",
+     "package",
+     "spec.json",
+     "out.json"
+    ],
+    "rc": 0,
+    "seconds": 0.003,
+    "stderr_tail": "",
+    "stdout_bytes": 0
+   },
+   "pass": true
+  },
+  {
+   "case": "s4_above_c_source",
+   "checks": 7,
+   "classify": {
+    "argv": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "waste",
+     "classify.json",
+     "classify_out.json"
+    ],
+    "rc": 0,
+    "seconds": 0.002,
+    "stderr_tail": "",
+    "stdout_bytes": 0
+   },
+   "failed": 0,
+   "failures": [],
+   "missing_fields": [],
+   "notes": {
+    "s4_above_c_source step 1 table1_sum relative difference": 0.0,
+    "s4_above_c_source step 1 table2_sum relative difference": 0.0,
+    "s4_above_c_source step 2 table1_sum relative difference": 0.0,
+    "s4_above_c_source step 2 table2_sum relative difference": 0.0
+   },
+   "package": {
+    "argv": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "waste",
+     "package",
+     "spec.json",
+     "out.json"
+    ],
+    "rc": 0,
+    "seconds": 0.003,
+    "stderr_tail": "",
+    "stdout_bytes": 0
+   },
+   "pass": true
+  },
+  {
+   "case": "s5_mass_based",
+   "checks": 7,
+   "classify": {
+    "argv": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "waste",
+     "classify.json",
+     "classify_out.json"
+    ],
+    "rc": 0,
+    "seconds": 0.002,
+    "stderr_tail": "",
+    "stdout_bytes": 0
+   },
+   "failed": 0,
+   "failures": [],
+   "missing_fields": [],
+   "notes": {
+    "s5_mass_based step 1 table1_sum relative difference": 0.0,
+    "s5_mass_based step 1 table2_sum relative difference": 0.0,
+    "s5_mass_based step 2 table1_sum relative difference": 0.0,
+    "s5_mass_based step 2 table2_sum relative difference": 0.0
+   },
+   "package": {
+    "argv": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "waste",
+     "package",
+     "spec.json",
+     "out.json"
+    ],
+    "rc": 0,
+    "seconds": 0.003,
+    "stderr_tail": "",
+    "stdout_bytes": 0
+   },
+   "pass": true
+  },
+  {
+   "case": "s6_above_c_passing",
+   "checks": 7,
+   "classify": {
+    "argv": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "waste",
+     "classify.json",
+     "classify_out.json"
+    ],
+    "rc": 0,
+    "seconds": 0.002,
+    "stderr_tail": "",
+    "stdout_bytes": 0
+   },
+   "failed": 0,
+   "failures": [],
+   "missing_fields": [],
+   "notes": {
+    "s6_above_c_passing step 1 table1_sum relative difference": 0.0,
+    "s6_above_c_passing step 1 table2_sum relative difference": 0.0,
+    "s6_above_c_passing step 2 table1_sum relative difference": 0.0,
+    "s6_above_c_passing step 2 table2_sum relative difference": 0.0
+   },
+   "package": {
+    "argv": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "waste",
+     "package",
+     "spec.json",
+     "out.json"
+    ],
+    "rc": 0,
+    "seconds": 0.003,
+    "stderr_tail": "",
+    "stdout_bytes": 0
+   },
+   "pass": true
+  },
+  {
+   "case": "s7_unknown_nuclide",
+   "checks": 3,
+   "classify": {
+    "argv": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "waste",
+     "classify.json",
+     "classify_out.json"
+    ],
+    "rc": 0,
+    "seconds": 0.002,
+    "stderr_tail": "",
+    "stdout_bytes": 0
+   },
+   "failed": 0,
+   "failures": [],
+   "missing_fields": [],
+   "notes": {},
+   "package": {
+    "argv": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "waste",
+     "package",
+     "spec.json",
+     "out.json"
+    ],
+    "rc": 0,
+    "seconds": 0.002,
+    "stderr_tail": "",
+    "stdout_bytes": 0
+   },
+   "pass": true
+  },
+  {
+   "case": "s8_cartridge_filter",
+   "checks": 7,
+   "classify": {
+    "argv": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "waste",
+     "classify.json",
+     "classify_out.json"
+    ],
+    "rc": 0,
+    "seconds": 0.002,
+    "stderr_tail": "",
+    "stdout_bytes": 0
+   },
+   "failed": 0,
+   "failures": [],
+   "missing_fields": [],
+   "notes": {
+    "s8_cartridge_filter step 1 table1_sum relative difference": 0.0,
+    "s8_cartridge_filter step 1 table2_sum relative difference": 0.0,
+    "s8_cartridge_filter step 2 table1_sum relative difference": 0.0,
+    "s8_cartridge_filter step 2 table2_sum relative difference": 0.0
+   },
+   "package": {
+    "argv": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "waste",
+     "package",
+     "spec.json",
+     "out.json"
+    ],
+    "rc": 0,
+    "seconds": 0.003,
+    "stderr_tail": "",
+    "stdout_bytes": 0
+   },
+   "pass": true
+  },
+  {
+   "case": "lo_piece",
+   "checks": 10,
+   "classify": {
+    "argv": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "waste",
+     "e4a_lo_piece_cls.json",
+     "e4a_lo_piece_cls_out.json"
+    ],
+    "rc": 0,
+    "seconds": 0.05,
+    "stderr_tail": "",
+    "stdout_bytes": 0
+   },
+   "failed": 0,
+   "failures": [],
+   "missing_fields": [],
+   "notes": {
+    "lo_piece step 11 table1_sum relative difference": 0.0,
+    "lo_piece step 11 table2_sum relative difference": 0.0,
+    "lo_piece step 12 table1_sum relative difference": 0.0,
+    "lo_piece step 12 table2_sum relative difference": 0.0,
+    "lo_piece step 13 table1_sum relative difference": 0.0,
+    "lo_piece step 13 table2_sum relative difference": 0.0
+   },
+   "package": {
+    "argv": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "waste",
+     "package",
+     "e4a_lo_piece.json",
+     "e4a_lo_piece_out.json"
+    ],
+    "rc": 0,
+    "seconds": 0.141,
+    "stderr_tail": "",
+    "stdout_bytes": 0
+   },
+   "pass": true
+  },
+  {
+   "case": "hi_piece",
+   "checks": 10,
+   "classify": {
+    "argv": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "waste",
+     "e4a_hi_piece_cls.json",
+     "e4a_hi_piece_cls_out.json"
+    ],
+    "rc": 0,
+    "seconds": 0.062,
+    "stderr_tail": "",
+    "stdout_bytes": 0
+   },
+   "failed": 0,
+   "failures": [],
+   "missing_fields": [],
+   "notes": {
+    "hi_piece step 11 table1_sum relative difference": 0.0,
+    "hi_piece step 11 table2_sum relative difference": 0.0,
+    "hi_piece step 12 table1_sum relative difference": 0.0,
+    "hi_piece step 12 table2_sum relative difference": 0.0,
+    "hi_piece step 13 table1_sum relative difference": 0.0,
+    "hi_piece step 13 table2_sum relative difference": 0.0
+   },
+   "package": {
+    "argv": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "waste",
+     "package",
+     "e4a_hi_piece.json",
+     "e4a_hi_piece_out.json"
+    ],
+    "rc": 0,
+    "seconds": 0.153,
+    "stderr_tail": "",
+    "stdout_bytes": 0
+   },
+   "pass": true
+  },
+  {
+   "case": "nbco_piece",
+   "checks": 10,
+   "classify": {
+    "argv": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "waste",
+     "e4a_nbco_piece_cls.json",
+     "e4a_nbco_piece_cls_out.json"
+    ],
+    "rc": 0,
+    "seconds": 0.055,
+    "stderr_tail": "",
+    "stdout_bytes": 0
+   },
+   "failed": 0,
+   "failures": [],
+   "missing_fields": [],
+   "notes": {
+    "nbco_piece step 11 table1_sum relative difference": 0.0,
+    "nbco_piece step 11 table2_sum relative difference": 0.0,
+    "nbco_piece step 12 table1_sum relative difference": 0.0,
+    "nbco_piece step 12 table2_sum relative difference": 0.0,
+    "nbco_piece step 13 table1_sum relative difference": 0.0,
+    "nbco_piece step 13 table2_sum relative difference": 0.0
+   },
+   "package": {
+    "argv": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "waste",
+     "package",
+     "e4a_nbco_piece.json",
+     "e4a_nbco_piece_out.json"
+    ],
+    "rc": 0,
+    "seconds": 0.149,
+    "stderr_tail": "",
+    "stdout_bytes": 0
+   },
+   "pass": true
+  }
+ ],
+ "split": [
+  {
+   "case": "s1_class_a_n2",
+   "checks": 341,
+   "failed": 0,
+   "failures": [],
+   "missing_fields": [],
+   "notes": {},
+   "pass": true,
+   "split": {
+    "argv": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "waste",
+     "package",
+     "spec.json",
+     "out.json"
+    ],
+    "rc": 0,
+    "seconds": 0.003,
+    "stderr_tail": "",
+    "stdout_bytes": 0
+   },
+   "whole": {
+    "argv": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "waste",
+     "package",
+     "spec.json",
+     "out.json"
+    ],
+    "rc": 0,
+    "seconds": 0.003,
+    "stderr_tail": "",
+    "stdout_bytes": 0
+   }
+  },
+  {
+   "case": "s1_class_a_n4",
+   "checks": 461,
+   "failed": 0,
+   "failures": [],
+   "missing_fields": [],
+   "notes": {},
+   "pass": true,
+   "split": {
+    "argv": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "waste",
+     "package",
+     "spec.json",
+     "out.json"
+    ],
+    "rc": 0,
+    "seconds": 0.004,
+    "stderr_tail": "",
+    "stdout_bytes": 0
+   },
+   "whole": {
+    "argv": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "waste",
+     "package",
+     "spec.json",
+     "out.json"
+    ],
+    "rc": 0,
+    "seconds": 0.003,
+    "stderr_tail": "",
+    "stdout_bytes": 0
+   }
+  },
+  {
+   "case": "s2_class_c_table1_n2",
+   "checks": 359,
+   "failed": 0,
+   "failures": [],
+   "missing_fields": [],
+   "notes": {},
+   "pass": true,
+   "split": {
+    "argv": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "waste",
+     "package",
+     "spec.json",
+     "out.json"
+    ],
+    "rc": 0,
+    "seconds": 0.003,
+    "stderr_tail": "",
+    "stdout_bytes": 0
+   },
+   "whole": {
+    "argv": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "waste",
+     "package",
+     "spec.json",
+     "out.json"
+    ],
+    "rc": 0,
+    "seconds": 0.003,
+    "stderr_tail": "",
+    "stdout_bytes": 0
+   }
+  },
+  {
+   "case": "s2_class_c_table1_n4",
+   "checks": 491,
+   "failed": 0,
+   "failures": [],
+   "missing_fields": [],
+   "notes": {},
+   "pass": true,
+   "split": {
+    "argv": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "waste",
+     "package",
+     "spec.json",
+     "out.json"
+    ],
+    "rc": 0,
+    "seconds": 0.004,
+    "stderr_tail": "",
+    "stdout_bytes": 0
+   },
+   "whole": {
+    "argv": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "waste",
+     "package",
+     "spec.json",
+     "out.json"
+    ],
+    "rc": 0,
+    "seconds": 0.003,
+    "stderr_tail": "",
+    "stdout_bytes": 0
+   }
+  },
+  {
+   "case": "s3_class_b_n2",
+   "checks": 353,
+   "failed": 0,
+   "failures": [],
+   "missing_fields": [],
+   "notes": {},
+   "pass": true,
+   "split": {
+    "argv": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "waste",
+     "package",
+     "spec.json",
+     "out.json"
+    ],
+    "rc": 0,
+    "seconds": 0.003,
+    "stderr_tail": "",
+    "stdout_bytes": 0
+   },
+   "whole": {
+    "argv": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "waste",
+     "package",
+     "spec.json",
+     "out.json"
+    ],
+    "rc": 0,
+    "seconds": 0.003,
+    "stderr_tail": "",
+    "stdout_bytes": 0
+   }
+  },
+  {
+   "case": "s3_class_b_n4",
+   "checks": 461,
+   "failed": 0,
+   "failures": [],
+   "missing_fields": [],
+   "notes": {},
+   "pass": true,
+   "split": {
+    "argv": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "waste",
+     "package",
+     "spec.json",
+     "out.json"
+    ],
+    "rc": 0,
+    "seconds": 0.004,
+    "stderr_tail": "",
+    "stdout_bytes": 0
+   },
+   "whole": {
+    "argv": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "waste",
+     "package",
+     "spec.json",
+     "out.json"
+    ],
+    "rc": 0,
+    "seconds": 0.003,
+    "stderr_tail": "",
+    "stdout_bytes": 0
+   }
+  },
+  {
+   "case": "lo_piece_n2",
+   "checks": 19,
+   "failed": 0,
+   "failures": [],
+   "missing_fields": [],
+   "notes": {},
+   "pass": true,
+   "split": {
+    "argv": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "waste",
+     "package",
+     "e4b_lo_piece_n2.json",
+     "e4b_lo_piece_n2_out.json"
+    ],
+    "rc": 0,
+    "seconds": 0.203,
+    "stderr_tail": "",
+    "stdout_bytes": 0
+   },
+   "whole": {
+    "argv": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "waste",
+     "package",
+     "e4b_lo_piece_whole.json",
+     "e4b_lo_piece_whole_out.json"
+    ],
+    "rc": 0,
+    "seconds": 0.134,
+    "stderr_tail": "",
+    "stdout_bytes": 0
+   }
+  },
+  {
+   "case": "lo_piece_n4",
+   "checks": 19,
+   "failed": 0,
+   "failures": [],
+   "missing_fields": [],
+   "notes": {},
+   "pass": true,
+   "split": {
+    "argv": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "waste",
+     "package",
+     "e4b_lo_piece_n4.json",
+     "e4b_lo_piece_n4_out.json"
+    ],
+    "rc": 0,
+    "seconds": 0.355,
+    "stderr_tail": "",
+    "stdout_bytes": 0
+   },
+   "whole": {
+    "argv": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "waste",
+     "package",
+     "e4b_lo_piece_whole.json",
+     "e4b_lo_piece_whole_out.json"
+    ],
+    "rc": 0,
+    "seconds": 0.141,
+    "stderr_tail": "",
+    "stdout_bytes": 0
+   }
+  },
+  {
+   "case": "hi_piece_n2",
+   "checks": 19,
+   "failed": 0,
+   "failures": [],
+   "missing_fields": [],
+   "notes": {},
+   "pass": true,
+   "split": {
+    "argv": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "waste",
+     "package",
+     "e4b_hi_piece_n2.json",
+     "e4b_hi_piece_n2_out.json"
+    ],
+    "rc": 0,
+    "seconds": 0.22,
+    "stderr_tail": "",
+    "stdout_bytes": 0
+   },
+   "whole": {
+    "argv": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "waste",
+     "package",
+     "e4b_hi_piece_whole.json",
+     "e4b_hi_piece_whole_out.json"
+    ],
+    "rc": 0,
+    "seconds": 0.155,
+    "stderr_tail": "",
+    "stdout_bytes": 0
+   }
+  },
+  {
+   "case": "hi_piece_n4",
+   "checks": 19,
+   "failed": 0,
+   "failures": [],
+   "missing_fields": [],
+   "notes": {},
+   "pass": true,
+   "split": {
+    "argv": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "waste",
+     "package",
+     "e4b_hi_piece_n4.json",
+     "e4b_hi_piece_n4_out.json"
+    ],
+    "rc": 0,
+    "seconds": 0.378,
+    "stderr_tail": "",
+    "stdout_bytes": 0
+   },
+   "whole": {
+    "argv": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "waste",
+     "package",
+     "e4b_hi_piece_whole.json",
+     "e4b_hi_piece_whole_out.json"
+    ],
+    "rc": 0,
+    "seconds": 0.147,
+    "stderr_tail": "",
+    "stdout_bytes": 0
+   }
+  }
+ ],
+ "sum_rel_tol": 1e-12,
+ "summary": {
+  "all_pass": 3,
+  "of": 24,
+  "passed": 24,
+  "single_item": 11,
+  "split": 10
+ },
+ "worktree_clean_after": true
+}
