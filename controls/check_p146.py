@@ -1160,7 +1160,8 @@ def b3_check(model: Model, spec: dict, result: dict, keep: Path) -> tuple[Checks
         # P146 Amendment A: above a capped supremum (the balance limit binds, no class constraint) the 1.01 point is
         # not a composition; the command lists it as skipped, and the kept interval must say capped
         capped_ranks = set()
-        for r in pick(result, "verification_skipped") or []:
+        skipped = pick(result, "verification_skipped")
+        for r in skipped if isinstance(skipped, list) else []:  # absent: nothing skipped (Amendment B)
             if pick(r, "quantity") != quantity or pick(r, "point") != "1.01_supremum":
                 continue
             sample, rank = int(pick(r, "sample")), int(pick(r, "rank")) + (1 - base)
@@ -1796,7 +1797,7 @@ def reference_result(model: Model, spec: dict, keep: Path, nominal: dict) -> dic
     return {"schema": RESULT_SCHEMA, "spec_sha256": "0" * 64, "rule_pack_sha256": sha(p145.RULES_FILE),
             "confidence_level": level, "samples": n, "seed": spec["sampling"]["seed"],
             "order_statistic": {"k": k, "n": n, "minimum_samples": p145.minimum_samples(level)}, "nominal": nominal,
-            "quantities": report, "failed_samples": failed, "verification": rows,
+            "quantities": report, "failed_samples": failed, "verification": rows, "verification_skipped": [],
             "verification_pass": all(r["inside"] == r["point"].startswith("0.99") for r in rows),
             "coverage": {"channels": ["flux_rel_std"], "statement": "conditional on the sampled channels"},
             "not_claimed": ["linearity in composition assumed per sample"]}
@@ -1976,6 +1977,11 @@ def selftest() -> int:
         outcome3 = checks3.report()
         expect(outcome3["failed"] == 0 and outcome3["checks"] > 100 and details3["linear_predictions"] > 100,
                f"reference result passes B3: {outcome3['failures'][:2]} {details3}")
+        # Amendment B: a result without the verification_skipped member is read as nothing skipped
+        absent = {key: value for key, value in result.items() if key != "verification_skipped"}
+        outcome3b = b3_check(model, spec, absent, base / "keep")[0].report()
+        expect(outcome3b["failed"] == 0 and outcome3b["checks"] == outcome3["checks"],
+               f"B3 without verification_skipped: {outcome3b['failures'][:2]}")
         statuses = result["quantities"]["Co"]["sample_status"]
         expect(statuses["failed"] == 1 and statuses["infeasible"] == 1 and statuses["bound"] == n - 2,
                f"sample statuses {statuses}")
