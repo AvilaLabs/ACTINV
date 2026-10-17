@@ -3588,3 +3588,14 @@ and 3, the 280 cc pool, failing-item removal, sectioned components, mixed waste 
 every ambiguity resolved in the protocol before implementation. E1 independent recomputation; E2 source fidelity
 and the BTP's worked examples; E3 boundaries; E4 reductions to `actinv waste classify`; E5 refusals and determinism;
 E6 regressions, quality and CI.
+
+## Entry 205 — P147 Amendment A registered before the evidence (2026-10-17)
+
+Registered after implementation and before the candidate commit and any evidence run: **P147 Amendment A**
+`db28b5cf79bddd72ef06b02e954f33203f1f1369f4495d54dc5f97d1f92418a2`. It fixes how sectioned components merge (per candidate class, with that class's BTP Table 2 and 3 columns;
+the chosen candidate's sections are reported; groups list original item ids), refuses a lone sectioned piece (E5's
+pieces in different packages) and a screen with encapsulation (BTP Figure 5 has no screening step), sums the alpha
+transuranic group's concentration for its concern level and Factor of 10, treats an encapsulated container as one
+waste form evaluated under each rule-row set its items carry, and gives empty targets their own refusal. It discloses
+the development runs on uncommitted code (last run: E1 62/62 battery and 6/6 activation packages, E2–E5 every case,
+pass flags false only on the dirty tree) and the command and checker fixes they found. No gate is relaxed.
