@@ -3575,3 +3575,16 @@ triggered on the evidence commit `f1bed74` succeeded, `controls` among them (`re
 handbook and browser workflows are path-filtered and did not trigger; all six succeeded on the candidate `b98042d`,
 whose docs changes are unchanged since). The phase took its one repair round (Amendment B); attempt 1 stays
 preserved under `results/failures/p146/`.
+
+## Entry 204 — P147 registered: mixed packages of discrete items and encapsulation (2026-10-17)
+
+G0: the NRC Concentration Averaging and Encapsulation BTP, Rev. 1, was retrieved in full (Volume 1 ML12254B065,
+2015 original SHA-256 `4e0e3df3…`, identical text to the live NRC copy; Volume 2 ML12326A611 `30bac2d3…`) and frozen
+as `docs/maintainers/WASTE_BTP_SOURCE_REVIEW.md` (`40a78716c9fe9579c9a952e030339116ad8f28909a60e8c3158176642beb06e1`), with verbatim quotes, BTP Tables 1–4 and the
+source's ambiguities. Owner scope 2026-10-17: discrete items and encapsulation, blending out of scope. Registered
+before any source change: **P147** `da238b312800646e12b2e924ea90dbb327fcf4f969a5aee7dfdd6e315fde9212`. A new command `actinv waste package` and
+`actinv.waste.package` classify one container of discrete items under BTP §3.3–3.4 (Factor of 2 and 10, BTP Tables 2
+and 3, the 280 cc pool, failing-item removal, sectioned components, mixed waste types) and encapsulation (§3.3.4), with
+every ambiguity resolved in the protocol before implementation. E1 independent recomputation; E2 source fidelity
+and the BTP's worked examples; E3 boundaries; E4 reductions to `actinv waste classify`; E5 refusals and determinism;
+E6 regressions, quality and CI.
