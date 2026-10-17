@@ -1,0 +1,13 @@
+Traceback (most recent call last):
+  File "/home/connoravila/Documents/actinv/controls/check_p146.py", line 2195, in <module>
+    raise SystemExit(main(sys.argv))
+                     ~~~~^^^^^^^^^^
+  File "/home/connoravila/Documents/actinv/controls/check_p146.py", line 2190, in main
+    return selftest()
+  File "/home/connoravila/Documents/actinv/controls/check_p146.py", line 1975, in selftest
+    checks3, details3 = b3_check(model, spec, result, base / "keep")
+                        ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/connoravila/Documents/actinv/controls/check_p146.py", line 1163, in b3_check
+    for r in pick(result, "verification_skipped") or []:
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: 'object' object is not iterable

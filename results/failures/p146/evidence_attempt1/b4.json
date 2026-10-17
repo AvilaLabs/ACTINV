@@ -1,0 +1,109 @@
+{
+ "candidate": {
+  "amendments_sha256": {
+   "ACTINV-P146_AMENDMENT_A.md": "df96453f5d7fa9d05b6b806284befd3a8703429754184d8b5db4fcf731f019b3"
+  },
+  "binary": "target/release/actinv",
+  "binary_sha256": "7cd833a08e5670cd7a96f066db48307c7bf7cf95ca73bace7e80fe58fb8d62b4",
+  "commit": "b98042da69a1ee6d932c9156e39220f998908d32",
+  "protocol_sha256": "f965cdc7e6189d923c4d28b05e5b218dd89889fae529ece34bf894079aa1adcb",
+  "tree_clean": true
+ },
+ "cases": [
+  {
+   "band": [
+    0.9405626788850436,
+    0.9794072470562591
+   ],
+   "band_level": 0.999,
+   "budget": 0.14205829686455407,
+   "command": null,
+   "expected_ln_f_mean": -0.08,
+   "id": "v16",
+   "implied_ln_f_mean": -0.09340247973595453,
+   "implied_ln_f_mean_standard_errors": -1.0721983788763623,
+   "k": 38,
+   "keep_probability": 0.9609907945921513,
+   "keep_probability_inside_band": true,
+   "n": 1024,
+   "nominal_supremum_in_nominal_block": 0.2653787416418477,
+   "nominal_supremum_matches_nominal_block": true,
+   "pass": true,
+   "result_sha256": "ae9c699a95ce4d7e78bcf1cd5270e19743e392e0754928e4ab631388312e97c8",
+   "reused_b1_run": true,
+   "sigma2": 0.16,
+   "sigma2_matches_cases_file": true,
+   "spec_sha256": "b1c7462b29d41c6eae2126a95dee533ddea435e205199a079f98e9b01dadee1f",
+   "status": "established",
+   "x0": 0.2653787416418477
+  },
+  {
+   "band": [
+    0.9405626788850436,
+    0.9794072470562591
+   ],
+   "band_level": 0.999,
+   "budget": 0.10342887843031176,
+   "command": null,
+   "expected_ln_f_mean": -0.18,
+   "id": "v36",
+   "implied_ln_f_mean": -0.18202738340389635,
+   "implied_ln_f_mean_standard_errors": -0.10812711487447224,
+   "k": 38,
+   "keep_probability": 0.9692897631907001,
+   "keep_probability_inside_band": true,
+   "n": 1024,
+   "nominal_supremum_in_nominal_block": 0.2653787416418477,
+   "nominal_supremum_matches_nominal_block": true,
+   "pass": true,
+   "result_sha256": "f6e9663db4d3eedf37a39ed98973f43b3a05f981a5d37c547b0a82735c64c9df",
+   "reused_b1_run": true,
+   "sigma2": 0.36,
+   "sigma2_matches_cases_file": true,
+   "spec_sha256": "16c768e1893389573fb4a59fb4e03ddd8d341e383a4b8b99334d397ce6260d59",
+   "status": "established",
+   "x0": 0.2653787416418477
+  },
+  {
+   "band": [
+    0.9405626788850436,
+    0.9794072470562591
+   ],
+   "band_level": 0.999,
+   "budget": 0.08654160758081,
+   "command": null,
+   "expected_ln_f_mean": -0.32,
+   "id": "v64",
+   "implied_ln_f_mean": -0.357936366741598,
+   "implied_ln_f_mean_standard_errors": -1.5174546696639202,
+   "k": 38,
+   "keep_probability": 0.9641222211742233,
+   "keep_probability_inside_band": true,
+   "n": 1024,
+   "nominal_supremum_in_nominal_block": 0.2653787416418477,
+   "nominal_supremum_matches_nominal_block": true,
+   "pass": true,
+   "result_sha256": "e7d7b0e09cde1dc197bf54c4ed65c5c2d3e115d56626d127510b7a7efaa8d350",
+   "reused_b1_run": true,
+   "sigma2": 0.64,
+   "sigma2_matches_cases_file": true,
+   "spec_sha256": "1c9f145be7b0bed90d1000e076709893a15850953051f6864d52bbd1ab342964",
+   "status": "established",
+   "x0": 0.2653787416418477
+  }
+ ],
+ "closed_form": "keep probability at level x = Phi((ln(x0/x) + sigma2/2)/sigma), x0 the nominal supremum of the same result",
+ "coverage_distribution": "Beta(n - k + 1, k) for the k-th smallest of n continuous draws",
+ "interval": "the keep probability of the closed form at the reported budget must lie inside the central 99.9 % of Beta(n - k + 1, k), by bisection on the regularized incomplete beta",
+ "pass": true,
+ "schema": "actinv-p146-b4-1",
+ "summary": {
+  "cases": 3,
+  "inside": [
+   true,
+   true,
+   true
+  ]
+ },
+ "worktree_clean_after": true
+}

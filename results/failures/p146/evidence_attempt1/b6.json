@@ -1,0 +1,110 @@
+{
+ "binary_sha256": "7cd833a08e5670cd7a96f066db48307c7bf7cf95ca73bace7e80fe58fb8d62b4",
+ "commit": "b98042da69a1ee6d932c9156e39220f998908d32",
+ "failed_steps": [],
+ "gate_step_exits": {
+  "b1_d1": 0,
+  "b1_d2_v16": 0,
+  "b1_d2_v36": 0,
+  "b1_d2_v64": 0,
+  "b2_d1": 0,
+  "b2_d2_v16": 0,
+  "b2_d2_v36": 0,
+  "b2_d2_v64": 0,
+  "b3_d1": 0,
+  "b3_d2_v16": 0,
+  "b3_d2_v36": 0,
+  "b3_d2_v64": 0,
+  "b4": 0,
+  "b5": 0,
+  "selftest": 1
+ },
+ "missing_steps": [],
+ "note": "local half of B6; the verdict also requires CI green on the pushed evidence commit",
+ "pass": false,
+ "protocol_sha256": "f965cdc7e6189d923c4d28b05e5b218dd89889fae529ece34bf894079aa1adcb",
+ "schema": "actinv-p146-b6-1",
+ "steps": {
+  "b6_binding_check": {
+   "argv": "cargo check --manifest-path python/Cargo.toml --all-targets --all-features",
+   "exit": 0
+  },
+  "b6_binding_clippy": {
+   "argv": "cargo clippy --manifest-path python/Cargo.toml --all-targets --all-features -- -D warnings",
+   "exit": 0
+  },
+  "b6_binding_fmt": {
+   "argv": "cargo fmt --manifest-path python/Cargo.toml -- --check",
+   "exit": 0
+  },
+  "b6_clippy_native": {
+   "argv": "cargo clippy --workspace --all-targets --all-features -- -D warnings",
+   "exit": 0
+  },
+  "b6_clippy_wasm": {
+   "argv": "cargo clippy --locked -p actinv-gui --lib --no-default-features --target wasm32-unknown-unknown -- -D warnings",
+   "exit": 0
+  },
+  "b6_fmt": {
+   "argv": "cargo fmt --all -- --check",
+   "exit": 0
+  },
+  "b6_handbook": {
+   "argv": "mdbook build -d /home/connoravila/Documents/actinv/target/p146/book && python3 scripts/check_docs.py target/p146/book",
+   "exit": 0
+  },
+  "b6_module_build": {
+   "argv": "cd python && maturin build --release --locked --out /home/connoravila/Documents/actinv/target/p146/dist-evidence-1792201614 && python ../scripts/smoke_python_wheel.py /home/connoravila/Documents/actinv/target/p146/dist-evidence-1792201614",
+   "exit": 0
+  },
+  "b6_module_install": {
+   "argv": "pip install --force-reinstall --no-deps target/p146/dist-evidence-1792201614/*.whl",
+   "exit": 0
+  },
+  "b6_module_tests": {
+   "argv": "python scripts/test_python_objects.py",
+   "exit": 0
+  },
+  "b6_p105_check": {
+   "argv": "python controls/check_p105.py --no-write",
+   "exit": 0
+  },
+  "b6_p105_children": {
+   "argv": "python controls/test_p105_children.py",
+   "exit": 0
+  },
+  "b6_p105_verdict": {
+   "argv": "python controls/check_p105_verdict.py",
+   "exit": 0
+  },
+  "b6_p13_data_distribution": {
+   "argv": "python3 controls/g1_p13_data_distribution.py && python3 controls/check_p13.py && git checkout -- results/",
+   "exit": 0
+  },
+  "b6_study_regression": {
+   "argv": "python3 controls/check_p136.py --reference target/p146/actinv-reference-0ea4a18 --candidate target/release/actinv --workdir target/p146/b6-p136-work --out results/p146/b6_study_regression.json",
+   "exit": 0
+  },
+  "b6_workspace_tests": {
+   "argv": "cargo test --locked --workspace",
+   "exit": 0
+  },
+  "build_cli": {
+   "argv": "cargo build --release --locked -p actinv-cli",
+   "exit": 0
+  }
+ },
+ "study_regression": {
+  "G2": true,
+  "G2_differences": 0,
+  "G3": true,
+  "G4": true,
+  "candidate_binary_sha256": "7cd833a08e5670cd7a96f066db48307c7bf7cf95ca73bace7e80fe58fb8d62b4",
+  "present": true,
+  "reference_binary_sha256": "db2d482f3706e12138a118edbed4368ffd821c4adde4b76898ffc19a98663a56",
+  "verdict": "PASS"
+ },
+ "tests_failed": 0,
+ "tests_passed": 1087,
+ "tree_clean_tracked": true
+}

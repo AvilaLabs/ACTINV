@@ -1,0 +1,103 @@
+{
+ "assumptions": {
+  "endpoint_tol": 1e-08,
+  "rel_tol": 1e-12
+ },
+ "candidate": {
+  "amendments_sha256": {
+   "ACTINV-P146_AMENDMENT_A.md": "df96453f5d7fa9d05b6b806284befd3a8703429754184d8b5db4fcf731f019b3"
+  },
+  "binary": "target/release/actinv",
+  "binary_sha256": "7cd833a08e5670cd7a96f066db48307c7bf7cf95ca73bace7e80fe58fb8d62b4",
+  "commit": "b98042da69a1ee6d932c9156e39220f998908d32",
+  "protocol_sha256": "f965cdc7e6189d923c4d28b05e5b218dd89889fae529ece34bf894079aa1adcb",
+  "tree_clean": true
+ },
+ "case": "D2_V16",
+ "check_report": {
+  "checks": 9268,
+  "failed": 0,
+  "failures": [],
+  "missing_fields": []
+ },
+ "command": null,
+ "details": {
+  "failed_count": 0,
+  "failed_samples": [],
+  "k": 38,
+  "kept_missing": [],
+  "minimum_samples": 72,
+  "n": 1024,
+  "nominal_intervals": {
+   "Co": {
+    "feasible": true,
+    "lower": 0.0,
+    "status": "limit",
+    "upper": 0.2653787416418477
+   },
+   "joint_scale_factor": {
+    "feasible": true,
+    "lower": 0.0,
+    "status": "limit",
+    "upper": 5.307574832836954
+   }
+  },
+  "nominal_worst_relative_difference": 0.0,
+  "quantities": {
+   "Co": {
+    "budget": 0.14205829686455407,
+    "nominal_supremum": 0.2653787416418477,
+    "sample_status": {
+     "bound": 1024,
+     "capped": 0,
+     "failed": 0,
+     "infeasible": 0,
+     "no_response": 0
+    },
+    "status": "established"
+   },
+   "joint_scale_factor": {
+    "budget": 2.841165937291081,
+    "nominal_supremum": 5.307574832836954,
+    "sample_status": {
+     "bound": 1024,
+     "capped": 0,
+     "failed": 0,
+     "infeasible": 0,
+     "no_response": 0
+    },
+    "status": "established"
+   }
+  },
+  "worst_kept_sum_deviation": 0.0
+ },
+ "nominal_command": {
+  "argv": [
+   "/home/connoravila/Documents/actinv/target/release/actinv",
+   "waste",
+   "budget",
+   "budget.json",
+   "nominal_ref.json"
+  ],
+  "rc": 0,
+  "seconds": 1.278,
+  "stderr_tail": "",
+  "stdout_bytes": 0
+ },
+ "nominal_reference_present": true,
+ "pass": true,
+ "result_sha256": "ae9c699a95ce4d7e78bcf1cd5270e19743e392e0754928e4ab631388312e97c8",
+ "reused_b1_run": true,
+ "rule_pack": "crates/actinv-core/data/waste_us_nrc_61_55_v1.json",
+ "rule_pack_sha256": "890268af81a53815b8e11c238e4a1694eabb79664a1ca087fd7fe22b9fabe5d7",
+ "schema": "actinv-p146-b2-1",
+ "spec": "d2_v16.json",
+ "spec_sha256": "b1c7462b29d41c6eae2126a95dee533ddea435e205199a079f98e9b01dadee1f",
+ "summary": {
+  "case": "D2_V16",
+  "checks": 9268,
+  "failed": 0,
+  "missing_fields": 0
+ },
+ "worktree_clean_after": true
+}

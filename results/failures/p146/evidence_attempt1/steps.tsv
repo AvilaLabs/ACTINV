@@ -1,0 +1,32 @@
+build_cli	cargo build --release --locked -p actinv-cli	0
+selftest	python3 controls/check_p146.py selftest	1
+b1_d1	python3 controls/check_p146.py b1 D1	0
+b2_d1	python3 controls/check_p146.py b2 D1	0
+b3_d1	python3 controls/check_p146.py b3 D1	0
+b1_d2_v16	python3 controls/check_p146.py b1 D2_V16	0
+b2_d2_v16	python3 controls/check_p146.py b2 D2_V16	0
+b3_d2_v16	python3 controls/check_p146.py b3 D2_V16	0
+b1_d2_v36	python3 controls/check_p146.py b1 D2_V36	0
+b2_d2_v36	python3 controls/check_p146.py b2 D2_V36	0
+b3_d2_v36	python3 controls/check_p146.py b3 D2_V36	0
+b1_d2_v64	python3 controls/check_p146.py b1 D2_V64	0
+b2_d2_v64	python3 controls/check_p146.py b2 D2_V64	0
+b3_d2_v64	python3 controls/check_p146.py b3 D2_V64	0
+b4	python3 controls/check_p146.py b4	0
+b5	python3 controls/check_p146.py b5	0
+b6_study_regression	python3 controls/check_p136.py --reference target/p146/actinv-reference-0ea4a18 --candidate target/release/actinv --workdir target/p146/b6-p136-work --out results/p146/b6_study_regression.json	0
+b6_p105_children	python controls/test_p105_children.py	0
+b6_p105_check	python controls/check_p105.py --no-write	0
+b6_p105_verdict	python controls/check_p105_verdict.py	0
+b6_fmt	cargo fmt --all -- --check	0
+b6_clippy_native	cargo clippy --workspace --all-targets --all-features -- -D warnings	0
+b6_clippy_wasm	cargo clippy --locked -p actinv-gui --lib --no-default-features --target wasm32-unknown-unknown -- -D warnings	0
+b6_workspace_tests	cargo test --locked --workspace	0
+b6_binding_fmt	cargo fmt --manifest-path python/Cargo.toml -- --check	0
+b6_binding_check	cargo check --manifest-path python/Cargo.toml --all-targets --all-features	0
+b6_binding_clippy	cargo clippy --manifest-path python/Cargo.toml --all-targets --all-features -- -D warnings	0
+b6_module_build	cd python && maturin build --release --locked --out /home/connoravila/Documents/actinv/target/p146/dist-evidence-1792201614 && python ../scripts/smoke_python_wheel.py /home/connoravila/Documents/actinv/target/p146/dist-evidence-1792201614	0
+b6_module_install	pip install --force-reinstall --no-deps target/p146/dist-evidence-1792201614/*.whl	0
+b6_module_tests	python scripts/test_python_objects.py	0
+b6_handbook	mdbook build -d /home/connoravila/Documents/actinv/target/p146/book && python3 scripts/check_docs.py target/p146/book	0
+b6_p13_data_distribution	python3 controls/g1_p13_data_distribution.py && python3 controls/check_p13.py && git checkout -- results/	0

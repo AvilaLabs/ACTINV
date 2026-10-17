@@ -1,0 +1,11 @@
+P146 evidence attempt 1 on candidate b98042d (Amendment A), run locally; not pushed as an evidence commit.
+Every gate command exited 0 (B1-B5 for D1 and the three D2 variances, the check_p136 study regression, the P105
+steps, fmt, clippy native and wasm, workspace tests 1087 passed 0 failed, binding checks, module build and tests,
+handbook, P13), but the step `python3 controls/check_p146.py selftest` exited 1, so b6-collect, which requires every
+step in steps.tsv to exit 0, wrote B6 pass=false and the phase fails B6.
+Cause: b3_check() iterates `pick(result, "verification_skipped") or []`; pick() returns the MISSING sentinel object
+(truthy, not iterable) when the member is absent, and the selftest's synthetic reference result has no
+verification_skipped member (TypeError at check_p146.py line 1163, logs/selftest.log). The line was added to the
+checker after its last selftest run and before the candidate commit (Amendment A item 1). Real results carry the
+member, so B3 itself ran on every case.
+Reproduce: git checkout b98042d && python3 controls/check_p146.py selftest

@@ -3537,3 +3537,16 @@ D1's irradiation amplitude (250 instead of 1e4) and targets (C2 steps 12 and 13)
 exists; and defines the nominal comparison as exact JSON-value equality. It discloses the development runs made before
 it (D1 at 20 samples; the committed D2 σ² = 0.36 case through B1, B2, B3 and B5). No input was changed after them and
 no gate is relaxed.
+
+## Entry 201 — P146 evidence attempt 1 fails B6 on a checker selftest crash; Amendment B registered (2026-10-16)
+
+Candidate `b98042d` (CI on the pushed candidate: all six workflows succeeded). Every gate command exited 0: B1 (0
+mismatches in 200 and 3 × 1024 samples), B2 (3288 and 3 × 9268 checks, 0 failed), B3 (823 and 3 × 1994 verification
+rows, 0 failed), B4 (closed-form keep probability at the budget 0.961, 0.969, 0.964 inside the 99.9 % Beta band
+[0.941, 0.979] for σ² = 0.16, 0.36, 0.64), B5, the `check_p136.py` study regression against `db2d482f…`, the P105
+steps, fmt, clippy native and wasm, workspace tests (1087 passed, 0 failed), binding checks, module build and tests,
+handbook and P13. But `check_p146.py selftest` exited 1 (a TypeError in the Amendment A capped-suprema code when the
+synthetic result lacks `verification_skipped`), so the B6 record, which requires every step to exit 0, failed:
+P146 fails B6. Preserved in `results/failures/p146/evidence_attempt1/`. Registered before the repair:
+**P146 Amendment B** `7c0058e8b1b945ff5e1631c8a41fcec5f28e4427d9366f3a6e44bfb96d883007` (treat an absent member as empty, exercise both cases
+in the selftest, rerun B1–B6 in full; the one repair round is consumed).
