@@ -1,0 +1,126 @@
+{
+ "amendments_sha256": {
+  "ACTINV-P147_AMENDMENT_A.md": "db28b5cf79bddd72ef06b02e954f33203f1f1369f4495d54dc5f97d1f92418a2",
+  "ACTINV-P147_AMENDMENT_B.md": "fc709580fda8267a9bb69bf755f6f458c65b7fe9c81bc004966f79ec1724ed7c"
+ },
+ "binary_sha256": "14cbadb91a2aaf406af8c7909421b4c2a08da0fa9f60d3fe588e8beb04006355",
+ "commit": "4a2c6d2e5f40dac22a9c692bfd12380ee0fff704",
+ "committed_controls": {
+  "changed_since_registration": [],
+  "pass": true,
+  "registration_commit": "7ee8a034c9076d1f852e93cb3db2ef417d6f8fde",
+  "u2_records": {
+   "results/p145/u2_c1.json": {
+    "pass": true,
+    "present": true,
+    "sha256": "0bea7bbaff201decf087d1c4003ff8faf5a0d8b22828a6560553ea69cffbb764"
+   },
+   "results/p145/u2_c2.json": {
+    "pass": true,
+    "present": true,
+    "sha256": "bef5a5a4aaf87e4a9d8f49974842e49353b314450c8a7f459db80f18288426f7"
+   }
+  }
+ },
+ "failed_steps": [],
+ "gate_records_present": [
+  "e1",
+  "e2",
+  "e3",
+  "e4",
+  "e5"
+ ],
+ "gate_step_exits": {
+  "e1": 0,
+  "e2": 0,
+  "e3": 0,
+  "e4": 0,
+  "e5": 0
+ },
+ "missing_steps": [],
+ "note": "local half of E6; the verdict also requires CI green on the pushed evidence commit",
+ "pass": true,
+ "protocol_sha256": "da238b312800646e12b2e924ea90dbb327fcf4f969a5aee7dfdd6e315fde9212",
+ "schema": "actinv-p147-e6-1",
+ "steps": {
+  "build_cli": {
+   "argv": "cargo build --release --locked -p actinv-cli",
+   "exit": 0
+  },
+  "e6_binding_check": {
+   "argv": "cargo check --manifest-path python/Cargo.toml --all-targets --all-features",
+   "exit": 0
+  },
+  "e6_binding_clippy": {
+   "argv": "cargo clippy --manifest-path python/Cargo.toml --all-targets --all-features -- -D warnings",
+   "exit": 0
+  },
+  "e6_binding_fmt": {
+   "argv": "cargo fmt --manifest-path python/Cargo.toml -- --check",
+   "exit": 0
+  },
+  "e6_clippy_native": {
+   "argv": "cargo clippy --workspace --all-targets --all-features -- -D warnings",
+   "exit": 0
+  },
+  "e6_clippy_wasm": {
+   "argv": "cargo clippy --locked -p actinv-gui --lib --no-default-features --target wasm32-unknown-unknown -- -D warnings",
+   "exit": 0
+  },
+  "e6_fmt": {
+   "argv": "cargo fmt --all -- --check",
+   "exit": 0
+  },
+  "e6_handbook": {
+   "argv": "mdbook build -d /home/connoravila/Documents/actinv/target/p147/book && python3 scripts/check_docs.py target/p147/book",
+   "exit": 0
+  },
+  "e6_module_build": {
+   "argv": "cd python && maturin build --release --locked --out /home/connoravila/Documents/actinv/target/p147/dist-evidence-1792249786 && python ../scripts/smoke_python_wheel.py /home/connoravila/Documents/actinv/target/p147/dist-evidence-1792249786",
+   "exit": 0
+  },
+  "e6_module_install": {
+   "argv": "pip install --force-reinstall --no-deps target/p147/dist-evidence-1792249786/*.whl",
+   "exit": 0
+  },
+  "e6_module_tests": {
+   "argv": "python scripts/test_python_objects.py",
+   "exit": 0
+  },
+  "e6_p103_check": {
+   "argv": "python3 controls/check_p147.py e6-p103",
+   "exit": 0
+  },
+  "e6_p105_check": {
+   "argv": "python controls/check_p105.py --no-write",
+   "exit": 0
+  },
+  "e6_p105_children": {
+   "argv": "python controls/test_p105_children.py",
+   "exit": 0
+  },
+  "e6_p105_verdict": {
+   "argv": "python controls/check_p105_verdict.py",
+   "exit": 0
+  },
+  "e6_p13_data_distribution": {
+   "argv": "python3 controls/g1_p13_data_distribution.py && python3 controls/check_p13.py && git checkout -- results/",
+   "exit": 0
+  },
+  "e6_p145_selftest": {
+   "argv": "python3 controls/check_p145.py selftest",
+   "exit": 0
+  },
+  "e6_selftest": {
+   "argv": "python3 controls/check_p147.py selftest",
+   "exit": 0
+  },
+  "e6_workspace_tests": {
+   "argv": "cargo test --locked --workspace",
+   "exit": 0
+  }
+ },
+ "tests_failed": 0,
+ "tests_passed": 1131,
+ "tree_clean_tracked": true
+}

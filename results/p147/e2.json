@@ -1,0 +1,392 @@
+{
+ "candidate": {
+  "amendments_sha256": {
+   "ACTINV-P147_AMENDMENT_A.md": "db28b5cf79bddd72ef06b02e954f33203f1f1369f4495d54dc5f97d1f92418a2",
+   "ACTINV-P147_AMENDMENT_B.md": "fc709580fda8267a9bb69bf755f6f458c65b7fe9c81bc004966f79ec1724ed7c"
+  },
+  "binary": "target/release/actinv",
+  "binary_sha256": "14cbadb91a2aaf406af8c7909421b4c2a08da0fa9f60d3fe588e8beb04006355",
+  "commit": "4a2c6d2e5f40dac22a9c692bfd12380ee0fff704",
+  "protocol_sha256": "da238b312800646e12b2e924ea90dbb327fcf4f969a5aee7dfdd6e315fde9212",
+  "tree_clean": true
+ },
+ "cases": [
+  {
+   "checks": 98,
+   "command": {
+    "argv": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "waste",
+     "package",
+     "spec.json",
+     "out.json"
+    ],
+    "rc": 0,
+    "seconds": 0.003,
+    "stderr_tail": "",
+    "stdout_bytes": 0
+   },
+   "failed": 0,
+   "failures": [],
+   "missing_fields": [],
+   "model_assertions": {
+    "Nb-94 item test": true,
+    "Table 2 sum is 1": true,
+    "mixture is Class A": true,
+    "primary gammas control": true
+   },
+   "name": "ex1_table2_37mbq",
+   "notes": {
+    "ex1_table2_37mbq spec_sha256_is_file_sha256": true
+   },
+   "pass": true,
+   "reported_assertions": {
+    "Nb-94 item test": true,
+    "Table 2 sum is 1": true,
+    "mixture is Class A": true,
+    "primary gammas control": true
+   },
+   "robust_construction": true,
+   "side": null,
+   "threshold": "BTP example (factor2)"
+  },
+  {
+   "checks": 98,
+   "command": {
+    "argv": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "waste",
+     "package",
+     "spec.json",
+     "out.json"
+    ],
+    "rc": 0,
+    "seconds": 0.003,
+    "stderr_tail": "",
+    "stdout_bytes": 0
+   },
+   "failed": 0,
+   "failures": [],
+   "missing_fields": [],
+   "model_assertions": {
+    "Nb-94 item test": true,
+    "primary gammas control": true
+   },
+   "name": "ex1_table2_above",
+   "notes": {
+    "ex1_table2_above spec_sha256_is_file_sha256": true
+   },
+   "pass": true,
+   "reported_assertions": {
+    "Nb-94 item test": true,
+    "primary gammas control": true
+   },
+   "robust_construction": true,
+   "side": null,
+   "threshold": "BTP example (factor2)"
+  },
+  {
+   "checks": 98,
+   "command": {
+    "argv": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "waste",
+     "package",
+     "spec.json",
+     "out.json"
+    ],
+    "rc": 0,
+    "seconds": 0.003,
+    "stderr_tail": "",
+    "stdout_bytes": 0
+   },
+   "failed": 0,
+   "failures": [],
+   "missing_fields": [],
+   "model_assertions": {
+    "Nb-94 item test": true,
+    "mixture is Class A": true,
+    "primary gammas control": true
+   },
+   "name": "ex1_factor2_0p039",
+   "notes": {
+    "ex1_factor2_0p039 spec_sha256_is_file_sha256": true
+   },
+   "pass": true,
+   "reported_assertions": {
+    "Nb-94 item test": true,
+    "mixture is Class A": true,
+    "primary gammas control": true
+   },
+   "robust_construction": true,
+   "side": null,
+   "threshold": "BTP example (factor2)"
+  },
+  {
+   "checks": 98,
+   "command": {
+    "argv": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "waste",
+     "package",
+     "spec.json",
+     "out.json"
+    ],
+    "rc": 0,
+    "seconds": 0.003,
+    "stderr_tail": "",
+    "stdout_bytes": 0
+   },
+   "failed": 0,
+   "failures": [],
+   "missing_fields": [],
+   "model_assertions": {
+    "Nb-94 item test": true,
+    "primary gammas control": true
+   },
+   "name": "ex1_factor2_0p041",
+   "notes": {
+    "ex1_factor2_0p041 spec_sha256_is_file_sha256": true
+   },
+   "pass": true,
+   "reported_assertions": {
+    "Nb-94 item test": true,
+    "primary gammas control": true
+   },
+   "robust_construction": true,
+   "side": null,
+   "threshold": "BTP example (factor2)"
+  },
+  {
+   "checks": 101,
+   "command": {
+    "argv": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "waste",
+     "package",
+     "spec.json",
+     "out.json"
+    ],
+    "rc": 0,
+    "seconds": 0.003,
+    "stderr_tail": "",
+    "stdout_bytes": 0
+   },
+   "failed": 0,
+   "failures": [],
+   "missing_fields": [],
+   "model_assertions": {
+    "Nb-94 item test": true,
+    "mixture is Class A": true,
+    "primary gammas do not control": true
+   },
+   "name": "ex2_factor10_0p19",
+   "notes": {
+    "ex2_factor10_0p19 spec_sha256_is_file_sha256": true
+   },
+   "pass": true,
+   "reported_assertions": {
+    "Nb-94 item test": true,
+    "mixture is Class A": true,
+    "primary gammas do not control": true
+   },
+   "robust_construction": true,
+   "side": null,
+   "threshold": "BTP example (factor10)"
+  },
+  {
+   "checks": 101,
+   "command": {
+    "argv": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "waste",
+     "package",
+     "spec.json",
+     "out.json"
+    ],
+    "rc": 0,
+    "seconds": 0.003,
+    "stderr_tail": "",
+    "stdout_bytes": 0
+   },
+   "failed": 0,
+   "failures": [],
+   "missing_fields": [],
+   "model_assertions": {
+    "Nb-94 item test": true,
+    "primary gammas do not control": true
+   },
+   "name": "ex2_factor10_0p21",
+   "notes": {
+    "ex2_factor10_0p21 spec_sha256_is_file_sha256": true
+   },
+   "pass": true,
+   "reported_assertions": {
+    "Nb-94 item test": true,
+    "primary gammas do not control": true
+   },
+   "robust_construction": true,
+   "side": null,
+   "threshold": "BTP example (factor10)"
+  },
+  {
+   "checks": 72,
+   "command": {
+    "argv": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "waste",
+     "package",
+     "spec.json",
+     "out.json"
+    ],
+    "rc": 0,
+    "seconds": 0.003,
+    "stderr_tail": "",
+    "stdout_bytes": 0
+   },
+   "failed": 0,
+   "failures": [],
+   "missing_fields": [],
+   "model_assertions": {
+    "Table 2 is restrictive": true,
+    "Table 2 sum is 0.3": true,
+    "primary gamma share is 0.2/0.3": true,
+    "primary gammas control": true
+   },
+   "name": "fn36_controlling_67_percent",
+   "notes": {
+    "fn36_controlling_67_percent spec_sha256_is_file_sha256": true
+   },
+   "pass": true,
+   "reported_assertions": {
+    "Table 2 is restrictive": true,
+    "Table 2 sum is 0.3": true,
+    "primary gamma share is 0.2/0.3": true,
+    "primary gammas control": true
+   },
+   "robust_construction": true,
+   "side": null,
+   "threshold": "BTP footnote 36"
+  },
+  {
+   "checks": 78,
+   "command": {
+    "argv": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "waste",
+     "package",
+     "spec.json",
+     "out.json"
+    ],
+    "rc": 0,
+    "seconds": 0.003,
+    "stderr_tail": "",
+    "stdout_bytes": 0
+   },
+   "failed": 0,
+   "failures": [],
+   "missing_fields": [],
+   "model_assertions": {
+    "cap class is C": true,
+    "credited volume is 0.2 m3": true,
+    "inside the Class C cap": true,
+    "loading under 14 percent": true
+   },
+   "name": "sec_3_8_2_33_tbq_in_0p5_m3",
+   "notes": {
+    "sec_3_8_2_33_tbq_in_0p5_m3 spec_sha256_is_file_sha256": true
+   },
+   "pass": true,
+   "reported_assertions": {
+    "cap class is C": true,
+    "credited volume is 0.2 m3": true,
+    "inside the Class C cap": true,
+    "loading under 14 percent": true
+   },
+   "robust_construction": true,
+   "side": null,
+   "threshold": "BTP 3.8.2 example"
+  }
+ ],
+ "data_checks": {
+  "checks": 77,
+  "failed": 0,
+  "failures": [],
+  "missing_fields": [],
+  "notes": {}
+ },
+ "data_detail": {
+  "btp_sha256": "b7b3745920264c99347728cdd95ed438620f6af4c3883c543c6584ab22d3d34b",
+  "review_sha256": "40a78716c9fe9579c9a952e030339116ad8f28909a60e8c3158176642beb06e1",
+  "worst_si_customary_relative_difference": 0.08108108108108114
+ },
+ "pass": true,
+ "review": "docs/maintainers/WASTE_BTP_SOURCE_REVIEW.md",
+ "schema": "actinv-p147-e2-1",
+ "summary": {
+  "cases": 8,
+  "cases_passed": 8,
+  "data_checks": 77,
+  "data_failed": 0
+ },
+ "table3_consistency": {
+  "basis": "limit x 0.2 m3 (volume-based) or limit x 0.2 m3 x 1.5 g/cm3 (mass-based)",
+  "rows": [
+   {
+    "btp_bq": 300000000000.0,
+    "derived_bq": 296000000000.0,
+    "entry": "H-3 Class A/B",
+    "relative_difference": 0.013333333333333334,
+    "required": true
+   },
+   {
+    "btp_bq": 260000000000.0,
+    "derived_bq": 259000000000.0,
+    "entry": "Ni-63 Class A/B",
+    "relative_difference": 0.0038461538461538464,
+    "required": true
+   },
+   {
+    "btp_bq": 55000000000000.0,
+    "derived_bq": 51800000000000.0,
+    "entry": "Ni-63 Class C",
+    "relative_difference": 0.05818181818181818,
+    "required": true
+   },
+   {
+    "btp_bq": 111000000.0,
+    "derived_bq": 111000000.0,
+    "entry": "alpha TRU Class A/B",
+    "relative_difference": 0.0,
+    "required": true
+   },
+   {
+    "btp_bq": 1100000000.0,
+    "derived_bq": 1110000000.0,
+    "entry": "alpha TRU Class C",
+    "relative_difference": 0.00909090909090909,
+    "required": true
+   },
+   {
+    "btp_bq": 400000000000.0,
+    "derived_bq": 59200000000.0,
+    "entry": "C-14 (general limit) Class C",
+    "relative_difference": 0.852,
+    "required": false
+   },
+   {
+    "btp_bq": 1500000000000.0,
+    "derived_bq": 1628000000000.0,
+    "entry": "Ni-59 Class C",
+    "relative_difference": 0.08533333333333333,
+    "required": false
+   }
+  ],
+  "tolerance": 0.07
+ },
+ "tolerances": {
+  "si_customary": 0.1,
+  "table3_derivation": 0.07
+ },
+ "worktree_clean_after": true
+}

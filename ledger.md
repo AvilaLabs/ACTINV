@@ -3611,3 +3611,20 @@ exactly (`persisted_result_matches: true`, G0 sealed). Judging it by exit code w
 the E6 record failed, so P147 fails E6. Preserved in `results/failures/p147/evidence_attempt1/`. Registered before
 the repair: **P147 Amendment B** `fc709580fda8267a9bb69bf755f6f458c65b7fe9c81bc004966f79ec1724ed7c` (the step passes on G0 sealed and identity with the committed G1 record; the
 repair adds only that subcommand and its selftest cases; E1–E6 rerun in full; the one repair round is consumed).
+
+## Entry 207 — P147 evidence attempt 2: E1–E5 and local E6 pass on the repaired candidate (2026-10-17)
+
+Candidate `4a2c6d2` (Amendment B), clean tracked tree, release binary rebuilt from it; all 24 steps ran serially in the
+bounded scope and exited 0, the checker selftest among them (`results/p147/steps.tsv`, `logs/`). **E1**: the
+independent recomputation matched 62 of 62 synthetic packages, reaching all 71 branches, and 6 of 6 activation
+packages built from ACTINV run results (steel pieces under and over 280 cm3 at two cooling steps, an Nb/Co mix,
+encapsulated low-loading and credited packages, both screens): classes, statuses, choices and counts equal, sums
+within 1e-12 relative. **E2**: 77 data checks of the bundled BTP tables and thresholds against the frozen review and 8
+source cases (Examples 1 and 2, the footnote-36 controlling share, BTP Table 3 against the class limits, the §3.8.2 Class
+C cap example) passed. **E3**: 51 below/at/above cases over every threshold fell on the side the readings fix. **E4**:
+24 reductions (11 single items equal to `actinv waste classify`, 10 splits into passing pieces, 3 all-pass averages)
+passed. **E5**: 24 refusals, each with its own message and nothing written; repeats byte-identical. **E6 (local)**: the
+P103 control equals its committed records (Amendment B), the P105 steps, the P145 selftest, fmt, clippy native and
+wasm, workspace tests (1131 passed, 0 failed), binding checks, module build and tests, handbook and P13 exited 0; the
+committed waste controls and P145/P146 records are unchanged since registration. The gate results equal attempt 1's,
+as expected for an unchanged command. CI decides the rest.

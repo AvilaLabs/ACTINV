@@ -1,0 +1,23 @@
+{
+  "command": {
+    "argv": [
+      "/home/connoravila/Documents/actinv/target/ci-local/venv/bin/python3",
+      "/home/connoravila/Documents/actinv/controls/check_p103.py",
+      "--no-write"
+    ],
+    "rc": 1,
+    "seconds": 0.256,
+    "stderr_tail": "",
+    "stdout_bytes": 290012
+  },
+  "documents": [
+    "actinv-p103-g0-seal-1",
+    "actinv-p103-g1-classes-1"
+  ],
+  "g0_failing_checks": [],
+  "g0_sealed": true,
+  "g1_matches_committed_record": true,
+  "g1_record_pass_flag": false,
+  "pass": true,
+  "schema": "actinv-p147-e6-p103-1"
+}

@@ -1,0 +1,697 @@
+{
+ "candidate": {
+  "amendments_sha256": {
+   "ACTINV-P147_AMENDMENT_A.md": "db28b5cf79bddd72ef06b02e954f33203f1f1369f4495d54dc5f97d1f92418a2",
+   "ACTINV-P147_AMENDMENT_B.md": "fc709580fda8267a9bb69bf755f6f458c65b7fe9c81bc004966f79ec1724ed7c"
+  },
+  "binary": "target/release/actinv",
+  "binary_sha256": "14cbadb91a2aaf406af8c7909421b4c2a08da0fa9f60d3fe588e8beb04006355",
+  "commit": "4a2c6d2e5f40dac22a9c692bfd12380ee0fff704",
+  "protocol_sha256": "da238b312800646e12b2e924ea90dbb327fcf4f969a5aee7dfdd6e315fde9212",
+  "tree_clean": true
+ },
+ "cases_sharing_a_message": [],
+ "control": {
+  "accepted": true,
+  "checks": 252,
+  "command": {
+   "argv": [
+    "/home/connoravila/Documents/actinv/target/release/actinv",
+    "waste",
+    "package",
+    "spec.json",
+    "out.json"
+   ],
+   "rc": 0,
+   "seconds": 0.004,
+   "stderr_tail": "",
+   "stdout_bytes": 0
+  },
+  "failed": 0,
+  "failures": [],
+  "missing_fields": [],
+  "notes": {
+   "e5_control spec_sha256_is_file_sha256": true
+  },
+  "pass": true
+ },
+ "hints_missed": [],
+ "messages_pairwise_distinct": true,
+ "optional_refusals": [
+  {
+   "command": {
+    "argv": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "waste",
+     "package",
+     "spec.json",
+     "out.json"
+    ],
+    "rc": 1,
+    "seconds": 0.002,
+    "stderr_tail": "cannot parse waste package spec: unknown field `unexpected_field`, expected one of `schema`, `rules`, `btp`, `targets`, `nuclide_properties`, `screen`, `encapsulation`, `items` at line 119 column 19\n",
+    "stdout_bytes": 0
+   },
+   "exit_is_error_not_panic": true,
+   "exit_nonzero": true,
+   "message": "cannot parse waste package spec: unknown field `unexpected_field`, expected one of `schema`, `rules`, `btp`, `targets`, `nuclide_properties`, `screen`, `encapsulation`, `items` at line 119 column 19",
+   "message_mentions_topic_hint": true,
+   "message_present": true,
+   "name": "unknown_field",
+   "no_output_written": true,
+   "nothing_else_created": true
+  },
+  {
+   "command": {
+    "argv": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "waste",
+     "package",
+     "spec.json",
+     "out.json"
+    ],
+    "rc": 0,
+    "seconds": 0.004,
+    "stderr_tail": "",
+    "stdout_bytes": 0
+   },
+   "exit_is_error_not_panic": false,
+   "exit_nonzero": false,
+   "message": "",
+   "message_mentions_topic_hint": false,
+   "message_present": false,
+   "name": "per_item_encapsulated_flag",
+   "no_output_written": false,
+   "nothing_else_created": false
+  }
+ ],
+ "pass": true,
+ "refusals": [
+  {
+   "command": {
+    "argv": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "waste",
+     "package",
+     "spec.json",
+     "out.json"
+    ],
+    "rc": 1,
+    "seconds": 0.002,
+    "stderr_tail": "unsupported waste package schema 'actinv-waste-package-spec-9'\n",
+    "stdout_bytes": 0
+   },
+   "exit_is_error_not_panic": true,
+   "exit_nonzero": true,
+   "message": "unsupported waste package schema 'actinv-waste-package-spec-9'",
+   "message_mentions_topic_hint": true,
+   "message_present": true,
+   "name": "wrong_schema",
+   "no_output_written": true,
+   "nothing_else_created": true
+  },
+  {
+   "command": {
+    "argv": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "waste",
+     "package",
+     "spec.json",
+     "out.json"
+    ],
+    "rc": 1,
+    "seconds": 0.002,
+    "stderr_tail": "unknown screen 'median_item' (expected none, activity_37mbq or highest_item)\n",
+    "stdout_bytes": 0
+   },
+   "exit_is_error_not_panic": true,
+   "exit_nonzero": true,
+   "message": "unknown screen 'median_item' (expected none, activity_37mbq or highest_item)",
+   "message_mentions_topic_hint": true,
+   "message_present": true,
+   "name": "unknown_screen",
+   "no_output_written": true,
+   "nothing_else_created": true
+  },
+  {
+   "command": {
+    "argv": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "waste",
+     "package",
+     "spec.json",
+     "out.json"
+    ],
+    "rc": 1,
+    "seconds": 0.002,
+    "stderr_tail": "item a: unknown waste_type 'ion_exchange_resin' (expected activated_metal, contaminated_material, design_radioactivity_component, sealed_source or cartridge_filter)\n",
+    "stdout_bytes": 0
+   },
+   "exit_is_error_not_panic": true,
+   "exit_nonzero": true,
+   "message": "item a: unknown waste_type 'ion_exchange_resin' (expected activated_metal, contaminated_material, design_radioactivity_component, sealed_source or cartridge_filter)",
+   "message_mentions_topic_hint": true,
+   "message_present": true,
+   "name": "unknown_waste_type",
+   "no_output_written": true,
+   "nothing_else_created": true
+  },
+  {
+   "command": {
+    "argv": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "waste",
+     "package",
+     "spec.json",
+     "out.json"
+    ],
+    "rc": 1,
+    "seconds": 0.002,
+    "stderr_tail": "item a: mass_g is missing\n",
+    "stdout_bytes": 0
+   },
+   "exit_is_error_not_panic": true,
+   "exit_nonzero": true,
+   "message": "item a: mass_g is missing",
+   "message_mentions_topic_hint": true,
+   "message_present": true,
+   "name": "missing_mass",
+   "no_output_written": true,
+   "nothing_else_created": true
+  },
+  {
+   "command": {
+    "argv": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "waste",
+     "package",
+     "spec.json",
+     "out.json"
+    ],
+    "rc": 1,
+    "seconds": 0.002,
+    "stderr_tail": "item a: mass_g must be finite and positive\n",
+    "stdout_bytes": 0
+   },
+   "exit_is_error_not_panic": true,
+   "exit_nonzero": true,
+   "message": "item a: mass_g must be finite and positive",
+   "message_mentions_topic_hint": true,
+   "message_present": true,
+   "name": "non_positive_mass",
+   "no_output_written": true,
+   "nothing_else_created": true
+  },
+  {
+   "command": {
+    "argv": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "waste",
+     "package",
+     "spec.json",
+     "out.json"
+    ],
+    "rc": 1,
+    "seconds": 0.002,
+    "stderr_tail": "item a: displaced_volume_cm3 is missing\n",
+    "stdout_bytes": 0
+   },
+   "exit_is_error_not_panic": true,
+   "exit_nonzero": true,
+   "message": "item a: displaced_volume_cm3 is missing",
+   "message_mentions_topic_hint": true,
+   "message_present": true,
+   "name": "missing_volume",
+   "no_output_written": true,
+   "nothing_else_created": true
+  },
+  {
+   "command": {
+    "argv": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "waste",
+     "package",
+     "spec.json",
+     "out.json"
+    ],
+    "rc": 1,
+    "seconds": 0.002,
+    "stderr_tail": "item a: displaced_volume_cm3 must be finite and positive\n",
+    "stdout_bytes": 0
+   },
+   "exit_is_error_not_panic": true,
+   "exit_nonzero": true,
+   "message": "item a: displaced_volume_cm3 must be finite and positive",
+   "message_mentions_topic_hint": true,
+   "message_present": true,
+   "name": "negative_volume",
+   "no_output_written": true,
+   "nothing_else_created": true
+  },
+  {
+   "command": {
+    "argv": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "waste",
+     "package",
+     "spec.json",
+     "out.json"
+    ],
+    "rc": 1,
+    "seconds": 0.002,
+    "stderr_tail": "item b: a cartridge_filter takes envelope_volume_cm3 (BTP Table 4), not displaced_volume_cm3\n",
+    "stdout_bytes": 0
+   },
+   "exit_is_error_not_panic": true,
+   "exit_nonzero": true,
+   "message": "item b: a cartridge_filter takes envelope_volume_cm3 (BTP Table 4), not displaced_volume_cm3",
+   "message_mentions_topic_hint": true,
+   "message_present": true,
+   "name": "filter_without_envelope_volume",
+   "no_output_written": true,
+   "nothing_else_created": true
+  },
+  {
+   "command": {
+    "argv": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "waste",
+     "package",
+     "spec.json",
+     "out.json"
+    ],
+    "rc": 1,
+    "seconds": 0.002,
+    "stderr_tail": "item a: only a cartridge_filter takes envelope_volume_cm3; use displaced_volume_cm3\n",
+    "stdout_bytes": 0
+   },
+   "exit_is_error_not_panic": true,
+   "exit_nonzero": true,
+   "message": "item a: only a cartridge_filter takes envelope_volume_cm3; use displaced_volume_cm3",
+   "message_mentions_topic_hint": true,
+   "message_present": true,
+   "name": "non_filter_with_envelope_volume",
+   "no_output_written": true,
+   "nothing_else_created": true
+  },
+  {
+   "command": {
+    "argv": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "waste",
+     "package",
+     "spec.json",
+     "out.json"
+    ],
+    "rc": 1,
+    "seconds": 0.002,
+    "stderr_tail": "duplicate item id 'a'\n",
+    "stdout_bytes": 0
+   },
+   "exit_is_error_not_panic": true,
+   "exit_nonzero": true,
+   "message": "duplicate item id 'a'",
+   "message_mentions_topic_hint": true,
+   "message_present": true,
+   "name": "duplicate_item_ids",
+   "no_output_written": true,
+   "nothing_else_created": true
+  },
+  {
+   "command": {
+    "argv": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "waste",
+     "package",
+     "spec.json",
+     "out.json"
+    ],
+    "rc": 1,
+    "seconds": 0.002,
+    "stderr_tail": "items must contain at least one item\n",
+    "stdout_bytes": 0
+   },
+   "exit_is_error_not_panic": true,
+   "exit_nonzero": true,
+   "message": "items must contain at least one item",
+   "message_mentions_topic_hint": true,
+   "message_present": true,
+   "name": "empty_items",
+   "no_output_written": true,
+   "nothing_else_created": true
+  },
+  {
+   "command": {
+    "argv": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "waste",
+     "package",
+     "spec.json",
+     "out.json"
+    ],
+    "rc": 1,
+    "seconds": 0.002,
+    "stderr_tail": "encapsulation total_volume_cm3 must be finite and positive\n",
+    "stdout_bytes": 0
+   },
+   "exit_is_error_not_panic": true,
+   "exit_nonzero": true,
+   "message": "encapsulation total_volume_cm3 must be finite and positive",
+   "message_mentions_topic_hint": true,
+   "message_present": true,
+   "name": "encapsulation_non_positive_total",
+   "no_output_written": true,
+   "nothing_else_created": true
+  },
+  {
+   "command": {
+    "argv": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "waste",
+     "package",
+     "spec.json",
+     "out.json"
+    ],
+    "rc": 1,
+    "seconds": 0.002,
+    "stderr_tail": "encapsulation encapsulant_mass_g must be finite and positive\n",
+    "stdout_bytes": 0
+   },
+   "exit_is_error_not_panic": true,
+   "exit_nonzero": true,
+   "message": "encapsulation encapsulant_mass_g must be finite and positive",
+   "message_mentions_topic_hint": true,
+   "message_present": true,
+   "name": "encapsulation_non_positive_mass",
+   "no_output_written": true,
+   "nothing_else_created": true
+  },
+  {
+   "command": {
+    "argv": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "waste",
+     "package",
+     "spec.json",
+     "out.json"
+    ],
+    "rc": 1,
+    "seconds": 0.002,
+    "stderr_tail": "encapsulation encapsulant_density_g_cm3 must be finite and positive\n",
+    "stdout_bytes": 0
+   },
+   "exit_is_error_not_panic": true,
+   "exit_nonzero": true,
+   "message": "encapsulation encapsulant_density_g_cm3 must be finite and positive",
+   "message_mentions_topic_hint": true,
+   "message_present": true,
+   "name": "encapsulation_non_positive_density",
+   "no_output_written": true,
+   "nothing_else_created": true
+  },
+  {
+   "command": {
+    "argv": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "waste",
+     "package",
+     "spec.json",
+     "out.json"
+    ],
+    "rc": 1,
+    "seconds": 0.001,
+    "stderr_tail": "encapsulation waste volume 2000 cm3 exceeds the total encapsulated volume 1000 cm3 (waste loading above 1)\n",
+    "stdout_bytes": 0
+   },
+   "exit_is_error_not_panic": true,
+   "exit_nonzero": true,
+   "message": "encapsulation waste volume 2000 cm3 exceeds the total encapsulated volume 1000 cm3 (waste loading above 1)",
+   "message_mentions_topic_hint": true,
+   "message_present": true,
+   "name": "loading_above_one",
+   "no_output_written": true,
+   "nothing_else_created": true
+  },
+  {
+   "command": {
+    "argv": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "waste",
+     "package",
+     "spec.json",
+     "out.json"
+    ],
+    "rc": 1,
+    "seconds": 0.002,
+    "stderr_tail": "section_of 'component-1': pieces 'a' and 'b' have different waste types\n",
+    "stdout_bytes": 0
+   },
+   "exit_is_error_not_panic": true,
+   "exit_nonzero": true,
+   "message": "section_of 'component-1': pieces 'a' and 'b' have different waste types",
+   "message_mentions_topic_hint": true,
+   "message_present": true,
+   "name": "sectioned_pieces_of_different_types",
+   "no_output_written": true,
+   "nothing_else_created": true
+  },
+  {
+   "command": {
+    "argv": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "waste",
+     "package",
+     "spec.json",
+     "out.json"
+    ],
+    "rc": 1,
+    "seconds": 0.002,
+    "stderr_tail": "section_of 'component-1' has only one piece in the package: all pieces of a sectioned component must be in the same package (BTP 3.3.2.3)\n",
+    "stdout_bytes": 0
+   },
+   "exit_is_error_not_panic": true,
+   "exit_nonzero": true,
+   "message": "section_of 'component-1' has only one piece in the package: all pieces of a sectioned component must be in the same package (BTP 3.3.2.3)",
+   "message_mentions_topic_hint": true,
+   "message_present": true,
+   "name": "sectioned_piece_without_its_component",
+   "no_output_written": true,
+   "nothing_else_created": true
+  },
+  {
+   "command": {
+    "argv": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "waste",
+     "package",
+     "spec.json",
+     "out.json"
+    ],
+    "rc": 1,
+    "seconds": 0.002,
+    "stderr_tail": "screen 'highest_item' is not available with encapsulation (BTP Figure 5 has no screening step)\n",
+    "stdout_bytes": 0
+   },
+   "exit_is_error_not_panic": true,
+   "exit_nonzero": true,
+   "message": "screen 'highest_item' is not available with encapsulation (BTP Figure 5 has no screening step)",
+   "message_mentions_topic_hint": true,
+   "message_present": true,
+   "name": "screen_with_encapsulation",
+   "no_output_written": true,
+   "nothing_else_created": true
+  },
+  {
+   "command": {
+    "argv": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "waste",
+     "package",
+     "spec.json",
+     "out.json"
+    ],
+    "rc": 1,
+    "seconds": 0.002,
+    "stderr_tail": "item b: declared_bq step 5 is not a target step\n",
+    "stdout_bytes": 0
+   },
+   "exit_is_error_not_panic": true,
+   "exit_nonzero": true,
+   "message": "item b: declared_bq step 5 is not a target step",
+   "message_mentions_topic_hint": true,
+   "message_present": true,
+   "name": "declared_step_not_in_targets",
+   "no_output_written": true,
+   "nothing_else_created": true
+  },
+  {
+   "command": {
+    "argv": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "waste",
+     "package",
+     "spec.json",
+     "out.json"
+    ],
+    "rc": 1,
+    "seconds": 0.002,
+    "stderr_tail": "component a input has no selected step 9\n",
+    "stdout_bytes": 0
+   },
+   "exit_is_error_not_panic": true,
+   "exit_nonzero": true,
+   "message": "component a input has no selected step 9",
+   "message_mentions_topic_hint": true,
+   "message_present": true,
+   "name": "target_step_absent",
+   "no_output_written": true,
+   "nothing_else_created": true
+  },
+  {
+   "command": {
+    "argv": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "waste",
+     "package",
+     "spec.json",
+     "out.json"
+    ],
+    "rc": 1,
+    "seconds": 0.002,
+    "stderr_tail": "targets must name at least one result step\n",
+    "stdout_bytes": 0
+   },
+   "exit_is_error_not_panic": true,
+   "exit_nonzero": true,
+   "message": "targets must name at least one result step",
+   "message_mentions_topic_hint": true,
+   "message_present": true,
+   "name": "no_targets",
+   "no_output_written": true,
+   "nothing_else_created": true
+  },
+  {
+   "command": {
+    "argv": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "waste",
+     "package",
+     "spec.json",
+     "out.json"
+    ],
+    "rc": 1,
+    "seconds": 0.002,
+    "stderr_tail": "targets must contain positive one-based step numbers\n",
+    "stdout_bytes": 0
+   },
+   "exit_is_error_not_panic": true,
+   "exit_nonzero": true,
+   "message": "targets must contain positive one-based step numbers",
+   "message_mentions_topic_hint": true,
+   "message_present": true,
+   "name": "target_step_zero",
+   "no_output_written": true,
+   "nothing_else_created": true
+  },
+  {
+   "command": {
+    "argv": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "waste",
+     "package",
+     "spec.json",
+     "out.json"
+    ],
+    "rc": 1,
+    "seconds": 0.002,
+    "stderr_tail": "item a: cannot read result no_such_result.json: No such file or directory (os error 2)\n",
+    "stdout_bytes": 0
+   },
+   "exit_is_error_not_panic": true,
+   "exit_nonzero": true,
+   "message": "item a: cannot read result no_such_result.json: No such file or directory (os error 2)",
+   "message_mentions_topic_hint": true,
+   "message_present": true,
+   "name": "missing_result_file",
+   "no_output_written": true,
+   "nothing_else_created": true
+  },
+  {
+   "command": {
+    "argv": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "waste",
+     "package",
+     "spec.json",
+     "out.json"
+    ],
+    "rc": 1,
+    "seconds": 0.002,
+    "stderr_tail": "item b: activity of Cs137 at step 1 must be finite and nonnegative\n",
+    "stdout_bytes": 0
+   },
+   "exit_is_error_not_panic": true,
+   "exit_nonzero": true,
+   "message": "item b: activity of Cs137 at step 1 must be finite and nonnegative",
+   "message_mentions_topic_hint": true,
+   "message_present": true,
+   "name": "negative_declared_activity",
+   "no_output_written": true,
+   "nothing_else_created": true
+  }
+ ],
+ "repeat": {
+  "bytes": 17412,
+  "first": {
+   "argv": [
+    "/home/connoravila/Documents/actinv/target/release/actinv",
+    "waste",
+    "package",
+    "spec.json",
+    "out_a.json"
+   ],
+   "rc": 0,
+   "seconds": 0.004,
+   "stderr_tail": "",
+   "stdout_bytes": 0
+  },
+  "identical": true,
+  "second": {
+   "argv": [
+    "/home/connoravila/Documents/actinv/target/release/actinv",
+    "waste",
+    "package",
+    "spec.json",
+    "out_b.json"
+   ],
+   "rc": 0,
+   "seconds": 0.004,
+   "stderr_tail": "",
+   "stdout_bytes": 0
+  },
+  "sha256": "52c39f54a39c81e83f5454831285f5a5ce1b7216c603d1b708e06d5dbcb6854b",
+  "third": {
+   "argv": [
+    "/home/connoravila/Documents/actinv/target/release/actinv",
+    "waste",
+    "package",
+    "spec.json",
+    "out_a.json"
+   ],
+   "rc": 0,
+   "seconds": 0.004,
+   "stderr_tail": "",
+   "stdout_bytes": 0
+  }
+ },
+ "schema": "actinv-p147-e5-1",
+ "summary": {
+  "control_accepted": true,
+  "distinct_messages": true,
+  "hints_missed": [],
+  "refusals": 24,
+  "refusals_ok": true,
+  "repeat_identical": true
+ },
+ "worktree_clean_after": true
+}

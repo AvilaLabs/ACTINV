@@ -1,0 +1,1887 @@
+{
+ "candidate": {
+  "amendments_sha256": {
+   "ACTINV-P147_AMENDMENT_A.md": "db28b5cf79bddd72ef06b02e954f33203f1f1369f4495d54dc5f97d1f92418a2",
+   "ACTINV-P147_AMENDMENT_B.md": "fc709580fda8267a9bb69bf755f6f458c65b7fe9c81bc004966f79ec1724ed7c"
+  },
+  "binary": "target/release/actinv",
+  "binary_sha256": "14cbadb91a2aaf406af8c7909421b4c2a08da0fa9f60d3fe588e8beb04006355",
+  "commit": "4a2c6d2e5f40dac22a9c692bfd12380ee0fff704",
+  "protocol_sha256": "da238b312800646e12b2e924ea90dbb327fcf4f969a5aee7dfdd6e315fde9212",
+  "tree_clean": true
+ },
+ "cases": [
+  {
+   "checks": 26,
+   "command": {
+    "argv": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "waste",
+     "package",
+     "spec.json",
+     "out.json"
+    ],
+    "rc": 0,
+    "seconds": 0.002,
+    "stderr_tail": "",
+    "stdout_bytes": 0
+   },
+   "failed": 0,
+   "failures": [],
+   "missing_fields": [],
+   "model_assertions": {
+    "screen applied": true
+   },
+   "name": "screen37_below",
+   "notes": {
+    "screen37_below spec_sha256_is_file_sha256": true
+   },
+   "pass": true,
+   "reported_assertions": {
+    "screen applied": true
+   },
+   "robust_construction": true,
+   "side": "below",
+   "threshold": "37 MBq screen"
+  },
+  {
+   "checks": 71,
+   "command": {
+    "argv": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "waste",
+     "package",
+     "spec.json",
+     "out.json"
+    ],
+    "rc": 0,
+    "seconds": 0.003,
+    "stderr_tail": "",
+    "stdout_bytes": 0
+   },
+   "failed": 0,
+   "failures": [],
+   "missing_fields": [],
+   "model_assertions": {
+    "screen falls through": true
+   },
+   "name": "screen37_at",
+   "notes": {
+    "screen37_at spec_sha256_is_file_sha256": true
+   },
+   "pass": true,
+   "reported_assertions": {
+    "screen falls through": true
+   },
+   "robust_construction": true,
+   "side": "at",
+   "threshold": "37 MBq screen"
+  },
+  {
+   "checks": 71,
+   "command": {
+    "argv": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "waste",
+     "package",
+     "spec.json",
+     "out.json"
+    ],
+    "rc": 0,
+    "seconds": 0.003,
+    "stderr_tail": "",
+    "stdout_bytes": 0
+   },
+   "failed": 0,
+   "failures": [],
+   "missing_fields": [],
+   "model_assertions": {
+    "screen falls through": true
+   },
+   "name": "screen37_above",
+   "notes": {
+    "screen37_above spec_sha256_is_file_sha256": true
+   },
+   "pass": true,
+   "reported_assertions": {
+    "screen falls through": true
+   },
+   "robust_construction": true,
+   "side": "above",
+   "threshold": "37 MBq screen"
+  },
+  {
+   "checks": 77,
+   "command": {
+    "argv": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "waste",
+     "package",
+     "spec.json",
+     "out.json"
+    ],
+    "rc": 0,
+    "seconds": 0.003,
+    "stderr_tail": "",
+    "stdout_bytes": 0
+   },
+   "failed": 0,
+   "failures": [],
+   "missing_fields": [],
+   "model_assertions": {
+    "pool present only for a small item": true,
+    "small flag": true
+   },
+   "name": "small280_below",
+   "notes": {
+    "small280_below spec_sha256_is_file_sha256": true
+   },
+   "pass": true,
+   "reported_assertions": {
+    "pool present only for a small item": true,
+    "small flag": true
+   },
+   "robust_construction": true,
+   "side": "below",
+   "threshold": "280 cm3 small item"
+  },
+  {
+   "checks": 71,
+   "command": {
+    "argv": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "waste",
+     "package",
+     "spec.json",
+     "out.json"
+    ],
+    "rc": 0,
+    "seconds": 0.003,
+    "stderr_tail": "",
+    "stdout_bytes": 0
+   },
+   "failed": 0,
+   "failures": [],
+   "missing_fields": [],
+   "model_assertions": {
+    "pool present only for a small item": true,
+    "small flag": true
+   },
+   "name": "small280_at",
+   "notes": {
+    "small280_at spec_sha256_is_file_sha256": true
+   },
+   "pass": true,
+   "reported_assertions": {
+    "pool present only for a small item": true,
+    "small flag": true
+   },
+   "robust_construction": true,
+   "side": "at",
+   "threshold": "280 cm3 small item"
+  },
+  {
+   "checks": 71,
+   "command": {
+    "argv": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "waste",
+     "package",
+     "spec.json",
+     "out.json"
+    ],
+    "rc": 0,
+    "seconds": 0.002,
+    "stderr_tail": "",
+    "stdout_bytes": 0
+   },
+   "failed": 0,
+   "failures": [],
+   "missing_fields": [],
+   "model_assertions": {
+    "pool present only for a small item": true,
+    "small flag": true
+   },
+   "name": "small280_above",
+   "notes": {
+    "small280_above spec_sha256_is_file_sha256": true
+   },
+   "pass": true,
+   "reported_assertions": {
+    "pool present only for a small item": true,
+    "small flag": true
+   },
+   "robust_construction": true,
+   "side": "above",
+   "threshold": "280 cm3 small item"
+  },
+  {
+   "checks": 71,
+   "command": {
+    "argv": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "waste",
+     "package",
+     "spec.json",
+     "out.json"
+    ],
+    "rc": 0,
+    "seconds": 0.003,
+    "stderr_tail": "",
+    "stdout_bytes": 0
+   },
+   "failed": 0,
+   "failures": [],
+   "missing_fields": [],
+   "model_assertions": {
+    "limit met": true,
+    "sum of fractions": true
+   },
+   "name": "t2sum_below",
+   "notes": {
+    "t2sum_below spec_sha256_is_file_sha256": true
+   },
+   "pass": true,
+   "reported_assertions": {
+    "limit met": true,
+    "sum of fractions": true
+   },
+   "robust_construction": true,
+   "side": "below",
+   "threshold": "BTP Table 2 sum of fractions 1 (individual)"
+  },
+  {
+   "checks": 71,
+   "command": {
+    "argv": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "waste",
+     "package",
+     "spec.json",
+     "out.json"
+    ],
+    "rc": 0,
+    "seconds": 0.003,
+    "stderr_tail": "",
+    "stdout_bytes": 0
+   },
+   "failed": 0,
+   "failures": [],
+   "missing_fields": [],
+   "model_assertions": {
+    "limit met": true,
+    "sum of fractions": true
+   },
+   "name": "t2sum_at",
+   "notes": {
+    "t2sum_at spec_sha256_is_file_sha256": true
+   },
+   "pass": true,
+   "reported_assertions": {
+    "limit met": true,
+    "sum of fractions": true
+   },
+   "robust_construction": true,
+   "side": "at",
+   "threshold": "BTP Table 2 sum of fractions 1 (individual)"
+  },
+  {
+   "checks": 71,
+   "command": {
+    "argv": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "waste",
+     "package",
+     "spec.json",
+     "out.json"
+    ],
+    "rc": 0,
+    "seconds": 0.003,
+    "stderr_tail": "",
+    "stdout_bytes": 0
+   },
+   "failed": 0,
+   "failures": [],
+   "missing_fields": [],
+   "model_assertions": {
+    "limit met": true,
+    "sum of fractions": true
+   },
+   "name": "t2sum_above",
+   "notes": {
+    "t2sum_above spec_sha256_is_file_sha256": true
+   },
+   "pass": true,
+   "reported_assertions": {
+    "limit met": true,
+    "sum of fractions": true
+   },
+   "robust_construction": true,
+   "side": "above",
+   "threshold": "BTP Table 2 sum of fractions 1 (individual)"
+  },
+  {
+   "checks": 104,
+   "command": {
+    "argv": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "waste",
+     "package",
+     "spec.json",
+     "out.json"
+    ],
+    "rc": 0,
+    "seconds": 0.003,
+    "stderr_tail": "",
+    "stdout_bytes": 0
+   },
+   "failed": 0,
+   "failures": [],
+   "missing_fields": [],
+   "model_assertions": {
+    "item limit met": true,
+    "pool passes": true
+   },
+   "name": "t2pool_below",
+   "notes": {
+    "t2pool_below spec_sha256_is_file_sha256": true
+   },
+   "pass": true,
+   "reported_assertions": {
+    "item limit met": true,
+    "pool passes": true
+   },
+   "robust_construction": true,
+   "side": "below",
+   "threshold": "BTP Table 2 sum of fractions 1 (pooled)"
+  },
+  {
+   "checks": 104,
+   "command": {
+    "argv": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "waste",
+     "package",
+     "spec.json",
+     "out.json"
+    ],
+    "rc": 0,
+    "seconds": 0.003,
+    "stderr_tail": "",
+    "stdout_bytes": 0
+   },
+   "failed": 0,
+   "failures": [],
+   "missing_fields": [],
+   "model_assertions": {
+    "item limit met": true,
+    "pool passes": true
+   },
+   "name": "t2pool_at",
+   "notes": {
+    "t2pool_at spec_sha256_is_file_sha256": true
+   },
+   "pass": true,
+   "reported_assertions": {
+    "item limit met": true,
+    "pool passes": true
+   },
+   "robust_construction": true,
+   "side": "at",
+   "threshold": "BTP Table 2 sum of fractions 1 (pooled)"
+  },
+  {
+   "checks": 104,
+   "command": {
+    "argv": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "waste",
+     "package",
+     "spec.json",
+     "out.json"
+    ],
+    "rc": 0,
+    "seconds": 0.003,
+    "stderr_tail": "",
+    "stdout_bytes": 0
+   },
+   "failed": 0,
+   "failures": [],
+   "missing_fields": [],
+   "model_assertions": {
+    "item limit met": true,
+    "pool passes": true
+   },
+   "name": "t2pool_above",
+   "notes": {
+    "t2pool_above spec_sha256_is_file_sha256": true
+   },
+   "pass": true,
+   "reported_assertions": {
+    "item limit met": true,
+    "pool passes": true
+   },
+   "robust_construction": true,
+   "side": "above",
+   "threshold": "BTP Table 2 sum of fractions 1 (pooled)"
+  },
+  {
+   "checks": 71,
+   "command": {
+    "argv": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "waste",
+     "package",
+     "spec.json",
+     "out.json"
+    ],
+    "rc": 0,
+    "seconds": 0.003,
+    "stderr_tail": "",
+    "stdout_bytes": 0
+   },
+   "failed": 0,
+   "failures": [],
+   "missing_fields": [],
+   "model_assertions": {
+    "limit met": true,
+    "primary gammas control": true
+   },
+   "name": "factor2_below",
+   "notes": {
+    "factor2_below spec_sha256_is_file_sha256": true
+   },
+   "pass": true,
+   "reported_assertions": {
+    "limit met": true,
+    "primary gammas control": true
+   },
+   "robust_construction": true,
+   "side": "below",
+   "threshold": "Factor of 2"
+  },
+  {
+   "checks": 71,
+   "command": {
+    "argv": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "waste",
+     "package",
+     "spec.json",
+     "out.json"
+    ],
+    "rc": 0,
+    "seconds": 0.003,
+    "stderr_tail": "",
+    "stdout_bytes": 0
+   },
+   "failed": 0,
+   "failures": [],
+   "missing_fields": [],
+   "model_assertions": {
+    "limit met": true,
+    "primary gammas control": true
+   },
+   "name": "factor2_at",
+   "notes": {
+    "factor2_at spec_sha256_is_file_sha256": true
+   },
+   "pass": true,
+   "reported_assertions": {
+    "limit met": true,
+    "primary gammas control": true
+   },
+   "robust_construction": true,
+   "side": "at",
+   "threshold": "Factor of 2"
+  },
+  {
+   "checks": 71,
+   "command": {
+    "argv": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "waste",
+     "package",
+     "spec.json",
+     "out.json"
+    ],
+    "rc": 0,
+    "seconds": 0.003,
+    "stderr_tail": "",
+    "stdout_bytes": 0
+   },
+   "failed": 0,
+   "failures": [],
+   "missing_fields": [],
+   "model_assertions": {
+    "limit met": true,
+    "primary gammas control": true
+   },
+   "name": "factor2_above",
+   "notes": {
+    "factor2_above spec_sha256_is_file_sha256": true
+   },
+   "pass": true,
+   "reported_assertions": {
+    "limit met": true,
+    "primary gammas control": true
+   },
+   "robust_construction": true,
+   "side": "above",
+   "threshold": "Factor of 2"
+  },
+  {
+   "checks": 101,
+   "command": {
+    "argv": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "waste",
+     "package",
+     "spec.json",
+     "out.json"
+    ],
+    "rc": 0,
+    "seconds": 0.003,
+    "stderr_tail": "",
+    "stdout_bytes": 0
+   },
+   "failed": 0,
+   "failures": [],
+   "missing_fields": [],
+   "model_assertions": {
+    "limit met": true,
+    "primary gammas do not control": true
+   },
+   "name": "factor10pg_below",
+   "notes": {
+    "factor10pg_below spec_sha256_is_file_sha256": true
+   },
+   "pass": true,
+   "reported_assertions": {
+    "limit met": true,
+    "primary gammas do not control": true
+   },
+   "robust_construction": true,
+   "side": "below",
+   "threshold": "Factor of 10 (primary gamma)"
+  },
+  {
+   "checks": 101,
+   "command": {
+    "argv": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "waste",
+     "package",
+     "spec.json",
+     "out.json"
+    ],
+    "rc": 0,
+    "seconds": 0.003,
+    "stderr_tail": "",
+    "stdout_bytes": 0
+   },
+   "failed": 0,
+   "failures": [],
+   "missing_fields": [],
+   "model_assertions": {
+    "limit met": true,
+    "primary gammas do not control": true
+   },
+   "name": "factor10pg_at",
+   "notes": {
+    "factor10pg_at spec_sha256_is_file_sha256": true
+   },
+   "pass": true,
+   "reported_assertions": {
+    "limit met": true,
+    "primary gammas do not control": true
+   },
+   "robust_construction": true,
+   "side": "at",
+   "threshold": "Factor of 10 (primary gamma)"
+  },
+  {
+   "checks": 101,
+   "command": {
+    "argv": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "waste",
+     "package",
+     "spec.json",
+     "out.json"
+    ],
+    "rc": 0,
+    "seconds": 0.003,
+    "stderr_tail": "",
+    "stdout_bytes": 0
+   },
+   "failed": 0,
+   "failures": [],
+   "missing_fields": [],
+   "model_assertions": {
+    "limit met": true,
+    "primary gammas do not control": true
+   },
+   "name": "factor10pg_above",
+   "notes": {
+    "factor10pg_above spec_sha256_is_file_sha256": true
+   },
+   "pass": true,
+   "reported_assertions": {
+    "limit met": true,
+    "primary gammas do not control": true
+   },
+   "robust_construction": true,
+   "side": "above",
+   "threshold": "Factor of 10 (primary gamma)"
+  },
+  {
+   "checks": 74,
+   "command": {
+    "argv": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "waste",
+     "package",
+     "spec.json",
+     "out.json"
+    ],
+    "rc": 0,
+    "seconds": 0.002,
+    "stderr_tail": "",
+    "stdout_bytes": 0
+   },
+   "failed": 0,
+   "failures": [],
+   "missing_fields": [],
+   "model_assertions": {
+    "item passes": true,
+    "limit met": true
+   },
+   "name": "factor10other_below",
+   "notes": {
+    "factor10other_below spec_sha256_is_file_sha256": true
+   },
+   "pass": true,
+   "reported_assertions": {
+    "item passes": true,
+    "limit met": true
+   },
+   "robust_construction": true,
+   "side": "below",
+   "threshold": "Factor of 10 (other nuclide)"
+  },
+  {
+   "checks": 74,
+   "command": {
+    "argv": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "waste",
+     "package",
+     "spec.json",
+     "out.json"
+    ],
+    "rc": 0,
+    "seconds": 0.003,
+    "stderr_tail": "",
+    "stdout_bytes": 0
+   },
+   "failed": 0,
+   "failures": [],
+   "missing_fields": [],
+   "model_assertions": {
+    "item passes": true,
+    "limit met": true
+   },
+   "name": "factor10other_at",
+   "notes": {
+    "factor10other_at spec_sha256_is_file_sha256": true
+   },
+   "pass": true,
+   "reported_assertions": {
+    "item passes": true,
+    "limit met": true
+   },
+   "robust_construction": true,
+   "side": "at",
+   "threshold": "Factor of 10 (other nuclide)"
+  },
+  {
+   "checks": 74,
+   "command": {
+    "argv": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "waste",
+     "package",
+     "spec.json",
+     "out.json"
+    ],
+    "rc": 0,
+    "seconds": 0.003,
+    "stderr_tail": "",
+    "stdout_bytes": 0
+   },
+   "failed": 0,
+   "failures": [],
+   "missing_fields": [],
+   "model_assertions": {
+    "item passes": true,
+    "limit met": true
+   },
+   "name": "factor10other_above",
+   "notes": {
+    "factor10other_above spec_sha256_is_file_sha256": true
+   },
+   "pass": true,
+   "reported_assertions": {
+    "item passes": true,
+    "limit met": true
+   },
+   "robust_construction": true,
+   "side": "above",
+   "threshold": "Factor of 10 (other nuclide)"
+  },
+  {
+   "checks": 73,
+   "command": {
+    "argv": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "waste",
+     "package",
+     "spec.json",
+     "out.json"
+    ],
+    "rc": 0,
+    "seconds": 0.003,
+    "stderr_tail": "",
+    "stdout_bytes": 0
+   },
+   "failed": 0,
+   "failures": [],
+   "missing_fields": [],
+   "model_assertions": {
+    "controlling only above one half": true,
+    "share": true
+   },
+   "name": "share50_below",
+   "notes": {
+    "share50_below spec_sha256_is_file_sha256": true
+   },
+   "pass": true,
+   "reported_assertions": {
+    "controlling only above one half": true,
+    "share": true
+   },
+   "robust_construction": true,
+   "side": "below",
+   "threshold": "50 percent controlling share"
+  },
+  {
+   "checks": 73,
+   "command": {
+    "argv": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "waste",
+     "package",
+     "spec.json",
+     "out.json"
+    ],
+    "rc": 0,
+    "seconds": 0.003,
+    "stderr_tail": "",
+    "stdout_bytes": 0
+   },
+   "failed": 0,
+   "failures": [],
+   "missing_fields": [],
+   "model_assertions": {
+    "controlling only above one half": true,
+    "share": true
+   },
+   "name": "share50_at",
+   "notes": {
+    "share50_at spec_sha256_is_file_sha256": true
+   },
+   "pass": true,
+   "reported_assertions": {
+    "controlling only above one half": true,
+    "share": true
+   },
+   "robust_construction": true,
+   "side": "at",
+   "threshold": "50 percent controlling share"
+  },
+  {
+   "checks": 73,
+   "command": {
+    "argv": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "waste",
+     "package",
+     "spec.json",
+     "out.json"
+    ],
+    "rc": 0,
+    "seconds": 0.003,
+    "stderr_tail": "",
+    "stdout_bytes": 0
+   },
+   "failed": 0,
+   "failures": [],
+   "missing_fields": [],
+   "model_assertions": {
+    "controlling only above one half": true,
+    "share": true
+   },
+   "name": "share50_above",
+   "notes": {
+    "share50_above spec_sha256_is_file_sha256": true
+   },
+   "pass": true,
+   "reported_assertions": {
+    "controlling only above one half": true,
+    "share": true
+   },
+   "robust_construction": true,
+   "side": "above",
+   "threshold": "50 percent controlling share"
+  },
+  {
+   "checks": 71,
+   "command": {
+    "argv": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "waste",
+     "package",
+     "spec.json",
+     "out.json"
+    ],
+    "rc": 0,
+    "seconds": 0.002,
+    "stderr_tail": "",
+    "stdout_bytes": 0
+   },
+   "failed": 0,
+   "failures": [],
+   "missing_fields": [],
+   "model_assertions": {
+    "H-3 of concern only above 1 percent": true
+   },
+   "name": "concern1_below",
+   "notes": {
+    "concern1_below spec_sha256_is_file_sha256": true
+   },
+   "pass": true,
+   "reported_assertions": {
+    "H-3 of concern only above 1 percent": true
+   },
+   "robust_construction": true,
+   "side": "below",
+   "threshold": "1 percent concern level"
+  },
+  {
+   "checks": 71,
+   "command": {
+    "argv": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "waste",
+     "package",
+     "spec.json",
+     "out.json"
+    ],
+    "rc": 0,
+    "seconds": 0.002,
+    "stderr_tail": "",
+    "stdout_bytes": 0
+   },
+   "failed": 0,
+   "failures": [],
+   "missing_fields": [],
+   "model_assertions": {
+    "H-3 of concern only above 1 percent": true
+   },
+   "name": "concern1_at",
+   "notes": {
+    "concern1_at spec_sha256_is_file_sha256": true
+   },
+   "pass": true,
+   "reported_assertions": {
+    "H-3 of concern only above 1 percent": true
+   },
+   "robust_construction": true,
+   "side": "at",
+   "threshold": "1 percent concern level"
+  },
+  {
+   "checks": 72,
+   "command": {
+    "argv": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "waste",
+     "package",
+     "spec.json",
+     "out.json"
+    ],
+    "rc": 0,
+    "seconds": 0.003,
+    "stderr_tail": "",
+    "stdout_bytes": 0
+   },
+   "failed": 0,
+   "failures": [],
+   "missing_fields": [],
+   "model_assertions": {
+    "H-3 of concern only above 1 percent": true
+   },
+   "name": "concern1_above",
+   "notes": {
+    "concern1_above spec_sha256_is_file_sha256": true
+   },
+   "pass": true,
+   "reported_assertions": {
+    "H-3 of concern only above 1 percent": true
+   },
+   "robust_construction": true,
+   "side": "above",
+   "threshold": "1 percent concern level"
+  },
+  {
+   "checks": 73,
+   "command": {
+    "argv": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "waste",
+     "package",
+     "spec.json",
+     "out.json"
+    ],
+    "rc": 0,
+    "seconds": 0.003,
+    "stderr_tail": "",
+    "stdout_bytes": 0
+   },
+   "failed": 0,
+   "failures": [],
+   "missing_fields": [],
+   "model_assertions": {
+    "limit met": true
+   },
+   "name": "t3ni63_below",
+   "notes": {
+    "t3ni63_below spec_sha256_is_file_sha256": true
+   },
+   "pass": true,
+   "reported_assertions": {
+    "limit met": true
+   },
+   "robust_construction": true,
+   "side": "below",
+   "threshold": "BTP Table 3 value (Ni-63)"
+  },
+  {
+   "checks": 73,
+   "command": {
+    "argv": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "waste",
+     "package",
+     "spec.json",
+     "out.json"
+    ],
+    "rc": 0,
+    "seconds": 0.003,
+    "stderr_tail": "",
+    "stdout_bytes": 0
+   },
+   "failed": 0,
+   "failures": [],
+   "missing_fields": [],
+   "model_assertions": {
+    "limit met": true
+   },
+   "name": "t3ni63_at",
+   "notes": {
+    "t3ni63_at spec_sha256_is_file_sha256": true
+   },
+   "pass": true,
+   "reported_assertions": {
+    "limit met": true
+   },
+   "robust_construction": true,
+   "side": "at",
+   "threshold": "BTP Table 3 value (Ni-63)"
+  },
+  {
+   "checks": 73,
+   "command": {
+    "argv": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "waste",
+     "package",
+     "spec.json",
+     "out.json"
+    ],
+    "rc": 0,
+    "seconds": 0.002,
+    "stderr_tail": "",
+    "stdout_bytes": 0
+   },
+   "failed": 0,
+   "failures": [],
+   "missing_fields": [],
+   "model_assertions": {
+    "limit met": true
+   },
+   "name": "t3ni63_above",
+   "notes": {
+    "t3ni63_above spec_sha256_is_file_sha256": true
+   },
+   "pass": true,
+   "reported_assertions": {
+    "limit met": true
+   },
+   "robust_construction": true,
+   "side": "above",
+   "threshold": "BTP Table 3 value (Ni-63)"
+  },
+  {
+   "checks": 73,
+   "command": {
+    "argv": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "waste",
+     "package",
+     "spec.json",
+     "out.json"
+    ],
+    "rc": 0,
+    "seconds": 0.003,
+    "stderr_tail": "",
+    "stdout_bytes": 0
+   },
+   "failed": 0,
+   "failures": [],
+   "missing_fields": [],
+   "model_assertions": {
+    "limit met": true
+   },
+   "name": "t3alpha_below",
+   "notes": {
+    "t3alpha_below spec_sha256_is_file_sha256": true
+   },
+   "pass": true,
+   "reported_assertions": {
+    "limit met": true
+   },
+   "robust_construction": true,
+   "side": "below",
+   "threshold": "BTP Table 3 value (alpha TRU)"
+  },
+  {
+   "checks": 73,
+   "command": {
+    "argv": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "waste",
+     "package",
+     "spec.json",
+     "out.json"
+    ],
+    "rc": 0,
+    "seconds": 0.003,
+    "stderr_tail": "",
+    "stdout_bytes": 0
+   },
+   "failed": 0,
+   "failures": [],
+   "missing_fields": [],
+   "model_assertions": {
+    "limit met": true
+   },
+   "name": "t3alpha_at",
+   "notes": {
+    "t3alpha_at spec_sha256_is_file_sha256": true
+   },
+   "pass": true,
+   "reported_assertions": {
+    "limit met": true
+   },
+   "robust_construction": true,
+   "side": "at",
+   "threshold": "BTP Table 3 value (alpha TRU)"
+  },
+  {
+   "checks": 73,
+   "command": {
+    "argv": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "waste",
+     "package",
+     "spec.json",
+     "out.json"
+    ],
+    "rc": 0,
+    "seconds": 0.003,
+    "stderr_tail": "",
+    "stdout_bytes": 0
+   },
+   "failed": 0,
+   "failures": [],
+   "missing_fields": [],
+   "model_assertions": {
+    "limit met": true
+   },
+   "name": "t3alpha_above",
+   "notes": {
+    "t3alpha_above spec_sha256_is_file_sha256": true
+   },
+   "pass": true,
+   "reported_assertions": {
+    "limit met": true
+   },
+   "robust_construction": true,
+   "side": "above",
+   "threshold": "BTP Table 3 value (alpha TRU)"
+  },
+  {
+   "checks": 132,
+   "command": {
+    "argv": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "waste",
+     "package",
+     "spec.json",
+     "out.json"
+    ],
+    "rc": 0,
+    "seconds": 0.003,
+    "stderr_tail": "",
+    "stdout_bytes": 0
+   },
+   "failed": 0,
+   "failures": [],
+   "missing_fields": [],
+   "model_assertions": {
+    "loading": true,
+    "status": true
+   },
+   "name": "loading14_below",
+   "notes": {
+    "loading14_below spec_sha256_is_file_sha256": true
+   },
+   "pass": true,
+   "reported_assertions": {
+    "loading": true,
+    "status": true
+   },
+   "robust_construction": true,
+   "side": "below",
+   "threshold": "14 percent loading"
+  },
+  {
+   "checks": 132,
+   "command": {
+    "argv": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "waste",
+     "package",
+     "spec.json",
+     "out.json"
+    ],
+    "rc": 0,
+    "seconds": 0.003,
+    "stderr_tail": "",
+    "stdout_bytes": 0
+   },
+   "failed": 0,
+   "failures": [],
+   "missing_fields": [],
+   "model_assertions": {
+    "loading": true,
+    "status": true
+   },
+   "name": "loading14_at",
+   "notes": {
+    "loading14_at spec_sha256_is_file_sha256": true
+   },
+   "pass": true,
+   "reported_assertions": {
+    "loading": true,
+    "status": true
+   },
+   "robust_construction": true,
+   "side": "at",
+   "threshold": "14 percent loading"
+  },
+  {
+   "checks": 132,
+   "command": {
+    "argv": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "waste",
+     "package",
+     "spec.json",
+     "out.json"
+    ],
+    "rc": 0,
+    "seconds": 0.003,
+    "stderr_tail": "",
+    "stdout_bytes": 0
+   },
+   "failed": 0,
+   "failures": [],
+   "missing_fields": [],
+   "model_assertions": {
+    "loading": true,
+    "status": true
+   },
+   "name": "loading14_above",
+   "notes": {
+    "loading14_above spec_sha256_is_file_sha256": true
+   },
+   "pass": true,
+   "reported_assertions": {
+    "loading": true,
+    "status": true
+   },
+   "robust_construction": true,
+   "side": "above",
+   "threshold": "14 percent loading"
+  },
+  {
+   "checks": 132,
+   "command": {
+    "argv": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "waste",
+     "package",
+     "spec.json",
+     "out.json"
+    ],
+    "rc": 0,
+    "seconds": 0.003,
+    "stderr_tail": "",
+    "stdout_bytes": 0
+   },
+   "failed": 0,
+   "failures": [],
+   "missing_fields": [],
+   "model_assertions": {
+    "status": true
+   },
+   "name": "volume331_below",
+   "notes": {
+    "volume331_below spec_sha256_is_file_sha256": true
+   },
+   "pass": true,
+   "reported_assertions": {
+    "status": true
+   },
+   "robust_construction": true,
+   "side": "below",
+   "threshold": "9.373 m3"
+  },
+  {
+   "checks": 132,
+   "command": {
+    "argv": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "waste",
+     "package",
+     "spec.json",
+     "out.json"
+    ],
+    "rc": 0,
+    "seconds": 0.003,
+    "stderr_tail": "",
+    "stdout_bytes": 0
+   },
+   "failed": 0,
+   "failures": [],
+   "missing_fields": [],
+   "model_assertions": {
+    "status": true
+   },
+   "name": "volume331_at",
+   "notes": {
+    "volume331_at spec_sha256_is_file_sha256": true
+   },
+   "pass": true,
+   "reported_assertions": {
+    "status": true
+   },
+   "robust_construction": true,
+   "side": "at",
+   "threshold": "9.373 m3"
+  },
+  {
+   "checks": 47,
+   "command": {
+    "argv": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "waste",
+     "package",
+     "spec.json",
+     "out.json"
+    ],
+    "rc": 0,
+    "seconds": 0.002,
+    "stderr_tail": "",
+    "stdout_bytes": 0
+   },
+   "failed": 0,
+   "failures": [],
+   "missing_fields": [],
+   "model_assertions": {
+    "status": true
+   },
+   "name": "volume331_above",
+   "notes": {
+    "volume331_above spec_sha256_is_file_sha256": true
+   },
+   "pass": true,
+   "reported_assertions": {
+    "status": true
+   },
+   "robust_construction": true,
+   "side": "above",
+   "threshold": "9.373 m3"
+  },
+  {
+   "checks": 132,
+   "command": {
+    "argv": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "waste",
+     "package",
+     "spec.json",
+     "out.json"
+    ],
+    "rc": 0,
+    "seconds": 0.003,
+    "stderr_tail": "",
+    "stdout_bytes": 0
+   },
+   "failed": 0,
+   "failures": [],
+   "missing_fields": [],
+   "model_assertions": {
+    "credited volume": true,
+    "status": true
+   },
+   "name": "low02_below",
+   "notes": {
+    "low02_below spec_sha256_is_file_sha256": true
+   },
+   "pass": true,
+   "reported_assertions": {
+    "credited volume": true,
+    "status": true
+   },
+   "robust_construction": true,
+   "side": "below",
+   "threshold": "0.2 m3"
+  },
+  {
+   "checks": 132,
+   "command": {
+    "argv": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "waste",
+     "package",
+     "spec.json",
+     "out.json"
+    ],
+    "rc": 0,
+    "seconds": 0.003,
+    "stderr_tail": "",
+    "stdout_bytes": 0
+   },
+   "failed": 0,
+   "failures": [],
+   "missing_fields": [],
+   "model_assertions": {
+    "credited volume": true,
+    "status": true
+   },
+   "name": "low02_at",
+   "notes": {
+    "low02_at spec_sha256_is_file_sha256": true
+   },
+   "pass": true,
+   "reported_assertions": {
+    "credited volume": true,
+    "status": true
+   },
+   "robust_construction": true,
+   "side": "at",
+   "threshold": "0.2 m3"
+  },
+  {
+   "checks": 132,
+   "command": {
+    "argv": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "waste",
+     "package",
+     "spec.json",
+     "out.json"
+    ],
+    "rc": 0,
+    "seconds": 0.003,
+    "stderr_tail": "",
+    "stdout_bytes": 0
+   },
+   "failed": 0,
+   "failures": [],
+   "missing_fields": [],
+   "model_assertions": {
+    "credited volume": true,
+    "status": true
+   },
+   "name": "low02_above",
+   "notes": {
+    "low02_above spec_sha256_is_file_sha256": true
+   },
+   "pass": true,
+   "reported_assertions": {
+    "credited volume": true,
+    "status": true
+   },
+   "robust_construction": true,
+   "side": "above",
+   "threshold": "0.2 m3"
+  },
+  {
+   "checks": 78,
+   "command": {
+    "argv": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "waste",
+     "package",
+     "spec.json",
+     "out.json"
+    ],
+    "rc": 0,
+    "seconds": 0.003,
+    "stderr_tail": "",
+    "stdout_bytes": 0
+   },
+   "failed": 0,
+   "failures": [],
+   "missing_fields": [],
+   "model_assertions": {
+    "credited mass": true,
+    "status": true
+   },
+   "name": "low500_below",
+   "notes": {
+    "low500_below spec_sha256_is_file_sha256": true
+   },
+   "pass": true,
+   "reported_assertions": {
+    "credited mass": true,
+    "status": true
+   },
+   "robust_construction": true,
+   "side": "below",
+   "threshold": "500 kg"
+  },
+  {
+   "checks": 78,
+   "command": {
+    "argv": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "waste",
+     "package",
+     "spec.json",
+     "out.json"
+    ],
+    "rc": 0,
+    "seconds": 0.003,
+    "stderr_tail": "",
+    "stdout_bytes": 0
+   },
+   "failed": 0,
+   "failures": [],
+   "missing_fields": [],
+   "model_assertions": {
+    "credited mass": true,
+    "status": true
+   },
+   "name": "low500_at",
+   "notes": {
+    "low500_at spec_sha256_is_file_sha256": true
+   },
+   "pass": true,
+   "reported_assertions": {
+    "credited mass": true,
+    "status": true
+   },
+   "robust_construction": true,
+   "side": "at",
+   "threshold": "500 kg"
+  },
+  {
+   "checks": 78,
+   "command": {
+    "argv": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "waste",
+     "package",
+     "spec.json",
+     "out.json"
+    ],
+    "rc": 0,
+    "seconds": 0.003,
+    "stderr_tail": "",
+    "stdout_bytes": 0
+   },
+   "failed": 0,
+   "failures": [],
+   "missing_fields": [],
+   "model_assertions": {
+    "credited mass": true,
+    "status": true
+   },
+   "name": "low500_above",
+   "notes": {
+    "low500_above spec_sha256_is_file_sha256": true
+   },
+   "pass": true,
+   "reported_assertions": {
+    "credited mass": true,
+    "status": true
+   },
+   "robust_construction": true,
+   "side": "above",
+   "threshold": "500 kg"
+  },
+  {
+   "checks": 78,
+   "command": {
+    "argv": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "waste",
+     "package",
+     "spec.json",
+     "out.json"
+    ],
+    "rc": 0,
+    "seconds": 0.003,
+    "stderr_tail": "",
+    "stdout_bytes": 0
+   },
+   "failed": 0,
+   "failures": [],
+   "missing_fields": [],
+   "model_assertions": {
+    "credited mass": true,
+    "status": true
+   },
+   "name": "density25_below",
+   "notes": {
+    "density25_below spec_sha256_is_file_sha256": true
+   },
+   "pass": true,
+   "reported_assertions": {
+    "credited mass": true,
+    "status": true
+   },
+   "robust_construction": true,
+   "side": "below",
+   "threshold": "2.5 g/cm3"
+  },
+  {
+   "checks": 78,
+   "command": {
+    "argv": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "waste",
+     "package",
+     "spec.json",
+     "out.json"
+    ],
+    "rc": 0,
+    "seconds": 0.003,
+    "stderr_tail": "",
+    "stdout_bytes": 0
+   },
+   "failed": 0,
+   "failures": [],
+   "missing_fields": [],
+   "model_assertions": {
+    "credited mass": true,
+    "status": true
+   },
+   "name": "density25_at",
+   "notes": {
+    "density25_at spec_sha256_is_file_sha256": true
+   },
+   "pass": true,
+   "reported_assertions": {
+    "credited mass": true,
+    "status": true
+   },
+   "robust_construction": true,
+   "side": "at",
+   "threshold": "2.5 g/cm3"
+  },
+  {
+   "checks": 78,
+   "command": {
+    "argv": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "waste",
+     "package",
+     "spec.json",
+     "out.json"
+    ],
+    "rc": 0,
+    "seconds": 0.003,
+    "stderr_tail": "",
+    "stdout_bytes": 0
+   },
+   "failed": 0,
+   "failures": [],
+   "missing_fields": [],
+   "model_assertions": {
+    "credited mass": true,
+    "status": true
+   },
+   "name": "density25_above",
+   "notes": {
+    "density25_above spec_sha256_is_file_sha256": true
+   },
+   "pass": true,
+   "reported_assertions": {
+    "credited mass": true,
+    "status": true
+   },
+   "robust_construction": true,
+   "side": "above",
+   "threshold": "2.5 g/cm3"
+  },
+  {
+   "checks": 84,
+   "command": {
+    "argv": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "waste",
+     "package",
+     "spec.json",
+     "out.json"
+    ],
+    "rc": 0,
+    "seconds": 0.003,
+    "stderr_tail": "",
+    "stdout_bytes": 0
+   },
+   "failed": 0,
+   "failures": [],
+   "missing_fields": [],
+   "model_assertions": {
+    "cap passes": true,
+    "status": true
+   },
+   "name": "cap_below",
+   "notes": {
+    "cap_below spec_sha256_is_file_sha256": true
+   },
+   "pass": true,
+   "reported_assertions": {
+    "cap passes": true,
+    "status": true
+   },
+   "robust_construction": true,
+   "side": "below",
+   "threshold": "Class C cap"
+  },
+  {
+   "checks": 84,
+   "command": {
+    "argv": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "waste",
+     "package",
+     "spec.json",
+     "out.json"
+    ],
+    "rc": 0,
+    "seconds": 0.003,
+    "stderr_tail": "",
+    "stdout_bytes": 0
+   },
+   "failed": 0,
+   "failures": [],
+   "missing_fields": [],
+   "model_assertions": {
+    "cap passes": true,
+    "status": true
+   },
+   "name": "cap_at",
+   "notes": {
+    "cap_at spec_sha256_is_file_sha256": true
+   },
+   "pass": true,
+   "reported_assertions": {
+    "cap passes": true,
+    "status": true
+   },
+   "robust_construction": true,
+   "side": "at",
+   "threshold": "Class C cap"
+  },
+  {
+   "checks": 84,
+   "command": {
+    "argv": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "waste",
+     "package",
+     "spec.json",
+     "out.json"
+    ],
+    "rc": 0,
+    "seconds": 0.003,
+    "stderr_tail": "",
+    "stdout_bytes": 0
+   },
+   "failed": 0,
+   "failures": [],
+   "missing_fields": [],
+   "model_assertions": {
+    "cap passes": true,
+    "status": true
+   },
+   "name": "cap_above",
+   "notes": {
+    "cap_above spec_sha256_is_file_sha256": true
+   },
+   "pass": true,
+   "reported_assertions": {
+    "cap passes": true,
+    "status": true
+   },
+   "robust_construction": true,
+   "side": "above",
+   "threshold": "Class C cap"
+  }
+ ],
+ "construction_not_robust": [],
+ "note": "an at case is built from exactly representable values (1 m3 volumes, integer or literal activities); where a pairing of equivalent floating-point orders disagrees it is listed in construction_not_robust and only required to run",
+ "pass": true,
+ "schema": "actinv-p147-e3-1",
+ "sides_by_threshold": {
+  "0.2 m3": [
+   "above",
+   "at",
+   "below"
+  ],
+  "1 percent concern level": [
+   "above",
+   "at",
+   "below"
+  ],
+  "14 percent loading": [
+   "above",
+   "at",
+   "below"
+  ],
+  "2.5 g/cm3": [
+   "above",
+   "at",
+   "below"
+  ],
+  "280 cm3 small item": [
+   "above",
+   "at",
+   "below"
+  ],
+  "37 MBq screen": [
+   "above",
+   "at",
+   "below"
+  ],
+  "50 percent controlling share": [
+   "above",
+   "at",
+   "below"
+  ],
+  "500 kg": [
+   "above",
+   "at",
+   "below"
+  ],
+  "9.373 m3": [
+   "above",
+   "at",
+   "below"
+  ],
+  "BTP Table 2 sum of fractions 1 (individual)": [
+   "above",
+   "at",
+   "below"
+  ],
+  "BTP Table 2 sum of fractions 1 (pooled)": [
+   "above",
+   "at",
+   "below"
+  ],
+  "BTP Table 3 value (Ni-63)": [
+   "above",
+   "at",
+   "below"
+  ],
+  "BTP Table 3 value (alpha TRU)": [
+   "above",
+   "at",
+   "below"
+  ],
+  "Class C cap": [
+   "above",
+   "at",
+   "below"
+  ],
+  "Factor of 10 (other nuclide)": [
+   "above",
+   "at",
+   "below"
+  ],
+  "Factor of 10 (primary gamma)": [
+   "above",
+   "at",
+   "below"
+  ],
+  "Factor of 2": [
+   "above",
+   "at",
+   "below"
+  ]
+ },
+ "summary": {
+  "cases": 51,
+  "construction_not_robust": [],
+  "passed": 51,
+  "thresholds_with_three_sides": true
+ },
+ "thresholds": [
+  "37 MBq screen",
+  "280 cm3 small item",
+  "BTP Table 2 sum of fractions 1 (individual)",
+  "BTP Table 2 sum of fractions 1 (pooled)",
+  "Factor of 2",
+  "Factor of 10 (primary gamma)",
+  "Factor of 10 (other nuclide)",
+  "50 percent controlling share",
+  "1 percent concern level",
+  "BTP Table 3 value (Ni-63)",
+  "BTP Table 3 value (alpha TRU)",
+  "14 percent loading",
+  "9.373 m3",
+  "0.2 m3",
+  "500 kg",
+  "2.5 g/cm3",
+  "Class C cap"
+ ],
+ "worktree_clean_after": true
+}
