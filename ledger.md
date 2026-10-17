@@ -3567,3 +3567,11 @@ nothing written; zero variance reproduces the nominal supremum; repeats byte-ide
 G2–G4 against `db2d482f…`, the P105 steps, fmt, clippy native and wasm, workspace tests (1087 passed, 0 failed),
 binding checks, module build and tests, handbook and P13 exited 0. The results equal attempt 1's, as expected for an
 unchanged command. CI decides the rest.
+
+## Entry 203 — P146 verdict: impurity budgets under nuclear-data uncertainty (2026-10-16)
+
+**P146-PASS** (`results/p146_verdict.json`). B1–B5 and the local half of B6 as entry 202; the four workflows the push
+triggered on the evidence commit `f1bed74` succeeded, `controls` among them (`results/p146/ci_runs.json`; the
+handbook and browser workflows are path-filtered and did not trigger; all six succeeded on the candidate `b98042d`,
+whose docs changes are unchanged since). The phase took its one repair round (Amendment B); attempt 1 stays
+preserved under `results/failures/p146/`.

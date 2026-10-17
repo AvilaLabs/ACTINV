@@ -1,0 +1,26 @@
+{
+ "commit": "f1bed746418c0369507cba6c4a9015e140c31c74",
+ "note": "workflows triggered by the push; Build handbook and Build browser workbench are path-filtered and did not trigger",
+ "runs": [
+  {
+   "conclusion": "success",
+   "name": "controls",
+   "run_id": 38997506495
+  },
+  {
+   "conclusion": "success",
+   "name": "desktop builds",
+   "run_id": 38997506514
+  },
+  {
+   "conclusion": "success",
+   "name": "fns-iron",
+   "run_id": 38997506494
+  },
+  {
+   "conclusion": "success",
+   "name": "fusion-isotope",
+   "run_id": 38997506487
+  }
+ ]
+}
