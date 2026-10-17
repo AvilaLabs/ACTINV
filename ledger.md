@@ -3507,3 +3507,12 @@ release binary rebuilt from it; all twenty steps ran serially in the bounded sco
 99.9 % intervals at 4096 samples), U4 and the `check_p136.py` study regression pass with the same results as
 attempt 1; workspace tests 1073 passed, 0 failed; fmt, clippy native and wasm, binding checks, module build, smoke
 and tests, handbook build and, new under Amendment C, the P13 data-distribution step exited 0. CI decides the rest.
+
+## Entry 198 — P145 verdict: waste classification under nuclear-data uncertainty (2026-10-16)
+
+**P145-PASS** (`results/p145_verdict.json`). U1–U4 and the local half of U5 as entry 197 (`results/p145/u5.json`
+assembled from `steps.tsv`, the workspace test log and the study regression record); the four workflows the push
+triggered on the evidence commit `95db7d1` succeeded, `controls` among them (`results/p145/ci_runs.json`; the
+handbook and browser workflows are path-filtered and did not trigger). This also returns `master` to green after
+the red attempt-1 evidence commit `51a42cd`. The phase took its one repair round (Amendment C, completed in entry
+196); attempts 1 and 2 stay preserved under `results/failures/p145/`.

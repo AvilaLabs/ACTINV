@@ -1,0 +1,58 @@
+{
+ "amendment_sha256": "355ddb6f3d1188c780f322f9cfabe95ce66adc628b2ccd45de523001e2f6bc72",
+ "candidate": {
+  "amendment_b_sha256": "b48aa0c11c02a9121563c729d53b7fe8dc3426b2ecb2ce2ecab2f3735f04ef05",
+  "amendment_sha256": "355ddb6f3d1188c780f322f9cfabe95ce66adc628b2ccd45de523001e2f6bc72",
+  "binary": "target/release/actinv",
+  "binary_sha256": "db2d482f3706e12138a118edbed4368ffd821c4adde4b76898ffc19a98663a56",
+  "commit": "0ea4a18cdc29399efac211ce349a02b8905693fe",
+  "protocol_sha256": "7a50a266d7bb68f0745ac159114493b7731479c3bbc6b4b61b72cff6e2bd89f1",
+  "tree_clean": true
+ },
+ "ci": {
+  "commit": "95db7d110dc9c0c192d6c45d2bf593e5a4e1fa89",
+  "note": "workflows triggered by the push; Build handbook and Build browser workbench are path-filtered and did not trigger",
+  "runs": [
+   {
+    "conclusion": "success",
+    "name": "controls",
+    "run_id": 38982479470
+   },
+   {
+    "conclusion": "success",
+    "name": "desktop builds",
+    "run_id": 38982479469
+   },
+   {
+    "conclusion": "success",
+    "name": "fns-iron",
+    "run_id": 38982479483
+   },
+   {
+    "conclusion": "success",
+    "name": "fusion-isotope",
+    "run_id": 38982479501
+   }
+  ]
+ },
+ "evidence_candidates_consistent": true,
+ "gate_file_sha256": {
+  "u1_c1": "3a272155f6a53f8b77aa76f296b95a58ac8b5ca61a94128a3e42897084f93e5c",
+  "u1_c2": "165ebf40595505eab7b9610a7846c6d58ad409cb88751e3e92bb76948abdfdd0",
+  "u2_c1": "0bea7bbaff201decf087d1c4003ff8faf5a0d8b22828a6560553ea69cffbb764",
+  "u2_c2": "bef5a5a4aaf87e4a9d8f49974842e49353b314450c8a7f459db80f18288426f7",
+  "u3": "ebef3adb4adb9a46291c0d088553d934f83860880df17f78b8d2ca5ef36bbde6",
+  "u4": "f199899a46f578e4f1f2f75bb4674051be3f47469e1f75a15ac1562343ec1dfd",
+  "u5": "707f1e476c9958ebffb94902b3d5b212fa32e419bff8a9f9ec588aee7e146286"
+ },
+ "gates": {
+  "U1": true,
+  "U2": true,
+  "U3": true,
+  "U4": true,
+  "U5": true
+ },
+ "protocol_sha256": "7a50a266d7bb68f0745ac159114493b7731479c3bbc6b4b61b72cff6e2bd89f1",
+ "schema": "actinv-p145-verdict-1",
+ "verdict": "P145-PASS"
+}
