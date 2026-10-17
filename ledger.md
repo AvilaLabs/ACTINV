@@ -3516,3 +3516,13 @@ triggered on the evidence commit `95db7d1` succeeded, `controls` among them (`re
 handbook and browser workflows are path-filtered and did not trigger). This also returns `master` to green after
 the red attempt-1 evidence commit `51a42cd`. The phase took its one repair round (Amendment C, completed in entry
 196); attempts 1 and 2 stay preserved under `results/failures/p145/`.
+
+## Entry 199 — P146 registered: impurity budgets under nuclear-data uncertainty (2026-10-16)
+
+Registered before any source change for the phase: **P146** `f965cdc7e6189d923c4d28b05e5b218dd89889fae529ece34bf894079aa1adcb`. A new command
+`actinv waste budget uncertainty` and `actinv.waste.budget_uncertainty` draw each sample's factors once from the
+full budget material, solve every element with them, apply the nominal P105 budget algorithm per sample and report
+per impurity and for the joint scale factor the order-statistic (Wilks) budget at a confidence level, with P145
+Clopper–Pearson conventions; one-sided budgets only. B1 one data set per sample; B2 independent recomputation; B3
+verification at 0.99 and 1.01 of per-sample suprema; B4 Beta calibration against the lognormal closed form; B5
+refusals and invariance; B6 study and P105 regression, P13, quality and CI.
