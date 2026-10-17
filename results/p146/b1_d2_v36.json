@@ -1,0 +1,93 @@
+{
+ "budget_sha256": "48095e8ca8e50a0a79276bb539b25ea964193489badb923008583e59422dd512",
+ "budget_uncertainty": {
+  "argv": [
+   "/home/connoravila/Documents/actinv/target/release/actinv",
+   "waste",
+   "budget",
+   "uncertainty",
+   "spec.json",
+   "result.json"
+  ],
+  "rc": 0,
+  "seconds": 231.943,
+  "stderr_tail": "",
+  "stdout_bytes": 0
+ },
+ "candidate": {
+  "amendments_sha256": {
+   "ACTINV-P146_AMENDMENT_A.md": "df96453f5d7fa9d05b6b806284befd3a8703429754184d8b5db4fcf731f019b3",
+   "ACTINV-P146_AMENDMENT_B.md": "7c0058e8b1b945ff5e1631c8a41fcec5f28e4427d9366f3a6e44bfb96d883007"
+  },
+  "binary": "target/release/actinv",
+  "binary_sha256": "7cd833a08e5670cd7a96f066db48307c7bf7cf95ca73bace7e80fe58fb8d62b4",
+  "commit": "8e2f471d0eaa13a1092e8e4d15416921b220f446",
+  "protocol_sha256": "f965cdc7e6189d923c4d28b05e5b218dd89889fae529ece34bf894079aa1adcb",
+  "tree_clean": true
+ },
+ "case": "D2_V36",
+ "comparison": {
+  "channel_exercised": {
+   "decay_scale": true,
+   "flux_factor": true,
+   "rate_scale": true,
+   "yield_scale": true
+  },
+  "channels_enabled": {
+   "decay_scale": false,
+   "flux_factor": false,
+   "rate_scale": true,
+   "yield_scale": false
+  },
+  "counts": {
+   "decay_scale_nonempty": 0,
+   "element_blocks_identical": 2048,
+   "flux_factor_not_one": 0,
+   "rate_scale_nonempty": 1024,
+   "samples_compared": 1024,
+   "yield_scale_nonempty": 0
+  },
+  "mismatch_count": 0,
+  "mismatches": []
+ },
+ "keep_files": 1024,
+ "keep_files_expected": true,
+ "pass": true,
+ "properties_entries": 3611,
+ "properties_sha256": "705a6ca44ecbccdf821fb1ecc2a02e39ed20e5759b7b94c23131f9f52b384e4b",
+ "result_sha256": "f6e9663db4d3eedf37a39ed98973f43b3a05f981a5d37c547b0a82735c64c9df",
+ "samples": 1024,
+ "schema": "actinv-p146-b1-1",
+ "source_problem_sha256": "2916afb8d78a93e1a668060afd7289cd2f1bde1b26626d19dda459baa791b4fe",
+ "spec": "d2_v36.json",
+ "spec_sha256": "16c768e1893389573fb4a59fb4e03ddd8d341e383a4b8b99334d397ce6260d59",
+ "staged_budget_sha256": "5c40ad4357de376e28b8ae8d0d9892db139fefb76f8b416368435ff214b50c7a",
+ "staged_problem_sha256": "490385394446f1724612410c2cb8ea19dbd2320ce7a5e7033eacdd50fed793e4",
+ "staged_spec_sha256": "b112f735d0d331b2df67c945121453be33f0f51b536ce4b671ca58289f698b86",
+ "study": {
+  "argv": [
+   "/home/connoravila/Documents/actinv/target/release/actinv",
+   "study",
+   "run",
+   "study.json",
+   "study_out"
+  ],
+  "rc": 0,
+  "seconds": 33.735,
+  "stderr_tail": "",
+  "stdout_bytes": 42
+ },
+ "study_sha256": "a18cc58dfe9c36e0e02d518fe3ad192e8773f6437febb2c04293a2a7a76d0cad",
+ "summary": {
+  "case": "D2_V36",
+  "channel_exercised": {
+   "decay_scale": true,
+   "flux_factor": true,
+   "rate_scale": true,
+   "yield_scale": true
+  },
+  "mismatches": 0,
+  "samples": 1024
+ },
+ "worktree_clean_after": true
+}

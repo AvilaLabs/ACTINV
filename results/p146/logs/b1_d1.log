@@ -1,0 +1,1 @@
+{"case": "D1", "channel_exercised": {"decay_scale": true, "flux_factor": true, "rate_scale": true, "yield_scale": true}, "gate": "b1_d1", "mismatches": 0, "pass": true, "samples": 200}

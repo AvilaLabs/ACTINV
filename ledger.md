@@ -3550,3 +3550,20 @@ synthetic result lacks `verification_skipped`), so the B6 record, which requires
 P146 fails B6. Preserved in `results/failures/p146/evidence_attempt1/`. Registered before the repair:
 **P146 Amendment B** `7c0058e8b1b945ff5e1631c8a41fcec5f28e4427d9366f3a6e44bfb96d883007` (treat an absent member as empty, exercise both cases
 in the selftest, rerun B1–B6 in full; the one repair round is consumed).
+
+## Entry 202 — P146 evidence attempt 2: B1–B5 and local B6 pass on the repaired candidate (2026-10-16)
+
+Candidate `8e2f471` (Amendment B), clean tracked tree, release binary rebuilt from it; all 33 steps ran serially in
+the bounded scope and exited 0, the checker selftest among them (`results/p146/steps.tsv`, `logs/`). **B1**: every
+kept sample's factor block is identical across its element solves and equal to the `study.robustness` file of the
+same index (200 samples of D1, 1024 of each D2 case; 0 mismatches). **B2**: the independent recomputation from the
+kept element activities and the bundled rule pack reproduced every per-sample interval, the sorted suprema, k, the
+budget, the minimum sample count and the binding tallies (3288 checks for D1, 9268 per D2 case; 0 failed), and the
+reported nominal equals a separate `actinv waste budget` run. D1 at 0.95: N and Nb bind on the Table 1 sum at
+33 years, Co is capped by the balance (Amendment A). **B3**: 823 and 3 × 1994 verification rows, 0 failed. **B4**: the
+closed-form keep probability at the budget, 0.961, 0.969 and 0.964 for σ² = 0.16, 0.36 and 0.64 (k = 38 of 1024),
+lies inside the 99.9 % band [0.941, 0.979] of Beta(n − k + 1, k). **B5**: every refusal with its own message and
+nothing written; zero variance reproduces the nominal supremum; repeats byte-identical. **B6 (local)**: `check_p136.py`
+G2–G4 against `db2d482f…`, the P105 steps, fmt, clippy native and wasm, workspace tests (1087 passed, 0 failed),
+binding checks, module build and tests, handbook and P13 exited 0. The results equal attempt 1's, as expected for an
+unchanged command. CI decides the rest.

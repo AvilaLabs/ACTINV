@@ -1,0 +1,140 @@
+{
+ "assumptions": {
+  "endpoint_tol": 1e-08,
+  "rel_tol": 1e-12
+ },
+ "candidate": {
+  "amendments_sha256": {
+   "ACTINV-P146_AMENDMENT_A.md": "df96453f5d7fa9d05b6b806284befd3a8703429754184d8b5db4fcf731f019b3",
+   "ACTINV-P146_AMENDMENT_B.md": "7c0058e8b1b945ff5e1631c8a41fcec5f28e4427d9366f3a6e44bfb96d883007"
+  },
+  "binary": "target/release/actinv",
+  "binary_sha256": "7cd833a08e5670cd7a96f066db48307c7bf7cf95ca73bace7e80fe58fb8d62b4",
+  "commit": "8e2f471d0eaa13a1092e8e4d15416921b220f446",
+  "protocol_sha256": "f965cdc7e6189d923c4d28b05e5b218dd89889fae529ece34bf894079aa1adcb",
+  "tree_clean": true
+ },
+ "case": "D1",
+ "check_report": {
+  "checks": 3288,
+  "failed": 0,
+  "failures": [],
+  "missing_fields": []
+ },
+ "command": null,
+ "details": {
+  "failed_count": 0,
+  "failed_samples": [],
+  "k": 4,
+  "kept_missing": [],
+  "minimum_samples": 72,
+  "n": 200,
+  "nominal_intervals": {
+   "Co": {
+    "feasible": true,
+    "lower": 0.0,
+    "status": "composition_bound",
+    "upper": 72.44
+   },
+   "N": {
+    "feasible": true,
+    "lower": 0.0,
+    "status": "limit",
+    "upper": 5.900867394689934
+   },
+   "Nb": {
+    "feasible": true,
+    "lower": 0.0,
+    "status": "limit",
+    "upper": 2.071953916417288
+   },
+   "joint_scale_factor": {
+    "feasible": true,
+    "lower": 0.0,
+    "status": "limit",
+    "upper": 75.6518775344883
+   }
+  },
+  "nominal_worst_relative_difference": 0.0,
+  "quantities": {
+   "Co": {
+    "budget": 72.44,
+    "nominal_supremum": 72.44,
+    "sample_status": {
+     "bound": 0,
+     "capped": 200,
+     "failed": 0,
+     "infeasible": 0,
+     "no_response": 0
+    },
+    "status": "established"
+   },
+   "N": {
+    "budget": 2.712819806197912,
+    "nominal_supremum": 5.900867394689934,
+    "sample_status": {
+     "bound": 200,
+     "capped": 0,
+     "failed": 0,
+     "infeasible": 0,
+     "no_response": 0
+    },
+    "status": "established"
+   },
+   "Nb": {
+    "budget": 1.4430828926724402,
+    "nominal_supremum": 2.071953916417288,
+    "sample_status": {
+     "bound": 200,
+     "capped": 0,
+     "failed": 0,
+     "infeasible": 0,
+     "no_response": 0
+    },
+    "status": "established"
+   },
+   "joint_scale_factor": {
+    "budget": 42.13107506829902,
+    "nominal_supremum": 75.6518775344883,
+    "sample_status": {
+     "bound": 200,
+     "capped": 0,
+     "failed": 0,
+     "infeasible": 0,
+     "no_response": 0
+    },
+    "status": "established"
+   }
+  },
+  "worst_kept_sum_deviation": 0.0
+ },
+ "nominal_command": {
+  "argv": [
+   "/home/connoravila/Documents/actinv/target/release/actinv",
+   "waste",
+   "budget",
+   "budget.json",
+   "nominal_ref.json"
+  ],
+  "rc": 0,
+  "seconds": 7.245,
+  "stderr_tail": "",
+  "stdout_bytes": 0
+ },
+ "nominal_reference_present": true,
+ "pass": true,
+ "result_sha256": "bdfb0046048fa8a4f5a010bfd9c8c73b6100cef79d7632e8dd672e8aad321949",
+ "reused_b1_run": true,
+ "rule_pack": "crates/actinv-core/data/waste_us_nrc_61_55_v1.json",
+ "rule_pack_sha256": "890268af81a53815b8e11c238e4a1694eabb79664a1ca087fd7fe22b9fabe5d7",
+ "schema": "actinv-p146-b2-1",
+ "spec": "d1_steel.json",
+ "spec_sha256": "b4df9c62288d9f4bb4c9920f15c08f982c31c4d135d3f4a33ff80009886c2bf5",
+ "summary": {
+  "case": "D1",
+  "checks": 3288,
+  "failed": 0,
+  "missing_fields": 0
+ },
+ "worktree_clean_after": true
+}
