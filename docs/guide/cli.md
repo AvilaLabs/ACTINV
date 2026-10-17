@@ -27,6 +27,14 @@ specification scale factor, the budget at a confidence level as an order statist
 72 samples at 0.95), with a verification re-solve around it. The budget path is relative to the spec file. See
 [Budgets under nuclear-data uncertainty](waste.md#budgets-under-nuclear-data-uncertainty).
 
+`actinv waste package SPEC.json [OUT.json]` classifies one container of discrete items (activated metal pieces,
+sealed sources, cartridge filters) under the NRC concentration-averaging and encapsulation BTP: it tests every item
+against BTP Tables 2 and 3 and the Factors of 2 and 10, takes failing items out of the average and classifies them
+alone, treats sectioned components as one, and applies the encapsulation volume and mass credit and the Class C cap.
+Item result paths are relative to the spec file. See
+[Classify a package of discrete items](waste.md#classify-a-package-of-discrete-items) for the spec, the readings the
+result is conditional on and what it does not claim.
+
 ## Create, check, and solve
 
 ```text
@@ -183,6 +191,7 @@ actinv waste bounds BOUNDS.json [OUT.json]
 actinv waste composition COMPOSITION.json [OUT.json]
 actinv waste composition solve NATIVE_COMPOSITION.json [OUT.json]
 actinv waste intrusion-screen INTRUSION.json [OUT.json]
+actinv waste package PACKAGE.json [OUT.json]
 ```
 
 Each workflow consumes its own document format. [Advanced workflows](workflows.md) links the schemas, examples, and applicability limits. Run `actinv COMMAND --help` for available help; some commands print the shared usage rather than a dedicated page.

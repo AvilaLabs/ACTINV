@@ -1,0 +1,36 @@
+{
+  "schema": "actinv-waste-btp-1",
+  "id": "us-nrc-ca-btp-2015-rev1-v1",
+  "source": {
+    "title": "Concentration Averaging and Encapsulation Branch Technical Position, Revision 1, Volume 1",
+    "adams": "ML12254B065",
+    "sha256_2015_original": "4e0e3df3017b0f546630c94fbbd637c7fb4ee124f830afa575dfc05ad67ba7eb",
+    "review": "docs/maintainers/WASTE_BTP_SOURCE_REVIEW.md"
+  },
+  "primary_gamma": ["Co-60", "Nb-94", "Cs-137"],
+  "table2_bq": {
+    "Co-60": [5.2e12, null, null],
+    "Nb-94": [3.7e7, 3.7e7, 3.7e7],
+    "Cs-137": [2.66e8, 2.7e10, 4.8e12]
+  },
+  "table3_bq": {
+    "H-3": [3.0e11, 3.0e11, null],
+    "C-14": [4.0e10, 4.0e10, 4.0e11],
+    "Ni-59": [1.5e11, 1.5e11, 1.5e12],
+    "Ni-63": [2.6e11, 2.6e11, 5.5e13],
+    "alpha_transuranic_gt5y": [1.11e8, 1.11e8, 1.1e9]
+  },
+  "thresholds": {
+    "screen_activity_bq": 3.7e7,
+    "small_item_cm3": 280.0,
+    "factor_controlling": 2.0,
+    "factor_other": 10.0,
+    "controlling_share": 0.5,
+    "concern_fraction": 0.01,
+    "encapsulation_min_loading": 0.14,
+    "encapsulation_max_volume_cm3": 9372876.221952,
+    "low_loading_max_volume_cm3": 200000.0,
+    "low_loading_max_mass_g": 500000.0,
+    "encapsulant_max_density_g_cm3": 2.5
+  }
+}

@@ -167,6 +167,16 @@ def _intrusion_spec():
     }
 
 
+def _package_spec():
+    return {
+        "schema": "actinv-waste-package-spec-1", "rules": "us-nrc-10cfr61.55-v1",
+        "targets": [1], "nuclide_properties": {"C14": _C14},
+        "items": [{"id": "part", "waste_type": "contaminated_material", "mass_g": 10.0,
+                   "displaced_volume_cm3": 100.0,
+                   "activity": {"declared_bq": {"1": {"C14": 1.0}}}}],
+    }
+
+
 def _text(spec):
     return json.dumps(spec, allow_nan=False)
 
@@ -228,7 +238,7 @@ class Waste(unittest.TestCase):
         self.assertEqual(
             sorted(n for n in vars(actinv.waste) if not n.startswith("_")),
             ["bounds", "budget", "budget_uncertainty", "classify", "composition",
-             "composition_solve", "intrusion_screen", "summary", "uncertainty"])
+             "composition_solve", "intrusion_screen", "package", "summary", "uncertainty"])
         self.assertTrue(callable(actinv.twin))
         self.assertIn("waste", actinv.__all__)
         self.assertIn("twin", actinv.__all__)
@@ -239,7 +249,8 @@ class Waste(unittest.TestCase):
         cases = [("classify", _classify_spec(), "actinv-waste-result-1"),
                  ("bounds", _bounds_spec(), "actinv-waste-bounds-result-1"),
                  ("composition", _composition_spec(), "actinv-waste-composition-result-1"),
-                 ("intrusion_screen", _intrusion_spec(), "actinv-waste-intrusion-screen-result-1")]
+                 ("intrusion_screen", _intrusion_spec(), "actinv-waste-intrusion-screen-result-1"),
+                 ("package", _package_spec(), "actinv-waste-package-1")]
         for name, spec, schema in cases:
             with self.subTest(name):
                 function = getattr(actinv.waste, name)
@@ -331,6 +342,26 @@ class Waste(unittest.TestCase):
         rows = actinv.waste.summary(screen["classification"])
         self.assertEqual([r["component"] for r in rows], ["whole-container"])
         self.assertEqual(actinv.waste.summary(screen), rows)
+
+    def test_package_result_and_refusal(self):
+        result = actinv.waste.package(_package_spec(), base_dir=self.root)
+        self.assertEqual(result["schema"], "actinv-waste-package-1")
+        self.assertEqual(result["btp"], "us-nrc-ca-btp-2015-rev1-v1")
+        self.assertEqual(result["steps"][0]["package_class"], "A")
+        self.assertEqual(result["steps"][0]["groups"][0]["waste_type"], "contaminated_material")
+        self.assertIn("alternative approaches (BTP 3.8)", result["not_claimed"])
+        self.assertClean("run.json")
+        bad = _package_spec()
+        bad["items"][0]["waste_type"] = "rubble"
+        with self.assertRaises(ValueError) as caught:
+            actinv.waste.package(bad, base_dir=self.root)
+        self.assertIn("unknown waste_type", str(caught.exception))
+        self.assertClean("run.json")
+        path = self.path_for("bad-package.json", bad)
+        with self.assertRaises(ValueError) as from_path:
+            actinv.waste.package(path)
+        self.assertEqual(str(from_path.exception), str(caught.exception))
+        self.assertClean("run.json", "bad-package.json")
 
     def test_uncertainty_refuses_too_few_samples_before_reading_data(self):
         spec = {

@@ -338,6 +338,10 @@ waste = _types.SimpleNamespace(
         "budget_uncertainty",
         "Impurity budgets under nuclear-data uncertainty, as an order-statistic bound over "
         "sampled re-solves (`actinv waste budget uncertainty SPEC`)."),
+    package=_waste_operation(
+        "package",
+        "Class of one container of discrete items under the NRC concentration-averaging "
+        "BTP, with encapsulation (`actinv waste package SPEC`)."),
     summary=_waste_summary,
 )
 twin = _waste_operation("twin", "Facility twin (`actinv twin SPEC`), with its optional waste block.")

@@ -50,6 +50,7 @@ const USAGE: &str = "usage: actinv run SPEC.json [OUT.json]\n\
                     actinv waste composition solve SPEC.json [OUT.json]\n\
                     actinv waste intrusion-screen SPEC.json [OUT.json]\n\
                     actinv waste uncertainty SPEC.json [OUT.json]\n\
+                    actinv waste package SPEC.json [OUT.json]\n\
                     actinv study {validate|build|run} STUDY.json [OUTDIR] [--revocations FILE]\n\
                     actinv inspect {decay|xs|yields|library|groups} ... [--table] [--out OUT]\n\
                     actinv report RESULT.json [--tables LIST] [--format csv|tsv|markdown|text] [--out DIR] [--step N|all] [--nuclides LIST]\n\
@@ -678,7 +679,7 @@ pub fn main_from(a: Vec<String>) {
             "import-fispact" => println!("{}\nConvert a FISPACT-II input deck into an actinv-spec-1 problem. The group fluxes come from --fluxes, else from the `fluxes` entry of the files file (--files, else DECK_files or files beside the deck). OUT.import.json lists every keyword with its line and a status: mapped, approximated, noted or unsupported. --strict fails when any keyword is unsupported. See docs/guide/fispact-migration.md.", crate::fispact_import::USAGE),
             "optimize" => println!("usage: actinv optimize OPTSPEC.json [OUTDIR] [--resume]\nRun a bounded, seeded design search over an actinv-optimize-1 document.\nEvery candidate is solved through the identical run path and recorded in\nOUTDIR/optimize_ledger.jsonl (append-only); the ranked result lands in\nOUTDIR/optimize_result.json. --resume skips already-ledgered evaluations."),
             "budget" => println!("usage: actinv budget BUDGET.json [OUT.json] [--no-verify]\nImpurity budgets for the IAEA clearance index from one coupled solve per element\n(activation at fixed flux is linear in composition). Every emitted limit is re-solved\nat that composition and compared with the prediction unless --no-verify is given.\nSee docs/BUDGET.md for the actinv-budget-1 schema."),
-            "waste" => println!("usage: actinv waste WASTE.json [OUT.json]\n       actinv waste budget BUDGET.json [OUT.json]\n       actinv waste budget uncertainty SPEC.json [OUT.json]\n       actinv waste bounds BOUNDS.json [OUT.json]\n       actinv waste composition COMPOSITION.json [OUT.json]\n       actinv waste composition solve SPEC.json [OUT.json]\n       actinv waste intrusion-screen SPEC.json [OUT.json]\n       actinv waste uncertainty SPEC.json [OUT.json]\nNominal component classification, verified class impurity budgets, impurity budgets under nuclear-data uncertainty as an order-statistic bound over sampled re-solves, conservative classification of declared activity boxes, caller-declared affine composition ranges, native solver-generated composition responses, opt-in screening against a pinned 2026 draft intrusion table, and class probabilities under nuclear-data uncertainty from a sampled re-solve. Draft screening is a review aid only; it does not assess dose, acceptance, or legal compliance. The probabilities are conditional on the sampled channels. See the public waste handbook at docs/guide/waste.md."),
+            "waste" => println!("usage: actinv waste WASTE.json [OUT.json]\n       actinv waste budget BUDGET.json [OUT.json]\n       actinv waste budget uncertainty SPEC.json [OUT.json]\n       actinv waste bounds BOUNDS.json [OUT.json]\n       actinv waste composition COMPOSITION.json [OUT.json]\n       actinv waste composition solve SPEC.json [OUT.json]\n       actinv waste intrusion-screen SPEC.json [OUT.json]\n       actinv waste uncertainty SPEC.json [OUT.json]\n       actinv waste package SPEC.json [OUT.json]\nNominal component classification, verified class impurity budgets, impurity budgets under nuclear-data uncertainty as an order-statistic bound over sampled re-solves, conservative classification of declared activity boxes, caller-declared affine composition ranges, native solver-generated composition responses, opt-in screening against a pinned 2026 draft intrusion table, class probabilities under nuclear-data uncertainty from a sampled re-solve, and the class of one container of discrete items, with encapsulation, under the NRC concentration-averaging BTP. Draft screening is a review aid only; it does not assess dose, acceptance, or legal compliance. The probabilities are conditional on the sampled channels. The package class holds only under the readings recorded in its result and where the disposal site's licence adopts the BTP. See the public waste handbook at docs/guide/waste.md."),
             "study" => println!("usage: actinv study validate STUDY.json\n       actinv study build STUDY.json [OUTDIR] [--revocations FILE]\n       actinv study run STUDY.json [OUTDIR] [--revocations FILE]\nValidate an actinv-study-1 document, expand it deterministically into actinv-spec-1 cases plus a manifest, or run the population and write study_record.json.\nSee docs/STUDY.md for the schema."),
             "inspect" => println!("{}\n{}", crate::inspect::USAGE, crate::inspect::HELP),
             "report" => println!("{}\n{}", crate::report::USAGE, crate::report::HELP),
@@ -722,6 +723,12 @@ pub fn main_from(a: Vec<String>) {
                     die("usage: actinv waste uncertainty SPEC.json [OUT.json]", 2);
                 }
                 crate::waste_uncertainty::run(&a[3], a.get(4).map(String::as_str))
+                    .unwrap_or_else(|e| die(e, 1));
+            } else if a.get(2).is_some_and(|arg| arg == "package") {
+                if a.len() < 4 || a.len() > 5 {
+                    die("usage: actinv waste package SPEC.json [OUT.json]", 2);
+                }
+                crate::waste_package::run(&a[3], a.get(4).map(String::as_str))
                     .unwrap_or_else(|e| die(e, 1));
             } else if a.get(2).is_some_and(|arg| arg == "bounds") {
                 if a.len() < 4 || a.len() > 5 {

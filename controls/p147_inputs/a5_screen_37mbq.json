@@ -1,0 +1,19 @@
+{
+ "_note": "P147 A5: the A1 items with the BTP 3.3.2.1 activity screen (every item under 37 MBq total activity: average over the whole mixture; otherwise the item tests). The checker computes the expected outcome whichever branch applies. Keys starting with an underscore are removed by the checker.",
+ "schema": "actinv-waste-package-spec-1",
+ "rules": "us-nrc-10cfr61.55-v1",
+ "targets": [11, 12, 13],
+ "nuclide_properties": "from_decay_data",
+ "screen": "activity_37mbq",
+ "encapsulation": null,
+ "items": [
+  {"id": "lo-small-1", "waste_type": "activated_metal", "mass_g": 50.0, "displaced_volume_cm3": 6.329,
+   "activity": {"result": "act_lo_result.json"}},
+  {"id": "lo-small-2", "waste_type": "activated_metal", "mass_g": 200.0, "displaced_volume_cm3": 25.316,
+   "activity": {"result": "act_lo_result.json"}},
+  {"id": "lo-small-3", "waste_type": "activated_metal", "mass_g": 1500.0, "displaced_volume_cm3": 189.873,
+   "activity": {"result": "act_lo_result.json"}},
+  {"id": "lo-large-1", "waste_type": "activated_metal", "mass_g": 3000.0, "displaced_volume_cm3": 379.747,
+   "activity": {"result": "act_lo_result.json"}}
+ ]
+}

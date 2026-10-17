@@ -34,5 +34,6 @@ pub mod summary;
 pub mod uncertainty;
 pub mod waste;
 pub mod waste_bounds;
+pub mod waste_btp;
 pub mod waste_composition;
 pub mod waste_intrusion;

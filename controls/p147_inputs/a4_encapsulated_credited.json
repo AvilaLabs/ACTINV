@@ -1,0 +1,20 @@
+{
+ "_note": "P147 A4: three cold LO pieces and a declared Cs-137 sealed source of 5e11 Bq (13.5 Ci) at step 11 in a 20000 cm3 container with 40 kg of encapsulant at 2.0 g/cm3. The waste loading (about 20 percent) is above 14 percent and the container is under 9.373 m3, so the whole container volume is credited. The source exceeds the BTP Table 2 Class A and B Cs-137 values, so it fails the item tests of the lower classes and is removed. Keys starting with an underscore are removed by the checker.",
+ "schema": "actinv-waste-package-spec-1",
+ "rules": "us-nrc-10cfr61.55-v1",
+ "targets": [11, 12, 13],
+ "nuclide_properties": "from_decay_data",
+ "screen": "none",
+ "encapsulation": {"total_volume_cm3": 20000.0, "encapsulant_mass_g": 40000.0, "encapsulant_density_g_cm3": 2.0,
+                   "waste_volume_cm3": null},
+ "items": [
+  {"id": "lo-1", "waste_type": "activated_metal", "mass_g": 12000.0, "displaced_volume_cm3": 1518.987,
+   "activity": {"result": "act_lo_result.json"}},
+  {"id": "lo-2", "waste_type": "activated_metal", "mass_g": 12000.0, "displaced_volume_cm3": 1518.987,
+   "activity": {"result": "act_lo_result.json"}},
+  {"id": "lo-3", "waste_type": "activated_metal", "mass_g": 6000.0, "displaced_volume_cm3": 759.494,
+   "activity": {"result": "act_lo_result.json"}},
+  {"id": "src-cs", "waste_type": "sealed_source", "mass_g": 2000.0, "displaced_volume_cm3": 300.0,
+   "activity": {"declared_bq": {"11": {"Cs137": 5.0e11}, "12": {"Cs137": 2.5e11}, "13": {"Cs137": 6.0e10}}}}
+ ]
+}

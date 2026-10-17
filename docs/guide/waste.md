@@ -16,6 +16,7 @@ actinv waste composition composition.json composition-result.json
 actinv waste composition solve native-composition.json native-composition-result.json
 actinv waste intrusion-screen intrusion.json intrusion-result.json
 actinv waste uncertainty uncertainty.json uncertainty-result.json
+actinv waste package package.json package-result.json
 ```
 
 This is a concentration calculation for research and design screening. It does
@@ -31,7 +32,7 @@ derive bounds from a `RunResult`. The separate `intrusion-screen` command applie
 the selected draft screen to nominal inventories.
 
 From Python the same commands are `actinv.waste.classify`, `budget`, `bounds`, `composition`, `composition_solve`,
-`intrusion_screen`, `uncertainty` and `budget_uncertainty`, and `actinv.twin`; they return the CLI's result. See [Python](python.md#waste-classification-from-python).
+`intrusion_screen`, `uncertainty`, `budget_uncertainty` and `package`, and `actinv.twin`; they return the CLI's result. See [Python](python.md#waste-classification-from-python).
 
 ## Classify declared waste components in a facility twin
 
@@ -643,3 +644,143 @@ of these channels on the FNS corpus is below nominal (see
 [Data limitations](https://github.com/AvilaLabs/ACTINV/blob/master/docs/DATA_LIMITATIONS.md)), so a budget can be
 optimistic. A budget is not a composition tolerance, a procurement specification, a package class or a disposal
 acceptance.
+
+## Classify a package of discrete items
+
+`actinv waste package SPEC.json [OUT.json]` classifies one disposal container that holds several discrete items, such
+as activated steel pieces of different sizes, a sealed source or a cartridge filter, under the NRC Concentration
+Averaging and Encapsulation Branch Technical Position (Revision 1, Volume 1, February 2015; ADAMS ML12254B065; "BTP"
+below). `actinv waste` classifies one component on its own concentrations. A container of mixed items cannot simply
+be averaged: the BTP limits how concentrated an individual item may be before it has to be taken out of the average,
+how small items and sectioned components are grouped, and how much credit encapsulation earns. Homogeneous
+(blendable) waste is not covered. The BTP's Tables 2 and 3 and its thresholds are bundled as
+`us-nrc-ca-btp-2015-rev1-v1`; the Part 61 limits come from the same rule pack as `actinv waste`. "BTP Table n" and
+"CFR Table n" (10 CFR 61.55) are different tables throughout.
+
+An item has an id, a BTP waste type (`activated_metal`, `contaminated_material`, `design_radioactivity_component`,
+`sealed_source` or `cartridge_filter`), a mass in g and a volume in cm3: the displaced volume (envelope with major voids
+removed), or for a cartridge filter the envelope volume (BTP Table 4). Its activity is either taken from an ACTINV run
+result (the per-gram activities at each target step times the item mass; a mesh result needs `cells` as in
+`actinv waste`) or declared as whole-item Bq by nuclide and step, which suits a sealed source or a measurement.
+
+```json
+{
+  "schema": "actinv-waste-package-spec-1",
+  "rules": "us-nrc-10cfr61.55-v1",
+  "targets": [2, 3],
+  "screen": "none",
+  "nuclide_properties": {
+    "Nb94": {"z": 41, "half_life_s": 640000000000, "alpha_emitting": false},
+    "Cs137": {"z": 55, "half_life_s": 951000000, "alpha_emitting": false}
+  },
+  "items": [
+    {"id": "plug-1", "waste_type": "activated_metal", "mass_g": 7800, "displaced_volume_cm3": 1000,
+     "activity": {"result": "plug-result.json"}},
+    {"id": "rod-a", "waste_type": "activated_metal", "mass_g": 780, "displaced_volume_cm3": 100,
+     "section_of": "rod-7", "activity": {"result": "rod-result.json"}},
+    {"id": "rod-b", "waste_type": "activated_metal", "mass_g": 780, "displaced_volume_cm3": 100,
+     "section_of": "rod-7", "activity": {"result": "rod-result.json"}},
+    {"id": "source-1", "waste_type": "sealed_source", "mass_g": 400, "displaced_volume_cm3": 60,
+     "activity": {"declared_bq": {"2": {"Cs137": 150000000}, "3": {"Cs137": 148000000}}}}
+  ],
+  "encapsulation": null
+}
+```
+
+`rules`, `targets` and `nuclide_properties` are those of `actinv waste`. `btp` is optional: the bundled id (the
+default) or the path of an `actinv-waste-btp-1` file, relative to the spec. `screen` is `none` (the default),
+`activity_37mbq` or `highest_item`. `section_of` names the original component an item was cut from. The command refuses,
+and writes nothing, for another schema, an unknown waste type, a missing or non-positive mass or volume, duplicate ids,
+no items, a `section_of` whose pieces differ in waste type or are alone in the package, an unknown screen, a declared
+activity step that is not a target, and the encapsulation inputs described below.
+
+### What the command does at each target step
+
+1. Items are grouped by waste type (BTP 3.4). Each item alone is evaluated with the nominal Part 61 evaluator, which
+   gives its own class and its concentrations. Within a group the command averages all items over their summed
+   volume and mass, finds the more restrictive of CFR Table 1 and 2 (the one giving the higher class; on a tie the
+   larger sum of fractions) and decides whether the primary gamma emitters Co-60, Nb-94 and Cs-137 are
+   classification-controlling: more than 50 % of that table's sum of fractions (BTP p.25).
+2. For each candidate class X from A to C, every item is tested against the limits of X:
+   - *Primary gamma emitters.* The item passes if its sum of fractions against BTP Table 2 is at most 1, or if each
+     primary gamma of concern meets the Factor of 2 (controlling) or the Factor of 10 (not controlling) against the
+     class limit of X. Items of 280 cm3 or more use their own sum; items under 280 cm3 share one sum over their
+     summed inventory, and the pool passes or fails as a whole. The result records which limit each item met.
+   - *Other radionuclides of concern.* H-3, C-14, Ni-59 and Ni-63 pass BTP Table 3 or the Factor of 10, nuclide by
+     nuclide. The alpha-emitting transuranics with half-life above 5 years (excluding Pu-241 and Cm-242) are one entry
+     per item: their summed activity against BTP Table 3, or their summed concentration against the Factor of 10 of the
+     CFR Table 1 transuranic row. Nuclides outside Tables 2 and 3 use the Factor of 10 only.
+3. Failing items are removed from the average and classified alone (BTP 3.3.1). The remaining items are classified
+   on their volume- and mass-averaged concentrations; call that class Y. X qualifies when Y is not above X. The class
+   of the group is the lowest qualifying X, reported as X because the items were tested at X's limits; if none
+   qualifies the group is above Class C. All three candidates are listed in the result.
+4. Pieces of one sectioned component in the package are treated as that component (BTP 3.3.2.3) when no piece exceeds
+   BTP Table 3 and no piece under 280 cm3 exceeds BTP Table 2. Pieces that do are separate items, and the result
+   lists them as `split_out`. The test uses the BTP columns of each candidate class X, so the merge can differ between
+   candidates; the step reports the sections of the chosen candidate. Item tests name a merged component by its
+   `section_of` id.
+5. The package class is the highest class of any group and of any item classified alone (BTP 3.4). An item left out
+   of the average therefore still counts.
+
+The two optional screens (BTP 3.3.2.1) replace step 2. With `activity_37mbq`, a group whose items each have a total
+activity below 37 MBq is classified on the average of the whole group; otherwise the item tests run. With
+`highest_item` the group takes the highest class of any one item.
+
+### Readings fixed in advance
+
+The BTP is silent or ambiguous in places. The readings below were fixed before the implementation (protocol P147) and
+are stated in every result. They are choices made here, not statements of what the BTP says.
+
+- The volume limit for encapsulation is 331 ft3 = 9.373 m3, the value common to the BTP text (9.5 m3), Figure 5 and
+  Volume 2 (9.4 m3). A waste loading of at least 14 % qualifies.
+- The class limit in the Factors of 2 and 10 is that of the class being tested: 0.1 times the CFR Table 1 value for
+  Class A and B and the Table 1 value for Class C, or the CFR Table 2 column of that class. Where the column has no
+  limit (Co-60, H-3 and the under-5-year group in Classes B and C) the factor test does not apply to that nuclide in
+  that class, and the BTP is not cited for it.
+- A radionuclide of concern exceeds 1 % of its class limit for the class being tested.
+- The 37 MBq screen uses the total activity of the item, strictly less than 37 MBq.
+- An item of exactly 280 cm3 is individual for BTP Table 2.
+- A Factor test passes below the factor times the limit (strictly); a BTP Table 2 sum of fractions passes at 1 or less
+  and a BTP Table 3 activity at the table value or less.
+- The waste loading is the sum of the encapsulated items' volumes over the total encapsulated volume, unless the
+  waste volume is declared. The 0.2 m3 cap applies to volume-based limits and the 500 kg cap to mass-based limits.
+
+### Encapsulation
+
+Add an `encapsulation` block to describe one encapsulated container; every item is then encapsulated:
+
+```json
+"encapsulation": {"total_volume_cm3": 500000, "encapsulant_mass_g": 900000,
+                  "encapsulant_density_g_cm3": 2.0, "waste_volume_cm3": null}
+```
+
+The item tests of step 2 apply unchanged to the items. The credited volume and mass then follow BTP 3.3.4. With a
+loading of at least 14 % and a total volume of at most 331 ft3, the average is taken over the whole encapsulated
+volume and over the item mass plus the encapsulant mass. With a lower loading, the credited volume is at most 0.2 m3
+and the credited mass at most 500 kg, and never more than the actual volume or mass. A loading of at least 14 % in a
+container above 331 ft3 gets no credit (`alternative_approach_required`, no class). The encapsulant mass is credited at
+a density of at most 2.5 g/cm3. Separately, the activity of all items averaged over the waste and the whole encapsulant
+must not exceed Class C (`exceeds_class_c_cap` otherwise). An encapsulated container is one waste form, so its items
+form one group whatever their waste types. When they mix activated metal with other types, the group is evaluated,
+item tests included, under both the activated-metal and the general rule rows (groups
+`encapsulated_activated_metal_rules` and `encapsulated_general_rules`) and the higher class is kept. An item that fails
+its tests is classified alone, without encapsulation credit. `waste_volume_cm3` overrides the summed item volumes. The command refuses a non-positive field,
+a waste volume above the total volume (a loading above 1), an encapsulation block together with an item flagged
+`"encapsulated": false` (encapsulated and unencapsulated items do not share a package), and a screen other than `none`.
+
+### Result
+
+The `actinv-waste-package-1` result holds the SHA-256 of the spec, the rule pack and the BTP data, and for every
+target step: the package class and status, each item (volume, mass, total activity, own class, activities), the
+sectioned components, each group's sums of fractions for both CFR tables, the restrictive table, the primary gamma share
+and whether it controls, every candidate with its small-item pool, per-item tests and limit met, removed items,
+remainder class, volume and mass, and the encapsulation block (waste volume, loading, credited volume and mass,
+status, class and the Class C cap). An item with a nuclide that has no properties makes its group and the package
+`unknown`, and the group lists those items. Alongside are the readings, the implementation choices and the list of what
+is not claimed.
+
+The result is consistent with the BTP only under the readings above, and only where the disposal site's licence adopts
+the BTP; the site's licence conditions override it. It is not a classification for shipment or a disposal acceptance,
+and it does not cover blending of homogeneous wastes (BTP 3.2), alternative approaches (BTP 3.8), 10 CFR 61.58
+authorizations or exemptions, structural stability under 10 CFR 61.56, centring procedures, compatibility documentation
+or the encapsulation topical reports.

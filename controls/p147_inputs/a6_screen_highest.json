@@ -1,0 +1,21 @@
+{
+ "_note": "P147 A6: the A2 items with the BTP 3.3.2.1 highest-item screen (the mixture is classified as its highest item class, no averaging). Keys starting with an underscore are removed by the checker.",
+ "schema": "actinv-waste-package-spec-1",
+ "rules": "us-nrc-10cfr61.55-v1",
+ "targets": [11, 12, 13],
+ "nuclide_properties": "from_decay_data",
+ "screen": "highest_item",
+ "encapsulation": null,
+ "items": [
+  {"id": "nb-1", "waste_type": "activated_metal", "mass_g": 2500.0, "displaced_volume_cm3": 316.456,
+   "activity": {"result": "act_nbco_result.json"}},
+  {"id": "nb-2", "waste_type": "activated_metal", "mass_g": 300.0, "displaced_volume_cm3": 37.975,
+   "activity": {"result": "act_nbco_result.json"}},
+  {"id": "lo-big", "waste_type": "activated_metal", "mass_g": 8000.0, "displaced_volume_cm3": 1012.658,
+   "activity": {"result": "act_lo_result.json"}},
+  {"id": "hi-1", "waste_type": "activated_metal", "mass_g": 1500.0, "displaced_volume_cm3": 189.873,
+   "activity": {"result": "act_hi_result.json"}},
+  {"id": "cm-1", "waste_type": "contaminated_material", "mass_g": 5000.0, "displaced_volume_cm3": 800.0,
+   "activity": {"result": "act_lo_result.json"}}
+ ]
+}

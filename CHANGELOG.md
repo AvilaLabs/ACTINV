@@ -20,6 +20,14 @@
   per-sample suprema of each impurity and of the joint specification scale factor (at least 72 samples at 0.95),
   with binding-constraint tallies, a verification re-solve around the reported rank, and the coverage of the sampled
   channels. Upper bounds only: a positive lower bound leaves the budget not established (P146).
+- `actinv waste package SPEC [OUT]` (and `actinv.waste.package`): the class of one container of discrete items under
+  the NRC concentration-averaging and encapsulation BTP (Revision 1, 2015). Items (activated metal, contaminated
+  material, design-radioactivity components, sealed sources, cartridge filters) are tested against BTP Tables 2 and 3
+  and the Factors of 2 and 10 at each candidate class, failing items are removed and classified alone, sectioned
+  components are merged, the 37 MBq and highest-item screens are optional, and encapsulation earns the BTP volume and
+  mass credit under the 14 % loading, 331 ft3, 0.2 m3 and 500 kg rules and the Class C cap. The BTP numbers are bundled
+  as `waste_us_nrc_btp_2015_v1.json`. The result holds only under the readings recorded in it; blending, alternative
+  approaches, 10 CFR 61.58 and site licence conditions are not covered (P147).
 
 **Added (desktop and browser)**
 

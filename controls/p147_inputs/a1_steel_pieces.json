@@ -1,0 +1,27 @@
+{
+ "_note": "P147 A1: activated steel pieces of several sizes (three under 280 cm3 from the cold LO run, one hot piece under 280 cm3 from the HI run, two LO pieces of 380 and 1519 cm3), plus two pieces sectioned from one component, at the 4-year, 33-year and 101-year steps. nuclide_properties is the token from_decay_data: controls/check_p147.py replaces it by the properties of every radionuclide of the decay files named by the LO problem. Volumes are mass / 7.9 g/cm3. Keys starting with an underscore are removed by the checker.",
+ "schema": "actinv-waste-package-spec-1",
+ "rules": "us-nrc-10cfr61.55-v1",
+ "targets": [11, 12, 13],
+ "nuclide_properties": "from_decay_data",
+ "screen": "none",
+ "encapsulation": null,
+ "items": [
+  {"id": "lo-small-1", "waste_type": "activated_metal", "mass_g": 50.0, "displaced_volume_cm3": 6.329,
+   "activity": {"result": "act_lo_result.json"}},
+  {"id": "lo-small-2", "waste_type": "activated_metal", "mass_g": 200.0, "displaced_volume_cm3": 25.316,
+   "activity": {"result": "act_lo_result.json"}},
+  {"id": "lo-small-3", "waste_type": "activated_metal", "mass_g": 1500.0, "displaced_volume_cm3": 189.873,
+   "activity": {"result": "act_lo_result.json"}},
+  {"id": "lo-large-1", "waste_type": "activated_metal", "mass_g": 3000.0, "displaced_volume_cm3": 379.747,
+   "activity": {"result": "act_lo_result.json"}},
+  {"id": "lo-large-2", "waste_type": "activated_metal", "mass_g": 12000.0, "displaced_volume_cm3": 1518.987,
+   "activity": {"result": "act_lo_result.json"}},
+  {"id": "hi-small-1", "waste_type": "activated_metal", "mass_g": 800.0, "displaced_volume_cm3": 101.266,
+   "activity": {"result": "act_hi_result.json"}},
+  {"id": "rod-a", "waste_type": "activated_metal", "mass_g": 400.0, "displaced_volume_cm3": 50.633,
+   "section_of": "rod-1", "activity": {"result": "act_lo_result.json"}},
+  {"id": "rod-b", "waste_type": "activated_metal", "mass_g": 600.0, "displaced_volume_cm3": 75.949,
+   "section_of": "rod-1", "activity": {"result": "act_lo_result.json"}}
+ ]
+}

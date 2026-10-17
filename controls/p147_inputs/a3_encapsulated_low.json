@@ -1,0 +1,18 @@
+{
+ "_note": "P147 A3: two cold LO pieces and a declared Cs-137 sealed source (2e8 Bq at step 11, below the BTP Table 2 Class A value of 266 MBq) encapsulated in a 208000 cm3 drum with 400 kg of encapsulant at 2.3 g/cm3. The waste loading is under 14 percent, so the credited volume is capped at 0.2 m3 and the credited mass at 500 kg. The declared Cs-137 activities at steps 12 and 13 are simply smaller values. Keys starting with an underscore are removed by the checker.",
+ "schema": "actinv-waste-package-spec-1",
+ "rules": "us-nrc-10cfr61.55-v1",
+ "targets": [11, 12, 13],
+ "nuclide_properties": "from_decay_data",
+ "screen": "none",
+ "encapsulation": {"total_volume_cm3": 208000.0, "encapsulant_mass_g": 400000.0, "encapsulant_density_g_cm3": 2.3,
+                   "waste_volume_cm3": null},
+ "items": [
+  {"id": "lo-1", "waste_type": "activated_metal", "mass_g": 3000.0, "displaced_volume_cm3": 379.747,
+   "activity": {"result": "act_lo_result.json"}},
+  {"id": "lo-2", "waste_type": "activated_metal", "mass_g": 1500.0, "displaced_volume_cm3": 189.873,
+   "activity": {"result": "act_lo_result.json"}},
+  {"id": "src-cs", "waste_type": "sealed_source", "mass_g": 2000.0, "displaced_volume_cm3": 300.0,
+   "activity": {"declared_bq": {"11": {"Cs137": 2.0e8}, "12": {"Cs137": 1.0e8}, "13": {"Cs137": 2.5e7}}}}
+ ]
+}
