@@ -10,6 +10,7 @@ then P146_DATA, P145_DATA, default ./actinv-data). Launch inside the required sy
     python3 controls/check_p147.py e3                   # below, at and above every threshold
     python3 controls/check_p147.py e4                   # reductions to `actinv waste`, split pieces, averaged items
     python3 controls/check_p147.py e5                   # refusals, no output file, byte-identical repeat
+    python3 controls/check_p147.py e6-p103              # the P103 control equals its committed record (Amendment B)
     python3 controls/check_p147.py e6-collect [STEPS_TSV]   # local E6 record from steps.tsv and logs/ (no binary)
     python3 controls/check_p147.py verdict CI_RUNS.json     # needs the gate records and results/p147/e6.json
     python3 controls/check_p147.py stage CASE DIR       # A1..A6 or a synthetic package by name, for a development run
@@ -2756,6 +2757,38 @@ def committed_controls() -> dict:
             "pass": base is not None and changed == [] and all(r["pass"] for r in records.values())}
 
 
+def p103_identity(stdout: str) -> dict:
+    """Amendment B: the P103 control stays as committed when its G0 document is sealed with every check passing and its
+    G1 document equals the committed G1 record (persisted_result_matches), whatever that record's own pass flag."""
+    docs, rest, decoder = {}, stdout, json.JSONDecoder()
+    while rest.strip():
+        rest = rest.lstrip()
+        try:
+            doc, end = decoder.raw_decode(rest)
+        except json.JSONDecodeError:
+            break
+        rest = rest[end:]
+        if isinstance(doc, dict) and isinstance(doc.get("schema"), str):
+            docs[doc["schema"]] = doc
+    g0, g1 = docs.get("actinv-p103-g0-seal-1"), docs.get("actinv-p103-g1-classes-1")
+    checks = g0.get("checks") if isinstance(g0, dict) else None
+    failing = sorted(k for k, v in checks.items() if not (isinstance(v, dict) and v.get("pass") is True)) \
+        if isinstance(checks, dict) else None
+    g0_ok = (isinstance(g0, dict) and g0.get("sealed") is True and g0.get("verdict") == "P103-G0-SEALED"
+             and failing == [])
+    g1_ok = isinstance(g1, dict) and g1.get("persisted_result_matches") is True
+    return {"documents": sorted(docs), "g0_sealed": g0_ok, "g0_failing_checks": failing,
+            "g1_matches_committed_record": g1_ok, "g1_record_pass_flag": g1.get("pass") if isinstance(g1, dict) else None,
+            "pass": g0_ok and g1_ok}
+
+
+def e6_p103() -> int:
+    child = p145.run_child([sys.executable, ROOT / "controls/check_p103.py", "--no-write"], ROOT)
+    record = {"schema": "actinv-p147-e6-p103-1", "command": brief(child), **p103_identity(child["stdout"])}
+    print(json.dumps(record, indent=2, sort_keys=True))
+    return 0 if record["pass"] else 1
+
+
 def e6_collect(steps_path: str | None = None) -> int:
     path = Path(steps_path) if steps_path else OUT / "steps.tsv"
     steps = read_steps(path)
@@ -3228,6 +3261,24 @@ def selftest() -> int:
         OUT = saved
     expect(len(E6_REQUIRED) == len(set(E6_REQUIRED)), "E6 step names are unique")
 
+    # Amendment B: the P103 step passes on a sealed G0 and a G1 recomputation equal to the committed record
+    g0 = {"schema": "actinv-p103-g0-seal-1", "sealed": True, "verdict": "P103-G0-SEALED",
+          "checks": {"a": {"pass": True}, "b": {"pass": True}}}
+    g1 = {"schema": "actinv-p103-g1-classes-1", "pass": False, "persisted_result_matches": True}
+
+    def text(*docs):
+        return "".join(json.dumps(d, indent=2) + "\n" for d in docs)
+
+    expect(p103_identity(text(g0, g1))["pass"] is True, "p103: sealed G0 and the committed G1 record pass")
+    expect(p103_identity(text(g0, {**g1, "persisted_result_matches": False}))["pass"] is False,
+           "p103: a G1 recomputation that differs from the committed record fails")
+    expect(p103_identity(text(g0))["pass"] is False, "p103: a missing G1 document fails")
+    expect(p103_identity(text({**g0, "sealed": False}, g1))["pass"] is False, "p103: an unsealed G0 fails")
+    expect(p103_identity(text({**g0, "checks": {"a": {"pass": False}}}, g1))["pass"] is False,
+           "p103: a failing G0 check fails")
+    expect(p103_identity("")["pass"] is False and p103_identity("not json")["pass"] is False,
+           "p103: no output fails")
+
     mutation_count = len(selftest_mutations())
     print(json.dumps({"selftest": "fail" if failures else "pass", "battery_packages": len(packages),
                       "branches": len(BRANCHES), "mutations": mutation_count, "boundary_assertions_checked": construction,
@@ -3240,6 +3291,8 @@ def main(argv: list) -> int:
     gates = {"e1": e1, "e2": e2, "e3": e3, "e4": e4, "e5": e5}
     if command in gates and len(argv) == 2:
         return gates[command]()
+    if command == "e6-p103" and len(argv) == 2:
+        return e6_p103()
     if command == "e6-collect" and len(argv) in (2, 3):
         return e6_collect(argv[2] if len(argv) == 3 else None)
     if command == "verdict" and len(argv) == 3:
