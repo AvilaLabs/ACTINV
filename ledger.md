@@ -3628,3 +3628,16 @@ P103 control equals its committed records (Amendment B), the P105 steps, the P14
 wasm, workspace tests (1131 passed, 0 failed), binding checks, module build and tests, handbook and P13 exited 0; the
 committed waste controls and P145/P146 records are unchanged since registration. The gate results equal attempt 1's,
 as expected for an unchanged command. CI decides the rest.
+
+## Entry 208 — P148 registered: a proven rate-pruning bound and certified response bounds (2026-10-19)
+
+Owner direction 2026-10-19 (JRNC revision, reviewer comment 3). Reading `prune::reachable_values` found that the
+v1.0.0 rate-significance "bound" takes the maximum over converging paths, ignores multiplicity and never raises a
+produced source, so it is an estimate, not an upper bound; no committed result shows a change beyond 2.8e-9 relative
+(`results/g3_pruning.json`), so the defect is in the claim and the drop rule. Registered before any source change:
+**P148** `e48e5668623fe2d0c0e09393a49f7fd8283b0468887f85c6150fe1c8597b94f8`. Throughput and population bounds per state
+(sums over parents, edge rates capped by loss shares, an equilibrium cap for decaying states), cyclic components
+solved under a Collatz–Wielandt contraction or kept as unbounded, the drop rule on the population bound, and activity
+and heat bounds that include the shortfall of kept states fed by dropped ones. R1 independent recomputation through a
+new probe binary; R2 dominance against unpruned CRAM-48 references with no exceptions; R3 threshold study for the
+paper; R4 a converging-path regression case; R5 every changed baseline listed and explained; R6 quality and CI.
