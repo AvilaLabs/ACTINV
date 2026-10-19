@@ -3652,3 +3652,17 @@ five-figure print precision), one factor at a time; S3 long, variable-flux and b
 a dense reference; S4 Doppler broadening at 600 and 1200 K against NJOY2016, pointwise and 709-group; S5 per-reaction
 variance shares, response-weighted covariance coverage and a 1000-sample comparison; S6 solver scaling by network
 size. Descriptive studies: a study passes on a complete, checked, repeatable record, never on a favourable number.
+
+## Entry 210 — P148 Amendment A registered before the candidate (2026-10-19)
+
+Registered after implementation and before the candidate commit and any evidence run: **P148 Amendment A**
+`a7b7c9c95d81e736fad18f6e95ee4edcae15de82a7e3692f656faf1b0b63bf06`. A1 replaces the cyclic starting weight (power iteration of `I + Cᵀ` stalls on periodic
+isomer pairs) with a Neumann iterate `v_{k+1} = 1 + C v_k`, used by the solver and the checker alike. A2 runs R1 and
+R2 on a synthetic battery through `prune_probe --synthetic`, with dense matrix-exponential references. A3 records
+state names and decay energies in the capture, so the checker recomputes the heat bound's arithmetic. A4 defines the
+two long-history cases on the FNS iron spectrum (one year steady, and twelve monthly pulses, each with a year of
+cooling). A5 and A7 disclose development runs: the unit tests, the synthetic battery, six spec cases, and a local
+replay of the CI controls that found the changed baselines (P15 cache integrity, the P110 G1/G2 records, the CI
+end-to-end state count 40 → 38, the P10 legacy neutron hash). A6 leaves the historical P65 controls unedited. A7
+registers the R5 driver, `controls/p148_r5.py`, which compares the opening-commit binary with the candidate,
+and its difference classes, with a selftest of planted changes. No gate is relaxed.
