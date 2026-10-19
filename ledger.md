@@ -3641,3 +3641,14 @@ solved under a Collatz–Wielandt contraction or kept as unbounded, the drop rul
 and heat bounds that include the shortfall of kept states fed by dropped ones. R1 independent recomputation through a
 new probe binary; R2 dominance against unpruned CRAM-48 references with no exceptions; R3 threshold study for the
 paper; R4 a converging-path regression case; R5 every changed baseline listed and explained; R6 quality and CI.
+
+## Entry 209 — P149 registered: evidence studies for the JRNC revision (2026-10-19)
+
+Owner direction 2026-10-19: answer the J Radioanal Nucl Chem review with one revision release and regenerated
+numbers. Registered before any study run: **P149** `70c220c6faa424e2f42c2f2952ca8ce8cd0ed6e998c5015f53027985f1b0ba20`. No source change. S0 regenerates
+every number of the v1.0.0 manuscript on the revision release; S1 the FNS benchmark on TENDL-2017 with gas production
+and nuclide contributors, with absolute-error metrics; S2 the ALARA Ni-60/Ni-61 difference (4.3e-4 against a
+five-figure print precision), one factor at a time; S3 long, variable-flux and branching histories against ALARA and
+a dense reference; S4 Doppler broadening at 600 and 1200 K against NJOY2016, pointwise and 709-group; S5 per-reaction
+variance shares, response-weighted covariance coverage and a 1000-sample comparison; S6 solver scaling by network
+size. Descriptive studies: a study passes on a complete, checked, repeatable record, never on a favourable number.
