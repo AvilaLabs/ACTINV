@@ -162,7 +162,7 @@ def run_case(probe: str, name: str, spec: dict, thresholds: list[float], tmp: Pa
 
 def cached_case(probe: str, name: str, spec: dict, thresholds: list[float], cases_dir: Path) -> list[dict]:
     """One case's rows, from OUT_DIR/cases when an earlier run of the same spec and thresholds finished it."""
-    key = {"spec": spec, "thresholds": thresholds,
+    key = {"spec": spec, "thresholds": thresholds, "outputs": OUTPUTS,
            "probe_sha256": hashlib.sha256(Path(probe).read_bytes()).hexdigest()}
     path = cases_dir / f"{name}.json"
     if path.is_file():
