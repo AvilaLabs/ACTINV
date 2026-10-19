@@ -40,6 +40,9 @@ import run_fns_spec  # noqa: E402
 import check_p148  # noqa: E402
 
 THRESHOLDS = [1e-12, 1e-10, 1e-8, 1e-6, 1e-4, 1e-2]
+# R1 and R2 read inventories, activity, heat and the ledger only. Photon and pathway outputs do not change them
+# (checked bit-for-bit on Dy 2000exp_5min) but cost 4 GB and 9 minutes per unpruned reference.
+OUTPUTS = ["inventory", "activity", "heat", "ledger"]
 SLACK = 1e-12
 
 
@@ -134,11 +137,11 @@ def run_case(probe: str, name: str, spec: dict, thresholds: list[float], tmp: Pa
     refs = {}
     for order in (16, 48):
         ref = copy.deepcopy(spec)
-        ref["options"].update({"prune": "none", "cram_order": order})
+        ref["options"].update({"prune": "none", "cram_order": order, "outputs": OUTPUTS})
         refs[order] = run_probe(probe, ref, tmp, f"{name}_none{order}")
     for bmin in thresholds:
         rs = copy.deepcopy(spec)
-        rs["options"].update({"prune": "rate", "bmin_atoms_per_g": bmin})
+        rs["options"].update({"prune": "rate", "bmin_atoms_per_g": bmin, "outputs": OUTPUTS})
         rate = run_probe(probe, rs, tmp, f"{name}_rate")
         cap = rate["captures"][-1]
         mine = check_p148.recompute(cap)
