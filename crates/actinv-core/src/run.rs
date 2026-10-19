@@ -4739,38 +4739,55 @@ impl PreparedRun {
             }
         }
         // ---- prune
-        // Feed and removal edges join the reachability graph so fed nuclides and the removed
-        // sink are kept; removal diagonals accumulate into the bound estimate's loss rates.
-        let (mut keep, rate_pruned): (Vec<usize>, Vec<(usize, f64, f64)>) =
-            match spec.options.prune.as_str() {
-                "none" => ((0..n_total).collect(), Vec::new()),
-                p => {
-                    let mut graph = d_src.clone();
-                    for edges in step_feed.iter().chain(step_removal.iter()) {
-                        graph.extend_from_slice(edges);
-                    }
-                    // prune on the union of every step's reaction graph — a
-                    // nuclide reachable under any spectrum must be kept
-                    let r_union: Vec<(usize, usize, f64)> =
-                        r_srcs.iter().flatten().copied().collect();
-                    crate::prune::reachable_physical(
-                        n_total,
-                        &graph,
-                        &r_union,
-                        &n0,
-                        sched,
-                        p == "rate",
-                        // P65: a screening spec prunes at its own raised
-                        // bound; the certificate maps the drop onto the
-                        // banded responses.
-                        match spec.options.screen.as_ref() {
-                            Some(screen) => AtomsPerGram::new(screen.bmin_atoms_per_g)
-                                .map_err(|e| format!("options.screen.bmin_atoms_per_g: {e}"))?,
-                            None => physical.bmin,
-                        },
-                    )
-                }
-            };
+        // Feed and removal edges join the bound graph so fed nuclides and the removed sink are
+        // kept. Every spectrum's reaction graph enters (a nuclide reachable under any spectrum
+        // must be kept), each with its own loss diagonal for the P148 edge shares.
+        // P65: a screening spec prunes at its own raised bound; the certificate maps the drop
+        // onto the banded responses.
+        let prune_threshold = match spec.options.screen.as_ref() {
+            Some(screen) => AtomsPerGram::new(screen.bmin_atoms_per_g)
+                .map_err(|e| format!("options.screen.bmin_atoms_per_g: {e}"))?,
+            None => physical.bmin,
+        };
+        let pruned = match spec.options.prune.as_str() {
+            "none" => crate::prune::PruneOutcome {
+                keep: (0..n_total).collect(),
+                ..Default::default()
+            },
+            p => crate::prune::reachable_physical(
+                &crate::prune::PruneProblem {
+                    n: n_total,
+                    decay: &d_src,
+                    feed: &step_feed,
+                    removal: &step_removal,
+                    spectra: &r_srcs,
+                    n0: &n0,
+                },
+                sched,
+                p == "rate",
+                prune_threshold,
+            ),
+        };
+        if crate::prune::capture::active() {
+            let energy_ev = (0..n_total)
+                .map(|index| {
+                    ch.keys
+                        .get(index)
+                        .and_then(|key| nuclides.get(key))
+                        .map_or(0.0, |nu| nu.e_light() + nu.e_em() + nu.e_heavy())
+                })
+                .collect();
+            let names = (0..n_total)
+                .map(|index| match ch.keys.get(index) {
+                    Some(key) => name_of(key.0, key.1),
+                    None if index == ch.leak => "leakage".to_string(),
+                    None if index == ch.unit => "unit".to_string(),
+                    None => "removed".to_string(),
+                })
+                .collect();
+            crate::prune::capture::record_states(energy_ev, names);
+        }
+        let mut keep = pruned.keep.clone();
         // No edge reaches the sink of a partition-only schedule, so reachability would drop it;
         // it is the highest index, so appending keeps `keep` ascending.
         if let Some(sink) = removed.filter(|_| has_partition) {
@@ -6667,61 +6684,63 @@ impl PreparedRun {
 
         let reporting_started = profiler.start();
         // ---- ledger
-        let rate_pruning: Vec<_> = rate_pruned
+        let rate_pruning: Vec<_> = pruned
+            .dropped
             .iter()
-            .filter_map(|(index, atoms_bound, feed_bound)| {
-                ch.keys.get(*index).map(|key| {
+            .filter_map(|dropped| {
+                ch.keys.get(dropped.index).map(|key| {
                     serde_json::json!({
                         "nuclide": name_of(key.0, key.1),
-                        "atoms_per_g_bound": atoms_bound,
-                        "feed_atoms_per_g_s_bound": feed_bound,
+                        "atoms_per_g_bound": dropped.atoms_bound,
+                        "feed_atoms_per_g_s_bound": dropped.feed_bound,
                     })
                 })
             })
             .collect();
-        let rate_pruning_heat_bound_W_per_g: f64 = rate_pruned
-            .iter()
-            .filter_map(|(index, atoms_bound, _)| ch.keys.get(*index).map(|key| (key, atoms_bound)))
-            .filter_map(|(key, atoms_bound)| {
-                nuclides.get(key).map(|nuclide| (nuclide, atoms_bound))
-            })
-            .map(|(nuclide, atoms_bound)| {
-                nuclide.lambda()
-                    * atoms_bound
-                    * (nuclide.e_light() + nuclide.e_em() + nuclide.e_heavy())
-                    * EV
-            })
-            .sum();
-
-        // ---- P65 certified screening
-        // The prune bound is time-independent (it bounds what the dropped
-        // states could ever hold), so one widening applies at every step.
-        let screen_block = if let Some(screen) = spec.options.screen.as_ref() {
-            let mut removed_activity_bound = 0.0f64;
-            let mut activity_bound_by_nuclide: BTreeMap<String, f64> = BTreeMap::new();
-            for (index, atoms_bound, _) in &rate_pruned {
-                let Some(key) = ch.keys.get(*index) else {
+        // P148: activity and heat each state can carry under its population bound, for dropped
+        // states (their whole contribution) and kept states (the shortfall from cut inflow).
+        let mut activity_bound_by_nuclide: BTreeMap<String, f64> = BTreeMap::new();
+        let mut response_bounds = |states: &mut dyn Iterator<Item = (usize, f64)>| -> (f64, f64) {
+            let (mut activity, mut heat) = (0.0f64, 0.0f64);
+            for (index, atoms_bound) in states {
+                let Some(key) = ch.keys.get(index) else {
                     continue;
                 };
                 let Some(nuclide) = nuclides.get(key) else {
                     continue;
                 };
-                let contribution = nuclide.lambda() * atoms_bound;
-                removed_activity_bound += contribution;
+                let a = nuclide.lambda() * atoms_bound;
+                activity += a;
+                heat += a * (nuclide.e_light() + nuclide.e_em() + nuclide.e_heavy()) * EV;
                 *activity_bound_by_nuclide
                     .entry(name_of(key.0, key.1))
-                    .or_default() += contribution;
+                    .or_default() += a;
             }
+            (activity, heat)
+        };
+        let (dropped_activity_bound, dropped_heat_bound) =
+            response_bounds(&mut pruned.dropped.iter().map(|d| (d.index, d.atoms_bound)));
+        let (kept_activity_bound, kept_heat_bound) =
+            response_bounds(&mut pruned.kept_shortfall.iter().copied());
+        let activity_bound_Bq_per_g = dropped_activity_bound + kept_activity_bound;
+        let heat_bound_W_per_g = dropped_heat_bound + kept_heat_bound;
+        let unbounded_states: Vec<String> = pruned
+            .unbounded
+            .iter()
+            .filter_map(|index| ch.keys.get(*index).map(|key| name_of(key.0, key.1)))
+            .collect();
+
+        // ---- P65 certified screening
+        // The prune bounds are time-independent (they bound the whole schedule), so one
+        // widening applies at every step.
+        let screen_block = if let Some(screen) = spec.options.screen.as_ref() {
             let bound_for = |response: &str| -> Option<(f64, f64)> {
                 // (lower-bound widening, upper-bound widening); heat's upper
                 // also absorbs the below-floor bound at emit time.
                 if response.starts_with("heat.") {
-                    Some((
-                        rate_pruning_heat_bound_W_per_g,
-                        rate_pruning_heat_bound_W_per_g,
-                    ))
+                    Some((heat_bound_W_per_g, heat_bound_W_per_g))
                 } else if response == "activity.total" {
-                    Some((removed_activity_bound, removed_activity_bound))
+                    Some((activity_bound_Bq_per_g, activity_bound_Bq_per_g))
                 } else if let Some(name) = response.strip_prefix("activity:") {
                     let b = activity_bound_by_nuclide.get(name).copied().unwrap_or(0.0);
                     Some((b, b))
@@ -6782,9 +6801,9 @@ impl PreparedRun {
             Some(serde_json::json!({
                 "bmin_atoms_per_g": screen.bmin_atoms_per_g,
                 "kept_states": keep.len(),
-                "dropped_states": rate_pruned.len(),
-                "removed_heat_W_per_g_bound": rate_pruning_heat_bound_W_per_g,
-                "removed_activity_Bq_per_g_bound": removed_activity_bound,
+                "dropped_states": pruned.dropped.len(),
+                "heat_W_per_g_bound": heat_bound_W_per_g,
+                "activity_Bq_per_g_bound": activity_bound_Bq_per_g,
                 "certified": serde_json::Value::Object(certified),
             }))
         } else {
@@ -6949,9 +6968,16 @@ impl PreparedRun {
             "decay_nuclides_from_fallback": n_fallback,
             "negative_atoms_zeroed_per_step": steps.iter().map(|s| s.negative_atoms_zeroed).collect::<Vec<_>>(),
             "rate_pruning": {
-                "threshold_atoms_per_g": spec.options.bmin_atoms_per_g,
+                "threshold_atoms_per_g": spec.options.screen.as_ref()
+                    .map_or(spec.options.bmin_atoms_per_g, |screen| screen.bmin_atoms_per_g),
                 "dropped": rate_pruning,
-                "removed_heat_W_per_g_bound": rate_pruning_heat_bound_W_per_g,
+                "dropped_activity_Bq_per_g_bound": dropped_activity_bound,
+                "dropped_heat_W_per_g_bound": dropped_heat_bound,
+                "kept_activity_Bq_per_g_bound": kept_activity_bound,
+                "kept_heat_W_per_g_bound": kept_heat_bound,
+                "activity_Bq_per_g_bound": activity_bound_Bq_per_g,
+                "heat_W_per_g_bound": heat_bound_W_per_g,
+                "unbounded_components": unbounded_states,
             },
             "library_convergence_flags": library_convergence_flags,
             "library_target_limitations": library_target_limitations,

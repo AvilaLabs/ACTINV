@@ -10,8 +10,27 @@ infinite-dilution averages and SIGMA1 broadening. Independent Python/NJOY/OpenMC
 dependencies. Decay data are ENDF/B-VIII.0 primary with a JEFF-3.3 fallback, with source recorded per nuclide.
 
 **Solver.** CRAM-16 (Pusa 2016 coefficients, incomplete-partial-fraction recurrence) with our own sparse complex LU
-(Gilbert–Peierls, partial pivoting, Smith division). Two prunings: reachable-set (exact) and rate-significance (bounded:
-a forward bound on atoms that could reach each nuclide; dropped nuclides and their bounds are written to the result).
+(Gilbert–Peierls, partial pivoting, Smith division). Two prunings: reachable-set (exact) and rate-significance (P148:
+a proven upper bound on each nuclide's population over the schedule; dropped nuclides, their bounds and the resulting
+bounds on total activity and heat are written to the result).
+
+**Rate-pruning bound (P148).** For each edge `j → i` let `a_ji` be its largest rate over the schedule (reaction rates at
+the largest flux multiplier, the largest over spectra) and `g_ji` the largest share of `j`'s losses it can take (the
+branch fraction for decay; `σφmax/(λ + Σφmax)` for a reaction, which rises with flux; 1 for removal; unbounded out of
+a state with no loss). Over the total duration `T`, atoms moving along the edge number at most `a_ji T S_j` and at most
+`g_ji Θ_j`, where `S_j` bounds the population and `Θ_j` the throughput (initial atoms plus all inflow; nothing leaves
+that did not enter, since populations stay non-negative). Hence `Θ_i ≤ N0_i + Σ_j min(a_ji T S_j, g_ji Θ_j)`, and with
+the inflow-rate bound `F_i = Σ_j a_ji S_j` and `dN_i/dt ≤ F_i − λ_i N_i`, `S_i ≤ min(Θ_i, N0_i + F_i/λ_i)`. Parents are
+summed, so converging paths are counted in full (v1.0.0 took the largest single parent, which could undercount).
+Components without cycles are evaluated once in topological order. A cyclic component needs a starting bound: with
+`C = min(aT, g)` inside it, the Neumann iterate `v_{k+1} = 1 + C v_k` gives `C v_k ≤ q v_k`, and the first `q < 1`
+yields `Θ ≤ v max(b/v)/(1 − q)`; repeated application of the monotone map then tightens it, and every iterate remains a
+bound. A component with no contraction is kept whole, with everything it reaches, and is listed in the ledger. A
+state is dropped when `S_i` is below `bmin`. Pruning removes only non-negative inflow from kept states and keeps their
+loss terms, so their pruned populations are not larger; the shortfall obeys the same inequalities driven by the cut
+inflow and gets its own bound `E_k`. The ledger's activity and heat bounds are `Σ λ S` over dropped states plus
+`Σ λ E` over kept ones (heat with each state's evaluated energy per decay). The bound covers the assembled linear
+problem; it does not cover data, flux or solver error.
 
 **Trace activation.** When burn-up is negligible (recorded per run), the composition is a constant source through a unit
 state and only products are solved — CRAM's absolute round-off is then relative to the product inventory, not the bulk.

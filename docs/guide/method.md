@@ -14,6 +14,8 @@ The solver uses the Chebyshev Rational Approximation Method, with CRAM orders 16
 
 `options.mode` selects `auto`, `trace`, or `coupled`. Trace mode retains an undepleted initial-material reservoir and a linear production system. Coupled mode evolves the material network. Auto uses an estimated initial-material reaction-loss fraction to select the path and records its decision in the ledger. See the [options reference](specification.md#options-and-result) for the exact criterion and pruning choices.
 
+Rate pruning drops a nuclide only when a proven upper bound on its population over the whole schedule is below the threshold. The bound sums every parent's contribution, limited both by the parent's population and by the share of its losses each edge can take, and cycles are handled only where a contraction is certified; otherwise they are kept. The ledger reports bounds on the resulting change in total activity and decay heat, including the shortfall of kept nuclides fed by dropped ones. The bound covers the assembled linear problem, not data, flux, or solver error.
+
 ## Responses and uncertainty
 
 Activity follows radioactive populations and decay constants. Decay heat combines evaluated alpha, beta, and gamma energy contributions. Photon sources use evaluated decay spectra; response quantities use the explicit photon or radiological tables supplied by the analyst.

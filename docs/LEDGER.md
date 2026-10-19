@@ -64,8 +64,14 @@ counted for inspection only and never appear as production sources.
 - `negative_atoms_zeroed_per_step` — negative CRAM round-off set to zero, with the removed amount.
 - `numerical_floor` — CRAM's absolute floor (`alpha0 × max population`), the maximum number of sub-floor states and a
   conservative heat fraction for them. Each step also carries the underlying counts and heat bound.
-- `rate_pruning` — threshold, every dropped nuclide's atom/feed bound, and `removed_heat_W_per_g_bound`. Reachability
-  and `none` pruning produce an empty dropped list.
+- `rate_pruning` — the threshold actually used (the `screen` threshold when one is set), every dropped nuclide's
+  population bound (`atoms_per_g_bound`) and inflow-rate bound (`feed_atoms_per_g_s_bound`), the activity and heat the
+  dropped states can carry (`dropped_activity_Bq_per_g_bound`, `dropped_heat_W_per_g_bound`), the shortfall of kept
+  states fed by dropped ones (`kept_activity_Bq_per_g_bound`, `kept_heat_W_per_g_bound`), their sums
+  (`activity_Bq_per_g_bound`, `heat_W_per_g_bound`: bounds on the change in total activity and total heat at every
+  step), and `unbounded_components`, states kept because no bound could be established. A bound that is infinite is
+  written as `null`. Reachability and `none` pruning produce an empty dropped list and zero bounds. Before P148 the
+  heat field was `removed_heat_W_per_g_bound` and covered dropped states only; see `docs/METHOD.md`.
 
 ## MF=33 uncertainty accounting
 

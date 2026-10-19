@@ -1219,7 +1219,10 @@ other order as its separately reported numerical-method comparison. For each ini
 base-spectrum reaction-loss
 optical depth `tau = loss_rate * sum(dt * flux_multiplier)` and burn-up fraction `-expm1(-tau)`; it selects `trace`
 only when the largest fraction is strictly below `1e-6`. The controlling nuclide, optical depth and fraction are
-ledgered. Explicitly requested modes are always honored. `prune` is `rate`, `reach`, or `none`. The `outputs` list
+ledgered. Explicitly requested modes are always honored. `prune` is `rate`, `reach`, or `none`: `reach` keeps every
+nuclide reachable from the material; `rate` (the default) also drops nuclides whose proven population bound over the
+whole schedule is below `bmin_atoms_per_g` (default `1e-8`), and the ledger's `rate_pruning` block bounds what that
+can change in total activity and heat. The `outputs` list
 controls optional pathway and photon/dose calculations; the core inventory/activity/heat diagnostics remain in each
 result step.
 
@@ -1311,7 +1314,7 @@ results retain their historical bytes and `fluence_n_cm2` field when `projectile
 
 ### Screening and perturbation options
 
-`options.screen` accepts `{"bmin_atoms_per_g": value}` with a finite nonnegative value and requires `prune: "rate"`. It applies the declared screening threshold and emits a `screen` certificate for dropped-state bounds on banded responses. Inspect that certificate and coverage before relying on a screened calculation.
+`options.screen` accepts `{"bmin_atoms_per_g": value}` with a finite nonnegative value and requires `prune: "rate"`. It applies the declared screening threshold and emits a `screen` certificate that widens `heat.*`, `activity.total` and `activity:<nuclide>` responses (their band edges, or the nominal value without a band) by the pruning bounds of the `rate_pruning` ledger block, which include the shortfall of kept nuclides. Other responses are not certified. Inspect that certificate and coverage before relying on a screened calculation.
 
 The optional scale maps support explicit perturbations for sensitivity and sampling workflows:
 
