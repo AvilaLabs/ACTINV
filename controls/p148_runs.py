@@ -10,12 +10,17 @@ for dominance against the CRAM-48 reference at every step:
 A difference is a violation only if it exceeds the bound by more than 1e-12 of the reference total plus the
 CRAM-16/CRAM-48 difference of the same quantity on the unpruned problem.
 
-Usage: p148_runs.py PROBE OUT_DIR [--only MAT_TAG ...] [--thresholds ...]
+Cases are independent: `--workers N` runs N at once (inside the caller's cgroup), and each finished case is saved
+to OUT_DIR/cases/<case>.json so an interrupted batch resumes. The rows do not depend on the order or the workers.
+
+Usage: p148_runs.py PROBE OUT_DIR [--only MAT_TAG ...] [--thresholds ...] [--workers N]
 """
 from __future__ import annotations
 
 import argparse
+import concurrent.futures
 import copy
+import hashlib
 import json
 import os
 import statistics
@@ -70,7 +75,7 @@ def run_probe(probe: str, spec: dict, tmp: Path, label: str) -> dict:
     spec_path = tmp / f"{label}.spec.json"
     out = tmp / f"{label}.out.json"
     spec_path.write_text(json.dumps(spec))
-    subprocess.run([probe, str(spec_path), str(out)], check=True)
+    subprocess.run([probe, str(spec_path), str(out)], check=True, timeout=3600.0)
     data = json.loads(out.read_text())
     out.unlink()
     return data
@@ -124,6 +129,51 @@ def dominance(rate: dict, ref48: dict, ref16: dict) -> tuple[list[str], dict]:
     return problems, worst
 
 
+def run_case(probe: str, name: str, spec: dict, thresholds: list[float], tmp: Path) -> list[dict]:
+    rows = []
+    refs = {}
+    for order in (16, 48):
+        ref = copy.deepcopy(spec)
+        ref["options"].update({"prune": "none", "cram_order": order})
+        refs[order] = run_probe(probe, ref, tmp, f"{name}_none{order}")
+    for bmin in thresholds:
+        rs = copy.deepcopy(spec)
+        rs["options"].update({"prune": "rate", "bmin_atoms_per_g": bmin})
+        rate = run_probe(probe, rs, tmp, f"{name}_rate")
+        cap = rate["captures"][-1]
+        mine = check_p148.recompute(cap)
+        r1 = check_p148.compare(cap, mine)
+        ledger = rate["result"]["ledger"]["rate_pruning"]
+        for key, value in check_p148.response_bounds(cap, mine).items():
+            if not check_p148.close(float(ledger[key]), value):
+                r1.append(f"ledger {key} {ledger[key]!r} vs {value!r}")
+        r2, worst = dominance(rate, refs[48], refs[16])
+        rows.append({"case": name, "bmin": bmin, "kept": len(cap["keep"]), "total_states": cap["n"],
+                     "dropped": len(cap["dropped"]), "unbounded": len(cap["kept_unbounded"]),
+                     "run_ms": rate["result"]["ms"], "reference_ms": refs[16]["result"]["ms"],
+                     "activity_bound_Bq_per_g": ledger["activity_Bq_per_g_bound"],
+                     "heat_bound_W_per_g": ledger["heat_W_per_g_bound"], **worst,
+                     "r1_problems": r1[:10], "r2_problems": r2[:10]})
+    return rows
+
+
+def cached_case(probe: str, name: str, spec: dict, thresholds: list[float], cases_dir: Path) -> list[dict]:
+    """One case's rows, from OUT_DIR/cases when an earlier run of the same spec and thresholds finished it."""
+    key = {"spec": spec, "thresholds": thresholds,
+           "probe_sha256": hashlib.sha256(Path(probe).read_bytes()).hexdigest()}
+    path = cases_dir / f"{name}.json"
+    if path.is_file():
+        saved = json.loads(path.read_text())
+        if saved.get("key") == key:
+            return saved["rows"]
+    with tempfile.TemporaryDirectory(dir=os.environ.get("TMPDIR")) as tmp:
+        rows = run_case(probe, name, spec, thresholds, Path(tmp))
+    partial = path.with_suffix(".tmp")
+    partial.write_text(json.dumps({"key": key, "rows": rows}) + "\n")
+    partial.replace(path)
+    return rows
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("probe")
@@ -131,45 +181,29 @@ def main() -> int:
     ap.add_argument("--only", nargs="*")
     ap.add_argument("--thresholds", nargs="*", type=float, default=THRESHOLDS)
     ap.add_argument("--no-long", action="store_true")
+    ap.add_argument("--workers", type=int, default=1)
     args = ap.parse_args()
     args.out.mkdir(parents=True, exist_ok=True)
+    cases_dir = args.out / "cases"
+    cases_dir.mkdir(exist_ok=True)
     cases = list(fns_cases()) + ([] if args.no_long else list(long_cases()))
     if args.only:
         cases = [c for c in cases if c[0] in args.only]
-    rows = []
+    by_case = {}
     started = time.time()
-    with tempfile.TemporaryDirectory(dir=os.environ.get("TMPDIR")) as tmp:
-        tmp = Path(tmp)
-        for n, (name, spec) in enumerate(cases):
-            refs = {}
-            for order in (16, 48):
-                ref = copy.deepcopy(spec)
-                ref["options"].update({"prune": "none", "cram_order": order})
-                refs[order] = run_probe(args.probe, ref, tmp, f"{name}_none{order}")
-            for bmin in args.thresholds:
-                rs = copy.deepcopy(spec)
-                rs["options"].update({"prune": "rate", "bmin_atoms_per_g": bmin})
-                rate = run_probe(args.probe, rs, tmp, f"{name}_rate")
-                cap = rate["captures"][-1]
-                mine = check_p148.recompute(cap)
-                r1 = check_p148.compare(cap, mine)
-                ledger = rate["result"]["ledger"]["rate_pruning"]
-                for key, value in check_p148.response_bounds(cap, mine).items():
-                    if not check_p148.close(float(ledger[key]), value):
-                        r1.append(f"ledger {key} {ledger[key]!r} vs {value!r}")
-                r2, worst = dominance(rate, refs[48], refs[16])
-                rows.append({"case": name, "bmin": bmin, "kept": len(cap["keep"]), "total_states": cap["n"],
-                             "dropped": len(cap["dropped"]), "unbounded": len(cap["kept_unbounded"]),
-                             "run_ms": rate["result"]["ms"], "reference_ms": refs[16]["result"]["ms"],
-                             "activity_bound_Bq_per_g": ledger["activity_Bq_per_g_bound"],
-                             "heat_bound_W_per_g": ledger["heat_W_per_g_bound"], **worst,
-                             "r1_problems": r1[:10], "r2_problems": r2[:10]})
-            last = rows[-1]
-            print(f"{n + 1:3d}/{len(cases)} {name:24s} kept@1e-8 "
-                  f"{next((r['kept'] for r in rows if r['case'] == name and r['bmin'] == 1e-8), '-')} "
-                  f"r1 {sum(len(r['r1_problems']) for r in rows if r['case'] == name)} "
-                  f"r2 {sum(len(r['r2_problems']) for r in rows if r['case'] == name)} "
+    with concurrent.futures.ProcessPoolExecutor(max_workers=args.workers) as pool:
+        futures = {pool.submit(cached_case, args.probe, name, spec, args.thresholds, cases_dir): name
+                   for name, spec in cases}
+        for done, future in enumerate(concurrent.futures.as_completed(futures), 1):
+            name = futures[future]
+            case_rows = future.result()
+            by_case[name] = case_rows
+            print(f"{done:3d}/{len(cases)} {name:24s} kept@1e-8 "
+                  f"{next((r['kept'] for r in case_rows if r['bmin'] == 1e-8), '-')} "
+                  f"r1 {sum(len(r['r1_problems']) for r in case_rows)} "
+                  f"r2 {sum(len(r['r2_problems']) for r in case_rows)} "
                   f"{time.time() - started:.0f}s", file=sys.stderr, flush=True)
+    rows = [row for name, _spec in cases for row in by_case[name]]
     summary = {}
     for bmin in args.thresholds:
         sel = [r for r in rows if r["bmin"] == bmin and r["case"].startswith(tuple("ABCDEFGHIJKLMNOPQRSTUVWXYZ"))]
