@@ -3779,3 +3779,21 @@ and browser workflows are path-filtered and did not trigger on that push; both s
 web are unchanged between the two). The phase took its one repair round (Amendment B); attempt 1 stays preserved
 under `results/failures/p147/`. The verdict was not recorded when CI finished on 2026-10-17; it is recorded now from
 the same runs.
+
+## Entry 218 — P149 Amendment B registered after S5 attempt 1 stopped (2026-10-20)
+
+Evidence attempt 1 ran on the v1.6.0 release (`b07a763`, `actinv` `7b76596b…`). S0–S4 completed. S5 completed Fe
+and Fe with 100 wppm Co. On SS316, after all 1000 draws, the kernel OOM killer stopped `actinv study run` at 5.9 GB
+inside the 6 GB cgroup, during the study's built-in first-order comparison. The run is preserved under
+`results/failures/p149/s5_oom_attempt1/`.
+
+**P149 Amendment B** `e018b8508668d6c14724c02a05ef775dd9e12edfd8003b15c7919beca98d3f9f` is the protocol's repair
+round:
+- The sampling study turns the built-in comparison off. The sampled-over-first-order ratio uses the first-order
+  run's own `mf33_standard_uncertainty`; on Fe and Fe+Co in attempt 1 it equals the built-in value to 2.2e-16
+  relative.
+- The driver reads one per-sample output at a time.
+- The checker recomputes the ratio, and its selftest passes.
+- All three S5 cases are rerun, then S6 and the checker; S0–S4 stand.
+
+The built-in comparison's memory use on large networks is recorded as a solver limitation.

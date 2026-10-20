@@ -213,6 +213,9 @@ def check_s4(record: dict) -> list[str]:
 
 # ---- S5 ---------------------------------------------------------------------------------------------------------
 
+S5_RESPONSES = {"activity.total": "total_activity_bq_per_g", "heat.total": "decay_heat_w_per_g"}
+
+
 def check_s5(record: dict) -> list[str]:
     errors = []
     for name, case in record["cases"].items():
@@ -234,6 +237,8 @@ def check_s5(record: dict) -> list[str]:
                 shares = [row["share"] for row in d["top_rows"] if row["share"] is not None]
                 if shares != sorted(shares, key=abs, reverse=True):
                     errors.append(f"{where}: top rows are not ordered by |share|")
+        first_std = {(S5_RESPONSES[selector], point["cooling_s"]): d["mf33_standard_uncertainty"]
+                     for point in first["points"] for selector, d in point["responses"].items()}
         sampling = case.get("sampling")
         if sampling is None:
             errors.append(f"{name}: no sampling run")
@@ -244,6 +249,13 @@ def check_s5(record: dict) -> list[str]:
             for time, row in times.items():
                 if not row["recomputed_matches_tool"]:
                     errors.append(f"{name} {response} t={time}: recomputed moments differ from the tool's")
+                # Amendment B: the sampled-over-first-order ratio uses the first-order run's own uncertainty.
+                expected = first_std.get((response, float(time)))
+                if expected is None or row["first_order_std"] != expected:
+                    errors.append(f"{name} {response} t={time}: first-order std is not the first-order run's")
+                elif expected > 0 and not close(row["sampled_over_first_order"], row["recomputed"]["std"] / expected,
+                                                1e-12):
+                    errors.append(f"{name} {response} t={time}: sampled-over-first-order ratio does not recompute")
                 for key, interval in row["bootstrap_95"].items():
                     if interval is not None and not interval[0] <= interval[1]:
                         errors.append(f"{name} {response} t={time} {key}: bootstrap interval reversed")
@@ -357,14 +369,15 @@ def fixtures() -> dict:
                                                              "maximum_relative": 1e-4, "worst_group_low_ev": 9e4,
                                                              "worst_group_high_ev": 2e5}}}}
                     for t in ("Fe56", "Ag107") for T in (293.6, 600.0, 1200.0)]}
-    d = {"variance_relative_difference": 1e-12, "variance_recomputed": 4.0,
+    d = {"variance_relative_difference": 1e-12, "variance_recomputed": 4.0, "mf33_standard_uncertainty": 2.0,
          "variance_split": {"diagonal": 3.0, "cross_within_target": 1.5, "cross_between_targets": -0.5},
          "coverage": {"response_weighted": 0.9}, "top_rows": [{"share": 0.6}, {"share": -0.3}, {"share": 0.1}]}
     s5 = {"cases": {"fe": {"first_order": {"probe": {"collapsed_cross_section_max_relative_difference": 0.0},
                                            "points": [{"cooling_s": 66.0, "responses": {"heat.total": d}}]},
                            "sampling": {"samples": 1000, "samples_declared": 1000, "truncated_by_resource_limit": False,
                                         "per_time": {"decay_heat_w_per_g": {"66.0": {
-                                            "recomputed_matches_tool": True,
+                                            "recomputed_matches_tool": True, "recomputed": {"std": 2.2},
+                                            "first_order_std": 2.0, "sampled_over_first_order": 1.1,
                                             "bootstrap_95": {"mean": [1.0, 2.0], "std": [0.1, 0.2]}}}}}}}}
     s6_rows = []
     for prune, kept in (("rate", 40), ("reach", 60), ("none", 900)):
@@ -418,6 +431,10 @@ def selftest() -> int:
     region["cases"][0]["groups_MT102"]["by_region"]["straddling_top"]["worst_group_high_ev"] = 5.0e4
     if not run_check("s4", region):
         failures.append("s4: mislabelled group region not caught")
+    ratio = copy.deepcopy(fixtures()["s5"])
+    ratio["cases"]["fe"]["sampling"]["per_time"]["decay_heat_w_per_g"]["66.0"]["sampled_over_first_order"] = 1.2
+    if not run_check("s5", ratio):
+        failures.append("s5: wrong sampled-over-first-order ratio not caught")
     selection = s1_selection(fixtures()["s1"])
     if len(selection) != 132 or selection[0]["time_s"] != 600.0:
         failures.append(f"s1 selection: {len(selection)} points")

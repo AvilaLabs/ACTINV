@@ -244,7 +244,7 @@ def sample_value(output: dict, response: str, t_s: float) -> float:
 
 
 def sampling(name: str, spec: dict, times: list[float], t_irr: float, samples: int, work: Path,
-             identities: dict) -> dict:
+             identities: dict, first: dict) -> dict:
     spectrum_path = work / "spectrum_spec.json"
     spectrum_path.write_text(json.dumps(spec, indent=1))
     study = {
@@ -259,7 +259,10 @@ def sampling(name: str, spec: dict, times: list[float], t_irr: float, samples: i
         "responses": list(RESPONSES.values()),
         "robustness": {"samples": samples, "seed": SEED, "channels": {"cross_section_mf33": True},
                        "covariance": {"path": str(COVARIANCE), "sha256": identities["covariance"]},
-                       "responses": list(RESPONSES.values()), "statistics": {"bootstrap_resamples": 200}},
+                       "responses": list(RESPONSES.values()), "statistics": {"bootstrap_resamples": 200},
+                       # Amendment B: the built-in comparison exceeded the 6 GB limit on SS316; the ratio below uses
+                       # the first-order run's own standard uncertainty, the same S C S^T.
+                       "first_order_comparison": False},
     }
     study_path, out = work / "study.json", work / "study"
     study_path.write_text(json.dumps(study, indent=1))
@@ -268,12 +271,20 @@ def sampling(name: str, spec: dict, times: list[float], t_irr: float, samples: i
     (case,) = record["cases"]
     robustness = case["robustness"]
     case_dir = out / "cases" / case["case_id"]
-    outputs = [json.loads((case_dir / f"rob_{i}.out.json").read_text()) for i in range(robustness["samples"])]
+    # Amendment B: each output is read once and reduced to its response values, never held all at once.
+    collected = {(response, time): [] for response in RESPONSES.values() for time in times}
+    for i in range(robustness["samples"]):
+        output = json.loads((case_dir / f"rob_{i}.out.json").read_text())
+        for (response, time), values in collected.items():
+            values.append(sample_value(output, response, t_irr + time))
+        del output
     statistics = robustness["sampling_statistics"]["responses"]
+    first_std = {(RESPONSES[selector], point["cooling_s"]): point["responses"][selector]["mf33_standard_uncertainty"]
+                 for point in first["points"] for selector in RESPONSES}
     per_time = {}
     for j, time in enumerate(times):
         for k, response in enumerate(RESPONSES.values()):
-            values = np.asarray([sample_value(o, response, t_irr + time) for o in outputs])
+            values = np.asarray(collected[(response, time)])
             tool = statistics[response][next(key for key in statistics[response] if math.isclose(float(key), time))]
             mine = moments(values)
             per_time.setdefault(response, {})[repr(time)] = {
@@ -284,6 +295,9 @@ def sampling(name: str, spec: dict, times: list[float], t_irr: float, samples: i
                                             and math.isclose(mine["std"], tool["distribution"]["std"],
                                                              rel_tol=1e-9)),
                 "bootstrap_95": bootstrap(values, BOOTSTRAP_SEED + 10 * j + k),
+                "first_order_std": first_std[(response, time)],
+                "sampled_over_first_order": (mine["std"] / first_std[(response, time)]
+                                             if first_std[(response, time)] > 0 else None),
             }
     return {"study_sha256": sha256(study_path), "record_status": record.get("status", case["status"]),
             "case_status": case["status"], "samples": robustness["samples"],
@@ -318,7 +332,8 @@ def main() -> int:
                        "cooling_times_s": times, "irradiation_s": t_irr,
                        "first_order": first_order(name, spec, times, work)}
         print(f"{name}: first order done", file=sys.stderr, flush=True)
-        cases[name]["sampling"] = sampling(name, spec, times, t_irr, args.samples, work, identities)
+        cases[name]["sampling"] = sampling(name, spec, times, t_irr, args.samples, work, identities,
+                                           cases[name]["first_order"])
         print(f"{name}: sampling done", file=sys.stderr, flush=True)
         args.out.parent.mkdir(parents=True, exist_ok=True)
         args.out.write_text(json.dumps(record, indent=1, sort_keys=True) + "\n")

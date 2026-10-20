@@ -1,0 +1,3 @@
+Oct 20 14:32:26 connoravila kernel: actinv invoked oom-killer: gfp_mask=0xcc0(GFP_KERNEL), order=0, oom_score_adj=100
+Oct 20 14:32:26 connoravila kernel: oom-kill:constraint=CONSTRAINT_MEMCG,nodemask=(null),cpuset=/,mems_allowed=0,oom_memcg=/user.slice/user-1000.slice/user@1000.service/app.slice/run-p640332-i638110.scope,task_memcg=/user.slice/user-1000.slice/user@1000.service/app.slice/run-p640332-i638110.scope,task=actinv,pid=658679,uid=1000
+Oct 20 14:32:26 connoravila kernel: Memory cgroup out of memory: Killed process 658679 (actinv) total-vm:6144956kB, anon-rss:5947860kB, file-rss:11760kB, shmem-rss:0kB, UID:1000 pgtables:12068kB oom_score_adj:100
