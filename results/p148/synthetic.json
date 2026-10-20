@@ -1,0 +1,508 @@
+{
+ "schema": "actinv-p148-synthetic-1",
+ "cases": 40,
+ "coverage": {
+  "converging": 2,
+  "cooling": 7,
+  "coupled": 17,
+  "cycle": 2,
+  "cyclic_component": 31,
+  "feed": 1,
+  "isomer": 1,
+  "kept_shortfall": 17,
+  "linear": 2,
+  "multiplicity": 1,
+  "produced_source": 1,
+  "r4": 1,
+  "random": 28,
+  "removal": 1,
+  "spectra": 1,
+  "trace": 12,
+  "unbounded": 1,
+  "unbounded_found": 1
+ },
+ "missing_coverage": [],
+ "rows": [
+  {
+   "name": "r4_converging_pair",
+   "tags": [
+    "converging",
+    "r4"
+   ],
+   "states": 4,
+   "kept": 2,
+   "dropped": 2,
+   "r1_problems": [],
+   "r2_problems": []
+  },
+  {
+   "name": "converging_three_deep",
+   "tags": [
+    "converging",
+    "cooling"
+   ],
+   "states": 7,
+   "kept": 7,
+   "dropped": 0,
+   "r1_problems": [],
+   "r2_problems": []
+  },
+  {
+   "name": "linear_chain_10",
+   "tags": [
+    "linear",
+    "cooling"
+   ],
+   "states": 10,
+   "kept": 10,
+   "dropped": 0,
+   "r1_problems": [],
+   "r2_problems": []
+  },
+  {
+   "name": "linear_chain_30",
+   "tags": [
+    "linear",
+    "cooling"
+   ],
+   "states": 30,
+   "kept": 30,
+   "dropped": 0,
+   "r1_problems": [],
+   "r2_problems": []
+  },
+  {
+   "name": "reaction_cycle",
+   "tags": [
+    "cycle"
+   ],
+   "states": 4,
+   "kept": 4,
+   "dropped": 0,
+   "r1_problems": [],
+   "r2_problems": []
+  },
+  {
+   "name": "isomer_pair",
+   "tags": [
+    "cycle",
+    "isomer",
+    "cooling"
+   ],
+   "states": 3,
+   "kept": 3,
+   "dropped": 0,
+   "r1_problems": [],
+   "r2_problems": []
+  },
+  {
+   "name": "multiplicity",
+   "tags": [
+    "multiplicity"
+   ],
+   "states": 4,
+   "kept": 4,
+   "dropped": 0,
+   "r1_problems": [],
+   "r2_problems": []
+  },
+  {
+   "name": "trace_unit",
+   "tags": [
+    "trace",
+    "cooling"
+   ],
+   "states": 5,
+   "kept": 5,
+   "dropped": 0,
+   "r1_problems": [],
+   "r2_problems": []
+  },
+  {
+   "name": "produced_source",
+   "tags": [
+    "produced_source"
+   ],
+   "states": 4,
+   "kept": 4,
+   "dropped": 0,
+   "r1_problems": [],
+   "r2_problems": []
+  },
+  {
+   "name": "feed_and_removal",
+   "tags": [
+    "feed",
+    "removal",
+    "cooling"
+   ],
+   "states": 5,
+   "kept": 5,
+   "dropped": 0,
+   "r1_problems": [],
+   "r2_problems": []
+  },
+  {
+   "name": "two_spectra",
+   "tags": [
+    "spectra",
+    "cooling"
+   ],
+   "states": 4,
+   "kept": 4,
+   "dropped": 0,
+   "r1_problems": [],
+   "r2_problems": []
+  },
+  {
+   "name": "no_contraction",
+   "tags": [
+    "unbounded"
+   ],
+   "states": 4,
+   "kept": 4,
+   "dropped": 0,
+   "r1_problems": [],
+   "r2_problems": []
+  },
+  {
+   "name": "random_12",
+   "tags": [
+    "random",
+    "coupled"
+   ],
+   "states": 18,
+   "kept": 9,
+   "dropped": 7,
+   "r1_problems": [],
+   "r2_problems": []
+  },
+  {
+   "name": "random_13",
+   "tags": [
+    "random",
+    "coupled"
+   ],
+   "states": 8,
+   "kept": 8,
+   "dropped": 0,
+   "r1_problems": [],
+   "r2_problems": []
+  },
+  {
+   "name": "random_14",
+   "tags": [
+    "random",
+    "coupled"
+   ],
+   "states": 12,
+   "kept": 11,
+   "dropped": 1,
+   "r1_problems": [],
+   "r2_problems": []
+  },
+  {
+   "name": "random_15",
+   "tags": [
+    "random",
+    "coupled"
+   ],
+   "states": 13,
+   "kept": 1,
+   "dropped": 0,
+   "r1_problems": [],
+   "r2_problems": []
+  },
+  {
+   "name": "random_16",
+   "tags": [
+    "random",
+    "coupled"
+   ],
+   "states": 6,
+   "kept": 3,
+   "dropped": 1,
+   "r1_problems": [],
+   "r2_problems": []
+  },
+  {
+   "name": "random_17",
+   "tags": [
+    "random",
+    "trace"
+   ],
+   "states": 15,
+   "kept": 3,
+   "dropped": 11,
+   "r1_problems": [],
+   "r2_problems": []
+  },
+  {
+   "name": "random_18",
+   "tags": [
+    "random",
+    "trace"
+   ],
+   "states": 11,
+   "kept": 1,
+   "dropped": 10,
+   "r1_problems": [],
+   "r2_problems": []
+  },
+  {
+   "name": "random_19",
+   "tags": [
+    "random",
+    "coupled"
+   ],
+   "states": 18,
+   "kept": 1,
+   "dropped": 0,
+   "r1_problems": [],
+   "r2_problems": []
+  },
+  {
+   "name": "random_20",
+   "tags": [
+    "random",
+    "coupled"
+   ],
+   "states": 23,
+   "kept": 14,
+   "dropped": 3,
+   "r1_problems": [],
+   "r2_problems": []
+  },
+  {
+   "name": "random_21",
+   "tags": [
+    "random",
+    "coupled"
+   ],
+   "states": 20,
+   "kept": 2,
+   "dropped": 16,
+   "r1_problems": [],
+   "r2_problems": []
+  },
+  {
+   "name": "random_22",
+   "tags": [
+    "random",
+    "trace"
+   ],
+   "states": 19,
+   "kept": 14,
+   "dropped": 3,
+   "r1_problems": [],
+   "r2_problems": []
+  },
+  {
+   "name": "random_23",
+   "tags": [
+    "random",
+    "coupled"
+   ],
+   "states": 6,
+   "kept": 6,
+   "dropped": 0,
+   "r1_problems": [],
+   "r2_problems": []
+  },
+  {
+   "name": "random_24",
+   "tags": [
+    "random",
+    "trace"
+   ],
+   "states": 24,
+   "kept": 10,
+   "dropped": 11,
+   "r1_problems": [],
+   "r2_problems": []
+  },
+  {
+   "name": "random_25",
+   "tags": [
+    "random",
+    "trace"
+   ],
+   "states": 17,
+   "kept": 1,
+   "dropped": 16,
+   "r1_problems": [],
+   "r2_problems": []
+  },
+  {
+   "name": "random_26",
+   "tags": [
+    "random",
+    "trace"
+   ],
+   "states": 23,
+   "kept": 15,
+   "dropped": 2,
+   "r1_problems": [],
+   "r2_problems": []
+  },
+  {
+   "name": "random_27",
+   "tags": [
+    "random",
+    "coupled"
+   ],
+   "states": 20,
+   "kept": 1,
+   "dropped": 0,
+   "r1_problems": [],
+   "r2_problems": []
+  },
+  {
+   "name": "random_28",
+   "tags": [
+    "random",
+    "coupled"
+   ],
+   "states": 17,
+   "kept": 1,
+   "dropped": 0,
+   "r1_problems": [],
+   "r2_problems": []
+  },
+  {
+   "name": "random_29",
+   "tags": [
+    "random",
+    "coupled"
+   ],
+   "states": 10,
+   "kept": 1,
+   "dropped": 0,
+   "r1_problems": [],
+   "r2_problems": []
+  },
+  {
+   "name": "random_30",
+   "tags": [
+    "random",
+    "trace"
+   ],
+   "states": 17,
+   "kept": 7,
+   "dropped": 4,
+   "r1_problems": [],
+   "r2_problems": []
+  },
+  {
+   "name": "random_31",
+   "tags": [
+    "random",
+    "coupled"
+   ],
+   "states": 17,
+   "kept": 2,
+   "dropped": 0,
+   "r1_problems": [],
+   "r2_problems": []
+  },
+  {
+   "name": "random_32",
+   "tags": [
+    "random",
+    "trace"
+   ],
+   "states": 10,
+   "kept": 9,
+   "dropped": 0,
+   "r1_problems": [],
+   "r2_problems": []
+  },
+  {
+   "name": "random_33",
+   "tags": [
+    "random",
+    "trace"
+   ],
+   "states": 22,
+   "kept": 5,
+   "dropped": 14,
+   "r1_problems": [],
+   "r2_problems": []
+  },
+  {
+   "name": "random_34",
+   "tags": [
+    "random",
+    "trace"
+   ],
+   "states": 21,
+   "kept": 13,
+   "dropped": 6,
+   "r1_problems": [],
+   "r2_problems": []
+  },
+  {
+   "name": "random_35",
+   "tags": [
+    "random",
+    "trace"
+   ],
+   "states": 24,
+   "kept": 8,
+   "dropped": 9,
+   "r1_problems": [],
+   "r2_problems": []
+  },
+  {
+   "name": "random_36",
+   "tags": [
+    "random",
+    "coupled"
+   ],
+   "states": 18,
+   "kept": 3,
+   "dropped": 13,
+   "r1_problems": [],
+   "r2_problems": []
+  },
+  {
+   "name": "random_37",
+   "tags": [
+    "random",
+    "coupled"
+   ],
+   "states": 12,
+   "kept": 3,
+   "dropped": 8,
+   "r1_problems": [],
+   "r2_problems": []
+  },
+  {
+   "name": "random_38",
+   "tags": [
+    "random",
+    "coupled"
+   ],
+   "states": 9,
+   "kept": 6,
+   "dropped": 2,
+   "r1_problems": [],
+   "r2_problems": []
+  },
+  {
+   "name": "random_39",
+   "tags": [
+    "random",
+    "coupled"
+   ],
+   "states": 21,
+   "kept": 8,
+   "dropped": 6,
+   "r1_problems": [],
+   "r2_problems": []
+  }
+ ],
+ "r1_pass": true,
+ "r2_pass": true,
+ "pass": true
+}

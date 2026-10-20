@@ -3677,3 +3677,39 @@ classed them `other`. B2 names a list item after its nearest named key, with an 
 B4 discloses the R1–R3 driver changes (two workers and per-case resume; probe runs limited to the outputs R1 and R2
 read, 540 s and 4.1 GB down to 6 s and 112 MB per unpruned reference with identical inventories, activity and heat;
 the outputs in the cache key). No gate is relaxed.
+
+## Entry 212 — P148 evidence: R1–R6 on candidate c2beaa0 (2026-10-19)
+
+Binaries built from c2beaa0 (`results/p148/binaries.sha256`: actinv `13af0225…`, prune_probe `a3c612eb…`); drivers at
+af9eb2f (R1–R3) and f36efbb (R5, after Amendment B).
+- **R1, R2.** Synthetic battery: 40 problems, every required feature covered, independent recomputation and
+  dense-exponential dominance pass (`results/p148/synthetic.json`). Spec runs: the 132 FNS experiments and the two
+  one-year iron histories at six thresholds (1e-12 to 1e-2 atoms/g), 804 rate runs, each recomputed by
+  `check_p148` and checked against unpruned CRAM-48 and CRAM-16 references at every step: no violation
+  (`results/p148/runs/runs.json`). The R1–R3 batch survived a power loss through its per-case resume; every case was
+  computed by af9eb2f.
+- **R3.** Median kept states over the FNS experiments 84, 77.5, 70.5, 60.5, 53, 45 at 1e-12 … 1e-2. At 1e-12 the
+  largest change is 5.2e-12 of the heat and 3.3e-10 of the activity. At 1e-8 (the default) the median bound is
+  4.9e-12 of the heat; 19 of 132 experiments change the heat by more than 1e-6, at most 1.38 % (Cl) and 1.31 % (I),
+  and total activity by at most 48 % (I) and 33 % (Cl). The large changes are at the end-of-irradiation step and come
+  from Be-8 made by C-12(n,n'α) in the carbon of the iodine (32.8 wt% C) and chlorine (24.8 wt% C) compounds: Be-8
+  lives about 1e-16 s, so its population stays below 1e-8 atoms/g while its activity equals its production rate
+  (1.3e6 and 9.8e5 Bq/g); nothing differs after the first cooling step. Every change is inside its ledger bound; the
+  bound can be loose, up to 816 times the heat (K 7 h) and 2.3e3 times the activity (Na). The one-year steady and
+  pulsed histories change by at most 2.3e-14.
+- **R4.** The converging-path regression case is a unit test of the candidate (in R6).
+- **R5.** First run failed in the classifier (Amendment B, preserved under `results/failures/p148/`); repeated in full
+  on the same binaries, pass (`results/p148/r5/r5.json`). Changed baselines, regenerated with the candidate binary
+  and committed here: `results/p15_cache_integrity.json` (normalized-result hash `9853ccc8…` → `34f21e21…`, six
+  occurrences, nothing else); `results/g1_p110_composition_solve.json` (nine case-output hashes) and
+  `results/g2_p110_composition_solve.json` (the G1 result hash); `controls/ci_expected.json` (CI end-to-end kept
+  states 40 → 38: pruning, drop-set, rounding and noise differences only); the P10 legacy neutron normalized hash in
+  `controls/g6_p10_projectile_runtime.py` (`e6157b59…` → `1a36b8c5…`, pruning differences only, both values
+  reproduced). Historical P65 controls are not rerun (Amendment A6). Raw R5 outputs and the R1–R3 per-case files are
+  kept outside the repository, listed by SHA-256 in `results/p148/raw_artifacts.sha256`.
+- **R6.** Rerun at f36efbb, whose Rust sources are identical to c2beaa0 (the first R6 log was lost with a power
+  loss): `cargo fmt --all -- --check`, `cargo clippy --workspace --all-targets -- -D warnings` and
+  `cargo check --workspace --tests` exit 0; workspace tests 1138 passed, 0 failed; the P148 checker selftest and the
+  classifier selftest pass (`results/p148/selftest.json`).
+
+P148 verdict: pass. Remaining before release: CI on the pushed commits.

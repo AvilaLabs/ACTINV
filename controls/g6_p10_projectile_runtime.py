@@ -36,9 +36,12 @@ PRE_P10_COMMIT = "e5421a0e30eb94303482bed2c4b9491b773244e6"
 # max_product_optical_depth{,_nuclide} ledger keys — a schema addition, not a
 # numerical change. Re-seated again from d27ba80b... after b7e81f2 (D6 decay
 # overrides) added the unconditional decay_overrides_applied ledger key —
-# likewise a schema addition, not a numerical change.
+# likewise a schema addition, not a numerical change. Re-seated again from
+# e6157b59... after P148 (proven rate-pruning bound): the ledger's rate_pruning
+# block gained the activity/heat bound fields and lost removed_heat_W_per_g_bound;
+# controls/p148_r5.py shows the result changes only in that block.
 PRE_P10_NEUTRON_NORMALIZED_SHA256 = (
-    "e6157b592dd8285cbdcf079153d27e44161c178378219b6afddbc4f4be8ee285"
+    "1a36b8c507740fd19ef1cf7898ef604bef82afad2f6ad80520dace71fb64fc29"
 )
 PRE_P12_TABLES_PROVENANCE = (
     "openmc.data.NATURAL_ABUNDANCE and openmc.data.atomic_mass (OpenMC 0.15.3; "
