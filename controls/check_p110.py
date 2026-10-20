@@ -8,6 +8,7 @@ import copy
 import hashlib
 import json
 import os
+import re
 import struct
 import zipfile
 from pathlib import Path
@@ -90,6 +91,23 @@ def map_version_token(output: bytes, current: str, sealed: str) -> bytes:
     if current == sealed:
         return output
     return output.replace(f"actinv-core {current}".encode(), f"actinv-core {sealed}".encode())
+
+
+# P120 Amendment D: the P148 ledger block of a run with pruning off, exactly as the solver writes it.
+P148_UNPRUNED_BLOCK = re.compile(
+    rb'"rate_pruning": \{\n(?P<i> +)"activity_Bq_per_g_bound": 0\.0,\n(?P=i)"dropped": \[\],\n'
+    rb'(?P=i)"dropped_activity_Bq_per_g_bound": 0\.0,\n(?P=i)"dropped_heat_W_per_g_bound": 0\.0,\n'
+    rb'(?P=i)"heat_W_per_g_bound": 0\.0,\n(?P=i)"kept_activity_Bq_per_g_bound": 0\.0,\n'
+    rb'(?P=i)"kept_heat_W_per_g_bound": 0\.0,\n(?P=i)"threshold_atoms_per_g": 0\.0,\n'
+    rb'(?P=i)"unbounded_components": \[\]\n')
+
+
+def map_p148_ledger(output: bytes) -> bytes:
+    """P120 Amendment D: only the unpruned P148 block is mapped to the pre-P148 block, and only for the digest."""
+    return P148_UNPRUNED_BLOCK.sub(
+        lambda m: (b'"rate_pruning": {\n' + m["i"] + b'"dropped": [],\n' + m["i"]
+                   + b'"removed_heat_W_per_g_bound": -0.0,\n' + m["i"] + b'"threshold_atoms_per_g": 0.0\n'),
+        output)
 
 
 def _registered() -> bool:
@@ -661,7 +679,8 @@ def run_g1(*, no_write: bool=False) -> int:
                                 for w in native.get("native_verification",{}).get("verified_witnesses",[])
                                 for t in w.get("targets",[])),default=0.0)
             case_evidence.append({"id":case["id"],"input_sha256":hashlib.sha256(raw).hexdigest(),
-                "output_sha256":hashlib.sha256(map_version_token(output_bytes,current_version,sealed_version)).hexdigest(),
+                "output_sha256":hashlib.sha256(map_version_token(map_p148_ledger(output_bytes),
+                    current_version,sealed_version)).hexdigest(),
                 "generated_response_input_sha256":actual.get("generated_response_input_sha256"),
                 "selected_steps":[{"step":t.get("step"),"lower_class":t.get("lower",{}).get("class"),
                     "upper_class":t.get("upper",{}).get("class"),"class_envelope":t.get("class_envelope")}
