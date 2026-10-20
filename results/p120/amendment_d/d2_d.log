@@ -1,0 +1,10 @@
+test_a_pruned_or_altered_block_is_not_mapped (__main__.P148LedgerMapTests.test_a_pruned_or_altered_block_is_not_mapped) ... ok
+test_any_other_byte_difference_survives_the_map (__main__.P148LedgerMapTests.test_any_other_byte_difference_survives_the_map) ... ok
+test_output_without_the_block_is_unchanged (__main__.P148LedgerMapTests.test_output_without_the_block_is_unchanged) ... ok
+test_the_digest_applies_both_registered_maps (__main__.P148LedgerMapTests.test_the_digest_applies_both_registered_maps) ... ok
+test_the_unpruned_block_maps_to_the_pre_p148_block (__main__.P148LedgerMapTests.test_the_unpruned_block_maps_to_the_pre_p148_block) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.001s
+
+OK

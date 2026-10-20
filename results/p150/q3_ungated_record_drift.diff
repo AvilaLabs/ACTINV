@@ -1,0 +1,253 @@
+diff --git a/results/ci_end_to_end.json b/results/ci_end_to_end.json
+index 297c2ca..70b45f6 100644
+--- a/results/ci_end_to_end.json
++++ b/results/ci_end_to_end.json
+@@ -2,12 +2,12 @@
+  "data_dir": "<HOME>/actinv-ci-data",
+  "library_targets": 10,
+  "expected_first_cooling_W_per_g": 1.1497333991518499e-07,
+- "cli_first_cooling_W_per_g": 1.1497333991518504e-07,
+- "max_abs_deviation_cli_W_per_g": 1.0587911840678754e-22,
+- "max_abs_deviation_python_W_per_g": 1.0587911840678754e-22,
++ "cli_first_cooling_W_per_g": 1.1497333991519451e-07,
++ "max_abs_deviation_cli_W_per_g": 1.4240741425712924e-20,
++ "max_abs_deviation_python_W_per_g": 1.4240741425712924e-20,
+  "criterion_abs_W_per_g": 9.999999999999999e-18,
+  "cli_equals_python": true,
+  "mode": "trace",
+- "pruned_states": 36,
++ "pruned_states": 38,
+  "pass": true
+ }
+diff --git a/results/g1_p12_radiological.json b/results/g1_p12_radiological.json
+index 1fd8f77..3b0ea12 100644
+--- a/results/g1_p12_radiological.json
++++ b/results/g1_p12_radiological.json
+@@ -43,7 +43,7 @@
+   "wrong_hash": {
+    "returncode": 1,
+    "output_published": false,
+-   "stderr_tail": "SHA-256 mismatch for <ROOT>/controls/fixtures/p12_radiological_table.json: declared 0000000000000000000000000000000000000000000000000000000000000000, computed 65997d2cd7a308dcb452aba392817f6611924c6eaa1012a21ba2c5d705f2f601",
++   "stderr_tail": "radiological table: SHA-256 mismatch for <ROOT>/controls/fixtures/p12_radiological_table.json: declared 0000000000000000000000000000000000000000000000000000000000000000, computed 65997d2cd7a308dcb452aba392817f6611924c6eaa1012a21ba2c5d705f2f601",
+    "pass": true
+   },
+   "unknown_selector": {
+@@ -73,7 +73,7 @@
+   "unknown_kind": {
+    "returncode": 1,
+    "output_published": false,
+-   "stderr_tail": "radiological table: unknown variant `external_dose`, expected one of `clearance_index`, `waste_index`, `ingestion_dose`, `inhalation_dose` at line 1 column 351",
++   "stderr_tail": "radiological table: unknown variant `external_dose`, expected one of `clearance_index`, `waste_index`, `ingestion_dose`, `inhalation_dose`, `a2`, `activity_limit` at line 1 column 351",
+    "pass": true
+   },
+   "duplicate_id": {
+diff --git a/results/g2_p9_fission_matrix.json b/results/g2_p9_fission_matrix.json
+index 5eccc99..6d399e2 100644
+--- a/results/g2_p9_fission_matrix.json
++++ b/results/g2_p9_fission_matrix.json
+@@ -100,19 +100,19 @@
+   },
+   "fixture": {
+     "decay": {
+-      "path": "/tmp/actinv-p9-final/g2/p9-synthetic-decay.endf"
++      "path": "<HOME>/Documents/actinv/target/preflight-tmp/actinv-p9-g2-fa0nmbyo/g2/p9-synthetic-decay.endf"
+     },
+     "index": {
+-      "path": "/tmp/actinv-p9-final/g2/p9-synthetic_index.json"
++      "path": "<HOME>/Documents/actinv/target/preflight-tmp/actinv-p9-g2-fa0nmbyo/g2/p9-synthetic_index.json"
+     },
+     "library": {
+-      "path": "/tmp/actinv-p9-final/g2/p9-synthetic.npz"
++      "path": "<HOME>/Documents/actinv/target/preflight-tmp/actinv-p9-g2-fa0nmbyo/g2/p9-synthetic.npz"
+     },
+     "yields": {
+-      "path": "/tmp/actinv-p9-final/g2/p9-synthetic-yields.endf"
++      "path": "<HOME>/Documents/actinv/target/preflight-tmp/actinv-p9-g2-fa0nmbyo/g2/p9-synthetic-yields.endf"
+     },
+     "yields_cumulative_changed": {
+-      "path": "/tmp/actinv-p9-final/g2/p9-synthetic-yields-cumulative-changed.endf"
++      "path": "<HOME>/Documents/actinv/target/preflight-tmp/actinv-p9-g2-fa0nmbyo/g2/p9-synthetic-yields-cumulative-changed.endf"
+     }
+   },
+   "matrix_mismatches": [],
+diff --git a/results/g3_p11_sensitivity.json b/results/g3_p11_sensitivity.json
+index aa568b5..d43b6d7 100644
+--- a/results/g3_p11_sensitivity.json
++++ b/results/g3_p11_sensitivity.json
+@@ -9,8 +9,8 @@
+       "pass": true
+      },
+      "three_state_chain": {
+-      "maximum_absolute": 8.881784197001252e-16,
+-      "maximum_resolvable_relative": 1.0447759193194732e-14,
++      "maximum_absolute": 2.5091040356528538e-14,
++      "maximum_resolvable_relative": 7.131151381222372e-13,
+       "pass": true
+      },
+      "stiff_branch": {
+@@ -29,8 +29,8 @@
+       "pass": true
+      },
+      "three_state_chain": {
+-      "maximum_absolute": 2.220446049250313e-15,
+-      "maximum_resolvable_relative": 1.7085968183621206e-15,
++      "maximum_absolute": 2.7755575615628914e-14,
++      "maximum_resolvable_relative": 7.021116470570718e-13,
+       "pass": true
+      },
+      "stiff_branch": {
+@@ -54,10 +54,10 @@
+      3
+     ],
+     "comparisons": 48,
+-    "maximum_relative": 1.1237224675783594e-12,
+-    "maximum_absolute": 1.7824630660356888e-13,
++    "maximum_relative": 1.336906774781553e-12,
++    "maximum_absolute": 3.2401858973685194e-13,
+     "conditioned_structural_zeros": 8,
+-    "maximum_raw_structural_zero": 2.3129646346357426e-14,
++    "maximum_raw_structural_zero": 1.7347234759768068e-14,
+     "failures": [],
+     "pass": true
+    },
+@@ -69,10 +69,10 @@
+      3
+     ],
+     "comparisons": 48,
+-    "maximum_relative": 1.435895642053006e-12,
+-    "maximum_absolute": 1.9667600881234648e-13,
++    "maximum_relative": 1.521871518702891e-12,
++    "maximum_absolute": 5.612732500992479e-13,
+     "conditioned_structural_zeros": 8,
+-    "maximum_raw_structural_zero": 3.4694469519536136e-14,
++    "maximum_raw_structural_zero": 1.7347234759768068e-14,
+     "failures": [],
+     "pass": true
+    },
+@@ -86,8 +86,8 @@
+      3
+     ],
+     "comparisons": 96,
+-    "maximum_relative": 1.9209388048892125e-11,
+-    "maximum_absolute": 2.614158889358009e-13,
++    "maximum_relative": 3.013111780522829e-11,
++    "maximum_absolute": 7.12430114901963e-13,
+     "conditioned_structural_zeros": 8,
+     "maximum_raw_structural_zero": 2.3129646346357426e-14,
+     "failures": [],
+@@ -103,16 +103,16 @@
+      3
+     ],
+     "comparisons": 96,
+-    "maximum_relative": 2.1168646224192025e-11,
+-    "maximum_absolute": 8.837930387528559e-13,
++    "maximum_relative": 2.3126770609383616e-11,
++    "maximum_absolute": 6.328826351875705e-13,
+     "conditioned_structural_zeros": 8,
+     "maximum_raw_structural_zero": 1.7347234759768068e-14,
+     "failures": [],
+     "pass": true
+    }
+   },
+-  "maximum_relative": 2.1168646224192025e-11,
+-  "maximum_absolute": 8.837930387528559e-13,
++  "maximum_relative": 3.013111780522829e-11,
++  "maximum_absolute": 7.12430114901963e-13,
+   "legacy_default_equals_explicit_cram16": true,
+   "pass": true
+  },
+diff --git a/results/g4_p11_propagation.json b/results/g4_p11_propagation.json
+index 72faf44..9d1a8be 100644
+--- a/results/g4_p11_propagation.json
++++ b/results/g4_p11_propagation.json
+@@ -2,8 +2,8 @@
+  "samples": 67108864,
+  "rng": "NumPy PCG64 seed 0xA11CE, chunked antithetic normals",
+  "sensitivity": [
+-  1.9761960106170895e-13,
+-  8.551560222878181e-14
++  1.9761960106170905e-13,
++  8.551560222878174e-14
+  ],
+  "covariance_barn2": [
+   [
+@@ -15,17 +15,17 @@
+    0.0009
+   ]
+  ],
+- "direct_variance": 2.7272896850712803e-29,
++ "direct_variance": 2.727289685071281e-29,
+  "rust_variance": 2.7272896850712803e-29,
+  "reported_variance": 2.727289685071281e-29,
+- "sampled_variance": 2.7278195663975265e-29,
+- "rust_relative": 0.0,
+- "reported_relative": 2.0552249685763656e-16,
+- "sample_relative": 0.0001942886115643073,
+- "without_cross_variance": 2.220302909161171e-29,
+- "predicted_cross_change": 5.069867759101094e-30,
++ "sampled_variance": 2.7278195663975293e-29,
++ "rust_relative": 2.0552249685763653e-16,
++ "reported_relative": 0.0,
++ "sample_relative": 0.00019428861156512933,
++ "without_cross_variance": 2.2203029091611715e-29,
++ "predicted_cross_change": 5.069867759101093e-30,
+  "observed_cross_change": 5.069867759101094e-30,
+- "cross_change_relative": 0.0,
++ "cross_change_relative": 2.763974389291118e-16,
+  "edge_cases": {
+   "zero": {
+    "variance": 0.0,
+diff --git a/results/g6_p10_projectile_runtime.json b/results/g6_p10_projectile_runtime.json
+index 542dbea..8239a0c 100644
+--- a/results/g6_p10_projectile_runtime.json
++++ b/results/g6_p10_projectile_runtime.json
+@@ -1,7 +1,7 @@
+ {
+   "address_space_limit_bytes": 2147483648,
+   "analytic_tolerance": 2e-12,
+-  "binary_sha256": "bc6be9564ea727715ce71c0309b594a80f455ebdf53844209c2e4e204485ca20",
++  "binary_sha256": "13af0225f3f3d8a5b386f502b5a811c51d0caad27d8e7e0b252a5797807af869",
+   "canonical_flux_sha256": "eef5381f5663bb8a2f6463332f4ad22114141c02189da54e801ec9a874277161",
+   "certificate_hashes": {
+     "alpha_cli": {
+@@ -175,7 +175,7 @@
+       }
+     }
+   },
+-  "control_sha256": "77694f48d78ae4e2648ef0de12e7fbf5c7e0692aba659427d6962f232b5b80a4",
++  "control_sha256": "dbc20b2954da7b3185314879f11f5246e67beece8a558a3fc478258f3dd275b7",
+   "entry_point_identity": {
+     "alpha": true,
+     "deuteron": true,
+@@ -223,9 +223,9 @@
+   "pass": true,
+   "pre_p10_neutron": {
+     "baseline_commit": "e5421a0e30eb94303482bed2c4b9491b773244e6",
+-    "current_solver": "actinv-core 1.2.1",
++    "current_solver": "actinv-core 1.5.0",
+     "current_tables_provenance": "Meija et al., Isotopic compositions of the elements 2013, Pure Appl. Chem. 88 (2016) 293-306, DOI 10.1515/pac-2015-0503, NRC PDF SHA-256 d9079171301dc440e6ee40378da1aa5aef7c43e99d815f4cf31c1eb76561dd89 (Table 1 column 9 point values; column 6 when column 9 is an interval); AME2020 Huang et al./Wang et al., Chinese Physics C 45 (2021) 030002/030003, mass_1.mas20 SHA-256 e8599c6d7f724fac91934e59f1b9de8fb8f63e820f4b39456b790665ed2a3307",
+-    "expected_normalized_result_sha256": "d27ba80b6c393ff3661f35cdf5be5ec32c8e8bc50876721ef7dbbed05e224e43",
++    "expected_normalized_result_sha256": "1a36b8c507740fd19ef1cf7898ef604bef82afad2f6ad80520dace71fb64fc29",
+     "index_sha256": "5e2ceba997b6fe5fd7598ae04bb5de8b0185390fd0d96d29862048ba3f95b151",
+     "legacy_neutron_fluence_schema_unchanged": true,
+     "library_sha256": "1c6a2b713348f96ffc43f7aad26c7e27e6c0559da17b67a13ca1fe4ad9b54d2f",
+@@ -237,7 +237,7 @@
+       "certificate.solver semantic version",
+       "certificate.tables_provenance after exact embedded-table-record check"
+     ],
+-    "normalized_result_sha256": "d27ba80b6c393ff3661f35cdf5be5ec32c8e8bc50876721ef7dbbed05e224e43",
++    "normalized_result_sha256": "1a36b8c507740fd19ef1cf7898ef604bef82afad2f6ad80520dace71fb64fc29",
+     "pass": true,
+     "spec_sha256": "48f33e243d8242b51cc0e2572ad9a176dfd9e723bfed565a536736581ed70504",
+     "wrong_tables_provenance_rejected": true
+@@ -252,8 +252,8 @@
+     "amendment_b": "36fe887080b03af2851c00a92ebcd5fe93fa4f4bded69c37415ead2626f8cc23",
+     "protocol": "74273ec549d113b24367341d1f94f57d0070795d6e679b84a1921d64dbc85b27"
+   },
+-  "python_extension": "actinv.abi3.so",
+-  "python_extension_sha256": "0900f1941275638f511e17aab7fd55934755d51eb070e5044e3fd244e0976bcd",
++  "python_extension": "libactinv.so",
++  "python_extension_sha256": "787dcd4ba0792ca557ca8a09d6cbc52e70f66c7228645a4d860ff98ac7b6eec9",
+   "rejections": {
+     "charged_fission": {
+       "context": "not supported for proton",

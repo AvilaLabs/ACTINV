@@ -3731,3 +3731,26 @@ commit: **P120 Amendment D** `c8d3dd050ab4efb5e190eca861d5a077910ec1c92a1c6e90ce
 its digest; the sealed P110 records are restored) and **P150** `7664bd75600c5dacecc2c4df72582ed8d7a78f7d4e183d382e5b72d76df341ab` (the unchanged
 P148 solver qualified on CI, as P142 did for P116). The `check_p110.py` edit was drafted in the working tree to
 measure the binding before this registration; it is committed only after it.
+
+## Entry 214 — P120 Amendment D evidence D1–D3; P150 Q1–Q3 recorded (2026-10-20)
+
+Candidate `4c2d89c`: `controls/check_p110.py` maps only the exact unpruned P148 `rate_pruning` block to the
+pre-P148 block before G1's digest, and the sealed P110 G1 and G2 records are restored from `f31e0f1`. Release binary
+`13af0225…`, the P148 evidence binary (`results/p148/binaries.sha256`); Rust sources identical to `c2beaa0` (Q1).
+- **D1.** `results/failures/p148/r6_ci_attempt1/` (ledger 213): all nine mapped candidate outputs equal the pre-P148
+  outputs byte for byte and reproduce the sealed digests; all 120 blocks are the unpruned form.
+- **D2.** The five Amendment D regressions and the six Amendment C regressions pass
+  (`results/p120/amendment_d/d2_*.log`).
+- **D3.** `check_p110.py --no-write` reproduces the sealed G0, G1 and G2 records (the files are byte-identical to
+  `f31e0f1` after the run), and the CI steps P103–P118 exit 0 as `ci.yml` lists them.
+- **Q3.** Every `controls` step from the manifest check to "Repository is self-contained" was run locally in the
+  bounded scope (`results/p150/q3_ci_steps.txt`). Not run: the three P18b steps that load the full TENDL-2025
+  libraries (6 GB limit). Under the system Python 3.14 the P18 G2 and closure steps fail on its gzip bytes (known),
+  the P8 and P21 runtime steps lack `h5py`, and the P12 payload step trips on the untracked `.claude/worktrees`
+  directory (known); rerun under Python 3.12.13 with `requirements-ci.txt` (CI's interpreter and pins), P18 and P21
+  pass, P8 passes when run after the end-to-end step as in CI (it reads the record that step writes), and the P12
+  payload step passes in a clean worktree of the candidate. `cargo fmt --all -- --check` passes. Records the runtime
+  controls rewrite and CI does not gate moved only in local paths, error-message wording and last-digit rounding;
+  they were restored, and the diff is kept (`results/p150/q3_ungated_record_drift.diff`).
+
+Q4 (CI green on the pushed commit for every triggered workflow) is pending.

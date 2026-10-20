@@ -1,0 +1,11 @@
+test_a_commit_where_the_files_differ_does_not_match (__main__.SealedControlHashTests.test_a_commit_where_the_files_differ_does_not_match) ... ok
+test_seal_commit_objects_equal_the_sealed_control_hashes (__main__.SealedControlHashTests.test_seal_commit_objects_equal_the_sealed_control_hashes) ... ok
+test_any_other_byte_difference_survives_the_map (__main__.VersionTokenTests.test_any_other_byte_difference_survives_the_map) ... ok
+test_equal_versions_leave_the_bytes_alone (__main__.VersionTokenTests.test_equal_versions_leave_the_bytes_alone) ... ok
+test_only_the_exact_token_is_mapped (__main__.VersionTokenTests.test_only_the_exact_token_is_mapped) ... ok
+test_the_sealed_version_is_read_from_the_seal_commit (__main__.VersionTokenTests.test_the_sealed_version_is_read_from_the_seal_commit) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.102s
+
+OK
