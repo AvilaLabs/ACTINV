@@ -3666,3 +3666,14 @@ replay of the CI controls that found the changed baselines (P15 cache integrity,
 end-to-end state count 40 → 38, the P10 legacy neutron hash). A6 leaves the historical P65 controls unedited. A7
 registers the R5 driver, `controls/p148_r5.py`, which compares the opening-commit binary with the candidate,
 and its difference classes, with a selftest of planted changes. No gate is relaxed.
+
+## Entry 211 — P148 Amendment B registered: R5 hash class for lists of hashes (2026-10-19)
+
+Registered after the first R5 evidence run failed and before it is repeated: **P148 Amendment B**
+`f70477cd0a169bade647bfdb08e03966638432e0717d5c1799e78afc17645a1e`. The failed run is preserved as `results/failures/p148/r5_attempt1.json`: two items of the
+P15 record's `concurrent_preparation/normalized_result_sha256` list moved `9853ccc8…` → `34f21e21…` like the record's
+other four hashes, but a list item carries an index, not a field name, so the classifier found no hash marker and
+classed them `other`. B2 names a list item after its nearest named key, with an allowed and a planted selftest case.
+B4 discloses the R1–R3 driver changes (two workers and per-case resume; probe runs limited to the outputs R1 and R2
+read, 540 s and 4.1 GB down to 6 s and 112 MB per unpruned reference with identical inventories, activity and heat;
+the outputs in the cache key). No gate is relaxed.

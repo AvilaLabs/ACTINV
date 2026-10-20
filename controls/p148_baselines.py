@@ -139,7 +139,8 @@ def without_dropped(rows: list, dropped: set[str]) -> list:
 
 
 def classify(old, new, path: tuple, ctx: Context) -> None:
-    key = str(path[-1]) if path else ""
+    # A list item takes its name from the nearest named key above it (a list of hashes is still hashes).
+    key = next((str(part) for part in reversed(path) if not isinstance(part, int)), "")
     if path and (set(map(str, path)) & PRUNING_KEYS):
         if old != new:
             ctx.add("pruning", path, f"{json.dumps(old)[:80]} -> {json.dumps(new)[:80]}")
@@ -270,12 +271,14 @@ def selftest() -> int:
                 "pathway_closure": 0.0,
                 "ledger": {"rate_pruning": {"dropped": [], "heat_W_per_g_bound": 1.0e-18,
                                             "activity_Bq_per_g_bound": 2.0e-6}},
-                "certificate": {"normalized_result_sha256": "a" * 64}, "ms": 3.0}
+                "certificate": {"normalized_result_sha256": "a" * 64}, "ms": 3.0,
+                "repeats": {"normalized_result_sha256": ["a" * 64, "a" * 64]}, "tags": ["fe", "mn"]}
 
     def run(mutate) -> bool:
         old, new = result(False), result(True)
         new["ledger"]["rate_pruning"]["dropped"] = [{"nuclide": "Cr55", "atoms_per_g_bound": 2e-3}]
         new["certificate"]["normalized_result_sha256"] = "b" * 64
+        new["repeats"]["normalized_result_sha256"] = ["b" * 64, "b" * 64]
         new["ms"] = 9.0
         mutate(new)
         return compare_documents(old, new)["counts"].get("other", 0) == 0
@@ -296,6 +299,7 @@ def selftest() -> int:
         "count moved too far": lambda n: n["steps"][0].__setitem__("n_states_populated", 1),
         "closure changed": lambda n: n.__setitem__("pathway_closure", 0.5),
         "new key": lambda n: n.__setitem__("extra", 1),
+        "item of a hash-free list changed": lambda n: n["tags"].__setitem__(0, "co"),
     }
     failures = [name for name, mutate in allowed.items() if not run(mutate)]
     failures += [name for name, mutate in planted.items() if run(mutate)]

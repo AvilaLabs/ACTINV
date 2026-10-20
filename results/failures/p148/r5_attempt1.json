@@ -1,0 +1,445 @@
+{
+ "schema": "actinv-p148-r5-1",
+ "opening_commit": "364a73e04761a322eb27ab86289c8c6fd9a0032c",
+ "cases": [
+  {
+   "baseline": "results/p15_cache_integrity.json",
+   "old_reproduces_committed": true,
+   "new_matches_regenerated": true,
+   "hashes": {
+    "old": "9853ccc82f742529dd4e27c070f9aa3fbd13dccee576844f6a7ebb8b4c40a495",
+    "new": "34f21e214892ddd88be921213060cbc42df2bcd096697e354d1e82120dcdd87c"
+   },
+   "committed": {
+    "old": "9853ccc82f742529dd4e27c070f9aa3fbd13dccee576844f6a7ebb8b4c40a495",
+    "new": "34f21e214892ddd88be921213060cbc42df2bcd096697e354d1e82120dcdd87c"
+   },
+   "diff": {
+    "documents": {
+     "document": {
+      "dropped_nuclides": [],
+      "bounds": {
+       "heat": 0.0,
+       "activity": 0.0
+      },
+      "counts": {
+       "pruning": 1
+      },
+      "examples": {
+       "pruning": [
+        "ledger/rate_pruning: {\"dropped\": [], \"removed_heat_W_per_g_bound\": -0.0, \"threshold_atoms_per_g\": 0.0 -> {\"activity_Bq_per_g_bound\": 0.0, \"dropped\": [], \"dropped_activity_Bq_per_g_bound"
+       ]
+      }
+     }
+    },
+    "only_old": [],
+    "only_new": [],
+    "other": 0,
+    "pass": true
+   },
+   "pass": true
+  },
+  {
+   "baseline": "results/g1_p110_composition_solve.json",
+   "old_reproduces_committed": true,
+   "new_matches_regenerated": true,
+   "diff": {
+    "documents": {
+     "caller_incomplete.json": {
+      "dropped_nuclides": [],
+      "bounds": {
+       "heat": 0.0,
+       "activity": 0.0
+      },
+      "counts": {
+       "pruning": 15
+      },
+      "examples": {
+       "pruning": [
+        "components/0/native/coverage_evidence/0/evidence/omission_ledger/rate_pruning: {\"dropped\": [], \"removed_heat_W_per_g_bound\": -0.0, \"threshold_atoms_per_g\": 0.0 -> {\"activity_Bq_per_g_bound\": 0.0, \"dropped\": [], \"dropped_activity_Bq_per_g_bound",
+        "components/0/native/coverage_evidence/1/evidence/omission_ledger/rate_pruning: {\"dropped\": [], \"removed_heat_W_per_g_bound\": -0.0, \"threshold_atoms_per_g\": 0.0 -> {\"activity_Bq_per_g_bound\": 0.0, \"dropped\": [], \"dropped_activity_Bq_per_g_bound",
+        "components/0/native/coverage_evidence/2/evidence/omission_ledger/rate_pruning: {\"dropped\": [], \"removed_heat_W_per_g_bound\": -0.0, \"threshold_atoms_per_g\": 0.0 -> {\"activity_Bq_per_g_bound\": 0.0, \"dropped\": [], \"dropped_activity_Bq_per_g_bound",
+        "components/0/native/coverage_evidence/3/evidence/omission_ledger/rate_pruning: {\"dropped\": [], \"removed_heat_W_per_g_bound\": -0.0, \"threshold_atoms_per_g\": 0.0 -> {\"activity_Bq_per_g_bound\": 0.0, \"dropped\": [], \"dropped_activity_Bq_per_g_bound",
+        "components/0/native/coverage_evidence/4/evidence/omission_ledger/rate_pruning: {\"dropped\": [], \"removed_heat_W_per_g_bound\": -0.0, \"threshold_atoms_per_g\": 0.0 -> {\"activity_Bq_per_g_bound\": 0.0, \"dropped\": [], \"dropped_activity_Bq_per_g_bound",
+        "components/0/native/native_verification/verified_witnesses/0/audit_evidence/coverage/omission_ledger/rate_pruning: {\"dropped\": [], \"removed_heat_W_per_g_bound\": -0.0, \"threshold_atoms_per_g\": 0.0 -> {\"activity_Bq_per_g_bound\": 0.0, \"dropped\": [], \"dropped_activity_Bq_per_g_bound",
+        "components/0/native/native_verification/verified_witnesses/0/audit_evidence/ledger/rate_pruning: {\"dropped\": [], \"removed_heat_W_per_g_bound\": -0.0, \"threshold_atoms_per_g\": 0.0 -> {\"activity_Bq_per_g_bound\": 0.0, \"dropped\": [], \"dropped_activity_Bq_per_g_bound",
+        "components/0/native/native_verification/verified_witnesses/1/audit_evidence/coverage/omission_ledger/rate_pruning: {\"dropped\": [], \"removed_heat_W_per_g_bound\": -0.0, \"threshold_atoms_per_g\": 0.0 -> {\"activity_Bq_per_g_bound\": 0.0, \"dropped\": [], \"dropped_activity_Bq_per_g_bound"
+       ]
+      }
+     },
+     "high_fixed_volume_7.json": {
+      "dropped_nuclides": [],
+      "bounds": {
+       "heat": 0.0,
+       "activity": 0.0
+      },
+      "counts": {
+       "pruning": 12
+      },
+      "examples": {
+       "pruning": [
+        "components/0/native/coverage_evidence/0/evidence/omission_ledger/rate_pruning: {\"dropped\": [], \"removed_heat_W_per_g_bound\": -0.0, \"threshold_atoms_per_g\": 0.0 -> {\"activity_Bq_per_g_bound\": 0.0, \"dropped\": [], \"dropped_activity_Bq_per_g_bound",
+        "components/0/native/coverage_evidence/1/evidence/omission_ledger/rate_pruning: {\"dropped\": [], \"removed_heat_W_per_g_bound\": -0.0, \"threshold_atoms_per_g\": 0.0 -> {\"activity_Bq_per_g_bound\": 0.0, \"dropped\": [], \"dropped_activity_Bq_per_g_bound",
+        "components/0/native/coverage_evidence/2/evidence/omission_ledger/rate_pruning: {\"dropped\": [], \"removed_heat_W_per_g_bound\": -0.0, \"threshold_atoms_per_g\": 0.0 -> {\"activity_Bq_per_g_bound\": 0.0, \"dropped\": [], \"dropped_activity_Bq_per_g_bound",
+        "components/0/native/coverage_evidence/3/evidence/omission_ledger/rate_pruning: {\"dropped\": [], \"removed_heat_W_per_g_bound\": -0.0, \"threshold_atoms_per_g\": 0.0 -> {\"activity_Bq_per_g_bound\": 0.0, \"dropped\": [], \"dropped_activity_Bq_per_g_bound",
+        "components/0/native/native_verification/verified_witnesses/0/audit_evidence/coverage/omission_ledger/rate_pruning: {\"dropped\": [], \"removed_heat_W_per_g_bound\": -0.0, \"threshold_atoms_per_g\": 0.0 -> {\"activity_Bq_per_g_bound\": 0.0, \"dropped\": [], \"dropped_activity_Bq_per_g_bound",
+        "components/0/native/native_verification/verified_witnesses/0/audit_evidence/ledger/rate_pruning: {\"dropped\": [], \"removed_heat_W_per_g_bound\": -0.0, \"threshold_atoms_per_g\": 0.0 -> {\"activity_Bq_per_g_bound\": 0.0, \"dropped\": [], \"dropped_activity_Bq_per_g_bound",
+        "components/0/native/solver_basis/0/audit_evidence/coverage/omission_ledger/rate_pruning: {\"dropped\": [], \"removed_heat_W_per_g_bound\": -0.0, \"threshold_atoms_per_g\": 0.0 -> {\"activity_Bq_per_g_bound\": 0.0, \"dropped\": [], \"dropped_activity_Bq_per_g_bound",
+        "components/0/native/solver_basis/0/audit_evidence/ledger/rate_pruning: {\"dropped\": [], \"removed_heat_W_per_g_bound\": -0.0, \"threshold_atoms_per_g\": 0.0 -> {\"activity_Bq_per_g_bound\": 0.0, \"dropped\": [], \"dropped_activity_Bq_per_g_bound"
+       ]
+      }
+     },
+     "low_fixed_external_h3.json": {
+      "dropped_nuclides": [],
+      "bounds": {
+       "heat": 0.0,
+       "activity": 0.0
+      },
+      "counts": {
+       "pruning": 12
+      },
+      "examples": {
+       "pruning": [
+        "components/0/native/coverage_evidence/0/evidence/omission_ledger/rate_pruning: {\"dropped\": [], \"removed_heat_W_per_g_bound\": -0.0, \"threshold_atoms_per_g\": 0.0 -> {\"activity_Bq_per_g_bound\": 0.0, \"dropped\": [], \"dropped_activity_Bq_per_g_bound",
+        "components/0/native/coverage_evidence/1/evidence/omission_ledger/rate_pruning: {\"dropped\": [], \"removed_heat_W_per_g_bound\": -0.0, \"threshold_atoms_per_g\": 0.0 -> {\"activity_Bq_per_g_bound\": 0.0, \"dropped\": [], \"dropped_activity_Bq_per_g_bound",
+        "components/0/native/coverage_evidence/2/evidence/omission_ledger/rate_pruning: {\"dropped\": [], \"removed_heat_W_per_g_bound\": -0.0, \"threshold_atoms_per_g\": 0.0 -> {\"activity_Bq_per_g_bound\": 0.0, \"dropped\": [], \"dropped_activity_Bq_per_g_bound",
+        "components/0/native/coverage_evidence/3/evidence/omission_ledger/rate_pruning: {\"dropped\": [], \"removed_heat_W_per_g_bound\": -0.0, \"threshold_atoms_per_g\": 0.0 -> {\"activity_Bq_per_g_bound\": 0.0, \"dropped\": [], \"dropped_activity_Bq_per_g_bound",
+        "components/0/native/native_verification/verified_witnesses/0/audit_evidence/coverage/omission_ledger/rate_pruning: {\"dropped\": [], \"removed_heat_W_per_g_bound\": -0.0, \"threshold_atoms_per_g\": 0.0 -> {\"activity_Bq_per_g_bound\": 0.0, \"dropped\": [], \"dropped_activity_Bq_per_g_bound",
+        "components/0/native/native_verification/verified_witnesses/0/audit_evidence/ledger/rate_pruning: {\"dropped\": [], \"removed_heat_W_per_g_bound\": -0.0, \"threshold_atoms_per_g\": 0.0 -> {\"activity_Bq_per_g_bound\": 0.0, \"dropped\": [], \"dropped_activity_Bq_per_g_bound",
+        "components/0/native/solver_basis/0/audit_evidence/coverage/omission_ledger/rate_pruning: {\"dropped\": [], \"removed_heat_W_per_g_bound\": -0.0, \"threshold_atoms_per_g\": 0.0 -> {\"activity_Bq_per_g_bound\": 0.0, \"dropped\": [], \"dropped_activity_Bq_per_g_bound",
+        "components/0/native/solver_basis/0/audit_evidence/ledger/rate_pruning: {\"dropped\": [], \"removed_heat_W_per_g_bound\": -0.0, \"threshold_atoms_per_g\": 0.0 -> {\"activity_Bq_per_g_bound\": 0.0, \"dropped\": [], \"dropped_activity_Bq_per_g_bound"
+       ]
+      }
+     },
+     "missing_fe58_target.json": {
+      "dropped_nuclides": [],
+      "bounds": {
+       "heat": 0.0,
+       "activity": 0.0
+      },
+      "counts": {
+       "pruning": 15
+      },
+      "examples": {
+       "pruning": [
+        "components/0/native/coverage_evidence/0/evidence/omission_ledger/rate_pruning: {\"dropped\": [], \"removed_heat_W_per_g_bound\": -0.0, \"threshold_atoms_per_g\": 0.0 -> {\"activity_Bq_per_g_bound\": 0.0, \"dropped\": [], \"dropped_activity_Bq_per_g_bound",
+        "components/0/native/coverage_evidence/1/evidence/omission_ledger/rate_pruning: {\"dropped\": [], \"removed_heat_W_per_g_bound\": -0.0, \"threshold_atoms_per_g\": 0.0 -> {\"activity_Bq_per_g_bound\": 0.0, \"dropped\": [], \"dropped_activity_Bq_per_g_bound",
+        "components/0/native/coverage_evidence/2/evidence/omission_ledger/rate_pruning: {\"dropped\": [], \"removed_heat_W_per_g_bound\": -0.0, \"threshold_atoms_per_g\": 0.0 -> {\"activity_Bq_per_g_bound\": 0.0, \"dropped\": [], \"dropped_activity_Bq_per_g_bound",
+        "components/0/native/coverage_evidence/3/evidence/omission_ledger/rate_pruning: {\"dropped\": [], \"removed_heat_W_per_g_bound\": -0.0, \"threshold_atoms_per_g\": 0.0 -> {\"activity_Bq_per_g_bound\": 0.0, \"dropped\": [], \"dropped_activity_Bq_per_g_bound",
+        "components/0/native/coverage_evidence/4/evidence/omission_ledger/rate_pruning: {\"dropped\": [], \"removed_heat_W_per_g_bound\": -0.0, \"threshold_atoms_per_g\": 0.0 -> {\"activity_Bq_per_g_bound\": 0.0, \"dropped\": [], \"dropped_activity_Bq_per_g_bound",
+        "components/0/native/native_verification/verified_witnesses/0/audit_evidence/coverage/omission_ledger/rate_pruning: {\"dropped\": [], \"removed_heat_W_per_g_bound\": -0.0, \"threshold_atoms_per_g\": 0.0 -> {\"activity_Bq_per_g_bound\": 0.0, \"dropped\": [], \"dropped_activity_Bq_per_g_bound",
+        "components/0/native/native_verification/verified_witnesses/0/audit_evidence/ledger/rate_pruning: {\"dropped\": [], \"removed_heat_W_per_g_bound\": -0.0, \"threshold_atoms_per_g\": 0.0 -> {\"activity_Bq_per_g_bound\": 0.0, \"dropped\": [], \"dropped_activity_Bq_per_g_bound",
+        "components/0/native/native_verification/verified_witnesses/1/audit_evidence/coverage/omission_ledger/rate_pruning: {\"dropped\": [], \"removed_heat_W_per_g_bound\": -0.0, \"threshold_atoms_per_g\": 0.0 -> {\"activity_Bq_per_g_bound\": 0.0, \"dropped\": [], \"dropped_activity_Bq_per_g_bound"
+       ]
+      }
+     },
+     "missing_nb94_decay.json": {
+      "dropped_nuclides": [],
+      "bounds": {
+       "heat": 0.0,
+       "activity": 0.0
+      },
+      "counts": {
+       "pruning": 12
+      },
+      "examples": {
+       "pruning": [
+        "components/0/native/coverage_evidence/0/evidence/omission_ledger/rate_pruning: {\"dropped\": [], \"removed_heat_W_per_g_bound\": -0.0, \"threshold_atoms_per_g\": 0.0 -> {\"activity_Bq_per_g_bound\": 0.0, \"dropped\": [], \"dropped_activity_Bq_per_g_bound",
+        "components/0/native/coverage_evidence/1/evidence/omission_ledger/rate_pruning: {\"dropped\": [], \"removed_heat_W_per_g_bound\": -0.0, \"threshold_atoms_per_g\": 0.0 -> {\"activity_Bq_per_g_bound\": 0.0, \"dropped\": [], \"dropped_activity_Bq_per_g_bound",
+        "components/0/native/coverage_evidence/2/evidence/omission_ledger/rate_pruning: {\"dropped\": [], \"removed_heat_W_per_g_bound\": -0.0, \"threshold_atoms_per_g\": 0.0 -> {\"activity_Bq_per_g_bound\": 0.0, \"dropped\": [], \"dropped_activity_Bq_per_g_bound",
+        "components/0/native/coverage_evidence/3/evidence/omission_ledger/rate_pruning: {\"dropped\": [], \"removed_heat_W_per_g_bound\": -0.0, \"threshold_atoms_per_g\": 0.0 -> {\"activity_Bq_per_g_bound\": 0.0, \"dropped\": [], \"dropped_activity_Bq_per_g_bound",
+        "components/0/native/native_verification/verified_witnesses/0/audit_evidence/coverage/omission_ledger/rate_pruning: {\"dropped\": [], \"removed_heat_W_per_g_bound\": -0.0, \"threshold_atoms_per_g\": 0.0 -> {\"activity_Bq_per_g_bound\": 0.0, \"dropped\": [], \"dropped_activity_Bq_per_g_bound",
+        "components/0/native/native_verification/verified_witnesses/0/audit_evidence/ledger/rate_pruning: {\"dropped\": [], \"removed_heat_W_per_g_bound\": -0.0, \"threshold_atoms_per_g\": 0.0 -> {\"activity_Bq_per_g_bound\": 0.0, \"dropped\": [], \"dropped_activity_Bq_per_g_bound",
+        "components/0/native/solver_basis/0/audit_evidence/coverage/omission_ledger/rate_pruning: {\"dropped\": [], \"removed_heat_W_per_g_bound\": -0.0, \"threshold_atoms_per_g\": 0.0 -> {\"activity_Bq_per_g_bound\": 0.0, \"dropped\": [], \"dropped_activity_Bq_per_g_bound",
+        "components/0/native/solver_basis/0/audit_evidence/ledger/rate_pruning: {\"dropped\": [], \"removed_heat_W_per_g_bound\": -0.0, \"threshold_atoms_per_g\": 0.0 -> {\"activity_Bq_per_g_bound\": 0.0, \"dropped\": [], \"dropped_activity_Bq_per_g_bound"
+       ]
+      }
+     },
+     "ranged_volume_1.json": {
+      "dropped_nuclides": [],
+      "bounds": {
+       "heat": 0.0,
+       "activity": 0.0
+      },
+      "counts": {
+       "pruning": 15
+      },
+      "examples": {
+       "pruning": [
+        "components/0/native/coverage_evidence/0/evidence/omission_ledger/rate_pruning: {\"dropped\": [], \"removed_heat_W_per_g_bound\": -0.0, \"threshold_atoms_per_g\": 0.0 -> {\"activity_Bq_per_g_bound\": 0.0, \"dropped\": [], \"dropped_activity_Bq_per_g_bound",
+        "components/0/native/coverage_evidence/1/evidence/omission_ledger/rate_pruning: {\"dropped\": [], \"removed_heat_W_per_g_bound\": -0.0, \"threshold_atoms_per_g\": 0.0 -> {\"activity_Bq_per_g_bound\": 0.0, \"dropped\": [], \"dropped_activity_Bq_per_g_bound",
+        "components/0/native/coverage_evidence/2/evidence/omission_ledger/rate_pruning: {\"dropped\": [], \"removed_heat_W_per_g_bound\": -0.0, \"threshold_atoms_per_g\": 0.0 -> {\"activity_Bq_per_g_bound\": 0.0, \"dropped\": [], \"dropped_activity_Bq_per_g_bound",
+        "components/0/native/coverage_evidence/3/evidence/omission_ledger/rate_pruning: {\"dropped\": [], \"removed_heat_W_per_g_bound\": -0.0, \"threshold_atoms_per_g\": 0.0 -> {\"activity_Bq_per_g_bound\": 0.0, \"dropped\": [], \"dropped_activity_Bq_per_g_bound",
+        "components/0/native/coverage_evidence/4/evidence/omission_ledger/rate_pruning: {\"dropped\": [], \"removed_heat_W_per_g_bound\": -0.0, \"threshold_atoms_per_g\": 0.0 -> {\"activity_Bq_per_g_bound\": 0.0, \"dropped\": [], \"dropped_activity_Bq_per_g_bound",
+        "components/0/native/native_verification/verified_witnesses/0/audit_evidence/coverage/omission_ledger/rate_pruning: {\"dropped\": [], \"removed_heat_W_per_g_bound\": -0.0, \"threshold_atoms_per_g\": 0.0 -> {\"activity_Bq_per_g_bound\": 0.0, \"dropped\": [], \"dropped_activity_Bq_per_g_bound",
+        "components/0/native/native_verification/verified_witnesses/0/audit_evidence/ledger/rate_pruning: {\"dropped\": [], \"removed_heat_W_per_g_bound\": -0.0, \"threshold_atoms_per_g\": 0.0 -> {\"activity_Bq_per_g_bound\": 0.0, \"dropped\": [], \"dropped_activity_Bq_per_g_bound",
+        "components/0/native/native_verification/verified_witnesses/1/audit_evidence/coverage/omission_ledger/rate_pruning: {\"dropped\": [], \"removed_heat_W_per_g_bound\": -0.0, \"threshold_atoms_per_g\": 0.0 -> {\"activity_Bq_per_g_bound\": 0.0, \"dropped\": [], \"dropped_activity_Bq_per_g_bound"
+       ]
+      }
+     },
+     "ranged_volume_point_1.json": {
+      "dropped_nuclides": [],
+      "bounds": {
+       "heat": 0.0,
+       "activity": 0.0
+      },
+      "counts": {
+       "pruning": 15
+      },
+      "examples": {
+       "pruning": [
+        "components/0/native/coverage_evidence/0/evidence/omission_ledger/rate_pruning: {\"dropped\": [], \"removed_heat_W_per_g_bound\": -0.0, \"threshold_atoms_per_g\": 0.0 -> {\"activity_Bq_per_g_bound\": 0.0, \"dropped\": [], \"dropped_activity_Bq_per_g_bound",
+        "components/0/native/coverage_evidence/1/evidence/omission_ledger/rate_pruning: {\"dropped\": [], \"removed_heat_W_per_g_bound\": -0.0, \"threshold_atoms_per_g\": 0.0 -> {\"activity_Bq_per_g_bound\": 0.0, \"dropped\": [], \"dropped_activity_Bq_per_g_bound",
+        "components/0/native/coverage_evidence/2/evidence/omission_ledger/rate_pruning: {\"dropped\": [], \"removed_heat_W_per_g_bound\": -0.0, \"threshold_atoms_per_g\": 0.0 -> {\"activity_Bq_per_g_bound\": 0.0, \"dropped\": [], \"dropped_activity_Bq_per_g_bound",
+        "components/0/native/coverage_evidence/3/evidence/omission_ledger/rate_pruning: {\"dropped\": [], \"removed_heat_W_per_g_bound\": -0.0, \"threshold_atoms_per_g\": 0.0 -> {\"activity_Bq_per_g_bound\": 0.0, \"dropped\": [], \"dropped_activity_Bq_per_g_bound",
+        "components/0/native/coverage_evidence/4/evidence/omission_ledger/rate_pruning: {\"dropped\": [], \"removed_heat_W_per_g_bound\": -0.0, \"threshold_atoms_per_g\": 0.0 -> {\"activity_Bq_per_g_bound\": 0.0, \"dropped\": [], \"dropped_activity_Bq_per_g_bound",
+        "components/0/native/native_verification/verified_witnesses/0/audit_evidence/coverage/omission_ledger/rate_pruning: {\"dropped\": [], \"removed_heat_W_per_g_bound\": -0.0, \"threshold_atoms_per_g\": 0.0 -> {\"activity_Bq_per_g_bound\": 0.0, \"dropped\": [], \"dropped_activity_Bq_per_g_bound",
+        "components/0/native/native_verification/verified_witnesses/0/audit_evidence/ledger/rate_pruning: {\"dropped\": [], \"removed_heat_W_per_g_bound\": -0.0, \"threshold_atoms_per_g\": 0.0 -> {\"activity_Bq_per_g_bound\": 0.0, \"dropped\": [], \"dropped_activity_Bq_per_g_bound",
+        "components/0/native/native_verification/verified_witnesses/1/audit_evidence/coverage/omission_ledger/rate_pruning: {\"dropped\": [], \"removed_heat_W_per_g_bound\": -0.0, \"threshold_atoms_per_g\": 0.0 -> {\"activity_Bq_per_g_bound\": 0.0, \"dropped\": [], \"dropped_activity_Bq_per_g_bound"
+       ]
+      }
+     },
+     "required_external_h3.json": {
+      "dropped_nuclides": [],
+      "bounds": {
+       "heat": 0.0,
+       "activity": 0.0
+      },
+      "counts": {
+       "pruning": 15
+      },
+      "examples": {
+       "pruning": [
+        "components/0/native/coverage_evidence/0/evidence/omission_ledger/rate_pruning: {\"dropped\": [], \"removed_heat_W_per_g_bound\": -0.0, \"threshold_atoms_per_g\": 0.0 -> {\"activity_Bq_per_g_bound\": 0.0, \"dropped\": [], \"dropped_activity_Bq_per_g_bound",
+        "components/0/native/coverage_evidence/1/evidence/omission_ledger/rate_pruning: {\"dropped\": [], \"removed_heat_W_per_g_bound\": -0.0, \"threshold_atoms_per_g\": 0.0 -> {\"activity_Bq_per_g_bound\": 0.0, \"dropped\": [], \"dropped_activity_Bq_per_g_bound",
+        "components/0/native/coverage_evidence/2/evidence/omission_ledger/rate_pruning: {\"dropped\": [], \"removed_heat_W_per_g_bound\": -0.0, \"threshold_atoms_per_g\": 0.0 -> {\"activity_Bq_per_g_bound\": 0.0, \"dropped\": [], \"dropped_activity_Bq_per_g_bound",
+        "components/0/native/coverage_evidence/3/evidence/omission_ledger/rate_pruning: {\"dropped\": [], \"removed_heat_W_per_g_bound\": -0.0, \"threshold_atoms_per_g\": 0.0 -> {\"activity_Bq_per_g_bound\": 0.0, \"dropped\": [], \"dropped_activity_Bq_per_g_bound",
+        "components/0/native/coverage_evidence/4/evidence/omission_ledger/rate_pruning: {\"dropped\": [], \"removed_heat_W_per_g_bound\": -0.0, \"threshold_atoms_per_g\": 0.0 -> {\"activity_Bq_per_g_bound\": 0.0, \"dropped\": [], \"dropped_activity_Bq_per_g_bound",
+        "components/0/native/native_verification/verified_witnesses/0/audit_evidence/coverage/omission_ledger/rate_pruning: {\"dropped\": [], \"removed_heat_W_per_g_bound\": -0.0, \"threshold_atoms_per_g\": 0.0 -> {\"activity_Bq_per_g_bound\": 0.0, \"dropped\": [], \"dropped_activity_Bq_per_g_bound",
+        "components/0/native/native_verification/verified_witnesses/0/audit_evidence/ledger/rate_pruning: {\"dropped\": [], \"removed_heat_W_per_g_bound\": -0.0, \"threshold_atoms_per_g\": 0.0 -> {\"activity_Bq_per_g_bound\": 0.0, \"dropped\": [], \"dropped_activity_Bq_per_g_bound",
+        "components/0/native/native_verification/verified_witnesses/1/audit_evidence/coverage/omission_ledger/rate_pruning: {\"dropped\": [], \"removed_heat_W_per_g_bound\": -0.0, \"threshold_atoms_per_g\": 0.0 -> {\"activity_Bq_per_g_bound\": 0.0, \"dropped\": [], \"dropped_activity_Bq_per_g_bound"
+       ]
+      }
+     },
+     "zero_response_reference.json": {
+      "dropped_nuclides": [],
+      "bounds": {
+       "heat": 0.0,
+       "activity": 0.0
+      },
+      "counts": {
+       "pruning": 9
+      },
+      "examples": {
+       "pruning": [
+        "components/0/native/coverage_evidence/0/evidence/omission_ledger/rate_pruning: {\"dropped\": [], \"removed_heat_W_per_g_bound\": -0.0, \"threshold_atoms_per_g\": 0.0 -> {\"activity_Bq_per_g_bound\": 0.0, \"dropped\": [], \"dropped_activity_Bq_per_g_bound",
+        "components/0/native/coverage_evidence/1/evidence/omission_ledger/rate_pruning: {\"dropped\": [], \"removed_heat_W_per_g_bound\": -0.0, \"threshold_atoms_per_g\": 0.0 -> {\"activity_Bq_per_g_bound\": 0.0, \"dropped\": [], \"dropped_activity_Bq_per_g_bound",
+        "components/0/native/coverage_evidence/2/evidence/omission_ledger/rate_pruning: {\"dropped\": [], \"removed_heat_W_per_g_bound\": -0.0, \"threshold_atoms_per_g\": 0.0 -> {\"activity_Bq_per_g_bound\": 0.0, \"dropped\": [], \"dropped_activity_Bq_per_g_bound",
+        "components/0/native/native_verification/verified_witnesses/0/audit_evidence/coverage/omission_ledger/rate_pruning: {\"dropped\": [], \"removed_heat_W_per_g_bound\": -0.0, \"threshold_atoms_per_g\": 0.0 -> {\"activity_Bq_per_g_bound\": 0.0, \"dropped\": [], \"dropped_activity_Bq_per_g_bound",
+        "components/0/native/native_verification/verified_witnesses/0/audit_evidence/ledger/rate_pruning: {\"dropped\": [], \"removed_heat_W_per_g_bound\": -0.0, \"threshold_atoms_per_g\": 0.0 -> {\"activity_Bq_per_g_bound\": 0.0, \"dropped\": [], \"dropped_activity_Bq_per_g_bound",
+        "components/0/native/solver_basis/0/audit_evidence/coverage/omission_ledger/rate_pruning: {\"dropped\": [], \"removed_heat_W_per_g_bound\": -0.0, \"threshold_atoms_per_g\": 0.0 -> {\"activity_Bq_per_g_bound\": 0.0, \"dropped\": [], \"dropped_activity_Bq_per_g_bound",
+        "components/0/native/solver_basis/0/audit_evidence/ledger/rate_pruning: {\"dropped\": [], \"removed_heat_W_per_g_bound\": -0.0, \"threshold_atoms_per_g\": 0.0 -> {\"activity_Bq_per_g_bound\": 0.0, \"dropped\": [], \"dropped_activity_Bq_per_g_bound",
+        "components/0/native/solver_basis/1/audit_evidence/coverage/omission_ledger/rate_pruning: {\"dropped\": [], \"removed_heat_W_per_g_bound\": -0.0, \"threshold_atoms_per_g\": 0.0 -> {\"activity_Bq_per_g_bound\": 0.0, \"dropped\": [], \"dropped_activity_Bq_per_g_bound"
+       ]
+      }
+     }
+    },
+    "only_old": [],
+    "only_new": [],
+    "other": 0,
+    "pass": true
+   },
+   "pass": true
+  },
+  {
+   "baseline": "ci_end_to_end",
+   "spec": "/home/connoravila/Documents/actinv/target/preflight-tmp/actinv-ci/spec.json",
+   "diff": {
+    "documents": {
+     "document": {
+      "dropped_nuclides": [
+       "Mn59",
+       "Ti51"
+      ],
+      "bounds": {
+       "heat": 1.2829060542938472e-22,
+       "activity": 3.1267457290382876e-10
+      },
+      "counts": {
+       "drop_set": 251,
+       "noise": 15,
+       "pruning": 2,
+       "rounding": 1960
+      },
+      "examples": {
+       "drop_set": [
+        "pathway_closure: 0.9999999999999539 -> 0.7805251972242166; old maximum over remaining nuclides 0.7805251972243007",
+        "ledger/numerical_floor/max_states_below_floor: 12 -> 10",
+        "ledger/numerical_floor/worst_heat_bound_fraction: 4.869633032016709e-14 -> 4.869490360313192e-14",
+        "ledger/photon_spectra/0/energy_normalized_spectra: 2 rows of dropped nuclides only in old",
+        "ledger/photon_spectra/1/energy_normalized_spectra: 2 rows of dropped nuclides only in old",
+        "ledger/photon_spectra/2/energy_normalized_spectra: 2 rows of dropped nuclides only in old",
+        "ledger/photon_spectra/3/energy_normalized_spectra: 2 rows of dropped nuclides only in old",
+        "ledger/photon_spectra/4/energy_normalized_spectra: 2 rows of dropped nuclides only in old"
+       ],
+       "noise": [
+        "ledger/negative_atoms_zeroed_per_step/15: 2.3550998893256977e-27 -> 2.355099903141299e-27 (slack 2.165e-02)",
+        "ledger/negative_atoms_zeroed_per_step/16: 6.209408814369452e-27 -> 6.209408813453005e-27 (slack 2.165e-02)",
+        "ledger/negative_atoms_zeroed_per_step/17: 2.5949284799581718e-27 -> 2.3832605379057523e-27 (slack 2.165e-02)",
+        "ledger/negative_atoms_zeroed_per_step/18: 5.3089499186831464e-27 -> 2.3815174714663283e-27 (slack 2.165e-02)",
+        "ledger/negative_atoms_zeroed_per_step/20: 3.720204777131664e-27 -> 3.7185372946664256e-27 (slack 2.165e-02)",
+        "pathways/15/Mn58/0/fraction: 0.6973246509901642 -> 0.6973246509880539 (nuclide below 1e-12 of the step's atoms)",
+        "pathways/15/Mn58/1/atoms_per_g: 9.765812552881667e-28 -> 9.76581255297868e-28 (slack 2.165e-02)",
+        "pathways/15/Mn58/1/fraction: 0.30267534900978543 -> 0.3026753490118762 (nuclide below 1e-12 of the step's atoms)"
+       ],
+       "pruning": [
+        "ledger/rate_pruning: {\"dropped\": [{\"atoms_per_g_bound\": 5.618326211642612e-43, \"feed_atoms_per_g_s_bo -> {\"activity_Bq_per_g_bound\": 3.1267457290382876e-10, \"dropped\": [{\"atoms_per_g_bo",
+        "pruned_states: 40 -> 38"
+       ],
+       "rounding": [
+        "pathways/0/Co59/0/atoms_per_g: 4.0736859767210065 -> 4.073685976720946",
+        "pathways/0/Fe59/0/atoms_per_g: 150623.19873045332 -> 150623.19873044983",
+        "pathways/0/Fe60/0/atoms_per_g: 1.449033944113555e-09 -> 1.4490339441135335e-09",
+        "pathways/0/V51/0/fraction: 0.9999999997561667 -> 0.9999999997562795",
+        "pathways/1/Co59/0/atoms_per_g: 5.866080983054729 -> 5.866080983054629",
+        "pathways/1/Fe59/0/atoms_per_g: 150621.4063354472 -> 150621.40633544352",
+        "pathways/1/Fe60/0/atoms_per_g: 1.449033944112155e-09 -> 1.4490339441121333e-09",
+        "pathways/1/V51/0/fraction: 0.9999999998306083 -> 0.9999999998307159"
+       ]
+      }
+     }
+    },
+    "only_old": [],
+    "only_new": [],
+    "other": 0,
+    "pass": true
+   },
+   "pass": true
+  },
+  {
+   "baseline": "p10_legacy",
+   "spec": "/home/connoravila/Documents/actinv/target/preflight-tmp/actinv-p10/g6/legacy-neutron.json",
+   "diff": {
+    "documents": {
+     "document": {
+      "dropped_nuclides": [],
+      "bounds": {
+       "heat": 0.0,
+       "activity": 0.0
+      },
+      "counts": {
+       "pruning": 1
+      },
+      "examples": {
+       "pruning": [
+        "ledger/rate_pruning: {\"dropped\": [], \"removed_heat_W_per_g_bound\": -0.0, \"threshold_atoms_per_g\": 0.0 -> {\"activity_Bq_per_g_bound\": 0.0, \"dropped\": [], \"dropped_activity_Bq_per_g_bound"
+       ]
+      }
+     }
+    },
+    "only_old": [],
+    "only_new": [],
+    "other": 0,
+    "pass": true
+   },
+   "pass": true,
+   "hashes": {
+    "old": "e6157b592dd8285cbdcf079153d27e44161c178378219b6afddbc4f4be8ee285",
+    "new": "1a36b8c507740fd19ef1cf7898ef604bef82afad2f6ad80520dace71fb64fc29"
+   },
+   "expected": {
+    "old": "e6157b592dd8285cbdcf079153d27e44161c178378219b6afddbc4f4be8ee285",
+    "new": "1a36b8c507740fd19ef1cf7898ef604bef82afad2f6ad80520dace71fb64fc29"
+   },
+   "old_reproduces_committed": true,
+   "new_matches_regenerated": true
+  }
+ ],
+ "records": {
+  "results/p15_cache_integrity.json": {
+   "documents": {
+    "document": {
+     "dropped_nuclides": [],
+     "bounds": {
+      "heat": 0.0,
+      "activity": 0.0
+     },
+     "counts": {
+      "other": 2,
+      "hash": 4
+     },
+     "examples": {
+      "other": [
+       "concurrent_preparation/normalized_result_sha256/0: \"9853ccc82f742529dd4e27c070f9aa3fbd13dccee576844f6a7ebb8b4c40a495\" -> \"34f21e214892ddd88be921213060cbc42df2bcd096697e354d1e82120dcdd87c\"",
+       "concurrent_preparation/normalized_result_sha256/1: \"9853ccc82f742529dd4e27c070f9aa3fbd13dccee576844f6a7ebb8b4c40a495\" -> \"34f21e214892ddd88be921213060cbc42df2bcd096697e354d1e82120dcdd87c\""
+      ],
+      "hash": [
+       "deletion_recreation/normalized_result_sha256: 9853ccc82f742529\u2026 -> 34f21e214892ddd8\u2026",
+       "fixture/normalized_result_sha256: 9853ccc82f742529\u2026 -> 34f21e214892ddd8\u2026",
+       "interrupted_publication/normalized_result_sha256: 9853ccc82f742529\u2026 -> 34f21e214892ddd8\u2026",
+       "warm_reuse/normalized_result_sha256: 9853ccc82f742529\u2026 -> 34f21e214892ddd8\u2026"
+      ]
+     }
+    }
+   },
+   "only_old": [],
+   "only_new": [],
+   "other": 2,
+   "pass": false
+  },
+  "results/g1_p110_composition_solve.json": {
+   "documents": {
+    "document": {
+     "dropped_nuclides": [],
+     "bounds": {
+      "heat": 0.0,
+      "activity": 0.0
+     },
+     "counts": {
+      "hash": 9
+     },
+     "examples": {
+      "hash": [
+       "case_evidence/0/output_sha256: 9083a3e6031734ca\u2026 -> 7b0264acd02e3743\u2026",
+       "case_evidence/1/output_sha256: 728fb2a94ca61f5c\u2026 -> 1ab9a8b968a7f20b\u2026",
+       "case_evidence/2/output_sha256: 6f4de67a65d63f1b\u2026 -> db5a677263bcc99a\u2026",
+       "case_evidence/3/output_sha256: dc2636b2266e8c48\u2026 -> 4ffa7c6ba5330109\u2026",
+       "case_evidence/4/output_sha256: 2a6ba453b58e6a92\u2026 -> 3f810a904001dfb9\u2026",
+       "case_evidence/5/output_sha256: d409ecff40d5e312\u2026 -> 83ab6a373bc2caaf\u2026",
+       "case_evidence/6/output_sha256: 27ffda3eeab60351\u2026 -> 8aa6535d45fb0821\u2026",
+       "case_evidence/7/output_sha256: 3066f8f27b8636dc\u2026 -> e97ee89cdc1cf479\u2026"
+      ]
+     }
+    }
+   },
+   "only_old": [],
+   "only_new": [],
+   "other": 0,
+   "pass": true
+  },
+  "results/g2_p110_composition_solve.json": {
+   "documents": {
+    "document": {
+     "dropped_nuclides": [],
+     "bounds": {
+      "heat": 0.0,
+      "activity": 0.0
+     },
+     "counts": {
+      "hash": 1
+     },
+     "examples": {
+      "hash": [
+       "g1_result_sha256: 9f02e1f81c509b4b\u2026 -> 3c11d4eb80f75942\u2026"
+      ]
+     }
+    }
+   },
+   "only_old": [],
+   "only_new": [],
+   "other": 0,
+   "pass": true
+  }
+ },
+ "pass": false
+}
