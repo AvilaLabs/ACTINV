@@ -274,6 +274,8 @@ def check_s6(record: dict) -> list[str]:
                 errors.append(f"{where}: capture keeps {row['pattern']['kept_states']}, result {row['kept_states']}")
             if row["pattern"]["nonzeros"] != row["pattern"]["off_diagonal"] + row["pattern"]["kept_states"]:
                 errors.append(f"{where}: non-zeros != off-diagonal + diagonal")
+            if len(row.get("distinct_result_sha256_without_ms", [])) != 1:
+                errors.append(f"{where}: repeats are not identical apart from `ms`")
             for key in ("core_ms", "wall_s"):
                 s = row[key]
                 if not s["min"] <= s["median"] <= s["max"]:
@@ -385,7 +387,8 @@ def fixtures() -> dict:
             s6_rows.append({"prune": prune, "cram_order": order, "kept_states": kept, "pattern_matches_kept": True,
                             "pattern": {"kept_states": kept, "off_diagonal": 2 * kept, "nonzeros": 3 * kept},
                             "core_ms": {"min": 1.0, "median": 2.0, "max": 3.0},
-                            "wall_s": {"min": 1.0, "median": 1.5, "max": 2.0}})
+                            "wall_s": {"min": 1.0, "median": 1.5, "max": 2.0},
+                            "distinct_result_sha256_without_ms": ["0" * 64]})
     s6 = {"host": {"cgroup_limits": {"cpu.max": "200000 100000"}}, "cases": {"fe": {"rows": s6_rows}}}
     return {"s0": (s0, fns), "s1": s1, "s2": s2, "s3": s3, "s4": s4, "s5": s5, "s6": s6}
 
@@ -435,6 +438,10 @@ def selftest() -> int:
     ratio["cases"]["fe"]["sampling"]["per_time"]["decay_heat_w_per_g"]["66.0"]["sampled_over_first_order"] = 1.2
     if not run_check("s5", ratio):
         failures.append("s5: wrong sampled-over-first-order ratio not caught")
+    repeats = copy.deepcopy(fixtures()["s6"])
+    repeats["cases"]["fe"]["rows"][2]["distinct_result_sha256_without_ms"].append("1" * 64)
+    if not run_check("s6", repeats):
+        failures.append("s6: differing repeats not caught")
     selection = s1_selection(fixtures()["s1"])
     if len(selection) != 132 or selection[0]["time_s"] != 600.0:
         failures.append(f"s1 selection: {len(selection)} points")

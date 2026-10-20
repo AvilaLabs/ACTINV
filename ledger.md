@@ -3797,3 +3797,21 @@ round:
 - All three S5 cases are rerun, then S6 and the checker; S0–S4 stand.
 
 The built-in comparison's memory use on large networks is recorded as a solver limitation.
+
+## Entry 219 — P149 Amendment C registered after evidence attempt 2 (2026-10-20)
+
+Evidence attempt 2 ran S5 under Amendment B, then S6 and the checker. S5 completed all three cases. S6 stopped on its
+first row: its driver compared repeats by the hash of the whole `actinv run` output, which carries the timing field
+`ms`. The checker failed S0. Three Table 3 controls had not run in attempt 1, because the system interpreter lacks
+`openmc` and `h5py` and a restart had cleared the CMake that the pinned ALARA build was configured with. Their values
+were the committed ones. The attempt is preserved under `results/failures/p149/attempt2/`.
+
+**P149 Amendment C** `581415a1256e94c9cdf1da07163eec2b93271b71ffb45f7f3dc64a0d77c9da42`:
+- S6 compares repeats by the result hash with `ms` removed and records the distinct hashes per row. The checker
+  requires one per row, and its selftest passes.
+- S0 is rerun with the interpreter that carries `openmc` and `h5py`, with CMake 4.2.3 restored. The ALARA binary is
+  unchanged (`7ef1d632…`).
+- The repeat run and its comparison rules are fixed.
+
+Correction to entry 218 and Amendment B: attempts 1 and 2 ran the workspace release build of `b07a763`, `actinv`
+SHA-256 `8845e93e…`, not `7b76596b…`.

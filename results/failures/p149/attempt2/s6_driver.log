@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "<HOME>/Documents/actinv/controls/p149_s6_scaling.py", line 200, in <module>
+    sys.exit(main())
+             ~~~~^^
+  File "<HOME>/Documents/actinv/controls/p149_s6_scaling.py", line 193, in main
+    cases[name] = run_case(name, args.repeats, work)
+                  ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<HOME>/Documents/actinv/controls/p149_s6_scaling.py", line 141, in run_case
+    raise RuntimeError(f"{name} {prune} {order}: repeats differ")
+RuntimeError: fe rate 16: repeats differ

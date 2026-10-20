@@ -1,0 +1,49 @@
+{
+ "studies": {
+  "s0": {
+   "error_count": 3,
+   "errors": [
+    "table3 g4_p12_fng: returncode 1, pass True",
+    "table3 g4_p9_pulses_openmc: returncode 1, pass True",
+    "table3 g5_p9_alara: returncode 1, pass True"
+   ],
+   "record": "s0/s0.json",
+   "status": "fail"
+  },
+  "s1": {
+   "error_count": 0,
+   "errors": [],
+   "record": "s1_fns_tendl2017_gas.json",
+   "status": "ok"
+  },
+  "s2": {
+   "error_count": 0,
+   "errors": [],
+   "record": "s2_alara_nickel.json",
+   "status": "ok"
+  },
+  "s3": {
+   "error_count": 0,
+   "errors": [],
+   "record": "s3_histories.json",
+   "status": "ok"
+  },
+  "s4": {
+   "error_count": 0,
+   "errors": [],
+   "record": "s4_doppler.json",
+   "status": "ok"
+  },
+  "s5": {
+   "error_count": 0,
+   "errors": [],
+   "record": "s5_covariance.json",
+   "status": "ok"
+  },
+  "s6": {
+   "record": "s6_scaling.json",
+   "status": "missing"
+  }
+ },
+ "verdict": "fail"
+}
