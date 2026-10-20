@@ -6,7 +6,9 @@ Cases (TENDL-2017, the FNS benchmark library; spectra, irradiations and cooling 
   ss316  FNS SS316 1996exp_7hour;
   w      FNS W 1996exp_7hour;
   u_nat  natural uranium (U 100 wt%) in the Fe 1996exp_5min spectrum and schedule, mode `coupled`, with the
-         ENDF/B-VIII.0 neutron fission-yield evaluations for U-234, U-235, U-238 and Pu-239 (ACTINV ships none).
+         ENDF/B-VIII.0 neutron fission-yield evaluations for U-234, U-235, U-238 and Pu-239 (ACTINV ships none),
+         on the bundled TENDL-2025 neutron library (Amendment E: the FNS TENDL-2017 build has no uranium); each row
+         records the inventory nuclides with Z <= 72 at the end of irradiation, which only fission produces.
 For each case, `prune` in {rate, reach, none} and `cram_order` in {16, 48}: one warm-up and REPEATS timed
 `actinv run` processes under GNU time, with `outputs` = inventory, activity, heat and ledger (the solve). Photon and
 pathway outputs over an unpruned network cost far more than the solve, so each `prune` mode also gets one run at CRAM
@@ -48,6 +50,11 @@ NFY = Path(os.environ.get("ACTINV_NFY_DIR", Path.home() / "nuclear-data/endfb-vi
 YIELD_FILES = ("nfy-092_U_234.endf", "nfy-092_U_235.endf", "nfy-092_U_238.endf", "nfy-094_Pu_239.endf")
 CASES = {"fe": ("Fe", "1996exp_5min"), "ss316": ("SS316", "1996exp_7hour"), "w": ("W", "1996exp_7hour"),
          "u_nat": ("Fe", "1996exp_5min")}
+# The FNS TENDL-2017 build has no Z = 90-94 evaluations, so natural uranium uses the bundled TENDL-2025 neutron
+# library (the S5 library) (Amendment E)
+LIBRARIES = {"u_nat": Path(os.environ.get("ACTINV_P149_S6_FISSION_LIBRARY",
+                                          ROOT / "actinv-data/v1.1.0/activation/tendl-2025-neutron-709g.npz"))}
+FISSION_PRODUCT_MAX_Z = 72  # uranium decay chains stay at Z >= 81, so lighter nuclides come from fission
 PRUNES = ("rate", "reach", "none")
 ORDERS = (16, 48)
 REPEATS = 10
@@ -67,6 +74,8 @@ def case_spec(name: str) -> dict:
     material, experiment = CASES[name]
     spec, _record = cb3.specification(material, experiment)
     spec["title"] = f"P149 S6 {name}"
+    if name in LIBRARIES:
+        spec["library"] = {"path": str(LIBRARIES[name]), "sha256": sha256(LIBRARIES[name])}
     if name == "u_nat":
         spec["material"]["composition"] = {"U": 100.0}
         spec["options"]["mode"] = "coupled"
@@ -98,9 +107,11 @@ def timed_run(spec_path: Path, out_path: Path) -> dict:
     rss = [line for line in run.stderr.splitlines() if line.startswith("P149RSS ")]
     result = json.loads(out_path.read_text())
     untimed = json.dumps({k: v for k, v in result.items() if k != "ms"}, sort_keys=True).encode()
+    light = sum(1 for entry in result["steps"][0]["inventory"]
+                if entry["Z"] <= FISSION_PRODUCT_MAX_Z and entry["atoms_per_g"] > 0.0)
     return {"wall_s": wall_s, "core_ms": float(result["ms"]), "peak_rss_kib": int(rss[-1].split()[1]),
             "states": (result["pruned_states"], result["total_states"]), "mode": result["mode"],
-            "result_sha256_without_ms": hashlib.sha256(untimed).hexdigest()}
+            "result_sha256_without_ms": hashlib.sha256(untimed).hexdigest(), "light_nuclides_first_step": light}
 
 
 def pattern(spec: dict, prune: str, work: Path) -> dict:
@@ -167,6 +178,8 @@ def run_case(name: str, repeats: int, work: Path) -> dict:
                            "min": min(r["wall_s"] for r in runs), "max": max(r["wall_s"] for r in runs)},
                 "peak_rss_mib": max(r["peak_rss_kib"] for r in runs) / 1024.0,
                 "distinct_result_sha256_without_ms": distinct, "repeats": repeats,
+                **({"fission_products_end_of_irradiation": runs[0]["light_nuclides_first_step"]}
+                   if name == "u_nat" else {}),
             })
             out_path.unlink()
             print(f"{name} {prune} {order}: kept {kept} nnz {counts['nonzeros']} "
@@ -190,7 +203,8 @@ def run_case(name: str, repeats: int, work: Path) -> dict:
         default_outputs[prune] = {k: run[k] for k in ("wall_s", "core_ms", "peak_rss_kib")}
         print(f"{name} {prune} default outputs: wall {run['wall_s']:.1f} s rss {run['peak_rss_kib'] / 1024:.0f} MiB",
               file=sys.stderr, flush=True)
-    return {"experiment": "/".join(CASES[name]), "default_outputs_cram16": default_outputs, "timed_outputs": OUTPUTS, "composition": spec["material"]["composition"],
+    return {"experiment": "/".join(CASES[name]), "default_outputs_cram16": default_outputs, "timed_outputs": OUTPUTS,
+            "library": spec["library"], "composition": spec["material"]["composition"],
             "options": {k: spec["options"][k] for k in ("mode", "bmin_atoms_per_g", "temperature_K")},
             "fission_yields": spec["fission_yields"]["files"], "rows": rows}
 

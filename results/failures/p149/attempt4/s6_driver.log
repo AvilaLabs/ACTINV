@@ -1,0 +1,36 @@
+fe rate 16: kept 48 nnz 441 core 714.1 ms rss 192 MiB
+fe rate 48: kept 48 nnz 441 core 725.9 ms rss 192 MiB
+fe reach 16: kept 906 nnz 11486 core 810.8 ms rss 192 MiB
+fe reach 48: kept 906 nnz 11486 core 1000.6 ms rss 192 MiB
+fe none 16: kept 3873 nnz 28144 core 1059.9 ms rss 192 MiB
+fe none 48: kept 3873 nnz 28144 core 1765.4 ms rss 192 MiB
+fe rate default outputs: wall 0.9 s rss 192 MiB
+fe reach default outputs: wall 5.3 s rss 225 MiB
+fe none default outputs: wall 12.6 s rss 234 MiB
+ss316 rate 16: kept 263 nnz 3218 core 694.4 ms rss 192 MiB
+ss316 rate 48: kept 263 nnz 3218 core 718.8 ms rss 192 MiB
+ss316 reach 16: kept 906 nnz 11618 core 766.7 ms rss 192 MiB
+ss316 reach 48: kept 906 nnz 11618 core 980.1 ms rss 192 MiB
+ss316 none 16: kept 3873 nnz 28276 core 923.1 ms rss 192 MiB
+ss316 none 48: kept 3873 nnz 28276 core 1481.8 ms rss 192 MiB
+ss316 rate default outputs: wall 4.3 s rss 192 MiB
+ss316 reach default outputs: wall 34.5 s rss 316 MiB
+ss316 none default outputs: wall 65.1 s rss 327 MiB
+w rate 16: kept 101 nnz 1735 core 695.6 ms rss 192 MiB
+w rate 48: kept 101 nnz 1735 core 707.3 ms rss 192 MiB
+w reach 16: kept 1568 nnz 21265 core 870.2 ms rss 192 MiB
+w reach 48: kept 1568 nnz 21265 core 1324.2 ms rss 192 MiB
+w none 16: kept 3873 nnz 28179 core 1013.3 ms rss 192 MiB
+w none 48: kept 3873 nnz 28179 core 1752.9 ms rss 192 MiB
+w rate default outputs: wall 1.4 s rss 192 MiB
+w reach default outputs: wall 37.7 s rss 337 MiB
+w none default outputs: failed (101): thread 'main' panicked at crates/actinv-core/src/run.rs:6472:63: index out of bounds: the len is 3871 but the index is 3871
+u_nat rate 16: kept 12 nnz 27 core 724.9 ms rss 194 MiB
+u_nat rate 48: kept 12 nnz 27 core 729.5 ms rss 194 MiB
+u_nat reach 16: kept 1608 nnz 21329 core 876.1 ms rss 194 MiB
+u_nat reach 48: kept 1608 nnz 21329 core 1304.2 ms rss 194 MiB
+u_nat none 16: kept 3873 nnz 28114 core 1139.5 ms rss 194 MiB
+u_nat none 48: kept 3873 nnz 28114 core 2042.8 ms rss 194 MiB
+u_nat rate default outputs: wall 0.8 s rss 194 MiB
+u_nat reach default outputs: wall 1.1 s rss 205 MiB
+u_nat none default outputs: wall 1.4 s rss 246 MiB

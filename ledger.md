@@ -3832,3 +3832,19 @@ The attempt is preserved under `results/failures/p149/attempt3/`.
 - The checker requires all four S6 cases and a status for every default-outputs run. Its selftest passes.
 
 The pathway defect is recorded for the next release.
+
+## Entry 221 — P149 Amendment E registered after evidence attempt 4 (2026-10-20)
+
+Attempt 4 ran S0 and S6 under Amendment D, then the checker, which reported P149-COMPLETE. S0 regenerated every
+Table 3 control on the release binary.
+
+The S6 natural-uranium case had no neutron reactions. S6 built every case on the FNS TENDL-2017 library, and that
+library has no Z = 90–94 evaluations. The case kept 12 states, and its fission yields were never used. The checker
+did not test for fission. The S6 record of attempt 4 is preserved under `results/failures/p149/attempt4/`.
+
+**P149 Amendment E** `2bba94effec336f492bfcf24d88dc0ad10b423cc01884a30b79185b7bd18ee5a`:
+- The fission case uses the bundled TENDL-2025 neutron library, the S5 library.
+- Every case records its library.
+- Each uranium row records the nuclides with Z ≤ 72 at the end of irradiation, and the checker requires them. The
+  selftest passes, and the amended checker fails the attempt-4 record.
+- S6 is rerun and repeated. The attempt-4 S0 record and its repeat stand.

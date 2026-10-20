@@ -1,0 +1,6 @@
+s0 rc=0 15s
+s6 rc=0 499s
+check rc=0 0s
+r_s0 rc=0 15s
+r_s6 rc=0 502s
+done

@@ -277,8 +277,12 @@ def check_s6(record: dict) -> list[str]:
             elif not run.get("wall_s", 0) > 0:
                 errors.append(f"{name} {prune} default outputs: no wall time")
         kept = {}
+        if "library" not in case:
+            errors.append(f"{name}: library identity not recorded")
         for row in case["rows"]:
             where = f"{name} {row['prune']} {row['cram_order']}"
+            if name == "u_nat" and not row.get("fission_products_end_of_irradiation", 0) > 0:
+                errors.append(f"{where}: no fission products at the end of irradiation")
             if not row["pattern_matches_kept"] and row["prune"] != "none":
                 errors.append(f"{where}: capture keeps {row['pattern']['kept_states']}, result {row['kept_states']}")
             if row["pattern"]["nonzeros"] != row["pattern"]["off_diagonal"] + row["pattern"]["kept_states"]:
@@ -399,7 +403,9 @@ def fixtures() -> dict:
                             "wall_s": {"min": 1.0, "median": 1.5, "max": 2.0},
                             "distinct_result_sha256_without_ms": ["0" * 64]})
     s6 = {"host": {"cgroup_limits": {"cpu.max": "200000 100000"}},
-          "cases": {name: {"rows": copy.deepcopy(s6_rows),
+          "cases": {name: {"rows": [dict(row, **({"fission_products_end_of_irradiation": 40} if name == "u_nat"
+                                                 else {})) for row in s6_rows],
+                           "library": {"path": "lib.npz", "sha256": "0" * 64},
                            "default_outputs_cram16": {"rate": {"wall_s": 1.0}, "reach": {"wall_s": 2.0},
                                                       "none": {"failed": True, "returncode": 101,
                                                                "message": "panicked"}}}
@@ -460,6 +466,10 @@ def selftest() -> int:
     silent["cases"]["w"]["default_outputs_cram16"]["none"]["message"] = ""
     if not run_check("s6", silent):
         failures.append("s6: failure without a message not caught")
+    no_fission = copy.deepcopy(fixtures()["s6"])
+    no_fission["cases"]["u_nat"]["rows"][0]["fission_products_end_of_irradiation"] = 0
+    if not run_check("s6", no_fission):
+        failures.append("s6: fission case without fission products not caught")
     repeats = copy.deepcopy(fixtures()["s6"])
     repeats["cases"]["fe"]["rows"][2]["distinct_result_sha256_without_ms"].append("1" * 64)
     if not run_check("s6", repeats):

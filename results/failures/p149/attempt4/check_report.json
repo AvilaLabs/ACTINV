@@ -1,0 +1,47 @@
+{
+ "studies": {
+  "s0": {
+   "error_count": 0,
+   "errors": [],
+   "record": "s0/s0.json",
+   "status": "ok"
+  },
+  "s1": {
+   "error_count": 0,
+   "errors": [],
+   "record": "s1_fns_tendl2017_gas.json",
+   "status": "ok"
+  },
+  "s2": {
+   "error_count": 0,
+   "errors": [],
+   "record": "s2_alara_nickel.json",
+   "status": "ok"
+  },
+  "s3": {
+   "error_count": 0,
+   "errors": [],
+   "record": "s3_histories.json",
+   "status": "ok"
+  },
+  "s4": {
+   "error_count": 0,
+   "errors": [],
+   "record": "s4_doppler.json",
+   "status": "ok"
+  },
+  "s5": {
+   "error_count": 0,
+   "errors": [],
+   "record": "s5_covariance.json",
+   "status": "ok"
+  },
+  "s6": {
+   "error_count": 0,
+   "errors": [],
+   "record": "s6_scaling.json",
+   "status": "ok"
+  }
+ },
+ "verdict_before_amendment_e": "P149-COMPLETE"
+}
