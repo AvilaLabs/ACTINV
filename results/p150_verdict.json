@@ -1,0 +1,19 @@
+{
+ "evidence": [
+  "results/p150/q3_ci_steps.txt",
+  "results/p150/ci_runs.json",
+  "results/p120/amendment_d/",
+  "results/failures/p148/r6_ci_attempt1/"
+ ],
+ "gates": {
+  "Q1": "PASS",
+  "Q2": "PASS",
+  "Q3": "PASS",
+  "Q4": "PASS"
+ },
+ "p148_verdict": "P148-FAIL (R6, ledger 213)",
+ "protocol": "protocols/ACTINV-P150_PROTOCOL.md",
+ "protocol_sha256": "7664bd75600c5dacecc2c4df72582ed8d7a78f7d4e183d382e5b72d76df341ab",
+ "schema": "actinv-p150-verdict-1",
+ "verdict": "P150-PASS"
+}

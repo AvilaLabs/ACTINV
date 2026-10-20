@@ -3754,3 +3754,11 @@ pre-P148 block before G1's digest, and the sealed P110 G1 and G2 records are res
   they were restored, and the diff is kept (`results/p150/q3_ungated_record_drift.diff`).
 
 Q4 (CI green on the pushed commit for every triggered workflow) is pending.
+
+## Entry 215 — P120 Amendment D D4 and P150 Q4: CI green; P150-PASS (2026-10-20)
+
+On `31f446b` (candidate `4c2d89c` plus its evidence) every triggered workflow passed: controls 39366837528,
+desktop builds 39366837510, fns-iron 39366837453, fusion-isotope 39366837576 (`results/p150/ci_runs.json`); the
+handbook and browser-workbench workflows are path-filtered and were not triggered. Amendment D holds (D1–D4).
+**P150-PASS** (`results/p150_verdict.json`): the P148 solver is qualified on CI, with P148's R1–R5 (entry 212) as its
+scientific evidence. P148 stays FAIL on R6 (entry 213).

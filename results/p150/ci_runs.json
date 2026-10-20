@@ -1,0 +1,40 @@
+{
+ "all_triggered_green": true,
+ "candidate": "4c2d89c",
+ "commit": "31f446bde0f61a96cb1c93431ff6c0c03a05a7c6",
+ "not_triggered": {
+  "Build browser workbench": "paths filter (web.yml)",
+  "Build handbook": "paths filter (docs.yml)"
+ },
+ "runs": [
+  {
+   "conclusion": "success",
+   "databaseId": 39366837528,
+   "headSha": "31f446bde0f61a96cb1c93431ff6c0c03a05a7c6",
+   "name": "controls",
+   "url": "https://github.com/AvilaLabs/ACTINV/actions/runs/39366837528"
+  },
+  {
+   "conclusion": "success",
+   "databaseId": 39366837510,
+   "headSha": "31f446bde0f61a96cb1c93431ff6c0c03a05a7c6",
+   "name": "desktop builds",
+   "url": "https://github.com/AvilaLabs/ACTINV/actions/runs/39366837510"
+  },
+  {
+   "conclusion": "success",
+   "databaseId": 39366837453,
+   "headSha": "31f446bde0f61a96cb1c93431ff6c0c03a05a7c6",
+   "name": "fns-iron",
+   "url": "https://github.com/AvilaLabs/ACTINV/actions/runs/39366837453"
+  },
+  {
+   "conclusion": "success",
+   "databaseId": 39366837576,
+   "headSha": "31f446bde0f61a96cb1c93431ff6c0c03a05a7c6",
+   "name": "fusion-isotope",
+   "url": "https://github.com/AvilaLabs/ACTINV/actions/runs/39366837576"
+  }
+ ],
+ "schema": "actinv-p150-ci-runs-1"
+}
