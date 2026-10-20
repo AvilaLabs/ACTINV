@@ -10,7 +10,8 @@ Cases (TENDL-2017, the FNS benchmark library; spectra, irradiations and cooling 
 For each case, `prune` in {rate, reach, none} and `cram_order` in {16, 48}: one warm-up and REPEATS timed
 `actinv run` processes under GNU time, with `outputs` = inventory, activity, heat and ledger (the solve). Photon and
 pathway outputs over an unpruned network cost far more than the solve, so each `prune` mode also gets one run at CRAM
-order 16 with the default outputs, reported apart. Reported: kept and total states, the solve's core time (`ms`) and the process
+order 16 with the default outputs, reported apart; a failing default-outputs run is recorded with its exit status and
+message (Amendment D). Reported: kept and total states, the solve's core time (`ms`) and the process
 wall time (median, minimum, maximum) and the largest peak RSS. Repeats are compared by the SHA-256 of the result
 with its timing field `ms` removed (Amendment C); every row records the distinct hashes, which must be one. Non-zeros are counted from `prune_probe`'s capture
 of the pruning inputs (the full decay, reaction, feed and removal triplets): the number of distinct off-diagonal
@@ -28,6 +29,7 @@ import hashlib
 import json
 import os
 import platform
+import re
 import statistics
 import subprocess
 import sys
@@ -73,13 +75,26 @@ def case_spec(name: str) -> dict:
     return spec
 
 
+class RuntimeFailure(RuntimeError):
+    """`actinv run` exited non-zero; `message` is the panic or error line of its standard error."""
+
+    def __init__(self, spec_path: Path, returncode: int, stderr: str):
+        lines = [line.strip() for line in stderr.splitlines()
+                 if line.strip() and not line.startswith(("P149RSS ", "Command exited", "note: run with"))]
+        panic = next((i for i, line in enumerate(lines) if "panicked at" in line), None)
+        self.returncode = returncode
+        message = " ".join(lines[panic:panic + 2]) if panic is not None else (lines[-1] if lines else "")
+        self.message = re.sub(r"thread '([^']*)' \(\d+\)", r"thread '\1'", message)  # the thread id varies per run
+        super().__init__(f"{spec_path}: actinv failed ({returncode}): {stderr[-3000:]}")
+
+
 def timed_run(spec_path: Path, out_path: Path) -> dict:
     started = time.perf_counter()
     run = subprocess.run([str(GNU_TIME), "-f", "P149RSS %M", str(ACTINV), "run", str(spec_path), str(out_path)],
                          cwd=ROOT, capture_output=True, text=True, timeout=TIMEOUT_S)
     wall_s = time.perf_counter() - started
     if run.returncode != 0:
-        raise RuntimeError(f"{spec_path}: actinv failed ({run.returncode}): {run.stderr[-3000:]}")
+        raise RuntimeFailure(spec_path, run.returncode, run.stderr)
     rss = [line for line in run.stderr.splitlines() if line.startswith("P149RSS ")]
     result = json.loads(out_path.read_text())
     untimed = json.dumps({k: v for k, v in result.items() if k != "ms"}, sort_keys=True).encode()
@@ -164,7 +179,13 @@ def run_case(name: str, repeats: int, work: Path) -> dict:
         variant["options"].pop("outputs", None)
         spec_path, out_path = work / f"{prune}_default.json", work / f"{prune}_default.out.json"
         spec_path.write_text(json.dumps(variant, indent=1))
-        run = timed_run(spec_path, out_path)
+        try:
+            run = timed_run(spec_path, out_path)
+        except RuntimeFailure as failure:  # a release defect is reported, not skipped (Amendment D)
+            default_outputs[prune] = {"failed": True, "returncode": failure.returncode, "message": failure.message}
+            print(f"{name} {prune} default outputs: failed ({failure.returncode}): {failure.message}",
+                  file=sys.stderr, flush=True)
+            continue
         out_path.unlink()
         default_outputs[prune] = {k: run[k] for k in ("wall_s", "core_ms", "peak_rss_kib")}
         print(f"{name} {prune} default outputs: wall {run['wall_s']:.1f} s rss {run['peak_rss_kib'] / 1024:.0f} MiB",

@@ -1,0 +1,460 @@
+{
+ "cases": {
+  "fe": {
+   "composition": {
+    "FE": 100.0
+   },
+   "default_outputs_cram16": {
+    "none": {
+     "core_ms": 12050.985078,
+     "peak_rss_kib": 239308,
+     "wall_s": 12.243738728997414
+    },
+    "rate": {
+     "core_ms": 806.0522129999999,
+     "peak_rss_kib": 196780,
+     "wall_s": 0.8602196069987258
+    },
+    "reach": {
+     "core_ms": 5019.998827,
+     "peak_rss_kib": 229772,
+     "wall_s": 5.200359718997788
+    }
+   },
+   "experiment": "Fe/1996exp_5min",
+   "fission_yields": [],
+   "options": {
+    "bmin_atoms_per_g": 1e-08,
+    "mode": "auto",
+    "temperature_K": 293.6
+   },
+   "rows": [
+    {
+     "core_ms": {
+      "max": 715.617006,
+      "median": 704.4150515,
+      "min": 699.786214
+     },
+     "cram_order": 16,
+     "distinct_result_sha256_without_ms": [
+      "a55a524eb2f80243dde5eb32d37bc11a9ac2ba96b244bb5f61d1d98fd114bfaf"
+     ],
+     "kept_states": 48,
+     "mode": "trace",
+     "pattern": {
+      "kept_states": 48,
+      "nonzeros": 441,
+      "off_diagonal": 393,
+      "states_in_capture": 3873
+     },
+     "pattern_matches_kept": true,
+     "peak_rss_mib": 192.13671875,
+     "prune": "rate",
+     "repeats": 10,
+     "total_states": 3873,
+     "wall_s": {
+      "max": 0.7428440299991053,
+      "median": 0.7331584769999608,
+      "min": 0.7269328059992404
+     }
+    },
+    {
+     "core_ms": {
+      "max": 720.9682039999999,
+      "median": 707.883283,
+      "min": 699.199503
+     },
+     "cram_order": 48,
+     "distinct_result_sha256_without_ms": [
+      "ee66f6caa599048f4009ba3bf5d13aeec747e377aaa2d47c755e756dd6e9728f"
+     ],
+     "kept_states": 48,
+     "mode": "trace",
+     "pattern": {
+      "kept_states": 48,
+      "nonzeros": 441,
+      "off_diagonal": 393,
+      "states_in_capture": 3873
+     },
+     "pattern_matches_kept": true,
+     "peak_rss_mib": 192.1953125,
+     "prune": "rate",
+     "repeats": 10,
+     "total_states": 3873,
+     "wall_s": {
+      "max": 0.7531585479955538,
+      "median": 0.7374862165015657,
+      "min": 0.7241338780004298
+     }
+    },
+    {
+     "core_ms": {
+      "max": 805.676293,
+      "median": 793.5847085,
+      "min": 788.971286
+     },
+     "cram_order": 16,
+     "distinct_result_sha256_without_ms": [
+      "68c92e28aa799a334382c40aaa8916cab6c586aacde352a54d138deb2b0490b0"
+     ],
+     "kept_states": 906,
+     "mode": "trace",
+     "pattern": {
+      "kept_states": 906,
+      "nonzeros": 11486,
+      "off_diagonal": 10580,
+      "states_in_capture": 3873
+     },
+     "pattern_matches_kept": true,
+     "peak_rss_mib": 192.16015625,
+     "prune": "reach",
+     "repeats": 10,
+     "total_states": 3873,
+     "wall_s": {
+      "max": 0.8354698549956083,
+      "median": 0.8222742799953267,
+      "min": 0.8179819330034661
+     }
+    },
+    {
+     "core_ms": {
+      "max": 992.454288,
+      "median": 976.2912515,
+      "min": 970.456287
+     },
+     "cram_order": 48,
+     "distinct_result_sha256_without_ms": [
+      "f74970f0a33cda871431ad7e3123256959f7abba8456f139e7305f479a637881"
+     ],
+     "kept_states": 906,
+     "mode": "trace",
+     "pattern": {
+      "kept_states": 906,
+      "nonzeros": 11486,
+      "off_diagonal": 10580,
+      "states_in_capture": 3873
+     },
+     "pattern_matches_kept": true,
+     "peak_rss_mib": 192.3125,
+     "prune": "reach",
+     "repeats": 10,
+     "total_states": 3873,
+     "wall_s": {
+      "max": 1.026054694004415,
+      "median": 1.0078020464970905,
+      "min": 0.9996070370034431
+     }
+    },
+    {
+     "core_ms": {
+      "max": 1050.082666,
+      "median": 1036.720671,
+      "min": 1028.385221
+     },
+     "cram_order": 16,
+     "distinct_result_sha256_without_ms": [
+      "30c852bc5dbf448117907ddfc730c2b6132dfb9ad6dd8edc2ffb700b3a492b1d"
+     ],
+     "kept_states": 3873,
+     "mode": "trace",
+     "pattern": {
+      "kept_states": 3873,
+      "nonzeros": 28144,
+      "off_diagonal": 24271,
+      "states_in_capture": 3873
+     },
+     "pattern_matches_kept": true,
+     "peak_rss_mib": 192.20703125,
+     "prune": "none",
+     "repeats": 10,
+     "total_states": 3873,
+     "wall_s": {
+      "max": 1.0865291240043007,
+      "median": 1.0676219779998064,
+      "min": 1.0580663380023907
+     }
+    },
+    {
+     "core_ms": {
+      "max": 1771.936044,
+      "median": 1722.153601,
+      "min": 1709.605311
+     },
+     "cram_order": 48,
+     "distinct_result_sha256_without_ms": [
+      "14493cb9c745851bd19b75bee9669bc4f41b65472d1614df4991cb120cda5df0"
+     ],
+     "kept_states": 3873,
+     "mode": "trace",
+     "pattern": {
+      "kept_states": 3873,
+      "nonzeros": 28144,
+      "off_diagonal": 24271,
+      "states_in_capture": 3873
+     },
+     "pattern_matches_kept": true,
+     "peak_rss_mib": 192.23828125,
+     "prune": "none",
+     "repeats": 10,
+     "total_states": 3873,
+     "wall_s": {
+      "max": 1.8148888669966254,
+      "median": 1.7638650005028467,
+      "min": 1.7433062650015927
+     }
+    }
+   ],
+   "timed_outputs": [
+    "inventory",
+    "activity",
+    "heat",
+    "ledger"
+   ]
+  },
+  "ss316": {
+   "composition": {
+    "CR": 18.28,
+    "FE": 63.72,
+    "MN": 1.44,
+    "MO": 2.11,
+    "NI": 13.49,
+    "SI": 0.96
+   },
+   "default_outputs_cram16": {
+    "none": {
+     "core_ms": 64213.33035799999,
+     "peak_rss_kib": 334600,
+     "wall_s": 64.48243596099928
+    },
+    "rate": {
+     "core_ms": 4046.6942579999995,
+     "peak_rss_kib": 196652,
+     "wall_s": 4.141060186004324
+    },
+    "reach": {
+     "core_ms": 33706.303296,
+     "peak_rss_kib": 322692,
+     "wall_s": 33.97010329999466
+    }
+   },
+   "experiment": "SS316/1996exp_7hour",
+   "fission_yields": [],
+   "options": {
+    "bmin_atoms_per_g": 1e-08,
+    "mode": "auto",
+    "temperature_K": 293.6
+   },
+   "rows": [
+    {
+     "core_ms": {
+      "max": 687.320482,
+      "median": 680.1697045,
+      "min": 672.546153
+     },
+     "cram_order": 16,
+     "distinct_result_sha256_without_ms": [
+      "a41a90bf55de3149bee3eb4fadbf397afdb0b3246e859d598bf711dacb5d2c12"
+     ],
+     "kept_states": 263,
+     "mode": "trace",
+     "pattern": {
+      "kept_states": 263,
+      "nonzeros": 3218,
+      "off_diagonal": 2955,
+      "states_in_capture": 3873
+     },
+     "pattern_matches_kept": true,
+     "peak_rss_mib": 192.33984375,
+     "prune": "rate",
+     "repeats": 10,
+     "total_states": 3873,
+     "wall_s": {
+      "max": 0.7185864220009535,
+      "median": 0.7070077165008115,
+      "min": 0.6979829010015237
+     }
+    },
+    {
+     "core_ms": {
+      "max": 727.25901,
+      "median": 711.3186685000001,
+      "min": 696.852985
+     },
+     "cram_order": 48,
+     "distinct_result_sha256_without_ms": [
+      "aaf962bf0898797a9a3821bfba2c221d17dbfe2b9d1a1c07f6feb618a894202b"
+     ],
+     "kept_states": 263,
+     "mode": "trace",
+     "pattern": {
+      "kept_states": 263,
+      "nonzeros": 3218,
+      "off_diagonal": 2955,
+      "states_in_capture": 3873
+     },
+     "pattern_matches_kept": true,
+     "peak_rss_mib": 192.046875,
+     "prune": "rate",
+     "repeats": 10,
+     "total_states": 3873,
+     "wall_s": {
+      "max": 0.7541565950014046,
+      "median": 0.740228267499333,
+      "min": 0.7225516429971321
+     }
+    },
+    {
+     "core_ms": {
+      "max": 764.579188,
+      "median": 757.8701775,
+      "min": 747.322598
+     },
+     "cram_order": 16,
+     "distinct_result_sha256_without_ms": [
+      "7357203da36f5727b1f80da269840c491ac5a89658510764f37ed970272f8add"
+     ],
+     "kept_states": 906,
+     "mode": "trace",
+     "pattern": {
+      "kept_states": 906,
+      "nonzeros": 11618,
+      "off_diagonal": 10712,
+      "states_in_capture": 3873
+     },
+     "pattern_matches_kept": true,
+     "peak_rss_mib": 192.2578125,
+     "prune": "reach",
+     "repeats": 10,
+     "total_states": 3873,
+     "wall_s": {
+      "max": 0.7958766220035614,
+      "median": 0.7896022070017352,
+      "min": 0.781657316001656
+     }
+    },
+    {
+     "core_ms": {
+      "max": 1004.060749,
+      "median": 964.2550195000001,
+      "min": 960.005981
+     },
+     "cram_order": 48,
+     "distinct_result_sha256_without_ms": [
+      "c7c3f128c1a2527beffe4fe1b7b738f8289f4c4164f3bc8d4e5e1ec7cc601dfb"
+     ],
+     "kept_states": 906,
+     "mode": "trace",
+     "pattern": {
+      "kept_states": 906,
+      "nonzeros": 11618,
+      "off_diagonal": 10712,
+      "states_in_capture": 3873
+     },
+     "pattern_matches_kept": true,
+     "peak_rss_mib": 192.26953125,
+     "prune": "reach",
+     "repeats": 10,
+     "total_states": 3873,
+     "wall_s": {
+      "max": 1.0352937419957016,
+      "median": 0.9956868820008822,
+      "min": 0.9917167179955868
+     }
+    },
+    {
+     "core_ms": {
+      "max": 924.576547,
+      "median": 912.643681,
+      "min": 902.62518
+     },
+     "cram_order": 16,
+     "distinct_result_sha256_without_ms": [
+      "d3dca9ea041b5ec642e662439c2490b15167e6d3ca11fdb833c2474a4a157e6e"
+     ],
+     "kept_states": 3873,
+     "mode": "trace",
+     "pattern": {
+      "kept_states": 3873,
+      "nonzeros": 28276,
+      "off_diagonal": 24403,
+      "states_in_capture": 3873
+     },
+     "pattern_matches_kept": true,
+     "peak_rss_mib": 192.23828125,
+     "prune": "none",
+     "repeats": 10,
+     "total_states": 3873,
+     "wall_s": {
+      "max": 0.9555463940050686,
+      "median": 0.9435045344980608,
+      "min": 0.9331513520010049
+     }
+    },
+    {
+     "core_ms": {
+      "max": 1465.2491590000002,
+      "median": 1449.241988,
+      "min": 1441.8574820000001
+     },
+     "cram_order": 48,
+     "distinct_result_sha256_without_ms": [
+      "85c007b052d9480050ce0f6cb701a914872bf85a00a622c293c56db5d0fbc10e"
+     ],
+     "kept_states": 3873,
+     "mode": "trace",
+     "pattern": {
+      "kept_states": 3873,
+      "nonzeros": 28276,
+      "off_diagonal": 24403,
+      "states_in_capture": 3873
+     },
+     "pattern_matches_kept": true,
+     "peak_rss_mib": 192.12109375,
+     "prune": "none",
+     "repeats": 10,
+     "total_states": 3873,
+     "wall_s": {
+      "max": 1.4964475000015227,
+      "median": 1.4839789405014017,
+      "min": 1.476332441001432
+     }
+    }
+   ],
+   "timed_outputs": [
+    "inventory",
+    "activity",
+    "heat",
+    "ledger"
+   ]
+  }
+ },
+ "host": {
+  "cgroup": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p798561-i800797.scope",
+  "cgroup_limits": {
+   "cpu.max": "200000 100000",
+   "memory.max": "6442450944",
+   "memory.swap.max": "0",
+   "pids.max": "128"
+  },
+  "cpu": "Intel(R) Core(TM) i3-N305",
+  "environment": {
+   "OMP_NUM_THREADS": null,
+   "RAYON_NUM_THREADS": "2"
+  },
+  "kernel": "7.0.0-38-generic",
+  "logical_cpus": 8,
+  "machine": "x86_64",
+  "node": "connoravila"
+ },
+ "identities": {
+  "actinv": "8845e93e5a83ceebf68ad26ec676f925e3ccdbd9b814b5d42325dbd134fdd36b",
+  "decay_fallback": "850b8b7f85f8d88b6ad826c4cd341aaaffabd525c8ecf3c588a0ad437bf5d123",
+  "decay_primary": "6f04cf009086c179021f243a58dadc2d5bb078de5ba39c4fe46ccad77d228ddb",
+  "library": "218156708ae685db2a50cd7a2c74ca02049b68f266c38a29020b71095717447d",
+  "prune_probe": "56487a039a236a468eb46f41ae7b7b5925c36cd899f73ce3250344eddeeab417"
+ },
+ "nonzeros_definition": "distinct off-diagonal (i, j) with a nonzero decay, reaction, feed or removal entry between kept states, plus one diagonal entry per kept state",
+ "protocol": "P149 S6",
+ "schema": "actinv-p149-s6-scaling-1",
+ "timing_note": "times and memory hold for the recorded host and cgroup only"
+}

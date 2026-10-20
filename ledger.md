@@ -3815,3 +3815,20 @@ were the committed ones. The attempt is preserved under `results/failures/p149/a
 
 Correction to entry 218 and Amendment B: attempts 1 and 2 ran the workspace release build of `b07a763`, `actinv`
 SHA-256 `8845e93e…`, not `7b76596b…`.
+
+## Entry 220 — P149 Amendment D registered after evidence attempt 3 (2026-10-20)
+
+Attempt 3 ran S0 and S6 under Amendment C. In S0, `g4_p12_fng` and `g5_p9_alara` still did not run. The FNG
+research data had been extracted to a `/tmp` directory that a restart cleared. ALARA 2.9.2 reads input tokens into
+64 bytes, and the disk-backed work path made its `dump_file` token longer than that. S6 timed every row for Fe,
+SS316 and W, then stopped. In the release, `actinv run` panics on unpruned W when pathways are requested: a
+pathway source in the leakage state indexes one past the nuclide list (`run.rs:6472`). Natural uranium did not run.
+The attempt is preserved under `results/failures/p149/attempt3/`.
+
+**P149 Amendment D** `64500171ddbabc0c314126a6ad1fd3253fd10b774080337fd2c699a05a73c115`:
+- No source changes.
+- S0 runs with the six pinned FNG members extracted to disk and a short disk work path for ALARA.
+- S6 records a failing default-outputs run with its status and message and continues.
+- The checker requires all four S6 cases and a status for every default-outputs run. Its selftest passes.
+
+The pathway defect is recorded for the next release.

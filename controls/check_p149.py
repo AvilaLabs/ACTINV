@@ -264,9 +264,18 @@ def check_s5(record: dict) -> list[str]:
 
 # ---- S6 ---------------------------------------------------------------------------------------------------------
 
+S6_CASES = ("fe", "ss316", "w", "u_nat")
+
+
 def check_s6(record: dict) -> list[str]:
-    errors = []
+    errors = [f"{name}: case missing" for name in S6_CASES if name not in record["cases"]]
     for name, case in record["cases"].items():
+        for prune, run in case.get("default_outputs_cram16", {}).items():
+            if run.get("failed"):
+                if not run.get("message") or run.get("returncode") in (None, 0):
+                    errors.append(f"{name} {prune} default outputs: failure without status and message")
+            elif not run.get("wall_s", 0) > 0:
+                errors.append(f"{name} {prune} default outputs: no wall time")
         kept = {}
         for row in case["rows"]:
             where = f"{name} {row['prune']} {row['cram_order']}"
@@ -389,7 +398,12 @@ def fixtures() -> dict:
                             "core_ms": {"min": 1.0, "median": 2.0, "max": 3.0},
                             "wall_s": {"min": 1.0, "median": 1.5, "max": 2.0},
                             "distinct_result_sha256_without_ms": ["0" * 64]})
-    s6 = {"host": {"cgroup_limits": {"cpu.max": "200000 100000"}}, "cases": {"fe": {"rows": s6_rows}}}
+    s6 = {"host": {"cgroup_limits": {"cpu.max": "200000 100000"}},
+          "cases": {name: {"rows": copy.deepcopy(s6_rows),
+                           "default_outputs_cram16": {"rate": {"wall_s": 1.0}, "reach": {"wall_s": 2.0},
+                                                      "none": {"failed": True, "returncode": 101,
+                                                               "message": "panicked"}}}
+                    for name in S6_CASES}}
     return {"s0": (s0, fns), "s1": s1, "s2": s2, "s3": s3, "s4": s4, "s5": s5, "s6": s6}
 
 
@@ -438,6 +452,14 @@ def selftest() -> int:
     ratio["cases"]["fe"]["sampling"]["per_time"]["decay_heat_w_per_g"]["66.0"]["sampled_over_first_order"] = 1.2
     if not run_check("s5", ratio):
         failures.append("s5: wrong sampled-over-first-order ratio not caught")
+    missing = copy.deepcopy(fixtures()["s6"])
+    del missing["cases"]["u_nat"]
+    if not run_check("s6", missing):
+        failures.append("s6: missing case not caught")
+    silent = copy.deepcopy(fixtures()["s6"])
+    silent["cases"]["w"]["default_outputs_cram16"]["none"]["message"] = ""
+    if not run_check("s6", silent):
+        failures.append("s6: failure without a message not caught")
     repeats = copy.deepcopy(fixtures()["s6"])
     repeats["cases"]["fe"]["rows"][2]["distinct_result_sha256_without_ms"].append("1" * 64)
     if not run_check("s6", repeats):

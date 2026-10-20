@@ -1,0 +1,45 @@
+fe rate 16: kept 48 nnz 441 core 704.4 ms rss 192 MiB
+fe rate 48: kept 48 nnz 441 core 707.9 ms rss 192 MiB
+fe reach 16: kept 906 nnz 11486 core 793.6 ms rss 192 MiB
+fe reach 48: kept 906 nnz 11486 core 976.3 ms rss 192 MiB
+fe none 16: kept 3873 nnz 28144 core 1036.7 ms rss 192 MiB
+fe none 48: kept 3873 nnz 28144 core 1722.2 ms rss 192 MiB
+fe rate default outputs: wall 0.9 s rss 192 MiB
+fe reach default outputs: wall 5.2 s rss 224 MiB
+fe none default outputs: wall 12.2 s rss 234 MiB
+ss316 rate 16: kept 263 nnz 3218 core 680.2 ms rss 192 MiB
+ss316 rate 48: kept 263 nnz 3218 core 711.3 ms rss 192 MiB
+ss316 reach 16: kept 906 nnz 11618 core 757.9 ms rss 192 MiB
+ss316 reach 48: kept 906 nnz 11618 core 964.3 ms rss 192 MiB
+ss316 none 16: kept 3873 nnz 28276 core 912.6 ms rss 192 MiB
+ss316 none 48: kept 3873 nnz 28276 core 1449.2 ms rss 192 MiB
+ss316 rate default outputs: wall 4.1 s rss 192 MiB
+ss316 reach default outputs: wall 34.0 s rss 315 MiB
+ss316 none default outputs: wall 64.5 s rss 327 MiB
+w rate 16: kept 101 nnz 1735 core 687.6 ms rss 192 MiB
+w rate 48: kept 101 nnz 1735 core 695.0 ms rss 192 MiB
+w reach 16: kept 1568 nnz 21265 core 851.8 ms rss 192 MiB
+w reach 48: kept 1568 nnz 21265 core 1306.7 ms rss 192 MiB
+w none 16: kept 3873 nnz 28179 core 997.6 ms rss 192 MiB
+w none 48: kept 3873 nnz 28179 core 1730.0 ms rss 192 MiB
+w rate default outputs: wall 1.3 s rss 191 MiB
+w reach default outputs: wall 37.3 s rss 337 MiB
+Traceback (most recent call last):
+  File "<HOME>/Documents/actinv/controls/p149_s6_scaling.py", line 203, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "<HOME>/Documents/actinv/controls/p149_s6_scaling.py", line 196, in main
+    cases[name] = run_case(name, args.repeats, work)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<HOME>/Documents/actinv/controls/p149_s6_scaling.py", line 167, in run_case
+    run = timed_run(spec_path, out_path)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<HOME>/Documents/actinv/controls/p149_s6_scaling.py", line 82, in timed_run
+    raise RuntimeError(f"{spec_path}: actinv failed ({run.returncode}): {run.stderr[-3000:]}")
+RuntimeError: <HOME>/Documents/actinv/target/p149-evidence/work3/s6/w/none_default.json: actinv failed (101): 
+thread 'main' (800521) panicked at crates/actinv-core/src/run.rs:6472:63:
+index out of bounds: the len is 3871 but the index is 3871
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+Command exited with non-zero status 101
+P149RSS 196584
+

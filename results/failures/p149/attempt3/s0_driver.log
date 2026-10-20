@@ -1,0 +1,112 @@
+{
+ "fns.median_geomean_CE.actinv": {
+  "v1_0_0": 1.024,
+  "regenerated": 1.023819685395162,
+  "difference": -0.00018031460483802775
+ },
+ "fns.median_geomean_CE.fispact": {
+  "v1_0_0": 1.009,
+  "regenerated": 1.0085200841086217,
+  "difference": -0.0004799158913781909
+ },
+ "fns.median_max_abs_lnCE.actinv": {
+  "v1_0_0": 0.284,
+  "regenerated": 0.28353558178510807,
+  "difference": -0.00046441821489190405
+ },
+ "fns.median_max_abs_lnCE.fispact": {
+  "v1_0_0": 0.223,
+  "regenerated": 0.2232260220473155,
+  "difference": 0.00022602204731550501
+ },
+ "fns.within_1p3_every_point.actinv": {
+  "v1_0_0": 62,
+  "regenerated": 62,
+  "difference": 0
+ },
+ "fns.within_1p3_every_point_fraction.fispact": {
+  "v1_0_0": 0.52,
+  "regenerated": 0.5227272727272727,
+  "difference": 0.0027272727272726893
+ },
+ "fns.within_20pct_of_reference_every_point": {
+  "v1_0_0": 103,
+  "regenerated": 103,
+  "difference": 0
+ },
+ "fns.geomean_within_10pct_of_reference": {
+  "v1_0_0": 88,
+  "regenerated": 88,
+  "difference": 0
+ },
+ "fns.disposition.agree_measurement": {
+  "v1_0_0": 41,
+  "regenerated": 41,
+  "difference": 0
+ },
+ "fns.disposition.agree_reference_only": {
+  "v1_0_0": 32,
+  "regenerated": 32,
+  "difference": 0
+ },
+ "fns.disposition.neither": {
+  "v1_0_0": 59,
+  "regenerated": 59,
+  "difference": 0
+ },
+ "table3.dense_relative": {
+  "v1_0_0": 1.33e-15,
+  "regenerated": 1.3259059324872317e-15,
+  "difference": -4.094067512768198e-18
+ },
+ "table3.openmc_cram48_relative": {
+  "v1_0_0": 3.91e-15,
+  "regenerated": 3.910762950268231e-15,
+  "difference": 7.629502682307509e-19
+ },
+ "table3.alara_fe56_mn56_relative": {
+  "v1_0_0": 4.12e-08,
+  "regenerated": 4.1145888345661785e-08,
+  "difference": -5.4111654338213285e-11
+ },
+ "table3.sensitivity_maximum_relative": {
+  "v1_0_0": 3.013e-11,
+  "regenerated": 3.013111780522829e-11,
+  "difference": 1.117805228291029e-15
+ },
+ "table3.sensitivity_maximum_absolute": {
+  "v1_0_0": 7.124e-13,
+  "regenerated": 7.12430114901963e-13,
+  "difference": 3.0114901962978516e-17
+ },
+ "table3.scst_relative": {
+  "v1_0_0": 2.055e-16,
+  "regenerated": 2.0552249685763653e-16,
+  "difference": 2.2496857636523073e-20
+ },
+ "table3.sampling_relative": {
+  "v1_0_0": 0.0001943,
+  "regenerated": 0.00019428861156451277,
+  "difference": -1.1388435487236313e-08
+ },
+ "table3.fng_history_relative": {
+  "v1_0_0": 2.88e-14,
+  "regenerated": 2.8774804027527194e-14,
+  "difference": -2.5195972472807206e-17
+ },
+ "table3.fng_endpoints": {
+  "v1_0_0": 170,
+  "regenerated": 170,
+  "difference": 0
+ },
+ "table3.fng_rates_relative": {
+  "v1_0_0": 3.24e-16,
+  "regenerated": 3.236508739334936e-16,
+  "difference": -3.491260665063734e-19
+ },
+ "table3.fng_rate_comparisons": {
+  "v1_0_0": 120,
+  "regenerated": 120,
+  "difference": 0
+ }
+}
