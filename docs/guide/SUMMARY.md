@@ -29,6 +29,7 @@
 
 # Science and releases
 
+- [What's new in 1.6](whats-new-1.6.md)
 - [What's new in 1.5](whats-new.md)
 - [Numerical method](method.md)
 - [Validation evidence](validation.md)

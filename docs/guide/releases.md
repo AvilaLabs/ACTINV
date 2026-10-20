@@ -4,11 +4,20 @@ Software, nuclear data, and desktop packages have separate release histories. Re
 
 | Component | Version covered here | Release |
 | --- | --- | --- |
-| CLI, Python, and Rust workspace | 1.5.0 | [v1.5.0](https://github.com/AvilaLabs/ACTINV/releases/tag/v1.5.0) |
+| CLI, Python, and Rust workspace | 1.6.0 | [v1.6.0](https://github.com/AvilaLabs/ACTINV/releases/tag/v1.6.0) |
 | Embedded nuclear-data catalog | 1.1.0 | [data-v1.1.0](https://github.com/AvilaLabs/ACTINV/releases/tag/data-v1.1.0) |
-| Desktop preview | 0.4.0-preview.1, using solver 1.5.0 | [desktop preview](https://github.com/AvilaLabs/ACTINV/releases/tag/desktop-v0.4.0-preview.1) |
+| Desktop preview | 0.5.0-preview.1, using solver 1.6.0 | [desktop preview](https://github.com/AvilaLabs/ACTINV/releases/tag/desktop-v0.5.0-preview.1) |
 
 Use `actinv --version` for the executable. `actinv data manifest` prints its embedded catalog. Source-built desktop candidates may use a newer solver than the published preview; inspect their package/build record.
+
+## New in 1.6.0
+
+Release 1.6.0 adds waste classification under nuclear-data uncertainty (`actinv waste uncertainty`), impurity budgets
+under uncertainty (`actinv waste budget uncertainty`), classes for packages of discrete items with encapsulation
+(`actinv waste package`), the waste commands in the Python API (`actinv.waste`, `actinv.twin`) and a Waste class page
+in the desktop. Rate pruning now drops a nuclide only when a proven bound on its population is below the threshold,
+and the ledger's `rate_pruning` block reports bounds on the change in total activity and heat; see
+[What's new in 1.6](whats-new-1.6.md).
 
 ## New in 1.5.0
 
@@ -29,12 +38,14 @@ python -m pip install --upgrade actinv
 For an exact Rust CLI version:
 
 ```bash
-cargo install --locked --force actinv-cli --version 1.5.0
+cargo install --locked --force actinv-cli --version 1.6.0
 ```
 
 A software upgrade does not silently replace installed data. Revisit optional settings and coverage when a release changes their behavior, and retain the executable or source version for older results.
 
 ## Changes that may affect earlier results
+
+The [1.6.0 release notes](https://github.com/AvilaLabs/ACTINV/blob/master/docs/RELEASE_NOTES_v1.6.0.md) describe the one default-result change: the new rate-pruning rule keeps or drops a few different noise-level nuclides, and the ledger's `rate_pruning` fields are renamed and extended. [Results that may change](whats-new-1.6.md#results-that-may-change) gives the measured effect.
 
 The [1.5.0 release notes](https://github.com/AvilaLabs/ACTINV/blob/master/docs/RELEASE_NOTES_v1.5.0.md) list the default-result changes: trace mode with radioactive initial material (restart or cooling runs from an activated inventory should be rerun), trace-mode pathway attribution, the spontaneous-fission branch count, and corrections to opt-in photon, regulatory-table and self-shielding outputs. [Results that may change](whats-new.md#results-that-may-change) summarizes them.
 

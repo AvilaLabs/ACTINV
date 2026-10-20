@@ -13,7 +13,7 @@ Open the [ACTINV download page](https://actinv.avilalabs.org/download/) and choo
 | Mac, Intel | Intel disk image | Open the DMG and drag ACTINV to Applications |
 | Linux, Intel or AMD 64-bit | AppImage | Allow execution in file properties, then double-click |
 
-The **0.4.0-preview.1** desktop is unsigned and uses solver **1.5.0**, the same as the CLI/Python software release. It adds the Outputs, Tables, Photons & dose and Pathways pages and FISPACT-II deck import; see [What's new in 1.5](whats-new.md#use-the-04-interface). Its Outputs page has controls for gas production and every uncertainty channel, including the `flux` channel, and the gamma projectile is on Overview & data. Download filenames identify the desktop version and architecture.
+The **0.5.0-preview.1** desktop is unsigned and uses solver **1.6.0**, the same as the CLI/Python software release. It adds the Waste class page, which classifies the loaded result against the NRC Part 61 tables; see [What's new in 1.6](whats-new-1.6.md). The Outputs, Tables, Photons & dose and Pathways pages and FISPACT-II deck import came in 0.4; see [What's new in 1.5](whats-new.md#use-the-04-interface). Its Outputs page has controls for gas production and every uncertainty channel, including the `flux` channel, and the gamma projectile is on Overview & data. Download filenames identify the desktop version and architecture.
 
 For platform launch notices and the optional Linux application-menu shortcut, see the [desktop installation details](https://github.com/AvilaLabs/ACTINV/blob/master/docs/DESKTOP_INSTALL.md). Use the [desktop walkthrough](desktop.md) for calculation setup.
 
@@ -26,18 +26,18 @@ python -m pip install actinv
 actinv --version
 ```
 
-Supported platforms have prebuilt wheels. If a matching wheel is unavailable, pip may attempt a source build; use a [standalone executable](https://github.com/AvilaLabs/ACTINV/releases/tag/v1.5.0) if you want to avoid setting up a compiler.
+Supported platforms have prebuilt wheels. If a matching wheel is unavailable, pip may attempt a source build; use a [standalone executable](https://github.com/AvilaLabs/ACTINV/releases/tag/v1.6.0) if you want to avoid setting up a compiler.
 
 For a reproducible installation of this handbook's software version:
 
 ```bash
-python -m pip install actinv==1.5.0
+python -m pip install actinv==1.6.0
 ```
 
 If you already use Rust, install just the CLI from crates.io:
 
 ```bash
-cargo install --locked actinv-cli --version 1.5.0
+cargo install --locked actinv-cli --version 1.6.0
 ```
 
 The Python package and `cargo install actinv-cli` install the terminal interface. Get the desktop from the download page.

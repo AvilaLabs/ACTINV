@@ -1,6 +1,20 @@
 # Changelog
 
-## Unreleased
+## v1.6.0 — 2026-10-20
+
+**Changed (default results)**
+
+- Rate pruning drops a nuclide only when a proven bound on its population over the whole schedule is below
+  `bmin_atoms_per_g`. The bound sums every converging parent, limits each edge by its share of the parent's losses,
+  and bounds cycles only through a certified contraction; otherwise they are kept and listed in
+  `unbounded_components`. The previous rule took the largest converging path and could under-estimate a population.
+  `ledger.rate_pruning` replaces `removed_heat_W_per_g_bound` with `dropped_*`, `kept_*` and total
+  `activity_Bq_per_g_bound` / `heat_W_per_g_bound` bounds, and each dropped nuclide carries `atoms_per_g_bound` and
+  `feed_atoms_per_g_s_bound`; the `options.screen` certificate widens heat and activity responses by these bounds.
+  The CI end-to-end case keeps 38 states instead of 40. Over the 132 FNS experiments at the default threshold,
+  19 change heat by more than 1e-6 (at most 1.38 %) and activity by up to 48 %, only at the end of irradiation
+  (Be-8 from C-12(n,n'α)); every change is inside its bound (P148; P148 closed FAIL on its CI gate and P150 qualified
+  the same solver).
 
 **Added**
 
@@ -38,7 +52,7 @@
   margin and binding nuclides, a class-by-cooling-time strip and the earliest step within each class. Save the
   spec with its result input and the result exactly as `actinv waste` writes it. The browser workbench opens waste
   results, intrusion-screen results and twin results with `waste_classification`, shows the same tables, and
-  opens, edits and downloads waste specs; it never classifies. Fourteen desktop pages.
+  opens, edits and downloads waste specs; it never classifies. Fourteen desktop pages; desktop 0.5.0-preview.1.
 
 ## v1.5.0 — 2026-10-16
 
