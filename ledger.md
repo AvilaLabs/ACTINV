@@ -3713,3 +3713,21 @@ af9eb2f (R1–R3) and f36efbb (R5, after Amendment B).
   classifier selftest pass (`results/p148/selftest.json`).
 
 P148 verdict: pass. Remaining before release: CI on the pushed commits.
+
+## Entry 213 — P148 R6 fails in CI; P148 closes FAIL; P120 Amendment D and P150 registered (2026-10-19)
+
+On the P148 evidence commit `c50fce2` the `controls` workflow failed (run 39360320526) in the P110 replay; the
+handbook, browser workbench, desktop, fns-iron and fusion-isotope workflows passed. The evidence had regenerated the
+P110 G1 and G2 records as changed baselines, but the P110 verdict pins their hashes and is itself frozen by the P113–P116
+history verifiers, so neither the records nor the verdict can move. Entry 212 stated "P148 verdict: pass" before CI had
+run; that was premature. R6 requires CI green on the pushed commit and Amendment B used P148's one repair round, so
+**P148 closes FAIL on R6**. R1–R5 stand as recorded in entry 212. Preserved: `results/failures/p148/r6_ci_attempt1/`
+(the six workflow conclusions, the failed step's log, and the P110 ledger binding record).
+
+The cause is the P148 ledger: the nine P110 outputs embed 120 `rate_pruning` blocks, all unpruned, and P148 changed
+that block's fields. Outside those blocks the outputs are byte-identical to the pre-P148 ones, and mapping the unpruned
+block back reproduces all nine sealed digests. The owner approved a P120-style repair. Registered before the repair
+commit: **P120 Amendment D** `c8d3dd050ab4efb5e190eca861d5a077910ec1c92a1c6e90ce45e9fb8610168c` (G1 maps only the exact unpruned P148 block before
+its digest; the sealed P110 records are restored) and **P150** `7664bd75600c5dacecc2c4df72582ed8d7a78f7d4e183d382e5b72d76df341ab` (the unchanged
+P148 solver qualified on CI, as P142 did for P116). The `check_p110.py` edit was drafted in the working tree to
+measure the binding before this registration; it is committed only after it.
