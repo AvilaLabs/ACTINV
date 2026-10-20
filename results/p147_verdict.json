@@ -1,0 +1,63 @@
+{
+ "amendments_sha256": {
+  "ACTINV-P147_AMENDMENT_A.md": "db28b5cf79bddd72ef06b02e954f33203f1f1369f4495d54dc5f97d1f92418a2",
+  "ACTINV-P147_AMENDMENT_B.md": "fc709580fda8267a9bb69bf755f6f458c65b7fe9c81bc004966f79ec1724ed7c"
+ },
+ "candidate": {
+  "amendments_sha256": {
+   "ACTINV-P147_AMENDMENT_A.md": "db28b5cf79bddd72ef06b02e954f33203f1f1369f4495d54dc5f97d1f92418a2",
+   "ACTINV-P147_AMENDMENT_B.md": "fc709580fda8267a9bb69bf755f6f458c65b7fe9c81bc004966f79ec1724ed7c"
+  },
+  "binary": "target/release/actinv",
+  "binary_sha256": "14cbadb91a2aaf406af8c7909421b4c2a08da0fa9f60d3fe588e8beb04006355",
+  "commit": "4a2c6d2e5f40dac22a9c692bfd12380ee0fff704",
+  "protocol_sha256": "da238b312800646e12b2e924ea90dbb327fcf4f969a5aee7dfdd6e315fde9212",
+  "tree_clean": true
+ },
+ "ci": {
+  "commit": "5db43bc9c54652121c071e305a0e397b3f79764e",
+  "note": "workflows triggered by the push; Build handbook and Build browser workbench are path-filtered and did not trigger on this push (both succeeded on 4a2c6d2, whose docs changes are unchanged since)",
+  "runs": [
+   {
+    "conclusion": "success",
+    "name": "controls",
+    "run_id": 39277118025
+   },
+   {
+    "conclusion": "success",
+    "name": "desktop builds",
+    "run_id": 39277118159
+   },
+   {
+    "conclusion": "success",
+    "name": "fns-iron",
+    "run_id": 39277118077
+   },
+   {
+    "conclusion": "success",
+    "name": "fusion-isotope",
+    "run_id": 39277118215
+   }
+  ]
+ },
+ "evidence_candidates_consistent": true,
+ "gate_file_sha256": {
+  "e1": "ce2f2db49f5ec82b6740a0e937e9baf68020a36840ee8c10bfe263d4e01d6201",
+  "e2": "caeedd0549924601c1d208a655c7405ddc189b2078cfcf73fb14ae0462990e28",
+  "e3": "b0b976d8f5fb4b4c25f21e8d48344392f7acd869085768b52776f25e0e3e61e8",
+  "e4": "29ba62aa3caf61ddc895bef58dc97d26b8db8bf89eb22de0d2fec03a5ede28e4",
+  "e5": "4d61c3de393deb6ccdf3cb7baaca27c48e963620be26d53db2162705c436248a",
+  "e6": "5e3340e5fc4ae200dd679d917a88ef603eaea9ab668ea85302928539ea724541"
+ },
+ "gates": {
+  "E1": true,
+  "E2": true,
+  "E3": true,
+  "E4": true,
+  "E5": true,
+  "E6": true
+ },
+ "protocol_sha256": "da238b312800646e12b2e924ea90dbb327fcf4f969a5aee7dfdd6e315fde9212",
+ "schema": "actinv-p147-verdict-1",
+ "verdict": "P147-PASS"
+}

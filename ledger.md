@@ -3770,3 +3770,12 @@ scientific evidence. P148 stays FAIL on R6 (entry 213).
 `controls/check_p149.py` (selftest passes), with the data choices and definitions the protocol left open (A1–A8).
 Development runs of every driver on the P148 binary are disclosed in A9 with the changes they led to; none is
 evidence. The evidence runs S0–S6 on the revision release.
+
+## Entry 217 — P147 verdict: mixed packages of discrete items and encapsulation (2026-10-20)
+
+**P147-PASS** (`results/p147_verdict.json`). E1–E5 and the local half of E6 as entry 207; the four workflows the push
+triggered on the evidence commit `5db43bc` succeeded, `controls` among them (`results/p147/ci_runs.json`; the handbook
+and browser workflows are path-filtered and did not trigger on that push; both succeeded on `4a2c6d2`, and docs and
+web are unchanged between the two). The phase took its one repair round (Amendment B); attempt 1 stays preserved
+under `results/failures/p147/`. The verdict was not recorded when CI finished on 2026-10-17; it is recorded now from
+the same runs.
