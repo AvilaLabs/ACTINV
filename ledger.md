@@ -3762,3 +3762,11 @@ desktop builds 39366837510, fns-iron 39366837453, fusion-isotope 39366837576 (`r
 handbook and browser-workbench workflows are path-filtered and were not triggered. Amendment D holds (D1–D4).
 **P150-PASS** (`results/p150_verdict.json`): the P148 solver is qualified on CI, with P148's R1–R5 (entry 212) as its
 scientific evidence. P148 stays FAIL on R6 (entry 213).
+
+## Entry 216 — P149 Amendment A registered before the evidence (2026-10-20)
+
+**P149 Amendment A** `9fceff46bdff531f9fb193e8524a98b1e26969217ead092bd878ace4210e3218`: the study drivers `controls/p149_s0_regenerate.py` to
+`p149_s6_scaling.py`, the 40-digit dense reference `controls/p149_mp_dense.py` and the checker
+`controls/check_p149.py` (selftest passes), with the data choices and definitions the protocol left open (A1–A8).
+Development runs of every driver on the P148 binary are disclosed in A9 with the changes they led to; none is
+evidence. The evidence runs S0–S6 on the revision release.
