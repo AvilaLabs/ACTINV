@@ -274,7 +274,8 @@ created.
 - [x] Desktop: attach the `desktop builds` artifacts and checksums from the release commit to a
   `desktop-v0.5.0-preview.1` GitHub pre-release and paste its notes.
 - [ ] Production smoke from PyPI and crates.io; record the release in `results/release_v1.6.1.json`.
-- [ ] Run the P149 evidence studies on the 1.6.1 release binary (Amendment F).
+- [x] Run the P149 evidence studies on the 1.6.1 release binary (Amendment F): P149-COMPLETE with its repeat,
+  `results/p149_verdict.json` (ledger 225).
 - [x] Zenodo: the GitHub release archived 1.6.1 as 10.5281/zenodo.23539164 under the GitHub-linked concept
   10.5281/zenodo.22665067 (22181617 holds only the manual 1.0.1 upload); the JRNC revision cites it.
 - [x] Handbook and website: deploy the `actinv-web` bundle CI built from the release commit and check

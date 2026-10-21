@@ -1,0 +1,425 @@
+{
+ "rule": "identical apart from timing fields (protocol; Amendment C, C4; Amendment F, F4.2)",
+ "schema": "actinv-p149-repeat-comparison-1",
+ "studies": {
+  "s0": {
+   "classification": "differs",
+   "meets_repeat_criterion": false,
+   "records": {
+    "fns_eaf2010.json": {
+     "classification": "differs",
+     "compared_values": 15913,
+     "differences": [
+      {
+       "first": 0,
+       "path": "/cached_experiments",
+       "second": 132
+      },
+      {
+       "first": 132,
+       "path": "/fresh_experiments",
+       "second": 0
+      }
+     ]
+    },
+    "g3_p11_sensitivity.json": {
+     "classification": "identical apart from timing fields",
+     "compared_values": 71,
+     "differences": []
+    },
+    "g4_p11_propagation.json": {
+     "classification": "identical apart from timing fields",
+     "compared_values": 33,
+     "differences": []
+    },
+    "g4_p12_fng.json": {
+     "classification": "identical apart from timing fields",
+     "compared_values": 102,
+     "differences": []
+    },
+    "g4_p9_pulses_openmc.json": {
+     "classification": "identical apart from timing fields",
+     "compared_values": 118,
+     "differences": []
+    },
+    "g5_p9_alara.json": {
+     "classification": "differs in work-directory paths and in hashes of input files that contain those paths only",
+     "compared_values": 182,
+     "differences": [
+      {
+       "first": "<HOME>/.p9c/g5/fendl2-fe56-np.npz",
+       "path": "/actinv/certificate/inputs/library/path",
+       "second": "<HOME>/.p9d/g5/fendl2-fe56-np.npz"
+      },
+      {
+       "first": "<HOME>/.p9c/g5/fendl2-fe56-np_index.json",
+       "path": "/actinv/certificate/inputs/library_index/path",
+       "second": "<HOME>/.p9d/g5/fendl2-fe56-np_index.json"
+      },
+      {
+       "first": "<HOME>/.p9c/g5/fendl2-fe56-np.npz",
+       "path": "/actinv/certificate/library",
+       "second": "<HOME>/.p9d/g5/fendl2-fe56-np.npz"
+      },
+      {
+       "first": "<HOME>/.p9c/g5/fendl2-fe56-np_index.json",
+       "path": "/data/actinv_index",
+       "second": "<HOME>/.p9d/g5/fendl2-fe56-np_index.json"
+      },
+      {
+       "first": "<HOME>/.p9c/g5/fendl2-fe56-np.npz",
+       "path": "/data/actinv_library",
+       "second": "<HOME>/.p9d/g5/fendl2-fe56-np.npz"
+      },
+      {
+       "first": "<HOME>/.p9c/g5/fe56-flux",
+       "path": "/data/flux",
+       "second": "<HOME>/.p9d/g5/fe56-flux"
+      },
+      {
+       "first": "<HOME>/.p9c/g5/fendl2-fe56-np.eaf",
+       "path": "/identical_data_run/activation_subset",
+       "second": "<HOME>/.p9d/g5/fendl2-fe56-np.eaf"
+      },
+      {
+       "first": "<HOME>/.p9c/g5/convert-fe56",
+       "path": "/identical_data_run/conversion_input",
+       "second": "<HOME>/.p9d/g5/convert-fe56"
+      },
+      {
+       "first": "19eedd5f2f1fcdf8b9382c854040ed99b347801ae425d1666f1bf35715dc43dd",
+       "path": "/identical_data_run/conversion_input_sha256",
+       "second": "3d48e75c04f157fc5f144a121334e1e9800ef85b8d4850fa50db88712416e6ea"
+      },
+      {
+       "first": "<HOME>/.p9c/g5/fendl2-fe56-np-bin",
+       "path": "/identical_data_run/converted_library_stem",
+       "second": "<HOME>/.p9d/g5/fendl2-fe56-np-bin"
+      },
+      {
+       "first": "<HOME>/.p9c/g5/fe56-pulses",
+       "path": "/identical_data_run/run_input",
+       "second": "<HOME>/.p9d/g5/fe56-pulses"
+      },
+      {
+       "first": "403e19f7b9a70efc5d7659d67337be23531ae2ef81460323ae64293c1c0d4b14",
+       "path": "/identical_data_run/run_input_sha256",
+       "second": "4fd4418b0c09047e3242d72e0448663ca4c32b29046ecf8e9406a8837b086238"
+      }
+     ]
+    },
+    "s0.json": {
+     "classification": "differs",
+     "compared_values": 111,
+     "differences": [
+      {
+       "first": "    points=21 wall=0.61s cached=0\n 90/132   S 1996exp_7hour      points= 9 wall=0.62s cached=0\n100/132  Se 2000exp_5min       points=21 wall=0.58s cached=0\n110/132  Ta 1996exp_7hour      points=10 wall=0.55s cached=0\n120/132   V 1996exp_7hour      points= 7 wall=0.62s cached=0\n130/132  Zr 1996exp_5min       points=20 wall=0.58s cached=0\n132/132  Zr 2000exp_5min       points=21 wall=0.58s cached=0\n",
+       "path": "/fns/run/stderr_tail",
+       "second": "1 wall=0.61s cached=80\n 90/132   S 1996exp_7hour      points= 9 wall=0.62s cached=90\n100/132  Se 2000exp_5min       points=21 wall=0.58s cached=100\n110/132  Ta 1996exp_7hour      points=10 wall=0.55s cached=110\n120/132   V 1996exp_7hour      points= 7 wall=0.62s cached=120\n130/132  Zr 1996exp_5min       points=20 wall=0.58s cached=130\n132/132  Zr 2000exp_5min       points=21 wall=0.58s cached=132\n"
+      }
+     ]
+    }
+   }
+  },
+  "s1": {
+   "classification": "identical apart from timing fields",
+   "meets_repeat_criterion": true,
+   "records": {
+    "s1_fns_tendl2017_gas.json": {
+     "classification": "identical apart from timing fields",
+     "compared_values": 44343,
+     "differences": []
+    }
+   }
+  },
+  "s2": {
+   "classification": "identical apart from timing fields",
+   "meets_repeat_criterion": true,
+   "records": {
+    "s2_alara_nickel.json": {
+     "classification": "identical apart from timing fields",
+     "compared_values": 263,
+     "differences": []
+    }
+   }
+  },
+  "s3": {
+   "classification": "identical apart from timing fields",
+   "meets_repeat_criterion": true,
+   "records": {
+    "s3_histories.json": {
+     "classification": "identical apart from timing fields",
+     "compared_values": 6743,
+     "differences": []
+    }
+   }
+  },
+  "s4": {
+   "classification": "identical apart from timing fields",
+   "meets_repeat_criterion": true,
+   "records": {
+    "s4_doppler.json": {
+     "classification": "identical apart from timing fields",
+     "compared_values": 273,
+     "differences": []
+    }
+   }
+  },
+  "s5": {
+   "classification": "differs in work-directory paths and in hashes of input files that contain those paths only",
+   "meets_repeat_criterion": false,
+   "outputs": {
+    "fe": {
+     "first_order_output_without_ms": {
+      "classification": "identical apart from timing fields",
+      "compared_values": 245308,
+      "differences": []
+     },
+     "study_file_identical_after_work_directory_normalised": true
+    },
+    "fe_co100wppm": {
+     "first_order_output_without_ms": {
+      "classification": "identical apart from timing fields",
+      "compared_values": 286989,
+      "differences": []
+     },
+     "study_file_identical_after_work_directory_normalised": true
+    },
+    "ss316": {
+     "first_order_output_without_ms": {
+      "classification": "identical apart from timing fields",
+      "compared_values": 1541370,
+      "differences": []
+     },
+     "study_file_identical_after_work_directory_normalised": true
+    }
+   },
+   "records": {
+    "s5_covariance.json": {
+     "classification": "differs in work-directory paths and in hashes of input files that contain those paths only",
+     "compared_values": 3363,
+     "differences": [
+      {
+       "first": "dfcb78fbd7006946756114166cba32b08c0bda708cbcc452e4710b8c448b57af",
+       "path": "/cases/fe/sampling/study_sha256",
+       "second": "69d3face32159f5fa6865d54a828b1e2a8af2c2c175b83c2c338bbf0262035c8"
+      },
+      {
+       "first": "376c6f3774d70d32fc23b9d17ec1e07ec025092eb66d0f7ca86d9c374876a446",
+       "path": "/cases/fe_co100wppm/sampling/study_sha256",
+       "second": "d7e309cf3b2f10e2457d643f9b032ba5c436005fee3629bbc32830421a781865"
+      },
+      {
+       "first": "323d6efdf54e820e5b6136b18b03dbe9d9dac1a75431ea61330c3a8e7da11236",
+       "path": "/cases/ss316/sampling/study_sha256",
+       "second": "07389c1969a7cb8ed51c3236c25578f0433e0aa2b0c6d378daa27cf5787a165e"
+      }
+     ]
+    }
+   }
+  },
+  "s6": {
+   "classification": "differs in peak resident set only",
+   "meets_repeat_criterion": false,
+   "records": {
+    "s6_scaling.json": {
+     "classification": "differs in peak resident set only",
+     "compared_values": 384,
+     "differences": [
+      {
+       "first": 239208,
+       "path": "/cases/fe/default_outputs_cram16/none/peak_rss_kib",
+       "second": 239456
+      },
+      {
+       "first": 196896,
+       "path": "/cases/fe/default_outputs_cram16/rate/peak_rss_kib",
+       "second": 197204
+      },
+      {
+       "first": 230480,
+       "path": "/cases/fe/default_outputs_cram16/reach/peak_rss_kib",
+       "second": 229988
+      },
+      {
+       "first": 192.36328125,
+       "path": "/cases/fe/rows[0]/peak_rss_mib",
+       "second": 192.82421875
+      },
+      {
+       "first": 192.46484375,
+       "path": "/cases/fe/rows[1]/peak_rss_mib",
+       "second": 192.859375
+      },
+      {
+       "first": 192.2421875,
+       "path": "/cases/fe/rows[2]/peak_rss_mib",
+       "second": 192.94140625
+      },
+      {
+       "first": 192.171875,
+       "path": "/cases/fe/rows[3]/peak_rss_mib",
+       "second": 192.87109375
+      },
+      {
+       "first": 192.41015625,
+       "path": "/cases/fe/rows[4]/peak_rss_mib",
+       "second": 192.90234375
+      },
+      {
+       "first": 192.35546875,
+       "path": "/cases/fe/rows[5]/peak_rss_mib",
+       "second": 192.87109375
+      },
+      {
+       "first": 334284,
+       "path": "/cases/ss316/default_outputs_cram16/none/peak_rss_kib",
+       "second": 334492
+      },
+      {
+       "first": 196872,
+       "path": "/cases/ss316/default_outputs_cram16/rate/peak_rss_kib",
+       "second": 197376
+      },
+      {
+       "first": 323072,
+       "path": "/cases/ss316/default_outputs_cram16/reach/peak_rss_kib",
+       "second": 323188
+      },
+      {
+       "first": 192.3828125,
+       "path": "/cases/ss316/rows[0]/peak_rss_mib",
+       "second": 193.00390625
+      },
+      {
+       "first": 192.27734375,
+       "path": "/cases/ss316/rows[1]/peak_rss_mib",
+       "second": 193.0
+      },
+      {
+       "first": 192.4609375,
+       "path": "/cases/ss316/rows[2]/peak_rss_mib",
+       "second": 192.859375
+      },
+      {
+       "first": 192.37109375,
+       "path": "/cases/ss316/rows[3]/peak_rss_mib",
+       "second": 192.98828125
+      },
+      {
+       "first": 192.43359375,
+       "path": "/cases/ss316/rows[4]/peak_rss_mib",
+       "second": 192.87109375
+      },
+      {
+       "first": 192.42578125,
+       "path": "/cases/ss316/rows[5]/peak_rss_mib",
+       "second": 192.88671875
+      },
+      {
+       "first": 1040812,
+       "path": "/cases/u_nat/default_outputs_cram16/none/peak_rss_kib",
+       "second": 1041092
+      },
+      {
+       "first": 550536,
+       "path": "/cases/u_nat/default_outputs_cram16/rate/peak_rss_kib",
+       "second": 551488
+      },
+      {
+       "first": 1031664,
+       "path": "/cases/u_nat/default_outputs_cram16/reach/peak_rss_kib",
+       "second": 1032272
+      },
+      {
+       "first": 131.4296875,
+       "path": "/cases/u_nat/rows[0]/peak_rss_mib",
+       "second": 131.8515625
+      },
+      {
+       "first": 131.39453125,
+       "path": "/cases/u_nat/rows[1]/peak_rss_mib",
+       "second": 131.93359375
+      },
+      {
+       "first": 131.37109375,
+       "path": "/cases/u_nat/rows[2]/peak_rss_mib",
+       "second": 131.984375
+      },
+      {
+       "first": 131.41796875,
+       "path": "/cases/u_nat/rows[3]/peak_rss_mib",
+       "second": 131.9453125
+      },
+      {
+       "first": 131.34375,
+       "path": "/cases/u_nat/rows[4]/peak_rss_mib",
+       "second": 132.0234375
+      },
+      {
+       "first": 131.38671875,
+       "path": "/cases/u_nat/rows[5]/peak_rss_mib",
+       "second": 131.81640625
+      },
+      {
+       "first": 397796,
+       "path": "/cases/w/default_outputs_cram16/none/peak_rss_kib",
+       "second": 398000
+      },
+      {
+       "first": 196844,
+       "path": "/cases/w/default_outputs_cram16/rate/peak_rss_kib",
+       "second": 197252
+      },
+      {
+       "first": 344608,
+       "path": "/cases/w/default_outputs_cram16/reach/peak_rss_kib",
+       "second": 344448
+      },
+      {
+       "first": 192.35546875,
+       "path": "/cases/w/rows[0]/peak_rss_mib",
+       "second": 192.9296875
+      },
+      {
+       "first": 192.328125,
+       "path": "/cases/w/rows[1]/peak_rss_mib",
+       "second": 193.05078125
+      },
+      {
+       "first": 192.390625,
+       "path": "/cases/w/rows[2]/peak_rss_mib",
+       "second": 192.8515625
+      },
+      {
+       "first": 192.35546875,
+       "path": "/cases/w/rows[3]/peak_rss_mib",
+       "second": 192.91796875
+      },
+      {
+       "first": 192.296875,
+       "path": "/cases/w/rows[4]/peak_rss_mib",
+       "second": 192.88671875
+      },
+      {
+       "first": 192.34375,
+       "path": "/cases/w/rows[5]/peak_rss_mib",
+       "second": 192.91015625
+      }
+     ]
+    }
+   }
+  },
+  "s7": {
+   "classification": "identical apart from timing fields",
+   "meets_repeat_criterion": true,
+   "records": {
+    "s7_pruning_runs.json": {
+     "classification": "identical apart from timing fields",
+     "compared_values": 11441,
+     "differences": []
+    }
+   }
+  }
+ }
+}

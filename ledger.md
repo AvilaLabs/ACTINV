@@ -3925,3 +3925,25 @@ home-directory paths in the records were replaced by `<HOME>`, as for the 1.6.0 
 
 The repeat of Amendment F, F4.2 is running on the same binaries. Its comparison, the comparison with the 1.6.0 records
 (F4.3) and the verdict record follow in the next entry.
+
+## Entry 225 — P149 Amendment F repeat on 1.6.1: verdict P149-COMPLETE (2026-10-21)
+
+The repeat of Amendment F, F4.2 ran S0–S7 again on the attempt-6 binaries (unchanged before and after) into a separate
+directory with fresh work directories; every study exited 0 and no tracked file changed. Comparison against the
+evidence records (`results/p149/repeat_comparison.json`):
+- S1, S2, S3, S4 and S7 repeat identically apart from timing fields.
+- S0: `fns_eaf2010` differs in its cache counters and the run's stderr tail (the repeat reused the experiment cache);
+  `g5_p9_alara` in 12 work-directory paths and hashes of ALARA inputs that contain them. Every computed value repeats.
+- S5: each case's `sampling.study_sha256` only; the study files are identical once their work directories are
+  normalised, and every record value and first-order output without `ms` repeats.
+- S6: peak resident set only.
+
+As on 1.6.0, S0, S5 and S6 therefore do not meet the repeat rule as written and are reported with those fields under
+Amendment C, C4. No computed value differs between evidence and repeat.
+
+The information-only comparison with the 1.6.0 records (F4.3, `results/p149/v1.6.0_comparison.json`) finds, apart from
+binary identities and fingerprints derived from them, work-directory paths, cache counters, the cgroup scope name and
+peak resident set, exactly the expected difference: the W, 7 h default-outputs run without pruning completes on 1.6.1.
+
+Verdict: **P149-COMPLETE** on 1.6.1, `results/p149_verdict.json`. The 1.6.0 verdict stays in
+`results/p149_v1.6.0_verdict.json`.
