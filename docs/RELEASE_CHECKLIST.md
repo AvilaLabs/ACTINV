@@ -249,17 +249,32 @@ created.
 - [ ] Pre-tag gates: `cargo publish --dry-run` for `actinv-data`, `actinv-core` and `actinv-cli`,
   every `include_str!`/`include_bytes!` in `crates/` resolving inside its package, `cargo check --tests`,
   fmt and clippy `-D warnings`; local CI replay green.
-- [ ] Push the release commit and the `v1.6.0` tag in one atomic push; confirm `controls` and every
+- [x] Push the release commit and the `v1.6.0` tag in one atomic push; confirm `controls` and every
   other workflow green on the release commit.
-- [ ] Approve the `crates.io` and `pypi` environment gates; confirm all three crates and the
-  wheel/sdist set land at 1.6.0.
-- [ ] Attach packaged platform archives and `SHA256SUMS` to the `v1.6.0` GitHub release; paste the
-  release notes.
+- [x] Approve the `pypi` environment gate; the wheel/sdist set landed at 1.6.0 on 2026-10-20.
+- [x] Run the P149 evidence studies on the release binary (P149-COMPLETE, ledger 222). S6 found a pathway
+  defect, so 1.6.1 supersedes 1.6.0 as the revision release (owner direction, 2026-10-21). The remaining 1.6.0
+  steps (crates, GitHub releases, Zenodo, handbook and website) move to v1.6.1 below.
+
+## v1.6.1 (revision release, pathway fix) with desktop-v0.5.0-preview.1
+
+- [x] Fix the pathway decomposition's leakage-state index (`attribute_pathway_column`) with a unit test.
+- [x] Bump the workspace, `python`, `pyproject.toml`, inter-crate versions and `release-artifacts.yml` to 1.6.1;
+  the desktop stays 0.5.0-preview.1 on solver 1.6.1. Update README release links, the DATA_LIMITATIONS header,
+  `DESKTOP.md`, `DESKTOP_INSTALL.md`, the desktop release notes and the handbook's version references; write
+  `docs/RELEASE_NOTES_v1.6.1.md` and the changelog section; refresh `MANIFEST.sha256`.
+- [x] Pre-tag gates: `cargo publish --workspace --dry-run` packages and verifies `actinv-data`, `actinv-core` and
+  `actinv-cli`; `cargo check --workspace --tests`, fmt and clippy `--all-targets -D warnings` pass; the new unit
+  test and the trace-pathway tests pass.
+- [ ] Push the release commit and the `v1.6.1` tag in one atomic push; confirm every workflow green.
+- [ ] Approve the `crates.io` and `pypi` environment gates; confirm all three crates and the wheel/sdist set
+  land at 1.6.1.
+- [ ] Attach packaged platform archives and `SHA256SUMS` to the `v1.6.1` GitHub release; paste the release notes.
 - [ ] Desktop: attach the `desktop builds` artifacts and checksums from the release commit to a
   `desktop-v0.5.0-preview.1` GitHub pre-release and paste its notes.
-- [ ] Production smoke from PyPI and crates.io; record the release in `results/release_v1.6.0.json`.
-- [ ] Zenodo: archive the release as a new version under concept record 22181617 (the JRNC revision cites it).
+- [ ] Production smoke from PyPI and crates.io; record the release in `results/release_v1.6.1.json`.
+- [ ] Run the P149 evidence studies on the 1.6.1 release binary (Amendment F).
+- [ ] Zenodo: archive 1.6.1 as a new version under concept record 22181617 (the JRNC revision cites it).
 - [ ] Handbook and website: deploy the `actinv-web` bundle CI built from the release commit and check
   `/`, `/download/` and `/docs/` live; update AvilaLabs.org `/actinv` and `/actinv/docs`.
-- [ ] Run the P149 evidence studies on the release binary.
 - [ ] Remind the owner to rerun FARIS restart/cooling runs affected by P133.

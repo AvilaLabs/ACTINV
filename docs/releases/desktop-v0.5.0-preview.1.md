@@ -1,8 +1,9 @@
 # ACTINV Desktop 0.5.0-preview.1
 
 This preview adds a Waste class page to the desktop and waste views to the browser workbench. The desktop uses
-solver **1.6.0**, the same as the CLI and Python software release; see the
-[1.6.0 release notes](../RELEASE_NOTES_v1.6.0.md) for the solver changes, including the new rate-pruning rule. The
+solver **1.6.1**, the same as the CLI and Python software release; see the
+[1.6.0 release notes](../RELEASE_NOTES_v1.6.0.md) for the solver changes, including the new rate-pruning rule, and the
+[1.6.1 release notes](../RELEASE_NOTES_v1.6.1.md) for the pathway fix. The
 look is unchanged: the theme, colours, fonts and widget style stay as they were.
 
 ## Downloads

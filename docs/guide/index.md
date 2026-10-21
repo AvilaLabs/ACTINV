@@ -2,7 +2,7 @@
 
 ACTINV calculates which nuclides a material contains during irradiation and cooling. Supply a material composition, a particle-flux spectrum, a schedule, and evaluated nuclear data. ACTINV calculates inventories, activity, decay heat, and requested source terms and responses.
 
-This handbook covers **ACTINV 1.6.0** and nuclear-data catalog **1.1.0**. The downloadable desktop preview has a separate release history; [check its solver version](releases.md) before using a feature described here.
+This handbook covers **ACTINV 1.6.1** and nuclear-data catalog **1.1.0**. The downloadable desktop preview has a separate release history; [check its solver version](releases.md) before using a feature described here.
 
 Waste classification with nuclear-data uncertainty, impurity budgets under uncertainty, packages of discrete items, and a proven bound for rate pruning are new in 1.6; see [What's new in 1.6](whats-new-1.6.md). FISPACT-II deck import, step summaries and report tables, photon dose, production routes, regulatory tables, and geometry self-shielding are new in 1.5; see [What's new in 1.5](whats-new.md). Coming from FISPACT-II? Start with [Coming from FISPACT-II](fispact-migration.md#coming-from-fispact-ii). Gas production, transport-tally error propagation, impurity budgets, lean mesh output, and photonuclear activation arrived in 1.4.0. [Versions and releases](releases.md) lists what each release and the desktop include.
 

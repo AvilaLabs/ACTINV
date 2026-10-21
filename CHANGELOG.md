@@ -1,5 +1,15 @@
 # Changelog
 
+## v1.6.1 — 2026-10-21
+
+**Fixed**
+
+- A trace-mode run with pathway output (the default outputs) could stop with `index out of bounds` in the pathway
+  decomposition. This happened when a bulk nuclide's reaction product has no decay data, so the product is the
+  leakage state, and that source's column held a positive round-off value at a real nuclide. Found on unpruned W, 7 h
+  (P149 S6). A source whose first product is the leakage state feeds only that sink, which is never a pathway
+  target, so it now carries no chain. Runs that completed in 1.6.0 give the same results.
+
 ## v1.6.0 — 2026-10-20
 
 **Changed (default results)**

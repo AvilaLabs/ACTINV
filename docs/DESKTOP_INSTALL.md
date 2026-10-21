@@ -1,6 +1,6 @@
 # Install ACTINV Desktop preview
 
-Desktop **0.5.0-preview.1** uses solver **1.6.0**. Desktop packaging has its own
+Desktop **0.5.0-preview.1** uses solver **1.6.1**. Desktop packaging has its own
 version and `desktop-v…` tags; it does not change the scientific release verdicts.
 Download the [unsigned desktop preview](https://github.com/AvilaLabs/ACTINV/releases/tag/desktop-v0.5.0-preview.1).
 Software releases (`v…` tags) do not contain the desktop. Development candidates remain

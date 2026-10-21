@@ -4,11 +4,17 @@ Software, nuclear data, and desktop packages have separate release histories. Re
 
 | Component | Version covered here | Release |
 | --- | --- | --- |
-| CLI, Python, and Rust workspace | 1.6.0 | [v1.6.0](https://github.com/AvilaLabs/ACTINV/releases/tag/v1.6.0) |
+| CLI, Python, and Rust workspace | 1.6.1 | [v1.6.1](https://github.com/AvilaLabs/ACTINV/releases/tag/v1.6.1) |
 | Embedded nuclear-data catalog | 1.1.0 | [data-v1.1.0](https://github.com/AvilaLabs/ACTINV/releases/tag/data-v1.1.0) |
-| Desktop preview | 0.5.0-preview.1, using solver 1.6.0 | [desktop preview](https://github.com/AvilaLabs/ACTINV/releases/tag/desktop-v0.5.0-preview.1) |
+| Desktop preview | 0.5.0-preview.1, using solver 1.6.1 | [desktop preview](https://github.com/AvilaLabs/ACTINV/releases/tag/desktop-v0.5.0-preview.1) |
 
 Use `actinv --version` for the executable. `actinv data manifest` prints its embedded catalog. Source-built desktop candidates may use a newer solver than the published preview; inspect their package/build record.
+
+## New in 1.6.1
+
+Release 1.6.1 fixes one defect of 1.6.0. A trace-mode run with pathway output, which the default outputs
+include, could stop with an `index out of bounds` error. This happened when a reaction of a bulk nuclide led to a
+product with no decay data. Runs that completed in 1.6.0 give the same results in 1.6.1.
 
 ## New in 1.6.0
 
@@ -38,7 +44,7 @@ python -m pip install --upgrade actinv
 For an exact Rust CLI version:
 
 ```bash
-cargo install --locked --force actinv-cli --version 1.6.0
+cargo install --locked --force actinv-cli --version 1.6.1
 ```
 
 A software upgrade does not silently replace installed data. Revisit optional settings and coverage when a release changes their behavior, and retain the executable or source version for older results.

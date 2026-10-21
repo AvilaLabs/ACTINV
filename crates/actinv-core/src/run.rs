@@ -268,6 +268,39 @@ pub(crate) fn name_of(za: i32, liso: i32) -> String {
     }
 }
 
+/// Adds one pathway source's column, over the `keep.len()` kept states, to the chains of each target.
+/// A source whose first product is the leakage state feeds only that sink, which is never a target,
+/// so its column carries no chain; anything else in it is round-off of an exact zero.
+fn attribute_pathway_column(
+    per: &mut BTreeMap<String, Vec<Pathway>>,
+    col: &[f64],
+    keep: &[usize],
+    ch: &chain::Chain,
+    removed: Option<usize>,
+    (row, from): &(usize, (i32, i32)),
+) {
+    if *row == ch.leak {
+        return;
+    }
+    for (idx, v) in col.iter().enumerate().take(keep.len()) {
+        if *v <= 0.0 {
+            continue;
+        }
+        let g = keep[idx];
+        if g == ch.leak || g == ch.unit || Some(g) == removed {
+            continue;
+        }
+        per.entry(name_of(ch.keys[g].0, ch.keys[g].1))
+            .or_default()
+            .push(Pathway {
+                from: name_of(from.0, from.1),
+                first_product: name_of(ch.keys[*row].0, ch.keys[*row].1),
+                atoms_per_g: *v,
+                fraction: 0.0,
+            });
+    }
+}
+
 /// Moves the fraction `1 - kept` of every listed state of `vector` to the removal sink at
 /// `sink` and returns the amount moved (the PARTITION operator, one element). The same linear
 /// map acts on the state, its tangents and the comparison solution.
@@ -6455,25 +6488,8 @@ impl PreparedRun {
                 }
                 // report at every step, ranked, keeping chains above 1e-6 of the nuclide
                 let mut per: BTreeMap<String, Vec<Pathway>> = BTreeMap::new();
-                for (k, col) in cols.iter().enumerate() {
-                    let (row, from) = &origins[k];
-                    for (idx, v) in col.iter().enumerate().take(m) {
-                        if *v <= 0.0 {
-                            continue;
-                        }
-                        let g = keep[idx];
-                        if g == ch.leak || g == ch.unit || Some(g) == removed {
-                            continue;
-                        }
-                        per.entry(name_of(ch.keys[g].0, ch.keys[g].1))
-                            .or_default()
-                            .push(Pathway {
-                                from: name_of(from.0, from.1),
-                                first_product: name_of(ch.keys[*row].0, ch.keys[*row].1),
-                                atoms_per_g: *v,
-                                fraction: 0.0,
-                            });
-                    }
+                for (col, origin) in cols.iter().zip(&origins) {
+                    attribute_pathway_column(&mut per, col, &keep[..m], ch, removed, origin);
                 }
                 // a bulk nuclide that is also a reaction parent can feed one product by decay and by
                 // reaction: one chain per (from, first product)
@@ -9373,6 +9389,49 @@ mod gas_prepared_tests {
         assert!(result.ledger["kerma"]["power"]
             .get("pathways_suppressed")
             .is_none());
+    }
+
+    #[test]
+    fn pathway_source_into_the_leakage_state_carries_no_chain() {
+        // v1.6.0 indexed the nuclide list with the leakage row and panicked when such a column held a
+        // positive round-off value at a real nuclide (unpruned W, 7 h, P149 S6)
+        let keys = vec![(26056, 0), (26057, 0)];
+        let ch = chain::Chain {
+            index: keys.iter().enumerate().map(|(i, k)| (*k, i)).collect(),
+            keys,
+            lambda: vec![0.0; 2],
+            decay: Vec::new(),
+            leak: 2,
+            unit: 3,
+            n: 4,
+            ledger: chain::ChainLedger::default(),
+        };
+        let keep = [0, 1, 2];
+        let mut per = BTreeMap::new();
+        attribute_pathway_column(
+            &mut per,
+            &[0.0, 1e-30, 5.0],
+            &keep,
+            &ch,
+            None,
+            &(ch.leak, (26056, 0)),
+        );
+        assert!(per.is_empty());
+        attribute_pathway_column(
+            &mut per,
+            &[0.0, 3.0, 0.0],
+            &keep,
+            &ch,
+            None,
+            &(1, (26056, 0)),
+        );
+        let chains = &per["Fe57"];
+        assert_eq!(chains.len(), 1);
+        assert_eq!(
+            (chains[0].from.as_str(), chains[0].first_product.as_str()),
+            ("Fe56", "Fe57")
+        );
+        assert_eq!(chains[0].atoms_per_g, 3.0);
     }
 
     #[test]
