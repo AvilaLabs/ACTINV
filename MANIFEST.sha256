@@ -1321,6 +1321,9 @@ cfd86c2c5ac15d76ec2358c6bd196a6362b46bcc889160c06439975dc5ae8f3a  ./interchange/
 f35e9ce33c938d768673712aa44a9eda5f8bc4d787694201f1915d80c082bd3f  ./packaging/desktop.json
 371becebd005e36a596da0a9c2b9ceae85acdb870a659b55ca3fc1350c783e7e  ./packaging/install-linux.sh
 10b54f6c9a302806d003639c7783c038f9c29589a0f23cfb579c78fa3c744884  ./packaging/windows.rc
+a72f80c490972f97e319ee7db7943bad2f2fa67fa739e163105ef282dd41dd98  ./paper/jrnc-revision/analysis/fns_error_metrics.py
+b18fdb87c13395c5f44f5be7d7a15724a00feb4e8273aa04a0bb27d2ee77f2c1  ./paper/jrnc-revision/analysis/out/fns_error_metrics.json
+4e8d4c2c923a0c61f3afbcb4a756f926afc13bf4c6c755db909016d65f9e18e4  ./paper/jrnc-revision/analysis/out/fns_error_metrics.md
 97a5c38f2591006c8f8058e1aa6823a7c601e6e89c6062a0eef42080d27aca18  ./paper/tendl-threshold-note/.gitignore
 53bd1013ba18ea15cd795cfdfe8526037be022c9e09741f7d515be74783406f4  ./paper/tendl-threshold-note/EXECUTION_LOG.md
 5ff76c8b21aa08cb384464b73b3826e5fe201534d5dd9e64600bd822f5dff36f  ./paper/tendl-threshold-note/MANIFEST.sha256
