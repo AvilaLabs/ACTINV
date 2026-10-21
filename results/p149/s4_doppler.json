@@ -1,0 +1,397 @@
+{
+ "actinv_binary_sha256": "8845e93e5a83ceebf68ad26ec676f925e3ccdbd9b814b5d42325dbd134fdd36b",
+ "cases": [
+  {
+   "actinv_library_sha256": "9c4aa736a8d0c3bcb244671e63bb59114ea871265cc3d0a664ff84f400652eeb",
+   "gendf_sha256": "06eb63d018cf26fdb1449da6e200622df9c9e69f227b37e90584965974962cbe",
+   "groups_MT102": {
+    "actinv_b": 0.017635348234579885,
+    "by_region": {
+     "above_resolved": {
+      "groups": 131,
+      "maximum_relative": 9.584197575762256e-05,
+      "median_relative": 1.1546006823664413e-05,
+      "worst_group": 670,
+      "worst_group_high_ev": 52000000.0,
+      "worst_group_low_ev": 50000000.0
+     },
+     "inside_resolved": {
+      "groups": 546,
+      "maximum_relative": 0.00018605557348351428,
+      "median_relative": 3.456073828263687e-05,
+      "worst_group": 379,
+      "worst_group_high_ev": 398.1072,
+      "worst_group_low_ev": 380.1894
+     },
+     "straddling_top": {
+      "groups": 1,
+      "maximum_relative": 6.255659641772868e-05,
+      "median_relative": 6.255659641772868e-05,
+      "worst_group": 546,
+      "worst_group_high_ev": 870963.6,
+      "worst_group_low_ev": 831763.8
+     }
+    },
+    "groupr_b": 0.01763863,
+    "groups_compared": 678,
+    "maximum_relative": 0.00018605557348351428,
+    "median_relative": 2.4214904986960095e-05,
+    "worst_group": 379,
+    "worst_group_high_ev": 398.1072,
+    "worst_group_low_ev": 380.1894
+   },
+   "njoy_deck_sha256": "b5265dbbbceac2485f223245a080dfd716ea49259b4b5d08314776f03f04fbfe",
+   "pendf_sha256": "a90da9274b5566e1e86b5da2d0d14379620fa950f09b269fc9d4a2c2fb0519e7",
+   "pointwise": {
+    "MT102": {
+     "energy_at_maximum_ev": 370599.8,
+     "maximum_relative": 0.0008822196461332119,
+     "median_relative": 9.937982794364314e-05,
+     "p99_relative": 0.00023827185063531267,
+     "points": 122419
+    },
+    "MT2": {
+     "energy_at_maximum_ev": 24578.56,
+     "maximum_relative": 0.0014054666567884723,
+     "median_relative": 9.901736891642595e-05,
+     "p99_relative": 0.0002866490090876491,
+     "points": 122419
+    }
+   },
+   "resolved_range_ev": [
+    1e-05,
+    850000.0
+   ],
+   "target": "Fe56",
+   "temperature_K": 293.6
+  },
+  {
+   "actinv_library_sha256": "356844099a60dccdcd40d86c10b20c99dcb93b51ec5f7e36cfd8456e6c688f0c",
+   "gendf_sha256": "f56a4c4afa7c46932bdfa9ab4adff8570f4b08323d0a42cc4a55a83705ceeac3",
+   "groups_MT102": {
+    "actinv_b": 0.0176353458212337,
+    "by_region": {
+     "above_resolved": {
+      "groups": 131,
+      "maximum_relative": 9.615869216374075e-05,
+      "median_relative": 1.1395460184661722e-05,
+      "worst_group": 670,
+      "worst_group_high_ev": 52000000.0,
+      "worst_group_low_ev": 50000000.0
+     },
+     "inside_resolved": {
+      "groups": 546,
+      "maximum_relative": 0.0001856255629012587,
+      "median_relative": 3.58150751979586e-05,
+      "worst_group": 379,
+      "worst_group_high_ev": 398.1072,
+      "worst_group_low_ev": 380.1894
+     },
+     "straddling_top": {
+      "groups": 1,
+      "maximum_relative": 0.00010830609299487951,
+      "median_relative": 0.00010830609299487951,
+      "worst_group": 546,
+      "worst_group_high_ev": 870963.6,
+      "worst_group_low_ev": 831763.8
+     }
+    },
+    "groupr_b": 0.01763862,
+    "groups_compared": 678,
+    "maximum_relative": 0.0001856255629012587,
+    "median_relative": 2.3441140336781395e-05,
+    "worst_group": 379,
+    "worst_group_high_ev": 398.1072,
+    "worst_group_low_ev": 380.1894
+   },
+   "njoy_deck_sha256": "cd73c226805fb383a46e8374e998a7db744c79e3ea9dd1b3ea539af892bf9b60",
+   "pendf_sha256": "7967fc872dfc0dcf16a49b92652613171942dd2fcdc21435eacbe75d53ca0a53",
+   "pointwise": {
+    "MT102": {
+     "energy_at_maximum_ev": 370599.8,
+     "maximum_relative": 0.0008613106634930742,
+     "median_relative": 9.979880773431714e-05,
+     "p99_relative": 0.00023652861931493528,
+     "points": 117164
+    },
+    "MT2": {
+     "energy_at_maximum_ev": 24580.77,
+     "maximum_relative": 0.0013961853502183841,
+     "median_relative": 9.512895146381621e-05,
+     "p99_relative": 0.00028117414352669804,
+     "points": 117164
+    }
+   },
+   "resolved_range_ev": [
+    1e-05,
+    850000.0
+   ],
+   "target": "Fe56",
+   "temperature_K": 600.0
+  },
+  {
+   "actinv_library_sha256": "3a3021ec6a0083ce3af0d8a94ee9246765ee6baee816dbbd47d0a06578564efa",
+   "gendf_sha256": "ec44cb802f591a9e2e5b792ea7485a7a7150595d3e266a1c2e90b7a2ba954657",
+   "groups_MT102": {
+    "actinv_b": 0.017635341087687214,
+    "by_region": {
+     "above_resolved": {
+      "groups": 131,
+      "maximum_relative": 9.659536555439897e-05,
+      "median_relative": 1.1324814415444885e-05,
+      "worst_group": 670,
+      "worst_group_high_ev": 52000000.0,
+      "worst_group_low_ev": 50000000.0
+     },
+     "inside_resolved": {
+      "groups": 546,
+      "maximum_relative": 0.00018532709282562858,
+      "median_relative": 3.557954765546199e-05,
+      "worst_group": 379,
+      "worst_group_high_ev": 398.1072,
+      "worst_group_low_ev": 380.1894
+     },
+     "straddling_top": {
+      "groups": 1,
+      "maximum_relative": 0.00016220245780602425,
+      "median_relative": 0.00016220245780602425,
+      "worst_group": 546,
+      "worst_group_high_ev": 870963.6,
+      "worst_group_low_ev": 831763.8
+     }
+    },
+    "groupr_b": 0.01763861,
+    "groups_compared": 678,
+    "maximum_relative": 0.00018532709282562858,
+    "median_relative": 2.2859773576420287e-05,
+    "worst_group": 379,
+    "worst_group_high_ev": 398.1072,
+    "worst_group_low_ev": 380.1894
+   },
+   "njoy_deck_sha256": "c1809bc60dc3becc04543d7e499df76214ecf5665fcb91d0e3d5996af796c714",
+   "pendf_sha256": "dc45394bd1b7cecd2752cd6ed99672946e141691c5405a729b876b4eca529439",
+   "pointwise": {
+    "MT102": {
+     "energy_at_maximum_ev": 370599.8,
+     "maximum_relative": 0.0008380699735745233,
+     "median_relative": 9.993277242856803e-05,
+     "p99_relative": 0.00023599600077545298,
+     "points": 111750
+    },
+    "MT2": {
+     "energy_at_maximum_ev": 24580.77,
+     "maximum_relative": 0.0013824967500269977,
+     "median_relative": 8.986442568884877e-05,
+     "p99_relative": 0.00027407132460012046,
+     "points": 111750
+    }
+   },
+   "resolved_range_ev": [
+    1e-05,
+    850000.0
+   ],
+   "target": "Fe56",
+   "temperature_K": 1200.0
+  },
+  {
+   "actinv_library_sha256": "f4d640478cf12c86030df245175760ceabbb3d6b6ce88de7a20ce1e933cd5532",
+   "gendf_sha256": "6c0184011f739b9cb3e40ec5d62e2fc65d01816eb35f462db469d4cbf07780f1",
+   "groups_MT102": {
+    "actinv_b": 1.2881708926742226,
+    "by_region": {
+     "above_resolved": {
+      "groups": 209,
+      "maximum_relative": 0.00028696948031522264,
+      "median_relative": 2.314298588516648e-05,
+      "worst_group": 649,
+      "worst_group_high_ev": 20000000.0,
+      "worst_group_low_ev": 19800000.0
+     },
+     "inside_resolved": {
+      "groups": 440,
+      "maximum_relative": 0.0002161905129510268,
+      "median_relative": 1.18029564805255e-05,
+      "worst_group": 285,
+      "worst_group_high_ev": 5.248075,
+      "worst_group_low_ev": 5.011872
+     },
+     "straddling_top": {
+      "groups": 1,
+      "maximum_relative": 0.01211301844207336,
+      "median_relative": 0.01211301844207336,
+      "worst_group": 440,
+      "worst_group_high_ev": 6606.934,
+      "worst_group_low_ev": 6309.573
+     }
+    },
+    "groupr_b": 1.272754,
+    "groups_compared": 650,
+    "maximum_relative": 0.01211301844207336,
+    "median_relative": 1.4389031357472058e-05,
+    "worst_group": 440,
+    "worst_group_high_ev": 6606.934,
+    "worst_group_low_ev": 6309.573
+   },
+   "njoy_deck_sha256": "1fe59aa1d6fdcb0b8291f57634d098e97146aa72b321d4a98d84210dbbe13a1c",
+   "pendf_sha256": "e2f5b9a7be5d60a456fa5a386c880f8f52b1f5a58b30daa3b5fbcca2aa6e2d2f",
+   "pointwise": {
+    "MT102": {
+     "energy_at_maximum_ev": 187.3261,
+     "maximum_relative": 0.000292249788312628,
+     "median_relative": 9.320211739519447e-05,
+     "p99_relative": 0.0002148074725290622,
+     "points": 164055
+    },
+    "MT2": {
+     "energy_at_maximum_ev": 2388.565,
+     "maximum_relative": 0.00345150385532554,
+     "median_relative": 5.948220944655227e-05,
+     "p99_relative": 0.0002332660518508735,
+     "points": 164055
+    }
+   },
+   "resolved_range_ev": [
+    1e-05,
+    6500.0
+   ],
+   "target": "Ag107",
+   "temperature_K": 293.6
+  },
+  {
+   "actinv_library_sha256": "a404e17b1ca304e79e7803e9f97d942473123ab717b6275e3d0cd778fdf229c1",
+   "gendf_sha256": "61ccd9241183d5841251a554d6d856af48cf0851e5620932b5a290b3f540f696",
+   "groups_MT102": {
+    "actinv_b": 1.284476626631122,
+    "by_region": {
+     "above_resolved": {
+      "groups": 209,
+      "maximum_relative": 0.0003671630428062701,
+      "median_relative": 2.345811470488666e-05,
+      "worst_group": 649,
+      "worst_group_high_ev": 20000000.0,
+      "worst_group_low_ev": 19800000.0
+     },
+     "inside_resolved": {
+      "groups": 440,
+      "maximum_relative": 0.0002240619620703907,
+      "median_relative": 1.2472251421841846e-05,
+      "worst_group": 285,
+      "worst_group_high_ev": 5.248075,
+      "worst_group_low_ev": 5.011872
+     },
+     "straddling_top": {
+      "groups": 1,
+      "maximum_relative": 0.014134686667436695,
+      "median_relative": 0.014134686667436695,
+      "worst_group": 440,
+      "worst_group_high_ev": 6606.934,
+      "worst_group_low_ev": 6309.573
+     }
+    },
+    "groupr_b": 1.266574,
+    "groups_compared": 650,
+    "maximum_relative": 0.014134686667436695,
+    "median_relative": 1.4414709118411609e-05,
+    "worst_group": 440,
+    "worst_group_high_ev": 6606.934,
+    "worst_group_low_ev": 6309.573
+   },
+   "njoy_deck_sha256": "7f6815e7fe6c6c98b99b72c8f2c0cf546dcd162c1e22cb69625a7b35f989103d",
+   "pendf_sha256": "a65559185b14cd033fa6666fd2763e290d4220712f5aa830f8d374177bd34946",
+   "pointwise": {
+    "MT102": {
+     "energy_at_maximum_ev": 187.679,
+     "maximum_relative": 0.0002799190493277107,
+     "median_relative": 9.266069125617049e-05,
+     "p99_relative": 0.00021771797001842293,
+     "points": 140089
+    },
+    "MT2": {
+     "energy_at_maximum_ev": 749.7554,
+     "maximum_relative": 0.000672595187778432,
+     "median_relative": 4.837547189431302e-05,
+     "p99_relative": 0.00022594493570127073,
+     "points": 140089
+    }
+   },
+   "resolved_range_ev": [
+    1e-05,
+    6500.0
+   ],
+   "target": "Ag107",
+   "temperature_K": 600.0
+  },
+  {
+   "actinv_library_sha256": "b3df19c696b672dedde2301ec5ef7dc394fefcf68a59bf12eed2cbf797a2128e",
+   "gendf_sha256": "69de5871b3a2adb64aba2be14b26a177b8ad06baf51d30e40b00f10d7616a244",
+   "groups_MT102": {
+    "actinv_b": 1.2752833080772579,
+    "by_region": {
+     "above_resolved": {
+      "groups": 209,
+      "maximum_relative": 0.00047776261624378317,
+      "median_relative": 2.3427401177691793e-05,
+      "worst_group": 649,
+      "worst_group_high_ev": 20000000.0,
+      "worst_group_low_ev": 19800000.0
+     },
+     "inside_resolved": {
+      "groups": 440,
+      "maximum_relative": 0.0002234091716922523,
+      "median_relative": 1.1744554304511802e-05,
+      "worst_group": 285,
+      "worst_group_high_ev": 5.248075,
+      "worst_group_low_ev": 5.011872
+     },
+     "straddling_top": {
+      "groups": 1,
+      "maximum_relative": 0.014920641348834624,
+      "median_relative": 0.014920641348834624,
+      "worst_group": 440,
+      "worst_group_high_ev": 6606.934,
+      "worst_group_low_ev": 6309.573
+     }
+    },
+    "groupr_b": 1.256535,
+    "groups_compared": 650,
+    "maximum_relative": 0.014920641348834624,
+    "median_relative": 1.4303674225482516e-05,
+    "worst_group": 440,
+    "worst_group_high_ev": 6606.934,
+    "worst_group_low_ev": 6309.573
+   },
+   "njoy_deck_sha256": "23480f19a6d017fb4245e0e9d076239f8d16d03ad4890a220ec103799aecd72c",
+   "pendf_sha256": "788c73cdff3306eaf0e28c5c9872ae06cc8ec384874fa6b4cf2f56c8d65c27a9",
+   "pointwise": {
+    "MT102": {
+     "energy_at_maximum_ev": 1314.382,
+     "maximum_relative": 0.00027055145750305953,
+     "median_relative": 8.922099270308114e-05,
+     "p99_relative": 0.00022113869180609883,
+     "points": 113438
+    },
+    "MT2": {
+     "energy_at_maximum_ev": 2385.504,
+     "maximum_relative": 0.00034707923555246737,
+     "median_relative": 3.785295671529689e-05,
+     "p99_relative": 0.00021447798960608973,
+     "points": 113438
+    }
+   },
+   "resolved_range_ev": [
+    1e-05,
+    6500.0
+   ],
+   "target": "Ag107",
+   "temperature_K": 1200.0
+  }
+ ],
+ "dump_binary_sha256": "b4ab74d070dc2fa4fd14167bd5cad12622377e8e56a1204ae82f541b50fb98b4",
+ "groupr_weight": "iwt 3 (1/E), infinite dilution",
+ "njoy": "<HOME>/nuclear-data/njoy2016.79-build/njoy",
+ "njoy_commit": "ac5adf5f33d893e42f2eed7fb286b0d51c7580da",
+ "protocol": "P149 S4",
+ "reconstruction_tolerance": 0.0002,
+ "relative_cutoff": 1e-08,
+ "schema": "actinv-p149-s4-doppler-1"
+}

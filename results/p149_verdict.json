@@ -1,0 +1,123 @@
+{
+ "amendments_sha256": {
+  "ACTINV-P149_AMENDMENT_A.md": "9fceff46bdff531f9fb193e8524a98b1e26969217ead092bd878ace4210e3218",
+  "ACTINV-P149_AMENDMENT_B.md": "e018b8508668d6c14724c02a05ef775dd9e12edfd8003b15c7919beca98d3f9f",
+  "ACTINV-P149_AMENDMENT_C.md": "581415a1256e94c9cdf1da07163eec2b93271b71ffb45f7f3dc64a0d77c9da42",
+  "ACTINV-P149_AMENDMENT_D.md": "64500171ddbabc0c314126a6ad1fd3253fd10b774080337fd2c699a05a73c115",
+  "ACTINV-P149_AMENDMENT_E.md": "2bba94effec336f492bfcf24d88dc0ad10b423cc01884a30b79185b7bd18ee5a"
+ },
+ "binaries": {
+  "actinv": {
+   "built_from": "b07a7636db523c1c658a44a925fbc2e7fb02da1a (v1.6.0), workspace release build; the distributed CI binary is a separate build of the same commit",
+   "path": "target/release/actinv",
+   "sha256": "8845e93e5a83ceebf68ad26ec676f925e3ccdbd9b814b5d42325dbd134fdd36b"
+  },
+  "alara": {
+   "sha256": "7ef1d6324a611976bd19e24abf1472a1e0ca07d33e9b8760ae1c0673247877b0",
+   "version": "2.9.2"
+  }
+ },
+ "checker": {
+  "command": "python3 controls/check_p149.py --results results/p149 --out results/p149/check_p149.json",
+  "report_sha256": "c9413f6b2ded3dd12e2f9b493fdee036f43777d44557d053668813b1e8e0562f",
+  "verdict": "P149-COMPLETE"
+ },
+ "ci": {
+  "commit": "901cb2e612daf5dfa16d8d665cfe220bd3c161f6",
+  "runs": [
+   {
+    "conclusion": "success",
+    "name": "controls",
+    "run_id": 39516373799
+   },
+   {
+    "conclusion": "success",
+    "name": "desktop builds",
+    "run_id": 39516373793
+   },
+   {
+    "conclusion": "success",
+    "name": "fns-iron",
+    "run_id": 39516373816
+   },
+   {
+    "conclusion": "success",
+    "name": "fusion-isotope",
+    "run_id": 39516373804
+   }
+  ]
+ },
+ "failures_preserved": "results/failures/p149/ (s5_oom_attempt1, attempt2, attempt3, attempt4)",
+ "not_meeting_repeat_rule": {
+  "s0": "g5_p9_alara: 12 fields, each a work-directory path or the SHA-256 of an ALARA input file that contains that path; every computed value repeats",
+  "s5": "SS316 sampling.study_sha256 only: the study file names its work directory and is identical after normalising it; all 1,120 record values and the first-order output without ms repeat",
+  "s6": "peak resident set only (35 fields); every count, hash and failure message repeats"
+ },
+ "note": "P149-COMPLETE: every study has a checked record. S1-S4 repeat identically apart from timing fields. S0, S5 and S6 do not meet the repeat rule as written, because of non-timing environment fields listed above; under Amendment C, C4 they are reported with those fields and do not pass that criterion. No computed value differs between evidence and repeat.",
+ "protocol_sha256": "70c220c6faa424e2f42c2f2952ca8ce8cd0ed6e998c5015f53027985f1b0ba20",
+ "repeat_comparison": {
+  "record": "results/p149/repeat_comparison.json",
+  "rule": "identical apart from timing fields (protocol; Amendment C, C4)",
+  "sha256": "c4107220d91caf0cd86fb967f899d3cc89fc2c82fda9baf6e2135f75ab428ca8"
+ },
+ "schema": "actinv-p149-verdict-1",
+ "studies": {
+  "s0": {
+   "checker_status": "ok",
+   "driver_commit": "9e6c77397d6403ee7b4f1ee4ac225e80ec5b16ad",
+   "evidence_run": "attempt 4 (Amendment D)",
+   "record": "results/p149/s0/",
+   "repeat_classification": "differs in work-directory paths and in hashes of input files that contain those paths only",
+   "repeat_identical_apart_from_timing": false
+  },
+  "s1": {
+   "checker_status": "ok",
+   "driver_commit": "b07a7636db523c1c658a44a925fbc2e7fb02da1a",
+   "evidence_run": "attempt 1",
+   "record": "results/p149/s1_fns_tendl2017_gas.json",
+   "repeat_classification": "identical apart from timing fields",
+   "repeat_identical_apart_from_timing": true
+  },
+  "s2": {
+   "checker_status": "ok",
+   "driver_commit": "b07a7636db523c1c658a44a925fbc2e7fb02da1a",
+   "evidence_run": "attempt 1",
+   "record": "results/p149/s2_alara_nickel.json",
+   "repeat_classification": "identical apart from timing fields",
+   "repeat_identical_apart_from_timing": true
+  },
+  "s3": {
+   "checker_status": "ok",
+   "driver_commit": "b07a7636db523c1c658a44a925fbc2e7fb02da1a",
+   "evidence_run": "attempt 1",
+   "record": "results/p149/s3_histories.json",
+   "repeat_classification": "identical apart from timing fields",
+   "repeat_identical_apart_from_timing": true
+  },
+  "s4": {
+   "checker_status": "ok",
+   "driver_commit": "b07a7636db523c1c658a44a925fbc2e7fb02da1a",
+   "evidence_run": "attempt 1",
+   "record": "results/p149/s4_doppler.json",
+   "repeat_classification": "identical apart from timing fields",
+   "repeat_identical_apart_from_timing": true
+  },
+  "s5": {
+   "checker_status": "ok",
+   "driver_commit": "4ee04f21feee584ddccc1b851d8e3ee065893cbe",
+   "evidence_run": "attempt 2 (Amendment B)",
+   "record": "results/p149/s5_covariance.json",
+   "repeat_classification": "differs in work-directory paths and in hashes of input files that contain those paths only",
+   "repeat_identical_apart_from_timing": false
+  },
+  "s6": {
+   "checker_status": "ok",
+   "driver_commit": "901cb2e612daf5dfa16d8d665cfe220bd3c161f6",
+   "evidence_run": "attempt 5 (Amendment E)",
+   "record": "results/p149/s6_scaling.json",
+   "repeat_classification": "differs in peak resident set only",
+   "repeat_identical_apart_from_timing": false
+  }
+ },
+ "verdict": "P149-COMPLETE"
+}

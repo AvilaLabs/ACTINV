@@ -3848,3 +3848,31 @@ did not test for fission. The S6 record of attempt 4 is preserved under `results
 - Each uranium row records the nuclides with Z ≤ 72 at the end of irradiation, and the checker requires them. The
   selftest passes, and the amended checker fails the attempt-4 record.
 - S6 is rerun and repeated. The attempt-4 S0 record and its repeat stand.
+
+## Entry 222 — P149 verdict: P149-COMPLETE (2026-10-20)
+
+Attempt 5 ran S6 under Amendment E, then the checker. The natural-uranium case on the TENDL-2025 library kept 1,172
+of 3,873 states with rate pruning and produced 1,112 nuclides with Z ≤ 72 by the end of irradiation. W without
+pruning again stopped in the pathway calculation, and the record holds its status and message.
+
+The final checker run on `results/p149/` reports every study ok: **P149-COMPLETE**. Verdict record
+`results/p149_verdict.json` `17703c62221d980e5bdbb1ae5dc8a92bce11ea29141d39bed96831cb129ab401`. The evidence ran on `target/release/actinv` `8845e93e…`, the workspace release
+build of v1.6.0, and ALARA 2.9.2 `7ef1d632…`. CI on `901cb2e` is green.
+
+Each study was repeated into a separate directory and compared with its evidence record, ignoring timing fields
+(`results/p149/repeat_comparison.json`):
+- S1–S4 are identical apart from timing fields.
+- S0 differs in 12 fields of `g5_p9_alara`: work-directory paths and the SHA-256 of ALARA inputs that contain them.
+- S5 SS316 differs in `sampling.study_sha256` only. The study file names its work directory and is identical after
+  normalising it. All 1,120 record values and the first-order output without `ms` repeat. Fe and Fe+Co repeat between
+  attempts 1 and 2 on every compared value (1,094 and 1,095).
+- S6 differs in peak resident set only (35 fields).
+
+S0, S5 and S6 therefore do not meet the repeat rule as written. Amendment C, C4 reports them with their differing
+fields; no computed value differs between evidence and repeat.
+
+An earlier S5 SS316 repeat, run with numpy 2.5.2 rather than the evidence interpreter's 2.3.5, differed in the last
+place of the driver's variance decomposition. The repeat on the evidence interpreter matches. The attempt-1 S5 record
+and attempts 2–4 stay under `results/failures/p149/`.
+
+The v1.6.0 pathway defect found by S6 is open.

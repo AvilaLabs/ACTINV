@@ -1,0 +1,384 @@
+{
+ "rule": "identical apart from timing fields (protocol; Amendment C, C4)",
+ "schema": "actinv-p149-repeat-comparison-1",
+ "studies": {
+  "s0": {
+   "classification": "differs in work-directory paths and in hashes of input files that contain those paths only",
+   "evidence": "results/p149/s0/",
+   "meets_repeat_criterion": false,
+   "records": {
+    "fns_eaf2010.json": {
+     "classification": "identical apart from timing fields",
+     "compared_values": 15913,
+     "differences": []
+    },
+    "g3_p11_sensitivity.json": {
+     "classification": "identical apart from timing fields",
+     "compared_values": 71,
+     "differences": []
+    },
+    "g4_p11_propagation.json": {
+     "classification": "identical apart from timing fields",
+     "compared_values": 33,
+     "differences": []
+    },
+    "g4_p12_fng.json": {
+     "classification": "identical apart from timing fields",
+     "compared_values": 102,
+     "differences": []
+    },
+    "g4_p9_pulses_openmc.json": {
+     "classification": "identical apart from timing fields",
+     "compared_values": 118,
+     "differences": []
+    },
+    "g5_p9_alara.json": {
+     "classification": "differs in work-directory paths and in hashes of input files that contain those paths only",
+     "compared_values": 182,
+     "differences": [
+      {
+       "evidence": "<HOME>/.p9a/g5/fendl2-fe56-np.npz",
+       "path": "/actinv/certificate/inputs/library/path",
+       "repeat": "<HOME>/.p9b/g5/fendl2-fe56-np.npz"
+      },
+      {
+       "evidence": "<HOME>/.p9a/g5/fendl2-fe56-np_index.json",
+       "path": "/actinv/certificate/inputs/library_index/path",
+       "repeat": "<HOME>/.p9b/g5/fendl2-fe56-np_index.json"
+      },
+      {
+       "evidence": "<HOME>/.p9a/g5/fendl2-fe56-np.npz",
+       "path": "/actinv/certificate/library",
+       "repeat": "<HOME>/.p9b/g5/fendl2-fe56-np.npz"
+      },
+      {
+       "evidence": "<HOME>/.p9a/g5/fendl2-fe56-np_index.json",
+       "path": "/data/actinv_index",
+       "repeat": "<HOME>/.p9b/g5/fendl2-fe56-np_index.json"
+      },
+      {
+       "evidence": "<HOME>/.p9a/g5/fendl2-fe56-np.npz",
+       "path": "/data/actinv_library",
+       "repeat": "<HOME>/.p9b/g5/fendl2-fe56-np.npz"
+      },
+      {
+       "evidence": "<HOME>/.p9a/g5/fe56-flux",
+       "path": "/data/flux",
+       "repeat": "<HOME>/.p9b/g5/fe56-flux"
+      },
+      {
+       "evidence": "<HOME>/.p9a/g5/fendl2-fe56-np.eaf",
+       "path": "/identical_data_run/activation_subset",
+       "repeat": "<HOME>/.p9b/g5/fendl2-fe56-np.eaf"
+      },
+      {
+       "evidence": "<HOME>/.p9a/g5/convert-fe56",
+       "path": "/identical_data_run/conversion_input",
+       "repeat": "<HOME>/.p9b/g5/convert-fe56"
+      },
+      {
+       "evidence": "d431cd5120964aee61a6e5190dccc9818ec9b44c2c5cde5ec19b508e1b76d597",
+       "path": "/identical_data_run/conversion_input_sha256",
+       "repeat": "1fbbc631fddea450dc65e502afb26f52b647d431549fa114d7d5e49241711323"
+      },
+      {
+       "evidence": "<HOME>/.p9a/g5/fendl2-fe56-np-bin",
+       "path": "/identical_data_run/converted_library_stem",
+       "repeat": "<HOME>/.p9b/g5/fendl2-fe56-np-bin"
+      },
+      {
+       "evidence": "<HOME>/.p9a/g5/fe56-pulses",
+       "path": "/identical_data_run/run_input",
+       "repeat": "<HOME>/.p9b/g5/fe56-pulses"
+      },
+      {
+       "evidence": "519632a6468fc0ff7058d338d8d2d5cadd9bd6b3eab13e459181f7ee5320130d",
+       "path": "/identical_data_run/run_input_sha256",
+       "repeat": "3db1be4d6b58a2d9749e79bd1abaa26a6cc5de8a59e3a8d5dcf5bac3ea8aac8e"
+      }
+     ]
+    },
+    "s0.json": {
+     "classification": "identical apart from timing fields",
+     "compared_values": 111,
+     "differences": []
+    }
+   }
+  },
+  "s1_fns_tendl2017_gas": {
+   "classification": "identical apart from timing fields",
+   "compared_values": 44343,
+   "differences": [],
+   "evidence": "results/p149/s1_fns_tendl2017_gas.json",
+   "meets_repeat_criterion": true
+  },
+  "s2_alara_nickel": {
+   "classification": "identical apart from timing fields",
+   "compared_values": 263,
+   "differences": [],
+   "evidence": "results/p149/s2_alara_nickel.json",
+   "meets_repeat_criterion": true
+  },
+  "s3_histories": {
+   "classification": "identical apart from timing fields",
+   "compared_values": 6743,
+   "differences": [],
+   "evidence": "results/p149/s3_histories.json",
+   "meets_repeat_criterion": true
+  },
+  "s4_doppler": {
+   "classification": "identical apart from timing fields",
+   "compared_values": 273,
+   "differences": [],
+   "evidence": "results/p149/s4_doppler.json",
+   "meets_repeat_criterion": true
+  },
+  "s5_covariance": {
+   "classification": "differs in work-directory paths and in hashes of input files that contain those paths only",
+   "evidence": "results/p149/s5_covariance.json",
+   "fe_and_fe_co100wppm": {
+    "cases": {
+     "fe": {
+      "classification": "identical apart from timing fields",
+      "compared_values": 1094,
+      "differences": []
+     },
+     "fe_co100wppm": {
+      "classification": "identical apart from timing fields",
+      "compared_values": 1095,
+      "differences": []
+     }
+    },
+    "excluded_fields_amendment_b": [
+     "first_order_std",
+     "local_vs_nonlinear",
+     "result_sha256",
+     "sampled_over_first_order",
+     "study_sha256",
+     "tool_first_order"
+    ],
+    "repeat_of": "results/failures/p149/s5_oom_attempt1/s5_covariance_partial.json"
+   },
+   "meets_repeat_criterion": false,
+   "ss316": {
+    "classification": "differs in work-directory paths and in hashes of input files that contain those paths only",
+    "compared_values": 1120,
+    "differences": [
+     {
+      "evidence": "131470d3870820c55543d16dd0f44b2272d176b19d6748a978aecafda93a740c",
+      "path": "/sampling/study_sha256",
+      "repeat": "959b2f31d69877f0cf93a28ac055e015015314e455bde31da75d83445d545832"
+     }
+    ],
+    "first_order_output_without_ms": {
+     "classification": "identical apart from timing fields",
+     "compared_values": 1541370,
+     "differences": []
+    },
+    "interpreter": "/usr/bin/python3 2.3.5",
+    "note": "first_order.result_sha256 hashes an output that carries ms; the outputs it identifies are compared without ms instead (Amendment C, C4). An earlier repeat on another interpreter (numpy 2.5.2, evidence numpy 2.3.5) differed in the last place of the driver's variance decomposition and is not the repeat. sampling.study_sha256 hashes the generated study file, which names its work directory; the evidence and repeat study files are identical after the work directory is normalised."
+   }
+  },
+  "s6_scaling": {
+   "classification": "differs in peak resident set only",
+   "compared_values": 386,
+   "differences": [
+    {
+     "evidence": 239220,
+     "path": "/cases/fe/default_outputs_cram16/none/peak_rss_kib",
+     "repeat": 239360
+    },
+    {
+     "evidence": 196812,
+     "path": "/cases/fe/default_outputs_cram16/rate/peak_rss_kib",
+     "repeat": 196444
+    },
+    {
+     "evidence": 230792,
+     "path": "/cases/fe/default_outputs_cram16/reach/peak_rss_kib",
+     "repeat": 230380
+    },
+    {
+     "evidence": 192.21875,
+     "path": "/cases/fe/rows[0]/peak_rss_mib",
+     "repeat": 192.34375
+    },
+    {
+     "evidence": 192.38671875,
+     "path": "/cases/fe/rows[1]/peak_rss_mib",
+     "repeat": 192.3359375
+    },
+    {
+     "evidence": 192.33984375,
+     "path": "/cases/fe/rows[2]/peak_rss_mib",
+     "repeat": 192.33203125
+    },
+    {
+     "evidence": 192.19140625,
+     "path": "/cases/fe/rows[3]/peak_rss_mib",
+     "repeat": 192.35546875
+    },
+    {
+     "evidence": 192.2890625,
+     "path": "/cases/fe/rows[4]/peak_rss_mib",
+     "repeat": 192.40625
+    },
+    {
+     "evidence": 192.2265625,
+     "path": "/cases/fe/rows[5]/peak_rss_mib",
+     "repeat": 192.1640625
+    },
+    {
+     "evidence": 335044,
+     "path": "/cases/ss316/default_outputs_cram16/none/peak_rss_kib",
+     "repeat": 334764
+    },
+    {
+     "evidence": 196588,
+     "path": "/cases/ss316/default_outputs_cram16/rate/peak_rss_kib",
+     "repeat": 196596
+    },
+    {
+     "evidence": 323532,
+     "path": "/cases/ss316/default_outputs_cram16/reach/peak_rss_kib",
+     "repeat": 323360
+    },
+    {
+     "evidence": 192.39453125,
+     "path": "/cases/ss316/rows[0]/peak_rss_mib",
+     "repeat": 192.2734375
+    },
+    {
+     "evidence": 192.08984375,
+     "path": "/cases/ss316/rows[1]/peak_rss_mib",
+     "repeat": 192.30078125
+    },
+    {
+     "evidence": 192.32421875,
+     "path": "/cases/ss316/rows[2]/peak_rss_mib",
+     "repeat": 192.31640625
+    },
+    {
+     "evidence": 192.375,
+     "path": "/cases/ss316/rows[3]/peak_rss_mib",
+     "repeat": 192.2734375
+    },
+    {
+     "evidence": 192.30859375,
+     "path": "/cases/ss316/rows[4]/peak_rss_mib",
+     "repeat": 192.2265625
+    },
+    {
+     "evidence": 192.2265625,
+     "path": "/cases/ss316/rows[5]/peak_rss_mib",
+     "repeat": 192.3125
+    },
+    {
+     "evidence": 1040572,
+     "path": "/cases/u_nat/default_outputs_cram16/none/peak_rss_kib",
+     "repeat": 1040632
+    },
+    {
+     "evidence": 551268,
+     "path": "/cases/u_nat/default_outputs_cram16/rate/peak_rss_kib",
+     "repeat": 551340
+    },
+    {
+     "evidence": 1032148,
+     "path": "/cases/u_nat/default_outputs_cram16/reach/peak_rss_kib",
+     "repeat": 1032352
+    },
+    {
+     "evidence": 131.13671875,
+     "path": "/cases/u_nat/rows[0]/peak_rss_mib",
+     "repeat": 131.26171875
+    },
+    {
+     "evidence": 131.21875,
+     "path": "/cases/u_nat/rows[1]/peak_rss_mib",
+     "repeat": 131.26953125
+    },
+    {
+     "evidence": 131.1328125,
+     "path": "/cases/u_nat/rows[2]/peak_rss_mib",
+     "repeat": 131.36328125
+    },
+    {
+     "evidence": 131.2421875,
+     "path": "/cases/u_nat/rows[3]/peak_rss_mib",
+     "repeat": 131.2734375
+    },
+    {
+     "evidence": 131.21875,
+     "path": "/cases/u_nat/rows[4]/peak_rss_mib",
+     "repeat": 131.20703125
+    },
+    {
+     "evidence": 131.1640625,
+     "path": "/cases/u_nat/rows[5]/peak_rss_mib",
+     "repeat": 131.125
+    },
+    {
+     "evidence": 196492,
+     "path": "/cases/w/default_outputs_cram16/rate/peak_rss_kib",
+     "repeat": 196872
+    },
+    {
+     "evidence": 344940,
+     "path": "/cases/w/default_outputs_cram16/reach/peak_rss_kib",
+     "repeat": 344452
+    },
+    {
+     "evidence": 192.1875,
+     "path": "/cases/w/rows[0]/peak_rss_mib",
+     "repeat": 192.25
+    },
+    {
+     "evidence": 192.28125,
+     "path": "/cases/w/rows[1]/peak_rss_mib",
+     "repeat": 192.24609375
+    },
+    {
+     "evidence": 192.27734375,
+     "path": "/cases/w/rows[2]/peak_rss_mib",
+     "repeat": 192.36328125
+    },
+    {
+     "evidence": 192.36328125,
+     "path": "/cases/w/rows[3]/peak_rss_mib",
+     "repeat": 191.9921875
+    },
+    {
+     "evidence": 192.359375,
+     "path": "/cases/w/rows[4]/peak_rss_mib",
+     "repeat": 192.16015625
+    },
+    {
+     "evidence": 192.13671875,
+     "path": "/cases/w/rows[5]/peak_rss_mib",
+     "repeat": 192.1875
+    }
+   ],
+   "evidence": "results/p149/s6_scaling.json",
+   "meets_repeat_criterion": false
+  }
+ },
+ "timing_fields": [
+  "core_ms",
+  "date",
+  "duration_s",
+  "elapsed_s",
+  "finished",
+  "ms",
+  "reference_ms",
+  "run_ms",
+  "seconds",
+  "started",
+  "time_s_wall",
+  "timestamp",
+  "wall_s",
+  "wall_time_s",
+  "*_ms",
+  "*wall_s"
+ ]
+}
