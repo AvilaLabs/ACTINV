@@ -305,6 +305,52 @@ def check_s6(record: dict) -> list[str]:
     return errors
 
 
+S7_THRESHOLDS = [1e-12, 1e-10, 1e-8, 1e-6, 1e-4, 1e-2]
+S7_FNS_EXPERIMENTS = 132
+
+
+def s7_summary(rows: list[dict], bmin: float) -> dict:
+    """Table 7's row for one threshold, recomputed from the per-run rows (as `p148_runs.py` writes it)."""
+    sel = [r for r in rows if r["bmin"] == bmin and r["case"][:1].isupper()]
+    return {
+        "fns_experiments": len(sel),
+        "median_kept": statistics.median(r["kept"] for r in sel),
+        "median_run_ms": statistics.median(r["run_ms"] for r in sel),
+        "max_heat_change_rel": max(r["heat_change_rel"] for r in sel),
+        "median_heat_change_rel": statistics.median(r["heat_change_rel"] for r in sel),
+        "max_heat_bound_rel": max(r["heat_bound_rel"] for r in sel),
+        "max_activity_change_rel": max(r["activity_change_rel"] for r in sel),
+        "max_activity_bound_rel": max(r["activity_bound_rel"] for r in sel),
+    }
+
+
+def check_s7(record: dict) -> list[str]:
+    """Amendment F: Table 7 regenerated on the release `prune_probe` by `p148_runs.py`, which recomputes every
+    rate run independently and checks it against unpruned CRAM-48 and CRAM-16 references at every step."""
+    errors = []
+    if record.get("schema") != "actinv-p148-runs-1":
+        errors.append(f"schema {record.get('schema')}")
+    if record.get("thresholds") != S7_THRESHOLDS:
+        errors.append(f"thresholds {record.get('thresholds')}")
+    rows = record.get("rows", [])
+    for bmin in S7_THRESHOLDS:
+        sel = [r for r in rows if r["bmin"] == bmin]
+        fns = [r for r in sel if r["case"][:1].isupper()]
+        if len(fns) != S7_FNS_EXPERIMENTS:
+            errors.append(f"bmin {bmin:g}: {len(fns)} FNS experiments, expected {S7_FNS_EXPERIMENTS}")
+        if not any(r["case"].startswith("long_") for r in sel):
+            errors.append(f"bmin {bmin:g}: no long-history case")
+        stored = record.get("summary_fns", {}).get(f"{bmin:g}")
+        if fns and stored != s7_summary(rows, bmin):
+            errors.append(f"bmin {bmin:g}: summary does not match the rows")
+    for r in rows:
+        if r["r1_problems"] or r["r2_problems"]:
+            errors.append(f"{r['case']} bmin {r['bmin']:g}: R1 {len(r['r1_problems'])}, R2 {len(r['r2_problems'])}")
+    if record.get("r1_pass") is not True or record.get("r2_pass") is not True:
+        errors.append("r1_pass/r2_pass not both true")
+    return errors
+
+
 STUDIES = {
     "s0": ("s0/s0.json", check_s0),
     "s1": ("s1_fns_tendl2017_gas.json", check_s1),
@@ -313,6 +359,7 @@ STUDIES = {
     "s4": ("s4_doppler.json", check_s4),
     "s5": ("s5_covariance.json", check_s5),
     "s6": ("s6_scaling.json", check_s6),
+    "s7": ("s7_pruning_runs.json", check_s7),
 }
 
 
@@ -410,7 +457,14 @@ def fixtures() -> dict:
                                                       "none": {"failed": True, "returncode": 101,
                                                                "message": "panicked"}}}
                     for name in S6_CASES}}
-    return {"s0": (s0, fns), "s1": s1, "s2": s2, "s3": s3, "s4": s4, "s5": s5, "s6": s6}
+    s7_rows = [{"case": case, "bmin": bmin, "kept": 10 + i, "run_ms": 5.0, "heat_change_rel": 1e-9 * i,
+                "heat_bound_rel": 1e-6, "activity_change_rel": 2e-9 * i, "activity_bound_rel": 1e-5,
+                "r1_problems": [], "r2_problems": []}
+               for bmin in S7_THRESHOLDS
+               for i, case in enumerate([f"X{n}_5min" for n in range(S7_FNS_EXPERIMENTS)] + ["long_fe_steady"])]
+    s7 = {"schema": "actinv-p148-runs-1", "thresholds": list(S7_THRESHOLDS), "rows": s7_rows,
+          "summary_fns": {f"{b:g}": s7_summary(s7_rows, b) for b in S7_THRESHOLDS}, "r1_pass": True, "r2_pass": True}
+    return {"s0": (s0, fns), "s1": s1, "s2": s2, "s3": s3, "s4": s4, "s5": s5, "s6": s6, "s7": s7}
 
 
 def run_check(study: str, value) -> list[str]:
@@ -433,6 +487,8 @@ def plant(study: str, value):
         v["cases"][2]["pointwise"]["MT102"]["p99_relative"] = 1.0
     elif study == "s5":
         v["cases"]["fe"]["first_order"]["points"][0]["responses"]["heat.total"]["variance_split"]["diagonal"] = 3.5
+    elif study == "s7":
+        v["summary_fns"]["1e-08"]["max_heat_change_rel"] *= 1.5
     elif study == "s6":
         v["cases"]["fe"]["rows"][0]["kept_states"] = 70
         v["cases"]["fe"]["rows"][1]["kept_states"] = 70
@@ -474,6 +530,14 @@ def selftest() -> int:
     repeats["cases"]["fe"]["rows"][2]["distinct_result_sha256_without_ms"].append("1" * 64)
     if not run_check("s6", repeats):
         failures.append("s6: differing repeats not caught")
+    violation = copy.deepcopy(fixtures()["s7"])
+    violation["rows"][5]["r2_problems"].append("dropped state above its bound")
+    if not run_check("s7", violation):
+        failures.append("s7: dominance violation not caught")
+    short = copy.deepcopy(fixtures()["s7"])
+    short["rows"] = [r for r in short["rows"] if r["case"] != "X0_5min"]
+    if not run_check("s7", short):
+        failures.append("s7: missing experiment not caught")
     selection = s1_selection(fixtures()["s1"])
     if len(selection) != 132 or selection[0]["time_s"] != 600.0:
         failures.append(f"s1 selection: {len(selection)} points")

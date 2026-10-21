@@ -3876,3 +3876,32 @@ place of the driver's variance decomposition. The repeat on the evidence interpr
 and attempts 2–4 stay under `results/failures/p149/`.
 
 The v1.6.0 pathway defect found by S6 is open.
+
+## Entry 223 — v1.6.1 release commit; P149 Amendment F registered before any run on it (2026-10-21)
+
+Owner direction 2026-10-21: the pathway defect found by S6 is fixed in 1.6.1, and 1.6.1 is the revision release the
+paper describes. 1.6.0 stays on PyPI, where a published version cannot be replaced.
+
+**v1.6.1 release commit** `a36e5d3`:
+- `attribute_pathway_column` leaves out a pathway source whose first product is the leakage state. That state is a
+  sink and never a target, so such a source carries no chain. The solve is unchanged.
+- In a run that completed in 1.6.0, every such column held nothing at a real nuclide, so the results do not change.
+- A unit test plants a positive round-off value in a leakage-sourced column, the case that panicked.
+- Versions 1.6.1 (desktop 0.5.0-preview.1 on solver 1.6.1), changelog, release notes and checklist.
+
+Local gates on the release tree:
+- fmt and `cargo check --workspace --tests` pass.
+- clippy `--all-targets -D warnings` passes after one needless-borrow fix.
+- The new unit test and the trace-pathway tests pass.
+- `cargo publish --workspace --dry-run` packages and verifies the three crates.
+- `g5_p12_release.py --source-only` and `test_preflight.py` pass.
+Not yet pushed or tagged on the remote.
+
+**P149 Amendment F** `dd2b0ce65ae6771a7dd624810885deee0dcd82a80cb45b7f319c003694a99b0e`:
+- S0–S6 are rerun on the 1.6.1 binaries as attempt 6 and repeated on the same binaries.
+- New study S7 reruns P148's R1–R3 batch, which is Table 7, on the release `prune_probe`. `check_s7` recomputes each
+  threshold's summary and requires every row free of R1/R2 problems. Its selftest passes, and it passes P148's
+  record.
+- Each 1.6.1 record is also compared with its 1.6.0 counterpart, for information only.
+- The 1.6.0 evidence and verdict (ledger 222) move unchanged to `results/p149_v1.6.0/` and
+  `results/p149_v1.6.0_verdict.json`. Paths inside them still name `results/p149/`.
