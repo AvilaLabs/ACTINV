@@ -1,0 +1,209 @@
+{
+  "boundaries": [
+    {
+      "actinv": [
+        8.880647745473985e+19,
+        1.1193522545260138e+19
+      ],
+      "dense": [
+        8.880647745473987e+19,
+        1.1193522545260132e+19
+      ],
+      "dense_comparison": {
+        "maximum_absolute_atoms_per_g": 16384.0,
+        "maximum_resolvable_relative": 5.488888752541675e-16,
+        "within_relative_or_floor": true
+      },
+      "duration_s": 3.0,
+      "fluence_n_cm2": 3e+22,
+      "flux_weighted_time_s": 3.0,
+      "multiplier": 1.0,
+      "openmc_comparison": {
+        "maximum_absolute_atoms_per_g": 131072.0,
+        "maximum_resolvable_relative": 1.4759283754588796e-15,
+        "within_relative_or_floor": true
+      },
+      "openmc_cram48": [
+        8.880647745473998e+19,
+        1.1193522545260138e+19
+      ],
+      "step": 1,
+      "time_s": 3.0
+    },
+    {
+      "actinv": [
+        8.91877699248939e+19,
+        1.081223007510608e+19
+      ],
+      "dense": [
+        8.918776992489393e+19,
+        1.0812230075106066e+19
+      ],
+      "dense_comparison": {
+        "maximum_absolute_atoms_per_g": 32768.0,
+        "maximum_resolvable_relative": 1.3259059324872317e-15,
+        "within_relative_or_floor": true
+      },
+      "duration_s": 5.0,
+      "fluence_n_cm2": 3e+22,
+      "flux_weighted_time_s": 3.0,
+      "multiplier": 0.0,
+      "openmc_comparison": {
+        "maximum_absolute_atoms_per_g": 98304.0,
+        "maximum_resolvable_relative": 1.1022139031257636e-15,
+        "within_relative_or_floor": true
+      },
+      "openmc_cram48": [
+        8.9187769924894e+19,
+        1.0812230075106083e+19
+      ],
+      "step": 2,
+      "time_s": 8.0
+    },
+    {
+      "actinv": [
+        8.586055951148682e+19,
+        1.4139440488513157e+19
+      ],
+      "dense": [
+        8.586055951148684e+19,
+        1.4139440488513165e+19
+      ],
+      "dense_comparison": {
+        "maximum_absolute_atoms_per_g": 16384.0,
+        "maximum_resolvable_relative": 5.793722889286286e-16,
+        "within_relative_or_floor": true
+      },
+      "duration_s": 2.0,
+      "fluence_n_cm2": 4e+22,
+      "flux_weighted_time_s": 4.0,
+      "multiplier": 0.5,
+      "openmc_comparison": {
+        "maximum_absolute_atoms_per_g": 180224.0,
+        "maximum_resolvable_relative": 3.910762950268231e-15,
+        "within_relative_or_floor": true
+      },
+      "openmc_cram48": [
+        8.5860559511487e+19,
+        1.4139440488513212e+19
+      ],
+      "step": 3,
+      "time_s": 10.0
+    },
+    {
+      "actinv": [
+        8.653023171956143e+19,
+        1.3469768280438569e+19
+      ],
+      "dense": [
+        8.653023171956143e+19,
+        1.3469768280438573e+19
+      ],
+      "dense_comparison": {
+        "maximum_absolute_atoms_per_g": 4096.0,
+        "maximum_resolvable_relative": 3.0408837885863283e-16,
+        "within_relative_or_floor": true
+      },
+      "duration_s": 7.0,
+      "fluence_n_cm2": 4e+22,
+      "flux_weighted_time_s": 4.0,
+      "multiplier": 0.0,
+      "openmc_comparison": {
+        "maximum_absolute_atoms_per_g": 196608.0,
+        "maximum_resolvable_relative": 3.1929279780156353e-15,
+        "within_relative_or_floor": true
+      },
+      "openmc_cram48": [
+        8.653023171956163e+19,
+        1.3469768280438612e+19
+      ],
+      "step": 4,
+      "time_s": 17.0
+    },
+    {
+      "actinv": [
+        7.998959076729928e+19,
+        2.0010409232700735e+19
+      ],
+      "dense": [
+        7.998959076729923e+19,
+        2.001040923270076e+19
+      ],
+      "dense_comparison": {
+        "maximum_absolute_atoms_per_g": 49152.0,
+        "maximum_resolvable_relative": 1.228160789427445e-15,
+        "within_relative_or_floor": true
+      },
+      "duration_s": 1.0,
+      "fluence_n_cm2": 6e+22,
+      "flux_weighted_time_s": 6.0,
+      "multiplier": 2.0,
+      "openmc_comparison": {
+        "maximum_absolute_atoms_per_g": 180224.0,
+        "maximum_resolvable_relative": 3.27509543847318e-15,
+        "within_relative_or_floor": true
+      },
+      "openmc_cram48": [
+        7.998959076729946e+19,
+        2.00104092327008e+19
+      ],
+      "step": 5,
+      "time_s": 18.0
+    }
+  ],
+  "gaps_vs_average": {
+    "averaged_dense_comparison": {
+      "maximum_absolute_atoms_per_g": 2048.0,
+      "maximum_resolvable_relative": 2.774545303505702e-16,
+      "within_relative_or_floor": true
+    },
+    "averaged_final": [
+      9.261861034522557e+19,
+      7.381389654774443e+18
+    ],
+    "calculated_mn_difference_atoms_per_g": 4952790704068608.0,
+    "difference_relative": 1.1784871093253369e-11,
+    "gapped_dense_comparison": {
+      "maximum_absolute_atoms_per_g": 163840.0,
+      "maximum_resolvable_relative": 7.624883413640725e-15,
+      "within_relative_or_floor": true
+    },
+    "gapped_final": [
+      9.26136575545216e+19,
+      7.386342445478512e+18
+    ],
+    "predicted_mn_difference_atoms_per_g": 4952790704126976.0,
+    "relative_effect": 0.0006709835052353638,
+    "same_flux_weighted_time_s": 2.0,
+    "same_time_s": 12.0
+  },
+  "model": {
+    "base_reaction_rate_per_s": 0.039999999999999994,
+    "initial_atoms_per_g": [
+      1e+20,
+      0.0
+    ],
+    "mn56_decay_constant_per_s": 0.006931471805599453,
+    "openmc_solver": "openmc.deplete.cram.CRAM48",
+    "openmc_version": "0.15.3",
+    "state_order": [
+      "Fe56",
+      "Mn56"
+    ]
+  },
+  "pass": true,
+  "split_merged": {
+    "maximum_relative": 7.086823947813929e-16,
+    "merged_final": [
+      8.266077993402037e+19,
+      1.7339220065979595e+19
+    ],
+    "split_final": [
+      8.266077993402039e+19,
+      1.7339220065979607e+19
+    ]
+  },
+  "time_exposure_fluence_worst_relative": 0.0,
+  "worst_actinv_vs_dense_resolvable_relative": 1.3259059324872317e-15,
+  "worst_actinv_vs_openmc_cram48_resolvable_relative": 3.910762950268231e-15
+}

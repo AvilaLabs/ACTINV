@@ -1,0 +1,183 @@
+{
+ "comparison": {
+  "fns.disposition.agree_measurement": {
+   "difference": 0,
+   "regenerated": 41,
+   "v1_0_0": 41
+  },
+  "fns.disposition.agree_reference_only": {
+   "difference": 0,
+   "regenerated": 32,
+   "v1_0_0": 32
+  },
+  "fns.disposition.neither": {
+   "difference": 0,
+   "regenerated": 59,
+   "v1_0_0": 59
+  },
+  "fns.geomean_within_10pct_of_reference": {
+   "difference": 0,
+   "regenerated": 88,
+   "v1_0_0": 88
+  },
+  "fns.median_geomean_CE.actinv": {
+   "difference": -0.00018031460483802775,
+   "regenerated": 1.023819685395162,
+   "v1_0_0": 1.024
+  },
+  "fns.median_geomean_CE.fispact": {
+   "difference": -0.0004799158913781909,
+   "regenerated": 1.0085200841086217,
+   "v1_0_0": 1.009
+  },
+  "fns.median_max_abs_lnCE.actinv": {
+   "difference": -0.00046441821489190405,
+   "regenerated": 0.28353558178510807,
+   "v1_0_0": 0.284
+  },
+  "fns.median_max_abs_lnCE.fispact": {
+   "difference": 0.00022602204731550501,
+   "regenerated": 0.2232260220473155,
+   "v1_0_0": 0.223
+  },
+  "fns.within_1p3_every_point.actinv": {
+   "difference": 0,
+   "regenerated": 62,
+   "v1_0_0": 62
+  },
+  "fns.within_1p3_every_point_fraction.fispact": {
+   "difference": 0.0027272727272726893,
+   "regenerated": 0.5227272727272727,
+   "v1_0_0": 0.52
+  },
+  "fns.within_20pct_of_reference_every_point": {
+   "difference": 0,
+   "regenerated": 103,
+   "v1_0_0": 103
+  },
+  "table3.alara_fe56_mn56_relative": {
+   "difference": -5.4111654338213285e-11,
+   "regenerated": 4.1145888345661785e-08,
+   "v1_0_0": 4.12e-08
+  },
+  "table3.dense_relative": {
+   "difference": -4.094067512768198e-18,
+   "regenerated": 1.3259059324872317e-15,
+   "v1_0_0": 1.33e-15
+  },
+  "table3.fng_endpoints": {
+   "difference": 0,
+   "regenerated": 170,
+   "v1_0_0": 170
+  },
+  "table3.fng_history_relative": {
+   "difference": -1.3432060168744158e-14,
+   "regenerated": 1.5367939831255843e-14,
+   "v1_0_0": 2.88e-14
+  },
+  "table3.fng_rate_comparisons": {
+   "difference": 0,
+   "regenerated": 120,
+   "v1_0_0": 120
+  },
+  "table3.fng_rates_relative": {
+   "difference": -3.491260665063734e-19,
+   "regenerated": 3.236508739334936e-16,
+   "v1_0_0": 3.24e-16
+  },
+  "table3.openmc_cram48_relative": {
+   "difference": 7.629502682307509e-19,
+   "regenerated": 3.910762950268231e-15,
+   "v1_0_0": 3.91e-15
+  },
+  "table3.sampling_relative": {
+   "difference": -1.1388435487236313e-08,
+   "regenerated": 0.00019428861156451277,
+   "v1_0_0": 0.0001943
+  },
+  "table3.scst_relative": {
+   "difference": 2.2496857636523073e-20,
+   "regenerated": 2.0552249685763653e-16,
+   "v1_0_0": 2.055e-16
+  },
+  "table3.sensitivity_maximum_absolute": {
+   "difference": 3.0114901962978516e-17,
+   "regenerated": 7.12430114901963e-13,
+   "v1_0_0": 7.124e-13
+  },
+  "table3.sensitivity_maximum_relative": {
+   "difference": 1.117805228291029e-15,
+   "regenerated": 3.013111780522829e-11,
+   "v1_0_0": 3.013e-11
+  }
+ },
+ "fns": {
+  "run": {
+   "record_pass": true,
+   "returncode": 0,
+   "stderr_tail": "    points=21 wall=0.61s cached=0\n 90/132   S 1996exp_7hour      points= 9 wall=0.62s cached=0\n100/132  Se 2000exp_5min       points=21 wall=0.58s cached=0\n110/132  Ta 1996exp_7hour      points=10 wall=0.55s cached=0\n120/132   V 1996exp_7hour      points= 7 wall=0.62s cached=0\n130/132  Zr 1996exp_5min       points=20 wall=0.58s cached=0\n132/132  Zr 2000exp_5min       points=21 wall=0.58s cached=0\n"
+  },
+  "values": {
+   "fns.disposition.agree_measurement": 41,
+   "fns.disposition.agree_reference_only": 32,
+   "fns.disposition.neither": 59,
+   "fns.experiments": 132,
+   "fns.geomean_within_10pct_of_reference": 88,
+   "fns.median_core_ms": 582.5947705000001,
+   "fns.median_geomean_CE.actinv": 1.023819685395162,
+   "fns.median_geomean_CE.fispact": 1.0085200841086217,
+   "fns.median_kept_states": 70.5,
+   "fns.median_max_abs_lnCE.actinv": 0.28353558178510807,
+   "fns.median_max_abs_lnCE.fispact": 0.2232260220473155,
+   "fns.points": 2360,
+   "fns.sum_core_ms": 76554.592591,
+   "fns.within_1p3_every_point.actinv": 62,
+   "fns.within_1p3_every_point_fraction.fispact": 0.5227272727272727,
+   "fns.within_20pct_of_reference_every_point": 103
+  }
+ },
+ "paper_values_source": "ACTINV v1.0.0 manuscript as submitted to J Radioanal Nucl Chem (Tables 2-3, \u00a74)",
+ "schema": "actinv-p149-s0-1",
+ "table3": {
+  "runs": {
+   "g3_p11_sensitivity": {
+    "record_pass": true,
+    "returncode": 0,
+    "stderr_tail": ""
+   },
+   "g4_p11_propagation": {
+    "record_pass": true,
+    "returncode": 0,
+    "stderr_tail": ""
+   },
+   "g4_p12_fng": {
+    "record_pass": true,
+    "returncode": 0,
+    "stderr_tail": ""
+   },
+   "g4_p9_pulses_openmc": {
+    "record_pass": true,
+    "returncode": 0,
+    "stderr_tail": ""
+   },
+   "g5_p9_alara": {
+    "record_pass": true,
+    "returncode": 0,
+    "stderr_tail": ""
+   }
+  },
+  "values": {
+   "table3.alara_fe56_mn56_relative": 4.1145888345661785e-08,
+   "table3.dense_relative": 1.3259059324872317e-15,
+   "table3.fng_endpoints": 170,
+   "table3.fng_history_relative": 1.5367939831255843e-14,
+   "table3.fng_rate_comparisons": 120,
+   "table3.fng_rates_relative": 3.236508739334936e-16,
+   "table3.openmc_cram48_relative": 3.910762950268231e-15,
+   "table3.sampling_relative": 0.00019428861156451277,
+   "table3.scst_relative": 2.0552249685763653e-16,
+   "table3.sensitivity_maximum_absolute": 7.12430114901963e-13,
+   "table3.sensitivity_maximum_relative": 3.013111780522829e-11
+  }
+ }
+}

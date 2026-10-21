@@ -3905,3 +3905,23 @@ Not yet pushed or tagged on the remote.
 - Each 1.6.1 record is also compared with its 1.6.0 counterpart, for information only.
 - The 1.6.0 evidence and verdict (ledger 222) move unchanged to `results/p149_v1.6.0/` and
   `results/p149_v1.6.0_verdict.json`. Paths inside them still name `results/p149/`.
+
+## Entry 224 — P149 Amendment F attempt 6: evidence on 1.6.1, P149-COMPLETE before the repeat (2026-10-21)
+
+Attempt 6 ran S0–S7 under Amendment F from fresh disk-backed work directories, then the checker. The tree was
+`45cb8c8`, clean; it differs from the 1.6.1 release commit `a36e5d3` only in `controls/`, `protocols/`, `ledger.md`,
+`results/` and the manifest, so the workspace release build is the build of the release source:
+- `target/release/actinv` `79e1e860…`, `prune_probe` `a0c5391c…`, `libactinv.so` `238d9b66…`; ALARA 2.9.2 `7ef1d632…`.
+- S0, S2, S3, S4 and S6 ran on the interpreter with `openmc` and `h5py` (numpy 2.5.2); S1, S5 and S7 on the system
+  interpreter (numpy 2.3.5).
+
+Every study exited 0 and `controls/check_p149.py` reports each of S0–S7 ok: **P149-COMPLETE**
+(`results/p149/check_p149.json` `081612071f19bda9b303422809f6aeda01a521cbc836d3e29abb1c1a79f4936b`, written after
+home-directory paths in the records were replaced by `<HOME>`, as for the 1.6.0 evidence).
+- S6: the W, 7 h default-outputs run without pruning, which stopped with an index error on 1.6.0, completes. All twelve
+  default-output runs complete.
+- S7: `results/p149/s7_pruning_runs.json` matches P148's `results/p148/runs/runs.json` in all 11,441 compared values
+  apart from timing; Table 7 is unchanged on the release binary.
+
+The repeat of Amendment F, F4.2 is running on the same binaries. Its comparison, the comparison with the 1.6.0 records
+(F4.3) and the verdict record follow in the next entry.

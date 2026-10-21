@@ -1,0 +1,405 @@
+{
+ "alara_binary": "<HOME>/nuclear-data/alara-2.9.2-build/src/alara",
+ "not_run": {
+  "full_precision_decay": "ALARA convert_lib stores half-lives, energies and cross sections as 32-bit floats; both codes already read the same FENDL-2 decay text"
+ },
+ "protocol": "P149 S2",
+ "schema": "actinv-p149-s2-alara-nickel-1",
+ "variants": [
+  {
+   "alara_run": {
+    "conversion_returncode": 0,
+    "four_pulses": true,
+    "run_input_sha256": "07721ba035c4c1ebf130620c11fbda332b02500adde8e6893117b2faee3318cb",
+    "run_returncode": 0
+   },
+   "initial": [
+    "Na23",
+    "Fe56",
+    "Co59",
+    "Ni58"
+   ],
+   "maximum_actinv_alara_relative_reportable": 0.0004298040283105071,
+   "maximum_actinv_dense_relative_reportable": 4.648575666417026e-11,
+   "nuclides": {
+    "Co58": {
+     "actinv": 524466886234268.4,
+     "actinv_alara_relative": 5.936975864444105e-06,
+     "actinv_dense_relative": 3.467807115638449e-14,
+     "alara": 524470000000000.0,
+     "dense": 524466886234286.56,
+     "openmc": 524466886234284.94
+    },
+    "Co60": {
+     "actinv": 9168147166737538.0,
+     "actinv_alara_relative": 5.1446313720969824e-06,
+     "actinv_dense_relative": 2.6613883433856384e-14,
+     "alara": 9168100000000000.0,
+     "dense": 9168147166737782.0,
+     "openmc": 9168147166737832.0
+    },
+    "Co61": {
+     "actinv": 15804315200.776117,
+     "actinv_alara_relative": 1.9943969233279148e-05,
+     "actinv_dense_relative": 2.90851590004498e-14,
+     "alara": 15804000000.0,
+     "dense": 15804315200.776577,
+     "openmc": 15804315200.776667
+    },
+    "Ni59": {
+     "actinv": 1136998367838723.8,
+     "actinv_alara_relative": 1.4354980441952506e-06,
+     "actinv_dense_relative": 2.7044893704157777e-14,
+     "alara": 1137000000000000.0,
+     "dense": 1136998367838754.5,
+     "openmc": 1136998367838755.2
+    },
+    "Ni60": {
+     "actinv": 15831390234862.424,
+     "actinv_alara_relative": 3.851472571855557e-05,
+     "actinv_dense_relative": 7.106135237084543e-14,
+     "alara": 15832000000000.0,
+     "dense": 15831390234863.549,
+     "openmc": 15831390234863.568
+    },
+    "Ni61": {
+     "actinv": 75285628020.19571,
+     "actinv_alara_relative": 0.0004298040283105071,
+     "actinv_dense_relative": 4.2035550938251215e-13,
+     "alara": 75318000000.0,
+     "dense": 75285628020.22736,
+     "openmc": 75285628020.22763
+    }
+   },
+   "schedule": {
+    "actinv_flux_weighted_time_s": 86400.0,
+    "actinv_time_s": 108000.0,
+    "expected_flux_weighted_time_s": 86400.0,
+    "expected_time_s": 108000.0,
+    "gaps": 3,
+    "pulses": 4,
+    "segments": 7,
+    "total_flux_n_cm2_s": 3150000000000000.0
+   },
+   "variant": "baseline",
+   "worst_alara": [
+    [
+     0.0004298040283105071,
+     "Ni61"
+    ],
+    [
+     3.851472571855557e-05,
+     "Ni60"
+    ],
+    [
+     1.9943969233279148e-05,
+     "Co61"
+    ],
+    [
+     1.8629262494762398e-05,
+     "Fe59"
+    ],
+    [
+     1.855400520775255e-05,
+     "Co59"
+    ]
+   ]
+  },
+  {
+   "alara_run": {
+    "conversion_returncode": 0,
+    "four_pulses": true,
+    "run_input_sha256": "a094852928868cf207cbf5633809c952fc955628fbf7ac7ae9a1ef3fa5f58427",
+    "run_returncode": 0
+   },
+   "initial": [
+    "Na23",
+    "Fe56",
+    "Ni58"
+   ],
+   "maximum_actinv_alara_relative_reportable": 1.2496334308129316e-05,
+   "maximum_actinv_dense_relative_reportable": 4.648575666417026e-11,
+   "nuclides": {
+    "Co58": {
+     "actinv": 524466886234268.4,
+     "actinv_alara_relative": 5.936975864444105e-06,
+     "actinv_dense_relative": 3.467807115638449e-14,
+     "alara": 524470000000000.0,
+     "dense": 524466886234286.56,
+     "openmc": 524466886234284.94
+    },
+    "Co60": {
+     "actinv": 2254.204827053068,
+     "actinv_alara_relative": 0.06638855785749923,
+     "actinv_dense_relative": 2.169435959293728e-12,
+     "alara": 2414.5,
+     "dense": 2254.2048270579585,
+     "openmc": 2254.2048270579667
+    },
+    "Co61": {
+     "actinv": 0.0033267804461538223,
+     "actinv_alara_relative": 0.01490022618405666,
+     "actinv_dense_relative": 2.713584835270911e-12,
+     "alara": 0.0033771,
+     "dense": 0.00332678044616285,
+     "openmc": 0.003326780446162864
+    },
+    "Ni59": {
+     "actinv": 1136998367838723.8,
+     "actinv_alara_relative": 1.4354980441952506e-06,
+     "actinv_dense_relative": 2.7044893704157777e-14,
+     "alara": 1137000000000000.0,
+     "dense": 1136998367838754.5,
+     "openmc": 1136998367838755.2
+    },
+    "Ni60": {
+     "actinv": 456204530135.46246,
+     "actinv_alara_relative": 9.930053656236665e-06,
+     "actinv_dense_relative": 3.4918933787251594e-13,
+     "alara": 456200000000.0,
+     "dense": 456204530135.62177,
+     "openmc": 456204530135.622
+    },
+    "Ni61": {
+     "actinv": 0.007866229729958476,
+     "actinv_alara_relative": 0.9925154807517045,
+     "actinv_dense_relative": 1.776286437260707e-11,
+     "alara": 1.051,
+     "dense": 0.007866229730098203,
+     "openmc": 0.00786622973009823
+    }
+   },
+   "schedule": {
+    "actinv_flux_weighted_time_s": 86400.0,
+    "actinv_time_s": 108000.0,
+    "expected_flux_weighted_time_s": 86400.0,
+    "expected_time_s": 108000.0,
+    "gaps": 3,
+    "pulses": 4,
+    "segments": 7,
+    "total_flux_n_cm2_s": 3150000000000000.0
+   },
+   "variant": "no_cobalt",
+   "worst_alara": [
+    [
+     1.2496334308129316e-05,
+     "Co58m1"
+    ],
+    [
+     1.173619466387586e-05,
+     "Fe56"
+    ],
+    [
+     9.930053656236665e-06,
+     "Ni60"
+    ],
+    [
+     8.07637045993291e-06,
+     "Mg24"
+    ],
+    [
+     6.921089067252595e-06,
+     "Ni58"
+    ]
+   ]
+  },
+  {
+   "alara_run": {
+    "conversion_returncode": 0,
+    "four_pulses": false,
+    "run_input_sha256": "d17c1586dec4510821eb07a657b3cd70ee2bc5e170eaf498d6fe0ee7076c732b",
+    "run_returncode": 0
+   },
+   "initial": [
+    "Na23",
+    "Fe56",
+    "Co59",
+    "Ni58"
+   ],
+   "maximum_actinv_alara_relative_reportable": 0.00012143999056465465,
+   "maximum_actinv_dense_relative_reportable": 4.344117819212905e-11,
+   "nuclides": {
+    "Co58": {
+     "actinv": 501665328653744.56,
+     "actinv_alara_relative": 9.311591794282098e-06,
+     "actinv_dense_relative": 3.039875217393241e-14,
+     "alara": 501670000000000.0,
+     "dense": 501665328653759.8,
+     "openmc": 501665328653759.8
+    },
+    "Co60": {
+     "actinv": 9168562122546322.0,
+     "actinv_alara_relative": 4.131214545077765e-06,
+     "actinv_dense_relative": 2.8575909340867183e-14,
+     "alara": 9168600000000000.0,
+     "dense": 9168562122546584.0,
+     "openmc": 9168562122546588.0
+    },
+    "Co61": {
+     "actinv": 16354433270.33398,
+     "actinv_alara_relative": 2.6492531218827878e-05,
+     "actinv_dense_relative": 3.137233640234044e-14,
+     "alara": 16354000000.0,
+     "dense": 16354433270.334494,
+     "openmc": 16354433270.3345
+    },
+    "Ni59": {
+     "actinv": 1136998371387062.8,
+     "actinv_alara_relative": 1.43237725351803e-06,
+     "actinv_dense_relative": 2.7044893619756204e-14,
+     "alara": 1137000000000000.0,
+     "dense": 1136998371387093.5,
+     "openmc": 1136998371387094.0
+    },
+    "Ni60": {
+     "actinv": 15416398224949.559,
+     "actinv_alara_relative": 3.903321336455901e-05,
+     "actinv_dense_relative": 1.9282430348669547e-13,
+     "alara": 15417000000000.0,
+     "dense": 15416398224952.531,
+     "openmc": 15416398224952.533
+    },
+    "Ni61": {
+     "actinv": 74704926732.54495,
+     "actinv_alara_relative": 0.00012143999056465465,
+     "actinv_dense_relative": 1.5078039131538797e-12,
+     "alara": 74714000000.0,
+     "dense": 74704926732.6576,
+     "openmc": 74704926732.65762
+    }
+   },
+   "schedule": {
+    "actinv_flux_weighted_time_s": 86400.0,
+    "actinv_time_s": 86400.0,
+    "expected_flux_weighted_time_s": 86400.0,
+    "expected_time_s": 86400.0,
+    "gaps": 0,
+    "pulses": 1,
+    "segments": 1,
+    "total_flux_n_cm2_s": 3150000000000000.0
+   },
+   "variant": "continuous_24h",
+   "worst_alara": [
+    [
+     0.00012143999056465465,
+     "Ni61"
+    ],
+    [
+     3.903321336455901e-05,
+     "Ni60"
+    ],
+    [
+     2.6492531218827878e-05,
+     "Co61"
+    ],
+    [
+     2.3665048327139865e-05,
+     "Co58m1"
+    ],
+    [
+     2.1057287703087484e-05,
+     "Fe58"
+    ]
+   ]
+  },
+  {
+   "alara_run": {
+    "conversion_returncode": 0,
+    "four_pulses": true,
+    "run_input_sha256": "0d9e88e0ebc98674853982117d0ff68a9d1bac7f8ce6a7a1277fe1684a6e584f",
+    "run_returncode": 0
+   },
+   "initial": [
+    "Na23",
+    "Fe56",
+    "Co59",
+    "Ni58"
+   ],
+   "maximum_actinv_alara_relative_reportable": 0.0004298040283105071,
+   "maximum_actinv_dense_relative_reportable": 4.648575666417026e-11,
+   "nuclides": {
+    "Co58": {
+     "actinv": 524466886234268.4,
+     "actinv_alara_relative": 5.936975864444105e-06,
+     "actinv_dense_relative": 3.467807115638449e-14,
+     "alara": 524470000000000.0,
+     "dense": 524466886234286.56,
+     "openmc": 524466886234284.94
+    },
+    "Co60": {
+     "actinv": 9168147166737538.0,
+     "actinv_alara_relative": 5.1446313720969824e-06,
+     "actinv_dense_relative": 2.6613883433856384e-14,
+     "alara": 9168100000000000.0,
+     "dense": 9168147166737782.0,
+     "openmc": 9168147166737832.0
+    },
+    "Co61": {
+     "actinv": 15804315200.776117,
+     "actinv_alara_relative": 1.9943969233279148e-05,
+     "actinv_dense_relative": 2.90851590004498e-14,
+     "alara": 15804000000.0,
+     "dense": 15804315200.776577,
+     "openmc": 15804315200.776667
+    },
+    "Ni59": {
+     "actinv": 1136998367838723.8,
+     "actinv_alara_relative": 1.4354980441952506e-06,
+     "actinv_dense_relative": 2.7044893704157777e-14,
+     "alara": 1137000000000000.0,
+     "dense": 1136998367838754.5,
+     "openmc": 1136998367838755.2
+    },
+    "Ni60": {
+     "actinv": 15831390234862.424,
+     "actinv_alara_relative": 3.851472571855557e-05,
+     "actinv_dense_relative": 7.106135237084543e-14,
+     "alara": 15832000000000.0,
+     "dense": 15831390234863.549,
+     "openmc": 15831390234863.568
+    },
+    "Ni61": {
+     "actinv": 75285628020.19571,
+     "actinv_alara_relative": 0.0004298040283105071,
+     "actinv_dense_relative": 4.2035550938251215e-13,
+     "alara": 75318000000.0,
+     "dense": 75285628020.22736,
+     "openmc": 75285628020.22763
+    }
+   },
+   "schedule": {
+    "actinv_flux_weighted_time_s": 86400.0,
+    "actinv_time_s": 108000.0,
+    "expected_flux_weighted_time_s": 86400.0,
+    "expected_time_s": 108000.0,
+    "gaps": 3,
+    "pulses": 4,
+    "segments": 7,
+    "total_flux_n_cm2_s": 3150000000000000.0
+   },
+   "variant": "truncation",
+   "worst_alara": [
+    [
+     0.0004298040283105071,
+     "Ni61"
+    ],
+    [
+     3.851472571855557e-05,
+     "Ni60"
+    ],
+    [
+     1.9943969233279148e-05,
+     "Co61"
+    ],
+    [
+     1.8629262494762398e-05,
+     "Fe59"
+    ],
+    [
+     1.855400520775255e-05,
+     "Co59"
+    ]
+   ]
+  }
+ ]
+}

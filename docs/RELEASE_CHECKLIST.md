@@ -266,15 +266,18 @@ created.
 - [x] Pre-tag gates: `cargo publish --workspace --dry-run` packages and verifies `actinv-data`, `actinv-core` and
   `actinv-cli`; `cargo check --workspace --tests`, fmt and clippy `--all-targets -D warnings` pass; the new unit
   test and the trace-pathway tests pass.
-- [ ] Push the release commit and the `v1.6.1` tag in one atomic push; confirm every workflow green.
-- [ ] Approve the `crates.io` and `pypi` environment gates; confirm all three crates and the wheel/sdist set
+- [x] Push the release commit and the `v1.6.1` tag in one atomic push; confirm every workflow green (the publish
+  gates needed a controls run on the tag commit itself, dispatched as run 39619529951).
+- [x] Approve the `crates.io` and `pypi` environment gates; confirm all three crates and the wheel/sdist set
   land at 1.6.1.
-- [ ] Attach packaged platform archives and `SHA256SUMS` to the `v1.6.1` GitHub release; paste the release notes.
-- [ ] Desktop: attach the `desktop builds` artifacts and checksums from the release commit to a
+- [x] Attach packaged platform archives and `SHA256SUMS` to the `v1.6.1` GitHub release; paste the release notes.
+- [x] Desktop: attach the `desktop builds` artifacts and checksums from the release commit to a
   `desktop-v0.5.0-preview.1` GitHub pre-release and paste its notes.
 - [ ] Production smoke from PyPI and crates.io; record the release in `results/release_v1.6.1.json`.
 - [ ] Run the P149 evidence studies on the 1.6.1 release binary (Amendment F).
-- [ ] Zenodo: archive 1.6.1 as a new version under concept record 22181617 (the JRNC revision cites it).
-- [ ] Handbook and website: deploy the `actinv-web` bundle CI built from the release commit and check
-  `/`, `/download/` and `/docs/` live; update AvilaLabs.org `/actinv` and `/actinv/docs`.
+- [x] Zenodo: the GitHub release archived 1.6.1 as 10.5281/zenodo.23539164 under the GitHub-linked concept
+  10.5281/zenodo.22665067 (22181617 holds only the manual 1.0.1 upload); the JRNC revision cites it.
+- [x] Handbook and website: deploy the `actinv-web` bundle CI built from the release commit and check
+  `/`, `/download/` and `/docs/` live; update AvilaLabs.org `/actinv` and `/actinv/docs`
+  (deployed as worker version b0beb15d; AvilaLabs.org PR #33 open, stacked on #32; merge with the owner).
 - [ ] Remind the owner to rerun FARIS restart/cooling runs affected by P133.

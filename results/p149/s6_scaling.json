@@ -1,0 +1,921 @@
+{
+ "cases": {
+  "fe": {
+   "composition": {
+    "FE": 100.0
+   },
+   "default_outputs_cram16": {
+    "none": {
+     "core_ms": 12948.845582,
+     "peak_rss_kib": 239208,
+     "wall_s": 13.148230187012814
+    },
+    "rate": {
+     "core_ms": 912.7539260000001,
+     "peak_rss_kib": 196896,
+     "wall_s": 0.9756311750097666
+    },
+    "reach": {
+     "core_ms": 5405.787122,
+     "peak_rss_kib": 230480,
+     "wall_s": 5.603388823015848
+    }
+   },
+   "experiment": "Fe/1996exp_5min",
+   "fission_yields": [],
+   "library": {
+    "path": "<HOME>/nuclear-data/tendl-2017/build/neutron.n.p10.npz",
+    "sha256": "218156708ae685db2a50cd7a2c74ca02049b68f266c38a29020b71095717447d"
+   },
+   "options": {
+    "bmin_atoms_per_g": 1e-08,
+    "mode": "auto",
+    "temperature_K": 293.6
+   },
+   "rows": [
+    {
+     "core_ms": {
+      "max": 827.7012219999999,
+      "median": 808.263227,
+      "min": 778.546262
+     },
+     "cram_order": 16,
+     "distinct_result_sha256_without_ms": [
+      "5fa59389c70aee6ed55c5db098205a4d860b9ab71d633b7a5e3e853e4d29d662"
+     ],
+     "kept_states": 48,
+     "mode": "trace",
+     "pattern": {
+      "kept_states": 48,
+      "nonzeros": 441,
+      "off_diagonal": 393,
+      "states_in_capture": 3873
+     },
+     "pattern_matches_kept": true,
+     "peak_rss_mib": 192.36328125,
+     "prune": "rate",
+     "repeats": 10,
+     "total_states": 3873,
+     "wall_s": {
+      "max": 0.8653845349908806,
+      "median": 0.8425407265021931,
+      "min": 0.8105266230122652
+     }
+    },
+    {
+     "core_ms": {
+      "max": 842.192182,
+      "median": 806.4695295,
+      "min": 760.84886
+     },
+     "cram_order": 48,
+     "distinct_result_sha256_without_ms": [
+      "9da2ba41fc4e74fdde52bbfb66af32d7ae9203d8074234731413a7d57ebb0fa4"
+     ],
+     "kept_states": 48,
+     "mode": "trace",
+     "pattern": {
+      "kept_states": 48,
+      "nonzeros": 441,
+      "off_diagonal": 393,
+      "states_in_capture": 3873
+     },
+     "pattern_matches_kept": true,
+     "peak_rss_mib": 192.46484375,
+     "prune": "rate",
+     "repeats": 10,
+     "total_states": 3873,
+     "wall_s": {
+      "max": 0.8762788979802281,
+      "median": 0.840571431486751,
+      "min": 0.7921415499877185
+     }
+    },
+    {
+     "core_ms": {
+      "max": 942.187811,
+      "median": 903.0320469999999,
+      "min": 865.9151969999999
+     },
+     "cram_order": 16,
+     "distinct_result_sha256_without_ms": [
+      "2aba1357c646cb8f1029ddc7a956f6c498a8df2caa30c115de9c23dd1e78268e"
+     ],
+     "kept_states": 906,
+     "mode": "trace",
+     "pattern": {
+      "kept_states": 906,
+      "nonzeros": 11486,
+      "off_diagonal": 10580,
+      "states_in_capture": 3873
+     },
+     "pattern_matches_kept": true,
+     "peak_rss_mib": 192.2421875,
+     "prune": "reach",
+     "repeats": 10,
+     "total_states": 3873,
+     "wall_s": {
+      "max": 0.9802760080201551,
+      "median": 0.938827070989646,
+      "min": 0.9023704330029432
+     }
+    },
+    {
+     "core_ms": {
+      "max": 1126.1751140000001,
+      "median": 1084.1364789999998,
+      "min": 1035.803685
+     },
+     "cram_order": 48,
+     "distinct_result_sha256_without_ms": [
+      "1c2ebcd047b9eb96d5e3a288f9dc531f636296f9271da0514fc0c2e53b2c0863"
+     ],
+     "kept_states": 906,
+     "mode": "trace",
+     "pattern": {
+      "kept_states": 906,
+      "nonzeros": 11486,
+      "off_diagonal": 10580,
+      "states_in_capture": 3873
+     },
+     "pattern_matches_kept": true,
+     "peak_rss_mib": 192.171875,
+     "prune": "reach",
+     "repeats": 10,
+     "total_states": 3873,
+     "wall_s": {
+      "max": 1.1640394540154375,
+      "median": 1.1227599749981891,
+      "min": 1.0743598790140823
+     }
+    },
+    {
+     "core_ms": {
+      "max": 1171.6447910000002,
+      "median": 1123.460343,
+      "min": 1064.057734
+     },
+     "cram_order": 16,
+     "distinct_result_sha256_without_ms": [
+      "9a7a0a71c0835571b6ae72855b4f26acf966650de6479e7db186ecaf2f5dd830"
+     ],
+     "kept_states": 3873,
+     "mode": "trace",
+     "pattern": {
+      "kept_states": 3873,
+      "nonzeros": 28144,
+      "off_diagonal": 24271,
+      "states_in_capture": 3873
+     },
+     "pattern_matches_kept": true,
+     "peak_rss_mib": 192.41015625,
+     "prune": "none",
+     "repeats": 10,
+     "total_states": 3873,
+     "wall_s": {
+      "max": 1.2093187760037836,
+      "median": 1.1592772899894044,
+      "min": 1.0999394309765194
+     }
+    },
+    {
+     "core_ms": {
+      "max": 1909.627367,
+      "median": 1855.6046015000002,
+      "min": 1756.6804650000001
+     },
+     "cram_order": 48,
+     "distinct_result_sha256_without_ms": [
+      "7595356074ba78c0d8a8e51c61bb877f9e67fcb9f203293b651d9b3487a0b6c7"
+     ],
+     "kept_states": 3873,
+     "mode": "trace",
+     "pattern": {
+      "kept_states": 3873,
+      "nonzeros": 28144,
+      "off_diagonal": 24271,
+      "states_in_capture": 3873
+     },
+     "pattern_matches_kept": true,
+     "peak_rss_mib": 192.35546875,
+     "prune": "none",
+     "repeats": 10,
+     "total_states": 3873,
+     "wall_s": {
+      "max": 1.94571109599201,
+      "median": 1.8921868475008523,
+      "min": 1.7906713639968075
+     }
+    }
+   ],
+   "timed_outputs": [
+    "inventory",
+    "activity",
+    "heat",
+    "ledger"
+   ]
+  },
+  "ss316": {
+   "composition": {
+    "CR": 18.28,
+    "FE": 63.72,
+    "MN": 1.44,
+    "MO": 2.11,
+    "NI": 13.49,
+    "SI": 0.96
+   },
+   "default_outputs_cram16": {
+    "none": {
+     "core_ms": 66478.964226,
+     "peak_rss_kib": 334284,
+     "wall_s": 66.75752286901115
+    },
+    "rate": {
+     "core_ms": 4407.175196,
+     "peak_rss_kib": 196872,
+     "wall_s": 4.507862196012866
+    },
+    "reach": {
+     "core_ms": 34433.767743,
+     "peak_rss_kib": 323072,
+     "wall_s": 34.711419005005155
+    }
+   },
+   "experiment": "SS316/1996exp_7hour",
+   "fission_yields": [],
+   "library": {
+    "path": "<HOME>/nuclear-data/tendl-2017/build/neutron.n.p10.npz",
+    "sha256": "218156708ae685db2a50cd7a2c74ca02049b68f266c38a29020b71095717447d"
+   },
+   "options": {
+    "bmin_atoms_per_g": 1e-08,
+    "mode": "auto",
+    "temperature_K": 293.6
+   },
+   "rows": [
+    {
+     "core_ms": {
+      "max": 776.762202,
+      "median": 742.6219269999999,
+      "min": 718.297859
+     },
+     "cram_order": 16,
+     "distinct_result_sha256_without_ms": [
+      "b90f9b106f58131d0beed58df8b98d85af0689f8be4a2fe2f874a93634396bcf"
+     ],
+     "kept_states": 263,
+     "mode": "trace",
+     "pattern": {
+      "kept_states": 263,
+      "nonzeros": 3218,
+      "off_diagonal": 2955,
+      "states_in_capture": 3873
+     },
+     "pattern_matches_kept": true,
+     "peak_rss_mib": 192.3828125,
+     "prune": "rate",
+     "repeats": 10,
+     "total_states": 3873,
+     "wall_s": {
+      "max": 0.8105043660034426,
+      "median": 0.77540317850071,
+      "min": 0.7510875989974011
+     }
+    },
+    {
+     "core_ms": {
+      "max": 785.7738549999999,
+      "median": 750.2000535,
+      "min": 726.5067469999999
+     },
+     "cram_order": 48,
+     "distinct_result_sha256_without_ms": [
+      "29ad9c8e3ea2d4c39ce7a39cf855176ad1fa67610b16441e3040e0925c601a88"
+     ],
+     "kept_states": 263,
+     "mode": "trace",
+     "pattern": {
+      "kept_states": 263,
+      "nonzeros": 3218,
+      "off_diagonal": 2955,
+      "states_in_capture": 3873
+     },
+     "pattern_matches_kept": true,
+     "peak_rss_mib": 192.27734375,
+     "prune": "rate",
+     "repeats": 10,
+     "total_states": 3873,
+     "wall_s": {
+      "max": 0.8187780200096313,
+      "median": 0.7835823080094997,
+      "min": 0.7564271869778167
+     }
+    },
+    {
+     "core_ms": {
+      "max": 833.846404,
+      "median": 815.8392825000001,
+      "min": 790.424152
+     },
+     "cram_order": 16,
+     "distinct_result_sha256_without_ms": [
+      "09003b71543495f9b9d194de6b183afef9b576f7db6ac580b4eee5e0ce95334f"
+     ],
+     "kept_states": 906,
+     "mode": "trace",
+     "pattern": {
+      "kept_states": 906,
+      "nonzeros": 11618,
+      "off_diagonal": 10712,
+      "states_in_capture": 3873
+     },
+     "pattern_matches_kept": true,
+     "peak_rss_mib": 192.4609375,
+     "prune": "reach",
+     "repeats": 10,
+     "total_states": 3873,
+     "wall_s": {
+      "max": 0.8705151350004598,
+      "median": 0.852950949993101,
+      "min": 0.8249621670111082
+     }
+    },
+    {
+     "core_ms": {
+      "max": 1046.246104,
+      "median": 1023.5404974999999,
+      "min": 975.675462
+     },
+     "cram_order": 48,
+     "distinct_result_sha256_without_ms": [
+      "2ac27978e69bfa269b01e30df61c825688342577c5bb1fed7355638e128b1e00"
+     ],
+     "kept_states": 906,
+     "mode": "trace",
+     "pattern": {
+      "kept_states": 906,
+      "nonzeros": 11618,
+      "off_diagonal": 10712,
+      "states_in_capture": 3873
+     },
+     "pattern_matches_kept": true,
+     "peak_rss_mib": 192.37109375,
+     "prune": "reach",
+     "repeats": 10,
+     "total_states": 3873,
+     "wall_s": {
+      "max": 1.1010286970122252,
+      "median": 1.0622446784982458,
+      "min": 1.0089732540072873
+     }
+    },
+    {
+     "core_ms": {
+      "max": 1012.3227690000001,
+      "median": 960.6479885,
+      "min": 934.3293120000001
+     },
+     "cram_order": 16,
+     "distinct_result_sha256_without_ms": [
+      "9025fc3fc60bcafd01850c59f9801bbf197d70e7123e3d1d62db592a2532cf0d"
+     ],
+     "kept_states": 3873,
+     "mode": "trace",
+     "pattern": {
+      "kept_states": 3873,
+      "nonzeros": 28276,
+      "off_diagonal": 24403,
+      "states_in_capture": 3873
+     },
+     "pattern_matches_kept": true,
+     "peak_rss_mib": 192.43359375,
+     "prune": "none",
+     "repeats": 10,
+     "total_states": 3873,
+     "wall_s": {
+      "max": 1.0449376470060088,
+      "median": 0.9955574750056257,
+      "min": 0.9708836110075936
+     }
+    },
+    {
+     "core_ms": {
+      "max": 1555.419855,
+      "median": 1519.7595585,
+      "min": 1458.821397
+     },
+     "cram_order": 48,
+     "distinct_result_sha256_without_ms": [
+      "09d801ea414292c1c63a424df903213e28764817060651d36ae1e1934f6cc279"
+     ],
+     "kept_states": 3873,
+     "mode": "trace",
+     "pattern": {
+      "kept_states": 3873,
+      "nonzeros": 28276,
+      "off_diagonal": 24403,
+      "states_in_capture": 3873
+     },
+     "pattern_matches_kept": true,
+     "peak_rss_mib": 192.42578125,
+     "prune": "none",
+     "repeats": 10,
+     "total_states": 3873,
+     "wall_s": {
+      "max": 1.5936741389741655,
+      "median": 1.5556995945080416,
+      "min": 1.4947884650027845
+     }
+    }
+   ],
+   "timed_outputs": [
+    "inventory",
+    "activity",
+    "heat",
+    "ledger"
+   ]
+  },
+  "u_nat": {
+   "composition": {
+    "U": 100.0
+   },
+   "default_outputs_cram16": {
+    "none": {
+     "core_ms": 2364.363937,
+     "peak_rss_kib": 1040812,
+     "wall_s": 4.335270665003918
+    },
+    "rate": {
+     "core_ms": 1140.9307660000002,
+     "peak_rss_kib": 550536,
+     "wall_s": 2.1660838020034134
+    },
+    "reach": {
+     "core_ms": 2171.4531930000003,
+     "peak_rss_kib": 1031664,
+     "wall_s": 4.131534560001455
+    }
+   },
+   "experiment": "Fe/1996exp_5min",
+   "fission_yields": [
+    {
+     "path": "<HOME>/nuclear-data/endfb-viii.0-nfpy/nfy-092_U_234.endf",
+     "sha256": "7cb099c8ab622abc06ded1352de52d6ea9122bdf28455e52e025591f742575e2"
+    },
+    {
+     "path": "<HOME>/nuclear-data/endfb-viii.0-nfpy/nfy-092_U_235.endf",
+     "sha256": "9e1320293a544fc03f33f804a15a9e3ccc3be026552ee6dbc03b8d3e24615e41"
+    },
+    {
+     "path": "<HOME>/nuclear-data/endfb-viii.0-nfpy/nfy-092_U_238.endf",
+     "sha256": "05598b1c16117a729a3314842a2de574ffb7c992f679f6e1505c1d566164791c"
+    },
+    {
+     "path": "<HOME>/nuclear-data/endfb-viii.0-nfpy/nfy-094_Pu_239.endf",
+     "sha256": "a2713aa6d0283b879040a07fa29d3e99b2d660b619c6d11a2a71aa9d5c5a2605"
+    }
+   ],
+   "library": {
+    "path": "<HOME>/Documents/actinv/actinv-data/v1.1.0/activation/tendl-2025-neutron-709g.npz",
+    "sha256": "ec4c72bf598dc8ad3d533d9cfafdcf493e2d1f949a3e4db6251495659b68cc44"
+   },
+   "options": {
+    "bmin_atoms_per_g": 1e-08,
+    "mode": "coupled",
+    "temperature_K": 293.6
+   },
+   "rows": [
+    {
+     "core_ms": {
+      "max": 961.813669,
+      "median": 922.8004305000001,
+      "min": 890.228795
+     },
+     "cram_order": 16,
+     "distinct_result_sha256_without_ms": [
+      "eab003508d18f36dcafc38ca04d18c51bc67668ee37275177351566eb5c0cb98"
+     ],
+     "fission_products_end_of_irradiation": 1112,
+     "kept_states": 1172,
+     "mode": "coupled",
+     "pattern": {
+      "kept_states": 1172,
+      "nonzeros": 21721,
+      "off_diagonal": 20549,
+      "states_in_capture": 3873
+     },
+     "pattern_matches_kept": true,
+     "peak_rss_mib": 131.4296875,
+     "prune": "rate",
+     "repeats": 10,
+     "total_states": 3873,
+     "wall_s": {
+      "max": 0.9874079540022649,
+      "median": 0.9535037360037677,
+      "min": 0.9197378329990897
+     }
+    },
+    {
+     "core_ms": {
+      "max": 1219.55844,
+      "median": 1194.5084895,
+      "min": 1122.5358379999998
+     },
+     "cram_order": 48,
+     "distinct_result_sha256_without_ms": [
+      "a9a069a0229685247b788c7c14094d60b01fed577b888d03681e753dc4cd5b39"
+     ],
+     "fission_products_end_of_irradiation": 1112,
+     "kept_states": 1172,
+     "mode": "coupled",
+     "pattern": {
+      "kept_states": 1172,
+      "nonzeros": 21721,
+      "off_diagonal": 20549,
+      "states_in_capture": 3873
+     },
+     "pattern_matches_kept": true,
+     "peak_rss_mib": 131.39453125,
+     "prune": "rate",
+     "repeats": 10,
+     "total_states": 3873,
+     "wall_s": {
+      "max": 1.2518852530047297,
+      "median": 1.2250758260197472,
+      "min": 1.1464320780069102
+     }
+    },
+    {
+     "core_ms": {
+      "max": 1869.12707,
+      "median": 1849.9538865,
+      "min": 1784.7178000000001
+     },
+     "cram_order": 16,
+     "distinct_result_sha256_without_ms": [
+      "87e66c8bbb6c91cd0c9da02d723dc6285e6ffe01ca9fd428e9edad345bf75a54"
+     ],
+     "fission_products_end_of_irradiation": 2197,
+     "kept_states": 3110,
+     "mode": "coupled",
+     "pattern": {
+      "kept_states": 3110,
+      "nonzeros": 58781,
+      "off_diagonal": 55671,
+      "states_in_capture": 3873
+     },
+     "pattern_matches_kept": true,
+     "peak_rss_mib": 131.37109375,
+     "prune": "reach",
+     "repeats": 10,
+     "total_states": 3873,
+     "wall_s": {
+      "max": 1.9432417539937887,
+      "median": 1.8988821954990271,
+      "min": 1.8328439229808282
+     }
+    },
+    {
+     "core_ms": {
+      "max": 4147.314852,
+      "median": 4106.4480955,
+      "min": 4012.8776879999996
+     },
+     "cram_order": 48,
+     "distinct_result_sha256_without_ms": [
+      "fd5fb4fbf3a3768b89363f3b28b9fcab1897981f8f5e5ee40a9db70cfd04c4e8"
+     ],
+     "fission_products_end_of_irradiation": 2222,
+     "kept_states": 3110,
+     "mode": "coupled",
+     "pattern": {
+      "kept_states": 3110,
+      "nonzeros": 58781,
+      "off_diagonal": 55671,
+      "states_in_capture": 3873
+     },
+     "pattern_matches_kept": true,
+     "peak_rss_mib": 131.41796875,
+     "prune": "reach",
+     "repeats": 10,
+     "total_states": 3873,
+     "wall_s": {
+      "max": 4.2010630590084475,
+      "median": 4.176170138511225,
+      "min": 4.0642325630178675
+     }
+    },
+    {
+     "core_ms": {
+      "max": 2045.48032,
+      "median": 2018.6305754999998,
+      "min": 1956.858275
+     },
+     "cram_order": 16,
+     "distinct_result_sha256_without_ms": [
+      "de035dc8cce9c96e1c663eb6d86428c1e4025e0ef60d9e1e7e149c99e7322db8"
+     ],
+     "fission_products_end_of_irradiation": 2224,
+     "kept_states": 3873,
+     "mode": "coupled",
+     "pattern": {
+      "kept_states": 3873,
+      "nonzeros": 61781,
+      "off_diagonal": 57908,
+      "states_in_capture": 3873
+     },
+     "pattern_matches_kept": true,
+     "peak_rss_mib": 131.34375,
+     "prune": "none",
+     "repeats": 10,
+     "total_states": 3873,
+     "wall_s": {
+      "max": 2.1219948490033858,
+      "median": 2.0697475065098843,
+      "min": 2.005646099016303
+     }
+    },
+    {
+     "core_ms": {
+      "max": 4890.957066,
+      "median": 4845.2089815,
+      "min": 4781.561212
+     },
+     "cram_order": 48,
+     "distinct_result_sha256_without_ms": [
+      "c9ef7b99e947affbadee050763328a397c45bbd684b0b6c651630cb635faf276"
+     ],
+     "fission_products_end_of_irradiation": 2249,
+     "kept_states": 3873,
+     "mode": "coupled",
+     "pattern": {
+      "kept_states": 3873,
+      "nonzeros": 61781,
+      "off_diagonal": 57908,
+      "states_in_capture": 3873
+     },
+     "pattern_matches_kept": true,
+     "peak_rss_mib": 131.38671875,
+     "prune": "none",
+     "repeats": 10,
+     "total_states": 3873,
+     "wall_s": {
+      "max": 4.95439778099535,
+      "median": 4.91461182050989,
+      "min": 4.86252110498026
+     }
+    }
+   ],
+   "timed_outputs": [
+    "inventory",
+    "activity",
+    "heat",
+    "ledger"
+   ]
+  },
+  "w": {
+   "composition": {
+    "W": 100.0
+   },
+   "default_outputs_cram16": {
+    "none": {
+     "core_ms": 51351.525842,
+     "peak_rss_kib": 397796,
+     "wall_s": 51.80141741799889
+    },
+    "rate": {
+     "core_ms": 1373.997083,
+     "peak_rss_kib": 196844,
+     "wall_s": 1.4392873939941637
+    },
+    "reach": {
+     "core_ms": 38268.966079000005,
+     "peak_rss_kib": 344608,
+     "wall_s": 38.636998795002
+    }
+   },
+   "experiment": "W/1996exp_7hour",
+   "fission_yields": [],
+   "library": {
+    "path": "<HOME>/nuclear-data/tendl-2017/build/neutron.n.p10.npz",
+    "sha256": "218156708ae685db2a50cd7a2c74ca02049b68f266c38a29020b71095717447d"
+   },
+   "options": {
+    "bmin_atoms_per_g": 1e-08,
+    "mode": "auto",
+    "temperature_K": 293.6
+   },
+   "rows": [
+    {
+     "core_ms": {
+      "max": 744.89414,
+      "median": 722.1778355,
+      "min": 705.3164939999999
+     },
+     "cram_order": 16,
+     "distinct_result_sha256_without_ms": [
+      "68fbd3b9a2feb906a3f3d18f33ec07ddb3583935c7f79dd403c88109da6eff04"
+     ],
+     "kept_states": 101,
+     "mode": "trace",
+     "pattern": {
+      "kept_states": 101,
+      "nonzeros": 1735,
+      "off_diagonal": 1634,
+      "states_in_capture": 3873
+     },
+     "pattern_matches_kept": true,
+     "peak_rss_mib": 192.35546875,
+     "prune": "rate",
+     "repeats": 10,
+     "total_states": 3873,
+     "wall_s": {
+      "max": 0.7781467740132939,
+      "median": 0.7519413270201767,
+      "min": 0.7351940879889298
+     }
+    },
+    {
+     "core_ms": {
+      "max": 761.397247,
+      "median": 745.474409,
+      "min": 722.93791
+     },
+     "cram_order": 48,
+     "distinct_result_sha256_without_ms": [
+      "aa11a4410b058186212478603f86c9341854c78190d5cd466f0144082e6626d7"
+     ],
+     "kept_states": 101,
+     "mode": "trace",
+     "pattern": {
+      "kept_states": 101,
+      "nonzeros": 1735,
+      "off_diagonal": 1634,
+      "states_in_capture": 3873
+     },
+     "pattern_matches_kept": true,
+     "peak_rss_mib": 192.328125,
+     "prune": "rate",
+     "repeats": 10,
+     "total_states": 3873,
+     "wall_s": {
+      "max": 0.7897034169873223,
+      "median": 0.7733010469964938,
+      "min": 0.7556046259996947
+     }
+    },
+    {
+     "core_ms": {
+      "max": 922.2811869999999,
+      "median": 893.4098664999999,
+      "min": 879.013648
+     },
+     "cram_order": 16,
+     "distinct_result_sha256_without_ms": [
+      "e8a4a7a0fe239e2fdf0a1dc956b708a9647641d8fc28ef528dfb0a94ed845eab"
+     ],
+     "kept_states": 1568,
+     "mode": "trace",
+     "pattern": {
+      "kept_states": 1568,
+      "nonzeros": 21265,
+      "off_diagonal": 19697,
+      "states_in_capture": 3873
+     },
+     "pattern_matches_kept": true,
+     "peak_rss_mib": 192.390625,
+     "prune": "reach",
+     "repeats": 10,
+     "total_states": 3873,
+     "wall_s": {
+      "max": 0.9540833700157236,
+      "median": 0.9240049825020833,
+      "min": 0.909252400015248
+     }
+    },
+    {
+     "core_ms": {
+      "max": 1402.043283,
+      "median": 1358.2229885000002,
+      "min": 1323.336182
+     },
+     "cram_order": 48,
+     "distinct_result_sha256_without_ms": [
+      "a05bca8b8683c57f845e3ee4b6b8d2be2047d00805ccbf934c5ba250d6a679e6"
+     ],
+     "kept_states": 1568,
+     "mode": "trace",
+     "pattern": {
+      "kept_states": 1568,
+      "nonzeros": 21265,
+      "off_diagonal": 19697,
+      "states_in_capture": 3873
+     },
+     "pattern_matches_kept": true,
+     "peak_rss_mib": 192.35546875,
+     "prune": "reach",
+     "repeats": 10,
+     "total_states": 3873,
+     "wall_s": {
+      "max": 1.4357587980048265,
+      "median": 1.394026276000659,
+      "min": 1.3556094910018146
+     }
+    },
+    {
+     "core_ms": {
+      "max": 1087.670596,
+      "median": 1054.1342205,
+      "min": 1016.977875
+     },
+     "cram_order": 16,
+     "distinct_result_sha256_without_ms": [
+      "937a13a0d23d5fd9c6ccf3832d8960b97695f52aea8b8f741027ecc1c011e270"
+     ],
+     "kept_states": 3873,
+     "mode": "trace",
+     "pattern": {
+      "kept_states": 3873,
+      "nonzeros": 28179,
+      "off_diagonal": 24306,
+      "states_in_capture": 3873
+     },
+     "pattern_matches_kept": true,
+     "peak_rss_mib": 192.296875,
+     "prune": "none",
+     "repeats": 10,
+     "total_states": 3873,
+     "wall_s": {
+      "max": 1.1279574910004158,
+      "median": 1.0902976710058283,
+      "min": 1.0531859690090641
+     }
+    },
+    {
+     "core_ms": {
+      "max": 1849.205215,
+      "median": 1791.793267,
+      "min": 1756.532764
+     },
+     "cram_order": 48,
+     "distinct_result_sha256_without_ms": [
+      "537c91708a4d4742185f575f7865dd5ea029e85eaa6530a5aafa7be3237b977e"
+     ],
+     "kept_states": 3873,
+     "mode": "trace",
+     "pattern": {
+      "kept_states": 3873,
+      "nonzeros": 28179,
+      "off_diagonal": 24306,
+      "states_in_capture": 3873
+     },
+     "pattern_matches_kept": true,
+     "peak_rss_mib": 192.34375,
+     "prune": "none",
+     "repeats": 10,
+     "total_states": 3873,
+     "wall_s": {
+      "max": 1.8866635710000992,
+      "median": 1.8277766985120252,
+      "min": 1.7983486680022907
+     }
+    }
+   ],
+   "timed_outputs": [
+    "inventory",
+    "activity",
+    "heat",
+    "ledger"
+   ]
+  }
+ },
+ "host": {
+  "cgroup": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p1218609-i1214507.scope",
+  "cgroup_limits": {
+   "cpu.max": "200000 100000",
+   "memory.max": "6442450944",
+   "memory.swap.max": "0",
+   "pids.max": "128"
+  },
+  "cpu": "Intel(R) Core(TM) i3-N305",
+  "environment": {
+   "OMP_NUM_THREADS": null,
+   "RAYON_NUM_THREADS": "2"
+  },
+  "kernel": "7.0.0-38-generic",
+  "logical_cpus": 8,
+  "machine": "x86_64",
+  "node": "connoravila"
+ },
+ "identities": {
+  "actinv": "79e1e8600a8c2ad3ce42e72dcf34ce4dd8fa9bf60288db24e9eeb077781c9072",
+  "decay_fallback": "850b8b7f85f8d88b6ad826c4cd341aaaffabd525c8ecf3c588a0ad437bf5d123",
+  "decay_primary": "6f04cf009086c179021f243a58dadc2d5bb078de5ba39c4fe46ccad77d228ddb",
+  "library": "218156708ae685db2a50cd7a2c74ca02049b68f266c38a29020b71095717447d",
+  "prune_probe": "a0c5391c496919279350e13f1308614aeac7c7ed01f604c46e7ebf189ad36736"
+ },
+ "nonzeros_definition": "distinct off-diagonal (i, j) with a nonzero decay, reaction, feed or removal entry between kept states, plus one diagonal entry per kept state",
+ "protocol": "P149 S6",
+ "schema": "actinv-p149-s6-scaling-1",
+ "timing_note": "times and memory hold for the recorded host and cgroup only"
+}
