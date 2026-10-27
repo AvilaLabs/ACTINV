@@ -4149,3 +4149,22 @@ LCT=3 frame: light ejectiles had been read in the laboratory, while the ENDF con
 reads them in the centre of mass. An opt-in `--continuum-recoil evaluated` treatment follows. The checker now builds
 the NJOY comparisons in NJOY's treatments and takes the elastic gate reference from NJOY's pointwise σ times its own
 exact W(E). The defaults are unchanged and are reported against NJOY.
+
+## Entry 236 — P154 development run 2; Amendment B registered (2026-10-27)
+
+Development run 2 of `controls/check_p154.py` on a release build of `748d15f` (binary `020db689…93ee`; G1 at
+`748d15f`: fmt and clippy clean, 1192 tests passed after one unit-test tolerance was corrected from 1e-6 to 1e-5, the
+accuracy of its own 8-point quadrature). G2, G3 and G6 passed. G4 inelastic passed for Fe-56, Cr-52 and Ni-58 (worst
+group 0.26 %). G4 disappearance failed for all four targets, G4 inelastic failed for W-184 in nine groups at 115–182
+keV, and G5 failed. The causes are diagnosed in `protocols/ACTINV-P154_AMENDMENT_B.md`
+(`7fc6c840501db52fe1dceb967bda3f498945975825ab3391b550d2ea82a53c5b`). Both are NJOY2016.79 HEATR approximations,
+and the table is correct in both cases:
+- `tabsq6` multiplies 4-point Gauss–Legendre weights, which sum to 2, by the full panel width. This counts the capture-photon
+  continuum twice relative to the discrete lines, and the routine ignores LEP=1. Read as the format specifies, the
+  Fe-56 thermal photon-recoil damage is 160.5 eV per capture. NJOY gives 214.1 eV and the table 160.6 eV.
+- `disbar`'s 1.1-step energy ladder, already named for elastic in Amendment A, also applies to discrete inelastic
+  levels. Its linear interpolation overshoots where the damage rises steeply above W-184's first levels.
+
+The checker will take the G4 and G5 references from NJOY with these two terms replaced by exact values. It must first
+reproduce NJOY's own MT=446 and MT=447 by emulation, to within 0.5 %, where those terms dominate. The candidate is
+unchanged.
