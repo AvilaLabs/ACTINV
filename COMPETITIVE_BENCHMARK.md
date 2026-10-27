@@ -144,7 +144,7 @@ FILE...` (P155). Sources: `crates/actinv-core/src/fispact_import.rs`,
 | `DEPLETION` | `summary.depletion` | **parity** | P135; noted by the importer (an output request; set `summary.depletion` for the table) |
 | `PATH` | `pathways` | **ahead** | targets imported; numeric arguments not interpreted |
 | `ROUTES` | `pathways` | **ahead** | exact route integration with closure |
-| `RESULT` | `pathways.targets`, `rank_by` | **parity** | noted when the deck runs its own inventory, `unsupported` when the listed atoms would be the only one |
+| `RESULT` | `pathways.targets`, `rank_by` | **parity** | noted: a converted deck always runs its own inventory, which the pathways use |
 | `LOOKAHEAD` | `pathways.max_depth`, `path_floor` | **parity** | pathways, row 21 |
 | `PATHRESET` | `pathways` floors | **parity** | pathways, row 21 |
 | `GENERIC` | `pathways` | **parity** | generic pathways grouped by edge-type sequence |

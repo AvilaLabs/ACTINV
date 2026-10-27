@@ -34,8 +34,8 @@
   `DENSITY`; `PROBTABLE` sets `self_shielding.table` from `--self-shielding-table` (`approximated`); `SSFDILUTION`
   sets `dilution_overrides`, converting FISPACT-II's group numbers (1 is the highest energy) to ACTINV's 0-based
   ascending index. Without the option each is `unsupported` and names it.
-- `XSTHRESHOLD` and `DEPLETION` are noted; `RESULT` is noted when the deck runs its own inventory and `unsupported`
-  when it would be the only one. The `IRON`, `READSF`, `USESPALLATION` and `USEXSEXTRA` reasons were corrected.
+- `XSTHRESHOLD` and `DEPLETION` are noted; `RESULT` is noted (a converted deck always runs its own
+  inventory). The `IRON`, `READSF`, `USESPALLATION` and `USEXSEXTRA` reasons were corrected.
 - Photon keywords: `NOXRAY` sets `photon.exclude_xrays` (`mapped`), `SPEK` sets `photon.missing_spectra: "estimate"`
   (`approximated`: a mean-energy exponential shape by decay mode, with certified lower and upper dose bounds), and
   `READGG` sets `photon.group_structure: "custom"` with `group_boundaries_eV` read from the files file's `ggbins` entry

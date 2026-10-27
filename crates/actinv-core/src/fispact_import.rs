@@ -1726,20 +1726,13 @@ impl<'a> Interp<'a> {
             }
             "SSFDILUTION" => self.apply_ssf_dilution(cmd),
             "RESULT" => {
-                // RESULT stands in for an inventory run that precedes a pathway calculation
-                if self.material.is_some() && (!self.steps.is_empty() || self.pending.is_some()) {
-                    self.log(
-                        cmd,
-                        Status::Noted,
-                        "the deck defines and runs its own inventory (material, then a schedule step), and ACTINV's pathways are built from that run; the atom counts listed here are not used",
-                    );
-                } else {
-                    self.log(
-                        cmd,
-                        Status::Unsupported,
-                        "no inventory run (material and a schedule step) precedes it, so the atom counts it lists would be the only inventory; ACTINV starts every problem from the material and its schedule and cannot take an inventory as a pathway input",
-                    );
-                }
+                // RESULT stands in for an inventory run that precedes a pathway calculation; a deck
+                // ACTINV converts always defines its material and runs a schedule, which supplies it
+                self.log(
+                    cmd,
+                    Status::Noted,
+                    "the deck defines and runs its own inventory (material and a schedule), and ACTINV's pathways are built from that run; the atom counts listed here are not used",
+                );
             }
             "PULSE" | "ENDPULSE" => {}
             other => {
@@ -1912,7 +1905,7 @@ impl<'a> Interp<'a> {
                 self.log(
                     cmd,
                     Status::Unsupported,
-                    "sensitivity coefficients with respect to decay constants: ACTINV ranks no decay-constant sensitivities (uncertainty.channels decay_constants propagates the half-life uncertainties but gives no per-parameter ranking), and the FISPACT-II manual marks the option as unavailable in its current version",
+                    "SENSITIVITY LAMBDA (sensitivity coefficients with respect to decay constants): ACTINV ranks no decay-constant sensitivities (uncertainty.channels decay_constants propagates the half-life uncertainties but gives no per-parameter ranking), and the FISPACT-II manual marks the option as unavailable in its current version",
                 );
             }
             _ => {
@@ -6933,8 +6926,7 @@ ZERO
         let iron = convert(&deck_with(&format!("IRON\n{RUN}")), &context()).unwrap();
         assert!(entry_detail(&iron, "IRON").contains("2023"));
         assert!(!entry_detail(&iron, "IRON").contains("background removal"));
-        // RESULT is noted beside a deck that runs its own inventory, refused when it would be the
-        // only one
+        // RESULT is noted wherever it stands: a converted deck always runs its own inventory
         let own = convert(
             &deck_with(&format!("{RUN}\nPATH 1 MN54\nRESULT 1\nFE56 1.0E10")),
             &context(),
@@ -6946,7 +6938,7 @@ ZERO
             &context(),
         )
         .unwrap();
-        assert_eq!(entry_status(&first, "RESULT"), vec!["unsupported"]);
+        assert_eq!(entry_status(&first, "RESULT"), vec!["noted"]);
     }
 
     #[test]
