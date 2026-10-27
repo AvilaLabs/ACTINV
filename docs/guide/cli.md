@@ -145,7 +145,7 @@ acceptance. Omitting the `waste` block retains the existing twin result fields.
 actinv import-fispact DECK.i OUT.json [--fluxes FLUXES] [--files FILES] [--library LIB.npz] [--decay DECAY] [--covariance COV.npz] [--strict]
 ```
 
-Writes an `actinv-spec-1` problem and an `OUT.import.json` report that lists every deck keyword as mapped, approximated, noted or unsupported. `--strict` fails when any keyword is unsupported. See [Move a FISPACT-II deck to ACTINV](fispact-migration.md) for the keyword table and limits.
+Writes an `actinv-spec-1` problem and an `OUT.import.json` report that lists every deck keyword as mapped, approximated, noted or unsupported. `--strict` fails when any keyword is unsupported. Four more options, `--fission-yields FILE...`, `--resonance FILE...`, `--self-shielding-table FILE` and `--damage TABLE`, supply the data files that the fission, self-shielding and damage keywords need; each is hashed into the spec. See [Move a FISPACT-II deck to ACTINV](fispact-migration.md) for the keyword table and limits.
 
 ## Export photon sources
 

@@ -15,6 +15,27 @@
 - `actinv inspect decay DECAY_PATH NUCLIDE --estimated-spectrum` prints the estimated grouped spectrum beside the
   evaluated one.
 
+**Added (P155 part 1: `actinv import-fispact`; an import without the new options is unchanged)**
+
+- Four options that supply data a deck does not name, each file hashed into the spec: `--fission-yields FILE...`
+  (ENDF neutron-induced yield files), `--self-shielding-table FILE` (Bondarenko table), `--resonance FILE...` (ENDF
+  resonance evaluations) and `--damage TABLE` (read now, used by the damage keywords in the next step of P155).
+  An option the deck never uses is listed under `options_unused` in the import report.
+- Fission keywords: `USEFISSION` fills `fission_yields.files` (else `unsupported`, naming `--fission-yields`),
+  `NOFISS` forces no yield files, `CUMFYLD` sets `yields: "cumulative"`, `FISYIELD` sets `fission_yields.parents`
+  (the parents are read from the yield files' own headers; the default U-235, U-238, Pu-239 set is intersected with
+  the files and the dropped names are reported), `FISCHOOSE` sets `pathways.fission_parents`.
+- Uncertainty keywords: `UNCTYPE` sets `uncertainty.channels` (type 2 is `approximated`: ACTINV propagates MF=33
+  whenever a covariance is present), `SENSITIVITY SIGMA` sets `uncertainty.voi` (`approximated`; `LAMBDA` stays
+  `unsupported`), `MCSAMPLE` and `MCSEED` are noted beside it and `unsupported` without it, `ERROR` sets per-reaction
+  `cross_section_uncertainty` overrides (`approximated`; -1 is noted), `COVARIANCE` is noted.
+- Self-shielding keywords: `SSFGEOMETRY` (with `SSFCHOOSE`) sets `self_shielding.geometry` from `--resonance` and
+  `DENSITY`; `PROBTABLE` sets `self_shielding.table` from `--self-shielding-table` (`approximated`); `SSFDILUTION`
+  sets `dilution_overrides`, converting FISPACT-II's group numbers (1 is the highest energy) to ACTINV's 0-based
+  ascending index. Without the option each is `unsupported` and names it.
+- `XSTHRESHOLD` and `DEPLETION` are noted; `RESULT` is noted when the deck runs its own inventory and `unsupported`
+  when it would be the only one. The `IRON`, `READSF`, `USESPALLATION` and `USEXSEXTRA` reasons were corrected.
+
 **Added (P153; all opt-in, default results unchanged)**
 
 - `fission_yields.energy: "rate_weighted"` mixes the evaluation's tabulated yield sets by each parent's fission rate

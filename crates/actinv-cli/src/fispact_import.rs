@@ -1,7 +1,8 @@
 //! P132a: FISPACT-II input deck -> `actinv-spec-1` problem importer, command-line front end.
 //!
 //! `actinv import-fispact DECK.i OUT.json [--fluxes FLUXES] [--files FILES] [--library LIB.npz]
-//! [--decay DECAY] [--covariance COV.npz] [--strict]`
+//! [--decay DECAY] [--covariance COV.npz] [--fission-yields FILE...] [--damage TABLE]
+//! [--self-shielding-table FILE] [--resonance FILE...] [--strict]`
 //!
 //! The conversion itself (lexer, keyword table, mapping, report) is `actinv_core::fispact_import`,
 //! shared with the browser build and re-exported here. This module reads the deck, the files file
@@ -14,7 +15,8 @@ use std::path::{Path, PathBuf};
 
 pub use actinv_core::fispact_import::{
     convert, lex, load_flux_text, parse_files_file, Conversion, Counts, CovarianceRef,
-    ImportContext, Lexed, LoadedFlux, Status, Tok, IRRADIATES_WITHOUT_FLUXES,
+    FissionYieldFile, HashedFile, ImportContext, Lexed, LoadedFlux, Status, Tok,
+    IRRADIATES_WITHOUT_FLUXES,
 };
 
 fn load_flux(path: &Path) -> Result<LoadedFlux, String> {
@@ -40,10 +42,16 @@ pub struct CliArgs {
     pub library: Option<String>,
     pub decay: Option<String>,
     pub covariance: Option<String>,
+    pub damage: Option<String>,
+    pub self_shielding_table: Option<String>,
+    /// `--fission-yields FILE...`: every word up to the next option
+    pub fission_yields: Vec<String>,
+    /// `--resonance FILE...`: every word up to the next option
+    pub resonance: Vec<String>,
     pub strict: bool,
 }
 
-pub const USAGE: &str = "usage: actinv import-fispact DECK.i OUT.json [--fluxes FLUXES] [--files FILES] [--library LIB.npz] [--decay DECAY] [--covariance COV.npz] [--strict]";
+pub const USAGE: &str = "usage: actinv import-fispact DECK.i OUT.json [--fluxes FLUXES] [--files FILES] [--library LIB.npz] [--decay DECAY] [--covariance COV.npz] [--fission-yields FILE...] [--damage TABLE] [--self-shielding-table FILE] [--resonance FILE...] [--strict]";
 
 pub fn parse_cli(args: &[String]) -> Result<CliArgs, String> {
     let mut cli = CliArgs::default();
@@ -56,7 +64,13 @@ pub fn parse_cli(args: &[String]) -> Result<CliArgs, String> {
                 cli.strict = true;
                 index += 1;
             }
-            "--fluxes" | "--files" | "--library" | "--decay" | "--covariance" => {
+            "--fluxes"
+            | "--files"
+            | "--library"
+            | "--decay"
+            | "--covariance"
+            | "--damage"
+            | "--self-shielding-table" => {
                 let value = args
                     .get(index + 1)
                     .ok_or_else(|| format!("option {arg} has no value"))?
@@ -66,12 +80,34 @@ pub fn parse_cli(args: &[String]) -> Result<CliArgs, String> {
                     "--files" => &mut cli.files,
                     "--library" => &mut cli.library,
                     "--decay" => &mut cli.decay,
+                    "--damage" => &mut cli.damage,
+                    "--self-shielding-table" => &mut cli.self_shielding_table,
                     _ => &mut cli.covariance,
                 };
                 if slot.replace(value).is_some() {
                     return Err(format!("duplicate option {arg}"));
                 }
                 index += 2;
+            }
+            "--fission-yields" | "--resonance" => {
+                let slot = if arg == "--resonance" {
+                    &mut cli.resonance
+                } else {
+                    &mut cli.fission_yields
+                };
+                if !slot.is_empty() {
+                    return Err(format!("duplicate option {arg}"));
+                }
+                let files: Vec<String> = args[index + 1..]
+                    .iter()
+                    .take_while(|word| !word.starts_with("--"))
+                    .cloned()
+                    .collect();
+                if files.is_empty() {
+                    return Err(format!("option {arg} has no value"));
+                }
+                index += 1 + files.len();
+                *slot = files;
             }
             other if other.starts_with("--") => return Err(format!("unknown option {other}")),
             other => {
@@ -189,11 +225,40 @@ pub fn run(cli: &CliArgs) -> Result<String, String> {
         }),
         None => None,
     };
+    let hashed = |path: &String| -> Result<HashedFile, String> {
+        Ok(HashedFile {
+            path: path.clone(),
+            sha256: sha256_file(path)?,
+        })
+    };
+    // a yield file names its parent in its own MF=8 header; reading it here keeps the conversion
+    // free of file access, and a file that does not parse stops the import
+    let fission_yields = cli
+        .fission_yields
+        .iter()
+        .map(|path| {
+            let file = hashed(path)?;
+            let parent = actinv_data::fission::parse_file(path)?.parent;
+            Ok(FissionYieldFile {
+                file,
+                parent_za: parent.0,
+                parent_liso: parent.1,
+            })
+        })
+        .collect::<Result<Vec<_>, String>>()?;
     let ctx = ImportContext {
         flux,
         library: cli.library.clone(),
         decay: cli.decay.clone(),
         covariance,
+        fission_yields,
+        damage: cli.damage.as_ref().map(hashed).transpose()?,
+        self_shielding_table: cli.self_shielding_table.as_ref().map(hashed).transpose()?,
+        resonance: cli
+            .resonance
+            .iter()
+            .map(hashed)
+            .collect::<Result<Vec<_>, String>>()?,
     };
 
     let conversion = convert(&deck_text, &ctx).map_err(|error| match &unresolved_fluxes {
@@ -452,5 +517,145 @@ mod tests {
         let _ = std::fs::remove_dir_all(&dir);
         assert!(result.is_err(), "{result:?}");
         assert_eq!(after, COOLING_ONLY, "the deck was overwritten by the spec");
+    }
+
+    // ---- P155: the new options ----
+
+    fn words(line: &str) -> Vec<String> {
+        line.split_whitespace().map(str::to_string).collect()
+    }
+
+    /// An 80-column ENDF record.
+    fn endf_record(values: [&str; 6], mf: i32, mt: i32, sequence: i32) -> String {
+        let data: String = values
+            .into_iter()
+            .map(|value| format!("{value:>11}"))
+            .collect();
+        format!("{data}{:>4}{mf:>2}{mt:>3}{sequence:>5}", 9237)
+    }
+
+    /// A one-energy MF=8/MT=454 evaluation for the parent `za` (yields sum to 2).
+    fn yield_evaluation(za: &str) -> String {
+        [
+            endf_record([za, "233", "0", "0", "0", "0"], 1, 451, 1),
+            endf_record(["0", "0", "0", "0", "0", "0"], 1, 451, 2),
+            endf_record(["", "", "", "", "", ""], 1, 0, 99_999),
+            endf_record([za, "233", "1", "0", "0", "0"], 8, 454, 1),
+            endf_record(["0.0253", "0", "0", "0", "4", "1"], 8, 454, 2),
+            endf_record(["53135", "0", "2", "0.1", "", ""], 8, 454, 3),
+            endf_record(["", "", "", "", "", ""], 8, 0, 99_999),
+        ]
+        .join("\n")
+    }
+
+    fn sha256_text(bytes: &[u8]) -> String {
+        use sha2::{Digest, Sha256};
+        format!("{:x}", Sha256::digest(bytes))
+    }
+
+    #[test]
+    fn p155_new_options_parse() {
+        let cli = parse_cli(&words(
+            "deck.i out.json --fission-yields u235.endf u238.endf --damage dmg.json --self-shielding-table s.json --resonance a.endf b.endf c.endf --strict",
+        ))
+        .unwrap();
+        assert_eq!(cli.fission_yields, ["u235.endf", "u238.endf"]);
+        assert_eq!(cli.resonance, ["a.endf", "b.endf", "c.endf"]);
+        assert_eq!(cli.damage.as_deref(), Some("dmg.json"));
+        assert_eq!(cli.self_shielding_table.as_deref(), Some("s.json"));
+        assert!(cli.strict);
+        // a list option needs at least one file and may not repeat
+        assert!(parse_cli(&words("deck.i out.json --resonance")).is_err());
+        assert!(parse_cli(&words("deck.i out.json --fission-yields --strict")).is_err());
+        assert!(parse_cli(&words(
+            "deck.i out.json --resonance a.endf --resonance b.endf"
+        ))
+        .is_err());
+        assert!(parse_cli(&words("deck.i out.json --damage a --damage b")).is_err());
+        assert!(parse_cli(&words("deck.i out.json --self-shielding-table")).is_err());
+    }
+
+    #[test]
+    fn p155_supplied_files_are_hashed_into_the_spec() {
+        let dir = p140_scratch("p155-hash");
+        let deck = dir.join("deck.i");
+        let out = dir.join("out.json");
+        std::fs::write(
+            &deck,
+            "FISPACT\n* t\nMASS 1E-3 1\n FE 100\nDENSITY 7.874\nUSEFISSION\nSSFGEOMETRY 1 0.01\nFLUX 0\nTIME 1 DAYS ATOMS\nEND\n",
+        )
+        .unwrap();
+        let u235 = yield_evaluation("92235");
+        let u238 = yield_evaluation("92238");
+        std::fs::write(dir.join("u235.endf"), &u235).unwrap();
+        std::fs::write(dir.join("u238.endf"), &u238).unwrap();
+        std::fs::write(dir.join("fe56.endf"), b"resonance data").unwrap();
+        let mut cli = p140_cli(&deck, &out);
+        cli.fission_yields = vec![
+            dir.join("u235.endf").display().to_string(),
+            dir.join("u238.endf").display().to_string(),
+        ];
+        cli.resonance = vec![dir.join("fe56.endf").display().to_string()];
+        let result = run(&cli);
+        let spec: Value = serde_json::from_str(&std::fs::read_to_string(&out).unwrap_or_default())
+            .unwrap_or(Value::Null);
+        let _ = std::fs::remove_dir_all(&dir);
+        result.unwrap();
+        let files = spec["fission_yields"]["files"].as_array().unwrap();
+        assert_eq!(files.len(), 2);
+        assert_eq!(files[0]["sha256"], sha256_text(u235.as_bytes()));
+        assert_eq!(files[1]["sha256"], sha256_text(u238.as_bytes()));
+        // the parents come from the files' own headers
+        assert_eq!(
+            spec["fission_yields"]["parents"],
+            serde_json::json!({"include": ["U235", "U238"]})
+        );
+        let resonance = &spec["self_shielding"]["geometry"]["resonance_files"];
+        assert_eq!(resonance[0]["sha256"], sha256_text(b"resonance data"));
+    }
+
+    #[test]
+    fn p155_a_missing_option_file_or_a_bad_yield_file_stops_the_import() {
+        let dir = p140_scratch("p155-bad");
+        let deck = dir.join("deck.i");
+        let out = dir.join("out.json");
+        std::fs::write(&deck, COOLING_ONLY).unwrap();
+        std::fs::write(dir.join("junk.endf"), "not an evaluation\n").unwrap();
+        let mut missing = p140_cli(&deck, &out);
+        missing.resonance = vec![dir.join("absent.endf").display().to_string()];
+        let missing = run(&missing);
+        let mut junk = p140_cli(&deck, &out);
+        junk.fission_yields = vec![dir.join("junk.endf").display().to_string()];
+        let junk = run(&junk);
+        let written = out.exists();
+        let _ = std::fs::remove_dir_all(&dir);
+        assert!(missing.is_err(), "{missing:?}");
+        assert!(junk.is_err(), "{junk:?}");
+        assert!(!written);
+    }
+
+    #[test]
+    fn p155_strict_refuses_a_keyword_whose_option_is_missing() {
+        let dir = p140_scratch("p155-strict");
+        let deck = dir.join("deck.i");
+        let out = dir.join("out.json");
+        std::fs::write(
+            &deck,
+            "FISPACT\n* t\nMASS 1E-3 1\n FE 100\nUSEFISSION\nSSFGEOMETRY 1 0.01\nFLUX 0\nTIME 1 DAYS ATOMS\nEND\n",
+        )
+        .unwrap();
+        let mut cli = p140_cli(&deck, &out);
+        cli.strict = true;
+        let result = run(&cli);
+        let written = out.exists();
+        let report = std::fs::read_to_string(dir.join("out.import.json")).unwrap_or_default();
+        let _ = std::fs::remove_dir_all(&dir);
+        let error = result.expect_err("--strict must fail when an option is missing");
+        assert!(
+            error.contains("USEFISSION") && error.contains("SSFGEOMETRY"),
+            "{error}"
+        );
+        assert!(!written, "--strict wrote a spec");
+        assert!(report.contains("--fission-yields") && report.contains("--resonance"));
     }
 }
