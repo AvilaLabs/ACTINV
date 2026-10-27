@@ -384,6 +384,10 @@ jobs:
       - name: P18 formal closure preserves the frozen failure verdict
         run: python controls/check_p18.py --no-write
 
+      # P16 builds its doctests offline; this job has not fetched the dev-dependencies otherwise.
+      - name: Fetch Rust dependencies for offline controls
+        run: cargo fetch --locked
+
       - name: P16 typed-boundary control and independent verdict
         run: |
           python controls/test_p16_dependency_history.py
