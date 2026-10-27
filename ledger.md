@@ -4232,3 +4232,20 @@ The branch was then rebased onto master with P154 (`0de61ae`):
   `results/p155/`.
 - The handbook walk-through passes 102/102 with 0 unclassified, and the mdbook build and anchor check pass. **G8** is
   pending CI on the pushed commit.
+
+## Entry 240 — P154 verdict: native damage energy without NJOY (2026-10-27)
+
+**P154-PASS** (`results/p154_verdict.json`). G0–G6 are as recorded in entry 238 for candidate `93af72e` (binary
+`020db689151e367f0a2e8a4474b54c2d9fc098be6481758a2f422dbca5d993ee`). G7: all six workflows succeeded on the evidence
+commit `0de61ae`, `controls` among them, and no committed baseline changed. Three development runs were made, disclosed
+in entries 235, 236 and 238, and three amendments were registered before the evidence run: A (entry 235), B (entry 236)
+and C (entry 237). There was no repair round.
+
+Released for use:
+- `build-damage --method kinematic`, which writes table 2 from the evaluation's own kinematics with exact NRT,
+  arc-dpa and He/dpa;
+- the opt-in NJOY-treatment options `--capture-photons per-photon` and `--continuum-recoil evaluated`.
+
+Two numerical approximations in NJOY2016.79 HEATR are documented in Amendments B and C: `tabsq6`'s doubled continuum
+weight and ignored LEP, and the linear interpolation of σ·W between PENDF grid energies above level thresholds. The
+table follows the evaluation where these depart from it.
