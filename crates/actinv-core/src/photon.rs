@@ -10,6 +10,7 @@ use std::collections::BTreeMap;
 use actinv_data::decay::{ContinuousRadiation, Nuclide};
 use serde::{Deserialize, Serialize};
 
+use crate::chain::rtyp_digits;
 use crate::run::EV;
 use crate::spec::{BremsstrahlungOptions, PointSourceOptions, POINT_SOURCE_MIN_DISTANCE_M};
 
@@ -145,6 +146,10 @@ pub struct NuclidePhotonOut {
     /// This nuclide's share of the point-source dose; present only with `photon.point_source`.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub point_source_gamma_air_dose_Sv_h: Option<f64>,
+    /// Power (W/g) of the nuclide's X-ray spectra (STYP 9) removed from the source; present
+    /// only with `photon.exclude_xrays`.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub excluded_xray_power_W_g: Option<f64>,
     pub lines: Vec<NuclideLineOut>,
     pub groups: Vec<PhotonGroupOut>,
 }
@@ -264,6 +269,80 @@ pub struct PhotonSourceOut {
     /// FISPACT-II `BREMSSTRAHLUNG` analog; present only with `photon.bremsstrahlung`.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub bremsstrahlung: Option<BremsstrahlungOut>,
+    /// Power (W/g) of nuclides without a photon spectrum that `photon.missing_spectra: "estimate"`
+    /// placed in the groups; included in `source_power_W_g`, not in `unrepresented_gamma_power_W_g`.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub estimated_gamma_power_W_g: Option<f64>,
+    /// Power (W/g) of the X-ray spectra removed by `photon.exclude_xrays`; not counted as
+    /// unrepresented and not in `source_power_W_g`.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub excluded_xray_power_W_g: Option<f64>,
+    /// The estimated nuclides and the range of each dose; present only with
+    /// `photon.missing_spectra: "estimate"`.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub estimated_spectra: Option<EstimatedSpectraOut>,
+}
+
+/// One linear dose quantity of an estimated nuclide: the estimate and the bounds that hold for
+/// any spectrum with the nuclide's power below its energy cap.
+#[derive(Clone, Debug, Serialize, Deserialize)]
+pub struct DoseRange {
+    pub estimate: f64,
+    pub lower: f64,
+    pub upper: f64,
+    /// This nuclide's share of the step's estimated dose; set when the step estimate exists.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub share_of_step_estimate: Option<f64>,
+}
+
+/// A nuclide whose photon spectrum was estimated from its mean electromagnetic energy.
+#[derive(Clone, Debug, Serialize, Deserialize)]
+pub struct EstimatedNuclideOut {
+    pub nuclide: String,
+    pub activity_Bq_g: f64,
+    pub mean_em_energy_eV_per_decay: f64,
+    /// Class of the decay mode with the largest summed branching ratio.
+    pub decay_mode: String,
+    /// E_max before the Q-value cap.
+    pub e_max_manual_eV: f64,
+    pub e_max_eV: f64,
+    /// Largest Q-value among the modes with positive branching, when one is positive.
+    pub q_cap_eV: Option<f64>,
+    /// Upper energy of the dose bounds: `q_cap_eV`, else the top of the group structure.
+    pub e_cap_eV: f64,
+    pub photons_per_decay: f64,
+    pub photons_s_g: f64,
+    pub power_W_g: f64,
+    /// Power (W/g) of the estimate below or above the group structure.
+    pub ungrouped_power_W_g: f64,
+    pub groups: Vec<PhotonGroupOut>,
+    pub contact_gamma_air_dose_proxy_Gy_h: Option<DoseRange>,
+    /// Present only with `photon.point_source`.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub point_source_gamma_air_dose_Sv_h: Option<DoseRange>,
+}
+
+/// One dose quantity of a step: the value from evaluated spectra alone, the estimate that adds
+/// the estimated nuclides, and bounds that add each nuclide's lower or upper bound.
+#[derive(Clone, Debug, Default, Serialize, Deserialize)]
+pub struct DoseBoundsOut {
+    pub represented_only: Option<f64>,
+    pub estimate: Option<f64>,
+    pub lower: Option<f64>,
+    pub upper: Option<f64>,
+    /// Estimated nuclides' part of `estimate`.
+    pub estimated_share: Option<f64>,
+    pub unavailable_reason: Option<String>,
+}
+
+#[derive(Clone, Debug, Serialize, Deserialize)]
+pub struct EstimatedSpectraOut {
+    pub model: String,
+    pub exponent_a: f64,
+    pub contact_gamma_air_dose_proxy_Gy_h: DoseBoundsOut,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub point_source_gamma_air_dose_Sv_h: Option<DoseBoundsOut>,
+    pub by_nuclide: Vec<EstimatedNuclideOut>,
 }
 
 fn is_zero(v: &f64) -> bool {
@@ -286,10 +365,28 @@ pub struct MissingSpectrumDiagnostic {
     pub unrepresented_power_W_g: f64,
 }
 
+/// A nuclide whose missing spectrum `photon.missing_spectra: "estimate"` replaced by an estimate.
+#[derive(Clone, Debug, Serialize)]
+pub struct EstimatedSpectrumDiagnostic {
+    pub nuclide: String,
+    pub activity_Bq_g: f64,
+    pub estimated_power_W_g: f64,
+    pub decay_mode: String,
+    pub e_max_manual_eV: f64,
+    pub e_max_eV: f64,
+    pub q_cap_eV: Option<f64>,
+}
+
 #[derive(Clone, Debug, Default, Serialize)]
 pub struct PhotonDiagnostics {
     pub energy_normalized_spectra: Vec<NormalizationDiagnostic>,
     pub nuclides_with_em_energy_but_no_photon_spectrum: Vec<MissingSpectrumDiagnostic>,
+    #[serde(skip_serializing_if = "Vec::is_empty")]
+    pub nuclides_with_estimated_photon_spectrum: Vec<EstimatedSpectrumDiagnostic>,
+    #[serde(skip_serializing_if = "is_zero")]
+    pub estimated_gamma_power_W_g: f64,
+    #[serde(skip_serializing_if = "is_zero")]
+    pub excluded_xray_power_W_g: f64,
     pub group_underflow_photons_s_g: f64,
     pub group_overflow_photons_s_g: f64,
     pub group_underflow_power_W_g: f64,
@@ -321,6 +418,8 @@ struct Shape {
     over_count: f64,
     under_energy: f64,
     over_energy: f64,
+    /// Scaled energy (eV per decay) of the X-ray spectra removed by `exclude_xrays`.
+    excluded_xray_energy: f64,
 }
 
 fn law_for_interval(ranges: &[(usize, i32)], interval: usize) -> Result<i32, String> {
@@ -502,13 +601,19 @@ fn line_group(energy: f64, boundaries: &[f64]) -> Option<usize> {
     upper.checked_sub(1).filter(|g| *g + 1 < boundaries.len())
 }
 
-fn shape(nu: &Nuclide, boundaries: &[f64]) -> Result<Option<Shape>, String> {
+/// The nuclide's grouped photon spectrum scaled to its mean electromagnetic energy. With
+/// `exclude_xrays` the STYP 9 content counts toward the evaluated total, and so toward the
+/// scale, but is left out of the groups, lines and source totals.
+fn shape(nu: &Nuclide, boundaries: &[f64], exclude_xrays: bool) -> Result<Option<Shape>, String> {
     let ng = boundaries.len() - 1;
     let mut group_count = vec![0.0; ng];
     let mut group_moment = vec![0.0; ng];
     let mut lines = Vec::new();
     let mut raw_count = 0.0;
     let mut raw_energy = 0.0;
+    let mut kept_count = 0.0;
+    let mut kept_energy = 0.0;
+    let mut xray_energy = 0.0;
     let mut under_count = 0.0;
     let mut over_count = 0.0;
     let mut under_energy = 0.0;
@@ -518,6 +623,7 @@ fn shape(nu: &Nuclide, boundaries: &[f64]) -> Result<Option<Shape>, String> {
         .iter()
         .filter(|s| s.styp.round() as i32 == 0 || s.styp.round() as i32 == 9)
     {
+        let removed = exclude_xrays && spectrum.styp.round() as i32 == 9;
         for d in &spectrum.discrete {
             let y = spectrum.fd * d.intensity;
             if y <= 0.0 || d.energy < 0.0 {
@@ -525,6 +631,12 @@ fn shape(nu: &Nuclide, boundaries: &[f64]) -> Result<Option<Shape>, String> {
             }
             raw_count += y;
             raw_energy += y * d.energy;
+            if removed {
+                xray_energy += y * d.energy;
+                continue;
+            }
+            kept_count += y;
+            kept_energy += y * d.energy;
             if let Some(g) = line_group(d.energy, boundaries) {
                 group_count[g] += y;
                 group_moment[g] += y * d.energy;
@@ -542,6 +654,21 @@ fn shape(nu: &Nuclide, boundaries: &[f64]) -> Result<Option<Shape>, String> {
             });
         }
         if let Some(c) = &spectrum.continuous {
+            if removed {
+                let mut discarded_count = vec![0.0; ng];
+                let mut discarded_moment = vec![0.0; ng];
+                let (n, e, ..) = continuous_moments(
+                    c,
+                    boundaries,
+                    &mut discarded_count,
+                    &mut discarded_moment,
+                    spectrum.fc,
+                )?;
+                raw_count += n;
+                raw_energy += e;
+                xray_energy += e;
+                continue;
+            }
             let (n, e, un, ue, on, oe) = continuous_moments(
                 c,
                 boundaries,
@@ -551,6 +678,8 @@ fn shape(nu: &Nuclide, boundaries: &[f64]) -> Result<Option<Shape>, String> {
             )?;
             raw_count += n;
             raw_energy += e;
+            kept_count += n;
+            kept_energy += e;
             under_count += un;
             under_energy += ue;
             over_count += on;
@@ -581,14 +710,574 @@ fn shape(nu: &Nuclide, boundaries: &[f64]) -> Result<Option<Shape>, String> {
         group_moment,
         raw_count,
         raw_energy,
-        source_count: raw_count * scale,
-        source_energy: raw_energy * scale,
+        source_count: kept_count * scale,
+        source_energy: kept_energy * scale,
         scale,
         under_count: under_count * scale,
         over_count: over_count * scale,
         under_energy: under_energy * scale,
         over_energy: over_energy * scale,
+        excluded_xray_energy: xray_energy * scale,
     }))
+}
+
+/// Exponent `a` of the estimated photon-number spectrum `n(E) ~ exp(-a E / E_max)`
+/// (FISPACT-II `SPEK`).
+pub const ESTIMATE_EXPONENT: f64 = 14.0;
+
+/// `E_max` (eV) for beta-plus, electron-capture and every other decay mode, and the fallback
+/// for a beta-minus record without a positive mean light-particle energy.
+pub const ESTIMATE_DEFAULT_E_MAX_EV: f64 = 5.0e6;
+
+/// Description of the estimator, written to the certificate and each step's block.
+pub const ESTIMATE_MODEL_DESCRIPTION: &str = "photon-number density n(E) = C exp(-a E / E_max) on (0, E_max], a = 14, integrated exactly into each group and normalised to the nuclide's mean electromagnetic energy; E_max by the decay mode with the largest summed branching ratio (beta-minus 2 x mean light-particle energy, beta-plus/EC 5 MeV, IT mean EM energy, other 5 MeV; ties in that order), capped by the largest Q-value of the modes with positive branching when one is positive; dose bounds from the per-group dose per unit power over the groups below the energy cap";
+
+/// Decay-mode class that sets `E_max`: the first RTYP digit, with RTYP 10 (unknown origin) as other.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum ModeClass {
+    BetaMinus,
+    BetaPlusEc,
+    IsomericTransition,
+    Other,
+}
+
+impl ModeClass {
+    pub fn label(self) -> &'static str {
+        match self {
+            Self::BetaMinus => "beta-minus",
+            Self::BetaPlusEc => "beta-plus/EC",
+            Self::IsomericTransition => "isomeric-transition",
+            Self::Other => "other",
+        }
+    }
+}
+
+fn mode_class(rtyp: f64) -> ModeClass {
+    if rtyp.trunc() == 10.0 {
+        return ModeClass::Other;
+    }
+    match rtyp_digits(rtyp).first() {
+        Some(1) => ModeClass::BetaMinus,
+        Some(2) => ModeClass::BetaPlusEc,
+        Some(3) => ModeClass::IsomericTransition,
+        _ => ModeClass::Other,
+    }
+}
+
+/// How `E_max` of one nuclide's estimated spectrum was chosen.
+#[derive(Clone, Debug)]
+pub struct EstimateModel {
+    pub mode: ModeClass,
+    /// `E_max` by the mode rule, before the Q-value cap.
+    pub e_max_manual_eV: f64,
+    pub e_max_eV: f64,
+    /// Largest Q-value among the modes with positive branching, when one is positive.
+    pub q_cap_eV: Option<f64>,
+}
+
+/// The estimator's `E_max` rule for a nuclide with a positive mean electromagnetic energy;
+/// `None` otherwise. Modes count only with a finite positive branching ratio.
+pub fn estimate_model(nu: &Nuclide) -> Option<EstimateModel> {
+    let e_em = nu.e_em();
+    if !(e_em.is_finite() && e_em > 0.0) {
+        return None;
+    }
+    let mut sums = [0.0_f64; 4];
+    let mut q_max = 0.0_f64;
+    for m in &nu.modes {
+        if !(m.br.is_finite() && m.br > 0.0) {
+            continue;
+        }
+        let slot = match mode_class(m.rtyp) {
+            ModeClass::BetaMinus => 0,
+            ModeClass::BetaPlusEc => 1,
+            ModeClass::IsomericTransition => 2,
+            ModeClass::Other => 3,
+        };
+        sums[slot] += m.br;
+        if m.q.is_finite() && m.q > q_max {
+            q_max = m.q;
+        }
+    }
+    let classes = [
+        ModeClass::BetaMinus,
+        ModeClass::BetaPlusEc,
+        ModeClass::IsomericTransition,
+        ModeClass::Other,
+    ];
+    let mut best = 3;
+    let mut best_sum = 0.0;
+    for (slot, &sum) in sums.iter().enumerate() {
+        if sum > best_sum {
+            best = slot;
+            best_sum = sum;
+        }
+    }
+    let mode = classes[best];
+    let manual = match mode {
+        ModeClass::BetaMinus => {
+            let twice_light = 2.0 * nu.e_light();
+            if twice_light.is_finite() && twice_light > 0.0 {
+                twice_light
+            } else {
+                ESTIMATE_DEFAULT_E_MAX_EV
+            }
+        }
+        ModeClass::IsomericTransition => e_em,
+        ModeClass::BetaPlusEc | ModeClass::Other => ESTIMATE_DEFAULT_E_MAX_EV,
+    };
+    let q_cap_eV = (q_max > 0.0).then_some(q_max);
+    Some(EstimateModel {
+        mode,
+        e_max_manual_eV: manual,
+        e_max_eV: q_cap_eV.map_or(manual, |q| manual.min(q)),
+        q_cap_eV,
+    })
+}
+
+/// Photons (per unit `c`) and energy (eV per unit `c`) of `c exp(-k E)` between `lo` and `hi`,
+/// from the closed form of the exponential integral. `expm1` keeps narrow groups exact.
+fn exp_moments(c: f64, k: f64, lo: f64, hi: f64) -> (f64, f64) {
+    let d = hi - lo;
+    let decay = (-k * d).exp();
+    let u = -(-k * d).exp_m1();
+    let w = c * (-k * lo).exp();
+    (w * u / k, w * ((lo + 1.0 / k) * u - d * decay) / k)
+}
+
+/// The estimated spectrum of one nuclide as a `Shape` of the given group structure: photons per
+/// decay of `C exp(-a E / E_max)` on (0, E_max], with `C` set so the energy is the nuclide's
+/// mean electromagnetic energy. Photons outside the structure are counted as under or overflow.
+fn estimate_shape(
+    nu: &Nuclide,
+    model: &EstimateModel,
+    boundaries: &[f64],
+) -> Result<Shape, String> {
+    let ng = boundaries.len() - 1;
+    let k = ESTIMATE_EXPONENT / model.e_max_eV;
+    let c = nu.e_em() / exp_moments(1.0, k, 0.0, model.e_max_eV).1;
+    let mut group_count = vec![0.0; ng];
+    let mut group_moment = vec![0.0; ng];
+    let (under_count, under_energy, over_count, over_energy) = add_to_groups(
+        boundaries,
+        &mut group_count,
+        &mut group_moment,
+        0.0,
+        model.e_max_eV,
+        |lo, hi| Ok(exp_moments(c, k, lo, hi)),
+    )?;
+    let (count, energy) = exp_moments(c, k, 0.0, model.e_max_eV);
+    Ok(Shape {
+        lines: Vec::new(),
+        group_count,
+        group_moment,
+        raw_count: count,
+        raw_energy: energy,
+        source_count: count,
+        source_energy: energy,
+        scale: 1.0,
+        under_count,
+        over_count,
+        under_energy,
+        over_energy,
+        excluded_xray_energy: 0.0,
+    })
+}
+
+/// One group of a per-decay grouped spectrum.
+#[derive(Clone, Debug, Serialize)]
+pub struct SpectrumGroup {
+    pub low_eV: f64,
+    pub high_eV: f64,
+    pub centroid_eV: f64,
+    pub photons_per_decay: f64,
+    pub energy_eV_per_decay: f64,
+}
+
+/// A nuclide's grouped photon spectrum per decay, evaluated or estimated.
+#[derive(Clone, Debug, Serialize)]
+pub struct GroupedSpectrum {
+    pub groups: Vec<SpectrumGroup>,
+    pub photons_per_decay: f64,
+    pub energy_eV_per_decay: f64,
+    pub below_structure_photons_per_decay: f64,
+    pub below_structure_energy_eV_per_decay: f64,
+    pub above_structure_photons_per_decay: f64,
+    pub above_structure_energy_eV_per_decay: f64,
+}
+
+fn grouped_spectrum(sh: &Shape, boundaries: &[f64]) -> GroupedSpectrum {
+    let groups = (0..sh.group_count.len())
+        .map(|g| SpectrumGroup {
+            low_eV: boundaries[g],
+            high_eV: boundaries[g + 1],
+            centroid_eV: if sh.group_count[g] > 0.0 {
+                sh.group_moment[g] / sh.group_count[g]
+            } else {
+                0.0
+            },
+            photons_per_decay: sh.group_count[g],
+            energy_eV_per_decay: sh.group_moment[g],
+        })
+        .collect();
+    GroupedSpectrum {
+        groups,
+        photons_per_decay: sh.source_count,
+        energy_eV_per_decay: sh.source_energy,
+        below_structure_photons_per_decay: sh.under_count,
+        below_structure_energy_eV_per_decay: sh.under_energy,
+        above_structure_photons_per_decay: sh.over_count,
+        above_structure_energy_eV_per_decay: sh.over_energy,
+    }
+}
+
+/// The estimator's grouped spectrum for `nu`, with the `E_max` choice; `None` without a
+/// positive mean electromagnetic energy. For `actinv inspect decay --estimated-spectrum`.
+pub fn estimated_grouped_spectrum(
+    nu: &Nuclide,
+    boundaries: &[f64],
+) -> Result<Option<(EstimateModel, GroupedSpectrum)>, String> {
+    if boundaries.len() < 2 || boundaries.windows(2).any(|w| w[1] <= w[0]) {
+        return Err("photon group boundaries must be strictly increasing".into());
+    }
+    let Some(model) = estimate_model(nu) else {
+        return Ok(None);
+    };
+    let sh = estimate_shape(nu, &model, boundaries)?;
+    Ok(Some((model, grouped_spectrum(&sh, boundaries))))
+}
+
+/// The evaluated STYP 0 and 9 spectrum of `nu`, grouped and scaled to its mean electromagnetic
+/// energy as the photon source does; `None` when the record has no such content.
+pub fn evaluated_grouped_spectrum(
+    nu: &Nuclide,
+    boundaries: &[f64],
+) -> Result<Option<GroupedSpectrum>, String> {
+    if boundaries.len() < 2 || boundaries.windows(2).any(|w| w[1] <= w[0]) {
+        return Err("photon group boundaries must be strictly increasing".into());
+    }
+    Ok(shape(nu, boundaries, false)?.map(|sh| grouped_spectrum(&sh, boundaries)))
+}
+
+/// The energy intervals a nuclide's photons can occupy for the dose bounds: each group with its
+/// lower edge below `e_cap`, clipped to `e_cap`.
+pub fn allowed_intervals(boundaries: &[f64], e_cap: f64) -> Vec<[f64; 2]> {
+    boundaries
+        .windows(2)
+        .filter(|w| w[0] < e_cap)
+        .map(|w| [w[0], w[1].min(e_cap)])
+        .collect()
+}
+
+/// Ascending knots of `curves` strictly inside `(a, b)`, with `a` and `b` as the ends.
+fn split_points(curves: &[&ResponseCurve], a: f64, b: f64) -> Vec<f64> {
+    let mut points = vec![a, b];
+    for curve in curves {
+        points.extend(curve.energy_eV.iter().copied().filter(|x| *x > a && *x < b));
+    }
+    points.sort_by(f64::total_cmp);
+    points.dedup();
+    points
+}
+
+/// The log-log power law `y = c E^p` that `curve_value` follows on the sub-interval `[a, b]`,
+/// which must lie between two knots of the curve. `None` outside the tabulated range. At an
+/// absorption edge (a repeated energy) this is the one-sided law of that sub-interval.
+fn power_law_on(curve: &ResponseCurve, a: f64, b: f64) -> Option<(f64, f64)> {
+    let mid = 0.5 * (a + b);
+    let energies = &curve.energy_eV;
+    if mid < energies[0] || mid > *energies.last()? {
+        return None;
+    }
+    let upper = energies.partition_point(|x| *x <= mid);
+    if upper == 0 || upper == energies.len() {
+        return None;
+    }
+    let (x0, x1) = (energies[upper - 1], energies[upper]);
+    let (y0, y1) = (curve.values_cm2_g[upper - 1], curve.values_cm2_g[upper]);
+    let p = (y1 / y0).ln() / (x1 / x0).ln();
+    Some((y0 / x0.powf(p), p))
+}
+
+/// Smallest and largest value of `f` over `candidates`.
+fn extent(candidates: &[f64]) -> (f64, f64) {
+    candidates
+        .iter()
+        .fold((f64::INFINITY, f64::NEG_INFINITY), |(lo, hi), &v| {
+            (lo.min(v), hi.max(v))
+        })
+}
+
+/// Candidate energies for the extrema of `ln(num) - ln(den)` with `num = c_n E^p_n` and
+/// `den = sum_j m_j E^p_j` on `[s, t]`: the ends and, where the slope changes sign, the
+/// stationary point. With `w(E)` the `m_j E^p_j`-weighted mean of the `p_j`, the slope in `ln E`
+/// is `p_n - w(E)`; `w` rises with `E` (its slope is the weighted variance of the `p_j`), so
+/// `ln rho` is concave and has at most one interior maximum, found by bisection.
+fn power_ratio_candidates(pn: f64, den: &[(f64, f64)], s: f64, t: f64) -> Vec<f64> {
+    let slope = |e: f64| {
+        let (mut total, mut weighted) = (0.0, 0.0);
+        for &(m, p) in den {
+            let term = m * e.powf(p);
+            total += term;
+            weighted += term * p;
+        }
+        pn - weighted / total
+    };
+    let mut candidates = vec![s, t];
+    if slope(s) > 0.0 && slope(t) < 0.0 {
+        let (mut lo, mut hi) = (s, t);
+        for _ in 0..200 {
+            let mid = (lo * hi).sqrt();
+            if slope(mid) > 0.0 {
+                lo = mid;
+            } else {
+                hi = mid;
+            }
+        }
+        candidates.push((lo * hi).sqrt());
+    }
+    candidates
+}
+
+/// Exact smallest and largest contact-proxy dose per unit power (Gy/h per W/g) of a photon at
+/// any energy in `[a, b]`, `a` at or above the response's lowest energy: `(B/2)(mu_air/mu_mat)`
+/// with the same log-log curves as the proxy. The interval is split at every knot of the air
+/// and element curves; on each piece `mu_air` is a power law and `mu_mat` a sum of power laws
+/// (see `power_ratio_candidates`). `None` when a curve or element is missing or the interval
+/// leaves the tabulated range.
+fn contact_extrema(
+    response: &PhotonResponse,
+    fractions: &BTreeMap<String, f64>,
+    build_up: f64,
+    a: f64,
+    b: f64,
+) -> Option<(f64, f64)> {
+    let mut curves = vec![&response.air_mass_energy_absorption];
+    for element in fractions.keys() {
+        curves.push(response.element_mass_attenuation.get(element)?);
+    }
+    let constant = (build_up / 2.0) * 1000.0 * 3600.0;
+    let mut values = Vec::new();
+    let points = split_points(&curves, a, b);
+    for w in points.windows(2) {
+        let (s, t) = (w[0], w[1]);
+        let (c_air, p_air) = power_law_on(curves[0], s, t)?;
+        let mut den = Vec::with_capacity(fractions.len());
+        for (i, fraction) in fractions.values().enumerate() {
+            let (c, p) = power_law_on(curves[i + 1], s, t)?;
+            den.push((fraction * c, p));
+        }
+        for e in power_ratio_candidates(p_air, &den, s, t) {
+            let mu_mat: f64 = den.iter().map(|&(m, p)| m * e.powf(p)).sum();
+            values.push(constant * c_air * e.powf(p_air) / mu_mat);
+        }
+    }
+    (!values.is_empty() && values.iter().all(|v| v.is_finite())).then(|| extent(&values))
+}
+
+/// Candidate values of `f(E) = scale c_q E^q exp(-c E^p)` on `[s, t]`: the ends and the
+/// stationary point `E* = (q / (c p))^(1/p)` when it is real and inside. `attenuation` is
+/// `Some((c, p))` for the air transmission `exp(-c E^p)`, or `None` without it.
+fn point_candidates(
+    scale: f64,
+    c_q: f64,
+    q: f64,
+    attenuation: Option<(f64, f64)>,
+    s: f64,
+    t: f64,
+) -> Vec<f64> {
+    let f = |e: f64| {
+        let transmission = match attenuation {
+            Some((c, p)) => (-c * e.powf(p)).exp(),
+            None => 1.0,
+        };
+        scale * c_q * e.powf(q) * transmission
+    };
+    let mut values = vec![f(s), f(t)];
+    if let Some((c, p)) = attenuation {
+        if p != 0.0 && c > 0.0 {
+            let ratio = q / (c * p);
+            if ratio > 0.0 {
+                let stationary = ratio.powf(1.0 / p);
+                if stationary.is_finite() && stationary > s && stationary < t {
+                    values.push(f(stationary));
+                }
+            }
+        }
+    }
+    values
+}
+
+/// Exact smallest and largest point-source dose (Sv/h) of the step's mass per unit power
+/// (W/g) of a photon at any energy in `[a, b]`, `a` at or above the lowest tabulated energy of
+/// the curves involved: `mu_en(E) T(E) / (4 pi r^2)`, with `T` the air transmission
+/// `exp(-mu_rho(E) rho_air 100 r)` when `attenuation` is given. The interval is split at every
+/// knot of both curves; on each piece `f = A E^q exp(-c E^p)`, whose extrema lie at the ends or
+/// at the stationary point of `point_candidates`.
+fn point_extrema(
+    response: &PhotonResponse,
+    attenuation: Option<&ResponseCurve>,
+    options: &PointSourceOptions,
+    mass_g: f64,
+    a: f64,
+    b: f64,
+) -> Option<(f64, f64)> {
+    let r = options.distance_m;
+    let scale = 0.1 / (4.0 * std::f64::consts::PI * r * r) * 3600.0 * mass_g;
+    let mut curves = vec![&response.air_mass_energy_absorption];
+    curves.extend(attenuation);
+    let mut values = Vec::new();
+    for w in split_points(&curves, a, b).windows(2) {
+        let (s, t) = (w[0], w[1]);
+        let (c_q, q) = power_law_on(curves[0], s, t)?;
+        let air = match attenuation {
+            Some(curve) => {
+                let (c_m, p) = power_law_on(curve, s, t)?;
+                Some((c_m * options.air_density_g_cm3 * 100.0 * r, p))
+            }
+            None => None,
+        };
+        values.extend(point_candidates(scale, c_q, q, air, s, t));
+    }
+    (!values.is_empty() && values.iter().all(|v| v.is_finite())).then(|| extent(&values))
+}
+
+/// A linear dose model: the value per unit power at one energy, and its exact extrema over an
+/// interval at or above the response's lowest energy. Both are `None` outside the response.
+struct DoseModel<'a> {
+    value: &'a dyn Fn(f64) -> Option<f64>,
+    extrema: &'a dyn Fn(f64, f64) -> Option<(f64, f64)>,
+}
+
+/// The estimated nuclides' dose per unit power, summed over their groups, and its bounds.
+struct RangeTerms {
+    range: Option<DoseRange>,
+    /// Power (W/g) in groups whose centroid is below the response's lowest energy.
+    subthreshold_power_W_g: f64,
+}
+
+/// Dose of `groups` and its bounds for any spectrum of the same power below `e_cap`.
+///
+/// The dose model puts each group's power at the group's centroid energy. Whatever the spectrum
+/// inside a group, that centroid lies in the group's interval clipped to `e_cap`
+/// (`allowed_intervals`), so the dose per unit power is the model's value at some energy in the
+/// union of those intervals. The bounds are the power times the exact extrema of that value
+/// over the union, with zero below `e_lo` (the response's lowest energy), where the model
+/// gives no dose. They hold for every energy-conserving spectrum, and contain the estimate by
+/// construction. The estimate takes each group of the estimated spectrum at its centroid.
+fn dose_range(groups: &[PhotonGroupOut], e_cap: f64, e_lo: f64, model: &DoseModel) -> RangeTerms {
+    let (mut estimate, mut power, mut subthreshold) = (0.0, 0.0, 0.0);
+    let (mut lowest, mut highest) = (f64::INFINITY, f64::NEG_INFINITY);
+    let mut available = true;
+    for g in groups {
+        power += g.power_W_g;
+        if g.power_W_g > 0.0 {
+            if g.centroid_eV < e_lo {
+                subthreshold += g.power_W_g;
+            } else {
+                match (model.value)(g.centroid_eV) {
+                    Some(r) => estimate += g.power_W_g * r,
+                    None => available = false,
+                }
+            }
+        }
+        if g.low_eV < e_cap {
+            let (lo, hi) = (g.low_eV, g.high_eV.min(e_cap));
+            if lo < e_lo {
+                lowest = lowest.min(0.0);
+                highest = highest.max(0.0);
+            }
+            if hi > e_lo {
+                match (model.extrema)(lo.max(e_lo), hi) {
+                    Some((mn, mx)) => {
+                        lowest = lowest.min(mn);
+                        highest = highest.max(mx);
+                    }
+                    None => available = false,
+                }
+            }
+        }
+    }
+    let range = (available && lowest.is_finite()).then(|| {
+        let (lower, upper) = (power * lowest, power * highest);
+        debug_assert!(
+            lower <= estimate * (1.0 + 1e-9) + 1e-300 && estimate <= upper * (1.0 + 1e-9) + 1e-300,
+            "dose estimate {estimate} outside its bounds [{lower}, {upper}]"
+        );
+        DoseRange {
+            estimate,
+            lower,
+            upper,
+            share_of_step_estimate: None,
+        }
+    });
+    RangeTerms {
+        range,
+        subthreshold_power_W_g: subthreshold,
+    }
+}
+
+/// An estimated nuclide's dose range, withheld when power lies outside the group structure or
+/// the sub-threshold share exceeds the tolerance, like the dose of an evaluated nuclide.
+/// Returns the range and the nuclide's sub-threshold power (W/g).
+fn nuclide_dose_range(
+    n: &EstimatedNuclideOut,
+    e_lo: f64,
+    model: &DoseModel,
+) -> (Option<DoseRange>, f64) {
+    let terms = dose_range(&n.groups, n.e_cap_eV, e_lo, model);
+    let withheld = n.ungrouped_power_W_g > 1e-9 * n.power_W_g
+        || terms.subthreshold_power_W_g > SUBTHRESHOLD_POWER_TOLERANCE * n.power_W_g;
+    (
+        terms.range.filter(|_| !withheld),
+        terms.subthreshold_power_W_g,
+    )
+}
+
+/// Combine the value from evaluated spectra with the estimated nuclides' ranges. The step's
+/// estimate and bounds need every part; `subthreshold` and `total` (same power unit) apply the
+/// sub-threshold tolerance to the step as a whole. Fills each nuclide's share of the estimate.
+fn combine_dose_bounds(
+    represented: Option<f64>,
+    ranges: &mut [Option<DoseRange>],
+    subthreshold: f64,
+    total: f64,
+) -> DoseBoundsOut {
+    let mut out = DoseBoundsOut {
+        represented_only: represented,
+        ..DoseBoundsOut::default()
+    };
+    let mut reasons = Vec::new();
+    if represented.is_none() {
+        reasons.push("the dose from evaluated spectra is unavailable");
+    }
+    if ranges.iter().any(|r| r.is_none()) {
+        reasons.push("an estimated nuclide's dose range is unavailable");
+    }
+    if subthreshold > SUBTHRESHOLD_POWER_TOLERANCE * total {
+        reasons.push("sub-threshold power exceeds the tolerance");
+    }
+    let Some(rep) = represented.filter(|_| reasons.is_empty()) else {
+        out.unavailable_reason = Some(reasons.join("; "));
+        return out;
+    };
+    let (mut est, mut lower, mut upper) = (0.0, 0.0, 0.0);
+    for r in ranges.iter().flatten() {
+        est += r.estimate;
+        lower += r.lower;
+        upper += r.upper;
+    }
+    let estimate = rep + est;
+    out.estimate = Some(estimate);
+    out.lower = Some(rep + lower);
+    out.upper = Some(rep + upper);
+    out.estimated_share = (estimate > 0.0).then(|| est / estimate);
+    if estimate > 0.0 {
+        for r in ranges.iter_mut().flatten() {
+            r.share_of_step_estimate = Some(r.estimate / estimate);
+        }
+    }
+    out
 }
 
 fn material_mu(
@@ -651,6 +1340,16 @@ fn response_lowest_energy(response: &PhotonResponse, fractions: &BTreeMap<String
     e_lo
 }
 
+/// Opt-in treatments of the decay records' photon content. The default changes nothing.
+#[derive(Clone, Copy, Debug, Default)]
+pub struct SourceModel {
+    /// Estimate the spectrum of a nuclide that has a mean electromagnetic energy and no photon
+    /// spectrum (`photon.missing_spectra: "estimate"`) instead of booking its power unrepresented.
+    pub estimate_missing: bool,
+    /// Remove STYP 9 (X-ray) content after scaling to the mean electromagnetic energy.
+    pub exclude_xrays: bool,
+}
+
 /// Build one step's source from `(name, decay record, activity Bq/g)` entries.
 #[allow(clippy::too_many_arguments)]
 pub fn source_for_step(
@@ -664,6 +1363,34 @@ pub fn source_for_step(
     build_up: f64,
     gamma_cutoff_eV: f64,
 ) -> Result<(PhotonSourceOut, PhotonDiagnostics), String> {
+    source_for_step_with(
+        active,
+        boundaries,
+        group_structure,
+        mass_g,
+        response,
+        material_mass_fractions,
+        material_response_complete,
+        build_up,
+        gamma_cutoff_eV,
+        &SourceModel::default(),
+    )
+}
+
+/// `source_for_step` with the opt-in treatments of `model`.
+#[allow(clippy::too_many_arguments)]
+pub fn source_for_step_with(
+    active: &[(&str, &Nuclide, f64)],
+    boundaries: &[f64],
+    group_structure: &str,
+    mass_g: f64,
+    response: Option<&PhotonResponse>,
+    material_mass_fractions: &BTreeMap<String, f64>,
+    material_response_complete: bool,
+    build_up: f64,
+    gamma_cutoff_eV: f64,
+    model: &SourceModel,
+) -> Result<(PhotonSourceOut, PhotonDiagnostics), String> {
     if boundaries.len() < 2 || boundaries.windows(2).any(|w| w[1] <= w[0]) {
         return Err("photon group boundaries must be strictly increasing".into());
     }
@@ -674,6 +1401,9 @@ pub fn source_for_step(
     let mut by_nuclide = Vec::new();
     let mut diag = PhotonDiagnostics::default();
     let mut missing_power = 0.0;
+    let mut estimated_power = 0.0;
+    let mut excluded_xray_power = 0.0;
+    let mut estimated_nuclides: Vec<EstimatedNuclideOut> = Vec::new();
     let mut contact_total = 0.0;
     let mut contact_available = response.is_some() && material_response_complete;
     let mut response_included_power = 0.0;
@@ -698,8 +1428,63 @@ pub fn source_for_step(
             continue;
         }
         let expected_power = activity * nu.e_em().max(0.0) * EV;
-        let Some(sh) = shape(nu, boundaries)? else {
-            if expected_power > 0.0 {
+        let Some(sh) = shape(nu, boundaries, model.exclude_xrays)? else {
+            let estimate = if model.estimate_missing && expected_power > 0.0 {
+                estimate_model(nu)
+            } else {
+                None
+            };
+            if let Some(em) = estimate {
+                // The estimate joins the step source like an evaluated spectrum; its dose
+                // range is reported apart, never inside the evaluated nuclides' totals.
+                let est = estimate_shape(nu, &em, boundaries)?;
+                diag.group_underflow_photons_s_g += activity * est.under_count;
+                diag.group_overflow_photons_s_g += activity * est.over_count;
+                diag.group_underflow_power_W_g += activity * est.under_energy * EV;
+                diag.group_overflow_power_W_g += activity * est.over_energy * EV;
+                let mut est_groups = Vec::with_capacity(ng);
+                for g in 0..ng {
+                    let rate = activity * est.group_count[g];
+                    let moment_rate = activity * est.group_moment[g];
+                    aggregate_count[g] += rate;
+                    aggregate_moment[g] += moment_rate;
+                    est_groups.push(group_out(
+                        boundaries[g],
+                        boundaries[g + 1],
+                        rate,
+                        moment_rate,
+                        mass_g,
+                    ));
+                }
+                estimated_power += expected_power;
+                diag.nuclides_with_estimated_photon_spectrum
+                    .push(EstimatedSpectrumDiagnostic {
+                        nuclide: name.into(),
+                        activity_Bq_g: activity,
+                        estimated_power_W_g: expected_power,
+                        decay_mode: em.mode.label().into(),
+                        e_max_manual_eV: em.e_max_manual_eV,
+                        e_max_eV: em.e_max_eV,
+                        q_cap_eV: em.q_cap_eV,
+                    });
+                estimated_nuclides.push(EstimatedNuclideOut {
+                    nuclide: name.into(),
+                    activity_Bq_g: activity,
+                    mean_em_energy_eV_per_decay: nu.e_em(),
+                    decay_mode: em.mode.label().into(),
+                    e_max_manual_eV: em.e_max_manual_eV,
+                    e_max_eV: em.e_max_eV,
+                    q_cap_eV: em.q_cap_eV,
+                    e_cap_eV: em.q_cap_eV.unwrap_or_else(|| *boundaries.last().unwrap()),
+                    photons_per_decay: est.source_count,
+                    photons_s_g: activity * est.source_count,
+                    power_W_g: expected_power,
+                    ungrouped_power_W_g: activity * (est.under_energy + est.over_energy) * EV,
+                    groups: est_groups,
+                    contact_gamma_air_dose_proxy_Gy_h: None,
+                    point_source_gamma_air_dose_Sv_h: None,
+                });
+            } else if expected_power > 0.0 {
                 missing_power += expected_power;
                 diag.nuclides_with_em_energy_but_no_photon_spectrum.push(
                     MissingSpectrumDiagnostic {
@@ -832,9 +1617,13 @@ pub fn source_for_step(
                 None
             },
             point_source_gamma_air_dose_Sv_h: None,
+            excluded_xray_power_W_g: model
+                .exclude_xrays
+                .then_some(activity * sh.excluded_xray_energy * EV),
             lines: n_lines,
             groups: n_groups,
         });
+        excluded_xray_power += activity * sh.excluded_xray_energy * EV;
     }
 
     aggregate_lines.sort_by(|a, b| a.0.total_cmp(&b.0));
@@ -883,6 +1672,55 @@ pub fn source_for_step(
     } else {
         response.map(|_| 1.0)
     };
+    let contact_proxy = if contact_available
+        && diag.response_excluded_power_W_g == 0.0
+        && total_subthreshold <= SUBTHRESHOLD_POWER_TOLERANCE * response_total_power
+    {
+        Some(contact_total)
+    } else {
+        None
+    };
+    let estimated_spectra = model.estimate_missing.then(|| {
+        // Contact proxy per unit power at one energy (Gy/h per W/g), the proxy's own formula.
+        let contact_rho = |e: f64| -> Option<f64> {
+            let r = response.filter(|_| material_response_complete)?;
+            let mu_air = curve_value(&r.air_mass_energy_absorption, e)?;
+            let mu_mat = material_mu(r, material_mass_fractions, e)?;
+            Some((build_up / 2.0) * (mu_air / mu_mat) * 1000.0 * 3600.0)
+        };
+        let contact_extrema_fn = |a: f64, b: f64| -> Option<(f64, f64)> {
+            let r = response.filter(|_| material_response_complete)?;
+            contact_extrema(r, material_mass_fractions, build_up, a, b)
+        };
+        let dose_model = DoseModel {
+            value: &contact_rho,
+            extrema: &contact_extrema_fn,
+        };
+        let mut ranges = Vec::with_capacity(estimated_nuclides.len());
+        let mut subthreshold = total_subthreshold * EV;
+        let mut total_power = response_total_power * EV;
+        for n in &estimated_nuclides {
+            let (range, sub) = nuclide_dose_range(n, response_e_lo, &dose_model);
+            ranges.push(range);
+            subthreshold += sub;
+            total_power += n.power_W_g;
+        }
+        let contact = combine_dose_bounds(contact_proxy, &mut ranges, subthreshold, total_power);
+        for (n, range) in estimated_nuclides.iter_mut().zip(ranges) {
+            n.contact_gamma_air_dose_proxy_Gy_h = range;
+        }
+        EstimatedSpectraOut {
+            model: ESTIMATE_MODEL_DESCRIPTION.into(),
+            exponent_a: ESTIMATE_EXPONENT,
+            contact_gamma_air_dose_proxy_Gy_h: contact,
+            point_source_gamma_air_dose_Sv_h: None,
+            by_nuclide: std::mem::take(&mut estimated_nuclides),
+        }
+    });
+    if model.estimate_missing {
+        diag.estimated_gamma_power_W_g = estimated_power;
+    }
+    diag.excluded_xray_power_W_g = excluded_xray_power;
     Ok((
         PhotonSourceOut {
             group_structure: group_structure.into(),
@@ -903,18 +1741,14 @@ pub fn source_for_step(
             } else {
                 1.0
             },
-            contact_gamma_air_dose_proxy_Gy_h: if contact_available
-                && diag.response_excluded_power_W_g == 0.0
-                && total_subthreshold <= SUBTHRESHOLD_POWER_TOLERANCE * response_total_power
-            {
-                Some(contact_total)
-            } else {
-                None
-            },
+            contact_gamma_air_dose_proxy_Gy_h: contact_proxy,
             dose_response_power_coverage: coverage,
             dose_response_subthreshold_power_W_g: diag.response_subthreshold_power_W_g,
             point_source_dose: None,
             bremsstrahlung: None,
+            estimated_gamma_power_W_g: model.estimate_missing.then_some(estimated_power),
+            excluded_xray_power_W_g: model.exclude_xrays.then_some(excluded_xray_power),
+            estimated_spectra,
         },
         diag,
     ))
@@ -997,6 +1831,90 @@ fn point_source_dose(
         subthreshold_W: subthreshold,
         excluded_W: excluded,
     })
+}
+
+/// With `photon.missing_spectra: "estimate"`, the point-source dose range of each estimated
+/// nuclide and of the step: the dose from evaluated spectra alone (rebuilt from the evaluated
+/// nuclides' groups), the estimate and the bounds. The dose model is `point_source_dose`'s:
+/// group energies at their centroids, response and air transmission by log-log interpolation.
+/// Returns the step's estimate (the evaluated nuclides' dose plus each estimated nuclide's own
+/// sum over its groups) and, when it is `None`, the reason; `None` without an estimate request.
+/// That estimate is the step's point-source dose in estimate mode.
+fn add_estimated_point_source_bounds(
+    source: &mut PhotonSourceOut,
+    response: &PhotonResponse,
+    options: &PointSourceOptions,
+    mass_g: f64,
+) -> Option<(Option<f64>, Option<String>)> {
+    if source.estimated_spectra.is_none() || source.boundaries_eV.len() < 2 {
+        return None;
+    }
+    let attenuation = if options.air_attenuation {
+        response.air_mass_attenuation.as_ref()
+    } else {
+        None
+    };
+    let mut e_lo = response.air_mass_energy_absorption.energy_eV[0];
+    if let Some(curve) = attenuation {
+        e_lo = e_lo.max(curve.energy_eV[0]);
+    }
+    let r = options.distance_m;
+    // Dose (Sv/h) of the step's mass per unit power (W/g) placed at one energy.
+    let rho = |e: f64| -> Option<f64> {
+        let mu_en = curve_value(&response.air_mass_energy_absorption, e)?;
+        let transmission = match attenuation {
+            None => 1.0,
+            Some(curve) => (-curve_value(curve, e)? * options.air_density_g_cm3 * 100.0 * r).exp(),
+        };
+        Some(mu_en * 0.1 * transmission / (4.0 * std::f64::consts::PI * r * r) * 3600.0 * mass_g)
+    };
+    let extrema = |a: f64, b: f64| point_extrema(response, attenuation, options, mass_g, a, b);
+    let dose_model = DoseModel {
+        value: &rho,
+        extrema: &extrema,
+    };
+    let ng = source.boundaries_eV.len() - 1;
+    let mut rate = vec![0.0; ng];
+    let mut moment = vec![0.0; ng];
+    let mut reference_W_g = 0.0;
+    for n in &source.by_nuclide {
+        reference_W_g += n.source_power_W_g;
+        for (g, group) in n.groups.iter().enumerate() {
+            rate[g] += group.photons_s_g;
+            moment[g] += group.power_W_g / EV;
+        }
+    }
+    let evaluated_groups: Vec<_> = (0..ng)
+        .map(|g| {
+            group_out(
+                source.boundaries_eV[g],
+                source.boundaries_eV[g + 1],
+                rate[g],
+                moment[g],
+                mass_g,
+            )
+        })
+        .collect();
+    let evaluated =
+        point_source_dose(&evaluated_groups, reference_W_g, mass_g, response, options).ok();
+    let represented = evaluated.as_ref().and_then(|t| t.dose_Sv_h);
+    let mut subthreshold_W = evaluated.as_ref().map_or(0.0, |t| t.subthreshold_W);
+    let mut total_W = reference_W_g * mass_g;
+    let estimated = source.estimated_spectra.as_mut()?;
+    let mut ranges = Vec::with_capacity(estimated.by_nuclide.len());
+    for n in &estimated.by_nuclide {
+        let (range, sub_W_g) = nuclide_dose_range(n, e_lo, &dose_model);
+        ranges.push(range);
+        subthreshold_W += sub_W_g * mass_g;
+        total_W += n.power_W_g * mass_g;
+    }
+    let bounds = combine_dose_bounds(represented, &mut ranges, subthreshold_W, total_W);
+    let outcome = (bounds.estimate, bounds.unavailable_reason.clone());
+    estimated.point_source_gamma_air_dose_Sv_h = Some(bounds);
+    for (n, range) in estimated.by_nuclide.iter_mut().zip(ranges) {
+        n.point_source_gamma_air_dose_Sv_h = range;
+    }
+    Some(outcome)
 }
 
 /// Add the FISPACT-II `DOSE 2` point-source dose to a built step source. `mass_g` is the
@@ -1092,6 +2010,20 @@ pub fn add_point_source_dose(
                             point_source_dose(&n.groups, n.source_power_W_g, mass_g, r, options)
                         {
                             n.point_source_gamma_air_dose_Sv_h = t.dose_Sv_h;
+                        }
+                    }
+                    // In estimate mode the step's dose is the estimate by definition: the
+                    // evaluated groups' dose plus each estimated nuclide at its own centroids,
+                    // not one dose of the combined groups. Unavailable together with it.
+                    if let Some((estimate, reason)) =
+                        add_estimated_point_source_bounds(source, r, options, mass_g)
+                    {
+                        out.gamma_air_dose_Sv_h = estimate;
+                        out.gamma_air_dose_Sv_h_per_g = estimate.map(|d| d / mass_g);
+                        if estimate.is_some() {
+                            out.unavailable_reason = None;
+                        } else if out.unavailable_reason.is_none() {
+                            out.unavailable_reason = reason;
                         }
                     }
                     if let Some(b) = source.bremsstrahlung.as_mut() {
@@ -2379,6 +3311,9 @@ mod tests {
                 dose_response_subthreshold_power_W_g: 0.0,
                 point_source_dose: None,
                 bremsstrahlung: None,
+                estimated_gamma_power_W_g: None,
+                excluded_xray_power_W_g: None,
+                estimated_spectra: None,
             }
         }
 
@@ -2906,6 +3841,645 @@ mod tests {
                     "mass {bad}: {:?}",
                     out.unavailable_reason
                 );
+            }
+        }
+    }
+
+    mod estimate {
+        use super::super::{
+            add_point_source_dose, allowed_intervals, contact_extrema, curve_value, dose_range,
+            estimate_model, estimate_shape, exp_moments, extent, material_mu, point_candidates,
+            point_extrema, source_for_step, source_for_step_with, DoseModel, DoseRange, ModeClass,
+            PhotonGroupOut, PhotonResponse, ResponseCurve, SourceModel, ESTIMATE_EXPONENT,
+        };
+        use crate::run::EV;
+        use crate::spec::PointSourceOptions;
+        use actinv_data::decay::{DiscreteRadiation, Mode, Nuclide, Spectrum};
+        use std::collections::BTreeMap;
+
+        const BOUNDS: [f64; 5] = [0.0, 1.0e4, 1.0e5, 1.0e6, 1.0e7];
+        const ESTIMATE: SourceModel = SourceModel {
+            estimate_missing: true,
+            exclude_xrays: false,
+        };
+
+        fn rel(a: f64, b: f64) -> f64 {
+            (a - b).abs() / b.abs().max(1e-300)
+        }
+
+        fn mode(rtyp: f64, q: f64, br: f64) -> Mode {
+            Mode {
+                rtyp,
+                rfs: 0.0,
+                q,
+                dq: 0.0,
+                br,
+                dbr: 0.0,
+            }
+        }
+
+        fn line_spectrum(styp: f64, lines: &[(f64, f64)]) -> Spectrum {
+            Spectrum {
+                styp,
+                lcon: 0,
+                lcov: 0,
+                fd: 1.0,
+                d_fd: 0.0,
+                average_energy: 0.0,
+                d_average_energy: 0.0,
+                fc: 0.0,
+                d_fc: 0.0,
+                discrete: lines
+                    .iter()
+                    .map(|&(energy, intensity)| DiscreteRadiation {
+                        energy,
+                        d_energy: 0.0,
+                        rtyp: 0.0,
+                        transition_type: 0.0,
+                        intensity,
+                        d_intensity: 0.0,
+                        pair_intensity: 0.0,
+                        d_pair_intensity: 0.0,
+                        conversion_total: 0.0,
+                        d_conversion_total: 0.0,
+                        conversion_k: 0.0,
+                        d_conversion_k: 0.0,
+                        conversion_l: 0.0,
+                        d_conversion_l: 0.0,
+                    })
+                    .collect(),
+                continuous: None,
+            }
+        }
+
+        fn nuclide(e_light: f64, e_em: f64, modes: Vec<Mode>, spectra: Vec<Spectrum>) -> Nuclide {
+            Nuclide {
+                mat: 0,
+                za: 27060,
+                awr: 58.0,
+                liso: 0,
+                nst: 0,
+                half_life: 1.0,
+                d_half_life: 0.0,
+                energies: vec![e_light, 0.0, e_em],
+                modes,
+                spectra,
+            }
+        }
+
+        fn curve(values: [f64; 5]) -> ResponseCurve {
+            ResponseCurve {
+                energy_eV: vec![1.0e3, 1.0e4, 1.0e5, 1.0e6, 1.0e7],
+                values_cm2_g: values.to_vec(),
+            }
+        }
+
+        fn response() -> PhotonResponse {
+            let mut elements = BTreeMap::new();
+            elements.insert("H".to_string(), curve([4500.0, 5.0, 0.15, 0.06, 0.03]));
+            PhotonResponse {
+                schema: "actinv-photon-response-1".into(),
+                provenance: serde_json::Value::Null,
+                air_mass_energy_absorption: curve([3000.0, 10.0, 0.2, 0.03, 0.05]),
+                air_mass_attenuation: Some(curve([4000.0, 12.0, 0.17, 0.06, 0.04])),
+                element_mass_attenuation: elements,
+            }
+        }
+
+        fn fractions() -> BTreeMap<String, f64> {
+            BTreeMap::from([("H".to_string(), 1.0)])
+        }
+
+        fn build(
+            nu: &Nuclide,
+            activity: f64,
+            model: &SourceModel,
+        ) -> (
+            super::super::PhotonSourceOut,
+            super::super::PhotonDiagnostics,
+        ) {
+            source_for_step_with(
+                &[("Co60", nu, activity)],
+                &BOUNDS,
+                "test",
+                2.0,
+                Some(&response()),
+                &fractions(),
+                true,
+                2.0,
+                0.0,
+                model,
+            )
+            .unwrap()
+        }
+
+        fn beta_minus() -> Nuclide {
+            nuclide(2.0e5, 7.5e4, vec![mode(1.0, 0.0, 1.0)], vec![])
+        }
+
+        #[test]
+        fn closed_form_matches_quadrature() {
+            let (c, k, lo, hi) = (2.5, 4.0e-6, 3.0e5, 9.0e5);
+            let (n, e) = exp_moments(c, k, lo, hi);
+            let steps = 400_000;
+            let dx = (hi - lo) / steps as f64;
+            let (mut n_ref, mut e_ref) = (0.0, 0.0);
+            for i in 0..steps {
+                let x = lo + (i as f64 + 0.5) * dx;
+                let y = c * (-k * x).exp();
+                n_ref += y * dx;
+                e_ref += x * y * dx;
+            }
+            assert!(rel(n, n_ref) < 1e-10, "{n} {n_ref}");
+            assert!(rel(e, e_ref) < 1e-10, "{e} {e_ref}");
+        }
+
+        #[test]
+        fn estimate_energy_is_the_mean_em_energy() {
+            let nu = beta_minus();
+            let model = estimate_model(&nu).unwrap();
+            assert_eq!(model.mode, ModeClass::BetaMinus);
+            assert_eq!(model.e_max_eV, 4.0e5);
+            let sh = estimate_shape(&nu, &model, &BOUNDS).unwrap();
+            let energy: f64 =
+                sh.group_moment.iter().sum::<f64>() + sh.under_energy + sh.over_energy;
+            assert!(rel(energy, 7.5e4) < 1e-12, "{energy}");
+            let count: f64 = sh.group_count.iter().sum::<f64>() + sh.under_count + sh.over_count;
+            // Independent closed form over (0, E_max]: C = E a^2 / (E_max^2 (1 - (1 + a) e^-a)).
+            let a = ESTIMATE_EXPONENT;
+            let c = 7.5e4 * a * a / (4.0e5_f64.powi(2) * (1.0 - (1.0 + a) * (-a).exp()));
+            let count_ref = c * 4.0e5 * (1.0 - (-a).exp()) / a;
+            assert!(rel(count, count_ref) < 1e-12, "{count} {count_ref}");
+            assert!(rel(sh.source_count, count_ref) < 1e-12);
+        }
+
+        #[test]
+        fn photons_beyond_the_structure_are_overflow_and_energy_is_conserved() {
+            let nu = nuclide(2.0e6, 7.5e4, vec![mode(1.0, 0.0, 1.0)], vec![]);
+            let model = estimate_model(&nu).unwrap();
+            let short = [0.0, 1.0e4, 1.0e5, 1.0e6];
+            let sh = estimate_shape(&nu, &model, &short).unwrap();
+            assert!(sh.over_energy > 0.0 && sh.under_energy == 0.0);
+            let energy: f64 =
+                sh.group_moment.iter().sum::<f64>() + sh.under_energy + sh.over_energy;
+            assert!(rel(energy, 7.5e4) < 1e-12);
+        }
+
+        #[test]
+        fn q_value_caps_e_max() {
+            let capped = nuclide(0.0, 1.0e5, vec![mode(2.0, 1.0e6, 1.0)], vec![]);
+            let m = estimate_model(&capped).unwrap();
+            assert_eq!(m.mode, ModeClass::BetaPlusEc);
+            assert_eq!((m.e_max_manual_eV, m.e_max_eV), (5.0e6, 1.0e6));
+            assert_eq!(m.q_cap_eV, Some(1.0e6));
+            // A larger Q leaves the manual E_max; no Q-value leaves no cap.
+            let loose = nuclide(0.0, 1.0e5, vec![mode(2.0, 8.0e6, 1.0)], vec![]);
+            let m = estimate_model(&loose).unwrap();
+            assert_eq!((m.e_max_eV, m.q_cap_eV), (5.0e6, Some(8.0e6)));
+            let none = nuclide(0.0, 1.0e5, vec![mode(2.0, 0.0, 1.0)], vec![]);
+            let m = estimate_model(&none).unwrap();
+            assert_eq!((m.e_max_eV, m.q_cap_eV), (5.0e6, None));
+            // A mode without branching does not set the cap.
+            let zero = nuclide(
+                0.0,
+                1.0e5,
+                vec![mode(1.0, 9.0e6, 0.0), mode(2.0, 1.0e6, 1.0)],
+                vec![],
+            );
+            let m = estimate_model(&zero).unwrap();
+            assert_eq!((m.mode, m.q_cap_eV), (ModeClass::BetaPlusEc, Some(1.0e6)));
+        }
+
+        #[test]
+        fn dominant_mode_sets_e_max() {
+            // The larger summed branching ratio wins, and the Q-value cap spans every mode.
+            let nu = nuclide(
+                1.0e5,
+                3.0e4,
+                vec![mode(1.0, 2.0e6, 0.3), mode(3.0, 5.0e4, 0.7)],
+                vec![],
+            );
+            let m = estimate_model(&nu).unwrap();
+            assert_eq!(m.mode, ModeClass::IsomericTransition);
+            assert_eq!((m.e_max_manual_eV, m.e_max_eV), (3.0e4, 3.0e4));
+            assert_eq!(m.q_cap_eV, Some(2.0e6));
+            // Ties go to beta-minus; the sequential decay 1.5 is a beta-minus mode.
+            let tie = nuclide(
+                1.0e5,
+                3.0e4,
+                vec![mode(1.5, 0.0, 0.5), mode(2.0, 0.0, 0.5)],
+                vec![],
+            );
+            let m = estimate_model(&tie).unwrap();
+            assert_eq!((m.mode, m.e_max_eV), (ModeClass::BetaMinus, 2.0e5));
+            // RTYP 10 (unknown origin), alpha and a record without modes are other.
+            for modes in [
+                vec![mode(10.0, 0.0, 1.0)],
+                vec![mode(4.0, 0.0, 1.0)],
+                Vec::new(),
+            ] {
+                let m = estimate_model(&nuclide(1.0e5, 3.0e4, modes, vec![])).unwrap();
+                assert_eq!((m.mode, m.e_max_eV), (ModeClass::Other, 5.0e6));
+            }
+            // A beta-minus record without a light-particle energy falls back to 5 MeV.
+            let m =
+                estimate_model(&nuclide(0.0, 3.0e4, vec![mode(1.0, 0.0, 1.0)], vec![])).unwrap();
+            assert_eq!(m.e_max_eV, 5.0e6);
+            assert!(
+                estimate_model(&nuclide(1.0e5, 0.0, vec![mode(1.0, 0.0, 1.0)], vec![])).is_none()
+            );
+        }
+
+        #[test]
+        fn estimate_books_power_as_estimated_not_unrepresented() {
+            let nu = beta_minus();
+            let expected = 3.0e6 * 7.5e4 * EV;
+            let (src, diag) = build(&nu, 3.0e6, &ESTIMATE);
+            assert!(rel(src.estimated_gamma_power_W_g.unwrap(), expected) < 1e-12);
+            assert_eq!(src.unrepresented_gamma_power_W_g, 0.0);
+            assert!(rel(src.source_power_W_g, expected) < 1e-12);
+            assert!(diag
+                .nuclides_with_em_energy_but_no_photon_spectrum
+                .is_empty());
+            assert_eq!(diag.nuclides_with_estimated_photon_spectrum.len(), 1);
+            let n = &src.estimated_spectra.as_ref().unwrap().by_nuclide[0];
+            assert!(rel(n.power_W_g, expected) < 1e-12);
+            assert!(rel(n.photons_s_g, 3.0e6 * n.photons_per_decay) < 1e-12);
+            // The default books the same power as unrepresented.
+            let (report, _) = build(&nu, 3.0e6, &SourceModel::default());
+            assert_eq!(report.unrepresented_gamma_power_W_g, expected);
+            assert_eq!(report.source_power_W_g, 0.0);
+            assert!(
+                report.estimated_spectra.is_none() && report.estimated_gamma_power_W_g.is_none()
+            );
+        }
+
+        /// Contact proxy per unit power at one energy, from the response directly (B = 2).
+        fn contact_rho(e: f64) -> f64 {
+            let r = response();
+            let ratio = curve_value(&r.air_mass_energy_absorption, e).unwrap()
+                / material_mu(&r, &fractions(), e).unwrap();
+            ratio * 1000.0 * 3600.0
+        }
+
+        fn contact_range(groups: &[PhotonGroupOut], e_cap: f64) -> DoseRange {
+            let r = response();
+            let f = fractions();
+            let value = |e: f64| {
+                Some(
+                    curve_value(&r.air_mass_energy_absorption, e)? / material_mu(&r, &f, e)?
+                        * 1000.0
+                        * 3600.0,
+                )
+            };
+            let extrema = |a: f64, b: f64| contact_extrema(&r, &f, 2.0, a, b);
+            let model = DoseModel {
+                value: &value,
+                extrema: &extrema,
+            };
+            dose_range(groups, e_cap, 1.0e3, &model).range.unwrap()
+        }
+
+        #[test]
+        fn contact_bounds_contain_the_estimate_and_are_exact_extrema() {
+            let nu = beta_minus();
+            let (src, _) = build(&nu, 3.0e6, &ESTIMATE);
+            let est = src.estimated_spectra.as_ref().unwrap();
+            let n = &est.by_nuclide[0];
+            let range = n.contact_gamma_air_dose_proxy_Gy_h.as_ref().unwrap();
+            assert!(range.lower <= range.estimate && range.estimate <= range.upper);
+            let reference: f64 = n
+                .groups
+                .iter()
+                .filter(|g| g.power_W_g > 0.0)
+                .map(|g| g.power_W_g * contact_rho(g.centroid_eV))
+                .sum();
+            assert!(rel(range.estimate, reference) < 1e-12);
+            // No Q-value: every group below the top of the structure counts.
+            assert_eq!(n.e_cap_eV, 1.0e7);
+            let power: f64 = n.groups.iter().map(|g| g.power_W_g).sum();
+            // The part of the first group below the response's lowest energy gives no dose.
+            assert_eq!(range.lower, 0.0);
+            let (_, hi) = contact_extrema(&response(), &fractions(), 2.0, 1.0e3, 1.0e7).unwrap();
+            assert!(rel(range.upper, power * hi) < 1e-12);
+            // With no evaluated nuclide the step's estimate is the estimated nuclide's.
+            let step = &est.contact_gamma_air_dose_proxy_Gy_h;
+            assert_eq!(step.represented_only, Some(0.0));
+            assert!(rel(step.estimate.unwrap(), range.estimate) < 1e-12);
+            assert!(rel(step.upper.unwrap(), range.upper) < 1e-12);
+            assert!(rel(step.estimated_share.unwrap(), 1.0) < 1e-12);
+            assert!(rel(range.share_of_step_estimate.unwrap(), 1.0) < 1e-12);
+        }
+
+        #[test]
+        fn q_cap_narrows_the_bounds_to_the_intervals_below_it() {
+            let nu = nuclide(2.0e5, 7.5e4, vec![mode(1.0, 5.0e4, 1.0)], vec![]);
+            let (src, _) = build(&nu, 3.0e6, &ESTIMATE);
+            let n = &src.estimated_spectra.as_ref().unwrap().by_nuclide[0];
+            assert_eq!(
+                (n.e_max_manual_eV, n.e_max_eV, n.e_cap_eV),
+                (4.0e5, 5.0e4, 5.0e4)
+            );
+            assert_eq!(
+                allowed_intervals(&BOUNDS, n.e_cap_eV),
+                vec![[0.0, 1.0e4], [1.0e4, 5.0e4]]
+            );
+            let range = n.contact_gamma_air_dose_proxy_Gy_h.as_ref().unwrap();
+            let power: f64 = n.groups.iter().map(|g| g.power_W_g).sum();
+            let (r, f) = (response(), fractions());
+            let (_, hi_a) = contact_extrema(&r, &f, 2.0, 1.0e3, 1.0e4).unwrap();
+            let (_, hi_b) = contact_extrema(&r, &f, 2.0, 1.0e4, 5.0e4).unwrap();
+            assert_eq!(range.lower, 0.0);
+            assert!(rel(range.upper, power * hi_a.max(hi_b)) < 1e-12);
+            assert!(range.upper >= range.estimate);
+        }
+
+        #[test]
+        fn power_law_ratio_has_its_extremum_at_an_endpoint() {
+            let (r, f) = (response(), fractions());
+            // One log-log piece (1e4 to 1e5 eV): the air-to-material ratio is a power law.
+            let (lo, hi) = contact_extrema(&r, &f, 2.0, 2.0e4, 8.0e4).unwrap();
+            let (a, b) = (contact_rho(2.0e4), contact_rho(8.0e4));
+            assert!(rel(lo, a.min(b)) < 1e-12 && rel(hi, a.max(b)) < 1e-12);
+            // Over the whole table no energy leaves the extrema.
+            let (lo, hi) = contact_extrema(&r, &f, 2.0, 1.0e3, 1.0e7).unwrap();
+            for i in 0..=4000 {
+                let e = 1.0e3 * 1.0e4_f64.powf(i as f64 / 4000.0);
+                let v = contact_rho(e.min(1.0e7));
+                assert!(
+                    v >= lo * (1.0 - 1e-12) && v <= hi * (1.0 + 1e-12),
+                    "{e}: {v}"
+                );
+            }
+            // Past the top of the table the extrema are unavailable.
+            assert!(contact_extrema(&r, &f, 2.0, 1.0e6, 2.0e7).is_none());
+        }
+
+        #[test]
+        fn point_source_curve_with_an_interior_maximum_is_found() {
+            // f(E) = E exp(-1e-6 E) peaks at E* = 1/1e-6 = 1e6 eV, above both end values.
+            let values = point_candidates(1.0, 1.0, 1.0, Some((1.0e-6, 1.0)), 1.0e5, 1.0e7);
+            assert_eq!(values.len(), 3);
+            let (_, hi) = extent(&values);
+            let end = |e: f64| e * (-1.0e-6 * e).exp();
+            assert!(rel(hi, 1.0e6 * (-1.0_f64).exp()) < 1e-12);
+            assert!(hi > end(1.0e5) && hi > end(1.0e7));
+            // A stationary point outside the interval, or no attenuation, adds no candidate.
+            assert_eq!(
+                point_candidates(1.0, 1.0, 1.0, Some((1.0e-6, 1.0)), 1.0e7, 2.0e7).len(),
+                2
+            );
+            assert_eq!(point_candidates(1.0, 1.0, 1.0, None, 1.0e5, 1.0e7).len(), 2);
+            // Dense scan: nothing exceeds the extrema.
+            let (lo, hi) = extent(&values);
+            for i in 0..=10_000 {
+                let e = 1.0e5 + (1.0e7 - 1.0e5) * i as f64 / 10_000.0;
+                assert!(end(e) >= lo * (1.0 - 1e-12) && end(e) <= hi * (1.0 + 1e-12));
+            }
+        }
+
+        #[test]
+        fn evaluated_spectrum_with_arbitrary_lines_lies_within_the_bounds() {
+            // Lines at arbitrary energies, none above the cap; the model's own dose.
+            let lines = [(3.3e3, 0.2), (4.7e4, 0.5), (7.7e5, 0.1), (2.9e6, 0.01)];
+            let e_em: f64 = lines.iter().map(|&(e, y)| e * y).sum();
+            let nu = nuclide(
+                0.0,
+                e_em,
+                vec![mode(2.0, 0.0, 1.0)],
+                vec![line_spectrum(0.0, &lines)],
+            );
+            let point = PointSourceOptions {
+                distance_m: 1.0,
+                air_attenuation: true,
+                air_density_g_cm3: 1.20479e-3,
+            };
+            let (mut src, _) = build(&nu, 3.0e6, &SourceModel::default());
+            add_point_source_dose(&mut src, Some(&response()), &point, 2.0);
+            let proxy = src.contact_gamma_air_dose_proxy_Gy_h.unwrap();
+            let dose = src
+                .point_source_dose
+                .as_ref()
+                .unwrap()
+                .gamma_air_dose_Sv_h
+                .unwrap();
+            let r = response();
+            let value = |e: f64| {
+                let mu_en = curve_value(&r.air_mass_energy_absorption, e)?;
+                let mu_rho = curve_value(r.air_mass_attenuation.as_ref().unwrap(), e)?;
+                Some(
+                    mu_en * 0.1 * (-mu_rho * point.air_density_g_cm3 * 100.0).exp()
+                        / (4.0 * std::f64::consts::PI)
+                        * 3600.0
+                        * 2.0,
+                )
+            };
+            let extrema = |a: f64, b: f64| {
+                point_extrema(&r, r.air_mass_attenuation.as_ref(), &point, 2.0, a, b)
+            };
+            let point_model = DoseModel {
+                value: &value,
+                extrema: &extrema,
+            };
+            for cap in [1.0e7, 3.0e6] {
+                let contact = contact_range(&src.groups, cap);
+                assert!(rel(contact.estimate, proxy) < 1e-12);
+                assert!(
+                    contact.lower <= proxy && proxy <= contact.upper,
+                    "cap {cap}"
+                );
+                let range = dose_range(&src.groups, cap, 1.0e3, &point_model)
+                    .range
+                    .unwrap();
+                assert!(rel(range.estimate, dose) < 1e-12);
+                assert!(range.lower <= dose && dose <= range.upper, "cap {cap}");
+            }
+        }
+
+        #[test]
+        fn point_source_dose_is_given_with_bounds_instead_of_withheld() {
+            let nu = beta_minus();
+            let point = PointSourceOptions {
+                distance_m: 1.0,
+                air_attenuation: true,
+                air_density_g_cm3: 1.20479e-3,
+            };
+            let (mut src, _) = build(&nu, 3.0e6, &ESTIMATE);
+            add_point_source_dose(&mut src, Some(&response()), &point, 2.0);
+            let dose = src
+                .point_source_dose
+                .as_ref()
+                .unwrap()
+                .gamma_air_dose_Sv_h
+                .unwrap();
+            let est = src.estimated_spectra.as_ref().unwrap();
+            let step = est.point_source_gamma_air_dose_Sv_h.as_ref().unwrap();
+            assert_eq!(step.represented_only, Some(0.0));
+            let (value, lower, upper) = (
+                step.estimate.unwrap(),
+                step.lower.unwrap(),
+                step.upper.unwrap(),
+            );
+            assert!(lower <= value && value <= upper && lower < upper);
+            assert_eq!(dose, value);
+            let own = est.by_nuclide[0]
+                .point_source_gamma_air_dose_Sv_h
+                .as_ref()
+                .unwrap();
+            assert!(rel(own.estimate, value) < 1e-12);
+            // Without the estimate the dose stays withheld.
+            let (mut report, _) = build(&nu, 3.0e6, &SourceModel::default());
+            add_point_source_dose(&mut report, Some(&response()), &point, 2.0);
+            let out = report.point_source_dose.as_ref().unwrap();
+            assert!(out.gamma_air_dose_Sv_h.is_none() && out.unavailable_reason.is_some());
+            assert!(report.estimated_spectra.is_none());
+        }
+
+        #[test]
+        fn step_point_source_dose_is_the_estimate_by_definition() {
+            // An evaluated and an estimated nuclide share the 10 to 100 keV group, so one dose
+            // of the combined groups would differ from the sum at each nuclide's own centroid.
+            let evaluated = nuclide(
+                0.0,
+                4.7e4 * 0.5,
+                vec![mode(2.0, 0.0, 1.0)],
+                vec![line_spectrum(0.0, &[(4.7e4, 0.5)])],
+            );
+            let estimated = beta_minus();
+            let point = PointSourceOptions {
+                distance_m: 1.0,
+                air_attenuation: true,
+                air_density_g_cm3: 1.20479e-3,
+            };
+            let (mut src, _) = source_for_step_with(
+                &[("Fe59", &evaluated, 3.0e6), ("Co60", &estimated, 3.0e6)],
+                &BOUNDS,
+                "test",
+                2.0,
+                Some(&response()),
+                &fractions(),
+                true,
+                2.0,
+                0.0,
+                &ESTIMATE,
+            )
+            .unwrap();
+            add_point_source_dose(&mut src, Some(&response()), &point, 2.0);
+            let out = src.point_source_dose.as_ref().unwrap();
+            let step = src
+                .estimated_spectra
+                .as_ref()
+                .unwrap()
+                .point_source_gamma_air_dose_Sv_h
+                .as_ref()
+                .unwrap();
+            let own = src.estimated_spectra.as_ref().unwrap().by_nuclide[0]
+                .point_source_gamma_air_dose_Sv_h
+                .as_ref()
+                .unwrap()
+                .estimate;
+            assert_eq!(out.gamma_air_dose_Sv_h, step.estimate);
+            assert_eq!(
+                out.gamma_air_dose_Sv_h_per_g,
+                step.estimate.map(|d| d / 2.0)
+            );
+            assert!(out.unavailable_reason.is_none());
+            assert!(rel(step.estimate.unwrap(), step.represented_only.unwrap() + own) < 1e-12);
+        }
+
+        fn xray_nuclide(e_em: f64) -> Nuclide {
+            nuclide(
+                0.0,
+                e_em,
+                vec![mode(2.0, 0.0, 1.0)],
+                vec![
+                    line_spectrum(0.0, &[(1.0e5, 1.0)]),
+                    line_spectrum(9.0, &[(2.0e4, 0.5)]),
+                ],
+            )
+        }
+
+        #[test]
+        fn xray_exclusion_removes_the_scaled_styp9_power() {
+            // Evaluated total 1.1e5 eV against a mean EM energy of 2.2e5 eV: scale 2.
+            let nu = xray_nuclide(2.2e5);
+            let on = SourceModel {
+                estimate_missing: false,
+                exclude_xrays: true,
+            };
+            let (src, diag) = build(&nu, 4.0e3, &on);
+            let excluded = 4.0e3 * 2.0 * 0.5 * 2.0e4 * EV;
+            assert!(rel(src.excluded_xray_power_W_g.unwrap(), excluded) < 1e-12);
+            assert!(rel(diag.excluded_xray_power_W_g, excluded) < 1e-12);
+            assert!(rel(src.by_nuclide[0].excluded_xray_power_W_g.unwrap(), excluded) < 1e-12);
+            assert!(rel(src.source_power_W_g, 4.0e3 * 2.0 * 1.0e5 * EV) < 1e-12);
+            assert_eq!(src.unrepresented_gamma_power_W_g, 0.0);
+            assert_eq!(src.lines.len(), 1);
+            assert_eq!(src.lines[0].energy_eV, 1.0e5);
+            let (full, _) = build(&nu, 4.0e3, &SourceModel::default());
+            assert!(rel(full.source_power_W_g, 4.0e3 * 2.2e5 * EV) < 1e-12);
+            assert!(full.excluded_xray_power_W_g.is_none());
+            assert!(rel(src.source_power_W_g + excluded, full.source_power_W_g) < 1e-12);
+            assert_eq!(src.by_nuclide[0].energy_normalization, 2.0);
+        }
+
+        #[test]
+        fn xray_only_nuclide_is_excluded_not_unrepresented() {
+            let nu = nuclide(
+                0.0,
+                1.0e4,
+                vec![mode(2.0, 0.0, 1.0)],
+                vec![line_spectrum(9.0, &[(2.0e4, 0.5)])],
+            );
+            let on = SourceModel {
+                estimate_missing: false,
+                exclude_xrays: true,
+            };
+            let (src, diag) = build(&nu, 4.0e3, &on);
+            assert_eq!(src.unrepresented_gamma_power_W_g, 0.0);
+            assert!(diag
+                .nuclides_with_em_energy_but_no_photon_spectrum
+                .is_empty());
+            assert_eq!(src.source_power_W_g, 0.0);
+            assert!(rel(src.excluded_xray_power_W_g.unwrap(), 4.0e3 * 1.0e4 * EV) < 1e-12);
+            // Kept, the same nuclide is an ordinary source.
+            let (full, _) = build(&nu, 4.0e3, &SourceModel::default());
+            assert!(rel(full.source_power_W_g, 4.0e3 * 1.0e4 * EV) < 1e-12);
+        }
+
+        #[test]
+        fn default_output_has_no_new_keys() {
+            let nu = xray_nuclide(1.1e5);
+            let (src, diag) = source_for_step(
+                &[("Co60", &nu, 1.0)],
+                &BOUNDS,
+                "test",
+                1.0,
+                Some(&response()),
+                &fractions(),
+                true,
+                2.0,
+                0.0,
+            )
+            .unwrap();
+            let value = serde_json::to_value(&src).unwrap();
+            for key in [
+                "estimated_gamma_power_W_g",
+                "excluded_xray_power_W_g",
+                "estimated_spectra",
+            ] {
+                assert!(value.get(key).is_none(), "{key}");
+            }
+            assert!(value["by_nuclide"][0]
+                .get("excluded_xray_power_W_g")
+                .is_none());
+            let value = serde_json::to_value(&diag).unwrap();
+            for key in [
+                "nuclides_with_estimated_photon_spectrum",
+                "estimated_gamma_power_W_g",
+                "excluded_xray_power_W_g",
+            ] {
+                assert!(value.get(key).is_none(), "{key}");
             }
         }
     }
