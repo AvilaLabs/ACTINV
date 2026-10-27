@@ -299,8 +299,11 @@ groupwise library rows, so a spectrum-collapsed cache is not used. It cannot be 
 
 ```json
 "fission_yields": {
-  "files": [ ... ],
-  "parents": { "include": ["U235", "Pu239"] }
+  "files": [
+    {"path": "/data/endfb-viii.0-nfpy/nfy-092_U_235.endf", "sha256": "64 hexadecimal digits"},
+    {"path": "/data/endfb-viii.0-nfpy/nfy-094_Pu_239.endf", "sha256": "64 hexadecimal digits"}
+  ],
+  "parents": {"include": ["U235", "Pu239"]}
 }
 ```
 

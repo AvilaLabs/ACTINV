@@ -1,0 +1,854 @@
+{
+ "candidate_sha256": "68d271840c628d2e3c04e3e54b139e99c8b6d936ce7dd3cd0cea8987fdac63f2",
+ "checker_sha256": "907efaadafc196993f386f891c1929339732466ea79ee3b420aed153da27730c",
+ "data": {
+  "decay_fallback": {
+   "path": "/home/connoravila/Documents/actinv/actinv-data/v1.1.0/decay/jeff-3-3_decay.dat",
+   "sha256": "850b8b7f85f8d88b6ad826c4cd341aaaffabd525c8ecf3c588a0ad437bf5d123"
+  },
+  "decay_primary": {
+   "path": "/home/connoravila/Documents/actinv/actinv-data/v1.1.0/decay/endf-b-viii-0_decay.dat",
+   "sha256": "6f04cf009086c179021f243a58dadc2d5bb078de5ba39c4fe46ccad77d228ddb"
+  },
+  "library": {
+   "path": "/home/connoravila/Documents/actinv/actinv-data/v1.1.0/activation/tendl-2025-neutron-709g.npz",
+   "sha256": "ec4c72bf598dc8ad3d533d9cfafdcf493e2d1f949a3e4db6251495659b68cc44"
+  },
+  "yields": {
+   "nfy-092_U_235.endf": {
+    "path": "/home/connoravila/nuclear-data/endfb-viii.0-nfpy/nfy-092_U_235.endf",
+    "sha256": "9e1320293a544fc03f33f804a15a9e3ccc3be026552ee6dbc03b8d3e24615e41"
+   },
+   "nfy-092_U_238.endf": {
+    "path": "/home/connoravila/nuclear-data/endfb-viii.0-nfpy/nfy-092_U_238.endf",
+    "sha256": "05598b1c16117a729a3314842a2de574ffb7c992f679f6e1505c1d566164791c"
+   }
+  }
+ },
+ "design": {
+  "U235_fission_rate_per_atom_per_s": 1e-11,
+  "atoms_per_g_each_parent": 1e+21,
+  "fission_rates_per_atom_per_s": {
+   "fns": {
+    "92235": 1e-11,
+    "92238": 5.440074699899346e-12
+   },
+   "mix": {
+    "92235": 2.0000000000000005e-11,
+    "92238": 5.440075022461645e-12
+   },
+   "one_group": {
+    "92235": 1e-11,
+    "92238": 4.200836203385893e-12
+   },
+   "thermal": {
+    "92235": 1.0000000000000003e-11,
+    "92238": 3.225622986921378e-19
+   }
+  },
+  "irradiation_s": 10.0,
+  "kT_eV": 0.0253,
+  "tabulated_energies_eV": {
+   "92235": [
+    0.0253,
+    500000.0,
+    14000000.0
+   ],
+   "92238": [
+    500000.0,
+    14000000.0
+   ]
+  },
+  "tolerances": {
+   "exact": 1e-12,
+   "first_order_inventory": 1e-06,
+   "weights": 1e-12
+  }
+ },
+ "external_gates": {
+  "G0": {
+   "external": true,
+   "in_protocol_hash_txt": true,
+   "note": "recorded for information; G0 is evaluated by the coordinator",
+   "protocol_sha256": "da7473c4d9a1ad4142c2519fe2c1634106c65cd6ca3bd70bce8a3859cc2e7d92"
+  },
+  "G1": "fmt, clippy -D warnings, workspace tests: coordinator",
+  "G7": "CI on the pushed commit and committed baselines: coordinator"
+ },
+ "gates": {
+  "G2": {
+   "cases": {
+    "fns_fe_5min": {
+     "identical_apart_from_timing": true,
+     "pass": true,
+     "timing_keys_dropped": [
+      "/ms"
+     ]
+    },
+    "shielding_demo": {
+     "identical_apart_from_timing": true,
+     "pass": true,
+     "timing_keys_dropped": [
+      "/ms"
+     ]
+    },
+    "u235_spectrum_average": {
+     "identical_apart_from_timing": true,
+     "pass": true,
+     "timing_keys_dropped": [
+      "/ms"
+     ]
+    }
+   },
+   "pass": true
+  },
+  "G3": {
+   "cases": {
+    "fns": {
+     "first_order_inventory": {
+      "absent_from_run": [],
+      "bad": [],
+      "compared": 533,
+      "floor_atoms_per_g": 645464.8481519675,
+      "largest_expected_atoms_per_g": 6454648481.519674,
+      "n_absent": 0,
+      "n_bad": 0,
+      "pass": true,
+      "tolerance": 1e-06,
+      "worst_relative_error": 3.4124714038471748e-09
+     },
+     "fission_rates_per_atom_per_s": {
+      "92235": 1e-11,
+      "92238": 5.440074699899346e-12
+     },
+     "pass": true,
+     "weights": {
+      "certificate_equals_ledger": true,
+      "parents": {
+       "92235_0": {
+        "energies_match": true,
+        "entries": 1,
+        "expected_requested_energy_eV": 12836745.17811999,
+        "expected_weights": [
+         0.03975405316080942,
+         0.04494059841736715,
+         0.9153053484218234
+        ],
+        "run_weights": [
+         0.03975405316080945,
+         0.044940598417367174,
+         0.9153053484218235
+        ],
+        "selection_certificate_requested_energy_eV": [
+         12836745.178119991
+        ],
+        "selection_ledger_requested_energy_eV": [
+         12836745.178119991
+        ],
+        "sum_of_weights": 1.0000000000000002,
+        "worst_relative_error": 6.981822835360869e-16
+       },
+       "92238_0": {
+        "energies_match": true,
+        "entries": 1,
+        "expected_requested_energy_eV": 13677981.875164486,
+        "expected_weights": [
+         0.023853194432260087,
+         0.9761468055677398
+        ],
+        "run_weights": [
+         0.02385319443226009,
+         0.9761468055677399
+        ],
+        "selection_certificate_requested_energy_eV": [
+         13677981.875164488
+        ],
+        "selection_ledger_requested_energy_eV": [
+         13677981.875164488
+        ],
+        "sum_of_weights": 1.0,
+        "worst_relative_error": 1.4544999252852208e-16
+       }
+      },
+      "pass": true
+     }
+    },
+    "mix": {
+     "first_order_inventory": {
+      "absent_from_run": [],
+      "bad": [],
+      "compared": 513,
+      "floor_atoms_per_g": 1171505.5878125723,
+      "largest_expected_atoms_per_g": 11715055878.125721,
+      "n_absent": 0,
+      "n_bad": 0,
+      "pass": true,
+      "tolerance": 1e-06,
+      "worst_relative_error": 2.773849895802771e-07
+     },
+     "fission_rates_per_atom_per_s": {
+      "92235": 2.0000000000000005e-11,
+      "92238": 5.440075022461645e-12
+     },
+     "information_top5_fission_product_activity_vs_spectrum_average": [
+      {
+       "nuclide": "Zr99",
+       "rate_weighted_Bq_per_g": 1224903251.27911,
+       "relative_difference": -0.0070221417982313915,
+       "spectrum_average_Bq_per_g": 1233565523.30114
+      },
+      {
+       "nuclide": "Sr96",
+       "rate_weighted_Bq_per_g": 800880282.7732255,
+       "relative_difference": -0.09055435689644412,
+       "spectrum_average_Bq_per_g": 880624684.7696775
+      },
+      {
+       "nuclide": "Rb92",
+       "rate_weighted_Bq_per_g": 789440304.3433812,
+       "relative_difference": 0.06623800915791964,
+       "spectrum_average_Bq_per_g": 740397826.3416586
+      },
+      {
+       "nuclide": "Zr100",
+       "rate_weighted_Bq_per_g": 667685024.675492,
+       "relative_difference": -0.010216276608650609,
+       "spectrum_average_Bq_per_g": 674576686.7005721
+      },
+      {
+       "nuclide": "Nb100",
+       "rate_weighted_Bq_per_g": 665699179.3961565,
+       "relative_difference": 0.0012349770563981736,
+       "spectrum_average_Bq_per_g": 664878070.2341151
+      }
+     ],
+     "pass": true,
+     "weights": {
+      "certificate_equals_ledger": true,
+      "parents": {
+       "92235_0": {
+        "energies_match": true,
+        "entries": 1,
+        "expected_requested_energy_eV": 6418372.609981408,
+        "expected_weights": [
+         0.5198770100375745,
+         0.02247031575151364,
+         0.4576526742109117
+        ],
+        "run_weights": [
+         0.5198770100375742,
+         0.022470315751513634,
+         0.45765267421091155
+        ],
+        "selection_certificate_requested_energy_eV": [
+         6418372.6099814065
+        ],
+        "selection_ledger_requested_energy_eV": [
+         6418372.6099814065
+        ],
+        "sum_of_weights": 0.9999999999999994,
+        "worst_relative_error": 4.271098752933562e-16
+       },
+       "92238_0": {
+        "energies_match": true,
+        "entries": 1,
+        "expected_requested_energy_eV": 13677981.093792891,
+        "expected_weights": [
+         0.023853252311637884,
+         0.9761467476883622
+        ],
+        "run_weights": [
+         0.023853252311637888,
+         0.9761467476883621
+        ],
+        "selection_certificate_requested_energy_eV": [
+         13677981.09379289
+        ],
+        "selection_ledger_requested_energy_eV": [
+         13677981.09379289
+        ],
+        "sum_of_weights": 1.0,
+        "worst_relative_error": 1.4544963959740148e-16
+       }
+      },
+      "pass": true
+     }
+    },
+    "one_group": {
+     "balance_differences": [],
+     "group_index": 565,
+     "midpoint_eV": 2041737.7195790845,
+     "pass": true,
+     "step_differences_above_tolerance": [],
+     "steps_byte_identical": true,
+     "tolerance": 1e-12,
+     "weights": {
+      "certificate_equals_ledger": true,
+      "parents": {
+       "92235_0": {
+        "energies_match": true,
+        "entries": 1,
+        "expected_requested_energy_eV": 2041737.7195790848,
+        "expected_weights": [
+         0.0,
+         0.8857972059571049,
+         0.11420279404289517
+        ],
+        "run_weights": [
+         0.0,
+         0.8857972059571049,
+         0.11420279404289516
+        ],
+        "selection_certificate_requested_energy_eV": [
+         2041737.7195790845
+        ],
+        "selection_ledger_requested_energy_eV": [
+         2041737.7195790845
+        ],
+        "sum_of_weights": 1.0,
+        "worst_relative_error": 1.2151881155028384e-16
+       },
+       "92238_0": {
+        "energies_match": true,
+        "entries": 1,
+        "expected_requested_energy_eV": 2041737.7195790845,
+        "expected_weights": [
+         0.8857972059571049,
+         0.11420279404289516
+        ],
+        "run_weights": [
+         0.8857972059571049,
+         0.11420279404289516
+        ],
+        "selection_certificate_requested_energy_eV": [
+         2041737.7195790845
+        ],
+        "selection_ledger_requested_energy_eV": [
+         2041737.7195790845
+        ],
+        "sum_of_weights": 1.0,
+        "worst_relative_error": 0.0
+       }
+      },
+      "pass": true
+     }
+    },
+    "thermal": {
+     "first_order_inventory": {
+      "absent_from_run": [],
+      "bad": [],
+      "compared": 380,
+      "floor_atoms_per_g": 664957.0705881363,
+      "largest_expected_atoms_per_g": 6649570705.881363,
+      "n_absent": 0,
+      "n_bad": 0,
+      "pass": true,
+      "tolerance": 1e-06,
+      "worst_relative_error": 2.7356002626217217e-07
+     },
+     "fission_rates_per_atom_per_s": {
+      "92235": 1.0000000000000003e-11,
+      "92238": 3.225622986921378e-19
+     },
+     "pass": true,
+     "weights": {
+      "certificate_equals_ledger": true,
+      "parents": {
+       "92235_0": {
+        "energies_match": true,
+        "entries": 1,
+        "expected_requested_energy_eV": 0.041842829228926195,
+        "expected_weights": [
+         0.9999999669143398,
+         3.30856601319868e-08,
+         0.0
+        ],
+        "run_weights": [
+         0.9999999669143387,
+         3.3085660131986765e-08,
+         0.0
+        ],
+        "selection_certificate_requested_energy_eV": [
+         0.041842829228926154
+        ],
+        "selection_ledger_requested_energy_eV": [
+         0.041842829228926154
+        ],
+        "sum_of_weights": 0.9999999999999988,
+        "worst_relative_error": 1.1102230613576195e-15
+       },
+       "92238_0": {
+        "energies_match": true,
+        "entries": 1,
+        "expected_requested_energy_eV": 500000.0,
+        "expected_weights": [
+         1.0,
+         0.0
+        ],
+        "run_weights": [
+         1.0,
+         0.0
+        ],
+        "selection_certificate_requested_energy_eV": [
+         500000.0
+        ],
+        "selection_ledger_requested_energy_eV": [
+         500000.0
+        ],
+        "sum_of_weights": 1.0,
+        "worst_relative_error": 0.0
+       }
+      },
+      "pass": true
+     }
+    }
+   },
+   "pass": true,
+   "scope_note": "mixed yields are verified through the first-order inventory (1e-6), not per product at 1e-12: the run does not print per-product effective yields"
+  },
+  "G4": {
+   "cases": {
+    "refusals": {
+     "cumulative_without_mt459": {
+      "exit_code": 1,
+      "message_tail": "/home/connoravila/Documents/actinv/target/p153-work/nfy-092_U_235.no_mt459.endf: fission_yields.yields 'cumulative' needs MF=8/MT=459, which this evaluation lacks",
+      "names_cause": true,
+      "output_file_written": false,
+      "pass": true
+     },
+     "empty_list": {
+      "exit_code": 2,
+      "message_tail": "fission_yields.parents.include must not be empty",
+      "names_cause": true,
+      "output_file_written": false,
+      "pass": true
+     },
+     "include_and_exclude": {
+      "exit_code": 2,
+      "message_tail": "fission_yields.parents takes include or exclude, not both",
+      "names_cause": true,
+      "output_file_written": false,
+      "pass": true
+     },
+     "neither": {
+      "exit_code": 2,
+      "message_tail": "fission_yields.parents needs include or exclude",
+      "names_cause": true,
+      "output_file_written": false,
+      "pass": true
+     },
+     "no_yield_file": {
+      "exit_code": 1,
+      "message_tail": "fission_yields.parents names U234, which has no fission-yield file",
+      "names_cause": true,
+      "output_file_written": false,
+      "pass": true
+     },
+     "not_fissionable": {
+      "exit_code": 1,
+      "message_tail": "fission_yields.parents names Fe56, which is not fissionable in the activation library",
+      "names_cause": true,
+      "output_file_written": false,
+      "pass": true
+     },
+     "pass": true,
+     "rate_weighted_with_fixed_energy": {
+      "exit_code": 2,
+      "message_tail": "fission_yields.fixed_energy_eV is forbidden with rate_weighted",
+      "names_cause": true,
+      "output_file_written": false,
+      "pass": true
+     }
+    },
+    "selection": {
+     "exclude_vs_u235_file_only_byte_identical_steps": true,
+     "exclude_vs_u235_file_only_step_differences": [],
+     "include_vs_exclude_differences": [
+      "/certificate/fission_yields/parents/exclude: present in one result only",
+      "/certificate/fission_yields/parents/include: present in one result only"
+     ],
+     "include_vs_exclude_non_echo_differences": [],
+     "include_vs_exclude_steps_identical": true,
+     "pass": true,
+     "u238_fission_rate_independent": 5.440075022461645e-12,
+     "u238_fission_rate_ledger": 5.440075022461644e-12,
+     "u238_in_no_yields_to_leakage": false,
+     "u238_relative_error": 1.484894167104313e-16,
+     "unselected_is_u238_only": true,
+     "unselected_keys": [
+      "92238_0"
+     ]
+    }
+   },
+   "pass": true
+  },
+  "G5": {
+   "certificate_parents": null,
+   "certificate_pass": true,
+   "certificate_yields": "cumulative",
+   "first_order_inventory": {
+    "absent_from_run": [],
+    "bad": [],
+    "compared": 553,
+    "floor_atoms_per_g": 3073850.4581403476,
+    "largest_expected_atoms_per_g": 30738504581.403473,
+    "n_absent": 0,
+    "n_bad": 0,
+    "pass": true,
+    "tolerance": 1e-06,
+    "worst_relative_error": 2.979984111435466e-07
+   },
+   "fixed_energy_eV": 2000000.0,
+   "overlap": {
+    "92235_0": {
+     "ledger": {
+      "overlap_products": 795,
+      "overlap_share": 0.9773930285929072,
+      "overlap_yield": 8.190860712460417,
+      "products_with_yield": 1189,
+      "summed_cumulative_yield": 8.380314236794073
+     },
+     "matched_mapping": "exact",
+     "matches_exact": {
+      "overlap_products": true,
+      "overlap_yield": true,
+      "products_with_yield": true,
+      "summed_cumulative_yield": true
+     },
+     "pass": true,
+     "recomputed_exact": {
+      "overlap_products": 795,
+      "overlap_yield": 8.190860712460406,
+      "products_with_yield_mapped": 1079,
+      "products_with_yield_tabulated": 1189,
+      "summed_all_tabulated": 8.380314236794062,
+      "summed_mapped": 8.371075818948631
+     },
+     "share_equals_ratio_of_ledger_values": true
+    },
+    "92238_0": {
+     "ledger": {
+      "overlap_products": 765,
+      "overlap_share": 0.9750735815866706,
+      "overlap_yield": 9.163471746189542,
+      "products_with_yield": 1175,
+      "summed_cumulative_yield": 9.397723330047
+     },
+     "matched_mapping": "exact",
+     "matches_exact": {
+      "overlap_products": true,
+      "overlap_yield": true,
+      "products_with_yield": true,
+      "summed_cumulative_yield": true
+     },
+     "pass": true,
+     "recomputed_exact": {
+      "overlap_products": 765,
+      "overlap_yield": 9.163471746189547,
+      "products_with_yield_mapped": 1011,
+      "products_with_yield_tabulated": 1175,
+      "summed_all_tabulated": 9.397723330047,
+      "summed_mapped": 9.390141496660627
+     },
+     "share_equals_ratio_of_ledger_values": true
+    }
+   },
+   "overlap_pass": true,
+   "pass": true
+  },
+  "G6": {
+   "pass": true,
+   "routes_removed_in_total": 62,
+   "steps_identical": true,
+   "targets": {
+    "Ba140": {
+     "explained_fraction": [
+      0.9997709893179695,
+      0.8081975067588348
+     ],
+     "pass": true,
+     "paths_dropped_by_cap": [
+      0,
+      0
+     ],
+     "removed_atoms_per_g": 21032623385133.33,
+     "removed_without_u238_fission_edge": [],
+     "residual_expected": 21057766193845.547,
+     "residual_filtered": 21057766193845.547,
+     "residual_relative_to_total": 0.0,
+     "residual_unfiltered": 25142808712.234375,
+     "routes_added_by_filter": 0,
+     "routes_filtered": 6,
+     "routes_removed": 6,
+     "routes_unfiltered": 12,
+     "routes_with_u238_fission_in_filtered": 0,
+     "surviving_routes_changed": 0,
+     "total_equal": true
+    },
+    "Cs137": {
+     "explained_fraction": [
+      0.9999577506352633,
+      0.8007074167927496
+     ],
+     "pass": true,
+     "paths_dropped_by_cap": [
+      0,
+      0
+     ],
+     "removed_atoms_per_g": 24043234797247.016,
+     "removed_without_u238_fission_edge": [],
+     "residual_expected": 24048332963843.844,
+     "residual_filtered": 24048332963843.875,
+     "residual_relative_to_total": 2.5897401015654897e-16,
+     "residual_unfiltered": 5098166596.8125,
+     "routes_added_by_filter": 0,
+     "routes_filtered": 7,
+     "routes_removed": 7,
+     "routes_unfiltered": 14,
+     "routes_with_u238_fission_in_filtered": 0,
+     "surviving_routes_changed": 0,
+     "total_equal": true
+    },
+    "I131": {
+     "explained_fraction": [
+      0.9998099219874854,
+      0.7486456834532786
+     ],
+     "pass": true,
+     "paths_dropped_by_cap": [
+      0,
+      0
+     ],
+     "removed_atoms_per_g": 15832035788749.117,
+     "removed_without_u238_fission_edge": [],
+     "residual_expected": 15844017279085.258,
+     "residual_filtered": 15844017279085.266,
+     "residual_relative_to_total": 1.2393987985694954e-16,
+     "residual_unfiltered": 11981490336.15625,
+     "routes_added_by_filter": 0,
+     "routes_filtered": 15,
+     "routes_removed": 15,
+     "routes_unfiltered": 30,
+     "routes_with_u238_fission_in_filtered": 0,
+     "surviving_routes_changed": 0,
+     "total_equal": true
+    },
+    "Mo99": {
+     "explained_fraction": [
+      0.999789160633173,
+      0.7817685033444338
+     ],
+     "pass": true,
+     "paths_dropped_by_cap": [
+      0,
+      0
+     ],
+     "removed_atoms_per_g": 23704716069415.754,
+     "removed_without_u238_fission_edge": [],
+     "residual_expected": 23727639985842.016,
+     "residual_filtered": 23727639985842.03,
+     "residual_relative_to_total": 1.4370865106170883e-16,
+     "residual_unfiltered": 22923916426.28125,
+     "routes_added_by_filter": 0,
+     "routes_filtered": 15,
+     "routes_removed": 16,
+     "routes_unfiltered": 31,
+     "routes_with_u238_fission_in_filtered": 0,
+     "surviving_routes_changed": 0,
+     "total_equal": true
+    },
+    "Xe135": {
+     "explained_fraction": [
+      0.999866979976335,
+      0.7990585685243117
+     ],
+     "pass": true,
+     "paths_dropped_by_cap": [
+      0,
+      0
+     ],
+     "removed_atoms_per_g": 9592399931991.127,
+     "removed_without_u238_fission_edge": [],
+     "residual_expected": 9598754154190.945,
+     "residual_filtered": 9598754154190.945,
+     "residual_relative_to_total": 0.0,
+     "residual_unfiltered": 6354222199.8125,
+     "routes_added_by_filter": 0,
+     "routes_filtered": 11,
+     "routes_removed": 12,
+     "routes_unfiltered": 23,
+     "routes_with_u238_fission_in_filtered": 0,
+     "surviving_routes_changed": 0,
+     "total_equal": true
+    },
+    "Zr95": {
+     "explained_fraction": [
+      0.9998641270277947,
+      0.8145467301370755
+     ],
+     "pass": true,
+     "paths_dropped_by_cap": [
+      0,
+      0
+     ],
+     "removed_atoms_per_g": 22599362630683.234,
+     "removed_without_u238_fission_edge": [],
+     "residual_expected": 22615932270782.297,
+     "residual_filtered": 22615932270782.297,
+     "residual_relative_to_total": 0.0,
+     "residual_unfiltered": 16569640099.078125,
+     "routes_added_by_filter": 0,
+     "routes_filtered": 6,
+     "routes_removed": 6,
+     "routes_unfiltered": 12,
+     "routes_with_u238_fission_in_filtered": 0,
+     "surviving_routes_changed": 0,
+     "total_equal": true
+    }
+   },
+   "targets_in_both": [
+    "Ba140",
+    "Cs137",
+    "I131",
+    "Mo99",
+    "Xe135",
+    "Zr95"
+   ],
+   "targets_missing": [],
+   "u235_fission_routes_kept": 60,
+   "vacuous": false
+  }
+ },
+ "protocol": "protocols/ACTINV-P153_PROTOCOL.md",
+ "protocol_sha256": "da7473c4d9a1ad4142c2519fe2c1634106c65cd6ca3bd70bce8a3859cc2e7d92",
+ "reference_sha256": "79e1e8600a8c2ad3ce42e72dcf34ce4dd8fa9bf60288db24e9eeb077781c9072",
+ "runs": {
+  "g2_fns_fe_5min_candidate": {
+   "binary": "/home/connoravila/Documents/actinv/target/p153-cand/actinv",
+   "exit_code": 0,
+   "output_sha256": "366b6b3d72762df8f08f15585048dc4db0f3e00175742f3bf3d2970d0b006035",
+   "spec": "/home/connoravila/Documents/actinv/.claude/worktrees/agent-aab76f705cb2b52e6/examples/fns_fe_5min.json",
+   "spec_sha256": "ed55ed00f6c00fc4a2351e18332e98e7feb33d9b7ca65e7ba861e0e5e8feef39"
+  },
+  "g2_fns_fe_5min_reference": {
+   "binary": "/home/connoravila/Documents/actinv/target/parity2-ref/actinv",
+   "exit_code": 0,
+   "output_sha256": "46e20882da7607a5027224bdc56fe8646001381fc708fc45595f6959a3f5428c",
+   "spec": "/home/connoravila/Documents/actinv/.claude/worktrees/agent-aab76f705cb2b52e6/examples/fns_fe_5min.json",
+   "spec_sha256": "ed55ed00f6c00fc4a2351e18332e98e7feb33d9b7ca65e7ba861e0e5e8feef39"
+  },
+  "g2_shielding_demo_candidate": {
+   "binary": "/home/connoravila/Documents/actinv/target/p153-cand/actinv",
+   "exit_code": 0,
+   "output_sha256": "1377cb69e58a60ab3a48291ba0a9c0e35c9ceb0e413d77c23e51a7f609f120f6",
+   "spec": "/home/connoravila/Documents/actinv/.claude/worktrees/agent-aab76f705cb2b52e6/examples/shielding_demo.json",
+   "spec_sha256": "5da1f8e0d1028bba93a51c5b21125d6145aaf24d0f1a65c2c90acf735616afb1"
+  },
+  "g2_shielding_demo_reference": {
+   "binary": "/home/connoravila/Documents/actinv/target/parity2-ref/actinv",
+   "exit_code": 0,
+   "output_sha256": "3fbbc7dc02e69ff327e829d07bba1b185b06a955a690cb68b210992257a9afa0",
+   "spec": "/home/connoravila/Documents/actinv/.claude/worktrees/agent-aab76f705cb2b52e6/examples/shielding_demo.json",
+   "spec_sha256": "5da1f8e0d1028bba93a51c5b21125d6145aaf24d0f1a65c2c90acf735616afb1"
+  },
+  "g2_u235_spectrum_average_candidate": {
+   "binary": "/home/connoravila/Documents/actinv/target/p153-cand/actinv",
+   "exit_code": 0,
+   "output_sha256": "bae1dd2794112d008985a8432fdced855b9a9106fdeef38ef4f4246effd6c455",
+   "spec": "/home/connoravila/Documents/actinv/target/p153-work/g2_u235_spectrum_average_candidate.spec.json",
+   "spec_sha256": "40a3936e1b73a94265bc9598d9a55e4d48a0f54ca1ab73b3d714d773961c096a"
+  },
+  "g2_u235_spectrum_average_reference": {
+   "binary": "/home/connoravila/Documents/actinv/target/parity2-ref/actinv",
+   "exit_code": 0,
+   "output_sha256": "3e256c2f68ec75fabf4de064575ce1185a2eaa725c507debd227f2f2d3c2087a",
+   "spec": "/home/connoravila/Documents/actinv/target/p153-work/g2_u235_spectrum_average_reference.spec.json",
+   "spec_sha256": "40a3936e1b73a94265bc9598d9a55e4d48a0f54ca1ab73b3d714d773961c096a"
+  },
+  "g3_fns_rate_weighted": {
+   "binary": "/home/connoravila/Documents/actinv/target/p153-cand/actinv",
+   "exit_code": 0,
+   "output_sha256": "16b30e3222021a702d4e007c61f2b9c8596f074ef28443ab9e58afe4096416e7",
+   "spec": "/home/connoravila/Documents/actinv/target/p153-work/g3_fns_rate_weighted.spec.json",
+   "spec_sha256": "1eea828f6087fa07abb7720069daa83a7b85221d879c06ddfcb84305d3615c98"
+  },
+  "g3_mix_rate_weighted": {
+   "binary": "/home/connoravila/Documents/actinv/target/p153-cand/actinv",
+   "exit_code": 0,
+   "output_sha256": "b951da37b0acd69f6baee3344bc13a307f32ea76bd9dd490ab04f763527333dc",
+   "spec": "/home/connoravila/Documents/actinv/target/p153-work/g3_mix_rate_weighted.spec.json",
+   "spec_sha256": "c0ad27fd426e72f13ab92d0091d4d3a2a10bf9e8514732883630c4a6475bf0fe"
+  },
+  "g3_mix_spectrum_average": {
+   "binary": "/home/connoravila/Documents/actinv/target/p153-cand/actinv",
+   "exit_code": 0,
+   "output_sha256": "fff21c17593f7fa2ae27320362aa2d65f989542bd153b32da6fc02def36915ec",
+   "spec": "/home/connoravila/Documents/actinv/target/p153-work/g3_mix_spectrum_average.spec.json",
+   "spec_sha256": "3857fa7c56ed2bfbbb3c182bea92e5efbd54fd4d34b9185b3d50eb800090c997"
+  },
+  "g3_one_group_fixed": {
+   "binary": "/home/connoravila/Documents/actinv/target/p153-cand/actinv",
+   "exit_code": 0,
+   "output_sha256": "27121f6ab8ecdaea702aba6a0e9350aee9269854ea8ea38b851108480dd39197",
+   "spec": "/home/connoravila/Documents/actinv/target/p153-work/g3_one_group_fixed.spec.json",
+   "spec_sha256": "b960b3f985fde8e9806595a8e28b4cd6ab88acd3ecab4fd849a66044754ed9ee"
+  },
+  "g3_one_group_rate_weighted": {
+   "binary": "/home/connoravila/Documents/actinv/target/p153-cand/actinv",
+   "exit_code": 0,
+   "output_sha256": "45e58d359d769f74be91baf1760c5c32a380940046a68ac0bf2d9548f751b04e",
+   "spec": "/home/connoravila/Documents/actinv/target/p153-work/g3_one_group_rate_weighted.spec.json",
+   "spec_sha256": "6cfecb661f4b27563c003c1a0807eaa7c9a210575516ad672ff15d8a18b4b4f0"
+  },
+  "g3_thermal_rate_weighted": {
+   "binary": "/home/connoravila/Documents/actinv/target/p153-cand/actinv",
+   "exit_code": 0,
+   "output_sha256": "881107ad9945e39f83d1d84032b39adbf06d99883e7c16417eb42563bef6d42e",
+   "spec": "/home/connoravila/Documents/actinv/target/p153-work/g3_thermal_rate_weighted.spec.json",
+   "spec_sha256": "345b70bbd87b4fab86fca02c52b27fab1504cbd62a1bd3e25f07dc35a0c9d77e"
+  },
+  "g4_exclude_u238": {
+   "binary": "/home/connoravila/Documents/actinv/target/p153-cand/actinv",
+   "exit_code": 0,
+   "output_sha256": "059e0e0d3773ea26b24501e58385e77023bf40e63bda8beb2ae668a7e5e7479f",
+   "spec": "/home/connoravila/Documents/actinv/target/p153-work/g4_exclude_u238.spec.json",
+   "spec_sha256": "43055b0f38c3bcb7c0b0de74f3ea444822b1c7d540d96f43a6dd96fc4692a2ca"
+  },
+  "g4_include_u235": {
+   "binary": "/home/connoravila/Documents/actinv/target/p153-cand/actinv",
+   "exit_code": 0,
+   "output_sha256": "9bc8a2cfc6d26136e2ad35b4c2e5b4a66d909c976e35f2098218d0313610a822",
+   "spec": "/home/connoravila/Documents/actinv/target/p153-work/g4_include_u235.spec.json",
+   "spec_sha256": "36b0ddf32fb0a71eb366b3f050f4c9e365d4e4813a029bb2cb5c831f456bd1a1"
+  },
+  "g4_u235_file_only": {
+   "binary": "/home/connoravila/Documents/actinv/target/p153-cand/actinv",
+   "exit_code": 0,
+   "output_sha256": "7a32fd0e9b2ca67770b8aec8f7cd3d487c2bc0c9b5c96922d3bc25caef853633",
+   "spec": "/home/connoravila/Documents/actinv/target/p153-work/g4_u235_file_only.spec.json",
+   "spec_sha256": "e96318d5b0c108d32018b8bafa2418dcd3179d56538d3cffddcef1f489587103"
+  },
+  "g5_cumulative": {
+   "binary": "/home/connoravila/Documents/actinv/target/p153-cand/actinv",
+   "exit_code": 0,
+   "output_sha256": "5605988e9334c89aef79b14245ea3ec5555f40137117595bda27ad3d3baeb0f4",
+   "spec": "/home/connoravila/Documents/actinv/target/p153-work/g5_cumulative.spec.json",
+   "spec_sha256": "512f32b9d5f4f83378b5612e88364d2da4c17cdaec643f116ca4cac4ea670a78"
+  },
+  "g6_filtered": {
+   "binary": "/home/connoravila/Documents/actinv/target/p153-cand/actinv",
+   "exit_code": 0,
+   "output_sha256": "728ed994bcb9a275abbe64de759ce89bc07eb653b99a2df9d9718e9e15610bcc",
+   "spec": "/home/connoravila/Documents/actinv/target/p153-work/g6_filtered.spec.json",
+   "spec_sha256": "57ae905bacb9943835ce0ccacc988c5201d457c0ec08df4fb1106bbfa98a0b4d"
+  },
+  "g6_unfiltered": {
+   "binary": "/home/connoravila/Documents/actinv/target/p153-cand/actinv",
+   "exit_code": 0,
+   "output_sha256": "2ec2829fa3da84f42f9c031f564e04f6781c66e647f130e474363aa12c9bedce",
+   "spec": "/home/connoravila/Documents/actinv/target/p153-work/g6_unfiltered.spec.json",
+   "spec_sha256": "0518591699b637b91f7b4f0f0b224db9f00799bb5554d7ce1944bfcaf84f152d"
+  }
+ },
+ "verdict": "PASS"
+}

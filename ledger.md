@@ -3981,3 +3981,51 @@ Registered before any source change for these phases:
 
 Reference binary for the wave: the v1.6.1 release build, SHA-256
 `79e1e8600a8c2ad3ce42e72dcf34ce4dd8fa9bf60288db24e9eeb077781c9072`.
+
+## Entry 228 — P153 candidate: G1–G6 recorded (2026-10-27)
+
+Fission-yield selection is implemented in `crates/actinv-data/src/fission.rs` (hat weights, mixed and cumulative
+yield sets), the new `crates/actinv-core/src/fission_mix.rs` (rate weights, overlap diagnostic), `spec.rs`,
+`chain.rs` (unselected parents booked to leakage), `pathways.rs` (fission-parent route filter) and `run.rs`
+(per-spectrum mixing, prepare-time refusals, ledger and certificate keys). The native waste composition solve refuses
+the new options.
+
+G1, under the cgroup: `cargo fmt --check` clean; clippy `-D warnings` clean after a type alias for the parent
+selection (clippy 1.98 `type_complexity`); `cargo test --workspace --all-targets --all-features` exit zero, no
+failures. One test compile fix (an unqualified `library::` path) was made before the first build.
+
+Candidate: release build of `b1922a6`, SHA-256 `68d271840c628d2e3c04e3e54b139e99c8b6d936ce7dd3cd0cea8987fdac63f2`;
+`db58f35` changes only the checker, so the binary is that of the evidence commit. Reference: v1.6.1 release
+(`79e1e860…9c072`). Checker `controls/check_p153.py` (SHA-256 `907efaadafc196993f386f891c1929339732466ea79ee3b420aed153da27730c`), written from the protocol and
+the documented keys without reading the implementation. Record `results/p153_fission_yields.json`.
+
+Development run disclosed: the checker's first run (`results/p153/development_run_1.json`) failed G3, G5 and one
+G4 refusal on checker defects, with G2, G6, the weights and the one-group identity already passing. (1) The checker
+mapped a yield product whose isomer has no decay record onto its ground state, so products listed under both FPS=0 and
+FPS=1 counted twice (Xe-143 expected 2× the run); the engine, before and after P153, maps the exact state and books an
+absent state to leakage. (2) Th-232 was chosen as the "not fissionable" parent, but the TENDL-2025 library holds its
+MT=18 row, so no refusal was due. The checker now maps exact states, builds the refusal case from a copy of the U-235
+yield file re-headed as Fe-56 (hash pinned at generation), and compares first-order inventories above 1e-4 (was 1e-6)
+of the largest expected population, still at 1e-6 relative: the dense matrix exponential's absolute error (~3e-11 of
+its largest entry) reached 2e-6 relative on populations near the old floor. No implementation change followed.
+
+Evidence run (fresh work directory):
+- **G2:** `fns_fe_5min`, `shielding_demo` and a U-235 `spectrum_average` case byte-identical to v1.6.1 apart from
+  `ms`.
+- **G3:** rate weights for U-235 and U-238 in thermal, FNS 14 MeV and equal-rate mixed spectra equal an independent
+  recomputation from the library MT=18 rows to ~1e-15; ledger and certificate copies agree; first-order inventories
+  from the checker's own MT=454 read agree within 1e-6 (worst ~3e-7). A one-group spectrum gives steps byte-identical
+  to `"fixed"` at the group midpoint. Information, mixed spectrum, rate-weighted vs spectrum-average activities:
+  Zr-99 −0.7 %, Sr-96 −9.1 %, Rb-92 +6.6 %, Zr-100 −1.0 %, Nb-100 +0.1 %.
+- **G4:** excluding U-238 books exactly its independently folded fission rate to `fission_unselected_to_leakage`
+  (relative difference 1.5e-16); U-235 products equal a U-235-only run; include and exclude forms give identical
+  steps; seven refusals each exit nonzero, name the cause and write nothing.
+- **G5:** cumulative-mode inventories agree with the checker's MT=459 read within 1e-6; `fission_cumulative_overlap`
+  reproduced exactly for U-235 (overlap share 0.977) and U-238 (0.975).
+- **G6:** with `fission_parents: ["U235"]` no route leaves U-238 fission, steps are identical to the unfiltered run,
+  removed routes all carry a U-238 fission edge, and the residual equals total minus surviving routes.
+
+Handbook walk-through (`check_p140_docs.py`, local): 98/98 gating items pass after one P153 fragment was made
+valid JSON. One unclassified fragment predates this wave (`docs/guide/waste.md` `encapsulation` block, P147).
+
+G7 (CI) pending.

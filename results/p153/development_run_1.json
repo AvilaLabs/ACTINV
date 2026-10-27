@@ -1,0 +1,1370 @@
+{
+ "candidate_sha256": "68d271840c628d2e3c04e3e54b139e99c8b6d936ce7dd3cd0cea8987fdac63f2",
+ "checker_sha256": "6e8bf340e600cfae01f8cb39ebddf30d7d2ab7fdc73fd58bd90c310e3729e5bd",
+ "data": {
+  "decay_fallback": {
+   "path": "/home/connoravila/Documents/actinv/actinv-data/v1.1.0/decay/jeff-3-3_decay.dat",
+   "sha256": "850b8b7f85f8d88b6ad826c4cd341aaaffabd525c8ecf3c588a0ad437bf5d123"
+  },
+  "decay_primary": {
+   "path": "/home/connoravila/Documents/actinv/actinv-data/v1.1.0/decay/endf-b-viii-0_decay.dat",
+   "sha256": "6f04cf009086c179021f243a58dadc2d5bb078de5ba39c4fe46ccad77d228ddb"
+  },
+  "library": {
+   "path": "/home/connoravila/Documents/actinv/actinv-data/v1.1.0/activation/tendl-2025-neutron-709g.npz",
+   "sha256": "ec4c72bf598dc8ad3d533d9cfafdcf493e2d1f949a3e4db6251495659b68cc44"
+  },
+  "yields": {
+   "nfy-090_Th_232.endf": {
+    "path": "/home/connoravila/nuclear-data/endfb-viii.0-nfpy/nfy-090_Th_232.endf",
+    "sha256": "551d2721427034042ed31307b297011b0b2a092b7baeeac6a5d3a6d90472d052"
+   },
+   "nfy-092_U_235.endf": {
+    "path": "/home/connoravila/nuclear-data/endfb-viii.0-nfpy/nfy-092_U_235.endf",
+    "sha256": "9e1320293a544fc03f33f804a15a9e3ccc3be026552ee6dbc03b8d3e24615e41"
+   },
+   "nfy-092_U_238.endf": {
+    "path": "/home/connoravila/nuclear-data/endfb-viii.0-nfpy/nfy-092_U_238.endf",
+    "sha256": "05598b1c16117a729a3314842a2de574ffb7c992f679f6e1505c1d566164791c"
+   }
+  }
+ },
+ "design": {
+  "U235_fission_rate_per_atom_per_s": 1e-11,
+  "atoms_per_g_each_parent": 1e+21,
+  "fission_rates_per_atom_per_s": {
+   "fns": {
+    "92235": 1e-11,
+    "92238": 5.440074699899346e-12
+   },
+   "mix": {
+    "92235": 2.0000000000000005e-11,
+    "92238": 5.440075022461645e-12
+   },
+   "one_group": {
+    "92235": 1e-11,
+    "92238": 4.200836203385893e-12
+   },
+   "thermal": {
+    "92235": 1.0000000000000003e-11,
+    "92238": 3.225622986921378e-19
+   }
+  },
+  "irradiation_s": 10.0,
+  "kT_eV": 0.0253,
+  "tabulated_energies_eV": {
+   "92235": [
+    0.0253,
+    500000.0,
+    14000000.0
+   ],
+   "92238": [
+    500000.0,
+    14000000.0
+   ]
+  },
+  "tolerances": {
+   "exact": 1e-12,
+   "first_order_inventory": 1e-06,
+   "weights": 1e-12
+  }
+ },
+ "external_gates": {
+  "G0": {
+   "external": true,
+   "in_protocol_hash_txt": true,
+   "note": "recorded for information; G0 is evaluated by the coordinator",
+   "protocol_sha256": "da7473c4d9a1ad4142c2519fe2c1634106c65cd6ca3bd70bce8a3859cc2e7d92"
+  },
+  "G1": "fmt, clippy -D warnings, workspace tests: coordinator",
+  "G7": "CI on the pushed commit and committed baselines: coordinator"
+ },
+ "gates": {
+  "G2": {
+   "cases": {
+    "fns_fe_5min": {
+     "identical_apart_from_timing": true,
+     "pass": true,
+     "timing_keys_dropped": [
+      "/ms"
+     ]
+    },
+    "shielding_demo": {
+     "identical_apart_from_timing": true,
+     "pass": true,
+     "timing_keys_dropped": [
+      "/ms"
+     ]
+    },
+    "u235_spectrum_average": {
+     "identical_apart_from_timing": true,
+     "pass": true,
+     "timing_keys_dropped": [
+      "/ms"
+     ]
+    }
+   },
+   "pass": true
+  },
+  "G3": {
+   "cases": {
+    "fns": {
+     "first_order_inventory": {
+      "absent_from_run": [],
+      "bad": [
+       {
+        "expected": 5601801.448816017,
+        "nuclide": "Xe143",
+        "rel": 0.49979041996871937,
+        "run": 2802074.750130879
+       },
+       {
+        "expected": 358498.67969624867,
+        "nuclide": "Tb162",
+        "rel": 0.4769994779225464,
+        "run": 187494.99664521587
+       },
+       {
+        "expected": 1386003430.0113611,
+        "nuclide": "Se85",
+        "rel": 0.43622224013041483,
+        "run": 781397908.9433665
+       },
+       {
+        "expected": 1275518196.826974,
+        "nuclide": "Br86",
+        "rel": 0.3979823336284974,
+        "run": 767884488.2681618
+       },
+       {
+        "expected": 5085041.793682797,
+        "nuclide": "Pd109",
+        "rel": 0.2860509800392999,
+        "run": 3630460.6050590333
+       },
+       {
+        "expected": 160642605.03247684,
+        "nuclide": "Rh109",
+        "rel": 0.25181271016393086,
+        "run": 120190755.29145493
+       },
+       {
+        "expected": 1346033039.7074723,
+        "nuclide": "Ru109",
+        "rel": 0.1656525228280995,
+        "run": 1123059270.869954
+       },
+       {
+        "expected": 223723674.4370033,
+        "nuclide": "Kr86",
+        "rel": 0.14598107586235048,
+        "run": 191064251.74681133
+       },
+       {
+        "expected": 12042.723533815988,
+        "nuclide": "Dy162",
+        "rel": 0.10819575726825156,
+        "run": 10739.751941502573
+       },
+       {
+        "expected": 701492347.4257202,
+        "nuclide": "Br85",
+        "rel": 0.09635353964152585,
+        "run": 633901076.719809
+       },
+       {
+        "expected": 16605485.985793287,
+        "nuclide": "Kr85m1",
+        "rel": 0.055113676885637994,
+        "run": 15690296.596643286
+       },
+       {
+        "expected": 438446630.31209075,
+        "nuclide": "Cs143",
+        "rel": 0.03697169324796453,
+        "run": 422236515.9905884
+       },
+       {
+        "expected": 3627969454.748845,
+        "nuclide": "Ba143",
+        "rel": 0.010262740338428042,
+        "run": 3590736546.2790093
+       },
+       {
+        "expected": 1987424434.8584251,
+        "nuclide": "La143",
+        "rel": 0.0037028883117617363,
+        "run": 1980065224.1480782
+       },
+       {
+        "expected": 283066.15851506626,
+        "nuclide": "Rb85",
+        "rel": 0.00027654138324789934,
+        "run": 282987.87900803983
+       },
+       {
+        "expected": 66891109.78490036,
+        "nuclide": "Ce143",
+        "rel": 0.0002512210532699543,
+        "run": 66874305.3298458
+       },
+       {
+        "expected": 5199634353.9187565,
+        "nuclide": "Ba142",
+        "rel": 0.00018912081217336971,
+        "run": 5198650994.846739
+       },
+       {
+        "expected": 738528097.9429893,
+        "nuclide": "Cs142",
+        "rel": 0.0001094901352040487,
+        "run": 738447236.4016936
+       },
+       {
+        "expected": 28003751.513368405,
+        "nuclide": "Kr85",
+        "rel": 5.399916326557027e-05,
+        "run": 28002239.334218387
+       },
+       {
+        "expected": 513915256.13450384,
+        "nuclide": "La142",
+        "rel": 8.20374472253004e-06,
+        "run": 513911040.1049335
+       }
+      ],
+      "compared": 746,
+      "floor_atoms_per_g": 6454.648481519674,
+      "largest_expected_atoms_per_g": 6454648481.519674,
+      "n_absent": 0,
+      "n_bad": 20,
+      "pass": false,
+      "tolerance": 1e-06,
+      "worst_relative_error": 0.49979041996871937
+     },
+     "fission_rates_per_atom_per_s": {
+      "92235": 1e-11,
+      "92238": 5.440074699899346e-12
+     },
+     "pass": false,
+     "weights": {
+      "certificate_equals_ledger": true,
+      "parents": {
+       "92235_0": {
+        "energies_match": true,
+        "entries": 1,
+        "expected_requested_energy_eV": 12836745.17811999,
+        "expected_weights": [
+         0.03975405316080942,
+         0.04494059841736715,
+         0.9153053484218234
+        ],
+        "run_weights": [
+         0.03975405316080945,
+         0.044940598417367174,
+         0.9153053484218235
+        ],
+        "selection_certificate_requested_energy_eV": [
+         12836745.178119991
+        ],
+        "selection_ledger_requested_energy_eV": [
+         12836745.178119991
+        ],
+        "sum_of_weights": 1.0000000000000002,
+        "worst_relative_error": 6.981822835360869e-16
+       },
+       "92238_0": {
+        "energies_match": true,
+        "entries": 1,
+        "expected_requested_energy_eV": 13677981.875164486,
+        "expected_weights": [
+         0.023853194432260087,
+         0.9761468055677398
+        ],
+        "run_weights": [
+         0.02385319443226009,
+         0.9761468055677399
+        ],
+        "selection_certificate_requested_energy_eV": [
+         13677981.875164488
+        ],
+        "selection_ledger_requested_energy_eV": [
+         13677981.875164488
+        ],
+        "sum_of_weights": 1.0,
+        "worst_relative_error": 1.4544999252852208e-16
+       }
+      },
+      "pass": true
+     }
+    },
+    "mix": {
+     "first_order_inventory": {
+      "absent_from_run": [],
+      "bad": [
+       {
+        "expected": 7893331.062195734,
+        "nuclide": "Xe143",
+        "rel": 0.49984588434782534,
+        "run": 3947882.016962348
+       },
+       {
+        "expected": 358644.70861101185,
+        "nuclide": "Tb162",
+        "rel": 0.4769303267545562,
+        "run": 187596.17054436938
+       },
+       {
+        "expected": 2399314609.453434,
+        "nuclide": "Se85",
+        "rel": 0.41921579743642073,
+        "run": 1393484022.1505582
+       },
+       {
+        "expected": 1937532016.8193731,
+        "nuclide": "Br86",
+        "rel": 0.37340426651737185,
+        "run": 1214049295.2250109
+       },
+       {
+        "expected": 5139790.8421087675,
+        "nuclide": "Pd109",
+        "rel": 0.28347102855807915,
+        "run": 3682809.0455227992
+       },
+       {
+        "expected": 162741684.61176342,
+        "nuclide": "Rh109",
+        "rel": 0.24905763935485345,
+        "run": 122209624.81772554
+       },
+       {
+        "expected": 1370033446.6803193,
+        "nuclide": "Ru109",
+        "rel": 0.1633169303758056,
+        "run": 1146283789.6563046
+       },
+       {
+        "expected": 350936555.26909477,
+        "nuclide": "Kr86",
+        "rel": 0.13263483623466152,
+        "run": 304390142.73222214
+       },
+       {
+        "expected": 12043.883800367861,
+        "nuclide": "Dy162",
+        "rel": 0.10821371160050856,
+        "run": 10740.570432244816
+       },
+       {
+        "expected": 1041766261.3300073,
+        "nuclide": "Br85",
+        "rel": 0.10793767341327232,
+        "run": 929320434.8416033
+       },
+       {
+        "expected": 28559907.738598574,
+        "nuclide": "Kr85m1",
+        "rel": 0.0533097819472,
+        "run": 27037385.284621734
+       },
+       {
+        "expected": 806669021.0332844,
+        "nuclide": "Cs143",
+        "rel": 0.028318581816273402,
+        "run": 783825298.3625002
+       },
+       {
+        "expected": 7780126690.903204,
+        "nuclide": "Ba143",
+        "rel": 0.00674405491137407,
+        "run": 7727657089.282306
+       },
+       {
+        "expected": 3389126350.017277,
+        "nuclide": "La143",
+        "rel": 0.003060020134127105,
+        "run": 3378755555.149123
+       },
+       {
+        "expected": 102569377.97535895,
+        "nuclide": "Ce143",
+        "rel": 0.00023088071328157458,
+        "run": 102545696.68421115
+       },
+       {
+        "expected": 10196837002.5004,
+        "nuclide": "Ba142",
+        "rel": 0.00013590253983231958,
+        "run": 10195451226.453505
+       },
+       {
+        "expected": 1383591686.9152265,
+        "nuclide": "Cs142",
+        "rel": 8.235981567285377e-05,
+        "run": 1383477734.5589256
+       },
+       {
+        "expected": 2659534.219504019,
+        "nuclide": "Rb85",
+        "rel": 4.896620398959289e-05,
+        "run": 2659403.9922089092
+       },
+       {
+        "expected": 53547276.92824468,
+        "nuclide": "Kr85",
+        "rel": 4.698067181967805e-05,
+        "run": 53544761.24120048
+       },
+       {
+        "expected": 635593218.2851186,
+        "nuclide": "La142",
+        "rel": 9.347688551785354e-06,
+        "run": 635587276.9576684
+       }
+      ],
+      "compared": 723,
+      "floor_atoms_per_g": 11715.05587812572,
+      "largest_expected_atoms_per_g": 11715055878.125721,
+      "n_absent": 0,
+      "n_bad": 20,
+      "pass": false,
+      "tolerance": 1e-06,
+      "worst_relative_error": 0.49984588434782534
+     },
+     "fission_rates_per_atom_per_s": {
+      "92235": 2.0000000000000005e-11,
+      "92238": 5.440075022461645e-12
+     },
+     "information_top5_fission_product_activity_vs_spectrum_average": [
+      {
+       "nuclide": "Zr99",
+       "rate_weighted_Bq_per_g": 1224903251.27911,
+       "relative_difference": -0.0070221417982313915,
+       "spectrum_average_Bq_per_g": 1233565523.30114
+      },
+      {
+       "nuclide": "Sr96",
+       "rate_weighted_Bq_per_g": 800880282.7732255,
+       "relative_difference": -0.09055435689644412,
+       "spectrum_average_Bq_per_g": 880624684.7696775
+      },
+      {
+       "nuclide": "Rb92",
+       "rate_weighted_Bq_per_g": 789440304.3433812,
+       "relative_difference": 0.06623800915791964,
+       "spectrum_average_Bq_per_g": 740397826.3416586
+      },
+      {
+       "nuclide": "Zr100",
+       "rate_weighted_Bq_per_g": 667685024.675492,
+       "relative_difference": -0.010216276608650609,
+       "spectrum_average_Bq_per_g": 674576686.7005721
+      },
+      {
+       "nuclide": "Nb100",
+       "rate_weighted_Bq_per_g": 665699179.3961565,
+       "relative_difference": 0.0012349770563981736,
+       "spectrum_average_Bq_per_g": 664878070.2341151
+      }
+     ],
+     "pass": false,
+     "weights": {
+      "certificate_equals_ledger": true,
+      "parents": {
+       "92235_0": {
+        "energies_match": true,
+        "entries": 1,
+        "expected_requested_energy_eV": 6418372.609981408,
+        "expected_weights": [
+         0.5198770100375745,
+         0.02247031575151364,
+         0.4576526742109117
+        ],
+        "run_weights": [
+         0.5198770100375742,
+         0.022470315751513634,
+         0.45765267421091155
+        ],
+        "selection_certificate_requested_energy_eV": [
+         6418372.6099814065
+        ],
+        "selection_ledger_requested_energy_eV": [
+         6418372.6099814065
+        ],
+        "sum_of_weights": 0.9999999999999994,
+        "worst_relative_error": 4.271098752933562e-16
+       },
+       "92238_0": {
+        "energies_match": true,
+        "entries": 1,
+        "expected_requested_energy_eV": 13677981.093792891,
+        "expected_weights": [
+         0.023853252311637884,
+         0.9761467476883622
+        ],
+        "run_weights": [
+         0.023853252311637888,
+         0.9761467476883621
+        ],
+        "selection_certificate_requested_energy_eV": [
+         13677981.09379289
+        ],
+        "selection_ledger_requested_energy_eV": [
+         13677981.09379289
+        ],
+        "sum_of_weights": 1.0,
+        "worst_relative_error": 1.4544963959740148e-16
+       }
+      },
+      "pass": true
+     }
+    },
+    "one_group": {
+     "balance_differences": [],
+     "group_index": 565,
+     "midpoint_eV": 2041737.7195790845,
+     "pass": true,
+     "step_differences_above_tolerance": [],
+     "steps_byte_identical": true,
+     "tolerance": 1e-12,
+     "weights": {
+      "certificate_equals_ledger": true,
+      "parents": {
+       "92235_0": {
+        "energies_match": true,
+        "entries": 1,
+        "expected_requested_energy_eV": 2041737.7195790848,
+        "expected_weights": [
+         0.0,
+         0.8857972059571049,
+         0.11420279404289517
+        ],
+        "run_weights": [
+         0.0,
+         0.8857972059571049,
+         0.11420279404289516
+        ],
+        "selection_certificate_requested_energy_eV": [
+         2041737.7195790845
+        ],
+        "selection_ledger_requested_energy_eV": [
+         2041737.7195790845
+        ],
+        "sum_of_weights": 1.0,
+        "worst_relative_error": 1.2151881155028384e-16
+       },
+       "92238_0": {
+        "energies_match": true,
+        "entries": 1,
+        "expected_requested_energy_eV": 2041737.7195790845,
+        "expected_weights": [
+         0.8857972059571049,
+         0.11420279404289516
+        ],
+        "run_weights": [
+         0.8857972059571049,
+         0.11420279404289516
+        ],
+        "selection_certificate_requested_energy_eV": [
+         2041737.7195790845
+        ],
+        "selection_ledger_requested_energy_eV": [
+         2041737.7195790845
+        ],
+        "sum_of_weights": 1.0,
+        "worst_relative_error": 0.0
+       }
+      },
+      "pass": true
+     }
+    },
+    "thermal": {
+     "first_order_inventory": {
+      "absent_from_run": [],
+      "bad": [
+       {
+        "expected": 2291529.6133797145,
+        "nuclide": "Xe143",
+        "rel": 0.49998147074376587,
+        "run": 1145807.2670292316
+       },
+       {
+        "expected": 1013311179.4420736,
+        "nuclide": "Se85",
+        "rel": 0.3959544454922521,
+        "run": 612086113.2749873
+       },
+       {
+        "expected": 662013819.9924002,
+        "nuclide": "Br86",
+        "rel": 0.32604910425605754,
+        "run": 446164806.9787472
+       },
+       {
+        "expected": 340273913.9042872,
+        "nuclide": "Br85",
+        "rel": 0.13181896678763683,
+        "run": 295419358.1486388
+       },
+       {
+        "expected": 127212880.83209164,
+        "nuclide": "Kr86",
+        "rel": 0.10916339416068305,
+        "run": 113325890.97950202
+       },
+       {
+        "expected": 11954421.752805296,
+        "nuclide": "Kr85m1",
+        "rel": 0.050804051998045746,
+        "run": 11347088.688469207
+       },
+       {
+        "expected": 54749.0484259739,
+        "nuclide": "Pd109",
+        "rel": 0.04384748136077865,
+        "run": 52348.440545595644
+       },
+       {
+        "expected": 2099079.579286601,
+        "nuclide": "Rh109",
+        "rel": 0.03821200986489939,
+        "run": 2018869.5296956925
+       },
+       {
+        "expected": 24000406.97284669,
+        "nuclide": "Ru109",
+        "rel": 0.03232812459319179,
+        "run": 23224518.825941194
+       },
+       {
+        "expected": 368222390.7211938,
+        "nuclide": "Cs143",
+        "rel": 0.018015222480789073,
+        "run": 361588782.42994344
+       },
+       {
+        "expected": 4152157236.15436,
+        "nuclide": "Ba143",
+        "rel": 0.0036695846944271053,
+        "run": 4136920543.511713
+       },
+       {
+        "expected": 1401701915.1588523,
+        "nuclide": "La143",
+        "rel": 0.0021485195993691773,
+        "run": 1398690331.1216602
+       },
+       {
+        "expected": 35678268.1904586,
+        "nuclide": "Ce143",
+        "rel": 0.0001927458294843384,
+        "run": 35671391.35306167
+       },
+       {
+        "expected": 4997202648.581648,
+        "nuclide": "Ba142",
+        "rel": 8.052833835062146e-05,
+        "run": 4996800232.155956
+       },
+       {
+        "expected": 645063588.9722375,
+        "nuclide": "Cs142",
+        "rel": 5.129836398571533e-05,
+        "run": 645030498.2654564
+       },
+       {
+        "expected": 25543525.414876293,
+        "nuclide": "Kr85",
+        "rel": 3.9286098871472115e-05,
+        "run": 25542521.90941132
+       },
+       {
+        "expected": 2376468.0609889575,
+        "nuclide": "Rb85",
+        "rel": 2.185914104977654e-05,
+        "run": 2376416.113438412
+       },
+       {
+        "expected": 121677962.15061428,
+        "nuclide": "La142",
+        "rel": 1.4179351250506546e-05,
+        "run": 121676236.8360495
+       },
+       {
+        "expected": 247254.29948956965,
+        "nuclide": "Ce142",
+        "rel": 2.4173876915138003e-06,
+        "run": 247253.7017800694
+       },
+       {
+        "expected": 11877.04653253602,
+        "nuclide": "Cu72",
+        "rel": 2.116998532350645e-06,
+        "run": 11877.021388845942
+       }
+      ],
+      "compared": 540,
+      "floor_atoms_per_g": 6649.570705881362,
+      "largest_expected_atoms_per_g": 6649570705.881363,
+      "n_absent": 0,
+      "n_bad": 20,
+      "pass": false,
+      "tolerance": 1e-06,
+      "worst_relative_error": 0.49998147074376587
+     },
+     "fission_rates_per_atom_per_s": {
+      "92235": 1.0000000000000003e-11,
+      "92238": 3.225622986921378e-19
+     },
+     "pass": false,
+     "weights": {
+      "certificate_equals_ledger": true,
+      "parents": {
+       "92235_0": {
+        "energies_match": true,
+        "entries": 1,
+        "expected_requested_energy_eV": 0.041842829228926195,
+        "expected_weights": [
+         0.9999999669143398,
+         3.30856601319868e-08,
+         0.0
+        ],
+        "run_weights": [
+         0.9999999669143387,
+         3.3085660131986765e-08,
+         0.0
+        ],
+        "selection_certificate_requested_energy_eV": [
+         0.041842829228926154
+        ],
+        "selection_ledger_requested_energy_eV": [
+         0.041842829228926154
+        ],
+        "sum_of_weights": 0.9999999999999988,
+        "worst_relative_error": 1.1102230613576195e-15
+       },
+       "92238_0": {
+        "energies_match": true,
+        "entries": 1,
+        "expected_requested_energy_eV": 500000.0,
+        "expected_weights": [
+         1.0,
+         0.0
+        ],
+        "run_weights": [
+         1.0,
+         0.0
+        ],
+        "selection_certificate_requested_energy_eV": [
+         500000.0
+        ],
+        "selection_ledger_requested_energy_eV": [
+         500000.0
+        ],
+        "sum_of_weights": 1.0,
+        "worst_relative_error": 0.0
+       }
+      },
+      "pass": true
+     }
+    }
+   },
+   "pass": false,
+   "scope_note": "mixed yields are verified through the first-order inventory (1e-6), not per product at 1e-12: the run does not print per-product effective yields"
+  },
+  "G4": {
+   "cases": {
+    "refusals": {
+     "cumulative_without_mt459": {
+      "exit_code": 1,
+      "message_tail": "/home/connoravila/Documents/actinv/target/p153-work/nfy-092_U_235.no_mt459.endf: fission_yields.yields 'cumulative' needs MF=8/MT=459, which this evaluation lacks",
+      "names_cause": true,
+      "output_file_written": false,
+      "pass": true
+     },
+     "empty_list": {
+      "exit_code": 2,
+      "message_tail": "fission_yields.parents.include must not be empty",
+      "names_cause": true,
+      "output_file_written": false,
+      "pass": true
+     },
+     "include_and_exclude": {
+      "exit_code": 2,
+      "message_tail": "fission_yields.parents takes include or exclude, not both",
+      "names_cause": true,
+      "output_file_written": false,
+      "pass": true
+     },
+     "neither": {
+      "exit_code": 2,
+      "message_tail": "fission_yields.parents needs include or exclude",
+      "names_cause": true,
+      "output_file_written": false,
+      "pass": true
+     },
+     "no_yield_file": {
+      "exit_code": 1,
+      "message_tail": "fission_yields.parents names U234, which has no fission-yield file",
+      "names_cause": true,
+      "output_file_written": false,
+      "pass": true
+     },
+     "not_fissionable": {
+      "exit_code": 0,
+      "message_tail": "1 steps, 482 of 3873 states, 1278.2 ms -> /home/connoravila/Documents/actinv/target/p153-work/g4_refuse_not_fissionable.json",
+      "names_cause": false,
+      "output_file_written": true,
+      "pass": false
+     },
+     "pass": false,
+     "rate_weighted_with_fixed_energy": {
+      "exit_code": 2,
+      "message_tail": "fission_yields.fixed_energy_eV is forbidden with rate_weighted",
+      "names_cause": true,
+      "output_file_written": false,
+      "pass": true
+     }
+    },
+    "selection": {
+     "exclude_vs_u235_file_only_byte_identical_steps": true,
+     "exclude_vs_u235_file_only_step_differences": [],
+     "include_vs_exclude_differences": [
+      "/certificate/fission_yields/parents/exclude: present in one result only",
+      "/certificate/fission_yields/parents/include: present in one result only"
+     ],
+     "include_vs_exclude_non_echo_differences": [],
+     "include_vs_exclude_steps_identical": true,
+     "pass": true,
+     "u238_fission_rate_independent": 5.440075022461645e-12,
+     "u238_fission_rate_ledger": 5.440075022461644e-12,
+     "u238_in_no_yields_to_leakage": false,
+     "u238_relative_error": 1.484894167104313e-16,
+     "unselected_is_u238_only": true,
+     "unselected_keys": [
+      "92238_0"
+     ]
+    }
+   },
+   "pass": false
+  },
+  "G5": {
+   "certificate_parents": null,
+   "certificate_pass": true,
+   "certificate_yields": "cumulative",
+   "first_order_inventory": {
+    "absent_from_run": [],
+    "bad": [
+     {
+      "expected": 14771254.451625898,
+      "nuclide": "Xe143",
+      "rel": 0.4941193539945135,
+      "run": 7472491.744299928
+     },
+     {
+      "expected": 2704261454.907366,
+      "nuclide": "Se85",
+      "rel": 0.4017892993074938,
+      "run": 1617718139.7958715
+     },
+     {
+      "expected": 928354767.725482,
+      "nuclide": "Rh109",
+      "rel": 0.28351705855397,
+      "run": 665150354.6853993
+     },
+     {
+      "expected": 4541919306.753989,
+      "nuclide": "Br86",
+      "rel": 0.11496936572392347,
+      "run": 4019737724.887241
+     },
+     {
+      "expected": 1241470.5303957197,
+      "nuclide": "Tb162",
+      "rel": 0.05164278881412599,
+      "run": 1177357.5299755326
+     },
+     {
+      "expected": 1059207913.0144475,
+      "nuclide": "Ru109",
+      "rel": 0.048413743227142904,
+      "run": 1007927693.0896081
+     },
+     {
+      "expected": 1061596947.2806079,
+      "nuclide": "Cs143",
+      "rel": 0.0398070526082296,
+      "run": 1019337901.7514728
+     },
+     {
+      "expected": 3435530634.2436566,
+      "nuclide": "Br85",
+      "rel": 0.035356699963561014,
+      "run": 3314061608.393081
+     },
+     {
+      "expected": 634595070.7443912,
+      "nuclide": "Pd109",
+      "rel": 0.018109581243991375,
+      "run": 623102819.7537092
+     },
+     {
+      "expected": 11870050119.234795,
+      "nuclide": "Ba143",
+      "rel": 0.00817726398847841,
+      "run": 11772985585.853342
+     },
+     {
+      "expected": 4876873022.315801,
+      "nuclide": "Kr86",
+      "rel": 0.006888714045411215,
+      "run": 4843277638.629287
+     },
+     {
+      "expected": 16360810181.446003,
+      "nuclide": "La143",
+      "rel": 0.0011726275374425877,
+      "run": 16341625044.892368
+     },
+     {
+      "expected": 3269043613.8335037,
+      "nuclide": "Kr85m1",
+      "rel": 0.0005031129374449536,
+      "run": 3267398915.6983123
+     },
+     {
+      "expected": 1253663.184129126,
+      "nuclide": "Dy162",
+      "rel": 0.0003896679854535824,
+      "run": 1253174.671721729
+     },
+     {
+      "expected": 19729210446.03418,
+      "nuclide": "Ba142",
+      "rel": 0.00012993799554232994,
+      "run": 19726646871.97519
+     },
+     {
+      "expected": 2187913442.6839647,
+      "nuclide": "Cs142",
+      "rel": 9.634869010989381e-05,
+      "run": 2187702640.0896883
+     },
+     {
+      "expected": 255135.00211269513,
+      "nuclide": "Sm150",
+      "rel": 6.79903410919212e-05,
+      "run": 255152.34882851326
+     },
+     {
+      "expected": 32727.69234253515,
+      "nuclide": "Rh106m1",
+      "rel": 5.940920029331464e-05,
+      "run": 32729.636668564664
+     },
+     {
+      "expected": 652061499.961483,
+      "nuclide": "Kr85",
+      "rel": 4.1676342780525065e-06,
+      "run": 652058782.4076244
+     },
+     {
+      "expected": 13570120905.724344,
+      "nuclide": "Ce143",
+      "rel": 3.22854969459063e-06,
+      "run": 13570077093.914639
+     }
+    ],
+    "compared": 730,
+    "floor_atoms_per_g": 30738.50458140347,
+    "largest_expected_atoms_per_g": 30738504581.403473,
+    "n_absent": 0,
+    "n_bad": 29,
+    "pass": false,
+    "tolerance": 1e-06,
+    "worst_relative_error": 0.4941193539945135
+   },
+   "fixed_energy_eV": 2000000.0,
+   "overlap": {
+    "92235_0": {
+     "ledger": {
+      "overlap_products": 795,
+      "overlap_share": 0.9773930285929072,
+      "overlap_yield": 8.190860712460417,
+      "products_with_yield": 1189,
+      "summed_cumulative_yield": 8.380314236794073
+     },
+     "matched_mapping": "exact",
+     "matches_exact": {
+      "overlap_products": true,
+      "overlap_yield": true,
+      "products_with_yield": true,
+      "summed_cumulative_yield": true
+     },
+     "matches_resolved": {
+      "overlap_products": true,
+      "overlap_yield": false,
+      "products_with_yield": true,
+      "summed_cumulative_yield": true
+     },
+     "pass": true,
+     "recomputed_exact": {
+      "overlap_products": 795,
+      "overlap_yield": 8.190860712460406,
+      "products_with_yield_mapped": 1079,
+      "products_with_yield_tabulated": 1189,
+      "summed_all_tabulated": 8.380314236794062,
+      "summed_mapped": 8.371075818948631
+     },
+     "recomputed_resolved": {
+      "overlap_products": 795,
+      "overlap_yield": 8.200099126220318,
+      "products_with_yield_mapped": 1079,
+      "products_with_yield_tabulated": 1189,
+      "summed_all_tabulated": 8.380314236794062,
+      "summed_mapped": 8.380314232805127
+     },
+     "share_equals_ratio_of_ledger_values": true
+    },
+    "92238_0": {
+     "ledger": {
+      "overlap_products": 765,
+      "overlap_share": 0.9750735815866706,
+      "overlap_yield": 9.163471746189542,
+      "products_with_yield": 1175,
+      "summed_cumulative_yield": 9.397723330047
+     },
+     "matched_mapping": "exact",
+     "matches_exact": {
+      "overlap_products": true,
+      "overlap_yield": true,
+      "products_with_yield": true,
+      "summed_cumulative_yield": true
+     },
+     "matches_resolved": {
+      "overlap_products": true,
+      "overlap_yield": false,
+      "products_with_yield": true,
+      "summed_cumulative_yield": true
+     },
+     "pass": true,
+     "recomputed_exact": {
+      "overlap_products": 765,
+      "overlap_yield": 9.163471746189547,
+      "products_with_yield_mapped": 1011,
+      "products_with_yield_tabulated": 1175,
+      "summed_all_tabulated": 9.397723330047,
+      "summed_mapped": 9.390141496660627
+     },
+     "recomputed_resolved": {
+      "overlap_products": 765,
+      "overlap_yield": 9.17105313721768,
+      "products_with_yield_mapped": 1011,
+      "products_with_yield_tabulated": 1175,
+      "summed_all_tabulated": 9.397723330047,
+      "summed_mapped": 9.397722887695563
+     },
+     "share_equals_ratio_of_ledger_values": true
+    }
+   },
+   "overlap_pass": true,
+   "pass": false
+  },
+  "G6": {
+   "pass": true,
+   "routes_removed_in_total": 62,
+   "steps_identical": true,
+   "targets": {
+    "Ba140": {
+     "explained_fraction": [
+      0.9997709893179695,
+      0.8081975067588348
+     ],
+     "pass": true,
+     "paths_dropped_by_cap": [
+      0,
+      0
+     ],
+     "removed_atoms_per_g": 21032623385133.33,
+     "removed_without_u238_fission_edge": [],
+     "residual_expected": 21057766193845.547,
+     "residual_filtered": 21057766193845.547,
+     "residual_relative_to_total": 0.0,
+     "residual_unfiltered": 25142808712.234375,
+     "routes_added_by_filter": 0,
+     "routes_filtered": 6,
+     "routes_removed": 6,
+     "routes_unfiltered": 12,
+     "routes_with_u238_fission_in_filtered": 0,
+     "surviving_routes_changed": 0,
+     "total_equal": true
+    },
+    "Cs137": {
+     "explained_fraction": [
+      0.9999577506352633,
+      0.8007074167927496
+     ],
+     "pass": true,
+     "paths_dropped_by_cap": [
+      0,
+      0
+     ],
+     "removed_atoms_per_g": 24043234797247.016,
+     "removed_without_u238_fission_edge": [],
+     "residual_expected": 24048332963843.844,
+     "residual_filtered": 24048332963843.875,
+     "residual_relative_to_total": 2.5897401015654897e-16,
+     "residual_unfiltered": 5098166596.8125,
+     "routes_added_by_filter": 0,
+     "routes_filtered": 7,
+     "routes_removed": 7,
+     "routes_unfiltered": 14,
+     "routes_with_u238_fission_in_filtered": 0,
+     "surviving_routes_changed": 0,
+     "total_equal": true
+    },
+    "I131": {
+     "explained_fraction": [
+      0.9998099219874854,
+      0.7486456834532786
+     ],
+     "pass": true,
+     "paths_dropped_by_cap": [
+      0,
+      0
+     ],
+     "removed_atoms_per_g": 15832035788749.117,
+     "removed_without_u238_fission_edge": [],
+     "residual_expected": 15844017279085.258,
+     "residual_filtered": 15844017279085.266,
+     "residual_relative_to_total": 1.2393987985694954e-16,
+     "residual_unfiltered": 11981490336.15625,
+     "routes_added_by_filter": 0,
+     "routes_filtered": 15,
+     "routes_removed": 15,
+     "routes_unfiltered": 30,
+     "routes_with_u238_fission_in_filtered": 0,
+     "surviving_routes_changed": 0,
+     "total_equal": true
+    },
+    "Mo99": {
+     "explained_fraction": [
+      0.999789160633173,
+      0.7817685033444338
+     ],
+     "pass": true,
+     "paths_dropped_by_cap": [
+      0,
+      0
+     ],
+     "removed_atoms_per_g": 23704716069415.754,
+     "removed_without_u238_fission_edge": [],
+     "residual_expected": 23727639985842.016,
+     "residual_filtered": 23727639985842.03,
+     "residual_relative_to_total": 1.4370865106170883e-16,
+     "residual_unfiltered": 22923916426.28125,
+     "routes_added_by_filter": 0,
+     "routes_filtered": 15,
+     "routes_removed": 16,
+     "routes_unfiltered": 31,
+     "routes_with_u238_fission_in_filtered": 0,
+     "surviving_routes_changed": 0,
+     "total_equal": true
+    },
+    "Xe135": {
+     "explained_fraction": [
+      0.999866979976335,
+      0.7990585685243117
+     ],
+     "pass": true,
+     "paths_dropped_by_cap": [
+      0,
+      0
+     ],
+     "removed_atoms_per_g": 9592399931991.127,
+     "removed_without_u238_fission_edge": [],
+     "residual_expected": 9598754154190.945,
+     "residual_filtered": 9598754154190.945,
+     "residual_relative_to_total": 0.0,
+     "residual_unfiltered": 6354222199.8125,
+     "routes_added_by_filter": 0,
+     "routes_filtered": 11,
+     "routes_removed": 12,
+     "routes_unfiltered": 23,
+     "routes_with_u238_fission_in_filtered": 0,
+     "surviving_routes_changed": 0,
+     "total_equal": true
+    },
+    "Zr95": {
+     "explained_fraction": [
+      0.9998641270277947,
+      0.8145467301370755
+     ],
+     "pass": true,
+     "paths_dropped_by_cap": [
+      0,
+      0
+     ],
+     "removed_atoms_per_g": 22599362630683.234,
+     "removed_without_u238_fission_edge": [],
+     "residual_expected": 22615932270782.297,
+     "residual_filtered": 22615932270782.297,
+     "residual_relative_to_total": 0.0,
+     "residual_unfiltered": 16569640099.078125,
+     "routes_added_by_filter": 0,
+     "routes_filtered": 6,
+     "routes_removed": 6,
+     "routes_unfiltered": 12,
+     "routes_with_u238_fission_in_filtered": 0,
+     "surviving_routes_changed": 0,
+     "total_equal": true
+    }
+   },
+   "targets_in_both": [
+    "Ba140",
+    "Cs137",
+    "I131",
+    "Mo99",
+    "Xe135",
+    "Zr95"
+   ],
+   "targets_missing": [],
+   "u235_fission_routes_kept": 60,
+   "vacuous": false
+  }
+ },
+ "protocol": "protocols/ACTINV-P153_PROTOCOL.md",
+ "protocol_sha256": "da7473c4d9a1ad4142c2519fe2c1634106c65cd6ca3bd70bce8a3859cc2e7d92",
+ "reference_sha256": "79e1e8600a8c2ad3ce42e72dcf34ce4dd8fa9bf60288db24e9eeb077781c9072",
+ "runs": {
+  "g2_fns_fe_5min_candidate": {
+   "binary": "/home/connoravila/Documents/actinv/target/p153-cand/actinv",
+   "exit_code": 0,
+   "output_sha256": "e4a3ef2079f55f8c0738a3b22ef2ba855cac10079055702a04aa4d6a402a630e",
+   "spec": "/home/connoravila/Documents/actinv/.claude/worktrees/agent-aab76f705cb2b52e6/examples/fns_fe_5min.json",
+   "spec_sha256": "ed55ed00f6c00fc4a2351e18332e98e7feb33d9b7ca65e7ba861e0e5e8feef39"
+  },
+  "g2_fns_fe_5min_reference": {
+   "binary": "/home/connoravila/Documents/actinv/target/parity2-ref/actinv",
+   "exit_code": 0,
+   "output_sha256": "720fef2703a65f007397cdb455847379582ff415c8694980df31ac7b117aa132",
+   "spec": "/home/connoravila/Documents/actinv/.claude/worktrees/agent-aab76f705cb2b52e6/examples/fns_fe_5min.json",
+   "spec_sha256": "ed55ed00f6c00fc4a2351e18332e98e7feb33d9b7ca65e7ba861e0e5e8feef39"
+  },
+  "g2_shielding_demo_candidate": {
+   "binary": "/home/connoravila/Documents/actinv/target/p153-cand/actinv",
+   "exit_code": 0,
+   "output_sha256": "e50db8736d2ae5abba5c02de0e6f4e8c569e5f65a23cb0d752cd4ff0d4c7a581",
+   "spec": "/home/connoravila/Documents/actinv/.claude/worktrees/agent-aab76f705cb2b52e6/examples/shielding_demo.json",
+   "spec_sha256": "5da1f8e0d1028bba93a51c5b21125d6145aaf24d0f1a65c2c90acf735616afb1"
+  },
+  "g2_shielding_demo_reference": {
+   "binary": "/home/connoravila/Documents/actinv/target/parity2-ref/actinv",
+   "exit_code": 0,
+   "output_sha256": "9052ce596b6608716a7290018b273ea17d7fff6bda4e7154d93e2060695bf2e0",
+   "spec": "/home/connoravila/Documents/actinv/.claude/worktrees/agent-aab76f705cb2b52e6/examples/shielding_demo.json",
+   "spec_sha256": "5da1f8e0d1028bba93a51c5b21125d6145aaf24d0f1a65c2c90acf735616afb1"
+  },
+  "g2_u235_spectrum_average_candidate": {
+   "binary": "/home/connoravila/Documents/actinv/target/p153-cand/actinv",
+   "exit_code": 0,
+   "output_sha256": "434bdd1b4d59b12a1bdda5ddddad141e4c6402f8ce24f01ed86695b16cac9745",
+   "spec": "/home/connoravila/Documents/actinv/target/p153-work/g2_u235_spectrum_average_candidate.spec.json",
+   "spec_sha256": "40a3936e1b73a94265bc9598d9a55e4d48a0f54ca1ab73b3d714d773961c096a"
+  },
+  "g2_u235_spectrum_average_reference": {
+   "binary": "/home/connoravila/Documents/actinv/target/parity2-ref/actinv",
+   "exit_code": 0,
+   "output_sha256": "931762497976287b20795224e2a84919df2dc34044cbfcb8c008151c273f8c56",
+   "spec": "/home/connoravila/Documents/actinv/target/p153-work/g2_u235_spectrum_average_reference.spec.json",
+   "spec_sha256": "40a3936e1b73a94265bc9598d9a55e4d48a0f54ca1ab73b3d714d773961c096a"
+  },
+  "g3_fns_rate_weighted": {
+   "binary": "/home/connoravila/Documents/actinv/target/p153-cand/actinv",
+   "exit_code": 0,
+   "output_sha256": "26950c774ef666f4e0977c24e1d3272f7a4b1704e7ab683d09d75c88652b921d",
+   "spec": "/home/connoravila/Documents/actinv/target/p153-work/g3_fns_rate_weighted.spec.json",
+   "spec_sha256": "1eea828f6087fa07abb7720069daa83a7b85221d879c06ddfcb84305d3615c98"
+  },
+  "g3_mix_rate_weighted": {
+   "binary": "/home/connoravila/Documents/actinv/target/p153-cand/actinv",
+   "exit_code": 0,
+   "output_sha256": "fa26ae65e52050888b13f02d853a63f95325284a998a56db8faf1c43f0d45fd7",
+   "spec": "/home/connoravila/Documents/actinv/target/p153-work/g3_mix_rate_weighted.spec.json",
+   "spec_sha256": "c0ad27fd426e72f13ab92d0091d4d3a2a10bf9e8514732883630c4a6475bf0fe"
+  },
+  "g3_mix_spectrum_average": {
+   "binary": "/home/connoravila/Documents/actinv/target/p153-cand/actinv",
+   "exit_code": 0,
+   "output_sha256": "ce9ccc2737877613b8eafb4d731d72815bf07188aa0bcb8fbdb08224641cabd1",
+   "spec": "/home/connoravila/Documents/actinv/target/p153-work/g3_mix_spectrum_average.spec.json",
+   "spec_sha256": "3857fa7c56ed2bfbbb3c182bea92e5efbd54fd4d34b9185b3d50eb800090c997"
+  },
+  "g3_one_group_fixed": {
+   "binary": "/home/connoravila/Documents/actinv/target/p153-cand/actinv",
+   "exit_code": 0,
+   "output_sha256": "cc16cc7c65bfb3c399ba823c6f02eb903f2274227d09e41e0bd723dce990f39c",
+   "spec": "/home/connoravila/Documents/actinv/target/p153-work/g3_one_group_fixed.spec.json",
+   "spec_sha256": "b960b3f985fde8e9806595a8e28b4cd6ab88acd3ecab4fd849a66044754ed9ee"
+  },
+  "g3_one_group_rate_weighted": {
+   "binary": "/home/connoravila/Documents/actinv/target/p153-cand/actinv",
+   "exit_code": 0,
+   "output_sha256": "f433410791b7e31f190d8276041385f80973b25bc680f34be1c5e6c09695c245",
+   "spec": "/home/connoravila/Documents/actinv/target/p153-work/g3_one_group_rate_weighted.spec.json",
+   "spec_sha256": "6cfecb661f4b27563c003c1a0807eaa7c9a210575516ad672ff15d8a18b4b4f0"
+  },
+  "g3_thermal_rate_weighted": {
+   "binary": "/home/connoravila/Documents/actinv/target/p153-cand/actinv",
+   "exit_code": 0,
+   "output_sha256": "281a731ee366cb437562e343ce86647b9080fa18b56861decace95d2006b4fdf",
+   "spec": "/home/connoravila/Documents/actinv/target/p153-work/g3_thermal_rate_weighted.spec.json",
+   "spec_sha256": "345b70bbd87b4fab86fca02c52b27fab1504cbd62a1bd3e25f07dc35a0c9d77e"
+  },
+  "g4_exclude_u238": {
+   "binary": "/home/connoravila/Documents/actinv/target/p153-cand/actinv",
+   "exit_code": 0,
+   "output_sha256": "ceef394f78274d930e3ebf1d7de3601557b4984ba652a6f7f157167e538978dc",
+   "spec": "/home/connoravila/Documents/actinv/target/p153-work/g4_exclude_u238.spec.json",
+   "spec_sha256": "43055b0f38c3bcb7c0b0de74f3ea444822b1c7d540d96f43a6dd96fc4692a2ca"
+  },
+  "g4_include_u235": {
+   "binary": "/home/connoravila/Documents/actinv/target/p153-cand/actinv",
+   "exit_code": 0,
+   "output_sha256": "2988007956cf7a489c88cdeb449b9e9dd2c623e5cadc2c9b00d16b8e3ee40710",
+   "spec": "/home/connoravila/Documents/actinv/target/p153-work/g4_include_u235.spec.json",
+   "spec_sha256": "36b0ddf32fb0a71eb366b3f050f4c9e365d4e4813a029bb2cb5c831f456bd1a1"
+  },
+  "g4_u235_file_only": {
+   "binary": "/home/connoravila/Documents/actinv/target/p153-cand/actinv",
+   "exit_code": 0,
+   "output_sha256": "b998ce3e180fa13e9a66a756d813478f1bf8dd4b6b14d62c24e3fe86f50b5ba2",
+   "spec": "/home/connoravila/Documents/actinv/target/p153-work/g4_u235_file_only.spec.json",
+   "spec_sha256": "e96318d5b0c108d32018b8bafa2418dcd3179d56538d3cffddcef1f489587103"
+  },
+  "g5_cumulative": {
+   "binary": "/home/connoravila/Documents/actinv/target/p153-cand/actinv",
+   "exit_code": 0,
+   "output_sha256": "57973081837ae27c37c8c776cdab796060a9557ba63d8d09bd26a98fb7d6e6b9",
+   "spec": "/home/connoravila/Documents/actinv/target/p153-work/g5_cumulative.spec.json",
+   "spec_sha256": "512f32b9d5f4f83378b5612e88364d2da4c17cdaec643f116ca4cac4ea670a78"
+  },
+  "g6_filtered": {
+   "binary": "/home/connoravila/Documents/actinv/target/p153-cand/actinv",
+   "exit_code": 0,
+   "output_sha256": "708ac493e8403af2b1a6cd70392cdddbb7f9ba7257f416fb63a71860b11a7e6c",
+   "spec": "/home/connoravila/Documents/actinv/target/p153-work/g6_filtered.spec.json",
+   "spec_sha256": "57ae905bacb9943835ce0ccacc988c5201d457c0ec08df4fb1106bbfa98a0b4d"
+  },
+  "g6_unfiltered": {
+   "binary": "/home/connoravila/Documents/actinv/target/p153-cand/actinv",
+   "exit_code": 0,
+   "output_sha256": "44064672e9c2d8a7f632faab640af2f938af34f2a5e39d455f534d216392902a",
+   "spec": "/home/connoravila/Documents/actinv/target/p153-work/g6_unfiltered.spec.json",
+   "spec_sha256": "0518591699b637b91f7b4f0f0b224db9f00799bb5554d7ce1944bfcaf84f152d"
+  }
+ },
+ "verdict": "FAIL"
+}
