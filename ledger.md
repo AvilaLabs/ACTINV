@@ -4089,3 +4089,11 @@ read about 1000 times too small, consistent with a keV/eV unit error in the eval
 mismatches.
 
 G7 (CI) pending.
+
+## Entry 231 — P153 verdict: fission-yield selection (2026-10-27)
+
+**P153-PASS** (`results/p153_verdict.json`). G1–G6 as entry 228 on candidate `b1922a6` (binary
+`68d271840c628d2e3c04e3e54b139e99c8b6d936ce7dd3cd0cea8987fdac63f2`); G7: all six workflows on the evidence commit
+`ef10e1f` succeeded, `controls` among them, and no committed baseline changed. One development run, disclosed in
+entry 228; no repair round. Rate-weighted yield mixing, parent selection, cumulative yields and the pathway
+fission-parent filter are released for use; tracker row 17 moves to parity.

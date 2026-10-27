@@ -1,0 +1,68 @@
+{
+ "candidate": {
+  "binary_sha256": "68d271840c628d2e3c04e3e54b139e99c8b6d936ce7dd3cd0cea8987fdac63f2",
+  "commit": "b1922a6"
+ },
+ "checker": {
+  "path": "controls/check_p153.py",
+  "sha256": "907efaadafc196993f386f891c1929339732466ea79ee3b420aed153da27730c"
+ },
+ "ci": {
+  "commit": "ef10e1f4316c40057d57bf6a9c29e2a6ac4b3ddc",
+  "runs": [
+   {
+    "conclusion": "success",
+    "name": "Build handbook",
+    "run_id": 40528757793
+   },
+   {
+    "conclusion": "success",
+    "name": "Build browser workbench",
+    "run_id": 40528758335
+   },
+   {
+    "conclusion": "success",
+    "name": "controls",
+    "run_id": 40528758615
+   },
+   {
+    "conclusion": "success",
+    "name": "desktop builds",
+    "run_id": 40528758210
+   },
+   {
+    "conclusion": "success",
+    "name": "fns-iron",
+    "run_id": 40528758005
+   },
+   {
+    "conclusion": "success",
+    "name": "fusion-isotope",
+    "run_id": 40528758264
+   }
+  ]
+ },
+ "development_runs": [
+  "results/p153/development_run_1.json"
+ ],
+ "gates": {
+  "G1": true,
+  "G2": true,
+  "G3": true,
+  "G4": true,
+  "G5": true,
+  "G6": true,
+  "G7": true
+ },
+ "protocol": "ACTINV-P153",
+ "protocol_sha256": "da7473c4d9a1ad4142c2519fe2c1634106c65cd6ca3bd70bce8a3859cc2e7d92",
+ "record": {
+  "path": "results/p153_fission_yields.json",
+  "sha256": "3c9c97950c97c4288d475f7ca54964f8235516b9663edf6f99cc99422dce6826"
+ },
+ "reference": {
+  "binary": "v1.6.1 release",
+  "binary_sha256": "79e1e8600a8c2ad3ce42e72dcf34ce4dd8fa9bf60288db24e9eeb077781c9072"
+ },
+ "verdict": "P153-PASS"
+}
