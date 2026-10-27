@@ -35,7 +35,7 @@ jobs:
           echo "release commit: $sha"
           for attempt in $(seq 1 70); do
             conclusion=$(gh api "repos/$REPO/actions/workflows/ci.yml/runs?head_sha=$sha&per_page=30" \
-              --jq '[.workflow_runs[] | select(.status == "completed")][0].conclusion // ""')
+              --jq '[.workflow_runs[] | select(.status == "completed" and .conclusion != "cancelled")][0].conclusion // ""')
             case "$conclusion" in
               success) echo "controls CI is green for $sha"; exit 0 ;;
               "") echo "waiting for a completed controls run on $sha ($attempt/70)"; sleep 60 ;;

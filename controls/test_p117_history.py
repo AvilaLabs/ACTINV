@@ -84,29 +84,27 @@ class P117HistoryTests(unittest.TestCase):
                 with self.assertRaises(ValueError):
                     history._archive_map("archive", {"a.txt": history._sha(b"a")})
 
-    def test_ci_transition_accepts_only_registered_p118_states(self):
+    def test_ci_transition_requires_each_registered_step_exactly_once(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             workflow = root / ".github/workflows/ci.yml"
             workflow.parent.mkdir(parents=True)
             prefix = b"name: CI\njobs:\n  controls:\n    steps:\n"
             suffix = b"      - name: unchanged\n        run: true\n"
-            previous = prefix + history.OLD_P117_CI_STEP + suffix
-            legacy_expected = prefix + history.NEW_P117_CI_STEP + b"\n" + history.NEW_P118_CI_STEP + suffix
-            history_expected = (prefix + history.NEW_P117_CI_STEP + b"\n"
-                                + history.NEW_P118_HISTORY_CI_STEP + suffix)
-            workflow.write_bytes(legacy_expected)
-            with patch.object(history, "ROOT", root), \
-                    patch.object(history.p116, "_git_blob", return_value=previous):
+            p117, legacy, new = history.NEW_P117_CI_STEP, history.NEW_P118_CI_STEP, history.NEW_P118_HISTORY_CI_STEP
+            with patch.object(history, "ROOT", root):
+                for body, expected in (
+                        (p117 + b"\n" + legacy, True), (p117 + b"\n" + new, True),
+                        (new + b"\n" + p117, True), (p117 + b"\n" + new + b"# unrelated edit\n", True),
+                        (p117, False), (new, False), (p117 + b"\n" + p117 + b"\n" + new, False),
+                        (p117 + b"\n" + new + b"\n" + new, False), (p117 + b"\n" + new + b"\n" + legacy, False),
+                        (history.OLD_P117_CI_STEP + b"\n" + new, False),
+                        (p117 + b"\n" + new.replace(b"check_p118_history", b"check_p118_hist0ry"), False),
+                        (p117.replace(b"test_p117_history", b"test_p117_histor"), False)):
+                    workflow.write_bytes(prefix + body + suffix)
+                    self.assertEqual(history._ci_transition_matches(), expected)
+                workflow.write_bytes(prefix + p117 + b"\n" + new + suffix + b"      - name: added\n        run: true\n")
                 self.assertTrue(history._ci_transition_matches())
-                workflow.write_bytes(history_expected)
-                self.assertTrue(history._ci_transition_matches())
-                workflow.write_bytes(history_expected + b"# unrelated edit\n")
-                self.assertFalse(history._ci_transition_matches())
-                workflow.write_bytes(prefix + history.NEW_P117_CI_STEP + suffix)
-                self.assertFalse(history._ci_transition_matches())
-                workflow.write_bytes(prefix + history.OLD_P117_CI_STEP + suffix)
-                self.assertFalse(history._ci_transition_matches())
 
     def test_genuine_initial_discovery_schema_has_no_file_count(self):
         raw = history._safe_file(f"{history.INITIAL}/discovery.json").read_bytes()

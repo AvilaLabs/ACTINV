@@ -25,6 +25,15 @@ env = dict(os.environ); env["HOME"] = fake_home; env["PYTHONWARNINGS"] = "ignore
 env["PATH"] = os.path.expanduser("~/.cargo/bin") + ":" + env.get("PATH", "")
 env["CARGO_HOME"] = os.path.expanduser("~/.cargo"); env["RUSTUP_HOME"] = os.path.expanduser("~/.rustup")
 env["CARGO_TARGET_DIR"] = os.path.join(clone, "target")
+# Optional warm build cache: ACTINV_SELF_CONTAINED_TARGET_DIR names a directory of previously built dependencies. The
+# clone's target path is linked to it and excluded from the clone's Git state; the cold build stays the default.
+warm = os.environ.get("ACTINV_SELF_CONTAINED_TARGET_DIR")
+if warm:
+    warm = os.path.abspath(warm)
+    os.makedirs(warm, exist_ok=True)
+    os.symlink(warm, os.path.join(clone, "target"))
+    with open(os.path.join(clone, ".git", "info", "exclude"), "a") as stream:
+        stream.write("/target\n")
 results = []
 for name, cmd in STEPS:
     p = subprocess.run(cmd, cwd=clone, env=env, capture_output=True, text=True)
