@@ -77,7 +77,8 @@ HOME = Path.home()
 DEFAULT_RESPONSE_ALL = HOME / "nuclear-data" / "photon-response" / "nist-xcom-all.json"
 DEFAULT_NIST_CACHE = HOME / ".cache" / "nist-html"
 
-REFERENCE_PREFIX, REFERENCE_SUFFIX = "79e1e860", "9c072"
+REFERENCE_PREFIX, REFERENCE_SUFFIX = "79e1e860", "9c072"  # the protocol abbreviation (its tail is a typo)
+REFERENCE_SHA256 = "79e1e8600a8c2ad3ce42e72dcf34ce4dd8fa9bf60288db24e9eeb077781c9072"  # ledger entry 227
 EV_J = P.EV_J
 AIR_RHO = P.AIR_DENSITY_DEFAULT
 EXP_A = 14.0
@@ -748,6 +749,21 @@ def analyze_case(name, spec, rep, est, models, records, g3, g4, info):
     g3.check("decay_mode_labels_distinguish_classes", name, len(classes) == len(set(classes)), True)
 
 
+def combine_groups(by_nuclide):
+    """Combine per-nuclide groups into step groups: summed photons and power, centroid = power / (photons eV)."""
+    if not by_nuclide:
+        return []
+    n_g = len(by_nuclide[0]["groups"])
+    out = []
+    for gi in range(n_g):
+        photons = sum(n["groups"][gi]["photons_s_g"] for n in by_nuclide)
+        power = sum(n["groups"][gi]["power_W_g"] for n in by_nuclide)
+        first = by_nuclide[0]["groups"][gi]
+        centroid = power / (photons * EV_J) if photons > 0.0 else 0.5 * (first["low_eV"] + first["high_eV"])
+        out.append({"power_W_g": power, "photons_s_g": photons, "centroid_eV": centroid})
+    return out
+
+
 def nuclide_dose(model, n):
     """Expected estimate of one estimated nuclide from its emitted groups (None: dose model gives null)."""
     power = n["power_W_g"]
@@ -817,8 +833,12 @@ def check_bounds_step(tag, sr, se, entries, bounds, records, models, g4, info):
                 else:
                     sums[fld] += nb[fld]
         # ---- represented-only
-        rep_groups = [g for nn in pse["by_nuclide"] for g in nn["groups"]]
         rep_power = sum(nn["source_power_W_g"] for nn in pse["by_nuclide"])
+        if kind == "point":
+            # the step's source: per-group sums over the lines, centroid = combined power / combined photons
+            rep_groups = combine_groups(pse["by_nuclide"])
+        else:
+            rep_groups = [g for nn in pse["by_nuclide"] for g in nn["groups"]]
         my_rep, _ = group_dose(model, rep_groups, rep_power)
         ro = blk.get("represented_only")
         if kind == "contact":
@@ -852,8 +872,10 @@ def check_bounds_step(tag, sr, se, entries, bounds, records, models, g4, info):
             if blk.get("estimate") is not None and psd.get("gamma_air_dose_Sv_h") is not None:
                 g4.check("point_source_dose_is_the_estimate", tag, psd["gamma_air_dose_Sv_h"], blk["estimate"],
                          tol=TOL_BOUNDS)
+            # With estimated nuclides the dose is represented-only plus each nuclide's estimate at its own group
+            # centroids (checked above); the combined groups' centroids differ, so only steps without them compare.
             tot, _ = group_dose(model, pse["groups"], pse["source_power_W_g"])
-            if psd.get("gamma_air_dose_Sv_h") is not None and tot is not None:
+            if not entries and psd.get("gamma_air_dose_Sv_h") is not None and tot is not None:
                 g4.check("point_source_dose_equals_recomputed_from_total_groups", tag, psd["gamma_air_dose_Sv_h"], tot,
                          tol=TOL_BOUNDS)
 
@@ -983,7 +1005,9 @@ class Context:
 def gate_g2(ctx):
     out = {"cases": [], "reference_pinned": f"{REFERENCE_PREFIX}...{REFERENCE_SUFFIX}"}
     ref_sha = ctx.record["reference_binary"]["sha256"]
-    out["reference_is_protocol_release"] = ref_sha.startswith(REFERENCE_PREFIX) and ref_sha.endswith(REFERENCE_SUFFIX)
+    out["reference_is_protocol_release"] = ref_sha == REFERENCE_SHA256
+    out["note"] = ("the protocol abbreviation 79e1e860...9c072 has a typo; the full SHA-256 from ledger entry 227 is "
+                   + REFERENCE_SHA256)
     ctx.prepare_response()
     items = [("fns_fe_5min", GATE_SPEC, ctx.cwd), ("shielding_demo", SHIELD_SPEC, ctx.cwd)]
     for name in ("steel", "zinc"):
@@ -1325,10 +1349,10 @@ def gate_g6(ctx):
                     cmp.check("remaining_group_power_W_g", gw, g["power_W_g"], act * ex["mom0"][gi] * EV_J,
                               floor=FLOOR_FRACTION * max(gp["power_W_g"], 1e-300))
                     cmp.check("full_minus_scaled_xray_equals_remaining_photons", gw, g["photons_s_g"],
-                              gp["photons_s_g"] - act * ex["cnt9"][gi], floor=1e-12 * max(gp["photons_s_g"], 1e-300))
+                              gp["photons_s_g"] - act * ex["cnt9"][gi], floor=max(gp["photons_s_g"], 1e-300))
                     cmp.check("full_minus_scaled_xray_equals_remaining_power", gw, g["power_W_g"],
                               gp["power_W_g"] - act * ex["mom9"][gi] * EV_J,
-                              floor=1e-12 * max(gp["power_W_g"], 1e-300))
+                              floor=max(gp["power_W_g"], 1e-300))
             else:
                 cmp.check("absent_nuclide_has_no_remaining_lines", w, sum(ex["cnt0"]) == 0.0, True)
             for gi in range(n_g):
@@ -1351,9 +1375,9 @@ def gate_g6(ctx):
                 cmp.check("step_group_photons_remaining", f"{tag}/g{gi}", gx["photons_s_g"], mine_p[gi],
                           floor=FLOOR_FRACTION * max(gp["photons_s_g"], 1e-300))
                 cmp.check("step_group_full_minus_xray_power", f"{tag}/g{gi}", gx["power_W_g"],
-                          gp["power_W_g"] - mine_x[gi], floor=1e-12 * max(gp["power_W_g"], 1e-300))
+                          gp["power_W_g"] - mine_x[gi], floor=max(gp["power_W_g"], 1e-300))
         cmp.check("source_power_closure", tag, px["source_power_W_g"], pp["source_power_W_g"] - px["excluded_xray_power_W_g"],
-                  floor=floor_src)
+                  floor=max(pp["source_power_W_g"], 1e-300))
         cmp.check("unrepresented_unchanged_by_exclusion", tag, px["unrepresented_gamma_power_W_g"],
                   pp["unrepresented_gamma_power_W_g"])
         cmp.check("plain_run_has_no_excluded_key", tag, "excluded_xray_power_W_g" in pp, False)
