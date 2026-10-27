@@ -13,9 +13,17 @@ own transcription of Table 1 of Nordlund et al., Nat. Commun. 9, 1084 (2018).
 G2  Defaults unchanged. examples/damage_demo.json and examples/fns_fe_5min.json are byte-identical between reference
     and candidate apart from `ms`; `build-damage` without `--method` is byte-identical on the P23 corpus
     (results/g3_p23_corpus, neutron).
-G3  Elastic. The table's `elastic` row against NJOY MT=445 collapsed onto the 709 groups: within 2 percent in every
-    group with lower edge >= 1 keV where NJOY's elastic exceeds 1e-6 of its maximum. Below 1 keV the distribution of
-    the differences is reported.
+G3  Elastic (Amendment A1). The table's `elastic` row against an exact elastic damage cross section: RECONR's
+    pointwise MT=2 sigma(E) (from the PENDF tape) times this script's own exact damage energy per elastic event W(E),
+    integrated over the scattering cosine of the TENDL MF=4 MT=2 distribution (Legendre and/or tabulated per LTT,
+    laboratory cosine converted by integrating in the laboratory variable when LCT=1, cut where the recoil energy equals
+    the displacement energy and at the NRT breakpoint 2 E_d / 0.8 and at every pdf panel edge, adaptive Gauss-Legendre),
+    W interpolated between MF=4 energies by linear pdf mixing (INT=2) on energies refined to a 5 percent ratio, then
+    W linear in E between those points; collapsed flat in lethargy onto the 709 groups: within 2 percent in every group
+    with lower edge >= 1 keV where the reference exceeds 1e-6 of its maximum. Below 1 keV the distribution of the
+    differences is reported. NJOY MT=445 against the table, the exact reference against NJOY MT=445, and NJOY's
+    documented approximations (edis = 25 eV, 1.1 energy ladder, 64-coefficient hgetco projection; heatr.f90 line
+    numbers in the output) are information.
 G4  Inelastic and disappearance. `inelastic` against MT=446 and `disappearance` against MT=447 within 5 percent in every
     group where the channel exceeds 1e-3 of NJOY's group total (MT=444) and the group has no uncovered cross section
     (the per-channel `channels` record is informational and not read). A group has an uncovered contribution only
@@ -24,9 +32,10 @@ G4  Inelastic and disappearance. `inelastic` against MT=446 and `disappearance` 
     tenth of the tolerance; TENDL's ~3e-20 b placeholder cross sections (uncovered_xs_barn > 0 in every W-184 group)
     therefore no longer disqualify a group. The groups excluded by the rule are still reported. A channel with fewer
     than 5 evaluable groups is reported as vacuous and fails.
-G5  Total and bound. In every group NJOY's MT=444 lies in [computed - s, computed + upper + s], computed =
-    `damage_energy_barn_eV`, upper = `uncovered_damage_upper_barn_eV`, s = 0.02 NJOY445 + 0.05 (NJOY446 + NJOY447)
-    + 1e-6 max(NJOY444) (the G3/G4 tolerances, plus a floor for groups with essentially no damage). The table
+G5  Total and bound (Amendment A3). In every group the reference total NJOY444 - NJOY445 + (exact elastic reference)
+    lies in [computed - s, computed + upper + s], computed = `damage_energy_barn_eV`, upper =
+    `uncovered_damage_upper_barn_eV`, s = 0.02 (exact elastic) + 0.05 (NJOY446 + NJOY447) + 1e-6 max(reference total)
+    (the G3/G4 tolerances, plus a floor for groups with essentially no damage). The raw NJOY444 bound is information. The table
     total equals elastic + inelastic + disappearance (1e-9). Totals folded with the FNS spectrum and their
     differences from NJOY are reported.
 G6  Displacement quantities. FNS Fe run (spec: examples/fns_fe_5min.json plus damage and gas) with the Fe-56 table-2:
@@ -43,7 +52,12 @@ section (icon=0, heatr.f90:1741-1827, 1387). When MF=6 MT=102 exists (TENDL-2025
 W-184) the reaction is routed to sixbar -> tabsq6 (heatr.f90:1125-1140, 1242, 1388-1389), which partitions each
 photon's recoil separately. The checker scans each pinned TENDL file for MF=6 MT=102 and builds the table with
 `--capture-photons per-photon` where it is present, `one-photon` otherwise; the determination is recorded per target
-in the output. The default `evaluated` build and the other modes are reported as information against NJOY MT=447.
+in the output. Continuum recoil (Amendment A2): HEATR sends every MF=6 reaction through sixbar, which takes the damage
+from the evaluation's residual-nucleus recoil subsection (LAW=4 or ZAP > 2004) where present, else from the emitted
+particle (heatr.f90:2755-2860, 3157); the checker scans MF=6 MT=91 and 600-849 of each pinned file and builds with
+`--continuum-recoil evaluated` where a continuum MT (91, 649, 699, 749, 799, 849) carries one, `kinematic` otherwise,
+recorded per target and MT. The default build (`evaluated` capture, `kinematic` continuum) and the other combinations
+are reported as information against NJOY MT=446 and 447 (relative differences, G4-style counts, FNS totals).
 
 Build parameters: the displacement energy of each target's element is Nordlund's Table 1 value where it has one (Fe
 40, Ni 39, W 70) and 40 eV for Cr (no arc-dpa constants; the ASTM E521 value), identical in `--displacement-energy`
@@ -55,6 +69,7 @@ Usage: check_p154.py --reference REF --candidate CAND [--workdir target/p154-wor
 Run inside the required systemd cgroup. Gates run serially.
 """
 import argparse
+import bisect
 import copy
 import hashlib
 import json
@@ -68,6 +83,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import p154_njoy as njoy  # noqa: E402
+import p126_njoy_fe56 as p126  # noqa: E402  (own ENDF-6 reader)
 
 ROOT = Path(__file__).resolve().parent.parent
 PROTOCOL = ROOT / "protocols" / "ACTINV-P154_PROTOCOL.md"
@@ -84,6 +100,7 @@ G3_EMIN_EV, G3_FLOOR = 1.0e3, 1.0e-6
 G4_FRACTION, G4_MIN_GROUPS = 1.0e-3, 5
 G4_UNCOVERED_FRACTION = TOL_G4 / 10.0   # an uncovered bound below this share of the channel value is negligible
 G5_FLOOR = 1.0e-6
+EL_TOL, EL_REFINE = 1.0e-9, 1.05   # exact elastic W: quadrature tolerance, largest energy-gap ratio
 TOL_RUN = 1e-12
 TOL_ATOMS = 1e-9
 TOL_TABLE = 1e-9
@@ -325,6 +342,359 @@ def bound_comparison(total, upper, n444, n445, n446, n447):
     return {"n_below_computed": below, "n_above_upper": above, "bad": bad[:20], "pass": not bad}
 
 
+# ------------------------------------------------------------------------------ exact elastic damage (gate G3 reference)
+
+
+def gauss_legendre(n):
+    """Nodes and weights of the n-point Gauss-Legendre rule on [-1, 1] (Newton on P_n)."""
+    nodes, weights = [], []
+    for i in range(1, n + 1):
+        x = math.cos(math.pi * (i - 0.25) / (n + 0.5))
+        for _ in range(100):
+            p0, p1 = 1.0, x
+            for k in range(2, n + 1):
+                p0, p1 = p1, ((2 * k - 1) * x * p1 - (k - 1) * p0) / k
+            dp = n * (x * p1 - p0) / (x * x - 1.0)
+            step = p1 / dp
+            x -= step
+            if abs(step) < 1e-15:
+                break
+        p0, p1 = 1.0, x
+        for k in range(2, n + 1):
+            p0, p1 = p1, ((2 * k - 1) * x * p1 - (k - 1) * p0) / k
+        dp = n * (x * p1 - p0) / (x * x - 1.0)
+        nodes.append(x)
+        weights.append(2.0 / ((1.0 - x * x) * dp * dp))
+    return nodes, weights
+
+
+_GL_X, _GL_W = gauss_legendre(8)
+
+
+def _gl(fun, a, b):
+    half, mid = 0.5 * (b - a), 0.5 * (a + b)
+    return half * sum(w * fun(mid + half * x) for x, w in zip(_GL_X, _GL_W))
+
+
+def adaptive_gl(fun, a, b, tol=EL_TOL, depth=0):
+    """Adaptive 8-point Gauss-Legendre: a panel is accepted when its two halves agree with it to `tol` (relative)."""
+    whole = _gl(fun, a, b)
+    mid = 0.5 * (a + b)
+    halves = _gl(fun, a, mid) + _gl(fun, mid, b)
+    if depth >= 30 or abs(halves - whole) <= tol * abs(halves) + 1e-300:
+        return halves
+    return adaptive_gl(fun, a, mid, tol, depth + 1) + adaptive_gl(fun, mid, b, tol, depth + 1)
+
+
+def interp_value(tab, e):
+    """Value of a TAB1-like table at `e` under its own interpolation laws; zero outside its support."""
+    x, y = tab["x"], tab["y"]
+    if e < x[0] or e > x[-1]:
+        return 0.0
+    i = min(max(bisect.bisect_right(x, e) - 1, 0), len(x) - 2)
+    x1, x2, y1, y2 = x[i], x[i + 1], y[i], y[i + 1]
+    law = njoy.law_of_segment(tab["ranges"], i)
+    if law == 1 or not x2 > x1:
+        return y1
+    if law == 2:
+        return y1 + (y2 - y1) * (e - x1) / (x2 - x1)
+    if law == 3:
+        return y1 + (y2 - y1) * math.log(e / x1) / math.log(x2 / x1)
+    if law == 4:
+        return y1 + (y2 - y1) * (e - x1) / (x2 - x1) if y1 <= 0.0 or y2 <= 0.0 else \
+            math.exp(math.log(y1) + (e - x1) / (x2 - x1) * (math.log(y2) - math.log(y1)))
+    if law == 5:
+        if y1 <= 0.0 or y2 <= 0.0:
+            return y1 + (y2 - y1) * (e - x1) / (x2 - x1)
+        return y1 * (e / x1) ** (math.log(y2 / y1) / math.log(x2 / x1))
+    raise ValueError(f"unsupported interpolation law INT={law}")
+
+
+def legendre_pdf(coeffs):
+    """Angular pdf f(mu) = 1/2 + sum_l (2l+1)/2 a_l P_l(mu) from the ENDF coefficients a_1..a_L: (breaks, f)."""
+    coeffs = list(coeffs)
+
+    def fn(mu):
+        total = 0.5
+        p0, p1 = 1.0, mu
+        for ell, a in enumerate(coeffs, start=1):
+            if ell > 1:
+                p0, p1 = p1, ((2 * ell - 1) * mu * p1 - (ell - 1) * p0) / ell
+            total += 0.5 * (2 * ell + 1) * a * p1
+        return total
+
+    return [-1.0, 1.0], fn
+
+
+def tabulated_pdf(tab):
+    """Tabulated pdf renormalized to unit integral where its laws allow it: (breaks, f, deviation of the norm)."""
+    norm, exact = 0.0, True
+    for i in range(len(tab["x"]) - 1):
+        law = njoy.law_of_segment(tab["ranges"], i)
+        width = tab["x"][i + 1] - tab["x"][i]
+        if law == 2:
+            norm += 0.5 * (tab["y"][i] + tab["y"][i + 1]) * width
+        elif law == 1:
+            norm += tab["y"][i] * width
+        else:
+            exact = False
+    scale = 1.0 / norm if exact and norm > 0.0 else 1.0
+    breaks = sorted({min(1.0, max(-1.0, v)) for v in tab["x"]})
+    return breaks, (lambda mu: scale * interp_value(tab, mu)), (abs(norm - 1.0) if exact else None)
+
+
+def mixed_pdf(a, b, alpha):
+    """(1 - alpha) a + alpha b on the union of the panel edges (linear interpolation in incident energy)."""
+    breaks = sorted(set(a[0]) | set(b[0]))
+    return breaks, (lambda mu: (1.0 - alpha) * a[1](mu) + alpha * b[1](mu))
+
+
+def elastic_w(pdf, e, awr, z, ed, lab=False, damage=None):
+    """Exact mean damage energy per elastic event at incident energy `e` (eV): the integral over the scattering cosine
+    of pdf(mu) R(T(mu)), R the Lindhard damage function (0 below `ed`, as HEATR's `break`), T the recoil energy of a
+    target of mass ratio `awr`. Centre-of-mass cosine: T = 2 A E (1 - mu) / (A + 1)^2. Laboratory cosine (LCT=1):
+    T = E (1 - s^2) with s = (mu + sqrt(A^2 - 1 + mu^2)) / (A + 1). The integral is cut where T = ed (no damage on the
+    other side) and at the NRT breakpoint T = 2 ed / 0.8 and at every pdf panel edge, then integrated adaptively."""
+    breaks, fn = pdf[0], pdf[1]
+    if damage is None:
+        def damage(t):
+            return df(t, z, awr, z, awr, ed)
+    if lab:
+        def recoil(mu):
+            s = (mu + math.sqrt(awr * awr - 1.0 + mu * mu)) / (awr + 1.0)
+            return e * (1.0 - s * s)
+
+        def cosine_at(t):                         # inverse of `recoil`: the cosine where the recoil energy is t
+            if t >= e:
+                return -math.inf
+            q = (awr + 1.0) * math.sqrt(1.0 - t / e)
+            return (q * q - awr * awr + 1.0) / (2.0 * q)
+    else:
+        c = 2.0 * awr * e / (awr + 1.0) ** 2
+
+        def recoil(mu):
+            return c * (1.0 - mu)
+
+        def cosine_at(t):
+            return 1.0 - t / c
+    top = cosine_at(ed)
+    if not top > -1.0:
+        return 0.0
+    top = min(1.0, top)
+    cuts = [cosine_at(2.0 * ed / 0.8)] + list(breaks)
+    edges = [-1.0] + sorted({v for v in cuts if -1.0 < v < top}) + [top]
+
+    def integrand(mu):
+        return fn(mu) * damage(recoil(mu))
+
+    return sum(adaptive_gl(integrand, lo, hi) for lo, hi in zip(edges, edges[1:]) if hi > lo)
+
+
+def read_mf4_elastic(path):
+    """MF=4 MT=2 of an ENDF-6 file: {"za", "awr", "lct", "li", "parts": [{"kind", "energies", "data", "ranges"}]}.
+    LTT=0 (isotropic, LI=1) has no parts; LTT=1/2/3 give a Legendre part, a tabulated part, or both in that order."""
+    for _mat, mf, mt, lines in p126.sections(path):
+        if (mf, mt) != (4, 2):
+            continue
+        za, awr, _lvt, ltt, _a, _b = p126.record(lines, 0)
+        _c1, awr2, li, lct, _a, _b = p126.record(lines, 1)
+        out = {"za": int(round(za)), "awr": awr, "lct": lct, "li": li, "ltt": ltt, "parts": []}
+        index = 2
+        for kind in ([] if ltt == 0 else {1: ["legendre"], 2: ["tabulated"], 3: ["legendre", "tabulated"]}[ltt]):
+            _t, _u, _l1, _l2, nr, ne = p126.record(lines, index)
+            words, index = p126.data_words(lines, index + 1, 2 * nr)
+            ranges = [(p126.endf_integer(words[2 * k]), p126.endf_integer(words[2 * k + 1])) for k in range(nr)]
+            energies, data = [], []
+            for _ in range(ne):
+                _t, energy, _l1, _l2, n1, n2 = p126.record(lines, index)
+                energies.append(energy)
+                if kind == "legendre":
+                    words, index = p126.data_words(lines, index + 1, n1)
+                    data.append([p126.endf_number(w) for w in words])
+                else:
+                    words, index = p126.data_words(lines, index + 1, 2 * n1)
+                    rng = [(p126.endf_integer(words[2 * k]), p126.endf_integer(words[2 * k + 1])) for k in range(n1)]
+                    words, index = p126.data_words(lines, index, 2 * n2)
+                    data.append({"x": [p126.endf_number(words[2 * k]) for k in range(n2)],
+                                 "y": [p126.endf_number(words[2 * k + 1]) for k in range(n2)], "ranges": rng})
+            out["parts"].append({"kind": kind, "energies": energies, "data": data, "ranges": ranges})
+        if ltt == 0 and li != 1:
+            raise ValueError("MF=4 MT=2 with LTT=0 but LI != 1")
+        return out
+    raise ValueError(f"{path}: no MF=4/MT=2 section")
+
+
+def w_table(mf4, ed, refine=EL_REFINE):
+    """W(E) per elastic event on the MF=4 energies refined so no gap exceeds `refine` in ratio, the pdf interpolated
+    linearly in energy between MF=4 energies (INT=2, the interpolation law of the pinned evaluations; INT=1 holds the
+    lower pdf; any other law is refused), plus the threshold energy ed (A+1)^2 / (4 A) where W is zero. W is then taken
+    linear in E between these points and constant above the last MF=4 energy. Returns {"x", "y", "ranges", "info"}."""
+    awr, z = mf4["awr"], mf4["za"] // 1000
+    lab = mf4["lct"] == 1
+    if mf4["lct"] not in (1, 2):
+        raise ValueError(f"MF=4 LCT={mf4['lct']} is neither laboratory nor centre of mass")
+    points, deviation = {}, 0.0
+    threshold = ed * (awr + 1.0) ** 2 / (4.0 * awr)
+
+    def make_pdf(part, i):
+        nonlocal deviation
+        if part["kind"] == "legendre":
+            return legendre_pdf(part["data"][i])
+        breaks, fn, dev = tabulated_pdf(part["data"][i])
+        if dev is not None:
+            deviation = max(deviation, dev)
+        return breaks, fn
+
+    def put(e, pdf):
+        points[e] = elastic_w(pdf, e, awr, z, ed, lab=lab) if e > threshold * (1.0 - 1e-12) else 0.0
+
+    if not mf4["parts"]:
+        energies = [1e-5, 2.0e7]
+        iso = legendre_pdf([])
+        for e in sorted(set(energies + [threshold, threshold * 1.0001])):
+            put(e, iso)
+    for part in mf4["parts"]:
+        energies = part["energies"]
+        for j in range(len(energies) - 1):
+            e0, e1 = energies[j], energies[j + 1]
+            if not e1 > e0:
+                continue
+            law = njoy.law_of_segment(part["ranges"], j)
+            if law not in (1, 2):
+                raise ValueError(f"MF=4 energy interpolation law INT={law} is not handled")
+            pdf0 = make_pdf(part, j)
+            pdf1 = make_pdf(part, j + 1) if law == 2 else None
+            if e1 < threshold * (1.0 - 1e-12):
+                points.setdefault(e0, 0.0)
+                continue
+            pieces = max(1, int(math.ceil(math.log(e1 / e0) / math.log(refine)))) if e0 > 0.0 else 1
+            for k in range(pieces):
+                e = e0 * (e1 / e0) ** (k / pieces) if e0 > 0.0 else e0
+                pdf = pdf0 if law == 1 or k == 0 else mixed_pdf(pdf0, pdf1, (e - e0) / (e1 - e0))
+                put(e, pdf)
+        put(energies[-1], make_pdf(part, len(energies) - 1))
+    if mf4["parts"] and threshold < max(points):
+        points[threshold] = 0.0
+    xs = sorted(points)
+    return {"x": xs, "y": [points[x] for x in xs], "ranges": [(len(xs), 2)],
+            "info": {"n_points": len(xs), "threshold_eV": threshold, "frame": "laboratory" if lab else "centre of mass",
+                     "ltt": mf4["ltt"], "tabulated_pdf_norm_worst_deviation": deviation, "refine_ratio": refine,
+                     "energy_interpolation": "linear pdf mixing between MF=4 energies (INT=2); W linear between "
+                                             "the refined points; constant above the last MF=4 energy"}}
+
+
+def damage_product(sigma, w):
+    """sigma(E) W(E) on the union of both energy grids (lin-lin), W held at its last value above its grid."""
+    xs = sorted(set(sigma["x"]) | set(w["x"]))
+    last = w["x"][-1]
+    ys = []
+    for x in xs:
+        wv = w["y"][-1] if x > last else interp_value(w, x)
+        ys.append(interp_value(sigma, x) * wv)
+    return {"x": xs, "y": ys, "ranges": [(len(xs), 2)]}
+
+
+def exact_elastic_reference(endf_path, pendf_path, boundaries, ed):
+    """The G3 reference: RECONR's pointwise MT=2 times the exact elastic damage per event, collapsed flat in lethargy.
+    Returns {"groups": [...], "info": {...}}."""
+    mf4 = read_mf4_elastic(endf_path)
+    sigma = njoy.read_pendf(pendf_path, mts=(2,)).get(2)
+    if sigma is None:
+        raise GateError("the PENDF carries no MF=3 MT=2")
+    w = w_table(mf4, ed)
+    product = damage_product(sigma, w)
+    return {"groups": njoy.collapse(product, boundaries), "info": w["info"]}
+
+
+def njoy_documented_approximations():
+    """NJOY2016.79 HEATR approximations relevant to the elastic damage (reported, not emulated)."""
+    return [
+        {"where": "heatr.f90:1891, 1941", "what": "elastic onset uses a fixed edis = 25 eV: below the incident energy "
+                                                  "where the maximum recoil is 25 eV, W is taken as zero whatever `ed`"},
+        {"where": "heatr.f90:1892, 1950-1960", "what": "elastic W is evaluated on a 1.1-ratio energy ladder and "
+                                                        "interpolated linearly in between"},
+        {"where": "heatr.f90:4404-4551 (hgetco), 4484", "what": "tabulated MF=4 pdfs are projected onto at most 64 "
+                                                                 "Legendre coefficients by 64-point Gauss quadrature, "
+                                                                 "rounded to 6 digits (4538-4546)"},
+        {"where": "heatr.f90:4531", "what": "laboratory-to-centre-of-mass conversion of coefficients is not coded"},
+        {"where": "heatr.f90:1943-1970", "what": "the angle integral of the damage function is a fixed 64-point "
+                                                   "Gauss-Legendre rule over the Legendre series"},
+    ]
+
+
+# ------------------------------------------------------------------------------ continuum recoil determination
+
+
+def _skip_law(lines, index, law):
+    """Index after the angular-energy data of an MF=6 subsection, or None for a law this reader does not skip."""
+    if law in (0, 3, 4):
+        return index
+    if law in (1, 2):
+        _a, _b, _l1, _l2, nr, ne = p126.record(lines, index)
+        _, index = p126.data_words(lines, index + 1, 2 * nr)
+        for _ in range(ne):
+            nw = p126.record(lines, index)[4]
+            _, index = p126.data_words(lines, index + 1, nw)
+        return index
+    if law == 6:
+        return index + 1
+    if law == 7:
+        _a, _b, _l1, _l2, nr, ne = p126.record(lines, index)
+        _, index = p126.data_words(lines, index + 1, 2 * nr)
+        for _ in range(ne):
+            _a, _b, _l1, _l2, nr2, nmu = p126.record(lines, index)
+            _, index = p126.data_words(lines, index + 1, 2 * nr2)
+            for _ in range(nmu):
+                nw = p126.record(lines, index)[4]
+                _, index = p126.data_words(lines, index + 1, nw)
+        return index
+    return None
+
+
+def mf6_subsections(lines):
+    """[(ZAP, LAW)] of an MF=6 section and whether every subsection could be walked."""
+    _za, _awr, _jp, _lct, nk, _ = p126.record(lines, 0)
+    index, subs = 1, []
+    for _ in range(nk):
+        zap, _awp, _lip, law, nr, npts = p126.record(lines, index)
+        _, index = p126.data_words(lines, index + 1, 2 * nr)
+        _, index = p126.data_words(lines, index, 2 * npts)
+        subs.append((int(round(zap)), law))
+        index = _skip_law(lines, index, law)
+        if index is None:
+            return subs, False
+    return subs, True
+
+
+CONTINUUM_MTS = (91, 649, 699, 749, 799, 849)
+
+
+def njoy_continuum_recoil(path):
+    """Which continuum reactions of the evaluation carry a recoil subsection in MF=6, read from the ENDF file. NJOY
+    HEATR routes every MF=6 reaction through sixbar, which takes the damage from the residual-nucleus recoil
+    subsection (LAW=4, or ZAP above 2004 for a residual nucleus) where there is one and computes it from the emitted
+    particle otherwise (heatr.f90:2755-2860, 3157). Returns the record kept in the output; `mode` is the
+    `--continuum-recoil` value to build with: `evaluated` when any continuum MT (91, 649, 699, 749, 799, 849) has a
+    recoil subsection, `kinematic` otherwise."""
+    per_mt = {}
+    for _mat, mf, mt, lines in p126.sections(path):
+        if mf != 6 or not (mt == 91 or 600 <= mt <= 849):
+            continue
+        try:
+            subs, complete = mf6_subsections(lines)
+        except (IndexError, ValueError) as error:
+            per_mt[str(mt)] = {"error": f"{type(error).__name__}: {error}", "recoil_subsection": False}
+            continue
+        per_mt[str(mt)] = {"subsections_zap_law": subs, "walked_completely": complete,
+                           "recoil_subsection": any(law == 4 or zap > 2004 for zap, law in subs)}
+    evaluated = any(per_mt.get(str(mt), {}).get("recoil_subsection") for mt in CONTINUUM_MTS)
+    return {"per_mt": per_mt, "continuum_mts_with_recoil": sorted(int(k) for k, v in per_mt.items()
+                                                                  if int(k) in CONTINUUM_MTS
+                                                                  and v.get("recoil_subsection")),
+            "njoy_treatment": "evaluated recoil subsection" if evaluated else "emitted-particle kinematics",
+            "mode": "evaluated" if evaluated else "kinematic"}
+
+
 # ------------------------------------------------------------------------------ building tables and NJOY references
 
 
@@ -351,24 +721,26 @@ def njoy_capture_treatment(path):
     return record
 
 
-def build_args(target, ed_map, capture, grid_density):
+def build_args(target, ed_map, capture, grid_density, continuum="kinematic"):
     info = TARGETS[target]
     args = ["--method", "kinematic", "--groups", "fispact-709", "--projectile", "neutron", "--capture-photons",
             capture, "--displacement-energy", f"{info['element']}={ed_map[info['element']]:g}"]
+    if continuum != "kinematic":     # `kinematic` is the build-damage default and is not passed
+        args += ["--continuum-recoil", continuum]
     if grid_density:
         args += ["--grid-density", str(grid_density)]
     return args
 
 
-def build_table(binary, target, work, ed_map, capture, grid_density, timeout, reuse):
-    out = work / f"table2_{target}_{capture}.json"
+def build_table(binary, target, work, ed_map, capture, grid_density, timeout, reuse, continuum="kinematic"):
+    out = work / f"table2_{target}_{capture}_{continuum}.json"
     if not (reuse and out.exists()):
         if out.exists():
             out.unlink()
         code, stdout, err = sh([binary, "build-damage", TENDL_DIR / TARGETS[target]["file"], out]
-                               + build_args(target, ed_map, capture, grid_density), timeout)
+                               + build_args(target, ed_map, capture, grid_density, continuum), timeout)
         if code != 0 or not out.exists():
-            raise GateError(f"build-damage {target} ({capture}) failed: {err.strip()[-400:]}")
+            raise GateError(f"build-damage {target} ({capture}, continuum {continuum}) failed: {err.strip()[-400:]}")
     return json.loads(out.read_text()), out
 
 
@@ -424,6 +796,19 @@ def arc_parameter_check(table):
     return {"elements": sorted(params), "problems": problems}
 
 
+def exact_elastic_cached(target, work, record, ed, boundaries, reuse):
+    """exact_elastic_reference for one target; a cached result is reused with --reuse when the tape and ed match."""
+    cache = work / f"exact_elastic_{target}.json"
+    key = {"pendf_sha256": record.get("pendf_sha256"), "endf_sha256": record["endf"]["sha256"], "ed_eV": ed}
+    if reuse and cache.exists():
+        saved = json.loads(cache.read_text())
+        if saved.get("key") == key:
+            return saved["result"]
+    result = exact_elastic_reference(record["endf"]["path"], record["pendf"], boundaries, ed)
+    cache.write_text(json.dumps({"key": key, "result": result}))
+    return result
+
+
 def njoy_reference(target, work, ed_map, njoy_exe, err, timeout, reuse):
     info = TARGETS[target]
     record = njoy.run_njoy(TENDL_DIR / info["file"], work / f"njoy_{target}", ed_map[info["element"]], njoy_exe, err,
@@ -445,85 +830,124 @@ def gates_g3_g4_g5(candidate, work, args, bounds, spec):
     g4["uncovered_rule"] = (f"a group's uncovered contribution is present only when uncovered_damage_upper_barn_eV "
                             f"> {G4_UNCOVERED_FRACTION:g} x the channel's computed value in that group (one tenth of "
                             f"the G4 tolerance); excluded groups are reported")
+    g4["note"] = ("tables compared with NJOY are built in NJOY's treatments: capture per-photon where MF=6 MT=102 "
+                  "exists, continuum recoil `evaluated` where an MF=6 continuum MT carries a recoil subsection; the "
+                  "determinations are in evidence.targets.<T>.capture_determination / continuum_determination")
+    g5["note"] = ("NJOY MT=444 is replaced by NJOY444 - NJOY445 + exact elastic reference (A3); the 2 percent term of "
+                  "the slack uses the exact elastic reference; the raw NJOY444 bound is information")
+    evidence["njoy_documented_approximations"] = njoy_documented_approximations()
     refs, modes = {}, {}
     for target in TARGETS:
         entry = evidence["targets"].setdefault(target, {})
         try:
-            capture = njoy_capture_treatment(TENDL_DIR / TARGETS[target]["file"])
+            endf = TENDL_DIR / TARGETS[target]["file"]
+            capture = njoy_capture_treatment(endf)
+            continuum = njoy_continuum_recoil(endf)
             entry["capture_determination"] = capture
-            modes[target] = capture["mode"]
-            table, path = build_table(candidate, target, work, ed_map, capture["mode"], args.grid_density,
-                                      args.timeout, args.reuse)
+            entry["continuum_determination"] = continuum
+            modes[target] = (capture["mode"], continuum["mode"])
+            record, tabs = njoy_reference(target, work, ed_map, args.njoy, args.njoy_err, args.timeout, args.reuse)
+            entry["njoy"] = {k: v for k, v in record.items() if k not in ("deck",)}
+            entry["njoy_deck"] = record["deck"]
+            asc = vendored_boundaries()
+            ref = {mt: njoy.collapse(tabs[mt], asc) for mt in njoy.DAMAGE_MTS}
+            entry["njoy_group_values_sha256"] = hashlib.sha256(json.dumps(ref, sort_keys=True).encode()).hexdigest()
+            exact = exact_elastic_cached(target, work, record, ed_map[TARGETS[target]["element"]], asc, args.reuse)
+            entry["exact_elastic"] = exact["info"]
+            table, path = build_table(candidate, target, work, ed_map, modes[target][0], args.grid_density,
+                                      args.timeout, args.reuse, modes[target][1])
             tables[target] = (table, path)
             entry["table"] = {"path": str(path), "sha256": sha256(path)}
             violations = check_table_structure(table, target, ed_map, bounds)
             entry["structure_violations"] = violations
-            record, tabs = njoy_reference(target, work, ed_map, args.njoy, args.njoy_err, args.timeout, args.reuse)
-            entry["njoy"] = {k: v for k, v in record.items() if k not in ("deck",)}
-            entry["njoy_deck"] = record["deck"]
             tb = [float(b) for b in table["boundaries_eV"]]
-            ref = {mt: njoy.collapse(tabs[mt], tb) for mt in njoy.DAMAGE_MTS}
+            if tb != asc:                      # the references were collapsed in ascending order; follow the table
+                if tb != asc[::-1]:
+                    raise GateError("table boundaries are neither the vendored ascending nor descending order")
+                ref = {mt: v[::-1] for mt, v in ref.items()}
+                exact = dict(exact, groups=exact["groups"][::-1])
             refs[target] = ref
             row = table["targets"][target]
-            entry["njoy_group_values_sha256"] = hashlib.sha256(json.dumps(ref, sort_keys=True).encode()).hexdigest()
-            g3["cases"][target] = elastic_comparison(row["elastic"], ref[445], tb)
+            ref_el = exact["groups"]
+            g3["cases"][target] = elastic_comparison(row["elastic"], ref_el, tb)
             g3["cases"][target]["structure_violations"] = violations
             g3["cases"][target]["pass"] = g3["cases"][target]["pass"] and not violations
+            above = [rel(a, b) for g, (a, b) in enumerate(zip(ref_el, ref[445])) if b > 0.0
+                     and min(tb[g], tb[g + 1]) >= G3_EMIN_EV]
+            g3["cases"][target]["information"] = {
+                "table_vs_njoy_445": {k: v for k, v in elastic_comparison(row["elastic"], ref[445], tb).items()
+                                      if k != "bad"},
+                "exact_reference_vs_njoy_445_above_1keV": distribution(above),
+                "njoy_documented_approximations": "see evidence.njoy_documented_approximations"}
+            uncovered = row["uncovered_damage_upper_barn_eV"]
             g4["cases"][target] = {
-                "inelastic_vs_446": channel_comparison(row["inelastic"], ref[446], ref[444],
-                                                       row["uncovered_damage_upper_barn_eV"], tb),
-                "disappearance_vs_447": channel_comparison(row["disappearance"], ref[447], ref[444],
-                                                           row["uncovered_damage_upper_barn_eV"], tb)}
+                "inelastic_vs_446": channel_comparison(row["inelastic"], ref[446], ref[444], uncovered, tb),
+                "disappearance_vs_447": channel_comparison(row["disappearance"], ref[447], ref[444], uncovered, tb)}
             g4["cases"][target]["pass"] = all(v["pass"] for v in g4["cases"][target].values())
-            case = bound_comparison(row["damage_energy_barn_eV"], row["uncovered_damage_upper_barn_eV"], ref[444],
-                                    ref[445], ref[446], ref[447])
+            adjusted = [a - b + c for a, b, c in zip(ref[444], ref[445], ref_el)]
+            case = bound_comparison(row["damage_energy_barn_eV"], uncovered, adjusted, ref_el, ref[446], ref[447])
+            raw = bound_comparison(row["damage_energy_barn_eV"], uncovered, ref[444], ref[445], ref[446], ref[447])
+            case["raw_njoy444_information"] = {k: raw[k] for k in ("n_below_computed", "n_above_upper", "pass")}
             ident = [rel(t, e + i + d) for t, e, i, d in zip(row["damage_energy_barn_eV"], row["elastic"],
                                                              row["inelastic"], row["disappearance"])]
             case["table_total_equals_partial_sum_worst_rel"] = max(ident)
             flux = spectrum_ascending(spec, tb)
             fns = {"computed": fold(row["damage_energy_barn_eV"], flux),
-                   "computed_plus_upper": fold([t + u for t, u in zip(row["damage_energy_barn_eV"],
-                                                                      row["uncovered_damage_upper_barn_eV"])], flux),
-                   "njoy_444": fold(ref[444], flux), "njoy_445": fold(ref[445], flux),
+                   "computed_plus_upper": fold([t + u for t, u in zip(row["damage_energy_barn_eV"], uncovered)],
+                                               flux),
+                   "njoy_444": fold(ref[444], flux), "njoy_444_adjusted": fold(adjusted, flux),
+                   "exact_elastic_reference": fold(ref_el, flux), "njoy_445": fold(ref[445], flux),
                    "njoy_446": fold(ref[446], flux), "njoy_447": fold(ref[447], flux),
                    "table_elastic": fold(row["elastic"], flux), "table_inelastic": fold(row["inelastic"], flux),
                    "table_disappearance": fold(row["disappearance"], flux),
                    "unit": "eV per atom per second at the spec's spectrum (multiplier one)"}
             fns["relative_difference_njoy_vs_computed"] = (fns["njoy_444"] - fns["computed"]) / fns["njoy_444"] \
                 if fns["njoy_444"] else None
+            fns["relative_difference_adjusted_vs_computed"] = (fns["njoy_444_adjusted"] - fns["computed"]) \
+                / fns["njoy_444_adjusted"] if fns["njoy_444_adjusted"] else None
             case["fns_collapsed"] = fns
             case["pass"] = case["pass"] and case["table_total_equals_partial_sum_worst_rel"] <= TOL_TABLE
             g5["cases"][target] = case
-        except (GateError, KeyError, ValueError, OSError) as error:
+        except (GateError, KeyError, ValueError, OSError, IndexError) as error:
             for gate in (g3, g4, g5):
                 gate["cases"].setdefault(target, {"pass": False, "error": f"{type(error).__name__}: {error}"})
-    # information: disappearance of every other capture mode against NJOY MT=447 (relative difference over the groups
-    # where NJOY is positive, and the FNS-collapsed totals)
+    # information: every capture / continuum combination of interest against NJOY 446 and 447 (relative difference over
+    # the groups where NJOY is positive, the G4-style comparison, and the FNS-collapsed totals); the default build
+    # (`evaluated` capture, `kinematic` continuum) is always among them
     info = {}
     for target in TARGETS:
-        info[target] = {"gate_mode": modes.get(target)}
-        if target not in refs:
-            info[target]["error"] = "no NJOY reference"
+        info[target] = {"gate_mode": {"capture": modes[target][0], "continuum": modes[target][1]}
+                        if target in modes else None}
+        if target not in refs or target not in tables:
+            info[target]["error"] = "no NJOY reference or no gate-mode table"
             continue
-        flux = spectrum_ascending(spec, [float(b) for b in tables[target][0]["boundaries_eV"]])
-        n447 = refs[target][447]
-        for mode in ("evaluated", "one-photon", "per-photon"):
+        tb = [float(b) for b in tables[target][0]["boundaries_eV"]]
+        flux = spectrum_ascending(spec, tb)
+        combos = [modes[target], ("evaluated", "kinematic"), ("one-photon", "kinematic"), ("per-photon", "kinematic")]
+        for capture_mode, continuum_mode in dict.fromkeys(combos):
+            label = f"capture={capture_mode},continuum={continuum_mode}"
             try:
-                if mode == modes[target]:
+                if (capture_mode, continuum_mode) == modes[target]:
                     tab = tables[target][0]
                 else:
-                    tab, _ = build_table(candidate, target, work, ed_map, mode, args.grid_density, args.timeout,
-                                         args.reuse)
-                dis = tab["targets"][target]["disappearance"]
-                total = fold(dis, flux)
-                info[target][mode] = {"disappearance_rel_vs_njoy_447": distribution(
-                                          [rel(a, b) for a, b in zip(dis, n447) if b > 0.0]),
-                                      "fns_disappearance": total, "fns_njoy_447": fold(n447, flux),
-                                      "fns_relative_difference": rel(total, fold(n447, flux)),
-                                      "is_gate_mode": mode == modes[target]}
+                    tab, _ = build_table(candidate, target, work, ed_map, capture_mode, args.grid_density,
+                                         args.timeout, args.reuse, continuum_mode)
+                row = tab["targets"][target]
+                result = {"is_gate_mode": (capture_mode, continuum_mode) == modes[target]}
+                for name, mt in (("inelastic", 446), ("disappearance", 447)):
+                    values, njoy_values = row[name], refs[target][mt]
+                    total = fold(values, flux)
+                    g4_style = channel_comparison(values, njoy_values, refs[target][444],
+                                                  row["uncovered_damage_upper_barn_eV"], tb)
+                    result[name] = {
+                        f"rel_vs_njoy_{mt}": distribution([rel(a, b) for a, b in zip(values, njoy_values) if b > 0.0]),
+                        "fns_table": total, f"fns_njoy_{mt}": fold(njoy_values, flux),
+                        "fns_relative_difference": rel(total, fold(njoy_values, flux)),
+                        "g4_style": {k: g4_style[k] for k in ("evaluated_groups", "n_bad", "worst_rel", "vacuous")}}
+                info[target][label] = result
             except (GateError, KeyError, ValueError, OSError) as error:
-                info[target][mode] = {"error": f"{type(error).__name__}: {error}"}
-    evidence["capture_mode_information"] = info
+                info[target][label] = {"error": f"{type(error).__name__}: {error}"}
+    evidence["mode_information"] = info
     for gate in (g3, g4, g5):
         gate["pass"] = all(c.get("pass") is True for c in gate["cases"].values()) and len(gate["cases"]) == len(TARGETS)
     g3["note"] = ("pass requires every target to have evaluated groups and none outside 2 percent; the <1 keV "
@@ -959,6 +1383,127 @@ def self_check():
     assert parse_duration("300.0 s") == 300.0 and parse_duration("2 min") == 120.0 and parse_duration("1e2 s") == 100.0
     assert abs(sum(fe_atoms_per_g(m) * 1.0 for m in FE_ABUNDANCE) - NA / sum(f * m for f, m in
                                                                           FE_ABUNDANCE.values())) < 1e11
+    # exact elastic damage: quadrature, analytic isotropic and P1 centre-of-mass cases, tabulated, laboratory frame
+    gx, gw = gauss_legendre(8)
+    assert abs(sum(gw) - 2.0) < 1e-14 and abs(sum(w * x ** 14 for x, w in zip(gx, gw)) - 2.0 / 15.0) < 1e-14
+    assert abs(adaptive_gl(lambda t: math.sqrt(t), 0.0, 1.0, 1e-8) - 2.0 / 3.0) < 1e-6
+    awr, zz, edp, lin = 55.45, 26, 40.0, (lambda t: t)
+    for e in (1e3, 5e3, 1e5, 2e7):                    # W = c - ed^2 / (4 c) for an isotropic pdf and R = T above ed
+        c = 2.0 * awr * e / (awr + 1.0) ** 2
+        assert rel(elastic_w(legendre_pdf([]), e, awr, zz, edp, damage=lin), c - edp ** 2 / (4.0 * c)) < 1e-9, e
+    assert elastic_w(legendre_pdf([]), 500.0, awr, zz, edp, damage=lin) == 0.0       # 2 c < ed: no damage possible
+    e = 1e5
+    c = 2.0 * awr * e / (awr + 1.0) ** 2
+    mu_ed = 1.0 - edp / c
+    f_int = mu_ed ** 2 / 2.0 - mu_ed ** 3 / 3.0 - 5.0 / 6.0
+    want = c - edp ** 2 / (4.0 * c) + 1.5 * 0.3 * c * f_int                            # P1: a_1 = 0.3
+    assert rel(elastic_w(legendre_pdf([0.3]), e, awr, zz, edp, damage=lin), want) < 1e-9
+    p1_tab = {"x": [-1.0, 0.0, 1.0], "y": [-0.25, 0.5, 1.25], "ranges": [(3, 2)]}     # = 1/2 + 3/4 mu (a_1 = 0.5)
+    b, fn, dev = tabulated_pdf(p1_tab)
+    assert dev < 1e-12 and b == [-1.0, 0.0, 1.0]
+    assert rel(elastic_w((b, fn), e, awr, zz, edp, damage=lin), elastic_w(legendre_pdf([0.5]), e, awr, zz, edp,
+                                                                           damage=lin)) < 1e-9
+    b, fn, dev = tabulated_pdf({"x": [-1.0, 1.0], "y": [1.0, 1.0], "ranges": [(2, 2)]})   # norm 2: renormalized
+    assert abs(dev - 1.0) < 1e-12 and rel(elastic_w((b, fn), e, awr, zz, edp, damage=lin),
+                                          elastic_w(legendre_pdf([]), e, awr, zz, edp, damage=lin)) < 1e-9
+    ratio = 10.0                                      # laboratory pdf of an isotropic centre-of-mass distribution
+
+    def lab_fn(mu):
+        root = math.sqrt(ratio * ratio - 1.0 + mu * mu)
+        s_ = (mu + root) / (ratio + 1.0)
+        return 0.5 * (ratio + 1.0) * s_ * (1.0 + mu / root) / ratio
+
+    c = 2.0 * ratio * e / (ratio + 1.0) ** 2
+    assert rel(elastic_w(([-1.0, 1.0], lab_fn), e, ratio, 5, edp, lab=True, damage=lin), c - edp ** 2 / (4.0 * c)) < 1e-8
+    real = elastic_w(legendre_pdf([]), 1e6, awr, zz, edp)                                # with the Lindhard function
+    assert 0.0 < real < 2.0 * awr * 1e6 / (awr + 1.0) ** 2
+    # interpolation helper against the self-check's own formulas
+    for law in (1, 2, 3, 5):
+        tab = {"x": [1.0, 3.0, 9.0], "y": [2.0, 3.0, 1.0], "ranges": [(3, law)]}
+        for q in (1.5, 3.0, 5.0, 8.9):
+            assert abs(interp_value(tab, q) - _interp(tab, q, law)) < 1e-12, (law, q)
+    # W(E) table: refinement, threshold point, pdf mixing in energy (Legendre a_1 linear in E gives a_1(E))
+    mf4 = {"za": 26056, "awr": awr, "lct": 2, "li": 0, "ltt": 1,
+           "parts": [{"kind": "legendre", "energies": [1e3, 1e4, 2e4], "data": [[0.0], [0.0], [0.4]],
+                      "ranges": [(3, 2)]}]}
+    wt = w_table(mf4, edp)
+    thr = edp * (awr + 1.0) ** 2 / (4.0 * awr)
+    assert thr in wt["x"] and wt["y"][wt["x"].index(thr)] == 0.0 and all(
+        y == 0.0 for x_, y in zip(wt["x"], wt["y"]) if x_ <= thr)
+    gaps = [b_ / a_ for a_, b_ in zip(wt["x"], wt["x"][1:]) if a_ >= 1e4]
+    assert gaps and max(gaps) <= EL_REFINE * (1 + 1e-9)
+    mid = next(x_ for x_ in wt["x"] if 1.2e4 < x_ < 1.8e4)
+    a1 = 0.4 * (mid - 1e4) / 1e4
+    assert rel(wt["y"][wt["x"].index(mid)], elastic_w(legendre_pdf([a1]), mid, awr, 26, edp)) < 1e-8
+    prod = damage_product({"x": [1e3, 3e4], "y": [2.0, 2.0], "ranges": [(2, 2)]}, wt)
+    assert rel(prod["y"][prod["x"].index(mid)], 2.0 * wt["y"][wt["x"].index(mid)]) < 1e-12
+    bad_law = dict(mf4, parts=[dict(mf4["parts"][0], ranges=[(3, 3)])])
+    try:
+        w_table(bad_law, edp)
+        raise AssertionError("an unsupported energy interpolation law must be refused")
+    except ValueError:
+        pass
+    # MF=4 and MF=6 readers on synthetic ENDF text
+    def ival(n):
+        return f"{n:>11}"
+
+    def endf_file(path, mat, mf, mt, rows):
+        out = []
+        for fields in rows:
+            out.append(_line(fields, mat, mf, mt, len(out) + 1))
+        out.append(_line([], mat, mf, 0, 99999))
+        out.append(_line([], mat, 0, 0, 0))
+        out.append(_line([], -1, 0, 0, 0))
+        Path(path).write_text("\n".join(out) + "\n")
+
+    def chunks(words):
+        return [words[i:i + 6] for i in range(0, len(words), 6)]
+
+    with tempfile.TemporaryDirectory(prefix="p154-selfcheck-") as tmp:
+        rows = [[26056.0, 55.45, ival(0), ival(3), ival(0), ival(0)], [0.0, 55.45, ival(0), ival(2), ival(0), ival(0)],
+                [0.0, 0.0, ival(0), ival(0), ival(1), ival(2)], [ival(2), ival(2)],
+                [0.0, 1.0e5, ival(0), ival(0), ival(1), ival(0)], [0.2], [0.0, 2.0e5, ival(0), ival(0), ival(1),
+                                                                         ival(0)], [0.4],
+                [0.0, 0.0, ival(0), ival(0), ival(1), ival(1)], [ival(1), ival(2)],
+                [0.0, 3.0e5, ival(0), ival(0), ival(1), ival(2)], [ival(2), ival(2)], [-1.0, 0.5, 1.0, 0.5]]
+        endf_file(Path(tmp) / "mf4", 2631, 4, 2, rows)
+        got = read_mf4_elastic(Path(tmp) / "mf4")
+        assert got["ltt"] == 3 and got["lct"] == 2 and got["za"] == 26056 and abs(got["awr"] - 55.45) < 1e-12
+        assert [p_["kind"] for p_ in got["parts"]] == ["legendre", "tabulated"]
+        assert got["parts"][0]["energies"] == [1e5, 2e5] and got["parts"][0]["data"] == [[0.2], [0.4]]
+        assert got["parts"][1]["energies"] == [3e5] and got["parts"][1]["data"][0]["x"] == [-1.0, 1.0]
+        assert got["parts"][0]["ranges"] == [(2, 2)]
+        wsyn = w_table(got, edp)
+        assert wsyn["x"][-1] == 3e5 and all(y >= 0.0 for y in wsyn["y"]) and wsyn["y"][-1] > 0.0
+
+        def mf6_file(path, mt, recoil):
+            sub1 = [[1.0, 1.0, ival(0), ival(1), ival(1), ival(2)], [ival(2), ival(2)], [1e6, 1.0, 2e8, 1.0],
+                    [0.0, 0.0, ival(1), ival(2), ival(1), ival(1)], [ival(1), ival(2)],
+                    [0.0, 1e6, ival(0), ival(1), ival(3), ival(1)], [0.0, 1.0, 2.0]]
+            sub2 = [[26055.0, 54.4, ival(0), ival(4), ival(1), ival(2)], [ival(2), ival(2)], [1e6, 1.0, 2e8, 1.0]]
+            head = [[26056.0, 55.45, ival(0), ival(2), ival(2 if recoil else 1), ival(0)]]
+            endf_file(path, 2631, 6, mt, head + sub1 + (sub2 if recoil else []))
+
+        mf6_file(Path(tmp) / "with", 91, True)
+        mf6_file(Path(tmp) / "without", 91, False)
+        mf6_file(Path(tmp) / "other_mt", 16, True)
+        mf6_file(Path(tmp) / "continuum649", 649, True)
+        ok = njoy_continuum_recoil(Path(tmp) / "with")
+        assert ok["mode"] == "evaluated" and ok["per_mt"]["91"]["subsections_zap_law"] == [(1, 1), (26055, 4)], ok
+        assert ok["per_mt"]["91"]["walked_completely"] and ok["continuum_mts_with_recoil"] == [91]
+        no = njoy_continuum_recoil(Path(tmp) / "without")
+        assert no["mode"] == "kinematic" and no["per_mt"]["91"]["subsections_zap_law"] == [(1, 1)], no
+        assert njoy_continuum_recoil(Path(tmp) / "other_mt")["mode"] == "kinematic"          # MT=16 is not a continuum
+        assert njoy_continuum_recoil(Path(tmp) / "continuum649")["mode"] == "evaluated"
+        assert njoy_continuum_recoil(Path(tmp) / "mf4")["mode"] == "kinematic"                # no MF=6 at all
+    # build arguments: `kinematic` continuum is the default and is not passed
+    assert "--continuum-recoil" not in build_args("Fe56", dict(BUILD_ED), "per-photon", None)
+    assert build_args("Fe56", dict(BUILD_ED), "per-photon", None, "evaluated")[-2:] == ["--continuum-recoil",
+                                                                                      "evaluated"]
+    # G5 reference total: NJOY444 - NJOY445 + exact elastic
+    adjusted = 12.0 - 6.0 + 3.0                                   # NJOY444 12, NJOY445 6, exact elastic 3
+    assert bound_comparison([9.0], [0.0], [adjusted], [3.0], [0.0], [0.0])["pass"]
+    assert not bound_comparison([9.0], [0.0], [12.0], [6.0], [0.0], [0.0])["pass"]
     print("P154 self-check: PASS")
     return 0
 
@@ -1042,7 +1587,8 @@ def main(argv=None):
               "inputs": inputs, "groups_sha256": sha256(GROUPS_JSON), "displacement_energy_eV": ed_map,
               "flux_weight": "flat in lethargy: sum of the integral of y dE/E over the group divided by ln(hi/lo)",
               "tolerances": {"G3_elastic": TOL_G3, "G4_inelastic_disappearance": TOL_G4,
-                             "G4_uncovered_fraction": G4_UNCOVERED_FRACTION, "G6_run": TOL_RUN},
+                             "G4_uncovered_fraction": G4_UNCOVERED_FRACTION,
+                             "elastic_exact_quadrature": EL_TOL, "elastic_exact_energy_refinement": EL_REFINE, "G6_run": TOL_RUN},
               "evidence": evidence, "gates": gates, "verdict": "PASS" if verdict else "FAIL"}
     out = ROOT / args.out
     out.parent.mkdir(parents=True, exist_ok=True)
