@@ -271,7 +271,7 @@ fd85342183fb1812ab789fb46431bca8e5bb4c27f890a63f6fa2a7ec7a5e50a3  ./controls/che
 db34631078f0ce4c95ee14bc54c1f78c4303168cb9ea445e4221261d6ebf36f0  ./controls/check_p148.py
 2929862b3cebd71a75947a453f088cfa2b5888a0a15679de04975d11386aa35f  ./controls/check_p149.py
 24ad768ce772812470b385d32bd6ac3bd897c226e0af9c648131cf1916eb31e3  ./controls/check_p15.py
-4a3a8310f7ab842ee414d9f3b69544c9f59c4cd5d3e8894936be3321ab28e3eb  ./controls/check_p152.py
+5e432bcdc7e365dca27d6f0a1dc66ff017b976addcaaf2343802c0d638583af0  ./controls/check_p152.py
 907efaadafc196993f386f891c1929339732466ea79ee3b420aed153da27730c  ./controls/check_p153.py
 3923f2a5d61580af1c60924581c01e90532131d1b0019da991717a8e46d60de3  ./controls/check_p16.py
 5f0afe1712eb9b0a3077aec2e9515ee1192d728b35726ce2c78466b0e8a564d3  ./controls/check_p17.py
@@ -1010,7 +1010,7 @@ ce1f7605dcfab502f61dbc93e0c250cb5c2db2c95db29e42284741bc5ee777bb  ./crates/actin
 dd008b666987a8d806f8496223ff4d6169ad89f75ff8e325c8d7e3182bc7beb4  ./crates/actinv-core/src/mesh.rs
 8e2cc0d64d78207d86626f25fe560a6e8fd907bbe29b5ffeb262ad61383c1c1f  ./crates/actinv-core/src/overrides.rs
 2d195a4d3ce8800d437c4b971a97b01b01f29198085a5005007fc0b3d719e8ab  ./crates/actinv-core/src/pathways.rs
-811dc4250ec5978898c7b9042afb48e074dc093b401151b581d7c9c2e941f3f3  ./crates/actinv-core/src/photon.rs
+93d18f4ab54cde178ab2bff5eb5b20790f31ab11bc41871ad71f421807726381  ./crates/actinv-core/src/photon.rs
 7457c7d29ec7cb786ff6c28b037f2b0127e03cbbf02ff6a8ec89e4bcd8bbfafb  ./crates/actinv-core/src/power.rs
 8f350faa991dbd2121c468bafcff9d3e9fc64b352b9b4c62ebf44f56819753e3  ./crates/actinv-core/src/prune.rs
 ff87d2bcbd3efef668bc9563240e1bcc27072e466d39659dab1a2525950e46d9  ./crates/actinv-core/src/quantity.rs
@@ -1220,8 +1220,8 @@ e2b5e857553bd5bfcac04a7a8882f88ea316acff8594c16a61239957ba3fc860  ./docs/guide/p
 fe3c97eb7c2e3a8da854b114b8fb547138a2d84fd23401a76797d9c6db2197b3  ./docs/guide/qualification.md
 6b827c7dfc13e20fc0f2e663472859ce2b9779179b56b4ef49b2df29f2629ae6  ./docs/guide/quick-start.md
 990dfad6f3870ad956a8a6e0a403b76accbd50253c04b12593dc2a54c8139b81  ./docs/guide/releases.md
-cea7d8a15ae639fadb1b0d8786fb1ff3e51725f972f56f3be4714237fd92edfe  ./docs/guide/results.md
-182983369e8969488ce1ba904c9af69fd9bfc8414e00d27fddb5521f018c998c  ./docs/guide/specification.md
+ede5cf543a60d46cde73a7b1cad15c74aeae6377bd4e0b70b422fcae3282122c  ./docs/guide/results.md
+8c532d58d96b675d576f82b5a28dda57d46fefe24bf13585a55754c22f261e96  ./docs/guide/specification.md
 e7d781c721fd6bd9d9177f96d870b20b104975585c54e3f01be77697e356cf7a  ./docs/guide/troubleshooting.md
 ac4c91f970b5e192efe4efdec60bafd00c6569ec6e672e2ef061610c66df0081  ./docs/guide/validation.md
 02238ae089ef8a05fb424da77ed78db87b829c5917b88390100de8a87fed85e8  ./docs/guide/waste.md
@@ -1319,7 +1319,7 @@ f9d2b037ba5d8a42d81f740cef8e2ae625655c4b3192ecc1d59e63283e2e6f20  ./examples/stu
 cfd86c2c5ac15d76ec2358c6bd196a6362b46bcc889160c06439975dc5ae8f3a  ./interchange/INTERCHANGE.md
 057dd636e1814f93c0869d4839887ff28a361f5c845f24153c4e93cbee1918d1  ./interchange/actinv_core_adapter.py
 4c42c2d68d375681621d6d3828b6daab4e2fdfc37f23cacbfc3b5a1c3fd3beec  ./interchange/run_case.py
-fea31e292e77ff085d92a226033f577269db6ad6148325b224d4a0128702b828  ./ledger.md
+9ed9c977136ccaa190a5418542e084e25cd13bb70610e2f4b0cd8840c39bbcac  ./ledger.md
 588e9f4f4ff74df627a1a15306214db678531d7334f2f6e95a1603eabd1f1c55  ./packaging/actinv.ico
 9897482011f194d9495fc80965177f0632ae4166917a7f240d80c0fc3c8fb83e  ./packaging/actinv.png
 f35e9ce33c938d768673712aa44a9eda5f8bc4d787694201f1915d80c082bd3f  ./packaging/desktop.json
@@ -5553,6 +5553,9 @@ db055602666b88ae234489291726d8f1add6d2f5b28b388057f24fda465abc67  ./results/p14_
 df8c3866cf9d002f519cb0627bb869f93fa6451b1c9db9a3b3912bb0367b95dd  ./results/p150/q3_ci_steps.txt
 9369d3feb398c481f93422a7d7c9e96c54a5b337ea865abf19fe98f9685f907c  ./results/p150/q3_ungated_record_drift.diff
 dc218860f5c95208aab50ce4ea80459e816073aab49d580d17a55db9f719fd03  ./results/p150_verdict.json
+d1e0a397e6ba66bf840142b9fdfcbf442a571a2ca43d3c05e518b212401d450a  ./results/p152/development_run_1.json
+b86d64e80df1c428041067f21613d5d6b6f4239cc3ae9098177f87e05ec0a2fd  ./results/p152/development_run_2.json
+e2837d2c0745b82404e7f6769b76bef42272a08a8f8267956106b3760e175ac5  ./results/p152_photon_estimate.json
 995146234c14a835ed49dc034347d1415ddc9aabcaa369473c0e66de1a29f7bc  ./results/p153/development_run_1.json
 3c9c97950c97c4288d475f7ca54964f8235516b9663edf6f99cc99422dce6826  ./results/p153_fission_yields.json
 7042c7a5a4a5e14d14d0309dfb2d1f244f6149121240b34256936082b4975b45  ./results/p15_cache_integrity.json

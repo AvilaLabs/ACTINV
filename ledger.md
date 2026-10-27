@@ -4043,3 +4043,49 @@ Registered before any source change for the phase:
 
 The protocols of P152–P154 and ledger entry 228 abbreviate the reference SHA-256 as `79e1e860…9c072`; the true suffix
 is `…c9072`, as entry 227 gives it in full. The checkers compare the full value.
+
+## Entry 230 — P152 candidate: G1–G6 recorded (2026-10-27)
+
+Estimated γ spectra and X-ray exclusion are implemented in `crates/actinv-core/src/photon.rs` (exponential estimate
+with the Q-value cap, exact extrema of each dose quantity per unit power over the allowed energy intervals, X-ray
+removal after scaling), `spec.rs` (`photon.missing_spectra`, `photon.exclude_xrays`), `run.rs` (ledger and certificate
+`photon_options`), `mesh.rs` and `inspect.rs` (`inspect decay --estimated-spectrum`). Candidate commits `82f80a8`,
+`53bb5e8` and `c19094e`; checker commits `49cf449` and `e4fdc6e`; merged by `Merge P152 candidate c19094e and checker
+e4fdc6e`.
+
+G1, under the cgroup at `c19094e`: `cargo fmt` clean, clippy `-D warnings` clean, `cargo test --workspace
+--all-targets --all-features` 1173 passed, 0 failed. Earlier fixes before the first full build: an inspect field
+name, a clippy `unnecessary_lazy_evaluations`, restored `boundaries_eV` JSON keys that the builder had renamed, and
+two test expectations (allowed-interval count; α-emitter E_max capped by Q).
+
+Candidate: release build of `c19094e`, SHA-256 `12f3fdc1ae5cff1a61493604ad8ee6360919d0223ac586e8cdcc73d95f32f22f`
+(rebuilt after the checker commit with no recompilation). Reference: v1.6.1 release (full SHA-256 as entry 227).
+Checker `controls/check_p152.py` (SHA-256 `5e432bcdc7e365dca27d6f0a1dc66ff017b976addcaaf2343802c0d638583af0`), written
+from the protocol and documented keys without reading the implementation. Record `results/p152_photon_estimate.json`.
+
+Development runs disclosed (`results/p152/development_run_1.json`, `development_run_2.json`):
+1. On an earlier candidate (`53bb5e8`): G3 and G5 passed; G2 failed only on the protocol's mistyped reference
+   abbreviation; G6 failed on subtraction round-off (a tolerance relative to the difference instead of the minuend);
+   G4 failed because (a) the checker recomputed the point-source represented-only dose per nuclide while the binary
+   combines the step's groups, and (b) the binary's point-source dose combined estimated and evaluated power into
+   shared group centroids, so it neither equalled the reported estimate nor obeyed the per-unit-power bounds the
+   protocol states. Implementation change (`c19094e`): in estimate mode the point-source dose is the represented-only
+   dose plus each estimated nuclide's estimate at its own centroids, which equals the reported estimate and keeps the
+   dose linear in each nuclide's power, as the bounds require. Checker changes: full reference SHA-256, minuend-relative
+   G6 tolerance, combined groups for the represented-only recomputation.
+2. On `c19094e`: all gates passed except one leftover G4 check, which recomputed the point-source dose from the
+   combined total groups (0.18 % off, the centroid shift above). That comparison is now made only for steps without
+   estimated nuclides; in the evidence cases every estimate-mode step has estimated nuclides, so it is not exercised,
+   and `point_source_dose_is_the_estimate` carries the definition.
+
+Evidence run (fresh work directory): **G2** `fns_fe_5min`, `shielding_demo` and two photon cases byte-identical to the
+reference apart from `ms`, with and without the defaults spelled out. **G3** 7824 comparisons over steel, zinc and
+nickel (52 estimated nuclide-steps), 0 mismatches. **G4** 984 comparisons, 0 mismatches. **G5** 1833 nuclides with
+evaluated spectra: every evaluated contact and point dose lies within its certified bounds except four whose
+evaluated lines exceed the file's Q-value (Cu-81, Rh-123, Pd-125, Pd-126 in the ENDF/B-VIII.0 decay file; the Q-values
+read about 1000 times too small, consistent with a keV/eV unit error in the evaluation); 0 unexplained. Accuracy
+(information): median |ln(estimate/evaluated)| 0.24 for the point-source dose and 0.46 for the contact proxy (factors
+1.27 and 1.58), 90th percentiles 1.74 and 1.61; the Q cap changes E_max for 391 nuclides. **G6** 41 515 comparisons, 0
+mismatches.
+
+G7 (CI) pending.

@@ -1,0 +1,2421 @@
+{
+ "candidate_binary": {
+  "path": "/home/connoravila/Documents/actinv/target/p152-cand/actinv",
+  "sha256": "e9576a36fe2c33e54f1edb54729d3251d46faa98b943061ec73c047054121cbc"
+ },
+ "checker": {
+  "path": "/home/connoravila/Documents/actinv/.claude/worktrees/agent-a712753719c55f354/controls/check_p152.py",
+  "sha256": "4a3a8310f7ab842ee414d9f3b69544c9f59c4cd5d3e8894936be3321ab28e3eb"
+ },
+ "data_files": {
+  "activation_library": {
+   "path": "/home/connoravila/Documents/actinv/.claude/worktrees/agent-a712753719c55f354/actinv-data/v1.1.0/activation/tendl-2025-neutron-709g.npz",
+   "sha256_declared": "ec4c72bf598dc8ad3d533d9cfafdcf493e2d1f949a3e4db6251495659b68cc44"
+  },
+  "decay_fallback": {
+   "path": "/home/connoravila/Documents/actinv/actinv-data/v1.1.0/decay/jeff-3-3_decay.dat",
+   "sha256": "850b8b7f85f8d88b6ad826c4cd341aaaffabd525c8ecf3c588a0ad437bf5d123"
+  },
+  "decay_primary": {
+   "path": "/home/connoravila/Documents/actinv/actinv-data/v1.1.0/decay/endf-b-viii-0_decay.dat",
+   "sha256": "6f04cf009086c179021f243a58dadc2d5bb078de5ba39c4fe46ccad77d228ddb"
+  },
+  "shielding_example": {
+   "path": "/home/connoravila/Documents/actinv/.claude/worktrees/agent-a712753719c55f354/examples/shielding_demo.json",
+   "sha256": "5da1f8e0d1028bba93a51c5b21125d6145aaf24d0f1a65c2c90acf735616afb1"
+  }
+ },
+ "data_root": "/home/connoravila/Documents/actinv/.claude/worktrees/agent-a712753719c55f354",
+ "external_gates": {
+  "G0": "external (see protocol)",
+  "G1": "external (see protocol)",
+  "G7": "external (see protocol)"
+ },
+ "gate_spec": {
+  "path": "/home/connoravila/Documents/actinv/.claude/worktrees/agent-a712753719c55f354/examples/fns_fe_5min.json",
+  "sha256": "ed55ed00f6c00fc4a2351e18332e98e7feb33d9b7ca65e7ba861e0e5e8feef39"
+ },
+ "gates": {
+  "G2": {
+   "cases": [
+    {
+     "bytes_equal_after_masking_ms": true,
+     "canonical_equal_without_ms": true,
+     "explicit_defaults": {
+      "echo_differences": [],
+      "identical_apart_from_echo": true,
+      "n_differences": 0,
+      "other_differences": []
+     },
+     "identical": true,
+     "ms_fields_masked": [
+      1,
+      1
+     ],
+     "name": "fns_fe_5min",
+     "spec": "/home/connoravila/Documents/actinv/.claude/worktrees/agent-a712753719c55f354/examples/fns_fe_5min.json",
+     "steps": 21
+    },
+    {
+     "bytes_equal_after_masking_ms": true,
+     "canonical_equal_without_ms": true,
+     "explicit_defaults": {
+      "echo_differences": [],
+      "identical_apart_from_echo": true,
+      "n_differences": 0,
+      "other_differences": []
+     },
+     "identical": true,
+     "ms_fields_masked": [
+      1,
+      1
+     ],
+     "name": "shielding_demo",
+     "spec": "/home/connoravila/Documents/actinv/.claude/worktrees/agent-a712753719c55f354/examples/shielding_demo.json",
+     "steps": 1
+    },
+    {
+     "bytes_equal_after_masking_ms": true,
+     "canonical_equal_without_ms": true,
+     "explicit_defaults": {
+      "echo_differences": [],
+      "identical_apart_from_echo": true,
+      "n_differences": 0,
+      "other_differences": []
+     },
+     "identical": true,
+     "ms_fields_masked": [
+      1,
+      1
+     ],
+     "name": "photon_steel",
+     "spec": "/home/connoravila/Documents/actinv/target/p152-work-dev1/g2_photon_steel.spec.json",
+     "steps": 7,
+     "steps_with_unrepresented_power_in_reference": 7
+    },
+    {
+     "bytes_equal_after_masking_ms": true,
+     "canonical_equal_without_ms": true,
+     "explicit_defaults": {
+      "echo_differences": [],
+      "identical_apart_from_echo": true,
+      "n_differences": 0,
+      "other_differences": []
+     },
+     "identical": true,
+     "ms_fields_masked": [
+      1,
+      1
+     ],
+     "name": "photon_zinc",
+     "spec": "/home/connoravila/Documents/actinv/target/p152-work-dev1/g2_photon_zinc.spec.json",
+     "steps": 6,
+     "steps_with_unrepresented_power_in_reference": 6
+    }
+   ],
+   "has_unrepresented_power_case": true,
+   "pass": false,
+   "reference_is_protocol_release": false,
+   "reference_pinned": "79e1e860...9c072",
+   "unrepresented_power_cases": {
+    "photon_steel": 7,
+    "photon_zinc": 6
+   }
+  },
+  "G3": {
+   "cases": {
+    "nickel": {
+     "has_estimated_nuclides": true,
+     "info": {
+      "activity_names_without_record": [],
+      "contact_bounds_convention_matches": {
+       "closure+naive": 5
+      },
+      "decay_mode_label_to_class": {
+       "beta-minus": [
+        "beta-"
+       ]
+      },
+      "estimated_nuclide_steps": 5,
+      "estimated_nuclides_seen": [
+       "Co62m1"
+      ],
+      "non_canonical_activity_names": [],
+      "photons_per_decay_convention": {
+       "grouped_only": 0,
+       "total": 5
+      },
+      "point_bounds_convention_matches": {
+       "closure+naive": 5
+      }
+     },
+     "n_comparisons": 927,
+     "n_mismatches": 0,
+     "pass": true,
+     "quantities": {
+      "activity_Bq_g": {
+       "mismatches": [],
+       "n": 5,
+       "n_bad": 0,
+       "worst_relative": 0.0
+      },
+      "decay_mode_label_is_a_function_of_class": {
+       "mismatches": [],
+       "n": 1,
+       "n_bad": 0,
+       "worst_relative": 0.0
+      },
+      "decay_mode_labels_distinguish_classes": {
+       "mismatches": [],
+       "n": 1,
+       "n_bad": 0,
+       "worst_relative": 0.0
+      },
+      "e_cap_eV": {
+       "mismatches": [],
+       "n": 5,
+       "n_bad": 0,
+       "worst_relative": 0.0
+      },
+      "e_max_eV": {
+       "mismatches": [],
+       "n": 5,
+       "n_bad": 0,
+       "worst_relative": 0.0
+      },
+      "e_max_manual_eV": {
+       "mismatches": [],
+       "n": 5,
+       "n_bad": 0,
+       "worst_relative": 0.0
+      },
+      "energy_placed_equals_activity_x_e_em": {
+       "mismatches": [],
+       "n": 5,
+       "n_bad": 0,
+       "worst_relative": 5.368863195439401e-16
+      },
+      "estimated_power_equals_independent_sum": {
+       "mismatches": [],
+       "n": 5,
+       "n_bad": 0,
+       "worst_relative": 0.0
+      },
+      "estimated_set_equals_independent_set": {
+       "mismatches": [],
+       "n": 5,
+       "n_bad": 0,
+       "worst_relative": 0.0
+      },
+      "group_count": {
+       "mismatches": [],
+       "n": 5,
+       "n_bad": 0,
+       "worst_relative": 0.0
+      },
+      "group_edges": {
+       "mismatches": [],
+       "n": 120,
+       "n_bad": 0,
+       "worst_relative": 0.0
+      },
+      "group_photons_s": {
+       "mismatches": [],
+       "n": 120,
+       "n_bad": 0,
+       "worst_relative": 5.099632350577523e-16
+      },
+      "group_photons_s_g": {
+       "mismatches": [],
+       "n": 120,
+       "n_bad": 0,
+       "worst_relative": 4.769079714327104e-16
+      },
+      "group_power_W": {
+       "mismatches": [],
+       "n": 120,
+       "n_bad": 0,
+       "worst_relative": 8.541269693749509e-15
+      },
+      "group_power_W_g": {
+       "mismatches": [],
+       "n": 120,
+       "n_bad": 0,
+       "worst_relative": 8.644767481268919e-15
+      },
+      "mean_em_energy_eV_per_decay": {
+       "mismatches": [],
+       "n": 5,
+       "n_bad": 0,
+       "worst_relative": 0.0
+      },
+      "photons_per_decay_is_total_or_grouped": {
+       "mismatches": [],
+       "n": 5,
+       "n_bad": 0,
+       "worst_relative": 0.0
+      },
+      "power_W_g_booked": {
+       "mismatches": [],
+       "n": 5,
+       "n_bad": 0,
+       "worst_relative": 0.0
+      },
+      "q_cap_eV": {
+       "mismatches": [],
+       "n": 5,
+       "n_bad": 0,
+       "worst_relative": 0.0
+      },
+      "report_unrepresented_equals_estimated_plus_remaining": {
+       "mismatches": [],
+       "n": 5,
+       "n_bad": 0,
+       "worst_relative": 0.0
+      },
+      "report_unrepresented_equals_independent_sum": {
+       "mismatches": [],
+       "n": 5,
+       "n_bad": 0,
+       "worst_relative": 0.0
+      },
+      "source_power_includes_estimate": {
+       "mismatches": [],
+       "n": 5,
+       "n_bad": 0,
+       "worst_relative": 2.5103266604851016e-16
+      },
+      "spectrum_energy_integrates_to_e_em": {
+       "mismatches": [],
+       "n": 5,
+       "n_bad": 0,
+       "worst_relative": 0.0
+      },
+      "step_group_photons_equals_report_plus_estimated": {
+       "mismatches": [],
+       "n": 120,
+       "n_bad": 0,
+       "worst_relative": 2.191867204986321e-16
+      },
+      "step_group_power_equals_report_plus_estimated": {
+       "mismatches": [],
+       "n": 120,
+       "n_bad": 0,
+       "worst_relative": 2.2154290962078703e-16
+      },
+      "ungrouped_power_W_g": {
+       "mismatches": [],
+       "n": 5,
+       "n_bad": 0,
+       "worst_relative": 0.0
+      }
+     },
+     "steps": 5,
+     "tolerance_relative": 1e-12
+    },
+    "steel": {
+     "has_estimated_nuclides": true,
+     "info": {
+      "activity_names_without_record": [],
+      "contact_bounds_convention_matches": {
+       "closure+naive": 16
+      },
+      "decay_mode_label_to_class": {
+       "beta-minus": [
+        "beta-"
+       ]
+      },
+      "estimated_nuclide_steps": 16,
+      "estimated_nuclides_seen": [
+       "Ca48",
+       "Co62m1",
+       "Mn60m1"
+      ],
+      "non_canonical_activity_names": [],
+      "photons_per_decay_convention": {
+       "grouped_only": 0,
+       "total": 16
+      },
+      "point_bounds_convention_matches": {
+       "closure+naive": 16
+      }
+     },
+     "n_comparisons": 2485,
+     "n_mismatches": 0,
+     "pass": true,
+     "quantities": {
+      "activity_Bq_g": {
+       "mismatches": [],
+       "n": 16,
+       "n_bad": 0,
+       "worst_relative": 0.0
+      },
+      "decay_mode_label_is_a_function_of_class": {
+       "mismatches": [],
+       "n": 1,
+       "n_bad": 0,
+       "worst_relative": 0.0
+      },
+      "decay_mode_labels_distinguish_classes": {
+       "mismatches": [],
+       "n": 1,
+       "n_bad": 0,
+       "worst_relative": 0.0
+      },
+      "e_cap_eV": {
+       "mismatches": [],
+       "n": 16,
+       "n_bad": 0,
+       "worst_relative": 0.0
+      },
+      "e_max_eV": {
+       "mismatches": [],
+       "n": 16,
+       "n_bad": 0,
+       "worst_relative": 0.0
+      },
+      "e_max_manual_eV": {
+       "mismatches": [],
+       "n": 16,
+       "n_bad": 0,
+       "worst_relative": 0.0
+      },
+      "energy_placed_equals_activity_x_e_em": {
+       "mismatches": [],
+       "n": 16,
+       "n_bad": 0,
+       "worst_relative": 4.0139954903764527e-16
+      },
+      "estimated_power_equals_independent_sum": {
+       "mismatches": [],
+       "n": 7,
+       "n_bad": 0,
+       "worst_relative": 0.0
+      },
+      "estimated_set_equals_independent_set": {
+       "mismatches": [],
+       "n": 7,
+       "n_bad": 0,
+       "worst_relative": 0.0
+      },
+      "group_count": {
+       "mismatches": [],
+       "n": 16,
+       "n_bad": 0,
+       "worst_relative": 0.0
+      },
+      "group_edges": {
+       "mismatches": [],
+       "n": 384,
+       "n_bad": 0,
+       "worst_relative": 0.0
+      },
+      "group_photons_s": {
+       "mismatches": [],
+       "n": 384,
+       "n_bad": 0,
+       "worst_relative": 6.605047879348237e-16
+      },
+      "group_photons_s_g": {
+       "mismatches": [],
+       "n": 384,
+       "n_bad": 0,
+       "worst_relative": 5.171191301481061e-16
+      },
+      "group_power_W": {
+       "mismatches": [],
+       "n": 384,
+       "n_bad": 0,
+       "worst_relative": 8.739420929000759e-15
+      },
+      "group_power_W_g": {
+       "mismatches": [],
+       "n": 384,
+       "n_bad": 0,
+       "worst_relative": 8.694681744194048e-15
+      },
+      "mean_em_energy_eV_per_decay": {
+       "mismatches": [],
+       "n": 16,
+       "n_bad": 0,
+       "worst_relative": 0.0
+      },
+      "photons_per_decay_is_total_or_grouped": {
+       "mismatches": [],
+       "n": 16,
+       "n_bad": 0,
+       "worst_relative": 0.0
+      },
+      "power_W_g_booked": {
+       "mismatches": [],
+       "n": 16,
+       "n_bad": 0,
+       "worst_relative": 0.0
+      },
+      "q_cap_eV": {
+       "mismatches": [],
+       "n": 16,
+       "n_bad": 0,
+       "worst_relative": 0.0
+      },
+      "report_unrepresented_equals_estimated_plus_remaining": {
+       "mismatches": [],
+       "n": 7,
+       "n_bad": 0,
+       "worst_relative": 0.0
+      },
+      "report_unrepresented_equals_independent_sum": {
+       "mismatches": [],
+       "n": 7,
+       "n_bad": 0,
+       "worst_relative": 0.0
+      },
+      "source_power_includes_estimate": {
+       "mismatches": [],
+       "n": 7,
+       "n_bad": 0,
+       "worst_relative": 2.145287920456349e-16
+      },
+      "spectrum_energy_integrates_to_e_em": {
+       "mismatches": [],
+       "n": 16,
+       "n_bad": 0,
+       "worst_relative": 0.0
+      },
+      "step_group_photons_equals_report_plus_estimated": {
+       "mismatches": [],
+       "n": 168,
+       "n_bad": 0,
+       "worst_relative": 2.1869968663937328e-16
+      },
+      "step_group_power_equals_report_plus_estimated": {
+       "mismatches": [],
+       "n": 168,
+       "n_bad": 0,
+       "worst_relative": 4.400068122484123e-16
+      },
+      "ungrouped_power_W_g": {
+       "mismatches": [],
+       "n": 16,
+       "n_bad": 0,
+       "worst_relative": 0.0
+      }
+     },
+     "steps": 7,
+     "tolerance_relative": 1e-12
+    },
+    "zinc": {
+     "has_estimated_nuclides": true,
+     "info": {
+      "activity_names_without_record": [],
+      "contact_bounds_convention_matches": {
+       "closure+naive": 31
+      },
+      "decay_mode_label_to_class": {
+       "beta-minus": [
+        "beta-"
+       ],
+       "isomeric-transition": [
+        "it"
+       ]
+      },
+      "estimated_nuclide_steps": 31,
+      "estimated_nuclides_seen": [
+       "Co62m1",
+       "Cu68m1",
+       "Cu70m1",
+       "Cu70m2",
+       "Cu71",
+       "Ni68"
+      ],
+      "non_canonical_activity_names": [],
+      "photons_per_decay_convention": {
+       "grouped_only": 0,
+       "total": 31
+      },
+      "point_bounds_convention_matches": {
+       "closure+naive": 31
+      }
+     },
+     "n_comparisons": 4412,
+     "n_mismatches": 0,
+     "pass": true,
+     "quantities": {
+      "activity_Bq_g": {
+       "mismatches": [],
+       "n": 31,
+       "n_bad": 0,
+       "worst_relative": 0.0
+      },
+      "decay_mode_label_is_a_function_of_class": {
+       "mismatches": [],
+       "n": 1,
+       "n_bad": 0,
+       "worst_relative": 0.0
+      },
+      "decay_mode_labels_distinguish_classes": {
+       "mismatches": [],
+       "n": 1,
+       "n_bad": 0,
+       "worst_relative": 0.0
+      },
+      "e_cap_eV": {
+       "mismatches": [],
+       "n": 31,
+       "n_bad": 0,
+       "worst_relative": 0.0
+      },
+      "e_max_eV": {
+       "mismatches": [],
+       "n": 31,
+       "n_bad": 0,
+       "worst_relative": 0.0
+      },
+      "e_max_manual_eV": {
+       "mismatches": [],
+       "n": 31,
+       "n_bad": 0,
+       "worst_relative": 0.0
+      },
+      "energy_placed_equals_activity_x_e_em": {
+       "mismatches": [],
+       "n": 31,
+       "n_bad": 0,
+       "worst_relative": 4.378926206101059e-16
+      },
+      "estimated_power_equals_independent_sum": {
+       "mismatches": [],
+       "n": 6,
+       "n_bad": 0,
+       "worst_relative": 1.4667235783305278e-16
+      },
+      "estimated_set_equals_independent_set": {
+       "mismatches": [],
+       "n": 6,
+       "n_bad": 0,
+       "worst_relative": 0.0
+      },
+      "group_count": {
+       "mismatches": [],
+       "n": 31,
+       "n_bad": 0,
+       "worst_relative": 0.0
+      },
+      "group_edges": {
+       "mismatches": [],
+       "n": 744,
+       "n_bad": 0,
+       "worst_relative": 0.0
+      },
+      "group_photons_s": {
+       "mismatches": [],
+       "n": 744,
+       "n_bad": 0,
+       "worst_relative": 1.7587595987135872e-15
+      },
+      "group_photons_s_g": {
+       "mismatches": [],
+       "n": 744,
+       "n_bad": 0,
+       "worst_relative": 1.648837123793988e-15
+      },
+      "group_power_W": {
+       "mismatches": [],
+       "n": 744,
+       "n_bad": 0,
+       "worst_relative": 1.3640332403117308e-14
+      },
+      "group_power_W_g": {
+       "mismatches": [],
+       "n": 744,
+       "n_bad": 0,
+       "worst_relative": 1.3748646606076268e-14
+      },
+      "mean_em_energy_eV_per_decay": {
+       "mismatches": [],
+       "n": 31,
+       "n_bad": 0,
+       "worst_relative": 0.0
+      },
+      "photons_per_decay_is_total_or_grouped": {
+       "mismatches": [],
+       "n": 31,
+       "n_bad": 0,
+       "worst_relative": 0.0
+      },
+      "power_W_g_booked": {
+       "mismatches": [],
+       "n": 31,
+       "n_bad": 0,
+       "worst_relative": 0.0
+      },
+      "q_cap_eV": {
+       "mismatches": [],
+       "n": 31,
+       "n_bad": 0,
+       "worst_relative": 0.0
+      },
+      "report_unrepresented_equals_estimated_plus_remaining": {
+       "mismatches": [],
+       "n": 6,
+       "n_bad": 0,
+       "worst_relative": 0.0
+      },
+      "report_unrepresented_equals_independent_sum": {
+       "mismatches": [],
+       "n": 6,
+       "n_bad": 0,
+       "worst_relative": 1.4667235783305278e-16
+      },
+      "source_power_includes_estimate": {
+       "mismatches": [],
+       "n": 6,
+       "n_bad": 0,
+       "worst_relative": 3.0488663230762614e-16
+      },
+      "spectrum_energy_integrates_to_e_em": {
+       "mismatches": [],
+       "n": 31,
+       "n_bad": 0,
+       "worst_relative": 0.0
+      },
+      "step_group_photons_equals_report_plus_estimated": {
+       "mismatches": [],
+       "n": 144,
+       "n_bad": 0,
+       "worst_relative": 2.1877238284530216e-16
+      },
+      "step_group_power_equals_report_plus_estimated": {
+       "mismatches": [],
+       "n": 144,
+       "n_bad": 0,
+       "worst_relative": 3.1514233845022477e-16
+      },
+      "ungrouped_power_W_g": {
+       "mismatches": [],
+       "n": 31,
+       "n_bad": 0,
+       "worst_relative": 0.0
+      }
+     },
+     "steps": 6,
+     "tolerance_relative": 1e-12
+    }
+   },
+   "cases_with_estimated_nuclides": 3,
+   "estimated_nuclide_steps_total": 52,
+   "pass": true
+  },
+  "G4": {
+   "cases": {
+    "nickel": {
+     "has_estimated_nuclides": true,
+     "n_comparisons": 165,
+     "n_mismatches": 10,
+     "pass": false,
+     "quantities": {
+      "contact_block_present": {
+       "mismatches": [],
+       "n": 5,
+       "n_bad": 0,
+       "worst_relative": 0.0
+      },
+      "contact_bounds_match_independent_extrema": {
+       "mismatches": [],
+       "n": 5,
+       "n_bad": 0,
+       "worst_relative": 0.0
+      },
+      "contact_estimate_equals_sum_rho_power": {
+       "mismatches": [],
+       "n": 5,
+       "n_bad": 0,
+       "worst_relative": 3.416474420279616e-16
+      },
+      "contact_estimate_null_iff_expected_null": {
+       "mismatches": [],
+       "n": 5,
+       "n_bad": 0,
+       "worst_relative": 0.0
+      },
+      "contact_estimate_within_bounds": {
+       "mismatches": [],
+       "n": 5,
+       "n_bad": 0,
+       "worst_relative": 0.0
+      },
+      "contact_estimated_share": {
+       "mismatches": [],
+       "n": 5,
+       "n_bad": 0,
+       "worst_relative": 0.0
+      },
+      "contact_nuclide_block_present": {
+       "mismatches": [],
+       "n": 5,
+       "n_bad": 0,
+       "worst_relative": 0.0
+      },
+      "contact_represented_only_equals_recomputed": {
+       "mismatches": [],
+       "n": 5,
+       "n_bad": 0,
+       "worst_relative": 4.3288953326916734e-16
+      },
+      "contact_represented_only_equals_report_run": {
+       "mismatches": [],
+       "n": 5,
+       "n_bad": 0,
+       "worst_relative": 0.0
+      },
+      "contact_share_of_step_estimate": {
+       "mismatches": [],
+       "n": 5,
+       "n_bad": 0,
+       "worst_relative": 0.0
+      },
+      "contact_step_estimate_equals_represented_plus_nuclides": {
+       "mismatches": [],
+       "n": 5,
+       "n_bad": 0,
+       "worst_relative": 0.0
+      },
+      "contact_step_estimate_within_bounds": {
+       "mismatches": [],
+       "n": 5,
+       "n_bad": 0,
+       "worst_relative": 0.0
+      },
+      "contact_step_lower_equals_represented_plus_nuclides": {
+       "mismatches": [],
+       "n": 5,
+       "n_bad": 0,
+       "worst_relative": 0.0
+      },
+      "contact_step_upper_equals_represented_plus_nuclides": {
+       "mismatches": [],
+       "n": 5,
+       "n_bad": 0,
+       "worst_relative": 0.0
+      },
+      "contact_top_level_unchanged_by_estimate": {
+       "mismatches": [],
+       "n": 5,
+       "n_bad": 0,
+       "worst_relative": 0.0
+      },
+      "estimated_spectra_block_present": {
+       "mismatches": [],
+       "n": 5,
+       "n_bad": 0,
+       "worst_relative": 0.0
+      },
+      "exponent_a": {
+       "mismatches": [],
+       "n": 5,
+       "n_bad": 0,
+       "worst_relative": 0.0
+      },
+      "model_is_named": {
+       "mismatches": [],
+       "n": 5,
+       "n_bad": 0,
+       "worst_relative": 0.0
+      },
+      "point_block_present": {
+       "mismatches": [],
+       "n": 5,
+       "n_bad": 0,
+       "worst_relative": 0.0
+      },
+      "point_bounds_match_independent_extrema": {
+       "mismatches": [],
+       "n": 5,
+       "n_bad": 0,
+       "worst_relative": 0.0
+      },
+      "point_estimate_equals_sum_rho_power": {
+       "mismatches": [],
+       "n": 5,
+       "n_bad": 0,
+       "worst_relative": 2.5457284390532587e-16
+      },
+      "point_estimate_null_iff_expected_null": {
+       "mismatches": [],
+       "n": 5,
+       "n_bad": 0,
+       "worst_relative": 0.0
+      },
+      "point_estimate_within_bounds": {
+       "mismatches": [],
+       "n": 5,
+       "n_bad": 0,
+       "worst_relative": 0.0
+      },
+      "point_estimated_share": {
+       "mismatches": [],
+       "n": 5,
+       "n_bad": 0,
+       "worst_relative": 0.0
+      },
+      "point_nuclide_block_present": {
+       "mismatches": [],
+       "n": 5,
+       "n_bad": 0,
+       "worst_relative": 0.0
+      },
+      "point_represented_only_equals_recomputed": {
+       "mismatches": [
+        {
+         "expected": 8.823942661474009e-08,
+         "got": 8.823710763004663e-08,
+         "where": "nickel/step0"
+        },
+        {
+         "expected": 8.386227726969362e-08,
+         "got": 8.385994659212769e-08,
+         "where": "nickel/step1"
+        },
+        {
+         "expected": 6.485848487959789e-08,
+         "got": 6.485635305452307e-08,
+         "where": "nickel/step2"
+        },
+        {
+         "expected": 3.0367031345021934e-08,
+         "got": 3.036591397210913e-08,
+         "where": "nickel/step3"
+        },
+        {
+         "expected": 6.2316144206704125e-09,
+         "got": 6.232966649466917e-09,
+         "where": "nickel/step4"
+        }
+       ],
+       "n": 5,
+       "n_bad": 5,
+       "worst_relative": 0.00021699493986973394
+      },
+      "point_share_of_step_estimate": {
+       "mismatches": [],
+       "n": 5,
+       "n_bad": 0,
+       "worst_relative": 0.0
+      },
+      "point_source_dose_equals_recomputed_from_total_groups": {
+       "mismatches": [],
+       "n": 5,
+       "n_bad": 0,
+       "worst_relative": 1.7616142912197343e-16
+      },
+      "point_source_dose_is_the_estimate": {
+       "mismatches": [
+        {
+         "expected": 9.921777284865001e-08,
+         "got": 9.912506145164227e-08,
+         "where": "nickel/step0"
+        },
+        {
+         "expected": 9.474979347461239e-08,
+         "got": 9.4657855200031e-08,
+         "where": "nickel/step1"
+        },
+        {
+         "expected": 7.521684812449113e-08,
+         "got": 7.512932806468471e-08,
+         "where": "nickel/step2"
+        },
+        {
+         "expected": 3.8441502521737807e-08,
+         "got": 3.837310990080009e-08,
+         "where": "nickel/step3"
+        },
+        {
+         "expected": 6.6391277112005145e-09,
+         "got": 6.635432825372903e-09,
+         "where": "nickel/step4"
+        }
+       ],
+       "n": 5,
+       "n_bad": 5,
+       "worst_relative": 0.001779134957043906
+      },
+      "point_step_estimate_equals_represented_plus_nuclides": {
+       "mismatches": [],
+       "n": 5,
+       "n_bad": 0,
+       "worst_relative": 0.0
+      },
+      "point_step_estimate_within_bounds": {
+       "mismatches": [],
+       "n": 5,
+       "n_bad": 0,
+       "worst_relative": 0.0
+      },
+      "point_step_lower_equals_represented_plus_nuclides": {
+       "mismatches": [],
+       "n": 5,
+       "n_bad": 0,
+       "worst_relative": 0.0
+      },
+      "point_step_upper_equals_represented_plus_nuclides": {
+       "mismatches": [],
+       "n": 5,
+       "n_bad": 0,
+       "worst_relative": 0.0
+      }
+     },
+     "ranges_emitted_steps": {
+      "contact": 5,
+      "point": 5
+     },
+     "steps": 5,
+     "tolerance_relative": 1e-09
+    },
+    "steel": {
+     "has_estimated_nuclides": true,
+     "n_comparisons": 339,
+     "n_mismatches": 11,
+     "pass": false,
+     "quantities": {
+      "contact_block_present": {
+       "mismatches": [],
+       "n": 7,
+       "n_bad": 0,
+       "worst_relative": 0.0
+      },
+      "contact_bounds_match_independent_extrema": {
+       "mismatches": [],
+       "n": 16,
+       "n_bad": 0,
+       "worst_relative": 0.0
+      },
+      "contact_estimate_equals_sum_rho_power": {
+       "mismatches": [],
+       "n": 16,
+       "n_bad": 0,
+       "worst_relative": 2.4065379849546923e-16
+      },
+      "contact_estimate_null_iff_expected_null": {
+       "mismatches": [],
+       "n": 16,
+       "n_bad": 0,
+       "worst_relative": 0.0
+      },
+      "contact_estimate_within_bounds": {
+       "mismatches": [],
+       "n": 16,
+       "n_bad": 0,
+       "worst_relative": 0.0
+      },
+      "contact_estimated_share": {
+       "mismatches": [],
+       "n": 7,
+       "n_bad": 0,
+       "worst_relative": 0.0
+      },
+      "contact_nuclide_block_present": {
+       "mismatches": [],
+       "n": 16,
+       "n_bad": 0,
+       "worst_relative": 0.0
+      },
+      "contact_represented_only_equals_recomputed": {
+       "mismatches": [],
+       "n": 7,
+       "n_bad": 0,
+       "worst_relative": 1.538280348042699e-15
+      },
+      "contact_represented_only_equals_report_run": {
+       "mismatches": [],
+       "n": 7,
+       "n_bad": 0,
+       "worst_relative": 0.0
+      },
+      "contact_share_of_step_estimate": {
+       "mismatches": [],
+       "n": 16,
+       "n_bad": 0,
+       "worst_relative": 0.0
+      },
+      "contact_step_estimate_equals_represented_plus_nuclides": {
+       "mismatches": [],
+       "n": 7,
+       "n_bad": 0,
+       "worst_relative": 0.0
+      },
+      "contact_step_estimate_within_bounds": {
+       "mismatches": [],
+       "n": 7,
+       "n_bad": 0,
+       "worst_relative": 0.0
+      },
+      "contact_step_lower_equals_represented_plus_nuclides": {
+       "mismatches": [],
+       "n": 7,
+       "n_bad": 0,
+       "worst_relative": 0.0
+      },
+      "contact_step_upper_equals_represented_plus_nuclides": {
+       "mismatches": [],
+       "n": 7,
+       "n_bad": 0,
+       "worst_relative": 0.0
+      },
+      "contact_top_level_unchanged_by_estimate": {
+       "mismatches": [],
+       "n": 7,
+       "n_bad": 0,
+       "worst_relative": 0.0
+      },
+      "estimated_spectra_block_present": {
+       "mismatches": [],
+       "n": 7,
+       "n_bad": 0,
+       "worst_relative": 0.0
+      },
+      "exponent_a": {
+       "mismatches": [],
+       "n": 7,
+       "n_bad": 0,
+       "worst_relative": 0.0
+      },
+      "model_is_named": {
+       "mismatches": [],
+       "n": 7,
+       "n_bad": 0,
+       "worst_relative": 0.0
+      },
+      "point_block_present": {
+       "mismatches": [],
+       "n": 7,
+       "n_bad": 0,
+       "worst_relative": 0.0
+      },
+      "point_bounds_match_independent_extrema": {
+       "mismatches": [],
+       "n": 16,
+       "n_bad": 0,
+       "worst_relative": 0.0
+      },
+      "point_estimate_equals_sum_rho_power": {
+       "mismatches": [],
+       "n": 16,
+       "n_bad": 0,
+       "worst_relative": 2.939105059830815e-16
+      },
+      "point_estimate_null_iff_expected_null": {
+       "mismatches": [],
+       "n": 16,
+       "n_bad": 0,
+       "worst_relative": 0.0
+      },
+      "point_estimate_within_bounds": {
+       "mismatches": [],
+       "n": 16,
+       "n_bad": 0,
+       "worst_relative": 0.0
+      },
+      "point_estimated_share": {
+       "mismatches": [],
+       "n": 7,
+       "n_bad": 0,
+       "worst_relative": 0.0
+      },
+      "point_nuclide_block_present": {
+       "mismatches": [],
+       "n": 16,
+       "n_bad": 0,
+       "worst_relative": 0.0
+      },
+      "point_represented_only_equals_recomputed": {
+       "mismatches": [
+        {
+         "expected": 4.664323775930638e-06,
+         "got": 4.662974017529939e-06,
+         "where": "steel/step0"
+        },
+        {
+         "expected": 4.485797906749806e-06,
+         "got": 4.484437489537144e-06,
+         "where": "steel/step1"
+        },
+        {
+         "expected": 3.7080679831499707e-06,
+         "got": 3.706678258245088e-06,
+         "where": "steel/step2"
+        },
+        {
+         "expected": 2.7635159058510495e-06,
+         "got": 2.7620975099334485e-06,
+         "where": "steel/step3"
+        },
+        {
+         "expected": 6.121122700152698e-08,
+         "got": 5.974527087570034e-08,
+         "where": "steel/step4"
+        },
+        {
+         "expected": 1.01490116827326e-08,
+         "got": 9.734291366992759e-09,
+         "where": "steel/step5"
+        },
+        {
+         "expected": 1.8535256790447345e-09,
+         "got": 1.8381627410378317e-09,
+         "where": "steel/step6"
+        }
+       ],
+       "n": 7,
+       "n_bad": 7,
+       "worst_relative": 0.040863123297556314
+      },
+      "point_share_of_step_estimate": {
+       "mismatches": [],
+       "n": 16,
+       "n_bad": 0,
+       "worst_relative": 0.0
+      },
+      "point_source_dose_equals_recomputed_from_total_groups": {
+       "mismatches": [],
+       "n": 7,
+       "n_bad": 0,
+       "worst_relative": 2.2500200719061456e-16
+      },
+      "point_source_dose_is_the_estimate": {
+       "mismatches": [
+        {
+         "expected": 4.667953001433856e-06,
+         "got": 4.667888777838988e-06,
+         "where": "steel/step0"
+        },
+        {
+         "expected": 4.48917444669978e-06,
+         "got": 4.489113301445347e-06,
+         "where": "steel/step1"
+        },
+        {
+         "expected": 3.7095562318576113e-06,
+         "got": 3.7095171296428057e-06,
+         "where": "steel/step2"
+        },
+        {
+         "expected": 2.7622422573795227e-06,
+         "got": 2.762238248636097e-06,
+         "where": "steel/step3"
+        }
+       ],
+       "n": 7,
+       "n_bad": 4,
+       "worst_relative": 1.375840648967267e-05
+      },
+      "point_step_estimate_equals_represented_plus_nuclides": {
+       "mismatches": [],
+       "n": 7,
+       "n_bad": 0,
+       "worst_relative": 0.0
+      },
+      "point_step_estimate_within_bounds": {
+       "mismatches": [],
+       "n": 7,
+       "n_bad": 0,
+       "worst_relative": 0.0
+      },
+      "point_step_lower_equals_represented_plus_nuclides": {
+       "mismatches": [],
+       "n": 7,
+       "n_bad": 0,
+       "worst_relative": 0.0
+      },
+      "point_step_upper_equals_represented_plus_nuclides": {
+       "mismatches": [],
+       "n": 7,
+       "n_bad": 0,
+       "worst_relative": 0.0
+      }
+     },
+     "ranges_emitted_steps": {
+      "contact": 7,
+      "point": 7
+     },
+     "steps": 7,
+     "tolerance_relative": 1e-09
+    },
+    "zinc": {
+     "has_estimated_nuclides": true,
+     "n_comparisons": 498,
+     "n_mismatches": 11,
+     "pass": false,
+     "quantities": {
+      "contact_block_present": {
+       "mismatches": [],
+       "n": 6,
+       "n_bad": 0,
+       "worst_relative": 0.0
+      },
+      "contact_bounds_match_independent_extrema": {
+       "mismatches": [],
+       "n": 31,
+       "n_bad": 0,
+       "worst_relative": 0.0
+      },
+      "contact_estimate_equals_sum_rho_power": {
+       "mismatches": [],
+       "n": 31,
+       "n_bad": 0,
+       "worst_relative": 4.3121566241920573e-16
+      },
+      "contact_estimate_null_iff_expected_null": {
+       "mismatches": [],
+       "n": 31,
+       "n_bad": 0,
+       "worst_relative": 0.0
+      },
+      "contact_estimate_within_bounds": {
+       "mismatches": [],
+       "n": 31,
+       "n_bad": 0,
+       "worst_relative": 0.0
+      },
+      "contact_estimated_share": {
+       "mismatches": [],
+       "n": 6,
+       "n_bad": 0,
+       "worst_relative": 0.0
+      },
+      "contact_nuclide_block_present": {
+       "mismatches": [],
+       "n": 31,
+       "n_bad": 0,
+       "worst_relative": 0.0
+      },
+      "contact_represented_only_equals_recomputed": {
+       "mismatches": [],
+       "n": 6,
+       "n_bad": 0,
+       "worst_relative": 2.3085853253391366e-16
+      },
+      "contact_represented_only_equals_report_run": {
+       "mismatches": [],
+       "n": 6,
+       "n_bad": 0,
+       "worst_relative": 0.0
+      },
+      "contact_share_of_step_estimate": {
+       "mismatches": [],
+       "n": 31,
+       "n_bad": 0,
+       "worst_relative": 0.0
+      },
+      "contact_step_estimate_equals_represented_plus_nuclides": {
+       "mismatches": [],
+       "n": 6,
+       "n_bad": 0,
+       "worst_relative": 0.0
+      },
+      "contact_step_estimate_within_bounds": {
+       "mismatches": [],
+       "n": 6,
+       "n_bad": 0,
+       "worst_relative": 0.0
+      },
+      "contact_step_lower_equals_represented_plus_nuclides": {
+       "mismatches": [],
+       "n": 6,
+       "n_bad": 0,
+       "worst_relative": 0.0
+      },
+      "contact_step_upper_equals_represented_plus_nuclides": {
+       "mismatches": [],
+       "n": 6,
+       "n_bad": 0,
+       "worst_relative": 0.0
+      },
+      "contact_top_level_unchanged_by_estimate": {
+       "mismatches": [],
+       "n": 6,
+       "n_bad": 0,
+       "worst_relative": 0.0
+      },
+      "estimated_spectra_block_present": {
+       "mismatches": [],
+       "n": 6,
+       "n_bad": 0,
+       "worst_relative": 0.0
+      },
+      "exponent_a": {
+       "mismatches": [],
+       "n": 6,
+       "n_bad": 0,
+       "worst_relative": 0.0
+      },
+      "model_is_named": {
+       "mismatches": [],
+       "n": 6,
+       "n_bad": 0,
+       "worst_relative": 0.0
+      },
+      "point_block_present": {
+       "mismatches": [],
+       "n": 6,
+       "n_bad": 0,
+       "worst_relative": 0.0
+      },
+      "point_bounds_match_independent_extrema": {
+       "mismatches": [],
+       "n": 31,
+       "n_bad": 0,
+       "worst_relative": 0.0
+      },
+      "point_estimate_equals_sum_rho_power": {
+       "mismatches": [],
+       "n": 31,
+       "n_bad": 0,
+       "worst_relative": 2.9289814235291124e-16
+      },
+      "point_estimate_null_iff_expected_null": {
+       "mismatches": [],
+       "n": 31,
+       "n_bad": 0,
+       "worst_relative": 0.0
+      },
+      "point_estimate_within_bounds": {
+       "mismatches": [],
+       "n": 31,
+       "n_bad": 0,
+       "worst_relative": 0.0
+      },
+      "point_estimated_share": {
+       "mismatches": [],
+       "n": 6,
+       "n_bad": 0,
+       "worst_relative": 0.0
+      },
+      "point_nuclide_block_present": {
+       "mismatches": [],
+       "n": 31,
+       "n_bad": 0,
+       "worst_relative": 0.0
+      },
+      "point_represented_only_equals_recomputed": {
+       "mismatches": [
+        {
+         "expected": 3.5907475019959466e-07,
+         "got": 3.5910862797432626e-07,
+         "where": "zinc/step0"
+        },
+        {
+         "expected": 3.451697590987388e-07,
+         "got": 3.4520308347049706e-07,
+         "where": "zinc/step1"
+        },
+        {
+         "expected": 2.985540016693032e-07,
+         "got": 2.9858487844166884e-07,
+         "where": "zinc/step2"
+        },
+        {
+         "expected": 2.4485392167761557e-07,
+         "got": 2.448813482199556e-07,
+         "where": "zinc/step3"
+        },
+        {
+         "expected": 7.9656057897696e-08,
+         "got": 7.967424873282649e-08,
+         "where": "zinc/step4"
+        },
+        {
+         "expected": 2.5129281587718866e-09,
+         "got": 2.515472524386233e-09,
+         "where": "zinc/step5"
+        }
+       ],
+       "n": 6,
+       "n_bad": 6,
+       "worst_relative": 0.0010125102882327828
+      },
+      "point_share_of_step_estimate": {
+       "mismatches": [],
+       "n": 31,
+       "n_bad": 0,
+       "worst_relative": 0.0
+      },
+      "point_source_dose_equals_recomputed_from_total_groups": {
+       "mismatches": [],
+       "n": 6,
+       "n_bad": 0,
+       "worst_relative": 3.251059637888861e-16
+      },
+      "point_source_dose_is_the_estimate": {
+       "mismatches": [
+        {
+         "expected": 3.9751369454953764e-07,
+         "got": 3.9555296429770113e-07,
+         "where": "zinc/step0"
+        },
+        {
+         "expected": 3.81166804850678e-07,
+         "got": 3.792457790107398e-07,
+         "where": "zinc/step1"
+        },
+        {
+         "expected": 3.2736987189069417e-07,
+         "got": 3.256757186882682e-07,
+         "where": "zinc/step2"
+        },
+        {
+         "expected": 2.561784275210517e-07,
+         "got": 2.5556572260107787e-07,
+         "where": "zinc/step3"
+        },
+        {
+         "expected": 7.967442110468846e-08,
+         "got": 7.967444274665874e-08,
+         "where": "zinc/step4"
+        }
+       ],
+       "n": 6,
+       "n_bad": 5,
+       "worst_relative": 0.0051750431175647356
+      },
+      "point_step_estimate_equals_represented_plus_nuclides": {
+       "mismatches": [],
+       "n": 6,
+       "n_bad": 0,
+       "worst_relative": 0.0
+      },
+      "point_step_estimate_within_bounds": {
+       "mismatches": [],
+       "n": 6,
+       "n_bad": 0,
+       "worst_relative": 0.0
+      },
+      "point_step_lower_equals_represented_plus_nuclides": {
+       "mismatches": [],
+       "n": 6,
+       "n_bad": 0,
+       "worst_relative": 0.0
+      },
+      "point_step_upper_equals_represented_plus_nuclides": {
+       "mismatches": [],
+       "n": 6,
+       "n_bad": 0,
+       "worst_relative": 0.0
+      }
+     },
+     "ranges_emitted_steps": {
+      "contact": 6,
+      "point": 6
+     },
+     "steps": 6,
+     "tolerance_relative": 1e-09
+    }
+   },
+   "cases_with_estimated_nuclides": 3,
+   "estimated_nuclide_steps_total": 52,
+   "pass": false
+  },
+  "G5": {
+   "accuracy_information_only": {
+    "contact_capped": {
+     "median_abs_ln_ratio": 0.4577791120754765,
+     "n": 1779,
+     "p90_abs_ln_ratio": 1.6105944541668233
+    },
+    "contact_inspect": {
+     "median_abs_ln_ratio": 0.45777911207547667,
+     "n": 1779,
+     "p90_abs_ln_ratio": 1.6105944541668233
+    },
+    "contact_uncapped": {
+     "median_abs_ln_ratio": 0.3787638087168998,
+     "n": 1779,
+     "p90_abs_ln_ratio": 1.7144386894803878
+    },
+    "point_capped": {
+     "median_abs_ln_ratio": 0.24257746892595433,
+     "n": 1779,
+     "p90_abs_ln_ratio": 1.738571988898349
+    },
+    "point_inspect": {
+     "median_abs_ln_ratio": 0.2425774689259542,
+     "n": 1779,
+     "p90_abs_ln_ratio": 1.7385719888983495
+    },
+    "point_uncapped": {
+     "median_abs_ln_ratio": 0.26499888828041407,
+     "n": 1779,
+     "p90_abs_ln_ratio": 1.7648593493811005
+    }
+   },
+   "continuum_flagged_failures_information": [],
+   "data_inconsistencies_lines_above_q": [
+    {
+     "e_cap_eV": 11634.0,
+     "evaluated": 1780178.3406536435,
+     "has_continuum": true,
+     "kind": "contact",
+     "lower": 0.0,
+     "nuclide": "Cu81",
+     "q_cap_eV": 11634.0,
+     "upper": 1426130.9851403413
+    },
+    {
+     "e_cap_eV": 10562.0,
+     "evaluated": 1716963.0323520694,
+     "has_continuum": true,
+     "kind": "contact",
+     "lower": 0.0,
+     "nuclide": "Rh123",
+     "q_cap_eV": 10562.0,
+     "upper": 1426130.9851403413
+    },
+    {
+     "e_cap_eV": 9644.0,
+     "evaluated": 1870808.427244108,
+     "has_continuum": true,
+     "kind": "contact",
+     "lower": 0.0,
+     "nuclide": "Pd125",
+     "q_cap_eV": 9644.0,
+     "upper": 1426130.9851403413
+    },
+    {
+     "e_cap_eV": 7643.0,
+     "evaluated": 1798609.609563568,
+     "has_continuum": true,
+     "kind": "contact",
+     "lower": 0.0,
+     "nuclide": "Pd126",
+     "q_cap_eV": 7643.0,
+     "upper": 1426130.9851403413
+    }
+   ],
+   "decay_file": {
+    "path": "/home/connoravila/Documents/actinv/actinv-data/v1.1.0/decay/endf-b-viii-0_decay.dat",
+    "sha256": "6f04cf009086c179021f243a58dadc2d5bb078de5ba39c4fe46ccad77d228ddb"
+   },
+   "eligible_nuclides": 1833,
+   "exponent_a": 14.0,
+   "group_structure": "fispact-24",
+   "inspect_agreement": {
+    "n_comparisons": 166526,
+    "n_mismatches": 0,
+    "quantities": {
+     "inspect_allowed_intervals_eV": {
+      "mismatches": [],
+      "n": 3142,
+      "n_bad": 0,
+      "worst_relative": 0.0
+     },
+     "inspect_e_cap_eV": {
+      "mismatches": [],
+      "n": 3142,
+      "n_bad": 0,
+      "worst_relative": 0.0
+     },
+     "inspect_e_max_eV": {
+      "mismatches": [],
+      "n": 3142,
+      "n_bad": 0,
+      "worst_relative": 0.0
+     },
+     "inspect_e_max_manual_eV": {
+      "mismatches": [],
+      "n": 3142,
+      "n_bad": 0,
+      "worst_relative": 0.0
+     },
+     "inspect_group_energy_eV": {
+      "mismatches": [],
+      "n": 75408,
+      "n_bad": 0,
+      "worst_relative": 4.1780189496746675e-14
+     },
+     "inspect_group_photons": {
+      "mismatches": [],
+      "n": 75408,
+      "n_bad": 0,
+      "worst_relative": 1.971396354586734e-15
+     },
+     "inspect_q_cap_eV": {
+      "mismatches": [],
+      "n": 3142,
+      "n_bad": 0,
+      "worst_relative": 0.0
+     }
+    },
+    "tolerance_relative": 1e-09
+   },
+   "inspect_dose_agreement_report_only": {
+    "n_comparisons": 3610,
+    "n_mismatches": 0,
+    "quantities": {
+     "inspect_contact_estimate_dose_vs_independent": {
+      "mismatches": [],
+      "n": 1805,
+      "n_bad": 0,
+      "worst_relative": 1.783161531485298e-15
+     },
+     "inspect_point_estimate_dose_vs_independent": {
+      "mismatches": [],
+      "n": 1805,
+      "n_bad": 0,
+      "worst_relative": 1.9159076247267564e-15
+     }
+    },
+    "tolerance_relative": 1e-09
+   },
+   "inspect_output": {
+    "path": "/home/connoravila/Documents/actinv/target/p152-work-dev1/g5_inspect_all.json",
+    "sha256": "f973dcc539121075ea35bbdca652e2e266f9a92a637483d3abf52655fb5cd0c1"
+   },
+   "models": {
+    "contact": {
+     "build_up": 2.0,
+     "e_hi_eV": 20000000.0,
+     "e_lo_eV": 1000.0,
+     "material": "iron"
+    },
+    "point": {
+     "air_attenuation": true,
+     "air_density_g_cm3": 0.00120479,
+     "distance_m": 1.0,
+     "e_hi_eV": 20000000.0,
+     "e_lo_eV": 1000.0,
+     "mass_g": 1.0
+    }
+   },
+   "n_continuum_unverified": 0,
+   "n_data_inconsistencies": 4,
+   "n_outside_or_undefined": 0,
+   "n_unexplained": 0,
+   "nuclides_in_file": 3821,
+   "nuclides_with_all_kinds_contained": 1829,
+   "outside_structure_or_undefined": [],
+   "pass": true,
+   "q_cap_changes_e_max": 391,
+   "records_parsed": 3821,
+   "schema": "actinv-inspect-decay-estimated-spectrum-1",
+   "skipped": {
+    "not_eligible": 1988
+   },
+   "unexplained_containment_failures": []
+  },
+  "G6": {
+   "info": {
+    "incomplete_steps": [],
+    "nuclides_not_recomputed": {},
+    "nuclides_with_xray_power": [
+     "Ar41",
+     "Ca41",
+     "Ca47",
+     "Co55",
+     "Co56",
+     "Co57",
+     "Co58",
+     "Co58m1",
+     "Co60",
+     "Co60m1",
+     "Co61",
+     "Co63",
+     "Cr48",
+     "Cr49",
+     "Cr51",
+     "Cr55",
+     "Cr56",
+     "Cr57",
+     "Cu62",
+     "Cu64",
+     "Cu66",
+     "Fe52",
+     "Fe53",
+     "Fe55",
+     "Fe59",
+     "Fe62",
+     "K42",
+     "K43",
+     "K44",
+     "Mn51",
+     "Mn52",
+     "Mn52m1",
+     "Mn53",
+     "Mn54",
+     "Mn56",
+     "Mn57",
+     "Mn58",
+     "Mn58m1",
+     "Mn59",
+     "Ni56",
+     "Ni57",
+     "Ni59",
+     "Ni65",
+     "Sc44",
+     "Sc44m1",
+     "Sc45m1",
+     "Sc46",
+     "Sc46m1",
+     "Sc47",
+     "Sc48",
+     "Ti44",
+     "Ti45",
+     "Ti51",
+     "Ti52",
+     "Ti53",
+     "V47",
+     "V48",
+     "V49",
+     "V50",
+     "V52",
+     "Zn65"
+    ],
+    "steps_with_xray_power": 7,
+    "strong_emitters_found": [
+     "Cr51",
+     "Fe55",
+     "Mn54"
+    ]
+   },
+   "n_comparisons": 41515,
+   "n_mismatches": 36,
+   "pass": false,
+   "quantities": {
+    "activity_Bq_per_g_byte_identical": {
+     "mismatches": [],
+     "n": 7,
+     "n_bad": 0,
+     "worst_relative": 0.0
+    },
+    "estimated_power_unchanged_by_exclusion": {
+     "mismatches": [],
+     "n": 7,
+     "n_bad": 0,
+     "worst_relative": 0.0
+    },
+    "excluded_power_same_with_estimate": {
+     "mismatches": [],
+     "n": 7,
+     "n_bad": 0,
+     "worst_relative": 0.0
+    },
+    "full_minus_scaled_xray_equals_remaining_photons": {
+     "mismatches": [
+      {
+       "expected": 0.019349045473063597,
+       "got": 0.019349045474913736,
+       "where": "steel/step0/Cr49/g7"
+      },
+      {
+       "expected": 3.6630340973642888,
+       "got": 3.6630340973604647,
+       "where": "steel/step0/Ni57/g7"
+      },
+      {
+       "expected": 1.5845131266909537e-15,
+       "got": 1.5845131266200172e-15,
+       "where": "steel/step0/Cu62/g7"
+      },
+      {
+       "expected": 0.01903456678337534,
+       "got": 0.019034566783434206,
+       "where": "steel/step1/Cr49/g7"
+      },
+      {
+       "expected": 3.6618456096184673,
+       "got": 3.6618456096094656,
+       "where": "steel/step1/Ni57/g7"
+      },
+      {
+       "expected": 1.4749428629693755e-15,
+       "got": 1.4749428629524178e-15,
+       "where": "steel/step1/Cu62/g7"
+      },
+      {
+       "expected": 0.016157624584593577,
+       "got": 0.016157624587414522,
+       "where": "steel/step2/Cr49/g7"
+      },
+      {
+       "expected": 7.203917826220454e-16,
+       "got": 7.20391782638786e-16,
+       "where": "steel/step2/Cu62/g7"
+      },
+      {
+       "expected": 0.006044837238732725,
+       "got": 0.006044837238828873,
+       "where": "steel/step3/Cr49/g7"
+      },
+      {
+       "expected": 3.579602596713812,
+       "got": 3.5796025967080696,
+       "where": "steel/step3/Ni57/g7"
+      },
+      {
+       "expected": 9.779802208343499e-18,
+       "got": 9.779802208391623e-18,
+       "where": "steel/step3/Cu62/g7"
+      },
+      {
+       "expected": 3.416303879849753e-13,
+       "got": 3.416303880469137e-13,
+       "where": "steel/step4/Cr49/g7"
+      },
+      {
+       "expected": 7.225502023651021e-29,
+       "got": 7.225502024499896e-29,
+       "where": "steel/step5/Cr49/g7"
+      },
+      {
+       "expected": 1.8308220783996854e-06,
+       "got": 1.8308220783907113e-06,
+       "where": "steel/step5/Ni57/g7"
+      }
+     ],
+     "n": 10128,
+     "n_bad": 14,
+     "worst_relative": 1.8130246080157742e-10
+    },
+    "full_minus_scaled_xray_equals_remaining_power": {
+     "mismatches": [
+      {
+       "expected": 1.8454650362345544e-15,
+       "got": 1.8454650363880616e-15,
+       "where": "steel/step0/Cr49/g7"
+      },
+      {
+       "expected": 1.2175460877062168e-28,
+       "got": 1.2175460877506055e-28,
+       "where": "steel/step0/Cu62/g7"
+      },
+      {
+       "expected": 7.140781328650159e-25,
+       "got": 7.140781328659288e-25,
+       "where": "steel/step1/Ti45/g7"
+      },
+      {
+       "expected": 1.8154708211953232e-15,
+       "got": 1.815470821398646e-15,
+       "where": "steel/step1/Cr49/g7"
+      },
+      {
+       "expected": 3.179285830023222e-13,
+       "got": 3.179285830035917e-13,
+       "where": "steel/step1/Ni57/g7"
+      },
+      {
+       "expected": 1.1333518683017876e-28,
+       "got": 1.1333518683269625e-28,
+       "where": "steel/step1/Cu62/g7"
+      },
+      {
+       "expected": 1.5410750511093273e-15,
+       "got": 1.541075051263764e-15,
+       "where": "steel/step2/Cr49/g7"
+      },
+      {
+       "expected": 5.53551865159574e-29,
+       "got": 5.535518651527578e-29,
+       "where": "steel/step2/Cu62/g7"
+      },
+      {
+       "expected": 5.765419170608685e-16,
+       "got": 5.765419172423012e-16,
+       "where": "steel/step3/Cr49/g7"
+      },
+      {
+       "expected": 7.5148382921877485e-31,
+       "got": 7.514838291811425e-31,
+       "where": "steel/step3/Cu62/g7"
+      },
+      {
+       "expected": 2.4775985747444937e-27,
+       "got": 2.4775985747406087e-27,
+       "where": "steel/step4/Ti45/g7"
+      },
+      {
+       "expected": 3.2583877957238176e-26,
+       "got": 3.258387796574632e-26,
+       "where": "steel/step4/Cr49/g7"
+      },
+      {
+       "expected": 1.9477032507011787e-13,
+       "got": 1.9477032506960608e-13,
+       "where": "steel/step4/Ni57/g7"
+      },
+      {
+       "expected": 4.309916083088954e-43,
+       "got": 4.309916083100843e-43,
+       "where": "steel/step5/Ti45/g7"
+      },
+      {
+       "expected": 6.891508612667623e-42,
+       "got": 6.891508614134962e-42,
+       "where": "steel/step5/Cr49/g7"
+      }
+     ],
+     "n": 10128,
+     "n_bad": 15,
+     "worst_relative": 3.1469122716114274e-10
+    },
+    "heat_W_per_g_byte_identical": {
+     "mismatches": [],
+     "n": 7,
+     "n_bad": 0,
+     "worst_relative": 0.0
+    },
+    "heat_bound_from_below_floor_W_per_g_byte_identical": {
+     "mismatches": [],
+     "n": 7,
+     "n_bad": 0,
+     "worst_relative": 0.0
+    },
+    "inventory_byte_identical": {
+     "mismatches": [],
+     "n": 7,
+     "n_bad": 0,
+     "worst_relative": 0.0
+    },
+    "nuclide_excluded_xray_power_W_g": {
+     "mismatches": [],
+     "n": 422,
+     "n_bad": 0,
+     "worst_relative": 0.0
+    },
+    "plain_run_has_no_excluded_key": {
+     "mismatches": [],
+     "n": 7,
+     "n_bad": 0,
+     "worst_relative": 0.0
+    },
+    "remaining_group_photons_s_g": {
+     "mismatches": [],
+     "n": 10128,
+     "n_bad": 0,
+     "worst_relative": 0.0
+    },
+    "remaining_group_power_W_g": {
+     "mismatches": [],
+     "n": 10128,
+     "n_bad": 0,
+     "worst_relative": 0.0
+    },
+    "source_power_closure": {
+     "mismatches": [],
+     "n": 7,
+     "n_bad": 0,
+     "worst_relative": 2.1609532283993328e-16
+    },
+    "step_excluded_xray_power_W_g": {
+     "mismatches": [],
+     "n": 7,
+     "n_bad": 0,
+     "worst_relative": 0.0
+    },
+    "step_group_full_minus_xray_power": {
+     "mismatches": [
+      {
+       "expected": -5.169878828456423e-26,
+       "got": 0.0,
+       "where": "steel/step0/g0"
+      },
+      {
+       "expected": -5.169878828456423e-26,
+       "got": 0.0,
+       "where": "steel/step1/g0"
+      },
+      {
+       "expected": -1.550963648536927e-25,
+       "got": 0.0,
+       "where": "steel/step2/g0"
+      },
+      {
+       "expected": 1.2888387803766826e-12,
+       "got": 1.2888387803745425e-12,
+       "where": "steel/step2/g7"
+      },
+      {
+       "expected": 1.550963648536927e-25,
+       "got": 0.0,
+       "where": "steel/step3/g0"
+      },
+      {
+       "expected": 1.2924697071141057e-26,
+       "got": 0.0,
+       "where": "steel/step4/g0"
+      },
+      {
+       "expected": 3.617906111571209e-13,
+       "got": 3.6179061115674685e-13,
+       "where": "steel/step4/g7"
+      }
+     ],
+     "n": 168,
+     "n_bad": 7,
+     "worst_relative": 0.0004897552650547317
+    },
+    "step_group_photons_remaining": {
+     "mismatches": [],
+     "n": 168,
+     "n_bad": 0,
+     "worst_relative": 0.0
+    },
+    "step_group_power_remaining": {
+     "mismatches": [],
+     "n": 168,
+     "n_bad": 0,
+     "worst_relative": 4.3490702335158915e-16
+    },
+    "steps_apart_from_photon_source_byte_identical": {
+     "mismatches": [],
+     "n": 7,
+     "n_bad": 0,
+     "worst_relative": 0.0
+    },
+    "unrepresented_unchanged_by_exclusion": {
+     "mismatches": [],
+     "n": 7,
+     "n_bad": 0,
+     "worst_relative": 0.0
+    }
+   },
+   "tolerance_relative": 1e-12
+  }
+ },
+ "gates_requested": [
+  "G2",
+  "G3",
+  "G4",
+  "G5",
+  "G6"
+ ],
+ "photon_response": {
+  "air_attenuation_available": true,
+  "path": "/home/connoravila/Documents/actinv/target/p152-work-dev1/p152_response_all_air.json",
+  "sha256": "347858c17ef430da011e3351764362a3293b7ad4f822e6bcce6a6961c76b7e28"
+ },
+ "protocol": "ACTINV-P152",
+ "protocol_file": {
+  "path": "/home/connoravila/Documents/actinv/.claude/worktrees/agent-a712753719c55f354/protocols/ACTINV-P152_PROTOCOL.md",
+  "sha256": "e5ec053169d766cd2cbc12d70c9b95a1829f89578f137c6e0f71cf1e0f132061"
+ },
+ "reference_binary": {
+  "path": "/home/connoravila/Documents/actinv/target/parity2-ref/actinv",
+  "sha256": "79e1e8600a8c2ad3ce42e72dcf34ce4dd8fa9bf60288db24e9eeb077781c9072"
+ },
+ "runs": {
+  "build_response_all_air": {
+   "command": [
+    "/usr/bin/python3",
+    "-I",
+    "/home/connoravila/Documents/actinv/.claude/worktrees/agent-a712753719c55f354/scripts/build_photon_response.py",
+    "/home/connoravila/Documents/actinv/target/p152-work-dev1/p152_response_all_air.json",
+    "--elements",
+    "all",
+    "--air-attenuation",
+    "--cache-dir",
+    "/home/connoravila/.cache/nist-html",
+    "--offline"
+   ],
+   "cwd": "/home/connoravila/Documents/actinv/target/p152-work-dev1",
+   "exit_code": 0,
+   "seconds": 0.118,
+   "stdout_tail": "/home/connoravila/Documents/actinv/target/p152-work-dev1/p152_response_all_air.json: 92 element(s), sha256=347858c17ef430da011e3351764362a3293b7ad4f822e6bcce6a6961c76b7e28\n"
+  },
+  "case_nickel_estimate": {
+   "binary": "/home/connoravila/Documents/actinv/target/p152-cand/actinv",
+   "cwd": "/home/connoravila/Documents/actinv/target/p152-work-dev1",
+   "exit_code": 0,
+   "output": {
+    "path": "/home/connoravila/Documents/actinv/target/p152-work-dev1/case_nickel_estimate.json",
+    "sha256": "95ed729272b23b19389612d93889d95bebc353a4e68d31b2271ada1b7a10ced0"
+   },
+   "seconds": 1.071,
+   "spec": {
+    "path": "/home/connoravila/Documents/actinv/target/p152-work-dev1/case_nickel_estimate.spec.json",
+    "sha256": "9675677db191819a29c735e9148116a08e245ad7ee70fbc58265a39e69676788"
+   }
+  },
+  "case_nickel_report": {
+   "binary": "/home/connoravila/Documents/actinv/target/p152-cand/actinv",
+   "cwd": "/home/connoravila/Documents/actinv/target/p152-work-dev1",
+   "exit_code": 0,
+   "output": {
+    "path": "/home/connoravila/Documents/actinv/target/p152-work-dev1/case_nickel_report.json",
+    "sha256": "5671ac861c623c7237296b78a5d58fe4024118ab25501716142cc1667c83c7d2"
+   },
+   "seconds": 1.067,
+   "spec": {
+    "path": "/home/connoravila/Documents/actinv/target/p152-work-dev1/case_nickel_report.spec.json",
+    "sha256": "82da2045db3e1b84c6f7589d2f0bb7fb3604211bc1ecff9f263cd488b60a5bd3"
+   }
+  },
+  "case_steel_estimate": {
+   "binary": "/home/connoravila/Documents/actinv/target/p152-cand/actinv",
+   "cwd": "/home/connoravila/Documents/actinv/target/p152-work-dev1",
+   "exit_code": 0,
+   "output": {
+    "path": "/home/connoravila/Documents/actinv/target/p152-work-dev1/case_steel_estimate.json",
+    "sha256": "6410425f2ca8f0f0b5029871c42d262685c86714ac303efdf3c4a574bcb4ea2a"
+   },
+   "seconds": 1.668,
+   "spec": {
+    "path": "/home/connoravila/Documents/actinv/target/p152-work-dev1/case_steel_estimate.spec.json",
+    "sha256": "0effa7a2cf2cf540d16590f08c7d948de94a201bf6a3403a77c90e9857af13fa"
+   }
+  },
+  "case_steel_report": {
+   "binary": "/home/connoravila/Documents/actinv/target/p152-cand/actinv",
+   "cwd": "/home/connoravila/Documents/actinv/target/p152-work-dev1",
+   "exit_code": 0,
+   "output": {
+    "path": "/home/connoravila/Documents/actinv/target/p152-work-dev1/case_steel_report.json",
+    "sha256": "e9c2a8bc6d23e62fc88fd4f45bf01a5575a55063ed86f227a06a631136b1c3dd"
+   },
+   "seconds": 1.668,
+   "spec": {
+    "path": "/home/connoravila/Documents/actinv/target/p152-work-dev1/case_steel_report.spec.json",
+    "sha256": "e69036a176f78a41f4eb8fd35943ae38544df54b6fbb2295fd05963514a6935b"
+   }
+  },
+  "case_zinc_estimate": {
+   "binary": "/home/connoravila/Documents/actinv/target/p152-cand/actinv",
+   "cwd": "/home/connoravila/Documents/actinv/target/p152-work-dev1",
+   "exit_code": 0,
+   "output": {
+    "path": "/home/connoravila/Documents/actinv/target/p152-work-dev1/case_zinc_estimate.json",
+    "sha256": "8372bd05b67d55ab58fea979ca9ec4057fcb855667829a816bcfc18fe15a8a25"
+   },
+   "seconds": 1.117,
+   "spec": {
+    "path": "/home/connoravila/Documents/actinv/target/p152-work-dev1/case_zinc_estimate.spec.json",
+    "sha256": "e61d44ead3e63003a68e48f8b4bc2b6230773bc2fc4b13522a4ea0523a12fb88"
+   }
+  },
+  "case_zinc_report": {
+   "binary": "/home/connoravila/Documents/actinv/target/p152-cand/actinv",
+   "cwd": "/home/connoravila/Documents/actinv/target/p152-work-dev1",
+   "exit_code": 0,
+   "output": {
+    "path": "/home/connoravila/Documents/actinv/target/p152-work-dev1/case_zinc_report.json",
+    "sha256": "52c065e73a2259aa7c955721588d82462bd6617e2c490bf491fdcf1cf31191db"
+   },
+   "seconds": 1.117,
+   "spec": {
+    "path": "/home/connoravila/Documents/actinv/target/p152-work-dev1/case_zinc_report.spec.json",
+    "sha256": "4269ac96d6d40e6f19f0e5bf059ef8b1f9decede73b2181b624748902606c724"
+   }
+  },
+  "g2_fns_fe_5min_candidate": {
+   "binary": "/home/connoravila/Documents/actinv/target/p152-cand/actinv",
+   "cwd": "/home/connoravila/Documents/actinv/.claude/worktrees/agent-a712753719c55f354",
+   "exit_code": 0,
+   "output": {
+    "path": "/home/connoravila/Documents/actinv/target/p152-work-dev1/g2_fns_fe_5min_candidate.json",
+    "sha256": "9a4aef391725791aead1a2a594a524cecd4a7a72f664eefb552df068aec2bdd2"
+   },
+   "seconds": 1.117,
+   "spec": {
+    "path": "/home/connoravila/Documents/actinv/.claude/worktrees/agent-a712753719c55f354/examples/fns_fe_5min.json",
+    "sha256": "ed55ed00f6c00fc4a2351e18332e98e7feb33d9b7ca65e7ba861e0e5e8feef39"
+   }
+  },
+  "g2_fns_fe_5min_explicit": {
+   "binary": "/home/connoravila/Documents/actinv/target/p152-cand/actinv",
+   "cwd": "/home/connoravila/Documents/actinv/.claude/worktrees/agent-a712753719c55f354",
+   "exit_code": 0,
+   "output": {
+    "path": "/home/connoravila/Documents/actinv/target/p152-work-dev1/g2_fns_fe_5min_explicit.json",
+    "sha256": "60f0abb7600657cffed5e6cd72911eead1eb3bf89406a6e023b5a2609886b534"
+   },
+   "seconds": 1.117,
+   "spec": {
+    "path": "/home/connoravila/Documents/actinv/target/p152-work-dev1/g2_fns_fe_5min_explicit.spec.json",
+    "sha256": "89e4f9e649db6a6b2338186c45a057c660cdc498844c7052ed6681b90da98548"
+   }
+  },
+  "g2_fns_fe_5min_reference": {
+   "binary": "/home/connoravila/Documents/actinv/target/parity2-ref/actinv",
+   "cwd": "/home/connoravila/Documents/actinv/.claude/worktrees/agent-a712753719c55f354",
+   "exit_code": 0,
+   "output": {
+    "path": "/home/connoravila/Documents/actinv/target/p152-work-dev1/g2_fns_fe_5min_reference.json",
+    "sha256": "2ed61ae53aa54179434920d03bed90468e621655e13ebbc2875a0ec9efa86236"
+   },
+   "seconds": 1.267,
+   "spec": {
+    "path": "/home/connoravila/Documents/actinv/.claude/worktrees/agent-a712753719c55f354/examples/fns_fe_5min.json",
+    "sha256": "ed55ed00f6c00fc4a2351e18332e98e7feb33d9b7ca65e7ba861e0e5e8feef39"
+   }
+  },
+  "g2_photon_steel_candidate": {
+   "binary": "/home/connoravila/Documents/actinv/target/p152-cand/actinv",
+   "cwd": "/home/connoravila/Documents/actinv/target/p152-work-dev1",
+   "exit_code": 0,
+   "output": {
+    "path": "/home/connoravila/Documents/actinv/target/p152-work-dev1/g2_photon_steel_candidate.json",
+    "sha256": "dc00cd305a9b51d64391ac771ea494486d1b889513c2fc966cf96b821789adac"
+   },
+   "seconds": 1.668,
+   "spec": {
+    "path": "/home/connoravila/Documents/actinv/target/p152-work-dev1/g2_photon_steel.spec.json",
+    "sha256": "e69036a176f78a41f4eb8fd35943ae38544df54b6fbb2295fd05963514a6935b"
+   }
+  },
+  "g2_photon_steel_explicit": {
+   "binary": "/home/connoravila/Documents/actinv/target/p152-cand/actinv",
+   "cwd": "/home/connoravila/Documents/actinv/target/p152-work-dev1",
+   "exit_code": 0,
+   "output": {
+    "path": "/home/connoravila/Documents/actinv/target/p152-work-dev1/g2_photon_steel_explicit.json",
+    "sha256": "9f236b05538da902531acfb12220853b34b72316003101d020694a63da9ee1ba"
+   },
+   "seconds": 1.668,
+   "spec": {
+    "path": "/home/connoravila/Documents/actinv/target/p152-work-dev1/g2_photon_steel_explicit.spec.json",
+    "sha256": "e03d46eaed226d96a7c4934990ff3adfdcd68d97afe2a3f2fc4500d2dab18270"
+   }
+  },
+  "g2_photon_steel_reference": {
+   "binary": "/home/connoravila/Documents/actinv/target/parity2-ref/actinv",
+   "cwd": "/home/connoravila/Documents/actinv/target/p152-work-dev1",
+   "exit_code": 0,
+   "output": {
+    "path": "/home/connoravila/Documents/actinv/target/p152-work-dev1/g2_photon_steel_reference.json",
+    "sha256": "b25c4ecf751cd0d614098ca23f4b9357143311fa2932c73841703fdcc218e748"
+   },
+   "seconds": 1.668,
+   "spec": {
+    "path": "/home/connoravila/Documents/actinv/target/p152-work-dev1/g2_photon_steel.spec.json",
+    "sha256": "e69036a176f78a41f4eb8fd35943ae38544df54b6fbb2295fd05963514a6935b"
+   }
+  },
+  "g2_photon_zinc_candidate": {
+   "binary": "/home/connoravila/Documents/actinv/target/p152-cand/actinv",
+   "cwd": "/home/connoravila/Documents/actinv/target/p152-work-dev1",
+   "exit_code": 0,
+   "output": {
+    "path": "/home/connoravila/Documents/actinv/target/p152-work-dev1/g2_photon_zinc_candidate.json",
+    "sha256": "bd56eb7953cd3f7bd89ded04c4d7e140f41d3ea6efe4124b510e68bd12719fe4"
+   },
+   "seconds": 1.117,
+   "spec": {
+    "path": "/home/connoravila/Documents/actinv/target/p152-work-dev1/g2_photon_zinc.spec.json",
+    "sha256": "4269ac96d6d40e6f19f0e5bf059ef8b1f9decede73b2181b624748902606c724"
+   }
+  },
+  "g2_photon_zinc_explicit": {
+   "binary": "/home/connoravila/Documents/actinv/target/p152-cand/actinv",
+   "cwd": "/home/connoravila/Documents/actinv/target/p152-work-dev1",
+   "exit_code": 0,
+   "output": {
+    "path": "/home/connoravila/Documents/actinv/target/p152-work-dev1/g2_photon_zinc_explicit.json",
+    "sha256": "300189a148224ed2a2740cf0f79c5ee86a6dc24c060908973853cbc5ad12a868"
+   },
+   "seconds": 1.117,
+   "spec": {
+    "path": "/home/connoravila/Documents/actinv/target/p152-work-dev1/g2_photon_zinc_explicit.spec.json",
+    "sha256": "00a8fc4368a57bc7bd665503a3dc5d8de55cc93ecfb11683d17825b00e3fdcc0"
+   }
+  },
+  "g2_photon_zinc_reference": {
+   "binary": "/home/connoravila/Documents/actinv/target/parity2-ref/actinv",
+   "cwd": "/home/connoravila/Documents/actinv/target/p152-work-dev1",
+   "exit_code": 0,
+   "output": {
+    "path": "/home/connoravila/Documents/actinv/target/p152-work-dev1/g2_photon_zinc_reference.json",
+    "sha256": "b003cf3d63e67ed05ad85519d5b8f224faa214544fa4892da1cdce373a2edea3"
+   },
+   "seconds": 1.117,
+   "spec": {
+    "path": "/home/connoravila/Documents/actinv/target/p152-work-dev1/g2_photon_zinc.spec.json",
+    "sha256": "4269ac96d6d40e6f19f0e5bf059ef8b1f9decede73b2181b624748902606c724"
+   }
+  },
+  "g2_shielding_demo_candidate": {
+   "binary": "/home/connoravila/Documents/actinv/target/p152-cand/actinv",
+   "cwd": "/home/connoravila/Documents/actinv/.claude/worktrees/agent-a712753719c55f354",
+   "exit_code": 0,
+   "output": {
+    "path": "/home/connoravila/Documents/actinv/target/p152-work-dev1/g2_shielding_demo_candidate.json",
+    "sha256": "01c346790a4961ec7b2f6ddd74ae01bbe63c8a32c34f65461005661e83033fdd"
+   },
+   "seconds": 1.818,
+   "spec": {
+    "path": "/home/connoravila/Documents/actinv/.claude/worktrees/agent-a712753719c55f354/examples/shielding_demo.json",
+    "sha256": "5da1f8e0d1028bba93a51c5b21125d6145aaf24d0f1a65c2c90acf735616afb1"
+   }
+  },
+  "g2_shielding_demo_explicit": {
+   "binary": "/home/connoravila/Documents/actinv/target/p152-cand/actinv",
+   "cwd": "/home/connoravila/Documents/actinv/.claude/worktrees/agent-a712753719c55f354",
+   "exit_code": 0,
+   "output": {
+    "path": "/home/connoravila/Documents/actinv/target/p152-work-dev1/g2_shielding_demo_explicit.json",
+    "sha256": "0ab2d7be357a6e0e1b798933900dc9510b1c69799ba05c11c11e1779f1874b3e"
+   },
+   "seconds": 1.718,
+   "spec": {
+    "path": "/home/connoravila/Documents/actinv/target/p152-work-dev1/g2_shielding_demo_explicit.spec.json",
+    "sha256": "9fcdfbc5669c79baf476fa3f039f8b45a5a7642b498c7377996408a3b19709e6"
+   }
+  },
+  "g2_shielding_demo_reference": {
+   "binary": "/home/connoravila/Documents/actinv/target/parity2-ref/actinv",
+   "cwd": "/home/connoravila/Documents/actinv/.claude/worktrees/agent-a712753719c55f354",
+   "exit_code": 0,
+   "output": {
+    "path": "/home/connoravila/Documents/actinv/target/p152-work-dev1/g2_shielding_demo_reference.json",
+    "sha256": "acf7d2058d08adb28a71c809e597dd42f4885e2f3ab4912f725b746871e4623f"
+   },
+   "seconds": 2.169,
+   "spec": {
+    "path": "/home/connoravila/Documents/actinv/.claude/worktrees/agent-a712753719c55f354/examples/shielding_demo.json",
+    "sha256": "5da1f8e0d1028bba93a51c5b21125d6145aaf24d0f1a65c2c90acf735616afb1"
+   }
+  },
+  "g5_inspect": {
+   "command": [
+    "/home/connoravila/Documents/actinv/target/p152-cand/actinv",
+    "inspect",
+    "decay",
+    "/home/connoravila/Documents/actinv/actinv-data/v1.1.0/decay/endf-b-viii-0_decay.dat",
+    "--estimated-spectrum",
+    "--out",
+    "/home/connoravila/Documents/actinv/target/p152-work-dev1/g5_inspect_all.json"
+   ],
+   "exit_code": 0,
+   "output_tail": "wrote /home/connoravila/Documents/actinv/target/p152-work-dev1/g5_inspect_all.json\n",
+   "seconds": 0.892
+  },
+  "g6_steel_exclude": {
+   "binary": "/home/connoravila/Documents/actinv/target/p152-cand/actinv",
+   "cwd": "/home/connoravila/Documents/actinv/target/p152-work-dev1",
+   "exit_code": 0,
+   "output": {
+    "path": "/home/connoravila/Documents/actinv/target/p152-work-dev1/g6_steel_exclude.json",
+    "sha256": "d0deb39cc1e0f0174f0207ea68f38a77aab11e0ae8ccc90a178e1e0668838d73"
+   },
+   "seconds": 1.818,
+   "spec": {
+    "path": "/home/connoravila/Documents/actinv/target/p152-work-dev1/g6_steel_exclude.spec.json",
+    "sha256": "5be95f99e82be1f16c175d2a3bf51a7ecaaa7497ff3344b388b7b7dc305d4e7e"
+   }
+  },
+  "g6_steel_exclude_estimate": {
+   "binary": "/home/connoravila/Documents/actinv/target/p152-cand/actinv",
+   "cwd": "/home/connoravila/Documents/actinv/target/p152-work-dev1",
+   "exit_code": 0,
+   "output": {
+    "path": "/home/connoravila/Documents/actinv/target/p152-work-dev1/g6_steel_exclude_estimate.json",
+    "sha256": "88b947b4138ea47342af2859b084457e38291d0c47fc6d51b62047165e1e9635"
+   },
+   "seconds": 1.668,
+   "spec": {
+    "path": "/home/connoravila/Documents/actinv/target/p152-work-dev1/g6_steel_exclude_estimate.spec.json",
+    "sha256": "0311dc6a16fa80ab1a74fcc0e0b6d75d73e01359e0d644bd1d85a97f04084bb9"
+   }
+  }
+ },
+ "started_utc": "2026-10-27T15:25:57.481204+00:00",
+ "verdict": "FAIL"
+}
