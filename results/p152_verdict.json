@@ -1,0 +1,69 @@
+{
+ "candidate": {
+  "binary_sha256": "12f3fdc1ae5cff1a61493604ad8ee6360919d0223ac586e8cdcc73d95f32f22f",
+  "commit": "c19094e"
+ },
+ "checker": {
+  "path": "controls/check_p152.py",
+  "sha256": "5e432bcdc7e365dca27d6f0a1dc66ff017b976addcaaf2343802c0d638583af0"
+ },
+ "ci": {
+  "commit": "94d2f317e5e77bc477b45081caf919c669b12789",
+  "runs": [
+   {
+    "conclusion": "success",
+    "name": "Build browser workbench",
+    "run_id": 40533913844
+   },
+   {
+    "conclusion": "success",
+    "name": "Build handbook",
+    "run_id": 40533913976
+   },
+   {
+    "conclusion": "success",
+    "name": "controls",
+    "run_id": 40533913892
+   },
+   {
+    "conclusion": "success",
+    "name": "desktop builds",
+    "run_id": 40533914139
+   },
+   {
+    "conclusion": "success",
+    "name": "fns-iron",
+    "run_id": 40533913982
+   },
+   {
+    "conclusion": "success",
+    "name": "fusion-isotope",
+    "run_id": 40533913967
+   }
+  ]
+ },
+ "development_runs": [
+  "results/p152/development_run_1.json",
+  "results/p152/development_run_2.json"
+ ],
+ "gates": {
+  "G1": true,
+  "G2": true,
+  "G3": true,
+  "G4": true,
+  "G5": true,
+  "G6": true,
+  "G7": true
+ },
+ "protocol": "ACTINV-P152",
+ "protocol_sha256": "e5ec053169d766cd2cbc12d70c9b95a1829f89578f137c6e0f71cf1e0f132061",
+ "record": {
+  "path": "results/p152_photon_estimate.json",
+  "sha256": "e2837d2c0745b82404e7f6769b76bef42272a08a8f8267956106b3760e175ac5"
+ },
+ "reference": {
+  "binary": "v1.6.1 release",
+  "binary_sha256": "79e1e8600a8c2ad3ce42e72dcf34ce4dd8fa9bf60288db24e9eeb077781c9072"
+ },
+ "verdict": "P152-PASS"
+}

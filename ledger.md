@@ -4097,3 +4097,11 @@ G7 (CI) pending.
 `ef10e1f` succeeded, `controls` among them, and no committed baseline changed. One development run, disclosed in
 entry 228; no repair round. Rate-weighted yield mixing, parent selection, cumulative yields and the pathway
 fission-parent filter are released for use; tracker row 17 moves to parity.
+
+## Entry 232 — P152 verdict: estimated γ spectra with certified dose bounds (2026-10-27)
+
+**P152-PASS** (`results/p152_verdict.json`). G1–G6 as entry 230 on candidate `c19094e` (binary
+`12f3fdc1ae5cff1a61493604ad8ee6360919d0223ac586e8cdcc73d95f32f22f`); G7: all six workflows on the evidence commit
+`94d2f31` succeeded, `controls` among them, and no committed baseline changed. Two development runs, disclosed in
+entry 230; no repair round. `photon.missing_spectra: "estimate"`, `photon.exclude_xrays` and `inspect decay
+--estimated-spectrum` are released for use.
