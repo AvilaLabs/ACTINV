@@ -571,7 +571,7 @@ fn os_bytes(value: Option<&OsStr>) -> &[u8] {
 /// A `fispact-*` structure must suit the projectile: the CCFE-162 grid for charged-particle and photon
 /// products, any vendored FISPACT-II neutron grid (`fispact-66` ... `fispact-1102`) for neutrons. Custom
 /// structures with other names carry their own boundaries and are not constrained.
-fn check_fispact_structure(
+pub(crate) fn check_fispact_structure(
     groups: &GroupStructure,
     projectile: Projectile,
     what: &str,
@@ -3630,7 +3630,7 @@ fn product_coverage_audit(
     })
 }
 
-fn damage_nuclide_name(za: i32, liso: i32) -> String {
+pub(crate) fn damage_nuclide_name(za: i32, liso: i32) -> String {
     let symbol = crate::composition::symbol_of(za / 1000);
     if liso > 0 {
         format!("{symbol}{}m{liso}", za % 1000)

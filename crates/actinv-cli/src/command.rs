@@ -35,7 +35,7 @@ const USAGE: &str = "usage: actinv run SPEC.json [OUT.json]\n\
                     actinv import-flux fispact FLUXES OUT.ndjson --groups GROUPS.json\n\
                     actinv import-fispact DECK.i OUT.json [--fluxes FLUXES] [--files FILES] [--library LIB.npz] [--decay DECAY] [--covariance COV.npz] [--strict]\n\
                     actinv build-library INPUT OUTPUT.npz [--format auto|tendl|eaf] [--projectile auto|neutron|proton|deuteron|triton|helion|alpha|gamma] [--groups fispact-709|fispact-162|fispact-66|...|fispact-1102|PATH] [--temperature-K K] [--workers N] [--cache DIR] [--grid-density D] [--strict-states true|false] [--profile none|endfb8|tendl] [--decay PATH] [--decay-fallback PATH] [--continue-on-error true|false] [--spallation TABLE.json] [--splice-energy-MeV MEV]\n\
-                    actinv build-damage EVALUATION_DIR OUT.json [--projectile auto|neutron|proton|deuteron|triton|helion|alpha|gamma] [--groups fispact-709|fispact-162|fispact-66|...|fispact-1102|PATH] [--temperature-K K] [--cache DIR]\n\
+                    actinv build-damage EVALUATION_DIR OUT.json [--projectile auto|neutron|proton|deuteron|triton|helion|alpha|gamma] [--groups fispact-709|fispact-162|fispact-66|...|fispact-1102|PATH] [--temperature-K K] [--cache DIR] [--method default|kinematic] [--displacement-energy EL=eV ...] [--capture-photons evaluated|one-photon] [--grid-density X]\n\
                     actinv build-shielding EVALUATION_DIR OUT.json [--projectile auto|neutron] [--groups fispact-709|PATH] [--cache DIR]\n\
                     actinv build-covariance INPUT ACTIVATION.npz OUTPUT.cov.npz [--workers N] [--cache DIR]\n\
                     actinv mesh SPEC.json OUT.ndjson\n\
@@ -546,11 +546,75 @@ fn build_damage(args: &[String]) {
     }
     let input = &args[0];
     let output = &args[1];
-    let options = valued_options(&args[2..]);
+    // --displacement-energy EL=eV may repeat (one per element), so it is peeled off before the
+    // single-valued option parser, which rejects duplicates.
+    let mut displacement_energies = BTreeMap::new();
+    let mut remaining: Vec<String> = Vec::new();
+    let mut rest = args[2..].iter();
+    while let Some(arg) = rest.next() {
+        if arg == "--displacement-energy" {
+            let value = rest.next().unwrap_or_else(|| {
+                die("option '--displacement-energy' has no value", 2)
+            });
+            let (symbol, energy) = value.split_once('=').unwrap_or_else(|| {
+                die(
+                    format!("--displacement-energy expects EL=eV, got '{value}'"),
+                    2,
+                )
+            });
+            let energy: f64 = energy.parse().unwrap_or_else(|_| {
+                die(format!("invalid displacement energy '{energy}' for {symbol}"), 2)
+            });
+            if !(energy.is_finite() && energy > 0.0) {
+                die(
+                    format!("displacement energy for {symbol} must be positive and finite"),
+                    2,
+                );
+            }
+            if displacement_energies
+                .insert(symbol.to_string(), energy)
+                .is_some()
+            {
+                die(
+                    format!("duplicate --displacement-energy for {symbol}"),
+                    2,
+                );
+            }
+        } else {
+            remaining.push(arg.clone());
+        }
+    }
+    let options = valued_options(&remaining);
     reject_unknown(
         &options,
-        &["--projectile", "--groups", "--temperature-K", "--cache"],
+        &[
+            "--projectile",
+            "--groups",
+            "--temperature-K",
+            "--cache",
+            "--method",
+            "--capture-photons",
+            "--grid-density",
+        ],
     );
+    let kinematic = match options.get("--method").copied().unwrap_or("default") {
+        "default" => false,
+        "kinematic" => true,
+        other => die(
+            format!("unknown damage method '{other}'; expected default or kinematic"),
+            2,
+        ),
+    };
+    if !kinematic
+        && (!displacement_energies.is_empty()
+            || options.contains_key("--capture-photons")
+            || options.contains_key("--grid-density"))
+    {
+        die(
+            "--displacement-energy, --capture-photons and --grid-density need --method kinematic",
+            2,
+        );
+    }
     let projectile_value = options.get("--projectile").copied().unwrap_or("auto");
     let requested_projectile = if projectile_value == "auto" {
         None
@@ -566,6 +630,39 @@ fn build_damage(args: &[String]) {
         None => GroupStructure::fispact_162(),
     }
     .unwrap_or_else(|error| die(error, 2));
+    if kinematic {
+        // The kinematic build reconstructs resonances at 0 K, so 0 K is its default.
+        let kinematic_options = actinv_data::damage_kinematic::KinematicOptions {
+            projectile: requested_projectile,
+            groups,
+            temperature_K: parsed_option(&options, "--temperature-K").unwrap_or(0.0),
+            cache: options.get("--cache").map(std::path::PathBuf::from),
+            displacement_energy_eV: displacement_energies,
+            default_displacement_energy_eV:
+                actinv_data::damage_kinematic::DEFAULT_DISPLACEMENT_ENERGY_EV,
+            capture_photons: actinv_data::damage_kinematic::CapturePhotons::parse(
+                options.get("--capture-photons").copied().unwrap_or("evaluated"),
+            )
+            .unwrap_or_else(|error| die(error, 2)),
+            grid_density: parsed_option(&options, "--grid-density").unwrap_or(1.0),
+        };
+        let summary = actinv_data::damage_kinematic::build_damage_kinematic(
+            input,
+            output,
+            &kinematic_options,
+        )
+        .unwrap_or_else(|error| die(error, 1));
+        println!(
+            "{} damage targets, {} evaluations without a covered elastic channel, {} cache hits, {} {}, sha256 {}",
+            summary.targets,
+            summary.uncovered_evaluations,
+            summary.cache_hits,
+            summary.projectile.name(),
+            summary.output.display(),
+            summary.sha256
+        );
+        return;
+    }
     let default_temperature = if detected_projectile == Projectile::Neutron {
         293.6
     } else {

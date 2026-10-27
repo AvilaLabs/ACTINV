@@ -179,6 +179,16 @@ The footer also records `cells_served_from_reuse`: cells whose byte-identical re
 solve instead of re-executing. Reuse is a scheduling record only — the emitted cell bytes are identical with or
 without grouping, and a resumed run reproduces the same count.
 
+## Damage accounting
+
+A run with an `actinv-damage-table-2` file adds `damage.recoil` to the ledger and the certificate's `damage` block:
+`table_format`, `built_displacement_energy_eV` per element, the arc-dpa citation and the elements with constants, and
+the definition of each recoil-integrated key. A table-1 run has no `recoil` key. The step and per-element keys
+`dpa_nrt_rate_per_s`, `dpa_nrt`, `dpa_arc_rate_per_s`, `dpa_arc`, `damage_energy_uncovered_upper_eV_per_g_s`,
+`dpa_uncovered_upper_bound_rate_per_s` and `dpa_uncovered_upper_bound` appear only with such a file; `he_appm_per_dpa` is
+a step key that appears with gas output. The uncovered keys are bounds on channels the table could not compute, not
+estimates, and they are never folded into the linear `dpa`.
+
 ## Assembly diagnostic
 
 `assembly` records the bulk isotope count, matrix triplet counts, activation-library row count, decay-chain size and

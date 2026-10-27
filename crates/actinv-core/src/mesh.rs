@@ -840,6 +840,7 @@ fn maximal_step_out() -> StepOut {
             damage_energy_eV_per_g_s: 0.0,
             covered_atom_fraction: 0.0,
             elements: BTreeMap::new(),
+            recoil: None,
         }),
         gas: Some(GasOut {
             H1: placeholder_gas_species(),
