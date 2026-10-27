@@ -4105,3 +4105,12 @@ fission-parent filter are released for use; tracker row 17 moves to parity.
 `94d2f31` succeeded, `controls` among them, and no committed baseline changed. Two development runs, disclosed in
 entry 230; no repair round. `photon.missing_spectra: "estimate"`, `photon.exclude_xrays` and `inspect decay
 --estimated-spectrum` are released for use.
+
+## Entry 233 — P155 Amendment A registered before any evidence run (2026-10-27)
+
+`protocols/ACTINV-P155_AMENDMENT_A.md` (`e1342b6849e51f31aa496e77309579015f8ff587be0bf57cff9a16254f021607`), registered after the candidate's unit tests (`3be641f`,
+`aeea9ce` on the P155 branch: clippy clean, 1203 workspace tests passed, 0 failed, after two test-code fixes) and
+before the checker has run on any binary. A1: `UNCTYPE 2` is approximated, because ACTINV propagates MF=33 whenever a
+covariance is present and builds the decay-constant channel inside that path. A2: displacement energies the deck does
+not give follow FISPACT-II's default behaviour (the table's build value, else FISPACT-II's default), and `--damage`
+without the keywords writes the damage section. A3: clarifications with no gate change.
