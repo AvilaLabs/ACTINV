@@ -553,9 +553,9 @@ fn build_damage(args: &[String]) {
     let mut rest = args[2..].iter();
     while let Some(arg) = rest.next() {
         if arg == "--displacement-energy" {
-            let value = rest.next().unwrap_or_else(|| {
-                die("option '--displacement-energy' has no value", 2)
-            });
+            let value = rest
+                .next()
+                .unwrap_or_else(|| die("option '--displacement-energy' has no value", 2));
             let (symbol, energy) = value.split_once('=').unwrap_or_else(|| {
                 die(
                     format!("--displacement-energy expects EL=eV, got '{value}'"),
@@ -563,7 +563,10 @@ fn build_damage(args: &[String]) {
                 )
             });
             let energy: f64 = energy.parse().unwrap_or_else(|_| {
-                die(format!("invalid displacement energy '{energy}' for {symbol}"), 2)
+                die(
+                    format!("invalid displacement energy '{energy}' for {symbol}"),
+                    2,
+                )
             });
             if !(energy.is_finite() && energy > 0.0) {
                 die(
@@ -575,10 +578,7 @@ fn build_damage(args: &[String]) {
                 .insert(symbol.to_string(), energy)
                 .is_some()
             {
-                die(
-                    format!("duplicate --displacement-energy for {symbol}"),
-                    2,
-                );
+                die(format!("duplicate --displacement-energy for {symbol}"), 2);
             }
         } else {
             remaining.push(arg.clone());
@@ -641,7 +641,10 @@ fn build_damage(args: &[String]) {
             default_displacement_energy_eV:
                 actinv_data::damage_kinematic::DEFAULT_DISPLACEMENT_ENERGY_EV,
             capture_photons: actinv_data::damage_kinematic::CapturePhotons::parse(
-                options.get("--capture-photons").copied().unwrap_or("evaluated"),
+                options
+                    .get("--capture-photons")
+                    .copied()
+                    .unwrap_or("evaluated"),
             )
             .unwrap_or_else(|error| die(error, 2)),
             grid_density: parsed_option(&options, "--grid-density").unwrap_or(1.0),

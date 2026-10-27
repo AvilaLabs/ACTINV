@@ -35,7 +35,7 @@ use crate::builder::{
 };
 use crate::composition;
 use crate::displacement::{
-    arc_dpa_entry, arc_displacements, nrt_displacements, Partition, ARC_DPA_CITATION,
+    arc_displacements, arc_dpa_entry, nrt_displacements, Partition, ARC_DPA_CITATION,
     NEUTRON_REST_EV, NRT_KAPPA,
 };
 use crate::endf_distributions::{
@@ -434,7 +434,9 @@ fn kalbach_a(z: i32, a_t: i32, ej_zap: i32, e_ev: f64, ep_ev: f64) -> f64 {
         15.68 * (ac - a_x)
             - 28.07 * ((nc - zc).powi(2) / ac - (n_x - z_x).powi(2) / a_x)
             - 18.56 * (ac.powf(2.0 / 3.0) - a_x.powf(2.0 / 3.0))
-            + 33.22 * ((nc - zc).powi(2) / ac.powf(4.0 / 3.0) - (n_x - z_x).powi(2) / a_x.powf(4.0 / 3.0))
+            + 33.22
+                * ((nc - zc).powi(2) / ac.powf(4.0 / 3.0)
+                    - (n_x - z_x).powi(2) / a_x.powf(4.0 / 3.0))
             - 0.717 * (zc * zc / ac.powf(1.0 / 3.0) - z_x * z_x / a_x.powf(1.0 / 3.0))
             + 1.211 * (zc * zc / ac - z_x * z_x / a_x)
     };
@@ -550,11 +552,7 @@ fn bracket(energies: &[f64], laws: &[i32], e: f64) -> (usize, Option<(usize, i32
 }
 
 const GL3_NODES: [f64; 3] = [-0.774_596_669_241_483_4, 0.0, 0.774_596_669_241_483_4];
-const GL3_WEIGHTS: [f64; 3] = [
-    0.555_555_555_555_555_6,
-    0.888_888_888_888_888_9,
-    0.555_555_555_555_555_6,
-];
+const GL3_WEIGHTS: [f64; 3] = [5.0 / 9.0, 8.0 / 9.0, 5.0 / 9.0];
 
 impl Continuum<'_> {
     fn kernel(&self, e: f64) -> Resp {
@@ -833,7 +831,7 @@ where
         return Err("cross-section grid has fewer than two positive points".into());
     }
     let values: Vec<[f64; N]> = grid.par_iter().map(|&e| eval(e)).collect();
-    let mut floor = [0.0; N];
+    let mut floor = [0.0_f64; N];
     for row in &values {
         for (slot, value) in floor.iter_mut().zip(row) {
             *slot = slot.max(value.abs());
@@ -923,7 +921,10 @@ fn collapse_component<const N: usize>(
     };
     let collapsed = groups.collapse(&table)?;
     let scale = collapsed.iter().fold(0.0_f64, |m, x| m.max(x.abs()));
-    if collapsed.iter().any(|v| !v.is_finite() || *v < -1e-9 * scale) {
+    if collapsed
+        .iter()
+        .any(|v| !v.is_finite() || *v < -1e-9 * scale)
+    {
         return Err("collapsed damage quantity is nonfinite or negative".into());
     }
     Ok(collapsed.into_iter().map(|v| v.max(0.0)).collect())
@@ -1133,18 +1134,24 @@ fn build_model<'a>(
                 .get(&102)
                 .and_then(|data| data.as_ref().ok())
                 .and_then(|data| {
-                    data.products.iter().find_map(|product| match &product.body {
-                        Mf6Body::Law1(law1) if product.zap == 0 && !law1.energies.is_empty() => {
-                            Some((law1, &product.yield_table))
-                        }
-                        _ => None,
-                    })
+                    data.products
+                        .iter()
+                        .find_map(|product| match &product.body {
+                            Mf6Body::Law1(law1)
+                                if product.zap == 0 && !law1.energies.is_empty() =>
+                            {
+                                Some((law1, &product.yield_table))
+                            }
+                            _ => None,
+                        })
                 })
         } else {
             None
         };
         if photons.is_none() && q.is_none() {
-            return Err("no evaluated photon spectrum and no Q value for the excitation energy".into());
+            return Err(
+                "no evaluated photon spectrum and no Q value for the excitation energy".into(),
+            );
         }
         return Ok(Model::Capture(Capture {
             awr,
@@ -1278,15 +1285,9 @@ fn sigma_table(
                 .get(&mt)
                 .or(zero_background.as_ref())
                 .expect("an MF=3 or explicit zero background is present");
-            let reaction = process_reaction(
-                resonance,
-                background,
-                groups,
-                mt,
-                0.0,
-                options.grid_density,
-            )
-            .map_err(|error| format!("MT{mt} resonance processing: {error}"))?;
+            let reaction =
+                process_reaction(resonance, background, groups, mt, 0.0, options.grid_density)
+                    .map_err(|error| format!("MT{mt} resonance processing: {error}"))?;
             return Ok(Some(reaction.table));
         }
     }
@@ -1359,23 +1360,23 @@ fn compute_row(
         if sigma.y.iter().all(|value| *value == 0.0) {
             continue;
         }
-        let covered = if mt == 2
-            || mt == 102
-            || level_range(mt)
-            || continuum_mt(mt)
-            || lumped_charged(mt)
-        {
-            Some(build_model(mt, &ctx, endf, options.capture_photons))
-        } else {
-            None
-        };
+        let covered =
+            if mt == 2 || mt == 102 || level_range(mt) || continuum_mt(mt) || lumped_charged(mt) {
+                Some(build_model(mt, &ctx, endf, options.capture_photons))
+            } else {
+                None
+            };
         match covered {
             Some(Ok(model)) => {
                 let onsets = model.onsets(ed);
                 let tabulation: Tabulation<3> = tabulate(&sigma, groups, &onsets, |e| {
                     let sigma_e = sigma.evaluate(e).unwrap_or(0.0);
                     let response = model.kernel(e);
-                    [sigma_e * response.d, sigma_e * response.nrt, sigma_e * response.arc]
+                    [
+                        sigma_e * response.d,
+                        sigma_e * response.nrt,
+                        sigma_e * response.arc,
+                    ]
                 })
                 .map_err(|error| format!("{name} MT{mt}: {error}"))?;
                 unresolved_segments += tabulation.unresolved;
@@ -1428,13 +1429,17 @@ fn compute_row(
             other => {
                 let reason = match other {
                     Some(Err(reason)) => reason,
-                    _ => "multi-particle or unspecified emission, or no distribution data".to_string(),
+                    _ => "multi-particle or unspecified emission, or no distribution data"
+                        .to_string(),
                 };
                 let q = endf.q.get(&mt).map_or(0.0, |q| q.qi_ev);
                 let emitted = emitted_nucleons(mt);
                 let tabulation: Tabulation<2> = tabulate(&sigma, groups, &[], |e| {
                     let sigma_e = sigma.evaluate(e).unwrap_or(0.0);
-                    [sigma_e, sigma_e * damage_upper_bound(ctx.awr, q, emitted, e)]
+                    [
+                        sigma_e,
+                        sigma_e * damage_upper_bound(ctx.awr, q, emitted, e),
+                    ]
                 })
                 .map_err(|error| format!("{name} MT{mt}: {error}"))?;
                 let cross_section = collapse_component(&tabulation, 0, groups)
@@ -1506,7 +1511,11 @@ struct KinematicCacheEntry {
     uncovered: Vec<String>,
 }
 
-fn kinematic_cache_key(source_sha256: &str, options: &KinematicOptions, projectile: Projectile) -> String {
+fn kinematic_cache_key(
+    source_sha256: &str,
+    options: &KinematicOptions,
+    projectile: Projectile,
+) -> String {
     static CODE: OnceLock<String> = OnceLock::new();
     let code = CODE.get_or_init(|| {
         let mut hash = Sha256::new();
@@ -1523,7 +1532,12 @@ fn kinematic_cache_key(source_sha256: &str, options: &KinematicOptions, projecti
     hasher.update(options.groups.hash().as_bytes());
     hasher.update(projectile.name().as_bytes());
     hasher.update([0]);
-    hasher.update(options.default_displacement_energy_eV.to_bits().to_le_bytes());
+    hasher.update(
+        options
+            .default_displacement_energy_eV
+            .to_bits()
+            .to_le_bytes(),
+    );
     for (symbol, ed) in &options.displacement_energy_eV {
         hasher.update(symbol.as_bytes());
         hasher.update([0]);
@@ -1567,20 +1581,19 @@ fn kinematic_source(
     });
     if let Some(checkpoint) = &checkpoint {
         if checkpoint.exists() {
-            let entry: KinematicCacheEntry = serde_json::from_str(
-                &std::fs::read_to_string(checkpoint).map_err(|error| {
+            let entry: KinematicCacheEntry =
+                serde_json::from_str(&std::fs::read_to_string(checkpoint).map_err(|error| {
                     format!(
                         "cannot read damage checkpoint {}: {error}",
                         checkpoint.display()
                     )
-                })?,
-            )
-            .map_err(|error| {
-                format!(
-                    "cannot parse damage checkpoint {}: {error}",
-                    checkpoint.display()
-                )
-            })?;
+                })?)
+                .map_err(|error| {
+                    format!(
+                        "cannot parse damage checkpoint {}: {error}",
+                        checkpoint.display()
+                    )
+                })?;
             if sha256_file(path)? != before {
                 return Err(format!(
                     "source {} changed while its damage checkpoint was validated",
@@ -1708,7 +1721,10 @@ pub fn build_damage_kinematic(
     let mut displacement_energy_eV = BTreeMap::new();
     let mut parameters = BTreeMap::new();
     for name in targets.keys() {
-        let symbol: String = name.chars().take_while(|c| c.is_ascii_alphabetic()).collect();
+        let symbol: String = name
+            .chars()
+            .take_while(|c| c.is_ascii_alphabetic())
+            .collect();
         displacement_energy_eV.insert(symbol.clone(), displacement_energy_for(options, &symbol));
         if let Some(entry) = arc_dpa_entry(&symbol) {
             parameters.insert(
@@ -1789,7 +1805,7 @@ mod tests {
             let sum: f64 = w.iter().sum();
             assert!((sum - 2.0).abs() < 1e-13, "n={n}");
             // exact to degree 2n - 1: integral of x^4 over [-1, 1] is 0.4
-            if 2 * n - 1 >= 4 {
+            if 2 * n > 4 {
                 let fourth: f64 = x.iter().zip(w).map(|(x, w)| w * x.powi(4)).sum();
                 assert!((fourth - 0.4).abs() < 1e-13, "n={n}");
             }
@@ -1920,7 +1936,10 @@ mod tests {
         let mut sum = 0.0;
         let n_e = 400;
         let n_mu = 2000;
-        for (lo, hi, f, r, a) in [(1.0e6, 3.0e6, 2.0e-7, 0.2, 1.5), (3.0e6, 5.0e6, 1.0e-7, 0.4, 2.5)] {
+        for (lo, hi, f, r, a) in [
+            (1.0e6, 3.0e6, 2.0e-7, 0.2, 1.5),
+            (3.0e6, 5.0e6, 1.0e-7, 0.4, 2.5),
+        ] {
             for i in 0..n_e {
                 let ep = lo + (i as f64 + 0.5) * (hi - lo) / n_e as f64;
                 let mut inner = 0.0;
@@ -1980,7 +1999,9 @@ mod tests {
 
     #[test]
     fn redundant_and_channel_mt_rules() {
-        let present: BTreeSet<i32> = [2, 4, 16, 51, 91, 102, 103, 649, 18, 19].into_iter().collect();
+        let present: BTreeSet<i32> = [2, 4, 16, 51, 91, 102, 103, 649, 18, 19]
+            .into_iter()
+            .collect();
         assert!(is_redundant(4, &present));
         assert!(!is_redundant(16, &present));
         assert!(is_redundant(103, &present));
@@ -2048,7 +2069,11 @@ mod tests {
         assert_eq!(back, table);
         // an element without arc constants serializes without the arc array
         let mut no_arc = table2();
-        no_arc.targets.get_mut("Fe56").unwrap().displacement_arc_barn = None;
+        no_arc
+            .targets
+            .get_mut("Fe56")
+            .unwrap()
+            .displacement_arc_barn = None;
         let text = serde_json::to_string(&no_arc).unwrap();
         assert!(!text.contains("displacement_arc_barn"));
         let back: DamageTable2 = serde_json::from_str(&text).unwrap();
@@ -2064,10 +2089,23 @@ mod tests {
     /// A TAB1 section `[mat, mf, mt]` with linear interpolation through `(x, y)` points.
     fn tab1_lines(mf: i32, mt: i32, q: [f64; 2], points: &[(f64, f64)]) -> Vec<String> {
         let mat = 2631;
-        let mut lines = vec![record(["26056", "55.45", "0", "0", "0", "0"], mat, mf, mt, 1)];
+        let mut lines = vec![record(
+            ["26056", "55.45", "0", "0", "0", "0"],
+            mat,
+            mf,
+            mt,
+            1,
+        )];
         let mut seq = 2;
         lines.push(record(
-            [&num(q[0]), &num(q[1]), "0", "0", "1", &points.len().to_string()],
+            [
+                &num(q[0]),
+                &num(q[1]),
+                "0",
+                "0",
+                "1",
+                &points.len().to_string(),
+            ],
             mat,
             mf,
             mt,
@@ -2082,7 +2120,10 @@ mod tests {
             seq,
         ));
         seq += 1;
-        let values: Vec<String> = points.iter().flat_map(|(x, y)| [num(*x), num(*y)]).collect();
+        let values: Vec<String> = points
+            .iter()
+            .flat_map(|(x, y)| [num(*x), num(*y)])
+            .collect();
         lines.extend(packed(&values, mat, mf, mt, &mut seq));
         lines.push(send(mat, mf));
         lines
@@ -2098,8 +2139,18 @@ mod tests {
             send(mat, 1),
         ];
         lines.extend(tab1_lines(3, 2, [0.0, 0.0], &[(1.0e-5, 3.0), (2.0e7, 3.0)]));
-        lines.extend(tab1_lines(3, 4, [0.0, -1.0e6], &[(1.1e6, 1.0), (2.0e7, 1.0)]));
-        lines.extend(tab1_lines(3, 16, [-11.0e6, -11.0e6], &[(1.2e7, 0.1), (2.0e7, 0.2)]));
+        lines.extend(tab1_lines(
+            3,
+            4,
+            [0.0, -1.0e6],
+            &[(1.1e6, 1.0), (2.0e7, 1.0)],
+        ));
+        lines.extend(tab1_lines(
+            3,
+            16,
+            [-11.0e6, -11.0e6],
+            &[(1.2e7, 0.1), (2.0e7, 0.2)],
+        ));
         // MF=4 MT=2: isotropic (LI=1) in the centre of mass
         lines.push(record(["26056", "55.45", "0", "0", "0", "0"], mat, 4, 2, 1));
         lines.push(record(["0", "55.45", "1", "2", "0", "0"], mat, 4, 2, 2));
@@ -2203,7 +2254,11 @@ mod tests {
         let kernel = capture.kernel(e);
         let tg = 7.646e6_f64.powi(2) / (2.0 * (awr + 1.0) * NEUTRON_REST_EV);
         let expected = Partition::new(26.0, awr + 1.0, 26.0, awr, 40.0).damage_energy(tg);
-        assert!((kernel.d - expected).abs() < 1e-5 * expected, "{} {expected}", kernel.d);
+        assert!(
+            (kernel.d - expected).abs() < 1e-5 * expected,
+            "{} {expected}",
+            kernel.d
+        );
         assert!(kernel.nrt > 0.0);
         // a lower Q puts the photon recoil below E_d: no damage at thermal energy
         let weak = Capture {

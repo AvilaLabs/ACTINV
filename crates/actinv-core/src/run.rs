@@ -7814,22 +7814,22 @@ impl PreparedRun {
         }
         if let (Some(prepared), Some(plan)) = (&self.damage, &damage_plan) {
             let mut damage_ledger = serde_json::json!({
-                    "table_sha256": &prepared.sha256,
-                    "require_complete": prepared.options.require_complete,
-                    "displacement_energy_eV": prepared.options.displacement_energy_eV,
-                    "covered_elements": plan
-                        .covered_elements
-                        .keys()
-                        .map(|z| composition::symbol_of(*z).to_string())
-                        .collect::<Vec<_>>(),
-                    "uncovered_targets": &plan.uncovered_targets,
-                    "model": "NRT: dpa_rate_per_s = 0.8 * damage_energy_eV_per_s_per_atom / (2 * E_d); damage targets are the material's composition-resolved nuclides; transmutation products are not damage targets",
-                    "units": {
-                        "damage_energy_eV_per_g_s": "eV per gram per second",
-                        "dpa_rate_per_s": "displacements per atom per second",
-                        "dpa": "dimensionless NRT displacements per atom",
-                    },
-                });
+                "table_sha256": &prepared.sha256,
+                "require_complete": prepared.options.require_complete,
+                "displacement_energy_eV": prepared.options.displacement_energy_eV,
+                "covered_elements": plan
+                    .covered_elements
+                    .keys()
+                    .map(|z| composition::symbol_of(*z).to_string())
+                    .collect::<Vec<_>>(),
+                "uncovered_targets": &plan.uncovered_targets,
+                "model": "NRT: dpa_rate_per_s = 0.8 * damage_energy_eV_per_s_per_atom / (2 * E_d); damage targets are the material's composition-resolved nuclides; transmutation products are not damage targets",
+                "units": {
+                    "damage_energy_eV_per_g_s": "eV per gram per second",
+                    "dpa_rate_per_s": "displacements per atom per second",
+                    "dpa": "dimensionless NRT displacements per atom",
+                },
+            });
             // only a table-2 file adds keys: a table-1 run's ledger is unchanged
             if let Some(recoil) = prepared.table.recoil_ledger() {
                 damage_ledger["recoil"] = recoil;

@@ -221,7 +221,8 @@ pub struct DamagePlan {
 
 impl PreparedDamageTable {
     pub fn from_json(text: &str, spec_projectile: &str) -> Result<Self, String> {
-        if serde_json::from_str::<FormatProbe>(text).is_ok_and(|probe| probe.format == TABLE_FORMAT_2)
+        if serde_json::from_str::<FormatProbe>(text)
+            .is_ok_and(|probe| probe.format == TABLE_FORMAT_2)
         {
             return Self::from_table2(text, spec_projectile);
         }
@@ -386,7 +387,10 @@ impl PreparedDamageTable {
                         values.len()
                     ));
                 }
-                if values.iter().any(|value| !value.is_finite() || *value < 0.0) {
+                if values
+                    .iter()
+                    .any(|value| !value.is_finite() || *value < 0.0)
+                {
                     return Err(format!(
                         "damage target '{canonical}' {name} contains a nonfinite or negative value"
                     ));
@@ -621,7 +625,7 @@ impl PreparedDamageTable {
         for &z in plan.covered_elements.keys() {
             let mut atoms_z = 0.0;
             let mut energy_rate_z = 0.0; // eV/s summed over atoms of this element
-            // table 2: displacements/s and bound eV/s summed over atoms; `None` arc when a row lacks it
+                                         // table 2: displacements/s and bound eV/s summed over atoms; `None` arc when a row lacks it
             let mut nrt_rate_z = 0.0;
             let mut arc_rate_z = Some(0.0);
             let mut uncovered_energy_z = 0.0;
@@ -693,8 +697,8 @@ impl PreparedDamageTable {
                 }
                 let mut sum = 0.0;
                 for element in elements.values() {
-                    sum += rate(element.recoil.as_ref()?)? * element.atoms_per_g
-                        / covered_atoms_total;
+                    sum +=
+                        rate(element.recoil.as_ref()?)? * element.atoms_per_g / covered_atoms_total;
                 }
                 Some(sum)
             };
@@ -971,12 +975,20 @@ mod tests {
                 < 1e-12 * bound_energy
         );
         let bound_dpa = bound_energy / 2.0e22 / 40.0;
-        assert!((recoil.dpa_uncovered_upper_bound_rate_per_s - bound_dpa).abs() < 1e-12 * bound_dpa);
+        assert!(
+            (recoil.dpa_uncovered_upper_bound_rate_per_s - bound_dpa).abs() < 1e-12 * bound_dpa
+        );
         let element = out_two.elements["Fe"].recoil.as_ref().unwrap();
         assert!((element.dpa_nrt_rate_per_s - nrt).abs() < 1e-12 * nrt);
         // the serialized step carries the new keys flat beside the existing ones
         let value = serde_json::to_value(&out_two).unwrap();
-        for key in ["dpa", "dpa_nrt", "dpa_arc", "dpa_nrt_rate_per_s", "dpa_uncovered_upper_bound"] {
+        for key in [
+            "dpa",
+            "dpa_nrt",
+            "dpa_arc",
+            "dpa_nrt_rate_per_s",
+            "dpa_uncovered_upper_bound",
+        ] {
             assert!(value.get(key).is_some(), "{key}");
         }
         assert!(value.get("he_appm_per_dpa").is_none());
@@ -1046,7 +1058,8 @@ mod tests {
         method["method"] = "other".into();
         assert!(read(&method).unwrap_err().contains("method"));
         let mut negative = good.clone();
-        negative["targets"]["Fe56"]["uncovered_damage_upper_barn_eV"] = serde_json::json!([1.0, -1.0]);
+        negative["targets"]["Fe56"]["uncovered_damage_upper_barn_eV"] =
+            serde_json::json!([1.0, -1.0]);
         assert!(read(&negative).unwrap_err().contains("negative"));
         let mut no_ed = good.clone();
         no_ed["displacement"]["displacement_energy_eV"] = serde_json::json!({});

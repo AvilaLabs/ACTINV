@@ -259,10 +259,7 @@ pub fn parse_mf4(section: &Section<'_>) -> Result<Mf4Data, String> {
     }
     if li == 1 || ltt == 0 {
         if next != lines.len() {
-            return Err(format!(
-                "{} unconsumed MF=4 records",
-                lines.len() - next
-            ));
+            return Err(format!("{} unconsumed MF=4 records", lines.len() - next));
         }
         return Ok(Mf4Data {
             lct,
@@ -305,10 +302,7 @@ pub fn parse_mf4(section: &Section<'_>) -> Result<Mf4Data, String> {
         laws.extend(block);
     }
     if next != lines.len() {
-        return Err(format!(
-            "{} unconsumed MF=4 records",
-            lines.len() - next
-        ));
+        return Err(format!("{} unconsumed MF=4 records", lines.len() - next));
     }
     check_ascending(&energies, "MF=4")?;
     if !energies.is_empty() && laws.len() + 1 != energies.len() {
@@ -442,8 +436,10 @@ fn parse_law2(lines: &[&str], index: usize) -> Result<(Mf6Body, usize), String> 
                 }
                 let (mu, f): (Vec<f64>, Vec<f64>) = list
                     .values
-                    .chunks_exact(2)
-                    .map(|pair| (pair[0], pair[1]))
+                    .as_chunks::<2>()
+                    .0
+                    .iter()
+                    .map(|&[mu, f]| (mu, f))
                     .unzip();
                 let table = Tabulated {
                     interpolation: vec![(mu.len(), lang - 10)],
@@ -496,10 +492,7 @@ pub fn parse_mf6_data(section: &Section<'_>) -> Result<Mf6Data, String> {
         });
     }
     if next != lines.len() {
-        return Err(format!(
-            "{} unconsumed MF=6 records",
-            lines.len() - next
-        ));
+        return Err(format!("{} unconsumed MF=6 records", lines.len() - next));
     }
     Ok(Mf6Data { lct, products })
 }
@@ -693,7 +686,13 @@ mod tests {
         seq += 1;
         lines.push(record(["2", "2", "", "", "", ""], 2631, 6, 91, seq));
         seq += 1;
-        lines.push(record(["1.0e6", "1", "2.0e8", "1", "", ""], 2631, 6, 91, seq));
+        lines.push(record(
+            ["1.0e6", "1", "2.0e8", "1", "", ""],
+            2631,
+            6,
+            91,
+            seq,
+        ));
         seq += 1;
         // TAB2: LANG=2, LEP=2, NR=1, NE=2
         lines.push(record(["0", "0", "2", "2", "1", "2"], 2631, 6, 91, seq));
@@ -701,8 +700,14 @@ mod tests {
         lines.push(record(["2", "2", "", "", "", ""], 2631, 6, 91, seq));
         seq += 1;
         for (energy, tuples) in [
-            ("1.0e6", [[0.0, 0.0, 0.0], [1.0e5, 2.0e-5, 0.1], [2.0e5, 0.0, 0.2]]),
-            ("2.0e6", [[0.0, 0.0, 0.0], [2.0e5, 1.0e-5, 0.1], [4.0e5, 0.0, 0.2]]),
+            (
+                "1.0e6",
+                [[0.0, 0.0, 0.0], [1.0e5, 2.0e-5, 0.1], [2.0e5, 0.0, 0.2]],
+            ),
+            (
+                "2.0e6",
+                [[0.0, 0.0, 0.0], [2.0e5, 1.0e-5, 0.1], [4.0e5, 0.0, 0.2]],
+            ),
         ] {
             lines.push(record(["0", energy, "0", "1", "9", "3"], 2631, 6, 91, seq));
             seq += 1;
@@ -713,11 +718,23 @@ mod tests {
             lines.extend(packed(&values, 2631, 6, 91, &mut seq));
         }
         // product 2: alpha, LAW=2 with LANG=0 at one energy
-        lines.push(record(["2004", "3.968", "0", "2", "1", "2"], 2631, 6, 91, seq));
+        lines.push(record(
+            ["2004", "3.968", "0", "2", "1", "2"],
+            2631,
+            6,
+            91,
+            seq,
+        ));
         seq += 1;
         lines.push(record(["2", "2", "", "", "", ""], 2631, 6, 91, seq));
         seq += 1;
-        lines.push(record(["1.0e6", "1", "2.0e8", "1", "", ""], 2631, 6, 91, seq));
+        lines.push(record(
+            ["1.0e6", "1", "2.0e8", "1", "", ""],
+            2631,
+            6,
+            91,
+            seq,
+        ));
         seq += 1;
         lines.push(record(["0", "0", "0", "0", "1", "1"], 2631, 6, 91, seq));
         seq += 1;
@@ -755,7 +772,10 @@ mod tests {
         };
         assert_eq!(distribution.energies, vec![1.0e6]);
         let at = distribution.at(1.0e6);
-        assert!((at.pdf(0.5) - (0.5 + 1.5 * 0.1 * 0.5 + 2.5 * 0.05 * 0.5 * (3.0 * 0.25 - 1.0))).abs() < 1e-12);
+        assert!(
+            (at.pdf(0.5) - (0.5 + 1.5 * 0.1 * 0.5 + 2.5 * 0.05 * 0.5 * (3.0 * 0.25 - 1.0))).abs()
+                < 1e-12
+        );
     }
 
     #[test]

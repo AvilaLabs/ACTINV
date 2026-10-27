@@ -200,7 +200,8 @@ mod tests {
             / (zsum.powf(0.75) * a.powf(1.5) * a.sqrt());
         let t: f64 = 10_000.0;
         let ep = t / el;
-        let expected = t / (1.0 + fl * (3.4008 * ep.powf(1.0 / 6.0) + 0.40244 * ep.powf(0.75) + ep));
+        let expected =
+            t / (1.0 + fl * (3.4008 * ep.powf(1.0 / 6.0) + 0.40244 * ep.powf(0.75) + ep));
         assert!((partition.damage_energy(t) - expected).abs() < 1e-12 * expected);
         // E_L for Fe-on-Fe is about 1.74e5 eV in the Robinson fit; F_L is about 0.157.
         assert!((el - 1.74e5).abs() < 0.1e5, "E_L {el}");
