@@ -93,6 +93,8 @@ STUDY_KEYS = {"robustness"}
 # Identifier keys that mark a block as a document of another type.
 DOC_ID_KEYS = ("spec", "schema", "format", "study")
 WASTE_FRAGMENT_KEYS = {"status", "source", "excludes_activation", "activity_bounds_bq", "activity_bq"}
+# Keys of a waste package spec (actinv-waste-package-spec-1) shown on their own in waste.md.
+WASTE_PACKAGE_FRAGMENT_KEYS = {"encapsulation"}
 REPLACE_KEYS = {"composition"}
 
 COMPLETE_RULE = ("complete spec iff the block, parsed as written, is a top-level object with spec == 'actinv-spec-1'; "
@@ -285,6 +287,8 @@ def classify_json(block):
     keys = set(obj)
     if keys <= WASTE_FRAGMENT_KEYS and "status" in keys:
         info.update(kind="other_document_fragment", reason="waste external_tritium object (waste.md)")
+    elif keys <= WASTE_PACKAGE_FRAGMENT_KEYS:
+        info.update(kind="other_document_fragment", reason="waste package spec block (waste.md)")
     elif keys <= (SPEC_KEYS | set(HOME_RULES) | STUDY_KEYS):
         info.update(kind="fragment", reason=f"problem keys {sorted(keys)} without a document identifier")
     else:
@@ -581,7 +585,7 @@ class Command:
 
     @property
     def flags(self):
-        return sorted(set(re.findall(r"--[a-z][a-z-]*", self.text)))
+        return sorted(set(re.findall(r"--[a-zA-Z][a-zA-Z-]*", self.text)))
 
 
 def extract_commands(blocks_by_file):
@@ -1060,6 +1064,10 @@ def build_command_items(plan, commands, lines_by_file, args):
         ("nuclides", [dec, "Co60", "Mn54"], None),
         ("isomer-table", [dec, "Ta182m1", "--table"], None),
         ("all-to-file", [dec, "--out", ins / "decay_all.json"], ins / "decay_all.json"),
+        ("estimated-spectrum", [dec, "Co60", "--estimated-spectrum"], None),
+        ("estimated-structure", [dec, "Co60", "--estimated-spectrum", "--group-structure", "steiner-22"], None),
+        ("estimated-boundaries", [dec, "Co60", "--estimated-spectrum", "--group-boundaries-eV", "1e3,1e5,1e6,1e7"],
+         None),
     ])
     expand_inspect("xs", [
         ("library", [libp], None),
@@ -1088,7 +1096,8 @@ def build_command_items(plan, commands, lines_by_file, args):
     expand_inspect("groups", groups)
 
     # every in-scope synopsis must be fully understood: a subcommand or flag the expansions do not use is reported
-    used_flags = {("inspect", "decay"): {"--table", "--out"},
+    used_flags = {("inspect", "decay"): {"--table", "--out", "--estimated-spectrum", "--group-structure",
+                                       "--group-boundaries-eV"},
                   ("inspect", "xs"): {"--target", "--mt", "--spectrum", "--table", "--out"},
                   ("inspect", "yields"): {"--parent", "--energy", "--cumulative", "--table", "--out"},
                   ("inspect", "library"): {"--table", "--out"}, ("inspect", "groups"): {"--table", "--out"},
