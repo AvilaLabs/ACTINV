@@ -4,6 +4,16 @@ on:
   workflow_dispatch:
   push:
     branches: [master, main]
+    paths:
+      - 'crates/**'
+      - 'Cargo.toml'
+      - 'Cargo.lock'
+      - 'packaging/**'
+      - 'scripts/*desktop*'
+      - 'docs/DESKTOP.md'
+      - 'LICENSE-MIT'
+      - 'LICENSE-APACHE'
+      - '.github/workflows/desktop.yml'
   pull_request:
     paths:
       - 'crates/**'
@@ -11,6 +21,9 @@ on:
       - 'Cargo.lock'
       - 'packaging/**'
       - 'scripts/*desktop*'
+      - 'docs/DESKTOP.md'
+      - 'LICENSE-MIT'
+      - 'LICENSE-APACHE'
       - '.github/workflows/desktop.yml'
 
 # Candidate downloads only. This workflow never creates tags or publishes releases.

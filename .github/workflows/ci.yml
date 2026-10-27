@@ -6,11 +6,19 @@ on:
   push: { branches: [master, main] }
   pull_request:
   workflow_dispatch:
+  schedule:
+    - cron: "17 3 * * *"
 
 permissions:
   contents: read
 
+# A newer push to the same ref cancels the older in-progress run; the nightly schedule has its own group.
+concurrency:
+  group: ci-${{ github.event_name }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
+  # Preserved-history controls and the fast checks every push needs.
   build-and-control:
     runs-on: ubuntu-latest
     env:
@@ -55,13 +63,6 @@ jobs:
 
       - name: Native desktop build dependencies
         run: sudo apt-get update && sudo apt-get install -y libwayland-dev libxkbcommon-dev libgl1-mesa-dev
-
-      - name: Rust quality gates
-        run: |
-          cargo fmt --all -- --check
-          cargo check --workspace --all-targets --all-features
-          cargo clippy --workspace --all-targets --all-features -- -D warnings
-          cargo test --workspace --all-targets --all-features
 
       - name: Build workspace
         run: cargo build --release --workspace
@@ -187,6 +188,108 @@ jobs:
       - name: Unit probe (constant source, analytic answer)
         run: ./target/release/unit_probe
 
+  # Builds the release workspace once for the downstream control jobs.
+  build-release:
+    runs-on: ubuntu-latest
+    env:
+      ACTINV_CI_DATA: /tmp/actinv-ci-data
+      ACTINV_CI_OUT: /tmp/actinv-ci
+      ACTINV_P8_WORK: /tmp/actinv-p8
+      ACTINV_P9_WORK: /tmp/actinv-p9
+      ACTINV_P9_RESULTS: /tmp/actinv-p9-results
+      ACTINV_P10_WORK: /tmp/actinv-p10
+    steps:
+      - uses: actions/checkout@v7
+        with: { fetch-depth: 0, persist-credentials: false }
+
+      - uses: dtolnay/rust-toolchain@6bed0761d98439e5a578e2877258200ad565ba87 # stable
+      - uses: Swatinem/rust-cache@6323deb102c322ba6fcbdcafc7e3dddab59af2b6 # v2.9.2
+
+      - name: Native desktop build dependencies
+        run: sudo apt-get update && sudo apt-get install -y libwayland-dev libxkbcommon-dev libgl1-mesa-dev
+
+      - name: Build workspace
+        run: cargo build --release --workspace
+
+      - name: Package release binaries
+        run: |
+          find target/release -maxdepth 1 -type f ! -name '*.d' ! -name '.*' -print0 \
+            | tar --null -T - -cf "$RUNNER_TEMP/release-binaries.tar"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: release-binaries
+          path: ${{ runner.temp }}/release-binaries.tar
+          retention-days: 1
+          if-no-files-found: error
+
+  rust-quality:
+    runs-on: ubuntu-latest
+    env:
+      ACTINV_CI_DATA: /tmp/actinv-ci-data
+      ACTINV_CI_OUT: /tmp/actinv-ci
+      ACTINV_P8_WORK: /tmp/actinv-p8
+      ACTINV_P9_WORK: /tmp/actinv-p9
+      ACTINV_P9_RESULTS: /tmp/actinv-p9-results
+      ACTINV_P10_WORK: /tmp/actinv-p10
+    steps:
+      - uses: actions/checkout@v7
+        with: { fetch-depth: 0, persist-credentials: false }
+
+      - uses: dtolnay/rust-toolchain@6bed0761d98439e5a578e2877258200ad565ba87 # stable
+      - uses: Swatinem/rust-cache@6323deb102c322ba6fcbdcafc7e3dddab59af2b6 # v2.9.2
+
+      - name: Native desktop build dependencies
+        run: sudo apt-get update && sudo apt-get install -y libwayland-dev libxkbcommon-dev libgl1-mesa-dev
+
+      - name: Rust quality gates
+        run: |
+          cargo fmt --all -- --check
+          cargo check --workspace --all-targets --all-features
+          cargo clippy --workspace --all-targets --all-features -- -D warnings
+          cargo test --workspace --all-targets --all-features
+
+      - uses: actions/setup-python@v7
+        with: { python-version: "3.12" }
+
+      - name: Python binding Rust quality
+        run: |
+          cargo fmt --manifest-path python/Cargo.toml -- --check
+          cargo check --manifest-path python/Cargo.toml --all-targets --all-features
+          cargo clippy --manifest-path python/Cargo.toml --all-targets --all-features -- -D warnings
+
+      - name: Python environment for the P16 control
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements-ci.txt
+
+      - name: P16 typed-boundary control and independent verdict
+        run: |
+          python controls/test_p16_dependency_history.py
+          python controls/g1_p16_quantities.py --no-write
+          python controls/check_p16.py --no-write
+
+  # Frozen-failure seals and the P15 control.
+  seals:
+    runs-on: ubuntu-latest
+    needs: [build-release]
+    env:
+      ACTINV_CI_DATA: /tmp/actinv-ci-data
+      ACTINV_CI_OUT: /tmp/actinv-ci
+      ACTINV_P8_WORK: /tmp/actinv-p8
+      ACTINV_P9_WORK: /tmp/actinv-p9
+      ACTINV_P9_RESULTS: /tmp/actinv-p9-results
+      ACTINV_P10_WORK: /tmp/actinv-p10
+    steps:
+      - uses: actions/checkout@v7
+        with: { fetch-depth: 0, persist-credentials: false }
+
+      - uses: dtolnay/rust-toolchain@6bed0761d98439e5a578e2877258200ad565ba87 # stable
+      - uses: Swatinem/rust-cache@6323deb102c322ba6fcbdcafc7e3dddab59af2b6 # v2.9.2
+
+      - name: Native desktop build dependencies
+        run: sudo apt-get update && sudo apt-get install -y libwayland-dev libxkbcommon-dev libgl1-mesa-dev
+
       - uses: actions/setup-python@v7
         with: { python-version: "3.12" }
 
@@ -194,6 +297,12 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements-ci.txt
+
+      - uses: actions/download-artifact@v4
+        with: { name: release-binaries, path: "${{ runner.temp }}/release-binaries" }
+
+      - name: Restore release binaries
+        run: tar -xf "$RUNNER_TEMP/release-binaries/release-binaries.tar"
 
       - name: Desktop and CLI scientific parity
         run: python controls/check_desktop.py
@@ -286,12 +395,6 @@ jobs:
       - name: P18 formal closure preserves the frozen failure verdict
         run: python controls/check_p18.py --no-write
 
-      - name: P16 typed-boundary control and independent verdict
-        run: |
-          python controls/test_p16_dependency_history.py
-          python controls/g1_p16_quantities.py --no-write
-          python controls/check_p16.py --no-write
-
       - name: P15 prepared-cache integrity and verdict
         env:
           ACTINV_BIN: target/release/actinv
@@ -300,6 +403,41 @@ jobs:
           python controls/g3_p15_cache_integrity.py
           git diff --exit-code -- results/p15_cache_integrity.json
           python controls/check_p15.py --no-write
+
+  # Current-phase controls that need the release binaries but no nuclear data.
+  current-controls:
+    runs-on: ubuntu-latest
+    needs: [build-release]
+    env:
+      ACTINV_CI_DATA: /tmp/actinv-ci-data
+      ACTINV_CI_OUT: /tmp/actinv-ci
+      ACTINV_P8_WORK: /tmp/actinv-p8
+      ACTINV_P9_WORK: /tmp/actinv-p9
+      ACTINV_P9_RESULTS: /tmp/actinv-p9-results
+      ACTINV_P10_WORK: /tmp/actinv-p10
+    steps:
+      - uses: actions/checkout@v7
+        with: { fetch-depth: 0, persist-credentials: false }
+
+      - uses: dtolnay/rust-toolchain@6bed0761d98439e5a578e2877258200ad565ba87 # stable
+      - uses: Swatinem/rust-cache@6323deb102c322ba6fcbdcafc7e3dddab59af2b6 # v2.9.2
+
+      - name: Native desktop build dependencies
+        run: sudo apt-get update && sudo apt-get install -y libwayland-dev libxkbcommon-dev libgl1-mesa-dev
+
+      - uses: actions/setup-python@v7
+        with: { python-version: "3.12" }
+
+      - name: Python environment
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements-ci.txt
+
+      - uses: actions/download-artifact@v4
+        with: { name: release-binaries, path: "${{ runner.temp }}/release-binaries" }
+
+      - name: Restore release binaries
+        run: tar -xf "$RUNNER_TEMP/release-binaries/release-binaries.tar"
 
       - name: CRAM coefficient control (G0 — needs no nuclear data)
         run: python controls/g0_cram_coefficients.py
@@ -363,6 +501,38 @@ jobs:
       - name: CI result tolerance regression
         run: python controls/test_ci_result.py
 
+  # Controls that run on the pinned data subset and the built Python module.
+  runtime-controls:
+    runs-on: ubuntu-latest
+    needs: [build-release]
+    env:
+      ACTINV_CI_DATA: /tmp/actinv-ci-data
+      ACTINV_CI_OUT: /tmp/actinv-ci
+      ACTINV_P8_WORK: /tmp/actinv-p8
+      ACTINV_P9_WORK: /tmp/actinv-p9
+      ACTINV_P9_RESULTS: /tmp/actinv-p9-results
+      ACTINV_P10_WORK: /tmp/actinv-p10
+    steps:
+      - uses: actions/checkout@v7
+        with: { fetch-depth: 0, persist-credentials: false }
+
+      - uses: dtolnay/rust-toolchain@6bed0761d98439e5a578e2877258200ad565ba87 # stable
+      - uses: Swatinem/rust-cache@6323deb102c322ba6fcbdcafc7e3dddab59af2b6 # v2.9.2
+
+      - uses: actions/setup-python@v7
+        with: { python-version: "3.12" }
+
+      - name: Python environment
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements-ci.txt
+
+      - uses: actions/download-artifact@v4
+        with: { name: release-binaries, path: "${{ runner.temp }}/release-binaries" }
+
+      - name: Restore release binaries
+        run: tar -xf "$RUNNER_TEMP/release-binaries/release-binaries.tar"
+
       - name: Fetch the pinned data subset
         run: |
           python scripts/test_fetch_ci_seed.py
@@ -376,12 +546,6 @@ jobs:
           pip install ../dist/*.whl
           python -c "import actinv, pathlib, tomllib; expected=tomllib.loads(pathlib.Path('pyproject.toml').read_text())['project']['version']; assert actinv.__version__ == expected"
           python ../scripts/test_python_objects.py
-
-      - name: Python binding Rust quality
-        run: |
-          cargo fmt --manifest-path python/Cargo.toml -- --check
-          cargo check --manifest-path python/Cargo.toml --all-targets --all-features
-          cargo clippy --manifest-path python/Cargo.toml --all-targets --all-features -- -D warnings
 
       - name: End-to-end spec through both entry points
         run: python controls/ci_end_to_end.py
@@ -418,8 +582,60 @@ jobs:
       - name: P12 data-independent response control
         run: python controls/g1_p12_radiological.py
 
+  p12-input-reliability:
+    runs-on: ubuntu-latest
+    env:
+      ACTINV_CI_DATA: /tmp/actinv-ci-data
+      ACTINV_CI_OUT: /tmp/actinv-ci
+      ACTINV_P8_WORK: /tmp/actinv-p8
+      ACTINV_P9_WORK: /tmp/actinv-p9
+      ACTINV_P9_RESULTS: /tmp/actinv-p9-results
+      ACTINV_P10_WORK: /tmp/actinv-p10
+    steps:
+      - uses: actions/checkout@v7
+        with: { fetch-depth: 0, persist-credentials: false }
+
+      - uses: dtolnay/rust-toolchain@6bed0761d98439e5a578e2877258200ad565ba87 # stable
+      - uses: Swatinem/rust-cache@6323deb102c322ba6fcbdcafc7e3dddab59af2b6 # v2.9.2
+
+      - uses: actions/setup-python@v7
+        with: { python-version: "3.12" }
+
+      - name: Python environment
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements-ci.txt
+
       - name: P12 bounded input reliability
         run: python controls/g3_p12_parser_fuzz.py --smoke
 
+  # Fresh-clone build with HOME redirected; cold on the nightly schedule.
+  self-contained:
+    runs-on: ubuntu-latest
+    env:
+      ACTINV_CI_DATA: /tmp/actinv-ci-data
+      ACTINV_CI_OUT: /tmp/actinv-ci
+      ACTINV_P8_WORK: /tmp/actinv-p8
+      ACTINV_P9_WORK: /tmp/actinv-p9
+      ACTINV_P9_RESULTS: /tmp/actinv-p9-results
+      ACTINV_P10_WORK: /tmp/actinv-p10
+    steps:
+      - uses: actions/checkout@v7
+        with: { fetch-depth: 0, persist-credentials: false }
+
+      - uses: dtolnay/rust-toolchain@6bed0761d98439e5a578e2877258200ad565ba87 # stable
+      - uses: Swatinem/rust-cache@6323deb102c322ba6fcbdcafc7e3dddab59af2b6 # v2.9.2
+
+      - uses: actions/setup-python@v7
+        with: { python-version: "3.12" }
+
+      - name: Python environment
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements-ci.txt
+
       - name: Repository is self-contained
+        env:
+          # Warm target on push and pull requests; the nightly schedule leaves it empty for the cold build.
+          ACTINV_SELF_CONTAINED_TARGET_DIR: ${{ github.event_name != 'schedule' && format('{0}/target', github.workspace) || '' }}
         run: python controls/g1_self_contained.py

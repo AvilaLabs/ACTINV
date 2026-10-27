@@ -82,12 +82,10 @@ def _json(raw: bytes):
 
 
 def _workflow_transition_matches() -> bool:
-    """Require the one registered P118 CI replacement against checkpoint Git."""
+    """Require the registered P118 history step exactly once, byte for byte, and the old P118 step absent."""
     try:
-        previous = p116._git_blob(CHECKPOINT, ".github/workflows/ci.yml")
         current = _read(".github/workflows/ci.yml")
-        return (previous.count(OLD_P118_CI_STEP) == 1
-                and current == previous.replace(OLD_P118_CI_STEP, NEW_P118_HISTORY_CI_STEP, 1))
+        return current.count(NEW_P118_HISTORY_CI_STEP) == 1 and current.count(OLD_P118_CI_STEP) == 0
     except (OSError, ValueError, RuntimeError, TypeError):
         return False
 

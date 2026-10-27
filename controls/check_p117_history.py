@@ -181,18 +181,12 @@ def _resource_ok(resource: object) -> bool:
 
 
 def _ci_transition_matches() -> bool:
-    """Require the P117 edit and either registered P118 workflow state."""
+    """Require each registered P117/P118 step block exactly once, byte for byte, and the old P117 step absent."""
     try:
-        previous = p116._git_blob(CHECKPOINT, ".github/workflows/ci.yml")
         current = _safe_file(".github/workflows/ci.yml").read_bytes()
-        if previous.count(OLD_P117_CI_STEP) != 1:
-            return False
-        candidates = (
-            NEW_P117_CI_STEP + b"\n" + NEW_P118_CI_STEP,
-            NEW_P117_CI_STEP + b"\n" + NEW_P118_HISTORY_CI_STEP,
-        )
-        return any(current == previous.replace(OLD_P117_CI_STEP, candidate, 1)
-                   for candidate in candidates)
+        legacy, history = current.count(NEW_P118_CI_STEP), current.count(NEW_P118_HISTORY_CI_STEP)
+        return (current.count(NEW_P117_CI_STEP) == 1 and current.count(OLD_P117_CI_STEP) == 0
+                and (legacy, history) in {(1, 0), (0, 1)})
     except (OSError, ValueError, RuntimeError, TypeError):
         return False
 

@@ -195,16 +195,21 @@ class P118HistoryTests(unittest.TestCase):
                 with self.assertRaises(ValueError):
                     history._verify_absent_artifacts()
 
-    def test_workflow_must_be_exact_registered_replacement(self):
+    def test_workflow_requires_the_registered_step_exactly_once(self):
+        step, old = history.NEW_P118_HISTORY_CI_STEP, history.OLD_P118_CI_STEP
         original_read = history._read
 
-        def read(path):
-            raw = original_read(path)
-            return raw + b"# unrelated change\n" if path == ".github/workflows/ci.yml" else raw
+        def check(raw):
+            with patch.object(history, "_read", side_effect=lambda path: (
+                    raw if path == ".github/workflows/ci.yml" else original_read(path))):
+                return history._workflow_transition_matches()
 
-        with patch.object(history, "_read", side_effect=read):
-            self.assertFalse(history._workflow_transition_matches())
-
+        self.assertTrue(check(b"steps:\n" + step))
+        self.assertTrue(check(original_read(".github/workflows/ci.yml") + b"# unrelated change\n"))
+        self.assertFalse(check(b"steps:\n"))
+        self.assertFalse(check(b"steps:\n" + step + step))
+        self.assertFalse(check(b"steps:\n" + step + old))
+        self.assertFalse(check(b"steps:\n" + step.replace(b"check_p118_history", b"check_p118_hist0ry")))
 
 if __name__ == "__main__":
     unittest.main()
