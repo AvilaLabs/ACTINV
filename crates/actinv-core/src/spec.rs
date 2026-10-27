@@ -654,6 +654,31 @@ pub struct PhotonOptions {
     /// component for the listed beta emitters. Absent leaves every output unchanged.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub bremsstrahlung: Option<BremsstrahlungOptions>,
+    /// FISPACT-II `SPEK` analog: what to do with a nuclide whose decay record gives a mean
+    /// electromagnetic energy but no photon spectrum. `"report"` (default) books its power as
+    /// unrepresented; `"estimate"` places an exponential estimate in the groups and reports
+    /// dose bounds. The default leaves every output unchanged.
+    #[serde(default, skip_serializing_if = "MissingSpectra::is_report")]
+    pub missing_spectra: MissingSpectra,
+    /// FISPACT-II `NOXRAY` analog: drop the decay records' X-ray spectra (STYP 9) from the photon
+    /// source after scaling each nuclide's spectrum to its mean electromagnetic energy.
+    #[serde(default, skip_serializing_if = "is_false")]
+    pub exclude_xrays: bool,
+}
+
+/// Treatment of nuclides with a mean electromagnetic energy and no photon spectrum.
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "lowercase")]
+pub enum MissingSpectra {
+    #[default]
+    Report,
+    Estimate,
+}
+
+impl MissingSpectra {
+    fn is_report(&self) -> bool {
+        *self == Self::Report
+    }
 }
 fn photon_groups() -> String {
     "fispact-24".into()
@@ -674,6 +699,8 @@ impl Default for PhotonOptions {
             gamma_constant_cutoff_eV: gamma_cutoff(),
             point_source: None,
             bremsstrahlung: None,
+            missing_spectra: MissingSpectra::Report,
+            exclude_xrays: false,
         }
     }
 }
@@ -2187,6 +2214,15 @@ impl Spec {
                 }
                 if self.photon.bremsstrahlung.is_some() {
                     return Err("photon.bremsstrahlung needs options.outputs to include 'photons' or 'dose'".into());
+                }
+                if self.photon.missing_spectra == MissingSpectra::Estimate {
+                    return Err("photon.missing_spectra 'estimate' needs options.outputs to include 'photons' or 'dose'".into());
+                }
+                if self.photon.exclude_xrays {
+                    return Err(
+                        "photon.exclude_xrays needs options.outputs to include 'photons' or 'dose'"
+                            .into(),
+                    );
                 }
             }
         }
@@ -5356,5 +5392,46 @@ mod p140_sg_tests {
         let error = Spec::from_json(&geometry_spec(Some(7.874), Some(19.3)).to_string())
             .expect_err("two different densities for one material must be refused");
         assert!(error.contains("density"), "{error}");
+    }
+}
+
+#[cfg(test)]
+mod photon_option_tests {
+    use super::{MissingSpectra, PhotonOptions};
+
+    #[test]
+    fn default_options_serialize_without_the_p152_keys() {
+        let value = serde_json::to_value(PhotonOptions::default()).unwrap();
+        let object = value.as_object().unwrap();
+        assert!(!object.contains_key("missing_spectra"));
+        assert!(!object.contains_key("exclude_xrays"));
+        // The round trip is byte-identical.
+        let text = serde_json::to_string(&PhotonOptions::default()).unwrap();
+        let again: PhotonOptions = serde_json::from_str(&text).unwrap();
+        assert_eq!(serde_json::to_string(&again).unwrap(), text);
+    }
+
+    #[test]
+    fn explicit_report_and_false_serialize_like_the_default() {
+        let explicit: PhotonOptions =
+            serde_json::from_str(r#"{"missing_spectra": "report", "exclude_xrays": false}"#)
+                .unwrap();
+        assert_eq!(
+            serde_json::to_string(&explicit).unwrap(),
+            serde_json::to_string(&PhotonOptions::default()).unwrap()
+        );
+    }
+
+    #[test]
+    fn requested_options_round_trip_and_unknown_values_are_refused() {
+        let options: PhotonOptions =
+            serde_json::from_str(r#"{"missing_spectra": "estimate", "exclude_xrays": true}"#)
+                .unwrap();
+        assert_eq!(options.missing_spectra, MissingSpectra::Estimate);
+        assert!(options.exclude_xrays);
+        let value = serde_json::to_value(&options).unwrap();
+        assert_eq!(value["missing_spectra"], "estimate");
+        assert_eq!(value["exclude_xrays"], true);
+        assert!(serde_json::from_str::<PhotonOptions>(r#"{"missing_spectra": "guess"}"#).is_err());
     }
 }

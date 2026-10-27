@@ -2,6 +2,19 @@
 
 ## Unreleased
 
+**Added (P152, opt-in; defaults unchanged)**
+
+- `photon.missing_spectra: "estimate"` (FISPACT-II `SPEK`). A nuclide with a mean electromagnetic energy and no photon
+  spectrum gets an exponential spectrum `exp(-14 E / E_max)`, integrated exactly into the photon groups and scaled to
+  its energy. `E_max` follows the dominant decay mode and is capped by the largest Q-value. Each step reports the
+  estimated power, and the contact proxy and point-source dose as the value from evaluated spectra, the estimate and
+  lower and upper bounds that hold for any spectrum of the same power below the cap. The point-source dose is given
+  instead of withheld.
+- `photon.exclude_xrays` (FISPACT-II `NOXRAY`). X-ray spectra are removed from the photon source after scaling to the
+  mean electromagnetic energy; the removed power is reported per step.
+- `actinv inspect decay DECAY_PATH NUCLIDE --estimated-spectrum` prints the estimated grouped spectrum beside the
+  evaluated one.
+
 **Added (P153; all opt-in, default results unchanged)**
 
 - `fission_yields.energy: "rate_weighted"` mixes the evaluation's tabulated yield sets by each parent's fission rate

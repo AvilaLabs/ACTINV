@@ -6,6 +6,7 @@
 //! re-derives physics; the one-group collapse is the library's own `ReactionLibrary::one_group`.
 
 use actinv_core::chain::{rtyp_digits, step_of};
+use actinv_core::photon;
 use actinv_core::report::{render_table, Table};
 use actinv_core::spec::Spectrum;
 use actinv_data::composition::{material_key, symbol_of, MaterialKey};
@@ -16,7 +17,7 @@ use actinv_data::library::{self, Library, ReactionLibrary, Row};
 use serde_json::{json, Map, Value};
 use std::collections::{BTreeMap, BTreeSet, HashMap};
 
-pub const USAGE: &str = "usage: actinv inspect decay DECAY_PATH [NUCLIDE...] [--table] [--out OUT]\n\
+pub const USAGE: &str = "usage: actinv inspect decay DECAY_PATH [NUCLIDE...] [--estimated-spectrum [--group-structure NAME | --group-boundaries-eV E0,E1,...]] [--table] [--out OUT]\n\
                          actinv inspect xs LIBRARY.npz [--target NUCLIDE] [--mt MT] [--spectrum SPEC.json] [--table] [--out OUT]\n\
                          actinv inspect yields YIELD_PATH... [--parent NUCLIDE] [--energy EV] [--cumulative] [--table] [--out OUT]\n\
                          actinv inspect library LIBRARY.npz [--table] [--out OUT]\n\
@@ -25,7 +26,9 @@ pub const USAGE: &str = "usage: actinv inspect decay DECAY_PATH [NUCLIDE...] [--
 /// Detail printed by `actinv inspect --help`.
 pub const HELP: &str = "Query decay data, activation libraries, fission yields and group structures.\n\
 Output is JSON on standard output (or OUT); --table prints a fixed-width table instead.\n\
-decay: half-life, decay modes with branching ratios and daughters, mean beta/gamma/alpha energies, discrete gamma lines.\n\
+decay: half-life, decay modes with branching ratios and daughters, mean beta/gamma/alpha energies, discrete gamma lines;\n\
+    with --estimated-spectrum the estimated photon spectrum (photon.missing_spectra=estimate) per decay in the photon\n\
+    group structure (--group-structure fispact-24 (default) or steiner-22, or --group-boundaries-eV), beside the evaluated one.\n\
 xs: reactions of a library (MT, product, groups, energy structure) and group cross sections for --target;\n\
     with --spectrum (a spectrum object or a run spec) also the collapsed one-group cross section and reaction rate.\n\
 yields: independent (or --cumulative MT=459) fission yields, interpolated at --energy EV when given.\n\
@@ -45,6 +48,13 @@ enum Command {
     Decay {
         path: String,
         nuclides: Vec<String>,
+    },
+    /// `decay --estimated-spectrum`: the estimated beside the evaluated grouped photon spectrum.
+    DecayEstimatedSpectrum {
+        path: String,
+        nuclides: Vec<String>,
+        structure: String,
+        boundaries_ev: Vec<f64>,
     },
     Xs {
         path: String,
@@ -135,13 +145,43 @@ fn parse_request(args: &[String]) -> Result<Request, String> {
     let rest = &args[1..];
     let (options, command) = match subcommand.as_str() {
         "decay" => {
-            let mut options = parse_options(rest, &["--out"], &["--table"])?;
+            let mut options = parse_options(
+                rest,
+                &["--out", "--group-structure", "--group-boundaries-eV"],
+                &["--table", "--estimated-spectrum"],
+            )?;
             if options.positional.is_empty() {
                 return Err("inspect decay needs DECAY_PATH".into());
             }
             let path = options.positional.remove(0);
             let nuclides = std::mem::take(&mut options.positional);
-            (options, Command::Decay { path, nuclides })
+            let estimated = options.flags.contains("--estimated-spectrum");
+            if !estimated
+                && (options.values.contains_key("--group-structure")
+                    || options.values.contains_key("--group-boundaries-eV"))
+            {
+                return Err(
+                    "--group-structure and --group-boundaries-eV need --estimated-spectrum".into(),
+                );
+            }
+            let command = if estimated {
+                let (structure, boundaries_ev) = photon_group_selection(
+                    options.values.get("--group-structure").map(String::as_str),
+                    options
+                        .values
+                        .get("--group-boundaries-eV")
+                        .map(String::as_str),
+                )?;
+                Command::DecayEstimatedSpectrum {
+                    path,
+                    nuclides,
+                    structure,
+                    boundaries_ev,
+                }
+            } else {
+                Command::Decay { path, nuclides }
+            };
+            (options, command)
         }
         "xs" => {
             let mut options = parse_options(
@@ -243,6 +283,16 @@ fn execute(command: &Command) -> Result<Output, String> {
             let table = decay::parse_file(path)
                 .map_err(|error| format!("cannot read decay data {path}: {error}"))?;
             decay_report(&table, nuclides, path)
+        }
+        Command::DecayEstimatedSpectrum {
+            path,
+            nuclides,
+            structure,
+            boundaries_ev,
+        } => {
+            let table = decay::parse_file(path)
+                .map_err(|error| format!("cannot read decay data {path}: {error}"))?;
+            estimated_spectrum_report(&table, nuclides, path, structure, boundaries_ev)
         }
         Command::Xs {
             path,
@@ -537,6 +587,191 @@ fn decay_report(
     })
 }
 
+/// Photon group boundaries chosen as the spec's `photon` block chooses them: `fispact-24`
+/// (default), `steiner-22`, or `custom` boundaries given as a comma-separated list in eV.
+fn photon_group_selection(
+    structure: Option<&str>,
+    custom: Option<&str>,
+) -> Result<(String, Vec<f64>), String> {
+    match (structure, custom) {
+        (None | Some("custom"), Some(list)) => {
+            let boundaries = list
+                .split(',')
+                .map(|item| {
+                    item.trim().parse::<f64>().map_err(|_| {
+                        format!("--group-boundaries-eV entry '{item}' is not a number")
+                    })
+                })
+                .collect::<Result<Vec<f64>, String>>()?;
+            if boundaries.len() < 2
+                || boundaries[0] < 0.0
+                || boundaries.iter().any(|v| !v.is_finite())
+                || boundaries.windows(2).any(|w| w[1] <= w[0])
+            {
+                return Err(
+                    "--group-boundaries-eV must be at least two finite, nonnegative, strictly \
+                     increasing energies"
+                        .into(),
+                );
+            }
+            Ok(("custom".into(), boundaries))
+        }
+        (Some(name), Some(_)) => Err(format!(
+            "--group-boundaries-eV is only valid with --group-structure custom, not '{name}'"
+        )),
+        (None | Some("fispact-24"), None) => Ok((
+            "fispact-24".into(),
+            actinv_core::photon::FISPACT_24_BOUNDARIES_EV.to_vec(),
+        )),
+        (Some("steiner-22"), None) => Ok((
+            "steiner-22".into(),
+            actinv_core::photon::STEINER_22_BOUNDARIES_EV.to_vec(),
+        )),
+        (Some("custom"), None) => {
+            Err("--group-structure custom needs --group-boundaries-eV".into())
+        }
+        (Some(other), None) => Err(format!("unknown photon group structure '{other}'")),
+    }
+}
+
+/// The estimated photon spectrum (`photon.missing_spectra: "estimate"`) of each requested
+/// nuclide in a photon group structure, beside its evaluated grouped spectrum when the record
+/// has one. Both are per decay.
+fn estimated_spectrum_report(
+    table: &HashMap<(i32, i32), Nuclide>,
+    requested: &[String],
+    source: &str,
+    structure: &str,
+    boundaries: &[f64],
+) -> Result<Output, String> {
+    let mut keys: Vec<(i32, i32)> = if requested.is_empty() {
+        table.keys().copied().collect()
+    } else {
+        requested
+            .iter()
+            .map(|name| parse_nuclide(name))
+            .collect::<Result<Vec<_>, String>>()?
+    };
+    keys.sort_unstable();
+    keys.dedup();
+    let mut entries = Vec::with_capacity(keys.len());
+    let mut tables = Vec::new();
+    for &(za, liso) in &keys {
+        let name = nuclide_name(za, liso);
+        let nuclide = table
+            .get(&(za, liso))
+            .ok_or_else(|| format!("{name} (ZA={za} LISO={liso}) is not in {source}"))?;
+        let estimated = photon::estimated_grouped_spectrum(nuclide, boundaries)?;
+        let evaluated = photon::evaluated_grouped_spectrum(nuclide, boundaries)?;
+        let to_value = |spectrum: &photon::GroupedSpectrum| {
+            serde_json::to_value(spectrum).map_err(|error| format!("serialise spectrum: {error}"))
+        };
+        let estimate_json = match &estimated {
+            Some((model, spectrum)) => {
+                let e_cap = model
+                    .q_cap_eV
+                    .unwrap_or_else(|| boundaries[boundaries.len() - 1]);
+                json!({
+                    "decay_mode": model.mode.label(),
+                    "exponent_a": photon::ESTIMATE_EXPONENT,
+                    "e_max_manual_eV": model.e_max_manual_eV,
+                    "e_max_eV": model.e_max_eV,
+                    "q_cap_eV": model.q_cap_eV,
+                    "e_cap_eV": e_cap,
+                    // Where a dose bound may place this nuclide's photons: each group whose
+                    // lower edge is below e_cap, clipped to e_cap.
+                    "allowed_intervals_eV": photon::allowed_intervals(boundaries, e_cap),
+                    "spectrum": to_value(spectrum)?,
+                })
+            }
+            None => Value::Null,
+        };
+        let evaluated_json = match &evaluated {
+            Some(spectrum) => to_value(spectrum)?,
+            None => Value::Null,
+        };
+        entries.push(json!({
+            "nuclide": name,
+            "za": za,
+            "liso": liso,
+            "mean_energy_eV": {
+                "beta": nuclide.e_light(),
+                "gamma": nuclide.e_em(),
+            },
+            "estimate": estimate_json,
+            "evaluated": evaluated_json,
+        }));
+        let mut rows = Vec::with_capacity(boundaries.len() - 1);
+        for g in 0..boundaries.len() - 1 {
+            let estimate_cells = match &estimated {
+                Some((_, spectrum)) => [
+                    sci(spectrum.groups[g].photons_per_decay),
+                    sci(spectrum.groups[g].energy_eV_per_decay),
+                ],
+                None => ["-".to_string(), "-".to_string()],
+            };
+            let evaluated_cells = match &evaluated {
+                Some(spectrum) => [
+                    sci(spectrum.groups[g].photons_per_decay),
+                    sci(spectrum.groups[g].energy_eV_per_decay),
+                ],
+                None => ["-".to_string(), "-".to_string()],
+            };
+            let [estimated_photons, estimated_energy] = estimate_cells;
+            let [evaluated_photons, evaluated_energy] = evaluated_cells;
+            rows.push(vec![
+                sci(boundaries[g]),
+                sci(boundaries[g + 1]),
+                estimated_photons,
+                estimated_energy,
+                evaluated_photons,
+                evaluated_energy,
+            ]);
+        }
+        let title = match &estimated {
+            Some((model, _)) => {
+                let cap = match model.q_cap_eV {
+                    Some(q) => format!("Q cap {} eV", sci(q)),
+                    None => "no Q cap".to_string(),
+                };
+                format!(
+                    "Estimated photon spectrum of {name} ({structure}): mode {}, E_max {} eV \
+                     (manual {} eV, {cap})",
+                    model.mode.label(),
+                    sci(model.e_max_eV),
+                    sci(model.e_max_manual_eV),
+                )
+            }
+            None => format!("Estimated photon spectrum of {name} ({structure}): no mean EM energy"),
+        };
+        tables.push(Table {
+            title,
+            headers: [
+                "Low (eV)",
+                "High (eV)",
+                "Estimated photons/decay",
+                "Estimated E/decay (eV)",
+                "Evaluated photons/decay",
+                "Evaluated E/decay (eV)",
+            ]
+            .iter()
+            .map(|header| header.to_string())
+            .collect(),
+            rows,
+        });
+    }
+    let json = json!({
+        "schema": "actinv-inspect-decay-estimated-spectrum-1",
+        "source": source,
+        "group_structure": structure,
+        "boundaries_eV": boundaries,
+        "exponent_a": photon::ESTIMATE_EXPONENT,
+        "count": entries.len(),
+        "nuclides": entries,
+    });
+    Ok(Output { json, tables })
+}
+
 // ---- activation library ----
 
 /// The `<stem>_index.json` sidecar of an activation library.
@@ -725,14 +960,14 @@ fn spectrum_flux(spectrum: &Spectrum, library: &Library) -> Result<Vec<f64>, Str
             let bounds = spectrum
                 .boundaries_eV
                 .as_ref()
-                .ok_or("custom spectrum needs boundaries_eV")?;
+                .ok_or("custom spectrum needs boundaries_ev")?;
             if bounds.len() != library.bounds.len()
                 || bounds.iter().zip(&library.bounds).any(|(left, right)| {
                     (left - right).abs() > 1e-12 * left.abs().max(right.abs()).max(1.0)
                 })
             {
                 return Err(
-                    "spectrum boundaries_eV differ from the library group boundaries".into(),
+                    "spectrum boundaries_ev differ from the library group boundaries".into(),
                 );
             }
         }
@@ -1231,7 +1466,7 @@ fn groups_report(structure: &GroupStructure) -> Output {
         "name": structure.name,
         "group_count": structure.groups(),
         "boundary_sha256": structure.hash(),
-        "boundaries_eV": structure.boundaries_ev,
+        "boundaries_ev": structure.boundaries_ev,
     });
     let rows = structure
         .boundaries_ev
@@ -1530,6 +1765,106 @@ mod tests {
     }
 
     #[test]
+    fn estimated_spectrum_option_parses_with_a_group_structure() {
+        let request =
+            parse_request(&args(&["decay", "d.endf", "Co60", "--estimated-spectrum"])).unwrap();
+        let Command::DecayEstimatedSpectrum {
+            structure,
+            boundaries_ev,
+            ..
+        } = request.command
+        else {
+            panic!("expected the estimated-spectrum command");
+        };
+        assert_eq!(structure, "fispact-24");
+        assert_eq!(boundaries_ev, actinv_core::photon::FISPACT_24_BOUNDARIES_EV);
+        let request = parse_request(&args(&[
+            "decay",
+            "d.endf",
+            "--estimated-spectrum",
+            "--group-boundaries-eV",
+            "0,1e5,1e6",
+        ]))
+        .unwrap();
+        let Command::DecayEstimatedSpectrum {
+            structure,
+            boundaries_ev,
+            ..
+        } = request.command
+        else {
+            panic!("expected the estimated-spectrum command");
+        };
+        assert_eq!(structure, "custom");
+        assert_eq!(boundaries_ev, vec![0.0, 1.0e5, 1.0e6]);
+        for bad in [
+            vec!["decay", "d.endf", "--group-structure", "steiner-22"],
+            vec![
+                "decay",
+                "d.endf",
+                "--estimated-spectrum",
+                "--group-structure",
+                "custom",
+            ],
+            vec![
+                "decay",
+                "d.endf",
+                "--estimated-spectrum",
+                "--group-structure",
+                "nope",
+            ],
+            vec![
+                "decay",
+                "d.endf",
+                "--estimated-spectrum",
+                "--group-boundaries-eV",
+                "5,1",
+            ],
+        ] {
+            assert!(parse_request(&args(&bad)).is_err(), "{bad:?}");
+        }
+    }
+
+    #[test]
+    fn estimated_spectrum_report_sits_beside_the_evaluated_spectrum() {
+        let boundaries = actinv_core::photon::FISPACT_24_BOUNDARIES_EV;
+        let output = estimated_spectrum_report(
+            &decay_table(),
+            &args(&["Co60", "U238"]),
+            "decay.endf",
+            "fispact-24",
+            &boundaries,
+        )
+        .unwrap();
+        let json = &output.json;
+        assert_eq!(json["schema"], "actinv-inspect-decay-estimated-spectrum-1");
+        assert_eq!(json["count"], 2);
+        let co = &json["nuclides"][0];
+        assert_eq!(co["nuclide"], "Co60");
+        assert_eq!(co["estimate"]["decay_mode"], "beta-minus");
+        assert_eq!(co["estimate"]["e_max_eV"], 1.92e5);
+        let intervals = co["estimate"]["allowed_intervals_eV"].as_array().unwrap();
+        assert_eq!(intervals.len(), boundaries.len() - 1);
+        assert_eq!(intervals[0], json!([0.0, 1.0e4]));
+        let groups = co["estimate"]["spectrum"]["groups"].as_array().unwrap();
+        assert_eq!(groups.len(), boundaries.len() - 1);
+        let energy: f64 = groups
+            .iter()
+            .map(|g| g["energy_eV_per_decay"].as_f64().unwrap())
+            .sum();
+        assert!((energy - 2.5e6).abs() < 1e-9 * 2.5e6, "{energy}");
+        // The evaluated spectrum is scaled to the same mean energy.
+        let evaluated = co["evaluated"]["energy_eV_per_decay"].as_f64().unwrap();
+        assert!((evaluated - 2.5e6).abs() < 1e-9 * 2.5e6, "{evaluated}");
+        // An alpha emitter without a spectrum has an estimate and no evaluated spectrum.
+        let u = &json["nuclides"][1];
+        assert_eq!(u["estimate"]["decay_mode"], "other");
+        assert_eq!(u["estimate"]["e_max_eV"], 5.0e6);
+        assert!(u["evaluated"].is_null());
+        let table = render_tables(&output.tables);
+        assert!(table.contains("Estimated photon spectrum of Co60"));
+    }
+
+    #[test]
     fn decay_report_handles_all_nuclides_stable_and_fission_modes() {
         let output = decay_report(&decay_table(), &[], "decay.endf").unwrap();
         assert_eq!(output.json["count"], 3);
@@ -1615,7 +1950,7 @@ mod tests {
     fn toy_spectrum() -> Spectrum {
         serde_json::from_value(json!({
             "structure": "custom",
-            "boundaries_eV": [1.0, 10.0, 100.0],
+            "boundaries_ev": [1.0, 10.0, 100.0],
             "flux_per_group": [1.0, 3.0],
         }))
         .unwrap()
@@ -1713,7 +2048,7 @@ mod tests {
         };
         let short: Spectrum = serde_json::from_value(json!({
             "structure": "custom",
-            "boundaries_eV": [1.0, 10.0],
+            "boundaries_ev": [1.0, 10.0],
             "flux_per_group": [1.0],
         }))
         .unwrap();
@@ -1723,14 +2058,14 @@ mod tests {
         assert!(error.contains("1 group fluxes"));
         let moved: Spectrum = serde_json::from_value(json!({
             "structure": "custom",
-            "boundaries_eV": [1.0, 10.0, 200.0],
+            "boundaries_ev": [1.0, 10.0, 200.0],
             "flux_per_group": [1.0, 1.0],
         }))
         .unwrap();
         let error = xs_report(&library, None, "lib.npz", &any, Some(&moved))
             .err()
             .unwrap();
-        assert!(error.contains("boundaries_eV differ"));
+        assert!(error.contains("boundaries_ev differ"));
     }
 
     #[test]
@@ -1901,7 +2236,7 @@ mod tests {
         assert_eq!(output.json["schema"], "actinv-inspect-groups-1");
         assert_eq!(output.json["name"], "toy");
         assert_eq!(output.json["group_count"], 2);
-        assert_eq!(output.json["boundaries_eV"], json!([1.0, 10.0, 100.0]));
+        assert_eq!(output.json["boundaries_ev"], json!([1.0, 10.0, 100.0]));
         assert_eq!(output.json["boundary_sha256"], structure.hash());
         let table = render_tables(&output.tables);
         assert!(table.starts_with("toy: 2 groups, ascending energy\nGroup"));
@@ -1935,7 +2270,7 @@ mod tests {
             json!({
                 "spectrum": {
                     "structure": "custom",
-                    "boundaries_eV": [1.0, 10.0, 100.0],
+                    "boundaries_ev": [1.0, 10.0, 100.0],
                     "flux_per_group": [1.0, 3.0],
                 }
             })
@@ -2065,7 +2400,7 @@ mod tests {
         // The solver refuses boundaries that differ by more than 1e-12 relative; 1e-10 is such a case.
         let spectrum: Spectrum = serde_json::from_value(json!({
             "structure": "custom",
-            "boundaries_eV": [1.0, 10.0, 100.0 * (1.0 + 1.0e-10)],
+            "boundaries_ev": [1.0, 10.0, 100.0 * (1.0 + 1.0e-10)],
             "flux_per_group": [1.0, 3.0],
         }))
         .unwrap();
@@ -2088,7 +2423,7 @@ mod tests {
         // A 709-group transport spectrum on its own boundaries; the run rebins it onto fispact-709.
         let same_count: Spectrum = serde_json::from_value(json!({
             "structure": "fispact-709",
-            "boundaries_eV": p140_log_grid_709(),
+            "boundaries_ev": p140_log_grid_709(),
             "flux_per_group": vec![1.0; 709],
             "rebin": {},
         }))
@@ -2104,7 +2439,7 @@ mod tests {
         // A different group count is a rebin too, not a count error about "group fluxes".
         let short: Spectrum = serde_json::from_value(json!({
             "structure": "fispact-709",
-            "boundaries_eV": [1.0e-3, 1.0, 1.0e3, 1.0e6],
+            "boundaries_ev": [1.0e-3, 1.0, 1.0e3, 1.0e6],
             "flux_per_group": [1.0, 2.0, 3.0],
             "rebin": {},
         }))

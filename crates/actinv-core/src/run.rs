@@ -14,7 +14,7 @@ use crate::radiological::{PreparedRadiologicalTable, RadiologicalStepOut};
 use crate::sparse::Csc;
 use crate::spec::{
     DamageOptions, DecayRef, FissionYieldOptions, HashedFileRef, KermaOptions, LibraryRef,
-    PhotonOptions, PhysicalInputs, PhysicalStep, Projectile, RadiologicalOptions,
+    MissingSpectra, PhotonOptions, PhysicalInputs, PhysicalStep, Projectile, RadiologicalOptions,
     SelfShieldingOptions, Spec, Spectrum, SpontaneousFissionOptions, StepLibrary,
     UncertaintyOptions,
 };
@@ -5731,6 +5731,10 @@ impl PreparedRun {
             .bremsstrahlung
             .as_ref()
             .map(|_| photon::material_z_eff(&bulk_inv, &cdiag.unknown));
+        let photon_model = photon::SourceModel {
+            estimate_missing: spec.photon.missing_spectra == MissingSpectra::Estimate,
+            exclude_xrays: spec.photon.exclude_xrays,
+        };
         let mut photon_diagnostics: Vec<PhotonDiagnostics> = Vec::new();
         let mut steps = Vec::new();
         let mut damage_cumulative: f64 = 0.0;
@@ -6504,7 +6508,7 @@ impl PreparedRun {
                         nuclides.get(key).map(|nu| (name.as_str(), nu, *activity))
                     })
                     .collect();
-                let (mut source, diagnostics) = photon::source_for_step(
+                let (mut source, diagnostics) = photon::source_for_step_with(
                     &active_refs,
                     photon_boundaries,
                     &spec.photon.group_structure,
@@ -6514,6 +6518,7 @@ impl PreparedRun {
                     material_response_complete,
                     spec.photon.build_up_factor,
                     physical.gamma_cutoff.get(),
+                    &photon_model,
                 )?;
                 // Opt-in components, added after the decay-photon source and never merged into it.
                 // Bremsstrahlung first, so the point-source dose can also cover it.
@@ -7310,6 +7315,25 @@ impl PreparedRun {
                 "fission_cumulative_overlap".into(),
                 serde_json::json!(overlap),
             );
+        }
+        // Present only when requested, so default ledgers keep their bytes (P152).
+        if photon_model.estimate_missing || photon_model.exclude_xrays {
+            let mut request = serde_json::Map::new();
+            if photon_model.estimate_missing {
+                request.insert("missing_spectra".into(), "estimate".into());
+                request.insert("exponent_a".into(), photon::ESTIMATE_EXPONENT.into());
+                request.insert(
+                    "e_max_beta_plus_ec_other_eV".into(),
+                    photon::ESTIMATE_DEFAULT_E_MAX_EV.into(),
+                );
+            }
+            if photon_model.exclude_xrays {
+                request.insert("exclude_xrays".into(), true.into());
+            }
+            ledger
+                .as_object_mut()
+                .expect("ledger is an object")
+                .insert("photon_options".into(), serde_json::Value::Object(request));
         }
         if !spec.projectile.is_neutron() {
             ledger.as_object_mut().expect("ledger is an object").insert(
@@ -8108,6 +8132,24 @@ impl PreparedRun {
                 "model": "FISPACT-II manual appendix C.7.4, Eqs. 65-68: beta-minus electrons per decay f (summed branching ratio of the beta-minus modes) at the mean energy ER/f of one electron (ER: the STYP=1 average energy per decay of the parent), atom-fraction Z_eff; the Eq. 67 bin-midpoint energy rule, with energy_closure and zero_lower_edge_energy_fraction reported",
                 "nuclides": &brems.nuclides,
                 "mean_beta_energy": "STYP=1 spectrum average energy per decay of the decay record divided by the beta-minus electrons per decay from its decay modes; never inferred",
+            });
+        }
+        if photon_model.estimate_missing {
+            certificate["photon"]["missing_spectra"] = serde_json::json!({
+                "request": "estimate",
+                "model": photon::ESTIMATE_MODEL_DESCRIPTION,
+                "exponent_a": photon::ESTIMATE_EXPONENT,
+                "e_max_beta_plus_ec_other_eV": photon::ESTIMATE_DEFAULT_E_MAX_EV,
+                "e_max_beta_minus": "2 x mean light-particle energy per decay (MT=457 index 0)",
+                "e_max_isomeric_transition": "mean electromagnetic energy per decay (MT=457 index 2)",
+                "q_value_cap": "largest Q-value of the decay modes with positive branching, when positive",
+                "dose_bounds": "power times the exact smallest and largest dose per unit power over the energy intervals of the groups whose lower edge is below the energy cap (clipped to the cap), valid for any energy-conserving spectrum because the dose model's group centroid lies in its group's interval; energies below the response's lowest give no dose",
+            });
+        }
+        if photon_model.exclude_xrays {
+            certificate["photon"]["exclude_xrays"] = serde_json::json!({
+                "request": true,
+                "rule": "STYP 9 spectra count toward the evaluated total used to scale each nuclide to its mean electromagnetic energy and are then removed from the photon source; the removed power is reported as excluded_xray_power_W_g",
             });
         }
         if let (Some(options), Some(runtime)) = (&spec.uncertainty, &uncertainty_runtime) {

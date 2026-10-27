@@ -817,6 +817,9 @@ fn maximal_step_out() -> StepOut {
             dose_response_subthreshold_power_W_g: 0.0,
             point_source_dose: None,
             bremsstrahlung: None,
+            estimated_gamma_power_W_g: None,
+            excluded_xray_power_W_g: None,
+            estimated_spectra: None,
         }),
         uncertainty: Some(StepUncertainty {
             method: "shape",

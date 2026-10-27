@@ -148,6 +148,18 @@ included only when their channels are requested. Neither reported interval is a 
 - `response_subthreshold_power_W_g` — power in groups with centroid below the response's lowest energy, left out of the
   proxy and not counted in `response_excluded_power_W_g`. Present only when non-zero.
 
+Three keys appear only when the option is set:
+
+- `nuclides_with_estimated_photon_spectrum` and `estimated_gamma_power_W_g`, with `photon.missing_spectra:
+  "estimate"` and at least one such nuclide — per nuclide: activity, estimated power, decay-mode class, `E_max`
+  before and after the Q-value cap, and the Q-value cap. These nuclides leave
+  `nuclides_with_em_energy_but_no_photon_spectrum` and the unrepresented account;
+- `excluded_xray_power_W_g`, with `photon.exclude_xrays` and non-zero X-ray power.
+
+The ledger's top-level `photon_options` records the request and the model constants (`exponent_a`,
+`e_max_beta_plus_ec_other_eV`), and only when `missing_spectra` is `"estimate"` or `exclude_xrays` is `true`. The
+certificate's `photon.missing_spectra` and `photon.exclude_xrays` state the rules.
+
 The step source repeats the user-facing consequences as `unrepresented_gamma_power_W_g`,
 `represented_gamma_power_fraction`, `ungrouped_power_W_g` and `dose_response_power_coverage`, plus `dose_response_subthreshold_power_W_g` when it is non-zero. The contact proxy
 stays available while that sub-threshold power is at most `1e-4` of the step's response power.

@@ -1148,6 +1148,8 @@ sources and energy-closure diagnostics, but dose fields are `null`.
 | `gamma_constant_cutoff_eV` | Lower energy cutoff for specific gamma constants. | 20,000 eV |
 | `point_source` | Optional point-source dose, the FISPACT-II `DOSE 2` analog; see below. | none |
 | `bremsstrahlung` | Optional bremsstrahlung component, the FISPACT-II `BREMSSTRAHLUNG` analog; see below. | none |
+| `missing_spectra` | `"report"` or `"estimate"`: what to do with a nuclide that has a mean EM energy and no photon spectrum, the FISPACT-II `SPEK` analog; see below. | `"report"` |
+| `exclude_xrays` | Remove the decay records' X-ray spectra (STYP 9) from the photon source, the FISPACT-II `NOXRAY` analog; see below. | `false` |
 
 Build response data with `scripts/build_photon_response.py`; see the [data-source record](https://github.com/AvilaLabs/ACTINV/blob/master/docs/DATA.md). A response must contain attenuation
 curves for every material element to produce the contact-dose proxy.
@@ -1198,12 +1200,13 @@ transmission needs an `air_mass_attenuation` curve (NIST table 4 mu/rho) in the 
 `null` with a reason under the same conditions as the contact proxy: no response, power above the response's top
 energy or outside the group structure, or a sub-threshold share above `1e-4`. It is also `null` while a nuclide has
 decay-record gamma energy but no photon spectrum (`unrepresented_gamma_power_W_g` above zero in `photon_source`): that
-power never reaches the groups, so the sum would be low by an unknown amount; it is added to `excluded_power_W`. A
+power never reaches the groups, so the sum would be low by an unknown amount; it is added to `excluded_power_W`.
+`photon.missing_spectra: "estimate"` places that power in the groups instead. A
 dose is never reported for a non-finite or non-positive distance, mass or air density.
 
-`point_source` and `bremsstrahlung` need the photon source, which is built only when `options.outputs` is absent or
-contains `photons` or `dose`. A specification that sets either with an `options.outputs` list lacking both is
-rejected.
+`point_source`, `bremsstrahlung`, `missing_spectra: "estimate"` and `exclude_xrays` need the photon source, which is
+built only when `options.outputs` is absent or contains `photons` or `dose`. A specification that sets any of them with
+an `options.outputs` list lacking both is rejected.
 
 The fragment below belongs inside a complete problem; it is not a standalone input.
 
@@ -1264,6 +1267,81 @@ The fragment below belongs inside a complete problem; it is not a standalone inp
 ```json
 "photon": {
   "bremsstrahlung": {"nuclides": ["Cl36", "K42"]}
+}
+```
+
+### Nuclides without a photon spectrum (`photon.missing_spectra`)
+
+`"report"` is the default. A nuclide whose decay record gives a mean electromagnetic energy `E_em` but no gamma or
+X-ray spectrum (STYP 0 or 9) adds its power to `unrepresented_gamma_power_W_g`, and the point-source dose stays `null`.
+
+`"estimate"` is the FISPACT-II `SPEK` analog. Each such nuclide gets a photon-number spectrum
+`n(E) = C exp(-a E / E_max)` on `(0, E_max]`, with `a = 14` and `C` set so the spectrum's energy is `E_em`. The
+spectrum is integrated exactly into every photon group (the closed form of the exponential integral, not a midpoint
+rule) and added to the step source. Its power moves from `unrepresented_gamma_power_W_g` to
+`estimated_gamma_power_W_g`. `E_max` follows the decay mode with the largest summed branching ratio, using the first
+RTYP digit (RTYP 10, unknown origin, is "other"):
+
+| dominant mode | `E_max` |
+|---|---|
+| beta-minus (1) | twice the mean light-particle energy per decay (MT=457 index 0); 5 MeV when that is not positive |
+| beta-plus or electron capture (2) | 5 MeV |
+| isomeric transition (3) | `E_em` |
+| any other mode, or no mode | 5 MeV |
+
+A tie goes to the mode earlier in that table. Beyond the manual's rule, `E_max` is also capped by the largest Q-value
+among the nuclide's modes with positive branching, when one is positive, so no estimated photon carries more energy
+than the decay releases. Photons above the top of the group structure are counted in the overflow diagnostics, as for
+an evaluated spectrum.
+
+The estimate is a model. Each dose ACTINV computes from the grouped source is linear in group power, so a nuclide of
+power `P` contributes between `P` times the smallest and `P` times the largest dose per unit power over the energy
+intervals of the groups whose lower edge is below the nuclide's energy cap (its Q-value cap, else the top of the group
+structure), each interval clipped to the cap. The dose model places each group's power at the group's centroid energy.
+Whatever the spectrum inside a group, that centroid lies in the group's interval, so the model's dose per unit power is
+its value at some energy in the union of the intervals. The bounds are the exact extrema of that value over the union,
+not samples: the intervals are split at every knot of the response curves, where the log-log curves are power laws. For
+the contact proxy the air-to-material ratio is log-concave on each piece, so the extrema are at the ends or at one
+stationary point found by bisection. For the point-source dose the value is `A E^q exp(-c E^p)`, with extrema at the
+ends or at `E* = (q / (c p))^(1/p)`. An energy below the response's lowest tabulated energy gives no dose, as in the
+model, so it enters as zero; with such energies in range the lower bound is zero. The bounds hold for any spectrum that
+conserves the nuclide's power below the cap and contain the estimate by construction. If an interval reaches past the
+response's top energy, the range is `null`. `actinv inspect decay --estimated-spectrum` lists each nuclide's intervals
+as `allowed_intervals_eV`.
+
+Each step's `photon_source` gains:
+
+- `estimated_gamma_power_W_g`: the power of the estimated nuclides;
+- `estimated_spectra`: `model`, `exponent_a`, `contact_gamma_air_dose_proxy_Gy_h` and, with `point_source`,
+  `point_source_gamma_air_dose_Sv_h`, each with `represented_only` (evaluated spectra alone, as `"report"` gives it),
+  `estimate`, `lower`, `upper`, `estimated_share` and `unavailable_reason`; and `by_nuclide`, one entry per estimated
+  nuclide with `decay_mode`, `e_max_manual_eV`, `e_max_eV`, `q_cap_eV`, `e_cap_eV`, `photons_per_decay`, `power_W_g`,
+  its `groups`, and `contact_gamma_air_dose_proxy_Gy_h` and `point_source_gamma_air_dose_Sv_h` as
+  `{estimate, lower, upper, share_of_step_estimate}`.
+
+The step's own `contact_gamma_air_dose_proxy_Gy_h` stays the value from evaluated spectra; the estimate and bounds are
+in `estimated_spectra`. The step's groups, `source_power_W_g` and photon rates include the estimated nuclides, so
+`point_source_dose.gamma_air_dose_Sv_h` is the estimate, given instead of withheld, and its range is in
+`estimated_spectra.point_source_gamma_air_dose_Sv_h`. A range is `null` for the same reasons as a dose: no response,
+power outside the response or the group structure, or a sub-threshold share above `1e-4`. The estimates are not
+evaluated data: `actinv inspect decay DECAY_PATH NUCLIDE --estimated-spectrum` prints the estimate beside the
+evaluated grouped spectrum.
+
+### X-ray exclusion (`photon.exclude_xrays`)
+
+`false` by default. With `true`, the STYP 9 content of every nuclide is removed from the photon source after the
+nuclide's evaluated spectrum has been scaled to its `E_em`, as FISPACT-II's `NOXRAY` does. The scale is the same one
+the source uses without the option, so the remaining gamma lines keep their power. The removed power is reported as
+`excluded_xray_power_W_g` in `photon_source` and, per nuclide, in `by_nuclide`; it is not part of
+`source_power_W_g` and is not counted as unrepresented. A nuclide whose only photon content is X-rays contributes no
+photons. Heat, activity and inventory are not affected.
+
+The fragment below belongs inside a complete problem; it is not a standalone input.
+
+```json
+"photon": {
+  "missing_spectra": "estimate",
+  "exclude_xrays": true
 }
 ```
 
@@ -1564,7 +1642,9 @@ When photons are requested (or `outputs` is omitted), `steps[].photon_source` co
 - `contact_gamma_air_dose_proxy_Gy_h`, response coverage, and explicit ungrouped/unrepresented power;
 - `dose_response_subthreshold_power_W_g`, only when non-zero: photon power below the response's lowest energy, omitted from the proxy.
 - `point_source_dose`, only with `photon.point_source`: distance, mass, dose in Sv/h and per gram, excluded power and the reason a dose is `null`; each `by_nuclide` entry gains `point_source_gamma_air_dose_Sv_h`;
-- `bremsstrahlung`, only with `photon.bremsstrahlung`: the separate component described above.
+- `bremsstrahlung`, only with `photon.bremsstrahlung`: the separate component described above;
+- `estimated_gamma_power_W_g` and `estimated_spectra`, only with `photon.missing_spectra: "estimate"`: the estimated nuclides and the estimate and bounds of each dose, described above;
+- `excluded_xray_power_W_g`, only with `photon.exclude_xrays`; each `by_nuclide` entry gains the same key.
 
 Use one-based result step numbers for transport export:
 
