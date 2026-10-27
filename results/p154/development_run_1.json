@@ -1,0 +1,1975 @@
+{
+ "candidate_sha256": "2b0034bb20f6085e1bbf497c5ea8abbf14e46e6e2946a31177372b1c6cbd3bf0",
+ "checker_sha256": "f0e6d29f3dfb339910582ab524472404bcfd4856c5256129e2e91fe14364b714",
+ "displacement_energy_eV": {
+  "Cr": 40.0,
+  "Fe": 40.0,
+  "Ni": 39.0,
+  "W": 70.0
+ },
+ "evidence": {
+  "evaluated_capture_information": {
+   "Cr52": {
+    "disappearance_evaluated_vs_one_photon_rel": {
+     "max": 0.6192174493480168,
+     "median": 0.6184948596909146,
+     "n": 660,
+     "p90": 0.6192174458251178
+    },
+    "fns_disappearance_evaluated": 2.594879552512463e-10,
+    "fns_disappearance_one_photon": 2.594981750005683e-10
+   },
+   "Fe56": {
+    "disappearance_evaluated_vs_one_photon_rel": {
+     "max": 0.6058512080548766,
+     "median": 0.6050900584904545,
+     "n": 660,
+     "p90": 0.6058512043431541
+    },
+    "fns_disappearance_evaluated": 3.071219969602793e-10,
+    "fns_disappearance_one_photon": 3.0714006607637427e-10
+   },
+   "Ni58": {
+    "disappearance_evaluated_vs_one_photon_rel": {
+     "max": 0.579860437806021,
+     "median": 0.57933525231263,
+     "n": 660,
+     "p90": 0.5798600857911215
+    },
+    "fns_disappearance_evaluated": 1.0703382505360402e-09,
+    "fns_disappearance_one_photon": 1.0703594363973104e-09
+   },
+   "W184": {
+    "disappearance_evaluated_vs_one_photon_rel": {
+     "max": 0.9999999934911648,
+     "median": 0.9999992855299079,
+     "n": 660,
+     "p90": 0.9999999588333529
+    },
+    "fns_disappearance_evaluated": 6.943953883338342e-12,
+    "fns_disappearance_one_photon": 6.9539042551873766e-12
+   }
+  },
+  "targets": {
+   "Cr52": {
+    "njoy": {
+     "ed_eV": 40.0,
+     "endf": {
+      "path": "/home/connoravila/nuclear-data/tendl-2025-patched/files/n/n-Cr052.tendl",
+      "sha256": "796548d723c19db57930f7a3c4c81a6a53e4004346f74279946d0d70875f0a94"
+     },
+     "evaluation": {
+      "awr": 51.49431,
+      "mat": 2431,
+      "za": 24052
+     },
+     "njoy": {
+      "path": "/home/connoravila/nuclear-data/njoy2016.79-build/njoy",
+      "sha256": "57e74621f41e7f7f881f933ae0f1b8754274f41e50c60c0cfaf630180a0f1f30"
+     },
+     "output_sha256": "162f5cc599e03ed30261f2a2a1d247ca7622eb27bccb4bc642a55a1476fba0ee",
+     "pendf": "/home/connoravila/Documents/actinv/target/p154-work-dev1/njoy_Cr52/tape24",
+     "pendf_sha256": "16d41b3dcadce46fb9e445f4ef85a06a31b2f046c5f561e7fd9b81fa45d39c42",
+     "reconr_err": 0.001,
+     "run": {
+      "error": null,
+      "exit_code": 0
+     },
+     "version": "njoy 2016.79  18Mar25                                       10/27/26 11:48:03"
+    },
+    "njoy_deck": "moder\n 20 -21/\nreconr\n -21 -22/\n 'TENDL-2025 pointwise for ACTINV P154'/\n 2431 1 0/\n 0.001/\n 'processed for the ACTINV P154 damage-energy check'/\n 0/\nheatr\n -21 -22 -23/\n 2431 4 0 0 0 0 40.0/\n 444 445 446 447/\nmoder\n -23 24/\nstop\n",
+    "njoy_group_values_sha256": "6bbb45f22531ca2cc7cd5d82c815a9a96d67d236133072c7700d9f24bc7d9b04",
+    "structure_violations": [],
+    "table": {
+     "path": "/home/connoravila/Documents/actinv/target/p154-work-dev1/table2_Cr52_one-photon.json",
+     "sha256": "44d60d1cbbac490ace10c750e21ff3fd29f43b21c4580aecd160ad5f4d252ef4"
+    }
+   },
+   "Fe56": {
+    "njoy": {
+     "ed_eV": 40.0,
+     "endf": {
+      "path": "/home/connoravila/nuclear-data/tendl-2025-patched/files/n/n-Fe056.tendl",
+      "sha256": "f33f867a4f9c4579a62954fe31dc6e70768ab2424dc8f282a122a93f156d2e1e"
+     },
+     "evaluation": {
+      "awr": 55.45443,
+      "mat": 2631,
+      "za": 26056
+     },
+     "njoy": {
+      "path": "/home/connoravila/nuclear-data/njoy2016.79-build/njoy",
+      "sha256": "57e74621f41e7f7f881f933ae0f1b8754274f41e50c60c0cfaf630180a0f1f30"
+     },
+     "output_sha256": "aab3cc381f0cbdde0423757e8dcdedddaf2f5995c23a0d32960e62d2d8bf3160",
+     "pendf": "/home/connoravila/Documents/actinv/target/p154-work-dev1/njoy_Fe56/tape24",
+     "pendf_sha256": "cd2370ddf43be8d90365cfc77557596ef0f0e94f4ed3d4952edb1daefda77089",
+     "reconr_err": 0.001,
+     "run": {
+      "error": null,
+      "exit_code": 0
+     },
+     "version": "njoy 2016.79  18Mar25                                       10/27/26 11:47:54"
+    },
+    "njoy_deck": "moder\n 20 -21/\nreconr\n -21 -22/\n 'TENDL-2025 pointwise for ACTINV P154'/\n 2631 1 0/\n 0.001/\n 'processed for the ACTINV P154 damage-energy check'/\n 0/\nheatr\n -21 -22 -23/\n 2631 4 0 0 0 0 40.0/\n 444 445 446 447/\nmoder\n -23 24/\nstop\n",
+    "njoy_group_values_sha256": "76b00e3654592912375f33f3f06ab867e5e1a945517d70a67d4c7ab7eb3602dc",
+    "structure_violations": [],
+    "table": {
+     "path": "/home/connoravila/Documents/actinv/target/p154-work-dev1/table2_Fe56_one-photon.json",
+     "sha256": "c25866a7a60d1a734dda988aafc95cd7e0a9a06f17d2a0c15b355c388a95fc6c"
+    }
+   },
+   "Ni58": {
+    "njoy": {
+     "ed_eV": 39.0,
+     "endf": {
+      "path": "/home/connoravila/nuclear-data/tendl-2025-patched/files/n/n-Ni058.tendl",
+      "sha256": "26c8ae72a203187fae84f9a11c3997086cd70153386e04cf204b4122ab368916"
+     },
+     "evaluation": {
+      "awr": 57.43764,
+      "mat": 2825,
+      "za": 28058
+     },
+     "njoy": {
+      "path": "/home/connoravila/nuclear-data/njoy2016.79-build/njoy",
+      "sha256": "57e74621f41e7f7f881f933ae0f1b8754274f41e50c60c0cfaf630180a0f1f30"
+     },
+     "output_sha256": "5a0cebfc9dc1b5441ca7d7f36bb5ac7485a6a927298dc4acdbe0f1eeb70024d9",
+     "pendf": "/home/connoravila/Documents/actinv/target/p154-work-dev1/njoy_Ni58/tape24",
+     "pendf_sha256": "2084cba1c52a3728842cd094b9f7069b82dc768ffbc0f217fc4e675867f9100b",
+     "reconr_err": 0.001,
+     "run": {
+      "error": null,
+      "exit_code": 0
+     },
+     "version": "njoy 2016.79  18Mar25                                       10/27/26 11:48:20"
+    },
+    "njoy_deck": "moder\n 20 -21/\nreconr\n -21 -22/\n 'TENDL-2025 pointwise for ACTINV P154'/\n 2825 1 0/\n 0.001/\n 'processed for the ACTINV P154 damage-energy check'/\n 0/\nheatr\n -21 -22 -23/\n 2825 4 0 0 0 0 39.0/\n 444 445 446 447/\nmoder\n -23 24/\nstop\n",
+    "njoy_group_values_sha256": "dd1b037f3410c1d26281af9b3394e593995565de22246b0d103aef217b71d3fa",
+    "structure_violations": [],
+    "table": {
+     "path": "/home/connoravila/Documents/actinv/target/p154-work-dev1/table2_Ni58_one-photon.json",
+     "sha256": "26f98c0ed87216220e64f0aef9262f87497acb212104b79cd374912669c627ac"
+    }
+   },
+   "W184": {
+    "njoy": {
+     "ed_eV": 70.0,
+     "endf": {
+      "path": "/home/connoravila/nuclear-data/tendl-2025-patched/files/n/n-W184.tendl",
+      "sha256": "cbf1c80e1557af58fcf4c40a78b3e1a0d2d70b08719a99ffe4a55b753aaa2a20"
+     },
+     "evaluation": {
+      "awr": 182.3707,
+      "mat": 7437,
+      "za": 74184
+     },
+     "njoy": {
+      "path": "/home/connoravila/nuclear-data/njoy2016.79-build/njoy",
+      "sha256": "57e74621f41e7f7f881f933ae0f1b8754274f41e50c60c0cfaf630180a0f1f30"
+     },
+     "output_sha256": "6b9e39e10a47dc4b374f1726b79fa144ed25f1613bf7ab4223fad54829deaaa6",
+     "pendf": "/home/connoravila/Documents/actinv/target/p154-work-dev1/njoy_W184/tape24",
+     "pendf_sha256": "0a2a8585a8890b862119ef678f871ab65855dea6bd5ba2b9c64e92cc814bd5d0",
+     "reconr_err": 0.001,
+     "run": {
+      "error": null,
+      "exit_code": 0
+     },
+     "version": "njoy 2016.79  18Mar25                                       10/27/26 11:48:32"
+    },
+    "njoy_deck": "moder\n 20 -21/\nreconr\n -21 -22/\n 'TENDL-2025 pointwise for ACTINV P154'/\n 7437 1 0/\n 0.001/\n 'processed for the ACTINV P154 damage-energy check'/\n 0/\nheatr\n -21 -22 -23/\n 7437 4 0 0 0 0 70.0/\n 444 445 446 447/\nmoder\n -23 24/\nstop\n",
+    "njoy_group_values_sha256": "041d34e7822c56cf5db82727696071b9e9f64da7a4b3ad8843abc9a45c48739c",
+    "structure_violations": [],
+    "table": {
+     "path": "/home/connoravila/Documents/actinv/target/p154-work-dev1/table2_W184_one-photon.json",
+     "sha256": "e05fae8acf4f746838ec77e18946572d67e3175acb5a8ea39339b654d017987b"
+    }
+   }
+  }
+ },
+ "flux_weight": "flat in lethargy: sum of the integral of y dE/E over the group divided by ln(hi/lo)",
+ "gates": {
+  "G0": {
+   "external": true,
+   "note": "protocol SHA-256 in protocols/protocol_hash.txt (external)",
+   "pass": null
+  },
+  "G1": {
+   "external": true,
+   "note": "fmt, clippy -D warnings, workspace tests (external)",
+   "pass": null
+  },
+  "G2": {
+   "cases": {
+    "build_damage_default_p23_corpus": {
+     "corpus_files": {
+      "n-Co059.tendl": "8ff347217eb7948bd6a032a08f1807b49104ed81aa9a840cce9a72c3f7bbaa45",
+      "n-Fe056.tendl": "c02da8f3e3157ebf6e42267b799943084261484f9984e25d8ef1b98d8ef5ba84",
+      "n-Ni058.tendl": "45acb51d359617252039b9ae70711663c978c3571617179e35b1b317625b170b"
+     },
+     "output_byte_identical": true,
+     "output_sha256": "8d6efcdde0006d828ec2c821cda69bc9cc75500dc42697161531e3bba4365c4b",
+     "stdout_identical": true
+    },
+    "damage_demo": {
+     "identical_apart_from_ms": true,
+     "spec_sha256": "8e2cb8857363a87d3f0bd0dee6788d3a1d256102dfe7cd770aa47f89fd5f78c1"
+    },
+    "fns_fe_5min": {
+     "identical_apart_from_ms": true,
+     "spec_sha256": "ed55ed00f6c00fc4a2351e18332e98e7feb33d9b7ca65e7ba861e0e5e8feef39"
+    }
+   },
+   "pass": true
+  },
+  "G3": {
+   "cases": {
+    "Cr52": {
+     "bad": [
+      {
+       "group": 688,
+       "lo_eV": 180000000.0,
+       "njoy": 17233.41068486873,
+       "rel": 0.020263898667481593,
+       "table": 17582.626772682004
+      }
+     ],
+     "below_1keV": {
+      "max": 0.6393855091358767,
+      "median": 0.008460093716122465,
+      "n": 14,
+      "p90": 0.07857279963497793
+     },
+     "below_1keV_table_positive_njoy_zero": 0,
+     "evaluated_groups": 289,
+     "n_bad": 1,
+     "pass": false,
+     "structure_violations": [],
+     "worst_rel": 0.020263898667481593
+    },
+    "Fe56": {
+     "bad": [
+      {
+       "group": 688,
+       "lo_eV": 180000000.0,
+       "njoy": 17733.24239146607,
+       "rel": 0.021979053890225198,
+       "table": 18123.002281636527
+      }
+     ],
+     "below_1keV": {
+      "max": 0.9535032045180795,
+      "median": 0.0116992739048446,
+      "n": 13,
+      "p90": 0.3486681557266048
+     },
+     "below_1keV_table_positive_njoy_zero": 0,
+     "evaluated_groups": 289,
+     "n_bad": 1,
+     "pass": false,
+     "structure_violations": [],
+     "worst_rel": 0.021979053890225198
+    },
+    "Ni58": {
+     "bad": [
+      {
+       "group": 687,
+       "lo_eV": 160000000.0,
+       "njoy": 18447.187161765916,
+       "rel": 0.023843448441050873,
+       "table": 18887.031717739897
+      },
+      {
+       "group": 688,
+       "lo_eV": 180000000.0,
+       "njoy": 16584.827207040933,
+       "rel": 0.032037383881192164,
+       "table": 17116.161682876143
+      }
+     ],
+     "below_1keV": {
+      "max": 1.0,
+      "median": 0.009732475702696674,
+      "n": 13,
+      "p90": 0.4355425522833976
+     },
+     "below_1keV_table_positive_njoy_zero": 0,
+     "evaluated_groups": 289,
+     "n_bad": 2,
+     "pass": false,
+     "structure_violations": [],
+     "worst_rel": 0.032037383881192164
+    },
+    "W184": {
+     "bad": [
+      {
+       "group": 425,
+       "lo_eV": 3162.278,
+       "njoy": 5.982438743817563,
+       "rel": 0.0851496041571242,
+       "table": 5.473036452887254
+      },
+      {
+       "group": 426,
+       "lo_eV": 3311.311,
+       "njoy": 79.43621784167462,
+       "rel": 0.03793747942032679,
+       "table": 82.44982772127175
+      },
+      {
+       "group": 427,
+       "lo_eV": 3467.369,
+       "njoy": 107.24339282224194,
+       "rel": 0.03487173392151129,
+       "table": 110.98315588157928
+      },
+      {
+       "group": 428,
+       "lo_eV": 3630.781,
+       "njoy": 208.0827913449254,
+       "rel": 0.03888013808322365,
+       "table": 216.1730790051587
+      },
+      {
+       "group": 429,
+       "lo_eV": 3801.894,
+       "njoy": 414.79762848034306,
+       "rel": 0.0346460585646756,
+       "table": 429.1687314091616
+      },
+      {
+       "group": 430,
+       "lo_eV": 3981.072,
+       "njoy": 137.32831809329934,
+       "rel": 0.024088837172560423,
+       "table": 140.63639758703042
+      },
+      {
+       "group": 441,
+       "lo_eV": 6606.934,
+       "njoy": 134.03753001593333,
+       "rel": 0.02631989690003156,
+       "table": 137.56538398668758
+      },
+      {
+       "group": 675,
+       "lo_eV": 60000000.0,
+       "njoy": 37266.450869269705,
+       "rel": 0.028862532581277186,
+       "table": 38342.05502167257
+      },
+      {
+       "group": 676,
+       "lo_eV": 65000000.0,
+       "njoy": 34635.69597803502,
+       "rel": 0.041881007999497365,
+       "table": 36086.273838359266
+      },
+      {
+       "group": 677,
+       "lo_eV": 70000000.0,
+       "njoy": 31619.32305461277,
+       "rel": 0.06253891843567982,
+       "table": 33596.76132011661
+      },
+      {
+       "group": 678,
+       "lo_eV": 75000000.0,
+       "njoy": 29081.46625040769,
+       "rel": 0.0810557301529506,
+       "table": 31438.685731252877
+      },
+      {
+       "group": 679,
+       "lo_eV": 80000000.0,
+       "njoy": 25923.04993068798,
+       "rel": 0.11411403150174429,
+       "table": 28881.233667099797
+      },
+      {
+       "group": 680,
+       "lo_eV": 90000000.0,
+       "njoy": 21694.11546578328,
+       "rel": 0.16668984468299153,
+       "table": 25310.30420330958
+      },
+      {
+       "group": 681,
+       "lo_eV": 100000000.0,
+       "njoy": 17835.284250224882,
+       "rel": 0.2265839327413275,
+       "table": 21876.473097200294
+      },
+      {
+       "group": 682,
+       "lo_eV": 110000000.0,
+       "njoy": 15084.171298821564,
+       "rel": 0.2831413436262943,
+       "table": 19355.123827859086
+      },
+      {
+       "group": 683,
+       "lo_eV": 120000000.0,
+       "njoy": 12756.461619523243,
+       "rel": 0.3423118910731993,
+       "table": 17123.15011990493
+      },
+      {
+       "group": 684,
+       "lo_eV": 130000000.0,
+       "njoy": 11038.326382287396,
+       "rel": 0.39340078532357153,
+       "table": 15380.812649737156
+      },
+      {
+       "group": 685,
+       "lo_eV": 140000000.0,
+       "njoy": 9481.385877351615,
+       "rel": 0.4644635129081364,
+       "table": 13885.143669183939
+      },
+      {
+       "group": 686,
+       "lo_eV": 150000000.0,
+       "njoy": 8194.165520514243,
+       "rel": 0.5481428659850577,
+       "table": 12685.738893284863
+      },
+      {
+       "group": 687,
+       "lo_eV": 160000000.0,
+       "njoy": 5876.494761485072,
+       "rel": 0.9304421498463541,
+       "table": 11344.23318092208
+      }
+     ],
+     "below_1keV": {
+      "n": 0
+     },
+     "below_1keV_table_positive_njoy_zero": 0,
+     "evaluated_groups": 264,
+     "n_bad": 21,
+     "pass": false,
+     "structure_violations": [],
+     "worst_rel": 2.70073205401959
+    }
+   },
+   "note": "pass requires every target to have evaluated groups and none outside 2 percent; the <1 keV distribution is reported only",
+   "pass": false
+  },
+  "G4": {
+   "cases": {
+    "Cr52": {
+     "disappearance_vs_447": {
+      "bad": [
+       {
+        "group": 0,
+        "lo_eV": 1e-05,
+        "njoy": 9193.113026134688,
+        "rel": 1.4473337961929214,
+        "table": 22498.6162010808
+       },
+       {
+        "group": 1,
+        "lo_eV": 1.047129e-05,
+        "njoy": 8983.790015574525,
+        "rel": 1.447350849218523,
+        "table": 21986.4861238172
+       },
+       {
+        "group": 2,
+        "lo_eV": 1.096478e-05,
+        "njoy": 8779.309515379786,
+        "rel": 1.4473465865381916,
+        "table": 21486.013174626984
+       },
+       {
+        "group": 3,
+        "lo_eV": 1.148154e-05,
+        "njoy": 8579.36777249066,
+        "rel": 1.447375294355775,
+        "table": 20996.932727585776
+       },
+       {
+        "group": 4,
+        "lo_eV": 1.202264e-05,
+        "njoy": 8384.058589991444,
+        "rel": 1.4473812246296252,
+        "table": 20518.987579339788
+       },
+       {
+        "group": 5,
+        "lo_eV": 1.258925e-05,
+        "njoy": 8193.197702868669,
+        "rel": 1.447385784994621,
+        "table": 20051.915591651363
+       },
+       {
+        "group": 6,
+        "lo_eV": 1.318257e-05,
+        "njoy": 8006.682968411576,
+        "rel": 1.4473902205700788,
+        "table": 19595.4775960955
+       },
+       {
+        "group": 7,
+        "lo_eV": 1.380384e-05,
+        "njoy": 7825.105011228413,
+        "rel": 1.447178694511401,
+        "table": 19149.43026579257
+       },
+       {
+        "group": 8,
+        "lo_eV": 1.44544e-05,
+        "njoy": 7646.9066415330835,
+        "rel": 1.4472033933683155,
+        "table": 18713.53588193047
+       },
+       {
+        "group": 9,
+        "lo_eV": 1.513561e-05,
+        "njoy": 7472.79675439024,
+        "rel": 1.4472183153106553,
+        "table": 18287.565083937814
+       },
+       {
+        "group": 10,
+        "lo_eV": 1.584893e-05,
+        "njoy": 7302.656698387206,
+        "rel": 1.4472310605617575,
+        "table": 17871.288296912546
+       },
+       {
+        "group": 11,
+        "lo_eV": 1.659587e-05,
+        "njoy": 7136.349650899658,
+        "rel": 1.4472577725264968,
+        "table": 17464.48715063094
+       },
+       {
+        "group": 12,
+        "lo_eV": 1.737801e-05,
+        "njoy": 6973.75108559197,
+        "rel": 1.447312296581104,
+        "table": 17066.94678506505
+       },
+       {
+        "group": 13,
+        "lo_eV": 1.819701e-05,
+        "njoy": 6815.057868820941,
+        "rel": 1.4472947653427142,
+        "table": 16678.455447873162
+       },
+       {
+        "group": 14,
+        "lo_eV": 1.905461e-05,
+        "njoy": 6659.882978105705,
+        "rel": 1.4473115294016268,
+        "table": 16298.808396783734
+       },
+       {
+        "group": 15,
+        "lo_eV": 1.995262e-05,
+        "njoy": 6508.6945583910165,
+        "rel": 1.447157864255571,
+        "table": 15927.803074604017
+       },
+       {
+        "group": 16,
+        "lo_eV": 2.089296e-05,
+        "njoy": 6360.440283359512,
+        "rel": 1.4471954819254182,
+        "table": 15565.240724493826
+       },
+       {
+        "group": 17,
+        "lo_eV": 2.187762e-05,
+        "njoy": 6215.585812518645,
+        "rel": 1.4472241612794225,
+        "table": 15210.93177690122
+       },
+       {
+        "group": 18,
+        "lo_eV": 2.290868e-05,
+        "njoy": 6074.077907203741,
+        "rel": 1.4472338737390704,
+        "table": 14864.689206239116
+       },
+       {
+        "group": 19,
+        "lo_eV": 2.398833e-05,
+        "njoy": 5935.80453973172,
+        "rel": 1.4472383897356786,
+        "table": 14526.328743598786
+       }
+      ],
+      "evaluated_groups": 446,
+      "n_bad": 439,
+      "pass": false,
+      "vacuous": false,
+      "with_uncovered_reported": {
+       "max": 0.057200625582536205,
+       "median": 0.01937711053343999,
+       "n": 62,
+       "p90": 0.036615420714593935
+      },
+      "worst_rel": 7.487918777344534
+     },
+     "inelastic_vs_446": {
+      "bad": [
+       {
+        "group": 588,
+        "lo_eV": 5754399.0,
+        "njoy": 100923.3772221392,
+        "rel": 0.06894708620102084,
+        "table": 107881.75001117217
+       },
+       {
+        "group": 589,
+        "lo_eV": 6025596.0,
+        "njoy": 102083.1030352655,
+        "rel": 0.10024311323556276,
+        "table": 112316.23109226725
+       },
+       {
+        "group": 590,
+        "lo_eV": 6309573.0,
+        "njoy": 102439.48217031563,
+        "rel": 0.13737681354286524,
+        "table": 116512.29181185475
+       },
+       {
+        "group": 591,
+        "lo_eV": 6606934.0,
+        "njoy": 102347.12772577893,
+        "rel": 0.1769618414936521,
+        "table": 120458.66391971879
+       },
+       {
+        "group": 592,
+        "lo_eV": 6918310.0,
+        "njoy": 101837.55402956813,
+        "rel": 0.2205475041738432,
+        "table": 124297.57240195828
+       },
+       {
+        "group": 593,
+        "lo_eV": 7244360.0,
+        "njoy": 101092.13842456108,
+        "rel": 0.26715629832152854,
+        "table": 128099.53991547438
+       },
+       {
+        "group": 594,
+        "lo_eV": 7585776.0,
+        "njoy": 100698.46577070789,
+        "rel": 0.30944888023500877,
+        "table": 131859.4932448368
+       },
+       {
+        "group": 595,
+        "lo_eV": 7943282.0,
+        "njoy": 100638.51048897044,
+        "rel": 0.3455600968426531,
+        "table": 135415.16391963942
+       },
+       {
+        "group": 596,
+        "lo_eV": 8317638.0,
+        "njoy": 101027.35724883912,
+        "rel": 0.3731453286091305,
+        "table": 138725.24366796922
+       },
+       {
+        "group": 597,
+        "lo_eV": 8709636.0,
+        "njoy": 101711.59129762281,
+        "rel": 0.39736411421489903,
+        "table": 142128.12767899054
+       }
+      ],
+      "evaluated_groups": 40,
+      "n_bad": 10,
+      "pass": false,
+      "vacuous": false,
+      "with_uncovered_reported": {
+       "max": 0.41682547465383696,
+       "median": 0.3755639053727492,
+       "n": 62,
+       "p90": 0.4079756355478985
+      },
+      "worst_rel": 0.39736411421489903
+     },
+     "pass": false
+    },
+    "Fe56": {
+     "disappearance_vs_447": {
+      "bad": [
+       {
+        "group": 0,
+        "lo_eV": 1e-05,
+        "njoy": 27729.9349430865,
+        "rel": 1.1391317136359085,
+        "table": 59317.983253816885
+       },
+       {
+        "group": 1,
+        "lo_eV": 1.047129e-05,
+        "njoy": 27098.536521935646,
+        "rel": 1.139146649154584,
+        "table": 57967.74359789176
+       },
+       {
+        "group": 2,
+        "lo_eV": 1.096478e-05,
+        "njoy": 26481.752584973197,
+        "rel": 1.1391423387206603,
+        "table": 56648.23815804146
+       },
+       {
+        "group": 3,
+        "lo_eV": 1.148154e-05,
+        "njoy": 25878.64292426443,
+        "rel": 1.1391681706504886,
+        "table": 55358.76924321595
+       },
+       {
+        "group": 4,
+        "lo_eV": 1.202264e-05,
+        "njoy": 25289.516727788356,
+        "rel": 1.1391732912491501,
+        "table": 54098.658732683456
+       },
+       {
+        "group": 5,
+        "lo_eV": 1.258925e-05,
+        "njoy": 24713.80740696388,
+        "rel": 1.139177287568284,
+        "table": 52867.215494313954
+       },
+       {
+        "group": 6,
+        "lo_eV": 1.318257e-05,
+        "njoy": 24151.210814443162,
+        "rel": 1.139180902916204,
+        "table": 51663.80895656012
+       },
+       {
+        "group": 7,
+        "lo_eV": 1.380384e-05,
+        "njoy": 23603.498434604837,
+        "rel": 1.138996374794187,
+        "table": 50487.79758408001
+       },
+       {
+        "group": 8,
+        "lo_eV": 1.44544e-05,
+        "njoy": 23065.98786473957,
+        "rel": 1.1390176269992265,
+        "table": 49338.55462682819
+       },
+       {
+        "group": 9,
+        "lo_eV": 1.513561e-05,
+        "njoy": 22540.81074932764,
+        "rel": 1.1390302198350284,
+        "table": 48215.475372394074
+       },
+       {
+        "group": 10,
+        "lo_eV": 1.584893e-05,
+        "njoy": 22026.866480557823,
+        "rel": 1.1391129138894782,
+        "table": 47117.95454108052
+       },
+       {
+        "group": 11,
+        "lo_eV": 1.659587e-05,
+        "njoy": 21525.505481234348,
+        "rel": 1.1391096454640022,
+        "table": 46045.41639839664
+       },
+       {
+        "group": 12,
+        "lo_eV": 1.737801e-05,
+        "njoy": 21035.49789992937,
+        "rel": 1.1391124029799355,
+        "table": 44997.2944605973
+       },
+       {
+        "group": 13,
+        "lo_eV": 1.819701e-05,
+        "njoy": 20556.81870400364,
+        "rel": 1.1390970593752534,
+        "table": 43973.03043984439
+       },
+       {
+        "group": 14,
+        "lo_eV": 1.905461e-05,
+        "njoy": 20088.75000450411,
+        "rel": 1.139111916843721,
+        "table": 42972.08452912909
+       },
+       {
+        "group": 15,
+        "lo_eV": 1.995262e-05,
+        "njoy": 19632.71141362001,
+        "rel": 1.138977230319374,
+        "table": 41993.92268316449
+       },
+       {
+        "group": 16,
+        "lo_eV": 2.089296e-05,
+        "njoy": 19185.51824249122,
+        "rel": 1.1390102866978644,
+        "table": 41038.02087631825
+       },
+       {
+        "group": 17,
+        "lo_eV": 2.187762e-05,
+        "njoy": 18748.578176749408,
+        "rel": 1.1390357672254159,
+        "table": 40103.87930468886
+       },
+       {
+        "group": 18,
+        "lo_eV": 2.290868e-05,
+        "njoy": 18321.739153104583,
+        "rel": 1.1390439273042994,
+        "table": 39191.004873101774
+       },
+       {
+        "group": 19,
+        "lo_eV": 2.398833e-05,
+        "njoy": 17904.65183759988,
+        "rel": 1.139048114337141,
+        "table": 38298.91175108105
+       }
+      ],
+      "evaluated_groups": 443,
+      "n_bad": 437,
+      "pass": false,
+      "vacuous": false,
+      "with_uncovered_reported": {
+       "max": 0.084324283934276,
+       "median": 0.017583086313694415,
+       "n": 66,
+       "p90": 0.07902212177207955
+      },
+      "worst_rel": 5.9205898984342875
+     },
+     "inelastic_vs_446": {
+      "bad": [
+       {
+        "group": 586,
+        "lo_eV": 5248075.0,
+        "njoy": 90634.77282781531,
+        "rel": 0.06302928073411337,
+        "table": 96347.41736865227
+       },
+       {
+        "group": 587,
+        "lo_eV": 5495409.0,
+        "njoy": 90822.71291722504,
+        "rel": 0.09369790807140438,
+        "table": 99332.61112293875
+       },
+       {
+        "group": 588,
+        "lo_eV": 5754399.0,
+        "njoy": 90462.74289683193,
+        "rel": 0.13175237785944008,
+        "table": 102381.42438117671
+       },
+       {
+        "group": 589,
+        "lo_eV": 6025596.0,
+        "njoy": 90326.4697889124,
+        "rel": 0.17067862260423267,
+        "table": 105743.26723718681
+       },
+       {
+        "group": 590,
+        "lo_eV": 6309573.0,
+        "njoy": 90193.04667343856,
+        "rel": 0.21186440120186167,
+        "table": 109301.74249947818
+       },
+       {
+        "group": 591,
+        "lo_eV": 6606934.0,
+        "njoy": 89814.94583407757,
+        "rel": 0.254671352680718,
+        "table": 112688.23958058753
+       },
+       {
+        "group": 592,
+        "lo_eV": 6918310.0,
+        "njoy": 89168.11086714432,
+        "rel": 0.29930784830621243,
+        "table": 115856.82626831908
+       },
+       {
+        "group": 593,
+        "lo_eV": 7244360.0,
+        "njoy": 88523.22551663361,
+        "rel": 0.34224833860685483,
+        "table": 118820.1523778214
+       }
+      ],
+      "evaluated_groups": 48,
+      "n_bad": 8,
+      "pass": false,
+      "vacuous": false,
+      "with_uncovered_reported": {
+       "max": 0.7718385147306219,
+       "median": 0.6262395808291408,
+       "n": 66,
+       "p90": 0.677395427616738
+      },
+      "worst_rel": 0.34224833860685483
+     },
+     "pass": false
+    },
+    "Ni58": {
+     "disappearance_vs_447": {
+      "bad": [
+       {
+        "group": 0,
+        "lo_eV": 1e-05,
+        "njoy": 63773.742852732896,
+        "rel": 1.0830228816249978,
+        "table": 132842.16560911128
+       },
+       {
+        "group": 1,
+        "lo_eV": 1.047129e-05,
+        "njoy": 62321.73840720778,
+        "rel": 1.0830368507893156,
+        "table": 129818.47770746562
+       },
+       {
+        "group": 2,
+        "lo_eV": 1.096478e-05,
+        "njoy": 60903.28166900979,
+        "rel": 1.0830336468192965,
+        "table": 126863.58491826028
+       },
+       {
+        "group": 3,
+        "lo_eV": 1.148154e-05,
+        "njoy": 59516.30892379212,
+        "rel": 1.0830580114872153,
+        "table": 123975.92411785322
+       },
+       {
+        "group": 4,
+        "lo_eV": 1.202264e-05,
+        "njoy": 58161.46285181206,
+        "rel": 1.0830627362904675,
+        "table": 121153.97595475201
+       },
+       {
+        "group": 5,
+        "lo_eV": 1.258925e-05,
+        "njoy": 56837.43540151519,
+        "rel": 1.083067102718581,
+        "table": 118396.19188778875
+       },
+       {
+        "group": 6,
+        "lo_eV": 1.318257e-05,
+        "njoy": 55543.55849350056,
+        "rel": 1.0830706940568373,
+        "table": 115701.15894144276
+       },
+       {
+        "group": 7,
+        "lo_eV": 1.380384e-05,
+        "njoy": 54283.90076847597,
+        "rel": 1.0828908374038309,
+        "table": 113067.43952919738
+       },
+       {
+        "group": 8,
+        "lo_eV": 1.44544e-05,
+        "njoy": 53047.67714870795,
+        "rel": 1.082911732545847,
+        "table": 110493.62911734803
+       },
+       {
+        "group": 9,
+        "lo_eV": 1.513561e-05,
+        "njoy": 51839.79902632704,
+        "rel": 1.0829242104708325,
+        "table": 107978.37245787888
+       },
+       {
+        "group": 10,
+        "lo_eV": 1.584893e-05,
+        "njoy": 50657.778948944295,
+        "rel": 1.0830031531604671,
+        "table": 105520.3132827569
+       },
+       {
+        "group": 11,
+        "lo_eV": 1.659587e-05,
+        "njoy": 49504.64268901617,
+        "rel": 1.083003077285725,
+        "table": 103118.32306115095
+       },
+       {
+        "group": 12,
+        "lo_eV": 1.737801e-05,
+        "njoy": 48377.7847466055,
+        "rel": 1.0830039213128912,
+        "table": 100771.11533161024
+       },
+       {
+        "group": 13,
+        "lo_eV": 1.819701e-05,
+        "njoy": 47276.91762496117,
+        "rel": 1.0829891703155192,
+        "table": 98477.30741869302
+       },
+       {
+        "group": 14,
+        "lo_eV": 1.905461e-05,
+        "njoy": 46200.44355990008,
+        "rel": 1.0830035892944898,
+        "table": 96235.68976226937
+       },
+       {
+        "group": 15,
+        "lo_eV": 1.995262e-05,
+        "njoy": 45151.61528735169,
+        "rel": 1.0828726736626146,
+        "table": 94045.065653752
+       },
+       {
+        "group": 16,
+        "lo_eV": 2.089296e-05,
+        "njoy": 44119.50233634878,
+        "rel": 1.0830762287794145,
+        "table": 91904.28654242598
+       },
+       {
+        "group": 17,
+        "lo_eV": 2.187762e-05,
+        "njoy": 43118.27758642737,
+        "rel": 1.0829294076902585,
+        "table": 89812.32839372131
+       },
+       {
+        "group": 18,
+        "lo_eV": 2.290868e-05,
+        "njoy": 42136.63250376271,
+        "rel": 1.082937843485539,
+        "table": 87767.98643913017
+       },
+       {
+        "group": 19,
+        "lo_eV": 2.398833e-05,
+        "njoy": 41177.430278308755,
+        "rel": 1.0829409926938038,
+        "table": 85770.15750048033
+       }
+      ],
+      "evaluated_groups": 506,
+      "n_bad": 481,
+      "pass": false,
+      "vacuous": false,
+      "with_uncovered_reported": {
+       "max": 0.5422681396362657,
+       "median": 0.07886456427727251,
+       "n": 73,
+       "p90": 0.4717562093682573
+      },
+      "worst_rel": 8.982225546875782
+     },
+     "inelastic_vs_446": {
+      "bad": [],
+      "evaluated_groups": 29,
+      "n_bad": 0,
+      "pass": true,
+      "vacuous": false,
+      "with_uncovered_reported": {
+       "max": 0.7828434547425448,
+       "median": 0.6240932739285358,
+       "n": 73,
+       "p90": 0.7738165009069998
+      },
+      "worst_rel": 0.013926758701082995
+     },
+     "pass": false
+    },
+    "W184": {
+     "disappearance_vs_447": {
+      "bad": [],
+      "evaluated_groups": 0,
+      "n_bad": 0,
+      "pass": false,
+      "vacuous": true,
+      "with_uncovered_reported": {
+       "max": 695.9897187287593,
+       "median": 536.2991293648045,
+       "n": 472,
+       "p90": 541.4887658722415
+      },
+      "worst_rel": 0.0
+     },
+     "inelastic_vs_446": {
+      "bad": [],
+      "evaluated_groups": 0,
+      "n_bad": 0,
+      "pass": false,
+      "vacuous": true,
+      "with_uncovered_reported": {
+       "max": 0.5236526128598721,
+       "median": 0.22463173452100166,
+       "n": 157,
+       "p90": 0.4164019881981225
+      },
+      "worst_rel": 0.0
+     },
+     "pass": false
+    }
+   },
+   "pass": false
+  },
+  "G5": {
+   "cases": {
+    "Cr52": {
+     "bad": [
+      {
+       "computed": 22498.6162010808,
+       "group": 0,
+       "njoy444": 9193.113026134688,
+       "side": "below_computed",
+       "slack": 459.986976573828
+      },
+      {
+       "computed": 21986.4861238172,
+       "group": 1,
+       "njoy444": 8983.790015574525,
+       "side": "below_computed",
+       "slack": 449.52082604581983
+      },
+      {
+       "computed": 21486.013174626984,
+       "group": 2,
+       "njoy444": 8779.309515379786,
+       "side": "below_computed",
+       "slack": 439.2968010360829
+      },
+      {
+       "computed": 20996.932727585776,
+       "group": 3,
+       "njoy444": 8579.36777249066,
+       "side": "below_computed",
+       "slack": 429.29971389162654
+      },
+      {
+       "computed": 20518.987579339788,
+       "group": 4,
+       "njoy444": 8384.058589991444,
+       "side": "below_computed",
+       "slack": 419.5342547666658
+      },
+      {
+       "computed": 20051.915591651363,
+       "group": 5,
+       "njoy444": 8193.197702868669,
+       "side": "below_computed",
+       "slack": 409.99121041052706
+      },
+      {
+       "computed": 19595.4775960955,
+       "group": 6,
+       "njoy444": 8006.682968411576,
+       "side": "below_computed",
+       "slack": 400.66547368767243
+      },
+      {
+       "computed": 19149.43026579257,
+       "group": 7,
+       "njoy444": 7825.105011228413,
+       "side": "below_computed",
+       "slack": 391.58657582851424
+      },
+      {
+       "computed": 18713.53588193047,
+       "group": 8,
+       "njoy444": 7646.9066415330835,
+       "side": "below_computed",
+       "slack": 382.67665734374776
+      },
+      {
+       "computed": 18287.565083937814,
+       "group": 9,
+       "njoy444": 7472.79675439024,
+       "side": "below_computed",
+       "slack": 373.9711629866056
+      },
+      {
+       "computed": 17871.288296912546,
+       "group": 10,
+       "njoy444": 7302.656698387206,
+       "side": "below_computed",
+       "slack": 365.4641601864539
+      },
+      {
+       "computed": 17464.48715063094,
+       "group": 11,
+       "njoy444": 7136.349650899658,
+       "side": "below_computed",
+       "slack": 357.1488078120765
+      },
+      {
+       "computed": 17066.94678506505,
+       "group": 12,
+       "njoy444": 6973.75108559197,
+       "side": "below_computed",
+       "slack": 349.0188795466921
+      },
+      {
+       "computed": 16678.455447873162,
+       "group": 13,
+       "njoy444": 6815.057868820941,
+       "side": "below_computed",
+       "slack": 341.0842187081406
+      },
+      {
+       "computed": 16298.808396783734,
+       "group": 14,
+       "njoy444": 6659.882978105705,
+       "side": "below_computed",
+       "slack": 333.32547417237885
+      },
+      {
+       "computed": 15927.803074604017,
+       "group": 15,
+       "njoy444": 6508.6945583910165,
+       "side": "below_computed",
+       "slack": 325.7660531866444
+      },
+      {
+       "computed": 15565.240724493826,
+       "group": 16,
+       "njoy444": 6360.440283359512,
+       "side": "below_computed",
+       "slack": 318.3533394350692
+      },
+      {
+       "computed": 15210.93177690122,
+       "group": 17,
+       "njoy444": 6215.585812518645,
+       "side": "below_computed",
+       "slack": 311.11061589302585
+      },
+      {
+       "computed": 14864.689206239116,
+       "group": 18,
+       "njoy444": 6074.077907203741,
+       "side": "below_computed",
+       "slack": 304.03522062728064
+      },
+      {
+       "computed": 14526.328743598786,
+       "group": 19,
+       "njoy444": 5935.80453973172,
+       "side": "below_computed",
+       "slack": 297.12155225367957
+      }
+     ],
+     "fns_collapsed": {
+      "computed": 2.0071643435460797e-09,
+      "computed_plus_upper": 5.81060929851597e-09,
+      "njoy_444": 2.492997748894352e-09,
+      "njoy_445": 6.656793705300877e-10,
+      "njoy_446": 7.908531625060855e-10,
+      "njoy_447": 2.6856523318243046e-10,
+      "relative_difference_njoy_vs_computed": 0.19487919937502557,
+      "table_disappearance": 2.594981750005683e-10,
+      "table_elastic": 6.657062646942177e-10,
+      "table_inelastic": 1.0819599038512936e-09,
+      "unit": "eV per atom per second at the spec's spectrum (multiplier one)"
+     },
+     "n_above_upper": 0,
+     "n_below_computed": 429,
+     "pass": false,
+     "table_total_equals_partial_sum_worst_rel": 0.0
+    },
+    "Fe56": {
+     "bad": [
+      {
+       "computed": 59317.983253816885,
+       "group": 0,
+       "njoy444": 27729.9349430865,
+       "side": "below_computed",
+       "slack": 1386.8255852342697
+      },
+      {
+       "computed": 57967.74359789176,
+       "group": 1,
+       "njoy444": 27098.536521935646,
+       "side": "below_computed",
+       "slack": 1355.2556641767271
+      },
+      {
+       "computed": 56648.23815804146,
+       "group": 2,
+       "njoy444": 26481.752584973197,
+       "side": "below_computed",
+       "slack": 1324.4164673286048
+      },
+      {
+       "computed": 55358.76924321595,
+       "group": 3,
+       "njoy444": 25878.64292426443,
+       "side": "below_computed",
+       "slack": 1294.2609842931663
+      },
+      {
+       "computed": 54098.658732683456,
+       "group": 4,
+       "njoy444": 25289.516727788356,
+       "side": "below_computed",
+       "slack": 1264.8046744693627
+      },
+      {
+       "computed": 52867.215494313954,
+       "group": 5,
+       "njoy444": 24713.80740696388,
+       "side": "below_computed",
+       "slack": 1236.0192084281387
+      },
+      {
+       "computed": 51663.80895656012,
+       "group": 6,
+       "njoy444": 24151.210814443162,
+       "side": "below_computed",
+       "slack": 1207.8893788021028
+      },
+      {
+       "computed": 50487.79758408001,
+       "group": 7,
+       "njoy444": 23603.498434604837,
+       "side": "below_computed",
+       "slack": 1180.5037598101867
+      },
+      {
+       "computed": 49338.55462682819,
+       "group": 8,
+       "njoy444": 23065.98786473957,
+       "side": "below_computed",
+       "slack": 1153.6282313169233
+      },
+      {
+       "computed": 48215.475372394074,
+       "group": 9,
+       "njoy444": 22540.81074932764,
+       "side": "below_computed",
+       "slack": 1127.3693755463269
+      },
+      {
+       "computed": 47117.95454108052,
+       "group": 10,
+       "njoy444": 22026.866480557823,
+       "side": "below_computed",
+       "slack": 1101.672162107836
+      },
+      {
+       "computed": 46045.41639839664,
+       "group": 11,
+       "njoy444": 21525.505481234348,
+       "side": "below_computed",
+       "slack": 1076.6041121416622
+      },
+      {
+       "computed": 44997.2944605973,
+       "group": 12,
+       "njoy444": 21035.49789992937,
+       "side": "below_computed",
+       "slack": 1052.1037330764134
+      },
+      {
+       "computed": 43973.03043984439,
+       "group": 13,
+       "njoy444": 20556.81870400364,
+       "side": "below_computed",
+       "slack": 1028.1697732801267
+      },
+      {
+       "computed": 42972.08452912909,
+       "group": 14,
+       "njoy444": 20088.75000450411,
+       "side": "below_computed",
+       "slack": 1004.7663383051502
+      },
+      {
+       "computed": 41993.92268316449,
+       "group": 15,
+       "njoy444": 19632.71141362001,
+       "side": "below_computed",
+       "slack": 981.9644087609453
+      },
+      {
+       "computed": 41038.02087631825,
+       "group": 16,
+       "njoy444": 19185.51824249122,
+       "side": "below_computed",
+       "slack": 959.6047502045058
+      },
+      {
+       "computed": 40103.87930468886,
+       "group": 17,
+       "njoy444": 18748.578176749408,
+       "side": "below_computed",
+       "slack": 937.7577469174151
+      },
+      {
+       "computed": 39191.004873101774,
+       "group": 18,
+       "njoy444": 18321.739153104583,
+       "side": "below_computed",
+       "slack": 916.4157957351739
+      },
+      {
+       "computed": 38298.91175108105,
+       "group": 19,
+       "njoy444": 17904.65183759988,
+       "side": "below_computed",
+       "slack": 895.5614299599387
+      }
+     ],
+     "fns_collapsed": {
+      "computed": 1.9641275127620915e-09,
+      "computed_plus_upper": 5.486491325255252e-09,
+      "njoy_444": 2.2395673167176113e-09,
+      "njoy_445": 5.534822335880061e-10,
+      "njoy_446": 7.015762346676356e-10,
+      "njoy_447": 3.0829390660688943e-10,
+      "relative_difference_njoy_vs_computed": 0.12298795481584988,
+      "table_disappearance": 3.0714006607637427e-10,
+      "table_elastic": 5.535087064439422e-10,
+      "table_inelastic": 1.1034787402417751e-09,
+      "unit": "eV per atom per second at the spec's spectrum (multiplier one)"
+     },
+     "n_above_upper": 1,
+     "n_below_computed": 431,
+     "pass": false,
+     "table_total_equals_partial_sum_worst_rel": 0.0
+    },
+    "Ni58": {
+     "bad": [
+      {
+       "computed": 132842.16560911128,
+       "group": 0,
+       "njoy444": 63773.742852732896,
+       "side": "below_computed",
+       "slack": 3189.0613868789274
+      },
+      {
+       "computed": 129818.47770746562,
+       "group": 1,
+       "njoy444": 62321.73840720778,
+       "side": "below_computed",
+       "slack": 3116.461164602671
+      },
+      {
+       "computed": 126863.58491826028,
+       "group": 2,
+       "njoy444": 60903.28166900979,
+       "side": "below_computed",
+       "slack": 3045.538327692772
+      },
+      {
+       "computed": 123975.92411785322,
+       "group": 3,
+       "njoy444": 59516.30892379212,
+       "side": "below_computed",
+       "slack": 2976.1896904318887
+      },
+      {
+       "computed": 121153.97595475201,
+       "group": 4,
+       "njoy444": 58161.46285181206,
+       "side": "below_computed",
+       "slack": 2908.4473868328855
+      },
+      {
+       "computed": 118396.19188778875,
+       "group": 5,
+       "njoy444": 56837.43540151519,
+       "side": "below_computed",
+       "slack": 2842.246014318042
+      },
+      {
+       "computed": 115701.15894144276,
+       "group": 6,
+       "njoy444": 55543.55849350056,
+       "side": "below_computed",
+       "slack": 2777.5521689173106
+      },
+      {
+       "computed": 113067.43952919738,
+       "group": 7,
+       "njoy444": 54283.90076847597,
+       "side": "below_computed",
+       "slack": 2714.569282666081
+      },
+      {
+       "computed": 110493.62911734803,
+       "group": 8,
+       "njoy444": 53047.67714870795,
+       "side": "below_computed",
+       "slack": 2652.75810167768
+      },
+      {
+       "computed": 107978.37245787888,
+       "group": 9,
+       "njoy444": 51839.79902632704,
+       "side": "below_computed",
+       "slack": 2592.3641955586345
+      },
+      {
+       "computed": 105520.3132827569,
+       "group": 10,
+       "njoy444": 50657.778948944295,
+       "side": "below_computed",
+       "slack": 2533.263191689497
+      },
+      {
+       "computed": 103118.32306115095,
+       "group": 11,
+       "njoy444": 49504.64268901617,
+       "side": "below_computed",
+       "slack": 2475.606378693091
+      },
+      {
+       "computed": 100771.11533161024,
+       "group": 12,
+       "njoy444": 48377.7847466055,
+       "side": "below_computed",
+       "slack": 2419.2634815725573
+      },
+      {
+       "computed": 98477.30741869302,
+       "group": 13,
+       "njoy444": 47276.91762496117,
+       "side": "below_computed",
+       "slack": 2364.2201254903407
+      },
+      {
+       "computed": 96235.68976226937,
+       "group": 14,
+       "njoy444": 46200.44355990008,
+       "side": "below_computed",
+       "slack": 2310.396422237286
+      },
+      {
+       "computed": 94045.065653752,
+       "group": 15,
+       "njoy444": 45151.61528735169,
+       "side": "below_computed",
+       "slack": 2257.955008609867
+      },
+      {
+       "computed": 91904.28654242598,
+       "group": 16,
+       "njoy444": 44119.50233634878,
+       "side": "below_computed",
+       "slack": 2206.349361059721
+      },
+      {
+       "computed": 89812.32839372131,
+       "group": 17,
+       "njoy444": 43118.27758642737,
+       "side": "below_computed",
+       "slack": 2156.288123563651
+      },
+      {
+       "computed": 87767.98643913017,
+       "group": 18,
+       "njoy444": 42136.63250376271,
+       "side": "below_computed",
+       "slack": 2107.205869430418
+      },
+      {
+       "computed": 85770.15750048033,
+       "group": 19,
+       "njoy444": 41177.430278308755,
+       "side": "below_computed",
+       "slack": 2059.24575815772
+      }
+     ],
+     "fns_collapsed": {
+      "computed": 2.0617812134954226e-09,
+      "computed_plus_upper": 8.68516967328526e-09,
+      "njoy_444": 3.0360729705258007e-09,
+      "njoy_445": 5.112778961981386e-10,
+      "njoy_446": 2.8831710189498806e-10,
+      "njoy_447": 1.1669594340669222e-09,
+      "relative_difference_njoy_vs_computed": 0.32090525046295115,
+      "table_disappearance": 1.0703594363973104e-09,
+      "table_elastic": 5.111998739411867e-10,
+      "table_inelastic": 4.802219031569255e-10,
+      "unit": "eV per atom per second at the spec's spectrum (multiplier one)"
+     },
+     "n_above_upper": 0,
+     "n_below_computed": 416,
+     "pass": false,
+     "table_total_equals_partial_sum_worst_rel": 0.0
+    },
+    "W184": {
+     "bad": [
+      {
+       "computed": 7419.3672255970905,
+       "group": 0,
+       "njoy444": 13.80875633013877,
+       "side": "below_computed",
+       "slack": 1.4292147912836497
+      },
+      {
+       "computed": 7250.482125860709,
+       "group": 1,
+       "njoy444": 13.494339514237915,
+       "side": "below_computed",
+       "slack": 1.413493950488607
+      },
+      {
+       "computed": 7085.441196129232,
+       "group": 2,
+       "njoy444": 13.187193850506995,
+       "side": "below_computed",
+       "slack": 1.398136667302061
+      },
+      {
+       "computed": 6924.157170648693,
+       "group": 3,
+       "njoy444": 12.886864883352278,
+       "side": "below_computed",
+       "slack": 1.3831202189443252
+      },
+      {
+       "computed": 6766.5452315453285,
+       "group": 4,
+       "njoy444": 12.593498419104792,
+       "side": "below_computed",
+       "slack": 1.368451895731951
+      },
+      {
+       "computed": 6612.518933450473,
+       "group": 5,
+       "njoy444": 12.306806641813177,
+       "side": "below_computed",
+       "slack": 1.3541173068673702
+      },
+      {
+       "computed": 6461.999405815262,
+       "group": 6,
+       "njoy444": 12.026644890312777,
+       "side": "below_computed",
+       "slack": 1.34010921929235
+      },
+      {
+       "computed": 6314.906406767846,
+       "group": 7,
+       "njoy444": 11.753903389402439,
+       "side": "below_computed",
+       "slack": 1.326472144246833
+      },
+      {
+       "computed": 6171.161543693853,
+       "group": 8,
+       "njoy444": 11.486116401766312,
+       "side": "below_computed",
+       "slack": 1.3130827948650268
+      },
+      {
+       "computed": 6030.689181986074,
+       "group": 9,
+       "njoy444": 11.224292878605437,
+       "side": "below_computed",
+       "slack": 1.299991618706983
+      },
+      {
+       "computed": 5893.413614447158,
+       "group": 10,
+       "njoy444": 10.969150791868868,
+       "side": "below_computed",
+       "slack": 1.2872345143701547
+      },
+      {
+       "computed": 5759.262828264624,
+       "group": 11,
+       "njoy444": 10.71933767418324,
+       "side": "below_computed",
+       "slack": 1.2747438584858732
+      },
+      {
+       "computed": 5628.165968664023,
+       "group": 12,
+       "njoy444": 10.47497551204999,
+       "side": "below_computed",
+       "slack": 1.2625257503792109
+      },
+      {
+       "computed": 5500.053206478514,
+       "group": 13,
+       "njoy444": 10.236384365031057,
+       "side": "below_computed",
+       "slack": 1.250596193028264
+      },
+      {
+       "computed": 5374.857024779015,
+       "group": 14,
+       "njoy444": 10.003461936389531,
+       "side": "below_computed",
+       "slack": 1.2389500715961876
+      },
+      {
+       "computed": 5252.5106253540425,
+       "group": 15,
+       "njoy444": 9.776556519343346,
+       "side": "below_computed",
+       "slack": 1.2276048007438787
+      },
+      {
+       "computed": 5132.948464006577,
+       "group": 16,
+       "njoy444": 9.553867049537555,
+       "side": "below_computed",
+       "slack": 1.216470327253589
+      },
+      {
+       "computed": 5016.10802625499,
+       "group": 17,
+       "njoy444": 9.336260864124602,
+       "side": "below_computed",
+       "slack": 1.2055900179829413
+      },
+      {
+       "computed": 4901.927637654167,
+       "group": 18,
+       "njoy444": 9.123030898707434,
+       "side": "below_computed",
+       "slack": 1.194928519712083
+      },
+      {
+       "computed": 4790.346531326445,
+       "group": 19,
+       "njoy444": 8.9160318721547,
+       "side": "below_computed",
+       "slack": 1.1845785683844463
+      }
+     ],
+     "fns_collapsed": {
+      "computed": 7.694714289464593e-10,
+      "computed_plus_upper": 6.694283408563097e-09,
+      "njoy_444": 1.9769881188171033e-09,
+      "njoy_445": 4.0675100122377424e-10,
+      "njoy_446": 2.5614602714109256e-10,
+      "njoy_447": 5.5083229184304784e-12,
+      "relative_difference_njoy_vs_computed": 0.6107860125093421,
+      "table_disappearance": 6.9539042551873766e-12,
+      "table_elastic": 4.076288733395568e-10,
+      "table_inelastic": 3.5488865135171516e-10,
+      "unit": "eV per atom per second at the spec's spectrum (multiplier one)"
+     },
+     "n_above_upper": 0,
+     "n_below_computed": 495,
+     "pass": false,
+     "table_total_equals_partial_sum_worst_rel": 0.0
+    }
+   },
+   "pass": false
+  },
+  "G6": {
+   "cases": {
+    "arc_parameters_and_invariants": {
+     "nordlund_transcription": {
+      "Cu": [
+       33.0,
+       -0.68,
+       0.16
+      ],
+      "Fe": [
+       40.0,
+       -0.568,
+       0.286
+      ],
+      "Ni": [
+       39.0,
+       -1.01,
+       0.23
+      ],
+      "Pd": [
+       41.0,
+       -0.88,
+       0.15
+      ],
+      "Pt": [
+       42.0,
+       -1.12,
+       0.11
+      ],
+      "W": [
+       70.0,
+       -0.56,
+       0.12
+      ]
+     },
+     "pass": true,
+     "tables": {
+      "Cr52": {
+       "elements": [],
+       "expected_elements_present": true,
+       "invariant_problems": [],
+       "pass": true,
+       "problems": []
+      },
+      "Fe56": {
+       "elements": [
+        "Fe"
+       ],
+       "expected_elements_present": true,
+       "invariant_problems": [],
+       "pass": true,
+       "problems": []
+      },
+      "Ni58": {
+       "elements": [
+        "Ni"
+       ],
+       "expected_elements_present": true,
+       "invariant_problems": [],
+       "pass": true,
+       "problems": []
+      },
+      "W184": {
+       "elements": [
+        "W"
+       ],
+       "expected_elements_present": true,
+       "invariant_problems": [],
+       "pass": true,
+       "problems": []
+      }
+     }
+    },
+    "displacement_energy_mismatch_refused": {
+     "exit_code": 1,
+     "message_names_rebuild": true,
+     "output_written": false,
+     "pass": true,
+     "stderr_tail": "damage: displacement_energy_eV for 'Fe' (41) differs from the 40 eV the table-2 recoil integrals were built with; rebuild the table with --displacement-energy Fe=41"
+    },
+    "run_Cr52": {
+     "certificate_recoil_present": true,
+     "compared": 273,
+     "failures": [],
+     "he_appm_per_dpa_last": [
+      18.907562638506327
+     ],
+     "ledger_recoil_ok": true,
+     "missing": [],
+     "n_failures": 0,
+     "n_missing": 0,
+     "output_sha256": "8cd4d93c8e00d055edc36baba45bdd4cf16b8787002d2c2dc5d7209e6cb32d57",
+     "pass": true,
+     "step0_damage_keys": [
+      "covered_atom_fraction",
+      "damage_energy_eV_per_g_s",
+      "damage_energy_uncovered_upper_eV_per_g_s",
+      "dpa",
+      "dpa_nrt",
+      "dpa_nrt_rate_per_s",
+      "dpa_rate_per_s",
+      "dpa_uncovered_upper_bound",
+      "dpa_uncovered_upper_bound_rate_per_s",
+      "elements",
+      "he_appm_per_dpa"
+     ],
+     "worst_rel": 1.6098193309802411e-16
+    },
+    "run_Fe56": {
+     "certificate_recoil_present": true,
+     "compared": 399,
+     "failures": [],
+     "he_appm_per_dpa_last": [
+      25.69028931679759
+     ],
+     "ledger_recoil_ok": true,
+     "missing": [],
+     "n_failures": 0,
+     "n_missing": 0,
+     "output_sha256": "d7feb7b86e2bb294de2281f98f40f94d3473514b252d7b65173cd8bb3b3aac5c",
+     "pass": true,
+     "step0_damage_keys": [
+      "covered_atom_fraction",
+      "damage_energy_eV_per_g_s",
+      "damage_energy_uncovered_upper_eV_per_g_s",
+      "dpa",
+      "dpa_arc",
+      "dpa_arc_rate_per_s",
+      "dpa_nrt",
+      "dpa_nrt_rate_per_s",
+      "dpa_rate_per_s",
+      "dpa_uncovered_upper_bound",
+      "dpa_uncovered_upper_bound_rate_per_s",
+      "elements",
+      "he_appm_per_dpa"
+     ],
+     "worst_rel": 7.061157149747729e-14
+    }
+   },
+   "pass": true
+  },
+  "G7": {
+   "external": true,
+   "note": "CI green on the pushed commit; committed baselines unchanged (external)",
+   "pass": null
+  }
+ },
+ "groups_sha256": "ce4bf523498ffbb38d42aa9415fc014882b8bc7a7ecfb89f859ba3259d8fb34f",
+ "inputs": {
+  "Cr52": {
+   "match": true,
+   "path": "/home/connoravila/nuclear-data/tendl-2025-patched/files/n/n-Cr052.tendl",
+   "pinned": "796548d723c19db57930f7a3c4c81a6a53e4004346f74279946d0d70875f0a94",
+   "sha256": "796548d723c19db57930f7a3c4c81a6a53e4004346f74279946d0d70875f0a94"
+  },
+  "Fe56": {
+   "match": true,
+   "path": "/home/connoravila/nuclear-data/tendl-2025-patched/files/n/n-Fe056.tendl",
+   "pinned": "f33f867a4f9c4579a62954fe31dc6e70768ab2424dc8f282a122a93f156d2e1e",
+   "sha256": "f33f867a4f9c4579a62954fe31dc6e70768ab2424dc8f282a122a93f156d2e1e"
+  },
+  "Ni58": {
+   "match": true,
+   "path": "/home/connoravila/nuclear-data/tendl-2025-patched/files/n/n-Ni058.tendl",
+   "pinned": "26c8ae72a203187fae84f9a11c3997086cd70153386e04cf204b4122ab368916",
+   "sha256": "26c8ae72a203187fae84f9a11c3997086cd70153386e04cf204b4122ab368916"
+  },
+  "W184": {
+   "match": true,
+   "path": "/home/connoravila/nuclear-data/tendl-2025-patched/files/n/n-W184.tendl",
+   "pinned": "cbf1c80e1557af58fcf4c40a78b3e1a0d2d70b08719a99ffe4a55b753aaa2a20",
+   "sha256": "cbf1c80e1557af58fcf4c40a78b3e1a0d2d70b08719a99ffe4a55b753aaa2a20"
+  }
+ },
+ "njoy_driver_sha256": "c040287df61d76668bc8b28f23d435c91056bd33cc1b80fa9bf5a56a6a2b43e4",
+ "protocol": "protocols/ACTINV-P154_PROTOCOL.md",
+ "protocol_sha256": "d2ea40acee20f5515bba4c2b8b7b0c89a795d76110fa9bd7711675330b4bbfec",
+ "reference_sha256": "79e1e8600a8c2ad3ce42e72dcf34ce4dd8fa9bf60288db24e9eeb077781c9072",
+ "tolerances": {
+  "G3_elastic": 0.02,
+  "G4_inelastic_disappearance": 0.05,
+  "G6_run": 1e-12
+ },
+ "verdict": "FAIL"
+}

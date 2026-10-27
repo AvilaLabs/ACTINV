@@ -1,0 +1,2788 @@
+{
+ "candidate_sha256": "020db689151e367f0a2e8a4474b54c2d9fc098be6481758a2f422dbca5d993ee",
+ "checker_sha256": "67ed4b0a9a0b20af8923e43bb5811c8699b1a7248c0b0e9d3e0060c0a67d9d78",
+ "displacement_energy_eV": {
+  "Cr": 40.0,
+  "Fe": 40.0,
+  "Ni": 39.0,
+  "W": 70.0
+ },
+ "evidence": {
+  "mode_information": {
+   "Cr52": {
+    "capture=evaluated,continuum=kinematic": {
+     "disappearance": {
+      "fns_njoy_447": 2.6856523318243046e-10,
+      "fns_relative_difference": 0.052225671997990476,
+      "fns_table": 2.54539233404181e-10,
+      "g4_style": {
+       "evaluated_groups": 456,
+       "n_bad": 397,
+       "vacuous": false,
+       "worst_rel": 5.958917204260418
+      },
+      "rel_vs_njoy_447": {
+       "max": 83.17209117838178,
+       "median": 0.06809800871127789,
+       "n": 660,
+       "p90": 14.299779116338469
+      }
+     },
+     "inelastic": {
+      "fns_njoy_446": 7.908531625060855e-10,
+      "fns_relative_difference": 0.3448349331435782,
+      "fns_table": 1.0635669599252588e-09,
+      "g4_style": {
+       "evaluated_groups": 51,
+       "n_bad": 21,
+       "vacuous": false,
+       "worst_rel": 0.38701410621670534
+      },
+      "rel_vs_njoy_446": {
+       "max": 0.38701410621670534,
+       "median": 0.31049670402395135,
+       "n": 102,
+       "p90": 0.36975461828869727
+      }
+     },
+     "is_gate_mode": false
+    },
+    "capture=one-photon,continuum=kinematic": {
+     "disappearance": {
+      "fns_njoy_447": 2.6856523318243046e-10,
+      "fns_relative_difference": 0.05218761886206921,
+      "fns_table": 2.5454945315350304e-10,
+      "g4_style": {
+       "evaluated_groups": 456,
+       "n_bad": 438,
+       "vacuous": false,
+       "worst_rel": 7.487918777344534
+      },
+      "rel_vs_njoy_447": {
+       "max": 84.2317488948495,
+       "median": 1.447385843743782,
+       "n": 660,
+       "p90": 15.398686398975993
+      }
+     },
+     "inelastic": {
+      "fns_njoy_446": 7.908531625060855e-10,
+      "fns_relative_difference": 0.3448349331435782,
+      "fns_table": 1.0635669599252588e-09,
+      "g4_style": {
+       "evaluated_groups": 51,
+       "n_bad": 21,
+       "vacuous": false,
+       "worst_rel": 0.38701410621670534
+      },
+      "rel_vs_njoy_446": {
+       "max": 0.38701410621670534,
+       "median": 0.31049670402395135,
+       "n": 102,
+       "p90": 0.36975461828869727
+      }
+     },
+     "is_gate_mode": false
+    },
+    "capture=per-photon,continuum=evaluated": {
+     "disappearance": {
+      "fns_njoy_447": 2.6856523318243046e-10,
+      "fns_relative_difference": 0.009244563913475905,
+      "fns_table": 2.660824647193379e-10,
+      "g4_style": {
+       "evaluated_groups": 456,
+       "n_bad": 434,
+       "vacuous": false,
+       "worst_rel": 0.204986276469096
+      },
+      "rel_vs_njoy_447": {
+       "max": 0.2325901847337315,
+       "median": 0.1926214686429646,
+       "n": 660,
+       "p90": 0.20454086671300944
+      }
+     },
+     "inelastic": {
+      "fns_njoy_446": 7.908531625060855e-10,
+      "fns_relative_difference": 0.002706462852512519,
+      "fns_table": 7.929935772122002e-10,
+      "g4_style": {
+       "evaluated_groups": 51,
+       "n_bad": 0,
+       "vacuous": false,
+       "worst_rel": 0.002458440646476564
+      },
+      "rel_vs_njoy_446": {
+       "max": 0.005240884998682093,
+       "median": 0.0024501779413905926,
+       "n": 102,
+       "p90": 0.0032608608368264996
+      }
+     },
+     "is_gate_mode": true
+    },
+    "capture=per-photon,continuum=kinematic": {
+     "disappearance": {
+      "fns_njoy_447": 2.6856523318243046e-10,
+      "fns_relative_difference": 0.056319922330626535,
+      "fns_table": 2.534396601088894e-10,
+      "g4_style": {
+       "evaluated_groups": 456,
+       "n_bad": 434,
+       "vacuous": false,
+       "worst_rel": 0.204986276469096
+      },
+      "rel_vs_njoy_447": {
+       "max": 0.2325901847337315,
+       "median": 0.1926214686429646,
+       "n": 660,
+       "p90": 0.20454086671300944
+      }
+     },
+     "inelastic": {
+      "fns_njoy_446": 7.908531625060855e-10,
+      "fns_relative_difference": 0.3448349331435782,
+      "fns_table": 1.0635669599252588e-09,
+      "g4_style": {
+       "evaluated_groups": 51,
+       "n_bad": 21,
+       "vacuous": false,
+       "worst_rel": 0.38701410621670534
+      },
+      "rel_vs_njoy_446": {
+       "max": 0.38701410621670534,
+       "median": 0.31049670402395135,
+       "n": 102,
+       "p90": 0.36975461828869727
+      }
+     },
+     "is_gate_mode": false
+    },
+    "gate_mode": {
+     "capture": "per-photon",
+     "continuum": "evaluated"
+    }
+   },
+   "Fe56": {
+    "capture=evaluated,continuum=kinematic": {
+     "disappearance": {
+      "fns_njoy_447": 3.0829390660688943e-10,
+      "fns_relative_difference": 0.02035007194939497,
+      "fns_table": 3.020201034258792e-10,
+      "g4_style": {
+       "evaluated_groups": 455,
+       "n_bad": 422,
+       "vacuous": false,
+       "worst_rel": 4.759563014745496
+      },
+      "rel_vs_njoy_447": {
+       "max": 68.68071460698481,
+       "median": 0.15685832583024015,
+       "n": 660,
+       "p90": 11.148886833357892
+      }
+     },
+     "inelastic": {
+      "fns_njoy_446": 7.015762346676356e-10,
+      "fns_relative_difference": 0.543865198403496,
+      "fns_table": 1.0831391327303268e-09,
+      "g4_style": {
+       "evaluated_groups": 61,
+       "n_bad": 21,
+       "vacuous": false,
+       "worst_rel": 0.4862041532613374
+      },
+      "rel_vs_njoy_446": {
+       "max": 0.7463495483341774,
+       "median": 0.47886528977702686,
+       "n": 114,
+       "p90": 0.6294199980681872
+      }
+     },
+     "is_gate_mode": false
+    },
+    "capture=one-photon,continuum=kinematic": {
+     "disappearance": {
+      "fns_njoy_447": 3.0829390660688943e-10,
+      "fns_relative_difference": 0.020291461916216464,
+      "fns_table": 3.0203817254197414e-10,
+      "g4_style": {
+       "evaluated_groups": 455,
+       "n_bad": 436,
+       "vacuous": false,
+       "worst_rel": 5.9205898984342875
+      },
+      "rel_vs_njoy_447": {
+       "max": 69.45724093686977,
+       "median": 1.1391770229215936,
+       "n": 660,
+       "p90": 11.924300437579882
+      }
+     },
+     "inelastic": {
+      "fns_njoy_446": 7.015762346676356e-10,
+      "fns_relative_difference": 0.543865198403496,
+      "fns_table": 1.0831391327303268e-09,
+      "g4_style": {
+       "evaluated_groups": 61,
+       "n_bad": 21,
+       "vacuous": false,
+       "worst_rel": 0.4862041532613374
+      },
+      "rel_vs_njoy_446": {
+       "max": 0.7463495483341774,
+       "median": 0.47886528977702686,
+       "n": 114,
+       "p90": 0.6294199980681872
+      }
+     },
+     "is_gate_mode": false
+    },
+    "capture=per-photon,continuum=evaluated": {
+     "disappearance": {
+      "fns_njoy_447": 3.0829390660688943e-10,
+      "fns_relative_difference": 0.010568502991532136,
+      "fns_table": 3.050357015326434e-10,
+      "g4_style": {
+       "evaluated_groups": 455,
+       "n_bad": 434,
+       "vacuous": false,
+       "worst_rel": 0.26110718642259795
+      },
+      "rel_vs_njoy_447": {
+       "max": 0.28668275539695937,
+       "median": 0.2504958550141551,
+       "n": 660,
+       "p90": 0.26660930830718943
+      }
+     },
+     "inelastic": {
+      "fns_njoy_446": 7.015762346676356e-10,
+      "fns_relative_difference": 0.0034747000527469768,
+      "fns_table": 7.040140016472412e-10,
+      "g4_style": {
+       "evaluated_groups": 61,
+       "n_bad": 0,
+       "vacuous": false,
+       "worst_rel": 0.0026178093899326483
+      },
+      "rel_vs_njoy_446": {
+       "max": 0.008545292937194134,
+       "median": 0.0024498582259087098,
+       "n": 114,
+       "p90": 0.00489789613569447
+      }
+     },
+     "is_gate_mode": true
+    },
+    "capture=per-photon,continuum=kinematic": {
+     "disappearance": {
+      "fns_njoy_447": 3.0829390660688943e-10,
+      "fns_relative_difference": 0.027337389243819274,
+      "fns_table": 2.9986595608047923e-10,
+      "g4_style": {
+       "evaluated_groups": 455,
+       "n_bad": 434,
+       "vacuous": false,
+       "worst_rel": 0.26110718642259795
+      },
+      "rel_vs_njoy_447": {
+       "max": 0.2868557634797716,
+       "median": 0.2504958550141551,
+       "n": 660,
+       "p90": 0.26660930830718926
+      }
+     },
+     "inelastic": {
+      "fns_njoy_446": 7.015762346676356e-10,
+      "fns_relative_difference": 0.543865198403496,
+      "fns_table": 1.0831391327303268e-09,
+      "g4_style": {
+       "evaluated_groups": 61,
+       "n_bad": 21,
+       "vacuous": false,
+       "worst_rel": 0.4862041532613374
+      },
+      "rel_vs_njoy_446": {
+       "max": 0.7463495483341774,
+       "median": 0.47886528977702686,
+       "n": 114,
+       "p90": 0.6294199980681872
+      }
+     },
+     "is_gate_mode": false
+    },
+    "gate_mode": {
+     "capture": "per-photon",
+     "continuum": "evaluated"
+    }
+   },
+   "Ni58": {
+    "capture=evaluated,continuum=kinematic": {
+     "disappearance": {
+      "fns_njoy_447": 1.1669594340669222e-09,
+      "fns_relative_difference": 0.09686521696851454,
+      "fns_table": 1.0539216552925749e-09,
+      "g4_style": {
+       "evaluated_groups": 518,
+       "n_bad": 463,
+       "vacuous": false,
+       "worst_rel": 7.845547013432808
+      },
+      "rel_vs_njoy_447": {
+       "max": 18.727784912596032,
+       "median": 0.12483131434333106,
+       "n": 660,
+       "p90": 2.2659540739894
+      }
+     },
+     "inelastic": {
+      "fns_njoy_446": 2.8831710189498806e-10,
+      "fns_relative_difference": 0.6426145456562936,
+      "fns_table": 4.735938653341751e-10,
+      "g4_style": {
+       "evaluated_groups": 41,
+       "n_bad": 10,
+       "vacuous": false,
+       "worst_rel": 0.4952549581639584
+      },
+      "rel_vs_njoy_446": {
+       "max": 0.7538049282466387,
+       "median": 0.5130867869046489,
+       "n": 102,
+       "p90": 0.7394246273248216
+      }
+     },
+     "is_gate_mode": false
+    },
+    "capture=one-photon,continuum=kinematic": {
+     "disappearance": {
+      "fns_njoy_447": 1.1669594340669222e-09,
+      "fns_relative_difference": 0.09684706221467163,
+      "fns_table": 1.053942841153845e-09,
+      "g4_style": {
+       "evaluated_groups": 518,
+       "n_bad": 481,
+       "vacuous": false,
+       "worst_rel": 8.982222252240954
+      },
+      "rel_vs_njoy_447": {
+       "max": 19.751378265402998,
+       "median": 1.0830627489158897,
+       "n": 660,
+       "p90": 3.2974448710440223
+      }
+     },
+     "inelastic": {
+      "fns_njoy_446": 2.8831710189498806e-10,
+      "fns_relative_difference": 0.6426145456562936,
+      "fns_table": 4.735938653341751e-10,
+      "g4_style": {
+       "evaluated_groups": 41,
+       "n_bad": 10,
+       "vacuous": false,
+       "worst_rel": 0.4952549581639584
+      },
+      "rel_vs_njoy_446": {
+       "max": 0.7538049282466387,
+       "median": 0.5130867869046489,
+       "n": 102,
+       "p90": 0.7394246273248216
+      }
+     },
+     "is_gate_mode": false
+    },
+    "capture=per-photon,continuum=evaluated": {
+     "disappearance": {
+      "fns_njoy_447": 1.1669594340669222e-09,
+      "fns_relative_difference": 0.07184642959410678,
+      "fns_table": 1.0831175652480544e-09,
+      "g4_style": {
+       "evaluated_groups": 518,
+       "n_bad": 470,
+       "vacuous": false,
+       "worst_rel": 0.21188544256543843
+      },
+      "rel_vs_njoy_447": {
+       "max": 0.5820812705924838,
+       "median": 0.17540395916572965,
+       "n": 660,
+       "p90": 0.20098875718701398
+      }
+     },
+     "inelastic": {
+      "fns_njoy_446": 2.8831710189498806e-10,
+      "fns_relative_difference": 0.003528677205903778,
+      "fns_table": 2.8933447988051715e-10,
+      "g4_style": {
+       "evaluated_groups": 41,
+       "n_bad": 0,
+       "vacuous": false,
+       "worst_rel": 0.0021888225619979096
+      },
+      "rel_vs_njoy_446": {
+       "max": 0.0048797206225489435,
+       "median": 0.0033066687610878937,
+       "n": 102,
+       "p90": 0.004016414519035349
+      }
+     },
+     "is_gate_mode": true
+    },
+    "capture=per-photon,continuum=kinematic": {
+     "disappearance": {
+      "fns_njoy_447": 1.1669594340669222e-09,
+      "fns_relative_difference": 0.0984675673674833,
+      "fns_table": 1.0520517773778174e-09,
+      "g4_style": {
+       "evaluated_groups": 518,
+       "n_bad": 496,
+       "vacuous": false,
+       "worst_rel": 0.21236037832240512
+      },
+      "rel_vs_njoy_447": {
+       "max": 0.5477248375995245,
+       "median": 0.17508527401301968,
+       "n": 660,
+       "p90": 0.20390346295315967
+      }
+     },
+     "inelastic": {
+      "fns_njoy_446": 2.8831710189498806e-10,
+      "fns_relative_difference": 0.6426145456562936,
+      "fns_table": 4.735938653341751e-10,
+      "g4_style": {
+       "evaluated_groups": 41,
+       "n_bad": 10,
+       "vacuous": false,
+       "worst_rel": 0.4952549581639584
+      },
+      "rel_vs_njoy_446": {
+       "max": 0.7538049282466387,
+       "median": 0.5130867869046489,
+       "n": 102,
+       "p90": 0.7394246273248216
+      }
+     },
+     "is_gate_mode": false
+    },
+    "gate_mode": {
+     "capture": "per-photon",
+     "continuum": "evaluated"
+    }
+   },
+   "W184": {
+    "capture=evaluated,continuum=kinematic": {
+     "disappearance": {
+      "fns_njoy_447": 5.5083229184304784e-12,
+      "fns_relative_difference": 0.2533689048906518,
+      "fns_table": 6.903960664057288e-12,
+      "g4_style": {
+       "evaluated_groups": 427,
+       "n_bad": 427,
+       "vacuous": false,
+       "worst_rel": 235.0918377904114
+      },
+      "rel_vs_njoy_447": {
+       "max": 5188.126165252764,
+       "median": 0.9999778572315783,
+       "n": 660,
+       "p90": 1551.520041909188
+      }
+     },
+     "inelastic": {
+      "fns_njoy_446": 2.5614602714109256e-10,
+      "fns_relative_difference": 0.3809383155238897,
+      "fns_table": 3.537218632483569e-10,
+      "g4_style": {
+       "evaluated_groups": 91,
+       "n_bad": 35,
+       "vacuous": false,
+       "worst_rel": 0.5137010526422113
+      },
+      "rel_vs_njoy_446": {
+       "max": 0.5137010526422113,
+       "median": 0.23147581389735777,
+       "n": 158,
+       "p90": 0.41091100285687443
+      }
+     },
+     "is_gate_mode": false
+    },
+    "capture=one-photon,continuum=kinematic": {
+     "disappearance": {
+      "fns_njoy_447": 5.5083229184304784e-12,
+      "fns_relative_difference": 0.2551753298218664,
+      "fns_table": 6.913911035906322e-12,
+      "g4_style": {
+       "evaluated_groups": 427,
+       "n_bad": 427,
+       "vacuous": false,
+       "worst_rel": 695.9897187284714
+      },
+      "rel_vs_njoy_447": {
+       "max": 5463.320384152193,
+       "median": 536.3067158613951,
+       "n": 660,
+       "p90": 1693.9214629952526
+      }
+     },
+     "inelastic": {
+      "fns_njoy_446": 2.5614602714109256e-10,
+      "fns_relative_difference": 0.3809383155238897,
+      "fns_table": 3.537218632483569e-10,
+      "g4_style": {
+       "evaluated_groups": 91,
+       "n_bad": 35,
+       "vacuous": false,
+       "worst_rel": 0.5137010526422113
+      },
+      "rel_vs_njoy_446": {
+       "max": 0.5137010526422113,
+       "median": 0.23147581389735777,
+       "n": 158,
+       "p90": 0.41091100285687443
+      }
+     },
+     "is_gate_mode": false
+    },
+    "capture=per-photon,continuum=evaluated": {
+     "disappearance": {
+      "fns_njoy_447": 5.5083229184304784e-12,
+      "fns_relative_difference": 0.016831148212218948,
+      "fns_table": 5.415611518989613e-12,
+      "g4_style": {
+       "evaluated_groups": 427,
+       "n_bad": 427,
+       "vacuous": false,
+       "worst_rel": 0.5454943383472859
+      },
+      "rel_vs_njoy_447": {
+       "max": 0.6074420819928787,
+       "median": 0.5369002677528695,
+       "n": 660,
+       "p90": 0.5508773648350246
+      }
+     },
+     "inelastic": {
+      "fns_njoy_446": 2.5614602714109256e-10,
+      "fns_relative_difference": 0.0007047116347433537,
+      "fns_table": 2.563265362266122e-10,
+      "g4_style": {
+       "evaluated_groups": 91,
+       "n_bad": 9,
+       "vacuous": false,
+       "worst_rel": 0.3410468216201092
+      },
+      "rel_vs_njoy_446": {
+       "max": 0.38408052391827807,
+       "median": 0.0006770054405142601,
+       "n": 158,
+       "p90": 0.013907872471873431
+      }
+     },
+     "is_gate_mode": true
+    },
+    "capture=per-photon,continuum=kinematic": {
+     "disappearance": {
+      "fns_njoy_447": 5.5083229184304784e-12,
+      "fns_relative_difference": 0.1473720715379996,
+      "fns_table": 6.320095877619818e-12,
+      "g4_style": {
+       "evaluated_groups": 427,
+       "n_bad": 427,
+       "vacuous": false,
+       "worst_rel": 0.5454902325882806
+      },
+      "rel_vs_njoy_447": {
+       "max": 0.6385112929417163,
+       "median": 0.5369238683901971,
+       "n": 660,
+       "p90": 0.5518691095526336
+      }
+     },
+     "inelastic": {
+      "fns_njoy_446": 2.5614602714109256e-10,
+      "fns_relative_difference": 0.3809383155238897,
+      "fns_table": 3.537218632483569e-10,
+      "g4_style": {
+       "evaluated_groups": 91,
+       "n_bad": 35,
+       "vacuous": false,
+       "worst_rel": 0.5137010526422113
+      },
+      "rel_vs_njoy_446": {
+       "max": 0.5137010526422113,
+       "median": 0.23147581389735777,
+       "n": 158,
+       "p90": 0.41091100285687443
+      }
+     },
+     "is_gate_mode": false
+    },
+    "gate_mode": {
+     "capture": "per-photon",
+     "continuum": "evaluated"
+    }
+   }
+  },
+  "njoy_documented_approximations": [
+   {
+    "what": "elastic onset uses a fixed edis = 25 eV: below the incident energy where the maximum recoil is 25 eV, W is taken as zero whatever `ed`",
+    "where": "heatr.f90:1891, 1941"
+   },
+   {
+    "what": "elastic W is evaluated on a 1.1-ratio energy ladder and interpolated linearly in between",
+    "where": "heatr.f90:1892, 1950-1960"
+   },
+   {
+    "what": "tabulated MF=4 pdfs are projected onto at most 64 Legendre coefficients by 64-point Gauss quadrature, rounded to 6 digits (4538-4546)",
+    "where": "heatr.f90:4404-4551 (hgetco), 4484"
+   },
+   {
+    "what": "laboratory-to-centre-of-mass conversion of coefficients is not coded",
+    "where": "heatr.f90:4531"
+   },
+   {
+    "what": "the angle integral of the damage function is a fixed 64-point Gauss-Legendre rule over the Legendre series",
+    "where": "heatr.f90:1943-1970"
+   }
+  ],
+  "targets": {
+   "Cr52": {
+    "capture_determination": {
+     "has_mf6_mt102": true,
+     "head_NK": 1,
+     "mf6_mt102_records": 1743,
+     "mode": "per-photon",
+     "njoy_routine": "sixbar/tabsq6 (heatr.f90 j6>0, icon=-1)",
+     "njoy_treatment": "per-photon"
+    },
+    "continuum_determination": {
+     "continuum_mts_with_recoil": [
+      91
+     ],
+     "mode": "evaluated",
+     "njoy_treatment": "evaluated recoil subsection",
+     "per_mt": {
+      "91": {
+       "recoil_subsection": true,
+       "subsections_zap_law": [
+        [
+         1,
+         1
+        ],
+        [
+         24052,
+         1
+        ],
+        [
+         0,
+         1
+        ]
+       ],
+       "walked_completely": true
+      }
+     }
+    },
+    "exact_elastic": {
+     "energy_interpolation": "linear pdf mixing between MF=4 energies (INT=2); W linear between the refined points; constant above the last MF=4 energy",
+     "frame": "centre of mass",
+     "ltt": 3,
+     "n_points": 1089,
+     "refine_ratio": 1.05,
+     "tabulated_pdf_norm_worst_deviation": 7.833410777813299e-07,
+     "threshold_eV": 535.137296213135
+    },
+    "njoy": {
+     "ed_eV": 40.0,
+     "endf": {
+      "path": "/home/connoravila/nuclear-data/tendl-2025-patched/files/n/n-Cr052.tendl",
+      "sha256": "796548d723c19db57930f7a3c4c81a6a53e4004346f74279946d0d70875f0a94"
+     },
+     "evaluation": {
+      "awr": 51.49431,
+      "mat": 2431,
+      "za": 24052
+     },
+     "njoy": {
+      "path": "/home/connoravila/nuclear-data/njoy2016.79-build/njoy",
+      "sha256": "57e74621f41e7f7f881f933ae0f1b8754274f41e50c60c0cfaf630180a0f1f30"
+     },
+     "output_sha256": "06b4aec457e815829b2734154ddbc6ee959aea1fb3e17da6c288f222a2a0c46f",
+     "pendf": "/home/connoravila/Documents/actinv/target/p154-work-dev2/njoy_Cr52/tape24",
+     "pendf_sha256": "16d41b3dcadce46fb9e445f4ef85a06a31b2f046c5f561e7fd9b81fa45d39c42",
+     "reconr_err": 0.001,
+     "run": {
+      "error": null,
+      "exit_code": 0
+     },
+     "version": "njoy 2016.79  18Mar25                                       10/27/26 13:31:17"
+    },
+    "njoy_deck": "moder\n 20 -21/\nreconr\n -21 -22/\n 'TENDL-2025 pointwise for ACTINV P154'/\n 2431 1 0/\n 0.001/\n 'processed for the ACTINV P154 damage-energy check'/\n 0/\nheatr\n -21 -22 -23/\n 2431 4 0 0 0 0 40.0/\n 444 445 446 447/\nmoder\n -23 24/\nstop\n",
+    "njoy_group_values_sha256": "6bbb45f22531ca2cc7cd5d82c815a9a96d67d236133072c7700d9f24bc7d9b04",
+    "structure_violations": [],
+    "table": {
+     "path": "/home/connoravila/Documents/actinv/target/p154-work-dev2/table2_Cr52_per-photon_evaluated.json",
+     "sha256": "6f53df3b859a2ce9e05a06b3e4ab22a92870620d2af705d0fb992ebeb2cb5ff1"
+    }
+   },
+   "Fe56": {
+    "capture_determination": {
+     "has_mf6_mt102": true,
+     "head_NK": 1,
+     "mf6_mt102_records": 2131,
+     "mode": "per-photon",
+     "njoy_routine": "sixbar/tabsq6 (heatr.f90 j6>0, icon=-1)",
+     "njoy_treatment": "per-photon"
+    },
+    "continuum_determination": {
+     "continuum_mts_with_recoil": [
+      91
+     ],
+     "mode": "evaluated",
+     "njoy_treatment": "evaluated recoil subsection",
+     "per_mt": {
+      "91": {
+       "recoil_subsection": true,
+       "subsections_zap_law": [
+        [
+         1,
+         1
+        ],
+        [
+         26056,
+         1
+        ],
+        [
+         0,
+         1
+        ]
+       ],
+       "walked_completely": true
+      }
+     }
+    },
+    "exact_elastic": {
+     "energy_interpolation": "linear pdf mixing between MF=4 energies (INT=2); W linear between the refined points; constant above the last MF=4 energy",
+     "frame": "centre of mass",
+     "ltt": 3,
+     "n_points": 1990,
+     "refine_ratio": 1.05,
+     "tabulated_pdf_norm_worst_deviation": 2.5534390152293085e-06,
+     "threshold_eV": 574.72462824429
+    },
+    "njoy": {
+     "ed_eV": 40.0,
+     "endf": {
+      "path": "/home/connoravila/nuclear-data/tendl-2025-patched/files/n/n-Fe056.tendl",
+      "sha256": "f33f867a4f9c4579a62954fe31dc6e70768ab2424dc8f282a122a93f156d2e1e"
+     },
+     "evaluation": {
+      "awr": 55.45443,
+      "mat": 2631,
+      "za": 26056
+     },
+     "njoy": {
+      "path": "/home/connoravila/nuclear-data/njoy2016.79-build/njoy",
+      "sha256": "57e74621f41e7f7f881f933ae0f1b8754274f41e50c60c0cfaf630180a0f1f30"
+     },
+     "output_sha256": "2365a87d7b6211cc7890fa50d7376c80590c62f2149477724e708b28df936f15",
+     "pendf": "/home/connoravila/Documents/actinv/target/p154-work-dev2/njoy_Fe56/tape24",
+     "pendf_sha256": "cd2370ddf43be8d90365cfc77557596ef0f0e94f4ed3d4952edb1daefda77089",
+     "reconr_err": 0.001,
+     "run": {
+      "error": null,
+      "exit_code": 0
+     },
+     "version": "njoy 2016.79  18Mar25                                       10/27/26 13:31:07"
+    },
+    "njoy_deck": "moder\n 20 -21/\nreconr\n -21 -22/\n 'TENDL-2025 pointwise for ACTINV P154'/\n 2631 1 0/\n 0.001/\n 'processed for the ACTINV P154 damage-energy check'/\n 0/\nheatr\n -21 -22 -23/\n 2631 4 0 0 0 0 40.0/\n 444 445 446 447/\nmoder\n -23 24/\nstop\n",
+    "njoy_group_values_sha256": "76b00e3654592912375f33f3f06ab867e5e1a945517d70a67d4c7ab7eb3602dc",
+    "structure_violations": [],
+    "table": {
+     "path": "/home/connoravila/Documents/actinv/target/p154-work-dev2/table2_Fe56_per-photon_evaluated.json",
+     "sha256": "b394741232c5b2584119a7ec0a82a7deee1c2bac281899987128604917b6d211"
+    }
+   },
+   "Ni58": {
+    "capture_determination": {
+     "has_mf6_mt102": true,
+     "head_NK": 1,
+     "mf6_mt102_records": 2234,
+     "mode": "per-photon",
+     "njoy_routine": "sixbar/tabsq6 (heatr.f90 j6>0, icon=-1)",
+     "njoy_treatment": "per-photon"
+    },
+    "continuum_determination": {
+     "continuum_mts_with_recoil": [
+      91
+     ],
+     "mode": "evaluated",
+     "njoy_treatment": "evaluated recoil subsection",
+     "per_mt": {
+      "91": {
+       "recoil_subsection": true,
+       "subsections_zap_law": [
+        [
+         1,
+         1
+        ],
+        [
+         28058,
+         1
+        ],
+        [
+         0,
+         1
+        ]
+       ],
+       "walked_completely": true
+      }
+     }
+    },
+    "exact_elastic": {
+     "energy_interpolation": "linear pdf mixing between MF=4 energies (INT=2); W linear between the refined points; constant above the last MF=4 energy",
+     "frame": "centre of mass",
+     "ltt": 3,
+     "n_points": 657,
+     "refine_ratio": 1.05,
+     "tabulated_pdf_norm_worst_deviation": 7.396331467290906e-07,
+     "threshold_eV": 579.6867393142128
+    },
+    "njoy": {
+     "ed_eV": 39.0,
+     "endf": {
+      "path": "/home/connoravila/nuclear-data/tendl-2025-patched/files/n/n-Ni058.tendl",
+      "sha256": "26c8ae72a203187fae84f9a11c3997086cd70153386e04cf204b4122ab368916"
+     },
+     "evaluation": {
+      "awr": 57.43764,
+      "mat": 2825,
+      "za": 28058
+     },
+     "njoy": {
+      "path": "/home/connoravila/nuclear-data/njoy2016.79-build/njoy",
+      "sha256": "57e74621f41e7f7f881f933ae0f1b8754274f41e50c60c0cfaf630180a0f1f30"
+     },
+     "output_sha256": "38a63d4f4d6a281a2d710f4b7c28554daa90ee0978e7ca726be9fa4346bd7cd8",
+     "pendf": "/home/connoravila/Documents/actinv/target/p154-work-dev2/njoy_Ni58/tape24",
+     "pendf_sha256": "2084cba1c52a3728842cd094b9f7069b82dc768ffbc0f217fc4e675867f9100b",
+     "reconr_err": 0.001,
+     "run": {
+      "error": null,
+      "exit_code": 0
+     },
+     "version": "njoy 2016.79  18Mar25                                       10/27/26 13:31:27"
+    },
+    "njoy_deck": "moder\n 20 -21/\nreconr\n -21 -22/\n 'TENDL-2025 pointwise for ACTINV P154'/\n 2825 1 0/\n 0.001/\n 'processed for the ACTINV P154 damage-energy check'/\n 0/\nheatr\n -21 -22 -23/\n 2825 4 0 0 0 0 39.0/\n 444 445 446 447/\nmoder\n -23 24/\nstop\n",
+    "njoy_group_values_sha256": "dd1b037f3410c1d26281af9b3394e593995565de22246b0d103aef217b71d3fa",
+    "structure_violations": [],
+    "table": {
+     "path": "/home/connoravila/Documents/actinv/target/p154-work-dev2/table2_Ni58_per-photon_evaluated.json",
+     "sha256": "53debba0774b3711345819420c586af267ee1313d9e453136ae48c97baf511bc"
+    }
+   },
+   "W184": {
+    "capture_determination": {
+     "has_mf6_mt102": true,
+     "head_NK": 1,
+     "mf6_mt102_records": 2296,
+     "mode": "per-photon",
+     "njoy_routine": "sixbar/tabsq6 (heatr.f90 j6>0, icon=-1)",
+     "njoy_treatment": "per-photon"
+    },
+    "continuum_determination": {
+     "continuum_mts_with_recoil": [
+      91
+     ],
+     "mode": "evaluated",
+     "njoy_treatment": "evaluated recoil subsection",
+     "per_mt": {
+      "91": {
+       "recoil_subsection": true,
+       "subsections_zap_law": [
+        [
+         1,
+         1
+        ],
+        [
+         74184,
+         1
+        ],
+        [
+         0,
+         1
+        ]
+       ],
+       "walked_completely": true
+      }
+     }
+    },
+    "exact_elastic": {
+     "energy_interpolation": "linear pdf mixing between MF=4 energies (INT=2); W linear between the refined points; constant above the last MF=4 energy",
+     "frame": "centre of mass",
+     "ltt": 3,
+     "n_points": 270,
+     "refine_ratio": 1.05,
+     "tabulated_pdf_norm_worst_deviation": 1.0096619633692683e-06,
+     "threshold_eV": 3226.5832083968257
+    },
+    "njoy": {
+     "ed_eV": 70.0,
+     "endf": {
+      "path": "/home/connoravila/nuclear-data/tendl-2025-patched/files/n/n-W184.tendl",
+      "sha256": "cbf1c80e1557af58fcf4c40a78b3e1a0d2d70b08719a99ffe4a55b753aaa2a20"
+     },
+     "evaluation": {
+      "awr": 182.3707,
+      "mat": 7437,
+      "za": 74184
+     },
+     "njoy": {
+      "path": "/home/connoravila/nuclear-data/njoy2016.79-build/njoy",
+      "sha256": "57e74621f41e7f7f881f933ae0f1b8754274f41e50c60c0cfaf630180a0f1f30"
+     },
+     "output_sha256": "7a24ccf0a6efa0cef66375876e09d1ccff9dfef5cdf4b323a090e6674c1fea80",
+     "pendf": "/home/connoravila/Documents/actinv/target/p154-work-dev2/njoy_W184/tape24",
+     "pendf_sha256": "0a2a8585a8890b862119ef678f871ab65855dea6bd5ba2b9c64e92cc814bd5d0",
+     "reconr_err": 0.001,
+     "run": {
+      "error": null,
+      "exit_code": 0
+     },
+     "version": "njoy 2016.79  18Mar25                                       10/27/26 13:31:47"
+    },
+    "njoy_deck": "moder\n 20 -21/\nreconr\n -21 -22/\n 'TENDL-2025 pointwise for ACTINV P154'/\n 7437 1 0/\n 0.001/\n 'processed for the ACTINV P154 damage-energy check'/\n 0/\nheatr\n -21 -22 -23/\n 7437 4 0 0 0 0 70.0/\n 444 445 446 447/\nmoder\n -23 24/\nstop\n",
+    "njoy_group_values_sha256": "041d34e7822c56cf5db82727696071b9e9f64da7a4b3ad8843abc9a45c48739c",
+    "structure_violations": [],
+    "table": {
+     "path": "/home/connoravila/Documents/actinv/target/p154-work-dev2/table2_W184_per-photon_evaluated.json",
+     "sha256": "ba2bf5011ed3196dba0522f309a8c961d7d8c7ed0d642ef638ca637033806301"
+    }
+   }
+  }
+ },
+ "flux_weight": "flat in lethargy: sum of the integral of y dE/E over the group divided by ln(hi/lo)",
+ "gates": {
+  "G0": {
+   "external": true,
+   "note": "protocol SHA-256 in protocols/protocol_hash.txt (external)",
+   "pass": null
+  },
+  "G1": {
+   "external": true,
+   "note": "fmt, clippy -D warnings, workspace tests (external)",
+   "pass": null
+  },
+  "G2": {
+   "cases": {
+    "build_damage_default_p23_corpus": {
+     "corpus_files": {
+      "n-Co059.tendl": "8ff347217eb7948bd6a032a08f1807b49104ed81aa9a840cce9a72c3f7bbaa45",
+      "n-Fe056.tendl": "c02da8f3e3157ebf6e42267b799943084261484f9984e25d8ef1b98d8ef5ba84",
+      "n-Ni058.tendl": "45acb51d359617252039b9ae70711663c978c3571617179e35b1b317625b170b"
+     },
+     "output_byte_identical": true,
+     "output_sha256": "8d6efcdde0006d828ec2c821cda69bc9cc75500dc42697161531e3bba4365c4b",
+     "pass": true,
+     "stdout_identical": true
+    },
+    "damage_demo": {
+     "identical_apart_from_ms": true,
+     "pass": true,
+     "spec_sha256": "8e2cb8857363a87d3f0bd0dee6788d3a1d256102dfe7cd770aa47f89fd5f78c1"
+    },
+    "fns_fe_5min": {
+     "identical_apart_from_ms": true,
+     "pass": true,
+     "spec_sha256": "ed55ed00f6c00fc4a2351e18332e98e7feb33d9b7ca65e7ba861e0e5e8feef39"
+    }
+   },
+   "pass": true
+  },
+  "G3": {
+   "cases": {
+    "Cr52": {
+     "bad": [],
+     "below_1keV": {
+      "max": 0.0040308039546428235,
+      "median": 0.0004962016608383163,
+      "n": 14,
+      "p90": 0.0032419524263891907
+     },
+     "below_1keV_table_positive_njoy_zero": 0,
+     "evaluated_groups": 289,
+     "information": {
+      "exact_reference_vs_njoy_445_above_1keV": {
+       "max": 0.02036760072694714,
+       "median": 8.925464517286672e-05,
+       "n": 289,
+       "p90": 0.0014242909719679672
+      },
+      "njoy_documented_approximations": "see evidence.njoy_documented_approximations",
+      "table_vs_njoy_445": {
+       "below_1keV": {
+        "max": 0.6393855091358767,
+        "median": 0.008460093716122465,
+        "n": 14,
+        "p90": 0.07857279963497793
+       },
+       "below_1keV_table_positive_njoy_zero": 0,
+       "evaluated_groups": 289,
+       "n_bad": 1,
+       "pass": false,
+       "worst_rel": 0.020263898667481593
+      }
+     },
+     "n_bad": 0,
+     "pass": true,
+     "structure_violations": [],
+     "worst_rel": 0.0014951593176129106
+    },
+    "Fe56": {
+     "bad": [],
+     "below_1keV": {
+      "max": 0.014224802145001329,
+      "median": 0.0007839862134778855,
+      "n": 13,
+      "p90": 0.005138986006232297
+     },
+     "below_1keV_table_positive_njoy_zero": 0,
+     "evaluated_groups": 289,
+     "information": {
+      "exact_reference_vs_njoy_445_above_1keV": {
+       "max": 0.0211932203870784,
+       "median": 5.228513445394051e-05,
+       "n": 289,
+       "p90": 0.002131075712993622
+      },
+      "njoy_documented_approximations": "see evidence.njoy_documented_approximations",
+      "table_vs_njoy_445": {
+       "below_1keV": {
+        "max": 0.9535032045180795,
+        "median": 0.0116992739048446,
+        "n": 13,
+        "p90": 0.3486681557266048
+       },
+       "below_1keV_table_positive_njoy_zero": 0,
+       "evaluated_groups": 289,
+       "n_bad": 1,
+       "pass": false,
+       "worst_rel": 0.021979053890225198
+      }
+     },
+     "n_bad": 0,
+     "pass": true,
+     "structure_violations": [],
+     "worst_rel": 0.01293840469960184
+    },
+    "Ni58": {
+     "bad": [],
+     "below_1keV": {
+      "max": 0.005316003927000745,
+      "median": 0.000671774706890061,
+      "n": 12,
+      "p90": 0.0032730460492081267
+     },
+     "below_1keV_table_positive_njoy_zero": 0,
+     "evaluated_groups": 289,
+     "information": {
+      "exact_reference_vs_njoy_445_above_1keV": {
+       "max": 0.032148780890505414,
+       "median": 0.00018935231543636537,
+       "n": 289,
+       "p90": 0.0019525836918442196
+      },
+      "njoy_documented_approximations": "see evidence.njoy_documented_approximations",
+      "table_vs_njoy_445": {
+       "below_1keV": {
+        "max": 1.0,
+        "median": 0.009732475702696674,
+        "n": 13,
+        "p90": 0.4355425522833976
+       },
+       "below_1keV_table_positive_njoy_zero": 0,
+       "evaluated_groups": 289,
+       "n_bad": 2,
+       "pass": false,
+       "worst_rel": 0.032037383881192164
+      }
+     },
+     "n_bad": 0,
+     "pass": true,
+     "structure_violations": [],
+     "worst_rel": 0.0013918419084676804
+    },
+    "W184": {
+     "bad": [],
+     "below_1keV": {
+      "n": 0
+     },
+     "below_1keV_table_positive_njoy_zero": 0,
+     "evaluated_groups": 264,
+     "information": {
+      "exact_reference_vs_njoy_445_above_1keV": {
+       "max": 2.699509130493651,
+       "median": 0.0012200860863817492,
+       "n": 264,
+       "p90": 0.014776101559950367
+      },
+      "njoy_documented_approximations": "see evidence.njoy_documented_approximations",
+      "table_vs_njoy_445": {
+       "below_1keV": {
+        "n": 0
+       },
+       "below_1keV_table_positive_njoy_zero": 0,
+       "evaluated_groups": 264,
+       "n_bad": 21,
+       "pass": false,
+       "worst_rel": 2.70073205401959
+      }
+     },
+     "n_bad": 0,
+     "pass": true,
+     "structure_violations": [],
+     "worst_rel": 0.016113189016655035
+    }
+   },
+   "note": "pass requires every target to have evaluated groups and none outside 2 percent; the <1 keV distribution is reported only",
+   "pass": true
+  },
+  "G4": {
+   "cases": {
+    "Cr52": {
+     "disappearance_vs_447": {
+      "bad": [
+       {
+        "group": 0,
+        "lo_eV": 1e-05,
+        "njoy": 9193.113026134688,
+        "rel": 0.19257749526286544,
+        "table": 7422.726345893248
+       },
+       {
+        "group": 1,
+        "lo_eV": 1.047129e-05,
+        "njoy": 8983.790015574525,
+        "rel": 0.19257186915298152,
+        "table": 7253.764780197445
+       },
+       {
+        "group": 2,
+        "lo_eV": 1.096478e-05,
+        "njoy": 8779.309515379786,
+        "rel": 0.19257327550512218,
+        "table": 7088.649125329814
+       },
+       {
+        "group": 3,
+        "lo_eV": 1.148154e-05,
+        "njoy": 8579.36777249066,
+        "rel": 0.19256380425622674,
+        "table": 6927.292076106588
+       },
+       {
+        "group": 4,
+        "lo_eV": 1.202264e-05,
+        "njoy": 8384.058589991444,
+        "rel": 0.19256184775782284,
+        "table": 6769.608776192845
+       },
+       {
+        "group": 5,
+        "lo_eV": 1.258925e-05,
+        "njoy": 8193.197702868669,
+        "rel": 0.19256034321932156,
+        "table": 6615.512741140521
+       },
+       {
+        "group": 6,
+        "lo_eV": 1.318257e-05,
+        "njoy": 8006.682968411576,
+        "rel": 0.1925588798519327,
+        "table": 6464.925064684696
+       },
+       {
+        "group": 7,
+        "lo_eV": 1.380384e-05,
+        "njoy": 7825.105011228413,
+        "rel": 0.19262866638329498,
+        "table": 6317.765468606245
+       },
+       {
+        "group": 8,
+        "lo_eV": 1.44544e-05,
+        "njoy": 7646.9066415330835,
+        "rel": 0.19262051777087721,
+        "table": 6173.955524895421
+       },
+       {
+        "group": 9,
+        "lo_eV": 1.513561e-05,
+        "njoy": 7472.79675439024,
+        "rel": 0.1926155947514183,
+        "table": 6033.419563086895
+       },
+       {
+        "group": 10,
+        "lo_eV": 1.584893e-05,
+        "njoy": 7302.656698387206,
+        "rel": 0.1926113898650511,
+        "table": 5896.081842003521
+       },
+       {
+        "group": 11,
+        "lo_eV": 1.659587e-05,
+        "njoy": 7136.349650899658,
+        "rel": 0.1926025770919536,
+        "table": 5761.87031710712
+       },
+       {
+        "group": 12,
+        "lo_eV": 1.737801e-05,
+        "njoy": 6973.75108559197,
+        "rel": 0.19258458857616959,
+        "table": 5630.7141019406245
+       },
+       {
+        "group": 13,
+        "lo_eV": 1.819701e-05,
+        "njoy": 6815.057868820941,
+        "rel": 0.19259037248873268,
+        "table": 5502.543335332447
+       },
+       {
+        "group": 14,
+        "lo_eV": 1.905461e-05,
+        "njoy": 6659.882978105705,
+        "rel": 0.19258484172382573,
+        "table": 5377.290468868016
+       },
+       {
+        "group": 15,
+        "lo_eV": 1.995262e-05,
+        "njoy": 6508.6945583910165,
+        "rel": 0.19263553883356008,
+        "table": 5254.888675032303
+       },
+       {
+        "group": 16,
+        "lo_eV": 2.089296e-05,
+        "njoy": 6360.440283359512,
+        "rel": 0.1926231280631881,
+        "table": 5135.272380119693
+       },
+       {
+        "group": 17,
+        "lo_eV": 2.187762e-05,
+        "njoy": 6215.585812518645,
+        "rel": 0.192613666216248,
+        "table": 5018.379041487732
+       },
+       {
+        "group": 18,
+        "lo_eV": 2.290868e-05,
+        "njoy": 6074.077907203741,
+        "rel": 0.1926104619137844,
+        "table": 4904.146955796916
+       },
+       {
+        "group": 19,
+        "lo_eV": 2.398833e-05,
+        "njoy": 5935.80453973172,
+        "rel": 0.19260897202562496,
+        "table": 4792.515329188956
+       }
+      ],
+      "evaluated_groups": 456,
+      "n_bad": 434,
+      "pass": false,
+      "uncovered_negligible_groups_evaluated": 10,
+      "vacuous": false,
+      "with_uncovered_reported": {
+       "max": 0.07822727400393796,
+       "median": 0.011321598408777795,
+       "n": 52,
+       "p90": 0.03394989743460697
+      },
+      "worst_rel": 0.204986276469096
+     },
+     "inelastic_vs_446": {
+      "bad": [],
+      "evaluated_groups": 51,
+      "n_bad": 0,
+      "pass": true,
+      "uncovered_negligible_groups_evaluated": 11,
+      "vacuous": false,
+      "with_uncovered_reported": {
+       "max": 0.005240884998682093,
+       "median": 0.0028543687141216606,
+       "n": 51,
+       "p90": 0.0037737459647353834
+      },
+      "worst_rel": 0.002458440646476564
+     },
+     "pass": false
+    },
+    "Fe56": {
+     "disappearance_vs_447": {
+      "bad": [
+       {
+        "group": 0,
+        "lo_eV": 1e-05,
+        "njoy": 27729.9349430865,
+        "rel": 0.2504558081049581,
+        "table": 20784.811678217855
+       },
+       {
+        "group": 1,
+        "lo_eV": 1.047129e-05,
+        "njoy": 27098.536521935646,
+        "rel": 0.25045057476337534,
+        "table": 20311.692474770545
+       },
+       {
+        "group": 2,
+        "lo_eV": 1.096478e-05,
+        "njoy": 26481.752584973197,
+        "rel": 0.2504520851360971,
+        "table": 19849.34243200843
+       },
+       {
+        "group": 3,
+        "lo_eV": 1.148154e-05,
+        "njoy": 25878.64292426443,
+        "rel": 0.25044303373165683,
+        "table": 19397.51708145337
+       },
+       {
+        "group": 4,
+        "lo_eV": 1.202264e-05,
+        "njoy": 25289.516727788356,
+        "rel": 0.2504412395050423,
+        "table": 18955.97881199754
+       },
+       {
+        "group": 5,
+        "lo_eV": 1.258925e-05,
+        "njoy": 24713.80740696388,
+        "rel": 0.250439839222617,
+        "table": 18524.485453385125
+       },
+       {
+        "group": 6,
+        "lo_eV": 1.318257e-05,
+        "njoy": 24151.210814443162,
+        "rel": 0.2504385724318024,
+        "table": 18102.81605557451
+       },
+       {
+        "group": 7,
+        "lo_eV": 1.380384e-05,
+        "njoy": 23603.498434604837,
+        "rel": 0.25050323044854483,
+        "table": 17690.745826849154
+       },
+       {
+        "group": 8,
+        "lo_eV": 1.44544e-05,
+        "njoy": 23065.98786473957,
+        "rel": 0.25049578376671267,
+        "table": 17288.05515620815
+       },
+       {
+        "group": 9,
+        "lo_eV": 1.513561e-05,
+        "njoy": 22540.81074932764,
+        "rel": 0.2504913712979952,
+        "table": 16894.53215455997
+       },
+       {
+        "group": 10,
+        "lo_eV": 1.584893e-05,
+        "njoy": 22026.866480557823,
+        "rel": 0.2504623956108094,
+        "table": 16509.964734037872
+       },
+       {
+        "group": 11,
+        "lo_eV": 1.659587e-05,
+        "njoy": 21525.505481234348,
+        "rel": 0.2504635408735691,
+        "table": 16134.151159310974
+       },
+       {
+        "group": 12,
+        "lo_eV": 1.737801e-05,
+        "njoy": 21035.49789992937,
+        "rel": 0.2504625746686071,
+        "table": 15766.892936476983
+       },
+       {
+        "group": 13,
+        "lo_eV": 1.819701e-05,
+        "njoy": 20556.81870400364,
+        "rel": 0.2504679510332202,
+        "table": 15407.99444345047
+       },
+       {
+        "group": 14,
+        "lo_eV": 1.905461e-05,
+        "njoy": 20088.75000450411,
+        "rel": 0.2504627450494785,
+        "table": 15057.266533763286
+       },
+       {
+        "group": 15,
+        "lo_eV": 1.995262e-05,
+        "njoy": 19632.71141362001,
+        "rel": 0.2505099387532286,
+        "table": 14714.52207983425
+       },
+       {
+        "group": 16,
+        "lo_eV": 2.089296e-05,
+        "njoy": 19185.51824249122,
+        "rel": 0.2504983559377358,
+        "table": 14379.57746493373
+       },
+       {
+        "group": 17,
+        "lo_eV": 2.187762e-05,
+        "njoy": 18748.578176749408,
+        "rel": 0.2504894276747045,
+        "table": 14052.257559540994
+       },
+       {
+        "group": 18,
+        "lo_eV": 2.290868e-05,
+        "njoy": 18321.739153104583,
+        "rel": 0.250486568436787,
+        "table": 13732.389584849492
+       },
+       {
+        "group": 19,
+        "lo_eV": 2.398833e-05,
+        "njoy": 17904.65183759988,
+        "rel": 0.25048510134133184,
+        "table": 13419.80330757741
+       }
+      ],
+      "evaluated_groups": 455,
+      "n_bad": 434,
+      "pass": false,
+      "uncovered_negligible_groups_evaluated": 12,
+      "vacuous": false,
+      "with_uncovered_reported": {
+       "max": 0.032236490579230094,
+       "median": 0.01123885008901641,
+       "n": 54,
+       "p90": 0.018820976369420286
+      },
+      "worst_rel": 0.26110718642259795
+     },
+     "inelastic_vs_446": {
+      "bad": [],
+      "evaluated_groups": 61,
+      "n_bad": 0,
+      "pass": true,
+      "uncovered_negligible_groups_evaluated": 13,
+      "vacuous": false,
+      "with_uncovered_reported": {
+       "max": 0.008545292937194134,
+       "median": 0.004430675360111436,
+       "n": 53,
+       "p90": 0.006265890768618546
+      },
+      "worst_rel": 0.0026178093899326483
+     },
+     "pass": false
+    },
+    "Ni58": {
+     "disappearance_vs_447": {
+      "bad": [
+       {
+        "group": 0,
+        "lo_eV": 1e-05,
+        "njoy": 63773.742852732896,
+        "rel": 0.17537841098661877,
+        "table": 52589.205168551365
+       },
+       {
+        "group": 1,
+        "lo_eV": 1.047129e-05,
+        "njoy": 62321.73840720778,
+        "rel": 0.17537334207945018,
+        "table": 51392.16685853452
+       },
+       {
+        "group": 2,
+        "lo_eV": 1.096478e-05,
+        "njoy": 60903.28166900979,
+        "rel": 0.17537499509717588,
+        "table": 50222.368944905276
+       },
+       {
+        "group": 3,
+        "lo_eV": 1.148154e-05,
+        "njoy": 59516.30892379212,
+        "rel": 0.1753656497776145,
+        "table": 49079.19273700608
+       },
+       {
+        "group": 4,
+        "lo_eV": 1.202264e-05,
+        "njoy": 58161.46285181206,
+        "rel": 0.1753639862177121,
+        "table": 47962.036881864915
+       },
+       {
+        "group": 5,
+        "lo_eV": 1.258925e-05,
+        "njoy": 56837.43540151519,
+        "rel": 0.1753623619855606,
+        "table": 46870.28848030377
+       },
+       {
+        "group": 6,
+        "lo_eV": 1.318257e-05,
+        "njoy": 55543.55849350056,
+        "rel": 0.17536093197770677,
+        "table": 45803.38831072203
+       },
+       {
+        "group": 7,
+        "lo_eV": 1.380384e-05,
+        "njoy": 54283.90076847597,
+        "rel": 0.17543200129250233,
+        "table": 44760.767418698626
+       },
+       {
+        "group": 8,
+        "lo_eV": 1.44544e-05,
+        "njoy": 53047.67714870795,
+        "rel": 0.17542346250604698,
+        "table": 43741.8699453787
+       },
+       {
+        "group": 9,
+        "lo_eV": 1.513561e-05,
+        "njoy": 51839.79902632704,
+        "rel": 0.17541810815350198,
+        "table": 42746.159554071
+       },
+       {
+        "group": 10,
+        "lo_eV": 1.584893e-05,
+        "njoy": 50657.778948944295,
+        "rel": 0.17538628165914022,
+        "table": 41773.09946197829
+       },
+       {
+        "group": 11,
+        "lo_eV": 1.659587e-05,
+        "njoy": 49504.64268901617,
+        "rel": 0.17538613766191846,
+        "table": 40822.21461145629
+       },
+       {
+        "group": 12,
+        "lo_eV": 1.737801e-05,
+        "njoy": 48377.7847466055,
+        "rel": 0.1753859944573518,
+        "table": 39892.99885917839
+       },
+       {
+        "group": 13,
+        "lo_eV": 1.819701e-05,
+        "njoy": 47276.91762496117,
+        "rel": 0.17539192300870157,
+        "table": 38984.928128795254
+       },
+       {
+        "group": 14,
+        "lo_eV": 1.905461e-05,
+        "njoy": 46200.44355990008,
+        "rel": 0.17538619188475382,
+        "table": 38097.523700542704
+       },
+       {
+        "group": 15,
+        "lo_eV": 1.995262e-05,
+        "njoy": 45151.61528735169,
+        "rel": 0.17543787273465275,
+        "table": 37230.311950805284
+       },
+       {
+        "group": 16,
+        "lo_eV": 2.089296e-05,
+        "njoy": 44119.50233634878,
+        "rel": 0.17535711264097653,
+        "table": 36382.83379548984
+       },
+       {
+        "group": 17,
+        "lo_eV": 2.187762e-05,
+        "njoy": 43118.27758642737,
+        "rel": 0.17541541382588832,
+        "table": 35554.66708014469
+       },
+       {
+        "group": 18,
+        "lo_eV": 2.290868e-05,
+        "njoy": 42136.63250376271,
+        "rel": 0.17541221310515842,
+        "table": 34745.35254347894
+       },
+       {
+        "group": 19,
+        "lo_eV": 2.398833e-05,
+        "njoy": 41177.430278308755,
+        "rel": 0.17541099814209862,
+        "table": 33954.45613226394
+       }
+      ],
+      "evaluated_groups": 518,
+      "n_bad": 470,
+      "pass": false,
+      "uncovered_negligible_groups_evaluated": 12,
+      "vacuous": false,
+      "with_uncovered_reported": {
+       "max": 0.5820812705924838,
+       "median": 0.10696050411427666,
+       "n": 61,
+       "p90": 0.5264537059560558
+      },
+      "worst_rel": 0.21188544256543843
+     },
+     "inelastic_vs_446": {
+      "bad": [],
+      "evaluated_groups": 41,
+      "n_bad": 0,
+      "pass": true,
+      "uncovered_negligible_groups_evaluated": 12,
+      "vacuous": false,
+      "with_uncovered_reported": {
+       "max": 0.0048797206225489435,
+       "median": 0.0037366321273596356,
+       "n": 61,
+       "p90": 0.004107192345513151
+      },
+      "worst_rel": 0.0021888225619979096
+     },
+     "pass": false
+    },
+    "W184": {
+     "disappearance_vs_447": {
+      "bad": [
+       {
+        "group": 0,
+        "lo_eV": 1e-05,
+        "njoy": 13.80875633013877,
+        "rel": 0.536963502036469,
+        "table": 21.223554487938344
+       },
+       {
+        "group": 1,
+        "lo_eV": 1.047129e-05,
+        "njoy": 13.494339514237915,
+        "rel": 0.536973958674407,
+        "table": 20.740448422894723
+       },
+       {
+        "group": 2,
+        "lo_eV": 1.096478e-05,
+        "njoy": 13.187193850506995,
+        "rel": 0.5369713255064833,
+        "table": 20.268338812124682
+       },
+       {
+        "group": 3,
+        "lo_eV": 1.148154e-05,
+        "njoy": 12.886864883352278,
+        "rel": 0.5369895009590899,
+        "table": 19.80697602599084
+       },
+       {
+        "group": 4,
+        "lo_eV": 1.202264e-05,
+        "njoy": 12.593498419104792,
+        "rel": 0.5369928825938033,
+        "table": 19.35611743712038
+       },
+       {
+        "group": 5,
+        "lo_eV": 1.258925e-05,
+        "njoy": 12.306806641813177,
+        "rel": 0.5369962584995127,
+        "table": 18.915515762543805
+       },
+       {
+        "group": 6,
+        "lo_eV": 1.318257e-05,
+        "njoy": 12.026644890312777,
+        "rel": 0.5369993506972788,
+        "table": 18.484945387477485
+       },
+       {
+        "group": 7,
+        "lo_eV": 1.380384e-05,
+        "njoy": 11.753903389402439,
+        "rel": 0.536866194648124,
+        "table": 18.064176774332612
+       },
+       {
+        "group": 8,
+        "lo_eV": 1.44544e-05,
+        "njoy": 11.486116401766312,
+        "rel": 0.5368976822023118,
+        "table": 17.652985675380602
+       },
+       {
+        "group": 9,
+        "lo_eV": 1.513561e-05,
+        "njoy": 11.224292878605437,
+        "rel": 0.5369481199326467,
+        "table": 17.251155837346023
+       },
+       {
+        "group": 10,
+        "lo_eV": 1.584893e-05,
+        "njoy": 10.969150791868868,
+        "rel": 0.5368984364092981,
+        "table": 16.858470700761078
+       },
+       {
+        "group": 11,
+        "lo_eV": 1.659587e-05,
+        "njoy": 10.71933767418324,
+        "rel": 0.5369162411769297,
+        "table": 16.474724166111958
+       },
+       {
+        "group": 12,
+        "lo_eV": 1.737801e-05,
+        "njoy": 10.47497551204999,
+        "rel": 0.5369690869296018,
+        "table": 16.09971354836541
+       },
+       {
+        "group": 13,
+        "lo_eV": 1.819701e-05,
+        "njoy": 10.236384365031057,
+        "rel": 0.5369918273665911,
+        "table": 15.733239110835887
+       },
+       {
+        "group": 14,
+        "lo_eV": 1.905461e-05,
+        "njoy": 10.003461936389531,
+        "rel": 0.5369786869003116,
+        "table": 15.37510779144923
+       },
+       {
+        "group": 15,
+        "lo_eV": 1.995262e-05,
+        "njoy": 9.776556519343346,
+        "rel": 0.5368528182474737,
+        "table": 15.025128439508533
+       },
+       {
+        "group": 16,
+        "lo_eV": 2.089296e-05,
+        "njoy": 9.553867049537555,
+        "rel": 0.5368764784774471,
+        "table": 14.683113546934996
+       },
+       {
+        "group": 17,
+        "lo_eV": 2.187762e-05,
+        "njoy": 9.336260864124602,
+        "rel": 0.5368983895674129,
+        "table": 14.348884286654364
+       },
+       {
+        "group": 18,
+        "lo_eV": 2.290868e-05,
+        "njoy": 9.123030898707434,
+        "rel": 0.5370181733679966,
+        "table": 14.022264287511092
+       },
+       {
+        "group": 19,
+        "lo_eV": 2.398833e-05,
+        "njoy": 8.9160318721547,
+        "rel": 0.5369034029124576,
+        "table": 13.70307972479049
+       }
+      ],
+      "evaluated_groups": 427,
+      "n_bad": 427,
+      "pass": false,
+      "uncovered_negligible_groups_evaluated": 427,
+      "vacuous": false,
+      "with_uncovered_reported": {
+       "max": 0.01738305574477679,
+       "median": 0.01671210707535132,
+       "n": 45,
+       "p90": 0.017136873085162672
+      },
+      "worst_rel": 0.5454943383472859
+     },
+     "inelastic_vs_446": {
+      "bad": [
+       {
+        "group": 503,
+        "lo_eV": 114815.4,
+        "njoy": 29.618914368751064,
+        "rel": 0.3410468216201092,
+        "table": 19.51747776345033
+       },
+       {
+        "group": 504,
+        "lo_eV": 120226.4,
+        "njoy": 58.5295476741335,
+        "rel": 0.2847309622724409,
+        "table": 41.86437324350676
+       },
+       {
+        "group": 505,
+        "lo_eV": 125892.5,
+        "njoy": 88.80309584479296,
+        "rel": 0.2241757234969581,
+        "table": 68.89559758501679
+       },
+       {
+        "group": 506,
+        "lo_eV": 131825.7,
+        "njoy": 120.50324805323136,
+        "rel": 0.16001905943996744,
+        "table": 101.22043164029219
+       },
+       {
+        "group": 507,
+        "lo_eV": 138038.4,
+        "njoy": 153.69732464311593,
+        "rel": 0.09209625336611423,
+        "table": 139.54237689108962
+       },
+       {
+        "group": 510,
+        "lo_eV": 158489.3,
+        "njoy": 324.4717021620062,
+        "rel": 0.08140492065579794,
+        "table": 298.05810899245637
+       },
+       {
+        "group": 511,
+        "lo_eV": 165958.7,
+        "njoy": 402.93277708686884,
+        "rel": 0.08548768582007242,
+        "table": 368.4869864326573
+       },
+       {
+        "group": 512,
+        "lo_eV": 173780.1,
+        "njoy": 485.09143727328825,
+        "rel": 0.07333564714237328,
+        "table": 449.5169427976277
+       },
+       {
+        "group": 513,
+        "lo_eV": 181970.1,
+        "njoy": 571.1221442076825,
+        "rel": 0.05026760958728765,
+        "table": 542.4131992359961
+       }
+      ],
+      "evaluated_groups": 91,
+      "n_bad": 9,
+      "pass": false,
+      "uncovered_negligible_groups_evaluated": 91,
+      "vacuous": false,
+      "with_uncovered_reported": {
+       "max": 0.0013328433494264416,
+       "median": 0.0007398020465313582,
+       "n": 66,
+       "p90": 0.0010572430676965103
+      },
+      "worst_rel": 0.3410468216201092
+     },
+     "pass": false
+    }
+   },
+   "note": "tables compared with NJOY are built in NJOY's treatments: capture per-photon where MF=6 MT=102 exists, continuum recoil `evaluated` where an MF=6 continuum MT carries a recoil subsection; the determinations are in evidence.targets.<T>.capture_determination / continuum_determination",
+   "pass": false,
+   "uncovered_rule": "a group's uncovered contribution is present only when uncovered_damage_upper_barn_eV > 0.005 x the channel's computed value in that group (one tenth of the G4 tolerance); excluded groups are reported"
+  },
+  "G5": {
+   "cases": {
+    "Cr52": {
+     "bad": [
+      {
+       "computed_plus_upper": 7422.726345893248,
+       "group": 0,
+       "njoy444": 9193.113026134688,
+       "side": "above_upper",
+       "slack": 459.9870217723789
+      },
+      {
+       "computed_plus_upper": 7253.764780197445,
+       "group": 1,
+       "njoy444": 8983.790015574525,
+       "side": "above_upper",
+       "slack": 449.52087124437077
+      },
+      {
+       "computed_plus_upper": 7088.649125329814,
+       "group": 2,
+       "njoy444": 8779.309515379786,
+       "side": "above_upper",
+       "slack": 439.29684623463385
+      },
+      {
+       "computed_plus_upper": 6927.292076106588,
+       "group": 3,
+       "njoy444": 8579.36777249066,
+       "side": "above_upper",
+       "slack": 429.2997590901775
+      },
+      {
+       "computed_plus_upper": 6769.608776192845,
+       "group": 4,
+       "njoy444": 8384.058589991444,
+       "side": "above_upper",
+       "slack": 419.53429996521675
+      },
+      {
+       "computed_plus_upper": 6615.512741140521,
+       "group": 5,
+       "njoy444": 8193.197702868669,
+       "side": "above_upper",
+       "slack": 409.991255609078
+      },
+      {
+       "computed_plus_upper": 6464.925064684696,
+       "group": 6,
+       "njoy444": 8006.682968411576,
+       "side": "above_upper",
+       "slack": 400.66551888622337
+      },
+      {
+       "computed_plus_upper": 6317.765468606245,
+       "group": 7,
+       "njoy444": 7825.105011228413,
+       "side": "above_upper",
+       "slack": 391.5866210270652
+      },
+      {
+       "computed_plus_upper": 6173.955524895421,
+       "group": 8,
+       "njoy444": 7646.9066415330835,
+       "side": "above_upper",
+       "slack": 382.6767025422987
+      },
+      {
+       "computed_plus_upper": 6033.419563086895,
+       "group": 9,
+       "njoy444": 7472.79675439024,
+       "side": "above_upper",
+       "slack": 373.9712081851565
+      },
+      {
+       "computed_plus_upper": 5896.081842003521,
+       "group": 10,
+       "njoy444": 7302.656698387206,
+       "side": "above_upper",
+       "slack": 365.46420538500485
+      },
+      {
+       "computed_plus_upper": 5761.87031710712,
+       "group": 11,
+       "njoy444": 7136.349650899658,
+       "side": "above_upper",
+       "slack": 357.1488530106274
+      },
+      {
+       "computed_plus_upper": 5630.7141019406245,
+       "group": 12,
+       "njoy444": 6973.75108559197,
+       "side": "above_upper",
+       "slack": 349.01892474524305
+      },
+      {
+       "computed_plus_upper": 5502.543335332447,
+       "group": 13,
+       "njoy444": 6815.057868820941,
+       "side": "above_upper",
+       "slack": 341.08426390669155
+      },
+      {
+       "computed_plus_upper": 5377.290468868016,
+       "group": 14,
+       "njoy444": 6659.882978105705,
+       "side": "above_upper",
+       "slack": 333.3255193709298
+      },
+      {
+       "computed_plus_upper": 5254.888675032303,
+       "group": 15,
+       "njoy444": 6508.6945583910165,
+       "side": "above_upper",
+       "slack": 325.76609838519533
+      },
+      {
+       "computed_plus_upper": 5135.272380119693,
+       "group": 16,
+       "njoy444": 6360.440283359512,
+       "side": "above_upper",
+       "slack": 318.3533846336201
+      },
+      {
+       "computed_plus_upper": 5018.379041487732,
+       "group": 17,
+       "njoy444": 6215.585812518645,
+       "side": "above_upper",
+       "slack": 311.1106610915768
+      },
+      {
+       "computed_plus_upper": 4904.146955796916,
+       "group": 18,
+       "njoy444": 6074.077907203741,
+       "side": "above_upper",
+       "slack": 304.0352658258316
+      },
+      {
+       "computed_plus_upper": 4792.515329188956,
+       "group": 19,
+       "njoy444": 5935.80453973172,
+       "side": "above_upper",
+       "slack": 297.1215974522305
+      }
+     ],
+     "fns_collapsed": {
+      "computed": 1.7247823066257558e-09,
+      "computed_plus_upper": 5.5282272615956465e-09,
+      "exact_elastic_reference": 6.656906873580872e-10,
+      "njoy_444": 2.492997748894352e-09,
+      "njoy_444_adjusted": 2.4930090657223513e-09,
+      "njoy_445": 6.656793705300877e-10,
+      "njoy_446": 7.908531625060855e-10,
+      "njoy_447": 2.6856523318243046e-10,
+      "relative_difference_adjusted_vs_computed": 0.3081524129451977,
+      "relative_difference_njoy_vs_computed": 0.3081492723406192,
+      "table_disappearance": 2.660824647193379e-10,
+      "table_elastic": 6.657062646942177e-10,
+      "table_inelastic": 7.929935772122002e-10,
+      "unit": "eV per atom per second at the spec's spectrum (multiplier one)"
+     },
+     "n_above_upper": 363,
+     "n_below_computed": 0,
+     "pass": false,
+     "raw_njoy444_information": {
+      "n_above_upper": 364,
+      "n_below_computed": 0,
+      "pass": false
+     },
+     "table_total_equals_partial_sum_worst_rel": 0.0
+    },
+    "Fe56": {
+     "bad": [
+      {
+       "computed_plus_upper": 20784.811678217855,
+       "group": 0,
+       "njoy444": 27729.9349430865,
+       "side": "above_upper",
+       "slack": 1386.825534901384
+      },
+      {
+       "computed_plus_upper": 20311.692474770545,
+       "group": 1,
+       "njoy444": 27098.536521935646,
+       "side": "above_upper",
+       "slack": 1355.2556138438413
+      },
+      {
+       "computed_plus_upper": 19849.34243200843,
+       "group": 2,
+       "njoy444": 26481.752584973197,
+       "side": "above_upper",
+       "slack": 1324.416416995719
+      },
+      {
+       "computed_plus_upper": 19397.51708145337,
+       "group": 3,
+       "njoy444": 25878.64292426443,
+       "side": "above_upper",
+       "slack": 1294.2609339602805
+      },
+      {
+       "computed_plus_upper": 18955.97881199754,
+       "group": 4,
+       "njoy444": 25289.516727788356,
+       "side": "above_upper",
+       "slack": 1264.8046241364768
+      },
+      {
+       "computed_plus_upper": 18524.485453385125,
+       "group": 5,
+       "njoy444": 24713.80740696388,
+       "side": "above_upper",
+       "slack": 1236.0191580952528
+      },
+      {
+       "computed_plus_upper": 18102.81605557451,
+       "group": 6,
+       "njoy444": 24151.210814443162,
+       "side": "above_upper",
+       "slack": 1207.889328469217
+      },
+      {
+       "computed_plus_upper": 17690.745826849154,
+       "group": 7,
+       "njoy444": 23603.498434604837,
+       "side": "above_upper",
+       "slack": 1180.5037094773008
+      },
+      {
+       "computed_plus_upper": 17288.05515620815,
+       "group": 8,
+       "njoy444": 23065.98786473957,
+       "side": "above_upper",
+       "slack": 1153.6281809840375
+      },
+      {
+       "computed_plus_upper": 16894.53215455997,
+       "group": 9,
+       "njoy444": 22540.81074932764,
+       "side": "above_upper",
+       "slack": 1127.369325213441
+      },
+      {
+       "computed_plus_upper": 16509.964734037872,
+       "group": 10,
+       "njoy444": 22026.866480557823,
+       "side": "above_upper",
+       "slack": 1101.67211177495
+      },
+      {
+       "computed_plus_upper": 16134.151159310974,
+       "group": 11,
+       "njoy444": 21525.505481234348,
+       "side": "above_upper",
+       "slack": 1076.6040618087764
+      },
+      {
+       "computed_plus_upper": 15766.892936476983,
+       "group": 12,
+       "njoy444": 21035.49789992937,
+       "side": "above_upper",
+       "slack": 1052.1036827435275
+      },
+      {
+       "computed_plus_upper": 15407.99444345047,
+       "group": 13,
+       "njoy444": 20556.81870400364,
+       "side": "above_upper",
+       "slack": 1028.1697229472409
+      },
+      {
+       "computed_plus_upper": 15057.266533763286,
+       "group": 14,
+       "njoy444": 20088.75000450411,
+       "side": "above_upper",
+       "slack": 1004.7662879722643
+      },
+      {
+       "computed_plus_upper": 14714.52207983425,
+       "group": 15,
+       "njoy444": 19632.71141362001,
+       "side": "above_upper",
+       "slack": 981.9643584280594
+      },
+      {
+       "computed_plus_upper": 14379.57746493373,
+       "group": 16,
+       "njoy444": 19185.51824249122,
+       "side": "above_upper",
+       "slack": 959.6046998716199
+      },
+      {
+       "computed_plus_upper": 14052.257559540994,
+       "group": 17,
+       "njoy444": 18748.578176749408,
+       "side": "above_upper",
+       "slack": 937.7576965845293
+      },
+      {
+       "computed_plus_upper": 13732.389584849492,
+       "group": 18,
+       "njoy444": 18321.739153104583,
+       "side": "above_upper",
+       "slack": 916.415745402288
+      },
+      {
+       "computed_plus_upper": 13419.80330757741,
+       "group": 19,
+       "njoy444": 17904.65183759988,
+       "side": "above_upper",
+       "slack": 895.5613796270528
+      }
+     ],
+     "fns_collapsed": {
+      "computed": 1.562558409623827e-09,
+      "computed_plus_upper": 5.084922222116988e-09,
+      "exact_elastic_reference": 5.534733626935899e-10,
+      "njoy_444": 2.2395673167176113e-09,
+      "njoy_444_adjusted": 2.239558445823195e-09,
+      "njoy_445": 5.534822335880061e-10,
+      "njoy_446": 7.015762346676356e-10,
+      "njoy_447": 3.0829390660688943e-10,
+      "relative_difference_adjusted_vs_computed": 0.3022917474924495,
+      "relative_difference_njoy_vs_computed": 0.30229451110495414,
+      "table_disappearance": 3.050357015326434e-10,
+      "table_elastic": 5.535087064439422e-10,
+      "table_inelastic": 7.040140016472412e-10,
+      "unit": "eV per atom per second at the spec's spectrum (multiplier one)"
+     },
+     "n_above_upper": 391,
+     "n_below_computed": 0,
+     "pass": false,
+     "raw_njoy444_information": {
+      "n_above_upper": 392,
+      "n_below_computed": 0,
+      "pass": false
+     },
+     "table_total_equals_partial_sum_worst_rel": 0.0
+    },
+    "Ni58": {
+     "bad": [
+      {
+       "computed_plus_upper": 52589.205168551365,
+       "group": 0,
+       "njoy444": 63773.742852732896,
+       "side": "above_upper",
+       "slack": 3189.0614695269455
+      },
+      {
+       "computed_plus_upper": 51392.16685853452,
+       "group": 1,
+       "njoy444": 62321.73840720778,
+       "side": "above_upper",
+       "slack": 3116.461247250689
+      },
+      {
+       "computed_plus_upper": 50222.368944905276,
+       "group": 2,
+       "njoy444": 60903.28166900979,
+       "side": "above_upper",
+       "slack": 3045.53841034079
+      },
+      {
+       "computed_plus_upper": 49079.19273700608,
+       "group": 3,
+       "njoy444": 59516.30892379212,
+       "side": "above_upper",
+       "slack": 2976.189773079907
+      },
+      {
+       "computed_plus_upper": 47962.036881864915,
+       "group": 4,
+       "njoy444": 58161.46285181206,
+       "side": "above_upper",
+       "slack": 2908.4474694809037
+      },
+      {
+       "computed_plus_upper": 46870.28848030377,
+       "group": 5,
+       "njoy444": 56837.43540151519,
+       "side": "above_upper",
+       "slack": 2842.24609696606
+      },
+      {
+       "computed_plus_upper": 45803.38831072203,
+       "group": 6,
+       "njoy444": 55543.55849350056,
+       "side": "above_upper",
+       "slack": 2777.552251565329
+      },
+      {
+       "computed_plus_upper": 44760.767418698626,
+       "group": 7,
+       "njoy444": 54283.90076847597,
+       "side": "above_upper",
+       "slack": 2714.5693653140993
+      },
+      {
+       "computed_plus_upper": 43741.8699453787,
+       "group": 8,
+       "njoy444": 53047.67714870795,
+       "side": "above_upper",
+       "slack": 2652.758184325698
+      },
+      {
+       "computed_plus_upper": 42746.159554071,
+       "group": 9,
+       "njoy444": 51839.79902632704,
+       "side": "above_upper",
+       "slack": 2592.3642782066527
+      },
+      {
+       "computed_plus_upper": 41773.09946197829,
+       "group": 10,
+       "njoy444": 50657.778948944295,
+       "side": "above_upper",
+       "slack": 2533.263274337515
+      },
+      {
+       "computed_plus_upper": 40822.21461145629,
+       "group": 11,
+       "njoy444": 49504.64268901617,
+       "side": "above_upper",
+       "slack": 2475.606461341109
+      },
+      {
+       "computed_plus_upper": 39892.99885917839,
+       "group": 12,
+       "njoy444": 48377.7847466055,
+       "side": "above_upper",
+       "slack": 2419.2635642205755
+      },
+      {
+       "computed_plus_upper": 38984.928128795254,
+       "group": 13,
+       "njoy444": 47276.91762496117,
+       "side": "above_upper",
+       "slack": 2364.220208138359
+      },
+      {
+       "computed_plus_upper": 38097.523700542704,
+       "group": 14,
+       "njoy444": 46200.44355990008,
+       "side": "above_upper",
+       "slack": 2310.3965048853042
+      },
+      {
+       "computed_plus_upper": 37230.311950805284,
+       "group": 15,
+       "njoy444": 45151.61528735169,
+       "side": "above_upper",
+       "slack": 2257.955091257885
+      },
+      {
+       "computed_plus_upper": 36382.83379548984,
+       "group": 16,
+       "njoy444": 44119.50233634878,
+       "side": "above_upper",
+       "slack": 2206.3494437077393
+      },
+      {
+       "computed_plus_upper": 35554.66708014469,
+       "group": 17,
+       "njoy444": 43118.27758642737,
+       "side": "above_upper",
+       "slack": 2156.288206211669
+      },
+      {
+       "computed_plus_upper": 34745.35254347894,
+       "group": 18,
+       "njoy444": 42136.63250376271,
+       "side": "above_upper",
+       "slack": 2107.205952078436
+      },
+      {
+       "computed_plus_upper": 33954.45613226394,
+       "group": 19,
+       "njoy444": 41177.430278308755,
+       "side": "above_upper",
+       "slack": 2059.245840805738
+      }
+     ],
+     "fns_collapsed": {
+      "computed": 1.883651919069758e-09,
+      "computed_plus_upper": 8.507040378859596e-09,
+      "exact_elastic_reference": 5.111927004246257e-10,
+      "njoy_444": 3.0360729705258007e-09,
+      "njoy_444_adjusted": 3.0359877747522876e-09,
+      "njoy_445": 5.112778961981386e-10,
+      "njoy_446": 2.8831710189498806e-10,
+      "njoy_447": 1.1669594340669222e-09,
+      "relative_difference_adjusted_vs_computed": 0.37955879311027557,
+      "relative_difference_njoy_vs_computed": 0.379576203419268,
+      "table_disappearance": 1.0831175652480544e-09,
+      "table_elastic": 5.111998739411867e-10,
+      "table_inelastic": 2.8933447988051715e-10,
+      "unit": "eV per atom per second at the spec's spectrum (multiplier one)"
+     },
+     "n_above_upper": 389,
+     "n_below_computed": 0,
+     "pass": false,
+     "raw_njoy444_information": {
+      "n_above_upper": 391,
+      "n_below_computed": 0,
+      "pass": false
+     },
+     "table_total_equals_partial_sum_worst_rel": 0.0
+    },
+    "W184": {
+     "bad": [
+      {
+       "computed": 21.223554487938344,
+       "group": 0,
+       "njoy444": 13.80875633013877,
+       "side": "below_computed",
+       "slack": 1.4364795723832915
+      },
+      {
+       "computed": 20.740448422894723,
+       "group": 1,
+       "njoy444": 13.494339514237915,
+       "side": "below_computed",
+       "slack": 1.4207587315882488
+      },
+      {
+       "computed": 20.268338812124682,
+       "group": 2,
+       "njoy444": 13.187193850506995,
+       "side": "below_computed",
+       "slack": 1.4054014484017028
+      },
+      {
+       "computed": 19.80697602599084,
+       "group": 3,
+       "njoy444": 12.886864883352278,
+       "side": "below_computed",
+       "slack": 1.3903850000439668
+      },
+      {
+       "computed": 19.35611743712038,
+       "group": 4,
+       "njoy444": 12.593498419104792,
+       "side": "below_computed",
+       "slack": 1.3757166768315927
+      },
+      {
+       "computed": 18.915515762543805,
+       "group": 5,
+       "njoy444": 12.306806641813177,
+       "side": "below_computed",
+       "slack": 1.3613820879670118
+      },
+      {
+       "computed": 18.484945387477485,
+       "group": 6,
+       "njoy444": 12.026644890312777,
+       "side": "below_computed",
+       "slack": 1.3473740003919918
+      },
+      {
+       "computed": 18.064176774332612,
+       "group": 7,
+       "njoy444": 11.753903389402439,
+       "side": "below_computed",
+       "slack": 1.3337369253464748
+      },
+      {
+       "computed": 17.652985675380602,
+       "group": 8,
+       "njoy444": 11.486116401766312,
+       "side": "below_computed",
+       "slack": 1.3203475759646686
+      },
+      {
+       "computed": 17.251155837346023,
+       "group": 9,
+       "njoy444": 11.224292878605437,
+       "side": "below_computed",
+       "slack": 1.307256399806625
+      },
+      {
+       "computed": 16.858470700761078,
+       "group": 10,
+       "njoy444": 10.969150791868868,
+       "side": "below_computed",
+       "slack": 1.2944992954697963
+      },
+      {
+       "computed": 16.474724166111958,
+       "group": 11,
+       "njoy444": 10.71933767418324,
+       "side": "below_computed",
+       "slack": 1.282008639585515
+      },
+      {
+       "computed": 16.09971354836541,
+       "group": 12,
+       "njoy444": 10.47497551204999,
+       "side": "below_computed",
+       "slack": 1.2697905314788525
+      },
+      {
+       "computed": 15.733239110835887,
+       "group": 13,
+       "njoy444": 10.236384365031057,
+       "side": "below_computed",
+       "slack": 1.2578609741279059
+      },
+      {
+       "computed": 15.37510779144923,
+       "group": 14,
+       "njoy444": 10.003461936389531,
+       "side": "below_computed",
+       "slack": 1.2462148526958294
+      },
+      {
+       "computed": 15.025128439508533,
+       "group": 15,
+       "njoy444": 9.776556519343346,
+       "side": "below_computed",
+       "slack": 1.2348695818435202
+      },
+      {
+       "computed": 14.683113546934996,
+       "group": 16,
+       "njoy444": 9.553867049537555,
+       "side": "below_computed",
+       "slack": 1.2237351083532306
+      },
+      {
+       "computed": 14.348884286654364,
+       "group": 17,
+       "njoy444": 9.336260864124602,
+       "side": "below_computed",
+       "slack": 1.212854799082583
+      },
+      {
+       "computed": 14.022264287511092,
+       "group": 18,
+       "njoy444": 9.123030898707434,
+       "side": "below_computed",
+       "slack": 1.2021933008117247
+      },
+      {
+       "computed": 13.70307972479049,
+       "group": 19,
+       "njoy444": 8.9160318721547,
+       "side": "below_computed",
+       "slack": 1.1918433494840879
+      }
+     ],
+     "fns_collapsed": {
+      "computed": 6.693710210851585e-10,
+      "computed_plus_upper": 6.594183000701796e-09,
+      "exact_elastic_reference": 4.0745594262077114e-10,
+      "njoy_444": 1.9769881188171033e-09,
+      "njoy_444_adjusted": 1.9776930602141e-09,
+      "njoy_445": 4.0675100122377424e-10,
+      "njoy_446": 2.5614602714109256e-10,
+      "njoy_447": 5.5083229184304784e-12,
+      "relative_difference_adjusted_vs_computed": 0.661539480240329,
+      "relative_difference_njoy_vs_computed": 0.6614187942183157,
+      "table_disappearance": 5.415611518989613e-12,
+      "table_elastic": 4.076288733395568e-10,
+      "table_inelastic": 2.563265362266122e-10,
+      "unit": "eV per atom per second at the spec's spectrum (multiplier one)"
+     },
+     "n_above_upper": 0,
+     "n_below_computed": 104,
+     "pass": false,
+     "raw_njoy444_information": {
+      "n_above_upper": 0,
+      "n_below_computed": 109,
+      "pass": false
+     },
+     "table_total_equals_partial_sum_worst_rel": 0.0
+    }
+   },
+   "note": "NJOY MT=444 is replaced by NJOY444 - NJOY445 + exact elastic reference (A3); the 2 percent term of the slack uses the exact elastic reference; the raw NJOY444 bound is information",
+   "pass": false
+  },
+  "G6": {
+   "cases": {
+    "arc_parameters_and_invariants": {
+     "nordlund_transcription": {
+      "Cu": [
+       33.0,
+       -0.68,
+       0.16
+      ],
+      "Fe": [
+       40.0,
+       -0.568,
+       0.286
+      ],
+      "Ni": [
+       39.0,
+       -1.01,
+       0.23
+      ],
+      "Pd": [
+       41.0,
+       -0.88,
+       0.15
+      ],
+      "Pt": [
+       42.0,
+       -1.12,
+       0.11
+      ],
+      "W": [
+       70.0,
+       -0.56,
+       0.12
+      ]
+     },
+     "pass": true,
+     "tables": {
+      "Cr52": {
+       "elements": [],
+       "expected_elements_present": true,
+       "invariant_problems": [],
+       "pass": true,
+       "problems": []
+      },
+      "Fe56": {
+       "elements": [
+        "Fe"
+       ],
+       "expected_elements_present": true,
+       "invariant_problems": [],
+       "pass": true,
+       "problems": []
+      },
+      "Ni58": {
+       "elements": [
+        "Ni"
+       ],
+       "expected_elements_present": true,
+       "invariant_problems": [],
+       "pass": true,
+       "problems": []
+      },
+      "W184": {
+       "elements": [
+        "W"
+       ],
+       "expected_elements_present": true,
+       "invariant_problems": [],
+       "pass": true,
+       "problems": []
+      }
+     }
+    },
+    "displacement_energy_mismatch_refused": {
+     "exit_code": 1,
+     "message_names_rebuild": true,
+     "output_written": false,
+     "pass": true,
+     "stderr_tail": "damage: displacement_energy_eV for 'Fe' (41) differs from the 40 eV the table-2 recoil integrals were built with; rebuild the table with --displacement-energy Fe=41"
+    },
+    "run_Cr52": {
+     "certificate_recoil_present": true,
+     "compared": 273,
+     "failures": [],
+     "he_appm_per_dpa_last": [
+      22.003116222601932
+     ],
+     "ledger_recoil_ok": true,
+     "missing": [],
+     "n_failures": 0,
+     "n_missing": 0,
+     "output_sha256": "9c045062cffa15153ed62a94a42bcb64cd97d5917c45e269b316e649d33734ce",
+     "pass": true,
+     "step0_damage_keys": [
+      "covered_atom_fraction",
+      "damage_energy_eV_per_g_s",
+      "damage_energy_uncovered_upper_eV_per_g_s",
+      "dpa",
+      "dpa_nrt",
+      "dpa_nrt_rate_per_s",
+      "dpa_rate_per_s",
+      "dpa_uncovered_upper_bound",
+      "dpa_uncovered_upper_bound_rate_per_s",
+      "elements",
+      "he_appm_per_dpa"
+     ],
+     "worst_rel": 1.3592621661846425e-16
+    },
+    "run_Fe56": {
+     "certificate_recoil_present": true,
+     "compared": 399,
+     "failures": [],
+     "he_appm_per_dpa_last": [
+      32.29255543163201
+     ],
+     "ledger_recoil_ok": true,
+     "missing": [],
+     "n_failures": 0,
+     "n_missing": 0,
+     "output_sha256": "038ecef729be905a377c6cea21b8a3e6621a4333777e4e11066fad58fc3c9747",
+     "pass": true,
+     "step0_damage_keys": [
+      "covered_atom_fraction",
+      "damage_energy_eV_per_g_s",
+      "damage_energy_uncovered_upper_eV_per_g_s",
+      "dpa",
+      "dpa_arc",
+      "dpa_arc_rate_per_s",
+      "dpa_nrt",
+      "dpa_nrt_rate_per_s",
+      "dpa_rate_per_s",
+      "dpa_uncovered_upper_bound",
+      "dpa_uncovered_upper_bound_rate_per_s",
+      "elements",
+      "he_appm_per_dpa"
+     ],
+     "worst_rel": 7.061157149747729e-14
+    }
+   },
+   "pass": true
+  },
+  "G7": {
+   "external": true,
+   "note": "CI green on the pushed commit; committed baselines unchanged (external)",
+   "pass": null
+  }
+ },
+ "groups_sha256": "ce4bf523498ffbb38d42aa9415fc014882b8bc7a7ecfb89f859ba3259d8fb34f",
+ "inputs": {
+  "Cr52": {
+   "match": true,
+   "path": "/home/connoravila/nuclear-data/tendl-2025-patched/files/n/n-Cr052.tendl",
+   "pinned": "796548d723c19db57930f7a3c4c81a6a53e4004346f74279946d0d70875f0a94",
+   "sha256": "796548d723c19db57930f7a3c4c81a6a53e4004346f74279946d0d70875f0a94"
+  },
+  "Fe56": {
+   "match": true,
+   "path": "/home/connoravila/nuclear-data/tendl-2025-patched/files/n/n-Fe056.tendl",
+   "pinned": "f33f867a4f9c4579a62954fe31dc6e70768ab2424dc8f282a122a93f156d2e1e",
+   "sha256": "f33f867a4f9c4579a62954fe31dc6e70768ab2424dc8f282a122a93f156d2e1e"
+  },
+  "Ni58": {
+   "match": true,
+   "path": "/home/connoravila/nuclear-data/tendl-2025-patched/files/n/n-Ni058.tendl",
+   "pinned": "26c8ae72a203187fae84f9a11c3997086cd70153386e04cf204b4122ab368916",
+   "sha256": "26c8ae72a203187fae84f9a11c3997086cd70153386e04cf204b4122ab368916"
+  },
+  "W184": {
+   "match": true,
+   "path": "/home/connoravila/nuclear-data/tendl-2025-patched/files/n/n-W184.tendl",
+   "pinned": "cbf1c80e1557af58fcf4c40a78b3e1a0d2d70b08719a99ffe4a55b753aaa2a20",
+   "sha256": "cbf1c80e1557af58fcf4c40a78b3e1a0d2d70b08719a99ffe4a55b753aaa2a20"
+  }
+ },
+ "njoy_driver_sha256": "c040287df61d76668bc8b28f23d435c91056bd33cc1b80fa9bf5a56a6a2b43e4",
+ "protocol": "protocols/ACTINV-P154_PROTOCOL.md",
+ "protocol_sha256": "d2ea40acee20f5515bba4c2b8b7b0c89a795d76110fa9bd7711675330b4bbfec",
+ "reference_sha256": "79e1e8600a8c2ad3ce42e72dcf34ce4dd8fa9bf60288db24e9eeb077781c9072",
+ "tolerances": {
+  "G3_elastic": 0.02,
+  "G4_inelastic_disappearance": 0.05,
+  "G4_uncovered_fraction": 0.005,
+  "G6_run": 1e-12,
+  "elastic_exact_energy_refinement": 1.05,
+  "elastic_exact_quadrature": 1e-09
+ },
+ "verdict": "FAIL"
+}

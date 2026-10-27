@@ -4191,3 +4191,27 @@ in `protocols/ACTINV-P154_AMENDMENT_C.md` (`c60f2730295cbef56fbabe7bd3c41ce3b6d0
   references are formed.
 
 The candidate is unchanged. Development run 3 follows the checker change.
+
+## Entry 238 — P154 evidence: G2–G6 pass on 93af72e; development run 3 disclosed (2026-10-27)
+
+Development run 3 used the development-run-2 binary (`020db689…93ee`; crate sources identical between `748d15f` and
+`93af72e`) with the checker implementing Amendments B and C. It passed G2–G6.
+
+The evidence run was `controls/check_p154.py` at `93af72e` (checker `ac5fcddd…`) on a release build from a clean
+checkout of `93af72e`, built in a fresh target directory. The binary is `020db689151e367f0a2e8a4474b54c2d9fc098be6481758a2f422dbca5d993ee`, identical to the
+development binary. The reference is v1.6.1 (`79e1e860…9072`). Record: `results/p154_damage.json`. Development
+runs 1–3 are in `results/p154/`.
+- **G1** at `748d15f`, with the same crate sources: fmt and clippy `-D warnings` clean, 1192 workspace tests passed,
+  0 failed.
+- **G2:** the defaults are byte-identical to the reference.
+- **G3:** elastic damage is within 2 % of the A1 reference for Fe-56, Cr-52, Ni-58 and W-184.
+- **G4:** worst groups against the B/C references, tolerance 5 %:
+  - inelastic: Fe-56 0.25 %, Cr-52 0.24 %, Ni-58 0.19 %, W-184 0.23 %;
+  - disappearance: Fe-56 1.34 %, Cr-52 0.78 %, Ni-58 2.01 %, W-184 0.13 %.
+
+  C1 preconditions: the emulations reproduce NJOY within 0.31 % of MT=447 and 0.11 % of MT=446 in their
+  independent-bound sets. Against raw NJOY, disappearance differs by 17–54 % because of `tabsq6`'s continuum
+  weighting, which is reported.
+- **G5:** NJOY MT=444, with the A1/B/C replacements, lies within the bound for all four targets.
+- **G6:** passes.
+- **G0** holds (protocol `d2ea40ac…`). **G7** is pending CI on the pushed commit.
