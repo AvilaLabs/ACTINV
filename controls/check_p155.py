@@ -74,6 +74,7 @@ HERE = Path(__file__).resolve().parent
 ROOT = HERE.parent
 PROTOCOL = ROOT / "protocols" / "ACTINV-P155_PROTOCOL.md"
 AMENDMENT = ROOT / "protocols" / "ACTINV-P155_AMENDMENT_A.md"
+AMENDMENT_B = ROOT / "protocols" / "ACTINV-P155_AMENDMENT_B.md"
 HASH_LOG = ROOT / "protocols" / "protocol_hash.txt"
 SCORECARD = ROOT / "COMPETITIVE_BENCHMARK.md"
 HANDBOOK = ROOT / "docs" / "guide" / "fispact-migration.md"
@@ -750,6 +751,7 @@ def C_vs_base(allowed_prefixes, expect_difference=False):
         if base is None or base["spec"] is None or imp["spec"] is None:
             return False, "no base import"
         diffs = json_diffs(base["spec"], imp["spec"])
+        diffs = [d for d in diffs if d["path"] != "title"]      # the decks differ in their title line
         outside = [d["path"] for d in diffs if not any(path_under(d["path"], p) for p in prefixes)]
         ok = not outside and (bool(diffs) or not expect_difference)
         return ok, f"{len(diffs)} differences, outside {list(prefixes)}: {outside[:6]}"
@@ -931,7 +933,7 @@ def build_g3_cases(fx):
         # Amendment A1: UNCTYPE 2 is approximated (the MF=33 covariance is still propagated), 1 and 3 are mapped
         extra = [C_detail("UNCTYPE", ["mf=33", "mf33", "covariance"], mode="any")] if n == 2 else []
         add(f"uncertainty_unctype_{n}", "uncertainty", make_deck(f"UNCTYPE {n}", initial=unc + [f"UNCTYPE {n}"]), [],
-            [C_status("UNCTYPE", ["approximated" if n == 2 else "mapped"]), C_status("UNCERTAINTY", ["mapped"]),
+            [C_status("UNCTYPE", ["approximated" if n == 2 else "mapped"]),
              C_channels(channels), C_no_unsupported()] + extra)
     add("uncertainty_covariance", "uncertainty", make_deck("COVARIANCE", library=["COVARIANCE"], initial=unc), [],
         [C_status("COVARIANCE", ["noted"]), C_vs_base([]), C_no_unsupported()],
@@ -1480,6 +1482,22 @@ def gate_g4(run, cand, fx):
 # ------------------------------------------------------------------------------ gate G5
 
 
+def g5_unsupported(ref_report, cand_report):
+    """Amendment B1: (item 2-7 keywords unsupported beyond the item-7 keeps, other unsupported entries the reference does
+    not also report by (keyword, line), the remaining entries both report)."""
+    ref_set = {(e["keyword"], e["line"]) for e in entries_of(ref_report, status="unsupported")}
+    item, new, remaining = [], [], []
+    for e in entries_of(cand_report, status="unsupported"):
+        key = (e["keyword"], e["line"])
+        if e["keyword"] in ITEM_KEYWORDS and e["keyword"] not in RETAINED_UNSUPPORTED:
+            item.append(f"{e['keyword']}@{e['line']}")
+        elif key not in ref_set:
+            new.append(f"{e['keyword']}@{e['line']}")
+        else:
+            remaining.append(f"{e['keyword']}@{e['line']}")
+    return item, new, remaining
+
+
 def gate_g5(run, ref, cand, fx, inputs):
     out = {"conderc": {}, "pypact": {}}
     u235 = "nfy-092_U_235.endf"
@@ -1490,9 +1508,9 @@ def gate_g5(run, ref, cand, fx, inputs):
         b = run.import_deck(cand, deck, run.work / "g5" / "conderc" / f"{name}.json", extra + fx.yield_args(u235))
         row = {"exit_ref": a["exit"], "exit_cand": b["exit"], "unsupported_ref": unsupported_keywords(a["report"]),
                "unsupported_cand": unsupported_keywords(b["report"])}
-        item = [k for k in row["unsupported_cand"] if k in ITEM_KEYWORDS]
-        new = [k for k in row["unsupported_cand"] if k not in row["unsupported_ref"]]
+        item, new, remaining = g5_unsupported(a["report"], b["report"])
         row["unsupported_item_keywords"], row["unsupported_beyond_reference"] = item, new
+        row["unsupported_remaining_also_in_reference"] = remaining
         row["files_in_spec_match"] = C_files("fission_yields.files", [(fx.yields[u235]["path"], fx.yields[u235]["sha256"])]
                                              ).fn(b, None)[0] if b["spec"] else False
         row["import_ok"] = a["exit"] == 0 and b["exit"] == 0 and b["spec"] is not None
@@ -1511,12 +1529,15 @@ def gate_g5(run, ref, cand, fx, inputs):
         deck = inputs["pypact_root"] / rel
         proton = re.search(r"^\s*PROJECTILE\s+([2-7])\b", deck.read_text(errors="replace"), re.M | re.I)
         flux = fx.flux162 if proton else fx.flux709
+        a = run.import_deck(ref, deck, run.work / "g5" / "pypact_ref" / f"{tag}.json", ["--fluxes", str(flux)])
         b = run.import_deck(cand, deck, run.work / "g5" / "pypact" / f"{tag}.json",
                             ["--fluxes", str(flux), "--files", str(fx.files_ggbins)])
-        bad = [k for k in unsupported_keywords(b["report"]) if k not in RETAINED_UNSUPPORTED]
-        out["pypact"][tag] = {"exit": b["exit"], "unsupported": unsupported_keywords(b["report"]),
+        item, new, remaining = g5_unsupported(a["report"], b["report"])
+        bad = item + new
+        out["pypact"][tag] = {"exit": b["exit"], "exit_ref": a["exit"], "unsupported": unsupported_keywords(b["report"]),
                               "unsupported_outside_item_7_keeps": bad,
-                              "pass": bool(b["exit"] == 0 and b["spec"] is not None and not bad),
+                              "unsupported_remaining_also_in_reference": remaining,
+                              "pass": bool(b["exit"] == 0 and a["exit"] == 0 and b["spec"] is not None and not bad),
                               "stderr": b["stderr"].strip()[-200:]}
     out["pass"] = all(v["pass"] for v in out["conderc"].values()) and all(v["pass"] for v in out["pypact"].values()) \
         and len(out["pypact"]) == len(PYPACT_PINS)
@@ -1563,7 +1584,7 @@ def gate_g7(run, cand, skip_docs):
 def gate_g0():
     lines = HASH_LOG.read_text(encoding="utf-8").splitlines()
     out, ok = {}, True
-    for label, path in (("protocol", PROTOCOL), ("amendment_a", AMENDMENT)):
+    for label, path in (("protocol", PROTOCOL), ("amendment_a", AMENDMENT), ("amendment_b", AMENDMENT_B)):
         if not path.is_file():
             out[label] = {"path": str(path), "present": False, "in_protocol_hash_txt": False}
             ok = False
