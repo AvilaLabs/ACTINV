@@ -18,8 +18,12 @@ G3  Elastic. The table's `elastic` row against NJOY MT=445 collapsed onto the 70
     the differences is reported.
 G4  Inelastic and disappearance. `inelastic` against MT=446 and `disappearance` against MT=447 within 5 percent in every
     group where the channel exceeds 1e-3 of NJOY's group total (MT=444) and the group has no uncovered cross section
-    (`uncovered_xs_barn` is zero; the per-channel `channels` record is informational and not read). The remaining
-    groups are reported. A channel with fewer than 5 evaluable groups is reported as vacuous and fails.
+    (the per-channel `channels` record is informational and not read). A group has an uncovered contribution only
+    when its `uncovered_damage_upper_barn_eV` exceeds 0.5 percent (G4_UNCOVERED_FRACTION = one tenth of the G4
+    tolerance) of the channel's computed value in that group, so the bound cannot move the comparison by more than a
+    tenth of the tolerance; TENDL's ~3e-20 b placeholder cross sections (uncovered_xs_barn > 0 in every W-184 group)
+    therefore no longer disqualify a group. The groups excluded by the rule are still reported. A channel with fewer
+    than 5 evaluable groups is reported as vacuous and fails.
 G5  Total and bound. In every group NJOY's MT=444 lies in [computed - s, computed + upper + s], computed =
     `damage_energy_barn_eV`, upper = `uncovered_damage_upper_barn_eV`, s = 0.02 NJOY445 + 0.05 (NJOY446 + NJOY447)
     + 1e-6 max(NJOY444) (the G3/G4 tolerances, plus a floor for groups with essentially no damage). The table
@@ -34,10 +38,17 @@ G6  Displacement quantities. FNS Fe run (spec: examples/fns_fe_5min.json plus da
     spec whose displacement energy differs from the build value is refused with a nonzero exit and writes nothing.
     Table invariants (nonnegative rows, c * nrt <= arc <= nrt) hold in every built table.
 
+Capture mode: NJOY HEATR treats MT=102 by capdam (one-photon capture damage) only when the reaction has no MF=6
+section (icon=0, heatr.f90:1741-1827, 1387). When MF=6 MT=102 exists (TENDL-2025 has it for Fe-56, Cr-52, Ni-58 and
+W-184) the reaction is routed to sixbar -> tabsq6 (heatr.f90:1125-1140, 1242, 1388-1389), which partitions each
+photon's recoil separately. The checker scans each pinned TENDL file for MF=6 MT=102 and builds the table with
+`--capture-photons per-photon` where it is present, `one-photon` otherwise; the determination is recorded per target
+in the output. The default `evaluated` build and the other modes are reported as information against NJOY MT=447.
+
 Build parameters: the displacement energy of each target's element is Nordlund's Table 1 value where it has one (Fe
 40, Ni 39, W 70) and 40 eV for Cr (no arc-dpa constants; the ASTM E521 value), identical in `--displacement-energy`
-and NJOY's HEATR `ed`. `--ed-uniform 25` sets the 25 eV default everywhere instead. Capture uses `--capture-photons
-one-photon` (NJOY's treatment) for the comparisons; an `evaluated` build of each target is reported as information.
+and NJOY's HEATR `ed`. `--ed-uniform 25` sets the 25 eV default everywhere instead. Capture uses the NJOY-matching
+mode chosen above for the comparisons.
 
 Usage: check_p154.py --reference REF --candidate CAND [--workdir target/p154-work] [--out results/p154_damage.json]
        check_p154.py --self-check      (offline unit checks, no binary, no NJOY)
@@ -71,6 +82,7 @@ NA = 6.02214076e23
 TOL_G3, TOL_G4 = 0.02, 0.05
 G3_EMIN_EV, G3_FLOOR = 1.0e3, 1.0e-6
 G4_FRACTION, G4_MIN_GROUPS = 1.0e-3, 5
+G4_UNCOVERED_FRACTION = TOL_G4 / 10.0   # an uncovered bound below this share of the channel value is negligible
 G5_FLOOR = 1.0e-6
 TOL_RUN = 1e-12
 TOL_ATOMS = 1e-9
@@ -267,23 +279,33 @@ def elastic_comparison(table, ref, bounds, tol=TOL_G3):
             "pass": evaluated > 0 and not bad}
 
 
-def channel_comparison(table, ref, ref_total, uncovered_xs, bounds, tol=TOL_G4):
-    """G4 on one channel: groups where NJOY's channel exceeds 1e-3 of NJOY's total and nothing is uncovered."""
+def uncovered_present(upper, computed):
+    """A group has an uncovered contribution only when its uncovered damage upper bound exceeds
+    G4_UNCOVERED_FRACTION (0.5 percent) of the channel's computed value in that group."""
+    return upper > G4_UNCOVERED_FRACTION * computed
+
+
+def channel_comparison(table, ref, ref_total, uncovered_upper, bounds, tol=TOL_G4):
+    """G4 on one channel: groups where NJOY's channel exceeds 1e-3 of NJOY's total and the uncovered damage upper
+    bound is at most 0.5 percent of the channel's computed value (uncovered_present)."""
     evaluated, bad, worst = 0, [], 0.0
-    skipped = []
-    for g, (t, r, tot, unc) in enumerate(zip(table, ref, ref_total, uncovered_xs)):
+    skipped, negligible = [], 0
+    for g, (t, r, tot, unc) in enumerate(zip(table, ref, ref_total, uncovered_upper)):
         if not (tot > 0.0 and r > G4_FRACTION * tot):
             continue
         e = rel(t, r)
-        if unc > 0.0:
+        if uncovered_present(unc, t):
             skipped.append(e)
             continue
+        if unc > 0.0:
+            negligible += 1
         evaluated += 1
         worst = max(worst, e)
         if e > tol:
             bad.append({"group": g, "lo_eV": min(bounds[g], bounds[g + 1]), "table": t, "njoy": r, "rel": e})
     return {"evaluated_groups": evaluated, "n_bad": len(bad), "worst_rel": worst, "bad": bad[:20],
             "with_uncovered_reported": distribution(skipped),
+            "uncovered_negligible_groups_evaluated": negligible,
             "vacuous": evaluated < G4_MIN_GROUPS and any(v > 0.0 for v in ref),
             "pass": not bad and not (evaluated < G4_MIN_GROUPS and any(v > 0.0 for v in ref))}
 
@@ -304,6 +326,29 @@ def bound_comparison(total, upper, n444, n445, n446, n447):
 
 
 # ------------------------------------------------------------------------------ building tables and NJOY references
+
+
+def njoy_capture_treatment(path):
+    """What NJOY HEATR does with MT=102 of this evaluation, read from the ENDF file itself: an MF=6 MT=102 section
+    routes the reaction to sixbar -> tabsq6 (each photon's recoil partitioned separately: `per-photon`), otherwise to
+    capdam (one recoil from the incident momentum and one photon: `one-photon`). Returns the record kept in the
+    output; `mode` is the `--capture-photons` value to build with."""
+    sections = 0
+    head = None
+    with open(path, "r", errors="replace") as handle:
+        for line in handle:
+            if len(line) >= 75 and line[70:72] == " 6" and line[72:75] == "102":
+                sections += 1
+                if head is None and line[75:80].strip() == "1":
+                    head = line
+    has = sections > 0
+    record = {"has_mf6_mt102": has, "mf6_mt102_records": sections,
+              "njoy_treatment": "per-photon" if has else "one-photon",
+              "njoy_routine": "sixbar/tabsq6 (heatr.f90 j6>0, icon=-1)" if has else "capdam (heatr.f90 icon=0)",
+              "mode": "per-photon" if has else "one-photon"}
+    if head is not None:
+        record["head_NK"] = int(head[44:55].strip() or 0)
+    return record
 
 
 def build_args(target, ed_map, capture, grid_density):
@@ -397,11 +442,18 @@ def gates_g3_g4_g5(candidate, work, args, bounds, spec):
     if args.ed_uniform:
         ed_map = {k: args.ed_uniform for k in ed_map}
     g3, g4, g5, evidence, tables = {"cases": {}}, {"cases": {}}, {"cases": {}}, {"targets": {}}, {}
+    g4["uncovered_rule"] = (f"a group's uncovered contribution is present only when uncovered_damage_upper_barn_eV "
+                            f"> {G4_UNCOVERED_FRACTION:g} x the channel's computed value in that group (one tenth of "
+                            f"the G4 tolerance); excluded groups are reported")
+    refs, modes = {}, {}
     for target in TARGETS:
         entry = evidence["targets"].setdefault(target, {})
         try:
-            table, path = build_table(candidate, target, work, ed_map, "one-photon", args.grid_density, args.timeout,
-                                      args.reuse)
+            capture = njoy_capture_treatment(TENDL_DIR / TARGETS[target]["file"])
+            entry["capture_determination"] = capture
+            modes[target] = capture["mode"]
+            table, path = build_table(candidate, target, work, ed_map, capture["mode"], args.grid_density,
+                                      args.timeout, args.reuse)
             tables[target] = (table, path)
             entry["table"] = {"path": str(path), "sha256": sha256(path)}
             violations = check_table_structure(table, target, ed_map, bounds)
@@ -411,16 +463,17 @@ def gates_g3_g4_g5(candidate, work, args, bounds, spec):
             entry["njoy_deck"] = record["deck"]
             tb = [float(b) for b in table["boundaries_eV"]]
             ref = {mt: njoy.collapse(tabs[mt], tb) for mt in njoy.DAMAGE_MTS}
+            refs[target] = ref
             row = table["targets"][target]
             entry["njoy_group_values_sha256"] = hashlib.sha256(json.dumps(ref, sort_keys=True).encode()).hexdigest()
             g3["cases"][target] = elastic_comparison(row["elastic"], ref[445], tb)
             g3["cases"][target]["structure_violations"] = violations
             g3["cases"][target]["pass"] = g3["cases"][target]["pass"] and not violations
             g4["cases"][target] = {
-                "inelastic_vs_446": channel_comparison(row["inelastic"], ref[446], ref[444], row["uncovered_xs_barn"],
-                                                       tb),
+                "inelastic_vs_446": channel_comparison(row["inelastic"], ref[446], ref[444],
+                                                       row["uncovered_damage_upper_barn_eV"], tb),
                 "disappearance_vs_447": channel_comparison(row["disappearance"], ref[447], ref[444],
-                                                           row["uncovered_xs_barn"], tb)}
+                                                           row["uncovered_damage_upper_barn_eV"], tb)}
             g4["cases"][target]["pass"] = all(v["pass"] for v in g4["cases"][target].values())
             case = bound_comparison(row["damage_energy_barn_eV"], row["uncovered_damage_upper_barn_eV"], ref[444],
                                     ref[445], ref[446], ref[447])
@@ -444,24 +497,33 @@ def gates_g3_g4_g5(candidate, work, args, bounds, spec):
         except (GateError, KeyError, ValueError, OSError) as error:
             for gate in (g3, g4, g5):
                 gate["cases"].setdefault(target, {"pass": False, "error": f"{type(error).__name__}: {error}"})
-    # information: the default (evaluated-photon) capture treatment
+    # information: disappearance of every other capture mode against NJOY MT=447 (relative difference over the groups
+    # where NJOY is positive, and the FNS-collapsed totals)
     info = {}
     for target in TARGETS:
-        try:
-            table, _ = build_table(candidate, target, work, ed_map, "evaluated", args.grid_density, args.timeout,
-                                   args.reuse)
-            one = tables[target][0]["targets"][target]["disappearance"]
-            ev = table["targets"][target]["disappearance"]
-            diffs = [rel(a, b) for a, b in zip(ev, one) if b > 0.0]
-            info[target] = {"disappearance_evaluated_vs_one_photon_rel": distribution(diffs),
-                            "fns_disappearance_evaluated": fold(table["targets"][target]["disappearance"],
-                                                                spectrum_ascending(spec, [float(b) for b in
-                                                                                          table["boundaries_eV"]])),
-                            "fns_disappearance_one_photon": fold(one, spectrum_ascending(
-                                spec, [float(b) for b in tables[target][0]["boundaries_eV"]]))}
-        except (GateError, KeyError, ValueError, OSError) as error:
-            info[target] = {"error": f"{type(error).__name__}: {error}"}
-    evidence["evaluated_capture_information"] = info
+        info[target] = {"gate_mode": modes.get(target)}
+        if target not in refs:
+            info[target]["error"] = "no NJOY reference"
+            continue
+        flux = spectrum_ascending(spec, [float(b) for b in tables[target][0]["boundaries_eV"]])
+        n447 = refs[target][447]
+        for mode in ("evaluated", "one-photon", "per-photon"):
+            try:
+                if mode == modes[target]:
+                    tab = tables[target][0]
+                else:
+                    tab, _ = build_table(candidate, target, work, ed_map, mode, args.grid_density, args.timeout,
+                                         args.reuse)
+                dis = tab["targets"][target]["disappearance"]
+                total = fold(dis, flux)
+                info[target][mode] = {"disappearance_rel_vs_njoy_447": distribution(
+                                          [rel(a, b) for a, b in zip(dis, n447) if b > 0.0]),
+                                      "fns_disappearance": total, "fns_njoy_447": fold(n447, flux),
+                                      "fns_relative_difference": rel(total, fold(n447, flux)),
+                                      "is_gate_mode": mode == modes[target]}
+            except (GateError, KeyError, ValueError, OSError) as error:
+                info[target][mode] = {"error": f"{type(error).__name__}: {error}"}
+    evidence["capture_mode_information"] = info
     for gate in (g3, g4, g5):
         gate["pass"] = all(c.get("pass") is True for c in gate["cases"].values()) and len(gate["cases"]) == len(TARGETS)
     g3["note"] = ("pass requires every target to have evaluated groups and none outside 2 percent; the <1 keV "
@@ -496,7 +558,9 @@ def gate_g2(ref, cand, work, timeout):
         "output_byte_identical": outs["ref"][0] == outs["cand"][0],
         "stdout_identical": outs["ref"][1] == outs["cand"][1], "corpus_files": corpus_files,
         "output_sha256": hashlib.sha256(outs["cand"][0]).hexdigest()}
-    ok = all(c.get("identical_apart_from_ms", True) and c.get("output_byte_identical", True) for c in cases.values())
+    for case in cases.values():
+        case["pass"] = bool(case.get("identical_apart_from_ms", True) and case.get("output_byte_identical", True))
+    ok = all(c["pass"] for c in cases.values())
     return {"pass": bool(ok), "cases": cases}
 
 
@@ -828,6 +892,25 @@ def self_check():
     assert not ch["pass"] and ch["vacuous"] and ch["with_uncovered_reported"]["n"] == 1  # 4 evaluable groups: vacuous
     ch = channel_comparison([1.0] * 5, [1.0] * 5, [10.0] * 5, [0.0] * 5, [1, 2, 3, 4, 5, 6])
     assert ch["pass"]
+    # uncovered rule: a bound below 0.5 percent of the channel value is negligible, above it excludes the group
+    assert abs(G4_UNCOVERED_FRACTION - 0.005) < 1e-15
+    assert not uncovered_present(0.04, 9.0) and uncovered_present(0.05, 9.0) and uncovered_present(1e-30, 0.0)
+    ch = channel_comparison([1.0] * 4 + [9.0], [1.0] * 4 + [1.0], [10.0] * 5, [3e-20] * 4 + [0.04], [1, 2, 3, 4, 5, 6])
+    assert not ch["pass"] and ch["n_bad"] == 1 and ch["evaluated_groups"] == 5 and not ch["vacuous"], ch
+    assert ch["uncovered_negligible_groups_evaluated"] == 5 and ch["with_uncovered_reported"]["n"] == 0
+    ch = channel_comparison([1.0] * 4 + [9.0], [1.0] * 4 + [1.0], [10.0] * 5, [0.0] * 4 + [0.05], [1, 2, 3, 4, 5, 6])
+    assert ch["vacuous"] and ch["with_uncovered_reported"]["n"] == 1 and not ch["pass"]
+    # capture-mode determination from the ENDF record layout (MF=6 MT=102 -> per-photon, none -> one-photon)
+    with tempfile.TemporaryDirectory(prefix="p154-selfcheck-") as tmp:
+        for name, mf, mt, expect in (("with", 6, 102, "per-photon"), ("none", 6, 16, "one-photon"),
+                                     ("mf3", 3, 102, "one-photon")):
+            path = Path(tmp) / name
+            head = _line([26056.0, 55.45, "          0", "          3", "          1", "          0"], 2631, mf, mt, 1)
+            path.write_text(head + "\n" + _line(["           "] * 6, 2631, mf, mt, 2) + "\n")
+            got = njoy_capture_treatment(path)
+            assert got["mode"] == expect and got["has_mf6_mt102"] == (expect == "per-photon"), (name, got)
+        assert got["njoy_treatment"] == "one-photon"
+        assert njoy_capture_treatment(Path(tmp) / "with")["head_NK"] == 1
     bc = bound_comparison([10.0, 10.0], [5.0, 5.0], [12.0, 20.0], [1.0, 1.0], [0.0, 0.0], [0.0, 0.0])
     assert bc["n_above_upper"] == 1 and not bc["pass"]
     bc = bound_comparison([10.0, 10.0], [5.0, 5.0], [9.99, 15.0], [1.0, 1.0], [0.0, 0.0], [0.0, 0.0])
@@ -958,7 +1041,8 @@ def main(argv=None):
               "checker_sha256": sha256(__file__), "njoy_driver_sha256": sha256(Path(njoy.__file__)),
               "inputs": inputs, "groups_sha256": sha256(GROUPS_JSON), "displacement_energy_eV": ed_map,
               "flux_weight": "flat in lethargy: sum of the integral of y dE/E over the group divided by ln(hi/lo)",
-              "tolerances": {"G3_elastic": TOL_G3, "G4_inelastic_disappearance": TOL_G4, "G6_run": TOL_RUN},
+              "tolerances": {"G3_elastic": TOL_G3, "G4_inelastic_disappearance": TOL_G4,
+                             "G4_uncovered_fraction": G4_UNCOVERED_FRACTION, "G6_run": TOL_RUN},
               "evidence": evidence, "gates": gates, "verdict": "PASS" if verdict else "FAIL"}
     out = ROOT / args.out
     out.parent.mkdir(parents=True, exist_ok=True)
