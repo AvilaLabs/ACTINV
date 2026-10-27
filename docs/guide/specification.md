@@ -260,8 +260,8 @@ Mesh specs still require a library.
 }
 ```
 
-The production source is MF=8/MT=454 independent yield. MF=8/MT=459 cumulative tables are parsed and checked but
-never used as matrix sources. Every independent table must sum to two fission fragments within `1e-6`; values are not
+The production source is MF=8/MT=454 independent yield. MF=8/MT=459 cumulative tables are parsed and checked, and
+enter the matrix only when `yields` is `"cumulative"` (below). Every independent table must sum to two fission fragments within `1e-6`; values are not
 renormalized. Duplicate parents, energies or products, malformed/truncated records, negative/nonfinite values and hash
 mismatches fail closed.
 
@@ -270,6 +270,53 @@ clamped to the evaluated range. `energy: "spectrum_average"` is the default and 
 the fission-rate-weighted representative incident energy separately for each parent. The certificate records the
 requested energy, selected bracket, interpolation weight, clamp decision, product count and effective yield sum.
 Fissioning parents without a matching file remain explicit leakage and never borrow another parent's evaluation.
+
+### Rate-weighted energy, parent selection and cumulative yields
+
+Three further options, all opt-in; without them every output is unchanged.
+
+`energy: "rate_weighted"` forbids `fixed_energy_eV` and mixes the evaluation's tabulated yield sets instead of
+interpolating at one energy. For each parent and each distinct step spectrum, with tabulated incident energies
+`E_1 < ... < E_K`, library group fission rates `r_g = phi_g sigma_f,g` (the parent's MT=18 group cross section
+and the spectrum's group flux) and group energies `E_g = sqrt(E_lo E_hi)`, the weights are
+
+```
+w_k = sum_g r_g h_k(E_g) / sum_g r_g
+```
+
+where `h_k` are the piecewise-linear hat functions on the `E_k` (`h_1 = 1` at and below `E_1`, `h_K = 1` at and
+above `E_K`; between two tabulated energies the two adjacent hats are `1 - w` and `w`, the weights
+`effective()` uses at one energy). The yield of product `i` is `Y_i = sum_k w_k Y_{k,i}` over the tables with
+nonzero weight; a product missing from one of them counts as zero yield and zero uncertainty. The standard
+uncertainty is `sqrt(sum_k w_k^2 sigma_{k,i}^2)`. A spectrum confined to one group therefore gives the same yields
+as `"fixed"` at that group's midpoint. A parent with no fission rate in a spectrum (`sum r_g = 0`) falls back to the
+`spectrum_average` rule, which also finds no fission energy there, so it carries no yields in that spectrum; the
+weights record names the fallback. Every distinct step spectrum gets its own weights. The mixing needs the
+groupwise library rows, so a spectrum-collapsed cache is not used. It cannot be combined with the
+`fission_yields` uncertainty channel.
+
+`parents` selects which parents' fission feeds products:
+
+```json
+"fission_yields": {
+  "files": [ ... ],
+  "parents": { "include": ["U235", "Pu239"] }
+}
+```
+
+Give exactly one of `include` or `exclude`, a nonempty list of nuclide names (`U235`, `Am242m1`). A parent with a
+yield file that the selection leaves out keeps its fission reaction and loses nothing from the burn-up diagonal; its
+whole fission rate goes to leakage and is booked per parent as `fission_unselected_to_leakage`. These are refused
+before any output: both `include` and `exclude`, an empty list, a name that is not a nuclide, a named parent without a
+yield file in `files`, and a named parent with no fission (MT=18) row in the activation library.
+
+`yields: "cumulative"` (default `"independent"`) reads the MF=8/MT=459 tables in place of MT=454, with the same energy
+selection and the same `parents` filter; an evaluation without MT=459 is refused. Cumulative yields already include
+the feeding of each product by its fission-product precursors, and the decay chain feeds the product again, so the
+inventory counts that feeding twice. This is an approximation the run reports and does not correct: the ledger's
+`fission_cumulative_overlap` gives, for each active parent, the summed cumulative yield and the share of it carried
+by products that have a direct decay precursor (a chain nuclide with a positive decay edge to the product) that also
+has a positive cumulative yield from the same parent.
 
 ### Spontaneous fission
 
@@ -1031,9 +1078,14 @@ nuclide in the inventory that no listed chain explains makes `pathway_closure` 1
 | `loop_floor` | `0.01` | A walk that revisits a nuclide is kept when it raises its loop-erased path's contribution by at least this fraction. |
 | `max_paths` | `100` | Routes reported per target; the excess is dropped smallest first and shows up in the residual. |
 | `by_step` | `false` | Also report every route's atoms at the end of each schedule step. |
+| `fission_parents` | `[]` | Nuclide names. When nonempty, routes may pass through fission edges only from these parents; the inventory is unchanged, and what the other parents' fission products received is reported as unexplained in each target's closure residual. Empty places no restriction. |
 
 Nuclide names are explicit nuclides such as `Mn54` or `Co60m1`. A source that is not an initial nuclide, or a target
 that is not a tracked state of the run, is named in the result's `notes` rather than failing the run.
+
+`fission_parents` removes only edges that are fission edges of a parent outside the list (a chain product with a
+nonzero yield in the parent's tables). A parent and product pair that also carries a decay or another reaction keeps
+its edge, because the matrix entry cannot be split; that fission share stays attributed.
 
 Each route is integrated exactly rather than estimated. For a route `x0 -> x1 -> ... -> xk`, ACTINV solves the
 linear chain with every node's full removal rate (decay, all reactions and declared removal) on the diagonal and

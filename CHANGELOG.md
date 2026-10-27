@@ -1,5 +1,20 @@
 # Changelog
 
+## Unreleased
+
+**Added (P153; all opt-in, default results unchanged)**
+
+- `fission_yields.energy: "rate_weighted"` mixes the evaluation's tabulated yield sets by each parent's fission rate
+  in the spectrum, per parent and per distinct step spectrum, with piecewise-linear weights over the incident-energy
+  grid (FISPACT-II `FISYIELD`). The weights are in `ledger.fission_yield_weights` and the certificate.
+- `fission_yields.parents` (`include` or `exclude`) selects which parents' fission feeds products (`FISCHOOSE`).
+  A deselected parent's fission rate goes to leakage and is booked in `ledger.fission_unselected_to_leakage`.
+  Naming a parent without a yield file or without fission in the library is refused.
+- `fission_yields.yields: "cumulative"` uses the MF=8/MT=459 tables (`CUMFYLD`) and reports the double counting it
+  introduces in `ledger.fission_cumulative_overlap`.
+- `pathways.fission_parents` limits route attribution to fission edges of the named parents; the inventory is
+  unchanged and the rest is unexplained in the closure.
+
 ## v1.6.1 — 2026-10-21
 
 **Fixed**

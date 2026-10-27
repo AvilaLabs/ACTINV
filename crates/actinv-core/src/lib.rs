@@ -10,6 +10,7 @@ pub mod doppler;
 pub mod finite;
 pub mod fispact_import;
 pub mod fission_count;
+pub mod fission_mix;
 pub mod flux;
 pub mod gas;
 pub mod mesh;

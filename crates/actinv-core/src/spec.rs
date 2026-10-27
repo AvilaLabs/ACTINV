@@ -459,6 +459,18 @@ pub struct FissionYieldOptions {
     pub energy: String,
     #[serde(default)]
     pub fixed_energy_eV: Option<f64>,
+    /// P153: which yield set the matrix uses, `independent` (MT=454, the default) or `cumulative` (MT=459). The
+    /// energy selection applies to either. Absent = `independent`, and the spec echo is unchanged.
+    #[serde(
+        default = "independent_yields",
+        skip_serializing_if = "is_independent_yields"
+    )]
+    pub yields: String,
+    /// P153: restrict which parents' fission feeds products. A parent outside the selection keeps its fission
+    /// reaction and sends its whole fission rate to leakage, booked per parent in the ledger. Absent = every
+    /// parent with a yield file is selected.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub parents: Option<FissionParentSelection>,
     /// Spontaneous-fission inputs: independent-yield files that route each state's SF branch to
     /// products instead of leakage, and neutron multiplicities for the SF neutron source. Absent =
     /// SF branches stay on leakage and the spec echo is byte-identical to a pre-P125 spec.
@@ -470,13 +482,96 @@ fn spectrum_average() -> String {
     "spectrum_average".into()
 }
 
+fn independent_yields() -> String {
+    "independent".into()
+}
+
+#[allow(clippy::ptr_arg)] // the signature serde's skip_serializing_if requires
+fn is_independent_yields(value: &String) -> bool {
+    value == "independent"
+}
+
 impl Default for FissionYieldOptions {
     fn default() -> Self {
         Self {
             files: Vec::new(),
             energy: spectrum_average(),
             fixed_energy_eV: None,
+            yields: independent_yields(),
+            parents: None,
             spontaneous: None,
+        }
+    }
+}
+
+/// P153 `fission_yields.parents`: exactly one of `include` or `exclude`, each a nonempty list of nuclide names.
+#[derive(Debug, Clone, PartialEq, Default, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct FissionParentSelection {
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub include: Option<Vec<String>>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub exclude: Option<Vec<String>>,
+}
+
+/// `(ZA, LISO)` of an explicit nuclide name, the naming the inventory uses.
+pub(crate) fn nuclide_key(raw: &str, field: &str) -> Result<(i32, i32), String> {
+    match actinv_data::composition::material_key(raw) {
+        Ok(actinv_data::composition::MaterialKey::Nuclide { za, liso, .. }) => Ok((za, liso)),
+        Ok(_) => Err(format!(
+            "{field} '{raw}' must be an explicit nuclide, e.g. 'U235'"
+        )),
+        Err(error) => Err(format!("{field} '{raw}': {error}")),
+    }
+}
+
+/// A fission parent selection: whether the named parents are included (else excluded), and their (ZA, LISO) keys.
+pub type ParentSelection = (bool, std::collections::BTreeSet<(i32, i32)>);
+
+impl FissionYieldOptions {
+    /// The yield set the matrix reads. Spec validation guarantees `yields` is one of the two names.
+    pub fn yield_kind(&self) -> actinv_data::fission::YieldKind {
+        if self.yields == "cumulative" {
+            actinv_data::fission::YieldKind::Cumulative
+        } else {
+            actinv_data::fission::YieldKind::Independent
+        }
+    }
+
+    /// The parent selection as `(is_include, parents)`, or `None` when every parent is selected.
+    pub fn parent_selection(&self) -> Result<Option<ParentSelection>, String> {
+        let Some(selection) = &self.parents else {
+            return Ok(None);
+        };
+        let (include, names) = match (&selection.include, &selection.exclude) {
+            (Some(_), Some(_)) => {
+                return Err("fission_yields.parents takes include or exclude, not both".into())
+            }
+            (None, None) => return Err("fission_yields.parents needs include or exclude".into()),
+            (Some(names), None) => (true, names),
+            (None, Some(names)) => (false, names),
+        };
+        let field = if include {
+            "fission_yields.parents.include"
+        } else {
+            "fission_yields.parents.exclude"
+        };
+        if names.is_empty() {
+            return Err(format!("{field} must not be empty"));
+        }
+        let keys = names
+            .iter()
+            .map(|raw| nuclide_key(raw, field))
+            .collect::<Result<std::collections::BTreeSet<_>, String>>()?;
+        Ok(Some((include, keys)))
+    }
+
+    /// Whether `parent`'s fission feeds products under the declared selection.
+    pub fn selects(&self, parent: (i32, i32)) -> bool {
+        match self.parent_selection() {
+            Ok(Some((true, keys))) => keys.contains(&parent),
+            Ok(Some((false, keys))) => !keys.contains(&parent),
+            _ => true,
         }
     }
 }
@@ -2363,11 +2458,37 @@ impl Spec {
                     );
                 }
             }
+            "rate_weighted" => {
+                if self.fission_yields.fixed_energy_eV.is_some() {
+                    return Err(
+                        "fission_yields.fixed_energy_eV is forbidden with rate_weighted".into(),
+                    );
+                }
+                if self.uncertainty.as_ref().is_some_and(|uncertainty| {
+                    uncertainty
+                        .channels
+                        .iter()
+                        .any(|channel| channel == "fission_yields")
+                }) {
+                    return Err(
+                        "fission_yields.energy 'rate_weighted' cannot be combined with the \
+                         fission_yields uncertainty channel: the mixed yields differ per spectrum"
+                            .into(),
+                    );
+                }
+            }
             value => return Err(format!("unknown fission_yields.energy '{value}'")),
         }
+        match self.fission_yields.yields.as_str() {
+            "independent" | "cumulative" => {}
+            value => return Err(format!("unknown fission_yields.yields '{value}'")),
+        }
+        self.fission_yields.parent_selection()?;
         if self.fission_yields.files.is_empty()
             && (self.fission_yields.energy != "spectrum_average"
-                || self.fission_yields.fixed_energy_eV.is_some())
+                || self.fission_yields.fixed_energy_eV.is_some()
+                || self.fission_yields.yields != "independent"
+                || self.fission_yields.parents.is_some())
         {
             return Err("empty fission_yields.files requires the default energy settings".into());
         }
@@ -3149,6 +3270,80 @@ mod duration_tests {
             echoed["fission_yields"]["spontaneous"]["nubar_table"]["path"],
             "nubar.json"
         );
+    }
+
+    #[test]
+    fn fission_yield_selection_options_are_opt_in_and_validated() {
+        // absent: nothing new in the echoed spec
+        let spec = Spec::from_json(&minimal_spec().to_string()).unwrap();
+        let echoed = serde_json::to_value(&spec).unwrap();
+        assert!(echoed["fission_yields"].get("yields").is_none());
+        assert!(echoed["fission_yields"].get("parents").is_none());
+
+        let files = serde_json::json!([{"path": "u235.endf", "sha256": "0".repeat(64)}]);
+        let with = |extra: serde_json::Value| {
+            let mut value = minimal_spec();
+            let mut block = serde_json::json!({"files": files});
+            for (key, item) in extra.as_object().unwrap() {
+                block[key] = item.clone();
+            }
+            value["fission_yields"] = block;
+            Spec::from_json(&value.to_string())
+        };
+        let spec = with(serde_json::json!({
+            "energy": "rate_weighted",
+            "yields": "cumulative",
+            "parents": {"exclude": ["U238"]},
+        }))
+        .unwrap();
+        assert_eq!(
+            spec.fission_yields.yield_kind(),
+            actinv_data::fission::YieldKind::Cumulative
+        );
+        assert!(spec.fission_yields.selects((92_235, 0)));
+        assert!(!spec.fission_yields.selects((92_238, 0)));
+        let echoed = serde_json::to_value(&spec).unwrap();
+        assert_eq!(echoed["fission_yields"]["yields"], "cumulative");
+        let spec = with(serde_json::json!({"parents": {"include": ["U235", "Am242m1"]}})).unwrap();
+        assert!(spec.fission_yields.selects((92_235, 0)));
+        assert!(spec.fission_yields.selects((95_242, 1)));
+        assert!(!spec.fission_yields.selects((92_238, 0)));
+
+        for (extra, expected) in [
+            (
+                serde_json::json!({"parents": {"include": ["U235"], "exclude": ["U238"]}}),
+                "include or exclude, not both",
+            ),
+            (
+                serde_json::json!({"parents": {}}),
+                "needs include or exclude",
+            ),
+            (
+                serde_json::json!({"parents": {"include": []}}),
+                "must not be empty",
+            ),
+            (
+                serde_json::json!({"parents": {"include": ["Uranium"]}}),
+                "fission_yields.parents.include",
+            ),
+            (
+                serde_json::json!({"yields": "total"}),
+                "unknown fission_yields.yields",
+            ),
+            (
+                serde_json::json!({"energy": "rate_weighted", "fixed_energy_eV": 1.0}),
+                "forbidden with rate_weighted",
+            ),
+        ] {
+            let message = with(extra).unwrap_err();
+            assert!(message.contains(expected), "{message}");
+        }
+        // selection without a yield file is the default-settings refusal
+        let mut value = minimal_spec();
+        value["fission_yields"] = serde_json::json!({"yields": "cumulative"});
+        assert!(Spec::from_json(&value.to_string())
+            .unwrap_err()
+            .contains("empty fission_yields.files"));
     }
 
     #[test]

@@ -68,6 +68,11 @@ pub struct PathwayOptions {
     /// Also report every route's atoms at the end of each schedule step.
     #[serde(default)]
     pub by_step: bool,
+    /// P153: when nonempty, routes may pass through fission edges only from these parents. The inventory is
+    /// unchanged; what other parents' fission products received is reported as unexplained in the closure.
+    /// Empty (the default) places no restriction.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub fission_parents: Vec<String>,
 }
 
 fn default_max_depth() -> usize {
@@ -101,6 +106,7 @@ impl Default for PathwayOptions {
             rank_by: default_rank_by(),
             top_targets: default_top_targets(),
             by_step: false,
+            fission_parents: Vec::new(),
         }
     }
 }
@@ -157,7 +163,22 @@ impl PathwayOptions {
         for raw in &self.sources {
             source_name(raw)?;
         }
+        for raw in &self.fission_parents {
+            nuclide_name(raw, "fission_parents")?;
+        }
         Ok(())
+    }
+
+    /// The nuclides `fission_parents` names as `(ZA, LISO)`; `None` when the restriction is off.
+    pub fn allowed_fission_parents(&self) -> Result<Option<BTreeSet<(i32, i32)>>, String> {
+        if self.fission_parents.is_empty() {
+            return Ok(None);
+        }
+        self.fission_parents
+            .iter()
+            .map(|raw| crate::spec::nuclide_key(raw, "pathways.fission_parents"))
+            .collect::<Result<_, _>>()
+            .map(Some)
     }
 }
 
@@ -473,6 +494,16 @@ pub struct StepGraph {
 }
 
 impl StepGraph {
+    /// Remove the off-diagonal edges named by `dropped` (matrix positions `(to, from)`). Diagonal entries stay,
+    /// so every node keeps its full removal rate; the reservoir feeds are filtered by the caller.
+    pub fn without_edges(mut self, dropped: &HashSet<(usize, usize)>) -> Self {
+        if !dropped.is_empty() {
+            self.edges
+                .retain(|&(to, from, _)| to == from || !dropped.contains(&(to, from)));
+        }
+        self
+    }
+
     /// Split a step's assembled matrix triplets into tracked-node edges. Entries in the unit-state row or column
     /// are the reservoir supply, which the caller splits by origin into `feeds`.
     pub fn from_matrix(
@@ -712,6 +743,52 @@ pub fn reaction_edge_labels(
                 .insert(reaction_label(row.mt, neutron));
         }
     }
+}
+
+/// Fission-product edges the `fission_parents` restriction removes, as global `(product row, parent column)`
+/// pairs: for each library fission row (MT 18) of a parent outside `allowed`, every chain product with a
+/// nonzero yield in any table of `kind`. A pair that also carries a decay or non-fission reaction (`other`,
+/// the labels of those edges) keeps its edge: the matrix entry cannot be split, so that attribution stays.
+pub fn excluded_fission_edges(
+    rows: &[Row],
+    lib_targets: &[(i32, i32)],
+    chain: &Chain,
+    yields: &HashMap<(i32, i32), actinv_data::fission::FissionYields>,
+    kind: actinv_data::fission::YieldKind,
+    allowed: &BTreeSet<(i32, i32)>,
+    other: &GlobalLabels,
+) -> HashSet<(usize, usize)> {
+    let mut out = HashSet::new();
+    for row in rows {
+        if row.mt != 18 || row.zap != 0 {
+            continue;
+        }
+        let Some(&parent) = lib_targets.get(row.target) else {
+            continue;
+        };
+        if allowed.contains(&parent) {
+            continue;
+        }
+        let (Some(&column), Some(data)) = (chain.index.get(&parent), yields.get(&parent)) else {
+            continue;
+        };
+        for table in data.tables(kind) {
+            for (product, value) in &table.products {
+                if value.value == 0.0 {
+                    continue;
+                }
+                if let Some(&product_row) = chain.index.get(product) {
+                    if other
+                        .get(&(product_row, column))
+                        .is_none_or(|set| set.is_empty())
+                    {
+                        out.insert((product_row, column));
+                    }
+                }
+            }
+        }
+    }
+    out
 }
 
 /// Map global-index labels onto matrix positions: `pos[global]` is the tracked position (`usize::MAX` if pruned),
@@ -1974,6 +2051,113 @@ mod tests {
         let step = StepGraph::from_matrix(10.0, &trip, 2, vec![(1, 0, 9.0)]);
         assert_eq!(step.edges, vec![(0, 0, -1.0), (1, 0, 0.5)]);
         assert_eq!(step.feeds, vec![(1, 0, 9.0)]);
+    }
+
+    #[test]
+    fn fission_parent_filter_drops_only_pure_fission_edges_of_other_parents() {
+        use actinv_data::fission::{FissionYields, YieldKind, YieldTable, YieldValue};
+        let keys = vec![(92_235, 0), (92_238, 0), (53_135, 0), (54_135, 0)];
+        let chain = Chain {
+            index: keys.iter().enumerate().map(|(i, &k)| (k, i)).collect(),
+            keys,
+            lambda: vec![0.0; 4],
+            decay: Vec::new(),
+            leak: 4,
+            unit: 5,
+            n: 6,
+            ledger: chain::ChainLedger::default(),
+        };
+        let fission_row = |target| Row {
+            target,
+            mt: 18,
+            zap: 0,
+            lfs: 0,
+            lmf: 3,
+        };
+        let rows = [fission_row(0), fission_row(1)];
+        let lib_targets = [(92_235, 0), (92_238, 0)];
+        let evaluation = |parent| FissionYields {
+            parent,
+            awr: 0.0,
+            independent: vec![YieldTable {
+                energy_ev: 0.0253,
+                products: [(53_135, 0), (54_135, 0)]
+                    .into_iter()
+                    .map(|key| {
+                        (
+                            key,
+                            YieldValue {
+                                value: 0.5,
+                                uncertainty: 0.0,
+                            },
+                        )
+                    })
+                    .collect(),
+                sum: 1.0,
+            }],
+            cumulative: Vec::new(),
+        };
+        let yields: HashMap<_, _> = [(92_235, 0), (92_238, 0)]
+            .into_iter()
+            .map(|parent| (parent, evaluation(parent)))
+            .collect();
+        let allowed = BTreeSet::from([(92_235, 0)]);
+        // Xe135 also arises from U238 by a non-fission label: that pair keeps its edge
+        let mut other = GlobalLabels::new();
+        other.entry((3, 1)).or_default().insert("(n,x)".to_owned());
+        let dropped = excluded_fission_edges(
+            &rows,
+            &lib_targets,
+            &chain,
+            &yields,
+            YieldKind::Independent,
+            &allowed,
+            &other,
+        );
+        assert_eq!(dropped, HashSet::from([(2, 1)]));
+        // nothing is dropped for a parent that is allowed, and an empty `allowed` drops both parents' edges
+        let all = excluded_fission_edges(
+            &rows,
+            &lib_targets,
+            &chain,
+            &yields,
+            YieldKind::Independent,
+            &BTreeSet::new(),
+            &GlobalLabels::new(),
+        );
+        assert_eq!(all.len(), 4);
+        // the graph loses the dropped edge and keeps the diagonal
+        let step = StepGraph {
+            duration_s: 1.0,
+            edges: vec![(1, 1, -2.0), (2, 1, 0.5), (2, 0, 0.25)],
+            feeds: Vec::new(),
+        }
+        .without_edges(&HashSet::from([(2, 1), (1, 1)]));
+        assert_eq!(step.edges, vec![(1, 1, -2.0), (2, 0, 0.25)]);
+    }
+
+    #[test]
+    fn fission_parents_option_is_opt_in_and_validated() {
+        let options = PathwayOptions::default();
+        assert!(options.allowed_fission_parents().unwrap().is_none());
+        assert!(serde_json::to_value(&options)
+            .unwrap()
+            .get("fission_parents")
+            .is_none());
+        let restricted = PathwayOptions {
+            fission_parents: vec!["U235".into(), "Pu239".into()],
+            ..options.clone()
+        };
+        assert!(restricted.validate().is_ok());
+        assert_eq!(
+            restricted.allowed_fission_parents().unwrap().unwrap(),
+            BTreeSet::from([(92_235, 0), (94_239, 0)])
+        );
+        let bad = PathwayOptions {
+            fission_parents: vec!["Unobtainium".into()],
+            ..options
+        };
+        assert!(bad.validate().unwrap_err().contains("fission_parents"));
     }
 
     #[test]

@@ -27,6 +27,18 @@ can distinguish “checked and empty” from “not evaluated.” Rates are per 
 - `products_unmapped_to_leakage` — activation-library rows whose product could not be mapped.
 - `fission_no_yields_to_leakage` — active-parent fission rate sent to leakage because no matching yield evaluation was
   supplied.
+- `fission_unselected_to_leakage` — present only with `fission_yields.parents`: per parent with a yield file that the
+  selection leaves out, its active fission rate (per atom, 1/s) sent whole to leakage. Never counted in
+  `fission_no_yields_to_leakage`.
+- `fission_yield_weights` — present only with `fission_yields.energy: "rate_weighted"`: one entry per selected parent
+  and distinct spectrum: `parent`, `parent_ZA`, `parent_LISO`, `yields`, `energies_eV` (the tabulated incident
+  energies), `weights` (the rate-weighted `w_k`, summing to 1; `null` with `fallback: "spectrum_average"` when the
+  parent has no fission in the spectrum), `spectrum` (0 = base spectrum, `n` = the n-th distinct step spectrum),
+  `steps` (1-based schedule steps using it) and `library_slot`.
+- `fission_cumulative_overlap` — present only with `fission_yields.yields: "cumulative"`: per active parent (key
+  `ZA_LISO`), `summed_cumulative_yield`, `overlap_yield` (summed yield of products with a direct decay precursor that
+  also receives a positive yield from the parent), `overlap_share` (their ratio), `overlap_products` and
+  `products_with_yield`. It uses the base spectrum's effective yields.
 - `fission_yield_selection` — per-parent effective incident energy, evaluated bracket, interpolation weight, clamp
   decision, product count and effective independent-yield sum.
 - `fission_yield_balance` — per-parent fission rate plus raw, chain-mapped and leakage yield sums. Mapped plus leakage
@@ -56,7 +68,10 @@ state, which holds exactly 1.0 atom/g in trace mode and in coupled runs with `fe
 `n_states_populated`). Subtract it before comparing a trace-mode total with a coupled total.
 
 The certificate's `inputs.fission_yields` records every declared and recomputed file hash, parent, AWR and independent
-table size/sum; `certificate.fission_yields.selection` repeats the effective selection. Cumulative MT=459 tables are
+table size/sum; `certificate.fission_yields.selection` repeats the effective selection (with `yields` added for cumulative mode;
+under `rate_weighted` its energy fields are the weight-mean energy and the lowest and highest tabulated energy with
+nonzero weight). `certificate.fission_yields.weights`, `.yields` and `.parents` appear only when the matching option
+is used, and `weights` repeats `fission_yield_weights`. Cumulative MT=459 tables are
 counted for inspection only and never appear as production sources.
 
 ## Numerical resolution and pruning

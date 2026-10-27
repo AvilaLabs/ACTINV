@@ -5,6 +5,7 @@ use crate::cram::{step as cram_step, step_with_tangents, Cram};
 use crate::damage::{DamageStepOut, PreparedDamageTable};
 use crate::depletion::{DepletionTracker, LossCovariance, Tracked};
 use crate::fission_count::{self, FissionStepOut};
+use crate::fission_mix;
 use crate::gas;
 use crate::photon::{self, PhotonDiagnostics, PhotonResponse, PhotonSourceOut};
 use crate::power::{self, summarize_kerma, KermaStepOut, PowerStepOut};
@@ -467,6 +468,55 @@ fn fission_average_energy_eV<L: ReactionLibrary + ?Sized>(
                 parent.0, parent.1
             )
         })
+}
+
+/// P153: `(E_g, r_g)` for every group where the parent's fission rate `r_g = phi_g sigma_f,g` is nonzero, with
+/// `E_g = sqrt(E_lo E_hi)` the group's lethargy midpoint. The row is the MT=18 row `fission_average_energy_eV`
+/// reads. Empty when the library has no such row or the spectrum has no fission.
+fn fission_rate_groups<L: ReactionLibrary + ?Sized>(
+    library: &L,
+    targets: &[(i32, i32)],
+    phi: &[f64],
+    parent: (i32, i32),
+) -> Result<Vec<(f64, f64)>, String> {
+    let row_index = library.rows().iter().position(|row| {
+        row.mt == 18 && row.zap == 0 && targets.get(row.target).is_some_and(|key| *key == parent)
+    });
+    let Some(row_index) = row_index else {
+        return Ok(Vec::new());
+    };
+    let boundaries = library.boundaries_ev();
+    let mut groups = Vec::new();
+    for (group, &flux) in phi.iter().take(library.group_count()).enumerate() {
+        let rate = library.row_cross_section(row_index, group) * flux;
+        if rate == 0.0 {
+            continue;
+        }
+        let (low, high) = (boundaries[group], boundaries[group + 1]);
+        if !(rate > 0.0
+            && rate.is_finite()
+            && low.is_finite()
+            && high.is_finite()
+            && low > 0.0
+            && high > low)
+        {
+            return Err(format!(
+                "cannot compute the rate-weighted fission energy mix for {}_{}: group {group} \
+                 [{low}, {high}] eV with fission rate {rate}",
+                parent.0, parent.1
+            ));
+        }
+        groups.push((fission_mix::group_midpoint_ev(low, high), rate));
+    }
+    Ok(groups)
+}
+
+/// P153: one spectrum's selected fission yields. `weights` holds the rate-weighted mixing record per parent
+/// (empty for the other energy modes).
+struct SelectedFissionYields {
+    effective: HashMap<(i32, i32), fission::EffectiveYields>,
+    selection: Vec<serde_json::Value>,
+    weights: Vec<serde_json::Value>,
 }
 
 enum ActivationLibrary {
@@ -2420,7 +2470,7 @@ impl PreparedRun {
             spec.radiological.as_ref(),
             spec.damage.as_ref(),
             spec.self_shielding.as_ref(),
-            if multi_spectrum || groupwise {
+            if multi_spectrum || groupwise || spec.fission_yields.energy == "rate_weighted" {
                 None
             } else {
                 collapsible_spectrum(physical.flux.values())
@@ -2666,11 +2716,21 @@ impl PreparedRun {
         };
         let mut fission_yields = HashMap::new();
         let mut fission_yield_inputs = Vec::with_capacity(fission_options.files.len());
+        let fission_parent_selection = fission_options.parent_selection()?;
         for reference in &fission_options.files {
             let (text, sha) = read_verified_text(&reference.path, Some(&reference.sha256))?;
             let parsed =
                 fission::parse_text(&text).map_err(|e| format!("{}: {e}", reference.path))?;
             let parent = parsed.parent;
+            if fission_options.yield_kind() == fission::YieldKind::Cumulative
+                && parsed.cumulative.is_empty()
+                && fission_options.selects(parent)
+            {
+                return Err(format!(
+                    "{}: fission_yields.yields 'cumulative' needs MF=8/MT=459, which this evaluation lacks",
+                    reference.path
+                ));
+            }
             if fission_yields.insert(parent, parsed).is_some() {
                 return Err(format!(
                     "duplicate fission-yield parent {}_{}",
@@ -2711,7 +2771,9 @@ impl PreparedRun {
             ActivationLibrary::Dense(library::read_npz_after_sha256_verification(
                 &library_ref.path,
             )?)
-        } else if let Some(phi) = collapse_flux.filter(|_| shielding.is_none()) {
+        } else if let Some(phi) = collapse_flux
+            .filter(|_| shielding.is_none() && fission_options.energy != "rate_weighted")
+        {
             // Self-shielding scales each library row's sigma per group inside
             // the unresolved ranges, which requires the groupwise data; the
             // spectrum-collapsed artifact keeps only one value per row.
@@ -2837,6 +2899,26 @@ impl PreparedRun {
                 })
                 .collect()
         };
+        // P153: a named parent must have a yield file and fission in the library; refused here, before any output.
+        if let Some((_, named)) = &fission_parent_selection {
+            for &parent in named {
+                if !fission_yields.contains_key(&parent) {
+                    return Err(format!(
+                        "fission_yields.parents names {}, which has no fission-yield file",
+                        name_of(parent.0, parent.1)
+                    ));
+                }
+                let fissionable = library.rows().iter().any(|row| {
+                    row.mt == 18 && row.zap == 0 && library_targets.get(row.target) == Some(&parent)
+                });
+                if !fissionable {
+                    return Err(format!(
+                        "fission_yields.parents names {}, which is not fissionable in the activation library",
+                        name_of(parent.0, parent.1)
+                    ));
+                }
+            }
+        }
         let covariance_started = profiler.start();
         let covariance = match uncertainty_options.and_then(|options| options.covariance.as_ref()) {
             Some(covariance_ref) => Some(Self::load_covariance(
@@ -3410,7 +3492,124 @@ impl PreparedRun {
             .collect()
     }
 
-    /// Effective independent fission yields for a spec as
+    /// Select the effective fission yields of one spectrum: the spec's energy rule (`fixed`, `spectrum_average` or
+    /// `rate_weighted`) applied to each selected parent's independent or cumulative tables, then `yield_scale`.
+    /// A parent outside `fission_yields.parents` is skipped (the caller books its fission to leakage); so is a
+    /// parent whose spectrum has no fission under `fixed` or `spectrum_average`.
+    fn select_fission_yields<L: ReactionLibrary + ?Sized>(
+        &self,
+        spec: &Spec,
+        fixed_energy_ev: Option<f64>,
+        lib: &L,
+        lib_targets: &[(i32, i32)],
+        phi: &[f64],
+        yield_factors: &BTreeMap<(i32, i32, i32, i32), f64>,
+    ) -> Result<SelectedFissionYields, String> {
+        let kind = spec.fission_yields.yield_kind();
+        let rate_weighted = spec.fission_yields.energy == "rate_weighted";
+        let mut out = SelectedFissionYields {
+            effective: HashMap::new(),
+            selection: Vec::new(),
+            weights: Vec::new(),
+        };
+        let mut parents: Vec<_> = self.fission_yields.keys().copied().collect();
+        parents.sort_unstable();
+        for parent in parents {
+            if !spec.fission_yields.selects(parent) {
+                continue;
+            }
+            let data = &self.fission_yields[&parent];
+            let mut effective = if rate_weighted {
+                let groups = fission_rate_groups(lib, lib_targets, phi, parent)?;
+                let grid = data.energy_grid();
+                let mut record = serde_json::json!({
+                    "parent": name_of(parent.0, parent.1),
+                    "parent_ZA": parent.0,
+                    "parent_LISO": parent.1,
+                    "yields": kind.name(),
+                    "energies_eV": grid,
+                });
+                match fission_mix::rate_weights(&grid, &groups) {
+                    Some(weights) => {
+                        let pairs: Vec<(f64, f64)> =
+                            grid.iter().copied().zip(weights.iter().copied()).collect();
+                        record["weights"] = serde_json::json!(weights);
+                        out.weights.push(record);
+                        data.mixed(kind, &pairs)?
+                    }
+                    None => {
+                        // no fission in this spectrum: the parent's rate is zero, so the existing
+                        // spectrum_average rule (which also finds no fission energy) applies and the
+                        // parent keeps no yields here
+                        record["weights"] = serde_json::Value::Null;
+                        record["fallback"] = "spectrum_average".into();
+                        out.weights.push(record);
+                        match fission_average_energy_eV(lib, lib_targets, phi, parent)? {
+                            Some(energy) => data.effective_kind(kind, energy)?,
+                            None => continue,
+                        }
+                    }
+                }
+            } else {
+                let requested_energy = match spec.fission_yields.energy.as_str() {
+                    "fixed" => fixed_energy_ev,
+                    "spectrum_average" => fission_average_energy_eV(lib, lib_targets, phi, parent)?,
+                    _ => None, // validated before preparation
+                };
+                let Some(requested_energy) = requested_energy else {
+                    continue;
+                };
+                data.effective_kind(kind, requested_energy)?
+            };
+            for (&(pza, pliso, dza, dliso), factor) in yield_factors
+                .iter()
+                .filter(|(k, _)| k.0 == parent.0 && k.1 == parent.1)
+            {
+                match effective.products.get_mut(&(dza, dliso)) {
+                    Some(value) => *value *= factor,
+                    None => {
+                        return Err(format!(
+                            "yield_scale pair '{}:{}' is absent from the effective yields",
+                            name_of(pza, pliso),
+                            name_of(dza, dliso)
+                        ))
+                    }
+                }
+                // The declared uncertainty scales with the yield so the
+                // relative uncertainty is preserved.
+                if let Some(sigma) = effective.uncertainties.get_mut(&(dza, dliso)) {
+                    *sigma *= factor;
+                }
+            }
+            if yield_factors
+                .keys()
+                .any(|k| k.0 == parent.0 && k.1 == parent.1)
+            {
+                effective.sum = effective.products.values().sum();
+            }
+            let mut entry = serde_json::json!({
+                "parent": name_of(parent.0, parent.1),
+                "parent_ZA": parent.0,
+                "parent_LISO": parent.1,
+                "mode": spec.fission_yields.energy,
+                "requested_energy_eV": effective.requested_energy_ev,
+                "lower_energy_eV": effective.lower_energy_ev,
+                "upper_energy_eV": effective.upper_energy_ev,
+                "upper_weight": effective.upper_weight,
+                "clamped": effective.clamped,
+                "effective_yield_sum": effective.sum,
+                "products": effective.products.len(),
+            });
+            if kind == fission::YieldKind::Cumulative {
+                entry["yields"] = kind.name().into();
+            }
+            out.selection.push(entry);
+            out.effective.insert(parent, effective);
+        }
+        Ok(out)
+    }
+
+    /// Effective fission yields for a spec as
     /// ((parent_za, parent_liso, product_za, product_liso), yield, rel_sigma)
     /// tuples, using the spec's fission-energy selection on the nominal
     /// (unperturbed) data. `rel_sigma` is `sigma_yield / yield`; a zero
@@ -3422,22 +3621,27 @@ impl PreparedRun {
         spec: &Spec,
         physical: &PhysicalInputs,
     ) -> Result<YieldInputs, String> {
+        if spec.fission_yields.energy == "rate_weighted" {
+            return Err(
+                "the fission_yields sampling channel is not available with fission_yields.energy \
+                 'rate_weighted': the mixed yields differ per spectrum"
+                    .into(),
+            );
+        }
         let phi = physical.flux.values();
+        let selected = self.select_fission_yields(
+            spec,
+            physical.fixed_fission_energy.map(|energy| energy.get()),
+            &self.library,
+            &self.library_targets,
+            phi,
+            &BTreeMap::new(),
+        )?;
         let mut out = Vec::new();
-        let mut parents: Vec<_> = self.fission_yields.keys().copied().collect();
+        let mut parents: Vec<_> = selected.effective.keys().copied().collect();
         parents.sort_unstable();
         for parent in parents {
-            let requested_energy = match spec.fission_yields.energy.as_str() {
-                "fixed" => physical.fixed_fission_energy.map(|energy| energy.get()),
-                "spectrum_average" => {
-                    fission_average_energy_eV(&self.library, &self.library_targets, phi, parent)?
-                }
-                _ => None,
-            };
-            let Some(requested_energy) = requested_energy else {
-                continue;
-            };
-            let effective = self.fission_yields[&parent].effective(requested_energy)?;
+            let effective = &selected.effective[&parent];
             for (&(dza, dliso), &y) in &effective.products {
                 let sigma = effective
                     .uncertainties
@@ -3783,61 +3987,18 @@ impl PreparedRun {
             }
             None => None,
         };
-        let mut effective_fission_yields = HashMap::new();
-        let mut fission_yield_selection = Vec::new();
-        let mut fission_parents: Vec<_> = self.fission_yields.keys().copied().collect();
-        fission_parents.sort_unstable();
-        for parent in fission_parents {
-            let requested_energy = match spec.fission_yields.energy.as_str() {
-                "fixed" => physical.fixed_fission_energy.map(|energy| energy.get()),
-                "spectrum_average" => fission_average_energy_eV(lib, lib_targets, phi, parent)?,
-                _ => None, // validated before preparation
-            };
-            let Some(requested_energy) = requested_energy else {
-                continue;
-            };
-            let mut effective = self.fission_yields[&parent].effective(requested_energy)?;
-            for (&(pza, pliso, dza, dliso), factor) in yield_factors
-                .iter()
-                .filter(|(k, _)| k.0 == parent.0 && k.1 == parent.1)
-            {
-                match effective.products.get_mut(&(dza, dliso)) {
-                    Some(value) => *value *= factor,
-                    None => {
-                        return Err(format!(
-                            "yield_scale pair '{}:{}' is absent from the effective yields",
-                            name_of(pza, pliso),
-                            name_of(dza, dliso)
-                        ))
-                    }
-                }
-                // The declared uncertainty scales with the yield so the
-                // relative uncertainty is preserved.
-                if let Some(sigma) = effective.uncertainties.get_mut(&(dza, dliso)) {
-                    *sigma *= factor;
-                }
-            }
-            if yield_factors
-                .keys()
-                .any(|k| k.0 == parent.0 && k.1 == parent.1)
-            {
-                effective.sum = effective.products.values().sum();
-            }
-            fission_yield_selection.push(serde_json::json!({
-                "parent": name_of(parent.0, parent.1),
-                "parent_ZA": parent.0,
-                "parent_LISO": parent.1,
-                "mode": spec.fission_yields.energy,
-                "requested_energy_eV": effective.requested_energy_ev,
-                "lower_energy_eV": effective.lower_energy_ev,
-                "upper_energy_eV": effective.upper_energy_ev,
-                "upper_weight": effective.upper_weight,
-                "clamped": effective.clamped,
-                "effective_yield_sum": effective.sum,
-                "products": effective.products.len(),
-            }));
-            effective_fission_yields.insert(parent, effective);
-        }
+        let fixed_fission_energy_ev = physical.fixed_fission_energy.map(|energy| energy.get());
+        let selected_yields = self.select_fission_yields(
+            spec,
+            fixed_fission_energy_ev,
+            lib,
+            lib_targets,
+            phi,
+            &yield_factors,
+        )?;
+        let effective_fission_yields = selected_yields.effective;
+        let fission_yield_selection = selected_yields.selection;
+        let mut fission_yield_weights = selected_yields.weights;
         for &(pza, pliso, ..) in yield_factors.keys() {
             if !effective_fission_yields.contains_key(&(pza, pliso)) {
                 return Err(format!(
@@ -3847,6 +4008,15 @@ impl PreparedRun {
             }
         }
         let mut led = RateLedger::default();
+        // P153: parents with a yield file that `fission_yields.parents` deselects send their fission to leakage
+        if spec.fission_yields.parents.is_some() {
+            led.fission_unselected_parents = self
+                .fission_yields
+                .keys()
+                .copied()
+                .filter(|&parent| !spec.fission_yields.selects(parent))
+                .collect();
+        }
         // FISPACT-II DEPLETION: the initial nuclides the table follows, and the loss rows the
         // rate assembly records for them (the solver's own collapsed rates; nothing is
         // recomputed). Present only when `summary.depletion` is true.
@@ -4253,6 +4423,18 @@ impl PreparedRun {
         let mut fission_rates_extra: Vec<BTreeMap<usize, f64>> = Vec::new();
         // Loss rates of the depletion table's nuclides under each override spectrum.
         let mut loss_rates_extra: Vec<Vec<chain::LossRate>> = Vec::new();
+        // 1-based steps that use a spectrum (None = the base spectrum, Some(i) = extra spectrum i)
+        let spectrum_steps = |id: Option<usize>| -> Vec<usize> {
+            (0..sched.len())
+                .filter(|&si| step_spectrum_id[si] == id)
+                .map(|si| si + 1)
+                .collect()
+        };
+        for entry in fission_yield_weights.iter_mut() {
+            entry["spectrum"] = 0.into();
+            entry["steps"] = serde_json::json!(spectrum_steps(None));
+            entry["library_slot"] = serde_json::Value::Null;
+        }
         for (extra_index, (extra_phi, extra_slot)) in
             extra_spectra.iter().zip(&extra_libraries).enumerate()
         {
@@ -4263,6 +4445,30 @@ impl PreparedRun {
                 ),
                 None => (lib, lib_targets.as_slice()),
             };
+            // P153 rate_weighted: the mix depends on the spectrum, so each extra spectrum selects its own yields
+            let extra_selected = if spec.fission_yields.energy == "rate_weighted" {
+                let selected = self.select_fission_yields(
+                    spec,
+                    fixed_fission_energy_ev,
+                    extra_lib,
+                    extra_targets,
+                    extra_phi,
+                    &yield_factors,
+                )?;
+                for entry in &selected.weights {
+                    let mut entry = entry.clone();
+                    entry["spectrum"] = (extra_index + 1).into();
+                    entry["steps"] = serde_json::json!(spectrum_steps(Some(extra_index)));
+                    entry["library_slot"] = serde_json::json!(extra_slot);
+                    fission_yield_weights.push(entry);
+                }
+                Some(selected)
+            } else {
+                None
+            };
+            let extra_fission_yields = extra_selected
+                .as_ref()
+                .map_or(&effective_fission_yields, |selected| &selected.effective);
             // a throwaway ledger per extra collapse: the base ledger already
             // recorded the channel universe; these calls only differ in phi
             let mut scratch = RateLedger {
@@ -4275,7 +4481,7 @@ impl PreparedRun {
                     extra_targets,
                     extra_phi,
                     ch,
-                    &effective_fission_yields,
+                    extra_fission_yields,
                     &mut scratch,
                     shield_plan.as_ref(),
                     rate_scales.as_ref(),
@@ -4292,7 +4498,7 @@ impl PreparedRun {
                     lib_targets,
                     extra_phi,
                     ch,
-                    &effective_fission_yields,
+                    extra_fission_yields,
                     &mut scratch,
                     shield_plan.as_ref(),
                     rate_scales.as_ref(),
@@ -4304,7 +4510,7 @@ impl PreparedRun {
                     extra_targets,
                     extra_phi,
                     ch,
-                    &effective_fission_yields,
+                    extra_fission_yields,
                     &mut scratch,
                     shield_plan.as_ref(),
                     rate_scales.as_ref(),
@@ -5559,6 +5765,43 @@ impl PreparedRun {
             .iter()
             .position(|state| state.is_none());
         let mut route_steps: Vec<crate::pathways::StepGraph> = Vec::new();
+        // P153 `pathways.fission_parents`: fission edges of other parents leave the route graph (the diagonal and
+        // the inventory are untouched), as global (row, column) pairs and as matrix positions
+        let route_fission_drop: HashSet<(usize, usize)> = match spec
+            .pathways
+            .as_ref()
+            .map(|options| options.allowed_fission_parents())
+            .transpose()?
+            .flatten()
+        {
+            Some(allowed) => {
+                let mut other = crate::pathways::GlobalLabels::new();
+                crate::pathways::decay_edge_labels(nuclides, ch, &mut other);
+                crate::pathways::reaction_edge_labels(
+                    &mut other,
+                    lib.rows(),
+                    lib_targets,
+                    ch,
+                    &HashMap::new(),
+                    spec.projectile.is_neutron(),
+                );
+                crate::pathways::excluded_fission_edges(
+                    lib.rows(),
+                    lib_targets,
+                    ch,
+                    &self.fission_yields,
+                    spec.fission_yields.yield_kind(),
+                    &allowed,
+                    &other,
+                )
+            }
+            None => HashSet::new(),
+        };
+        let route_fission_drop_positions: HashSet<(usize, usize)> = route_fission_drop
+            .iter()
+            .filter(|&&(row, column)| pos[row] != usize::MAX && pos[column] != usize::MAX)
+            .map(|&(row, column)| (pos[row], pos[column]))
+            .collect();
         // ---- P125 fission count (opt-in). The neutron-induced and spontaneous counts are two
         // extra states of a throwaway copy of each step's matrix, so each step's integral is exact
         // in the same CRAM sense as the inventory and the nominal solve is untouched.
@@ -5807,6 +6050,9 @@ impl PreparedRun {
                         .get(slot)
                         .map_or(&[][..], |origins| origins.as_slice());
                     for &(row, state, rate) in origins {
+                        if route_fission_drop.contains(&(row, state)) {
+                            continue;
+                        }
                         if let (true, Some(&p)) =
                             (pos[row] != usize::MAX, route_index_of.get(&state))
                         {
@@ -5821,12 +6067,10 @@ impl PreparedRun {
                         }
                     }
                 }
-                route_steps.push(crate::pathways::StepGraph::from_matrix(
-                    dt.get(),
-                    &trip,
-                    pos[ch.unit],
-                    supply,
-                ));
+                route_steps.push(
+                    crate::pathways::StepGraph::from_matrix(dt.get(), &trip, pos[ch.unit], supply)
+                        .without_edges(&route_fission_drop_positions),
+                );
             }
             if fission_count_options.is_some() {
                 // Fissions in this step: the two counters accumulate edge-rate times population
@@ -6894,6 +7138,8 @@ impl PreparedRun {
         }
         led.fission_no_yields
             .retain(|parent, _| active_fission_parents.contains(parent));
+        led.fission_unselected
+            .retain(|parent, _| active_fission_parents.contains(parent));
         led.fission_product_leakage
             .retain(|entry| active_fission_parents.contains(&entry.parent));
         led.fission_balance
@@ -7019,6 +7265,50 @@ impl PreparedRun {
             ledger.as_object_mut().expect("ledger is an object").insert(
                 "unmodelled_decay_branches_to_leakage".into(),
                 serde_json::json!(ch.ledger.unknown_modes),
+            );
+        }
+        // P153: present only when the options are used, so default ledgers keep their bytes
+        if spec.fission_yields.parents.is_some() {
+            ledger.as_object_mut().expect("ledger is an object").insert(
+                "fission_unselected_to_leakage".into(),
+                serde_json::json!(led.fission_unselected),
+            );
+        }
+        if spec.fission_yields.energy == "rate_weighted" {
+            ledger.as_object_mut().expect("ledger is an object").insert(
+                "fission_yield_weights".into(),
+                serde_json::json!(fission_yield_weights),
+            );
+        }
+        if spec.fission_yields.yields == "cumulative" {
+            let precursors = fission_mix::decay_precursors(ch);
+            let overlap: BTreeMap<String, serde_json::Value> = effective_fission_yields
+                .iter()
+                .filter_map(|(parent, effective)| {
+                    let name = format!("{}_{}", parent.0, parent.1);
+                    active_fission_parents.contains(&name).then(|| {
+                        let overlap = fission_mix::cumulative_overlap(
+                            &effective.products,
+                            effective.sum,
+                            ch,
+                            &precursors,
+                        );
+                        (
+                            name,
+                            serde_json::json!({
+                                "summed_cumulative_yield": overlap.summed_yield,
+                                "overlap_yield": overlap.overlap_yield,
+                                "overlap_share": overlap.share(),
+                                "overlap_products": overlap.overlap_products,
+                                "products_with_yield": overlap.products_with_yield,
+                            }),
+                        )
+                    })
+                })
+                .collect();
+            ledger.as_object_mut().expect("ledger is an object").insert(
+                "fission_cumulative_overlap".into(),
+                serde_json::json!(overlap),
             );
         }
         if !spec.projectile.is_neutron() {
@@ -7785,8 +8075,16 @@ impl PreparedRun {
                 "selection": fission_yield_selection,
             },
         });
-        // Opt-in photon components are recorded only when requested, so default certificates
-        // keep their bytes.
+        // Opt-in components are recorded only when requested, so default certificates keep their bytes.
+        if spec.fission_yields.yields != "independent" {
+            certificate["fission_yields"]["yields"] = spec.fission_yields.yields.clone().into();
+        }
+        if let Some(selection) = &spec.fission_yields.parents {
+            certificate["fission_yields"]["parents"] = serde_json::json!(selection);
+        }
+        if spec.fission_yields.energy == "rate_weighted" {
+            certificate["fission_yields"]["weights"] = serde_json::json!(fission_yield_weights);
+        }
         if want_depletion {
             certificate["depletion"] = serde_json::json!({
                 "formula": "removal per atom = lambda + sum of loss rows (sigma phi multiplier)",
@@ -8191,7 +8489,7 @@ fn prepared_fingerprint(
         .schedule
         .iter()
         .any(|step| step.spectrum_flux.is_some());
-    let collapse = if multi_spectrum {
+    let collapse = if multi_spectrum || spec.fission_yields.energy == "rate_weighted" {
         None
     } else {
         collapsible_spectrum(physical.flux.values())
@@ -8423,6 +8721,51 @@ mod projectile_output_tests {
             Some("fispact-709"),
             Some("fispact-162")
         ));
+    }
+
+    #[test]
+    fn fission_rate_groups_use_the_parent_row_flux_and_lethargy_midpoints() {
+        // two targets, each with one fission row; sigma_f differs per group
+        let lib = actinv_data::library::Library {
+            rows: vec![
+                actinv_data::library::Row {
+                    target: 0,
+                    mt: 18,
+                    zap: 0,
+                    lfs: 0,
+                    lmf: 3,
+                },
+                actinv_data::library::Row {
+                    target: 1,
+                    mt: 18,
+                    zap: 0,
+                    lfs: 0,
+                    lmf: 3,
+                },
+            ],
+            sig: vec![2.0, 0.0, 4.0, 1.0, 1.0, 1.0],
+            ngroups: 3,
+            bounds: vec![1.0, 4.0, 16.0, 64.0],
+        };
+        let targets = [(92_235, 0), (92_238, 0)];
+        let flux = [3.0, 5.0, 0.5];
+        let u235 = super::fission_rate_groups(&lib, &targets, &flux, (92_235, 0)).unwrap();
+        // group 1 has zero cross section and is skipped; midpoints sqrt(1*4) = 2 and sqrt(16*64) = 32
+        assert_eq!(u235, vec![(2.0, 6.0), (32.0, 2.0)]);
+        let u238 = super::fission_rate_groups(&lib, &targets, &flux, (92_238, 0)).unwrap();
+        assert_eq!(u238.len(), 3);
+        assert_eq!(u238[1], (8.0, 5.0));
+        // a parent without a fission row, and a spectrum without fission, give nothing
+        assert!(
+            super::fission_rate_groups(&lib, &targets, &flux, (94_239, 0))
+                .unwrap()
+                .is_empty()
+        );
+        assert!(
+            super::fission_rate_groups(&lib, &targets, &[0.0; 3], (92_235, 0))
+                .unwrap()
+                .is_empty()
+        );
     }
 
     #[test]

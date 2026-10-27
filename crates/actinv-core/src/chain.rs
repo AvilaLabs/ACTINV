@@ -360,6 +360,10 @@ pub struct FissionBalance {
 pub struct RateLedger {
     pub products_no_decay_data: BTreeMap<String, f64>,
     pub fission_no_yields: BTreeMap<String, f64>,
+    /// P153: parents the spec's `fission_yields.parents` deselects. Set by the caller before assembly; their
+    /// whole fission rate goes to leakage like a parent without yields, booked in `fission_unselected` instead.
+    pub fission_unselected_parents: std::collections::BTreeSet<(i32, i32)>,
+    pub fission_unselected: BTreeMap<String, f64>,
     pub fission_product_leakage: Vec<FissionProductLeakage>,
     pub fission_balance: BTreeMap<String, FissionBalance>,
     pub products_unmapped: BTreeMap<String, f64>,
@@ -714,7 +718,11 @@ fn assemble_reaction_rates<L: ReactionLibrary + ?Sized>(
                 }
             } else {
                 if rate != 0.0 {
-                    *led.fission_no_yields.entry(parent).or_insert(0.0) += rate;
+                    if led.fission_unselected_parents.contains(&tgt) {
+                        *led.fission_unselected.entry(parent).or_insert(0.0) += rate;
+                    } else {
+                        *led.fission_no_yields.entry(parent).or_insert(0.0) += rate;
+                    }
                     trip.push((chain.leak, col, rate));
                 }
                 if let Some(derivatives) = derivatives.as_mut() {
@@ -1301,6 +1309,40 @@ mod tests {
         assert!(leak_edges.contains(&h3_rate)); // H3 gas from the lmf=-2 row
         assert_eq!(led.gas_uncovered.len(), 1);
         assert!(led.gas_uncovered.contains_key("18"));
+    }
+
+    #[test]
+    fn unselected_fission_parent_books_its_rate_to_leakage_under_its_own_key() {
+        let (library, targets, chain) = gas_test_fixture();
+        let flux = [0.0, 5.0, 7.0, 0.0];
+        let yields = HashMap::new();
+        let mut plain = RateLedger::default();
+        let plain_trip = reaction_rates(
+            &library, &targets, &flux, &chain, &yields, &mut plain, None, None, false,
+        );
+        let parent = plain
+            .fission_no_yields
+            .keys()
+            .next()
+            .expect("the fixture's parent fissions")
+            .clone();
+        let mut led = RateLedger::default();
+        led.fission_unselected_parents.insert(targets[0]);
+        let trip = reaction_rates(
+            &library, &targets, &flux, &chain, &yields, &mut led, None, None, false,
+        );
+        // the matrix is the same; only the ledger key moves
+        assert_eq!(trip, plain_trip);
+        assert!(led.fission_no_yields.is_empty());
+        assert_eq!(led.fission_unselected.len(), 1);
+        assert_eq!(
+            led.fission_unselected[&parent],
+            plain.fission_no_yields[&parent]
+        );
+        assert_eq!(
+            led.fission_unselected[&parent],
+            led.fission_rate_per_atom[&0]
+        );
     }
 
     #[test]

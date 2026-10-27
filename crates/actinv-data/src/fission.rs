@@ -1,7 +1,8 @@
 //! ENDF-6 neutron-induced fission-product yields (MF=8/MT=454 and MT=459).
 //!
-//! Independent yields are the production source. Cumulative yields are retained only so callers can inspect and
-//! cross-check the evaluation; they must never be substituted into a depletion matrix.
+//! Independent yields are the production source. Cumulative yields enter a depletion matrix only when the spec asks
+//! for `fission_yields.yields: "cumulative"`, which also reports the double counting that introduces; otherwise
+//! they are retained so callers can inspect and cross-check the evaluation.
 use crate::endf::{fields, read_list_checked, read_tab1_checked, tail, ContRecord};
 use std::collections::{BTreeMap, HashSet};
 
@@ -26,6 +27,22 @@ pub struct FissionYields {
     pub awr: f64,
     pub independent: Vec<YieldTable>,
     pub cumulative: Vec<YieldTable>,
+}
+
+/// Which MF=8 yield set a selection reads: MT=454 independent or MT=459 cumulative.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum YieldKind {
+    Independent,
+    Cumulative,
+}
+
+impl YieldKind {
+    pub fn name(self) -> &'static str {
+        match self {
+            Self::Independent => "independent",
+            Self::Cumulative => "cumulative",
+        }
+    }
 }
 
 #[derive(Clone, Debug)]
@@ -464,27 +481,71 @@ pub fn parse_spontaneous_nubar_text(
     Ok(out)
 }
 
+/// Piecewise-linear hat functions on an ascending incident-energy `grid`, evaluated at `energy_ev`: the
+/// weights `FissionYields::effective` applies at one energy (h_1 = 1 at or below the first point, h_K = 1 at or
+/// above the last, two adjacent weights `1 - w` and `w` between). They sum to 1.
+pub fn hat_weights(grid: &[f64], energy_ev: f64) -> Vec<f64> {
+    let mut weights = vec![0.0; grid.len()];
+    let (Some(&first), Some(&last)) = (grid.first(), grid.last()) else {
+        return weights;
+    };
+    if energy_ev <= first {
+        weights[0] = 1.0;
+    } else if energy_ev >= last {
+        weights[grid.len() - 1] = 1.0;
+    } else {
+        let upper = grid.partition_point(|&point| point <= energy_ev);
+        let weight = (energy_ev - grid[upper - 1]) / (grid[upper] - grid[upper - 1]);
+        weights[upper - 1] = 1.0 - weight;
+        weights[upper] = weight;
+    }
+    weights
+}
+
 impl FissionYields {
+    /// The yield tables of one kind, ascending in incident energy.
+    pub fn tables(&self, kind: YieldKind) -> &[YieldTable] {
+        match kind {
+            YieldKind::Independent => &self.independent,
+            YieldKind::Cumulative => &self.cumulative,
+        }
+    }
+
+    /// Tabulated incident energies (eV), ascending. MT=454 and MT=459 share one grid (checked at parse).
+    pub fn energy_grid(&self) -> Vec<f64> {
+        self.independent
+            .iter()
+            .map(|table| table.energy_ev)
+            .collect()
+    }
+
     /// Select, clamp or linearly interpolate independent yields at an incident energy.
     pub fn effective(&self, energy_ev: f64) -> Result<EffectiveYields, String> {
+        self.effective_kind(YieldKind::Independent, energy_ev)
+    }
+
+    /// [`Self::effective`] for either yield set.
+    pub fn effective_kind(
+        &self,
+        kind: YieldKind,
+        energy_ev: f64,
+    ) -> Result<EffectiveYields, String> {
         if !energy_ev.is_finite() || energy_ev < 0.0 {
             return Err(format!("invalid fission-yield incident energy {energy_ev}"));
         }
-        let first = self
-            .independent
+        let tables = self.tables(kind);
+        let first = tables
             .first()
-            .ok_or("fission-yield evaluation has no independent tables")?;
-        let last = self.independent.last().unwrap();
+            .ok_or_else(|| format!("fission-yield evaluation has no {} tables", kind.name()))?;
+        let last = tables.last().unwrap();
         let (lower, upper, weight, clamped) = if energy_ev <= first.energy_ev {
             (first, first, 0.0, energy_ev < first.energy_ev)
         } else if energy_ev >= last.energy_ev {
             (last, last, 0.0, energy_ev > last.energy_ev)
         } else {
-            let upper_index = self
-                .independent
-                .partition_point(|table| table.energy_ev <= energy_ev);
-            let lower = &self.independent[upper_index - 1];
-            let upper = &self.independent[upper_index];
+            let upper_index = tables.partition_point(|table| table.energy_ev <= energy_ev);
+            let lower = &tables[upper_index - 1];
+            let upper = &tables[upper_index];
             let weight = (energy_ev - lower.energy_ev) / (upper.energy_ev - lower.energy_ev);
             (lower, upper, weight, false)
         };
@@ -525,6 +586,88 @@ impl FissionYields {
             upper_energy_ev: upper.energy_ev,
             upper_weight: weight,
             clamped,
+            products,
+            uncertainties,
+            sum,
+        })
+    }
+
+    /// Mix the tabulated yield sets of one kind: `Y = sum_k w_k Y_k` over `(incident energy, weight)` pairs,
+    /// each energy one of the tabulated energies (matched bitwise) and the weights nonnegative summing to 1.
+    /// The product set is the union over the tables with nonzero weight (a product absent from one counts as
+    /// zero yield and zero uncertainty); uncertainties combine as `sqrt(sum w_k^2 sigma_k^2)`. The reported
+    /// `requested_energy_ev` is the weight-mean energy, `lower`/`upper` the lowest and highest tabulated energy
+    /// with nonzero weight, `upper_weight` the weight of the upper one (0 when they coincide), `clamped` false.
+    pub fn mixed(
+        &self,
+        kind: YieldKind,
+        weights: &[(f64, f64)],
+    ) -> Result<EffectiveYields, String> {
+        let tables = self.tables(kind);
+        if tables.is_empty() {
+            return Err(format!(
+                "fission-yield evaluation has no {} tables",
+                kind.name()
+            ));
+        }
+        let mut total = 0.0;
+        let mut selected: Vec<(&YieldTable, f64)> = Vec::new();
+        for &(energy, weight) in weights {
+            if !weight.is_finite() || weight < 0.0 {
+                return Err(format!("invalid fission-yield mixing weight {weight}"));
+            }
+            let table = tables
+                .iter()
+                .find(|table| table.energy_ev.to_bits() == energy.to_bits())
+                .ok_or_else(|| {
+                    format!("mixing energy {energy} eV is not a tabulated incident energy")
+                })?;
+            total += weight;
+            if weight > 0.0 {
+                selected.push((table, weight));
+            }
+        }
+        if selected.is_empty() || (total - 1.0).abs() > 1e-9 {
+            return Err(format!(
+                "fission-yield mixing weights must sum to 1, got {total}"
+            ));
+        }
+        let mut keys: Vec<_> = selected
+            .iter()
+            .flat_map(|(table, _)| table.products.keys().copied())
+            .collect();
+        keys.sort_unstable();
+        keys.dedup();
+        let mut products = BTreeMap::new();
+        let mut uncertainties = BTreeMap::new();
+        for key in keys {
+            let mut value = 0.0;
+            let mut sigma = 0.0f64;
+            for (table, weight) in &selected {
+                let entry = table.products.get(&key);
+                value += weight * entry.map_or(0.0, |entry| entry.value);
+                sigma = sigma.hypot(weight * entry.map_or(0.0, |entry| entry.uncertainty));
+            }
+            products.insert(key, value);
+            uncertainties.insert(key, sigma);
+        }
+        let sum: f64 = products.values().sum();
+        let (lower, _) = selected[0];
+        let (upper, upper_weight) = *selected.last().unwrap();
+        let upper_weight = if std::ptr::eq(lower, upper) {
+            0.0
+        } else {
+            upper_weight
+        };
+        Ok(EffectiveYields {
+            requested_energy_ev: selected
+                .iter()
+                .map(|(table, weight)| weight * table.energy_ev)
+                .sum(),
+            lower_energy_ev: lower.energy_ev,
+            upper_energy_ev: upper.energy_ev,
+            upper_weight,
+            clamped: false,
             products,
             uncertainties,
             sum,
@@ -618,6 +761,112 @@ mod tests {
         assert_eq!(effective.sum, 2.0);
         assert!(yields.effective(0.0).unwrap().clamped);
         assert!(yields.effective(4.0).unwrap().clamped);
+    }
+
+    fn table_with_sigma(energy_ev: f64, products: &[(NuclideKey, f64, f64)]) -> YieldTable {
+        let products: BTreeMap<_, _> = products
+            .iter()
+            .map(|&(key, value, uncertainty)| (key, YieldValue { value, uncertainty }))
+            .collect();
+        YieldTable {
+            energy_ev,
+            sum: products.values().map(|value| value.value).sum(),
+            products,
+        }
+    }
+
+    fn three_table_yields() -> FissionYields {
+        FissionYields {
+            parent: (92_235, 0),
+            awr: 233.0,
+            independent: vec![
+                table_with_sigma(0.0253, &[((53_135, 0), 1.0, 0.1), ((54_135, 0), 1.0, 0.2)]),
+                table_with_sigma(5.0e5, &[((53_135, 0), 0.5, 0.3), ((55_135, 0), 1.5, 0.4)]),
+                table_with_sigma(1.4e7, &[((53_135, 0), 0.25, 0.5)]),
+            ],
+            cumulative: vec![
+                table_with_sigma(0.0253, &[((53_135, 0), 2.0, 0.0)]),
+                table_with_sigma(5.0e5, &[((53_135, 0), 3.0, 0.0)]),
+                table_with_sigma(1.4e7, &[((53_135, 0), 4.0, 0.0)]),
+            ],
+        }
+    }
+
+    #[test]
+    fn hat_weights_sum_to_one_and_clamp() {
+        let grid = [0.0253, 5.0e5, 1.4e7];
+        assert_eq!(hat_weights(&grid, 1.0e-3), vec![1.0, 0.0, 0.0]);
+        assert_eq!(hat_weights(&grid, 2.0e7), vec![0.0, 0.0, 1.0]);
+        assert_eq!(hat_weights(&grid, 5.0e5), vec![0.0, 1.0, 0.0]);
+        let inner = hat_weights(&grid, 1.0e6);
+        assert_eq!(inner[0], 0.0);
+        assert!((inner.iter().sum::<f64>() - 1.0).abs() < 1e-15);
+        assert!(inner[1] > 0.0 && inner[2] > 0.0);
+        assert_eq!(hat_weights(&[3.0], 9.0), vec![1.0]);
+    }
+
+    #[test]
+    fn mixed_with_one_bracketing_pair_reproduces_effective() {
+        let yields = three_table_yields();
+        let energy = 1.0e6;
+        let hats = hat_weights(&yields.energy_grid(), energy);
+        let weights: Vec<(f64, f64)> = yields.energy_grid().into_iter().zip(hats).collect();
+        let mixed = yields.mixed(YieldKind::Independent, &weights).unwrap();
+        let single = yields.effective(energy).unwrap();
+        assert_eq!(mixed.products, single.products);
+        assert_eq!(mixed.sum, single.sum);
+        for (key, sigma) in &single.uncertainties {
+            assert_eq!(mixed.uncertainties[key], *sigma);
+        }
+        // below the first energy: one table, exactly
+        let clamped = yields
+            .mixed(YieldKind::Independent, &[(0.0253, 1.0), (5.0e5, 0.0)])
+            .unwrap();
+        assert_eq!(clamped.products, yields.effective(1.0e-3).unwrap().products);
+        assert_eq!(clamped.upper_weight, 0.0);
+    }
+
+    #[test]
+    fn mixed_uses_union_of_products_and_combines_uncertainties_in_quadrature() {
+        let yields = three_table_yields();
+        let mixed = yields
+            .mixed(
+                YieldKind::Independent,
+                &[(0.0253, 0.25), (5.0e5, 0.5), (1.4e7, 0.25)],
+            )
+            .unwrap();
+        assert_eq!(mixed.products.len(), 3);
+        assert_eq!(mixed.products[&(53_135, 0)], 0.25 + 0.25 + 0.0625);
+        assert_eq!(mixed.products[&(54_135, 0)], 0.25);
+        assert_eq!(mixed.products[&(55_135, 0)], 0.75);
+        let expected: f64 =
+            ((0.25f64 * 0.1).powi(2) + (0.5f64 * 0.3).powi(2) + (0.25f64 * 0.5).powi(2)).sqrt();
+        assert!((mixed.uncertainties[&(53_135, 0)] - expected).abs() < 1e-15);
+        // a product absent from every other table carries only its own term
+        assert!((mixed.uncertainties[&(54_135, 0)] - 0.25 * 0.2).abs() < 1e-15);
+        let mean = 0.25 * 0.0253 + 0.5 * 5.0e5 + 0.25 * 1.4e7;
+        assert!((mixed.requested_energy_ev - mean).abs() < 1e-6);
+    }
+
+    #[test]
+    fn mixed_reads_cumulative_tables_and_rejects_bad_weights() {
+        let yields = three_table_yields();
+        let cumulative = yields
+            .mixed(YieldKind::Cumulative, &[(0.0253, 0.5), (5.0e5, 0.5)])
+            .unwrap();
+        assert_eq!(cumulative.products[&(53_135, 0)], 2.5);
+        assert!(yields
+            .mixed(YieldKind::Independent, &[(0.0253, 0.5)])
+            .is_err());
+        assert!(yields.mixed(YieldKind::Independent, &[(1.0, 1.0)]).is_err());
+        assert!(yields
+            .mixed(YieldKind::Independent, &[(0.0253, -0.5), (5.0e5, 1.5)])
+            .is_err());
+        let none = FissionYields {
+            cumulative: Vec::new(),
+            ..three_table_yields()
+        };
+        assert!(none.effective_kind(YieldKind::Cumulative, 1.0).is_err());
     }
 
     #[test]
