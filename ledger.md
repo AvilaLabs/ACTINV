@@ -4131,3 +4131,21 @@ they import, and the specs run. Failures and their dispositions:
   which now passes 102/102 with 0 unclassified.
 - The pypact `test.i` `TIME` entry is P140 schedule behaviour, shared with the reference: Amendment B1
   (`cf9cea4adb2b26b026a77b53e23b6664ce945632760a85ae3898e2f8600d7a9e`).
+
+## Entry 235 — P154 development run 1; Amendment A registered (2026-10-27)
+
+Development run 1 of `controls/check_p154.py` on a release build of `33f16bc` (binary `2b0034bb…3bf0`; G1 at
+`33f16bc`: fmt, clippy clean after three lint fixes, 1184 tests passed, 0 failed). G2 passed, though its per-case
+lines printed FAIL (a print defect, now fixed). G6 passed: `dpa`, `dpa_nrt`, `dpa_arc`, the arc parameters,
+`he_appm_per_dpa` and the mismatch refusal. G3–G5 failed. The causes are diagnosed in
+`protocols/ACTINV-P154_AMENDMENT_A.md` (`687fb2b03487032d22efbe255f0a099f71a0f0cb85f273f760bebba6bd72878f`):
+- NJOY's elastic approximations, which an emulation reproduces to 1e-5 of MT=445;
+- HEATR's per-photon capture and evaluated-recoil continuum treatments, which differ from P154's defaults;
+- TENDL's MT=91 recoil spectra lying outside the kinematic window of their own neutron data;
+- a W-184 G4 made vacuous by TENDL's 3e-20 b placeholder cross sections.
+
+Two candidate changes follow. One is an opt-in `per-photon` capture treatment (`89e6339`). The other fixes the
+LCT=3 frame: light ejectiles had been read in the laboratory, while the ENDF convention, which NJOY's groupr follows,
+reads them in the centre of mass. An opt-in `--continuum-recoil evaluated` treatment follows. The checker now builds
+the NJOY comparisons in NJOY's treatments and takes the elastic gate reference from NJOY's pointwise σ times its own
+exact W(E). The defaults are unchanged and are reported against NJOY.
