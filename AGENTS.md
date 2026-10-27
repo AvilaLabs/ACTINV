@@ -34,11 +34,13 @@ names, or links. Author and committer stay the repo owner's identity.
 
 # CI verification (owner direction, 2026-09-26)
 
-- After every `git push`, verify the GitHub Actions run on the pushed commit
-  reports green before treating the push as done (`gh run list` /
-  `gh run view` on the new SHA — the controls workflow especially).
-- A red check on any pushed commit must be fixed before starting new feature
-  work. No new red X's.
+- Superseded in part on 2026-10-27 (owner direction): the tip of master must
+  report green (`gh run list` / `gh run view` on its SHA — the controls
+  workflow especially) before the next push. A newer master push may cancel
+  an older in-progress run; cancelled (grey) runs on intermediate commits are
+  accepted. Batch related commits into one push; push a protocol or
+  amendment registration on its own, before its evidence run.
+- A red check must be fixed before starting new feature work. No new red X's.
 - Before pushing, run locally whatever cheap gates CI runs first (tracked-file
   manifest refresh via `scripts/refresh_manifest.py --write --index`,
   `cargo fmt --all -- --check`) so obvious failures never reach CI.
