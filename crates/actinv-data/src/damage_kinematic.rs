@@ -41,7 +41,7 @@ use crate::displacement::{
 };
 use crate::endf_distributions::{
     interpolate, parse_damage_endf, AngularDistribution, AngularRecord, DamageEndf, Law1,
-    Law1Energy, Mf6Body, Mf6Particle,
+    Law1Energy, Mf6Body, Mf6Data, Mf6Particle,
 };
 use crate::groups::{GroupStructure, Tabulated};
 use crate::processing::{has_resonance_contribution, process_reaction};
@@ -532,6 +532,10 @@ struct Continuum<'a> {
     law1: &'a Law1,
     lab: bool,
     rc: Recoil,
+    /// `--continuum-recoil evaluated`: per record `(E, yield * response)` of the evaluation's own residual-nucleus
+    /// recoil spectrum (NJOY HEATR `getsix` label 400), interpolated linearly between records; replaces the
+    /// momentum-conservation recoil.
+    evaluated_recoil: Option<Vec<(f64, Resp)>>,
 }
 
 /// Records bracketing `e` and the law blending them (`None` when one record applies).
@@ -557,6 +561,9 @@ const GL3_WEIGHTS: [f64; 3] = [5.0 / 9.0, 8.0 / 9.0, 5.0 / 9.0];
 
 impl Continuum<'_> {
     fn kernel(&self, e: f64) -> Resp {
+        if let Some(table) = &self.evaluated_recoil {
+            return interpolate_records(table, e);
+        }
         let energies: Vec<f64> = self.law1.energies.iter().map(|r| r.energy).collect();
         let (lo, hi) = bracket(&energies, &self.law1.laws, e);
         let low = self.record(&self.law1.energies[lo], e);
@@ -709,20 +716,17 @@ fn record_second_moment(rec: &Law1Energy, lep: i32) -> Option<f64> {
     (norm > 0.0).then(|| moment / norm)
 }
 
-/// Photon-averaged response of one `LAW=1` photon record when every photon's recoil `E_g^2 / (2 (A + 1) m_n c^2)`
-/// is partitioned separately (NJOY HEATR `tabsq6`, heatr.f90:4135-4212): `sum_i p_i R(T_i) / sum_i p_i` over the
-/// discrete lines and the continuum density. `rc` is the capture recoil. Each continuum panel is split at the
-/// photon energies whose recoil reaches `E_d` and the two NRT breakpoints, then integrated by 8-point
-/// Gauss-Legendre (NJOY: 4-point over the whole panel); the density is linear inside a panel for `lep == 2`.
-/// `None` when the spectrum has no weight.
-fn per_photon_record_response(rec: &Law1Energy, lep: i32, rc: &Recoil, a1: f64) -> Option<Resp> {
-    let scale = 1.0 / (2.0 * a1 * NEUTRON_REST_EV);
-    let recoil = |x: f64| x * x * scale;
-    let cuts: Vec<f64> = [rc.ed, rc.t_on, rc.t_knee]
-        .iter()
-        .filter(|t| t.is_finite() && **t > 0.0)
-        .map(|t| (t / scale).sqrt())
-        .collect();
+/// `integral f(x) R(T(x)) dx / integral f(x) dx` over one `LAW=1` record: the discrete lines (probability `f0`) plus
+/// the continuum density, linear inside a panel for `lep == 2` and a histogram for `lep == 1`. `recoil` maps the
+/// tabulated abscissa `x` to the recoil energy and `cuts` are the abscissae where the response is not smooth; each
+/// panel is split there and integrated by 8-point Gauss-Legendre. `None` when the spectrum has no weight.
+fn spectrum_response<F: Fn(f64) -> f64>(
+    rec: &Law1Energy,
+    lep: i32,
+    rc: &Recoil,
+    recoil: F,
+    cuts: &[f64],
+) -> Option<Resp> {
     let nep = rec.eprime.len();
     let (mut norm, mut total) = (0.0, Resp::default());
     for i in 0..rec.nd.min(nep) {
@@ -762,6 +766,46 @@ fn per_photon_record_response(rec: &Law1Energy, lep: i32, rc: &Recoil, a1: f64) 
         }
     }
     (norm > 0.0).then(|| total * (1.0 / norm))
+}
+
+/// Photon-averaged response of one `LAW=1` photon record when every photon's recoil `E_g^2 / (2 (A + 1) m_n c^2)`
+/// is partitioned separately (NJOY HEATR `tabsq6`, heatr.f90:4135-4212): `sum_i p_i R(T_i) / sum_i p_i` over the
+/// discrete lines and the continuum density. `rc` is the capture recoil. Each continuum panel is split at the
+/// photon energies whose recoil reaches `E_d` and the two NRT breakpoints, then integrated by 8-point
+/// Gauss-Legendre (NJOY: 4-point over the whole panel); the density is linear inside a panel for `lep == 2`.
+/// `None` when the spectrum has no weight.
+fn per_photon_record_response(rec: &Law1Energy, lep: i32, rc: &Recoil, a1: f64) -> Option<Resp> {
+    let scale = 1.0 / (2.0 * a1 * NEUTRON_REST_EV);
+    let cuts: Vec<f64> = [rc.ed, rc.t_on, rc.t_knee]
+        .iter()
+        .filter(|t| t.is_finite() && **t > 0.0)
+        .map(|t| (t / scale).sqrt())
+        .collect();
+    spectrum_response(rec, lep, rc, |x| x * x * scale, &cuts)
+}
+
+/// Per-record `(E, yield * response)` of an evaluated residual-nucleus recoil spectrum read as laboratory recoil
+/// energies (`--continuum-recoil evaluated`; NJOY HEATR `getsix` label 400 with the record values interpolated
+/// linearly in `E` and multiplied by the yield). Panels are split where the response is not smooth and integrated by
+/// 8-point Gauss-Legendre (HEATR: trapezoid on the damage function). `None` when a record has no weight.
+fn recoil_spectrum_table(
+    law1: &Law1,
+    yield_table: &Tabulated,
+    rc: &Recoil,
+) -> Option<Vec<(f64, Resp)>> {
+    let cuts: Vec<f64> = [rc.ed, rc.t_on, rc.t_knee]
+        .iter()
+        .copied()
+        .filter(|t| t.is_finite() && *t > 0.0)
+        .collect();
+    law1.energies
+        .iter()
+        .map(|rec| {
+            let response = spectrum_response(rec, law1.lep, rc, |x| x, &cuts)?;
+            let multiplicity = yield_table.evaluate(rec.energy).unwrap_or(0.0);
+            Some((rec.energy, response * multiplicity))
+        })
+        .collect()
 }
 
 /// Per-record `(E, yield * photon-averaged response)` of the evaluated capture photons for the per-photon mode
@@ -1132,6 +1176,34 @@ impl CapturePhotons {
     }
 }
 
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum ContinuumRecoil {
+    /// Recoil from momentum conservation with the emitted particle's evaluated energy and angular distribution.
+    Kinematic,
+    /// The evaluation's own residual-nucleus recoil spectrum where the MF=6 section carries one (NJOY HEATR's
+    /// treatment), else the kinematic recoil.
+    Evaluated,
+}
+
+impl ContinuumRecoil {
+    pub fn parse(value: &str) -> Result<Self, String> {
+        match value {
+            "kinematic" => Ok(Self::Kinematic),
+            "evaluated" => Ok(Self::Evaluated),
+            _ => Err(format!(
+                "unknown continuum recoil treatment '{value}'; expected kinematic or evaluated"
+            )),
+        }
+    }
+
+    fn name(self) -> &'static str {
+        match self {
+            Self::Kinematic => "kinematic",
+            Self::Evaluated => "evaluated",
+        }
+    }
+}
+
 #[derive(Clone, Debug)]
 pub struct KinematicOptions {
     pub projectile: Option<Projectile>,
@@ -1142,6 +1214,7 @@ pub struct KinematicOptions {
     pub displacement_energy_eV: BTreeMap<String, f64>,
     pub default_displacement_energy_eV: f64,
     pub capture_photons: CapturePhotons,
+    pub continuum_recoil: ContinuumRecoil,
     pub grid_density: f64,
 }
 
@@ -1207,8 +1280,10 @@ struct Context {
     arc: Option<(f64, f64)>,
 }
 
+/// Whether an MF=6 ejectile's distribution is in the laboratory frame. LCT=3 gives light particles (ZAP 1 to 2004,
+/// neutron to alpha) in the centre of mass and heavier products in the laboratory (as NJOY's groupr reads it).
 fn light_ejectile_in_lab(lct: i32, ej_zap: i32) -> bool {
-    lct == 1 || (lct == 3 && ej_zap % 1000 <= 4)
+    lct == 1 || (lct == 3 && !(1..=2004).contains(&ej_zap))
 }
 
 fn find_product(products: &[Mf6Particle], zap: i32, want_law: i32) -> Option<&Mf6Particle> {
@@ -1217,12 +1292,35 @@ fn find_product(products: &[Mf6Particle], zap: i32, want_law: i32) -> Option<&Mf
         .find(|product| product.zap == zap && product.law == want_law)
 }
 
+/// The residual-nucleus recoil subsection of an MF=6 section as a per-record response table, when HEATR would read
+/// it as a laboratory energy spectrum: a heavy product (`ZAP > 2004`) with a `LAW=1` distribution under `LCT=1` or
+/// `LCT=3` (getsix, heatr.f90:3155-3157). Anything else (`LAW=4` two-body recoils, centre-of-mass recoil
+/// spectra, no recoil subsection) returns `None` and the kinematic recoil applies.
+fn evaluated_recoil_table(data: &Mf6Data, rc: &Recoil) -> Option<Vec<(f64, Resp)>> {
+    if !matches!(data.lct, 1 | 3) {
+        return None;
+    }
+    data.products
+        .iter()
+        .find_map(|product| match &product.body {
+            Mf6Body::Law1(law1)
+                if product.zap > 2004
+                    && !law1.energies.is_empty()
+                    && law1.energies.iter().all(|rec| rec.eprime.len() >= 2) =>
+            {
+                recoil_spectrum_table(law1, &product.yield_table, rc)
+            }
+            _ => None,
+        })
+}
+
 /// Build the channel model of one MT, or the reason the channel is not covered.
 fn build_model<'a>(
     mt: i32,
     ctx: &Context,
     endf: &'a DamageEndf,
     capture_photons: CapturePhotons,
+    continuum_recoil: ContinuumRecoil,
 ) -> Result<Model<'a>, String> {
     let awr = ctx.awr;
     let z = f64::from(ctx.z);
@@ -1313,6 +1411,12 @@ fn build_model<'a>(
             ejectile_mass(ej_zap).ok_or("unknown ejectile mass")?
         };
         let m_res = awr + 1.0 - m_ej;
+        let rc = Recoil::new(z - z_ej, m_res, z, awr, ctx.ed, ctx.arc);
+        let evaluated_recoil = if continuum_recoil == ContinuumRecoil::Evaluated {
+            evaluated_recoil_table(data, &rc)
+        } else {
+            None
+        };
         return Ok(Model::Continuum(Continuum {
             awr,
             z_t: ctx.z,
@@ -1322,7 +1426,8 @@ fn build_model<'a>(
             m_res,
             law1,
             lab: light_ejectile_in_lab(data.lct, ej_zap),
-            rc: Recoil::new(z - z_ej, m_res, z, awr, ctx.ed, ctx.arc),
+            rc,
+            evaluated_recoil,
         }));
     }
     // discrete two-body: MF=4 first, then MF=6 LAW=2
@@ -1463,6 +1568,7 @@ fn compute_row(
     let mut photon_mode = "not_applicable".to_string();
     let mut lab_fallbacks = 0usize;
     let mut unresolved_segments = 0usize;
+    let mut evaluated_recoil_channels = 0usize;
 
     for &mt in &present {
         if !is_channel_mt(mt) || is_redundant(mt, &present) {
@@ -1476,7 +1582,13 @@ fn compute_row(
         }
         let covered =
             if mt == 2 || mt == 102 || level_range(mt) || continuum_mt(mt) || lumped_charged(mt) {
-                Some(build_model(mt, &ctx, endf, options.capture_photons))
+                Some(build_model(
+                    mt,
+                    &ctx,
+                    endf,
+                    options.capture_photons,
+                    options.continuum_recoil,
+                ))
             } else {
                 None
             };
@@ -1538,7 +1650,18 @@ fn compute_row(
                             note["lab_frame_cm_fallback_evaluations"] = count.into();
                         }
                     }
-                    Model::Continuum(_) => {}
+                    Model::Continuum(continuum) => {
+                        if options.continuum_recoil == ContinuumRecoil::Evaluated {
+                            note["recoil"] = if continuum.evaluated_recoil.is_some() {
+                                "evaluated_recoil_spectrum"
+                            } else {
+                                "kinematic_no_evaluated_recoil"
+                            }
+                            .into();
+                            evaluated_recoil_channels +=
+                                usize::from(continuum.evaluated_recoil.is_some());
+                        }
+                    }
                 }
                 covered_notes.push(note);
             }
@@ -1601,6 +1724,7 @@ fn compute_row(
             "covered": covered_notes,
             "uncovered": uncovered_notes,
             "capture_photon_recoil": photon_mode,
+            "evaluated_recoil_channels": evaluated_recoil_channels,
             "lab_frame_cm_fallback_evaluations": lab_fallbacks,
             "unresolved_refinement_segments": unresolved_segments,
         }),
@@ -1660,6 +1784,7 @@ fn kinematic_cache_key(
         hasher.update(ed.to_bits().to_le_bytes());
     }
     hasher.update(options.capture_photons.name().as_bytes());
+    hasher.update(options.continuum_recoil.name().as_bytes());
     hasher.update(options.grid_density.to_bits().to_le_bytes());
     hasher.update(code.as_bytes());
     format!("{:x}", hasher.finalize())
@@ -1886,6 +2011,7 @@ pub fn build_damage_kinematic(
             "nrt": "0 below E_d, 1 up to 2 E_d / 0.8, 0.8 T_d / (2 E_d) above",
             "arc_dpa": "N_NRT * xi, xi = (1 - c) / (2 E_d / 0.8)^b * T_d^b + c for T_d >= 2 E_d / 0.8",
             "capture_photons": options.capture_photons.name(),
+            "continuum_recoil": options.continuum_recoil.name(),
             "default_displacement_energy_eV": options.default_displacement_energy_eV,
             "refine_tolerance": REFINE_TOLERANCE,
             "max_refine_passes": MAX_REFINE_PASSES,
@@ -2044,6 +2170,7 @@ mod tests {
             law1: &law1,
             lab: true,
             rc,
+            evaluated_recoil: None,
         };
         let e = 10.0e6;
         let got = model.kernel(e);
@@ -2293,6 +2420,7 @@ mod tests {
             displacement_energy_eV: BTreeMap::new(),
             default_displacement_energy_eV: 40.0,
             capture_photons: CapturePhotons::Evaluated,
+            continuum_recoil: ContinuumRecoil::Kinematic,
             grid_density: 1.0,
         };
         let row = compute_row(evaluation, endf, &options, 40.0, Some((-0.568, 0.286)))
@@ -2511,6 +2639,119 @@ mod tests {
         assert!(per_photon_table(&empty, &photon_yield(1.0), &rc, a1).is_none());
     }
 
+    fn recoil_law1(energies: Vec<Law1Energy>) -> Law1 {
+        let laws = vec![2; energies.len().saturating_sub(1)];
+        Law1 {
+            lang: 1,
+            lep: 1,
+            energies,
+            laws,
+        }
+    }
+
+    #[test]
+    fn continuum_recoil_names_parse() {
+        assert_eq!(
+            ContinuumRecoil::parse("evaluated"),
+            Ok(ContinuumRecoil::Evaluated)
+        );
+        assert_eq!(
+            ContinuumRecoil::parse("kinematic"),
+            Ok(ContinuumRecoil::Kinematic)
+        );
+        assert_eq!(ContinuumRecoil::Evaluated.name(), "evaluated");
+        assert!(ContinuumRecoil::parse("lab").is_err());
+    }
+
+    // HEATR getsix label 400: the record value is the density-weighted damage function of the recoil histogram.
+    #[test]
+    fn evaluated_recoil_histogram_matches_the_hand_sum_and_interpolates() {
+        let awr = 55.45;
+        let rc = Recoil::new(26.0, awr, 26.0, awr, 40.0, None);
+        // histogram: 2e-6 per eV on [0, 1e5], 1e-6 on [1e5, 3e5]; norm = 0.2 + 0.2
+        let low = photon_record(5.0e6, 0, &[0.0, 1.0e5, 3.0e5], &[2.0e-6, 1.0e-6, 0.0]);
+        let high = photon_record(7.0e6, 0, &[0.0, 2.0e5, 4.0e5], &[1.0e-6, 1.0e-6, 0.0]);
+        let law1 = recoil_law1(vec![low, high]);
+        let table = recoil_spectrum_table(&law1, &photon_yield(1.0), &rc).unwrap();
+        let partition = Partition::new(26.0, awr, 26.0, awr, 40.0);
+        let hand = |bins: &[(f64, f64, f64)]| {
+            let (mut sum, mut norm) = (0.0, 0.0);
+            for &(lo, hi, f) in bins {
+                let n = 200_000;
+                for i in 0..n {
+                    let t = lo + (i as f64 + 0.5) * (hi - lo) / n as f64;
+                    sum += partition.damage_energy(t) * f * (hi - lo) / n as f64;
+                }
+                norm += f * (hi - lo);
+            }
+            sum / norm
+        };
+        // 8-point Gauss-Legendre over a 2e5 eV panel of the Robinson partition is good to about 1e-6.
+        let first = hand(&[(0.0, 1.0e5, 2.0e-6), (1.0e5, 3.0e5, 1.0e-6)]);
+        let second = hand(&[(0.0, 2.0e5, 1.0e-6), (2.0e5, 4.0e5, 1.0e-6)]);
+        assert!(
+            (table[0].1.d - first).abs() < 1e-5 * first,
+            "{} {first}",
+            table[0].1.d
+        );
+        assert!(
+            (table[1].1.d - second).abs() < 1e-5 * second,
+            "{} {second}",
+            table[1].1.d
+        );
+        assert!(table[0].1.nrt > 0.0);
+        let records = (table[0].1.d, table[1].1.d);
+        let capture_free = Continuum {
+            awr,
+            z_t: 26,
+            a_t: 56,
+            ej_zap: 1,
+            m_ej: 1.0,
+            m_res: awr,
+            law1: &law1,
+            lab: false,
+            rc,
+            evaluated_recoil: Some(table),
+        };
+        // linear in E between records, independent of the neutron data
+        let middle = capture_free.kernel(6.0e6).d;
+        assert!((middle - 0.5 * (records.0 + records.1)).abs() < 1e-12 * middle);
+    }
+
+    #[test]
+    fn evaluated_recoil_needs_a_laboratory_heavy_law1_subsection() {
+        let awr = 55.45;
+        let rc = Recoil::new(26.0, awr, 26.0, awr, 40.0, None);
+        let law1 = recoil_law1(vec![photon_record(
+            5.0e6,
+            0,
+            &[0.0, 1.0e5, 3.0e5],
+            &[2.0e-6, 1.0e-6, 0.0],
+        )]);
+        let particle = |zap: i32, body: Mf6Body| Mf6Particle {
+            zap,
+            awp: 55.0,
+            law: 1,
+            yield_table: photon_yield(1.0),
+            body,
+        };
+        let data = |lct: i32, products: Vec<Mf6Particle>| Mf6Data { lct, products };
+        let heavy = || particle(26056, Mf6Body::Law1(law1.clone()));
+        assert!(evaluated_recoil_table(&data(3, vec![heavy()]), &rc).is_some());
+        assert!(evaluated_recoil_table(&data(1, vec![heavy()]), &rc).is_some());
+        // centre-of-mass recoil spectrum, no recoil subsection, a LAW=4 two-body recoil, a light particle only
+        assert!(evaluated_recoil_table(&data(2, vec![heavy()]), &rc).is_none());
+        assert!(evaluated_recoil_table(
+            &data(3, vec![particle(1, Mf6Body::Law1(law1.clone()))]),
+            &rc
+        )
+        .is_none());
+        assert!(
+            evaluated_recoil_table(&data(3, vec![particle(26056, Mf6Body::Other(4))]), &rc)
+                .is_none()
+        );
+    }
+
     // Pinned to NJOY2016.79 acecm.f90 `bachaa` (neutron incident, MeV), Fe-56 target, hand-evaluated:
     //   (n,n'), E = 14, E' = 5: Ac = 57, Zc = 26, Nc = 31; the residual equals the target, so sb = sa = 9.95787.
     //     ecm = 56 * 14 / 57 = 13.75439, ea = ecm + sa = 23.71226 (below both breakpoints 41 and 130, so x1 = x3 = eb)
@@ -2534,5 +2775,15 @@ mod tests {
             let a = kalbach_a(z, a_t, zap, e, ep);
             assert!((a - expected).abs() < 1e-5, "{a} {expected}");
         }
+    }
+
+    #[test]
+    fn lct_3_reads_light_ejectiles_in_the_centre_of_mass() {
+        assert!(light_ejectile_in_lab(1, 1));
+        assert!(!light_ejectile_in_lab(2, 1));
+        for zap in [1, 1001, 1002, 1003, 2003, 2004] {
+            assert!(!light_ejectile_in_lab(3, zap), "{zap}");
+        }
+        assert!(light_ejectile_in_lab(3, 26055));
     }
 }

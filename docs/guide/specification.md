@@ -683,6 +683,21 @@ energy is emitted as one photon (NJOY HEATR `capdam`), flagged `excitation_energ
 several photons recoils less than one photon, so the one-photon value is an upper bound; the treatments therefore
 differ for capture. The mode is recorded as `model.capture_photons` and is part of the cache key.
 
+Continuum recoil: with `--continuum-recoil kinematic` (default) the residual's recoil in an MF=6 continuum channel
+(MT=91, 649, 699, 749, 799, 849 and the lumped MT=103-107) follows from momentum conservation with the emitted
+particle's evaluated energy distribution and, for Kalbach-Mann data without an explicit slope, Kalbach's systematics;
+it is consistent with the ejectile data. With `evaluated`, where the section carries a residual-nucleus subsection
+with an explicit `LAW=1` recoil energy distribution (a heavy product under `LCT=1` or `LCT=3`, read as a laboratory
+spectrum), the damage comes from that spectrum, as NJOY HEATR does: per incident-energy record the recoil histogram is
+passed through the damage function, the record values are interpolated linearly in energy and multiplied by the
+multiplicity (each panel is integrated by 8-point Gauss-Legendre after splitting where the response is not smooth;
+HEATR uses a trapezoid on the damage function). Channels without such a subsection (including `LAW=4` and
+centre-of-mass recoil spectra) keep the kinematic recoil. In the TENDL-2025 evaluations of Fe-56, Cr-52 and Ni-58 the
+two differ for MT=91, because the recoil spectrum lies partly outside the kinematic window of the neutron data. The
+mode is recorded as `model.continuum_recoil`, each continuum channel note carries `recoil` (`evaluated_recoil_spectrum`
+or `kinematic_no_evaluated_recoil`) when `evaluated` is requested, and `channels.evaluated_recoil_channels` counts the
+channels that used the evaluated spectrum.
+
 Every other non-elastic channel that has a cross section is *uncovered*: the table records its cross section and an
 upper bound on its damage energy from the largest recoil the kinematics allow, `D <= T`. Ultra-narrow analytic
 resonance lines that the pointwise grid does not carry are not added to the damage cross sections.

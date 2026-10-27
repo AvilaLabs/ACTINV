@@ -36,7 +36,8 @@
   Lindhard-Robinson partition. Channels it cannot compute are reported with their cross section and a kinematic
   upper bound on their damage energy, never as zero. The output is an `actinv-damage-table-2` file; `--displacement-energy
   EL=eV` (repeatable, default 25 eV) sets the displacement energy, `--capture-photons evaluated|one-photon|per-photon` the capture
-  recoil treatment.
+  recoil treatment, `--continuum-recoil kinematic|evaluated` whether continuum channels take the recoil from momentum
+  conservation (default) or from the evaluation's own recoil spectrum (NJOY HEATR's treatment).
 - A run with a table-2 file adds exact-NRT and arc-dpa displacement outputs (`dpa_nrt`, `dpa_arc`, rates and
   cumulative, per element too), the uncovered upper bounds and, when gas output is requested, `he_appm_per_dpa`. The
   linear `dpa` is unchanged and equals the table-1 value for the same totals; a spec displacement energy that

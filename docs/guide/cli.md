@@ -176,7 +176,7 @@ actinv build-shielding EVALUATION_DIR OUT.json [OPTIONS]
 `build-damage` takes `--method default|kinematic`. The default reads MT=444 from the evaluations. `--method kinematic`
 computes damage energy from MF=3/4/6 and writes an `actinv-damage-table-2` file; it also accepts
 `--displacement-energy EL=eV` (repeatable; default 25 eV), `--capture-photons evaluated|one-photon|per-photon`
-(default `evaluated`) and `--grid-density X`, and defaults `--temperature-K` to 0 because it reconstructs resonances at 0 K.
+(default `evaluated`), `--continuum-recoil kinematic|evaluated` (default `kinematic`) and `--grid-density X`, and defaults `--temperature-K` to 0 because it reconstructs resonances at 0 K.
 It is implemented for neutron evaluations. See [damage observables](specification.md#damage-observables-dpa).
 
 The [specification reference](specification.md#build-an-activation-library) describes builder parameters. Activation libraries, covariance, shielding, and damage tables are distinct inputs.
