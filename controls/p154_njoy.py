@@ -132,8 +132,9 @@ def read_pendf(path, mts=DAMAGE_MTS):
 
 
 def parse_tab1(lines):
-    """HEAD record on line 0, TAB1 record on line 1: (QM, QI, 0, LR, NR, NP), NR (NBT, INT) pairs, NP (x, y) pairs."""
-    _qm, _qi, _l1, _lr, nr, npts = p126.record(lines, 1)
+    """HEAD record on line 0, TAB1 record on line 1: (QM, QI, 0, LR, NR, NP), NR (NBT, INT) pairs, NP (x, y) pairs.
+    The table also carries the record's `qm` and `qi` (HEATR's `q` for a discrete level is QI)."""
+    qm, qi, _l1, _lr, nr, npts = p126.record(lines, 1)
     words, index = p126.data_words(lines, 2, 2 * nr)
     ranges = [(p126.endf_integer(words[2 * k]), p126.endf_integer(words[2 * k + 1])) for k in range(nr)]
     words, _ = p126.data_words(lines, index, 2 * npts)
@@ -141,7 +142,7 @@ def parse_tab1(lines):
     y = [p126.endf_number(words[2 * k + 1]) for k in range(npts)]
     if ranges and ranges[-1][0] != npts:
         raise ValueError(f"TAB1 ranges end at point {ranges[-1][0]} but NP = {npts}")
-    return {"x": x, "y": y, "ranges": ranges}
+    return {"x": x, "y": y, "ranges": ranges, "qm": qm, "qi": qi}
 
 
 def segment_integral(law, x1, x2, y1, y2, a, b):

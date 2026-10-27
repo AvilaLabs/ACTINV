@@ -24,18 +24,37 @@ G3  Elastic (Amendment A1). The table's `elastic` row against an exact elastic d
     differences is reported. NJOY MT=445 against the table, the exact reference against NJOY MT=445, and NJOY's
     documented approximations (edis = 25 eV, 1.1 energy ladder, 64-coefficient hgetco projection; heatr.f90 line
     numbers in the output) are information.
-G4  Inelastic and disappearance. `inelastic` against MT=446 and `disappearance` against MT=447 within 5 percent in every
-    group where the channel exceeds 1e-3 of NJOY's group total (MT=444) and the group has no uncovered cross section
-    (the per-channel `channels` record is informational and not read). A group has an uncovered contribution only
-    when its `uncovered_damage_upper_barn_eV` exceeds 0.5 percent (G4_UNCOVERED_FRACTION = one tenth of the G4
+G4  Inelastic and disappearance (Amendments B and C). `inelastic` against NJOY MT=446 with the discrete-level ladder term
+    replaced (B2) and `disappearance` against NJOY MT=447 with the capture-photon term replaced (B1), within 5 percent
+    in every group where the channel exceeds 1e-3 of NJOY's group total (MT=444) and the group has no uncovered cross
+    section (the per-channel `channels` record is informational and not read). A group has an uncovered contribution
+    only when its `uncovered_damage_upper_barn_eV` exceeds 0.5 percent (G4_UNCOVERED_FRACTION = one tenth of the G4
     tolerance) of the channel's computed value in that group, so the bound cannot move the comparison by more than a
     tenth of the tolerance; TENDL's ~3e-20 b placeholder cross sections (uncovered_xs_barn > 0 in every W-184 group)
     therefore no longer disqualify a group. The groups excluded by the rule are still reported. A channel with fewer
     than 5 evaluable groups is reported as vacuous and fails.
-G5  Total and bound (Amendment A3). In every group the reference total NJOY444 - NJOY445 + (exact elastic reference)
-    lies in [computed - s, computed + upper + s], computed = `damage_energy_barn_eV`, upper =
-    `uncovered_damage_upper_barn_eV`, s = 0.02 (exact elastic) + 0.05 (NJOY446 + NJOY447) + 1e-6 max(reference total)
-    (the G3/G4 tolerances, plus a floor for groups with essentially no damage). The raw NJOY444 bound is information. The table
+    B1: reference = 447 + sigma_102 (h_exact - h_tabsq6) on NJOY's PENDF grid. h_tabsq6 emulates heatr.f90 tabsq6
+    (4-point rule with weights times dx, linear interpolation whatever LEP, yield, records interpolated linearly in E);
+    h_exact reads the same MF=6 MT=102 photon records as the format specifies (LEP honoured, panels split where the
+    recoil equals the displacement energy, discrete lines at unit weight). Precondition (Amendment C1): U = collapse of
+    sum over the other disappearance MTs (103-120, 600-849 in the PENDF) of sigma T_max, T_max the largest laboratory
+    energy of the residual (ejectiles one cluster of mass m_b); in every group where U <= 0.005 NJOY(447) the collapsed
+    emulated capture X satisfies NJOY (1 - 0.005) - U <= X <= NJOY (1 + 0.005); fewer than 10 such groups is vacuous
+    and G4 fails for the target. B2: reference at
+    every PENDF grid energy = 446 + sum over MT=51-90 of sigma (W_exact - W_ladder); W_exact is the exact two-body
+    damage per event of the level (MF=4 + Q, centre-of-mass kinematics, as A1), W_ladder its linear interpolation
+    between the points heatr.f90 disbar evaluates (1.1 step ladder over the PENDF grid and the MF=4 energies).
+    HEATR tabulates the levels' sigma W_ladder only at the grid energies, so between them the reference is the
+    tabulated remainder plus sigma(E) W_exact(E) on energies subdivided to a 2 percent ratio (Amendment C2; the grid-only
+    form is reported). Precondition (C1): the same test for the emulated tabulated levels term against 446, U over MT=91
+    (the other 446 contributor), in groups above the lowest level threshold. HEATR's 444-447 tables carry 7-digit energies for values computed at
+    the 9-digit grid energy and drop their leading zero rows; both are restored from the grid before the references and
+    preconditions are formed (C3); the raw MT=446/447 comparisons use the tables as read.
+G5  Total and bound (Amendment B3). In every group the reference total NJOY444 - NJOY445 + (exact elastic reference)
+    + (B1 reference - NJOY447) + (B2 reference - NJOY446) lies in [computed - s, computed + upper + s], computed =
+    `damage_energy_barn_eV`, upper = `uncovered_damage_upper_barn_eV`, s = 0.02 (exact elastic) + 0.05 (B2 + B1
+    references) + 1e-6 max(reference total) (the G3/G4 tolerances, plus a floor for groups with essentially no damage).
+    The raw NJOY444 bound and the A3 form are information. The table
     total equals elastic + inelastic + disappearance (1e-9). Totals folded with the FNS spectrum and their
     differences from NJOY are reported.
 G6  Displacement quantities. FNS Fe run (spec: examples/fns_fe_5min.json plus damage and gas) with the Fe-56 table-2:
@@ -490,38 +509,52 @@ def elastic_w(pdf, e, awr, z, ed, lab=False, damage=None):
     return sum(adaptive_gl(integrand, lo, hi) for lo, hi in zip(edges, edges[1:]) if hi > lo)
 
 
-def read_mf4_elastic(path):
-    """MF=4 MT=2 of an ENDF-6 file: {"za", "awr", "lct", "li", "parts": [{"kind", "energies", "data", "ranges"}]}.
+def parse_mf4(lines):
+    """One MF=4 section: {"za", "awr", "lct", "li", "ltt", "parts": [{"kind", "energies", "data", "ranges"}]}.
     LTT=0 (isotropic, LI=1) has no parts; LTT=1/2/3 give a Legendre part, a tabulated part, or both in that order."""
+    za, awr, _lvt, ltt, _a, _b = p126.record(lines, 0)
+    _c1, awr2, li, lct, _a, _b = p126.record(lines, 1)
+    out = {"za": int(round(za)), "awr": awr, "lct": lct, "li": li, "ltt": ltt, "parts": []}
+    index = 2
+    for kind in ([] if ltt == 0 else {1: ["legendre"], 2: ["tabulated"], 3: ["legendre", "tabulated"]}[ltt]):
+        _t, _u, _l1, _l2, nr, ne = p126.record(lines, index)
+        words, index = p126.data_words(lines, index + 1, 2 * nr)
+        ranges = [(p126.endf_integer(words[2 * k]), p126.endf_integer(words[2 * k + 1])) for k in range(nr)]
+        energies, data = [], []
+        for _ in range(ne):
+            _t, energy, _l1, _l2, n1, n2 = p126.record(lines, index)
+            energies.append(energy)
+            if kind == "legendre":
+                words, index = p126.data_words(lines, index + 1, n1)
+                data.append([p126.endf_number(w) for w in words])
+            else:
+                words, index = p126.data_words(lines, index + 1, 2 * n1)
+                rng = [(p126.endf_integer(words[2 * k]), p126.endf_integer(words[2 * k + 1])) for k in range(n1)]
+                words, index = p126.data_words(lines, index, 2 * n2)
+                data.append({"x": [p126.endf_number(words[2 * k]) for k in range(n2)],
+                             "y": [p126.endf_number(words[2 * k + 1]) for k in range(n2)], "ranges": rng})
+        out["parts"].append({"kind": kind, "energies": energies, "data": data, "ranges": ranges})
+    if ltt == 0 and li != 1:
+        raise ValueError("MF=4 with LTT=0 but LI != 1")
+    return out
+
+
+def read_mf4_many(path, mts):
+    """{mt: parse_mf4(...)} for the MF=4 sections of the requested MTs found in the file (one pass)."""
+    found = {}
+    wanted = set(mts)
     for _mat, mf, mt, lines in p126.sections(path):
-        if (mf, mt) != (4, 2):
-            continue
-        za, awr, _lvt, ltt, _a, _b = p126.record(lines, 0)
-        _c1, awr2, li, lct, _a, _b = p126.record(lines, 1)
-        out = {"za": int(round(za)), "awr": awr, "lct": lct, "li": li, "ltt": ltt, "parts": []}
-        index = 2
-        for kind in ([] if ltt == 0 else {1: ["legendre"], 2: ["tabulated"], 3: ["legendre", "tabulated"]}[ltt]):
-            _t, _u, _l1, _l2, nr, ne = p126.record(lines, index)
-            words, index = p126.data_words(lines, index + 1, 2 * nr)
-            ranges = [(p126.endf_integer(words[2 * k]), p126.endf_integer(words[2 * k + 1])) for k in range(nr)]
-            energies, data = [], []
-            for _ in range(ne):
-                _t, energy, _l1, _l2, n1, n2 = p126.record(lines, index)
-                energies.append(energy)
-                if kind == "legendre":
-                    words, index = p126.data_words(lines, index + 1, n1)
-                    data.append([p126.endf_number(w) for w in words])
-                else:
-                    words, index = p126.data_words(lines, index + 1, 2 * n1)
-                    rng = [(p126.endf_integer(words[2 * k]), p126.endf_integer(words[2 * k + 1])) for k in range(n1)]
-                    words, index = p126.data_words(lines, index, 2 * n2)
-                    data.append({"x": [p126.endf_number(words[2 * k]) for k in range(n2)],
-                                 "y": [p126.endf_number(words[2 * k + 1]) for k in range(n2)], "ranges": rng})
-            out["parts"].append({"kind": kind, "energies": energies, "data": data, "ranges": ranges})
-        if ltt == 0 and li != 1:
-            raise ValueError("MF=4 MT=2 with LTT=0 but LI != 1")
-        return out
-    raise ValueError(f"{path}: no MF=4/MT=2 section")
+        if mf == 4 and mt in wanted:
+            found[mt] = parse_mf4(lines)
+    return found
+
+
+def read_mf4_elastic(path):
+    """MF=4 MT=2 of an ENDF-6 file (see parse_mf4)."""
+    got = read_mf4_many(path, (2,))
+    if 2 not in got:
+        raise ValueError(f"{path}: no MF=4/MT=2 section")
+    return got[2]
 
 
 def w_table(mf4, ed, refine=EL_REFINE):
@@ -619,7 +652,499 @@ def njoy_documented_approximations():
         {"where": "heatr.f90:4531", "what": "laboratory-to-centre-of-mass conversion of coefficients is not coded"},
         {"where": "heatr.f90:1943-1970", "what": "the angle integral of the damage function is a fixed 64-point "
                                                    "Gauss-Legendre rule over the Legendre series"},
+        {"where": "heatr.f90:4147-4153, 4182-4198", "what": "capture photons (tabsq6): the continuum panels use "
+                                                            "4-point Gauss-Legendre weights (sum 2) times dx instead "
+                                                            "of dx/2, so the continuum counts twice against the "
+                                                            "unit-weight discrete lines, and the spectrum is "
+                                                            "interpolated linearly whatever LEP (Amendment B1)"},
+        {"where": "heatr.f90:1892, 1949-2010 (disbar, step = 1.1)", "what": "discrete-level damage is evaluated on a "
+                                                                      "1.1-ratio ladder over the PENDF grid and the "
+                                                                      "MF=4 energies and interpolated linearly; "
+                                                                      "HEATR tabulates sigma W only at the grid "
+                                                                      "energies (Amendment B2)"},
     ]
+
+
+# ------------------------------------------------------------------------------ Amendment B references (G4, G5)
+
+B_VERSION = 1                       # bump when the B1/B2 reference computation changes (keys the cached results)
+EMC2 = 1.00866491595 * 931.49410242e6   # eV: amassn * amu c^2 (NJOY phys.f90), the photon-recoil mass unit of tabsq6
+TABSQ6_X = (-0.86114, -0.33998, 0.33998, 0.86114)    # heatr.f90:4147-4150: the 5-digit 4-point Gauss-Legendre rule
+TABSQ6_W = (0.34785, 0.65215, 0.65215, 0.34785)      # (the weights sum to 2)
+B_PRECONDITION_TOL, C1_BOUND_FRACTION, C1_MIN_GROUPS = 0.005, 5.0e-3, 10     # Amendment C1
+# MTs HEATR adds to MT=447 other than capture (heatr.f90 indx: MT=102-120 and 600-849 for ENDF-6) and the 446 contributors
+# other than the levels (MT=51-91): the terms the emulations do not cover
+C1_OTHER_447 = tuple(range(103, 121)) + tuple(range(600, 850))
+C1_OTHER_446 = (91,)
+LADDER_STEP, LADDER_SMALL, LADDER_ETOP = 1.1, 1.0e-10, 2.0e7   # heatr.f90 disbar `step`, `small`; etop (line 485)
+LEVEL_MTS = tuple(range(51, 91))
+LEVEL_REFINE, LEVEL_TOL, LEVEL_FINE_RATIO = 1.05, 1.0e-8, 1.02
+
+
+def read_mf6_photons(path, mt=102):
+    """The photon subsection (ZAP = 0, LAW = 1) of MF=6 `mt`: {"awr", "yield", "lang", "lep", "records"}, records being
+    {"energy", "nd", "x", "y"} (the first nd pairs are discrete lines (photon energy, probability), the rest the
+    continuum (photon energy, spectrum value)). None when the section or a photon subsection is absent."""
+    for _mat, mf, mt_, lines in p126.sections(path):
+        if (mf, mt_) != (6, mt):
+            continue
+        _za, awr, _jp, _lct, nk, _ = p126.record(lines, 0)
+        index = 1
+        for _ in range(nk):
+            zap, awp, _lip, law, nr, npts = p126.record(lines, index)
+            words, index = p126.data_words(lines, index + 1, 2 * nr)
+            ranges = [(p126.endf_integer(words[2 * k]), p126.endf_integer(words[2 * k + 1])) for k in range(nr)]
+            words, index = p126.data_words(lines, index, 2 * npts)
+            yld = {"x": [p126.endf_number(words[2 * k]) for k in range(npts)],
+                   "y": [p126.endf_number(words[2 * k + 1]) for k in range(npts)], "ranges": ranges}
+            if zap == 0.0 and law == 1:
+                if awp != 0.0:
+                    raise ValueError("MF=6 photon subsection with AWP > 0 (HEATR's relativistic hgam102 path)")
+                _a, _b, lang, lep, nr2, ne = p126.record(lines, index)
+                _, index = p126.data_words(lines, index + 1, 2 * nr2)
+                records = []
+                for _ in range(ne):
+                    _c, energy, nd, _na, nw, nep = p126.record(lines, index)
+                    words, index = p126.data_words(lines, index + 1, nw)
+                    values = [p126.endf_number(w) for w in words]
+                    stride = nw // nep
+                    records.append({"energy": energy, "nd": nd, "x": values[0::stride], "y": values[1::stride]})
+                return {"awr": awr, "yield": yld, "lang": lang, "lep": lep, "records": records}
+            index = _skip_law(lines, index, law)
+            if index is None:
+                raise ValueError(f"MF=6 MT={mt}: a subsection with LAW={law} could not be skipped")
+        return None
+    return None
+
+
+def tabsq6_record(record, tm, damage):
+    """What heatr.f90 tabsq6 (4135-4212) makes of one MF=6 photon record: (damage per photon, normalisation s).
+    Discrete lines carry their probability; each continuum panel is integrated by the 4-point rule with weights times
+    dx (the weights sum to 2, so the continuum counts twice) on the spectrum interpolated linearly (inn = 2) whatever
+    LEP says; the sums are divided by s."""
+    x, y, nd = record["x"], record["y"], record["nd"]
+    h = s = 0.0
+    for i in range(nd):
+        h += damage(x[i] * x[i] / (2.0 * tm)) * y[i]
+        s += y[i]
+    for i in range(nd, len(x) - 1):
+        xl, xh, yl, yh = x[i], x[i + 1], y[i], y[i + 1]
+        if xl == xh:
+            continue
+        dx = xh - xl
+        for q, w in zip(TABSQ6_X, TABSQ6_W):
+            xx = xl + (1.0 + q) * dx / 2.0
+            yy = yl + (xx - xl) / dx * (yh - yl)
+            h += w * damage(xx * xx / (2.0 * tm)) * dx * yy
+            s += w * dx * yy
+    return (h / s if s > 0.0 else 0.0), s
+
+
+def exact_photon_record(record, tm, damage, lep, cuts=()):
+    """The same record read as ENDF-6 specifies: discrete lines at unit weight, the continuum a histogram (LEP = 1:
+    the value at the lower point holds over the panel) or linear (LEP = 2), each panel split at the photon energies
+    in `cuts` (where the recoil energy equals the displacement energy) and integrated adaptively. Returns (damage per
+    photon, probability normalisation)."""
+    if lep not in (1, 2):
+        raise ValueError(f"MF=6 LEP={lep} is neither histogram nor linear")
+    x, y, nd = record["x"], record["y"], record["nd"]
+    h = s = 0.0
+    for i in range(nd):
+        h += damage(x[i] * x[i] / (2.0 * tm)) * y[i]
+        s += y[i]
+    for i in range(nd, len(x) - 1):
+        xl, xh, yl, yh = x[i], x[i + 1], y[i], y[i + 1]
+        if not xh > xl:
+            continue
+        if lep == 1:
+            def f(v, yl=yl):
+                return yl
+        else:
+            def f(v, xl=xl, xh=xh, yl=yl, yh=yh):
+                return yl + (v - xl) / (xh - xl) * (yh - yl)
+        edges = [xl] + sorted(c for c in cuts if xl < c < xh) + [xh]
+        for a, b in zip(edges, edges[1:]):
+            h += adaptive_gl(lambda v: f(v) * damage(v * v / (2.0 * tm)), a, b, LEVEL_TOL)
+            s += adaptive_gl(f, a, b, LEVEL_TOL)
+    return (h / s if s > 0.0 else 0.0), s
+
+
+def record_interpolant(energies, values, e):
+    """sixbar's value between MF=6 records: linear in E between the two records around `e` (extrapolated below the first,
+    as terp1 does), zero above the last record (heatr.f90:305-307, 450)."""
+    if e > energies[-1] * (1.0 + 1e-10):
+        return 0.0
+    k = min(max(bisect.bisect_right(energies, e) - 1, 0), len(energies) - 2)
+    e0, e1 = energies[k], energies[k + 1]
+    return values[k] + (values[k + 1] - values[k]) * (e - e0) / (e1 - e0)
+
+
+def capture_records(mf6, z, awr, ed):
+    """Per MF=6 record of the capture photons: the yield-weighted damage per capture as tabsq6 computes it and as the
+    format specifies, with the normalisations."""
+    tm = EMC2 * (awr + 1.0)
+
+    def damage(t):
+        return df(t, z, awr + 1.0, z, awr, ed)
+
+    cuts = [math.sqrt(2.0 * tm * ed)]
+    out = {"energies": [], "tabsq6": [], "exact": [], "s_tabsq6": [], "s_exact": [], "yield": []}
+    for rec in mf6["records"]:
+        y = interp_value(mf6["yield"], rec["energy"])
+        h_n, s_n = tabsq6_record(rec, tm, damage)
+        h_x, s_x = exact_photon_record(rec, tm, damage, mf6["lep"], cuts)
+        out["energies"].append(rec["energy"])
+        out["tabsq6"].append(y * h_n)
+        out["exact"].append(y * h_x)
+        out["s_tabsq6"].append(s_n)
+        out["s_exact"].append(s_x)
+        out["yield"].append(y)
+    return out
+
+
+# ejectile cluster masses m_b (neutron masses, mass numbers) of the non-emulated MTs, as ENDF defines the reactions
+C1_CLUSTER_MASS = {91: 1, 103: 1, 104: 2, 105: 3, 106: 3, 107: 4, 108: 8, 109: 12, 111: 2, 112: 5, 113: 11, 114: 10,
+                   115: 3, 116: 4, 117: 6}
+
+
+def cluster_mass(mt):
+    """m_b of MT `mt`: 600-649 proton, 650-699 deuteron, 700-749 triton, 750-799 He-3, 800-849 alpha (the parent channel's
+    ejectile) and the table above for MT=91 and 103-117."""
+    for lo, mass in ((600, 1), (650, 2), (700, 3), (750, 3), (800, 4)):
+        if lo <= mt < lo + 50:
+            return mass
+    if mt in C1_CLUSTER_MASS:
+        return C1_CLUSTER_MASS[mt]
+    raise ValueError(f"no ejectile cluster mass known for MT={mt}")
+
+
+def recoil_tmax(e, awr, m_b, qi):
+    """Largest laboratory kinetic energy of the residual nucleus (Amendment C1), all ejectiles one cluster of mass m_b
+    (neutron masses), m_R = A + 1 - m_b: (sqrt(m_b/(m_b+m_R) (E A/(A+1) + QI)) + sqrt(E m_R/(A+1)^2))^2, zero where
+    E A/(A+1) + QI <= 0."""
+    available = e * awr / (awr + 1.0) + qi
+    if available <= 0.0:
+        return 0.0
+    m_r = awr + 1.0 - m_b
+    return (math.sqrt(m_b / (m_b + m_r) * available) + math.sqrt(e * m_r / (awr + 1.0) ** 2)) ** 2
+
+
+def unemulated_bound(tabs, mts, boundaries, awr):
+    """Amendment C1: U, the collapse of sum over `mts` (those present in `tabs`) of sigma(E) T_max(E). Returns
+    (groups, {MT: m_b} of the MTs used)."""
+    used = {mt: cluster_mass(mt) for mt in mts if mt in tabs}
+    total = [0.0] * (len(boundaries) - 1)
+    for mt, m_b in used.items():
+        t = tabs[mt]
+        weighted = {"x": t["x"], "y": [y * recoil_tmax(x, awr, m_b, t["qi"]) for x, y in zip(t["x"], t["y"])],
+                    "ranges": t["ranges"]}
+        total = [a + b for a, b in zip(total, njoy.collapse(weighted, boundaries))]
+    return total, used
+
+
+def b_precondition(emulated, njoy_values, bound, tol=B_PRECONDITION_TOL, bounds=None, mts=None,
+                   min_groups=C1_MIN_GROUPS, above=None):
+    """Amendment C1: the set is the groups where NJOY's value is positive, the independent bound U on the terms not
+    emulated is at most C1_BOUND_FRACTION of it, and (B2) the group's upper edge exceeds `above`; in every group of the
+    set NJOY (1 - tol) - U <= emulated <= NJOY (1 + tol). Fewer than `min_groups` groups is vacuous and fails.
+    Returns the values reported; `deviation` is signed (emulated - NJOY)/NJOY."""
+    rows, bad, ratios = [], [], []
+    for g, (c, n, u) in enumerate(zip(emulated, njoy_values, bound)):
+        if not (n > 0.0 and u <= C1_BOUND_FRACTION * n):
+            continue
+        if above is not None and max(bounds[g], bounds[g + 1]) <= above:
+            continue
+        rows.append((c - n) / n)
+        ratios.append(u / n)
+        if not (n * (1.0 - tol) - u <= c <= n * (1.0 + tol)):
+            bad.append({"group": g, "lo_eV": min(bounds[g], bounds[g + 1]) if bounds else None, "emulated": c,
+                        "njoy": n, "bound": u, "deviation": (c - n) / n})
+    vacuous = len(rows) < min_groups
+    worst = max(rows, key=abs, default=0.0)
+    return {"set_size": len(rows), "worst_deviation": worst, "worst_rel": abs(worst), "n_bad": len(bad),
+            "bad": bad[:20], "distribution": distribution([abs(r) for r in rows]), "tolerance": tol,
+            "bound_fraction": C1_BOUND_FRACTION, "bound_over_njoy_max": max(ratios, default=None),
+            "bound_mts_cluster_mass": dict(mts or {}), "min_groups": min_groups, "above_eV": above,
+            "pass": not vacuous and not bad, "vacuous": vacuous}
+
+
+def true_grid(tab, grid):
+    """HEATR's MT=444-447 tables carry energies rounded to 7 digits while their values were computed at the 9-digit
+    RECONR grid energy (a resonance peak sampled at 149829.35 eV is written at 149829.4), and a table starts at its
+    first nonzero row (MT=445 of Fe-56 at 575 eV, the zero row at 550 eV, from which 444 ramps up, is dropped). The
+    tables run from some grid index to the end of the grid, so when the tail and the rounded energies agree to 1e-6
+    the energies are restored from `grid` and the dropped grid row is restored as zero; otherwise the table is
+    returned as read. Returns (table, restored)."""
+    n = len(tab["x"])
+    if n > len(grid) or n < 2:
+        return tab, False
+    tail = grid[len(grid) - n:]
+    if any(abs(a - b) > 1e-6 * abs(b) for a, b in zip(tail, tab["x"])):
+        return tab, False
+    x, y = list(tail), list(tab["y"])
+    if len(grid) > n:
+        x.insert(0, grid[len(grid) - n - 1])
+        y.insert(0, 0.0)
+    return dict(tab, x=x, y=y, ranges=[(len(x), 2)]), True
+
+
+def capture_reference(endf_path, pendf_path, boundaries, ed, min_groups=C1_MIN_GROUPS):
+    """B1. The disappearance reference: NJOY MT=447 + sigma_102 (h_exact - h_tabsq6) pointwise on NJOY's PENDF grid
+    (and at the MF=6 record energies), collapsed flat in lethargy. Without MF=6 MT=102 photons the reference is raw
+    MT=447. Returns {"applicable", "groups", "emulated_groups", "precondition", "info"}."""
+    mf6 = read_mf6_photons(endf_path)
+    tabs = njoy.read_pendf(pendf_path, mts=(1, 102, 447) + C1_OTHER_447)
+    if 447 not in tabs or 1 not in tabs:
+        raise GateError("the PENDF carries no MF=3 MT=447 or MT=1")
+    tabs[447], restored = true_grid(tabs[447], tabs[1]["x"])
+    raw = njoy.collapse(tabs[447], boundaries)
+    if mf6 is None:
+        return {"applicable": False, "groups": raw, "raw_groups": raw,
+                "info": {"note": "no MF=6 MT=102 photon subsection: raw MT=447"}}
+    if 102 not in tabs:
+        raise GateError("MF=6 MT=102 photons present but the PENDF carries no MF=3 MT=102")
+    _mat, za, awr = p126.endf_mat_and_za(endf_path)
+    recs = capture_records(mf6, za // 1000, awr, ed)
+    sig = tabs[102]
+    xs = sorted(set(sig["x"]) | set(tabs[447]["x"]) | {e for e in recs["energies"] if sig["x"][0] <= e <= sig["x"][-1]})
+    nj, ex, adj, emu = [], [], [], []
+    for x in xs:
+        s = interp_value(sig, x)
+        h_n = record_interpolant(recs["energies"], recs["tabsq6"], x)
+        h_x = record_interpolant(recs["energies"], recs["exact"], x)
+        nj.append(s * h_n)
+        ex.append(s * h_x)
+        adj.append(interp_value(tabs[447], x) + s * (h_x - h_n))
+    rng = [(len(xs), 2)]
+    emulated = njoy.collapse({"x": xs, "y": nj, "ranges": rng}, boundaries)
+    exact = njoy.collapse({"x": xs, "y": ex, "ranges": rng}, boundaries)
+    groups = njoy.collapse({"x": xs, "y": adj, "ranges": rng}, boundaries)
+    bound, used = unemulated_bound(tabs, C1_OTHER_447, boundaries, awr)
+    pre = b_precondition(emulated, raw, bound, bounds=boundaries, mts=used, min_groups=min_groups)
+    first = 0                          # the 1e-5 eV record
+    info = {"lep": mf6["lep"], "lang": mf6["lang"], "n_records": len(recs["energies"]),
+            "record_energies_eV": [recs["energies"][0], recs["energies"][-1]],
+            "per_capture_damage_eV_first_record": {"tabsq6_emulation": recs["tabsq6"][first],
+                                                   "exact_format": recs["exact"][first],
+                                                   "yield": recs["yield"][first]},
+            "normalisation_first_record": {"tabsq6_s": recs["s_tabsq6"][first], "exact_s": recs["s_exact"][first]},
+            "worst_exact_normalisation_deviation": max(abs(v - 1.0) for v in recs["s_exact"]),
+            "grid_points": len(xs), "mt447_energies_restored_from_grid": restored}
+    return {"applicable": True, "groups": groups, "raw_groups": raw, "emulated_groups": emulated, "exact_groups": exact,
+            "precondition": pre, "info": info}
+
+
+def inelastic_w(pdf, e, awr, z, ed, thresh, damage=None):
+    """Exact mean damage energy per inelastic event of a discrete level at incident energy `e` (eV), the integral over
+    the centre-of-mass cosine of pdf(mu) R(T(mu)) with R the damage function (0 below `ed`). The residual nucleus of a
+    two-body reaction with reaction threshold `thresh` = -Q (A+1)/A has T = A E (1 + r^2 - 2 r mu)/(A+1)^2,
+    r = sqrt(1 - thresh/E) (r = 0 at and below the threshold, as disbar sets it); r = 1 is elastic scattering. The
+    integral is cut where T = ed and at the NRT breakpoint T = 2 ed / 0.8 and at every pdf panel edge."""
+    breaks, fn = pdf
+    if damage is None:
+        def damage(t):
+            return df(t, z, awr, z, awr, ed)
+    r = 0.0 if thresh >= e * (1.0 - LADDER_SMALL) else math.sqrt(1.0 - thresh / e)
+    c = awr * e / (awr + 1.0) ** 2
+    if r == 0.0:
+        return damage(c)
+
+    def cosine_at(t):                 # T = t at this cosine (T falls as mu rises)
+        return (1.0 + r * r - t / c) / (2.0 * r)
+
+    top = cosine_at(ed)
+    if not top > -1.0:
+        return 0.0
+    top = min(1.0, top)
+    cuts = [cosine_at(2.0 * ed / 0.8)] + list(breaks)
+    edges = [-1.0] + sorted({v for v in cuts if -1.0 < v < top}) + [top]
+
+    def integrand(mu):
+        return fn(mu) * damage(c * (1.0 + r * r - 2.0 * r * mu))
+
+    return sum(adaptive_gl(integrand, lo, hi, LEVEL_TOL) for lo, hi in zip(edges, edges[1:]) if hi > lo)
+
+
+def part_pdf(part, i):
+    """The pdf of record i of an MF=4 part as (breaks, f)."""
+    if part["kind"] == "legendre":
+        return legendre_pdf(part["data"][i])
+    breaks, fn, _dev = tabulated_pdf(part["data"][i])
+    return breaks, fn
+
+
+def mf4_pdf_at(mf4, e):
+    """The MF=4 pdf at incident energy `e`: isotropic below the first energy (as hgtfle returns), the last record's
+    above the last, linear pdf mixing between records (INT=2; INT=1 holds the lower pdf; other laws are refused)."""
+    parts = mf4["parts"]
+    if not parts:
+        return legendre_pdf([])
+    part = parts[0] if len(parts) == 1 or e <= parts[0]["energies"][-1] else parts[1]
+    es = part["energies"]
+    if e < es[0] * (1.0 - LADDER_SMALL):
+        return legendre_pdf([])
+    j = bisect.bisect_right(es, e) - 1
+    if j >= len(es) - 1:
+        return part_pdf(part, len(es) - 1)
+    law = njoy.law_of_segment(part["ranges"], j)
+    if law not in (1, 2):
+        raise ValueError(f"MF=4 energy interpolation law INT={law} is not handled")
+    if law == 1 or e == es[j]:
+        return part_pdf(part, j)
+    return mixed_pdf(part_pdf(part, j), part_pdf(part, j + 1), (e - es[j]) / (es[j + 1] - es[j]))
+
+
+def mf4_ladder_energies(mf4):
+    """(sorted MF=4 incident energies of the first part, isotropic): hgtfle returns etop for the next energy when the
+    level is isotropic (no parts, or two energies both without coefficients)."""
+    parts = mf4["parts"]
+    if not parts:
+        return [], True
+    part = parts[0]
+    es = part["energies"]
+    iso = part["kind"] == "legendre" and len(es) == 2 and all(len(c) == 0 for c in part["data"])
+    return list(es), iso
+
+
+def disbar_ladder(grid, mf4_energies, iso, step=LADDER_STEP, small=LADDER_SMALL, etop=LADDER_ETOP):
+    """The incident energies at which disbar (heatr.f90:1829-2013, normal entry from label `if (ee.le.en*(1+small))`)
+    evaluates the damage, for the ascending energies `grid` that HEATR loops over (from the reaction threshold up):
+    a point lies at the grid energy when it is beyond the step, otherwise at step times the previous point or the next
+    MF=4 incident energy (hgtfle's `enext`), whichever is lower."""
+    def enext_after(e):
+        if iso or not mf4_energies:
+            return etop
+        j = 1
+        while j < len(mf4_energies) - 1 and mf4_energies[j] <= e * (1.0 + small):
+            j += 1
+        return mf4_energies[min(j, len(mf4_energies) - 1)]
+
+    points, en = [], 0.0
+    enext = mf4_energies[0] if (mf4_energies and not iso) else etop
+    for ee in grid:
+        if ee <= en * (1.0 + small):
+            continue
+        e = step * en
+        if enext < e * (1.0 - small):
+            e = enext
+        if ee > e * (1.0 + small):
+            e = ee
+        points.append(e)
+        en = e
+        enext = enext_after(e)
+    return points
+
+
+def level_w_tables(mf4, awr, z, ed, thresh, grid):
+    """For one discrete level: (W_exact table, W_ladder table, ladder points). W_exact is the exact damage per event on
+    the MF=4 energies refined to a 5 percent ratio, the reaction threshold and the ladder points; W_ladder is W_exact
+    at the ladder points only, linear in E between them (disbar's label 130)."""
+    mf4_energies, iso = mf4_ladder_energies(mf4)
+    ladder = disbar_ladder(grid, mf4_energies, iso)
+    energies = set(ladder)
+    for part in mf4["parts"][:1]:
+        es = part["energies"]
+        for e0, e1 in zip(es, es[1:]):
+            if e1 <= thresh or not e1 > e0:
+                continue
+            pieces = max(1, int(math.ceil(math.log(e1 / e0) / math.log(LEVEL_REFINE)))) if e0 > 0.0 else 1
+            energies.update(e0 * (e1 / e0) ** (k / pieces) if e0 > 0.0 else e0 for k in range(pieces + 1))
+    energies.add(thresh)
+    energies = sorted(e for e in energies if e >= thresh * (1.0 - LADDER_SMALL))
+    values = {e: inelastic_w(mf4_pdf_at(mf4, e), e, awr, z, ed, thresh) for e in energies}
+    exact = {"x": energies, "y": [values[e] for e in energies], "ranges": [(len(energies), 2)]}
+    lad = {"x": ladder, "y": [values[e] for e in ladder], "ranges": [(max(len(ladder), 2), 2)]}
+    return exact, lad, ladder
+
+
+def fine_points(grid, ratio):
+    """Energies subdividing every gap of the ascending `grid` wider than `ratio` into geometric steps of at most it."""
+    extra = []
+    for a, b in zip(grid, grid[1:]):
+        if a > 0.0 and b > a * ratio:
+            n = int(math.ceil(math.log(b / a) / math.log(ratio)))
+            extra.extend(a * (b / a) ** (k / n) for k in range(1, n))
+    return extra
+
+
+def inelastic_reference(endf_path, pendf_path, boundaries, ed, fine=LEVEL_FINE_RATIO, min_groups=C1_MIN_GROUPS):
+    """B2. The inelastic reference for G4: NJOY MT=446 with the discrete levels' ladder term replaced by the exact
+    one, collapsed flat in lethargy. At every PENDF grid energy it is 446 + sum over the levels MT=51-90 of
+    sigma (W_exact - W_ladder). HEATR tabulates the levels' sigma W_ladder only at the PENDF grid energies (linear in E
+    between them, a coarse interpolation of a product near a threshold, where sigma and W both rise), so between grid
+    energies the reference is the tabulated remainder (446 minus the levels' tabulated term, interpolated) plus
+    sigma(E) W_exact(E) on energies subdivided to a ratio of `fine`. `fine = None` gives the pointwise formula on the
+    grid and ladder energies only. Returns {"groups", "groups_grid_only", "ladder_groups", "exact_groups",
+    "precondition", "info"}; the precondition applies in the groups where the levels carry at least 99 percent of
+    MT=446 and some level is within a factor 2 of its threshold; `ladder_groups` is the collapse of what HEATR's
+    table holds for the levels: sigma W_ladder at the PENDF grid energies."""
+    _mat, za, awr = p126.endf_mat_and_za(endf_path)
+    z = za // 1000
+    tabs = njoy.read_pendf(pendf_path, mts=(1, 446) + LEVEL_MTS + C1_OTHER_446)
+    if 446 not in tabs or 1 not in tabs:
+        raise GateError("the PENDF carries no MF=3 MT=446 or MT=1")
+    tabs[446], restored = true_grid(tabs[446], tabs[1]["x"])
+    levels = [mt for mt in LEVEL_MTS if mt in tabs]
+    raw = njoy.collapse(tabs[446], boundaries)
+    mf4s = read_mf4_many(endf_path, levels)
+    iso_default = {"za": za, "awr": awr, "lct": 2, "li": 1, "ltt": 0, "parts": []}
+    grid446 = list(tabs[446]["x"])
+    per_level = {}
+    pts_all, extra = set(grid446), set()
+    for mt in levels:
+        sig = tabs[mt]
+        mf4 = mf4s.get(mt, iso_default)
+        if mf4["lct"] not in (1, 2):
+            raise ValueError(f"MT={mt}: MF=4 LCT={mf4['lct']} is neither laboratory nor centre of mass")
+        thresh = (awr + 1.0) / awr * (-sig["qi"])
+        grid = sig["x"]                 # HEATR loops over the PENDF grid from the reaction's first energy
+        exact, lad, ladder = level_w_tables(mf4, awr, z, ed, thresh, grid)
+        pts = sorted(set(grid) | set(ladder))
+        pts_all.update(pts)
+        if fine:
+            extra.update(fine_points(grid, fine))
+        per_level[mt] = {"sigma": sig, "exact": exact, "ladder": lad, "first": pts[0], "thresh": thresh,
+                         "n_ladder": len(ladder)}
+
+    def level_terms(x):
+        """(sum sigma W_ladder, sum sigma W_exact) over the levels at `x`."""
+        lad_sum = ex_sum = 0.0
+        for d in per_level.values():
+            if x < d["first"]:
+                continue
+            sg = interp_value(d["sigma"], x)
+            if sg != 0.0:
+                lad_sum += sg * interp_value(d["ladder"], x)
+                ex_sum += sg * interp_value(d["exact"], x)
+        return lad_sum, ex_sum
+
+    def tab(xs, ys):
+        return {"x": xs, "y": ys, "ranges": [(len(xs), 2)]}
+
+    at_grid = [level_terms(x) for x in grid446]                      # HEATR's own tabulated levels term
+    ladder_groups = njoy.collapse(tab(grid446, [t[0] for t in at_grid]), boundaries)
+    exact_groups = njoy.collapse(tab(grid446, [t[1] for t in at_grid]), boundaries)
+    xs_lit = sorted(pts_all)
+    y_lit = []
+    for x in xs_lit:
+        lad_sum, ex_sum = level_terms(x)
+        y_lit.append(interp_value(tabs[446], x) + ex_sum - lad_sum)
+    groups_lit = njoy.collapse(tab(xs_lit, y_lit), boundaries)
+    groups = groups_lit
+    if fine:
+        other = tab(grid446, [interp_value(tabs[446], x) - t[0] for x, t in zip(grid446, at_grid)])
+        xs_fine = sorted(pts_all | extra)
+        y_fine = [interp_value(other, x) + level_terms(x)[1] for x in xs_fine]
+        groups = njoy.collapse(tab(xs_fine, y_fine), boundaries)
+    bound, used = unemulated_bound(tabs, C1_OTHER_446, boundaries, awr)
+    lowest = min(per_level[mt]["thresh"] for mt in per_level) if per_level else None
+    pre = b_precondition(ladder_groups, raw, bound, bounds=boundaries, mts=used, min_groups=min_groups, above=lowest)
+    info = {"levels": levels, "ladder_points": {str(mt): d["n_ladder"] for mt, d in per_level.items()},
+            "thresholds_eV": {str(mt): d["thresh"] for mt, d in per_level.items()},
+            "fine_ratio": fine,
+            "grid_points": len(grid446), "mt446_energies_restored_from_grid": restored}
+    return {"groups": groups, "raw_groups": raw, "groups_grid_only": groups_lit, "ladder_groups": ladder_groups,
+            "exact_groups": exact_groups, "precondition": pre, "info": info}
 
 
 # ------------------------------------------------------------------------------ continuum recoil determination
@@ -809,6 +1334,21 @@ def exact_elastic_cached(target, work, record, ed, boundaries, reuse):
     return result
 
 
+def b_reference_cached(kind, target, work, record, ed, boundaries, reuse):
+    """capture_reference ("b1") or inelastic_reference ("b2") for one target, cached like exact_elastic_cached."""
+    cache = work / f"{kind}_{target}.json"
+    key = {"pendf_sha256": record.get("pendf_sha256"), "endf_sha256": record["endf"]["sha256"], "ed_eV": ed,
+           "version": B_VERSION}
+    if reuse and cache.exists():
+        saved = json.loads(cache.read_text())
+        if saved.get("key") == key:
+            return saved["result"]
+    fn = capture_reference if kind == "b1" else inelastic_reference
+    result = fn(record["endf"]["path"], record["pendf"], boundaries, ed)
+    cache.write_text(json.dumps({"key": key, "result": result}))
+    return result
+
+
 def njoy_reference(target, work, ed_map, njoy_exe, err, timeout, reuse):
     info = TARGETS[target]
     record = njoy.run_njoy(TENDL_DIR / info["file"], work / f"njoy_{target}", ed_map[info["element"]], njoy_exe, err,
@@ -833,8 +1373,15 @@ def gates_g3_g4_g5(candidate, work, args, bounds, spec):
     g4["note"] = ("tables compared with NJOY are built in NJOY's treatments: capture per-photon where MF=6 MT=102 "
                   "exists, continuum recoil `evaluated` where an MF=6 continuum MT carries a recoil subsection; the "
                   "determinations are in evidence.targets.<T>.capture_determination / continuum_determination")
-    g5["note"] = ("NJOY MT=444 is replaced by NJOY444 - NJOY445 + exact elastic reference (A3); the 2 percent term of "
-                  "the slack uses the exact elastic reference; the raw NJOY444 bound is information")
+    g4["note_b"] = ("Amendment B: the references are NJOY MT=447 with the capture-photon term replaced (B1) and NJOY "
+                    "MT=446 with the discrete-level ladder term replaced (B2, fine-grid form per C2), each with the "
+                    "Amendment C1 precondition (groups chosen by the recoil bound U <= 0.5 percent of NJOY, "
+                    "NJOY(1-0.005)-U <= emulated <= NJOY(1+0.005), at least 10 groups) that the checker's emulation of the HEATR routine "
+                    "reproduces NJOY; both are part of the gate, the raw comparisons are in raw_njoy_information")
+    g5["note"] = ("B3: NJOY MT=444 with MT=445 (leading zero row restored) replaced by the exact elastic reference "
+                  "(A1) and the B1 and B2 differences added; the 2 percent term of the slack uses the exact elastic "
+                  "reference and the 5 percent term the B2 and B1 references; the raw NJOY444 bound and the A3 form "
+                  "(444 - 445 + exact elastic) are information")
     evidence["njoy_documented_approximations"] = njoy_documented_approximations()
     refs, modes = {}, {}
     for target in TARGETS:
@@ -854,6 +1401,18 @@ def gates_g3_g4_g5(candidate, work, args, bounds, spec):
             entry["njoy_group_values_sha256"] = hashlib.sha256(json.dumps(ref, sort_keys=True).encode()).hexdigest()
             exact = exact_elastic_cached(target, work, record, ed_map[TARGETS[target]["element"]], asc, args.reuse)
             entry["exact_elastic"] = exact["info"]
+            ed_t = ed_map[TARGETS[target]["element"]]
+            b1 = b2 = b_error = None
+            try:
+                b1 = b_reference_cached("b1", target, work, record, ed_t, asc, args.reuse)
+                b2 = b_reference_cached("b2", target, work, record, ed_t, asc, args.reuse)
+                grid_1 = njoy.read_pendf(record["pendf"], mts=(1,))[1]["x"]
+                full_445 = njoy.collapse(true_grid(tabs[445], grid_1)[0], asc)
+            except (GateError, KeyError, ValueError, OSError, IndexError) as error:
+                b_error = f"{type(error).__name__}: {error}"
+            entry["amendment_b"] = {"error": b_error} if b_error else {
+                "b1_capture": {k: v for k, v in b1.items() if not k.endswith("groups")},
+                "b2_levels": {k: v for k, v in b2.items() if not k.endswith("groups")}}
             table, path = build_table(candidate, target, work, ed_map, modes[target][0], args.grid_density,
                                       args.timeout, args.reuse, modes[target][1])
             tables[target] = (table, path)
@@ -866,6 +1425,10 @@ def gates_g3_g4_g5(candidate, work, args, bounds, spec):
                     raise GateError("table boundaries are neither the vendored ascending nor descending order")
                 ref = {mt: v[::-1] for mt, v in ref.items()}
                 exact = dict(exact, groups=exact["groups"][::-1])
+                if not b_error:
+                    full_445 = full_445[::-1]
+                    b1 = {k: (v[::-1] if k.endswith("groups") else v) for k, v in b1.items()}
+                    b2 = {k: (v[::-1] if k.endswith("groups") else v) for k, v in b2.items()}
             refs[target] = ref
             row = table["targets"][target]
             ref_el = exact["groups"]
@@ -880,14 +1443,37 @@ def gates_g3_g4_g5(candidate, work, args, bounds, spec):
                 "exact_reference_vs_njoy_445_above_1keV": distribution(above),
                 "njoy_documented_approximations": "see evidence.njoy_documented_approximations"}
             uncovered = row["uncovered_damage_upper_barn_eV"]
-            g4["cases"][target] = {
-                "inelastic_vs_446": channel_comparison(row["inelastic"], ref[446], ref[444], uncovered, tb),
-                "disappearance_vs_447": channel_comparison(row["disappearance"], ref[447], ref[444], uncovered, tb)}
-            g4["cases"][target]["pass"] = all(v["pass"] for v in g4["cases"][target].values())
+            raw_446 = channel_comparison(row["inelastic"], ref[446], ref[444], uncovered, tb)
+            raw_447 = channel_comparison(row["disappearance"], ref[447], ref[444], uncovered, tb)
             adjusted = [a - b + c for a, b, c in zip(ref[444], ref[445], ref_el)]
-            case = bound_comparison(row["damage_energy_barn_eV"], uncovered, adjusted, ref_el, ref[446], ref[447])
             raw = bound_comparison(row["damage_energy_barn_eV"], uncovered, ref[444], ref[445], ref[446], ref[447])
-            case["raw_njoy444_information"] = {k: raw[k] for k in ("n_below_computed", "n_above_upper", "pass")}
+            a3 = bound_comparison(row["damage_energy_barn_eV"], uncovered, adjusted, ref_el, ref[446], ref[447])
+            info_keys = ("n_below_computed", "n_above_upper", "pass")
+            if b_error:
+                g4["cases"][target] = {"error": f"Amendment B reference: {b_error}", "pass": False,
+                                       "raw_njoy_information": {"inelastic_vs_446": raw_446,
+                                                                "disappearance_vs_447": raw_447}}
+                case = {"error": f"Amendment B reference: {b_error}", "pass": False,
+                        "raw_njoy444_information": {k: raw[k] for k in info_keys},
+                        "a3_information": {k: a3[k] for k in info_keys}}
+                g5["cases"][target] = case
+                continue
+            ref_446, ref_447 = b2["groups"], b1["groups"]
+            g4["cases"][target] = {
+                "inelastic_vs_446": channel_comparison(row["inelastic"], ref_446, ref[444], uncovered, tb),
+                "disappearance_vs_447": channel_comparison(row["disappearance"], ref_447, ref[444], uncovered, tb),
+                "b2_precondition": b2["precondition"], "b1_precondition": b1["precondition"]}
+            g4["cases"][target]["pass"] = all(v["pass"] for v in g4["cases"][target].values())
+            g4["cases"][target]["raw_njoy_information"] = {"inelastic_vs_446": raw_446,
+                                                           "disappearance_vs_447": raw_447}
+            if not b2["info"].get("fine_ratio"):
+                g4["cases"][target]["b2_grid_only"] = True
+            # B3: NJOY 444 with 445 replaced by the exact elastic reference and the B1 and B2 differences added
+            b3 = [a - f + c + (d1 - r1) + (d2 - r2) for a, f, c, d1, r1, d2, r2 in
+                  zip(ref[444], full_445, ref_el, ref_447, b1["raw_groups"], ref_446, b2["raw_groups"])]
+            case = bound_comparison(row["damage_energy_barn_eV"], uncovered, b3, ref_el, ref_446, ref_447)
+            case["raw_njoy444_information"] = {k: raw[k] for k in info_keys}
+            case["a3_information"] = {k: a3[k] for k in info_keys}
             ident = [rel(t, e + i + d) for t, e, i, d in zip(row["damage_energy_barn_eV"], row["elastic"],
                                                              row["inelastic"], row["disappearance"])]
             case["table_total_equals_partial_sum_worst_rel"] = max(ident)
@@ -895,7 +1481,9 @@ def gates_g3_g4_g5(candidate, work, args, bounds, spec):
             fns = {"computed": fold(row["damage_energy_barn_eV"], flux),
                    "computed_plus_upper": fold([t + u for t, u in zip(row["damage_energy_barn_eV"], uncovered)],
                                                flux),
-                   "njoy_444": fold(ref[444], flux), "njoy_444_adjusted": fold(adjusted, flux),
+                   "njoy_444": fold(ref[444], flux), "njoy_444_adjusted": fold(b3, flux),
+                   "njoy_444_a3": fold(adjusted, flux), "reference_446_b2": fold(ref_446, flux),
+                   "reference_447_b1": fold(ref_447, flux),
                    "exact_elastic_reference": fold(ref_el, flux), "njoy_445": fold(ref[445], flux),
                    "njoy_446": fold(ref[446], flux), "njoy_447": fold(ref[447], flux),
                    "table_elastic": fold(row["elastic"], flux), "table_inelastic": fold(row["inelastic"], flux),
@@ -1198,9 +1786,10 @@ def _line(fields, mat, mf, mt, seq):
 
 
 def synthetic_pendf(path, mat, sections):
-    """A PENDF snippet: sections = {mt: (ranges, points)}; HEAD, TAB1 record, ranges, points, SEND, MEND, TEND."""
+    """A PENDF snippet: sections = {mt: (ranges, points[, qi])}; HEAD, TAB1 record (QM = QI = qi), ranges, points, SEND,
+    MEND, TEND."""
     out = []
-    for mt, (ranges, points) in sections.items():
+    for mt, (ranges, points, *qi) in sections.items():
         n = 0
 
         def emit(fields):
@@ -1209,7 +1798,8 @@ def synthetic_pendf(path, mat, sections):
             out.append(_line(fields, mat, 3, mt, n))
 
         emit([26056.0, 55.45, "          0", "          0", "          0", "          0"])
-        emit([0.0, 0.0, "          0", "          0", f"{len(ranges):>11}", f"{len(points):>11}"])
+        emit([qi[0] if qi else 0.0, qi[0] if qi else 0.0, "          0", "          0", f"{len(ranges):>11}",
+              f"{len(points):>11}"])
         words = []
         for nbt, law in ranges:
             words += [f"{nbt:>11}", f"{law:>11}"]
@@ -1504,6 +2094,203 @@ def self_check():
     adjusted = 12.0 - 6.0 + 3.0                                   # NJOY444 12, NJOY445 6, exact elastic 3
     assert bound_comparison([9.0], [0.0], [adjusted], [3.0], [0.0], [0.0])["pass"]
     assert not bound_comparison([9.0], [0.0], [12.0], [6.0], [0.0], [0.0])["pass"]
+    # ---- Amendment B: capture photons (B1) -----------------------------------------------------------------------
+    assert abs(EMC2 / 939565420.52 - 1.0) < 1e-9 and abs(sum(TABSQ6_W) - 2.0) < 1e-12 and abs(sum(TABSQ6_X)) < 1e-12
+    tm_s, ident = 1.0e9, (lambda t: t)
+    rec_s = {"energy": 1.0e-5, "nd": 2, "x": [1.0e6, 2.0e6, 3.0e6, 4.0e6, 6.0e6], "y": [0.1, 0.2, 0.4, 0.4, 0.4]}
+    disc = sum(y_ * x_ * x_ / (2.0 * tm_s) for x_, y_ in ((1.0e6, 0.1), (2.0e6, 0.2)))
+    cont = 0.4 / (2.0 * tm_s) * (6.0e6 ** 3 - 3.0e6 ** 3) / 3.0          # integral of f x^2 / (2 tm) dx
+    h_n, s_n = tabsq6_record(rec_s, tm_s, ident)                         # tabsq6: the continuum counts twice
+    assert abs(s_n / (0.3 + 2.0 * 0.4 * 3.0e6) - 1.0) < 1e-4 and abs(h_n / ((disc + 2.0 * cont) / s_n) - 1.0) < 1e-4
+    h_x, s_x = exact_photon_record(rec_s, tm_s, ident, 1)
+    assert abs(s_x / (0.3 + 0.4 * 3.0e6) - 1.0) < 1e-9 and abs(h_x / ((disc + cont) / s_x) - 1.0) < 1e-9, (h_x, s_x)
+    assert h_x != h_n
+    rec_l = {"energy": 1.0e-5, "nd": 0, "x": [3.0e6, 5.0e6], "y": [0.0, 1.0]}           # f = (x - 3e6)/2e6, linear
+    cont_l = (5.0e6 ** 4 / 4.0 - 3.0e6 * 5.0e6 ** 3 / 3.0 - (3.0e6 ** 4 / 4.0 - 3.0e6 ** 4 / 3.0)) / (2.0e6 * 2.0 * tm_s)
+    h_l, s_l = exact_photon_record(rec_l, tm_s, ident, 2)
+    assert abs(s_l - 1.0e6) < 1e-3 and abs(h_l * s_l / cont_l - 1.0) < 1e-9
+    h_t, s_t = tabsq6_record(rec_l, tm_s, ident)           # a linear spectrum is read exactly by tabsq6, then doubled
+    assert abs(s_t / (2.0 * s_l) - 1.0) < 1e-4 and abs(h_t / h_l - 1.0) < 1e-4
+    t0 = 12.0                                              # damage = T for T >= t0: a panel split at the cut
+    step = (lambda t: t if t >= t0 else 0.0)
+    x0 = math.sqrt(2.0 * tm_s * t0)
+    rec_c = {"energy": 1.0e-5, "nd": 0, "x": [0.5 * x0, 2.0 * x0], "y": [1.0, 1.0]}
+    h_c, s_c = exact_photon_record(rec_c, tm_s, step, 1, cuts=[x0])
+    want = (2.0 * x0) ** 3 / (6.0 * tm_s) - x0 ** 3 / (6.0 * tm_s)
+    assert abs(h_c * s_c / want - 1.0) < 1e-9 and abs(s_c - 1.5 * x0) < 1e-6
+    try:
+        exact_photon_record(rec_c, tm_s, step, 3)
+        raise AssertionError("an unsupported LEP must be refused")
+    except ValueError:
+        pass
+    assert record_interpolant([1.0, 2.0, 4.0], [10.0, 20.0, 60.0], 3.0) == 40.0
+    assert record_interpolant([1.0, 2.0, 4.0], [10.0, 20.0, 60.0], 0.5) == 5.0
+    assert record_interpolant([1.0, 2.0, 4.0], [10.0, 20.0, 60.0], 4.0 * (1.0 + 1e-9)) == 0.0
+    assert record_interpolant([1.0, 2.0, 4.0], [10.0, 20.0, 60.0], 4.0) == 60.0
+    # the yield multiplies the record values; an MF=6 photon subsection read from synthetic ENDF text
+    with tempfile.TemporaryDirectory(prefix="p154-selfcheck-") as tmp:
+        def mf6_capture(path, yld):
+            recs_ = []
+            for energy in (1.0e-5, 2.0e7):
+                recs_ += [[0.0, energy, ival(1), ival(0), ival(6), ival(3)], [9.0e6, 0.25, 3.0e6, 5.0e-7, 6.0e6, 5.0e-7]]
+            rows_ = [[26056.0, 55.45, ival(0), ival(3), ival(1), ival(0)],
+                     [0.0, 0.0, ival(0), ival(1), ival(1), ival(2)], [ival(2), ival(2)], [1.0e-5, yld, 3.0e7, yld],
+                     [0.0, 0.0, ival(1), ival(1), ival(1), ival(2)], [ival(2), ival(2)]] + recs_
+            endf_file(path, 2631, 6, 102, rows_)
+
+        mf6_capture(Path(tmp) / "cap", 2.0)
+        ph = read_mf6_photons(Path(tmp) / "cap")
+        assert ph["lep"] == 1 and ph["lang"] == 1 and len(ph["records"]) == 2 and ph["yield"]["y"] == [2.0, 2.0]
+        assert ph["records"][0]["nd"] == 1 and ph["records"][1]["x"] == [9.0e6, 3.0e6, 6.0e6]
+        assert ph["records"][0]["y"] == [0.25, 5.0e-7, 5.0e-7] and abs(ph["awr"] - 55.45) < 1e-12
+        assert read_mf6_photons(Path(tmp) / "cap", 16) is None
+        recs_c = capture_records(ph, 26, 55.45, 40.0)
+        ph1 = {**ph, "yield": {"x": [1.0e-5, 3.0e7], "y": [1.0, 1.0], "ranges": [(2, 2)]}}
+        recs_1 = capture_records(ph1, 26, 55.45, 40.0)
+        assert abs(recs_c["exact"][0] / recs_1["exact"][0] - 2.0) < 1e-12 and recs_c["exact"][0] > 0.0
+        assert abs(recs_c["tabsq6"][1] / recs_1["tabsq6"][1] - 2.0) < 1e-12 and recs_c["energies"] == [1.0e-5, 2.0e7]
+        # capture_reference on a synthetic PENDF whose MT=447 is exactly sigma_102 times the tabsq6 emulation
+        mf6_capture(Path(tmp) / "endf", 1.0)
+        head = _line([26056.0, 55.45, "          0", "          0", "          0", "          0"], 2631, 1, 451, 1)
+        body = (Path(tmp) / "endf").read_text()
+        (Path(tmp) / "endf").write_text(head + "\n" + _line(["           "] * 6, 2631, 1, 0, 99999) + "\n" + body)
+        grid_ = [1.0e-5, 1.0, 1.0e3, 1.0e5, 2.0e7]
+        sig_ = [10.0, 8.0, 3.0, 1.0, 0.1]
+        hn_ = recs_1["tabsq6"][0]                                          # both records are equal: h is constant in E
+        he_ = recs_1["exact"][0]
+        assert abs(hn_ / he_ - 1.0) > 1e-3 and he_ > 0.0
+        synthetic_pendf(Path(tmp) / "pendf", 2631, {
+            1: ([(5, 2)], list(zip(grid_, [20.0] * 5))), 102: ([(5, 2)], list(zip(grid_, sig_))),
+            447: ([(5, 2)], [(g_, s_ * hn_) for g_, s_ in zip(grid_, sig_)])})
+        bnd = [1.0e-5, 1.0, 1.0e3, 1.0e5, 2.0e7]
+        got = capture_reference(Path(tmp) / "endf", Path(tmp) / "pendf", bnd, 40.0, min_groups=1)
+        want_ = njoy.collapse({"x": grid_, "y": [s_ * he_ for s_ in sig_], "ranges": [(5, 2)]}, bnd)
+        assert got["applicable"] and got["precondition"]["pass"] and got["precondition"]["set_size"] == 4
+        assert all(abs(a_ / b_ - 1.0) < 1e-5 for a_, b_ in zip(got["groups"], want_)), (got["groups"], want_)   # 7-digit tape
+        assert all(abs(a_ / b_ - 1.0) < 1e-5 for a_, b_ in zip(got["emulated_groups"], got["raw_groups"]))
+        # a 447 that is 3 percent above the emulation fails the precondition
+        synthetic_pendf(Path(tmp) / "pendf3", 2631, {
+            1: ([(5, 2)], list(zip(grid_, [20.0] * 5))), 102: ([(5, 2)], list(zip(grid_, sig_))),
+            447: ([(5, 2)], [(g_, 1.03 * s_ * hn_) for g_, s_ in zip(grid_, sig_)])})
+        assert not capture_reference(Path(tmp) / "endf", Path(tmp) / "pendf3", bnd, 40.0, min_groups=1)["precondition"]["pass"]
+        assert capture_reference(Path(tmp) / "endf", Path(tmp) / "pendf", bnd, 40.0)["precondition"]["vacuous"]   # 4 < 10
+        # without MF=6 photons the reference is the raw MT=447
+        (Path(tmp) / "plain").write_text(head + "\n" + _line(["           "] * 6, 2631, 1, 0, 99999) + "\n")
+        none_ = capture_reference(Path(tmp) / "plain", Path(tmp) / "pendf", bnd, 40.0)
+        assert not none_["applicable"] and none_["groups"] == none_["raw_groups"] and all(
+            abs(a_ / b_ - 1.0) < 1e-5 for a_, b_ in zip(none_["groups"], njoy.collapse(
+                {"x": grid_, "y": [s_ * hn_ for s_ in sig_], "ranges": [(5, 2)]}, bnd)))
+    # C1: the set is chosen by the independent bound U (not by the emulated value); window NJOY (1-tol) - U <= X <= NJOY (1+tol)
+    one, zero_u = [1.0] * 12, [0.0] * 12
+    assert b_precondition(one, one, zero_u)["set_size"] == 12 and b_precondition(one, one, zero_u)["pass"]
+    u_in = [0.0] * 11 + [0.004]                  # in the set (0.4 percent <= 0.5): low side widened by U
+    assert b_precondition([1.0] * 11 + [0.9951], one, u_in)["pass"]          # low by 0.49 percent < U + 0.5 percent
+    pc = b_precondition([1.0] * 11 + [0.990], one, u_in)                      # low by 1 percent > U + 0.5 percent
+    assert not pc["pass"] and pc["n_bad"] == 1 and pc["bad"][0]["group"] == 11 and abs(pc["worst_deviation"] + 0.01) < 1e-12
+    assert not b_precondition([1.0] * 11 + [1.006], one, u_in)["pass"]       # high by more than 0.5 percent
+    assert b_precondition([1.0] * 11 + [1.004], one, u_in)["pass"]
+    assert not b_precondition([1.0] * 11 + [0.98], one, zero_u)["pass"]       # low with no bound: fails (not selected out)
+    big_u = [0.0] * 11 + [0.006]                 # a bound above 0.5 percent of NJOY excludes the group
+    ex_ = b_precondition([1.0] * 11 + [0.5], one, big_u)
+    assert ex_["set_size"] == 11 and ex_["pass"] and ex_["bound_over_njoy_max"] == 0.0
+    assert b_precondition([1.0] * 9, [1.0] * 9, [0.0] * 9)["vacuous"] and b_precondition([1.0] * 10, [1.0] * 10,
+                                                                                         [0.0] * 10)["pass"]
+    assert b_precondition([0.0] * 12, [0.0] * 12, zero_u)["vacuous"]
+    bnd_s = [float(k) for k in range(13)]        # B2: groups whose upper edge is at or below the lowest threshold drop
+    ab = b_precondition([0.0] * 2 + [1.0] * 10, [1.0] * 12, zero_u, bounds=bnd_s, above=2.0)
+    assert ab["set_size"] == 10 and ab["pass"] and not b_precondition([0.0] * 12, [1.0] * 12, zero_u, bounds=bnd_s,
+                                                                      above=2.0)["pass"]
+    for a_, m_b in ((55.45, 1), (182.37, 1)):    # elastic limit: T_max = 4 A E / (A+1)^2
+        assert abs(recoil_tmax(1.0e6, a_, m_b, 0.0) / (4.0 * a_ / (a_ + 1.0) ** 2 * 1.0e6) - 1.0) < 1e-12
+    assert recoil_tmax(1.0e6, 55.45, 4, -2.0e6) == 0.0 and recoil_tmax(1.0e6, 55.45, 4, 3.0e6) > 0.0
+    assert recoil_tmax(10.0, 55.45, 4, 2.0e6) < 2.0e6 * 4.0 / 55.45 * 1.01     # (n,alpha)-like: recoil ~ Q m_b/(A+1)
+    assert [cluster_mass(m) for m in (91, 103, 107, 112, 600, 650, 700, 750, 849)] == [1, 1, 4, 5, 1, 2, 3, 3, 4]
+    try:
+        cluster_mass(118)
+        raise AssertionError("an MT with no known cluster must be refused")
+    except ValueError:
+        pass
+    tb_ = {107: {"x": [1.0, 100.0], "y": [2.0, 2.0], "ranges": [(2, 2)], "qi": 5.0}}
+    got_b, used_b = unemulated_bound(tb_, (107, 108), [1.0, 100.0], 10.0)
+    n_ = 20000                                   # midpoint rule in ln E of sigma T_max (T_max is smooth on the tape's chord)
+    ref_ = sum(2.0 * recoil_tmax(math.exp((k + 0.5) / n_ * math.log(100.0)), 10.0, 4, 5.0) for k in range(n_)) / n_
+    assert used_b == {107: 4} and abs(got_b[0] / ref_ - 1.0) < 2e-2    # the tape interpolates sigma T_max linearly
+    # HEATR table energies and leading zero rows restored from the grid
+    grid_t = [1.0, 2.0, 3.0, 4.0, 5.0, 6.0]
+    restored, flag = true_grid({"x": [4.0, 5.0, 6.000001], "y": [1.0, 2.0, 3.0], "ranges": [(3, 2)]}, grid_t)
+    assert flag and restored["x"] == [3.0, 4.0, 5.0, 6.0] and restored["y"] == [0.0, 1.0, 2.0, 3.0]
+    full, flag = true_grid({"x": [1.0, 2.0, 3.0, 4.0, 5.0, 6.0], "y": [0.0] * 6, "ranges": [(6, 2)]}, grid_t)
+    assert flag and full["x"] == grid_t and len(full["y"]) == 6
+    shifted, flag = true_grid({"x": [4.0, 5.1, 6.0], "y": [1.0, 2.0, 3.0], "ranges": [(3, 2)]}, grid_t)
+    assert not flag and shifted["x"] == [4.0, 5.1, 6.0]
+    # ---- Amendment B: discrete levels (B2) -----------------------------------------------------------------------
+    awr_s, thr_s = 55.45, 20000.0
+    for e in (30000.0, 1.0e5, 1.0e6):                          # isotropic, damage = T: W = c (1 + r^2), r^2 = 1 - thr/E
+        c_ = awr_s * e / (awr_s + 1.0) ** 2
+        got_w = inelastic_w(legendre_pdf([]), e, awr_s, 26, 0.0, thr_s, damage=lin)
+        assert rel(got_w, c_ * (2.0 - thr_s / e)) < 1e-9, e
+    e = 1.0e5                                                  # with a cut at T = ed: closed form
+    c_ = awr_s * e / (awr_s + 1.0) ** 2
+    r_ = math.sqrt(1.0 - thr_s / e)
+    mu_ed = (1.0 + r_ * r_ - 40.0 / c_) / (2.0 * r_)
+    want_w = c_ * ((1.0 + r_ * r_) * (mu_ed + 1.0) - r_ * (mu_ed ** 2 - 1.0)) / 2.0
+    assert rel(inelastic_w(legendre_pdf([]), e, awr_s, 26, 40.0, thr_s, damage=lin), want_w) < 1e-9
+    assert rel(inelastic_w(legendre_pdf([0.3]), e, awr_s, 26, 40.0, 0.0, damage=lin),
+               elastic_w(legendre_pdf([0.3]), e, awr_s, 26, 40.0, damage=lin)) < 1e-9     # thresh = 0 is elastic
+    assert abs(inelastic_w(legendre_pdf([]), thr_s, awr_s, 26, 40.0, thr_s, damage=lin)
+               - awr_s * thr_s / (awr_s + 1.0) ** 2) < 1e-9                                 # r = 0 at the threshold
+    assert inelastic_w(legendre_pdf([]), 100.0, awr_s, 26, 40.0, 0.0, damage=lin) == 0.0       # 2 c < ed: no damage
+    assert 0.0 < inelastic_w(legendre_pdf([]), 2.0e6, awr_s, 26, 40.0, thr_s) < awr_s * 2.0e6 / (awr_s + 1.0) ** 2 * 2.0
+    # the ladder: isotropic level, grid [100, 105, 130, 131, 200, 400] -> 100, 110, 130, 143, 200, 400
+    def same(a_, b_):
+        return len(a_) == len(b_) and all(abs(x_ - y_) <= 1e-12 * y_ for x_, y_ in zip(a_, b_))
+
+    assert same(disbar_ladder([100.0, 105.0, 130.0, 131.0, 200.0, 400.0], [], True),
+                [100.0, 110.0, 130.0, 143.0, 200.0, 400.0])
+    # MF=4 energies [50, 120, 1000] bound the step: 100, 110, then 120 (enext < 1.1 * 110) although 115 <= 120
+    assert same(disbar_ladder([100.0, 105.0, 115.0, 200.0], [50.0, 120.0, 1000.0], False),
+                [100.0, 110.0, 120.0, 200.0])
+    assert disbar_ladder([100.0, 105.0, 115.0], [50.0, 120.0, 1000.0], False)[2] == 120.0
+    assert disbar_ladder([], [], True) == []
+    pts = disbar_ladder([1.0e5 * 1.05 ** k for k in range(60)], [], True)      # 5 percent grid: a point every other energy
+    assert all(b_ / a_ > 1.0999 for a_, b_ in zip(pts, pts[1:])) and pts[0] == 1.0e5 and len(pts) < 35
+    assert mf4_ladder_energies({"parts": []}) == ([], True)
+    assert mf4_ladder_energies({"parts": [{"kind": "legendre", "energies": [1.0, 2.0], "data": [[], []]}]})[1]
+    assert not mf4_ladder_energies({"parts": [{"kind": "legendre", "energies": [1.0, 2.0], "data": [[], [0.1]]}]})[1]
+    assert fine_points([1.0, 1.01, 1.5], 1.02)[0] > 1.01 and len(fine_points([1.0, 1.01, 1.5], 1.02)) == 19
+    # MF=4 pdf at an energy: isotropic below the first record, mixing between, INT=1 holds the lower
+    m4 = {"parts": [{"kind": "legendre", "energies": [10.0, 20.0, 40.0], "data": [[0.0], [0.4], [0.4]],
+                     "ranges": [(2, 2), (3, 1)]}]}
+    assert abs(mf4_pdf_at(m4, 5.0)[1](0.5) - 0.5) < 1e-15
+    assert abs(mf4_pdf_at(m4, 15.0)[1](1.0) - (0.5 + 1.5 * 0.2)) < 1e-12
+    assert abs(mf4_pdf_at(m4, 30.0)[1](1.0) - (0.5 + 1.5 * 0.4)) < 1e-12 and abs(mf4_pdf_at(m4, 99.0)[1](1.0) - 1.1) < 1e-12
+    # inelastic_reference on a synthetic isotropic level: the emulated tabulated term reproduces a 446 built from it
+    with tempfile.TemporaryDirectory(prefix="p154-selfcheck-") as tmp:
+        head = _line([26056.0, 55.45, "          0", "          0", "          0", "          0"], 2631, 1, 451, 1)
+        (Path(tmp) / "endf").write_text(head + "\n" + _line(["           "] * 6, 2631, 1, 0, 99999) + "\n")
+        q_s = -20000.0 * 55.45 / 56.45                                       # threshold 20 keV
+        thr_q = (55.45 + 1.0) / 55.45 * (-q_s)
+        grid_i = [1.0e-5, 1.0e3, thr_q] + [thr_q * 1.4 ** k for k in range(1, 12)]
+        sig_i = [0.0, 0.0, 0.0] + [0.1 * k for k in range(1, 12)]
+        lvl = [(g_, s_) for g_, s_ in zip(grid_i, sig_i) if g_ >= thr_q]
+        ex_s, lad_s, lad_pts = level_w_tables({"parts": []}, 55.45, 26, 40.0, thr_q, [g_ for g_, _ in lvl])
+        assert lad_pts[0] == thr_q and abs(lad_s["y"][0] - inelastic_w(legendre_pdf([]), thr_q, 55.45, 26, 40.0, thr_q)) < 1e-12
+        t446 = [(g_, interp_value(lad_s, g_) * s_ if g_ >= thr_q else 0.0) for g_, s_ in zip(grid_i, sig_i)]
+        synthetic_pendf(Path(tmp) / "pendf", 2631, {
+            1: ([(len(grid_i), 2)], [(g_, 9.0) for g_ in grid_i]), 51: ([(len(lvl), 2)], lvl, q_s),
+            446: ([(len(grid_i), 2)], t446)})
+        bnd = [1.0e-5, 1.0e3, 1.0e4, thr_q, thr_q * 2.0, thr_q * 8.0, thr_q * 100.0]
+        got = inelastic_reference(Path(tmp) / "endf", Path(tmp) / "pendf", bnd, 40.0, min_groups=1)
+        assert got["precondition"]["pass"] and got["precondition"]["set_size"] >= 1, got["precondition"]
+        raw_ = njoy.collapse({"x": grid_i, "y": [t[1] for t in t446], "ranges": [(len(grid_i), 2)]}, bnd)
+        assert all(abs(a_ - b_) <= 1e-5 * (1.0 + abs(b_)) for a_, b_ in zip(got["ladder_groups"], raw_))   # 7-digit tape
+        assert all(a_ >= 0.0 for a_ in got["groups"]) and got["info"]["levels"] == [51]
+        grid_only = inelastic_reference(Path(tmp) / "endf", Path(tmp) / "pendf", bnd, 40.0, fine=None, min_groups=1)
+        assert grid_only["info"]["fine_ratio"] is None and len(grid_only["groups"]) == 6
+        # the exact reference of a convex-product group: sigma W_exact on the fine energies, not the coarse chord
+        fine_ = got["groups"][3]
+        exact_ = grid_only["exact_groups"][3]
+        assert abs(fine_ / exact_ - 1.0) < 0.2
     print("P154 self-check: PASS")
     return 0
 
@@ -1588,7 +2375,10 @@ def main(argv=None):
               "flux_weight": "flat in lethargy: sum of the integral of y dE/E over the group divided by ln(hi/lo)",
               "tolerances": {"G3_elastic": TOL_G3, "G4_inelastic_disappearance": TOL_G4,
                              "G4_uncovered_fraction": G4_UNCOVERED_FRACTION,
-                             "elastic_exact_quadrature": EL_TOL, "elastic_exact_energy_refinement": EL_REFINE, "G6_run": TOL_RUN},
+                             "elastic_exact_quadrature": EL_TOL, "elastic_exact_energy_refinement": EL_REFINE, "G6_run": TOL_RUN,
+                             "C1_precondition_tolerance": B_PRECONDITION_TOL,
+                             "C1_bound_fraction": C1_BOUND_FRACTION, "C1_min_groups": C1_MIN_GROUPS,
+                             "B2_fine_energy_ratio": LEVEL_FINE_RATIO, "B_reference_version": B_VERSION},
               "evidence": evidence, "gates": gates, "verdict": "PASS" if verdict else "FAIL"}
     out = ROOT / args.out
     out.parent.mkdir(parents=True, exist_ok=True)
