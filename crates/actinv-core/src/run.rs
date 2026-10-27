@@ -2,7 +2,7 @@
 //! spec -> result. This is the single path the CLI, the Python API and the harness all take (P5 G3).
 use crate::chain::{self, RateLedger};
 use crate::cram::{step as cram_step, step_with_tangents, Cram};
-use crate::damage::{DamageStepOut, PreparedDamageTable};
+use crate::damage::{DamageStepOut, PreparedDamageTable, RecoilCumulative};
 use crate::depletion::{DepletionTracker, LossCovariance, Tracked};
 use crate::fission_count::{self, FissionStepOut};
 use crate::fission_mix;
@@ -5739,6 +5739,7 @@ impl PreparedRun {
         let mut steps = Vec::new();
         let mut damage_cumulative: f64 = 0.0;
         let mut damage_cumulative_elements: BTreeMap<String, f64> = BTreeMap::new();
+        let mut recoil_cumulative = RecoilCumulative::default();
         let mut t_cum = Seconds::new(0.0).expect("zero seconds is valid");
         let mut flux_weighted_time_cum = Seconds::new(0.0).expect("zero seconds is valid");
         let mut fluence_cum = 0.0f64;
@@ -6456,6 +6457,15 @@ impl PreparedRun {
                             damage_cumulative_elements.entry(name.clone()).or_default();
                         *cumulative += element.dpa_rate_per_s * dt.get();
                         element.dpa = *cumulative;
+                    }
+                    // table 2: exact-NRT and arc-dpa dpa and the uncovered bound accumulate beside the
+                    // linear dpa; helium per dpa needs the gas output of the same step
+                    recoil_cumulative.accumulate(&mut out, dt.get());
+                    let linear_dpa = out.dpa;
+                    if let (Some(recoil), Some(gas)) = (out.recoil.as_mut(), gas_out.as_ref()) {
+                        if linear_dpa > 0.0 {
+                            recoil.he_appm_per_dpa = Some(gas.He_appm / linear_dpa);
+                        }
                     }
                     Some(out)
                 }
@@ -7803,26 +7813,31 @@ impl PreparedRun {
             }
         }
         if let (Some(prepared), Some(plan)) = (&self.damage, &damage_plan) {
-            ledger.as_object_mut().expect("ledger is an object").insert(
-                "damage".into(),
-                serde_json::json!({
-                    "table_sha256": &prepared.sha256,
-                    "require_complete": prepared.options.require_complete,
-                    "displacement_energy_eV": prepared.options.displacement_energy_eV,
-                    "covered_elements": plan
-                        .covered_elements
-                        .keys()
-                        .map(|z| composition::symbol_of(*z).to_string())
-                        .collect::<Vec<_>>(),
-                    "uncovered_targets": &plan.uncovered_targets,
-                    "model": "NRT: dpa_rate_per_s = 0.8 * damage_energy_eV_per_s_per_atom / (2 * E_d); damage targets are the material's composition-resolved nuclides; transmutation products are not damage targets",
-                    "units": {
-                        "damage_energy_eV_per_g_s": "eV per gram per second",
-                        "dpa_rate_per_s": "displacements per atom per second",
-                        "dpa": "dimensionless NRT displacements per atom",
-                    },
-                }),
-            );
+            let mut damage_ledger = serde_json::json!({
+                "table_sha256": &prepared.sha256,
+                "require_complete": prepared.options.require_complete,
+                "displacement_energy_eV": prepared.options.displacement_energy_eV,
+                "covered_elements": plan
+                    .covered_elements
+                    .keys()
+                    .map(|z| composition::symbol_of(*z).to_string())
+                    .collect::<Vec<_>>(),
+                "uncovered_targets": &plan.uncovered_targets,
+                "model": "NRT: dpa_rate_per_s = 0.8 * damage_energy_eV_per_s_per_atom / (2 * E_d); damage targets are the material's composition-resolved nuclides; transmutation products are not damage targets",
+                "units": {
+                    "damage_energy_eV_per_g_s": "eV per gram per second",
+                    "dpa_rate_per_s": "displacements per atom per second",
+                    "dpa": "dimensionless NRT displacements per atom",
+                },
+            });
+            // only a table-2 file adds keys: a table-1 run's ledger is unchanged
+            if let Some(recoil) = prepared.table.recoil_ledger() {
+                damage_ledger["recoil"] = recoil;
+            }
+            ledger
+                .as_object_mut()
+                .expect("ledger is an object")
+                .insert("damage".into(), damage_ledger);
         }
         if let Some(loaded) = &kerma_loaded {
             let powered: Vec<(usize, &PowerStepOut)> = steps

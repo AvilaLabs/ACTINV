@@ -28,6 +28,22 @@
 - `pathways.fission_parents` limits route attribution to fission edges of the named parents; the inventory is
   unchanged and the rest is unexplained in the closure.
 
+**Added (P154)**
+
+- `actinv build-damage --method kinematic` computes damage energy from the evaluation's own angular and energy
+  distributions (ENDF MF=3, MF=4, MF=6) instead of requiring a processed MT=444: elastic scattering, discrete
+  two-body levels, single-particle continua and capture, on the 0 K reconstructed grid, through the
+  Lindhard-Robinson partition. Channels it cannot compute are reported with their cross section and a kinematic
+  upper bound on their damage energy, never as zero. The output is an `actinv-damage-table-2` file; `--displacement-energy
+  EL=eV` (repeatable, default 25 eV) sets the displacement energy, `--capture-photons evaluated|one-photon|per-photon` the capture
+  recoil treatment, `--continuum-recoil kinematic|evaluated` whether continuum channels take the recoil from momentum
+  conservation (default) or from the evaluation's own recoil spectrum (NJOY HEATR's treatment).
+- A run with a table-2 file adds exact-NRT and arc-dpa displacement outputs (`dpa_nrt`, `dpa_arc`, rates and
+  cumulative, per element too), the uncovered upper bounds and, when gas output is requested, `he_appm_per_dpa`. The
+  linear `dpa` is unchanged and equals the table-1 value for the same totals; a spec displacement energy that
+  differs from the table's build value is refused.
+- Default `build-damage` and runs with table-1 files are unchanged.
+
 ## v1.6.1 — 2026-10-21
 
 **Fixed**

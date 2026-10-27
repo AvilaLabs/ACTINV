@@ -363,7 +363,7 @@ fn parse_mf9_or_10(section: &Section<'_>) -> Result<Vec<ProductTable>, String> {
     Ok(products)
 }
 
-fn consume_mf6_law(lines: &[&str], index: usize, law: i32) -> Result<usize, String> {
+pub(crate) fn consume_mf6_law(lines: &[&str], index: usize, law: i32) -> Result<usize, String> {
     match law {
         0 | 3 | 4 => Ok(index),
         1 | 2 | 5 => {

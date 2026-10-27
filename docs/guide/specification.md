@@ -654,7 +654,69 @@ inventories are used. The ledger records the table hash, covered elements, displ
 targets, model, and units; the certificate records the table's provenance and the computed input hash.
 
 Damage-energy production comes from ENDF-6 MF=3/MT=444 sections. TENDL-2025 and EAF-2010 as distributed do not
-carry MT=444; build tables from `heatr`-processed or equivalent damage-energy evaluations.
+carry MT=444; build tables from `heatr`-processed or equivalent damage-energy evaluations, or build an
+`actinv-damage-table-2` table with `actinv build-damage --method kinematic`.
+
+### Kinematic damage energy and the table-2 format
+
+`--method kinematic` computes the damage-energy cross section channel by channel on the 0 K pointwise grid
+(resonances included for MT=2 and MT=102). Elastic scattering and the discrete two-body levels use the MF=4 or
+MF=6 `LAW=2` angular distribution and the MF=3 Q value; single-particle continua (MT=91, 649, 699, 749, 799, 849,
+and MT=103-107 when no level MTs exist) use MF=6 `LAW=1` Kalbach-Mann or Legendre distributions; capture uses the
+incident momentum plus the photon recoil. Recoil energy becomes damage energy through the Lindhard partition in
+Robinson's fit (NJOY HEATR `df`); a recoil below `E_d` produces none. Quadrature is Gauss-Legendre in the emission
+cosine, split at the threshold and the NRT breakpoints, and the incident-energy grid is refined until a lin-lin
+midpoint agrees within 1e-3. The group collapse is the flat-lethargy weighting of the other builders.
+
+Capture recoil: with `--capture-photons evaluated` (default) the photon spectra of MF=6 are used where the
+evaluation carries them, and the result is flagged `evaluated_photon_spectrum`: one recoiling nucleus takes the
+incident neutron's momentum and the summed expected photon recoil (the momenta of a cascade emitted before the nucleus
+has slowed down add as a single recoil), and its damage energy is partitioned once. With `per-photon`, NJOY HEATR's
+treatment of MF=6 photon data (`tabsq6`), each photon's recoil `E_gamma^2 / (2 (A + 1) m_n c^2)` is partitioned
+separately and averaged over the discrete lines and the continuum, times the photon multiplicity, with no
+incident-neutron momentum; the result is flagged `per_photon_spectrum`. The multiplicity is taken at each record's
+incident energy and the product is interpolated linearly between records, as HEATR does; each continuum panel is
+integrated by 8-point Gauss-Legendre after splitting at the photon energies whose recoil reaches the displacement
+threshold and the NRT breakpoints (HEATR uses 4-point Gauss-Legendre over the whole panel). Where the evaluation has no
+MF=6 photons, `per-photon` falls back to the one-photon treatment. With `one-photon` (and the fallbacks), the excitation
+energy is emitted as one photon (NJOY HEATR `capdam`), flagged `excitation_energy_one_photon_upper_bound`. A cascade of
+several photons recoils less than one photon, so the one-photon value is an upper bound; the treatments therefore
+differ for capture. The mode is recorded as `model.capture_photons` and is part of the cache key.
+
+Continuum recoil: with `--continuum-recoil kinematic` (default) the residual's recoil in an MF=6 continuum channel
+(MT=91, 649, 699, 749, 799, 849 and the lumped MT=103-107) follows from momentum conservation with the emitted
+particle's evaluated energy distribution and, for Kalbach-Mann data without an explicit slope, Kalbach's systematics;
+it is consistent with the ejectile data. With `evaluated`, where the section carries a residual-nucleus subsection
+with an explicit `LAW=1` recoil energy distribution (a heavy product under `LCT=1` or `LCT=3`, read as a laboratory
+spectrum), the damage comes from that spectrum, as NJOY HEATR does: per incident-energy record the recoil histogram is
+passed through the damage function, the record values are interpolated linearly in energy and multiplied by the
+multiplicity (each panel is integrated by 8-point Gauss-Legendre after splitting where the response is not smooth;
+HEATR uses a trapezoid on the damage function). Channels without such a subsection (including `LAW=4` and
+centre-of-mass recoil spectra) keep the kinematic recoil. In the TENDL-2025 evaluations of Fe-56, Cr-52 and Ni-58 the
+two differ for MT=91, because the recoil spectrum lies partly outside the kinematic window of the neutron data. The
+mode is recorded as `model.continuum_recoil`, each continuum channel note carries `recoil` (`evaluated_recoil_spectrum`
+or `kinematic_no_evaluated_recoil`) when `evaluated` is requested, and `channels.evaluated_recoil_channels` counts the
+channels that used the evaluated spectrum.
+
+Every other non-elastic channel that has a cross section is *uncovered*: the table records its cross section and an
+upper bound on its damage energy from the largest recoil the kinematics allow, `D <= T`. Ultra-narrow analytic
+resonance lines that the pointwise grid does not carry are not added to the damage cross sections.
+
+A table-2 file has the table-1 fields (`format` `actinv-damage-table-2`, `source`, `projectile`, `group_structure`,
+`boundaries_eV`, `units`, `targets`) and these additions. `displacement.displacement_energy_eV` maps each element to
+the `E_d` the recoil integrals were built with, and `displacement.arc_dpa` holds the constants `b`, `c` and the fit's
+reference displacement energy for the elements in Table 1 of Nordlund et al., Nat. Commun. 9, 1084 (2018) (Fe, Cu,
+Ni, Pd, Pt, W; other elements have no arc-dpa output). Each target row holds `damage_energy_barn_eV` (the total, equal
+to `elastic + inelastic + disappearance`), the three partials, `uncovered_xs_barn`, `uncovered_damage_upper_barn_eV`,
+`displacement_nrt_barn`, `displacement_arc_barn` (when constants exist) and an informational `channels` record. The
+total feeds the linear `dpa` exactly as a table-1 file does.
+
+With a table-2 file each step and each element add `dpa_nrt_rate_per_s`, `dpa_nrt` (exact NRT, integrated over the
+recoil spectrum), `dpa_arc_rate_per_s`, `dpa_arc` (absent unless every covered element has constants),
+`damage_energy_uncovered_upper_eV_per_g_s`, `dpa_uncovered_upper_bound_rate_per_s` and `dpa_uncovered_upper_bound`
+(damage-energy bound divided by `E_d`). The step adds `he_appm_per_dpa`, the cumulative He-3 plus He-4 appm over the
+cumulative linear `dpa`, when gas output is requested. The spec's `displacement_energy_eV` must equal the table's build
+value for every covered element; otherwise validation fails and names the rebuild command.
 
 ## Kerma heating and power-driven steps
 
