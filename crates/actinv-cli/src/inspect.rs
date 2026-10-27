@@ -960,14 +960,14 @@ fn spectrum_flux(spectrum: &Spectrum, library: &Library) -> Result<Vec<f64>, Str
             let bounds = spectrum
                 .boundaries_eV
                 .as_ref()
-                .ok_or("custom spectrum needs boundaries_ev")?;
+                .ok_or("custom spectrum needs boundaries_eV")?;
             if bounds.len() != library.bounds.len()
                 || bounds.iter().zip(&library.bounds).any(|(left, right)| {
                     (left - right).abs() > 1e-12 * left.abs().max(right.abs()).max(1.0)
                 })
             {
                 return Err(
-                    "spectrum boundaries_ev differ from the library group boundaries".into(),
+                    "spectrum boundaries_eV differ from the library group boundaries".into(),
                 );
             }
         }
@@ -1466,7 +1466,7 @@ fn groups_report(structure: &GroupStructure) -> Output {
         "name": structure.name,
         "group_count": structure.groups(),
         "boundary_sha256": structure.hash(),
-        "boundaries_ev": structure.boundaries_ev,
+        "boundaries_eV": structure.boundaries_ev,
     });
     let rows = structure
         .boundaries_ev
@@ -1843,7 +1843,11 @@ mod tests {
         assert_eq!(co["estimate"]["decay_mode"], "beta-minus");
         assert_eq!(co["estimate"]["e_max_eV"], 1.92e5);
         let intervals = co["estimate"]["allowed_intervals_eV"].as_array().unwrap();
-        assert_eq!(intervals.len(), boundaries.len() - 1);
+        // one interval per group whose lower edge lies below the cap, each clipped to it
+        let e_cap = co["estimate"]["e_cap_eV"].as_f64().unwrap();
+        let below_cap = boundaries.windows(2).filter(|w| w[0] < e_cap).count();
+        assert_eq!(intervals.len(), below_cap);
+        assert!(intervals.iter().all(|i| i[1].as_f64().unwrap() <= e_cap));
         assert_eq!(intervals[0], json!([0.0, 1.0e4]));
         let groups = co["estimate"]["spectrum"]["groups"].as_array().unwrap();
         assert_eq!(groups.len(), boundaries.len() - 1);
@@ -1858,7 +1862,13 @@ mod tests {
         // An alpha emitter without a spectrum has an estimate and no evaluated spectrum.
         let u = &json["nuclides"][1];
         assert_eq!(u["estimate"]["decay_mode"], "other");
-        assert_eq!(u["estimate"]["e_max_eV"], 5.0e6);
+        assert_eq!(u["estimate"]["e_max_manual_eV"], 5.0e6);
+        // the manual 5 MeV is capped by the decay Q-value
+        let q_cap = u["estimate"]["q_cap_eV"].as_f64().unwrap();
+        assert_eq!(
+            u["estimate"]["e_max_eV"].as_f64().unwrap(),
+            q_cap.min(5.0e6)
+        );
         assert!(u["evaluated"].is_null());
         let table = render_tables(&output.tables);
         assert!(table.contains("Estimated photon spectrum of Co60"));
@@ -1950,7 +1960,7 @@ mod tests {
     fn toy_spectrum() -> Spectrum {
         serde_json::from_value(json!({
             "structure": "custom",
-            "boundaries_ev": [1.0, 10.0, 100.0],
+            "boundaries_eV": [1.0, 10.0, 100.0],
             "flux_per_group": [1.0, 3.0],
         }))
         .unwrap()
@@ -2048,7 +2058,7 @@ mod tests {
         };
         let short: Spectrum = serde_json::from_value(json!({
             "structure": "custom",
-            "boundaries_ev": [1.0, 10.0],
+            "boundaries_eV": [1.0, 10.0],
             "flux_per_group": [1.0],
         }))
         .unwrap();
@@ -2058,14 +2068,14 @@ mod tests {
         assert!(error.contains("1 group fluxes"));
         let moved: Spectrum = serde_json::from_value(json!({
             "structure": "custom",
-            "boundaries_ev": [1.0, 10.0, 200.0],
+            "boundaries_eV": [1.0, 10.0, 200.0],
             "flux_per_group": [1.0, 1.0],
         }))
         .unwrap();
         let error = xs_report(&library, None, "lib.npz", &any, Some(&moved))
             .err()
             .unwrap();
-        assert!(error.contains("boundaries_ev differ"));
+        assert!(error.contains("boundaries_eV differ"));
     }
 
     #[test]
@@ -2236,7 +2246,7 @@ mod tests {
         assert_eq!(output.json["schema"], "actinv-inspect-groups-1");
         assert_eq!(output.json["name"], "toy");
         assert_eq!(output.json["group_count"], 2);
-        assert_eq!(output.json["boundaries_ev"], json!([1.0, 10.0, 100.0]));
+        assert_eq!(output.json["boundaries_eV"], json!([1.0, 10.0, 100.0]));
         assert_eq!(output.json["boundary_sha256"], structure.hash());
         let table = render_tables(&output.tables);
         assert!(table.starts_with("toy: 2 groups, ascending energy\nGroup"));
@@ -2270,7 +2280,7 @@ mod tests {
             json!({
                 "spectrum": {
                     "structure": "custom",
-                    "boundaries_ev": [1.0, 10.0, 100.0],
+                    "boundaries_eV": [1.0, 10.0, 100.0],
                     "flux_per_group": [1.0, 3.0],
                 }
             })
@@ -2400,7 +2410,7 @@ mod tests {
         // The solver refuses boundaries that differ by more than 1e-12 relative; 1e-10 is such a case.
         let spectrum: Spectrum = serde_json::from_value(json!({
             "structure": "custom",
-            "boundaries_ev": [1.0, 10.0, 100.0 * (1.0 + 1.0e-10)],
+            "boundaries_eV": [1.0, 10.0, 100.0 * (1.0 + 1.0e-10)],
             "flux_per_group": [1.0, 3.0],
         }))
         .unwrap();
@@ -2423,7 +2433,7 @@ mod tests {
         // A 709-group transport spectrum on its own boundaries; the run rebins it onto fispact-709.
         let same_count: Spectrum = serde_json::from_value(json!({
             "structure": "fispact-709",
-            "boundaries_ev": p140_log_grid_709(),
+            "boundaries_eV": p140_log_grid_709(),
             "flux_per_group": vec![1.0; 709],
             "rebin": {},
         }))
@@ -2439,7 +2449,7 @@ mod tests {
         // A different group count is a rebin too, not a count error about "group fluxes".
         let short: Spectrum = serde_json::from_value(json!({
             "structure": "fispact-709",
-            "boundaries_ev": [1.0e-3, 1.0, 1.0e3, 1.0e6],
+            "boundaries_eV": [1.0e-3, 1.0, 1.0e3, 1.0e6],
             "flux_per_group": [1.0, 2.0, 3.0],
             "rebin": {},
         }))

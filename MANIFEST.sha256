@@ -10,7 +10,7 @@ db5deaf339bbe487e8910e1227a1c08ffc3aa362973b7b2c4981e7e3261d6288  ./.github/work
 45506fb0fb8f0a34c49c35c97d5e7a4584894562c516f2e77c712134bea58d2e  ./.github/workflows/web.yml
 79e13422a5e89cdf3e37984d7faa609cdd0bd1eaf8972c12dbff9fe175bf720e  ./.gitignore
 9d5bea15c985dcb2fbb60fb5fc92c5aceaaee39ded7d93ed469ab7fce8b5f5bf  ./AGENTS.md
-26a777ef74fe47b09b94a503a1e49b983692dac9a25fee3ae41befe599267282  ./CHANGELOG.md
+5a673eef71902f0f162ccc0befa16eb9b16647afce10b884cc870fd94e5668ae  ./CHANGELOG.md
 f5146d64470cd580d2e373ac0604c154d81722bd3e89e311ccc8a6c43b455a75  ./COMPETITIVE_BENCHMARK.md
 06debfb88cbe4179817b24708768586cc46b4ef0a9c94a4d6de3007a2f1fe8a1  ./CONTRIBUTING.md
 186e564bfc9ba41cd60759afd489f8c215578295ecbe2fb9f9786c4af597c154  ./Cargo.lock
@@ -944,7 +944,7 @@ b0f78a7666b9752c35948029d02cd52cd03a8b9596566a425b5512f30bd72237  ./crates/actin
 f94367b7bff4b23b0db198c08e8894b06e17b5fc1b43d01fe4a7a5cd78ce35e2  ./crates/actinv-cli/src/decide.rs
 dd9d19b9f71194417bc089ecb995d73cc631970c02305340999beb5fec8db59c  ./crates/actinv-cli/src/evalspread.rs
 c74d18010e3e9ccb8f14086e7a5361e010535c85841ee556c1f740827dc5a50b  ./crates/actinv-cli/src/fispact_import.rs
-c45bd493d0cf324eee0c2ef9409ce4229208990d4c7a65b5885d918443177711  ./crates/actinv-cli/src/inspect.rs
+14666ebeea2b004865f134dbbdacb997d0017699990e6498ab86b716277fb22b  ./crates/actinv-cli/src/inspect.rs
 dc3017f59583817c815c1fd0baecc1d113b5d8c0c472238a160a511cd875ecd3  ./crates/actinv-cli/src/lib.rs
 7d4f384ac0075b5246757fe30fe53c6efd023da3ba11f54c77d95a7037830c28  ./crates/actinv-cli/src/optimize.rs
 c6ccdeb3c858f135577609ff3ccd0dfc7a4c37a75060635ccf5513b1951862a3  ./crates/actinv-cli/src/report.rs
@@ -1006,10 +1006,10 @@ a455711592085c79e35beb4100cde82b1838919f03532eb326cd1ed3a7582763  ./crates/actin
 2034aff55adf393b4dba08e3f2e665f8a065cec1e6a647d215e6fc7083612db3  ./crates/actinv-core/src/flux.rs
 f358759dc25c7bb42d81006074a2f0b8ef679c0623725a3eef85cbe1bccbf6d4  ./crates/actinv-core/src/gas.rs
 ce1f7605dcfab502f61dbc93e0c250cb5c2db2c95db29e42284741bc5ee777bb  ./crates/actinv-core/src/lib.rs
-543f16dc18290d2446887a216f1bf6bcef2924ba741e2eab675cdf655d4aa2e3  ./crates/actinv-core/src/mesh.rs
+dd008b666987a8d806f8496223ff4d6169ad89f75ff8e325c8d7e3182bc7beb4  ./crates/actinv-core/src/mesh.rs
 8e2cc0d64d78207d86626f25fe560a6e8fd907bbe29b5ffeb262ad61383c1c1f  ./crates/actinv-core/src/overrides.rs
 2d195a4d3ce8800d437c4b971a97b01b01f29198085a5005007fc0b3d719e8ab  ./crates/actinv-core/src/pathways.rs
-18bd256ee2893961d0d6ea1c98cf692cbb94251a56313feb06f6c5ddcc7073ec  ./crates/actinv-core/src/photon.rs
+811dc4250ec5978898c7b9042afb48e074dc093b401151b581d7c9c2e941f3f3  ./crates/actinv-core/src/photon.rs
 7457c7d29ec7cb786ff6c28b037f2b0127e03cbbf02ff6a8ec89e4bcd8bbfafb  ./crates/actinv-core/src/power.rs
 8f350faa991dbd2121c468bafcff9d3e9fc64b352b9b4c62ebf44f56819753e3  ./crates/actinv-core/src/prune.rs
 ff87d2bcbd3efef668bc9563240e1bcc27072e466d39659dab1a2525950e46d9  ./crates/actinv-core/src/quantity.rs
@@ -1017,12 +1017,12 @@ f511d47d3fd36c6df5ab8b0aad85b31b010d2add9113611022a0b78baf9b5db4  ./crates/actin
 2a583254b022a91a7a8cafdca0c2183cc99d80147af4b1ace79f7d2c1918c05e  ./crates/actinv-core/src/radiological.rs
 a4142ec9565a7ced2478eda446fa5468b0f04275805d37bb83ac3afa59b34a4e  ./crates/actinv-core/src/report.rs
 01dbc34053810258d87529e4d15d19388a74f3454ab615377ccf73a614f31401  ./crates/actinv-core/src/reverse.rs
-46ed63ed9b6e549e9966df3ee4cc3674a76f6df4add5189530161a46ce669239  ./crates/actinv-core/src/run.rs
+3d799adb2d8a5570a4b7cc8c7dcdb3617939369c903d6f8e91bd7b87dde0bb45  ./crates/actinv-core/src/run.rs
 9a6095419add86f4c60c84641b57c7996728a261ad1288dacb2828a73ea18385  ./crates/actinv-core/src/sample_stats.rs
 68777a6656615c09cc5ebf0a65d685eda077f4d0e78c470f62d8f6f9c38a64f1  ./crates/actinv-core/src/shielding.rs
 f5d25dc6e3e471873e5fbc07c267269eb6da6d940587a6c36ca28635f1922e5f  ./crates/actinv-core/src/source_adapter.rs
 0ab2864aacdfb87a2522132df003c00388ce2cd0e49a445ed4c87f67c99f0fbc  ./crates/actinv-core/src/sparse.rs
-2359009425f8136916c2a88fbcccd31db2362591d3a77188002ac4f2c5a24020  ./crates/actinv-core/src/spec.rs
+f46942634cc9c37663269c6be945b3983b2aa934a35cb0ec0459af4de8cf4ff4  ./crates/actinv-core/src/spec.rs
 39e384c727579623837da740b4b32fb25015d6b48c195ac831f0f7872b918ad2  ./crates/actinv-core/src/study.rs
 437d8c3de5a5e6962360b18dfeaf37cd266bef3051cd0b2764d8a8dfc0475971  ./crates/actinv-core/src/summary.rs
 5086cf7a466bdaccdbc090a262dfd3be2d7a499071e7216931317286586948f2  ./crates/actinv-core/src/uncertainty.rs
@@ -1148,7 +1148,7 @@ f7f7d295b85d0978678ddfe4437d4faf880c38f8ba46f9b0dd9b1a71caab05a9  ./docs/FNS_GAP
 f7751791f18874456a6eb0a0b06299e29b8309374ab7bf75fad6d2f5cc708c75  ./docs/IDENTITY_AUDIT.md
 0402a7d303967fe66e0eefb6163096d2c7214a6167076b43bafb62e1b2138ba9  ./docs/INTERCHANGE_TRANSPORT.md
 190ed7e91200661453b523b30e45747a753f4962ea022f9201b4a83cc3bc48c9  ./docs/LEADERSHIP_LEVERS_2026-09-20.md
-5585672d07e292ce3b792f973eb5ca34f3edb81b1c9a3bb350ac2285f445e1a6  ./docs/LEDGER.md
+c7f6d68bb98936ad9293951f76b0ae0e2d1b97a5ab43ac700a00d41821e8866e  ./docs/LEDGER.md
 d8679e7e22d2bb904cd26c468feb78c14150916beea47be76ee68e982c3f26ad  ./docs/METHOD.md
 635a971f7137f9c480fcc22cb765478c6e18a2012865deb169b496921eea9fe4  ./docs/OPTIMIZE.md
 4d288aed34fd03b5ac3d9d7a13635868e8e6af55b8894bd355be23f81e111159  ./docs/P10_G7_EXECUTION.md
@@ -1206,7 +1206,7 @@ a04eefebf7a4b7cd9f1bc50072f27c0f995275ff1507186171fe439e05e10f2f  ./docs/guide/S
 29b9a4871b61c1e5af86963b6f73f4319b50a1fe0c1e5a7e0461c3afe3ac1fd9  ./docs/guide/account.md
 1095ea63c04bc214602396e6a5cdb8aaaabd97f81d3bab459d542eb8d7631eaf  ./docs/guide/benchmarks.md
 7896cb39e064f3edc4125be868dbc8cc9c69cf541f86c56ba0f9873365bfd222  ./docs/guide/browser.md
-d9e94234b82fb06bb6c14e6769eb9912225980dc00a34ebb5094cc7faea471dc  ./docs/guide/cli.md
+61bcec2a786390fee94fb97a31df5c54796a2715d520b47f35dd8a7782501962  ./docs/guide/cli.md
 07928f227e9685aae31bf6abb134ac9e33addb3196a8e28ba932f100547a74c7  ./docs/guide/data-limits.md
 b3075f18d4b5a7c0e3df7c14906e5962184452b544cb4c1326d3529e7e12ccac  ./docs/guide/data.md
 e615aac3acf90c39c6419b5f8748af860f269aa38fd290fa13eb6787758e059c  ./docs/guide/desktop.md
@@ -1219,8 +1219,8 @@ e2b5e857553bd5bfcac04a7a8882f88ea316acff8594c16a61239957ba3fc860  ./docs/guide/p
 fe3c97eb7c2e3a8da854b114b8fb547138a2d84fd23401a76797d9c6db2197b3  ./docs/guide/qualification.md
 6b827c7dfc13e20fc0f2e663472859ce2b9779179b56b4ef49b2df29f2629ae6  ./docs/guide/quick-start.md
 990dfad6f3870ad956a8a6e0a403b76accbd50253c04b12593dc2a54c8139b81  ./docs/guide/releases.md
-411ee8bd93f618d209fec3707a54cfba5c3e9e43b5b526637680ce8cf5ad0d6d  ./docs/guide/results.md
-6e68bb7266ea1f6bb375b196f718834aa5547831569aefb570970c813bc6e820  ./docs/guide/specification.md
+cea7d8a15ae639fadb1b0d8786fb1ff3e51725f972f56f3be4714237fd92edfe  ./docs/guide/results.md
+182983369e8969488ce1ba904c9af69fd9bfc8414e00d27fddb5521f018c998c  ./docs/guide/specification.md
 e7d781c721fd6bd9d9177f96d870b20b104975585c54e3f01be77697e356cf7a  ./docs/guide/troubleshooting.md
 ac4c91f970b5e192efe4efdec60bafd00c6569ec6e672e2ef061610c66df0081  ./docs/guide/validation.md
 02238ae089ef8a05fb424da77ed78db87b829c5917b88390100de8a87fed85e8  ./docs/guide/waste.md
