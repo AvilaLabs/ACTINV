@@ -4114,3 +4114,20 @@ before the checker has run on any binary. A1: `UNCTYPE 2` is approximated, becau
 covariance is present and builds the decay-constant channel inside that path. A2: displacement energies the deck does
 not give follow FISPACT-II's default behaviour (the table's build value, else FISPACT-II's default), and `--damage`
 without the keywords writes the damage section. A3: clarifications with no gate change.
+
+## Entry 234 — P155 development run 1; Amendment B registered (2026-10-27)
+
+Development run 1 of `controls/check_p155.py` on a release build of the P155 branch (`01e75b1`, binary
+`4fa32c4b…6273e`), with a P154 development-run damage table. P154 is not merged, so the table-2 damage run case of G4
+fails by design. G2 passed: all 132 FNS decks gave byte-identical specs and statuses, and the option-free pypact and
+CONDERC imports differ only through item keywords. G5 passed on both CONDERC fission decks with `--fission-yields`:
+they import, and the specs run. Failures and their dispositions:
+- Checker: it required the `UNCERTAINTY` entry to be mapped, but that status predates the phase and is
+  approximated; it compared the `title` of two decks that differ in their title line.
+- Implementation: the `SENSITIVITY LAMBDA` detail did not name the option. `RESULT` was refused when it stood
+  before the first step. It is now always noted (Amendment B2).
+- Handbook walk-through: two unclassified items predated the phase (the P147 waste `encapsulation` block and P152's
+  `inspect decay --estimated-spectrum` synopsis). They were fixed in `check_p140_docs.py` on master (`ef89210`),
+  which now passes 102/102 with 0 unclassified.
+- The pypact `test.i` `TIME` entry is P140 schedule behaviour, shared with the reference: Amendment B1
+  (`cf9cea4adb2b26b026a77b53e23b6664ce945632760a85ae3898e2f8600d7a9e`).
