@@ -1,0 +1,77 @@
+{
+ "amendments": [
+  "protocols/ACTINV-P155_AMENDMENT_A.md",
+  "protocols/ACTINV-P155_AMENDMENT_B.md"
+ ],
+ "candidate": {
+  "binary_sha256": "3f56196285c0c28215aa9f722a0252676f2842bead964f06c4f0b738db62d9dd",
+  "commit": "2aad54f"
+ },
+ "checker": {
+  "path": "controls/check_p155.py",
+  "sha256": "ce04ef5c779b4c52e8cee6c378af887a1b30772f63c1a5878e580bebddbc5e3d"
+ },
+ "ci": {
+  "commit": "457b151f72ebd1911ccf7afdfad647c1bd3fd350",
+  "note": "first pushed commit containing the evidence commit c8dd9fa (tip-of-master CI rule, AGENTS.md 2026-10-27)",
+  "runs": [
+   {
+    "conclusion": "success",
+    "name": "Build browser workbench",
+    "run_id": 40565770954
+   },
+   {
+    "conclusion": "success",
+    "name": "Build handbook",
+    "run_id": 40565770697
+   },
+   {
+    "conclusion": "success",
+    "name": "controls",
+    "run_id": 40565770815
+   },
+   {
+    "conclusion": "success",
+    "name": "desktop builds",
+    "run_id": 40565770817
+   },
+   {
+    "conclusion": "success",
+    "name": "fns-iron",
+    "run_id": 40565770665
+   },
+   {
+    "conclusion": "success",
+    "name": "fusion-isotope",
+    "run_id": 40565770929
+   }
+  ]
+ },
+ "development_runs": [
+  "results/p155/development_run_1.json",
+  "results/p155/development_run_2.json",
+  "results/p155/development_run_3.json"
+ ],
+ "gates": {
+  "G0": true,
+  "G1": true,
+  "G2": true,
+  "G3": true,
+  "G4": true,
+  "G5": true,
+  "G6": true,
+  "G7": true,
+  "G8": true
+ },
+ "protocol": "ACTINV-P155",
+ "protocol_sha256": "6b1ab89fd34a050c7d716b06aebb5545bc3ad401e06578298cea903341d8999d",
+ "record": {
+  "path": "results/p155_importer_sweep.json",
+  "sha256": "4c2266ba90fe79d1690b6b15f8cb4468f0f93a6984d50dcdf55a31314c503a14"
+ },
+ "reference": {
+  "binary": "v1.6.1 release",
+  "binary_sha256": "79e1e8600a8c2ad3ce42e72dcf34ce4dd8fa9bf60288db24e9eeb077781c9072"
+ },
+ "verdict": "P155-PASS"
+}

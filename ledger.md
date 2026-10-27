@@ -4249,3 +4249,16 @@ Released for use:
 Two numerical approximations in NJOY2016.79 HEATR are documented in Amendments B and C: `tabsq6`'s doubled continuum
 weight and ignored LEP, and the linear interpolation of σ·W between PENDF grid energies above level thresholds. The
 table follows the evaluation where these depart from it.
+
+## Entry 241 — P155 verdict: FISPACT-II importer sweep (2026-10-27)
+
+**P155-PASS** (`results/p155_verdict.json`). G0–G7 are as recorded in entry 239 for candidate `2aad54f` (binary
+`3f56196285c0c28215aa9f722a0252676f2842bead964f06c4f0b738db62d9dd`). G8: all six workflows succeeded on `457b151`,
+`controls` among them, and no committed baseline changed. `457b151` is the first pushed commit containing the
+evidence commit `c8dd9fa`; under the tip-of-master rule, CI ran only there. Three development runs were made,
+disclosed in entries 234 and 239, and two amendments were registered before evidence: A (entry 233) and B (entry 234).
+There was no repair round.
+
+Released: the importer maps the fission-yield, uncertainty, self-shielding, photon and displacement-energy keywords,
+and gains the `--fission-yields`, `--damage`, `--self-shielding-table` and `--resonance` data options. With P151–P155
+complete, the FISPACT-II parity wave is closed.
