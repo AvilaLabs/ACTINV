@@ -62,7 +62,9 @@ equivalent. Statuses follow the parity tracker above and are not raised past its
 name takes the status of the capability it belongs to. *Not applicable* marks a keyword that exists only because of
 FISPACT-II's own architecture (deck syntax, log and print switches, library preparation, solver tolerances). "Not
 mapped by import-fispact" means the capability exists in ACTINV but the importer reports the keyword `unsupported` and
-you add the spec section by hand. Sources: `crates/actinv-core/src/fispact_import.rs`,
+you add the spec section by hand. Four options of the importer supply the data a deck does not name, each file
+hashed into the spec: `--fission-yields FILE...`, `--damage TABLE`, `--self-shielding-table FILE` and `--resonance
+FILE...` (P155). Sources: `crates/actinv-core/src/fispact_import.rs`,
 `docs/guide/fispact-migration.md`, `docs/guide/specification.md`, `docs/guide/cli.md`, ledger entries 146–166.
 
 | keyword | ACTINV equivalent | status | note |
@@ -93,14 +95,14 @@ you add the spec section by hand. Sources: `crates/actinv-core/src/fispact_impor
 | `GRPCONVERT` | `spectrum.rebin` | **parity** | imported for FISPACT-II standard structures |
 | `CNVTYPE` | `spectrum.rebin.convention` | **parity** | imported |
 | `LIMGRP` | `spectrum.rebin` energy limits | **parity** | imported as eV limits |
-| `SSFGEOMETRY` | `self_shielding.geometry` | **parity** | foil, wire, sphere, cylinder; not mapped by import-fispact |
-| `SSFCHOOSE` | `self_shielding.geometry.choose` | **parity** | not mapped by import-fispact |
-| `SSFFUEL` | `geometry.density_g_cm3` with the material | **parity** | density replaces atoms per area; not mapped by import-fispact |
-| `SSFMASS` | `geometry.density_g_cm3` with the material | **parity** | density replaces atoms per area; not mapped by import-fispact |
-| `SSFDILUTION` | `self_shielding.dilution_overrides` | **parity** | table mode only; not mapped by import-fispact |
-| `PROBTABLE` | `self_shielding.table` (Bondarenko) | partial | tables built from evaluations; not mapped by import-fispact |
-| `ALLDISPEN` | `damage` (NRT dpa) | partial | needs a user-built MT=444 table; not mapped by import-fispact |
-| `ATDISPEN` | `damage` (NRT dpa) | partial | needs a user-built MT=444 table; not mapped by import-fispact |
+| `SSFGEOMETRY` | `self_shielding.geometry` | **parity** | foil, wire, sphere, cylinder; imported with `--resonance` (density from `DENSITY`), else `unsupported` naming the option |
+| `SSFCHOOSE` | `self_shielding.geometry.choose` | **parity** | imported beside `SSFGEOMETRY`; with a table it only notes that the table's coverage decides |
+| `SSFFUEL` | `geometry.density_g_cm3` with the material | **parity** | density replaces atoms per area; reported `approximated`: the problem's own material is shielded, not a separate composition |
+| `SSFMASS` | `geometry.density_g_cm3` with the material | **parity** | density replaces atoms per area; reported `approximated`: the problem's own material is shielded, not a separate composition |
+| `SSFDILUTION` | `self_shielding.dilution_overrides` | **parity** | table mode only; imported with `--self-shielding-table`, group numbers converted (FISPACT-II group 1 is the highest energy, ACTINV index 0 the lowest) |
+| `PROBTABLE` | `self_shielding.table` (Bondarenko) | partial | tables built from evaluations; imported with `--self-shielding-table` as `approximated` (Bondarenko factors in place of probability tables) |
+| `ALLDISPEN` | `damage` (NRT dpa) | partial | imported with `--damage`: `mapped` when the table's recorded displacement energies equal the deck's, else `unsupported` with the `build-damage --method kinematic --displacement-energy` command; without the option `unsupported` naming it |
+| `ATDISPEN` | `damage` (NRT dpa) | partial | as `ALLDISPEN`; a per-element value overrides the all-element one in either order |
 | *Output* | | | |
 | `ATOMS` | `summary`, `actinv report` | **parity** | per-nuclide atoms, grams, Bq per step |
 | `STEP` | step results | **parity** | every step reported in full |
@@ -114,8 +116,8 @@ you add the spec section by hand. Sources: `crates/actinv-core/src/fispact_impor
 | `DOSE` | `photon.point_source` | **parity** | importer maps DOSE 2 only |
 | `BREMSSTRAHLUNG` | `photon.bremsstrahlung` | **parity** | reported separately from decay-photon dose |
 | `GROUP` | `photon.group_structure`, `steiner-22` | **parity** | importer maps GROUP 0 and 1 |
-| `SPEK` | none | absent | unrepresented power is reported, not estimated |
-| `READGG` | custom `photon.group_structure` | **parity** | not mapped by import-fispact |
+| `SPEK` | `photon.missing_spectra: "estimate"` | partial | mean-energy exponential shape by decay mode with certified lower and upper dose bounds (P152); imported as `approximated` |
+| `READGG` | custom `photon.group_structure` | **parity** | imported from the files file's `ggbins` entry; `unsupported` naming `ggbins` when the file is missing or malformed |
 | `ATWO` | `radiological` A2 index | **parity** | bundled 49 CFR 173 A2 table |
 | `HAZARDS` | `radiological`, bundled regulatory tables | **parity** | ICRP 119 coefficients by local script |
 | `CLEAR` | `radiological` clearance tables, `actinv clearance` | **parity** | Euratom tables opt-in |
@@ -134,15 +136,15 @@ you add the spec section by hand. Sources: `crates/actinv-core/src/fispact_impor
 | *Uncertainty and pathways* | | | |
 | `UNCERTAINTY` | `uncertainty` (MF=33) | **ahead** | full-covariance bands; levels 1 and 2 imported |
 | `NOERROR` | no `uncertainty` block | **parity** | imported |
-| `UNCTYPE` | `uncertainty.channels` | **parity** | not mapped by import-fispact |
-| `ERROR` | `overrides` relative uncertainties | **parity** | not mapped by import-fispact |
-| `COVARIANCE` | `uncertainty.covariance` sidecar | **ahead** | not mapped by import-fispact |
-| `SENSITIVITY` | `study.robustness.statistics` | **parity** | P136; not mapped by import-fispact |
-| `MCSAMPLE` | `study.robustness.statistics` | **parity** | P136; not mapped by import-fispact |
-| `DEPLETION` | `summary.depletion` | **parity** | P135; not mapped by import-fispact |
+| `UNCTYPE` | `uncertainty.channels` | **parity** | imported (P155); type 2 is `approximated` because ACTINV propagates MF=33 whenever a covariance is present |
+| `ERROR` | `overrides` relative uncertainties | **parity** | imported as `cross_section_uncertainty` overrides, `approximated` (the fractional error is read as a relative standard uncertainty); -1 is noted |
+| `COVARIANCE` | `uncertainty.covariance` sidecar | **ahead** | noted: ACTINV propagates the full MF=33 covariance, with no collapse step |
+| `SENSITIVITY` | `study.robustness.statistics` | **parity** | P136; `SIGMA` imported as `uncertainty.voi` (`approximated`: first-order variance shares), `LAMBDA` `unsupported` |
+| `MCSAMPLE` | `study.robustness.statistics` | **parity** | P136; noted beside a mapped `SENSITIVITY SIGMA` (and `MCSEED` likewise), `unsupported` otherwise |
+| `DEPLETION` | `summary.depletion` | **parity** | P135; noted by the importer (an output request; set `summary.depletion` for the table) |
 | `PATH` | `pathways` | **ahead** | targets imported; numeric arguments not interpreted |
 | `ROUTES` | `pathways` | **ahead** | exact route integration with closure |
-| `RESULT` | `pathways.targets`, `rank_by` | **parity** | not mapped by import-fispact |
+| `RESULT` | `pathways.targets`, `rank_by` | **parity** | noted: a converted deck always runs its own inventory, which the pathways use |
 | `LOOKAHEAD` | `pathways.max_depth`, `path_floor` | **parity** | pathways, row 21 |
 | `PATHRESET` | `pathways` floors | **parity** | pathways, row 21 |
 | `GENERIC` | `pathways` | **parity** | generic pathways grouped by edge-type sequence |
@@ -157,27 +159,26 @@ you add the spec section by hand. Sources: `crates/actinv-core/src/fispact_impor
 | `EXTRACTXS` | `actinv inspect` | **parity** | cross sections as JSON or tables |
 | `USESPALLATION` | `build-library --spallation` | **parity** | splice table user-supplied; not mapped by import-fispact |
 | `USEXSEXTRA` | `build-library --spallation`, group structures to 1 GeV | **parity** | tracker row 24; not mapped by import-fispact |
-| `XSTHRESHOLD` | none | not applicable | cost control of FISPACT-II's pathway-based uncertainty estimate (manual 4.94); ACTINV propagates the full covariance (P151) |
-| `NOXRAY` | none | absent | no decay-data X-ray switch |
-| `IRON` | none | not applicable | no keyword section in the 2023 manual; recognised as a legacy name (P151) |
+| `XSTHRESHOLD` | none | not applicable | cost control of FISPACT-II's pathway-based uncertainty estimate (manual 4.94); ACTINV propagates the full covariance (P151); noted by the importer |
+| `NOXRAY` | `photon.exclude_xrays` | **parity** | X-ray spectra dropped after scaling to the mean electromagnetic energy (P152); imported as `mapped` |
+| `IRON` | none | not applicable | no keyword section in the 2023 manual; recognised as a legacy name (P151); reported `unsupported` with that reason |
 | `READSF` | `fission_yields.spontaneous` | **parity** | MT=454 SF yields; not mapped by import-fispact |
-| `FISYIELD` | `fission_yields.files` | partial | selection by yield files supplied; no keyword switch |
-| `CUMFYLD` | `actinv inspect yields` | partial | cumulative yields inspectable; no keyword switch |
-| `USEFISSION` | `fission_yields.files` | **parity** | fission with yield data enters the rate matrix (manual 4.90; P151) |
-| `NOFISS` | omit `fission_yields` | **parity** | no yield data read (manual 4.46; P151) |
-| `FISCHOOSE` | `fission_yields.files` | partial | selection by yield files supplied; no keyword switch |
+| `FISYIELD` | `fission_yields.files`, `fission_yields.parents` | partial | imported with `--fission-yields` (include, exclude or none; default U-235, U-238, Pu-239 intersected with the files, drops reported) |
+| `CUMFYLD` | `fission_yields.yields` | partial | imported as `cumulative` when `USEFISSION` has yield files |
+| `USEFISSION` | `fission_yields.files` | **parity** | fission with yield data enters the rate matrix (manual 4.90; P151); imported with `--fission-yields`, else `unsupported` naming the option |
+| `NOFISS` | omit `fission_yields` | **parity** | no yield data read (manual 4.46; P151); imported: forces no yield files |
+| `FISCHOOSE` | `pathways.fission_parents` | partial | imported beside `PATH` or `ROUTES`; the inventory is unchanged, as in FISPACT-II |
 
-Counts over the 94 keywords: 63 parity, 5 ahead, 6 partial, 2 absent, 18 not applicable (P151 manual audit, 2026-10-27: `docs/maintainers/FISPACT_MANUAL_KEYWORD_AUDIT.md`; before it, 61, 5, 8, 4 and 16). *Ahead* is claimed only where a closed verdict or the "Already ahead" paragraph shows it: `POWER`, `UNCERTAINTY`, `COVARIANCE`, `PATH`, `ROUTES` (power renormalized within the step, P126; full-covariance uncertainty; exact route integration with closure, P127). `RESULT` and `INDEXPATH` are counted *parity* on judgement: the `pathways` section covers target selection and route listing, though tracker row 21 does not name them.
+Counts over the 94 keywords: 64 parity, 5 ahead, 7 partial, 0 absent, 18 not applicable (P151 manual audit, 2026-10-27: `docs/maintainers/FISPACT_MANUAL_KEYWORD_AUDIT.md`; before it, 61, 5, 8, 4 and 16; `SPEK` and `NOXRAY` moved from absent with P152). *Ahead* is claimed only where a closed verdict or the "Already ahead" paragraph shows it: `POWER`, `UNCERTAINTY`, `COVARIANCE`, `PATH`, `ROUTES` (power renormalized within the step, P126; full-covariance uncertainty; exact route integration with closure, P127). `RESULT` and `INDEXPATH` are counted *parity* on judgement: the `pathways` section covers target selection and route listing, though tracker row 21 does not name them.
 
 Remaining gaps (every keyword with status partial or absent):
 
-- `SPEK` (absent): approximate γ spectra for nuclides without spectral data; needs an estimator for the unrepresented power now reported.
-- `NOXRAY` (absent): no decay-data switch of that name; needs a decay-data selection option, specified from the manual.
+- `SPEK` (partial): the estimate is a mean-energy exponential shape with dose bounds, not FISPACT-II's own approximate spectrum.
 - `FISYIELD`, `FISCHOOSE` (partial): actinides are chosen by the yield files supplied; needs a per-actinide selection (and, for `FISCHOOSE`, a pathway parent filter) and an importer mapping.
 - `CUMFYLD` (partial): cumulative yields are inspectable with `actinv inspect yields`; needs a keyword-level switch.
 - `PROBTABLE` (partial): self-shielding tables come from evaluations; needs an importer mapping, since the deck names no table.
-- `ALLDISPEN`, `ATDISPEN` (partial): `damage` needs a user-built MT=444 table and none ships; needs a shipped table and an importer mapping.
-- Importer mapping gaps, status unchanged: `DEPLETION`, `SENSITIVITY`, `MCSAMPLE`, `SSFGEOMETRY`, `SSFCHOOSE`, `SSFFUEL`, `SSFMASS`, `SSFDILUTION`, `READGG`, `READSF`, `USESPALLATION`, `USEXSEXTRA`, `UNCTYPE`, `ERROR`, `COVARIANCE`, `RESULT`, `ADCROSS`/`ADLAM` under `OVER`, and a `GETXS` after the first `TIME` need the importer to build the spec section or name its hash-pinned data.
+- `ALLDISPEN`, `ATDISPEN` (partial): `damage` needs a damage table you build (`actinv build-damage`); none ships.
+- Importer mapping gaps, status unchanged: `DEPLETION`, `SENSITIVITY`, `MCSAMPLE`, `SSFGEOMETRY`, `SSFCHOOSE`, `SSFFUEL`, `SSFMASS`, `SSFDILUTION`, `READSF`, `USESPALLATION`, `USEXSEXTRA`, `UNCTYPE`, `ERROR`, `COVARIANCE`, `RESULT`, `ADCROSS`/`ADLAM` under `OVER`, and a `GETXS` after the first `TIME` need the importer to build the spec section or name its hash-pinned data.
 
 ## Capability scorecard — 2026-09-30 refresh (ACTINV column only)
 

@@ -1,7 +1,8 @@
 //! P132a: FISPACT-II input deck -> `actinv-spec-1` problem importer, command-line front end.
 //!
 //! `actinv import-fispact DECK.i OUT.json [--fluxes FLUXES] [--files FILES] [--library LIB.npz]
-//! [--decay DECAY] [--covariance COV.npz] [--strict]`
+//! [--decay DECAY] [--covariance COV.npz] [--fission-yields FILE...] [--damage TABLE]
+//! [--self-shielding-table FILE] [--resonance FILE...] [--strict]`
 //!
 //! The conversion itself (lexer, keyword table, mapping, report) is `actinv_core::fispact_import`,
 //! shared with the browser build and re-exported here. This module reads the deck, the files file
@@ -10,11 +11,13 @@
 
 use actinv_core::flux::sha256_file;
 use serde_json::{json, Value};
+use std::collections::BTreeMap;
 use std::path::{Path, PathBuf};
 
 pub use actinv_core::fispact_import::{
     convert, lex, load_flux_text, parse_files_file, Conversion, Counts, CovarianceRef,
-    ImportContext, Lexed, LoadedFlux, Status, Tok, IRRADIATES_WITHOUT_FLUXES,
+    FissionYieldFile, GammaGroupFile, HashedFile, ImportContext, Lexed, LoadedFlux, Status, Tok,
+    IRRADIATES_WITHOUT_FLUXES,
 };
 
 fn load_flux(path: &Path) -> Result<LoadedFlux, String> {
@@ -40,10 +43,16 @@ pub struct CliArgs {
     pub library: Option<String>,
     pub decay: Option<String>,
     pub covariance: Option<String>,
+    pub damage: Option<String>,
+    pub self_shielding_table: Option<String>,
+    /// `--fission-yields FILE...`: every word up to the next option
+    pub fission_yields: Vec<String>,
+    /// `--resonance FILE...`: every word up to the next option
+    pub resonance: Vec<String>,
     pub strict: bool,
 }
 
-pub const USAGE: &str = "usage: actinv import-fispact DECK.i OUT.json [--fluxes FLUXES] [--files FILES] [--library LIB.npz] [--decay DECAY] [--covariance COV.npz] [--strict]";
+pub const USAGE: &str = "usage: actinv import-fispact DECK.i OUT.json [--fluxes FLUXES] [--files FILES] [--library LIB.npz] [--decay DECAY] [--covariance COV.npz] [--fission-yields FILE...] [--damage TABLE] [--self-shielding-table FILE] [--resonance FILE...] [--strict]";
 
 pub fn parse_cli(args: &[String]) -> Result<CliArgs, String> {
     let mut cli = CliArgs::default();
@@ -56,7 +65,13 @@ pub fn parse_cli(args: &[String]) -> Result<CliArgs, String> {
                 cli.strict = true;
                 index += 1;
             }
-            "--fluxes" | "--files" | "--library" | "--decay" | "--covariance" => {
+            "--fluxes"
+            | "--files"
+            | "--library"
+            | "--decay"
+            | "--covariance"
+            | "--damage"
+            | "--self-shielding-table" => {
                 let value = args
                     .get(index + 1)
                     .ok_or_else(|| format!("option {arg} has no value"))?
@@ -66,12 +81,34 @@ pub fn parse_cli(args: &[String]) -> Result<CliArgs, String> {
                     "--files" => &mut cli.files,
                     "--library" => &mut cli.library,
                     "--decay" => &mut cli.decay,
+                    "--damage" => &mut cli.damage,
+                    "--self-shielding-table" => &mut cli.self_shielding_table,
                     _ => &mut cli.covariance,
                 };
                 if slot.replace(value).is_some() {
                     return Err(format!("duplicate option {arg}"));
                 }
                 index += 2;
+            }
+            "--fission-yields" | "--resonance" => {
+                let slot = if arg == "--resonance" {
+                    &mut cli.resonance
+                } else {
+                    &mut cli.fission_yields
+                };
+                if !slot.is_empty() {
+                    return Err(format!("duplicate option {arg}"));
+                }
+                let files: Vec<String> = args[index + 1..]
+                    .iter()
+                    .take_while(|word| !word.starts_with("--"))
+                    .cloned()
+                    .collect();
+                if files.is_empty() {
+                    return Err(format!("option {arg} has no value"));
+                }
+                index += 1 + files.len();
+                *slot = files;
             }
             other if other.starts_with("--") => return Err(format!("unknown option {other}")),
             other => {
@@ -114,6 +151,42 @@ fn resolve_existing(value: &str, bases: &[&Path]) -> Option<PathBuf> {
         .map(|base| base.join(value))
         .chain(std::iter::once(direct.to_path_buf()))
         .find(|candidate| candidate.is_file())
+}
+
+/// The displacement energies (element -> eV) an `actinv-damage-table-2` file records, which the
+/// importer compares with the deck's. A table 1 records none (`None`).
+fn damage_table_energies(path: &str) -> Result<Option<BTreeMap<String, f64>>, String> {
+    let text = std::fs::read_to_string(path)
+        .map_err(|error| format!("cannot read damage table {path}: {error}"))?;
+    damage_energies_from_text(path, &text)
+}
+
+fn damage_energies_from_text(
+    path: &str,
+    text: &str,
+) -> Result<Option<BTreeMap<String, f64>>, String> {
+    let table: Value = serde_json::from_str(text)
+        .map_err(|error| format!("damage table {path} is not JSON: {error}"))?;
+    if table["format"] != "actinv-damage-table-2" {
+        return Ok(None);
+    }
+    let recorded = table["displacement"]["displacement_energy_eV"]
+        .as_object()
+        .ok_or_else(|| {
+            format!("damage table {path} records no displacement.displacement_energy_eV")
+        })?;
+    recorded
+        .iter()
+        .map(|(symbol, energy)| {
+            energy
+                .as_f64()
+                .map(|energy| (symbol.clone(), energy))
+                .ok_or_else(|| {
+                    format!("damage table {path}: the energy for {symbol} is not a number")
+                })
+        })
+        .collect::<Result<BTreeMap<_, _>, String>>()
+        .map(Some)
 }
 
 /// Run the command. Returns the one-line summary to print.
@@ -182,6 +255,29 @@ pub fn run(cli: &CliArgs) -> Result<String, String> {
         },
     };
     let flux = flux_path.as_deref().map(load_flux).transpose()?;
+    // the gamma group file READGG reads: found like the fluxes file; a path that does not read is
+    // kept as the reason, which matters only to a deck that uses READGG
+    let gamma_groups = files_entries
+        .iter()
+        .rev()
+        .find(|(key, _)| key == "ggbins")
+        .map(|(_, value)| {
+            let found =
+                resolve_existing(value, &[files_dir.as_path(), deck_dir]).ok_or_else(|| {
+                    format!("the ggbins file '{value}' named by the files file was not found")
+                })?;
+            std::fs::read_to_string(&found)
+                .map(|text| GammaGroupFile {
+                    path: found.display().to_string(),
+                    text,
+                })
+                .map_err(|error| {
+                    format!(
+                        "the ggbins file {} cannot be read: {error}",
+                        found.display()
+                    )
+                })
+        });
     let covariance = match &cli.covariance {
         Some(path) => Some(CovarianceRef {
             path: path.clone(),
@@ -189,11 +285,47 @@ pub fn run(cli: &CliArgs) -> Result<String, String> {
         }),
         None => None,
     };
+    let hashed = |path: &String| -> Result<HashedFile, String> {
+        Ok(HashedFile {
+            path: path.clone(),
+            sha256: sha256_file(path)?,
+        })
+    };
+    // a yield file names its parent in its own MF=8 header; reading it here keeps the conversion
+    // free of file access, and a file that does not parse stops the import
+    let fission_yields = cli
+        .fission_yields
+        .iter()
+        .map(|path| {
+            let file = hashed(path)?;
+            let parent = actinv_data::fission::parse_file(path)?.parent;
+            Ok(FissionYieldFile {
+                file,
+                parent_za: parent.0,
+                parent_liso: parent.1,
+            })
+        })
+        .collect::<Result<Vec<_>, String>>()?;
     let ctx = ImportContext {
         flux,
         library: cli.library.clone(),
         decay: cli.decay.clone(),
         covariance,
+        fission_yields,
+        damage: cli.damage.as_ref().map(hashed).transpose()?,
+        damage_energies_ev: cli
+            .damage
+            .as_ref()
+            .map(|path| damage_table_energies(path))
+            .transpose()?
+            .flatten(),
+        gamma_groups,
+        self_shielding_table: cli.self_shielding_table.as_ref().map(hashed).transpose()?,
+        resonance: cli
+            .resonance
+            .iter()
+            .map(hashed)
+            .collect::<Result<Vec<_>, String>>()?,
     };
 
     let conversion = convert(&deck_text, &ctx).map_err(|error| match &unresolved_fluxes {
@@ -221,7 +353,7 @@ pub fn run(cli: &CliArgs) -> Result<String, String> {
                         .iter()
                         .map(|(key, value)| json!({"key": key, "path": value}))
                         .collect::<Vec<_>>(),
-                    "note": "xs_endf, dk_endf and the other FISPACT-II data entries are listed for reference and never read; the library and decay data come from the spec",
+                    "note": "xs_endf, dk_endf and the other FISPACT-II data entries are listed for reference and never read, except fluxes and ggbins; the library and decay data come from the spec",
                 }),
                 None => Value::Null,
             },
@@ -452,5 +584,206 @@ mod tests {
         let _ = std::fs::remove_dir_all(&dir);
         assert!(result.is_err(), "{result:?}");
         assert_eq!(after, COOLING_ONLY, "the deck was overwritten by the spec");
+    }
+
+    // ---- P155: the new options ----
+
+    fn words(line: &str) -> Vec<String> {
+        line.split_whitespace().map(str::to_string).collect()
+    }
+
+    /// An 80-column ENDF record.
+    fn endf_record(values: [&str; 6], mf: i32, mt: i32, sequence: i32) -> String {
+        let data: String = values
+            .into_iter()
+            .map(|value| format!("{value:>11}"))
+            .collect();
+        format!("{data}{:>4}{mf:>2}{mt:>3}{sequence:>5}", 9237)
+    }
+
+    /// A one-energy MF=8/MT=454 evaluation for the parent `za` (yields sum to 2).
+    fn yield_evaluation(za: &str) -> String {
+        [
+            endf_record([za, "233", "0", "0", "0", "0"], 1, 451, 1),
+            endf_record(["0", "0", "0", "0", "0", "0"], 1, 451, 2),
+            endf_record(["", "", "", "", "", ""], 1, 0, 99_999),
+            endf_record([za, "233", "1", "0", "0", "0"], 8, 454, 1),
+            endf_record(["0.0253", "0", "0", "0", "4", "1"], 8, 454, 2),
+            endf_record(["53135", "0", "2", "0.1", "", ""], 8, 454, 3),
+            endf_record(["", "", "", "", "", ""], 8, 0, 99_999),
+        ]
+        .join("\n")
+    }
+
+    fn sha256_text(bytes: &[u8]) -> String {
+        use sha2::{Digest, Sha256};
+        format!("{:x}", Sha256::digest(bytes))
+    }
+
+    #[test]
+    fn p155_new_options_parse() {
+        let cli = parse_cli(&words(
+            "deck.i out.json --fission-yields u235.endf u238.endf --damage dmg.json --self-shielding-table s.json --resonance a.endf b.endf c.endf --strict",
+        ))
+        .unwrap();
+        assert_eq!(cli.fission_yields, ["u235.endf", "u238.endf"]);
+        assert_eq!(cli.resonance, ["a.endf", "b.endf", "c.endf"]);
+        assert_eq!(cli.damage.as_deref(), Some("dmg.json"));
+        assert_eq!(cli.self_shielding_table.as_deref(), Some("s.json"));
+        assert!(cli.strict);
+        // a list option needs at least one file and may not repeat
+        assert!(parse_cli(&words("deck.i out.json --resonance")).is_err());
+        assert!(parse_cli(&words("deck.i out.json --fission-yields --strict")).is_err());
+        assert!(parse_cli(&words(
+            "deck.i out.json --resonance a.endf --resonance b.endf"
+        ))
+        .is_err());
+        assert!(parse_cli(&words("deck.i out.json --damage a --damage b")).is_err());
+        assert!(parse_cli(&words("deck.i out.json --self-shielding-table")).is_err());
+    }
+
+    #[test]
+    fn p155_supplied_files_are_hashed_into_the_spec() {
+        let dir = p140_scratch("p155-hash");
+        let deck = dir.join("deck.i");
+        let out = dir.join("out.json");
+        std::fs::write(
+            &deck,
+            "FISPACT\n* t\nMASS 1E-3 1\n FE 100\nDENSITY 7.874\nUSEFISSION\nSSFGEOMETRY 1 0.01\nFLUX 0\nTIME 1 DAYS ATOMS\nEND\n",
+        )
+        .unwrap();
+        let u235 = yield_evaluation("92235");
+        let u238 = yield_evaluation("92238");
+        std::fs::write(dir.join("u235.endf"), &u235).unwrap();
+        std::fs::write(dir.join("u238.endf"), &u238).unwrap();
+        std::fs::write(dir.join("fe56.endf"), b"resonance data").unwrap();
+        let mut cli = p140_cli(&deck, &out);
+        cli.fission_yields = vec![
+            dir.join("u235.endf").display().to_string(),
+            dir.join("u238.endf").display().to_string(),
+        ];
+        cli.resonance = vec![dir.join("fe56.endf").display().to_string()];
+        let result = run(&cli);
+        let spec: Value = serde_json::from_str(&std::fs::read_to_string(&out).unwrap_or_default())
+            .unwrap_or(Value::Null);
+        let _ = std::fs::remove_dir_all(&dir);
+        result.unwrap();
+        let files = spec["fission_yields"]["files"].as_array().unwrap();
+        assert_eq!(files.len(), 2);
+        assert_eq!(files[0]["sha256"], sha256_text(u235.as_bytes()));
+        assert_eq!(files[1]["sha256"], sha256_text(u238.as_bytes()));
+        // the parents come from the files' own headers
+        assert_eq!(
+            spec["fission_yields"]["parents"],
+            serde_json::json!({"include": ["U235", "U238"]})
+        );
+        let resonance = &spec["self_shielding"]["geometry"]["resonance_files"];
+        assert_eq!(resonance[0]["sha256"], sha256_text(b"resonance data"));
+    }
+
+    #[test]
+    fn p155_a_missing_option_file_or_a_bad_yield_file_stops_the_import() {
+        let dir = p140_scratch("p155-bad");
+        let deck = dir.join("deck.i");
+        let out = dir.join("out.json");
+        std::fs::write(&deck, COOLING_ONLY).unwrap();
+        std::fs::write(dir.join("junk.endf"), "not an evaluation\n").unwrap();
+        let mut missing = p140_cli(&deck, &out);
+        missing.resonance = vec![dir.join("absent.endf").display().to_string()];
+        let missing = run(&missing);
+        let mut junk = p140_cli(&deck, &out);
+        junk.fission_yields = vec![dir.join("junk.endf").display().to_string()];
+        let junk = run(&junk);
+        let written = out.exists();
+        let _ = std::fs::remove_dir_all(&dir);
+        assert!(missing.is_err(), "{missing:?}");
+        assert!(junk.is_err(), "{junk:?}");
+        assert!(!written);
+    }
+
+    #[test]
+    fn p155_strict_refuses_a_keyword_whose_option_is_missing() {
+        let dir = p140_scratch("p155-strict");
+        let deck = dir.join("deck.i");
+        let out = dir.join("out.json");
+        std::fs::write(
+            &deck,
+            "FISPACT\n* t\nMASS 1E-3 1\n FE 100\nUSEFISSION\nSSFGEOMETRY 1 0.01\nFLUX 0\nTIME 1 DAYS ATOMS\nEND\n",
+        )
+        .unwrap();
+        let mut cli = p140_cli(&deck, &out);
+        cli.strict = true;
+        let result = run(&cli);
+        let written = out.exists();
+        let report = std::fs::read_to_string(dir.join("out.import.json")).unwrap_or_default();
+        let _ = std::fs::remove_dir_all(&dir);
+        let error = result.expect_err("--strict must fail when an option is missing");
+        assert!(
+            error.contains("USEFISSION") && error.contains("SSFGEOMETRY"),
+            "{error}"
+        );
+        assert!(!written, "--strict wrote a spec");
+        assert!(report.contains("--fission-yields") && report.contains("--resonance"));
+    }
+
+    // ---- P155 part 2: ggbins and the damage table ----
+
+    #[test]
+    fn p155_damage_table_energies_come_from_table_2_only() {
+        let table2 = r#"{"format": "actinv-damage-table-2", "displacement": {"displacement_energy_eV": {"Fe": 40.0, "Cr": 35.5}}}"#;
+        let energies = damage_energies_from_text("t.json", table2)
+            .unwrap()
+            .unwrap();
+        assert_eq!(energies["Fe"], 40.0);
+        assert_eq!(energies["Cr"], 35.5);
+        assert_eq!(
+            damage_energies_from_text("t.json", r#"{"format": "actinv-damage-table-1"}"#).unwrap(),
+            None
+        );
+        assert!(damage_energies_from_text("t.json", "not json").is_err());
+        assert!(damage_energies_from_text(
+            "t.json",
+            r#"{"format": "actinv-damage-table-2", "displacement": {}}"#
+        )
+        .is_err());
+    }
+
+    #[test]
+    fn p155_readgg_and_alldispen_read_their_files() {
+        let dir = p140_scratch("p155-gg");
+        let deck = dir.join("deck.i");
+        let out = dir.join("out.json");
+        std::fs::write(
+            &deck,
+            "READGG\nGETDECAY 1\nFISPACT\n* t\nMASS 1E-3 1\n FE 100\nALLDISPEN 40\nFLUX 0\nTIME 1 DAYS ATOMS\nEND\n",
+        )
+        .unwrap();
+        std::fs::write(dir.join("gg.txt"), "2\n1.0e3\n1.0e5\n1.0e7\n").unwrap();
+        std::fs::write(dir.join("files"), "ggbins gg.txt\n").unwrap();
+        let table = r#"{"format": "actinv-damage-table-2", "displacement": {"displacement_energy_eV": {"Fe": 40.0}}}"#;
+        std::fs::write(dir.join("damage.json"), table).unwrap();
+        let mut cli = p140_cli(&deck, &out);
+        cli.damage = Some(dir.join("damage.json").display().to_string());
+        let result = run(&cli);
+        let spec: Value = serde_json::from_str(&std::fs::read_to_string(&out).unwrap_or_default())
+            .unwrap_or(Value::Null);
+        // an unreadable ggbins path is a refusal of READGG, not of the import
+        std::fs::write(dir.join("files"), "ggbins absent.txt\n").unwrap();
+        let broken = run(&cli);
+        let broken_report =
+            std::fs::read_to_string(dir.join("out.import.json")).unwrap_or_default();
+        let _ = std::fs::remove_dir_all(&dir);
+        result.unwrap();
+        assert_eq!(
+            spec["photon"]["group_boundaries_eV"],
+            serde_json::json!([1.0e3, 1.0e5, 1.0e7])
+        );
+        assert_eq!(spec["damage"]["displacement_energy_eV"]["Fe"], 40.0);
+        assert_eq!(
+            spec["damage"]["table"]["sha256"].as_str().unwrap().len(),
+            64
+        );
+        broken.unwrap();
+        assert!(broken_report.contains("absent.txt"), "{broken_report}");
     }
 }

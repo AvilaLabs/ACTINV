@@ -15,6 +15,40 @@
 - `actinv inspect decay DECAY_PATH NUCLIDE --estimated-spectrum` prints the estimated grouped spectrum beside the
   evaluated one.
 
+**Added (P155: `actinv import-fispact`; an import without the new options is unchanged)**
+
+- Four options that supply data a deck does not name, each file hashed into the spec: `--fission-yields FILE...`
+  (ENDF neutron-induced yield files), `--self-shielding-table FILE` (Bondarenko table), `--resonance FILE...` (ENDF
+  resonance evaluations) and `--damage TABLE` (a damage table; its recorded displacement energies, when it is an `actinv-damage-table-2` file,
+  are compared with the deck's).
+  An option the deck never uses is listed under `options_unused` in the import report.
+- Fission keywords: `USEFISSION` fills `fission_yields.files` (else `unsupported`, naming `--fission-yields`),
+  `NOFISS` forces no yield files, `CUMFYLD` sets `yields: "cumulative"`, `FISYIELD` sets `fission_yields.parents`
+  (the parents are read from the yield files' own headers; the default U-235, U-238, Pu-239 set is intersected with
+  the files and the dropped names are reported), `FISCHOOSE` sets `pathways.fission_parents`.
+- Uncertainty keywords: `UNCTYPE` sets `uncertainty.channels` (type 2 is `approximated`: ACTINV propagates MF=33
+  whenever a covariance is present), `SENSITIVITY SIGMA` sets `uncertainty.voi` (`approximated`; `LAMBDA` stays
+  `unsupported`), `MCSAMPLE` and `MCSEED` are noted beside it and `unsupported` without it, `ERROR` sets per-reaction
+  `cross_section_uncertainty` overrides (`approximated`; -1 is noted), `COVARIANCE` is noted.
+- Self-shielding keywords: `SSFGEOMETRY` (with `SSFCHOOSE`) sets `self_shielding.geometry` from `--resonance` and
+  `DENSITY`; `PROBTABLE` sets `self_shielding.table` from `--self-shielding-table` (`approximated`); `SSFDILUTION`
+  sets `dilution_overrides`, converting FISPACT-II's group numbers (1 is the highest energy) to ACTINV's 0-based
+  ascending index. Without the option each is `unsupported` and names it.
+- `XSTHRESHOLD` and `DEPLETION` are noted; `RESULT` is noted (a converted deck always runs its own
+  inventory). The `IRON`, `READSF`, `USESPALLATION` and `USEXSEXTRA` reasons were corrected.
+- Photon keywords: `NOXRAY` sets `photon.exclude_xrays` (`mapped`), `SPEK` sets `photon.missing_spectra: "estimate"`
+  (`approximated`: a mean-energy exponential shape by decay mode, with certified lower and upper dose bounds), and
+  `READGG` sets `photon.group_structure: "custom"` with `group_boundaries_eV` read from the files file's `ggbins` entry
+  (`mapped`; `unsupported`, naming `ggbins`, when the file is missing, unreadable or malformed). The importer writes
+  no `options.outputs` list, so the default outputs build the photon source.
+- Damage keywords: `ALLDISPEN` and `ATDISPEN` set `damage.displacement_energy_eV` over the deck's elements (an
+  `ATDISPEN` value overrides `ALLDISPEN` whatever the order) and `damage.table` from `--damage`. They are `mapped` when
+  the table records the same energy for each element (or is a table 1, which records none) and `unsupported` otherwise,
+  with the `actinv build-damage --method kinematic --displacement-energy EL=eV` command that builds a matching table.
+  An element the deck gives no energy for takes the table's recorded energy, else FISPACT-II's default (25 eV outside
+  its table 8). With `--damage` and neither keyword, the `damage` section uses those defaults, as FISPACT-II computes
+  displacement rates by default.
+
 **Added (P153; all opt-in, default results unchanged)**
 
 - `fission_yields.energy: "rate_weighted"` mixes the evaluation's tabulated yield sets by each parent's fission rate

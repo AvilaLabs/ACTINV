@@ -1,7 +1,8 @@
 //! P132a: FISPACT-II input deck -> `actinv-spec-1` problem importer.
 //!
 //! `actinv import-fispact DECK.i OUT.json [--fluxes FLUXES] [--files FILES] [--library LIB.npz]
-//! [--decay DECAY] [--covariance COV.npz] [--strict]`
+//! [--decay DECAY] [--covariance COV.npz] [--fission-yields FILE...] [--damage TABLE]
+//! [--self-shielding-table FILE] [--resonance FILE...] [--strict]`
 //!
 //! The deck is read with FISPACT-II's own lexical rules (free-format keywords, `<< ... >>`
 //! comments that may span lines, `*` text lines, keywords recognised case-insensitively by
@@ -30,10 +31,10 @@
 use crate::flux::parse_fispact_fluxes_text;
 use crate::spec::{Spec, POINT_SOURCE_MIN_DISTANCE_M};
 use actinv_data::activation::Projectile;
-use actinv_data::composition::{material_key, MaterialKey, NA};
+use actinv_data::composition::{material_key, symbol_of, MaterialKey, NA};
 use actinv_data::groups::{GroupStructure, NAMED_STRUCTURES};
 use serde_json::{json, Map, Value};
-use std::collections::BTreeMap;
+use std::collections::{BTreeMap, BTreeSet};
 
 /// Upper bound on schedule steps after PULSE expansion.
 const MAX_STEPS: usize = 100_000;
@@ -47,6 +48,39 @@ pub const IRRADIATES_WITHOUT_FLUXES: &str =
     "the deck irradiates (FLUX, POWER or WALL) but no FLUXES file was found";
 /// Catalog identifier of the covariance sidecar paired with the default neutron library.
 const DEFAULT_COVARIANCE: &str = "tendl-2025-neutron-709g-covariance";
+/// Length of the ranked variance-share table that `SENSITIVITY SIGMA` asks for (`uncertainty.voi.top`).
+const SENSITIVITY_VOI_TOP: usize = 10;
+/// The actinides FISPACT-II lets produce fission products when no FISYIELD narrows or widens the set:
+/// U-235, U-238 and Pu-239, as `(ZA, LISO)`.
+const DEFAULT_FISSION_PARENTS: [(i32, i32); 3] = [(92235, 0), (92238, 0), (94239, 0)];
+/// The displacement energies in eV that FISPACT-II applies to the elements of its table 8 when no
+/// ALLDISPEN or ATDISPEN gives one; every other element has [`OTHER_DISPLACEMENT_EV`].
+const DEFAULT_DISPLACEMENT_EV: &[(&str, f64)] = &[
+    ("Be", 31.0),
+    ("C", 31.0),
+    ("Mg", 25.0),
+    ("Al", 27.0),
+    ("Si", 25.0),
+    ("Ca", 40.0),
+    ("Ti", 40.0),
+    ("V", 40.0),
+    ("Cr", 40.0),
+    ("Mn", 40.0),
+    ("Fe", 40.0),
+    ("Co", 40.0),
+    ("Ni", 40.0),
+    ("Cu", 40.0),
+    ("Zr", 40.0),
+    ("Nb", 40.0),
+    ("Mo", 60.0),
+    ("Ag", 60.0),
+    ("Ta", 90.0),
+    ("W", 55.0),
+    ("Au", 30.0),
+    ("Pb", 25.0),
+];
+/// FISPACT-II's displacement energy for an element outside its table 8, in eV.
+const OTHER_DISPLACEMENT_EV: f64 = 25.0;
 
 // ---------------------------------------------------------------------------------------------
 // Lexer
@@ -325,17 +359,23 @@ const KEYWORDS: &[(&str, Arity)] = &[
 #[cfg(test)]
 const HANDLED: &[&str] = &[
     "AINPUT",
+    "ALLDISPEN",
     "ARRAY",
+    "ATDISPEN",
     "ATOMS",
     "ATWO",
     "BREMSSTRAHLUNG",
     "CNVTYPE",
     "COLLAPSE",
+    "CUMFYLD",
     "DENSITY",
     "DOSE",
     "END",
     "ENDPULSE",
+    "ERROR",
+    "FISCHOOSE",
     "FISPACT",
+    "FISYIELD",
     "FLUX",
     "FUEL",
     "GETDECAY",
@@ -344,21 +384,37 @@ const HANDLED: &[&str] = &[
     "GROUP",
     "LIMGRP",
     "MASS",
+    "MCSAMPLE",
+    "MCSEED",
     "MIND",
     "NOERROR",
+    "NOFISS",
     "NOSTABLE",
+    "NOXRAY",
     "OVER",
     "PARTITION",
     "PATH",
     "POWER",
+    "PROBTABLE",
     "PROJECTILE",
     "PULSE",
+    "READGG",
+    "RESULT",
     "ROUTES",
+    "SENSITIVITY",
     "SORTDOMINANT",
     "SPECTRUM",
+    "SPEK",
+    "SSFCHOOSE",
+    "SSFDILUTION",
+    "SSFFUEL",
+    "SSFGEOMETRY",
+    "SSFMASS",
     "STEP",
     "TIME",
     "UNCERTAINTY",
+    "UNCTYPE",
+    "USEFISSION",
     "WALL",
     "ZERO",
 ];
@@ -708,6 +764,26 @@ pub struct CovarianceRef {
     pub sha256: String,
 }
 
+/// Any other file the command line hashes into the spec (a damage table, a Bondarenko table, an
+/// ENDF resonance evaluation).
+pub type HashedFile = CovarianceRef;
+
+/// One `--fission-yields` file: its hash and the parent nuclide its MF=8 header names, read by
+/// the caller (the conversion itself touches no file).
+#[derive(Debug, Clone)]
+pub struct FissionYieldFile {
+    pub file: HashedFile,
+    pub parent_za: i32,
+    pub parent_liso: i32,
+}
+
+/// The gamma group file a `ggbins` entry of the files file names, read by the caller.
+#[derive(Debug, Clone)]
+pub struct GammaGroupFile {
+    pub path: String,
+    pub text: String,
+}
+
 /// Everything the conversion needs from outside the deck.
 #[derive(Debug, Clone, Default)]
 pub struct ImportContext {
@@ -715,6 +791,20 @@ pub struct ImportContext {
     pub library: Option<String>,
     pub decay: Option<String>,
     pub covariance: Option<CovarianceRef>,
+    /// `--fission-yields`: the ENDF neutron-induced yield files USEFISSION puts in the spec
+    pub fission_yields: Vec<FissionYieldFile>,
+    /// `--damage`: the damage table ALLDISPEN and ATDISPEN refer to
+    pub damage: Option<HashedFile>,
+    /// the displacement energies in eV (element -> eV) the damage table records, when it is an
+    /// `actinv-damage-table-2` file; `None` for a table that records none
+    pub damage_energies_ev: Option<BTreeMap<String, f64>>,
+    /// the files file's `ggbins` entry: `None` when it has none (or there is no files file),
+    /// `Err` with the reason when its path cannot be read, else the file's text
+    pub gamma_groups: Option<Result<GammaGroupFile, String>>,
+    /// `--self-shielding-table`: the Bondarenko table PROBTABLE and SSFDILUTION refer to
+    pub self_shielding_table: Option<HashedFile>,
+    /// `--resonance`: the ENDF resonance evaluations SSFGEOMETRY refers to
+    pub resonance: Vec<HashedFile>,
 }
 
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
@@ -803,6 +893,25 @@ struct PhotonRec {
     group_structure: Option<&'static str>,
     point_source_m: Option<f64>,
     bremsstrahlung: Vec<String>,
+    /// the GROUP entry, superseded when READGG gives its own boundaries
+    group_entry: Option<usize>,
+    noxray: Seen,
+    spek: Seen,
+    readgg: Seen,
+    /// settled in `finish`: READGG's boundaries (ascending eV), SPEK and NOXRAY
+    boundaries: Option<Vec<f64>>,
+    estimate_missing: bool,
+    exclude_xrays: bool,
+}
+
+/// ALLDISPEN and ATDISPEN, settled in `finish` against `--damage` and the deck's elements.
+#[derive(Default, Clone)]
+struct DamageRec {
+    /// the last ALLDISPEN energy
+    all: Option<f64>,
+    /// ATDISPEN energies by element; a later value replaces an earlier one
+    atoms: BTreeMap<String, f64>,
+    entries: Vec<usize>,
 }
 
 /// GRPCONVERT, CNVTYPE and LIMGRP, each with the report entry that `finish` settles.
@@ -811,6 +920,68 @@ struct RebinRec {
     grpconvert: Option<(Vec<f64>, Option<usize>)>,
     cnvtype: Option<(u8, Option<usize>)>,
     limgrp: Option<(f64, f64, Option<usize>)>,
+}
+
+/// The report entries of a keyword that `finish` settles once the whole deck is known; `None` until
+/// the keyword is read. A repeat adds its entry to the list (a loop body logs only once).
+type Seen = Option<Vec<usize>>;
+
+fn mark_seen(slot: &mut Seen, entry: Option<usize>) {
+    slot.get_or_insert_with(Vec::new).extend(entry);
+}
+
+/// A FISYIELD or FISCHOOSE nuclide list: the declared count and the nuclides as `(name, ZA, LISO)`.
+type NuclideList = (i64, Vec<(String, i32, i32)>);
+
+/// The deck's fission keywords, settled in `finish` against the `--fission-yields` files.
+#[derive(Default, Clone)]
+struct FissionRec {
+    use_fission: Seen,
+    nofiss: Seen,
+    cumulative: Seen,
+    /// FISYIELD: the last list read, with its entries
+    yield_parents: Option<(NuclideList, Vec<usize>)>,
+    /// FISCHOOSE: the last list read, with its entries
+    choose: Option<(Vec<String>, Vec<usize>)>,
+}
+
+/// SSFGEOMETRY's target: shape name, length and cylinder height in cm.
+#[derive(Clone)]
+struct GeometryRec {
+    shape: &'static str,
+    length_cm: f64,
+    height_cm: Option<f64>,
+}
+
+/// The deck's self-shielding keywords, settled in `finish` against `--resonance` and
+/// `--self-shielding-table`.
+#[derive(Default, Clone)]
+struct ShieldRec {
+    geometry: Option<(GeometryRec, Vec<usize>)>,
+    probtable: Seen,
+    /// SSFCHOOSE: element or nuclide names
+    choose: Option<(Vec<String>, Vec<usize>)>,
+    mass: Seen,
+    fuel: Seen,
+    /// SSFDILUTION: nuclide -> FISPACT-II group number (1 = highest energy) -> dilution in barns
+    dilution: Option<(DilutionRows, Vec<usize>)>,
+}
+
+/// SSFDILUTION rows: nuclide -> FISPACT-II group number -> dilution in barns.
+type DilutionRows = BTreeMap<String, BTreeMap<u64, f64>>;
+
+/// The deck's uncertainty-side keywords, settled in `finish` once the uncertainty block is known.
+#[derive(Default, Clone)]
+struct UncertaintyRec {
+    /// UNCTYPE: 1 cross sections, 2 half-lives, 3 both; the last one read applies
+    unctype: Option<(i64, Vec<usize>)>,
+    /// SENSITIVITY SIGMA
+    sensitivity: Seen,
+    /// MCSAMPLE and MCSEED
+    sampling: Vec<usize>,
+    /// ERROR entries and the cross-section uncertainty overrides they ask for
+    error_entries: Vec<usize>,
+    error_overrides: Vec<OverrideRec>,
 }
 
 #[derive(Clone)]
@@ -833,9 +1004,13 @@ struct Interp<'a> {
     power_line: Option<usize>,
     overrides: Vec<OverrideRec>,
     photon: PhotonRec,
+    damage: DamageRec,
     /// the report entry of the DOSE 2 that set `photon.point_source_m`
     dose_entry: Option<usize>,
     rebin: RebinRec,
+    fission: FissionRec,
+    shield: ShieldRec,
+    unc: UncertaintyRec,
     pathway_targets: Vec<String>,
     pathway_entries: Vec<usize>,
     a2_line: Option<usize>,
@@ -877,6 +1052,9 @@ fn arg_whole(cmd: &Command, index: usize, what: &str) -> Result<i64, String> {
     Ok(value as i64)
 }
 
+/// Placeholder detail of a deferred keyword's entry until `finish` settles it.
+const DEFERRED_DETAIL: &str = "resolved when the deck ends";
+
 /// Dispositions of keywords with no dedicated handler.
 fn simple_disposition(keyword: &str) -> Option<(Status, &'static str)> {
     use Status::{Noted, Unsupported};
@@ -885,15 +1063,11 @@ fn simple_disposition(keyword: &str) -> Option<(Status, &'static str)> {
         "CLOBBER" => (Noted, "output-file overwrite policy; ACTINV writes only the files you name"),
         "MONITOR" | "LOGLEVEL" => (Noted, "run-log verbosity"),
         "JSON" => (Noted, "ACTINV results are always JSON"),
-        "PRINTLIB" | "SAVELINES" | "FULLXS" | "SPEK" | "COMPRESSXS" | "EXTRACTXS" | "LIBVERSION" => (
+        "PRINTLIB" | "SAVELINES" | "FULLXS" | "COMPRESSXS" | "EXTRACTXS" | "LIBVERSION" => (
             Noted,
             "FISPACT-II library preparation and printing; ACTINV reads its activation library and decay data from the spec",
         ),
         "NOHEAD" | "NOHEADER" => (Noted, "output header suppression; ACTINV's result JSON has no header"),
-        "MCSEED" => (
-            Noted,
-            "random seed of MCSAMPLE, which has no ACTINV equivalent (see MCSAMPLE); no effect on the calculated physics",
-        ),
         "CONV" | "DOMINANT" | "EAFVERSION" | "ENFA" | "LEVEL" | "LINA" | "LOOPS" | "NEWFILE" | "SEQNUMBER"
         | "SEQUENTIAL" | "TAPA" => (
             Noted,
@@ -914,39 +1088,33 @@ fn simple_disposition(keyword: &str) -> Option<(Status, &'static str)> {
             Noted,
             "pathway-analysis presentation; ACTINV's pathways output is selected with options.outputs",
         ),
-        "ALLDISPEN" | "ATDISPEN" => (
-            Unsupported,
-            "displacement-damage rates need a damage table in the spec (damage.displacement_energy_eV)",
+        "COVARIANCE" => (
+            Noted,
+            "FISPACT-II's collapse of the cross-section covariances; ACTINV propagates the full MF=33 covariance of the library's own groups, so there is no collapse step to switch on",
         ),
-        "COVARIANCE" | "UNCTYPE" | "ERROR" | "MCSAMPLE" | "SENSITIVITY" => (
-            Unsupported,
-            "FISPACT-II covariance, sampling and sensitivity controls have no spec field; use the uncertainty option",
+        "XSTHRESHOLD" => (
+            Noted,
+            "the smallest cross section FISPACT-II admits to its pathway-based uncertainty estimate, a cost control of that method; ACTINV propagates the full covariance without pathway truncation",
         ),
-        "CUMFYLD" | "FISYIELD" | "FISCHOOSE" | "USEFISSION" | "NOFISS" => (
-            Unsupported,
-            "fission treatment is set by spec.fission_yields.files, not by keyword",
+        "DEPLETION" => (
+            Noted,
+            "an output request for the depletion of named nuclides; every result step carries the atoms of every nuclide, and the spec's summary.depletion adds the per-step depletion table with its decay and reaction channels",
         ),
-        "DEPLETION" => (Unsupported, "nuclide depletion switches are not available"),
-        "IRON" => (Unsupported, "fictitious-matrix iron background removal is not available"),
-        "NOXRAY" | "READGG" | "READSF" | "USESPALLATION" | "USEXSEXTRA" | "XSTHRESHOLD" => (
+        "IRON" => (
             Unsupported,
-            "library-data selection or modification keyword with no ACTINV equivalent",
+            "not a keyword of the 2023 FISPACT-II manual (it has no section), so its behaviour is not defined and ACTINV has no equivalent",
         ),
-        "RESULT" => (
+        "READSF" => (
             Unsupported,
-            "pathway result selection has no spec field; the pathways section reports the targets it is given",
+            "spontaneous-fission yields read from a library directory; ACTINV takes them from spec fission_yields.spontaneous (hash-pinned ENDF sfy files and a nu-bar source), which the importer has no option to fill: add the section by hand",
         ),
-        "PROBTABLE" => (
+        "USESPALLATION" => (
             Unsupported,
-            "probability-table self-shielding is spec self_shielding.table, a hash-pinned Bondarenko table the deck does not name; add the section by hand",
+            "splices spallation cross sections above a cutoff energy into the library; ACTINV reads one activation library and has no spallation stream",
         ),
-        "SSFGEOMETRY" | "SSFCHOOSE" | "SSFFUEL" | "SSFMASS" => (
+        "USEXSEXTRA" => (
             Unsupported,
-            "geometry self-shielding is spec self_shielding.geometry (shape, length_cm, density_g_cm3 and hash-pinned ENDF resonance_files); the deck names no resonance evaluations, so the section cannot be built from it: add it by hand",
-        ),
-        "SSFDILUTION" => (
-            Unsupported,
-            "per-group dilution overrides are spec self_shielding.dilution_overrides, which needs a hash-pinned Bondarenko table the deck does not name: add the section by hand",
+            "prefers an extra cross-section stream over the main library; ACTINV reads one activation library, so build the combined library and pass it with --library",
         ),
         _ => return None,
     })
@@ -1055,6 +1223,99 @@ fn partition_pairs(words: &[String]) -> Result<BTreeMap<String, f64>, String> {
     Ok(kept)
 }
 
+/// A nuclide's spec name from its `(ZA, LISO)`: `U235`, `Am242m1`.
+fn nuclide_label(za: i32, liso: i32) -> String {
+    let symbol = actinv_data::composition::symbol_of(za / 1000);
+    if liso > 0 {
+        format!("{symbol}{}m{liso}", za % 1000)
+    } else {
+        format!("{symbol}{}", za % 1000)
+    }
+}
+
+/// `fission_yields.parents` for the yield files supplied (their parents as `(ZA, LISO)`) and the
+/// deck's FISYIELD list (`None`: the FISPACT-II default of U-235, U-238 and Pu-239), with the text
+/// that says what was chosen. A parent without a yield file does not fission in FISPACT-II, so a
+/// named parent that has no supplied file is dropped and reported; an include list left empty
+/// excludes every supplied parent instead, since the spec has no empty include.
+fn fission_parent_selection(
+    supplied: &[(i32, i32)],
+    list: Option<&NuclideList>,
+) -> (Option<Value>, String) {
+    let label = |keys: &[(i32, i32)]| -> Vec<String> {
+        keys.iter()
+            .map(|(za, liso)| nuclide_label(*za, *liso))
+            .collect()
+    };
+    let exclude_all = || json!({"exclude": label(supplied)});
+    type Keys = Vec<(i32, i32)>;
+    let split = |names: Keys| -> (Keys, Keys) {
+        let mut seen = std::collections::BTreeSet::new();
+        names
+            .into_iter()
+            .filter(|key| seen.insert(*key))
+            .partition(|key| supplied.contains(key))
+    };
+    let dropped_text = |dropped: &[(i32, i32)]| -> String {
+        if dropped.is_empty() {
+            String::new()
+        } else {
+            format!(
+                "; dropped, no yield file supplied for {}",
+                label(dropped).join(", ")
+            )
+        }
+    };
+    match list {
+        Some((0, _)) => (
+            Some(exclude_all()),
+            "FISYIELD 0: every parent with a yield file is excluded, so no fission products are produced"
+                .to_string(),
+        ),
+        Some((count, nuclides)) => {
+            let (kept, dropped) =
+                split(nuclides.iter().map(|(_, za, liso)| (*za, *liso)).collect());
+            let dropped = dropped_text(&dropped);
+            if *count > 0 && kept.is_empty() {
+                (
+                    Some(exclude_all()),
+                    format!("FISYIELD {count}: none of the named parents has a yield file, so no parent produces fission products{dropped}"),
+                )
+            } else if *count > 0 {
+                (
+                    Some(json!({"include": label(&kept)})),
+                    format!("FISYIELD {count}: parents.include = {}{dropped}", label(&kept).join(", ")),
+                )
+            } else if kept.is_empty() {
+                (
+                    None,
+                    format!("FISYIELD {count}: none of the excluded parents has a yield file, so every parent with one produces fission products{dropped}"),
+                )
+            } else {
+                (
+                    Some(json!({"exclude": label(&kept)})),
+                    format!("FISYIELD {count}: parents.exclude = {}{dropped}", label(&kept).join(", ")),
+                )
+            }
+        }
+        None => {
+            let (kept, dropped) = split(DEFAULT_FISSION_PARENTS.to_vec());
+            let dropped = dropped_text(&dropped);
+            if kept.is_empty() {
+                (
+                    Some(exclude_all()),
+                    format!("no FISYIELD: the default parents (U235, U238, Pu239) have no yield file, so no parent produces fission products{dropped}"),
+                )
+            } else {
+                (
+                    Some(json!({"include": label(&kept)})),
+                    format!("no FISYIELD: the default parents, parents.include = {}{dropped}", label(&kept).join(", ")),
+                )
+            }
+        }
+    }
+}
+
 /// Ascending boundaries of the FISPACT-II standard structure with this many groups (a neutron
 /// grid, or the charged-particle 162-group grid).
 fn standard_boundaries(groups: usize, neutron: bool) -> Option<Vec<f64>> {
@@ -1088,8 +1349,12 @@ impl<'a> Interp<'a> {
             power_line: None,
             overrides: Vec::new(),
             photon: PhotonRec::default(),
+            damage: DamageRec::default(),
             dose_entry: None,
             rebin: RebinRec::default(),
+            fission: FissionRec::default(),
+            shield: ShieldRec::default(),
+            unc: UncertaintyRec::default(),
             pathway_targets: Vec::new(),
             pathway_entries: Vec::new(),
             a2_line: None,
@@ -1160,9 +1425,14 @@ impl<'a> Interp<'a> {
         let mut added = self.entries.split_off(before);
         *self = saved;
         for entry in &mut added {
-            entry
-                .detail
-                .push_str(" (inside a PULSE 0 body: skipped, no effect on the problem)");
+            if entry.detail == DEFERRED_DETAIL {
+                // a deferred keyword is settled when the deck ends, which a skipped body never reaches
+                entry.detail = "inside a PULSE 0 body: skipped, no effect on the problem".into();
+            } else {
+                entry
+                    .detail
+                    .push_str(" (inside a PULSE 0 body: skipped, no effect on the problem)");
+            }
         }
         self.entries.extend(added);
         if let Err(reason) = outcome {
@@ -1359,7 +1629,7 @@ impl<'a> Interp<'a> {
                     ));
                 }
                 self.iuncer = level;
-                let index = self.log(cmd, Status::Noted, "resolved when the deck ends");
+                let index = self.log(cmd, Status::Noted, DEFERRED_DETAIL);
                 self.uncert_entry = self.replace_index(self.uncert_entry, index, cmd.line);
             }
             "NOERROR" => {
@@ -1412,6 +1682,58 @@ impl<'a> Interp<'a> {
                 self.apply_getxs(&getxs)?;
                 self.apply_getdecay(cmd);
             }
+            "USEFISSION" | "NOFISS" | "CUMFYLD" => {
+                let index = self.log(cmd, Status::Noted, DEFERRED_DETAIL);
+                let slot = match cmd.keyword.as_str() {
+                    "USEFISSION" => &mut self.fission.use_fission,
+                    "NOFISS" => &mut self.fission.nofiss,
+                    _ => &mut self.fission.cumulative,
+                };
+                mark_seen(slot, index);
+            }
+            "FISYIELD" | "FISCHOOSE" => self.apply_fission_list(cmd),
+            "ALLDISPEN" | "ATDISPEN" => self.apply_displacement(cmd),
+            "NOXRAY" | "SPEK" | "READGG" => {
+                let index = self.log(cmd, Status::Noted, DEFERRED_DETAIL);
+                let slot = match cmd.keyword.as_str() {
+                    "NOXRAY" => &mut self.photon.noxray,
+                    "SPEK" => &mut self.photon.spek,
+                    _ => &mut self.photon.readgg,
+                };
+                mark_seen(slot, index);
+            }
+            "UNCTYPE" => self.apply_unctype(cmd)?,
+            "SENSITIVITY" => self.apply_sensitivity(cmd),
+            "MCSAMPLE" | "MCSEED" => {
+                let index = self.log(cmd, Status::Noted, DEFERRED_DETAIL);
+                self.unc.sampling.extend(index);
+            }
+            "ERROR" => self.apply_error(cmd),
+            "PROBTABLE" => {
+                let index = self.log(cmd, Status::Noted, DEFERRED_DETAIL);
+                mark_seen(&mut self.shield.probtable, index);
+            }
+            "SSFGEOMETRY" => self.apply_ssf_geometry(cmd),
+            "SSFCHOOSE" => self.apply_ssf_choose(cmd),
+            "SSFMASS" | "SSFFUEL" => {
+                let index = self.log(cmd, Status::Noted, DEFERRED_DETAIL);
+                let slot = if cmd.keyword == "SSFMASS" {
+                    &mut self.shield.mass
+                } else {
+                    &mut self.shield.fuel
+                };
+                mark_seen(slot, index);
+            }
+            "SSFDILUTION" => self.apply_ssf_dilution(cmd),
+            "RESULT" => {
+                // RESULT stands in for an inventory run that precedes a pathway calculation; a deck
+                // ACTINV converts always defines its material and runs a schedule, which supplies it
+                self.log(
+                    cmd,
+                    Status::Noted,
+                    "the deck defines and runs its own inventory (material and a schedule), and ACTINV's pathways are built from that run; the atom counts listed here are not used",
+                );
+            }
             "PULSE" | "ENDPULSE" => {}
             other => {
                 let (status, detail) = simple_disposition(other).unwrap_or((
@@ -1422,6 +1744,449 @@ impl<'a> Interp<'a> {
             }
         }
         Ok(())
+    }
+
+    /// ALLDISPEN energy, ATDISPEN count (element energy)...: the displacement energies, settled in
+    /// `finish` once the deck's elements and the `--damage` table are known.
+    fn apply_displacement(&mut self, cmd: &Command) {
+        type Parsed = (Option<f64>, Vec<(String, f64)>);
+        let parsed = (|| -> Result<Parsed, String> {
+            let energy = |word: &str| -> Result<f64, String> {
+                parse_number(word)
+                    .filter(|value| *value > 0.0)
+                    .ok_or_else(|| {
+                        format!(
+                            "{} energy '{word}' is not a positive displacement energy in eV",
+                            cmd.keyword
+                        )
+                    })
+            };
+            if cmd.keyword == "ALLDISPEN" {
+                return match cmd.args.as_slice() {
+                    [word] => Ok((Some(energy(word)?), Vec::new())),
+                    _ => Err("ALLDISPEN takes one displacement energy in eV".to_string()),
+                };
+            }
+            let count = arg_whole(cmd, 0, "element count")?;
+            let words = &cmd.args[1..];
+            if count < 1 || words.len() as i64 != 2 * count {
+                return Err(format!(
+                    "ATDISPEN declares {count} element(s) but lists {} word(s); each element needs a symbol and an energy",
+                    words.len()
+                ));
+            }
+            let mut pairs = Vec::new();
+            for pair in words.chunks(2) {
+                let symbol = match material_key(&pair[0]) {
+                    Ok(MaterialKey::Element(symbol)) => symbol,
+                    _ => return Err(format!("ATDISPEN '{}' is not an element symbol", pair[0])),
+                };
+                pairs.push((symbol, energy(&pair[1])?));
+            }
+            Ok((None, pairs))
+        })();
+        match parsed {
+            Err(reason) => {
+                self.log(cmd, Status::Unsupported, reason);
+            }
+            Ok((all, pairs)) => {
+                let index = self.log(cmd, Status::Noted, DEFERRED_DETAIL);
+                if all.is_some() {
+                    self.damage.all = all;
+                }
+                // ATDISPEN overrides ALLDISPEN wherever each stands in the deck, so the two are
+                // kept apart and combined per element at the end
+                self.damage.atoms.extend(pairs);
+                self.damage.entries.extend(index);
+            }
+        }
+    }
+
+    /// FISYIELD and FISCHOOSE: a count and that many nuclide names (FISYIELD's count is signed).
+    fn apply_fission_list(&mut self, cmd: &Command) {
+        let signed = cmd.keyword == "FISYIELD";
+        let list = (|| -> Result<NuclideList, String> {
+            let count = arg_whole(cmd, 0, "nuclide count")?;
+            if count < 0 && !signed {
+                return Err(format!(
+                    "line {}: {} count must not be negative",
+                    cmd.line, cmd.keyword
+                ));
+            }
+            let names = &cmd.args[1..];
+            if names.len() as u64 != count.unsigned_abs() {
+                return Err(format!(
+                    "line {}: {} declares {} nuclide(s) but lists {}",
+                    cmd.line,
+                    cmd.keyword,
+                    count.unsigned_abs(),
+                    names.len()
+                ));
+            }
+            let mut nuclides = Vec::new();
+            for raw in names {
+                nuclides.push(fispact_nuclide(raw).map_err(|reason| {
+                    format!("line {}: {} nuclide {reason}", cmd.line, cmd.keyword)
+                })?);
+            }
+            Ok((count, nuclides))
+        })();
+        let list = match list {
+            Ok(list) => list,
+            Err(reason) => {
+                self.log(cmd, Status::Unsupported, reason);
+                return;
+            }
+        };
+        let index = self.log(cmd, Status::Noted, DEFERRED_DETAIL);
+        if signed {
+            let mut entries = self
+                .fission
+                .yield_parents
+                .take()
+                .map(|(_, entries)| entries)
+                .unwrap_or_default();
+            entries.extend(index);
+            self.fission.yield_parents = Some((list, entries));
+        } else {
+            let names = list.1.into_iter().map(|(name, ..)| name).collect();
+            let mut entries = self
+                .fission
+                .choose
+                .take()
+                .map(|(_, entries)| entries)
+                .unwrap_or_default();
+            entries.extend(index);
+            self.fission.choose = Some((names, entries));
+        }
+    }
+
+    /// UNCTYPE: which uncertainty contributions to include (1 cross sections, 2 half-lives, 3 both).
+    fn apply_unctype(&mut self, cmd: &Command) -> Result<(), String> {
+        let kind = if cmd.args.is_empty() {
+            1
+        } else {
+            arg_whole(cmd, 0, "contribution type")?
+        };
+        if !(1..=3).contains(&kind) {
+            self.log(
+                cmd,
+                Status::Unsupported,
+                format!("UNCTYPE {kind}: the contribution type is 1 (cross sections), 2 (half-lives) or 3 (both)"),
+            );
+            return Ok(());
+        }
+        let index = self.log(cmd, Status::Noted, DEFERRED_DETAIL);
+        let mut entries = self
+            .unc
+            .unctype
+            .take()
+            .map(|(_, entries)| entries)
+            .unwrap_or_default();
+        entries.extend(index);
+        self.unc.unctype = Some((kind, entries));
+        Ok(())
+    }
+
+    /// SENSITIVITY: SIGMA (cross-section sensitivities) maps to the ranked variance shares; LAMBDA
+    /// (decay-constant sensitivities) has no equivalent.
+    fn apply_sensitivity(&mut self, cmd: &Command) {
+        let mode = cmd
+            .args
+            .first()
+            .map(|word| word.to_ascii_uppercase())
+            .unwrap_or_default();
+        match mode.as_str() {
+            "SIGMA" | "SIGM" | "SIG" => {
+                let index = self.log(cmd, Status::Noted, DEFERRED_DETAIL);
+                mark_seen(&mut self.unc.sensitivity, index);
+            }
+            "LAMBDA" | "LAMB" | "LAM" => {
+                self.log(
+                    cmd,
+                    Status::Unsupported,
+                    "SENSITIVITY LAMBDA (sensitivity coefficients with respect to decay constants): ACTINV ranks no decay-constant sensitivities (uncertainty.channels decay_constants propagates the half-life uncertainties but gives no per-parameter ranking), and the FISPACT-II manual marks the option as unavailable in its current version",
+                );
+            }
+            _ => {
+                self.log(
+                    cmd,
+                    Status::Unsupported,
+                    "SENSITIVITY takes SIGMA or LAMBDA as its first word",
+                );
+            }
+        }
+    }
+
+    /// ERROR: the fractional error of named parent -> daughter reactions. A non-negative value
+    /// becomes a `cross_section_uncertainty` override, settled in `finish` with the uncertainty
+    /// block it needs; -1 asks for the library's own value.
+    fn apply_error(&mut self, cmd: &Command) {
+        let words = &cmd.args;
+        let Some(count) = words
+            .first()
+            .and_then(|raw| parse_number(raw))
+            .filter(|value| *value >= 0.0 && value.fract() == 0.0 && *value <= 1.0e6)
+        else {
+            self.log(
+                cmd,
+                Status::Unsupported,
+                "ERROR needs the number of reactions first",
+            );
+            return;
+        };
+        let count = count as usize;
+        if words.len() != 1 + 3 * count {
+            self.log(
+                cmd,
+                Status::Unsupported,
+                format!(
+                    "ERROR declares {count} reaction(s), which take {} words (parent, daughter, error), but lists {}",
+                    3 * count,
+                    words.len() - 1
+                ),
+            );
+            return;
+        }
+        if !self.projectile.is_neutron() {
+            self.log(
+                cmd,
+                Status::Unsupported,
+                "the daughter-to-ENDF-reaction mapping is defined for neutron projectiles only",
+            );
+            return;
+        }
+        let (mut library, mut asked) = (0usize, 0usize);
+        let mut failures: Vec<String> = Vec::new();
+        for triple in words[1..].chunks(3) {
+            let outcome = (|| -> Result<Option<OverrideRec>, String> {
+                let (nuclide, za, _) =
+                    fispact_nuclide(&triple[0]).map_err(|reason| format!("parent {reason}"))?;
+                let mt = if triple[1].eq_ignore_ascii_case("FISSION") || triple[1] == "0" {
+                    18
+                } else {
+                    let (_, daughter_za, _) = fispact_nuclide(&triple[1])
+                        .map_err(|reason| format!("daughter {reason}"))?;
+                    reaction_mt(za, daughter_za)?
+                };
+                let error = parse_number(&triple[2])
+                    .ok_or_else(|| format!("the error '{}' is not a number", triple[2]))?;
+                if error == -1.0 {
+                    return Ok(None);
+                }
+                if error < 0.0 {
+                    return Err(format!(
+                        "the error {error} is negative; -1 asks for the library value"
+                    ));
+                }
+                Ok(Some(OverrideRec {
+                    nuclide,
+                    kind: "cross_section_uncertainty",
+                    mt: Some(mt),
+                    value: error,
+                    units: None,
+                }))
+            })();
+            match outcome {
+                Ok(None) => library += 1,
+                Ok(Some(record)) => {
+                    let known = self
+                        .unc
+                        .error_overrides
+                        .iter()
+                        .find(|known| known.nuclide == record.nuclide && known.mt == record.mt)
+                        .cloned();
+                    match known {
+                        Some(known) if known == record => asked += 1,
+                        Some(known) => failures.push(format!(
+                            "{} MT {} was already set to {}",
+                            record.nuclide,
+                            record.mt.unwrap_or_default(),
+                            known.value
+                        )),
+                        None => {
+                            self.unc.error_overrides.push(record);
+                            asked += 1;
+                        }
+                    }
+                }
+                Err(reason) => failures.push(format!("{} {}: {reason}", triple[0], triple[1])),
+            }
+        }
+        if !failures.is_empty() {
+            self.log(
+                cmd,
+                Status::Unsupported,
+                format!(
+                    "{} reaction(s) cannot be read: {}",
+                    failures.len(),
+                    failures.join("; ")
+                ),
+            );
+        } else if asked == 0 {
+            self.log(
+                cmd,
+                Status::Noted,
+                format!("{library} reaction(s) ask for the library's own uncertainty (-1), which is what ACTINV's covariance supplies"),
+            );
+        } else {
+            let index = self.log(cmd, Status::Noted, DEFERRED_DETAIL);
+            self.unc.error_entries.extend(index);
+        }
+    }
+
+    /// SSFGEOMETRY type length1 [length2]: the target shape of the geometry self-shielding.
+    fn apply_ssf_geometry(&mut self, cmd: &Command) {
+        let parsed = (|| -> Result<GeometryRec, String> {
+            let kind = arg_whole(cmd, 0, "target type")?;
+            let length = arg_number(cmd, 1, "length")?;
+            let (shape, wants_height) = match kind {
+                1 => ("foil", false),
+                2 => ("wire", false),
+                3 => ("sphere", false),
+                4 => ("cylinder", true),
+                other => {
+                    return Err(format!(
+                        "target type {other} is not one ACTINV has: 1 foil, 2 wire, 3 sphere, 4 cylinder"
+                    ))
+                }
+            };
+            let height = if wants_height {
+                Some(arg_number(cmd, 2, "cylinder height")?)
+            } else {
+                None
+            };
+            let positive = |value: f64| value.is_finite() && value > 0.0;
+            if !positive(length) || height.is_some_and(|value| !positive(value)) {
+                return Err("the lengths must be positive".into());
+            }
+            Ok(GeometryRec {
+                shape,
+                length_cm: length,
+                height_cm: height,
+            })
+        })();
+        match parsed {
+            Ok(record) => {
+                let index = self.log(cmd, Status::Noted, DEFERRED_DETAIL);
+                let mut entries = self
+                    .shield
+                    .geometry
+                    .take()
+                    .map(|(_, entries)| entries)
+                    .unwrap_or_default();
+                entries.extend(index);
+                self.shield.geometry = Some((record, entries));
+            }
+            Err(reason) => {
+                self.log(cmd, Status::Unsupported, reason);
+            }
+        }
+    }
+
+    /// SSFCHOOSE ncho [nprint], then ncho element or nuclide names. The print switch only changes
+    /// FISPACT-II's output and may be left out, so the count of words after `ncho` decides.
+    fn apply_ssf_choose(&mut self, cmd: &Command) {
+        let parsed = (|| -> Result<Vec<String>, String> {
+            let count = arg_whole(cmd, 0, "name count")?;
+            let rest = &cmd.args[1..];
+            let names = match usize::try_from(count) {
+                Ok(count) if rest.len() == count => rest,
+                Ok(count) if rest.len() == count + 1 => &rest[1..],
+                _ => {
+                    return Err(format!(
+                        "SSFCHOOSE declares {count} name(s) but lists {}",
+                        rest.len()
+                    ))
+                }
+            };
+            names
+                .iter()
+                .map(|raw| match material_key(raw) {
+                    Ok(MaterialKey::Nuclide { canonical, .. }) => Ok(canonical),
+                    Ok(MaterialKey::Element(element)) => Ok(element),
+                    Err(error) => Err(format!("'{raw}': {error}")),
+                })
+                .collect()
+        })();
+        match parsed {
+            Ok(names) => {
+                let index = self.log(cmd, Status::Noted, DEFERRED_DETAIL);
+                let mut entries = self
+                    .shield
+                    .choose
+                    .take()
+                    .map(|(_, entries)| entries)
+                    .unwrap_or_default();
+                entries.extend(index);
+                self.shield.choose = Some((names, entries));
+            }
+            Err(reason) => {
+                self.log(cmd, Status::Unsupported, reason);
+            }
+        }
+    }
+
+    /// SSFDILUTION nnuc, then per nuclide its name, a count and that many group/dilution pairs.
+    fn apply_ssf_dilution(&mut self, cmd: &Command) {
+        let parsed = (|| -> Result<BTreeMap<String, BTreeMap<u64, f64>>, String> {
+            let words = &cmd.args;
+            let nnuc = arg_whole(cmd, 0, "nuclide count")?;
+            let mut table: BTreeMap<String, BTreeMap<u64, f64>> = BTreeMap::new();
+            let mut at = 1usize;
+            for _ in 0..nnuc.max(0) {
+                let name = words
+                    .get(at)
+                    .ok_or("fewer nuclides than the count declares")?;
+                let (canonical, ..) = fispact_nuclide(name)?;
+                let pairs = words
+                    .get(at + 1)
+                    .and_then(|raw| parse_number(raw))
+                    .filter(|value| *value >= 1.0 && value.fract() == 0.0 && *value <= 1.0e6)
+                    .ok_or_else(|| format!("{name} needs a whole-number count of group entries"))?
+                    as usize;
+                at += 2;
+                let rows = table.entry(canonical).or_default();
+                for _ in 0..pairs {
+                    let group = words
+                        .get(at)
+                        .and_then(|raw| parse_number(raw))
+                        .filter(|value| *value >= 1.0 && value.fract() == 0.0)
+                        .ok_or_else(|| format!("{name}: a group number is a whole number from 1"))?
+                        as u64;
+                    let dilution = words
+                        .get(at + 1)
+                        .and_then(|raw| parse_number(raw))
+                        .filter(|value| *value > 0.0)
+                        .ok_or_else(|| {
+                            format!("{name} group {group}: the dilution must be positive barns")
+                        })?;
+                    rows.insert(group, dilution);
+                    at += 2;
+                }
+            }
+            if at != words.len() {
+                return Err(format!(
+                    "{} word(s) follow the declared entries",
+                    words.len() - at
+                ));
+            }
+            Ok(table)
+        })();
+        match parsed {
+            Ok(table) => {
+                let index = self.log(cmd, Status::Noted, DEFERRED_DETAIL);
+                let (mut merged, mut entries) = self.shield.dilution.take().unwrap_or_default();
+                for (name, rows) in table {
+                    merged.entry(name).or_default().extend(rows);
+                }
+                entries.extend(index);
+                self.shield.dilution = Some((merged, entries));
+            }
+            Err(reason) => {
+                self.log(cmd, Status::Unsupported, reason);
+            }
+        }
     }
 
     /// GETXS (and the deprecated COLLAPSE, AINPUT).
@@ -2028,14 +2793,14 @@ impl<'a> Interp<'a> {
             .collect();
         match cmd.keyword.as_str() {
             "GRPCONVERT" => {
-                let index = self.log(cmd, Status::Noted, "resolved when the deck ends");
+                let index = self.log(cmd, Status::Noted, DEFERRED_DETAIL);
                 let previous = self.rebin.grpconvert.as_ref().and_then(|(_, index)| *index);
                 let index = self.replace_index(previous, index, cmd.line);
                 self.rebin.grpconvert = Some((numbers, index));
             }
             "CNVTYPE" => match numbers.first() {
                 Some(code) if *code == 0.0 || *code == 1.0 => {
-                    let index = self.log(cmd, Status::Noted, "resolved when the deck ends");
+                    let index = self.log(cmd, Status::Noted, DEFERRED_DETAIL);
                     let previous = self.rebin.cnvtype.and_then(|(_, index)| index);
                     let index = self.replace_index(previous, index, cmd.line);
                     self.rebin.cnvtype = Some((*code as u8, index));
@@ -2050,7 +2815,7 @@ impl<'a> Interp<'a> {
             },
             _ => match numbers.as_slice() {
                 [low, high, ..] if *low > 0.0 && low < high => {
-                    let index = self.log(cmd, Status::Noted, "resolved when the deck ends");
+                    let index = self.log(cmd, Status::Noted, DEFERRED_DETAIL);
                     let previous = self.rebin.limgrp.and_then(|(_, _, index)| index);
                     let index = self.replace_index(previous, index, cmd.line);
                     self.rebin.limgrp = Some((*low, *high, index));
@@ -2205,11 +2970,14 @@ impl<'a> Interp<'a> {
         match structure {
             Some(name) => {
                 self.photon.group_structure = Some(name);
-                self.log(
+                let index = self.log(
                     cmd,
                     Status::Mapped,
                     format!("photon.group_structure = \"{name}\""),
                 );
+                if index.is_some() {
+                    self.photon.group_entry = index;
+                }
             }
             None => {
                 self.log(
@@ -2402,6 +3170,689 @@ impl<'a> Interp<'a> {
             };
             self.set_entry(Some(index), status, detail);
         }
+    }
+
+    /// The covariance sidecar an uncertainty block uses, and whether the command line named it: the
+    /// `--covariance` file, else the catalog sidecar of the default library, else none.
+    fn covariance_source(
+        &self,
+        defaulted_library: bool,
+    ) -> Result<Option<(CovarianceRef, bool)>, String> {
+        Ok(match &self.ctx.covariance {
+            Some(reference) => Some((reference.clone(), true)),
+            None if defaulted_library => {
+                let catalog = actinv_data::catalog::embedded_catalog()?;
+                let artifact = catalog.artifact(DEFAULT_COVARIANCE)?;
+                Some((
+                    CovarianceRef {
+                        path: format!("catalog:{DEFAULT_COVARIANCE}"),
+                        sha256: artifact.sha256.clone(),
+                    },
+                    false,
+                ))
+            }
+            None => None,
+        })
+    }
+
+    /// The same status and text on every entry of a keyword.
+    fn settle(&mut self, entries: &[usize], status: Status, detail: impl Into<String>) {
+        let detail = detail.into();
+        for index in entries {
+            self.set_entry(Some(*index), status, detail.clone());
+        }
+    }
+
+    /// Settle the uncertainty keywords against the uncertainty block (`None` when none is emitted):
+    /// SENSITIVITY SIGMA, UNCTYPE, ERROR, MCSAMPLE and MCSEED. An ERROR override joins `overrides`
+    /// only beside a block that carries the cross-section channel it rescales.
+    fn settle_uncertainty_keywords(
+        &mut self,
+        uncertainty: &mut Option<Value>,
+        blocker: Option<&str>,
+        defaulted_library: bool,
+    ) -> Result<(), String> {
+        let mut sensitivity_mapped = false;
+        if let Some(entries) = self.unc.sensitivity.take() {
+            let mut refusal: Option<String> = None;
+            if uncertainty.is_none() {
+                refusal = if self.noerror {
+                    Some("NOERROR switches uncertainty off".to_string())
+                } else if !self.projectile.is_neutron() {
+                    Some("MF=33 uncertainty is available for neutron activation only".to_string())
+                } else if let Some(blocker) = blocker {
+                    Some(format!("ACTINV refuses uncertainty beside {blocker}"))
+                } else {
+                    match self.covariance_source(defaulted_library)? {
+                        Some((reference, _)) => {
+                            *uncertainty = Some(json!({
+                                "covariance": {"path": reference.path, "sha256": reference.sha256},
+                            }));
+                            None
+                        }
+                        None => Some(
+                            "it needs a covariance sidecar paired with the library: pass --covariance FILE"
+                                .to_string(),
+                        ),
+                    }
+                };
+            }
+            match (refusal, uncertainty.as_mut()) {
+                (None, Some(block)) => {
+                    block["voi"] = json!({"top": SENSITIVITY_VOI_TOP});
+                    sensitivity_mapped = true;
+                    self.settle(
+                        &entries,
+                        Status::Approximated,
+                        format!("uncertainty.voi.top = {SENSITIVITY_VOI_TOP}: ACTINV ranks the cross-section parameters by first-order variance share of each response, in place of FISPACT-II's sampled sensitivity coefficients; the reactions, nuclides and correlation cut-off the deck lists do not restrict the table, and the uncertainty block is added even when no UNCERTAINTY keyword asked for one"),
+                    );
+                }
+                (refusal, _) => self.settle(
+                    &entries,
+                    Status::Unsupported,
+                    format!(
+                        "no uncertainty block can be emitted, so there are no variance shares: {}",
+                        refusal.unwrap_or_default()
+                    ),
+                ),
+            }
+        }
+        let sampling = std::mem::take(&mut self.unc.sampling);
+        if sensitivity_mapped {
+            self.settle(
+                &sampling,
+                Status::Noted,
+                "parameterises the Monte-Carlo sampling of SENSITIVITY (distribution, sample count, cut-offs or random seed); the mapped sensitivity is ACTINV's analytic first-order result, so none of them has an effect",
+            );
+        } else {
+            self.settle(
+                &sampling,
+                Status::Unsupported,
+                "parameterises the Monte-Carlo sampling of SENSITIVITY, and no SENSITIVITY SIGMA was mapped; ACTINV has no sampling to configure",
+            );
+        }
+        let mut channel_two_only = false;
+        if let Some((kind, entries)) = self.unc.unctype.take() {
+            match uncertainty.as_mut() {
+                Some(block) => {
+                    let (channels, status, detail) = match kind {
+                        1 => (
+                            vec!["cross_section_mf33"],
+                            Status::Mapped,
+                            "uncertainty.channels = [cross_section_mf33]",
+                        ),
+                        2 => {
+                            channel_two_only = true;
+                            (
+                                vec!["decay_constants"],
+                                Status::Approximated,
+                                "uncertainty.channels = [decay_constants]; ACTINV propagates the MF=33 covariance whenever a covariance sidecar is given, so the cross-section contribution cannot be switched off and the band is wider than the half-life-only band FISPACT-II reports",
+                            )
+                        }
+                        _ => (
+                            vec!["cross_section_mf33", "decay_constants"],
+                            Status::Mapped,
+                            "uncertainty.channels = [cross_section_mf33, decay_constants]",
+                        ),
+                    };
+                    block["channels"] = json!(channels);
+                    self.settle(&entries, status, detail);
+                }
+                None => self.settle(
+                    &entries,
+                    Status::Noted,
+                    "no uncertainty block is emitted, so the choice of contributions has no effect",
+                ),
+            }
+        }
+        let overrides = std::mem::take(&mut self.unc.error_overrides);
+        let entries = std::mem::take(&mut self.unc.error_entries);
+        if !overrides.is_empty() {
+            if uncertainty.is_some() && !channel_two_only {
+                let listing: Vec<String> = overrides
+                    .iter()
+                    .map(|item| {
+                        format!(
+                            "{} MT {} = {}",
+                            item.nuclide,
+                            item.mt.unwrap_or_default(),
+                            item.value
+                        )
+                    })
+                    .collect();
+                self.settle(
+                    &entries,
+                    Status::Approximated,
+                    format!(
+                        "overrides cross_section_uncertainty: {}. The fractional error is read as the relative standard uncertainty of that reaction's collapsed cross section, and ACTINV rescales the reaction's covariance to it with the correlations unchanged; FISPACT-II applies it inside a sensitivity run",
+                        listing.join(", ")
+                    ),
+                );
+                self.overrides.extend(overrides);
+            } else {
+                let reason = if channel_two_only {
+                    "UNCTYPE 2 leaves the cross-section channel out"
+                } else {
+                    "no uncertainty block is emitted (it needs a UNCERTAINTY level, a covariance sidecar and none of the blockers), and an override of the cross-section uncertainty needs the cross-section channel"
+                };
+                let open: Vec<usize> = entries
+                    .into_iter()
+                    .filter(|index| {
+                        self.entries
+                            .get(*index)
+                            .is_some_and(|entry| entry.status != Status::Unsupported)
+                    })
+                    .collect();
+                self.settle(
+                    &open,
+                    Status::Unsupported,
+                    format!("a per-reaction cross-section uncertainty cannot be applied: {reason}"),
+                );
+            }
+        }
+        Ok(())
+    }
+
+    /// Settle the fission keywords against the `--fission-yields` files. Returns the
+    /// `fission_yields` section (`None` when fission-product yields stay off) and the FISCHOOSE list
+    /// with its entries, which the pathways section settles.
+    #[allow(clippy::type_complexity)]
+    fn settle_fission(&mut self) -> (Option<Value>, Option<(Vec<String>, Vec<usize>)>) {
+        let rec = std::mem::take(&mut self.fission);
+        let files = self.ctx.fission_yields.clone();
+        if let Some(entries) = &rec.nofiss {
+            self.settle(
+                entries,
+                Status::Mapped,
+                "fission_yields.files stays empty: no fission-product yields enter the rate matrix, as FISPACT-II skips the yield data (the default without USEFISSION; --fission-yields is not applied)",
+            );
+        }
+        let mut refusal: Option<(Status, String)> = None;
+        if rec.nofiss.is_some() {
+            refusal = Some((
+                Status::Noted,
+                "NOFISS keeps the yield data out, so no fission products are produced".to_string(),
+            ));
+        } else if !self.projectile.is_neutron() {
+            refusal = Some((
+                Status::Unsupported,
+                "ACTINV's fission-yield files are for neutron activation only".to_string(),
+            ));
+        } else if files.is_empty() {
+            refusal = Some((
+                Status::Unsupported,
+                "fission-product yields are spec fission_yields.files, hash-pinned ENDF neutron-induced yield files (one per parent) that the deck does not name: pass --fission-yields FILE..."
+                    .to_string(),
+            ));
+        }
+        let mut section = None;
+        let mut parents_detail = String::new();
+        if let Some(entries) = &rec.use_fission {
+            match &refusal {
+                Some((status, detail)) => self.settle(entries, *status, detail.clone()),
+                None => {
+                    let supplied: Vec<(i32, i32)> = files
+                        .iter()
+                        .map(|file| (file.parent_za, file.parent_liso))
+                        .collect();
+                    let (parents, detail) = fission_parent_selection(
+                        &supplied,
+                        rec.yield_parents.as_ref().map(|(list, _)| list),
+                    );
+                    parents_detail = detail;
+                    let mut map = Map::new();
+                    map.insert(
+                        "files".into(),
+                        json!(files
+                            .iter()
+                            .map(|file| json!({"path": file.file.path, "sha256": file.file.sha256}))
+                            .collect::<Vec<_>>()),
+                    );
+                    if rec.cumulative.is_some() {
+                        map.insert("yields".into(), json!("cumulative"));
+                    }
+                    if let Some(parents) = parents {
+                        map.insert("parents".into(), parents);
+                    }
+                    section = Some(Value::Object(map));
+                    self.settle(
+                        entries,
+                        Status::Mapped,
+                        format!(
+                            "fission_yields.files = the {} --fission-yields file(s) (parents {}); energy stays at the spec default (spectrum_average); {parents_detail}",
+                            files.len(),
+                            files
+                                .iter()
+                                .map(|file| nuclide_label(file.parent_za, file.parent_liso))
+                                .collect::<Vec<_>>()
+                                .join(", ")
+                        ),
+                    );
+                }
+            }
+        }
+        if let Some(entries) = &rec.cumulative {
+            if section.is_some() {
+                self.settle(
+                    entries,
+                    Status::Mapped,
+                    "fission_yields.yields = \"cumulative\" (the MT=459 yields instead of the MT=454 independent ones)",
+                );
+            } else {
+                self.settle(
+                    entries,
+                    Status::Noted,
+                    "no fission-product yields are in the spec, so the yield set has no effect",
+                );
+            }
+        }
+        if let Some((_, entries)) = &rec.yield_parents {
+            if section.is_some() {
+                self.settle(
+                    entries,
+                    Status::Mapped,
+                    format!("fission_yields.parents: {parents_detail}"),
+                );
+            } else {
+                self.settle(
+                    entries,
+                    Status::Noted,
+                    "no fission-product yields are in the spec (USEFISSION and yield files are both needed), so the parent selection has no effect",
+                );
+            }
+        }
+        (section, rec.choose)
+    }
+
+    /// Settle the self-shielding keywords against `--resonance` and `--self-shielding-table`.
+    /// Returns the `self_shielding` section and whether it needs a density the deck lacks.
+    fn settle_self_shielding(&mut self, groups: usize) -> (Option<Value>, bool) {
+        let rec = std::mem::take(&mut self.shield);
+        let table = self.ctx.self_shielding_table.clone();
+        let resonance = self.ctx.resonance.clone();
+        let geometry_asked = rec.geometry.is_some();
+        let table_asked = rec.probtable.is_some() || rec.dilution.is_some();
+        let companions: Vec<usize> = [
+            rec.choose.as_ref().map(|(_, entries)| entries),
+            rec.mass.as_ref(),
+            rec.fuel.as_ref(),
+        ]
+        .into_iter()
+        .flatten()
+        .flatten()
+        .copied()
+        .collect();
+        let requests: Vec<usize> = rec
+            .geometry
+            .iter()
+            .flat_map(|(_, entries)| entries.iter().copied())
+            .chain(rec.probtable.iter().flatten().copied())
+            .chain(
+                rec.dilution
+                    .iter()
+                    .flat_map(|(_, entries)| entries.iter().copied()),
+            )
+            .collect();
+        if !geometry_asked && !table_asked {
+            // names or a composition with nothing that uses them
+            let (status, detail) = if table.is_some() || !resonance.is_empty() {
+                (
+                    Status::Noted,
+                    "no SSFGEOMETRY, PROBTABLE or SSFDILUTION asks for self-shielding, so this selection has no effect",
+                )
+            } else {
+                (
+                    Status::Unsupported,
+                    "self-shielding needs spec self_shielding, a hash-pinned ENDF resonance evaluation per nuclide (--resonance FILE...) for the geometry model or a Bondarenko table (--self-shielding-table FILE), which the deck does not name",
+                )
+            };
+            self.settle(&companions, status, detail);
+            return (None, false);
+        }
+        let refusal: Option<String> = if !self.projectile.is_neutron() {
+            Some("self-shielding is neutron-only in ACTINV".to_string())
+        } else if geometry_asked && table_asked {
+            Some("FISPACT-II does not allow SSFGEOMETRY beside PROBTABLE, and ACTINV's self-shielding takes a table or a geometry, not both".to_string())
+        } else if geometry_asked && resonance.is_empty() {
+            Some("geometry self-shielding is spec self_shielding.geometry, which needs hash-pinned ENDF resonance evaluations the deck does not name: pass --resonance FILE...".to_string())
+        } else if table_asked && table.is_none() {
+            Some("table self-shielding is spec self_shielding.table, a hash-pinned Bondarenko table the deck does not name: pass --self-shielding-table FILE".to_string())
+        } else {
+            None
+        };
+        if let Some(reason) = refusal {
+            self.settle(&requests, Status::Unsupported, reason.clone());
+            self.settle(&companions, Status::Unsupported, reason);
+            return (None, false);
+        }
+        let composition = "ACTINV self-shields the problem's own material (MASS or FUEL, with the density), not a separate self-shielding composition; the two agree only when the deck gives the same material to both";
+        if let Some((geometry, entries)) = &rec.geometry {
+            let mut map = Map::new();
+            map.insert("shape".into(), json!(geometry.shape));
+            map.insert("length_cm".into(), json!(geometry.length_cm));
+            if let Some(height) = geometry.height_cm {
+                map.insert("height_cm".into(), json!(height));
+            }
+            if let Some(density) = self.density {
+                map.insert("density_g_cm3".into(), json!(density));
+            }
+            map.insert(
+                "resonance_files".into(),
+                json!(resonance
+                    .iter()
+                    .map(|file| json!({"path": file.path, "sha256": file.sha256}))
+                    .collect::<Vec<_>>()),
+            );
+            let chosen: Vec<String> = rec
+                .choose
+                .as_ref()
+                .map(|(names, _)| names.clone())
+                .unwrap_or_default();
+            if !chosen.is_empty() {
+                map.insert("choose".into(), json!(chosen));
+            }
+            let density = match self.density {
+                Some(density) => format!("density_g_cm3 = {density} (DENSITY)"),
+                None => "the deck has no DENSITY, so add self_shielding.geometry.density_g_cm3 or material.density_g_cm3 (see required_additions)".to_string(),
+            };
+            let size = match geometry.height_cm {
+                Some(height) => format!(
+                    "length_cm = {} (radius), height_cm = {height}",
+                    geometry.length_cm
+                ),
+                None => format!("length_cm = {}", geometry.length_cm),
+            };
+            self.settle(
+                entries,
+                Status::Mapped,
+                format!(
+                    "self_shielding.geometry: shape \"{}\", {size}, {density}, {} resonance file(s) from --resonance",
+                    geometry.shape,
+                    resonance.len()
+                ),
+            );
+            if let Some((names, entries)) = &rec.choose {
+                if names.is_empty() {
+                    self.settle(
+                        entries,
+                        Status::Noted,
+                        "names no nuclide, so no restriction applies",
+                    );
+                } else {
+                    self.settle(
+                        entries,
+                        Status::Mapped,
+                        format!("self_shielding.geometry.choose = {}", json!(names)),
+                    );
+                }
+            }
+            for entries in [&rec.mass, &rec.fuel].into_iter().flatten() {
+                self.settle(entries, Status::Approximated, composition);
+            }
+            return (
+                Some(json!({"geometry": Value::Object(map)})),
+                self.density.is_none(),
+            );
+        }
+        // table mode
+        let table = table.expect("table mode is refused without --self-shielding-table");
+        let mut map = Map::new();
+        map.insert(
+            "table".into(),
+            json!({"path": table.path, "sha256": table.sha256}),
+        );
+        if let Some(entries) = &rec.probtable {
+            self.settle(
+                entries,
+                Status::Approximated,
+                "self_shielding.table = --self-shielding-table: Bondarenko self-shielding factors on a dilution x temperature grid are applied in place of FISPACT-II's probability tables (a multiplicative factor on the collapsed cross section, whichever way the deck sets PROBTABLE's switches)",
+            );
+        }
+        if let Some((names, dilution_entries)) = &rec.dilution {
+            let mut converted: BTreeMap<String, BTreeMap<usize, f64>> = BTreeMap::new();
+            let mut bad: Option<String> = None;
+            for (name, rows) in names {
+                for (group, value) in rows {
+                    // FISPACT-II numbers the groups from the highest energy; ACTINV's index is 0-based
+                    // and ascending in energy
+                    match usize::try_from(*group)
+                        .ok()
+                        .filter(|group| *group <= groups)
+                    {
+                        Some(group) => {
+                            converted
+                                .entry(name.clone())
+                                .or_default()
+                                .insert(groups - group, *value);
+                        }
+                        None => {
+                            bad.get_or_insert_with(|| {
+                                format!(
+                                    "{name} group {group} is outside the library's {groups} groups"
+                                )
+                            });
+                        }
+                    }
+                }
+            }
+            match bad {
+                Some(reason) => {
+                    self.settle(dilution_entries, Status::Unsupported, reason);
+                }
+                None => {
+                    map.insert("dilution_overrides".into(), json!(converted));
+                    let pick = if rec.probtable.is_none() {
+                        "; SSFDILUTION alone selects the table mode, since there is no PROBTABLE"
+                    } else {
+                        ""
+                    };
+                    self.settle(
+                        dilution_entries,
+                        Status::Mapped,
+                        format!(
+                            "self_shielding.dilution_overrides: FISPACT-II group g (1 = highest energy) becomes ACTINV index {groups} - g (0-based, ascending energy) of the {groups}-group library, so group 1 is index {} and group {groups} is index 0{pick}",
+                            groups - 1
+                        ),
+                    );
+                }
+            }
+        }
+        if let Some((_, entries)) = &rec.choose {
+            self.settle(
+                entries,
+                Status::Approximated,
+                "ACTINV shields every material nuclide the table covers; the names do not restrict it",
+            );
+        }
+        for entries in [&rec.mass, &rec.fuel].into_iter().flatten() {
+            self.settle(entries, Status::Approximated, composition);
+        }
+        (Some(Value::Object(map)), false)
+    }
+
+    /// NOXRAY, SPEK and READGG against the spec's `photon` section and the `ggbins` file.
+    fn settle_photon(&mut self) {
+        if let Some(entries) = self.photon.noxray.take() {
+            self.photon.exclude_xrays = true;
+            self.settle(
+                &entries,
+                Status::Mapped,
+                "photon.exclude_xrays = true: the decay records' X-ray lines are dropped from the photon source after each nuclide's spectrum is scaled to its mean electromagnetic energy; the spec writes no options.outputs list, so the default outputs (which include photons) build the photon source",
+            );
+        }
+        if let Some(entries) = self.photon.spek.take() {
+            self.photon.estimate_missing = true;
+            self.settle(
+                &entries,
+                Status::Approximated,
+                "photon.missing_spectra = \"estimate\": a nuclide whose decay record gives a mean electromagnetic energy but no photon spectrum receives an exponential shape set by its mean energy per decay mode, not FISPACT-II's own approximate spectrum, and the result carries certified lower and upper dose bounds for the estimate; the spec writes no options.outputs list, so the default outputs (which include photons) build the photon source",
+            );
+        }
+        if let Some(entries) = self.photon.readgg.take() {
+            let outcome: Result<(String, Vec<f64>), String> = match &self.ctx.gamma_groups {
+                None => Err("READGG reads its group bins from the `ggbins` entry of the files file, and none was found: pass --files FILES with a `ggbins PATH` line".to_string()),
+                Some(Err(reason)) => Err(format!("the `ggbins` file cannot be read: {reason}")),
+                Some(Ok(file)) => parse_gamma_groups(&file.text)
+                    .map(|bounds| (file.path.clone(), bounds))
+                    .map_err(|reason| format!("the `ggbins` file {} {reason}", file.path)),
+            };
+            match outcome {
+                Ok((path, bounds)) => {
+                    let groups = bounds.len() - 1;
+                    self.photon.group_structure = Some("custom");
+                    self.photon.boundaries = Some(bounds);
+                    self.settle(
+                        &entries,
+                        Status::Mapped,
+                        format!("photon.group_structure = \"custom\" with photon.group_boundaries_eV from the `ggbins` file {path}: {groups} groups, ascending eV, as the file lists them"),
+                    );
+                    let group_entry = self.photon.group_entry.take();
+                    self.set_entry(
+                        group_entry,
+                        Status::Noted,
+                        "superseded by READGG: the gamma group file gives the photon structure"
+                            .into(),
+                    );
+                }
+                Err(reason) => self.settle(&entries, Status::Unsupported, reason),
+            }
+        }
+    }
+
+    /// ALLDISPEN and ATDISPEN against `--damage` and the deck's elements. Without either keyword
+    /// FISPACT-II still computes displacement rates, with its own default energies, so `--damage`
+    /// alone also yields a `damage` section.
+    fn settle_damage(&mut self, elements: &BTreeSet<String>) -> Option<Value> {
+        let rec = std::mem::take(&mut self.damage);
+        let asked = !rec.entries.is_empty();
+        let table = self.ctx.damage.clone();
+        if !asked && table.is_none() {
+            return None;
+        }
+        let recorded = self.ctx.damage_energies_ev.clone();
+        let default_of = |symbol: &str| {
+            DEFAULT_DISPLACEMENT_EV
+                .iter()
+                .find(|(name, _)| *name == symbol)
+                .map_or(OTHER_DISPLACEMENT_EV, |(_, energy)| *energy)
+        };
+        let mut energies: BTreeMap<String, f64> = BTreeMap::new();
+        let mut given: BTreeMap<String, f64> = BTreeMap::new();
+        let mut filled: Vec<String> = Vec::new();
+        let mut shifted = false;
+        for symbol in elements {
+            match rec.atoms.get(symbol).copied().or(rec.all) {
+                Some(energy) => {
+                    energies.insert(symbol.clone(), energy);
+                    given.insert(symbol.clone(), energy);
+                }
+                None => {
+                    let from_table = recorded.as_ref().and_then(|map| map.get(symbol)).copied();
+                    let energy = from_table.unwrap_or_else(|| default_of(symbol));
+                    if from_table.is_some_and(|value| value != default_of(symbol)) {
+                        shifted = true;
+                    }
+                    let source = if from_table.is_some() {
+                        "the energy the table was built with"
+                    } else {
+                        "FISPACT-II's default"
+                    };
+                    filled.push(format!("{symbol} {energy} eV ({source})"));
+                    energies.insert(symbol.clone(), energy);
+                }
+            }
+        }
+        let command = build_damage_command(&energies);
+        let entries: Vec<usize> = if asked {
+            rec.entries.clone()
+        } else {
+            self.entries.push(Entry {
+                keyword: "DISPLACEMENT".into(),
+                line: 0,
+                phase: Phase::Library,
+                status: Status::Noted,
+                detail: DEFERRED_DETAIL.into(),
+                args: String::new(),
+            });
+            vec![self.entries.len() - 1]
+        };
+        let Some(table) = table else {
+            self.settle(
+                &entries,
+                Status::Unsupported,
+                format!("displacement-damage rates need a damage table in the spec: pass --damage TABLE (an actinv-damage-table-1 or -2 file); to build one for these energies run `{command}`"),
+            );
+            return None;
+        };
+        let mismatches: Vec<String> = given
+            .iter()
+            .filter_map(|(symbol, energy)| {
+                let built = *recorded.as_ref()?.get(symbol)?;
+                ((built - energy).abs() > 1e-12 * built.abs().max(energy.abs())).then(|| {
+                    format!(
+                        "{symbol}: the deck gives {energy} eV, the table was built with {built} eV"
+                    )
+                })
+            })
+            .collect();
+        if !mismatches.is_empty() {
+            self.settle(
+                &entries,
+                Status::Unsupported,
+                format!("the deck's displacement energies disagree with the damage table ({}); ACTINV does not mix them, because the table's recoil integrals were computed at its own energies; build a matching table with `{command}`", mismatches.join("; ")),
+            );
+            return None;
+        }
+        let mut detail = format!(
+            "damage.table = --damage {}; damage.displacement_energy_eV = {}",
+            table.path,
+            json!(energies)
+        );
+        if recorded.is_some() {
+            if given.is_empty() {
+                detail.push_str("; the energies are the ones the table was built with");
+            } else {
+                detail.push_str(
+                    "; every energy the deck gives equals the one the table was built with",
+                );
+            }
+        } else {
+            detail.push_str("; the table records no displacement energies (an actinv-damage-table-1 file), so the deck's are used as given");
+        }
+        if !asked {
+            detail.push_str("; the deck has neither ALLDISPEN nor ATDISPEN, and FISPACT-II then computes displacement rates with its default energies (table 8 of its manual, 25 eV for other elements)");
+        }
+        if !filled.is_empty() {
+            detail.push_str(&format!("; no energy was given for {}", filled.join(", ")));
+        }
+        if shifted {
+            detail.push_str("; the table's energy differs from FISPACT-II's default for some of these, so the result is not FISPACT-II's own");
+        }
+        let unlisted: Vec<&String> = rec
+            .atoms
+            .keys()
+            .filter(|symbol| !elements.contains(*symbol))
+            .collect();
+        if !unlisted.is_empty() {
+            detail.push_str(&format!(
+                "; ATDISPEN also names {}, which the material does not contain, so they are not written",
+                unlisted
+                    .iter()
+                    .map(|symbol| symbol.as_str())
+                    .collect::<Vec<_>>()
+                    .join(", ")
+            ));
+        }
+        let status = if shifted {
+            Status::Approximated
+        } else {
+            Status::Mapped
+        };
+        self.settle(&entries, status, detail);
+        Some(json!({
+            "table": {"path": table.path, "sha256": table.sha256},
+            "displacement_energy_eV": energies,
+        }))
     }
 
     fn finish(mut self, deck_ended: bool) -> Result<Conversion, String> {
@@ -2647,11 +4098,9 @@ impl<'a> Interp<'a> {
         let has_partition = self.steps.iter().any(|step| step.partition.is_some());
         let uncertainty_blocker = if has_power {
             Some("power-driven schedule steps")
-        } else if self
-            .overrides
-            .iter()
-            .any(|item| item.kind.starts_with("cross_section"))
-        {
+        } else if self.overrides.iter().any(|item| {
+            item.kind.starts_with("cross_section") && item.kind != "cross_section_uncertainty"
+        }) {
             Some("cross-section overrides (the MF=33 collapse is anchored to the library value)")
         } else {
             None
@@ -2684,21 +4133,7 @@ impl<'a> Interp<'a> {
                     format!("ACTINV refuses uncertainty beside {blocker}, so no uncertainty block is emitted"),
                 );
             } else {
-                let covariance = match &self.ctx.covariance {
-                    Some(reference) => Some((reference.clone(), true)),
-                    None if defaulted_library => {
-                        let catalog = actinv_data::catalog::embedded_catalog()?;
-                        let artifact = catalog.artifact(DEFAULT_COVARIANCE)?;
-                        Some((
-                            CovarianceRef {
-                                path: format!("catalog:{DEFAULT_COVARIANCE}"),
-                                sha256: artifact.sha256.clone(),
-                            },
-                            false,
-                        ))
-                    }
-                    None => None,
-                };
+                let covariance = self.covariance_source(defaulted_library)?;
                 match covariance {
                     Some((reference, explicit)) => {
                         let pathways = if self.iuncer == 2 {
@@ -2737,6 +4172,26 @@ impl<'a> Interp<'a> {
                 "level 0: no uncertainty output".into(),
             );
         }
+
+        let blocker = uncertainty_blocker;
+        self.settle_uncertainty_keywords(&mut uncertainty, blocker, defaulted_library)?;
+        let (fission_section, fission_choose) = self.settle_fission();
+        let (shield_section, shield_needs_density) = self.settle_self_shielding(groups);
+        self.settle_photon();
+
+        // the elements the displacement energies are given for
+        let deck_elements: BTreeSet<String> = match &material {
+            MaterialDef::Mass { elements, .. } => elements.keys().cloned().collect(),
+            MaterialDef::Fuel { atoms_per_g, .. } => atoms_per_g
+                .keys()
+                .filter_map(|name| match material_key(name) {
+                    Ok(MaterialKey::Nuclide { za, .. }) => Some(symbol_of(za / 1000).to_string()),
+                    Ok(MaterialKey::Element(symbol)) => Some(symbol),
+                    Err(_) => None,
+                })
+                .collect(),
+        };
+        let damage_section = self.settle_damage(&deck_elements);
 
         // material
         let (material, material_g) = match material {
@@ -2777,6 +4232,23 @@ impl<'a> Interp<'a> {
         if let Some(uncertainty) = uncertainty {
             spec.insert("uncertainty".into(), uncertainty);
         }
+        let fission_used = fission_section.is_some();
+        if let Some(section) = fission_section {
+            spec.insert("fission_yields".into(), section);
+        }
+        let shielding_kind = shield_section.as_ref().map(|section| {
+            if section.get("geometry").is_some() {
+                "geometry"
+            } else {
+                "table"
+            }
+        });
+        if let Some(section) = shield_section {
+            spec.insert("self_shielding".into(), section);
+        }
+        if let Some(section) = damage_section {
+            spec.insert("damage".into(), section);
+        }
         let mut photon = Map::new();
         if let Some(name) = self.photon.group_structure {
             photon.insert("group_structure".into(), json!(name));
@@ -2784,11 +4256,20 @@ impl<'a> Interp<'a> {
         if let Some(distance) = self.photon.point_source_m {
             photon.insert("point_source".into(), json!({"distance_m": distance}));
         }
+        if let Some(bounds) = &self.photon.boundaries {
+            photon.insert("group_boundaries_eV".into(), json!(bounds));
+        }
         if !self.photon.bremsstrahlung.is_empty() {
             photon.insert(
                 "bremsstrahlung".into(),
                 json!({"nuclides": self.photon.bremsstrahlung}),
             );
+        }
+        if self.photon.estimate_missing {
+            photon.insert("missing_spectra".into(), json!("estimate"));
+        }
+        if self.photon.exclude_xrays {
+            photon.insert("exclude_xrays".into(), json!(true));
         }
         if !photon.is_empty() {
             spec.insert("photon".into(), Value::Object(photon));
@@ -2844,9 +4325,42 @@ impl<'a> Interp<'a> {
                     if !self.pathway_targets.is_empty() {
                         pathways.insert("targets".into(), json!(self.pathway_targets));
                     }
+                    if let Some((names, _)) = &fission_choose {
+                        let mut parents: Vec<&String> = Vec::new();
+                        for name in names {
+                            if !parents.contains(&name) {
+                                parents.push(name);
+                            }
+                        }
+                        if !parents.is_empty() {
+                            pathways.insert("fission_parents".into(), json!(parents));
+                        }
+                    }
                     spec.insert("pathways".into(), Value::Object(pathways));
                 }
             }
+        }
+        if let Some((names, entries)) = &fission_choose {
+            let (status, detail) = if names.is_empty() {
+                (
+                    Status::Noted,
+                    "names no actinide, so pathways keep every fission parent".to_string(),
+                )
+            } else if spec.contains_key("pathways") {
+                (
+                    Status::Mapped,
+                    format!(
+                        "pathways.fission_parents = {}: routes through a fission edge may start only from these parents; the inventory is unchanged, as in FISPACT-II",
+                        json!(names)
+                    ),
+                )
+            } else {
+                (
+                    Status::Noted,
+                    "restricts the parents of fission pathways, and the deck requests no pathways (PATH or ROUTES), so there is nothing to restrict".to_string(),
+                )
+            };
+            self.settle(entries, status, detail);
         }
 
         // A power-driven step needs a kerma table that no deck provides. The spec is emitted
@@ -2873,6 +4387,19 @@ impl<'a> Interp<'a> {
                 "keyword": "POWER",
                 "line": self.power_line,
                 "reason": "power-driven steps need kerma.table, a hash-pinned actinv-kerma-table-1 file (build one with scripts/build_kerma_table.py); until it is added the spec does not validate",
+            }));
+        }
+        if shield_needs_density {
+            // geometry self-shielding turns atoms per gram into number densities with a density
+            // that no DENSITY keyword gave
+            if validated["material"].get("density_g_cm3").is_none() {
+                validated["material"]["density_g_cm3"] = json!(1.0);
+            }
+            required.push(json!({
+                "field": "self_shielding.geometry.density_g_cm3",
+                "keyword": "SSFGEOMETRY",
+                "line": self.entries.iter().find(|entry| entry.keyword == "SSFGEOMETRY").map(|entry| entry.line),
+                "reason": "geometry self-shielding needs the target density; the deck has no DENSITY, so add self_shielding.geometry.density_g_cm3 (or material.density_g_cm3); until it is added the spec does not validate",
             }));
         }
 
@@ -2928,7 +4455,18 @@ impl<'a> Interp<'a> {
         } else {
             "--library"
         };
-        let report = json!({
+        // options that were supplied and that nothing in the deck used
+        let mut unused: Vec<&str> = Vec::new();
+        if !self.ctx.fission_yields.is_empty() && !fission_used {
+            unused.push("--fission-yields");
+        }
+        if !self.ctx.resonance.is_empty() && shielding_kind != Some("geometry") {
+            unused.push("--resonance");
+        }
+        if self.ctx.self_shielding_table.is_some() && shielding_kind != Some("table") {
+            unused.push("--self-shielding-table");
+        }
+        let mut report = json!({
             "schema": "actinv-fispact-import-report-1",
             "title": self.title,
             "density_g_cm3": self.density,
@@ -2954,6 +4492,9 @@ impl<'a> Interp<'a> {
             "required_additions": required,
             "entries": entries,
         });
+        if !unused.is_empty() {
+            report["options_unused"] = json!(unused);
+        }
         Ok(Conversion {
             spec: Value::Object(spec),
             report,
@@ -2961,6 +4502,56 @@ impl<'a> Interp<'a> {
             unsupported,
         })
     }
+}
+
+/// The `actinv build-damage` command that builds a table with these displacement energies (one
+/// `--displacement-energy EL=eV` per element).
+fn build_damage_command(energies: &BTreeMap<String, f64>) -> String {
+    let flags: Vec<String> = energies
+        .iter()
+        .map(|(symbol, energy)| format!("--displacement-energy {symbol}={energy}"))
+        .collect();
+    format!(
+        "actinv build-damage EVALUATION_DIR OUT.json --method kinematic {}",
+        flags.join(" ")
+    )
+    .trim_end()
+    .to_string()
+}
+
+/// The group boundaries of a FISPACT-II `ggbins` file (manual section 4.64): the group count N,
+/// then N + 1 energies in eV, ascending and positive. Returns the reason when the text breaks
+/// that format, phrased to follow the file's name.
+pub fn parse_gamma_groups(text: &str) -> Result<Vec<f64>, String> {
+    let words: Vec<&str> = text.split_whitespace().collect();
+    let Some((first, rest)) = words.split_first() else {
+        return Err("is empty".into());
+    };
+    let count = parse_number(first)
+        .filter(|value| value.fract() == 0.0 && *value >= 1.0 && *value <= 1.0e6)
+        .ok_or_else(|| format!("starts with '{first}', not a whole group count"))?
+        as usize;
+    let mut bounds = Vec::with_capacity(rest.len());
+    for word in rest {
+        bounds
+            .push(parse_number(word).ok_or_else(|| format!("has the non-numeric word '{word}'"))?);
+    }
+    if bounds.len() != count + 1 {
+        return Err(format!(
+            "declares {count} group(s), so {} energies, but lists {}",
+            count + 1,
+            bounds.len()
+        ));
+    }
+    if let Some(bad) = bounds.iter().find(|value| **value <= 0.0) {
+        return Err(format!(
+            "has the energy {bad}, which is not positive (zero is not allowed as the first energy)"
+        ));
+    }
+    if bounds.windows(2).any(|pair| pair[1] <= pair[0]) {
+        return Err("is not strictly ascending (the energies must increase, in eV)".into());
+    }
+    Ok(bounds)
 }
 
 /// Command executions the PULSE loops expand to (a zero-count body is interpreted once), refused
@@ -3086,6 +4677,7 @@ mod tests {
             library: Some("library.npz".into()),
             decay: Some("decay.endf".into()),
             covariance: None,
+            ..ImportContext::default()
         }
     }
 
@@ -3714,6 +5306,7 @@ END
             library: Some("library.npz".into()),
             decay: Some("decay.endf".into()),
             covariance: None,
+            ..ImportContext::default()
         };
         let error = convert(&deck_with("FLUX 1E10\nTIME 1 HOURS ATOMS"), &ctx)
             .err()
@@ -4231,26 +5824,6 @@ END
     }
 
     #[test]
-    fn self_shielding_keywords_say_which_data_the_deck_lacks() {
-        let deck = deck_with(
-            "SSFGEOMETRY 1 0.01\nSSFCHOOSE 1 FE\nSSFDILUTION FE56 1 10.0\nPROBTABLE 1\nFLUX 1E10\nTIME 1 HOURS ATOMS",
-        );
-        let conversion = convert(&deck, &context()).unwrap();
-        assert!(conversion.spec.get("self_shielding").is_none());
-        for keyword in ["SSFGEOMETRY", "SSFCHOOSE", "SSFDILUTION", "PROBTABLE"] {
-            assert_eq!(
-                entry_status(&conversion, keyword),
-                vec!["unsupported"],
-                "{keyword}"
-            );
-            assert!(
-                entry_detail(&conversion, keyword).contains("hash-pinned"),
-                "{keyword}"
-            );
-        }
-    }
-
-    #[test]
     fn triton_and_helion_need_an_explicit_library() {
         let deck = "PROJECTILE 6\nFISPACT\n* t\nMASS 1E-3 1\n FE 100\nFLUX 1E10\nTIME 1 HOURS ATOMS\nEND\n";
         let ctx = ImportContext {
@@ -4598,12 +6171,10 @@ ZERO
             "PULSE 0\n SSFGEOMETRY 1 0.5\n FROBNICATE\n FLUX 7E7\nENDPULSE\nFLUX 1E10\nTIME 1 HOURS ATOMS",
         );
         let conversion = convert(&deck, &context()).unwrap();
-        assert_eq!(
-            entry_status(&conversion, "SSFGEOMETRY"),
-            vec!["unsupported"]
-        );
+        // SSFGEOMETRY is deferred to the deck's end, which the skipped body never reaches
+        assert_eq!(entry_status(&conversion, "SSFGEOMETRY"), vec!["noted"]);
         assert_eq!(entry_status(&conversion, "FROBNICATE"), vec!["unsupported"]);
-        assert!(conversion.counts.unsupported >= 2);
+        assert!(conversion.counts.unsupported >= 1);
         // the skipped body has no effect on the problem: its FLUX is not the spectrum total
         assert_eq!(conversion.spec["spectrum"]["total"], 1.0e10);
         assert_eq!(conversion.spec["schedule"].as_array().unwrap().len(), 1);
@@ -4621,10 +6192,7 @@ ZERO
             .filter(|entry| entry["keyword"] == "UNCERTAINTY")
         {
             assert!(
-                !entry["detail"]
-                    .as_str()
-                    .unwrap()
-                    .contains("resolved when the deck ends"),
+                !entry["detail"].as_str().unwrap().contains(DEFERRED_DETAIL),
                 "stale placeholder: {entry}"
             );
         }
@@ -4643,10 +6211,9 @@ ZERO
         assert!(conversion.spec.get("uncertainty").is_some());
         let statuses = entry_status(&conversion, "UNCERTAINTY");
         assert_eq!(statuses.last().unwrap(), "mapped");
-        assert!(!entries(&conversion).iter().any(|entry| entry["detail"]
-            .as_str()
-            .unwrap()
-            .contains("resolved when the deck ends")));
+        assert!(!entries(&conversion)
+            .iter()
+            .any(|entry| entry["detail"].as_str().unwrap().contains(DEFERRED_DETAIL)));
     }
 
     #[test]
@@ -4659,10 +6226,7 @@ ZERO
         assert_eq!(entry_status(&conversion, "CNVTYPE").len(), 2);
         for entry in entries(&conversion) {
             assert!(
-                !entry["detail"]
-                    .as_str()
-                    .unwrap()
-                    .contains("resolved when the deck ends"),
+                !entry["detail"].as_str().unwrap().contains(DEFERRED_DETAIL),
                 "stale placeholder: {entry}"
             );
         }
@@ -4812,5 +6376,909 @@ ZERO
             assert_eq!(entry_status(&conversion, "ALAM").len(), 10_000);
             assert_eq!(conversion.spec["overrides"].as_array().unwrap().len(), 2);
         }
+    }
+
+    // ---- P155: fission, uncertainty and self-shielding keywords ----
+
+    const RUN: &str = "FLUX 1E10\nTIME 1 HOURS ATOMS";
+
+    fn hashed(path: &str, digit: &str) -> HashedFile {
+        HashedFile {
+            path: path.into(),
+            sha256: digit.repeat(64),
+        }
+    }
+
+    fn yield_file(path: &str, za: i32, liso: i32) -> FissionYieldFile {
+        FissionYieldFile {
+            file: hashed(path, "c"),
+            parent_za: za,
+            parent_liso: liso,
+        }
+    }
+
+    /// Yield files for U-235, U-238 and Pu-241.
+    fn ctx_fission() -> ImportContext {
+        ImportContext {
+            fission_yields: vec![
+                yield_file("u235.endf", 92235, 0),
+                yield_file("u238.endf", 92238, 0),
+                yield_file("pu241.endf", 94241, 0),
+            ],
+            ..context()
+        }
+    }
+
+    fn fission_deck(keywords: &str) -> String {
+        deck_with(&format!("USEFISSION\n{keywords}\n{RUN}"))
+    }
+
+    #[test]
+    fn p155_usefission_without_yield_files_names_the_option() {
+        let conversion = convert(&fission_deck(""), &context()).unwrap();
+        assert_eq!(entry_status(&conversion, "USEFISSION"), vec!["unsupported"]);
+        assert!(entry_detail(&conversion, "USEFISSION").contains("--fission-yields"));
+        assert!(conversion.spec.get("fission_yields").is_none());
+        assert_eq!(conversion.unsupported, vec![("USEFISSION".to_string(), 5)]);
+    }
+
+    #[test]
+    fn p155_usefission_with_files_maps_them_and_the_default_parents() {
+        let conversion = convert(&fission_deck(""), &ctx_fission()).unwrap();
+        let section = &conversion.spec["fission_yields"];
+        assert_eq!(
+            section["files"],
+            json!([
+                {"path": "u235.endf", "sha256": "c".repeat(64)},
+                {"path": "u238.endf", "sha256": "c".repeat(64)},
+                {"path": "pu241.endf", "sha256": "c".repeat(64)},
+            ])
+        );
+        // U-235 and U-238 are default parents with a file; Pu-239 has none and is reported
+        assert_eq!(section["parents"], json!({"include": ["U235", "U238"]}));
+        assert!(section.get("yields").is_none());
+        assert_eq!(entry_status(&conversion, "USEFISSION"), vec!["mapped"]);
+        assert!(entry_detail(&conversion, "USEFISSION").contains("Pu239"));
+        assert!(conversion.report.get("options_unused").is_none());
+        // no default parent has a file: every supplied parent is excluded
+        let only = ImportContext {
+            fission_yields: vec![yield_file("pu241.endf", 94241, 0)],
+            ..context()
+        };
+        let none = convert(&fission_deck(""), &only).unwrap();
+        assert_eq!(
+            none.spec["fission_yields"]["parents"],
+            json!({"exclude": ["Pu241"]})
+        );
+    }
+
+    #[test]
+    fn p155_nofiss_and_cumfyld_set_the_yield_files_and_the_yield_set() {
+        // NOFISS forces no yield files, whatever else the deck and the options say
+        let off = convert(&fission_deck("NOFISS"), &ctx_fission()).unwrap();
+        assert!(off.spec.get("fission_yields").is_none());
+        assert_eq!(entry_status(&off, "NOFISS"), vec!["mapped"]);
+        assert_eq!(entry_status(&off, "USEFISSION"), vec!["noted"]);
+        assert_eq!(off.report["options_unused"], json!(["--fission-yields"]));
+        // CUMFYLD selects the cumulative yields
+        let cumulative = convert(&fission_deck("CUMFYLD"), &ctx_fission()).unwrap();
+        assert_eq!(cumulative.spec["fission_yields"]["yields"], "cumulative");
+        assert_eq!(entry_status(&cumulative, "CUMFYLD"), vec!["mapped"]);
+        // without yield files it has nothing to select
+        let bare = convert(&deck_with(&format!("CUMFYLD\n{RUN}")), &ctx_fission()).unwrap();
+        assert!(bare.spec.get("fission_yields").is_none());
+        assert_eq!(entry_status(&bare, "CUMFYLD"), vec!["noted"]);
+        // a deck without USEFISSION leaves the supplied files unused and says so
+        let unused = convert(&deck_with(RUN), &ctx_fission()).unwrap();
+        assert!(unused.spec.get("fission_yields").is_none());
+        assert_eq!(unused.report["options_unused"], json!(["--fission-yields"]));
+    }
+
+    #[test]
+    fn p155_fisyield_counts_select_the_parents() {
+        let parents = |keywords: &str| {
+            let conversion = convert(&fission_deck(keywords), &ctx_fission()).unwrap();
+            assert_eq!(entry_status(&conversion, "FISYIELD"), vec!["mapped"]);
+            conversion.spec["fission_yields"]
+                .get("parents")
+                .cloned()
+                .unwrap_or(Value::Null)
+        };
+        assert_eq!(parents("FISYIELD 1 PU241"), json!({"include": ["Pu241"]}));
+        assert_eq!(
+            parents("FISYIELD 2 U235 PU241"),
+            json!({"include": ["U235", "Pu241"]})
+        );
+        assert_eq!(parents("FISYIELD -1 U238"), json!({"exclude": ["U238"]}));
+        // zero: every parent with a yield file is excluded
+        assert_eq!(
+            parents("FISYIELD 0"),
+            json!({"exclude": ["U235", "U238", "Pu241"]})
+        );
+        // named parents with no yield file are dropped and reported
+        let dropped = convert(&fission_deck("FISYIELD 2 U235 PU239"), &ctx_fission()).unwrap();
+        assert_eq!(
+            dropped.spec["fission_yields"]["parents"],
+            json!({"include": ["U235"]})
+        );
+        assert!(entry_detail(&dropped, "FISYIELD").contains("Pu239"));
+        // an include list left empty excludes every parent; an exclude list left empty excludes none
+        assert_eq!(
+            parents("FISYIELD 1 AM242M"),
+            json!({"exclude": ["U235", "U238", "Pu241"]})
+        );
+        assert_eq!(parents("FISYIELD -1 PU239"), Value::Null);
+        // a count that disagrees with the list is refused
+        let bad = convert(&fission_deck("FISYIELD 2 U235"), &ctx_fission()).unwrap();
+        assert_eq!(entry_status(&bad, "FISYIELD"), vec!["unsupported"]);
+        // without USEFISSION the selection has no effect
+        let idle = convert(&deck_with(&format!("FISYIELD 0\n{RUN}")), &ctx_fission()).unwrap();
+        assert_eq!(entry_status(&idle, "FISYIELD"), vec!["noted"]);
+        assert!(idle.spec.get("fission_yields").is_none());
+    }
+
+    #[test]
+    fn p155_fischoose_restricts_the_pathway_fission_parents() {
+        let deck = deck_with(&format!("PATH 1 MN54\nFISCHOOSE 2 U235 PU239\n{RUN}"));
+        let conversion = convert(&deck, &context()).unwrap();
+        assert_eq!(
+            conversion.spec["pathways"],
+            json!({"targets": ["Mn54"], "fission_parents": ["U235", "Pu239"]})
+        );
+        assert_eq!(entry_status(&conversion, "FISCHOOSE"), vec!["mapped"]);
+        // no pathways requested: nothing to restrict
+        let bare = convert(&deck_with(&format!("FISCHOOSE 1 U235\n{RUN}")), &context()).unwrap();
+        assert!(bare.spec.get("pathways").is_none());
+        assert_eq!(entry_status(&bare, "FISCHOOSE"), vec!["noted"]);
+        // the count must match the list
+        let bad = convert(
+            &deck_with(&format!("PATH\nFISCHOOSE 3 U235\n{RUN}")),
+            &context(),
+        )
+        .unwrap();
+        assert_eq!(entry_status(&bad, "FISCHOOSE"), vec!["unsupported"]);
+        assert!(bad.spec["pathways"].get("fission_parents").is_none());
+    }
+
+    fn uncertain(keywords: &str) -> String {
+        deck_with(&format!("UNCERT 2\n{keywords}\n{RUN}"))
+    }
+
+    #[test]
+    fn p155_unctype_sets_the_uncertainty_channels() {
+        for (kind, channels, status) in [
+            ("1", json!(["cross_section_mf33"]), "mapped"),
+            ("2", json!(["decay_constants"]), "approximated"),
+            (
+                "3",
+                json!(["cross_section_mf33", "decay_constants"]),
+                "mapped",
+            ),
+        ] {
+            let conversion = convert(
+                &uncertain(&format!("UNCTYPE {kind}")),
+                &context_with_covariance(),
+            )
+            .unwrap();
+            assert_eq!(
+                conversion.spec["uncertainty"]["channels"], channels,
+                "UNCTYPE {kind}"
+            );
+            assert_eq!(entry_status(&conversion, "UNCTYPE"), vec![status]);
+        }
+        // the default channel set stays implicit
+        let plain = convert(&uncertain(""), &context_with_covariance()).unwrap();
+        assert!(plain.spec["uncertainty"].get("channels").is_none());
+        // no uncertainty block: the choice has no effect
+        let none = convert(&uncertain("UNCTYPE 3"), &context()).unwrap();
+        assert!(none.spec.get("uncertainty").is_none());
+        assert_eq!(entry_status(&none, "UNCTYPE"), vec!["noted"]);
+        let bad = convert(&uncertain("UNCTYPE 4"), &context_with_covariance()).unwrap();
+        assert_eq!(entry_status(&bad, "UNCTYPE"), vec!["unsupported"]);
+        // COVARIANCE is a library-phase collapse that ACTINV does not need
+        let covariance = convert(&uncertain("COVARIANCE"), &context_with_covariance()).unwrap();
+        assert_eq!(entry_status(&covariance, "COVARIANCE"), vec!["noted"]);
+    }
+
+    #[test]
+    fn p155_sensitivity_sigma_asks_for_the_ranked_variance_shares() {
+        let deck =
+            uncertain("SENSITIVITY SIGMA 0.8 1 1\nFE56 FE57\nFE57\nMCSAMPLE 1 100\nMCSEED 7");
+        let conversion = convert(&deck, &context_with_covariance()).unwrap();
+        assert_eq!(conversion.spec["uncertainty"]["voi"], json!({"top": 10}));
+        assert_eq!(
+            entry_status(&conversion, "SENSITIVITY"),
+            vec!["approximated"]
+        );
+        assert_eq!(entry_status(&conversion, "MCSAMPLE"), vec!["noted"]);
+        assert_eq!(entry_status(&conversion, "MCSEED"), vec!["noted"]);
+        // SENSITIVITY alone brings its own uncertainty block
+        let alone = convert(
+            &deck_with(&format!("SENSITIVITY SIGMA 0.8 0 0\n{RUN}")),
+            &context_with_covariance(),
+        )
+        .unwrap();
+        assert_eq!(alone.spec["uncertainty"]["voi"], json!({"top": 10}));
+        assert_eq!(alone.spec["uncertainty"]["covariance"]["path"], "cov.npz");
+        // without a covariance sidecar there is nothing to rank: the sampling keywords go with it
+        let refused = convert(&deck, &context()).unwrap();
+        assert!(refused.spec.get("uncertainty").is_none());
+        assert_eq!(entry_status(&refused, "SENSITIVITY"), vec!["unsupported"]);
+        assert_eq!(entry_status(&refused, "MCSAMPLE"), vec!["unsupported"]);
+        assert_eq!(entry_status(&refused, "MCSEED"), vec!["unsupported"]);
+        // decay-constant sensitivities are not available
+        let lambda = convert(
+            &uncertain("SENSITIVITY LAMBDA 0.8 1 1\nFE56 FE57\nFE57\nMCSAMPLE 1 100"),
+            &context_with_covariance(),
+        )
+        .unwrap();
+        assert!(lambda.spec["uncertainty"].get("voi").is_none());
+        assert_eq!(entry_status(&lambda, "SENSITIVITY"), vec!["unsupported"]);
+        assert_eq!(entry_status(&lambda, "MCSAMPLE"), vec!["unsupported"]);
+        // sampling settings with no SENSITIVITY configure nothing
+        let seed = convert(&uncertain("MCSEED 12345"), &context_with_covariance()).unwrap();
+        assert_eq!(entry_status(&seed, "MCSEED"), vec!["unsupported"]);
+    }
+
+    #[test]
+    fn p155_error_becomes_a_cross_section_uncertainty_override() {
+        let deck = uncertain("ERROR 2\nFE56 FE57 0.1\nFE56 FISSION -1");
+        let conversion = convert(&deck, &context_with_covariance()).unwrap();
+        assert_eq!(
+            conversion.spec["overrides"],
+            json!([{"nuclide": "Fe56", "kind": "cross_section_uncertainty", "mt": 102, "value": 0.1}])
+        );
+        assert_eq!(entry_status(&conversion, "ERROR"), vec!["approximated"]);
+        assert!(entry_detail(&conversion, "ERROR").contains("relative standard uncertainty"));
+        assert!(conversion.spec["uncertainty"].get("covariance").is_some());
+        // -1 asks for the library value, which the covariance already is
+        let library = convert(
+            &uncertain("ERROR 1\nFE56 FE57 -1.0"),
+            &context_with_covariance(),
+        )
+        .unwrap();
+        assert!(library.spec.get("overrides").is_none());
+        assert_eq!(entry_status(&library, "ERROR"), vec!["noted"]);
+        // a fission reaction is MT 18
+        let fission = convert(
+            &uncertain("ERROR 1\nU235 0 0.05"),
+            &context_with_covariance(),
+        )
+        .unwrap();
+        assert_eq!(fission.spec["overrides"][0]["mt"], 18);
+        // no uncertainty block, or one without the cross-section channel: refused, nothing emitted
+        let without = convert(&uncertain("ERROR 1\nFE56 FE57 0.1"), &context()).unwrap();
+        assert!(without.spec.get("overrides").is_none());
+        assert_eq!(entry_status(&without, "ERROR"), vec!["unsupported"]);
+        let decay_only = convert(
+            &uncertain("UNCTYPE 2\nERROR 1\nFE56 FE57 0.1"),
+            &context_with_covariance(),
+        )
+        .unwrap();
+        assert!(decay_only.spec.get("overrides").is_none());
+        assert_eq!(entry_status(&decay_only, "ERROR"), vec!["unsupported"]);
+        // a reaction ACTINV cannot name, or a malformed card
+        for bad in [
+            "ERROR 1\nFE56 NI56 0.1",
+            "ERROR 2\nFE56 FE57 0.1",
+            "ERROR 1\nFE56 FE57 -0.5",
+        ] {
+            let conversion = convert(&uncertain(bad), &context_with_covariance()).unwrap();
+            assert_eq!(
+                entry_status(&conversion, "ERROR"),
+                vec!["unsupported"],
+                "{bad}"
+            );
+        }
+    }
+
+    fn shielded(keywords: &str) -> String {
+        deck_with(&format!("DENSITY 7.874\n{keywords}\n{RUN}"))
+    }
+
+    fn ctx_resonance() -> ImportContext {
+        ImportContext {
+            resonance: vec![hashed("fe56.endf", "d"), hashed("fe57.endf", "e")],
+            ..context()
+        }
+    }
+
+    fn ctx_table() -> ImportContext {
+        ImportContext {
+            self_shielding_table: Some(hashed("shield.json", "f")),
+            ..context()
+        }
+    }
+
+    #[test]
+    fn p155_ssfgeometry_with_resonance_files_maps_the_geometry() {
+        let foil = convert(&shielded("SSFGEOMETRY 1 0.01"), &ctx_resonance()).unwrap();
+        assert_eq!(
+            foil.spec["self_shielding"],
+            json!({"geometry": {
+                "shape": "foil",
+                "length_cm": 0.01,
+                "density_g_cm3": 7.874,
+                "resonance_files": [
+                    {"path": "fe56.endf", "sha256": "d".repeat(64)},
+                    {"path": "fe57.endf", "sha256": "e".repeat(64)},
+                ],
+            }})
+        );
+        assert_eq!(entry_status(&foil, "SSFGEOMETRY"), vec!["mapped"]);
+        assert!(foil.report["required_additions"]
+            .as_array()
+            .unwrap()
+            .is_empty());
+        // wire and sphere; the cylinder also takes a height
+        for (kind, shape) in [("2", "wire"), ("3", "sphere")] {
+            let conversion = convert(
+                &shielded(&format!("SSFGEOMETRY {kind} 0.5")),
+                &ctx_resonance(),
+            )
+            .unwrap();
+            assert_eq!(
+                conversion.spec["self_shielding"]["geometry"]["shape"],
+                shape
+            );
+        }
+        let cylinder = convert(&shielded("SSFGEOMETRY 4 0.5 2.0"), &ctx_resonance()).unwrap();
+        let geometry = &cylinder.spec["self_shielding"]["geometry"];
+        assert_eq!(geometry["shape"], "cylinder");
+        assert_eq!(geometry["height_cm"], 2.0);
+        // SSFCHOOSE restricts it; SSFMASS and SSFFUEL give a composition ACTINV does not read
+        let chosen = convert(
+            &shielded("SSFCHOOSE 2 0 FE56 FE\nSSFMASS 1.0 1\n FE 100\nSSFGEOMETRY 1 0.01"),
+            &ctx_resonance(),
+        )
+        .unwrap();
+        assert_eq!(
+            chosen.spec["self_shielding"]["geometry"]["choose"],
+            json!(["Fe56", "Fe"])
+        );
+        assert_eq!(entry_status(&chosen, "SSFCHOOSE"), vec!["mapped"]);
+        assert_eq!(entry_status(&chosen, "SSFMASS"), vec!["approximated"]);
+        let fuel = convert(
+            &shielded("SSFFUEL 1\nFE56 1.0E22\nSSFGEOMETRY 1 0.01"),
+            &ctx_resonance(),
+        )
+        .unwrap();
+        assert_eq!(entry_status(&fuel, "SSFFUEL"), vec!["approximated"]);
+        // no DENSITY: the section is emitted and the density is listed as missing
+        let bare = convert(
+            &deck_with(&format!("SSFGEOMETRY 1 0.01\n{RUN}")),
+            &ctx_resonance(),
+        )
+        .unwrap();
+        let geometry = &bare.spec["self_shielding"]["geometry"];
+        assert!(geometry.get("density_g_cm3").is_none());
+        assert_eq!(
+            bare.report["required_additions"][0]["field"],
+            "self_shielding.geometry.density_g_cm3"
+        );
+    }
+
+    #[test]
+    fn p155_self_shielding_without_its_option_names_it() {
+        let geometry = convert(
+            &shielded("SSFGEOMETRY 1 0.01\nSSFCHOOSE 1 0 FE\nSSFFUEL 1\nFE56 1.0E22"),
+            &context(),
+        )
+        .unwrap();
+        assert!(geometry.spec.get("self_shielding").is_none());
+        for keyword in ["SSFGEOMETRY", "SSFCHOOSE", "SSFFUEL"] {
+            assert_eq!(
+                entry_status(&geometry, keyword),
+                vec!["unsupported"],
+                "{keyword}"
+            );
+            assert!(
+                entry_detail(&geometry, keyword).contains("--resonance"),
+                "{keyword}"
+            );
+        }
+        let table = convert(
+            &shielded("PROBTABLE 1 0\nSSFDILUTION 1\nFE56 1\n300 100.0"),
+            &context(),
+        )
+        .unwrap();
+        assert!(table.spec.get("self_shielding").is_none());
+        for keyword in ["PROBTABLE", "SSFDILUTION"] {
+            assert_eq!(
+                entry_status(&table, keyword),
+                vec!["unsupported"],
+                "{keyword}"
+            );
+            assert!(
+                entry_detail(&table, keyword).contains("--self-shielding-table"),
+                "{keyword}"
+            );
+        }
+        // a selection with no request and no option behind it
+        let stray = convert(&shielded("SSFCHOOSE 1 0 FE"), &context()).unwrap();
+        assert_eq!(entry_status(&stray, "SSFCHOOSE"), vec!["unsupported"]);
+        // an option the deck never uses is reported as unused
+        let idle = convert(&shielded("SSFCHOOSE 1 0 FE"), &ctx_resonance()).unwrap();
+        assert_eq!(entry_status(&idle, "SSFCHOOSE"), vec!["noted"]);
+        assert_eq!(idle.report["options_unused"], json!(["--resonance"]));
+    }
+
+    #[test]
+    fn p155_ssfgeometry_refuses_what_actinv_cannot_shield() {
+        // a target type the manual does not define
+        let kind = convert(&shielded("SSFGEOMETRY 7 0.01"), &ctx_resonance()).unwrap();
+        assert_eq!(entry_status(&kind, "SSFGEOMETRY"), vec!["unsupported"]);
+        assert!(kind.spec.get("self_shielding").is_none());
+        // a cylinder without its height, a nonpositive length
+        for bad in ["SSFGEOMETRY 4 0.5", "SSFGEOMETRY 1 0.0"] {
+            let conversion = convert(&shielded(bad), &ctx_resonance()).unwrap();
+            assert_eq!(
+                entry_status(&conversion, "SSFGEOMETRY"),
+                vec!["unsupported"],
+                "{bad}"
+            );
+        }
+        // FISPACT-II does not allow both models, and ACTINV takes one
+        let both = ImportContext {
+            self_shielding_table: Some(hashed("shield.json", "f")),
+            ..ctx_resonance()
+        };
+        let conversion = convert(&shielded("SSFGEOMETRY 1 0.01\nPROBTABLE 1 0"), &both).unwrap();
+        assert!(conversion.spec.get("self_shielding").is_none());
+        assert_eq!(
+            entry_status(&conversion, "SSFGEOMETRY"),
+            vec!["unsupported"]
+        );
+        assert_eq!(entry_status(&conversion, "PROBTABLE"), vec!["unsupported"]);
+        // a charged-particle problem has no self-shielding
+        let proton = ImportContext {
+            flux: Some(LoadedFlux {
+                values: vec![1.0; 162],
+                ..flux709()
+            }),
+            ..ctx_resonance()
+        };
+        let deck = format!("PROJECTILE 3\n{}", shielded("SSFGEOMETRY 1 0.01"));
+        let conversion = convert(&deck, &proton).unwrap();
+        assert!(conversion.spec.get("self_shielding").is_none());
+        assert_eq!(
+            entry_status(&conversion, "SSFGEOMETRY"),
+            vec!["unsupported"]
+        );
+    }
+
+    #[test]
+    fn p155_probtable_and_ssfdilution_with_a_table_map_the_table() {
+        let conversion = convert(&shielded("PROBTABLE 1 0"), &ctx_table()).unwrap();
+        assert_eq!(
+            conversion.spec["self_shielding"],
+            json!({"table": {"path": "shield.json", "sha256": "f".repeat(64)}})
+        );
+        assert_eq!(entry_status(&conversion, "PROBTABLE"), vec!["approximated"]);
+        // FISPACT-II lists the highest-energy group first (group 1); ACTINV's index is 0-based and
+        // ascending in energy, so group g of the 709 is index 709 - g
+        let dilution = convert(
+            &shielded("PROBTABLE 1 0\nSSFDILUTION 2\nFE56 2\n300 100.0 301 80.0\nFE57 1\n709 2.5"),
+            &ctx_table(),
+        )
+        .unwrap();
+        assert_eq!(
+            dilution.spec["self_shielding"]["dilution_overrides"],
+            json!({"Fe56": {"409": 100.0, "408": 80.0}, "Fe57": {"0": 2.5}})
+        );
+        assert_eq!(entry_status(&dilution, "SSFDILUTION"), vec!["mapped"]);
+        assert!(entry_detail(&dilution, "SSFDILUTION").contains("709 - g"));
+        // group 1 is the top group
+        let top = convert(
+            &shielded("PROBTABLE 1 0\nSSFDILUTION 1\nFE56 1\n1 10.0"),
+            &ctx_table(),
+        )
+        .unwrap();
+        assert_eq!(
+            top.spec["self_shielding"]["dilution_overrides"],
+            json!({"Fe56": {"708": 10.0}})
+        );
+        // SSFDILUTION alone selects the table mode
+        let alone = convert(&shielded("SSFDILUTION 1\nFE56 1\n300 100.0"), &ctx_table()).unwrap();
+        assert!(alone.spec["self_shielding"].get("table").is_some());
+        // a group outside the library, a malformed card
+        for bad in [
+            "SSFDILUTION 1\nFE56 1\n710 10.0",
+            "SSFDILUTION 2\nFE56 1\n300 10.0",
+        ] {
+            let conversion =
+                convert(&shielded(&format!("PROBTABLE 1 0\n{bad}")), &ctx_table()).unwrap();
+            assert_eq!(
+                entry_status(&conversion, "SSFDILUTION"),
+                vec!["unsupported"],
+                "{bad}"
+            );
+            assert!(conversion.spec["self_shielding"]
+                .get("dilution_overrides")
+                .is_none());
+        }
+        // SSFCHOOSE names do not restrict a table
+        let chosen = convert(&shielded("PROBTABLE 1 0\nSSFCHOOSE 1 0 FE56"), &ctx_table()).unwrap();
+        assert_eq!(entry_status(&chosen, "SSFCHOOSE"), vec!["approximated"]);
+    }
+
+    #[test]
+    fn p155_misc_keywords_are_noted_or_refused_with_their_reasons() {
+        for keyword in ["XSTHRESHOLD 1.0E-12", "DEPLETION 1 FE56", "COVARIANCE"] {
+            let conversion = convert(&deck_with(&format!("{keyword}\n{RUN}")), &context()).unwrap();
+            let name = keyword.split(' ').next().unwrap();
+            assert_eq!(entry_status(&conversion, name), vec!["noted"], "{name}");
+        }
+        for keyword in [
+            "READSF",
+            "USESPALLATION 100.0 1\nPB204",
+            "USEXSEXTRA",
+            "IRON",
+        ] {
+            let conversion = convert(&deck_with(&format!("{keyword}\n{RUN}")), &context()).unwrap();
+            let name = keyword.split(['\n', ' ']).next().unwrap();
+            assert_eq!(
+                entry_status(&conversion, name),
+                vec!["unsupported"],
+                "{name}"
+            );
+        }
+        let iron = convert(&deck_with(&format!("IRON\n{RUN}")), &context()).unwrap();
+        assert!(entry_detail(&iron, "IRON").contains("2023"));
+        assert!(!entry_detail(&iron, "IRON").contains("background removal"));
+        // RESULT is noted wherever it stands: a converted deck always runs its own inventory
+        let own = convert(
+            &deck_with(&format!("{RUN}\nPATH 1 MN54\nRESULT 1\nFE56 1.0E10")),
+            &context(),
+        )
+        .unwrap();
+        assert_eq!(entry_status(&own, "RESULT"), vec!["noted"]);
+        let first = convert(
+            &deck_with(&format!("RESULT 1\nFE56 1.0E10\n{RUN}")),
+            &context(),
+        )
+        .unwrap();
+        assert_eq!(entry_status(&first, "RESULT"), vec!["noted"]);
+    }
+
+    #[test]
+    fn p155_a_deck_without_the_new_keywords_converts_as_before() {
+        // the options change nothing for a deck that does not use them
+        let plain = convert(&deck_with(RUN), &context()).unwrap();
+        let supplied = ImportContext {
+            fission_yields: ctx_fission().fission_yields,
+            self_shielding_table: ctx_table().self_shielding_table,
+            resonance: ctx_resonance().resonance,
+            ..context()
+        };
+        let with_options = convert(&deck_with(RUN), &supplied).unwrap();
+        assert_eq!(plain.spec, with_options.spec);
+        assert!(plain.report.get("options_unused").is_none());
+        assert_eq!(
+            with_options.report["options_unused"],
+            json!(["--fission-yields", "--resonance", "--self-shielding-table"])
+        );
+    }
+
+    // ---- P155 part 2: photon and damage keywords ----
+
+    fn photon_deck(keywords: &str) -> String {
+        deck_with(&format!("{keywords}\n{RUN}"))
+    }
+
+    fn ctx_ggbins(text: &str) -> ImportContext {
+        ImportContext {
+            gamma_groups: Some(Ok(GammaGroupFile {
+                path: "gg.txt".into(),
+                text: text.into(),
+            })),
+            ..context()
+        }
+    }
+
+    #[test]
+    fn p155_noxray_and_spek_set_the_photon_options() {
+        let conversion = convert(&photon_deck("NOXRAY\nSPEK"), &context()).unwrap();
+        assert_eq!(entry_status(&conversion, "NOXRAY"), vec!["mapped"]);
+        assert_eq!(entry_status(&conversion, "SPEK"), vec!["approximated"]);
+        assert_eq!(conversion.spec["photon"]["exclude_xrays"], json!(true));
+        assert_eq!(
+            conversion.spec["photon"]["missing_spectra"],
+            json!("estimate")
+        );
+        let spek = entry_detail(&conversion, "SPEK");
+        assert!(
+            spek.contains("mean energy per decay mode")
+                && spek.contains("lower and upper dose bounds"),
+            "{spek}"
+        );
+        // no outputs list is written, so the default outputs carry the photon source
+        assert!(conversion.spec.get("options").is_none());
+        assert!(entry_detail(&conversion, "NOXRAY").contains("default outputs"));
+        // the spec the importer builds validates (convert checks it) and a lone keyword stands alone
+        let only = convert(&photon_deck("SPEK"), &context()).unwrap();
+        assert!(only.spec["photon"].get("exclude_xrays").is_none());
+        assert_eq!(only.counts.unsupported, 0);
+        // neither keyword: no photon section at all
+        let none = convert(&photon_deck(""), &context()).unwrap();
+        assert!(none.spec.get("photon").is_none());
+    }
+
+    #[test]
+    fn p155_readgg_reads_the_ggbins_boundaries() {
+        let text = "5\n1.0\n1.0E+05\n5.0E+05\n1.0E+06\n2.0E+06\n1.0E+07\n";
+        let conversion = convert(&photon_deck("READGG"), &ctx_ggbins(text)).unwrap();
+        assert_eq!(entry_status(&conversion, "READGG"), vec!["mapped"]);
+        assert_eq!(
+            conversion.spec["photon"]["group_structure"],
+            json!("custom")
+        );
+        assert_eq!(
+            conversion.spec["photon"]["group_boundaries_eV"],
+            json!([1.0, 1.0e5, 5.0e5, 1.0e6, 2.0e6, 1.0e7])
+        );
+        // it replaces a GROUP selection, which says so
+        let grouped = convert(&photon_deck("GROUP 1\nREADGG"), &ctx_ggbins(text)).unwrap();
+        assert_eq!(grouped.spec["photon"]["group_structure"], json!("custom"));
+        assert_eq!(entry_status(&grouped, "GROUP"), vec!["noted"]);
+        // Fortran exponents and any whitespace layout read the same
+        let fortran = convert(&photon_deck("READGG"), &ctx_ggbins("2 1.0D3 1.0D4 1.0D5")).unwrap();
+        assert_eq!(
+            fortran.spec["photon"]["group_boundaries_eV"],
+            json!([1.0e3, 1.0e4, 1.0e5])
+        );
+    }
+
+    #[test]
+    fn p155_readgg_refuses_a_missing_or_malformed_ggbins_file() {
+        let cases: [(&str, &str); 7] = [
+            ("", "is empty"),
+            ("x 1 2", "group count"),
+            ("2 1.0 abc 3.0", "non-numeric"),
+            ("3 1.0 2.0 3.0", "declares 3 group"),
+            ("2 1.0 3.0 2.0", "ascending"),
+            ("2 0.0 1.0 2.0", "not positive"),
+            ("2 -1.0 1.0 2.0", "not positive"),
+        ];
+        for (text, reason) in cases {
+            let conversion = convert(&photon_deck("READGG"), &ctx_ggbins(text)).unwrap();
+            assert_eq!(
+                entry_status(&conversion, "READGG"),
+                vec!["unsupported"],
+                "{text}"
+            );
+            let detail = entry_detail(&conversion, "READGG");
+            assert!(
+                detail.contains("ggbins") && detail.contains(reason),
+                "{text}: {detail}"
+            );
+            assert!(conversion.spec.get("photon").is_none(), "{text}");
+        }
+        // no entry in the files file, or a path that would not read
+        let absent = convert(&photon_deck("READGG"), &context()).unwrap();
+        let detail = entry_detail(&absent, "READGG");
+        assert_eq!(entry_status(&absent, "READGG"), vec!["unsupported"]);
+        assert!(
+            detail.contains("ggbins") && detail.contains("--files"),
+            "{detail}"
+        );
+        let unreadable = ImportContext {
+            gamma_groups: Some(Err(
+                "the ggbins file 'gg.txt' named by the files file was not found".into(),
+            )),
+            ..context()
+        };
+        let conversion = convert(&photon_deck("READGG"), &unreadable).unwrap();
+        assert_eq!(entry_status(&conversion, "READGG"), vec!["unsupported"]);
+        assert!(entry_detail(&conversion, "READGG").contains("not found"));
+        // a ggbins entry no deck keyword uses changes nothing
+        let idle = convert(&photon_deck(""), &ctx_ggbins("2 1 2 3")).unwrap();
+        assert!(idle.spec.get("photon").is_none());
+    }
+
+    /// A damage table 2 built at these energies (element -> eV).
+    fn ctx_damage(energies: Option<&[(&str, f64)]>) -> ImportContext {
+        ImportContext {
+            damage: Some(hashed("damage.json", "a")),
+            damage_energies_ev: energies.map(|list| {
+                list.iter()
+                    .map(|(symbol, energy)| (symbol.to_string(), *energy))
+                    .collect()
+            }),
+            ..context()
+        }
+    }
+
+    /// A two-element deck (iron and chromium) with the keywords in the initial section.
+    fn steel_deck(keywords: &str) -> String {
+        format!("FISPACT\n* t\nMASS 1E-3 2\n FE 90 CR 10\n{keywords}\n{RUN}\nEND\n")
+    }
+
+    #[test]
+    fn p155_alldispen_and_atdispen_map_against_a_table_2() {
+        let table = ctx_damage(Some(&[("Fe", 40.0), ("Cr", 30.0)]));
+        // the per-element value overrides the all-element value, in either order
+        for keywords in [
+            "ALLDISPEN 30\nATDISPEN 1 FE 40.0",
+            "ATDISPEN 1 FE 40.0\nALLDISPEN 30",
+        ] {
+            let conversion = convert(&steel_deck(keywords), &table).unwrap();
+            assert_eq!(
+                entry_status(&conversion, "ALLDISPEN"),
+                vec!["mapped"],
+                "{keywords}"
+            );
+            assert_eq!(
+                entry_status(&conversion, "ATDISPEN"),
+                vec!["mapped"],
+                "{keywords}"
+            );
+            assert_eq!(
+                conversion.spec["damage"],
+                json!({
+                    "table": {"path": "damage.json", "sha256": "a".repeat(64)},
+                    "displacement_energy_eV": {"Cr": 30.0, "Fe": 40.0},
+                }),
+                "{keywords}"
+            );
+        }
+        // an element the deck gives no energy for takes the table's value, and the report says so
+        let partial = convert(&steel_deck("ATDISPEN 1 Fe 40"), &table).unwrap();
+        assert_eq!(
+            partial.spec["damage"]["displacement_energy_eV"]["Cr"],
+            json!(30.0)
+        );
+        assert_eq!(entry_status(&partial, "ATDISPEN"), vec!["approximated"]);
+        assert!(entry_detail(&partial, "ATDISPEN")
+            .contains("Cr 30 eV (the energy the table was built with)"));
+        // the same table with the default energy it matches is mapped
+        let matching = ctx_damage(Some(&[("Fe", 40.0), ("Cr", 40.0)]));
+        let defaulted = convert(&steel_deck("ATDISPEN 1 Fe 40"), &matching).unwrap();
+        assert_eq!(entry_status(&defaulted, "ATDISPEN"), vec!["mapped"]);
+        // an element the material lacks is not written
+        let extra = convert(&steel_deck("ALLDISPEN 40\nATDISPEN 1 W 55"), &matching).unwrap();
+        assert_eq!(
+            extra.spec["damage"]["displacement_energy_eV"]
+                .as_object()
+                .unwrap()
+                .len(),
+            2
+        );
+        assert!(entry_detail(&extra, "ATDISPEN").contains("not written"));
+    }
+
+    #[test]
+    fn p155_a_table_1_records_no_energy_so_the_deck_value_applies() {
+        let conversion = convert(
+            &deck_with(&format!("ALLDISPEN 35\n{RUN}")),
+            &ctx_damage(None),
+        )
+        .unwrap();
+        assert_eq!(entry_status(&conversion, "ALLDISPEN"), vec!["mapped"]);
+        assert_eq!(
+            conversion.spec["damage"]["displacement_energy_eV"],
+            json!({"Fe": 35.0})
+        );
+        assert!(entry_detail(&conversion, "ALLDISPEN").contains("table-1"));
+        // an element the deck does not give takes FISPACT-II's own default (table 8, else 25 eV)
+        let steel = convert(&steel_deck("ATDISPEN 1 Cr 41"), &ctx_damage(None)).unwrap();
+        assert_eq!(
+            steel.spec["damage"]["displacement_energy_eV"],
+            json!({"Cr": 41.0, "Fe": 40.0})
+        );
+        assert_eq!(entry_status(&steel, "ATDISPEN"), vec!["mapped"]);
+    }
+
+    #[test]
+    fn p155_a_mismatched_displacement_energy_names_the_build_command() {
+        let table = ctx_damage(Some(&[("Fe", 40.0), ("Cr", 40.0)]));
+        let conversion = convert(&steel_deck("ALLDISPEN 30\nATDISPEN 1 Fe 45"), &table).unwrap();
+        for keyword in ["ALLDISPEN", "ATDISPEN"] {
+            assert_eq!(entry_status(&conversion, keyword), vec!["unsupported"]);
+            let detail = entry_detail(&conversion, keyword);
+            for word in ["build-damage", "kinematic", "displacement-energy"] {
+                assert!(detail.contains(word), "{keyword}: {detail}");
+            }
+            assert!(
+                detail.contains(
+                    "--method kinematic --displacement-energy Cr=30 --displacement-energy Fe=45"
+                ),
+                "{detail}"
+            );
+        }
+        assert!(conversion.spec.get("damage").is_none());
+        assert_eq!(conversion.counts.unsupported, 2);
+    }
+
+    #[test]
+    fn p155_displacement_energies_without_a_table_name_the_option() {
+        let conversion = convert(&steel_deck("ALLDISPEN 40"), &context()).unwrap();
+        assert_eq!(entry_status(&conversion, "ALLDISPEN"), vec!["unsupported"]);
+        let detail = entry_detail(&conversion, "ALLDISPEN");
+        assert!(
+            detail.contains("--damage") && detail.contains("build-damage"),
+            "{detail}"
+        );
+        assert!(
+            detail.contains("--displacement-energy Cr=40 --displacement-energy Fe=40"),
+            "{detail}"
+        );
+        assert!(conversion.spec.get("damage").is_none());
+        // no keyword and no table: nothing is added
+        let plain = convert(&steel_deck(""), &context()).unwrap();
+        assert!(plain.spec.get("damage").is_none());
+    }
+
+    #[test]
+    fn p155_a_damage_table_without_the_keywords_uses_the_default_energies() {
+        // FISPACT-II computes displacement rates with its table 8 energies when no keyword gives any
+        let table1 = convert(&steel_deck(""), &ctx_damage(None)).unwrap();
+        assert_eq!(
+            table1.spec["damage"]["displacement_energy_eV"],
+            json!({"Cr": 40.0, "Fe": 40.0})
+        );
+        assert_eq!(entry_status(&table1, "DISPLACEMENT"), vec!["mapped"]);
+        assert!(entry_detail(&table1, "DISPLACEMENT").contains("neither ALLDISPEN nor ATDISPEN"));
+        // a table 2 built at other energies keeps its own, reported as approximated
+        let table2 = convert(
+            &steel_deck(""),
+            &ctx_damage(Some(&[("Fe", 40.0), ("Cr", 35.0)])),
+        )
+        .unwrap();
+        assert_eq!(
+            table2.spec["damage"]["displacement_energy_eV"],
+            json!({"Cr": 35.0, "Fe": 40.0})
+        );
+        assert_eq!(entry_status(&table2, "DISPLACEMENT"), vec!["approximated"]);
+        // an element outside table 8 gets 25 eV
+        let other = convert(
+            "FISPACT\n* t\nMASS 1E-3 1\n NA 100\nFLUX 1E10\nTIME 1 HOURS ATOMS\nEND\n",
+            &ctx_damage(None),
+        )
+        .unwrap();
+        assert_eq!(
+            other.spec["damage"]["displacement_energy_eV"],
+            json!({"Na": 25.0})
+        );
+    }
+
+    #[test]
+    fn p155_a_fuel_deck_takes_its_elements_from_the_nuclides() {
+        let deck =
+            "FISPACT\n* t\nFUEL 2\n FE56 1E20 CR52 1E19\nFLUX 1E10\nTIME 1 HOURS ATOMS\nEND\n";
+        let conversion = convert(deck, &ctx_damage(Some(&[("Fe", 40.0), ("Cr", 40.0)]))).unwrap();
+        assert_eq!(
+            conversion.spec["damage"]["displacement_energy_eV"],
+            json!({"Cr": 40.0, "Fe": 40.0})
+        );
+    }
+
+    #[test]
+    fn p155_malformed_displacement_keywords_are_unsupported() {
+        for bad in [
+            "ALLDISPEN",
+            "ALLDISPEN -3",
+            "ALLDISPEN 20 30",
+            "ATDISPEN 2 FE 40",
+            "ATDISPEN 1 FE12 40",
+            "ATDISPEN 1 FE zero",
+            "ATDISPEN 0",
+        ] {
+            let conversion = convert(&steel_deck(bad), &ctx_damage(None)).unwrap();
+            let keyword = bad.split_whitespace().next().unwrap();
+            assert_eq!(
+                entry_status(&conversion, keyword),
+                vec!["unsupported"],
+                "{bad}"
+            );
+        }
+    }
+
+    #[test]
+    fn p155_parse_gamma_groups_checks_the_format() {
+        assert_eq!(parse_gamma_groups("1\n1.0\n2.0\n").unwrap(), vec![1.0, 2.0]);
+        assert!(parse_gamma_groups("1\n1.0\n2.0\n3.0\n").is_err());
+        assert!(parse_gamma_groups("0\n1.0\n").is_err());
+        assert!(parse_gamma_groups("1 2.0 2.0").is_err());
     }
 }

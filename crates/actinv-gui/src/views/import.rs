@@ -772,6 +772,7 @@ mod tests {
             library: None,
             decay: None,
             covariance: None,
+            ..ImportContext::default()
         };
         let conversion = convert(deck, &ctx).unwrap();
         let mut report = conversion.report.clone();
