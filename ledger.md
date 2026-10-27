@@ -4029,3 +4029,17 @@ Handbook walk-through (`check_p140_docs.py`, local): 98/98 gating items pass aft
 valid JSON. One unclassified fragment predates this wave (`docs/guide/waste.md` `encapsulation` block, P147).
 
 G7 (CI) pending.
+
+## Entry 229 — P155 registered (2026-10-27)
+
+Registered before any source change for the phase:
+- **P155** `6b1ab89fd34a050c7d716b06aebb5545bc3ad401e06578298cea903341d8999d`: importer sweep. New `import-fispact`
+  options `--fission-yields`, `--damage`, `--self-shielding-table` and `--resonance` supply the hash-pinned data the
+  decks do not name; the fission (`USEFISSION`, `NOFISS`, `CUMFYLD`, `FISYIELD`, `FISCHOOSE`), photon (`NOXRAY`, `SPEK`,
+  `READGG`), damage (`ALLDISPEN`, `ATDISPEN`), uncertainty (`UNCTYPE`, `COVARIANCE`, `SENSITIVITY`, `MCSAMPLE`,
+  `ERROR`) and self-shielding (`SSF*`, `PROBTABLE`) keywords map onto the fields added by P152–P154 and earlier
+  phases. `XSTHRESHOLD`, `DEPLETION` and `RESULT` become noted; `IRON`'s reason string is corrected (the 2023 manual
+  has no such keyword). The builder starts once P152 and P154 are merged.
+
+The protocols of P152–P154 and ledger entry 228 abbreviate the reference SHA-256 as `79e1e860…9c072`; the true suffix
+is `…c9072`, as entry 227 gives it in full. The checkers compare the full value.
