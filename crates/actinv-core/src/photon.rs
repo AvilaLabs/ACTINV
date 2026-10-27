@@ -1837,14 +1837,17 @@ fn point_source_dose(
 /// nuclide and of the step: the dose from evaluated spectra alone (rebuilt from the evaluated
 /// nuclides' groups), the estimate and the bounds. The dose model is `point_source_dose`'s:
 /// group energies at their centroids, response and air transmission by log-log interpolation.
+/// Returns the step's estimate (the evaluated nuclides' dose plus each estimated nuclide's own
+/// sum over its groups) and, when it is `None`, the reason; `None` without an estimate request.
+/// That estimate is the step's point-source dose in estimate mode.
 fn add_estimated_point_source_bounds(
     source: &mut PhotonSourceOut,
     response: &PhotonResponse,
     options: &PointSourceOptions,
     mass_g: f64,
-) {
+) -> Option<(Option<f64>, Option<String>)> {
     if source.estimated_spectra.is_none() || source.boundaries_eV.len() < 2 {
-        return;
+        return None;
     }
     let attenuation = if options.air_attenuation {
         response.air_mass_attenuation.as_ref()
@@ -1897,9 +1900,7 @@ fn add_estimated_point_source_bounds(
     let represented = evaluated.as_ref().and_then(|t| t.dose_Sv_h);
     let mut subthreshold_W = evaluated.as_ref().map_or(0.0, |t| t.subthreshold_W);
     let mut total_W = reference_W_g * mass_g;
-    let Some(estimated) = source.estimated_spectra.as_mut() else {
-        return;
-    };
+    let estimated = source.estimated_spectra.as_mut()?;
     let mut ranges = Vec::with_capacity(estimated.by_nuclide.len());
     for n in &estimated.by_nuclide {
         let (range, sub_W_g) = nuclide_dose_range(n, e_lo, &dose_model);
@@ -1907,15 +1908,13 @@ fn add_estimated_point_source_bounds(
         subthreshold_W += sub_W_g * mass_g;
         total_W += n.power_W_g * mass_g;
     }
-    estimated.point_source_gamma_air_dose_Sv_h = Some(combine_dose_bounds(
-        represented,
-        &mut ranges,
-        subthreshold_W,
-        total_W,
-    ));
+    let bounds = combine_dose_bounds(represented, &mut ranges, subthreshold_W, total_W);
+    let outcome = (bounds.estimate, bounds.unavailable_reason.clone());
+    estimated.point_source_gamma_air_dose_Sv_h = Some(bounds);
     for (n, range) in estimated.by_nuclide.iter_mut().zip(ranges) {
         n.point_source_gamma_air_dose_Sv_h = range;
     }
+    Some(outcome)
 }
 
 /// Add the FISPACT-II `DOSE 2` point-source dose to a built step source. `mass_g` is the
@@ -2013,7 +2012,20 @@ pub fn add_point_source_dose(
                             n.point_source_gamma_air_dose_Sv_h = t.dose_Sv_h;
                         }
                     }
-                    add_estimated_point_source_bounds(source, r, options, mass_g);
+                    // In estimate mode the step's dose is the estimate by definition: the
+                    // evaluated groups' dose plus each estimated nuclide at its own centroids,
+                    // not one dose of the combined groups. Unavailable together with it.
+                    if let Some((estimate, reason)) =
+                        add_estimated_point_source_bounds(source, r, options, mass_g)
+                    {
+                        out.gamma_air_dose_Sv_h = estimate;
+                        out.gamma_air_dose_Sv_h_per_g = estimate.map(|d| d / mass_g);
+                        if estimate.is_some() {
+                            out.unavailable_reason = None;
+                        } else if out.unavailable_reason.is_none() {
+                            out.unavailable_reason = reason;
+                        }
+                    }
                     if let Some(b) = source.bremsstrahlung.as_mut() {
                         for n in &mut b.by_nuclide {
                             if let Ok(t) =
@@ -4309,7 +4321,7 @@ mod tests {
                 step.upper.unwrap(),
             );
             assert!(lower <= value && value <= upper && lower < upper);
-            assert!(rel(dose, value) < 1e-12, "{dose} {value}");
+            assert_eq!(dose, value);
             let own = est.by_nuclide[0]
                 .point_source_gamma_air_dose_Sv_h
                 .as_ref()
@@ -4321,6 +4333,58 @@ mod tests {
             let out = report.point_source_dose.as_ref().unwrap();
             assert!(out.gamma_air_dose_Sv_h.is_none() && out.unavailable_reason.is_some());
             assert!(report.estimated_spectra.is_none());
+        }
+
+        #[test]
+        fn step_point_source_dose_is_the_estimate_by_definition() {
+            // An evaluated and an estimated nuclide share the 10 to 100 keV group, so one dose
+            // of the combined groups would differ from the sum at each nuclide's own centroid.
+            let evaluated = nuclide(
+                0.0,
+                4.7e4 * 0.5,
+                vec![mode(2.0, 0.0, 1.0)],
+                vec![line_spectrum(0.0, &[(4.7e4, 0.5)])],
+            );
+            let estimated = beta_minus();
+            let point = PointSourceOptions {
+                distance_m: 1.0,
+                air_attenuation: true,
+                air_density_g_cm3: 1.20479e-3,
+            };
+            let (mut src, _) = source_for_step_with(
+                &[("Fe59", &evaluated, 3.0e6), ("Co60", &estimated, 3.0e6)],
+                &BOUNDS,
+                "test",
+                2.0,
+                Some(&response()),
+                &fractions(),
+                true,
+                2.0,
+                0.0,
+                &ESTIMATE,
+            )
+            .unwrap();
+            add_point_source_dose(&mut src, Some(&response()), &point, 2.0);
+            let out = src.point_source_dose.as_ref().unwrap();
+            let step = src
+                .estimated_spectra
+                .as_ref()
+                .unwrap()
+                .point_source_gamma_air_dose_Sv_h
+                .as_ref()
+                .unwrap();
+            let own = src.estimated_spectra.as_ref().unwrap().by_nuclide[0]
+                .point_source_gamma_air_dose_Sv_h
+                .as_ref()
+                .unwrap()
+                .estimate;
+            assert_eq!(out.gamma_air_dose_Sv_h, step.estimate);
+            assert_eq!(
+                out.gamma_air_dose_Sv_h_per_g,
+                step.estimate.map(|d| d / 2.0)
+            );
+            assert!(out.unavailable_reason.is_none());
+            assert!(rel(step.estimate.unwrap(), step.represented_only.unwrap() + own) < 1e-12);
         }
 
         fn xray_nuclide(e_em: f64) -> Nuclide {

@@ -1320,9 +1320,12 @@ Each step's `photon_source` gains:
   `{estimate, lower, upper, share_of_step_estimate}`.
 
 The step's own `contact_gamma_air_dose_proxy_Gy_h` stays the value from evaluated spectra; the estimate and bounds are
-in `estimated_spectra`. The step's groups, `source_power_W_g` and photon rates include the estimated nuclides, so
-`point_source_dose.gamma_air_dose_Sv_h` is the estimate, given instead of withheld, and its range is in
-`estimated_spectra.point_source_gamma_air_dose_Sv_h`. A range is `null` for the same reasons as a dose: no response,
+in `estimated_spectra`. The step's groups, `source_power_W_g` and photon rates include the estimated nuclides.
+`point_source_dose.gamma_air_dose_Sv_h` (and its per-gram value) is defined as the `estimate` of
+`estimated_spectra.point_source_gamma_air_dose_Sv_h`: the dose of the evaluated nuclides' groups plus each estimated
+nuclide's own sum over its groups at their centroids. It is not one dose of the combined step groups, where estimated
+and evaluated photons would share a group centroid. It is given instead of withheld, and is withheld, with the reason,
+when that estimate is `null`. Its range is in the same block. A range is `null` for the same reasons as a dose: no response,
 power outside the response or the group structure, or a sub-threshold share above `1e-4`. The estimates are not
 evaluated data: `actinv inspect decay DECAY_PATH NUCLIDE --estimated-spectrum` prints the estimate beside the
 evaluated grouped spectrum.
