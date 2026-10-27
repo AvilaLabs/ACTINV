@@ -669,10 +669,19 @@ cosine, split at the threshold and the NRT breakpoints, and the incident-energy 
 midpoint agrees within 1e-3. The group collapse is the flat-lethargy weighting of the other builders.
 
 Capture recoil: with `--capture-photons evaluated` (default) the photon spectra of MF=6 are used where the
-evaluation carries them, and the result is flagged `evaluated_photon_spectrum`; otherwise, and always with
-`one-photon`, the excitation energy is emitted as one photon (NJOY's treatment), flagged
-`excitation_energy_one_photon_upper_bound`. A cascade of several photons recoils less than one photon, so the
-one-photon value is an upper bound; the two treatments therefore differ for capture.
+evaluation carries them, and the result is flagged `evaluated_photon_spectrum`: one recoiling nucleus takes the
+incident neutron's momentum and the summed expected photon recoil (the momenta of a cascade emitted before the nucleus
+has slowed down add as a single recoil), and its damage energy is partitioned once. With `per-photon`, NJOY HEATR's
+treatment of MF=6 photon data (`tabsq6`), each photon's recoil `E_gamma^2 / (2 (A + 1) m_n c^2)` is partitioned
+separately and averaged over the discrete lines and the continuum, times the photon multiplicity, with no
+incident-neutron momentum; the result is flagged `per_photon_spectrum`. The multiplicity is taken at each record's
+incident energy and the product is interpolated linearly between records, as HEATR does; each continuum panel is
+integrated by 8-point Gauss-Legendre after splitting at the photon energies whose recoil reaches the displacement
+threshold and the NRT breakpoints (HEATR uses 4-point Gauss-Legendre over the whole panel). Where the evaluation has no
+MF=6 photons, `per-photon` falls back to the one-photon treatment. With `one-photon` (and the fallbacks), the excitation
+energy is emitted as one photon (NJOY HEATR `capdam`), flagged `excitation_energy_one_photon_upper_bound`. A cascade of
+several photons recoils less than one photon, so the one-photon value is an upper bound; the treatments therefore
+differ for capture. The mode is recorded as `model.capture_photons` and is part of the cache key.
 
 Every other non-elastic channel that has a cross section is *uncovered*: the table records its cross section and an
 upper bound on its damage energy from the largest recoil the kinematics allow, `D <= T`. Ultra-narrow analytic

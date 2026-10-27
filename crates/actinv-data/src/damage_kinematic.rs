@@ -10,7 +10,8 @@
 //! * single-particle continuum (MT=91, 649, 699, 749, 799, 849, and the lumped MT=103-107 when no level MTs exist)
 //!   from MF=6 `LAW=1` Kalbach-Mann or Legendre distributions: the recoil follows from momentum conservation
 //!   for each ejectile energy and angle;
-//! * capture (MT=102): the incident-neutron momentum plus the photon recoil.
+//! * capture (MT=102): the incident-neutron momentum plus the photon recoil, or with `per-photon` each photon's
+//!   recoil partitioned separately (NJOY HEATR's treatment of MF=6 photons).
 //!
 //! Recoil energy `T` becomes damage energy through the Lindhard partition in Robinson's fit
 //! ([`crate::displacement::Partition`], NJOY HEATR `df`). Every other non-elastic channel with a cross section is
@@ -673,6 +674,9 @@ struct Capture<'a> {
     /// NJOY HEATR `capdam`: one photon of the excitation energy, recoil `E/(A+1) + E_x^2 / (2 (A+1) m_n c^2)`
     /// with no photon-angle term (the cross term averages out), a single recoil energy per incident energy.
     njoy_one_photon: bool,
+    /// NJOY HEATR `tabsq6` (MF=6 photons): per incident-energy record the yield times the photon-averaged response
+    /// of each photon's own recoil, `(E_record, response)`; `kernel` interpolates linearly between records.
+    per_photon: Option<Vec<(f64, Resp)>>,
 }
 
 /// `E[E'^2]` of the normalized photon spectrum of one record (discrete lines plus continuum).
@@ -705,6 +709,93 @@ fn record_second_moment(rec: &Law1Energy, lep: i32) -> Option<f64> {
     (norm > 0.0).then(|| moment / norm)
 }
 
+/// Photon-averaged response of one `LAW=1` photon record when every photon's recoil `E_g^2 / (2 (A + 1) m_n c^2)`
+/// is partitioned separately (NJOY HEATR `tabsq6`, heatr.f90:4135-4212): `sum_i p_i R(T_i) / sum_i p_i` over the
+/// discrete lines and the continuum density. `rc` is the capture recoil. Each continuum panel is split at the
+/// photon energies whose recoil reaches `E_d` and the two NRT breakpoints, then integrated by 8-point
+/// Gauss-Legendre (NJOY: 4-point over the whole panel); the density is linear inside a panel for `lep == 2`.
+/// `None` when the spectrum has no weight.
+fn per_photon_record_response(rec: &Law1Energy, lep: i32, rc: &Recoil, a1: f64) -> Option<Resp> {
+    let scale = 1.0 / (2.0 * a1 * NEUTRON_REST_EV);
+    let recoil = |x: f64| x * x * scale;
+    let cuts: Vec<f64> = [rc.ed, rc.t_on, rc.t_knee]
+        .iter()
+        .filter(|t| t.is_finite() && **t > 0.0)
+        .map(|t| (t / scale).sqrt())
+        .collect();
+    let nep = rec.eprime.len();
+    let (mut norm, mut total) = (0.0, Resp::default());
+    for i in 0..rec.nd.min(nep) {
+        norm += rec.f0[i];
+        if rec.f0[i] > 0.0 {
+            total += rc.response(recoil(rec.eprime[i])) * rec.f0[i];
+        }
+    }
+    for i in rec.nd..nep.saturating_sub(1) {
+        let (x0, x1) = (rec.eprime[i], rec.eprime[i + 1]);
+        let (f0, f1) = (rec.f0[i], rec.f0[i + 1]);
+        if x1 <= x0 {
+            continue;
+        }
+        norm += if lep == 1 {
+            f0 * (x1 - x0)
+        } else {
+            0.5 * (f0 + f1) * (x1 - x0)
+        };
+        if f0 <= 0.0 && f1 <= 0.0 {
+            continue;
+        }
+        let density = |x: f64| {
+            if lep == 1 {
+                f0
+            } else {
+                f0 + (x - x0) / (x1 - x0) * (f1 - f0)
+            }
+        };
+        let mut edges = vec![x0, x1];
+        edges.extend(cuts.iter().copied().filter(|x| *x > x0 && *x < x1));
+        edges.sort_by(f64::total_cmp);
+        for piece in edges.windows(2) {
+            total += gl_integral(piece[0], piece[1], 8, |x| {
+                rc.response(recoil(x)) * density(x)
+            });
+        }
+    }
+    (norm > 0.0).then(|| total * (1.0 / norm))
+}
+
+/// Per-record `(E, yield * photon-averaged response)` of the evaluated capture photons for the per-photon mode
+/// (`tabsq6` applies the yield at each record energy); `None` when a record has no spectrum weight.
+fn per_photon_table(
+    law1: &Law1,
+    yield_table: &Tabulated,
+    rc: &Recoil,
+    a1: f64,
+) -> Option<Vec<(f64, Resp)>> {
+    law1.energies
+        .iter()
+        .map(|rec| {
+            let response = per_photon_record_response(rec, law1.lep, rc, a1)?;
+            let multiplicity = yield_table.evaluate(rec.energy).unwrap_or(0.0);
+            Some((rec.energy, response * multiplicity))
+        })
+        .collect()
+}
+
+/// Linear interpolation of a per-record table at `e`; the end records apply outside the tabulated range.
+fn interpolate_records(table: &[(f64, Resp)], e: f64) -> Resp {
+    let n = table.len();
+    if n == 1 || e <= table[0].0 {
+        return table[0].1;
+    }
+    if e >= table[n - 1].0 {
+        return table[n - 1].1;
+    }
+    let hi = table.partition_point(|(energy, _)| *energy <= e);
+    let ((e0, low), (e1, high)) = (table[hi - 1], table[hi]);
+    blend_resp(2, e0, e1, e, low, high)
+}
+
 impl Capture<'_> {
     /// `E[sum of photon energies squared]` per capture (eV^2): the evaluated photon multiplicity times the
     /// second moment of its spectrum, else the excitation energy emitted as one photon.
@@ -731,6 +822,9 @@ impl Capture<'_> {
     }
 
     fn kernel(&self, e: f64) -> Resp {
+        if let Some(table) = &self.per_photon {
+            return interpolate_records(table, e);
+        }
         let a1 = self.awr + 1.0;
         let t0 = e / a1;
         let tg = self.photon_energy_squared(e) / (2.0 * a1 * NEUTRON_REST_EV);
@@ -1009,8 +1103,12 @@ fn damage_upper_bound(awr: f64, q: f64, emitted: Option<f64>, e: f64) -> f64 {
 pub enum CapturePhotons {
     /// Evaluated MF=6 photon spectra where the evaluation carries them, else the excitation energy as one photon.
     Evaluated,
-    /// Always the excitation energy emitted as one photon (NJOY HEATR's capture treatment).
+    /// Always the excitation energy emitted as one photon (NJOY HEATR `capdam`, used for evaluations without MF=6
+    /// photons).
     OnePhoton,
+    /// NJOY HEATR's treatment of MF=6 photons (`tabsq6`): each photon's recoil is partitioned separately, with no
+    /// incident-neutron momentum; the one-photon treatment where the evaluation has no MF=6 photons.
+    PerPhoton,
 }
 
 impl CapturePhotons {
@@ -1018,8 +1116,9 @@ impl CapturePhotons {
         match value {
             "evaluated" => Ok(Self::Evaluated),
             "one-photon" => Ok(Self::OnePhoton),
+            "per-photon" => Ok(Self::PerPhoton),
             _ => Err(format!(
-                "unknown capture photon treatment '{value}'; expected evaluated or one-photon"
+                "unknown capture photon treatment '{value}'; expected evaluated, one-photon or per-photon"
             )),
         }
     }
@@ -1028,6 +1127,7 @@ impl CapturePhotons {
         match self {
             Self::Evaluated => "evaluated",
             Self::OnePhoton => "one-photon",
+            Self::PerPhoton => "per-photon",
         }
     }
 }
@@ -1129,7 +1229,7 @@ fn build_model<'a>(
     let q_of = |mt: i32| endf.q.get(&mt).map(|q| q.qi_ev);
     if mt == 102 {
         let q = q_of(102);
-        let photons = if capture_photons == CapturePhotons::Evaluated {
+        let photons = if capture_photons != CapturePhotons::OnePhoton {
             endf.mf6
                 .get(&102)
                 .and_then(|data| data.as_ref().ok())
@@ -1148,6 +1248,18 @@ fn build_model<'a>(
         } else {
             None
         };
+        let rc = Recoil::new(z, awr + 1.0, z, awr, ctx.ed, ctx.arc);
+        // per-photon needs a weighted spectrum in every record; otherwise it is the one-photon treatment
+        let per_photon = match (capture_photons, photons) {
+            (CapturePhotons::PerPhoton, Some((law1, yield_table))) => {
+                per_photon_table(law1, yield_table, &rc, awr + 1.0)
+            }
+            _ => None,
+        };
+        let photons = match capture_photons {
+            CapturePhotons::PerPhoton if per_photon.is_none() => None,
+            _ => photons,
+        };
         if photons.is_none() && q.is_none() {
             return Err(
                 "no evaluated photon spectrum and no Q value for the excitation energy".into(),
@@ -1157,8 +1269,10 @@ fn build_model<'a>(
             awr,
             q,
             photons,
-            rc: Recoil::new(z, awr + 1.0, z, awr, ctx.ed, ctx.arc),
-            njoy_one_photon: capture_photons == CapturePhotons::OnePhoton,
+            rc,
+            njoy_one_photon: capture_photons == CapturePhotons::OnePhoton
+                || (capture_photons == CapturePhotons::PerPhoton && per_photon.is_none()),
+            per_photon,
         }));
     }
     let ej_zap = ejectile_zap(mt).ok_or("no single-ejectile kinematics for this MT")?;
@@ -1407,7 +1521,9 @@ fn compute_row(
                 });
                 match &model {
                     Model::Capture(capture) => {
-                        photon_mode = if capture.photons.is_some() {
+                        photon_mode = if capture.per_photon.is_some() {
+                            "per_photon_spectrum"
+                        } else if capture.photons.is_some() {
                             "evaluated_photon_spectrum"
                         } else {
                             "excitation_energy_one_photon_upper_bound"
@@ -2248,6 +2364,7 @@ mod tests {
             photons: None,
             rc: Recoil::new(26.0, awr + 1.0, 26.0, awr, 40.0, None),
             njoy_one_photon: true,
+            per_photon: None,
         };
         // thermal capture: recoil from one photon of the Q-value energy, E_gamma^2 / (2 M c^2)
         let e = 0.0253;
@@ -2266,6 +2383,132 @@ mod tests {
             ..capture
         };
         assert_eq!(weak.kernel(e).d, 0.0);
+    }
+
+    fn photon_record(energy: f64, nd: usize, eprime: &[f64], f0: &[f64]) -> Law1Energy {
+        Law1Energy {
+            energy,
+            nd,
+            na: 0,
+            eprime: eprime.to_vec(),
+            f0: f0.to_vec(),
+            angular: Vec::new(),
+        }
+    }
+
+    fn photon_yield(value: f64) -> Tabulated {
+        Tabulated {
+            interpolation: vec![(2, 2)],
+            x: vec![1.0e-5, 2.0e7],
+            y: vec![value, value],
+        }
+    }
+
+    #[test]
+    fn capture_photons_parse_names_the_per_photon_mode() {
+        assert_eq!(
+            CapturePhotons::parse("per-photon"),
+            Ok(CapturePhotons::PerPhoton)
+        );
+        assert_eq!(CapturePhotons::PerPhoton.name(), "per-photon");
+        assert!(CapturePhotons::parse("two-photon").is_err());
+    }
+
+    // NJOY HEATR tabsq6 on discrete lines: h = yield * sum_i p_i df(E_i^2 / (2 tm)) / sum_i p_i, tm = (A + 1) m_n c^2,
+    // no incident-neutron momentum.
+    #[test]
+    fn per_photon_discrete_lines_match_the_hand_sum() {
+        let awr = 55.45;
+        let a1 = awr + 1.0;
+        let rc = Recoil::new(26.0, a1, 26.0, awr, 40.0, None);
+        let rec = photon_record(1.0e-5, 2, &[3.0e6, 6.0e6], &[0.3, 0.2]);
+        let law1 = Law1 {
+            lang: 1,
+            lep: 2,
+            energies: vec![rec],
+            laws: vec![2],
+        };
+        let table = per_photon_table(&law1, &photon_yield(2.0), &rc, a1).unwrap();
+        let partition = Partition::new(26.0, a1, 26.0, awr, 40.0);
+        let tm = NEUTRON_REST_EV * a1;
+        let df = |x: f64| partition.damage_energy(x * x / (2.0 * tm));
+        let expected = 2.0 * (0.3 * df(3.0e6) + 0.2 * df(6.0e6)) / 0.5;
+        assert!(expected > 0.0);
+        let capture = Capture {
+            awr,
+            q: None,
+            photons: None,
+            rc,
+            njoy_one_photon: false,
+            per_photon: Some(table),
+        };
+        // thermal and 1 MeV neutrons give the same recoil: no neutron momentum term
+        for e in [0.0253, 1.0e6] {
+            let got = capture.kernel(e).d;
+            assert!(
+                (got - expected).abs() < 1e-12 * expected,
+                "{got} {expected}"
+            );
+        }
+    }
+
+    #[test]
+    fn per_photon_continuum_matches_fine_quadrature_across_the_threshold() {
+        let awr = 55.45;
+        let a1 = awr + 1.0;
+        let rc = Recoil::new(26.0, a1, 26.0, awr, 40.0, None);
+        // one line plus a linear continuum whose range straddles the E_d photon energy (about 2.06 MeV)
+        let rec = photon_record(1.0e-5, 1, &[1.0e6, 1.0e6, 7.0e6], &[0.1, 0.05, 0.25]);
+        let response = per_photon_record_response(&rec, 2, &rc, a1).unwrap();
+        let partition = Partition::new(26.0, a1, 26.0, awr, 40.0);
+        let tm = NEUTRON_REST_EV * a1;
+        let n = 2_000_000;
+        let (lo, hi) = (1.0e6, 7.0e6);
+        let (mut sum, mut norm) = (0.0, 0.1);
+        for i in 0..n {
+            let x = lo + (i as f64 + 0.5) * (hi - lo) / n as f64;
+            let f = 0.05 + (0.25 - 0.05) * (x - lo) / (hi - lo);
+            sum += partition.damage_energy(x * x / (2.0 * tm)) * f * (hi - lo) / n as f64;
+            norm += f * (hi - lo) / n as f64;
+        }
+        // the 1 MeV line recoils 4.7 eV, below E_d
+        let expected = sum / norm;
+        assert!(
+            (response.d - expected).abs() < 1e-6 * expected,
+            "{} {expected}",
+            response.d
+        );
+        assert!(response.nrt > 0.0);
+    }
+
+    #[test]
+    fn per_photon_interpolates_linearly_between_records() {
+        let awr = 55.45;
+        let a1 = awr + 1.0;
+        let rc = Recoil::new(26.0, a1, 26.0, awr, 40.0, None);
+        let low = photon_record(1.0e-5, 1, &[5.0e6], &[1.0]);
+        let high = photon_record(1.0e6, 1, &[6.0e6], &[1.0]);
+        let law1 = Law1 {
+            lang: 1,
+            lep: 2,
+            energies: vec![low, high],
+            laws: vec![2, 2],
+        };
+        let table = per_photon_table(&law1, &photon_yield(1.5), &rc, a1).unwrap();
+        let (a, b) = (table[0].1.d, table[1].1.d);
+        assert!(a > 0.0 && b > a);
+        let middle = interpolate_records(&table, 0.5e6).d;
+        let expected = a + (0.5e6 - 1.0e-5) / (1.0e6 - 1.0e-5) * (b - a);
+        assert!((middle - expected).abs() < 1e-12 * expected);
+        assert_eq!(interpolate_records(&table, 5.0e7).d, b);
+        // a record with no spectrum weight makes the whole table unusable (one-photon fallback)
+        let empty = Law1 {
+            lang: 1,
+            lep: 2,
+            energies: vec![photon_record(1.0e-5, 0, &[1.0e6, 2.0e6], &[0.0, 0.0])],
+            laws: vec![2],
+        };
+        assert!(per_photon_table(&empty, &photon_yield(1.0), &rc, a1).is_none());
     }
 
     // Pinned to NJOY2016.79 acecm.f90 `bachaa` (neutron incident, MeV), Fe-56 target, hand-evaluated:

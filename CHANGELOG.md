@@ -35,7 +35,7 @@
   two-body levels, single-particle continua and capture, on the 0 K reconstructed grid, through the
   Lindhard-Robinson partition. Channels it cannot compute are reported with their cross section and a kinematic
   upper bound on their damage energy, never as zero. The output is an `actinv-damage-table-2` file; `--displacement-energy
-  EL=eV` (repeatable, default 25 eV) sets the displacement energy, `--capture-photons evaluated|one-photon` the capture
+  EL=eV` (repeatable, default 25 eV) sets the displacement energy, `--capture-photons evaluated|one-photon|per-photon` the capture
   recoil treatment.
 - A run with a table-2 file adds exact-NRT and arc-dpa displacement outputs (`dpa_nrt`, `dpa_arc`, rates and
   cumulative, per element too), the uncovered upper bounds and, when gas output is requested, `he_appm_per_dpa`. The
