@@ -157,25 +157,23 @@ you add the spec section by hand. Sources: `crates/actinv-core/src/fispact_impor
 | `EXTRACTXS` | `actinv inspect` | **parity** | cross sections as JSON or tables |
 | `USESPALLATION` | `build-library --spallation` | **parity** | splice table user-supplied; not mapped by import-fispact |
 | `USEXSEXTRA` | `build-library --spallation`, group structures to 1 GeV | **parity** | tracker row 24; not mapped by import-fispact |
-| `XSTHRESHOLD` | none | absent | no cross-section threshold switch |
+| `XSTHRESHOLD` | none | not applicable | cost control of FISPACT-II's pathway-based uncertainty estimate (manual 4.94); ACTINV propagates the full covariance (P151) |
 | `NOXRAY` | none | absent | no decay-data X-ray switch |
-| `IRON` | none | absent | no iron background removal |
+| `IRON` | none | not applicable | no keyword section in the 2023 manual; recognised as a legacy name (P151) |
 | `READSF` | `fission_yields.spontaneous` | **parity** | MT=454 SF yields; not mapped by import-fispact |
 | `FISYIELD` | `fission_yields.files` | partial | selection by yield files supplied; no keyword switch |
 | `CUMFYLD` | `actinv inspect yields` | partial | cumulative yields inspectable; no keyword switch |
-| `USEFISSION` | `fission_yields.files` | partial | selection by yield files supplied; no keyword switch |
-| `NOFISS` | omit `fission_yields` | partial | selection by yield files supplied; no keyword switch |
+| `USEFISSION` | `fission_yields.files` | **parity** | fission with yield data enters the rate matrix (manual 4.90; P151) |
+| `NOFISS` | omit `fission_yields` | **parity** | no yield data read (manual 4.46; P151) |
 | `FISCHOOSE` | `fission_yields.files` | partial | selection by yield files supplied; no keyword switch |
 
-Counts over the 94 keywords: 61 parity, 5 ahead, 8 partial, 4 absent, 16 not applicable. *Ahead* is claimed only where a closed verdict or the "Already ahead" paragraph shows it: `POWER`, `UNCERTAINTY`, `COVARIANCE`, `PATH`, `ROUTES` (power renormalized within the step, P126; full-covariance uncertainty; exact route integration with closure, P127). `RESULT` and `INDEXPATH` are counted *parity* on judgement: the `pathways` section covers target selection and route listing, though tracker row 21 does not name them.
+Counts over the 94 keywords: 63 parity, 5 ahead, 6 partial, 2 absent, 18 not applicable (P151 manual audit, 2026-10-27: `docs/maintainers/FISPACT_MANUAL_KEYWORD_AUDIT.md`; before it, 61, 5, 8, 4 and 16). *Ahead* is claimed only where a closed verdict or the "Already ahead" paragraph shows it: `POWER`, `UNCERTAINTY`, `COVARIANCE`, `PATH`, `ROUTES` (power renormalized within the step, P126; full-covariance uncertainty; exact route integration with closure, P127). `RESULT` and `INDEXPATH` are counted *parity* on judgement: the `pathways` section covers target selection and route listing, though tracker row 21 does not name them.
 
 Remaining gaps (every keyword with status partial or absent):
 
 - `SPEK` (absent): approximate γ spectra for nuclides without spectral data; needs an estimator for the unrepresented power now reported.
-- `XSTHRESHOLD` (absent): no cross-section threshold switch; needs a spec option, specified from the manual.
 - `NOXRAY` (absent): no decay-data switch of that name; needs a decay-data selection option, specified from the manual.
-- `IRON` (absent): fictitious-matrix iron background removal is not available; needs a design.
-- `FISYIELD`, `USEFISSION`, `NOFISS`, `FISCHOOSE` (partial): actinides are chosen by the yield files supplied; needs a keyword-level selection among them and an importer mapping.
+- `FISYIELD`, `FISCHOOSE` (partial): actinides are chosen by the yield files supplied; needs a per-actinide selection (and, for `FISCHOOSE`, a pathway parent filter) and an importer mapping.
 - `CUMFYLD` (partial): cumulative yields are inspectable with `actinv inspect yields`; needs a keyword-level switch.
 - `PROBTABLE` (partial): self-shielding tables come from evaluations; needs an importer mapping, since the deck names no table.
 - `ALLDISPEN`, `ATDISPEN` (partial): `damage` needs a user-built MT=444 table and none ships; needs a shipped table and an importer mapping.

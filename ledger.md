@@ -3947,3 +3947,37 @@ peak resident set, exactly the expected difference: the W, 7 h default-outputs r
 
 Verdict: **P149-COMPLETE** on 1.6.1, `results/p149_verdict.json`. The 1.6.0 verdict stays in
 `results/p149_v1.6.0_verdict.json`.
+
+## Entry 226 — P151: FISPACT-II manual keyword audit (2026-10-27)
+
+Owner direction 2026-10-27: close the remaining FISPACT-II gaps and be better where possible. Before the second parity
+wave, the keyword reference of *The FISPACT-II User Manual* (UKAEA-CCFE-RE(21)02, May 2023; PDF SHA-256
+`1efe16a62bd56c0e4933ea85fa3eeea29bc1c2ea59859d4fc7ae5bf26ff4a899`, not tracked) was compared read-only with the
+`import-fispact` keyword table at `f433fea`. Record: `docs/maintainers/FISPACT_MANUAL_KEYWORD_AUDIT.md`.
+
+- All 93 keywords with a manual section are in the importer table; the scorecard covers the manual's whole set.
+- Reclassified on the manual's definitions: `IRON` (no section in this edition) and `XSTHRESHOLD` (a cost control of
+  FISPACT-II's pathway-based uncertainty estimate) to not applicable; `NOFISS` and `USEFISSION` to parity.
+- Scorecard counts over 94 keywords: 63 parity, 5 ahead, 6 partial, 2 absent, 18 not applicable.
+- Remaining gaps scheduled: `SPEK`, `NOXRAY` → P152; `FISYIELD`, `CUMFYLD`, `FISCHOOSE` and rate-weighted yield
+  mixing → P153; native damage energy for `ALLDISPEN`/`ATDISPEN` → P154; importer mappings → P155.
+
+No executable job was run. Owner-approved convention for the wave: ACTINV keeps its own option names; FISPACT-II
+keyword strings appear only in the importer and comparison documents; manual behaviour is paraphrased and cited.
+
+## Entry 227 — P152, P153 and P154 registered (2026-10-27)
+
+Registered before any source change for these phases:
+- **P152** `e5ec053169d766cd2cbc12d70c9b95a1829f89578f137c6e0f71cf1e0f132061`: opt-in estimated γ spectra for nuclides
+  with a mean EM energy but no spectral data (exponential shape capped by the decay Q-value), certified lower and upper
+  bounds on every grouped dose quantity, whole-library leave-one-out validation, and opt-in X-ray exclusion.
+- **P153** `da7473c4d9a1ad4142c2519fe2c1634106c65cd6ca3bd70bce8a3859cc2e7d92`: fission-rate-weighted piecewise-linear
+  yield mixing per step spectrum, parent selection with unselected fission booked to leakage, cumulative yields with
+  an overlap diagnostic, and a pathway fission-parent filter.
+- **P154** `d2ea40acee20f5515bba4c2b8b7b0c89a795d76110fa9bd7711675330b4bbfec`: native damage energy from evaluation
+  kinematics (elastic, discrete levels, single-particle Kalbach–Mann continuum, capture), uncovered channels bounded,
+  `actinv-damage-table-2` with exact NRT and arc-dpa displacement cross sections, validated against NJOY2016.79 HEATR
+  partials 444–447.
+
+Reference binary for the wave: the v1.6.1 release build, SHA-256
+`79e1e8600a8c2ad3ce42e72dcf34ce4dd8fa9bf60288db24e9eeb077781c9072`.
