@@ -31,10 +31,10 @@
 use crate::flux::parse_fispact_fluxes_text;
 use crate::spec::{Spec, POINT_SOURCE_MIN_DISTANCE_M};
 use actinv_data::activation::Projectile;
-use actinv_data::composition::{material_key, MaterialKey, NA};
+use actinv_data::composition::{material_key, symbol_of, MaterialKey, NA};
 use actinv_data::groups::{GroupStructure, NAMED_STRUCTURES};
 use serde_json::{json, Map, Value};
-use std::collections::BTreeMap;
+use std::collections::{BTreeMap, BTreeSet};
 
 /// Upper bound on schedule steps after PULSE expansion.
 const MAX_STEPS: usize = 100_000;
@@ -53,6 +53,34 @@ const SENSITIVITY_VOI_TOP: usize = 10;
 /// The actinides FISPACT-II lets produce fission products when no FISYIELD narrows or widens the set:
 /// U-235, U-238 and Pu-239, as `(ZA, LISO)`.
 const DEFAULT_FISSION_PARENTS: [(i32, i32); 3] = [(92235, 0), (92238, 0), (94239, 0)];
+/// The displacement energies in eV that FISPACT-II applies to the elements of its table 8 when no
+/// ALLDISPEN or ATDISPEN gives one; every other element has [`OTHER_DISPLACEMENT_EV`].
+const DEFAULT_DISPLACEMENT_EV: &[(&str, f64)] = &[
+    ("Be", 31.0),
+    ("C", 31.0),
+    ("Mg", 25.0),
+    ("Al", 27.0),
+    ("Si", 25.0),
+    ("Ca", 40.0),
+    ("Ti", 40.0),
+    ("V", 40.0),
+    ("Cr", 40.0),
+    ("Mn", 40.0),
+    ("Fe", 40.0),
+    ("Co", 40.0),
+    ("Ni", 40.0),
+    ("Cu", 40.0),
+    ("Zr", 40.0),
+    ("Nb", 40.0),
+    ("Mo", 60.0),
+    ("Ag", 60.0),
+    ("Ta", 90.0),
+    ("W", 55.0),
+    ("Au", 30.0),
+    ("Pb", 25.0),
+];
+/// FISPACT-II's displacement energy for an element outside its table 8, in eV.
+const OTHER_DISPLACEMENT_EV: f64 = 25.0;
 
 // ---------------------------------------------------------------------------------------------
 // Lexer
@@ -331,7 +359,9 @@ const KEYWORDS: &[(&str, Arity)] = &[
 #[cfg(test)]
 const HANDLED: &[&str] = &[
     "AINPUT",
+    "ALLDISPEN",
     "ARRAY",
+    "ATDISPEN",
     "ATOMS",
     "ATWO",
     "BREMSSTRAHLUNG",
@@ -360,6 +390,7 @@ const HANDLED: &[&str] = &[
     "NOERROR",
     "NOFISS",
     "NOSTABLE",
+    "NOXRAY",
     "OVER",
     "PARTITION",
     "PATH",
@@ -367,11 +398,13 @@ const HANDLED: &[&str] = &[
     "PROBTABLE",
     "PROJECTILE",
     "PULSE",
+    "READGG",
     "RESULT",
     "ROUTES",
     "SENSITIVITY",
     "SORTDOMINANT",
     "SPECTRUM",
+    "SPEK",
     "SSFCHOOSE",
     "SSFDILUTION",
     "SSFFUEL",
@@ -744,6 +777,13 @@ pub struct FissionYieldFile {
     pub parent_liso: i32,
 }
 
+/// The gamma group file a `ggbins` entry of the files file names, read by the caller.
+#[derive(Debug, Clone)]
+pub struct GammaGroupFile {
+    pub path: String,
+    pub text: String,
+}
+
 /// Everything the conversion needs from outside the deck.
 #[derive(Debug, Clone, Default)]
 pub struct ImportContext {
@@ -755,6 +795,12 @@ pub struct ImportContext {
     pub fission_yields: Vec<FissionYieldFile>,
     /// `--damage`: the damage table ALLDISPEN and ATDISPEN refer to
     pub damage: Option<HashedFile>,
+    /// the displacement energies in eV (element -> eV) the damage table records, when it is an
+    /// `actinv-damage-table-2` file; `None` for a table that records none
+    pub damage_energies_ev: Option<BTreeMap<String, f64>>,
+    /// the files file's `ggbins` entry: `None` when it has none (or there is no files file),
+    /// `Err` with the reason when its path cannot be read, else the file's text
+    pub gamma_groups: Option<Result<GammaGroupFile, String>>,
     /// `--self-shielding-table`: the Bondarenko table PROBTABLE and SSFDILUTION refer to
     pub self_shielding_table: Option<HashedFile>,
     /// `--resonance`: the ENDF resonance evaluations SSFGEOMETRY refers to
@@ -847,6 +893,25 @@ struct PhotonRec {
     group_structure: Option<&'static str>,
     point_source_m: Option<f64>,
     bremsstrahlung: Vec<String>,
+    /// the GROUP entry, superseded when READGG gives its own boundaries
+    group_entry: Option<usize>,
+    noxray: Seen,
+    spek: Seen,
+    readgg: Seen,
+    /// settled in `finish`: READGG's boundaries (ascending eV), SPEK and NOXRAY
+    boundaries: Option<Vec<f64>>,
+    estimate_missing: bool,
+    exclude_xrays: bool,
+}
+
+/// ALLDISPEN and ATDISPEN, settled in `finish` against `--damage` and the deck's elements.
+#[derive(Default, Clone)]
+struct DamageRec {
+    /// the last ALLDISPEN energy
+    all: Option<f64>,
+    /// ATDISPEN energies by element; a later value replaces an earlier one
+    atoms: BTreeMap<String, f64>,
+    entries: Vec<usize>,
 }
 
 /// GRPCONVERT, CNVTYPE and LIMGRP, each with the report entry that `finish` settles.
@@ -939,6 +1004,7 @@ struct Interp<'a> {
     power_line: Option<usize>,
     overrides: Vec<OverrideRec>,
     photon: PhotonRec,
+    damage: DamageRec,
     /// the report entry of the DOSE 2 that set `photon.point_source_m`
     dose_entry: Option<usize>,
     rebin: RebinRec,
@@ -997,7 +1063,7 @@ fn simple_disposition(keyword: &str) -> Option<(Status, &'static str)> {
         "CLOBBER" => (Noted, "output-file overwrite policy; ACTINV writes only the files you name"),
         "MONITOR" | "LOGLEVEL" => (Noted, "run-log verbosity"),
         "JSON" => (Noted, "ACTINV results are always JSON"),
-        "PRINTLIB" | "SAVELINES" | "FULLXS" | "SPEK" | "COMPRESSXS" | "EXTRACTXS" | "LIBVERSION" => (
+        "PRINTLIB" | "SAVELINES" | "FULLXS" | "COMPRESSXS" | "EXTRACTXS" | "LIBVERSION" => (
             Noted,
             "FISPACT-II library preparation and printing; ACTINV reads its activation library and decay data from the spec",
         ),
@@ -1022,10 +1088,6 @@ fn simple_disposition(keyword: &str) -> Option<(Status, &'static str)> {
             Noted,
             "pathway-analysis presentation; ACTINV's pathways output is selected with options.outputs",
         ),
-        "ALLDISPEN" | "ATDISPEN" => (
-            Unsupported,
-            "displacement-damage rates need a damage table in the spec (damage.displacement_energy_eV)",
-        ),
         "COVARIANCE" => (
             Noted,
             "FISPACT-II's collapse of the cross-section covariances; ACTINV propagates the full MF=33 covariance of the library's own groups, so there is no collapse step to switch on",
@@ -1041,10 +1103,6 @@ fn simple_disposition(keyword: &str) -> Option<(Status, &'static str)> {
         "IRON" => (
             Unsupported,
             "not a keyword of the 2023 FISPACT-II manual (it has no section), so its behaviour is not defined and ACTINV has no equivalent",
-        ),
-        "NOXRAY" | "READGG" => (
-            Unsupported,
-            "library-data selection or modification keyword with no ACTINV equivalent",
         ),
         "READSF" => (
             Unsupported,
@@ -1291,6 +1349,7 @@ impl<'a> Interp<'a> {
             power_line: None,
             overrides: Vec::new(),
             photon: PhotonRec::default(),
+            damage: DamageRec::default(),
             dose_entry: None,
             rebin: RebinRec::default(),
             fission: FissionRec::default(),
@@ -1633,6 +1692,16 @@ impl<'a> Interp<'a> {
                 mark_seen(slot, index);
             }
             "FISYIELD" | "FISCHOOSE" => self.apply_fission_list(cmd),
+            "ALLDISPEN" | "ATDISPEN" => self.apply_displacement(cmd),
+            "NOXRAY" | "SPEK" | "READGG" => {
+                let index = self.log(cmd, Status::Noted, DEFERRED_DETAIL);
+                let slot = match cmd.keyword.as_str() {
+                    "NOXRAY" => &mut self.photon.noxray,
+                    "SPEK" => &mut self.photon.spek,
+                    _ => &mut self.photon.readgg,
+                };
+                mark_seen(slot, index);
+            }
             "UNCTYPE" => self.apply_unctype(cmd)?,
             "SENSITIVITY" => self.apply_sensitivity(cmd),
             "MCSAMPLE" | "MCSEED" => {
@@ -1682,6 +1751,62 @@ impl<'a> Interp<'a> {
             }
         }
         Ok(())
+    }
+
+    /// ALLDISPEN energy, ATDISPEN count (element energy)...: the displacement energies, settled in
+    /// `finish` once the deck's elements and the `--damage` table are known.
+    fn apply_displacement(&mut self, cmd: &Command) {
+        type Parsed = (Option<f64>, Vec<(String, f64)>);
+        let parsed = (|| -> Result<Parsed, String> {
+            let energy = |word: &str| -> Result<f64, String> {
+                parse_number(word)
+                    .filter(|value| *value > 0.0)
+                    .ok_or_else(|| {
+                        format!(
+                            "{} energy '{word}' is not a positive displacement energy in eV",
+                            cmd.keyword
+                        )
+                    })
+            };
+            if cmd.keyword == "ALLDISPEN" {
+                return match cmd.args.as_slice() {
+                    [word] => Ok((Some(energy(word)?), Vec::new())),
+                    _ => Err("ALLDISPEN takes one displacement energy in eV".to_string()),
+                };
+            }
+            let count = arg_whole(cmd, 0, "element count")?;
+            let words = &cmd.args[1..];
+            if count < 1 || words.len() as i64 != 2 * count {
+                return Err(format!(
+                    "ATDISPEN declares {count} element(s) but lists {} word(s); each element needs a symbol and an energy",
+                    words.len()
+                ));
+            }
+            let mut pairs = Vec::new();
+            for pair in words.chunks(2) {
+                let symbol = match material_key(&pair[0]) {
+                    Ok(MaterialKey::Element(symbol)) => symbol,
+                    _ => return Err(format!("ATDISPEN '{}' is not an element symbol", pair[0])),
+                };
+                pairs.push((symbol, energy(&pair[1])?));
+            }
+            Ok((None, pairs))
+        })();
+        match parsed {
+            Err(reason) => {
+                self.log(cmd, Status::Unsupported, reason);
+            }
+            Ok((all, pairs)) => {
+                let index = self.log(cmd, Status::Noted, DEFERRED_DETAIL);
+                if all.is_some() {
+                    self.damage.all = all;
+                }
+                // ATDISPEN overrides ALLDISPEN wherever each stands in the deck, so the two are
+                // kept apart and combined per element at the end
+                self.damage.atoms.extend(pairs);
+                self.damage.entries.extend(index);
+            }
+        }
     }
 
     /// FISYIELD and FISCHOOSE: a count and that many nuclide names (FISYIELD's count is signed).
@@ -2852,11 +2977,14 @@ impl<'a> Interp<'a> {
         match structure {
             Some(name) => {
                 self.photon.group_structure = Some(name);
-                self.log(
+                let index = self.log(
                     cmd,
                     Status::Mapped,
                     format!("photon.group_structure = \"{name}\""),
                 );
+                if index.is_some() {
+                    self.photon.group_entry = index;
+                }
             }
             None => {
                 self.log(
@@ -3549,6 +3677,191 @@ impl<'a> Interp<'a> {
         (Some(Value::Object(map)), false)
     }
 
+    /// NOXRAY, SPEK and READGG against the spec's `photon` section and the `ggbins` file.
+    fn settle_photon(&mut self) {
+        if let Some(entries) = self.photon.noxray.take() {
+            self.photon.exclude_xrays = true;
+            self.settle(
+                &entries,
+                Status::Mapped,
+                "photon.exclude_xrays = true: the decay records' X-ray lines are dropped from the photon source after each nuclide's spectrum is scaled to its mean electromagnetic energy; the spec writes no options.outputs list, so the default outputs (which include photons) build the photon source",
+            );
+        }
+        if let Some(entries) = self.photon.spek.take() {
+            self.photon.estimate_missing = true;
+            self.settle(
+                &entries,
+                Status::Approximated,
+                "photon.missing_spectra = \"estimate\": a nuclide whose decay record gives a mean electromagnetic energy but no photon spectrum receives an exponential shape set by its mean energy per decay mode, not FISPACT-II's own approximate spectrum, and the result carries certified lower and upper dose bounds for the estimate; the spec writes no options.outputs list, so the default outputs (which include photons) build the photon source",
+            );
+        }
+        if let Some(entries) = self.photon.readgg.take() {
+            let outcome: Result<(String, Vec<f64>), String> = match &self.ctx.gamma_groups {
+                None => Err("READGG reads its group bins from the `ggbins` entry of the files file, and none was found: pass --files FILES with a `ggbins PATH` line".to_string()),
+                Some(Err(reason)) => Err(format!("the `ggbins` file cannot be read: {reason}")),
+                Some(Ok(file)) => parse_gamma_groups(&file.text)
+                    .map(|bounds| (file.path.clone(), bounds))
+                    .map_err(|reason| format!("the `ggbins` file {} {reason}", file.path)),
+            };
+            match outcome {
+                Ok((path, bounds)) => {
+                    let groups = bounds.len() - 1;
+                    self.photon.group_structure = Some("custom");
+                    self.photon.boundaries = Some(bounds);
+                    self.settle(
+                        &entries,
+                        Status::Mapped,
+                        format!("photon.group_structure = \"custom\" with photon.group_boundaries_eV from the `ggbins` file {path}: {groups} groups, ascending eV, as the file lists them"),
+                    );
+                    let group_entry = self.photon.group_entry.take();
+                    self.set_entry(
+                        group_entry,
+                        Status::Noted,
+                        "superseded by READGG: the gamma group file gives the photon structure"
+                            .into(),
+                    );
+                }
+                Err(reason) => self.settle(&entries, Status::Unsupported, reason),
+            }
+        }
+    }
+
+    /// ALLDISPEN and ATDISPEN against `--damage` and the deck's elements. Without either keyword
+    /// FISPACT-II still computes displacement rates, with its own default energies, so `--damage`
+    /// alone also yields a `damage` section.
+    fn settle_damage(&mut self, elements: &BTreeSet<String>) -> Option<Value> {
+        let rec = std::mem::take(&mut self.damage);
+        let asked = !rec.entries.is_empty();
+        let table = self.ctx.damage.clone();
+        if !asked && table.is_none() {
+            return None;
+        }
+        let recorded = self.ctx.damage_energies_ev.clone();
+        let default_of = |symbol: &str| {
+            DEFAULT_DISPLACEMENT_EV
+                .iter()
+                .find(|(name, _)| *name == symbol)
+                .map_or(OTHER_DISPLACEMENT_EV, |(_, energy)| *energy)
+        };
+        let mut energies: BTreeMap<String, f64> = BTreeMap::new();
+        let mut given: BTreeMap<String, f64> = BTreeMap::new();
+        let mut filled: Vec<String> = Vec::new();
+        let mut shifted = false;
+        for symbol in elements {
+            match rec.atoms.get(symbol).copied().or(rec.all) {
+                Some(energy) => {
+                    energies.insert(symbol.clone(), energy);
+                    given.insert(symbol.clone(), energy);
+                }
+                None => {
+                    let from_table = recorded.as_ref().and_then(|map| map.get(symbol)).copied();
+                    let energy = from_table.unwrap_or_else(|| default_of(symbol));
+                    if from_table.is_some_and(|value| value != default_of(symbol)) {
+                        shifted = true;
+                    }
+                    let source = if from_table.is_some() {
+                        "the energy the table was built with"
+                    } else {
+                        "FISPACT-II's default"
+                    };
+                    filled.push(format!("{symbol} {energy} eV ({source})"));
+                    energies.insert(symbol.clone(), energy);
+                }
+            }
+        }
+        let command = build_damage_command(&energies);
+        let entries: Vec<usize> = if asked {
+            rec.entries.clone()
+        } else {
+            self.entries.push(Entry {
+                keyword: "DISPLACEMENT".into(),
+                line: 0,
+                phase: Phase::Library,
+                status: Status::Noted,
+                detail: DEFERRED_DETAIL.into(),
+                args: String::new(),
+            });
+            vec![self.entries.len() - 1]
+        };
+        let Some(table) = table else {
+            self.settle(
+                &entries,
+                Status::Unsupported,
+                format!("displacement-damage rates need a damage table in the spec: pass --damage TABLE (an actinv-damage-table-1 or -2 file); to build one for these energies run `{command}`"),
+            );
+            return None;
+        };
+        let mismatches: Vec<String> = given
+            .iter()
+            .filter_map(|(symbol, energy)| {
+                let built = *recorded.as_ref()?.get(symbol)?;
+                ((built - energy).abs() > 1e-12 * built.abs().max(energy.abs())).then(|| {
+                    format!(
+                        "{symbol}: the deck gives {energy} eV, the table was built with {built} eV"
+                    )
+                })
+            })
+            .collect();
+        if !mismatches.is_empty() {
+            self.settle(
+                &entries,
+                Status::Unsupported,
+                format!("the deck's displacement energies disagree with the damage table ({}); ACTINV does not mix them, because the table's recoil integrals were computed at its own energies; build a matching table with `{command}`", mismatches.join("; ")),
+            );
+            return None;
+        }
+        let mut detail = format!(
+            "damage.table = --damage {}; damage.displacement_energy_eV = {}",
+            table.path,
+            json!(energies)
+        );
+        if recorded.is_some() {
+            if given.is_empty() {
+                detail.push_str("; the energies are the ones the table was built with");
+            } else {
+                detail.push_str(
+                    "; every energy the deck gives equals the one the table was built with",
+                );
+            }
+        } else {
+            detail.push_str("; the table records no displacement energies (an actinv-damage-table-1 file), so the deck's are used as given");
+        }
+        if !asked {
+            detail.push_str("; the deck has neither ALLDISPEN nor ATDISPEN, and FISPACT-II then computes displacement rates with its default energies (table 8 of its manual, 25 eV for other elements)");
+        }
+        if !filled.is_empty() {
+            detail.push_str(&format!("; no energy was given for {}", filled.join(", ")));
+        }
+        if shifted {
+            detail.push_str("; the table's energy differs from FISPACT-II's default for some of these, so the result is not FISPACT-II's own");
+        }
+        let unlisted: Vec<&String> = rec
+            .atoms
+            .keys()
+            .filter(|symbol| !elements.contains(*symbol))
+            .collect();
+        if !unlisted.is_empty() {
+            detail.push_str(&format!(
+                "; ATDISPEN also names {}, which the material does not contain, so they are not written",
+                unlisted
+                    .iter()
+                    .map(|symbol| symbol.as_str())
+                    .collect::<Vec<_>>()
+                    .join(", ")
+            ));
+        }
+        let status = if shifted {
+            Status::Approximated
+        } else {
+            Status::Mapped
+        };
+        self.settle(&entries, status, detail);
+        Some(json!({
+            "table": {"path": table.path, "sha256": table.sha256},
+            "displacement_energy_eV": energies,
+        }))
+    }
+
     fn finish(mut self, deck_ended: bool) -> Result<Conversion, String> {
         if !deck_ended && !self.ended {
             self.entries.push(Entry {
@@ -3871,6 +4184,21 @@ impl<'a> Interp<'a> {
         self.settle_uncertainty_keywords(&mut uncertainty, blocker, defaulted_library)?;
         let (fission_section, fission_choose) = self.settle_fission();
         let (shield_section, shield_needs_density) = self.settle_self_shielding(groups);
+        self.settle_photon();
+
+        // the elements the displacement energies are given for
+        let deck_elements: BTreeSet<String> = match &material {
+            MaterialDef::Mass { elements, .. } => elements.keys().cloned().collect(),
+            MaterialDef::Fuel { atoms_per_g, .. } => atoms_per_g
+                .keys()
+                .filter_map(|name| match material_key(name) {
+                    Ok(MaterialKey::Nuclide { za, .. }) => Some(symbol_of(za / 1000).to_string()),
+                    Ok(MaterialKey::Element(symbol)) => Some(symbol),
+                    Err(_) => None,
+                })
+                .collect(),
+        };
+        let damage_section = self.settle_damage(&deck_elements);
 
         // material
         let (material, material_g) = match material {
@@ -3925,6 +4253,9 @@ impl<'a> Interp<'a> {
         if let Some(section) = shield_section {
             spec.insert("self_shielding".into(), section);
         }
+        if let Some(section) = damage_section {
+            spec.insert("damage".into(), section);
+        }
         let mut photon = Map::new();
         if let Some(name) = self.photon.group_structure {
             photon.insert("group_structure".into(), json!(name));
@@ -3932,11 +4263,20 @@ impl<'a> Interp<'a> {
         if let Some(distance) = self.photon.point_source_m {
             photon.insert("point_source".into(), json!({"distance_m": distance}));
         }
+        if let Some(bounds) = &self.photon.boundaries {
+            photon.insert("group_boundaries_eV".into(), json!(bounds));
+        }
         if !self.photon.bremsstrahlung.is_empty() {
             photon.insert(
                 "bremsstrahlung".into(),
                 json!({"nuclides": self.photon.bremsstrahlung}),
             );
+        }
+        if self.photon.estimate_missing {
+            photon.insert("missing_spectra".into(), json!("estimate"));
+        }
+        if self.photon.exclude_xrays {
+            photon.insert("exclude_xrays".into(), json!(true));
         }
         if !photon.is_empty() {
             spec.insert("photon".into(), Value::Object(photon));
@@ -4169,6 +4509,56 @@ impl<'a> Interp<'a> {
             unsupported,
         })
     }
+}
+
+/// The `actinv build-damage` command that builds a table with these displacement energies (one
+/// `--displacement-energy EL=eV` per element).
+fn build_damage_command(energies: &BTreeMap<String, f64>) -> String {
+    let flags: Vec<String> = energies
+        .iter()
+        .map(|(symbol, energy)| format!("--displacement-energy {symbol}={energy}"))
+        .collect();
+    format!(
+        "actinv build-damage EVALUATION_DIR OUT.json --method kinematic {}",
+        flags.join(" ")
+    )
+    .trim_end()
+    .to_string()
+}
+
+/// The group boundaries of a FISPACT-II `ggbins` file (manual section 4.64): the group count N,
+/// then N + 1 energies in eV, ascending and positive. Returns the reason when the text breaks
+/// that format, phrased to follow the file's name.
+pub fn parse_gamma_groups(text: &str) -> Result<Vec<f64>, String> {
+    let words: Vec<&str> = text.split_whitespace().collect();
+    let Some((first, rest)) = words.split_first() else {
+        return Err("is empty".into());
+    };
+    let count = parse_number(first)
+        .filter(|value| value.fract() == 0.0 && *value >= 1.0 && *value <= 1.0e6)
+        .ok_or_else(|| format!("starts with '{first}', not a whole group count"))?
+        as usize;
+    let mut bounds = Vec::with_capacity(rest.len());
+    for word in rest {
+        bounds
+            .push(parse_number(word).ok_or_else(|| format!("has the non-numeric word '{word}'"))?);
+    }
+    if bounds.len() != count + 1 {
+        return Err(format!(
+            "declares {count} group(s), so {} energies, but lists {}",
+            count + 1,
+            bounds.len()
+        ));
+    }
+    if let Some(bad) = bounds.iter().find(|value| **value <= 0.0) {
+        return Err(format!(
+            "has the energy {bad}, which is not positive (zero is not allowed as the first energy)"
+        ));
+    }
+    if bounds.windows(2).any(|pair| pair[1] <= pair[0]) {
+        return Err("is not strictly ascending (the energies must increase, in eV)".into());
+    }
+    Ok(bounds)
 }
 
 /// Command executions the PULSE loops expand to (a zero-count body is interpreted once), refused
@@ -6567,7 +6957,6 @@ ZERO
             fission_yields: ctx_fission().fission_yields,
             self_shielding_table: ctx_table().self_shielding_table,
             resonance: ctx_resonance().resonance,
-            damage: Some(hashed("damage.json", "a")),
             ..context()
         };
         let with_options = convert(&deck_with(RUN), &supplied).unwrap();
@@ -6577,5 +6966,327 @@ ZERO
             with_options.report["options_unused"],
             json!(["--fission-yields", "--resonance", "--self-shielding-table"])
         );
+    }
+
+    // ---- P155 part 2: photon and damage keywords ----
+
+    fn photon_deck(keywords: &str) -> String {
+        deck_with(&format!("{keywords}\n{RUN}"))
+    }
+
+    fn ctx_ggbins(text: &str) -> ImportContext {
+        ImportContext {
+            gamma_groups: Some(Ok(GammaGroupFile {
+                path: "gg.txt".into(),
+                text: text.into(),
+            })),
+            ..context()
+        }
+    }
+
+    #[test]
+    fn p155_noxray_and_spek_set_the_photon_options() {
+        let conversion = convert(&photon_deck("NOXRAY\nSPEK"), &context()).unwrap();
+        assert_eq!(entry_status(&conversion, "NOXRAY"), vec!["mapped"]);
+        assert_eq!(entry_status(&conversion, "SPEK"), vec!["approximated"]);
+        assert_eq!(conversion.spec["photon"]["exclude_xrays"], json!(true));
+        assert_eq!(
+            conversion.spec["photon"]["missing_spectra"],
+            json!("estimate")
+        );
+        let spek = entry_detail(&conversion, "SPEK");
+        assert!(
+            spek.contains("mean energy per decay mode")
+                && spek.contains("lower and upper dose bounds"),
+            "{spek}"
+        );
+        // no outputs list is written, so the default outputs carry the photon source
+        assert!(conversion.spec.get("options").is_none());
+        assert!(entry_detail(&conversion, "NOXRAY").contains("default outputs"));
+        // the spec the importer builds validates (convert checks it) and a lone keyword stands alone
+        let only = convert(&photon_deck("SPEK"), &context()).unwrap();
+        assert!(only.spec["photon"].get("exclude_xrays").is_none());
+        assert_eq!(only.counts.unsupported, 0);
+        // neither keyword: no photon section at all
+        let none = convert(&photon_deck(""), &context()).unwrap();
+        assert!(none.spec.get("photon").is_none());
+    }
+
+    #[test]
+    fn p155_readgg_reads_the_ggbins_boundaries() {
+        let text = "5\n1.0\n1.0E+05\n5.0E+05\n1.0E+06\n2.0E+06\n1.0E+07\n";
+        let conversion = convert(&photon_deck("READGG"), &ctx_ggbins(text)).unwrap();
+        assert_eq!(entry_status(&conversion, "READGG"), vec!["mapped"]);
+        assert_eq!(
+            conversion.spec["photon"]["group_structure"],
+            json!("custom")
+        );
+        assert_eq!(
+            conversion.spec["photon"]["group_boundaries_eV"],
+            json!([1.0, 1.0e5, 5.0e5, 1.0e6, 2.0e6, 1.0e7])
+        );
+        // it replaces a GROUP selection, which says so
+        let grouped = convert(&photon_deck("GROUP 1\nREADGG"), &ctx_ggbins(text)).unwrap();
+        assert_eq!(grouped.spec["photon"]["group_structure"], json!("custom"));
+        assert_eq!(entry_status(&grouped, "GROUP"), vec!["noted"]);
+        // Fortran exponents and any whitespace layout read the same
+        let fortran = convert(&photon_deck("READGG"), &ctx_ggbins("2 1.0D3 1.0D4 1.0D5")).unwrap();
+        assert_eq!(
+            fortran.spec["photon"]["group_boundaries_eV"],
+            json!([1.0e3, 1.0e4, 1.0e5])
+        );
+    }
+
+    #[test]
+    fn p155_readgg_refuses_a_missing_or_malformed_ggbins_file() {
+        let cases: [(&str, &str); 7] = [
+            ("", "is empty"),
+            ("x 1 2", "group count"),
+            ("2 1.0 abc 3.0", "non-numeric"),
+            ("3 1.0 2.0 3.0", "declares 3 group"),
+            ("2 1.0 3.0 2.0", "ascending"),
+            ("2 0.0 1.0 2.0", "not positive"),
+            ("2 -1.0 1.0 2.0", "not positive"),
+        ];
+        for (text, reason) in cases {
+            let conversion = convert(&photon_deck("READGG"), &ctx_ggbins(text)).unwrap();
+            assert_eq!(
+                entry_status(&conversion, "READGG"),
+                vec!["unsupported"],
+                "{text}"
+            );
+            let detail = entry_detail(&conversion, "READGG");
+            assert!(
+                detail.contains("ggbins") && detail.contains(reason),
+                "{text}: {detail}"
+            );
+            assert!(conversion.spec.get("photon").is_none(), "{text}");
+        }
+        // no entry in the files file, or a path that would not read
+        let absent = convert(&photon_deck("READGG"), &context()).unwrap();
+        let detail = entry_detail(&absent, "READGG");
+        assert_eq!(entry_status(&absent, "READGG"), vec!["unsupported"]);
+        assert!(
+            detail.contains("ggbins") && detail.contains("--files"),
+            "{detail}"
+        );
+        let unreadable = ImportContext {
+            gamma_groups: Some(Err(
+                "the ggbins file 'gg.txt' named by the files file was not found".into(),
+            )),
+            ..context()
+        };
+        let conversion = convert(&photon_deck("READGG"), &unreadable).unwrap();
+        assert_eq!(entry_status(&conversion, "READGG"), vec!["unsupported"]);
+        assert!(entry_detail(&conversion, "READGG").contains("not found"));
+        // a ggbins entry no deck keyword uses changes nothing
+        let idle = convert(&photon_deck(""), &ctx_ggbins("2 1 2 3")).unwrap();
+        assert!(idle.spec.get("photon").is_none());
+    }
+
+    /// A damage table 2 built at these energies (element -> eV).
+    fn ctx_damage(energies: Option<&[(&str, f64)]>) -> ImportContext {
+        ImportContext {
+            damage: Some(hashed("damage.json", "a")),
+            damage_energies_ev: energies.map(|list| {
+                list.iter()
+                    .map(|(symbol, energy)| (symbol.to_string(), *energy))
+                    .collect()
+            }),
+            ..context()
+        }
+    }
+
+    /// A two-element deck (iron and chromium) with the keywords in the initial section.
+    fn steel_deck(keywords: &str) -> String {
+        format!("FISPACT\n* t\nMASS 1E-3 2\n FE 90 CR 10\n{keywords}\n{RUN}\nEND\n")
+    }
+
+    #[test]
+    fn p155_alldispen_and_atdispen_map_against_a_table_2() {
+        let table = ctx_damage(Some(&[("Fe", 40.0), ("Cr", 30.0)]));
+        // the per-element value overrides the all-element value, in either order
+        for keywords in [
+            "ALLDISPEN 30\nATDISPEN 1 FE 40.0",
+            "ATDISPEN 1 FE 40.0\nALLDISPEN 30",
+        ] {
+            let conversion = convert(&steel_deck(keywords), &table).unwrap();
+            assert_eq!(
+                entry_status(&conversion, "ALLDISPEN"),
+                vec!["mapped"],
+                "{keywords}"
+            );
+            assert_eq!(
+                entry_status(&conversion, "ATDISPEN"),
+                vec!["mapped"],
+                "{keywords}"
+            );
+            assert_eq!(
+                conversion.spec["damage"],
+                json!({
+                    "table": {"path": "damage.json", "sha256": "a".repeat(64)},
+                    "displacement_energy_eV": {"Cr": 30.0, "Fe": 40.0},
+                }),
+                "{keywords}"
+            );
+        }
+        // an element the deck gives no energy for takes the table's value, and the report says so
+        let partial = convert(&steel_deck("ATDISPEN 1 Fe 40"), &table).unwrap();
+        assert_eq!(
+            partial.spec["damage"]["displacement_energy_eV"]["Cr"],
+            json!(30.0)
+        );
+        assert_eq!(entry_status(&partial, "ATDISPEN"), vec!["approximated"]);
+        assert!(entry_detail(&partial, "ATDISPEN")
+            .contains("Cr 30 eV (the energy the table was built with)"));
+        // the same table with the default energy it matches is mapped
+        let matching = ctx_damage(Some(&[("Fe", 40.0), ("Cr", 40.0)]));
+        let defaulted = convert(&steel_deck("ATDISPEN 1 Fe 40"), &matching).unwrap();
+        assert_eq!(entry_status(&defaulted, "ATDISPEN"), vec!["mapped"]);
+        // an element the material lacks is not written
+        let extra = convert(&steel_deck("ALLDISPEN 40\nATDISPEN 1 W 55"), &matching).unwrap();
+        assert_eq!(
+            extra.spec["damage"]["displacement_energy_eV"]
+                .as_object()
+                .unwrap()
+                .len(),
+            2
+        );
+        assert!(entry_detail(&extra, "ATDISPEN").contains("not written"));
+    }
+
+    #[test]
+    fn p155_a_table_1_records_no_energy_so_the_deck_value_applies() {
+        let conversion = convert(
+            &deck_with(&format!("ALLDISPEN 35\n{RUN}")),
+            &ctx_damage(None),
+        )
+        .unwrap();
+        assert_eq!(entry_status(&conversion, "ALLDISPEN"), vec!["mapped"]);
+        assert_eq!(
+            conversion.spec["damage"]["displacement_energy_eV"],
+            json!({"Fe": 35.0})
+        );
+        assert!(entry_detail(&conversion, "ALLDISPEN").contains("table-1"));
+        // an element the deck does not give takes FISPACT-II's own default (table 8, else 25 eV)
+        let steel = convert(&steel_deck("ATDISPEN 1 Cr 41"), &ctx_damage(None)).unwrap();
+        assert_eq!(
+            steel.spec["damage"]["displacement_energy_eV"],
+            json!({"Cr": 41.0, "Fe": 40.0})
+        );
+        assert_eq!(entry_status(&steel, "ATDISPEN"), vec!["mapped"]);
+    }
+
+    #[test]
+    fn p155_a_mismatched_displacement_energy_names_the_build_command() {
+        let table = ctx_damage(Some(&[("Fe", 40.0), ("Cr", 40.0)]));
+        let conversion = convert(&steel_deck("ALLDISPEN 30\nATDISPEN 1 Fe 45"), &table).unwrap();
+        for keyword in ["ALLDISPEN", "ATDISPEN"] {
+            assert_eq!(entry_status(&conversion, keyword), vec!["unsupported"]);
+            let detail = entry_detail(&conversion, keyword);
+            for word in ["build-damage", "kinematic", "displacement-energy"] {
+                assert!(detail.contains(word), "{keyword}: {detail}");
+            }
+            assert!(
+                detail.contains(
+                    "--method kinematic --displacement-energy Cr=30 --displacement-energy Fe=45"
+                ),
+                "{detail}"
+            );
+        }
+        assert!(conversion.spec.get("damage").is_none());
+        assert_eq!(conversion.counts.unsupported, 2);
+    }
+
+    #[test]
+    fn p155_displacement_energies_without_a_table_name_the_option() {
+        let conversion = convert(&steel_deck("ALLDISPEN 40"), &context()).unwrap();
+        assert_eq!(entry_status(&conversion, "ALLDISPEN"), vec!["unsupported"]);
+        let detail = entry_detail(&conversion, "ALLDISPEN");
+        assert!(
+            detail.contains("--damage") && detail.contains("build-damage"),
+            "{detail}"
+        );
+        assert!(
+            detail.contains("--displacement-energy Cr=40 --displacement-energy Fe=40"),
+            "{detail}"
+        );
+        assert!(conversion.spec.get("damage").is_none());
+        // no keyword and no table: nothing is added
+        let plain = convert(&steel_deck(""), &context()).unwrap();
+        assert!(plain.spec.get("damage").is_none());
+    }
+
+    #[test]
+    fn p155_a_damage_table_without_the_keywords_uses_the_default_energies() {
+        // FISPACT-II computes displacement rates with its table 8 energies when no keyword gives any
+        let table1 = convert(&steel_deck(""), &ctx_damage(None)).unwrap();
+        assert_eq!(
+            table1.spec["damage"]["displacement_energy_eV"],
+            json!({"Cr": 40.0, "Fe": 40.0})
+        );
+        assert_eq!(entry_status(&table1, "DISPLACEMENT"), vec!["mapped"]);
+        assert!(entry_detail(&table1, "DISPLACEMENT").contains("neither ALLDISPEN nor ATDISPEN"));
+        // a table 2 built at other energies keeps its own, reported as approximated
+        let table2 = convert(
+            &steel_deck(""),
+            &ctx_damage(Some(&[("Fe", 40.0), ("Cr", 35.0)])),
+        )
+        .unwrap();
+        assert_eq!(
+            table2.spec["damage"]["displacement_energy_eV"],
+            json!({"Cr": 35.0, "Fe": 40.0})
+        );
+        assert_eq!(entry_status(&table2, "DISPLACEMENT"), vec!["approximated"]);
+        // an element outside table 8 gets 25 eV
+        let other = convert(
+            "FISPACT\n* t\nMASS 1E-3 1\n NA 100\nFLUX 1E10\nTIME 1 HOURS ATOMS\nEND\n",
+            &ctx_damage(None),
+        )
+        .unwrap();
+        assert_eq!(
+            other.spec["damage"]["displacement_energy_eV"],
+            json!({"Na": 25.0})
+        );
+    }
+
+    #[test]
+    fn p155_a_fuel_deck_takes_its_elements_from_the_nuclides() {
+        let deck =
+            "FISPACT\n* t\nFUEL 2\n FE56 1E20 CR52 1E19\nFLUX 1E10\nTIME 1 HOURS ATOMS\nEND\n";
+        let conversion = convert(deck, &ctx_damage(Some(&[("Fe", 40.0), ("Cr", 40.0)]))).unwrap();
+        assert_eq!(
+            conversion.spec["damage"]["displacement_energy_eV"],
+            json!({"Cr": 40.0, "Fe": 40.0})
+        );
+    }
+
+    #[test]
+    fn p155_malformed_displacement_keywords_are_unsupported() {
+        for bad in [
+            "ALLDISPEN",
+            "ALLDISPEN -3",
+            "ALLDISPEN 20 30",
+            "ATDISPEN 2 FE 40",
+            "ATDISPEN 1 FE12 40",
+            "ATDISPEN 1 FE zero",
+            "ATDISPEN 0",
+        ] {
+            let conversion = convert(&steel_deck(bad), &ctx_damage(None)).unwrap();
+            let keyword = bad.split_whitespace().next().unwrap();
+            assert_eq!(
+                entry_status(&conversion, keyword),
+                vec!["unsupported"],
+                "{bad}"
+            );
+        }
+    }
+
+    #[test]
+    fn p155_parse_gamma_groups_checks_the_format() {
+        assert_eq!(parse_gamma_groups("1\n1.0\n2.0\n").unwrap(), vec![1.0, 2.0]);
+        assert!(parse_gamma_groups("1\n1.0\n2.0\n3.0\n").is_err());
+        assert!(parse_gamma_groups("0\n1.0\n").is_err());
+        assert!(parse_gamma_groups("1 2.0 2.0").is_err());
     }
 }

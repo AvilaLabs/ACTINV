@@ -11,11 +11,12 @@
 
 use actinv_core::flux::sha256_file;
 use serde_json::{json, Value};
+use std::collections::BTreeMap;
 use std::path::{Path, PathBuf};
 
 pub use actinv_core::fispact_import::{
     convert, lex, load_flux_text, parse_files_file, Conversion, Counts, CovarianceRef,
-    FissionYieldFile, HashedFile, ImportContext, Lexed, LoadedFlux, Status, Tok,
+    FissionYieldFile, GammaGroupFile, HashedFile, ImportContext, Lexed, LoadedFlux, Status, Tok,
     IRRADIATES_WITHOUT_FLUXES,
 };
 
@@ -152,6 +153,42 @@ fn resolve_existing(value: &str, bases: &[&Path]) -> Option<PathBuf> {
         .find(|candidate| candidate.is_file())
 }
 
+/// The displacement energies (element -> eV) an `actinv-damage-table-2` file records, which the
+/// importer compares with the deck's. A table 1 records none (`None`).
+fn damage_table_energies(path: &str) -> Result<Option<BTreeMap<String, f64>>, String> {
+    let text = std::fs::read_to_string(path)
+        .map_err(|error| format!("cannot read damage table {path}: {error}"))?;
+    damage_energies_from_text(path, &text)
+}
+
+fn damage_energies_from_text(
+    path: &str,
+    text: &str,
+) -> Result<Option<BTreeMap<String, f64>>, String> {
+    let table: Value = serde_json::from_str(text)
+        .map_err(|error| format!("damage table {path} is not JSON: {error}"))?;
+    if table["format"] != "actinv-damage-table-2" {
+        return Ok(None);
+    }
+    let recorded = table["displacement"]["displacement_energy_eV"]
+        .as_object()
+        .ok_or_else(|| {
+            format!("damage table {path} records no displacement.displacement_energy_eV")
+        })?;
+    recorded
+        .iter()
+        .map(|(symbol, energy)| {
+            energy
+                .as_f64()
+                .map(|energy| (symbol.clone(), energy))
+                .ok_or_else(|| {
+                    format!("damage table {path}: the energy for {symbol} is not a number")
+                })
+        })
+        .collect::<Result<BTreeMap<_, _>, String>>()
+        .map(Some)
+}
+
 /// Run the command. Returns the one-line summary to print.
 pub fn run(cli: &CliArgs) -> Result<String, String> {
     let deck_path = Path::new(&cli.deck);
@@ -218,6 +255,29 @@ pub fn run(cli: &CliArgs) -> Result<String, String> {
         },
     };
     let flux = flux_path.as_deref().map(load_flux).transpose()?;
+    // the gamma group file READGG reads: found like the fluxes file; a path that does not read is
+    // kept as the reason, which matters only to a deck that uses READGG
+    let gamma_groups = files_entries
+        .iter()
+        .rev()
+        .find(|(key, _)| key == "ggbins")
+        .map(|(_, value)| {
+            let found =
+                resolve_existing(value, &[files_dir.as_path(), deck_dir]).ok_or_else(|| {
+                    format!("the ggbins file '{value}' named by the files file was not found")
+                })?;
+            std::fs::read_to_string(&found)
+                .map(|text| GammaGroupFile {
+                    path: found.display().to_string(),
+                    text,
+                })
+                .map_err(|error| {
+                    format!(
+                        "the ggbins file {} cannot be read: {error}",
+                        found.display()
+                    )
+                })
+        });
     let covariance = match &cli.covariance {
         Some(path) => Some(CovarianceRef {
             path: path.clone(),
@@ -253,6 +313,13 @@ pub fn run(cli: &CliArgs) -> Result<String, String> {
         covariance,
         fission_yields,
         damage: cli.damage.as_ref().map(hashed).transpose()?,
+        damage_energies_ev: cli
+            .damage
+            .as_ref()
+            .map(|path| damage_table_energies(path))
+            .transpose()?
+            .flatten(),
+        gamma_groups,
         self_shielding_table: cli.self_shielding_table.as_ref().map(hashed).transpose()?,
         resonance: cli
             .resonance
@@ -286,7 +353,7 @@ pub fn run(cli: &CliArgs) -> Result<String, String> {
                         .iter()
                         .map(|(key, value)| json!({"key": key, "path": value}))
                         .collect::<Vec<_>>(),
-                    "note": "xs_endf, dk_endf and the other FISPACT-II data entries are listed for reference and never read; the library and decay data come from the spec",
+                    "note": "xs_endf, dk_endf and the other FISPACT-II data entries are listed for reference and never read, except fluxes and ggbins; the library and decay data come from the spec",
                 }),
                 None => Value::Null,
             },
@@ -657,5 +724,66 @@ mod tests {
         );
         assert!(!written, "--strict wrote a spec");
         assert!(report.contains("--fission-yields") && report.contains("--resonance"));
+    }
+
+    // ---- P155 part 2: ggbins and the damage table ----
+
+    #[test]
+    fn p155_damage_table_energies_come_from_table_2_only() {
+        let table2 = r#"{"format": "actinv-damage-table-2", "displacement": {"displacement_energy_eV": {"Fe": 40.0, "Cr": 35.5}}}"#;
+        let energies = damage_energies_from_text("t.json", table2)
+            .unwrap()
+            .unwrap();
+        assert_eq!(energies["Fe"], 40.0);
+        assert_eq!(energies["Cr"], 35.5);
+        assert_eq!(
+            damage_energies_from_text("t.json", r#"{"format": "actinv-damage-table-1"}"#).unwrap(),
+            None
+        );
+        assert!(damage_energies_from_text("t.json", "not json").is_err());
+        assert!(damage_energies_from_text(
+            "t.json",
+            r#"{"format": "actinv-damage-table-2", "displacement": {}}"#
+        )
+        .is_err());
+    }
+
+    #[test]
+    fn p155_readgg_and_alldispen_read_their_files() {
+        let dir = p140_scratch("p155-gg");
+        let deck = dir.join("deck.i");
+        let out = dir.join("out.json");
+        std::fs::write(
+            &deck,
+            "READGG\nGETDECAY 1\nFISPACT\n* t\nMASS 1E-3 1\n FE 100\nALLDISPEN 40\nFLUX 0\nTIME 1 DAYS ATOMS\nEND\n",
+        )
+        .unwrap();
+        std::fs::write(dir.join("gg.txt"), "2\n1.0e3\n1.0e5\n1.0e7\n").unwrap();
+        std::fs::write(dir.join("files"), "ggbins gg.txt\n").unwrap();
+        let table = r#"{"format": "actinv-damage-table-2", "displacement": {"displacement_energy_eV": {"Fe": 40.0}}}"#;
+        std::fs::write(dir.join("damage.json"), table).unwrap();
+        let mut cli = p140_cli(&deck, &out);
+        cli.damage = Some(dir.join("damage.json").display().to_string());
+        let result = run(&cli);
+        let spec: Value = serde_json::from_str(&std::fs::read_to_string(&out).unwrap_or_default())
+            .unwrap_or(Value::Null);
+        // an unreadable ggbins path is a refusal of READGG, not of the import
+        std::fs::write(dir.join("files"), "ggbins absent.txt\n").unwrap();
+        let broken = run(&cli);
+        let broken_report =
+            std::fs::read_to_string(dir.join("out.import.json")).unwrap_or_default();
+        let _ = std::fs::remove_dir_all(&dir);
+        result.unwrap();
+        assert_eq!(
+            spec["photon"]["group_boundaries_eV"],
+            serde_json::json!([1.0e3, 1.0e5, 1.0e7])
+        );
+        assert_eq!(spec["damage"]["displacement_energy_eV"]["Fe"], 40.0);
+        assert_eq!(
+            spec["damage"]["table"]["sha256"].as_str().unwrap().len(),
+            64
+        );
+        broken.unwrap();
+        assert!(broken_report.contains("absent.txt"), "{broken_report}");
     }
 }

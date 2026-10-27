@@ -15,11 +15,12 @@
 - `actinv inspect decay DECAY_PATH NUCLIDE --estimated-spectrum` prints the estimated grouped spectrum beside the
   evaluated one.
 
-**Added (P155 part 1: `actinv import-fispact`; an import without the new options is unchanged)**
+**Added (P155: `actinv import-fispact`; an import without the new options is unchanged)**
 
 - Four options that supply data a deck does not name, each file hashed into the spec: `--fission-yields FILE...`
   (ENDF neutron-induced yield files), `--self-shielding-table FILE` (Bondarenko table), `--resonance FILE...` (ENDF
-  resonance evaluations) and `--damage TABLE` (read now, used by the damage keywords in the next step of P155).
+  resonance evaluations) and `--damage TABLE` (a damage table; its recorded displacement energies, when it is an `actinv-damage-table-2` file,
+  are compared with the deck's).
   An option the deck never uses is listed under `options_unused` in the import report.
 - Fission keywords: `USEFISSION` fills `fission_yields.files` (else `unsupported`, naming `--fission-yields`),
   `NOFISS` forces no yield files, `CUMFYLD` sets `yields: "cumulative"`, `FISYIELD` sets `fission_yields.parents`
@@ -35,6 +36,18 @@
   ascending index. Without the option each is `unsupported` and names it.
 - `XSTHRESHOLD` and `DEPLETION` are noted; `RESULT` is noted when the deck runs its own inventory and `unsupported`
   when it would be the only one. The `IRON`, `READSF`, `USESPALLATION` and `USEXSEXTRA` reasons were corrected.
+- Photon keywords: `NOXRAY` sets `photon.exclude_xrays` (`mapped`), `SPEK` sets `photon.missing_spectra: "estimate"`
+  (`approximated`: a mean-energy exponential shape by decay mode, with certified lower and upper dose bounds), and
+  `READGG` sets `photon.group_structure: "custom"` with `group_boundaries_eV` read from the files file's `ggbins` entry
+  (`mapped`; `unsupported`, naming `ggbins`, when the file is missing, unreadable or malformed). The importer writes
+  no `options.outputs` list, so the default outputs build the photon source.
+- Damage keywords: `ALLDISPEN` and `ATDISPEN` set `damage.displacement_energy_eV` over the deck's elements (an
+  `ATDISPEN` value overrides `ALLDISPEN` whatever the order) and `damage.table` from `--damage`. They are `mapped` when
+  the table records the same energy for each element (or is a table 1, which records none) and `unsupported` otherwise,
+  with the `actinv build-damage --method kinematic --displacement-energy EL=eV` command that builds a matching table.
+  An element the deck gives no energy for takes the table's recorded energy, else FISPACT-II's default (25 eV outside
+  its table 8). With `--damage` and neither keyword, the `damage` section uses those defaults, as FISPACT-II computes
+  displacement rates by default.
 
 **Added (P153; all opt-in, default results unchanged)**
 
