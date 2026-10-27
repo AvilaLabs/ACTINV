@@ -75,9 +75,8 @@ DECAY_FALLBACK_NAME = "jeff-3-3_decay.dat"
 YIELD_SHA256 = {
     "nfy-092_U_235.endf": "9e1320293a544fc03f33f804a15a9e3ccc3be026552ee6dbc03b8d3e24615e41",
     "nfy-092_U_238.endf": "05598b1c16117a729a3314842a2de574ffb7c992f679f6e1505c1d566164791c",
-    "nfy-090_Th_232.endf": "551d2721427034042ed31307b297011b0b2a092b7baeeac6a5d3a6d90472d052",
 }
-U235, U238, TH232, U234 = (92235, 0), (92238, 0), (90232, 0), (92234, 0)
+U235, U238, U234 = (92235, 0), (92238, 0), (92234, 0)
 PARENTS = (U235, U238)
 KT_EV = 0.0253
 N0 = 1.0e21                 # atoms/g of each parent
@@ -90,7 +89,9 @@ TOL_WEIGHT = 1e-12
 WEIGHT_ABS_FLOOR = 1e-18    # weights below this are 1e-18 of the total and immaterial
 TOL_FIRST_ORDER = 1e-6
 TOL_EXACT = 1e-12
-FLOOR_FRACTION = 1e-6       # compare products above this fraction of the largest expected population
+FLOOR_FRACTION = 1e-4       # compare products above this fraction of the largest expected population. The dense
+                            # expm has an absolute error of about 3e-11 of the largest entry (observed: Cu72, Nb96 at
+                            # 1e-5..1e-6 of the maximum, 1 atom/g of 3e10), so relative noise is ~3e-11/floor: 3e-7 here
 MAX_LISTED = 20
 TIMING_TOP = ("ms",)
 TIMING_ANY = ("wall_time_s", "cells_per_s")
@@ -222,8 +223,11 @@ def parse_parent_key(text):
     return None
 
 
-def map_products(records, yields, mapping="resolved"):
-    """Yield-table products onto chain states; products with no state are dropped (the engine books them to leakage)."""
+def map_products(records, yields, mapping="exact"):
+    """Yield-table products onto chain states. The engine (verified against its runs, 2026-10-27) uses the exact
+    (ZAFP, FPS) state only: a product whose state is not in the chain, including an isomer FPS=1 entry whose isomer has
+    no decay record, goes to leakage and does NOT fall back to the ground state (which would double count the many
+    FPS=0/FPS=1 pairs of the evaluation). mapping="resolved" is kept only for the self-check."""
     out = {}
     for (za, fps), y in yields.items():
         if y <= 0.0:
@@ -235,7 +239,7 @@ def map_products(records, yields, mapping="resolved"):
     return out
 
 
-def overlap_diagnostic(records, yields, mapping="resolved"):
+def overlap_diagnostic(records, yields, mapping="exact"):
     """Independent recomputation of `fission_cumulative_overlap` for one parent. A product overlaps when its yield is
     positive, it is a chain nuclide, and a chain nuclide with a positive off-diagonal decay edge into it also has a
     positive yield from the same parent."""
@@ -516,6 +520,7 @@ class Inputs:
             self.cumulative[key] = read_yield_file(path, 459)
             if self.tables[key] is None or self.tables[key]["za"] != key[0]:
                 raise RuntimeError(f"{path}: no MT=454 section for the expected parent")
+        self.fe56_yield_file = None
         # spectra on the library's ascending groups
         n = self.lib.n_groups
         thermal = maxwellian_groups(self.bounds, KT_EV)
@@ -527,6 +532,20 @@ class Inputs:
         single[g0] = 1.0
         self.one_group_index, self.one_group_midpoint = g0, mids[g0]
         self.spectra["one_group"] = self.normalise(single)
+
+    def make_fe56_yield_file(self, work):
+        """Copy of the U-235 file with ZA 92235 -> 26056 in every HEAD line (Fe-56 has no MT=18 row in the library)."""
+        target = work / "nfy-026_Fe_056.synthetic_from_U235.endf"
+        with open(self.yield_files["nfy-092_U_235.endf"]["path"], "r", encoding="ascii", errors="replace") as src, \
+                open(target, "w", encoding="ascii") as dst:
+            for line in src:
+                if line.startswith(" 9.223500+4"):
+                    line = " 2.605600+4" + line[11:]
+                dst.write(line)
+        self.fe56_yield_file = {"path": str(target), "sha256": sha256_file(target)}
+        if 92235 in [k for t in (read_yield_file(target, 454),) for k in (t["za"],)]:
+            raise RuntimeError("Fe-56 yield file generation left ZA 92235 in place")
+        return self.fe56_yield_file
 
     def normalise(self, flux):
         scale = RATE_U235 / fold(self.sigma[U235], flux)
@@ -733,8 +752,12 @@ def refusal_cases(inputs):
     variant("neither", lambda f: f.update(parents={}))
     variant("empty_list", lambda f: f.update(parents={"include": []}))
     variant("no_yield_file", lambda f: f.update(parents={"include": ["U234"]}))
-    thorium = inputs.spec("P153 G4 refusal Th-232", flux, {"energy": "spectrum_average"},
-                          parents={"include": ["Th232"]}, files=("nfy-092_U_235.endf", "nfy-090_Th_232.endf"))
+    # Th-232 has an MT=18 row in this library, so it cannot serve. Honest construction: a copy of the U-235 yield file
+    # whose parent ZA is rewritten to Fe-56 (a library target with no fission row), generated and hash-pinned here.
+    fe = inputs.fe56_yield_file
+    thorium = inputs.spec("P153 G4 refusal non-fissionable parent", flux, {"energy": "spectrum_average"},
+                          parents={"include": ["Fe56"]}, files=("nfy-092_U_235.endf",))
+    thorium["fission_yields"]["files"].append(dict(fe))
     cases["not_fissionable"] = thorium
     variant("rate_weighted_with_fixed_energy", lambda f: f.update(energy="rate_weighted", fixed_energy_eV=0.0253))
     expect = {"include_and_exclude": [("include", "exclude")], "neither": [("include", "exclude", "parents")],
@@ -787,6 +810,7 @@ def gate_g4(h, cand, inputs, work):
     out["cases"]["selection"] = guarded(selection)
 
     def refusals():
+        inputs.make_fe56_yield_file(work)
         cases, expect = refusal_cases(inputs)
         stripped = work / "nfy-092_U_235.no_mt459.endf"
         with open(inputs.yield_files["nfy-092_U_235.endf"]["path"], "r", encoding="ascii", errors="replace") as src, \
@@ -847,7 +871,7 @@ def gate_g5(h, cand, inputs):
                 info["overlap"][f"{parent[0]}_{parent[1]}"] = row
                 continue
             best = None
-            for mapping in ("resolved", "exact"):
+            for mapping in ("exact",):
                 diag = overlap_diagnostic(inputs.records, yields[parent], mapping)
                 matches = {
                     "overlap_yield": rel_err(entry.get("overlap_yield"), diag["overlap_yield"]) <= TOL_EXACT,
