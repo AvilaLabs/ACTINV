@@ -4168,3 +4168,26 @@ and the table is correct in both cases:
 The checker will take the G4 and G5 references from NJOY with these two terms replaced by exact values. It must first
 reproduce NJOY's own MT=446 and MT=447 by emulation, to within 0.5 %, where those terms dominate. The candidate is
 unchanged.
+
+## Entry 237 — P154 Amendment C registered (2026-10-27)
+
+While Amendment B was being implemented, `controls/check_p154.py` was evaluated on development run 2's outputs in
+reuse mode, which runs neither NJOY nor ACTINV. That evaluation showed Amendment B wrong in three places, corrected
+in `protocols/ACTINV-P154_AMENDMENT_C.md` (`c60f2730295cbef56fbabe7bd3c41ce3b6d0176fe043d72b07103c057d885e79`):
+- B's precondition chose its groups by the emulated share itself, so a group whose true share is 99.0–99.5 %
+  failed whatever the emulation did. Every development-run-2 failure lay in that band; elsewhere the emulations
+  reproduce NJOY to medians of 4e-8–2e-4. Groups are now chosen from an independent bound: cross section times the
+  residual nucleus's maximum laboratory recoil energy. A group enters when the bound is at most 0.5 % (the
+  tolerance), and the low side of the test widens by the bound.
+- The bound and its fraction were chosen after measuring set sizes on development run 2's outputs, and that is
+  disclosed here. A first draft used σ·(E + Q) at 0.1 %, which left Ni-58 with no group and W-184 with 6. The recoil
+  bound at 0.1 % left Ni-58 with 9, against a minimum of 10. Measured at 0.3 % and 1 %, which bracket 0.5 %, the B1
+  sets are Fe-56 570–571, Cr-52 579, Ni-58 28–482 and W-184 517–543 groups. At 0.1 % the emulations deviate from
+  NJOY by at most 4.6e-4.
+- B2 named the wrong cause for W-184. The 1.1-step ladder contributes about 1e-7. HEATR's linear interpolation of
+  σ·W between PENDF grid energies, just above the level thresholds, gives 29.6 against 19.5 in the 115 keV group.
+  The B2 reference now evaluates σ·W_exact on a refined grid.
+- NJOY's MT=444–447 tables print 7-digit energies and drop their leading zero row. Both are restored before the
+  references are formed.
+
+The candidate is unchanged. Development run 3 follows the checker change.
