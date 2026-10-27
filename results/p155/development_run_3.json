@@ -1,0 +1,3739 @@
+{
+ "assumptions": [],
+ "candidate_sha256": "3f56196285c0c28215aa9f722a0252676f2842bead964f06c4f0b738db62d9dd",
+ "checker_sha256": "ce04ef5c779b4c52e8cee6c378af887a1b30772f63c1a5878e580bebddbc5e3d",
+ "external_gates": {
+  "G1": "fmt, clippy -D warnings, workspace tests: coordinator",
+  "G8": "CI on the pushed commit and committed baselines: coordinator"
+ },
+ "gates": {
+  "G0": {
+   "amendment_a": {
+    "in_protocol_hash_txt": true,
+    "path": "/home/connoravila/Documents/actinv/.claude/worktrees/agent-ae9794b35bef04ce6/protocols/ACTINV-P155_AMENDMENT_A.md",
+    "sha256": "e1342b6849e51f31aa496e77309579015f8ff587be0bf57cff9a16254f021607"
+   },
+   "amendment_b": {
+    "in_protocol_hash_txt": true,
+    "path": "/home/connoravila/Documents/actinv/.claude/worktrees/agent-ae9794b35bef04ce6/protocols/ACTINV-P155_AMENDMENT_B.md",
+    "sha256": "cf9cea4adb2b26b026a77b53e23b6664ce945632760a85ae3898e2f8600d7a9e"
+   },
+   "pass": true,
+   "protocol": {
+    "in_protocol_hash_txt": true,
+    "path": "/home/connoravila/Documents/actinv/.claude/worktrees/agent-ae9794b35bef04ce6/protocols/ACTINV-P155_PROTOCOL.md",
+    "sha256": "6b1ab89fd34a050c7d716b06aebb5545bc3ad401e06578298cea903341d8999d"
+   },
+   "protocol_sha256": "6b1ab89fd34a050c7d716b06aebb5545bc3ad401e06578298cea903341d8999d"
+  },
+  "G2": {
+   "fns": {
+    "decks": 132,
+    "decks_with_report_detail_changes": 0,
+    "failures": [],
+    "identical": 132,
+    "pass": true
+   },
+   "option_free": {
+    "cases": {
+     "U2352E4s.i": {
+      "differences": [
+       {
+        "attributed": true,
+        "attributed_to": [
+         "USEFISSION"
+        ],
+        "cand": "fission-product yields are spec fission_yields.files, hash-pinned ENDF neutron-induced yield files (one per parent) that the deck does not name: pass --fission-yields FILE...",
+        "keyword": "USEFISSION",
+        "line": 7,
+        "ref": "fission treatment is set by spec.fission_yields.files, not by keyword",
+        "what": "detail",
+        "where": "report"
+       },
+       {
+        "attributed": true,
+        "attributed_to": [
+         "FISYIELD"
+        ],
+        "cand": "noted",
+        "cand_detail": "no fission-product yields are in the spec (USEFISSION and yield files are both needed), so the parent selection has no effect",
+        "keyword": "FISYIELD",
+        "line": 8,
+        "ref": "unsupported",
+        "what": "status",
+        "where": "report"
+       },
+       {
+        "attributed": true,
+        "attributed_to": [
+         "FISCHOOSE"
+        ],
+        "cand": "noted",
+        "cand_detail": "restricts the parents of fission pathways, and the deck requests no pathways (PATH or ROUTES), so there is nothing to restrict",
+        "keyword": "FISCHOOSE",
+        "line": 21,
+        "ref": "unsupported",
+        "what": "status",
+        "where": "report"
+       }
+      ],
+      "exit_cand": 0,
+      "exit_ref": 0,
+      "fluxes": "/home/connoravila/nuclear-data/conderc-fission/fission/Fispact-II/Inputs/fluxes_therm",
+      "group": "conderc",
+      "keywords_with_differences": [
+       "FISCHOOSE",
+       "FISYIELD",
+       "USEFISSION"
+      ],
+      "n_differences": 3,
+      "pass": true,
+      "unattributed": []
+     },
+     "U235pulse.i": {
+      "differences": [
+       {
+        "attributed": true,
+        "attributed_to": [
+         "USEFISSION"
+        ],
+        "cand": "fission-product yields are spec fission_yields.files, hash-pinned ENDF neutron-induced yield files (one per parent) that the deck does not name: pass --fission-yields FILE...",
+        "keyword": "USEFISSION",
+        "line": 7,
+        "ref": "fission treatment is set by spec.fission_yields.files, not by keyword",
+        "what": "detail",
+        "where": "report"
+       },
+       {
+        "attributed": true,
+        "attributed_to": [
+         "FISYIELD"
+        ],
+        "cand": "noted",
+        "cand_detail": "no fission-product yields are in the spec (USEFISSION and yield files are both needed), so the parent selection has no effect",
+        "keyword": "FISYIELD",
+        "line": 8,
+        "ref": "unsupported",
+        "what": "status",
+        "where": "report"
+       },
+       {
+        "attributed": true,
+        "attributed_to": [
+         "FISCHOOSE"
+        ],
+        "cand": "noted",
+        "cand_detail": "restricts the parents of fission pathways, and the deck requests no pathways (PATH or ROUTES), so there is nothing to restrict",
+        "keyword": "FISCHOOSE",
+        "line": 21,
+        "ref": "unsupported",
+        "what": "status",
+        "where": "report"
+       }
+      ],
+      "exit_cand": 0,
+      "exit_ref": 0,
+      "fluxes": "/home/connoravila/nuclear-data/conderc-fission/fission/Fispact-II/Inputs/fluxes_therm",
+      "group": "conderc",
+      "keywords_with_differences": [
+       "FISCHOOSE",
+       "FISYIELD",
+       "USEFISSION"
+      ],
+      "n_differences": 3,
+      "pass": true,
+      "unattributed": []
+     },
+     "examples__files__test.i": {
+      "differences": [
+       {
+        "attributed": true,
+        "attributed_to": [
+         "READGG"
+        ],
+        "cand": "READGG reads its group bins from the `ggbins` entry of the files file, and none was found: pass --files FILES with a `ggbins PATH` line",
+        "keyword": "READGG",
+        "line": 7,
+        "ref": "library-data selection or modification keyword with no ACTINV equivalent",
+        "what": "detail",
+        "where": "report"
+       },
+       {
+        "attributed": true,
+        "attributed_to": [
+         "XSTHRESHOLD"
+        ],
+        "cand": "noted",
+        "cand_detail": "the smallest cross section FISPACT-II admits to its pathway-based uncertainty estimate, a cost control of that method; ACTINV propagates the full covariance without pathway truncation",
+        "keyword": "XSTHRESHOLD",
+        "line": 11,
+        "ref": "unsupported",
+        "what": "status",
+        "where": "report"
+       },
+       {
+        "attributed": true,
+        "attributed_to": [
+         "SPEK"
+        ],
+        "cand": "approximated",
+        "cand_detail": "photon.missing_spectra = \"estimate\": a nuclide whose decay record gives a mean electromagnetic energy but no photon spectrum receives an exponential shape set by its mean energy per decay mode, not FISPACT-II's own approximate spectrum, and the result carries certified lower and upper dose bounds for the estimate; the spec writes no options.outputs list, so the default outputs (which include photons) build the photon source",
+        "keyword": "SPEK",
+        "line": 19,
+        "ref": "noted",
+        "what": "status",
+        "where": "report"
+       },
+       {
+        "attributed": true,
+        "attributed_to": [
+         "SPEK"
+        ],
+        "cand": "estimate",
+        "path": "photon.missing_spectra",
+        "ref": "<absent>",
+        "where": "spec"
+       }
+      ],
+      "exit_cand": 0,
+      "exit_ref": 0,
+      "fluxes": "/home/connoravila/Documents/actinv/target/p155-work-dev3/fixtures/fluxes_709",
+      "group": "pypact",
+      "keywords_with_differences": [
+       "READGG",
+       "SPEK",
+       "XSTHRESHOLD"
+      ],
+      "n_differences": 4,
+      "pass": true,
+      "unattributed": []
+     },
+     "reference__test.i": {
+      "differences": [
+       {
+        "attributed": true,
+        "attributed_to": [
+         "READGG"
+        ],
+        "cand": "READGG reads its group bins from the `ggbins` entry of the files file, and none was found: pass --files FILES with a `ggbins PATH` line",
+        "keyword": "READGG",
+        "line": 7,
+        "ref": "library-data selection or modification keyword with no ACTINV equivalent",
+        "what": "detail",
+        "where": "report"
+       },
+       {
+        "attributed": true,
+        "attributed_to": [
+         "XSTHRESHOLD"
+        ],
+        "cand": "noted",
+        "cand_detail": "the smallest cross section FISPACT-II admits to its pathway-based uncertainty estimate, a cost control of that method; ACTINV propagates the full covariance without pathway truncation",
+        "keyword": "XSTHRESHOLD",
+        "line": 11,
+        "ref": "unsupported",
+        "what": "status",
+        "where": "report"
+       },
+       {
+        "attributed": true,
+        "attributed_to": [
+         "SPEK"
+        ],
+        "cand": "approximated",
+        "cand_detail": "photon.missing_spectra = \"estimate\": a nuclide whose decay record gives a mean electromagnetic energy but no photon spectrum receives an exponential shape set by its mean energy per decay mode, not FISPACT-II's own approximate spectrum, and the result carries certified lower and upper dose bounds for the estimate; the spec writes no options.outputs list, so the default outputs (which include photons) build the photon source",
+        "keyword": "SPEK",
+        "line": 19,
+        "ref": "noted",
+        "what": "status",
+        "where": "report"
+       },
+       {
+        "attributed": true,
+        "attributed_to": [
+         "SPEK"
+        ],
+        "cand": "estimate",
+        "path": "photon.missing_spectra",
+        "ref": "<absent>",
+        "where": "spec"
+       }
+      ],
+      "exit_cand": 0,
+      "exit_ref": 0,
+      "fluxes": "/home/connoravila/Documents/actinv/target/p155-work-dev3/fixtures/fluxes_709",
+      "group": "pypact",
+      "keywords_with_differences": [
+       "READGG",
+       "SPEK",
+       "XSTHRESHOLD"
+      ],
+      "n_differences": 4,
+      "pass": true,
+      "unattributed": []
+     },
+     "reference__test2.i": {
+      "differences": [
+       {
+        "attributed": true,
+        "attributed_to": [
+         "SPEK"
+        ],
+        "cand": "approximated",
+        "cand_detail": "photon.missing_spectra = \"estimate\": a nuclide whose decay record gives a mean electromagnetic energy but no photon spectrum receives an exponential shape set by its mean energy per decay mode, not FISPACT-II's own approximate spectrum, and the result carries certified lower and upper dose bounds for the estimate; the spec writes no options.outputs list, so the default outputs (which include photons) build the photon source",
+        "keyword": "SPEK",
+        "line": 4,
+        "ref": "noted",
+        "what": "status",
+        "where": "report"
+       },
+       {
+        "attributed": true,
+        "attributed_to": [
+         "SPEK"
+        ],
+        "cand": "estimate",
+        "path": "photon.missing_spectra",
+        "ref": "<absent>",
+        "where": "spec"
+       }
+      ],
+      "exit_cand": 0,
+      "exit_ref": 0,
+      "fluxes": "/home/connoravila/Documents/actinv/target/p155-work-dev3/fixtures/fluxes_709",
+      "group": "pypact",
+      "keywords_with_differences": [
+       "SPEK"
+      ],
+      "n_differences": 2,
+      "pass": true,
+      "unattributed": []
+     },
+     "reference__test3.i": {
+      "differences": [
+       {
+        "attributed": true,
+        "attributed_to": [
+         "SPEK"
+        ],
+        "cand": "approximated",
+        "cand_detail": "photon.missing_spectra = \"estimate\": a nuclide whose decay record gives a mean electromagnetic energy but no photon spectrum receives an exponential shape set by its mean energy per decay mode, not FISPACT-II's own approximate spectrum, and the result carries certified lower and upper dose bounds for the estimate; the spec writes no options.outputs list, so the default outputs (which include photons) build the photon source",
+        "keyword": "SPEK",
+        "line": 4,
+        "ref": "noted",
+        "what": "status",
+        "where": "report"
+       },
+       {
+        "attributed": true,
+        "attributed_to": [
+         "SPEK"
+        ],
+        "cand": "estimate",
+        "path": "photon.missing_spectra",
+        "ref": "<absent>",
+        "where": "spec"
+       }
+      ],
+      "exit_cand": 0,
+      "exit_ref": 0,
+      "fluxes": "/home/connoravila/Documents/actinv/target/p155-work-dev3/fixtures/fluxes_709",
+      "group": "pypact",
+      "keywords_with_differences": [
+       "SPEK"
+      ],
+      "n_differences": 2,
+      "pass": true,
+      "unattributed": []
+     },
+     "reference__test4.i": {
+      "differences": [
+       {
+        "attributed": true,
+        "attributed_to": [
+         "READGG"
+        ],
+        "cand": "READGG reads its group bins from the `ggbins` entry of the files file, and none was found: pass --files FILES with a `ggbins PATH` line",
+        "keyword": "READGG",
+        "line": 10,
+        "ref": "library-data selection or modification keyword with no ACTINV equivalent",
+        "what": "detail",
+        "where": "report"
+       }
+      ],
+      "exit_cand": 0,
+      "exit_ref": 0,
+      "fluxes": "/home/connoravila/Documents/actinv/target/p155-work-dev3/fixtures/fluxes_709",
+      "group": "pypact",
+      "keywords_with_differences": [
+       "READGG"
+      ],
+      "n_differences": 1,
+      "pass": true,
+      "unattributed": []
+     },
+     "reference__test5.i": {
+      "differences": [
+       {
+        "attributed": true,
+        "attributed_to": [
+         "SPEK"
+        ],
+        "cand": "approximated",
+        "cand_detail": "photon.missing_spectra = \"estimate\": a nuclide whose decay record gives a mean electromagnetic energy but no photon spectrum receives an exponential shape set by its mean energy per decay mode, not FISPACT-II's own approximate spectrum, and the result carries certified lower and upper dose bounds for the estimate; the spec writes no options.outputs list, so the default outputs (which include photons) build the photon source",
+        "keyword": "SPEK",
+        "line": 4,
+        "ref": "noted",
+        "what": "status",
+        "where": "report"
+       },
+       {
+        "attributed": true,
+        "attributed_to": [
+         "SPEK"
+        ],
+        "cand": "estimate",
+        "path": "photon.missing_spectra",
+        "ref": "<absent>",
+        "where": "spec"
+       }
+      ],
+      "exit_cand": 0,
+      "exit_ref": 0,
+      "fluxes": "/home/connoravila/Documents/actinv/target/p155-work-dev3/fixtures/fluxes_162",
+      "group": "pypact",
+      "keywords_with_differences": [
+       "SPEK"
+      ],
+      "n_differences": 2,
+      "pass": true,
+      "unattributed": []
+     }
+    },
+    "pass": true
+   },
+   "pass": true
+  },
+  "G3": {
+   "cases": [
+    {
+     "checks": [
+      {
+       "expect": "import exits 0 and writes spec and report",
+       "observed": "exit 0: ",
+       "ok": true
+      },
+      {
+       "expect": "USEFISSION entries all mapped",
+       "observed": "USEFISSION statuses ['mapped']",
+       "ok": true
+      },
+      {
+       "expect": "spec fission_yields.files lists the supplied files with the checker's sha256",
+       "observed": "fission_yields.files: [('nfy-090_Th_232.endf', '551d27214270'), ('nfy-092_U_235.endf', '9e1320293a54'), ('nfy-092_U_238.endf', '05598b1c1611'), ('nfy-094_Pu_239.endf', 'a2713aa6d028')]",
+       "ok": true
+      },
+      {
+       "expect": "spec fission_yields.parents.include names [('PU', 239, 0), ('U', 235, 0), ('U', 238, 0)]",
+       "observed": "parents {'include': ['U235', 'U238', 'Pu239']}",
+       "ok": true
+      },
+      {
+       "expect": "no unsupported entry",
+       "observed": "unsupported: []",
+       "ok": true
+      }
+     ],
+     "deck": "/home/connoravila/Documents/actinv/target/p155-work-dev3/decks/fission_default_parents_all_files.i",
+     "exit": 0,
+     "gating": true,
+     "group": "fission",
+     "id": "fission_default_parents_all_files",
+     "pass": true,
+     "statuses": {
+      "GETDECAY": [
+       "approximated"
+      ],
+      "GETXS": [
+       "approximated"
+      ],
+      "USEFISSION": [
+       "mapped"
+      ]
+     },
+     "unsupported": []
+    },
+    {
+     "checks": [
+      {
+       "expect": "import exits 0 and writes spec and report",
+       "observed": "exit 0: ",
+       "ok": true
+      },
+      {
+       "expect": "USEFISSION entries all mapped",
+       "observed": "USEFISSION statuses ['mapped']",
+       "ok": true
+      },
+      {
+       "expect": "spec fission_yields.files lists the supplied files with the checker's sha256",
+       "observed": "fission_yields.files: [('nfy-090_Th_232.endf', '551d27214270'), ('nfy-092_U_235.endf', '9e1320293a54')]",
+       "ok": true
+      },
+      {
+       "expect": "spec fission_yields.parents.include names [('U', 235, 0)]",
+       "observed": "parents {'include': ['U235']}",
+       "ok": true
+      },
+      {
+       "expect": "the report names the dropped default parents U238 and Pu239",
+       "observed": "searched every entry detail",
+       "ok": true
+      },
+      {
+       "expect": "no unsupported entry",
+       "observed": "unsupported: []",
+       "ok": true
+      }
+     ],
+     "deck": "/home/connoravila/Documents/actinv/target/p155-work-dev3/decks/fission_default_parents_intersected.i",
+     "exit": 0,
+     "gating": true,
+     "group": "fission",
+     "id": "fission_default_parents_intersected",
+     "pass": true,
+     "statuses": {
+      "GETDECAY": [
+       "approximated"
+      ],
+      "GETXS": [
+       "approximated"
+      ],
+      "USEFISSION": [
+       "mapped"
+      ]
+     },
+     "unsupported": []
+    },
+    {
+     "checks": [
+      {
+       "expect": "import exits 0 and writes spec and report",
+       "observed": "exit 0: ",
+       "ok": true
+      },
+      {
+       "expect": "NOFISS entries all mapped",
+       "observed": "NOFISS statuses ['mapped']",
+       "ok": true
+      },
+      {
+       "expect": "spec fission_yields.files absent or empty",
+       "observed": "fission_yields.files absent",
+       "ok": true
+      }
+     ],
+     "deck": "/home/connoravila/Documents/actinv/target/p155-work-dev3/decks/fission_nofiss.i",
+     "exit": 0,
+     "gating": true,
+     "group": "fission",
+     "id": "fission_nofiss",
+     "pass": true,
+     "statuses": {
+      "GETDECAY": [
+       "approximated"
+      ],
+      "GETXS": [
+       "approximated"
+      ],
+      "NOFISS": [
+       "mapped"
+      ],
+      "USEFISSION": [
+       "noted"
+      ]
+     },
+     "unsupported": []
+    },
+    {
+     "checks": [
+      {
+       "expect": "import exits 0 and writes spec and report",
+       "observed": "exit 0: ",
+       "ok": true
+      },
+      {
+       "expect": "CUMFYLD entries all mapped",
+       "observed": "CUMFYLD statuses ['mapped']",
+       "ok": true
+      },
+      {
+       "expect": "spec fission_yields.yields == 'cumulative'",
+       "observed": "fission_yields.yields = 'cumulative'",
+       "ok": true
+      },
+      {
+       "expect": "spec fission_yields.files lists the supplied files with the checker's sha256",
+       "observed": "fission_yields.files: [('nfy-092_U_235.endf', '9e1320293a54'), ('nfy-092_U_238.endf', '05598b1c1611')]",
+       "ok": true
+      },
+      {
+       "expect": "no unsupported entry",
+       "observed": "unsupported: []",
+       "ok": true
+      }
+     ],
+     "deck": "/home/connoravila/Documents/actinv/target/p155-work-dev3/decks/fission_cumfyld.i",
+     "exit": 0,
+     "gating": true,
+     "group": "fission",
+     "id": "fission_cumfyld",
+     "pass": true,
+     "statuses": {
+      "CUMFYLD": [
+       "mapped"
+      ],
+      "GETDECAY": [
+       "approximated"
+      ],
+      "GETXS": [
+       "approximated"
+      ],
+      "USEFISSION": [
+       "mapped"
+      ]
+     },
+     "unsupported": []
+    },
+    {
+     "checks": [
+      {
+       "expect": "import exits 0 and writes spec and report",
+       "observed": "exit 0: ",
+       "ok": true
+      },
+      {
+       "expect": "FISYIELD entries all mapped",
+       "observed": "FISYIELD statuses ['mapped']",
+       "ok": true
+      },
+      {
+       "expect": "spec fission_yields.parents.include names [('PU', 239, 0), ('U', 235, 0)]",
+       "observed": "parents {'include': ['U235', 'Pu239']}",
+       "ok": true
+      },
+      {
+       "expect": "no unsupported entry",
+       "observed": "unsupported: []",
+       "ok": true
+      }
+     ],
+     "deck": "/home/connoravila/Documents/actinv/target/p155-work-dev3/decks/fission_fisyield_positive.i",
+     "exit": 0,
+     "gating": true,
+     "group": "fission",
+     "id": "fission_fisyield_positive",
+     "pass": true,
+     "statuses": {
+      "FISYIELD": [
+       "mapped"
+      ],
+      "GETDECAY": [
+       "approximated"
+      ],
+      "GETXS": [
+       "approximated"
+      ],
+      "USEFISSION": [
+       "mapped"
+      ]
+     },
+     "unsupported": []
+    },
+    {
+     "checks": [
+      {
+       "expect": "import exits 0 and writes spec and report",
+       "observed": "exit 0: ",
+       "ok": true
+      },
+      {
+       "expect": "FISYIELD entries all mapped",
+       "observed": "FISYIELD statuses ['mapped']",
+       "ok": true
+      },
+      {
+       "expect": "spec fission_yields.parents.exclude names [('U', 238, 0)]",
+       "observed": "parents {'exclude': ['U238']}",
+       "ok": true
+      },
+      {
+       "expect": "no unsupported entry",
+       "observed": "unsupported: []",
+       "ok": true
+      }
+     ],
+     "deck": "/home/connoravila/Documents/actinv/target/p155-work-dev3/decks/fission_fisyield_negative.i",
+     "exit": 0,
+     "gating": true,
+     "group": "fission",
+     "id": "fission_fisyield_negative",
+     "pass": true,
+     "statuses": {
+      "FISYIELD": [
+       "mapped"
+      ],
+      "GETDECAY": [
+       "approximated"
+      ],
+      "GETXS": [
+       "approximated"
+      ],
+      "USEFISSION": [
+       "mapped"
+      ]
+     },
+     "unsupported": []
+    },
+    {
+     "checks": [
+      {
+       "expect": "import exits 0 and writes spec and report",
+       "observed": "exit 0: ",
+       "ok": true
+      },
+      {
+       "expect": "FISYIELD entries all mapped",
+       "observed": "FISYIELD statuses ['mapped']",
+       "ok": true
+      },
+      {
+       "expect": "spec fission_yields.parents.exclude names [('PU', 239, 0), ('U', 235, 0), ('U', 238, 0)]",
+       "observed": "parents {'exclude': ['U235', 'U238', 'Pu239']}",
+       "ok": true
+      },
+      {
+       "expect": "no unsupported entry",
+       "observed": "unsupported: []",
+       "ok": true
+      }
+     ],
+     "deck": "/home/connoravila/Documents/actinv/target/p155-work-dev3/decks/fission_fisyield_zero.i",
+     "exit": 0,
+     "gating": true,
+     "group": "fission",
+     "id": "fission_fisyield_zero",
+     "pass": true,
+     "statuses": {
+      "FISYIELD": [
+       "mapped"
+      ],
+      "GETDECAY": [
+       "approximated"
+      ],
+      "GETXS": [
+       "approximated"
+      ],
+      "USEFISSION": [
+       "mapped"
+      ]
+     },
+     "unsupported": []
+    },
+    {
+     "checks": [
+      {
+       "expect": "import exits 0 and writes spec and report",
+       "observed": "exit 0: ",
+       "ok": true
+      },
+      {
+       "expect": "FISCHOOSE entries all mapped",
+       "observed": "FISCHOOSE statuses ['mapped']",
+       "ok": true
+      },
+      {
+       "expect": "spec pathways.fission_parents names [('PU', 239, 0), ('U', 235, 0)]",
+       "observed": "pathways.fission_parents = ['U235', 'Pu239']",
+       "ok": true
+      },
+      {
+       "expect": "no unsupported entry",
+       "observed": "unsupported: []",
+       "ok": true
+      }
+     ],
+     "deck": "/home/connoravila/Documents/actinv/target/p155-work-dev3/decks/fission_fischoose.i",
+     "exit": 0,
+     "gating": true,
+     "group": "fission",
+     "id": "fission_fischoose",
+     "pass": true,
+     "statuses": {
+      "FISCHOOSE": [
+       "mapped"
+      ],
+      "GETDECAY": [
+       "approximated"
+      ],
+      "GETXS": [
+       "approximated"
+      ]
+     },
+     "unsupported": []
+    },
+    {
+     "checks": [
+      {
+       "expect": "import exits 0 and writes spec and report",
+       "observed": "exit 0: ",
+       "ok": true
+      }
+     ],
+     "deck": "/home/connoravila/Documents/actinv/target/p155-work-dev3/decks/info_fischoose_without_path.i",
+     "exit": 0,
+     "gating": false,
+     "group": "fission",
+     "id": "info_fischoose_without_path",
+     "information": {
+      "details": {
+       "FISCHOOSE": [
+        "noted",
+        "restricts the parents of fission pathways, and the deck requests no pathways (PATH or ROUTES), so there is nothing to restrict"
+       ],
+       "GETDECAY": [
+        "approximated",
+        "FISPACT-II's own decay library is not read; ACTINV's default decay bundle is used (pass --decay to choose)"
+       ],
+       "GETXS": [
+        "approximated",
+        "FISPACT-II's own collapsed library is not read; the default ACTINV library for the projectile is used (pass --library to choose)"
+       ]
+      },
+      "exit": 0,
+      "spec_keys": [
+       "decay",
+       "library",
+       "material",
+       "projectile",
+       "schedule",
+       "spec",
+       "spectrum",
+       "summary",
+       "title"
+      ],
+      "stderr": ""
+     },
+     "note": "information: status and whether a pathways section is created",
+     "pass": true,
+     "statuses": {
+      "FISCHOOSE": [
+       "noted"
+      ],
+      "GETDECAY": [
+       "approximated"
+      ],
+      "GETXS": [
+       "approximated"
+      ]
+     },
+     "unsupported": []
+    },
+    {
+     "checks": [
+      {
+       "expect": "import exits 0 and writes spec and report",
+       "observed": "exit 0: ",
+       "ok": true
+      },
+      {
+       "expect": "NOXRAY entries all mapped",
+       "observed": "NOXRAY statuses ['mapped']",
+       "ok": true
+      },
+      {
+       "expect": "spec photon.exclude_xrays == True",
+       "observed": "photon.exclude_xrays = True",
+       "ok": true
+      },
+      {
+       "expect": "options.outputs gains photons when a list lacks it, and the report says so",
+       "observed": "outputs None (base had none)",
+       "ok": true
+      },
+      {
+       "expect": "no unsupported entry",
+       "observed": "unsupported: []",
+       "ok": true
+      }
+     ],
+     "deck": "/home/connoravila/Documents/actinv/target/p155-work-dev3/decks/photon_noxray.i",
+     "exit": 0,
+     "gating": true,
+     "group": "photon",
+     "id": "photon_noxray",
+     "pass": true,
+     "statuses": {
+      "GETDECAY": [
+       "approximated"
+      ],
+      "GETXS": [
+       "approximated"
+      ],
+      "NOXRAY": [
+       "mapped"
+      ]
+     },
+     "unsupported": []
+    },
+    {
+     "checks": [
+      {
+       "expect": "import exits 0 and writes spec and report",
+       "observed": "exit 0: ",
+       "ok": true
+      },
+      {
+       "expect": "SPEK entries all approximated",
+       "observed": "SPEK statuses ['approximated']",
+       "ok": true
+      },
+      {
+       "expect": "spec photon.missing_spectra == 'estimate'",
+       "observed": "photon.missing_spectra = 'estimate'",
+       "ok": true
+      },
+      {
+       "expect": "SPEK detail names one of ['bound', 'mean energy', 'decay mode']",
+       "observed": "SPEK detail 'photon.missing_spectra = \"estimate\": a nuclide whose decay record gives a mean electromagnetic energy but no photon spectrum receives an exponential shape set by its mean energy per decay mode, not fi'",
+       "ok": true
+      },
+      {
+       "expect": "options.outputs gains photons when a list lacks it, and the report says so",
+       "observed": "outputs None (base had none)",
+       "ok": true
+      },
+      {
+       "expect": "no unsupported entry",
+       "observed": "unsupported: []",
+       "ok": true
+      }
+     ],
+     "deck": "/home/connoravila/Documents/actinv/target/p155-work-dev3/decks/photon_spek.i",
+     "exit": 0,
+     "gating": true,
+     "group": "photon",
+     "id": "photon_spek",
+     "pass": true,
+     "statuses": {
+      "GETDECAY": [
+       "approximated"
+      ],
+      "GETXS": [
+       "approximated"
+      ],
+      "SPEK": [
+       "approximated"
+      ]
+     },
+     "unsupported": []
+    },
+    {
+     "checks": [
+      {
+       "expect": "import exits 0 and writes spec and report",
+       "observed": "exit 0: ",
+       "ok": true
+      },
+      {
+       "expect": "SPEK entries all approximated",
+       "observed": "SPEK statuses ['approximated']",
+       "ok": true
+      },
+      {
+       "expect": "NOXRAY entries all mapped",
+       "observed": "NOXRAY statuses ['mapped']",
+       "ok": true
+      },
+      {
+       "expect": "spec photon.missing_spectra == 'estimate'",
+       "observed": "photon.missing_spectra = 'estimate'",
+       "ok": true
+      },
+      {
+       "expect": "spec photon.exclude_xrays == True",
+       "observed": "photon.exclude_xrays = True",
+       "ok": true
+      },
+      {
+       "expect": "options.outputs gains photons when a list lacks it, and the report says so",
+       "observed": "outputs None (base had none)",
+       "ok": true
+      },
+      {
+       "expect": "no unsupported entry",
+       "observed": "unsupported: []",
+       "ok": true
+      }
+     ],
+     "deck": "/home/connoravila/Documents/actinv/target/p155-work-dev3/decks/photon_spek_noxray.i",
+     "exit": 0,
+     "gating": true,
+     "group": "photon",
+     "id": "photon_spek_noxray",
+     "pass": true,
+     "statuses": {
+      "GETDECAY": [
+       "approximated"
+      ],
+      "GETXS": [
+       "approximated"
+      ],
+      "NOXRAY": [
+       "mapped"
+      ],
+      "SPEK": [
+       "approximated"
+      ]
+     },
+     "unsupported": []
+    },
+    {
+     "checks": [
+      {
+       "expect": "import exits 0 and writes spec and report",
+       "observed": "exit 0: ",
+       "ok": true
+      },
+      {
+       "expect": "READGG entries all mapped",
+       "observed": "READGG statuses ['mapped']",
+       "ok": true
+      },
+      {
+       "expect": "spec photon.group_boundaries_eV == [1000.0, 10000.0, 100000.0, 300000.0, 600000.0, 1000000.0, 2000000.0, 4000000.0, 10000000.0]",
+       "observed": "photon.group_boundaries_eV = [1000.0, 10000.0, 100000.0, 300000.0, 600000.0, 1000000.0, 2000000.0, 4000000.0, 10000000.0]",
+       "ok": true
+      },
+      {
+       "expect": "photon.group_structure is absent or 'custom' (Amendment A3)",
+       "observed": "custom",
+       "ok": true
+      },
+      {
+       "expect": "no unsupported entry",
+       "observed": "unsupported: []",
+       "ok": true
+      }
+     ],
+     "deck": "/home/connoravila/Documents/actinv/target/p155-work-dev3/decks/photon_readgg.i",
+     "exit": 0,
+     "gating": true,
+     "group": "photon",
+     "id": "photon_readgg",
+     "pass": true,
+     "statuses": {
+      "GETDECAY": [
+       "approximated"
+      ],
+      "GETXS": [
+       "approximated"
+      ],
+      "READGG": [
+       "mapped"
+      ]
+     },
+     "unsupported": []
+    },
+    {
+     "checks": [
+      {
+       "expect": "import exits 0 and writes spec and report",
+       "observed": "exit 0: ",
+       "ok": true
+      },
+      {
+       "expect": "ALLDISPEN entries all mapped",
+       "observed": "ALLDISPEN statuses ['mapped']",
+       "ok": true
+      },
+      {
+       "expect": "spec damage.table is the supplied table (checker's sha256), displacement_energy_eV == {'Fe': 40.0}",
+       "observed": "damage.table sha db04d001a152, displacement_energy_eV {'FE': 40.0}",
+       "ok": true
+      },
+      {
+       "expect": "no unsupported entry",
+       "observed": "unsupported: []",
+       "ok": true
+      }
+     ],
+     "deck": "/home/connoravila/Documents/actinv/target/p155-work-dev3/decks/damage_alldispen.i",
+     "exit": 0,
+     "gating": true,
+     "group": "damage",
+     "id": "damage_alldispen",
+     "pass": true,
+     "statuses": {
+      "ALLDISPEN": [
+       "mapped"
+      ],
+      "GETDECAY": [
+       "approximated"
+      ],
+      "GETXS": [
+       "approximated"
+      ]
+     },
+     "unsupported": []
+    },
+    {
+     "checks": [
+      {
+       "expect": "import exits 0 and writes spec and report",
+       "observed": "exit 0: ",
+       "ok": true
+      },
+      {
+       "expect": "ATDISPEN entries all mapped",
+       "observed": "ATDISPEN statuses ['mapped']",
+       "ok": true
+      },
+      {
+       "expect": "spec damage.table is the supplied table (checker's sha256), displacement_energy_eV == {'Fe': 40.0}",
+       "observed": "damage.table sha db04d001a152, displacement_energy_eV {'FE': 40.0}",
+       "ok": true
+      },
+      {
+       "expect": "no unsupported entry",
+       "observed": "unsupported: []",
+       "ok": true
+      }
+     ],
+     "deck": "/home/connoravila/Documents/actinv/target/p155-work-dev3/decks/damage_atdispen.i",
+     "exit": 0,
+     "gating": true,
+     "group": "damage",
+     "id": "damage_atdispen",
+     "pass": true,
+     "statuses": {
+      "ATDISPEN": [
+       "mapped"
+      ],
+      "GETDECAY": [
+       "approximated"
+      ],
+      "GETXS": [
+       "approximated"
+      ]
+     },
+     "unsupported": []
+    },
+    {
+     "checks": [
+      {
+       "expect": "import exits 0 and writes spec and report",
+       "observed": "exit 0: ",
+       "ok": true
+      },
+      {
+       "expect": "ALLDISPEN entries all mapped",
+       "observed": "ALLDISPEN statuses ['mapped']",
+       "ok": true
+      },
+      {
+       "expect": "ATDISPEN entries all mapped",
+       "observed": "ATDISPEN statuses ['mapped']",
+       "ok": true
+      },
+      {
+       "expect": "spec damage.table is the supplied table (checker's sha256), displacement_energy_eV == {'Fe': 40.0}",
+       "observed": "damage.table sha db04d001a152, displacement_energy_eV {'FE': 40.0}",
+       "ok": true
+      },
+      {
+       "expect": "no unsupported entry",
+       "observed": "unsupported: []",
+       "ok": true
+      }
+     ],
+     "deck": "/home/connoravila/Documents/actinv/target/p155-work-dev3/decks/damage_all_then_at.i",
+     "exit": 0,
+     "gating": true,
+     "group": "damage",
+     "id": "damage_all_then_at",
+     "pass": true,
+     "statuses": {
+      "ALLDISPEN": [
+       "mapped"
+      ],
+      "ATDISPEN": [
+       "mapped"
+      ],
+      "GETDECAY": [
+       "approximated"
+      ],
+      "GETXS": [
+       "approximated"
+      ]
+     },
+     "unsupported": []
+    },
+    {
+     "checks": [
+      {
+       "expect": "import exits 0 and writes spec and report",
+       "observed": "exit 0: ",
+       "ok": true
+      },
+      {
+       "expect": "ALLDISPEN entries all mapped",
+       "observed": "ALLDISPEN statuses ['mapped']",
+       "ok": true
+      },
+      {
+       "expect": "ATDISPEN entries all mapped",
+       "observed": "ATDISPEN statuses ['mapped']",
+       "ok": true
+      },
+      {
+       "expect": "spec damage.table is the supplied table (checker's sha256), displacement_energy_eV == {'Fe': 40.0}",
+       "observed": "damage.table sha db04d001a152, displacement_energy_eV {'FE': 40.0}",
+       "ok": true
+      },
+      {
+       "expect": "no unsupported entry",
+       "observed": "unsupported: []",
+       "ok": true
+      }
+     ],
+     "deck": "/home/connoravila/Documents/actinv/target/p155-work-dev3/decks/damage_at_then_all.i",
+     "exit": 0,
+     "gating": true,
+     "group": "damage",
+     "id": "damage_at_then_all",
+     "pass": true,
+     "statuses": {
+      "ALLDISPEN": [
+       "mapped"
+      ],
+      "ATDISPEN": [
+       "mapped"
+      ],
+      "GETDECAY": [
+       "approximated"
+      ],
+      "GETXS": [
+       "approximated"
+      ]
+     },
+     "unsupported": []
+    },
+    {
+     "checks": [
+      {
+       "expect": "import exits 0 and writes spec and report",
+       "observed": "exit 0: ",
+       "ok": true
+      },
+      {
+       "expect": "one DISPLACEMENT entry, mapped or approximated",
+       "observed": "[('mapped', 'damage.table = --damage /home/connoravila/Documents/actinv/target/p154-work-evid')]",
+       "ok": true
+      },
+      {
+       "expect": "spec damage.table is the supplied table (checker's sha256), displacement_energy_eV == {'Fe': 40.0}",
+       "observed": "damage.table sha db04d001a152, displacement_energy_eV {'FE': 40.0}",
+       "ok": true
+      },
+      {
+       "expect": "no unsupported entry",
+       "observed": "unsupported: []",
+       "ok": true
+      }
+     ],
+     "deck": "/home/connoravila/Documents/actinv/target/p155-work-dev3/decks/damage_no_keyword.i",
+     "exit": 0,
+     "gating": true,
+     "group": "damage",
+     "id": "damage_no_keyword",
+     "pass": true,
+     "statuses": {
+      "GETDECAY": [
+       "approximated"
+      ],
+      "GETXS": [
+       "approximated"
+      ]
+     },
+     "unsupported": []
+    },
+    {
+     "checks": [
+      {
+       "expect": "import exits 0 and writes spec and report",
+       "observed": "exit 0: ",
+       "ok": true
+      },
+      {
+       "expect": "spec damage.table is the supplied table (checker's sha256), displacement_energy_eV == {'Fe': 40.0}",
+       "observed": "damage.table sha db04d001a152, displacement_energy_eV {'FE': 40.0}",
+       "ok": true
+      },
+      {
+       "expect": "no unsupported entry",
+       "observed": "unsupported: []",
+       "ok": true
+      },
+      {
+       "expect": "the report says W is not in the material",
+       "observed": "searched ATDISPEN and DISPLACEMENT details",
+       "ok": true
+      }
+     ],
+     "deck": "/home/connoravila/Documents/actinv/target/p155-work-dev3/decks/damage_atdispen_element_not_in_material.i",
+     "exit": 0,
+     "gating": true,
+     "group": "damage",
+     "id": "damage_atdispen_element_not_in_material",
+     "pass": true,
+     "statuses": {
+      "ATDISPEN": [
+       "mapped"
+      ],
+      "GETDECAY": [
+       "approximated"
+      ],
+      "GETXS": [
+       "approximated"
+      ]
+     },
+     "unsupported": []
+    },
+    {
+     "checks": [
+      {
+       "expect": "import exits 0 and writes spec and report",
+       "observed": "exit 0: ",
+       "ok": true
+      },
+      {
+       "expect": "UNCTYPE entries all mapped",
+       "observed": "UNCTYPE statuses ['mapped']",
+       "ok": true
+      },
+      {
+       "expect": "spec uncertainty.channels == ['cross_section_mf33']",
+       "observed": "channels ['cross_section_mf33']",
+       "ok": true
+      },
+      {
+       "expect": "no unsupported entry",
+       "observed": "unsupported: []",
+       "ok": true
+      }
+     ],
+     "deck": "/home/connoravila/Documents/actinv/target/p155-work-dev3/decks/uncertainty_unctype_1.i",
+     "exit": 0,
+     "gating": true,
+     "group": "uncertainty",
+     "id": "uncertainty_unctype_1",
+     "pass": true,
+     "statuses": {
+      "GETDECAY": [
+       "approximated"
+      ],
+      "GETXS": [
+       "approximated"
+      ],
+      "UNCTYPE": [
+       "mapped"
+      ]
+     },
+     "unsupported": []
+    },
+    {
+     "checks": [
+      {
+       "expect": "import exits 0 and writes spec and report",
+       "observed": "exit 0: ",
+       "ok": true
+      },
+      {
+       "expect": "UNCTYPE entries all approximated",
+       "observed": "UNCTYPE statuses ['approximated']",
+       "ok": true
+      },
+      {
+       "expect": "spec uncertainty.channels == ['decay_constants']",
+       "observed": "channels ['decay_constants']",
+       "ok": true
+      },
+      {
+       "expect": "no unsupported entry",
+       "observed": "unsupported: []",
+       "ok": true
+      },
+      {
+       "expect": "UNCTYPE detail names one of ['mf=33', 'mf33', 'covariance']",
+       "observed": "UNCTYPE detail 'uncertainty.channels = [decay_constants]; actinv propagates the mf=33 covariance whenever a covariance sidecar is given, so the cross-section contribution cannot be switched off and the band is wider '",
+       "ok": true
+      }
+     ],
+     "deck": "/home/connoravila/Documents/actinv/target/p155-work-dev3/decks/uncertainty_unctype_2.i",
+     "exit": 0,
+     "gating": true,
+     "group": "uncertainty",
+     "id": "uncertainty_unctype_2",
+     "pass": true,
+     "statuses": {
+      "GETDECAY": [
+       "approximated"
+      ],
+      "GETXS": [
+       "approximated"
+      ],
+      "UNCTYPE": [
+       "approximated"
+      ]
+     },
+     "unsupported": []
+    },
+    {
+     "checks": [
+      {
+       "expect": "import exits 0 and writes spec and report",
+       "observed": "exit 0: ",
+       "ok": true
+      },
+      {
+       "expect": "UNCTYPE entries all mapped",
+       "observed": "UNCTYPE statuses ['mapped']",
+       "ok": true
+      },
+      {
+       "expect": "spec uncertainty.channels == ['cross_section_mf33', 'decay_constants']",
+       "observed": "channels ['cross_section_mf33', 'decay_constants']",
+       "ok": true
+      },
+      {
+       "expect": "no unsupported entry",
+       "observed": "unsupported: []",
+       "ok": true
+      }
+     ],
+     "deck": "/home/connoravila/Documents/actinv/target/p155-work-dev3/decks/uncertainty_unctype_3.i",
+     "exit": 0,
+     "gating": true,
+     "group": "uncertainty",
+     "id": "uncertainty_unctype_3",
+     "pass": true,
+     "statuses": {
+      "GETDECAY": [
+       "approximated"
+      ],
+      "GETXS": [
+       "approximated"
+      ],
+      "UNCTYPE": [
+       "mapped"
+      ]
+     },
+     "unsupported": []
+    },
+    {
+     "checks": [
+      {
+       "expect": "import exits 0 and writes spec and report",
+       "observed": "exit 0: ",
+       "ok": true
+      },
+      {
+       "expect": "COVARIANCE entries all noted",
+       "observed": "COVARIANCE statuses ['noted']",
+       "ok": true
+      },
+      {
+       "expect": "spec equals the base import (deck without the keyword)",
+       "observed": "0 differences, outside []: []",
+       "ok": true
+      },
+      {
+       "expect": "no unsupported entry",
+       "observed": "unsupported: []",
+       "ok": true
+      }
+     ],
+     "deck": "/home/connoravila/Documents/actinv/target/p155-work-dev3/decks/uncertainty_covariance.i",
+     "exit": 0,
+     "gating": true,
+     "group": "uncertainty",
+     "id": "uncertainty_covariance",
+     "pass": true,
+     "statuses": {
+      "COVARIANCE": [
+       "noted"
+      ],
+      "GETDECAY": [
+       "approximated"
+      ],
+      "GETXS": [
+       "approximated"
+      ]
+     },
+     "unsupported": []
+    },
+    {
+     "checks": [
+      {
+       "expect": "import exits 0 and writes spec and report",
+       "observed": "exit 0: ",
+       "ok": true
+      },
+      {
+       "expect": "SENSITIVITY entries all approximated",
+       "observed": "SENSITIVITY statuses ['approximated']",
+       "ok": true
+      },
+      {
+       "expect": "spec uncertainty.voi.top is a positive integer",
+       "observed": "{'top': 10}",
+       "ok": true
+      },
+      {
+       "expect": "no unsupported entry",
+       "observed": "unsupported: []",
+       "ok": true
+      }
+     ],
+     "deck": "/home/connoravila/Documents/actinv/target/p155-work-dev3/decks/uncertainty_sensitivity_sigma.i",
+     "exit": 0,
+     "gating": true,
+     "group": "uncertainty",
+     "id": "uncertainty_sensitivity_sigma",
+     "pass": true,
+     "statuses": {
+      "GETDECAY": [
+       "approximated"
+      ],
+      "GETXS": [
+       "approximated"
+      ],
+      "SENSITIVITY": [
+       "approximated"
+      ]
+     },
+     "unsupported": []
+    },
+    {
+     "checks": [
+      {
+       "expect": "import exits 0 and writes spec and report",
+       "observed": "exit 0: ",
+       "ok": true
+      },
+      {
+       "expect": "SENSITIVITY entries all unsupported",
+       "observed": "SENSITIVITY statuses ['unsupported']",
+       "ok": true
+      },
+      {
+       "expect": "SENSITIVITY detail names all of ['lambda']",
+       "observed": "SENSITIVITY detail 'sensitivity lambda (sensitivity coefficients with respect to decay constants): actinv ranks no decay-constant sensitivities (uncertainty.channels decay_constants propagates the half-life uncertainties'",
+       "ok": true
+      },
+      {
+       "expect": "spec uncertainty.voi absent or empty",
+       "observed": "uncertainty.voi absent",
+       "ok": true
+      }
+     ],
+     "deck": "/home/connoravila/Documents/actinv/target/p155-work-dev3/decks/uncertainty_sensitivity_lambda.i",
+     "exit": 0,
+     "gating": true,
+     "group": "uncertainty",
+     "id": "uncertainty_sensitivity_lambda",
+     "pass": true,
+     "statuses": {
+      "GETDECAY": [
+       "approximated"
+      ],
+      "GETXS": [
+       "approximated"
+      ],
+      "SENSITIVITY": [
+       "unsupported"
+      ]
+     },
+     "unsupported": [
+      "SENSITIVITY"
+     ]
+    },
+    {
+     "checks": [
+      {
+       "expect": "import exits 0 and writes spec and report",
+       "observed": "exit 0: ",
+       "ok": true
+      },
+      {
+       "expect": "SENSITIVITY entries all approximated",
+       "observed": "SENSITIVITY statuses ['approximated']",
+       "ok": true
+      },
+      {
+       "expect": "MCSAMPLE entries all noted",
+       "observed": "MCSAMPLE statuses ['noted']",
+       "ok": true
+      },
+      {
+       "expect": "MCSEED entries all noted",
+       "observed": "MCSEED statuses ['noted']",
+       "ok": true
+      },
+      {
+       "expect": "no unsupported entry",
+       "observed": "unsupported: []",
+       "ok": true
+      }
+     ],
+     "deck": "/home/connoravila/Documents/actinv/target/p155-work-dev3/decks/uncertainty_mcsample_with_sensitivity.i",
+     "exit": 0,
+     "gating": true,
+     "group": "uncertainty",
+     "id": "uncertainty_mcsample_with_sensitivity",
+     "pass": true,
+     "statuses": {
+      "GETDECAY": [
+       "approximated"
+      ],
+      "GETXS": [
+       "approximated"
+      ],
+      "MCSAMPLE": [
+       "noted"
+      ],
+      "MCSEED": [
+       "noted"
+      ],
+      "SENSITIVITY": [
+       "approximated"
+      ]
+     },
+     "unsupported": []
+    },
+    {
+     "checks": [
+      {
+       "expect": "import exits 0 and writes spec and report",
+       "observed": "exit 0: ",
+       "ok": true
+      },
+      {
+       "expect": "MCSAMPLE entries all unsupported",
+       "observed": "MCSAMPLE statuses ['unsupported']",
+       "ok": true
+      },
+      {
+       "expect": "MCSAMPLE detail names all of ['sensitivity']",
+       "observed": "MCSAMPLE detail 'parameterises the monte-carlo sampling of sensitivity, and no sensitivity sigma was mapped; actinv has no sampling to configure'",
+       "ok": true
+      }
+     ],
+     "deck": "/home/connoravila/Documents/actinv/target/p155-work-dev3/decks/uncertainty_mcsample_without_sensitivity.i",
+     "exit": 0,
+     "gating": true,
+     "group": "uncertainty",
+     "id": "uncertainty_mcsample_without_sensitivity",
+     "pass": true,
+     "statuses": {
+      "GETDECAY": [
+       "approximated"
+      ],
+      "GETXS": [
+       "approximated"
+      ],
+      "MCSAMPLE": [
+       "unsupported"
+      ]
+     },
+     "unsupported": [
+      "MCSAMPLE"
+     ]
+    },
+    {
+     "checks": [
+      {
+       "expect": "import exits 0 and writes spec and report",
+       "observed": "exit 0: ",
+       "ok": true
+      },
+      {
+       "expect": "SENSITIVITY entries all unsupported",
+       "observed": "SENSITIVITY statuses ['unsupported']",
+       "ok": true
+      },
+      {
+       "expect": "MCSAMPLE entries all unsupported",
+       "observed": "MCSAMPLE statuses ['unsupported']",
+       "ok": true
+      }
+     ],
+     "deck": "/home/connoravila/Documents/actinv/target/p155-work-dev3/decks/uncertainty_mcsample_with_lambda.i",
+     "exit": 0,
+     "gating": true,
+     "group": "uncertainty",
+     "id": "uncertainty_mcsample_with_lambda",
+     "pass": true,
+     "statuses": {
+      "GETDECAY": [
+       "approximated"
+      ],
+      "GETXS": [
+       "approximated"
+      ],
+      "MCSAMPLE": [
+       "unsupported"
+      ],
+      "SENSITIVITY": [
+       "unsupported"
+      ]
+     },
+     "unsupported": [
+      "MCSAMPLE",
+      "SENSITIVITY"
+     ]
+    },
+    {
+     "checks": [
+      {
+       "expect": "import exits 0 and writes spec and report",
+       "observed": "exit 0: ",
+       "ok": true
+      },
+      {
+       "expect": "ERROR entries all approximated",
+       "observed": "ERROR statuses ['approximated']",
+       "ok": true
+      },
+      {
+       "expect": "spec overrides has {Fe56, cross_section_uncertainty, mt 103, value 0.15}",
+       "observed": "overrides [{'kind': 'cross_section_uncertainty', 'mt': 103, 'nuclide': 'Fe56', 'value': 0.15}]",
+       "ok": true
+      },
+      {
+       "expect": "ERROR detail names all of ['relative']",
+       "observed": "ERROR detail \"overrides cross_section_uncertainty: fe56 mt 103 = 0.15. the fractional error is read as the relative standard uncertainty of that reaction's collapsed cross section, and actinv rescales the reaction'\"",
+       "ok": true
+      },
+      {
+       "expect": "no unsupported entry",
+       "observed": "unsupported: []",
+       "ok": true
+      }
+     ],
+     "deck": "/home/connoravila/Documents/actinv/target/p155-work-dev3/decks/uncertainty_error_value.i",
+     "exit": 0,
+     "gating": true,
+     "group": "uncertainty",
+     "id": "uncertainty_error_value",
+     "pass": true,
+     "statuses": {
+      "ERROR": [
+       "approximated"
+      ],
+      "GETDECAY": [
+       "approximated"
+      ],
+      "GETXS": [
+       "approximated"
+      ],
+      "SENSITIVITY": [
+       "approximated"
+      ]
+     },
+     "unsupported": []
+    },
+    {
+     "checks": [
+      {
+       "expect": "import exits 0 and writes spec and report",
+       "observed": "exit 0: ",
+       "ok": true
+      },
+      {
+       "expect": "ERROR entries all noted",
+       "observed": "ERROR statuses ['noted']",
+       "ok": true
+      },
+      {
+       "expect": "spec has no cross_section_uncertainty override",
+       "observed": "overrides of kind cross_section_uncertainty: []",
+       "ok": true
+      },
+      {
+       "expect": "no unsupported entry",
+       "observed": "unsupported: []",
+       "ok": true
+      }
+     ],
+     "deck": "/home/connoravila/Documents/actinv/target/p155-work-dev3/decks/uncertainty_error_library_value.i",
+     "exit": 0,
+     "gating": true,
+     "group": "uncertainty",
+     "id": "uncertainty_error_library_value",
+     "pass": true,
+     "statuses": {
+      "ERROR": [
+       "noted"
+      ],
+      "GETDECAY": [
+       "approximated"
+      ],
+      "GETXS": [
+       "approximated"
+      ],
+      "SENSITIVITY": [
+       "approximated"
+      ]
+     },
+     "unsupported": []
+    },
+    {
+     "checks": [
+      {
+       "expect": "import exits 0 and writes spec and report",
+       "observed": "exit 0: ",
+       "ok": true
+      }
+     ],
+     "deck": "/home/connoravila/Documents/actinv/target/p155-work-dev3/decks/info_sensitivity_without_uncertainty.i",
+     "exit": 0,
+     "gating": false,
+     "group": "uncertainty",
+     "id": "info_sensitivity_without_uncertainty",
+     "information": {
+      "details": {
+       "GETDECAY": [
+        "approximated",
+        "FISPACT-II's own decay library is not read; ACTINV's default decay bundle is used (pass --decay to choose)"
+       ],
+       "GETXS": [
+        "approximated",
+        "FISPACT-II's own collapsed library is not read; the default ACTINV library for the projectile is used (pass --library to choose)"
+       ],
+       "SENSITIVITY": [
+        "approximated",
+        "uncertainty.voi.top = 10: ACTINV ranks the cross-section parameters by first-order variance share of each response, in place of FISPACT-II's sampled sensitivity coefficients; the reactions, nuclides and correlation cut-off the deck lists do not restrict the table, and the uncertainty block is added even when no UNCERTAINTY keyword asked for one"
+       ]
+      },
+      "exit": 0,
+      "spec_keys": [
+       "decay",
+       "library",
+       "material",
+       "projectile",
+       "schedule",
+       "spec",
+       "spectrum",
+       "summary",
+       "title",
+       "uncertainty"
+      ],
+      "stderr": ""
+     },
+     "note": "information: status of SENSITIVITY SIGMA with no UNCERTAINTY keyword",
+     "pass": true,
+     "statuses": {
+      "GETDECAY": [
+       "approximated"
+      ],
+      "GETXS": [
+       "approximated"
+      ],
+      "SENSITIVITY": [
+       "approximated"
+      ]
+     },
+     "unsupported": []
+    },
+    {
+     "checks": [
+      {
+       "expect": "import exits 0 and writes spec and report",
+       "observed": "exit 0: ",
+       "ok": true
+      },
+      {
+       "expect": "SSFGEOMETRY entries all mapped",
+       "observed": "SSFGEOMETRY statuses ['mapped']",
+       "ok": true
+      },
+      {
+       "expect": "SSFMASS entries all mapped/approximated/noted",
+       "observed": "SSFMASS statuses ['approximated']",
+       "ok": true
+      },
+      {
+       "expect": "spec self_shielding.geometry is foil, length_cm 0.01, density 19.3",
+       "observed": "geometry {'density_g_cm3': 19.3, 'length_cm': 0.01, 'resonance_files': [{'path': '/home/connoravila/Documents/actinv/target/p155-work-dev3/fixtures/resonance_placeholder_W182.dat', 'sha256': '2327a885d5f94551d892935385ee557f3cfb47e9dd0c89f6d33248e0bb423d4c'}, {'path': '/home/connoravila/Documents/actinv/target/p155-work-dev3/fixtures/resonance_placeholder_W184.dat', 'sha256': '8745b052abffe2260df915e80a26fa26d1832d225f042f32ded7549aa97efdd4'}], 'shape': 'foil'}, effective density 19.3",
+       "ok": true
+      },
+      {
+       "expect": "spec self_shielding.geometry.resonance_files lists the supplied files with the checker's sha256",
+       "observed": "self_shielding.geometry.resonance_files: [('resonance_placeholder_W182.dat', '2327a885d5f9'), ('resonance_placeholder_W184.dat', '8745b052abff')]",
+       "ok": true
+      },
+      {
+       "expect": "no unsupported entry",
+       "observed": "unsupported: []",
+       "ok": true
+      }
+     ],
+     "deck": "/home/connoravila/Documents/actinv/target/p155-work-dev3/decks/selfshield_geometry_foil.i",
+     "exit": 0,
+     "gating": true,
+     "group": "self_shielding",
+     "id": "selfshield_geometry_foil",
+     "pass": true,
+     "statuses": {
+      "GETDECAY": [
+       "approximated"
+      ],
+      "GETXS": [
+       "approximated"
+      ],
+      "SSFGEOMETRY": [
+       "mapped"
+      ],
+      "SSFMASS": [
+       "approximated"
+      ]
+     },
+     "unsupported": []
+    },
+    {
+     "checks": [
+      {
+       "expect": "import exits 0 and writes spec and report",
+       "observed": "exit 0: ",
+       "ok": true
+      },
+      {
+       "expect": "SSFGEOMETRY entries all mapped",
+       "observed": "SSFGEOMETRY statuses ['mapped']",
+       "ok": true
+      },
+      {
+       "expect": "SSFMASS entries all mapped/approximated/noted",
+       "observed": "SSFMASS statuses ['approximated']",
+       "ok": true
+      },
+      {
+       "expect": "spec self_shielding.geometry is wire, length_cm 0.05, density 19.3",
+       "observed": "geometry {'density_g_cm3': 19.3, 'length_cm': 0.05, 'resonance_files': [{'path': '/home/connoravila/Documents/actinv/target/p155-work-dev3/fixtures/resonance_placeholder_W182.dat', 'sha256': '2327a885d5f94551d892935385ee557f3cfb47e9dd0c89f6d33248e0bb423d4c'}, {'path': '/home/connoravila/Documents/actinv/target/p155-work-dev3/fixtures/resonance_placeholder_W184.dat', 'sha256': '8745b052abffe2260df915e80a26fa26d1832d225f042f32ded7549aa97efdd4'}], 'shape': 'wire'}, effective density 19.3",
+       "ok": true
+      },
+      {
+       "expect": "spec self_shielding.geometry.resonance_files lists the supplied files with the checker's sha256",
+       "observed": "self_shielding.geometry.resonance_files: [('resonance_placeholder_W182.dat', '2327a885d5f9'), ('resonance_placeholder_W184.dat', '8745b052abff')]",
+       "ok": true
+      },
+      {
+       "expect": "no unsupported entry",
+       "observed": "unsupported: []",
+       "ok": true
+      }
+     ],
+     "deck": "/home/connoravila/Documents/actinv/target/p155-work-dev3/decks/selfshield_geometry_wire.i",
+     "exit": 0,
+     "gating": true,
+     "group": "self_shielding",
+     "id": "selfshield_geometry_wire",
+     "pass": true,
+     "statuses": {
+      "GETDECAY": [
+       "approximated"
+      ],
+      "GETXS": [
+       "approximated"
+      ],
+      "SSFGEOMETRY": [
+       "mapped"
+      ],
+      "SSFMASS": [
+       "approximated"
+      ]
+     },
+     "unsupported": []
+    },
+    {
+     "checks": [
+      {
+       "expect": "import exits 0 and writes spec and report",
+       "observed": "exit 0: ",
+       "ok": true
+      },
+      {
+       "expect": "SSFGEOMETRY entries all mapped",
+       "observed": "SSFGEOMETRY statuses ['mapped']",
+       "ok": true
+      },
+      {
+       "expect": "SSFMASS entries all mapped/approximated/noted",
+       "observed": "SSFMASS statuses ['approximated']",
+       "ok": true
+      },
+      {
+       "expect": "spec self_shielding.geometry is sphere, length_cm 0.5, density 19.3",
+       "observed": "geometry {'density_g_cm3': 19.3, 'length_cm': 0.5, 'resonance_files': [{'path': '/home/connoravila/Documents/actinv/target/p155-work-dev3/fixtures/resonance_placeholder_W182.dat', 'sha256': '2327a885d5f94551d892935385ee557f3cfb47e9dd0c89f6d33248e0bb423d4c'}, {'path': '/home/connoravila/Documents/actinv/target/p155-work-dev3/fixtures/resonance_placeholder_W184.dat', 'sha256': '8745b052abffe2260df915e80a26fa26d1832d225f042f32ded7549aa97efdd4'}], 'shape': 'sphere'}, effective density 19.3",
+       "ok": true
+      },
+      {
+       "expect": "spec self_shielding.geometry.resonance_files lists the supplied files with the checker's sha256",
+       "observed": "self_shielding.geometry.resonance_files: [('resonance_placeholder_W182.dat', '2327a885d5f9'), ('resonance_placeholder_W184.dat', '8745b052abff')]",
+       "ok": true
+      },
+      {
+       "expect": "no unsupported entry",
+       "observed": "unsupported: []",
+       "ok": true
+      }
+     ],
+     "deck": "/home/connoravila/Documents/actinv/target/p155-work-dev3/decks/selfshield_geometry_sphere.i",
+     "exit": 0,
+     "gating": true,
+     "group": "self_shielding",
+     "id": "selfshield_geometry_sphere",
+     "pass": true,
+     "statuses": {
+      "GETDECAY": [
+       "approximated"
+      ],
+      "GETXS": [
+       "approximated"
+      ],
+      "SSFGEOMETRY": [
+       "mapped"
+      ],
+      "SSFMASS": [
+       "approximated"
+      ]
+     },
+     "unsupported": []
+    },
+    {
+     "checks": [
+      {
+       "expect": "import exits 0 and writes spec and report",
+       "observed": "exit 0: ",
+       "ok": true
+      },
+      {
+       "expect": "SSFGEOMETRY entries all mapped",
+       "observed": "SSFGEOMETRY statuses ['mapped']",
+       "ok": true
+      },
+      {
+       "expect": "SSFMASS entries all mapped/approximated/noted",
+       "observed": "SSFMASS statuses ['approximated']",
+       "ok": true
+      },
+      {
+       "expect": "spec self_shielding.geometry is cylinder, length_cm 0.5, height_cm 2.0, density 19.3",
+       "observed": "geometry {'density_g_cm3': 19.3, 'height_cm': 2.0, 'length_cm': 0.5, 'resonance_files': [{'path': '/home/connoravila/Documents/actinv/target/p155-work-dev3/fixtures/resonance_placeholder_W182.dat', 'sha256': '2327a885d5f94551d892935385ee557f3cfb47e9dd0c89f6d33248e0bb423d4c'}, {'path': '/home/connoravila/Documents/actinv/target/p155-work-dev3/fixtures/resonance_placeholder_W184.dat', 'sha256': '8745b052abffe2260df915e80a26fa26d1832d225f042f32ded7549aa97efdd4'}], 'shape': 'cylinder'}, effective density 19.3",
+       "ok": true
+      },
+      {
+       "expect": "spec self_shielding.geometry.resonance_files lists the supplied files with the checker's sha256",
+       "observed": "self_shielding.geometry.resonance_files: [('resonance_placeholder_W182.dat', '2327a885d5f9'), ('resonance_placeholder_W184.dat', '8745b052abff')]",
+       "ok": true
+      },
+      {
+       "expect": "no unsupported entry",
+       "observed": "unsupported: []",
+       "ok": true
+      }
+     ],
+     "deck": "/home/connoravila/Documents/actinv/target/p155-work-dev3/decks/selfshield_geometry_cylinder.i",
+     "exit": 0,
+     "gating": true,
+     "group": "self_shielding",
+     "id": "selfshield_geometry_cylinder",
+     "pass": true,
+     "statuses": {
+      "GETDECAY": [
+       "approximated"
+      ],
+      "GETXS": [
+       "approximated"
+      ],
+      "SSFGEOMETRY": [
+       "mapped"
+      ],
+      "SSFMASS": [
+       "approximated"
+      ]
+     },
+     "unsupported": []
+    },
+    {
+     "checks": [
+      {
+       "expect": "import exits 0 and writes spec and report",
+       "observed": "exit 0: ",
+       "ok": true
+      },
+      {
+       "expect": "SSFGEOMETRY entries all mapped",
+       "observed": "SSFGEOMETRY statuses ['mapped']",
+       "ok": true
+      },
+      {
+       "expect": "SSFCHOOSE entries all mapped/approximated/noted",
+       "observed": "SSFCHOOSE statuses ['mapped']",
+       "ok": true
+      },
+      {
+       "expect": "SSFFUEL entries all mapped/approximated/noted",
+       "observed": "SSFFUEL statuses ['approximated']",
+       "ok": true
+      },
+      {
+       "expect": "spec self_shielding.geometry is foil, length_cm 0.01, density 19.3",
+       "observed": "geometry {'choose': ['W182', 'W184'], 'density_g_cm3': 19.3, 'length_cm': 0.01, 'resonance_files': [{'path': '/home/connoravila/Documents/actinv/target/p155-work-dev3/fixtures/resonance_placeholder_W182.dat', 'sha256': '2327a885d5f94551d892935385ee557f3cfb47e9dd0c89f6d33248e0bb423d4c'}, {'path': '/home/connoravila/Documents/actinv/target/p155-work-dev3/fixtures/resonance_placeholder_W184.dat', 'sha256': '8745b052abffe2260df915e80a26fa26d1832d225f042f32ded7549aa97efdd4'}], 'shape': 'foil'}, effective density 19.3",
+       "ok": true
+      },
+      {
+       "expect": "no unsupported entry",
+       "observed": "unsupported: []",
+       "ok": true
+      }
+     ],
+     "deck": "/home/connoravila/Documents/actinv/target/p155-work-dev3/decks/selfshield_geometry_choose_fuel.i",
+     "exit": 0,
+     "gating": true,
+     "group": "self_shielding",
+     "id": "selfshield_geometry_choose_fuel",
+     "pass": true,
+     "statuses": {
+      "GETDECAY": [
+       "approximated"
+      ],
+      "GETXS": [
+       "approximated"
+      ],
+      "SSFCHOOSE": [
+       "mapped"
+      ],
+      "SSFFUEL": [
+       "approximated"
+      ],
+      "SSFGEOMETRY": [
+       "mapped"
+      ]
+     },
+     "unsupported": []
+    },
+    {
+     "checks": [
+      {
+       "expect": "import exits 0 and writes spec and report",
+       "observed": "exit 0: ",
+       "ok": true
+      },
+      {
+       "expect": "SSFGEOMETRY entries all unsupported",
+       "observed": "SSFGEOMETRY statuses ['unsupported']",
+       "ok": true
+      },
+      {
+       "expect": "SSFGEOMETRY detail names one of ['shape', 'type']",
+       "observed": "SSFGEOMETRY detail 'target type 5 is not one actinv has: 1 foil, 2 wire, 3 sphere, 4 cylinder'",
+       "ok": true
+      },
+      {
+       "expect": "spec self_shielding.geometry absent or empty",
+       "observed": "self_shielding.geometry absent",
+       "ok": true
+      }
+     ],
+     "deck": "/home/connoravila/Documents/actinv/target/p155-work-dev3/decks/selfshield_geometry_type5.i",
+     "exit": 0,
+     "gating": true,
+     "group": "self_shielding",
+     "id": "selfshield_geometry_type5",
+     "pass": true,
+     "statuses": {
+      "GETDECAY": [
+       "approximated"
+      ],
+      "GETXS": [
+       "approximated"
+      ],
+      "SSFGEOMETRY": [
+       "unsupported"
+      ],
+      "SSFMASS": [
+       "noted"
+      ]
+     },
+     "unsupported": [
+      "SSFGEOMETRY"
+     ]
+    },
+    {
+     "checks": [
+      {
+       "expect": "import exits 0 and writes spec and report",
+       "observed": "exit 0: ",
+       "ok": true
+      },
+      {
+       "expect": "PROBTABLE entries all approximated",
+       "observed": "PROBTABLE statuses ['approximated']",
+       "ok": true
+      },
+      {
+       "expect": "PROBTABLE detail names all of ['bondarenko']",
+       "observed": "PROBTABLE detail \"self_shielding.table = --self-shielding-table: bondarenko self-shielding factors on a dilution x temperature grid are applied in place of fispact-ii's probability tables (a multiplicative factor on th\"",
+       "ok": true
+      },
+      {
+       "expect": "spec self_shielding.table.sha256 == '264457d353cc0c55df6c84ed200eb2aa1ef04cdc2c869f98db562d1af75269ea'",
+       "observed": "self_shielding.table.sha256 = '264457d353cc0c55df6c84ed200eb2aa1ef04cdc2c869f98db562d1af75269ea'",
+       "ok": true
+      },
+      {
+       "expect": "no unsupported entry except ['SSFCHOOSE']",
+       "observed": "unsupported: []",
+       "ok": true
+      }
+     ],
+     "deck": "/home/connoravila/Documents/actinv/target/p155-work-dev3/decks/selfshield_probtable.i",
+     "exit": 0,
+     "gating": true,
+     "group": "self_shielding",
+     "id": "selfshield_probtable",
+     "pass": true,
+     "statuses": {
+      "GETDECAY": [
+       "approximated"
+      ],
+      "GETXS": [
+       "approximated"
+      ],
+      "PROBTABLE": [
+       "approximated"
+      ],
+      "SSFCHOOSE": [
+       "approximated"
+      ]
+     },
+     "unsupported": []
+    },
+    {
+     "checks": [
+      {
+       "expect": "import exits 0 and writes spec and report",
+       "observed": "exit 0: ",
+       "ok": true
+      },
+      {
+       "expect": "SSFDILUTION entries all mapped",
+       "observed": "SSFDILUTION statuses ['mapped']",
+       "ok": true
+      },
+      {
+       "expect": "PROBTABLE entries all approximated",
+       "observed": "PROBTABLE statuses ['approximated']",
+       "ok": true
+      },
+      {
+       "expect": "spec self_shielding.dilution_overrides == {'W182': {'409': 100.0, '408': 80.0}, 'W184': {'515': 2.5, '509': 10.0}}",
+       "observed": "self_shielding.dilution_overrides = {'W182': {'408': 80.0, '409': 100.0}, 'W184': {'509': 10.0, '515': 2.5}}",
+       "ok": true
+      },
+      {
+       "expect": "no unsupported entry except ['SSFCHOOSE']",
+       "observed": "unsupported: []",
+       "ok": true
+      }
+     ],
+     "deck": "/home/connoravila/Documents/actinv/target/p155-work-dev3/decks/selfshield_ssfdilution.i",
+     "exit": 0,
+     "gating": true,
+     "group": "self_shielding",
+     "id": "selfshield_ssfdilution",
+     "pass": true,
+     "statuses": {
+      "GETDECAY": [
+       "approximated"
+      ],
+      "GETXS": [
+       "approximated"
+      ],
+      "PROBTABLE": [
+       "approximated"
+      ],
+      "SSFCHOOSE": [
+       "approximated"
+      ],
+      "SSFDILUTION": [
+       "mapped"
+      ]
+     },
+     "unsupported": []
+    },
+    {
+     "checks": [
+      {
+       "expect": "import exits 0 and writes spec and report",
+       "observed": "exit 0: ",
+       "ok": true
+      }
+     ],
+     "deck": "/home/connoravila/Documents/actinv/target/p155-work-dev3/decks/info_ssfdilution_without_probtable.i",
+     "exit": 0,
+     "gating": false,
+     "group": "self_shielding",
+     "id": "info_ssfdilution_without_probtable",
+     "information": {
+      "details": {
+       "GETDECAY": [
+        "approximated",
+        "FISPACT-II's own decay library is not read; ACTINV's default decay bundle is used (pass --decay to choose)"
+       ],
+       "GETXS": [
+        "approximated",
+        "FISPACT-II's own collapsed library is not read; the default ACTINV library for the projectile is used (pass --library to choose)"
+       ],
+       "SSFDILUTION": [
+        "mapped",
+        "self_shielding.dilution_overrides: FISPACT-II group g (1 = highest energy) becomes ACTINV index 709 - g (0-based, ascending energy) of the 709-group library, so group 1 is index 708 and group 709 is index 0; SSFDILUTION alone selects the table mode, since there is no PROBTABLE"
+       ]
+      },
+      "exit": 0,
+      "spec_keys": [
+       "decay",
+       "library",
+       "material",
+       "projectile",
+       "schedule",
+       "self_shielding",
+       "spec",
+       "spectrum",
+       "summary",
+       "title"
+      ],
+      "stderr": ""
+     },
+     "note": "information: SSFDILUTION with the table option and no PROBTABLE",
+     "pass": true,
+     "statuses": {
+      "GETDECAY": [
+       "approximated"
+      ],
+      "GETXS": [
+       "approximated"
+      ],
+      "SSFDILUTION": [
+       "mapped"
+      ]
+     },
+     "unsupported": []
+    },
+    {
+     "checks": [
+      {
+       "expect": "import exits 0 and writes spec and report",
+       "observed": "exit 0: ",
+       "ok": true
+      },
+      {
+       "expect": "XSTHRESHOLD entries all noted",
+       "observed": "XSTHRESHOLD statuses ['noted']",
+       "ok": true
+      },
+      {
+       "expect": "no unsupported entry",
+       "observed": "unsupported: []",
+       "ok": true
+      }
+     ],
+     "deck": "/home/connoravila/Documents/actinv/target/p155-work-dev3/decks/correction_xsthreshold.i",
+     "exit": 0,
+     "gating": true,
+     "group": "corrections",
+     "id": "correction_xsthreshold",
+     "pass": true,
+     "statuses": {
+      "GETDECAY": [
+       "approximated"
+      ],
+      "GETXS": [
+       "approximated"
+      ],
+      "XSTHRESHOLD": [
+       "noted"
+      ]
+     },
+     "unsupported": []
+    },
+    {
+     "checks": [
+      {
+       "expect": "import exits 0 and writes spec and report",
+       "observed": "exit 0: ",
+       "ok": true
+      },
+      {
+       "expect": "DEPLETION entries all noted",
+       "observed": "DEPLETION statuses ['noted']",
+       "ok": true
+      },
+      {
+       "expect": "no unsupported entry",
+       "observed": "unsupported: []",
+       "ok": true
+      }
+     ],
+     "deck": "/home/connoravila/Documents/actinv/target/p155-work-dev3/decks/correction_depletion.i",
+     "exit": 0,
+     "gating": true,
+     "group": "corrections",
+     "id": "correction_depletion",
+     "pass": true,
+     "statuses": {
+      "DEPLETION": [
+       "noted"
+      ],
+      "GETDECAY": [
+       "approximated"
+      ],
+      "GETXS": [
+       "approximated"
+      ]
+     },
+     "unsupported": []
+    },
+    {
+     "checks": [
+      {
+       "expect": "import exits 0 and writes spec and report",
+       "observed": "exit 0: ",
+       "ok": true
+      },
+      {
+       "expect": "RESULT entries all noted",
+       "observed": "RESULT statuses ['noted']",
+       "ok": true
+      },
+      {
+       "expect": "no unsupported entry",
+       "observed": "unsupported: []",
+       "ok": true
+      }
+     ],
+     "deck": "/home/connoravila/Documents/actinv/target/p155-work-dev3/decks/correction_result_with_inventory.i",
+     "exit": 0,
+     "gating": true,
+     "group": "corrections",
+     "id": "correction_result_with_inventory",
+     "pass": true,
+     "statuses": {
+      "GETDECAY": [
+       "approximated"
+      ],
+      "GETXS": [
+       "approximated"
+      ],
+      "RESULT": [
+       "noted"
+      ]
+     },
+     "unsupported": []
+    },
+    {
+     "checks": [
+      {
+       "expect": "import exits 0 and writes spec and report",
+       "observed": "exit 0: ",
+       "ok": true
+      },
+      {
+       "expect": "IRON entries all unsupported/noted",
+       "observed": "IRON statuses ['unsupported']",
+       "ok": true
+      },
+      {
+       "expect": "IRON's detail no longer describes iron background removal",
+       "observed": "not a keyword of the 2023 fispact-ii manual (it has no section), so its behaviour is not defined and actinv has no equivalent",
+       "ok": true
+      }
+     ],
+     "deck": "/home/connoravila/Documents/actinv/target/p155-work-dev3/decks/correction_iron_reason.i",
+     "exit": 0,
+     "gating": true,
+     "group": "corrections",
+     "id": "correction_iron_reason",
+     "pass": true,
+     "statuses": {
+      "GETDECAY": [
+       "approximated"
+      ],
+      "GETXS": [
+       "approximated"
+      ],
+      "IRON": [
+       "unsupported"
+      ]
+     },
+     "unsupported": [
+      "IRON"
+     ]
+    },
+    {
+     "checks": [
+      {
+       "expect": "import exits 0 and writes spec and report",
+       "observed": "exit 0: ",
+       "ok": true
+      },
+      {
+       "expect": "READSF entries all unsupported",
+       "observed": "READSF statuses ['unsupported']",
+       "ok": true
+      },
+      {
+       "expect": "READSF is the only unsupported keyword",
+       "observed": "unsupported: ['READSF']",
+       "ok": true
+      }
+     ],
+     "deck": "/home/connoravila/Documents/actinv/target/p155-work-dev3/decks/kept_readsf.i",
+     "exit": 0,
+     "gating": true,
+     "group": "kept_unsupported",
+     "id": "kept_readsf",
+     "pass": true,
+     "statuses": {
+      "GETDECAY": [
+       "approximated"
+      ],
+      "GETXS": [
+       "approximated"
+      ],
+      "READSF": [
+       "unsupported"
+      ]
+     },
+     "unsupported": [
+      "READSF"
+     ]
+    },
+    {
+     "checks": [
+      {
+       "expect": "import exits 0 and writes spec and report",
+       "observed": "exit 0: ",
+       "ok": true
+      },
+      {
+       "expect": "USESPALLATION entries all unsupported",
+       "observed": "USESPALLATION statuses ['unsupported']",
+       "ok": true
+      },
+      {
+       "expect": "USESPALLATION is the only unsupported keyword",
+       "observed": "unsupported: ['USESPALLATION']",
+       "ok": true
+      }
+     ],
+     "deck": "/home/connoravila/Documents/actinv/target/p155-work-dev3/decks/kept_usespallation.i",
+     "exit": 0,
+     "gating": true,
+     "group": "kept_unsupported",
+     "id": "kept_usespallation",
+     "pass": true,
+     "statuses": {
+      "GETDECAY": [
+       "approximated"
+      ],
+      "GETXS": [
+       "approximated"
+      ],
+      "USESPALLATION": [
+       "unsupported"
+      ]
+     },
+     "unsupported": [
+      "USESPALLATION"
+     ]
+    },
+    {
+     "checks": [
+      {
+       "expect": "import exits 0 and writes spec and report",
+       "observed": "exit 0: ",
+       "ok": true
+      },
+      {
+       "expect": "USEXSEXTRA entries all unsupported",
+       "observed": "USEXSEXTRA statuses ['unsupported']",
+       "ok": true
+      },
+      {
+       "expect": "USEXSEXTRA is the only unsupported keyword",
+       "observed": "unsupported: ['USEXSEXTRA']",
+       "ok": true
+      }
+     ],
+     "deck": "/home/connoravila/Documents/actinv/target/p155-work-dev3/decks/kept_usexsextra.i",
+     "exit": 0,
+     "gating": true,
+     "group": "kept_unsupported",
+     "id": "kept_usexsextra",
+     "pass": true,
+     "statuses": {
+      "GETDECAY": [
+       "approximated"
+      ],
+      "GETXS": [
+       "approximated"
+      ],
+      "USEXSEXTRA": [
+       "unsupported"
+      ]
+     },
+     "unsupported": [
+      "USEXSEXTRA"
+     ]
+    },
+    {
+     "checks": [
+      {
+       "expect": "import exits 0 and writes spec and report",
+       "observed": "exit 0: ",
+       "ok": true
+      },
+      {
+       "expect": "GETXS entries all unsupported (inventory phase)",
+       "observed": "GETXS statuses ['unsupported']",
+       "ok": true
+      },
+      {
+       "expect": "GETXS is the only unsupported keyword",
+       "observed": "unsupported: ['GETXS']",
+       "ok": true
+      }
+     ],
+     "deck": "/home/connoravila/Documents/actinv/target/p155-work-dev3/decks/kept_mid_schedule_getxs.i",
+     "exit": 0,
+     "gating": true,
+     "group": "kept_unsupported",
+     "id": "kept_mid_schedule_getxs",
+     "pass": true,
+     "statuses": {
+      "GETDECAY": [
+       "approximated"
+      ],
+      "GETXS": [
+       "approximated",
+       "unsupported"
+      ]
+     },
+     "unsupported": [
+      "GETXS"
+     ]
+    },
+    {
+     "checks": [
+      {
+       "expect": "import exits 0 and writes spec and report",
+       "observed": "exit 0: ",
+       "ok": true
+      },
+      {
+       "expect": "GETDECAY entries all unsupported (inventory phase)",
+       "observed": "GETDECAY statuses ['unsupported']",
+       "ok": true
+      },
+      {
+       "expect": "GETDECAY is the only unsupported keyword",
+       "observed": "unsupported: ['GETDECAY']",
+       "ok": true
+      }
+     ],
+     "deck": "/home/connoravila/Documents/actinv/target/p155-work-dev3/decks/kept_mid_schedule_getdecay.i",
+     "exit": 0,
+     "gating": true,
+     "group": "kept_unsupported",
+     "id": "kept_mid_schedule_getdecay",
+     "pass": true,
+     "statuses": {
+      "GETDECAY": [
+       "approximated",
+       "unsupported"
+      ],
+      "GETXS": [
+       "approximated"
+      ]
+     },
+     "unsupported": [
+      "GETDECAY"
+     ]
+    },
+    {
+     "checks": [
+      {
+       "expect": "import exits 0 and writes spec and report",
+       "observed": "exit 0: ",
+       "ok": true
+      },
+      {
+       "expect": "ADCROSS entries all unsupported",
+       "observed": "ADCROSS statuses ['unsupported']",
+       "ok": true
+      },
+      {
+       "expect": "no unsupported entry except ['ADCROSS', 'OVER']",
+       "observed": "unsupported: ['ADCROSS', 'OVER']",
+       "ok": true
+      }
+     ],
+     "deck": "/home/connoravila/Documents/actinv/target/p155-work-dev3/decks/kept_over_adcross.i",
+     "exit": 0,
+     "gating": true,
+     "group": "kept_unsupported",
+     "id": "kept_over_adcross",
+     "pass": true,
+     "statuses": {
+      "ADCROSS": [
+       "unsupported"
+      ],
+      "GETDECAY": [
+       "approximated"
+      ],
+      "GETXS": [
+       "approximated"
+      ]
+     },
+     "unsupported": [
+      "ADCROSS",
+      "OVER"
+     ]
+    },
+    {
+     "checks": [
+      {
+       "expect": "import exits 0 and writes spec and report",
+       "observed": "exit 0: ",
+       "ok": true
+      },
+      {
+       "expect": "ADLAM entries all unsupported",
+       "observed": "ADLAM statuses ['unsupported']",
+       "ok": true
+      },
+      {
+       "expect": "no unsupported entry except ['ADLAM', 'OVER']",
+       "observed": "unsupported: ['ADLAM']",
+       "ok": true
+      }
+     ],
+     "deck": "/home/connoravila/Documents/actinv/target/p155-work-dev3/decks/kept_over_adlam.i",
+     "exit": 0,
+     "gating": true,
+     "group": "kept_unsupported",
+     "id": "kept_over_adlam",
+     "pass": true,
+     "statuses": {
+      "ADLAM": [
+       "unsupported"
+      ],
+      "GETDECAY": [
+       "approximated"
+      ],
+      "GETXS": [
+       "approximated"
+      ]
+     },
+     "unsupported": [
+      "ADLAM"
+     ]
+    },
+    {
+     "checks": [
+      {
+       "expect": "import exits 0 and writes spec and report",
+       "observed": "exit 1: the deck defines no material: MASS or FUEL is required",
+       "ok": false
+      }
+     ],
+     "deck": "/home/connoravila/Documents/actinv/target/p155-work-dev3/decks/info_result_without_inventory.i",
+     "exit": 1,
+     "gating": false,
+     "group": "corrections",
+     "id": "info_result_without_inventory",
+     "information": {
+      "details": {},
+      "exit": 1,
+      "spec_keys": [],
+      "stderr": "the deck defines no material: MASS or FUEL is required"
+     },
+     "note": "information: RESULT in a deck that defines no inventory (protocol: unsupported)",
+     "pass": false,
+     "statuses": {},
+     "unsupported": []
+    }
+   ],
+   "failures": [],
+   "n_gating": 48,
+   "n_pass": 48,
+   "pass": true
+  },
+  "G4": {
+   "cases": [
+    {
+     "id": "fission_cumfyld_fisyield",
+     "kind": "fission",
+     "non_vacuous": true,
+     "outputs_extended_by_checker": false,
+     "pass": true,
+     "result_identical_apart_from_ms": true,
+     "spec_checks": [
+      {
+       "expect": "import exits 0 and writes spec and report",
+       "observed": "exit 0: ",
+       "ok": true
+      },
+      {
+       "expect": "spec fission_yields.files lists the supplied files with the checker's sha256",
+       "observed": "fission_yields.files: [('nfy-092_U_235.endf', '9e1320293a54'), ('nfy-092_U_238.endf', '05598b1c1611')]",
+       "ok": true
+      },
+      {
+       "expect": "spec fission_yields.yields == 'cumulative'",
+       "observed": "fission_yields.yields = 'cumulative'",
+       "ok": true
+      },
+      {
+       "expect": "spec fission_yields.parents.include names [('U', 235, 0)]",
+       "observed": "parents {'include': ['U235']}",
+       "ok": true
+      }
+     ],
+     "spec_checks_pass": true
+    },
+    {
+     "id": "fission_default_parents",
+     "kind": "fission",
+     "non_vacuous": true,
+     "outputs_extended_by_checker": false,
+     "pass": true,
+     "result_identical_apart_from_ms": true,
+     "spec_checks": [
+      {
+       "expect": "import exits 0 and writes spec and report",
+       "observed": "exit 0: ",
+       "ok": true
+      },
+      {
+       "expect": "spec fission_yields.files lists the supplied files with the checker's sha256",
+       "observed": "fission_yields.files: [('nfy-092_U_235.endf', '9e1320293a54'), ('nfy-092_U_238.endf', '05598b1c1611')]",
+       "ok": true
+      },
+      {
+       "expect": "spec fission_yields.parents.include names [('U', 235, 0), ('U', 238, 0)]",
+       "observed": "parents {'include': ['U235', 'U238']}",
+       "ok": true
+      }
+     ],
+     "spec_checks_pass": true
+    },
+    {
+     "id": "photon_spek_noxray",
+     "kind": "photon",
+     "non_vacuous": true,
+     "outputs_extended_by_checker": false,
+     "pass": true,
+     "result_identical_apart_from_ms": true,
+     "spec_checks": [
+      {
+       "expect": "import exits 0 and writes spec and report",
+       "observed": "exit 0: ",
+       "ok": true
+      },
+      {
+       "expect": "spec photon.missing_spectra == 'estimate'",
+       "observed": "photon.missing_spectra = 'estimate'",
+       "ok": true
+      },
+      {
+       "expect": "spec photon.exclude_xrays == True",
+       "observed": "photon.exclude_xrays = True",
+       "ok": true
+      },
+      {
+       "expect": "options.outputs rule",
+       "observed": "outputs None (base had none)",
+       "ok": true
+      }
+     ],
+     "spec_checks_pass": true
+    },
+    {
+     "id": "photon_readgg",
+     "kind": "photon",
+     "non_vacuous": true,
+     "outputs_extended_by_checker": false,
+     "pass": true,
+     "result_identical_apart_from_ms": true,
+     "spec_checks": [
+      {
+       "expect": "import exits 0 and writes spec and report",
+       "observed": "exit 0: ",
+       "ok": true
+      },
+      {
+       "expect": "spec photon.group_boundaries_eV == [1000.0, 10000.0, 100000.0, 300000.0, 600000.0, 1000000.0, 2000000.0, 4000000.0, 10000000.0]",
+       "observed": "photon.group_boundaries_eV = [1000.0, 10000.0, 100000.0, 300000.0, 600000.0, 1000000.0, 2000000.0, 4000000.0, 10000000.0]",
+       "ok": true
+      },
+      {
+       "expect": "options.outputs rule",
+       "observed": "not applicable",
+       "ok": true
+      }
+     ],
+     "spec_checks_pass": true
+    },
+    {
+     "id": "damage_alldispen",
+     "kind": "damage",
+     "non_vacuous": true,
+     "outputs_extended_by_checker": false,
+     "pass": true,
+     "result_identical_apart_from_ms": true,
+     "spec_checks": [
+      {
+       "expect": "import exits 0 and writes spec and report",
+       "observed": "exit 0: ",
+       "ok": true
+      },
+      {
+       "expect": "spec damage.table is the supplied table (checker's sha256), displacement_energy_eV == {'Fe': 40.0}",
+       "observed": "damage.table sha db04d001a152, displacement_energy_eV {'FE': 40.0}",
+       "ok": true
+      }
+     ],
+     "spec_checks_pass": true
+    }
+   ],
+   "note": "the hand-written spec is the imported spec with the feature blocks replaced by blocks built here from the checker's own file hashes",
+   "pass": true
+  },
+  "G5": {
+   "conderc": {
+    "U2352E4s.i": {
+     "exit_cand": 0,
+     "exit_ref": 0,
+     "files_in_spec_match": true,
+     "import_ok": true,
+     "import_pass": true,
+     "pass": true,
+     "run_ok": true,
+     "unsupported_beyond_reference": [],
+     "unsupported_cand": [
+      "UNCERTAINTY"
+     ],
+     "unsupported_item_keywords": [],
+     "unsupported_ref": [
+      "FISCHOOSE",
+      "FISYIELD",
+      "UNCERTAINTY",
+      "USEFISSION"
+     ],
+     "unsupported_remaining_also_in_reference": [
+      "UNCERTAINTY@18"
+     ]
+    },
+    "U235pulse.i": {
+     "exit_cand": 0,
+     "exit_ref": 0,
+     "files_in_spec_match": true,
+     "import_ok": true,
+     "import_pass": true,
+     "pass": true,
+     "run_ok": true,
+     "unsupported_beyond_reference": [],
+     "unsupported_cand": [
+      "UNCERTAINTY"
+     ],
+     "unsupported_item_keywords": [],
+     "unsupported_ref": [
+      "FISCHOOSE",
+      "FISYIELD",
+      "UNCERTAINTY",
+      "USEFISSION"
+     ],
+     "unsupported_remaining_also_in_reference": [
+      "UNCERTAINTY@18"
+     ]
+    }
+   },
+   "pass": true,
+   "pypact": {
+    "examples__files__test.i": {
+     "exit": 0,
+     "exit_ref": 0,
+     "pass": true,
+     "stderr": "",
+     "unsupported": [],
+     "unsupported_outside_item_7_keeps": [],
+     "unsupported_remaining_also_in_reference": []
+    },
+    "reference__test.i": {
+     "exit": 0,
+     "exit_ref": 0,
+     "pass": true,
+     "stderr": "",
+     "unsupported": [
+      "TIME"
+     ],
+     "unsupported_outside_item_7_keeps": [],
+     "unsupported_remaining_also_in_reference": [
+      "TIME@44"
+     ]
+    },
+    "reference__test2.i": {
+     "exit": 0,
+     "exit_ref": 0,
+     "pass": true,
+     "stderr": "",
+     "unsupported": [],
+     "unsupported_outside_item_7_keeps": [],
+     "unsupported_remaining_also_in_reference": []
+    },
+    "reference__test3.i": {
+     "exit": 0,
+     "exit_ref": 0,
+     "pass": true,
+     "stderr": "",
+     "unsupported": [],
+     "unsupported_outside_item_7_keeps": [],
+     "unsupported_remaining_also_in_reference": []
+    },
+    "reference__test4.i": {
+     "exit": 0,
+     "exit_ref": 0,
+     "pass": true,
+     "stderr": "",
+     "unsupported": [],
+     "unsupported_outside_item_7_keeps": [],
+     "unsupported_remaining_also_in_reference": []
+    },
+    "reference__test5.i": {
+     "exit": 0,
+     "exit_ref": 0,
+     "pass": true,
+     "stderr": "",
+     "unsupported": [],
+     "unsupported_outside_item_7_keeps": [],
+     "unsupported_remaining_also_in_reference": []
+    }
+   }
+  },
+  "G6": {
+   "cases": [
+    {
+     "detail": "fission-product yields are spec fission_yields.files, hash-pinned endf neutron-induced yield files (one per parent) that the deck does not name: pass --fission-yields file...",
+     "entry_unsupported": true,
+     "exit": 0,
+     "fragment_absent": true,
+     "id": "missing_option_usefission",
+     "keyword": [
+      "USEFISSION"
+     ],
+     "pass": true,
+     "reason_names_cause": true,
+     "strict": {
+      "exit": 1,
+      "names_strict": true,
+      "spec_or_stale_file_left": false,
+      "stderr": "--strict: 1 unsupported keyword(s): USEFISSION (line 11); see /home/connoravila/Documents/actinv/target/p155-work-dev3/g6/missing_option_usefission/strict.import.json"
+     },
+     "strict_ok": true,
+     "terms": [
+      "--fission-yields"
+     ],
+     "unsupported_keywords": [
+      "USEFISSION"
+     ]
+    },
+    {
+     "detail": "displacement-damage rates need a damage table in the spec: pass --damage table (an actinv-damage-table-1 or -2 file); to build one for these energies run `actinv build-damage evaluation_dir out.json --method kinematic --displacement-energy fe=40`",
+     "entry_unsupported": true,
+     "exit": 0,
+     "fragment_absent": true,
+     "id": "missing_option_alldispen",
+     "keyword": [
+      "ALLDISPEN"
+     ],
+     "pass": true,
+     "reason_names_cause": true,
+     "strict": {
+      "exit": 1,
+      "names_strict": true,
+      "spec_or_stale_file_left": false,
+      "stderr": "--strict: 1 unsupported keyword(s): ALLDISPEN (line 4); see /home/connoravila/Documents/actinv/target/p155-work-dev3/g6/missing_option_alldispen/strict.import.json"
+     },
+     "strict_ok": true,
+     "terms": [
+      "--damage"
+     ],
+     "unsupported_keywords": [
+      "ALLDISPEN"
+     ]
+    },
+    {
+     "detail": "displacement-damage rates need a damage table in the spec: pass --damage table (an actinv-damage-table-1 or -2 file); to build one for these energies run `actinv build-damage evaluation_dir out.json --method kinematic --displacement-energy fe=40`",
+     "entry_unsupported": true,
+     "exit": 0,
+     "fragment_absent": true,
+     "id": "missing_option_atdispen",
+     "keyword": [
+      "ATDISPEN"
+     ],
+     "pass": true,
+     "reason_names_cause": true,
+     "strict": {
+      "exit": 1,
+      "names_strict": true,
+      "spec_or_stale_file_left": false,
+      "stderr": "--strict: 1 unsupported keyword(s): ATDISPEN (line 4); see /home/connoravila/Documents/actinv/target/p155-work-dev3/g6/missing_option_atdispen/strict.import.json"
+     },
+     "strict_ok": true,
+     "terms": [
+      "--damage"
+     ],
+     "unsupported_keywords": [
+      "ATDISPEN"
+     ]
+    },
+    {
+     "detail": "table self-shielding is spec self_shielding.table, a hash-pinned bondarenko table the deck does not name: pass --self-shielding-table file",
+     "entry_unsupported": true,
+     "exit": 0,
+     "fragment_absent": true,
+     "id": "missing_option_probtable",
+     "keyword": [
+      "PROBTABLE"
+     ],
+     "pass": true,
+     "reason_names_cause": true,
+     "strict": {
+      "exit": 1,
+      "names_strict": true,
+      "spec_or_stale_file_left": false,
+      "stderr": "--strict: 2 unsupported keyword(s): SSFCHOOSE (line 10), PROBTABLE (line 12); see /home/connoravila/Documents/actinv/target/p155-work-dev3/g6/missing_option_probtable/strict.import.json"
+     },
+     "strict_ok": true,
+     "terms": [
+      "--self-shielding-table"
+     ],
+     "unsupported_keywords": [
+      "PROBTABLE",
+      "SSFCHOOSE"
+     ]
+    },
+    {
+     "detail": "table self-shielding is spec self_shielding.table, a hash-pinned bondarenko table the deck does not name: pass --self-shielding-table file",
+     "entry_unsupported": true,
+     "exit": 0,
+     "fragment_absent": true,
+     "id": "missing_option_ssfdilution",
+     "keyword": [
+      "SSFDILUTION"
+     ],
+     "pass": true,
+     "reason_names_cause": true,
+     "strict": {
+      "exit": 1,
+      "names_strict": true,
+      "spec_or_stale_file_left": false,
+      "stderr": "--strict: 1 unsupported keyword(s): SSFDILUTION (line 10); see /home/connoravila/Documents/actinv/target/p155-work-dev3/g6/missing_option_ssfdilution/strict.import.json"
+     },
+     "strict_ok": true,
+     "terms": [
+      "--self-shielding-table"
+     ],
+     "unsupported_keywords": [
+      "SSFDILUTION"
+     ]
+    },
+    {
+     "detail": "geometry self-shielding is spec self_shielding.geometry, which needs hash-pinned endf resonance evaluations the deck does not name: pass --resonance file...",
+     "entry_unsupported": true,
+     "exit": 0,
+     "fragment_absent": true,
+     "id": "missing_option_ssfgeometry",
+     "keyword": [
+      "SSFGEOMETRY"
+     ],
+     "pass": true,
+     "reason_names_cause": true,
+     "strict": {
+      "exit": 1,
+      "names_strict": true,
+      "spec_or_stale_file_left": false,
+      "stderr": "--strict: 2 unsupported keyword(s): SSFMASS (line 10), SSFGEOMETRY (line 12); see /home/connoravila/Documents/actinv/target/p155-work-dev3/g6/missing_option_ssfgeometry/strict.import.json"
+     },
+     "strict_ok": true,
+     "terms": [
+      "--resonance"
+     ],
+     "unsupported_keywords": [
+      "SSFGEOMETRY",
+      "SSFMASS"
+     ]
+    },
+    {
+     "detail": "the deck's displacement energies disagree with the damage table (fe: the deck gives 47.5 ev, the table was built with 40 ev); actinv does not mix them, because the table's recoil integrals were computed at its own energies; build a matching table with `actinv build-damage evaluation_dir out.json --m",
+     "entry_unsupported": true,
+     "exit": 0,
+     "fragment_absent": true,
+     "id": "damage_mismatch_alldispen",
+     "keyword": [
+      "ALLDISPEN"
+     ],
+     "pass": true,
+     "reason_names_cause": true,
+     "strict": {
+      "exit": 1,
+      "names_strict": true,
+      "spec_or_stale_file_left": false,
+      "stderr": "--strict: 1 unsupported keyword(s): ALLDISPEN (line 4); see /home/connoravila/Documents/actinv/target/p155-work-dev3/g6/damage_mismatch_alldispen/strict.import.json"
+     },
+     "strict_ok": true,
+     "terms": [
+      "build-damage",
+      "kinematic",
+      "displacement-energy"
+     ],
+     "unsupported_keywords": [
+      "ALLDISPEN"
+     ]
+    },
+    {
+     "detail": "the deck's displacement energies disagree with the damage table (fe: the deck gives 47.5 ev, the table was built with 40 ev); actinv does not mix them, because the table's recoil integrals were computed at its own energies; build a matching table with `actinv build-damage evaluation_dir out.json --m",
+     "entry_unsupported": true,
+     "exit": 0,
+     "fragment_absent": true,
+     "id": "damage_mismatch_atdispen",
+     "keyword": [
+      "ATDISPEN"
+     ],
+     "pass": true,
+     "reason_names_cause": true,
+     "strict": {
+      "exit": 1,
+      "names_strict": true,
+      "spec_or_stale_file_left": false,
+      "stderr": "--strict: 1 unsupported keyword(s): ATDISPEN (line 4); see /home/connoravila/Documents/actinv/target/p155-work-dev3/g6/damage_mismatch_atdispen/strict.import.json"
+     },
+     "strict_ok": true,
+     "terms": [
+      "build-damage",
+      "kinematic",
+      "displacement-energy"
+     ],
+     "unsupported_keywords": [
+      "ATDISPEN"
+     ]
+    },
+    {
+     "detail": "the deck's displacement energies disagree with the damage table (fe: the deck gives 47.5 ev, the table was built with 40 ev); actinv does not mix them, because the table's recoil integrals were computed at its own energies; build a matching table with `actinv build-damage evaluation_dir out.json --m",
+     "entry_unsupported": true,
+     "exit": 0,
+     "fragment_absent": true,
+     "id": "damage_mismatch_override_order",
+     "keyword": [
+      "ATDISPEN",
+      "ALLDISPEN"
+     ],
+     "pass": true,
+     "reason_names_cause": true,
+     "strict": {
+      "exit": 1,
+      "names_strict": true,
+      "spec_or_stale_file_left": false,
+      "stderr": "--strict: 2 unsupported keyword(s): ATDISPEN (line 4), ALLDISPEN (line 5); see /home/connoravila/Documents/actinv/target/p155-work-dev3/g6/damage_mismatch_override_order/strict.import.json"
+     },
+     "strict_ok": true,
+     "terms": [
+      "build-damage",
+      "kinematic",
+      "displacement-energy"
+     ],
+     "unsupported_keywords": [
+      "ALLDISPEN",
+      "ATDISPEN"
+     ]
+    },
+    {
+     "detail": "sensitivity lambda (sensitivity coefficients with respect to decay constants): actinv ranks no decay-constant sensitivities (uncertainty.channels decay_constants propagates the half-life uncertainties but gives no per-parameter ranking), and the fispact-ii manual marks the option as unavailable in i",
+     "entry_unsupported": true,
+     "exit": 0,
+     "fragment_absent": true,
+     "id": "sensitivity_lambda",
+     "keyword": [
+      "SENSITIVITY"
+     ],
+     "pass": true,
+     "reason_names_cause": true,
+     "strict": {
+      "exit": 1,
+      "names_strict": true,
+      "spec_or_stale_file_left": false,
+      "stderr": "--strict: 1 unsupported keyword(s): SENSITIVITY (line 11); see /home/connoravila/Documents/actinv/target/p155-work-dev3/g6/sensitivity_lambda/strict.import.json"
+     },
+     "strict_ok": true,
+     "terms": [
+      "lambda"
+     ],
+     "unsupported_keywords": [
+      "SENSITIVITY"
+     ]
+    },
+    {
+     "detail": "parameterises the monte-carlo sampling of sensitivity, and no sensitivity sigma was mapped; actinv has no sampling to configure",
+     "entry_unsupported": true,
+     "exit": 0,
+     "fragment_absent": true,
+     "id": "mcsample_without_sensitivity",
+     "keyword": [
+      "MCSAMPLE"
+     ],
+     "pass": true,
+     "reason_names_cause": true,
+     "strict": {
+      "exit": 1,
+      "names_strict": true,
+      "spec_or_stale_file_left": false,
+      "stderr": "--strict: 1 unsupported keyword(s): MCSAMPLE (line 11); see /home/connoravila/Documents/actinv/target/p155-work-dev3/g6/mcsample_without_sensitivity/strict.import.json"
+     },
+     "strict_ok": true,
+     "terms": [
+      "sensitivity"
+     ],
+     "unsupported_keywords": [
+      "MCSAMPLE"
+     ]
+    },
+    {
+     "detail": "the `ggbins` file /home/connoravila/documents/actinv/target/p155-work-dev3/fixtures/ggbins_junk starts with 'this', not a whole group count",
+     "entry_unsupported": true,
+     "exit": 0,
+     "fragment_absent": true,
+     "id": "ggbins_junk",
+     "keyword": [
+      "READGG"
+     ],
+     "pass": true,
+     "reason_names_cause": true,
+     "strict": {
+      "exit": 1,
+      "names_strict": true,
+      "spec_or_stale_file_left": false,
+      "stderr": "--strict: 1 unsupported keyword(s): READGG (line 2); see /home/connoravila/Documents/actinv/target/p155-work-dev3/g6/ggbins_junk/strict.import.json"
+     },
+     "strict_ok": true,
+     "terms": [
+      "ggbins"
+     ],
+     "unsupported_keywords": [
+      "READGG"
+     ]
+    },
+    {
+     "detail": "the `ggbins` file /home/connoravila/documents/actinv/target/p155-work-dev3/fixtures/ggbins_count_mismatch declares 5 group(s), so 6 energies, but lists 3",
+     "entry_unsupported": true,
+     "exit": 0,
+     "fragment_absent": true,
+     "id": "ggbins_count_mismatch",
+     "keyword": [
+      "READGG"
+     ],
+     "pass": true,
+     "reason_names_cause": true,
+     "strict": {
+      "exit": 1,
+      "names_strict": true,
+      "spec_or_stale_file_left": false,
+      "stderr": "--strict: 1 unsupported keyword(s): READGG (line 2); see /home/connoravila/Documents/actinv/target/p155-work-dev3/g6/ggbins_count_mismatch/strict.import.json"
+     },
+     "strict_ok": true,
+     "terms": [
+      "ggbins"
+     ],
+     "unsupported_keywords": [
+      "READGG"
+     ]
+    },
+    {
+     "detail": "the `ggbins` file /home/connoravila/documents/actinv/target/p155-work-dev3/fixtures/ggbins_not_ascending is not strictly ascending (the energies must increase, in ev)",
+     "entry_unsupported": true,
+     "exit": 0,
+     "fragment_absent": true,
+     "id": "ggbins_not_ascending",
+     "keyword": [
+      "READGG"
+     ],
+     "pass": true,
+     "reason_names_cause": true,
+     "strict": {
+      "exit": 1,
+      "names_strict": true,
+      "spec_or_stale_file_left": false,
+      "stderr": "--strict: 1 unsupported keyword(s): READGG (line 2); see /home/connoravila/Documents/actinv/target/p155-work-dev3/g6/ggbins_not_ascending/strict.import.json"
+     },
+     "strict_ok": true,
+     "terms": [
+      "ggbins"
+     ],
+     "unsupported_keywords": [
+      "READGG"
+     ]
+    },
+    {
+     "detail": "the `ggbins` file /home/connoravila/documents/actinv/target/p155-work-dev3/fixtures/ggbins_zero_first_energy has the energy 0, which is not positive (zero is not allowed as the first energy)",
+     "entry_unsupported": true,
+     "exit": 0,
+     "fragment_absent": true,
+     "id": "ggbins_zero_first_energy",
+     "keyword": [
+      "READGG"
+     ],
+     "pass": true,
+     "reason_names_cause": true,
+     "strict": {
+      "exit": 1,
+      "names_strict": true,
+      "spec_or_stale_file_left": false,
+      "stderr": "--strict: 1 unsupported keyword(s): READGG (line 2); see /home/connoravila/Documents/actinv/target/p155-work-dev3/g6/ggbins_zero_first_energy/strict.import.json"
+     },
+     "strict_ok": true,
+     "terms": [
+      "ggbins"
+     ],
+     "unsupported_keywords": [
+      "READGG"
+     ]
+    },
+    {
+     "detail": "the `ggbins` file /home/connoravila/documents/actinv/target/p155-work-dev3/fixtures/ggbins_empty is empty",
+     "entry_unsupported": true,
+     "exit": 0,
+     "fragment_absent": true,
+     "id": "ggbins_empty",
+     "keyword": [
+      "READGG"
+     ],
+     "pass": true,
+     "reason_names_cause": true,
+     "strict": {
+      "exit": 1,
+      "names_strict": true,
+      "spec_or_stale_file_left": false,
+      "stderr": "--strict: 1 unsupported keyword(s): READGG (line 2); see /home/connoravila/Documents/actinv/target/p155-work-dev3/g6/ggbins_empty/strict.import.json"
+     },
+     "strict_ok": true,
+     "terms": [
+      "ggbins"
+     ],
+     "unsupported_keywords": [
+      "READGG"
+     ]
+    },
+    {
+     "detail": "readgg reads its group bins from the `ggbins` entry of the files file, and none was found: pass --files files with a `ggbins path` line",
+     "entry_unsupported": true,
+     "exit": 0,
+     "fragment_absent": true,
+     "id": "ggbins_missing_entry",
+     "keyword": [
+      "READGG"
+     ],
+     "pass": true,
+     "reason_names_cause": true,
+     "strict": {
+      "exit": 1,
+      "names_strict": true,
+      "spec_or_stale_file_left": false,
+      "stderr": "--strict: 1 unsupported keyword(s): READGG (line 2); see /home/connoravila/Documents/actinv/target/p155-work-dev3/g6/ggbins_missing_entry/strict.import.json"
+     },
+     "strict_ok": true,
+     "terms": [
+      "ggbins"
+     ],
+     "unsupported_keywords": [
+      "READGG"
+     ]
+    },
+    {
+     "detail": "the `ggbins` file cannot be read: the ggbins file '/nonexistent/p155/ggbins' named by the files file was not found",
+     "entry_unsupported": true,
+     "exit": 0,
+     "fragment_absent": true,
+     "id": "ggbins_nonexistent_file",
+     "keyword": [
+      "READGG"
+     ],
+     "pass": true,
+     "reason_names_cause": true,
+     "strict": {
+      "exit": 1,
+      "names_strict": true,
+      "spec_or_stale_file_left": false,
+      "stderr": "--strict: 1 unsupported keyword(s): READGG (line 2); see /home/connoravila/Documents/actinv/target/p155-work-dev3/g6/ggbins_nonexistent_file/strict.import.json"
+     },
+     "strict_ok": true,
+     "terms": [
+      "ggbins"
+     ],
+     "unsupported_keywords": [
+      "READGG"
+     ]
+    },
+    {
+     "detail": "readgg reads its group bins from the `ggbins` entry of the files file, and none was found: pass --files files with a `ggbins path` line",
+     "entry_unsupported": true,
+     "exit": 0,
+     "fragment_absent": true,
+     "id": "ggbins_no_files_file",
+     "keyword": [
+      "READGG"
+     ],
+     "pass": true,
+     "reason_names_cause": true,
+     "strict": {
+      "exit": 1,
+      "names_strict": true,
+      "spec_or_stale_file_left": false,
+      "stderr": "--strict: 1 unsupported keyword(s): READGG (line 2); see /home/connoravila/Documents/actinv/target/p155-work-dev3/g6/ggbins_no_files_file/strict.import.json"
+     },
+     "strict_ok": true,
+     "terms": [
+      "ggbins"
+     ],
+     "unsupported_keywords": [
+      "READGG"
+     ]
+    }
+   ],
+   "failures": [],
+   "pass": true
+  },
+  "G7": {
+   "docs_checker": {
+    "exit": 0,
+    "result": "/home/connoravila/Documents/actinv/target/p155-work-dev3/p140_docs/result.json",
+    "stderr_tail": "",
+    "stdout_tail": "nspect:groups:table                                  docs/guide/cli.md:71 inspect groups fispact-162 --table\nPASS cmd:inspect:groups:to-file                                docs/guide/cli.md:71 inspect groups fispact-709 --out /home/connoravila/Documents\nH4 PASS: 102/102 gating items pass, 0 fail, 0 unclassified; record /home/connoravila/Documents/actinv/target/p155-work-dev3/p140_docs/result.json\n"
+   },
+   "grep_pass": true,
+   "handbook_file": "/home/connoravila/Documents/actinv/.claude/worktrees/agent-ae9794b35bef04ce6/docs/guide/fispact-migration.md",
+   "handbook_status_words": {
+    "approximated": true,
+    "mapped": true,
+    "noted": true,
+    "unsupported": true
+   },
+   "handbook_terms": {
+    "--damage": true,
+    "--fission-yields": true,
+    "--resonance": true,
+    "--self-shielding-table": true,
+    "ALLDISPEN": true,
+    "ATDISPEN": true,
+    "CUMFYLD": true,
+    "FISCHOOSE": true,
+    "FISYIELD": true,
+    "NOFISS": true,
+    "NOXRAY": true,
+    "PROBTABLE": true,
+    "READGG": true,
+    "SENSITIVITY": true,
+    "SPEK": true,
+    "SSFDILUTION": true,
+    "SSFGEOMETRY": true,
+    "UNCTYPE": true,
+    "USEFISSION": true,
+    "XSTHRESHOLD": true
+   },
+   "pass": true,
+   "scorecard_file": "/home/connoravila/Documents/actinv/.claude/worktrees/agent-ae9794b35bef04ce6/COMPETITIVE_BENCHMARK.md",
+   "scorecard_options": {
+    "--damage": true,
+    "--fission-yields": true,
+    "--resonance": true,
+    "--self-shielding-table": true
+   }
+  }
+ },
+ "pinned_inputs": {
+  "conderc": {
+   "U2352E4s.i": "a4d0a80a7f59f16db6ae15119d77468a45facc02d01f4fdaa96036047e372b94",
+   "U235pulse.i": "ecba520a89bd8a1046088c40ba300016355220b552e8ca6ae8451f84161aa477",
+   "fluxes_therm": "46c42e3ea73803bc791c55209d8bb8aeceffaf9e2bbce90aa645ff02acb4f68f"
+  },
+  "damage_table": {
+   "first": "Fe",
+   "path": "/home/connoravila/Documents/actinv/target/p154-work-evid/table2_Fe56_evaluated_kinematic.json",
+   "recorded": {
+    "Fe": 40.0
+   },
+   "second": null,
+   "sha256": "db04d001a152e7d69eab95530e19271959b75a40cc8e4e514b1d19c290988d66"
+  },
+  "damage_table_mismatch": null,
+  "fns": {
+   "decks": "ee710b72a918a23b2f66373de0280d9520c30e6634db24011293d9ddf4ee1d2a",
+   "decks_files_fluxes": "5b477313e2a013db36a331ae047d4279454c1aad8f9447398b6313b44a3e0e31",
+   "n_decks": 132,
+   "n_files": 396
+  },
+  "library": {
+   "path": "/home/connoravila/Documents/actinv/.claude/worktrees/agent-ae9794b35bef04ce6/actinv-data/v1.1.0/activation/tendl-2025-neutron-709g.npz",
+   "sha256": "ec4c72bf598dc8ad3d533d9cfafdcf493e2d1f949a3e4db6251495659b68cc44"
+  },
+  "pypact": {
+   "examples/files/test.i": "4435fb6e10c9222984101c4291753244b90cdaf0fee24b56df4d3d1e33753d5d",
+   "reference/test.i": "3975833023a37ec112d40a4f8d94c7901fa3373d0da585f20e733d8ecb0488ac",
+   "reference/test2.i": "e2eb423543a9e7cbb999acbd1025fe11318f2c7ae4b85214b54edc269d2c9ae6",
+   "reference/test3.i": "a543d0e1950f4072add545b818e56434e8011202ad690c5958f9cd22222437b2",
+   "reference/test4.i": "5f4f73522c8b48002d9762a58fb38321d95542ecb57f0481e2e2bda3d27fd972",
+   "reference/test5.i": "47298a2a81b412c3fe015502168388b148caa1d3f0141867ee7958104a404084"
+  },
+  "yield_files": {
+   "nfy-090_Th_232.endf": {
+    "path": "/home/connoravila/nuclear-data/endfb-viii.0-nfpy/nfy-090_Th_232.endf",
+    "sha256": "551d2721427034042ed31307b297011b0b2a092b7baeeac6a5d3a6d90472d052"
+   },
+   "nfy-092_U_235.endf": {
+    "path": "/home/connoravila/nuclear-data/endfb-viii.0-nfpy/nfy-092_U_235.endf",
+    "sha256": "9e1320293a544fc03f33f804a15a9e3ccc3be026552ee6dbc03b8d3e24615e41"
+   },
+   "nfy-092_U_238.endf": {
+    "path": "/home/connoravila/nuclear-data/endfb-viii.0-nfpy/nfy-092_U_238.endf",
+    "sha256": "05598b1c16117a729a3314842a2de574ffb7c992f679f6e1505c1d566164791c"
+   },
+   "nfy-094_Pu_239.endf": {
+    "path": "/home/connoravila/nuclear-data/endfb-viii.0-nfpy/nfy-094_Pu_239.endf",
+    "sha256": "a2713aa6d0283b879040a07fa29d3e99b2d660b619c6d11a2a71aa9d5c5a2605"
+   }
+  }
+ },
+ "protocol": "protocols/ACTINV-P155_PROTOCOL.md",
+ "protocol_sha256": "6b1ab89fd34a050c7d716b06aebb5545bc3ad401e06578298cea903341d8999d",
+ "reference_sha256": "79e1e8600a8c2ad3ce42e72dcf34ce4dd8fa9bf60288db24e9eeb077781c9072",
+ "runs": {
+  "g4_damage_alldispen_hand": {
+   "binary": "/home/connoravila/Documents/actinv/target/p155-evid/actinv",
+   "exit_code": 0,
+   "output_sha256": "82e3dd42ad5da908dbb2c4fc875791c0fc36904d191a59ca5bb9f18e8d90a154",
+   "spec": "/home/connoravila/Documents/actinv/target/p155-work-dev3/runs/g4_damage_alldispen_hand.spec.json",
+   "spec_sha256": "a28575e6eb6c994c1945330ad922bcb33056f14f07cbbfaa75724743a2c66fec"
+  },
+  "g4_damage_alldispen_imported": {
+   "binary": "/home/connoravila/Documents/actinv/target/p155-evid/actinv",
+   "exit_code": 0,
+   "output_sha256": "8d0a959afd3bc3eb9d1cdc0638f47b229129df695c01ced7ebf495f62f607b74",
+   "spec": "/home/connoravila/Documents/actinv/target/p155-work-dev3/g4/damage_alldispen/spec.json",
+   "spec_sha256": "6713c004fde110f618d22b59a89d851b991adbf9cc5c9956f5c55ff297009bbd"
+  },
+  "g4_fission_cumfyld_fisyield_hand": {
+   "binary": "/home/connoravila/Documents/actinv/target/p155-evid/actinv",
+   "exit_code": 0,
+   "output_sha256": "9c5a71592aee8321cdcdf155137fa5b86077c3802d5ccfd580a2dc2005341e8c",
+   "spec": "/home/connoravila/Documents/actinv/target/p155-work-dev3/runs/g4_fission_cumfyld_fisyield_hand.spec.json",
+   "spec_sha256": "c9368add8518c72c050e28d9195640891317f0834187e897306b77a529e40e9e"
+  },
+  "g4_fission_cumfyld_fisyield_imported": {
+   "binary": "/home/connoravila/Documents/actinv/target/p155-evid/actinv",
+   "exit_code": 0,
+   "output_sha256": "b83f839066b13ab177b2e85fbdbf7f27d01b7622c9168f8146513df33997f20c",
+   "spec": "/home/connoravila/Documents/actinv/target/p155-work-dev3/g4/fission_cumfyld_fisyield/spec.json",
+   "spec_sha256": "f151251a95c4b30bdc342a32c4c96da1fab602667ecb267ca72a926a443d2cfb"
+  },
+  "g4_fission_default_parents_hand": {
+   "binary": "/home/connoravila/Documents/actinv/target/p155-evid/actinv",
+   "exit_code": 0,
+   "output_sha256": "85d73836d6478a0a1853f6802596c936388bd5378ca30b49ec98957b94ce0ae3",
+   "spec": "/home/connoravila/Documents/actinv/target/p155-work-dev3/runs/g4_fission_default_parents_hand.spec.json",
+   "spec_sha256": "ea1465a81198582178065ceb9284967257f2a135d66500e012eff2333c315dce"
+  },
+  "g4_fission_default_parents_imported": {
+   "binary": "/home/connoravila/Documents/actinv/target/p155-evid/actinv",
+   "exit_code": 0,
+   "output_sha256": "798995665058a2e162ec591f6d772cba457f564b7f39512724c49659c3e9161d",
+   "spec": "/home/connoravila/Documents/actinv/target/p155-work-dev3/g4/fission_default_parents/spec.json",
+   "spec_sha256": "a16d467900ded3192b9acfa6c312d788d83b3b713c5b8c285f18fe7bbf0b8fa9"
+  },
+  "g4_photon_readgg_hand": {
+   "binary": "/home/connoravila/Documents/actinv/target/p155-evid/actinv",
+   "exit_code": 0,
+   "output_sha256": "538971804942f06adf1c3ec1d5060466999972ad228e3f137d270803624f2852",
+   "spec": "/home/connoravila/Documents/actinv/target/p155-work-dev3/runs/g4_photon_readgg_hand.spec.json",
+   "spec_sha256": "702734e1023385f0ccd5f1cd7c68a63d5c2f7bb9bca47acc4812965abe33de50"
+  },
+  "g4_photon_readgg_imported": {
+   "binary": "/home/connoravila/Documents/actinv/target/p155-evid/actinv",
+   "exit_code": 0,
+   "output_sha256": "2c79d2a877c80706e2ca0765e33d4781bdf026c7d54dd46e204e91222ac08d70",
+   "spec": "/home/connoravila/Documents/actinv/target/p155-work-dev3/g4/photon_readgg/spec.json",
+   "spec_sha256": "a5171a94a8ead6f00d161b30551c0f7bdb2ddeb30c26f0ac37b5411539e65b22"
+  },
+  "g4_photon_spek_noxray_hand": {
+   "binary": "/home/connoravila/Documents/actinv/target/p155-evid/actinv",
+   "exit_code": 0,
+   "output_sha256": "669113a5bd2236a7469514bd161ac7b93627e2cf2e406d9345891f908f4a501e",
+   "spec": "/home/connoravila/Documents/actinv/target/p155-work-dev3/runs/g4_photon_spek_noxray_hand.spec.json",
+   "spec_sha256": "e97f95c3fa599e1904981aff64fc0bf41e6934b07b712472e79773d1d023c467"
+  },
+  "g4_photon_spek_noxray_imported": {
+   "binary": "/home/connoravila/Documents/actinv/target/p155-evid/actinv",
+   "exit_code": 0,
+   "output_sha256": "68f36f891e7c07cbe3e07fcc90a3ae859d80b4b00249b6d4a489329e62a5ed46",
+   "spec": "/home/connoravila/Documents/actinv/target/p155-work-dev3/g4/photon_spek_noxray/spec.json",
+   "spec_sha256": "63a2ef260124ed70835672942961c8808a093be7e2fdf51b2beb9aaf4143c400"
+  },
+  "g5_conderc_U2352E4s.i": {
+   "binary": "/home/connoravila/Documents/actinv/target/p155-evid/actinv",
+   "exit_code": 0,
+   "output_sha256": "6c5526b5946072d36ff9ae4846c83d4d932d3665f5a7557e768f732b897a1d0c",
+   "spec": "/home/connoravila/Documents/actinv/target/p155-work-dev3/g5/conderc/U2352E4s.i.json",
+   "spec_sha256": "bbb86ab25a031333df1cf5810c67c4cd1f69a8ca99ee43353912fbddc578b9c4"
+  },
+  "g5_conderc_U235pulse.i": {
+   "binary": "/home/connoravila/Documents/actinv/target/p155-evid/actinv",
+   "exit_code": 0,
+   "output_sha256": "1f6848bf248b0df2764cbe28e2866fa61e00fd879653849ff6039898344a2500",
+   "spec": "/home/connoravila/Documents/actinv/target/p155-work-dev3/g5/conderc/U235pulse.i.json",
+   "spec_sha256": "23ce69c0818ea9a65d7a7b9d5f306de6c8c651b0fca1bd875bedc8beee4b7445"
+  }
+ },
+ "synthetic_files": {
+  "bondarenko_placeholder": "264457d353cc0c55df6c84ed200eb2aa1ef04cdc2c869f98db562d1af75269ea",
+  "fluxes_162": "dbdeba3b6f040432937261be42059ec404d66213bee62d9629c74c5be47edf3f",
+  "fluxes_709": "f53b5201bfa3368fba8df2ef7984cc7e1f67dbe55ee8899f1e2ee900c9d9dd81",
+  "ggbins_good": "0b28dd9a929b1a2fd29ffd037b1179239c306ce7b677fa226d81f7ac0f028eec",
+  "resonance_placeholders": [
+   "2327a885d5f94551d892935385ee557f3cfb47e9dd0c89f6d33248e0bb423d4c",
+   "8745b052abffe2260df915e80a26fa26d1832d225f042f32ded7549aa97efdd4"
+  ]
+ },
+ "verdict": "PASS"
+}

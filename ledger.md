@@ -4215,3 +4215,20 @@ runs 1–3 are in `results/p154/`.
 - **G5:** NJOY MT=444, with the A1/B/C replacements, lies within the bound for all four targets.
 - **G6:** passes.
 - **G0** holds (protocol `d2ea40ac…`). **G7** is pending CI on the pushed commit.
+
+## Entry 239 — P155 evidence: G2–G7 pass on 2aad54f; development runs 2–3 disclosed (2026-10-27)
+
+Development run 2, before P154 was merged, passed every gate except the G4 table-2 damage case. That case failed
+by design, because the candidate could not yet read a P154 table (`unknown field method`).
+
+The branch was then rebased onto master with P154 (`0de61ae`):
+- **G1** at `2aad54f`: fmt and clippy `-D warnings` clean; 1243 workspace tests passed, 0 failed; checker
+  self-check passed.
+- **Development run 3** passed G0 and G2–G7. It used a clean-checkout release build of `2aad54f` (binary
+  `3f56196285c0c28215aa9f722a0252676f2842bead964f06c4f0b738db62d9dd`) and the default-mode Fe-56 table-2 file from
+  the P154 evidence run.
+- **Evidence run:** `controls/check_p155.py` at `2aad54f` (checker `ce04ef5c…`), same binary and table, reference
+  v1.6.1. It passed G0 and G2–G7. Record: `results/p155_importer_sweep.json`; development runs 1–3 are in
+  `results/p155/`.
+- The handbook walk-through passes 102/102 with 0 unclassified, and the mdbook build and anchor check pass. **G8** is
+  pending CI on the pushed commit.
