@@ -4389,3 +4389,25 @@ untouched. The protocol required that the fetch download only the table.
   development runs 1–4 are in `results/p156/`.
 - Locally the mdbook build, `scripts/check_docs.py` and `scripts/test_prepare_web.py` pass. The P15 cache-integrity
   baseline is unchanged with the P156 binary. **G8** is pending CI on the pushed commit.
+
+## Entry 250 — P156 G8 fails in CI; P156 closes FAIL; the repair is green (2026-10-28)
+
+On the P156 evidence commit `4812ba1`, two workflows failed. `controls` (run 40693413505) failed in "P13 verified
+data-distribution contract", and `fns-iron` (run 40693413532) failed in its case step. The handbook, browser
+workbench, desktop and fusion-isotope workflows passed. Both failures had one cause: the P13 control and
+`controls/fns_iron.py` pinned catalog 1.1.0 and its `v1.1.0/` install directory. P156 changed the embedded catalog to
+1.2.0, so `data manifest` no longer matched and `data fetch` installed under `v1.2.0/`. No gate criterion or computed
+value was involved. The data-version sweep that `4611b11` made for catalog 1.1.0 was not repeated for 1.2.0. G8
+requires CI green on the pushed commit, and Amendment E used P156's one repair round, so **P156 closes FAIL on G8**.
+G0–G7 stand as recorded in entry 249. Preserved: `results/failures/p156/g8_ci_attempt1/` (the six workflow
+conclusions and both failed steps' logs). Verdict record: `results/p156_verdict.json`.
+
+Repair, `1b02817`: the P13 contract is pinned to catalog 1.2.0. It admits the `damage-table` role and allows an
+unreferenced notice, as catalog 1.2.0 keeps the superseded v1.0.0 notice. Its evidence identity for the table is
+P156's G5 SHA-256, and its expected counts are 20 artifacts and 17 identities. `controls/fns_iron.py` reads each
+pinned artifact from `v1.2.0/`, falling back to `v1.1.0/`. The README and the install guide name `actinv-data/v1.2.0`
+and the default bundle's 1.2.0 sizes (about 186 MiB download, 276 MiB installed); the old 79/170 MiB figures were
+already stale. No candidate source changed. Locally P13 passed, fns-iron (case, tests and diagnosis) passed, as did
+the public examples, P12 source, release notes and prior verdicts. All five workflows triggered on `1b02817`
+succeeded, `controls` among them. A successor phase may requalify P156's G8 on that commit, as P150 did for P148.
+The shipped table, catalog 1.2.0 and the published `data-v1.2.0` are unchanged by this verdict.

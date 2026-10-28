@@ -1,0 +1,77 @@
+current-controls	P13 verified data-distribution contract	﻿2026-10-28T13:09:52.5415151Z ##[group]Run python controls/g1_p13_data_distribution.py
+current-controls	P13 verified data-distribution contract	2026-10-28T13:09:52.5415732Z [36;1mpython controls/g1_p13_data_distribution.py[0m
+current-controls	P13 verified data-distribution contract	2026-10-28T13:09:52.5416068Z [36;1mpython controls/check_p13.py[0m
+current-controls	P13 verified data-distribution contract	2026-10-28T13:09:52.5436187Z shell: /usr/bin/bash -e {0}
+current-controls	P13 verified data-distribution contract	2026-10-28T13:09:52.5436450Z env:
+current-controls	P13 verified data-distribution contract	2026-10-28T13:09:52.5436669Z   ACTINV_CI_DATA: /tmp/actinv-ci-data
+current-controls	P13 verified data-distribution contract	2026-10-28T13:09:52.5437377Z   ACTINV_CI_OUT: /tmp/actinv-ci
+current-controls	P13 verified data-distribution contract	2026-10-28T13:09:52.5437657Z   ACTINV_P8_WORK: /tmp/actinv-p8
+current-controls	P13 verified data-distribution contract	2026-10-28T13:09:52.5437969Z   ACTINV_P9_WORK: /tmp/actinv-p9
+current-controls	P13 verified data-distribution contract	2026-10-28T13:09:52.5438248Z   ACTINV_P9_RESULTS: /tmp/actinv-p9-results
+current-controls	P13 verified data-distribution contract	2026-10-28T13:09:52.5438553Z   ACTINV_P10_WORK: /tmp/actinv-p10
+current-controls	P13 verified data-distribution contract	2026-10-28T13:09:52.5438822Z   CARGO_HOME: /home/runner/.cargo
+current-controls	P13 verified data-distribution contract	2026-10-28T13:09:52.5439079Z   CARGO_INCREMENTAL: 0
+current-controls	P13 verified data-distribution contract	2026-10-28T13:09:52.5439311Z   CARGO_TERM_COLOR: always
+current-controls	P13 verified data-distribution contract	2026-10-28T13:09:52.5439551Z   CACHE_ON_FAILURE: false
+current-controls	P13 verified data-distribution contract	2026-10-28T13:09:52.5439846Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.15/x64
+current-controls	P13 verified data-distribution contract	2026-10-28T13:09:52.5440316Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.15/x64/lib/pkgconfig
+current-controls	P13 verified data-distribution contract	2026-10-28T13:09:52.5440751Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+current-controls	P13 verified data-distribution contract	2026-10-28T13:09:52.5441136Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+current-controls	P13 verified data-distribution contract	2026-10-28T13:09:52.5441540Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+current-controls	P13 verified data-distribution contract	2026-10-28T13:09:52.5441944Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.15/x64/lib
+current-controls	P13 verified data-distribution contract	2026-10-28T13:09:52.5442294Z   ACTINV_BIN: target/release/actinv
+current-controls	P13 verified data-distribution contract	2026-10-28T13:09:52.5442561Z ##[endgroup]
+current-controls	P13 verified data-distribution contract	2026-10-28T13:09:52.6060428Z {
+current-controls	P13 verified data-distribution contract	2026-10-28T13:09:52.6060935Z  "artifact_count": 18,
+current-controls	P13 verified data-distribution contract	2026-10-28T13:09:52.6061342Z  "bundle_count": 7,
+current-controls	P13 verified data-distribution contract	2026-10-28T13:09:52.6061688Z  "catalog_version": "1.1.0",
+current-controls	P13 verified data-distribution contract	2026-10-28T13:09:52.6062079Z  "checks": {
+current-controls	P13 verified data-distribution contract	2026-10-28T13:09:52.6062418Z   "all_evidence_identities_match": true,
+current-controls	P13 verified data-distribution contract	2026-10-28T13:09:52.6062915Z   "all_planted_mutations_rejected": true,
+current-controls	P13 verified data-distribution contract	2026-10-28T13:09:52.6063364Z   "catalog_valid": true,
+current-controls	P13 verified data-distribution contract	2026-10-28T13:09:52.6063734Z   "cli_contract": false,
+current-controls	P13 verified data-distribution contract	2026-10-28T13:09:52.6064132Z   "no_bulk_data_tracked": true,
+current-controls	P13 verified data-distribution contract	2026-10-28T13:09:52.6064525Z   "notice_identity": true
+current-controls	P13 verified data-distribution contract	2026-10-28T13:09:52.6064871Z  },
+current-controls	P13 verified data-distribution contract	2026-10-28T13:09:52.6065144Z  "cli": {
+current-controls	P13 verified data-distribution contract	2026-10-28T13:09:52.6065469Z   "list_marks_default": true,
+current-controls	P13 verified data-distribution contract	2026-10-28T13:09:52.6065860Z   "list_names_every_bundle": true,
+current-controls	P13 verified data-distribution contract	2026-10-28T13:09:52.6066270Z   "list_names_release": false,
+current-controls	P13 verified data-distribution contract	2026-10-28T13:09:52.6066663Z   "manifest_byte_identical": false
+current-controls	P13 verified data-distribution contract	2026-10-28T13:09:52.6067308Z  },
+current-controls	P13 verified data-distribution contract	2026-10-28T13:09:52.6067610Z  "evidence_identities": {
+current-controls	P13 verified data-distribution contract	2026-10-28T13:09:52.6067995Z   "endfb-viii-0-decay": true,
+current-controls	P13 verified data-distribution contract	2026-10-28T13:09:52.6068392Z   "jeff-3-3-decay": true,
+current-controls	P13 verified data-distribution contract	2026-10-28T13:09:52.6068758Z   "tendl-2025-alpha-162g": true,
+current-controls	P13 verified data-distribution contract	2026-10-28T13:09:52.6069187Z   "tendl-2025-alpha-162g-index": true,
+current-controls	P13 verified data-distribution contract	2026-10-28T13:09:52.6069636Z   "tendl-2025-deuteron-162g": true,
+current-controls	P13 verified data-distribution contract	2026-10-28T13:09:52.6070071Z   "tendl-2025-deuteron-162g-index": true,
+current-controls	P13 verified data-distribution contract	2026-10-28T13:09:52.6070529Z   "tendl-2025-neutron-709g": true,
+current-controls	P13 verified data-distribution contract	2026-10-28T13:09:52.6071029Z   "tendl-2025-neutron-709g-covariance": true,
+current-controls	P13 verified data-distribution contract	2026-10-28T13:09:52.6071646Z   "tendl-2025-neutron-709g-covariance-index": true,
+current-controls	P13 verified data-distribution contract	2026-10-28T13:09:52.6072222Z   "tendl-2025-neutron-709g-index": true,
+current-controls	P13 verified data-distribution contract	2026-10-28T13:09:52.6072728Z   "tendl-2025-patched-neutron-709g": true,
+current-controls	P13 verified data-distribution contract	2026-10-28T13:09:52.6073349Z   "tendl-2025-patched-neutron-709g-covariance": true,
+current-controls	P13 verified data-distribution contract	2026-10-28T13:09:52.6074057Z   "tendl-2025-patched-neutron-709g-covariance-index": true,
+current-controls	P13 verified data-distribution contract	2026-10-28T13:09:52.6074742Z   "tendl-2025-patched-neutron-709g-index": true,
+current-controls	P13 verified data-distribution contract	2026-10-28T13:09:52.6075291Z   "tendl-2025-proton-162g": true,
+current-controls	P13 verified data-distribution contract	2026-10-28T13:09:52.6075773Z   "tendl-2025-proton-162g-index": true
+current-controls	P13 verified data-distribution contract	2026-10-28T13:09:52.6076232Z  },
+current-controls	P13 verified data-distribution contract	2026-10-28T13:09:52.6076558Z  "forbidden_tracked_files": [],
+current-controls	P13 verified data-distribution contract	2026-10-28T13:09:52.6077124Z  "gate": "P13-G1/G3",
+current-controls	P13 verified data-distribution contract	2026-10-28T13:09:52.6077450Z  "notice": {
+current-controls	P13 verified data-distribution contract	2026-10-28T13:09:52.6077803Z   "bytes_match": true,
+current-controls	P13 verified data-distribution contract	2026-10-28T13:09:52.6078175Z   "sha256_match": true
+current-controls	P13 verified data-distribution contract	2026-10-28T13:09:52.6078534Z  },
+current-controls	P13 verified data-distribution contract	2026-10-28T13:09:52.6078849Z  "pass": false,
+current-controls	P13 verified data-distribution contract	2026-10-28T13:09:52.6079237Z  "planted_rejections": {
+current-controls	P13 verified data-distribution contract	2026-10-28T13:09:52.6080052Z   "direct_identity_mismatch": true,
+current-controls	P13 verified data-distribution contract	2026-10-28T13:09:52.6080551Z   "duplicate_artifact_id": true,
+current-controls	P13 verified data-distribution contract	2026-10-28T13:09:52.6081025Z   "non_adjacent_index": true,
+current-controls	P13 verified data-distribution contract	2026-10-28T13:09:52.6081705Z   "non_https": true,
+current-controls	P13 verified data-distribution contract	2026-10-28T13:09:52.6082109Z   "parent_traversal": true,
+current-controls	P13 verified data-distribution contract	2026-10-28T13:09:52.6082553Z   "unknown_field": true
+current-controls	P13 verified data-distribution contract	2026-10-28T13:09:52.6082930Z  },
+current-controls	P13 verified data-distribution contract	2026-10-28T13:09:52.6083353Z  "schema": "actinv-p13-data-distribution-control-1"
+current-controls	P13 verified data-distribution contract	2026-10-28T13:09:52.6083904Z }
+current-controls	P13 verified data-distribution contract	2026-10-28T13:09:52.6144803Z ##[error]Process completed with exit code 1.
