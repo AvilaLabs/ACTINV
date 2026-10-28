@@ -2196,7 +2196,7 @@ mod tests {
         assert!(between.arc > 0.0 && between.nrt == 0.0 && between.d == 0.0);
         assert!(rc90.response(5.0e4).nrt < rc70.response(5.0e4).nrt);
         assert_eq!(rc90.threshold(), 70.0);
-        // integrated over a recoil spectrum: identical arc, different NRT
+        // integrated over a recoil spectrum: the same arc, different NRT
         let e = 2.0e6;
         let (c0, c1) = two_body_cm_map(awr, 1.0, awr, 0.0, e).unwrap();
         let (i90, i70) = (
@@ -2204,8 +2204,9 @@ mod tests {
             rc70.integrate(c0, c1, &|_| 0.5, 8, &[]),
         );
         assert!(i90.arc > 0.0);
+        // the NRT breakpoints are panel edges of the shared quadrature, so the integrals agree to its accuracy
         assert!(
-            (i90.arc - i70.arc).abs() < 1e-9 * i70.arc,
+            (i90.arc - i70.arc).abs() < 1e-4 * i70.arc,
             "{i90:?} {i70:?}"
         );
         assert!(

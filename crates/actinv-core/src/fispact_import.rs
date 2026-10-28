@@ -3841,7 +3841,7 @@ impl<'a> Interp<'a> {
             )
         };
         if unchecked {
-            detail.push_str("; the catalog table is not installed here, so the deck's energies are written as given and the run compares them with the table's, refusing a mismatch (run `actinv data fetch` first to compare at import)");
+            detail.push_str("; the catalog table is not installed here, so the deck's energies are written as given and compared with the table's at run time, where a mismatch is refused (run `actinv data fetch` first to compare at import)");
             if !deferred.is_empty() {
                 detail.push_str(&format!(
                     "; no energy was given for {}, which takes the table's energy at run time",
