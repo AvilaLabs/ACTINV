@@ -15,14 +15,15 @@ from urllib.parse import urlsplit
 
 
 ROOT = Path(__file__).resolve().parents[1]
-CATALOG_PATH = ROOT / "crates/actinv-cli/data/actinv-data-catalog-v1.1.0.json"
-NOTICE_PATH = ROOT / "crates/actinv-cli/data/ACTINV-DATA-NOTICE-v1.1.0.md"
+CATALOG_PATH = ROOT / "crates/actinv-cli/data/actinv-data-catalog-v1.2.0.json"
+NOTICE_PATH = ROOT / "crates/actinv-cli/data/ACTINV-DATA-NOTICE-v1.2.0.md"
 RESULT_PATH = ROOT / "results/g1_p13_data_distribution.json"
 P10_PATH = ROOT / "results/g7_p10_builds.json"
 P11_PATH = ROOT / "results/g6_p11_complete.json"
 P25C_BUILD_PATH = ROOT / "results/p25c_release_build.json"
 P25C_COV_PATH = ROOT / "results/p25c_release_covariance.json"
 FNS_PATH = ROOT / "results/fns_certificate.json"
+P156_PATH = ROOT / "results/p156_damage.json"
 
 TOP_KEYS = {
     "schema", "catalog_version", "default_bundle", "release_url", "notice", "artifacts", "bundles"
@@ -33,7 +34,7 @@ SOURCE_KEYS = SOURCE_REQUIRED_KEYS | {"archive_member"}
 BUNDLE_KEYS = {"id", "description", "projectile", "groups", "temperature_K", "artifacts"}
 ROLES = {
     "activation-library", "activation-index", "covariance-sidecar", "covariance-index",
-    "decay-primary", "decay-fallback", "notice",
+    "decay-primary", "decay-fallback", "notice", "damage-table",
 }
 REQUIRED_ROLES = {
     "activation-library", "activation-index", "decay-primary", "decay-fallback", "notice"
@@ -103,8 +104,8 @@ def expected_covariance_index_path(sidecar_path):
 
 def validate_catalog(catalog):
     require_exact_keys(catalog, TOP_KEYS, "catalog")
-    if catalog["schema"] != "actinv-data-catalog-1" or catalog["catalog_version"] != "1.1.0":
-        raise ValueError("catalog schema/version is not the frozen v1.1.0 contract")
+    if catalog["schema"] != "actinv-data-catalog-1" or catalog["catalog_version"] != "1.2.0":
+        raise ValueError("catalog schema/version is not the frozen v1.2.0 contract")
     require_https(catalog["release_url"], "release")
     require_path(catalog["notice"], "notice", one_name=True)
 
@@ -175,7 +176,9 @@ def validate_catalog(catalog):
     if catalog["default_bundle"] != "tendl-2025-neutron" \
             or catalog["default_bundle"] not in bundles:
         raise ValueError("default bundle differs")
-    if referenced != set(artifacts):
+    # catalog 1.2.0 keeps the superseded v1.0.0 notice listed but unreferenced; only a notice may be unreferenced
+    unreferenced = set(artifacts) - referenced
+    if not referenced <= set(artifacts) or any(artifacts[i]["role"] != "notice" for i in unreferenced):
         raise ValueError("catalog has an unreferenced artifact")
     return artifacts, bundles
 
@@ -228,6 +231,8 @@ def evidence_identities():
     identities["tendl-2025-patched-neutron-709g-covariance"] = patched_cov["npz_sha256"]
     identities["tendl-2025-patched-neutron-709g-covariance-index"] = \
         patched_cov["index_sha256"]
+    identities["tendl-2025-neutron-damage"] = \
+        load_json(P156_PATH)["gates"]["G5"]["build_report"]["table_sha256"]
     return identities
 
 
@@ -293,7 +298,7 @@ def main():
         artifact_id: artifacts[artifact_id]["sha256"] == sha256
         for artifact_id, sha256 in sorted(expected.items())
     }
-    notice = artifacts["actinv-data-notice-v1-1"]
+    notice = artifacts["actinv-data-notice-v1-2"]
     notice_check = {
         "bytes_match": NOTICE_PATH.stat().st_size == notice["bytes"],
         "sha256_match": hash_file(NOTICE_PATH) == notice["sha256"],

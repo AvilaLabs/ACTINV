@@ -67,11 +67,11 @@ def command_result(command, environment=None):
 def evaluate_g1(value):
     checks = {
         "schema": value is not None and value.get("schema") == "actinv-p13-data-distribution-control-1",
-        "catalog_version": value is not None and value.get("catalog_version") == "1.1.0",
-        "inventory": value is not None and value.get("artifact_count") == 18 and value.get("bundle_count") == 7,
+        "catalog_version": value is not None and value.get("catalog_version") == "1.2.0",
+        "inventory": value is not None and value.get("artifact_count") == 20 and value.get("bundle_count") == 7,
         "checks": value is not None and value.get("pass") is True
         and all(item is True for item in value.get("checks", {}).values()),
-        "evidence": value is not None and len(value.get("evidence_identities", {})) == 16
+        "evidence": value is not None and len(value.get("evidence_identities", {})) == 17
         and all(item is True for item in value.get("evidence_identities", {}).values()),
         "plants": value is not None and len(value.get("planted_rejections", {})) == 6
         and all(item is True for item in value.get("planted_rejections", {}).values()),
@@ -97,7 +97,7 @@ def evaluate_g4(value):
 
 def documentation_check():
     requirements = {
-        "README.md": ("actinv data fetch", "actinv data verify", "actinv-data/v1.1.0", "prints the exact paths"),
+        "README.md": ("actinv data fetch", "actinv data verify", "actinv-data/v1.2.0", "prints the exact paths"),
         "docs/DATA.md": ("Easiest setup", "MiB", "actinv data manifest", "CC-BY-4.0", "offline"),
         "docs/RELEASE_CHECKLIST.md": ("Versioned data release", "prepare_data_release.py", "data-v1.0.0"),
         "CHANGELOG.md": ("actinv data list/fetch/verify/manifest", "atomic", "official ENDF/B-VIII.0/JEFF-3.3"),
