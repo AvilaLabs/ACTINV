@@ -12,7 +12,7 @@ njoy_continuum_recoil, NORDLUND_TABLE_1, FE_ABUNDANCE, TARGETS / BUILD_ED (P154 
 hard-codes (its four targets and their displacement energies) is parameterized by temporarily rebinding those module
 globals around the call (`p154_targets`), never by editing check_p154.py.
 
-  G0  This protocol's and Amendment A's SHA-256 are in protocols/protocol_hash.txt.
+  G0  This protocol's and Amendments A and B's SHA-256 are in protocols/protocol_hash.txt.
   G1  External (fmt, clippy -D warnings, workspace tests): recorded; `--g1-log PATH` records the log's digest and tail.
   G2  Existing behaviour. examples/damage_demo.json and examples/fns_fe_5min.json run with reference and candidate are
       byte-identical apart from `ms`; `build-damage` without `--method` is byte-identical on the P23 corpus (both are
@@ -43,7 +43,10 @@ globals around the call (`p154_targets`), never by editing check_p154.py.
       actinv-damage-table-2; `files` equals the selection (names and SHA-256, the latter recomputed from --tendl-dir);
       every selected nuclide is a row of `targets` or is named with a non-empty reason in `uncovered`; every row finite
       and nonnegative; damage_energy_barn_eV equals elastic + inelastic + disappearance in every group within 1e-12
-      relative; the recorded displacement energies are the standard table. A seeded (random.Random(156).sample of the
+      relative; the recorded displacement energies are the standard table. Amendment B: the build adds `--continue-on-error true`;
+      a selected target is satisfied by a row or by a `failed` entry ({file, sha256, error}) naming its file; failed and
+      clipped (`channels.zero_k_clipped`) targets are counted with natural abundance; a failed stable nuclide of Fe, Cr, Ni,
+      W, V, Ti, Ta, Mo, Nb, Mn, Co, Cu, Al, Si, Be or Li fails G5; G4 reports clip records of its twelve targets (information). A seeded (random.Random(156).sample of the
       sorted selection) 16-file subset is copied (regular files) and rebuilt with the frozen item-6 command; each
       rebuilt row's canonical JSON equals the shipped row's. Build time, peak memory and size are reported (--build-log:
       GNU time -v output; the rebuild's own wall time and child peak RSS are always recorded).
@@ -121,6 +124,7 @@ TOL_SUM = 1e-12                       # damage_energy_barn_eV against the sum of
 TOL_RUN = 1e-12
 ENERGY_SOURCE_KEY = "displacement_energy_source"   # ledger.damage map element -> "spec" | "table" (table-2 runs)
 AMENDMENT_A = ROOT / "protocols" / "ACTINV-P156_AMENDMENT_A.md"
+AMENDMENT_B = ROOT / "protocols" / "ACTINV-P156_AMENDMENT_B.md"
 TOL_ARC = 1e-3                        # Amendment A1: arc agreement across NRT energies (the build REFINE_TOLERANCE)
 TOL_NRT = 1e-2                        # Amendment A1: NRT must differ by more than this
 A1_FLOOR = 1e-6                       # groups above this fraction of the maximum
@@ -129,7 +133,7 @@ CATALOG_ROLE = "damage-table"
 NEUTRON_BUNDLES = ("tendl-2025-neutron", "tendl-2025-neutron-covariance", "tendl-2025-patched-neutron",
                    "tendl-2025-patched-neutron-covariance")
 ITEM6_ARGS = ["--method", "kinematic", "--projectile", "neutron", "--groups", "fispact-709",
-              "--continuum-recoil", "evaluated"]
+              "--continuum-recoil", "evaluated", "--continue-on-error", "true"]   # Amendment B2
 G3_ARGS = ["--method", "kinematic", "--projectile", "neutron", "--groups", "fispact-709"]
 
 # NJOY2016 HEATR default displacement energies when no `ed` is given (protocol item 1; heatr.f90 tag 2016.80 lines
@@ -155,6 +159,20 @@ G4_TARGETS = {
     "Be9": ("n-Be009.tendl", "Be", "1da8eb7872395b119ab6cab3a374838764fde831619cc679b5a396422fd293be"),
     "Li7": ("n-Li007.tendl", "Li", "1f77be22830b17005b85698f03b74833bc012e2228c4c81a9a0a463b73a8ffdf"),
 }
+
+# Natural abundances (atom percent), IUPAC CIAAW representative isotopic compositions (Meija et al., Pure Appl. Chem. 88,
+# 293 (2016); Ta-180m from the same tables), for the stable isotopes of the Amendment B2 structural / breeder elements.
+# Keys are canonical nuclide names; Ta180m1 is an isomer (not stable) and is listed for the report only.
+NATURAL_ABUNDANCE_PERCENT = {
+    "Li6": 7.59, "Li7": 92.41, "Be9": 100.0, "Al27": 100.0, "Si28": 92.223, "Si29": 4.685, "Si30": 3.092,
+    "Ti46": 8.25, "Ti47": 7.44, "Ti48": 73.72, "Ti49": 5.41, "Ti50": 5.18, "V50": 0.250, "V51": 99.750,
+    "Cr50": 4.345, "Cr52": 83.789, "Cr53": 9.501, "Cr54": 2.365, "Mn55": 100.0,
+    "Fe54": 5.845, "Fe56": 91.754, "Fe57": 2.119, "Fe58": 0.282, "Co59": 100.0,
+    "Ni58": 68.0769, "Ni60": 26.2231, "Ni61": 1.1399, "Ni62": 3.6345, "Ni64": 0.9256,
+    "Cu63": 69.15, "Cu65": 30.85, "Nb93": 100.0,
+    "Mo92": 14.53, "Mo94": 9.15, "Mo95": 15.84, "Mo96": 16.67, "Mo97": 9.60, "Mo98": 24.39, "Mo100": 9.82,
+    "Ta180m1": 0.012, "Ta181": 99.988, "W180": 0.12, "W182": 26.50, "W183": 14.31, "W184": 30.64, "W186": 28.43}
+STRUCTURAL_ELEMENTS = ("Fe", "Cr", "Ni", "W", "V", "Ti", "Ta", "Mo", "Nb", "Mn", "Co", "Cu", "Al", "Si", "Be", "Li")
 
 SYMBOLS = ("H He Li Be B C N O F Ne Na Mg Al Si P S Cl Ar K Ca Sc Ti V Cr Mn Fe Co Ni Cu Zn Ga Ge As Se Br Kr Rb Sr Y Zr "
            "Nb Mo Tc Ru Rh Pd Ag Cd In Sn Sb Te I Xe Cs Ba La Ce Pr Nd Pm Sm Eu Gd Tb Dy Ho Er Tm Yb Lu Hf Ta W Re Os "
@@ -387,6 +405,49 @@ def find_uncovered_entry(uncovered, nuclide, filename):
                 reason = entry if len(entry.strip()) > len(nuclide) + 2 else ""
             return {"entry": entry, "reason": reason, "has_reason": bool(reason.strip())}
     return None
+
+
+def failed_map(table):
+    """The table's top-level `failed` array as {file basename: entry} (Amendment B2)."""
+    out = {}
+    for entry in table.get("failed") or []:
+        if isinstance(entry, dict) and (entry.get("file") or entry.get("path")):
+            out[Path(entry.get("file") or entry.get("path")).name] = entry
+    return out
+
+
+def clipped_records(row):
+    """The `channels.zero_k_clipped` array of a row (Amendment B1), [] when absent."""
+    clipped = (row.get("channels") or {}).get("zero_k_clipped") or []
+    return clipped if isinstance(clipped, list) else []
+
+
+def element_of_nuclide(name):
+    return re.match(r"[A-Z][a-z]?", name).group(0)
+
+
+def failure_report(selected, rows, failed):
+    """Amendment B2 accounting. `selected` rows carry file, nuclide, stable. Returns counts, per-target details with the
+    natural abundance, the failed targets that are stable nuclides of the structural elements (these fail G5), failed
+    entries naming a file outside the selection, and the selected targets satisfied by neither a row nor a failed entry."""
+    failed_targets = [r for r in selected if r["file"] in failed and r["nuclide"] not in rows]
+    clipped_targets = [(r, clipped_records(rows[r["nuclide"]])) for r in selected if r["nuclide"] in rows
+                       and clipped_records(rows[r["nuclide"]])]
+    names = {r["file"] for r in selected}
+
+    def info(r, extra):
+        return dict({"nuclide": r["nuclide"], "file": r["file"],
+                     "natural_abundance_percent": NATURAL_ABUNDANCE_PERCENT.get(r["nuclide"])}, **extra)
+    structural = [r["nuclide"] for r in failed_targets
+                  if r["stable"] and element_of_nuclide(r["nuclide"]) in STRUCTURAL_ELEMENTS]
+    return {"failed_count": len(failed_targets), "clipped_count": len(clipped_targets),
+            "clipped_records": sum(len(c) for _r, c in clipped_targets),
+            "failed": [info(r, {"error": str(failed[r["file"]].get("error", ""))[:300]}) for r in failed_targets],
+            "clipped": [info(r, {"zero_k_clipped": c}) for r, c in clipped_targets],
+            "failed_stable_structural": structural,
+            "failed_entries_outside_selection": sorted(set(failed) - names),
+            "failed_with_row": sorted(r["nuclide"] for r in selected if r["file"] in failed and r["nuclide"] in rows),
+            "failed_without_error": sorted(f for f, e in failed.items() if not str(e.get("error", "")).strip())}
 
 
 def compare_rows(shipped, rebuilt, keys):
@@ -655,7 +716,7 @@ def p154_recorded_modes():
 def gate_g0():
     lines = HASH_LOG.read_text(encoding="utf-8").splitlines()
     out, ok = {}, True
-    for label, path in (("protocol", PROTOCOL), ("amendment_a", AMENDMENT_A)):
+    for label, path in (("protocol", PROTOCOL), ("amendment_a", AMENDMENT_A), ("amendment_b", AMENDMENT_B)):
         if not path.is_file():
             out[label] = {"path": str(path), "present": False, "in_protocol_hash_txt": False}
             ok = False
@@ -861,6 +922,8 @@ def gate_g4(cand, work, args, bounds):
                 "fns_computed": computed, "fns_uncovered_upper": upper,
                 "groups_with_uncovered_xs": sum(1 for v in row["uncovered_xs_barn"] if v > 0.0),
                 "channels": {k: v for k, v in row.get("channels", {}).items() if "uncovered" in k.lower()}}
+        if t in tables:
+            entry["zero_k_clipped"] = clipped_records(tables[t][0]["targets"][t])    # information only (Amendment B3)
         entry["pass"] = entry["elastic_pass"] and entry["inelastic_disappearance_pass"] and entry["total_bound_pass"]
         per_target[t] = entry
     ok = bool(per_target) and all(e["pass"] for e in per_target.values()) and g3["pass"] and g4["pass"] and g5["pass"]
@@ -927,12 +990,15 @@ def gate_g5(cand, work, args):
         "table_files": len(tfiles), "pass": tfiles == want}
     rows = table.get("targets", {})
     uncovered = table.get("uncovered", [])
+    failed = failed_map(table)
     no_row, no_reason, bad_rows = [], [], {}
     for r in sel:
         if r["nuclide"] in rows:
             problems = row_problems(rows[r["nuclide"]])
             if problems:
                 bad_rows[r["nuclide"]] = problems
+        elif r["file"] in failed:
+            pass
         else:
             entry = find_uncovered_entry(uncovered, r["nuclide"], r["file"])
             if entry is None:
@@ -940,8 +1006,13 @@ def gate_g5(cand, work, args):
             elif not entry["has_reason"]:
                 no_reason.append(r["nuclide"])
     checks["every_target_row_or_listed"] = {"neither_row_nor_listed": no_row[:30], "listed_without_reason": no_reason[:30],
-                                            "rows": len(rows), "listed": len(uncovered),
+                                            "rows": len(rows), "listed": len(uncovered), "failed_entries": len(failed),
                                             "pass": not no_row and not no_reason}
+    report = failure_report(sel, rows, failed)
+    checks["failed_and_clipped_targets"] = dict(report, **{"pass": not report["failed_stable_structural"]
+                                                           and not report["failed_without_error"]
+                                                           and not report["failed_entries_outside_selection"]
+                                                           and not report["failed_with_row"]})
     extra_rows = sorted(set(rows) - {r["nuclide"] for r in sel})
     checks["rows_sound"] = {"rows_checked": len(rows), "problems": dict(list(bad_rows.items())[:15]),
                             "extra_rows_not_in_selection": extra_rows[:20],
@@ -1492,7 +1563,7 @@ def self_check():
           and find_uncovered_entry(unc, "Ta180", "n-Ta180.tendl") is None)
     # --- argument construction
     check("item-6 command", ITEM6_ARGS == ["--method", "kinematic", "--projectile", "neutron", "--groups", "fispact-709",
-                                           "--continuum-recoil", "evaluated"]
+                                           "--continuum-recoil", "evaluated", "--continue-on-error", "true"]
           and ed_args({"W": 70.0, "Fe": 40.0}) == ["--displacement-energy", "W=70", "--displacement-energy", "Fe=40"]
           and ed_args({"Ni": 39.5}) == ["--displacement-energy", "Ni=39.5"])
     check("P154 build arguments are explicit and unchanged", p154.build_args("Fe56", p154.BUILD_ED, "per-photon", None, "evaluated") ==
@@ -1574,6 +1645,31 @@ def self_check():
     check("covered Fe fraction of Fe56 only", covered2 == [56] and abs(frac2 - 0.91754 / 1.0) < 1e-3)
     er = effective_row([{"damage_energy_barn_eV": [1.0, 2.0]}, {"damage_energy_barn_eV": [3.0, 4.0]}], [1.0, 3.0])
     check("effective row", er == {"damage_energy_barn_eV": [2.5, 3.5]})
+    # --- Amendment B: failed entries, structural rule, clip records
+    sel_rows = [{"file": "n-Fe054.tendl", "nuclide": "Fe54", "stable": True}, {"file": "n-Fe056.tendl", "nuclide": "Fe56", "stable": True},
+                {"file": "n-Xe136.tendl", "nuclide": "Xe136", "stable": True}, {"file": "n-Co060.tendl", "nuclide": "Co60", "stable": False},
+                {"file": "n-Ta180m.tendl", "nuclide": "Ta180m1", "stable": False}]
+    clip = {"mt": 2, "points": 3, "min_barn": -1e-3, "min_energy_eV": 3493.9, "low_eV": 3490.0, "high_eV": 3497.0}
+    rws = {"Fe56": {"channels": {"zero_k_clipped": [clip, dict(clip, mt=102)]}}, "Ta180m1": {"channels": {}}}
+    rep_ok = failure_report(sel_rows, rws, {"n-Xe136.tendl": {"file": "n-Xe136.tendl", "error": "x"},
+                                            "n-Co060.tendl": {"file": "n-Co060.tendl", "error": "y"}})
+    check("B2: failed entries counted, clips counted", rep_ok["failed_count"] == 2 and rep_ok["clipped_count"] == 1
+          and rep_ok["clipped_records"] == 2 and rep_ok["failed_stable_structural"] == []
+          and rep_ok["failed"][0]["natural_abundance_percent"] is None
+          and rep_ok["clipped"][0]["natural_abundance_percent"] == 91.754, str(rep_ok))
+    rep_bad = failure_report(sel_rows, rws, {"n-Fe054.tendl": {"file": "n-Fe054.tendl", "error": "negative"}})
+    check("B2: stable structural failure is flagged", rep_bad["failed_stable_structural"] == ["Fe54"]
+          and rep_bad["failed"][0]["natural_abundance_percent"] == 5.845)
+    check("B2: unstable structural or non-structural failures are not", failure_report(
+        sel_rows, rws, {"n-Co060.tendl": {"error": "y"}, "n-Ta180m.tendl": {"error": "z"}})["failed_stable_structural"] == [])
+    check("B2: outside-selection, with-row and error-less entries reported", failure_report(
+        sel_rows, rws, {"n-Fe056.tendl": {"error": "q"}, "n-Zz.tendl": {"error": "r"}, "n-Xe136.tendl": {}}) ["failed_entries_outside_selection"]
+        == ["n-Zz.tendl"] and failure_report(sel_rows, rws, {"n-Fe056.tendl": {"error": "q"}})["failed_with_row"] == ["Fe56"]
+        and failure_report(sel_rows, rws, {"n-Xe136.tendl": {}})["failed_without_error"] == ["n-Xe136.tendl"])
+    check("failed_map / clipped_records", list(failed_map({"failed": [{"file": "/a/n-X.tendl", "sha256": "s", "error": "e"}]})) == ["n-X.tendl"]
+          and clipped_records({"channels": {"zero_k_clipped": [clip]}}) == [clip] and clipped_records({}) == [])
+    check("abundance table sums", all(abs(sum(v for k, v in NATURAL_ABUNDANCE_PERCENT.items() if element_of_nuclide(k) == el) - 100.0) < 0.05
+                                      for el in STRUCTURAL_ELEMENTS))
     # --- G0 on the present protocol, and the example spec made absolute
     check("G0 hash line (protocol)", gate_g0()["protocol"]["in_protocol_hash_txt"] is True and "amendment_a" in gate_g0())
     base = [1.0 + 0.01 * g for g in range(50)] + [1e-9]
