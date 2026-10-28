@@ -12,7 +12,7 @@ impl Desktop {
     /// chosen on one page is the step every other page shows.
     pub(super) fn result_bar(&mut self, ui: &mut egui::Ui) {
         ui.horizontal_wrapped(|ui| {
-            let open = ui.button("Open result");
+            let open = ui.button("Open result…");
             self.tour.mark("result_open", open.rect);
             if open.clicked() {
                 self.open_result(ui.ctx(), false);
@@ -26,19 +26,25 @@ impl Desktop {
             if self.comparison.is_some() && ui.button("Remove comparison").clicked() {
                 self.comparison = None;
             }
-            let export = ui.add_enabled(self.result.is_some(), egui::Button::new("Export JSON"));
-            self.tour.mark("export", export.rect);
-            if export.clicked() {
-                self.export(false);
-            }
             if ui
-                .add_enabled(
-                    self.result.is_some(),
-                    egui::Button::new("Export inventory CSV"),
+                .add_enabled(self.result.is_some(), egui::Button::new("Save result…"))
+                .on_hover_text(
+                    "The complete result JSON: every step, the ledger and the certificate.",
                 )
                 .clicked()
             {
-                self.export(true);
+                self.save_result();
+            }
+            // on Export itself the button would lead nowhere
+            if self.page != Page::Export {
+                let export = ui.add_enabled(self.result.is_some(), egui::Button::new("Export…"));
+                self.tour.mark("export", export.rect);
+                if export
+                    .on_hover_text("A report, charts and tables in one folder")
+                    .clicked()
+                {
+                    self.page = Page::Export;
+                }
             }
         });
         let Some(result) = &self.result else {
@@ -59,7 +65,7 @@ impl Desktop {
             }
             if self.result_unsaved {
                 ui.colored_label(BLUE, "· not saved yet")
-                    .on_hover_text("Export JSON preserves every step and its evidence.");
+                    .on_hover_text("Save result… keeps every step and its evidence.");
             }
         })
         .response

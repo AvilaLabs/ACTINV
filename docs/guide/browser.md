@@ -16,7 +16,7 @@ For a real calculation, open or drop a result JSON produced by ACTINV. Use **Com
 - **Evidence** shows the ledger of missing data and approximations, and the certificate of inputs and data.
 - **Waste class** reads waste results and edits waste specs; see [Read waste results and edit waste specs](#read-waste-results-and-edit-waste-specs).
 
-An inventory CSV download contains the selected time step. A result JSON download retains the complete imported result.
+**Download result** saves the complete result JSON. **Export…** opens the **Export** page, which downloads a report page, charts, tables and the result and problem files as one zip; it offers the same choices as the [desktop Export page](desktop.md#export-a-result) except the waste classification.
 
 ### Read waste results and edit waste specs
 

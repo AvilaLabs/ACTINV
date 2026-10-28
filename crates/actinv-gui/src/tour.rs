@@ -27,7 +27,7 @@ pub const RESULTS: &[TourStep] = &[
     TourStep {target:"photons",page:Page::Photons,title:"5. Inspect photons and dose",text:"Decay photon groups, dose rates and any bremsstrahlung for the selected step, with dose against cooling time. Missing optional outputs are explained here; request them in What to compute before rerunning."},
     TourStep {target:"pathways",page:Page::Pathways,title:"6. Trace production pathways",text:"See the first products that feed a nuclide, and the full routes with how much of the target they explain. Missing optional outputs are explained here; request them in What to compute before rerunning."},
     TourStep {target:"ledger",page:Page::Ledger,title:"7. Read the evidence",text:"The ledger lists unaccounted data and approximations; the certificate records the inputs and data the solver used. Read them before relying on a number."},
-    TourStep {target:"export",page:Page::Summary,title:"8. Export the result",text:"Save the complete result as JSON, or export the selected inventory as CSV. The JSON keeps every step, optional response, the ledger and the certificate."},
+    TourStep {target:"export",page:Page::Summary,title:"8. Export the result",text:"Export opens one page that saves a report to read and print, the charts, the tables and the files to rerun it. Save result… keeps the complete result JSON on its own."},
 ];
 #[derive(Default)]
 pub struct Tour {

@@ -48,6 +48,7 @@ pub enum Page {
     Pathways,
     Waste,
     Ledger,
+    Export,
     Sweep,
     Assimilation,
     Advanced,
@@ -55,7 +56,7 @@ pub enum Page {
 
 impl Page {
     /// Every page in sidebar order. Pages of one group are contiguous.
-    pub const ALL: [Page; 16] = [
+    pub const ALL: [Page; 17] = [
         Page::Start,
         Page::Material,
         Page::Schedule,
@@ -69,6 +70,7 @@ impl Page {
         Page::Pathways,
         Page::Waste,
         Page::Ledger,
+        Page::Export,
         Page::Sweep,
         Page::Assimilation,
         Page::Advanced,
@@ -98,6 +100,7 @@ impl Page {
             Page::Pathways => "Pathways",
             Page::Waste => "Waste class",
             Page::Ledger => "Evidence",
+            Page::Export => "Export",
             Page::Sweep => "Sweep",
             Page::Assimilation => "Assimilation",
             Page::Advanced => "Advanced JSON",
@@ -116,7 +119,8 @@ impl Page {
             | Page::Photons
             | Page::Pathways
             | Page::Waste
-            | Page::Ledger => Group::Results,
+            | Page::Ledger
+            | Page::Export => Group::Results,
             Page::Sweep | Page::Assimilation => Group::Studies,
             Page::Advanced => Group::Tools,
         }
@@ -163,6 +167,7 @@ mod tests {
                 "Pathways",
                 "Waste class",
                 "Evidence",
+                "Export",
                 "Sweep",
                 "Assimilation",
                 "Advanced JSON",
@@ -175,7 +180,7 @@ mod tests {
         let groups: Vec<_> = Page::ALL.iter().map(|p| p.group()).collect();
         let mut expected = vec![Group::Start];
         expected.extend([Group::Setup; 5]);
-        expected.extend([Group::Results; 7]);
+        expected.extend([Group::Results; 8]);
         expected.extend([Group::Studies; 2]);
         expected.push(Group::Tools);
         assert_eq!(groups, expected);
@@ -222,6 +227,7 @@ mod tests {
                 Page::Pathways,
                 Page::Waste,
                 Page::Ledger,
+                Page::Export,
             ]
         );
     }

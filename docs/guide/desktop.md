@@ -55,7 +55,7 @@ A result lacks an output you did not enable; the page that would show it says so
 
 ## Explore and save results
 
-The pages under **RESULTS** read one result. A bar at the top of each has **Open result**, **Compare with…**, **Export JSON**, **Export inventory CSV** and the **Computed step** slider. The chosen step is shared, so every page shows the same step. Add another result for a comparison; check both files' physical times and normalizations.
+The pages under **RESULTS** read one result. A bar at the top of each has **Open result…**, **Compare with…**, **Save result…**, **Export…** and the **Computed step** slider. The chosen step is shared, so every page shows the same step. Add another result for a comparison; check both files' physical times and normalizations.
 
 - **Summary** is where a result opens. It gives activity, decay heat, contact dose and, when computed, damage at the selected time, each with a small curve of how it evolves, and the nuclides that dominate activity and heat. **Jump to** selects shutdown or the step nearest 1 h, 1 d, 1 y and so on after it. With a comparison loaded, each value shows its change against the comparison at the same time. Select a nuclide to follow it on **Time history**.
 - **Time history** plots activity, total heat or inventory against time. Click the plot to select the nearest step, and filter and select a nuclide to follow its history. Heat remains the whole-material response.
@@ -64,8 +64,20 @@ The pages under **RESULTS** read one result. A bar at the top of each has **Open
 - **Pathways** shows how a nuclide is produced. **Full routes** lists the routes for each target with the part of the inventory they explain and the residual; **First products (trace)** ranks the first products and needs trace mode.
 - **Evidence** shows the ledger of incomplete inputs and approximations, and the certificate of inputs and data.
 - **Waste class** classifies the loaded result as waste; see [Classify a result as waste](#classify-a-result-as-waste).
+- **Export** saves what the result answers in one new folder; see [Export a result](#export-a-result).
 
-Export the **full result JSON** to preserve the complete calculation. Inventory CSV contains the selected time step; saving the problem or exporting CSV does not save the full result.
+**Save result…** keeps the complete result JSON: every step, the ledger and the certificate. Saving the problem does not save the result.
+
+### Export a result
+
+**Export** writes the files you tick into a new folder inside the folder you choose; it never writes over an existing folder. **Save to folder…** at the top of the page names how many files it will write.
+
+- **Report** (`report.html`): one page to read, share or print to PDF, with the problem in sentences, activity, decay heat, contact dose and damage at shutdown and at round cooling times, charts, the nuclides that dominate and the caveats. When **Waste class** has classified this result, its classes are included. Untick **Describe the problem as it is set up now** if you changed the setup after the run.
+- **Charts** (`charts/*.svg`): each quantity as the material cools, and the decay photon spectrum at shutdown.
+- **Tables** (`tables/`): the FISPACT-II style tables of `actinv report`, as CSV, TSV, Markdown or fixed-width text, for all steps or only the selected one, optionally restricted to named nuclides. A table the result cannot build is greyed, with the reason on hover.
+- **Files to rerun or reuse**: `result.json` and `problem.json`.
+
+The report, charts and tables are the files `actinv report` writes; see [the CLI reference](cli.md).
 
 ### Classify a result as waste
 

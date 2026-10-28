@@ -4,6 +4,7 @@ mod advanced;
 mod assimilation;
 mod charts;
 mod check_run;
+mod export;
 mod ledger;
 mod material;
 mod outputs;
@@ -49,6 +50,7 @@ impl Desktop {
             Page::Photons => self.photons(ui),
             Page::Pathways => self.pathways(ui),
             Page::Ledger => self.ledger(ui),
+            Page::Export => self.export_page(ui),
             Page::Waste => self.waste_page(ui),
             Page::Sweep => self.sweep_page(ui),
             Page::Assimilation => self.assimilation(ui),

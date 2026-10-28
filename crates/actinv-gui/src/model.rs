@@ -261,6 +261,8 @@ fn finite_nonnegative(v: &Value) -> bool {
     v.as_f64().is_some_and(|n| n.is_finite() && n >= 0.)
 }
 
+/// The selected step's inventory as CSV; the desktop smoke test checks a result through it.
+#[cfg(not(target_arch = "wasm32"))]
 pub fn inventory_csv(result: &ResultDocument, index: usize) -> Result<String, String> {
     let step = result
         .steps()

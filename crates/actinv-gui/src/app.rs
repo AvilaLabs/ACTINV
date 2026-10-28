@@ -109,6 +109,7 @@ pub struct Desktop {
     steps: crate::views::steps::StepsState,
     /// The Waste class page: its inputs, loaded properties, overrides and last classification.
     waste: pages::waste::WasteState,
+    export: crate::views::export::ExportState,
     /// The import dialog; `Some` while it is open.
     import: Option<ImportState>,
     /// A converted deck waiting for the unsaved-changes guard, and the folder its deck came from.
@@ -294,6 +295,7 @@ impl Desktop {
             material_view: Default::default(),
             steps: Default::default(),
             waste: Default::default(),
+            export: Default::default(),
             import: None,
             import_spec: None,
             import_base: None,
@@ -528,25 +530,20 @@ impl Desktop {
             Err(e) => self.report(Err(e)),
         }
     }
-    fn export(&mut self, csv: bool) {
+    /// Save the complete result JSON to a file the user picks.
+    fn save_result(&mut self) {
         let Some(result) = &self.result else {
             return;
         };
-        if let Some(path) = self.platform.save_file(Dialog::new().file_name(if csv {
-            "inventory.csv"
-        } else {
-            "result.json"
-        })) {
-            let r = if csv {
-                model::inventory_csv(result, self.step)
-                    .and_then(|csv| std::fs::write(path, csv).map_err(|e| e.to_string()))
-            } else {
-                model::write_json(&path, &result.value)
-            };
-            if r.is_ok() && !csv {
+        if let Some(path) = self
+            .platform
+            .save_file(Dialog::new().file_name("result.json"))
+        {
+            let saved = model::write_json(&path, &result.value);
+            if saved.is_ok() {
                 self.result_unsaved = false;
             }
-            self.report(r.map(|()| "Export saved.".into()));
+            self.report(saved.map(|()| "Result saved.".into()));
         }
     }
     /// Write text a view produced (a table, a report) to a file the user picks.
@@ -663,12 +660,16 @@ if self.job.is_some(){ui.spinner();}});
                 egui::ScrollArea::vertical()
                     .auto_shrink([false, false])
                     .show(ui, |ui| {
-                        ui.add_space(16.);
+                        // the rows and gaps are as small as keep the pages apart, so every page
+                        // and the foot fit the default window without scrolling
+                        ui.spacing_mut().item_spacing.y = 3.;
+                        ui.spacing_mut().button_padding.y = 5.;
+                        ui.add_space(8.);
                         let mut group = None;
                         for page in Page::ALL {
                             if group != Some(page.group()) {
                                 if group.is_some() {
-                                    ui.add_space(18.);
+                                    ui.add_space(10.);
                                 }
                                 if let Some(caption) = page.group().caption() {
                                     ui.label(RichText::new(caption).small().color(accent));
@@ -713,30 +714,32 @@ if self.job.is_some(){ui.spinner();}});
                                 }
                             });
                         }
-                        ui.add_space(24.);
+                        ui.add_space(12.);
                         ui.separator();
-                        if ui
-                            .add_enabled(
-                                !self.undo.is_empty() && !self.raw_dirty,
-                                egui::Button::new("Undo edit"),
-                            )
-                            .clicked()
-                        {
-                            if let Some(v) = self.undo.pop() {
-                                self.redo.push(std::mem::replace(&mut self.document, v));
+                        ui.horizontal_wrapped(|ui| {
+                            if ui
+                                .add_enabled(
+                                    !self.undo.is_empty() && !self.raw_dirty,
+                                    egui::Button::new("Undo edit"),
+                                )
+                                .clicked()
+                            {
+                                if let Some(v) = self.undo.pop() {
+                                    self.redo.push(std::mem::replace(&mut self.document, v));
+                                }
                             }
-                        }
-                        if ui
-                            .add_enabled(
-                                !self.redo.is_empty() && !self.raw_dirty,
-                                egui::Button::new("Redo edit"),
-                            )
-                            .clicked()
-                        {
-                            if let Some(v) = self.redo.pop() {
-                                self.undo.push(std::mem::replace(&mut self.document, v));
+                            if ui
+                                .add_enabled(
+                                    !self.redo.is_empty() && !self.raw_dirty,
+                                    egui::Button::new("Redo edit"),
+                                )
+                                .clicked()
+                            {
+                                if let Some(v) = self.redo.pop() {
+                                    self.undo.push(std::mem::replace(&mut self.document, v));
+                                }
                             }
-                        }
+                        });
                         ui.add_space(12.);
                         ui.label(
                             RichText::new(
@@ -864,7 +867,7 @@ impl eframe::App for Desktop {
                                 self.reset_plot = true;
                                 self.page = Page::Summary;
                                 self.report(Ok(
-                                "Calculation complete. Export JSON keeps it; Evidence lists the data and checks behind it."
+                                "Calculation complete. Save result… keeps it; Export saves a report, charts and tables."
                                     .into(),
                             ));
                             }
@@ -1000,10 +1003,10 @@ impl Desktop {
         if let Some(action) = self.result_guard {
             egui::Modal::new(egui::Id::new("unsaved-result")).show(&ctx, |ui| {
                 ui.heading("Keep your calculation result?");
-                ui.label("Export the complete result as JSON before replacing it or closing ACTINV. Saving the problem or an inventory CSV does not save the full result.");
+                ui.label("Save the complete result before replacing it or closing ACTINV. Saving the problem does not save the result.");
                 ui.horizontal(|ui| {
                     if ui.button("Cancel").clicked() { self.result_guard = None; }
-                    if ui.button("Export result JSON").clicked() { self.export(false); }
+                    if ui.button("Save result…").clicked() { self.save_result(); }
                     if ui.button(if self.result_unsaved { "Discard result and continue" } else { "Continue" }).clicked() {
                         self.result_unsaved = false;
                         self.result_guard = None;
@@ -1112,7 +1115,7 @@ mod ui_tests {
     }
     #[test]
     fn every_page_renders_in_both_themes_at_minimum_size_with_and_without_a_result() {
-        assert_eq!(Page::ALL.len(), 16);
+        assert_eq!(Page::ALL.len(), 17);
         for theme in [egui::ThemePreference::Light, egui::ThemePreference::Dark] {
             for with_result in [false, true] {
                 let ctx = egui::Context::default();

@@ -399,6 +399,46 @@ impl StepClass {
     }
 }
 
+/// The classification as a table for the report page: one row per component and step, with its
+/// class, the constraint that governs it, its sum of fractions and the nuclides that bind.
+#[cfg_attr(target_arch = "wasm32", allow(dead_code))]
+pub fn report_section(view: &WasteView) -> actinv_core::report_page::Section {
+    let mut rows = Vec::new();
+    for component in &view.components {
+        for step in &component.steps {
+            let governing = step.governing();
+            rows.push(vec![
+                component.id.clone(),
+                format!("Step {} · {}", step.step, time(step.t_s)),
+                class_label(&step.class),
+                governing.map_or("–".to_owned(), |c| {
+                    governing_label(c, step.binding.len() - 1)
+                }),
+                governing.map_or("–".to_owned(), |c| fraction(c.normalized_sum)),
+                nuclide_list(&step.binding_nuclides()),
+            ]);
+        }
+    }
+    actinv_core::report_page::Section {
+        title: "Waste class".into(),
+        note: format!(
+            "Classified against {} ({}). A sum of fractions at or below 1 meets the class.",
+            view.rules, view.status
+        ),
+        header: [
+            "Component",
+            "Step",
+            "Class",
+            "Governed by",
+            "Sum of fractions",
+            "Binding nuclides",
+        ]
+        .map(str::to_owned)
+        .to_vec(),
+        rows,
+    }
+}
+
 fn governing_label(constraint: &Constraint, tied: usize) -> String {
     let place = match constraint.column {
         Some(column) => format!("Table {}, column {column}", constraint.table),

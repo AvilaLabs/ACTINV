@@ -85,11 +85,17 @@ Without `--target`, `xs` omits the group values and lists every reaction in the 
 ## Render result tables
 
 ```text
-actinv report RESULT.json [--tables LIST] [--format csv|tsv|markdown|text]
-              [--out DIR] [--step N|all] [--nuclides LIST]
+actinv report RESULT.json [--tables LIST] [--format csv|tsv|markdown|text|html]
+              [--out DIR] [--step N|all] [--nuclides LIST] [--problem PROBLEM.json]
 ```
 
 `report` turns a result JSON from `actinv run` into FISPACT-II style tables, ready to plot. It runs no solver and reads no data files; the output depends only on the result. `--tables` takes a comma-separated list (default: `tab1`, `tab2`, `tab3`, `tab4`, `totals`, `dominant`, `elements` and `timeseries`; `depletion` and `regulatory` are built only when you name them); `--step` selects one step by its one-based number (default `all`); `--nuclides Co60,Mn54` keeps only those rows in `tab1`, `tab2` and `depletion` and adds their atoms and activity columns to `timeseries`. A nuclide that is in no selected step is an error. Names are written as in the result, for example `Co60` or `Ta182m1`.
+
+`--format html` writes a report page to read, share or print instead of tables. It shows the headline numbers (activity, decay heat, contact dose and damage) at shutdown and at round cooling times, charts of how they fall, the nuclides that dominate activity and heat, the decay photon spectrum, and the result's caveats in plain words. `--problem PROBLEM.json` adds the problem that produced the result, read back as sentences. With `--out DIR`, the page is written as `report.html` beside one SVG file per chart; without it, the page goes to standard output. `--tables`, `--step` and `--nuclides` select tables and are refused with `html`. The desktop and browser **Export** page writes the same page and charts.
+
+```bash
+actinv report result.json --format html --problem problem.json --out fe-report
+```
 
 | Table | One row per | Columns |
 | --- | --- | --- |

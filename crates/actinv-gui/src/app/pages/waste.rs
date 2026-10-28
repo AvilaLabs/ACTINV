@@ -122,6 +122,8 @@ pub(in crate::app) struct WasteState {
     overrides: BTreeMap<String, NuclideProperties>,
     job: Option<Job>,
     done: Option<Classified>,
+    /// The result the classification was made for, so a later result does not inherit it.
+    classified_for: Option<String>,
     error: Option<String>,
 }
 
@@ -134,7 +136,33 @@ enum Action {
     SaveResult,
 }
 
+/// Which result a classification belongs to: its label, title and step times.
+fn fingerprint(result: &crate::model::ResultDocument) -> String {
+    let times: Vec<String> = result
+        .steps()
+        .iter()
+        .map(|s| s["t_s"].to_string())
+        .collect();
+    format!(
+        "{}|{}|{}",
+        result.label,
+        result.value["spec_title"],
+        times.join(",")
+    )
+}
+
 impl WasteState {
+    /// The classification of `result`, when one was made for it on this page.
+    pub(in crate::app) fn view_for(
+        &self,
+        result: &crate::model::ResultDocument,
+    ) -> Option<&view::WasteView> {
+        if self.classified_for.as_deref() != Some(fingerprint(result).as_str()) {
+            return None;
+        }
+        self.done.as_ref().and_then(|done| done.view.as_ref().ok())
+    }
+
     /// The volume basis in force: the material density only when the problem declares one.
     fn basis(&mut self, density: Option<f64>) -> Volume {
         let chosen = *self.volume.get_or_insert(if density.is_some() {
@@ -584,6 +612,7 @@ impl Desktop {
                     Err(_) => "The evaluator wrote a result this page cannot read.",
                 };
                 self.waste.done = Some(done);
+                self.waste.classified_for = self.result.as_ref().map(fingerprint);
                 self.waste.error = None;
                 self.report(Ok(message.into()));
             }

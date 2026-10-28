@@ -10,7 +10,7 @@ Start here
   data fetch               install the standard nuclear data (about 186 MiB)
   new problem.json         write an example problem to edit
   run problem.json [OUT]   solve it; the result goes to OUT or stdout
-  report result.json       read a result as tables
+  report result.json       read a result as tables or a report page
 
 Ask a design question
   impurities   which impurities matter, and how much of each is allowed

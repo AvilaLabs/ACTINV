@@ -8,21 +8,26 @@ use actinv_core::report::{
     build, render, render_stream, Format, Outcome, Request as TableRequest, StepSelect, TableKind,
     ALL_TABLES, NAMED_TABLES,
 };
+use actinv_core::report_page;
 use serde_json::Value;
 use std::collections::BTreeMap;
 
-pub const USAGE: &str = "usage: actinv report RESULT.json [--tables LIST] [--format csv|tsv|markdown|text] [--out DIR] [--step N|all] [--nuclides LIST]";
+pub const USAGE: &str = "usage: actinv report RESULT.json [--tables LIST] [--format csv|tsv|markdown|text|html] [--out DIR] [--step N|all] [--nuclides LIST] [--problem PROBLEM.json]";
 
 /// Detail printed by `actinv report --help`.
-pub const HELP: &str = "Render a result JSON from `actinv run` as FISPACT-style tables.\n\
-Nothing is recomputed.\n\
+pub const HELP: &str = "Render a result JSON from `actinv run` as FISPACT-style tables, or as a\n\
+report page to read, share or print (--format html). Nothing is recomputed.\n\
 --tables LIST    comma-separated: tab1 (atoms, grams), tab2 (activity, heat),\n\
                  tab3 (ingestion/inhalation dose), tab4 (photon groups), totals,\n\
                  dominant, elements, timeseries (default: all of these),\n\
                  depletion (per-nuclide depletion table) and regulatory (clearance,\n\
                  waste, A2 and activity-limit indices); the last two only when asked for\n\
---format F       csv (default), tsv, markdown or text; csv and tsv carry exact {:e} values\n\
---out DIR        write one file per table (tab1.csv, ...) instead of standard output\n\
+--format F       csv (default), tsv, markdown or text; csv and tsv carry exact {:e} values;\n\
+                 html writes one report page: the problem, headline numbers at round\n\
+                 cooling times, charts, what dominates and the caveats\n\
+--out DIR        write one file per table (tab1.csv, ...) instead of standard output;\n\
+                 with html, report.html and one SVG file per chart\n\
+--problem FILE   with html, the problem that produced the result, read into sentences\n\
 --step N|all     one-based step number, or every step (default)\n\
 --nuclides LIST  comma-separated, e.g. Co60,Mn54: restrict tab1/tab2/depletion and add\n\
                  timeseries columns\n\
@@ -42,6 +47,9 @@ pub enum ReportError {
 struct Request {
     path: String,
     format: Format,
+    /// `--format html`: the report page instead of tables.
+    page: bool,
+    problem: Option<String>,
     out: Option<String>,
     select: TableRequest,
 }
@@ -64,7 +72,14 @@ fn parse_names(text: &str, what: &str) -> Result<Vec<String>, String> {
 }
 
 fn parse_request(args: &[String]) -> Result<Request, String> {
-    const VALUED: [&str; 5] = ["--tables", "--format", "--out", "--step", "--nuclides"];
+    const VALUED: [&str; 6] = [
+        "--tables",
+        "--format",
+        "--out",
+        "--step",
+        "--nuclides",
+        "--problem",
+    ];
     let mut positional: Vec<&str> = Vec::new();
     let mut values: BTreeMap<&str, &str> = BTreeMap::new();
     let mut index = 0;
@@ -106,14 +121,27 @@ fn parse_request(args: &[String]) -> Result<Request, String> {
         }
         None => ALL_TABLES.to_vec(),
     };
+    let page = values.get("--format") == Some(&"html");
+    if page {
+        if let Some(option) = ["--tables", "--step", "--nuclides"]
+            .into_iter()
+            .find(|option| values.contains_key(option))
+        {
+            return Err(format!(
+                "{option} selects tables; the html report page takes none"
+            ));
+        }
+    } else if values.contains_key("--problem") {
+        return Err("--problem is read only by --format html".into());
+    }
     let format = match values.get("--format").copied() {
-        None | Some("csv") => Format::Csv,
+        None | Some("csv") | Some("html") => Format::Csv,
         Some("tsv") => Format::Tsv,
         Some("markdown") => Format::Markdown,
         Some("text") => Format::Text,
         Some(other) => {
             return Err(format!(
-                "--format must be csv, tsv, markdown or text, got '{other}'"
+                "--format must be csv, tsv, markdown, text or html, got '{other}'"
             ))
         }
     };
@@ -135,6 +163,8 @@ fn parse_request(args: &[String]) -> Result<Request, String> {
     Ok(Request {
         path: positional[0].to_string(),
         format,
+        page,
+        problem: values.get("--problem").map(|value| value.to_string()),
         out: values.get("--out").map(|value| value.to_string()),
         select: TableRequest {
             tables,
@@ -165,6 +195,9 @@ pub fn run(args: &[String]) -> Result<(), ReportError> {
     let result: Value = serde_json::from_str(&source).map_err(|error| {
         ReportError::Failure(format!("{} is not valid JSON: {error}", request.path))
     })?;
+    if request.page {
+        return write_page(&request, &result);
+    }
     let outcomes = build(&result, &request.select).map_err(ReportError::Failure)?;
     print_notes(&outcomes);
     if outcomes.iter().all(|outcome| outcome.built.is_err()) {
@@ -192,6 +225,53 @@ pub fn run(args: &[String]) -> Result<(), ReportError> {
             }
         }
         None => println!("{}", render_stream(&outcomes, request.format)),
+    }
+    Ok(())
+}
+
+/// `--format html`: the report page on standard output, or `report.html` and the chart SVGs in
+/// `--out DIR`.
+fn write_page(request: &Request, result: &Value) -> Result<(), ReportError> {
+    let problem = match &request.problem {
+        Some(path) => {
+            let text = std::fs::read_to_string(path)
+                .map_err(|error| ReportError::Failure(format!("cannot read {path}: {error}")))?;
+            Some(serde_json::from_str::<Value>(&text).map_err(|error| {
+                ReportError::Failure(format!("{path} is not valid JSON: {error}"))
+            })?)
+        }
+        None => None,
+    };
+    let label = std::path::Path::new(&request.path)
+        .file_name()
+        .map(|name| name.to_string_lossy().into_owned());
+    let page = report_page::html(
+        result,
+        &report_page::PageOptions {
+            problem: problem.as_ref(),
+            label,
+            ..Default::default()
+        },
+    )
+    .map_err(ReportError::Failure)?;
+    let Some(dir) = &request.out else {
+        print!("{page}");
+        return Ok(());
+    };
+    std::fs::create_dir_all(dir)
+        .map_err(|error| ReportError::Failure(format!("cannot create {dir}: {error}")))?;
+    let mut files = vec![("report.html".to_owned(), page)];
+    files.extend(
+        report_page::charts(result)
+            .into_iter()
+            .map(|(stem, _, svg)| (format!("{stem}.svg"), svg)),
+    );
+    for (name, contents) in files {
+        let path = std::path::Path::new(dir).join(name);
+        std::fs::write(&path, contents).map_err(|error| {
+            ReportError::Failure(format!("cannot write {}: {error}", path.display()))
+        })?;
+        eprintln!("wrote {}", path.display());
     }
     Ok(())
 }
@@ -313,6 +393,21 @@ mod tests {
     }
 
     #[test]
+    fn html_asks_for_the_report_page() {
+        let page = parse_request(&args(&[
+            "r.json",
+            "--format",
+            "html",
+            "--problem",
+            "p.json",
+        ]))
+        .unwrap();
+        assert!(page.page);
+        assert_eq!(page.problem.as_deref(), Some("p.json"));
+        assert!(!parse_request(&args(&["r.json"])).unwrap().page);
+    }
+
+    #[test]
     fn rejects_malformed_command_lines() {
         let rejected = |items: &[&str], needle: &str| {
             let error = parse_request(&args(items)).unwrap_err();
@@ -323,6 +418,11 @@ mod tests {
         rejected(&["a.json", "--table"], "unknown report option --table");
         rejected(&["a.json", "--format"], "--format needs a value");
         rejected(&["a.json", "--format", "xml"], "--format must be");
+        rejected(
+            &["a.json", "--format", "html", "--tables", "tab1"],
+            "the html report page takes none",
+        );
+        rejected(&["a.json", "--problem", "p.json"], "only by --format html");
         rejected(&["a.json", "--step", "0"], "--step must be");
         rejected(&["a.json", "--step", "x"], "--step must be");
         rejected(&["a.json", "--tables", "tab9"], "unknown table 'tab9'");

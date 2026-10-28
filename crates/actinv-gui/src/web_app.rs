@@ -190,6 +190,7 @@ pub struct Workbench {
     pathways: PathwaysState,
     /// The waste result on the Waste class page: its file name and what it parsed to.
     waste_result: Option<(String, waste::WasteView)>,
+    export: crate::views::export::ExportState,
     /// The waste spec in the editor on the Waste class page.
     waste_spec: String,
     /// The deck import dialog while it is open.
@@ -238,6 +239,7 @@ impl Workbench {
             photons: PhotonsState::default(),
             pathways: PathwaysState::default(),
             waste_result: None,
+            export: Default::default(),
             waste_spec: String::new(),
             import: None,
             dark: false,
@@ -1009,18 +1011,26 @@ impl Workbench {
                 self.comparison = None;
             }
             if let Some(result) = &self.result {
-                if ui.button("Download inventory CSV").clicked() {
-                    exported = Some(
-                        model::inventory_csv(result, self.step)
-                            .and_then(|csv| web::download("inventory.csv", csv.as_bytes())),
-                    );
-                }
-                if ui.button("Download result JSON").clicked() {
+                if ui
+                    .button("Download result")
+                    .on_hover_text(
+                        "The complete result JSON: every step, the ledger and the certificate.",
+                    )
+                    .clicked()
+                {
                     exported = Some(
                         serde_json::to_vec_pretty(&result.value)
                             .map_err(|error| error.to_string())
                             .and_then(|bytes| web::download("result.json", &bytes)),
                     );
+                }
+                if self.page != Page::Export
+                    && ui
+                        .button("Export…")
+                        .on_hover_text("A report, charts and tables in one zip")
+                        .clicked()
+                {
+                    self.page = Page::Export;
                 }
             }
         });
@@ -1354,6 +1364,38 @@ impl Workbench {
         }
     }
 
+    fn export_page(&mut self, ui: &mut egui::Ui) {
+        if !self.result_page(
+            ui,
+            "Export",
+            "Save what this result answers: a report to read and share, charts and tables for your own documents, and the files to rerun or reuse it.",
+        ) {
+            return;
+        }
+        let Some(result) = &self.result else {
+            return;
+        };
+        let context = crate::views::export::Context {
+            problem: Some(&self.problem),
+            waste: None,
+            step: self.step,
+            save_label: "Download .zip",
+        };
+        if let crate::views::export::ExportAction::Save { name, files } =
+            crate::views::export::show(ui, result, &mut self.export, &context)
+        {
+            let zip = crate::views::export::zip(&files);
+            let saved = web::download(&format!("{name}.zip"), &zip).map(|()| {
+                format!(
+                    "Downloading {name}.zip with {} files. Open report.html from it to read or print the report.",
+                    files.len()
+                )
+            });
+            self.export.message = Some(saved.clone());
+            self.report(saved);
+        }
+    }
+
     fn ledger_page(&mut self, ui: &mut egui::Ui) {
         if !self.result_page(
             ui,
@@ -1654,6 +1696,7 @@ impl eframe::App for Workbench {
                     Page::Photons => self.photons_page(ui),
                     Page::Pathways => self.pathways_page(ui),
                     Page::Ledger => self.ledger_page(ui),
+                    Page::Export => self.export_page(ui),
                     Page::Waste => self.waste_page(ui),
                     Page::Advanced => self.advanced_page(ui),
                     // the browser never runs the solver
