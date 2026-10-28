@@ -297,6 +297,16 @@ pub(crate) fn element_spec(
     composition: &BTreeMap<String, f64>,
     title: &str,
 ) -> Result<actinv_core::spec::Spec, String> {
+    element_spec_with_outputs(base, composition, title, &["ledger"])
+}
+
+/// `element_spec` with the run's `options.outputs` chosen by the caller (`impurities` adds `photons`).
+pub(crate) fn element_spec_with_outputs(
+    base: &Value,
+    composition: &BTreeMap<String, f64>,
+    title: &str,
+    outputs: &[&str],
+) -> Result<actinv_core::spec::Spec, String> {
     let mut doc = base.clone();
     let mass = base
         .pointer("/material/mass_g")
@@ -306,7 +316,7 @@ pub(crate) fn element_spec(
     doc["material"] = json!({"mass_g": mass, "basis": "wt_percent", "composition": composition});
     doc["options"]["mode"] = Value::from("coupled");
     doc["options"]["prune"] = Value::from("reach");
-    doc["options"]["outputs"] = json!(["ledger"]);
+    doc["options"]["outputs"] = json!(outputs);
     let text = serde_json::to_string(&doc).map_err(|e| e.to_string())?;
     actinv_core::spec::Spec::from_json(&crate::resolve_catalog_json(&text)?)
         .map_err(|e| format!("{title}: {e}"))

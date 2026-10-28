@@ -2297,6 +2297,11 @@ impl PreparedRun {
         &self.nuclides
     }
 
+    /// The photon response loaded for the spec's `photon.response`, when it names one.
+    pub fn photon_response(&self) -> Option<&PhotonResponse> {
+        self.response.as_ref()
+    }
+
     pub fn prepare(spec: &Spec) -> Result<Self, String> {
         let started = std::time::Instant::now();
         let mut profiler = RunProfiler::from_environment();
@@ -8529,6 +8534,10 @@ impl PreparedCache {
     /// preparation a warm request pays.
     pub fn last_fingerprint_ms(&self) -> f64 {
         self.last_fingerprint_ms
+    }
+    /// The preparation the most recent `run_with_cache` used.
+    pub fn prepared(&self) -> Option<&PreparedRun> {
+        self.slot.as_ref().map(|(_, prepared)| prepared)
     }
 }
 
