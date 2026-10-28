@@ -34,6 +34,8 @@ use crate::{budget, waste_budget};
 pub const VERIFY_TOL: f64 = 1e-6;
 /// Relative width of the bracket at which a bisection stops, in the impurity's weight fraction.
 const BISECT_REL: f64 = 1e-9;
+/// A linear slope (per wt%) at or below this fraction of the largest pure-element value is round-off.
+const ROUND_OFF_REL: f64 = 1e-12;
 /// The most impurities with a range (min < max) the dose proxy's corner maximum is taken over.
 const MAX_DOSE_VARYING: usize = 12;
 const TOP_NUCLIDES: usize = 3;
@@ -630,6 +632,7 @@ fn solve_joint(
     eval: &Evaluator,
     limit: f64,
     gradients: &BTreeMap<String, Option<f64>>,
+    round_off: f64,
 ) -> Result<Limit, String> {
     let nominal = frame.nominal();
     let total: f64 = nominal.values().sum();
@@ -649,6 +652,7 @@ fn solve_joint(
                 .iter()
                 .map(|(e, w)| w * gradients[e].unwrap_or(0.0))
                 .sum();
+            let slope = if slope <= round_off { 0.0 } else { slope };
             Ok(limit_linear(slope, v_m, cap, limit))
         }
         Evaluator::General(_) => {
@@ -727,10 +731,18 @@ pub fn analyse_scalar(
             }
         };
 
+    // A linear slope no larger than ROUND_OFF_REL of the largest pure-element value is the
+    // round-off of two near-equal pure runs (a nuclide neither element makes): no response.
+    let round_off = match eval {
+        Evaluator::Linear { r, .. } => {
+            ROUND_OFF_REL * r.values().fold(0.0_f64, |m, v| m.max(v.abs()))
+        }
+        Evaluator::General(_) => 0.0,
+    };
     let mut joint = None;
     if let Some(l) = limit {
         for e in frame.imps.keys() {
-            let g = gradients[e];
+            let g = gradients[e].map(|g| if g <= round_off { 0.0 } else { g });
             let alone = solve_limit(frame, eval, l, &BTreeMap::new(), e, g)?;
             let mut ctx_nominal = nominal_w.clone();
             ctx_nominal.remove(e);
@@ -744,7 +756,7 @@ pub fn analyse_scalar(
                 entry.others_worst = Some(others_worst);
             }
         }
-        joint = Some(solve_joint(frame, eval, l, &gradients)?);
+        joint = Some(solve_joint(frame, eval, l, &gradients, round_off)?);
     }
 
     Ok(ScalarResult {
@@ -2784,6 +2796,37 @@ mod tests {
         }
         assert_eq!(res.joint.as_ref().unwrap().status, INFEASIBLE);
         assert_eq!(res.joint.as_ref().unwrap().value, None);
+    }
+
+    #[test]
+    fn round_off_slope_is_no_response_before_infeasible() {
+        let f = frame();
+        // Al differs from the balance only by round-off: 1e-160 against a largest value of 2000.
+        let rv = m(&[
+            ("Fe", 1e-160),
+            ("Ni", 10.0),
+            ("Co", 1000.0),
+            ("Nb", 2000.0),
+            ("Al", 2e-160),
+        ]);
+        let ev = Evaluator::Linear {
+            r: &rv,
+            offset: 0.0,
+        };
+        // matrix alone is 0.1 > 0.05: a real slope is infeasible, a round-off one no response
+        let res = analyse_scalar(&f, &ev, Some(0.05)).unwrap();
+        assert_eq!(
+            res.impurities["Co"].alone.as_ref().unwrap().status,
+            INFEASIBLE
+        );
+        for limit in [
+            &res.impurities["Al"].alone,
+            &res.impurities["Al"].others_nominal,
+            &res.impurities["Al"].others_worst,
+        ] {
+            assert_eq!(limit.as_ref().unwrap().status, NO_RESPONSE);
+        }
+        assert!(res.impurities["Al"].gradient.unwrap() > 0.0);
     }
 
     #[test]
