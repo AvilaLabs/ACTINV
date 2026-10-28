@@ -4287,3 +4287,31 @@ The candidate's workspace tests, on the P156 branch before any checker run or ta
 bit-identical pointwise, but integrated over a recoil spectrum it differs by 9e-6. The NRT breakpoints are panel
 edges of the shared quadrature, and the incident-energy grid is refined on all three quantities. One other test
 failure in the same run was a wording mismatch in an import message. No checker gate has been run.
+
+## Entry 244 — P156 development run 1 and Amendment B registered (2026-10-27)
+
+Development run 1 is disclosed. The first build of the shipped table with the item-6 command, on candidate
+`1a04639` (binary built from that commit), stopped after 2 min 51 s on `n-Fe054.tendl`: `MT=2 zero-K
+reconstruction is nonfinite or negative at 3493.98917819688 eV`. No table was written and no checker gate was run.
+
+- **P156 Amendment B** `e14e1f6a4cdab260ba265cb0621d849358fe71135d0aa202723c84f4f235a723`: the damage build sets a finite negative 0 K reconstructed value to zero, as NJOY2016
+  RECONR does (`reconr.f90:2643`). Each clip is recorded as `zero_k_clipped` in the target's row. The library
+  builder is unchanged. The build command gains `--continue-on-error`, which lists a failing evaluation in `failed`.
+  G5 fails if a stable nuclide of a structural or breeder element (Fe, Cr, Ni, W, V, Ti, Ta, Mo, Nb, Mn, Co, Cu, Al,
+  Si, Be, Li) is among the failures.
+
+## Entry 245 — P157 registered (2026-10-27)
+
+Registered before any source change for the phase, as the 1.7 headline:
+- **P157** `e2eeb8b6b5499ee7221f503f9729dd2d8e6639660245a689aee4f6ab06c66f65`: impurity screening. A new command, `actinv impurities` (schema `actinv-impurities-1`), takes a
+  base run, a matrix, impurity ranges, targets and endpoints: activity, heat, nuclide activity, contact-dose proxy,
+  clearance index and Part 61 class. From one solve per element it gives, per target and endpoint:
+  - the value at nominal and the worst case over the ranges;
+  - each impurity's gradient, contribution and ranking, with its top product nuclides;
+  - limits alone, with the others at nominal and with the others at their worst case, plus the joint factor;
+  - the worst Part 61 class over the ranges.
+
+  Every number is verified by a full solve. The contact-dose proxy is not linear in composition, because the
+  material's attenuation enters it. It is therefore evaluated exactly at each composition, its limits are found by
+  bisection, and its worst case is a corner maximum. Nuclear-data uncertainty is deferred to P158. No output has been
+  examined.
