@@ -1,0 +1,21 @@
+{
+ "evidence": [
+  "results/p161/g1.log",
+  "results/p161_closure.json",
+  "results/p161/evidence_run_1.log",
+  "results/p161/ci_runs.json"
+ ],
+ "gates": {
+  "G0": "PASS",
+  "G1": "PASS",
+  "G2": "PASS",
+  "G3": "PASS",
+  "G4": "PASS",
+  "G5": "PASS",
+  "G6": "PASS"
+ },
+ "protocol": "protocols/ACTINV-P161_PROTOCOL.md",
+ "protocol_sha256": "26daeb338508c5f45d2a64c7935da1ad599e0a3b5387d04322e871c4b42c280f",
+ "schema": "actinv-p161-verdict-1",
+ "verdict": "P161-PASS"
+}

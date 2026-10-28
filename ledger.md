@@ -4571,3 +4571,11 @@ Bookkeeping pushes do not, and the CI steps a change can reach run locally first
 - **Local CI steps the change reaches:** with the candidate binary, the P15 cache-integrity control left
   `results/p15_cache_integrity.json` unchanged, and `check_p15.py --no-write` and `check_public_examples.py` pass.
 - **G6** is pending CI on the pushed commit.
+
+## Entry 261 — P161 G6: CI green on 9158722; P161-PASS (2026-10-28)
+
+Every workflow triggered on `9158722` (candidate `d9037ca` plus its evidence) passed: controls 40784782419, fns-iron
+40784781669, desktop builds 40784781337, fusion-isotope 40784781051 and browser workbench 40784781007
+(`results/p161/ci_runs.json`). The handbook workflow is path-filtered and was not triggered. **P161-PASS**
+(`results/p161_verdict.json`): `pathway_closure` counts only populations above 1e-12 of the step's largest. The quick
+start's closure falls from 4.117 to 3.9e-15, and no other result field changes.
