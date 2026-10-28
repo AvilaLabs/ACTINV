@@ -1,0 +1,32 @@
+P157 G0: PASS
+P157 G2: PASS
+P157 G3: PASS
+P157 G4: PASS
+P157 G5: PASS
+P157 G6: PASS
+P157 G7: PASS
+P157 G1, G8: external (not evaluated here)
+P157: PASS (/home/connoravila/Documents/actinv/target/p157-wt/results/p157_screening.json)
+	Command being timed: "python3 controls/check_p157.py --reference /home/connoravila/Documents/actinv/target/release/actinv --candidate /home/connoravila/Documents/actinv/target/wt-p157-wt/release/actinv --g1-log results/p157/g1.log"
+	User time (seconds): 1686.58
+	System time (seconds): 163.95
+	Percent of CPU this job got: 99%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 30:53.44
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 1843908
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 288
+	Minor (reclaiming a frame) page faults: 64186103
+	Voluntary context switches: 13932
+	Involuntary context switches: 19786
+	Swaps: 0
+	File system inputs: 3694008
+	File system outputs: 78715176
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0

@@ -4508,3 +4508,21 @@ workbench and fusion-isotope were green. The failed step and the run list are pr
 - **P157 Amendment A** `20085866bd7ab94327c9ac6cb846666265037f881106e77d6988900c992f080b`: the example names its photon response `photon-response/nist-xcom-all.json`,
   outside the catalog namespace, with the same declared SHA-256. The full evidence run is repeated with the old
   path removed from the data home. This is P157's one repair round.
+
+## Entry 257 — P157 evidence run 2: G0 and G2–G7 pass on 93985f7 (Amendment A repair) (2026-10-28)
+
+- **Repair** `93985f7`: `examples/impurities_ra_steel/base_spec.json` names its photon response
+  `photon-response/nist-xcom-all.json` (same declared SHA-256), and the example README says to build the file and
+  place it there. `controls/check_public_examples.py` passes locally: 17 hashes checked, 4 external, 0 mismatched.
+  There is no change under `crates/`, `Cargo.toml` or `Cargo.lock` since `8702e67`, so G1 (`results/p157/g1.log`)
+  stands.
+- **Data home** for the run was `target/p157-wt`. `actinv-data/v1.1.0/photon/` was moved out of it first. The built
+  response was copied to `photon-response/nist-xcom-all.json`, and its SHA-256 matched the declared
+  `9efa4048…`.
+- **Evidence run 2:** `controls/check_p157.py` (`ab3ce75a…`, unchanged) ran with candidate `21146a0c…`, rebuilt from
+  `93985f7` and byte-identical to evidence run 1's, against reference `e767e0d0…`. G0, including Amendment A's hash,
+  and G2–G7 passed. The run took 30 min 53 s with a peak RSS of 1.8 GB; it ran alongside the GUI preview, against
+  16 min 48 s for run 1. G7's example run used `base_spec.json` `e340dfc3…` with `dose.contact_proxy` among its
+  endpoints, and its verification passed (max rel dev 2.0e-15). Record: `results/p157_screening.json`, log
+  `results/p157/evidence_run_2.log`. Evidence run 1's record is in `78ebd9d`.
+- **G8** is pending CI on the pushed commit.
