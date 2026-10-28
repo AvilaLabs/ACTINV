@@ -1,0 +1,100 @@
+{
+ "n-Al027.tendl": {
+  "elastic": {
+   "thermal_old": 1.42506295270725,
+   "thermal_new": 1.4250629527072503,
+   "thermal_rel": 2.220446049250313e-16,
+   "res_integral_above_0.5eV_rel": 0.0008096251662654819,
+   "worst_pointwise_rel": 1.1981272791390745,
+   "worst_at_eV": 773766.69995
+  },
+  "capture": {
+   "thermal_old": 0.23345359206427604,
+   "thermal_new": 0.23345359206427604,
+   "thermal_rel": 0.0,
+   "res_integral_above_0.5eV_rel": 2.634283814684224e-05,
+   "worst_pointwise_rel": 0.16303001577470555,
+   "worst_at_eV": 345152.33532
+  }
+ },
+ "n-Cl037.tendl": {
+  "elastic": {
+   "thermal_old": 1.2808453466718173,
+   "thermal_new": 1.2808453466718173,
+   "thermal_rel": 0.0,
+   "res_integral_above_0.5eV_rel": 0.0006206682734066771,
+   "worst_pointwise_rel": 1.6967016618807698,
+   "worst_at_eV": 417138.47366
+  },
+  "capture": {
+   "thermal_old": 0.431006401084137,
+   "thermal_new": 0.431006401084137,
+   "thermal_rel": 0.0,
+   "res_integral_above_0.5eV_rel": -3.0833273011898754e-05,
+   "worst_pointwise_rel": 0.011435867236152975,
+   "worst_at_eV": 262416.82765
+  }
+ },
+ "n-Mn055.tendl": {
+  "elastic": {
+   "thermal_old": 2.2088700174912885,
+   "thermal_new": 2.2088700174912885,
+   "thermal_rel": 0.0,
+   "res_integral_above_0.5eV_rel": 4.05011788551235e-08,
+   "worst_pointwise_rel": 0.046814148950602874,
+   "worst_at_eV": 115007.56369
+  },
+  "capture": {
+   "thermal_old": 13.26965287813357,
+   "thermal_new": 13.26965287813357,
+   "thermal_rel": 0.0,
+   "res_integral_above_0.5eV_rel": -2.7683193071226242e-08,
+   "worst_pointwise_rel": 4.402429210559333e-05,
+   "worst_at_eV": 10901.533297
+  }
+ },
+ "n-Si029.tendl": {
+  "elastic": {
+   "thermal_old": 2.5841310511411533,
+   "thermal_new": 2.5841310511411533,
+   "thermal_rel": 0.0,
+   "res_integral_above_0.5eV_rel": 0.0009629602880054655,
+   "worst_pointwise_rel": 0.8654398556597147,
+   "worst_at_eV": 640371.92744
+  },
+  "capture": {
+   "thermal_old": 0.11995247940422313,
+   "thermal_new": 0.11995247940422313,
+   "thermal_rel": 0.0,
+   "res_integral_above_0.5eV_rel": 1.535171900934884e-06,
+   "worst_pointwise_rel": 0.021047040026095587,
+   "worst_at_eV": 650003.89525
+  }
+ },
+ "n-U235.tendl": {
+  "elastic": {
+   "thermal_old": 14.079544584688403,
+   "thermal_new": 14.079544584688403,
+   "thermal_rel": 0.0,
+   "res_integral_above_0.5eV_rel": 0.0,
+   "worst_pointwise_rel": 0.0,
+   "worst_at_eV": 2250.0
+  },
+  "capture": {
+   "thermal_old": 99.39414988546653,
+   "thermal_new": 99.39414988546653,
+   "thermal_rel": 0.0,
+   "res_integral_above_0.5eV_rel": 0.0,
+   "worst_pointwise_rel": 0.0,
+   "worst_at_eV": 2235.6212306
+  },
+  "fission": {
+   "thermal_old": 586.8061698650183,
+   "thermal_new": 586.8061698650183,
+   "thermal_rel": 0.0,
+   "res_integral_above_0.5eV_rel": 0.0,
+   "worst_pointwise_rel": 0.0,
+   "worst_at_eV": 1871.2598451
+  }
+ }
+}

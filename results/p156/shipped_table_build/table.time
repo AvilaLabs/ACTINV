@@ -1,0 +1,24 @@
+linearization accepted a saturated frontier: 2 segment(s), worst relative error 2.455e-3
+	Command being timed: "/home/connoravila/Documents/actinv/target/wt-p156-wt/release/actinv build-damage /home/connoravila/Documents/actinv/target/p156-dev/corpus /home/connoravila/Documents/actinv/target/p156-dev/tendl-2025-neutron-damage-709g.json --method kinematic --projectile neutron --groups fispact-709 --continuum-recoil evaluated --continue-on-error true"
+	User time (seconds): 2938.90
+	System time (seconds): 5.88
+	Percent of CPU this job got: 195%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 25:08.87
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 432052
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 963755
+	Voluntary context switches: 250961
+	Involuntary context switches: 82029
+	Swaps: 0
+	File system inputs: 3381816
+	File system outputs: 95808
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0

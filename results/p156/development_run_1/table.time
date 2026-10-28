@@ -1,0 +1,25 @@
+/home/connoravila/Documents/actinv/target/p156-dev/corpus/n-Fe054.tendl: /home/connoravila/Documents/actinv/target/p156-dev/corpus/n-Fe054.tendl: MT2 resonance processing: MT=2 zero-K reconstruction is nonfinite or negative at 3493.9891781968804 eV
+Command exited with non-zero status 1
+	Command being timed: "/home/connoravila/Documents/actinv/target/wt-p156-wt/release/actinv build-damage /home/connoravila/Documents/actinv/target/p156-dev/corpus /home/connoravila/Documents/actinv/target/p156-dev/tendl-2025-neutron-damage-709g.json --method kinematic --projectile neutron --groups fispact-709 --continuum-recoil evaluated"
+	User time (seconds): 325.41
+	System time (seconds): 0.97
+	Percent of CPU this job got: 191%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 2:50.78
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 90484
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 1
+	Minor (reclaiming a frame) page faults: 118520
+	Voluntary context switches: 65180
+	Involuntary context switches: 1703
+	Swaps: 0
+	File system inputs: 932152
+	File system outputs: 8
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 1

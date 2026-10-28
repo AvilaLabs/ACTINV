@@ -1,0 +1,38 @@
+P156 G4: FAIL
+  G4/V51: PASS
+  G4/Ti48: PASS
+  G4/Cu63: PASS
+  G4/Ta181: PASS
+  G4/Mo98: PASS
+  G4/Nb93: PASS
+  G4/Mn55: PASS
+  G4/Co59: PASS
+  G4/Si28: PASS
+  G4/Al27: FAIL
+  G4/Be9: PASS
+  G4/Li7: PASS
+P156: FAIL (/home/connoravila/Documents/actinv/target/p156-dev/d_check_g4.json)
+Command exited with non-zero status 1
+	Command being timed: "python3 check_p156.py --gates G4 --reuse --workdir /home/connoravila/Documents/actinv/target/p156-work-d-check --candidate /home/connoravila/Documents/actinv/target/wt-p156-wt/release/actinv --out /home/connoravila/Documents/actinv/target/p156-dev/d_check_g4.json"
+	User time (seconds): 194.91
+	System time (seconds): 0.54
+	Percent of CPU this job got: 99%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 3:15.63
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 174552
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 93338
+	Voluntary context switches: 3
+	Involuntary context switches: 9347
+	Swaps: 0
+	File system inputs: 8
+	File system outputs: 3256
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 1

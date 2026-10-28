@@ -1,0 +1,6 @@
+n-Al027.tendl 2.5 1e-05 845001.0 45 34
+n-Cl037.tendl 1.5 1e-05 1200000.0 67 82
+n-Mn055.tendl 2.5 1e-05 125000.0 90 97
+n-Si029.tendl 0.5 1e-05 1300001.0 8 21
+n-U235.tendl 3.5 1e-05 2250.0 1449 1746
+files with negative AJ in an LRF=3 range: 5
