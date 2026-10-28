@@ -4329,3 +4329,24 @@ The earlier estimate of about 7 h, taken from eight heavy targets, was about 13 
 - **P156 Amendment C** `d77faef3eeb26042553e45b85ddc91cc7a544cd2a87383dba7475ecf9667a663`: the build directory takes `n-Pb208.tendl` from the P10 working corpus. That file has
   SHA-256 `86788a14…`, the source the shipped activation library's index records. The distributed file is not
   used, and the substitution is disclosed in the notice.
+
+## Entry 247 — P156 development run 3 and Amendment D registered (2026-10-27)
+
+Development run 3 is disclosed. The checker ran gates G0 and G2–G7 on candidate `e94b230` with the table built from
+`05a86cc` on the Amendment C corpus. G3, G5 and G6 passed. G0 failed because the candidate branch did not yet carry
+Amendment C. G2 failed because the candidate worktree had no `actinv-data` directory for the example specs. G7
+failed because the checker treated the neutron bundles' replacement of the v1/v1-1 notices by the v1-2 notice as a
+lost artifact; the notice artifacts themselves are byte-identical, which is what G7 requires, and the checker now
+reports a notice superseded by a new notice instead. G4 failed for Al-27, Cu-63, Ta-181, Be-9 and Li-7; the findings
+are in Amendment D. After the findings, and before registration, the D1–D3 checker changes were evaluated in reuse
+mode on development run 3's NJOY outputs and tables: every target passed except Al-27, whose tables predate the
+correction. A candidate build with the correction gave a worst Al-27 elastic group within 5e-4 of the reference.
+The 0 K reconstructions of the four affected evaluations were compared before and after the correction.
+
+- **P156 Amendment D** `0eedc36d4e2038cd9e560758ec0856f9e878ec48a4be29596cffffc094067f7a`: (D1) the elastic reference W steps at an LTT=3 switch energy, Legendre below and
+  tabulated at and above it. (D2) The B2 emulation computes `W_ladder` with HEATR's 64-point Gauss–Legendre rule.
+  (D3) A G4 channel comparison that is vacuous only because its groups are uncovered (none outside tolerance, at
+  least 10 uncovered groups) is reported, not gating, with its precondition set if that has no group outside its
+  bounds. (D4) The candidate's Reich–Moore reconstruction keeps channels of opposite AJ sign apart, as NJOY RECONR
+  does. This changes Al-27, Cl-37, Mn-55 and Si-29. The shipped damage table is rebuilt. The activation library is not
+  rebuilt: its capture resonance integrals move by at most 3e-5, and its thermal values not at all.
