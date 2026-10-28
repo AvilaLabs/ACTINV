@@ -6,6 +6,14 @@ fn default_validation_does_not_require_downloaded_data() {
     std::fs::create_dir_all(&dir).unwrap();
     let spec = dir.join("problem.json");
     let example = actinv_cli::workflow::new_example(&dir.join("missing-data")).unwrap();
+    // The example names the catalog damage table without any displacement energies.
+    let damage = serde_json::to_value(&example).unwrap()["damage"].clone();
+    assert!(damage["table"]["path"]
+        .as_str()
+        .is_some_and(|path| path.ends_with("/damage/tendl-2025-neutron-damage-709g.json")));
+    assert!(damage["displacement_energy_eV"]
+        .as_object()
+        .is_none_or(|energies| energies.is_empty()));
     std::fs::write(&spec, serde_json::to_vec(&example).unwrap()).unwrap();
     for flag in [None, Some("--schema")] {
         let mut command = Command::new(env!("CARGO_BIN_EXE_actinv"));
