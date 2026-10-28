@@ -4536,3 +4536,15 @@ entries 256–257). **P157-PASS** (`results/p157_verdict.json`): `actinv impurit
 activity, heat, contact dose, single nuclides, clearance and waste class, verified against full solves. Two
 caveats remain open: the latent `waste composition solve` defect on round-off nuclides needs its own phase
 (entry 254), and G5's agreement with that command compared no case (entry 255).
+
+## Entry 259 — P161 registered: pathway closure ignores noise-level inventories (2026-10-28)
+
+The quick start reports `pathway_closure = 4.117` on master `2efc851`, from a Mn-58 residue of 2.7e-28 atoms/g. The app
+shows that as a 411.7% gap. Before registration the reference was run on every example it accepts, plus a CRAM48
+variant of the quick start; the protocol discloses those values. The CRAM48 run ruled out a numerical-floor cut.
+
+- **P161 protocol** `26daeb338508c5f45d2a64c7935da1ad599e0a3b5387d04322e871c4b42c280f`: the code's existing noise cut, 1e-12 of the step's largest population, applies to every
+  nuclide in `pathway_closure`. The app shows each nuclide's own coverage. Reference `672ba4a3…` built from `2efc851`.
+
+The CI rule in `AGENTS.md` is relaxed by owner direction. Only G8-type checks and code-on-code pushes wait for CI.
+Bookkeeping pushes do not, and the CI steps a change can reach run locally first.
