@@ -12,7 +12,7 @@ njoy_continuum_recoil, NORDLUND_TABLE_1, FE_ABUNDANCE, TARGETS / BUILD_ED (P154 
 hard-codes (its four targets and their displacement energies) is parameterized by temporarily rebinding those module
 globals around the call (`p154_targets`), never by editing check_p154.py.
 
-  G0  This protocol's SHA-256 is in protocols/protocol_hash.txt.
+  G0  This protocol's and Amendment A's SHA-256 are in protocols/protocol_hash.txt.
   G1  External (fmt, clippy -D warnings, workspace tests): recorded; `--g1-log PATH` records the log's digest and tail.
   G2  Existing behaviour. examples/damage_demo.json and examples/fns_fe_5min.json run with reference and candidate are
       byte-identical apart from `ms`; `build-damage` without `--method` is byte-identical on the P23 corpus (both are
@@ -24,9 +24,10 @@ globals around the call (`p154_targets`), never by editing check_p154.py.
       Be-9, Li-7, Cu-63 and the smallest TENDL file of every other element of the standard table) records exactly
       the NJOY HEATR table (Be 31, C 31, Mg 25, Al 27, Si 25, Ca 40, Ti V Cr Mn Fe Co Ni Cu 40, Zr 40, Nb 40, Mo 60,
       Ag 60, Ta 90, W 90, Au 30, Pb 25; 25 otherwise) for each element present and nothing else. W-184 at W=90 (the
-      default) and W=70: displacement_arc_barn identical, displacement_nrt_barn differs. Fe-56 at Fe=40: the arc column
+      default) and W=70 (Amendment A1): displacement_arc_barn within 1e-3 relative and displacement_nrt_barn more than 1e-2 apart in
+      every group above 1e-6 of the maximum; largest arc and smallest NRT difference reported. Fe-56 at Fe=40: the arc column
       equals the reference binary's, and the candidate's no-option build of Fe-56 is identical to it. Cu-63 at its default
-      (40) and at Cu=33 (Nordlund's reference): the arc column is identical (item 2), the NRT column differs.
+      (40) and at Cu=33 (Nordlund's reference): the same numerical comparison as W-184 (item 2).
   G4  Wider accuracy. TENDL-2025 V-51, Ti-48, Cu-63, Ta-181, Mo-98, Nb-93, Mn-55, Co-59, Si-28, Al-27, Be-9, Li-7: P154's
       G3 (elastic, 2 %), G4 (inelastic and disappearance, 5 %, Amendment C precondition set and references) and G5 (NJOY
       MT=444 within computed plus uncovered bound) against NJOY at E_d equal to the candidate's standard energy of the
@@ -48,8 +49,8 @@ globals around the call (`p154_targets`), never by editing check_p154.py.
       GNU time -v output; the rebuild's own wall time and child peak RSS are always recorded).
   G6  No setup. `actinv new --data-dir DIR` output runs; its per-step damage blocks and ledger damage equal those of the
       same spec with damage.table path and sha256 explicit and every energy written out, once the energy-source field
-      (any key matching ENERGY_SOURCE_KEY, default `displacement_energy_source`) is removed; that field is `table` for
-      every element in the first and `spec` in the second. FNS Fe (examples/fns_fe_5min.json plus damage, gas) on the
+      (ledger.damage.displacement_energy_source, element -> spec | table) is removed; that field is `table` for every element
+      in the first and `spec` in the second; both runs have a damage block on every step (`new` leaves options.outputs unset). FNS Fe (examples/fns_fe_5min.json plus damage, gas) on the
       shipped table: dpa, dpa_nrt, dpa_arc and the rates / bounds reproduced from the table rows (atom-weighted over the
       covered Fe isotopes), the flux multipliers, durations and spectrum within 1e-12 relative (check_run_with_bounds);
       covered_atom_fraction present at every step and equal to the abundance of the covered isotopes; a spec giving
@@ -118,7 +119,11 @@ SEED = 156
 SUBSET = 16
 TOL_SUM = 1e-12                       # damage_energy_barn_eV against the sum of its partials (G5)
 TOL_RUN = 1e-12
-ENERGY_SOURCE_KEY = r"(?i)energy.*source|source.*energy"   # the key naming `spec` / `table` (set by --energy-source-key)
+ENERGY_SOURCE_KEY = "displacement_energy_source"   # ledger.damage map element -> "spec" | "table" (table-2 runs)
+AMENDMENT_A = ROOT / "protocols" / "ACTINV-P156_AMENDMENT_A.md"
+TOL_ARC = 1e-3                        # Amendment A1: arc agreement across NRT energies (the build REFINE_TOLERANCE)
+TOL_NRT = 1e-2                        # Amendment A1: NRT must differ by more than this
+A1_FLOOR = 1e-6                       # groups above this fraction of the maximum
 CATALOG_ID = "tendl-2025-neutron-damage"
 CATALOG_ROLE = "damage-table"
 NEUTRON_BUNDLES = ("tendl-2025-neutron", "tendl-2025-neutron-covariance", "tendl-2025-patched-neutron",
@@ -423,8 +428,9 @@ def parse_time_log(text):
 
 
 def strip_energy_source(node, pattern=None, path="", found=None):
-    """Copy of `node` without keys matching the energy-source pattern; `found` collects (path, value) of the removed."""
-    pattern = re.compile(pattern or ENERGY_SOURCE_KEY)
+    """Copy of `node` without the energy-source key (exact name); `found` collects (path, value) of the removed."""
+    if not isinstance(pattern, re.Pattern):
+        pattern = re.compile("^" + re.escape(pattern or ENERGY_SOURCE_KEY) + "$")
     found = [] if found is None else found
     if isinstance(node, dict):
         out = {}
@@ -647,10 +653,20 @@ def p154_recorded_modes():
 
 
 def gate_g0():
-    digest = sha256(PROTOCOL)
     lines = HASH_LOG.read_text(encoding="utf-8").splitlines()
-    hit = any(ln.startswith(digest) and ln.split()[-1] == f"protocols/{PROTOCOL.name}" for ln in lines)
-    return {"pass": hit, "protocol_sha256": digest, "in_protocol_hash_txt": hit}
+    out, ok = {}, True
+    for label, path in (("protocol", PROTOCOL), ("amendment_a", AMENDMENT_A)):
+        if not path.is_file():
+            out[label] = {"path": str(path), "present": False, "in_protocol_hash_txt": False}
+            ok = False
+            continue
+        digest = sha256(path)
+        hit = any(ln.startswith(digest) and ln.split()[-1] == f"protocols/{path.name}" for ln in lines)
+        out[label] = {"path": str(path), "sha256": digest, "in_protocol_hash_txt": hit}
+        ok = ok and hit
+    out["protocol_sha256"] = out["protocol"].get("sha256")
+    out["pass"] = ok
+    return out
 
 
 # ------------------------------------------------------------------------------ G1 / G8
@@ -708,6 +724,24 @@ def gate_g2(ref, cand, work, timeout, reuse):
 # ------------------------------------------------------------------------------ G3
 
 
+def arc_nrt_comparison(arc_a, arc_b, nrt_a, nrt_b, tol_arc=TOL_ARC, tol_nrt=TOL_NRT, floor=A1_FLOOR):
+    """Amendment A1 for one element built at two NRT energies (a = default, b = the comparison energy). arc: relative
+    difference of a from b at most tol_arc in every group where arc_b exceeds floor x its maximum. NRT: relative
+    difference from nrt_b more than tol_nrt in every group where nrt_b exceeds floor x its maximum. Reports the largest
+    arc and the smallest NRT difference."""
+    if not (len(arc_a) == len(arc_b) == len(nrt_a) == len(nrt_b)) or not arc_b:
+        return {"pass": False, "error": "columns missing or of different length"}
+    arc_top, nrt_top = max(arc_b), max(nrt_b)
+    arc_d = [(p154.rel(a, b), g) for g, (a, b) in enumerate(zip(arc_a, arc_b)) if b > floor * arc_top]
+    nrt_d = [(p154.rel(a, b), g) for g, (a, b) in enumerate(zip(nrt_a, nrt_b)) if b > floor * nrt_top]
+    arc_max = max(arc_d, default=(math.inf, None))
+    nrt_min = min(nrt_d, default=(0.0, None))
+    return {"arc_groups": len(arc_d), "nrt_groups": len(nrt_d), "largest_arc_rel_diff": arc_max[0],
+            "largest_arc_group": arc_max[1], "smallest_nrt_rel_diff": nrt_min[0], "smallest_nrt_group": nrt_min[1],
+            "arc_bitwise_identical": arc_a == arc_b,
+            "pass": bool(arc_d and nrt_d and arc_max[0] <= tol_arc and nrt_min[0] > tol_nrt)}
+
+
 def smallest_per_element(tendl_dir, skip_elements):
     """{element: file name} of the smallest ground-state TENDL file of each standard-table element not in skip."""
     best = {}
@@ -744,13 +778,12 @@ def gate_g3(ref, cand, work, tendl_dir, timeout):
     w_dir = stage_corpus(work / "w184", ["n-W184.tendl"], tendl_dir)
     w70, _ = build_table(cand, w_dir, work / "w184_70.json", G3_ARGS + ed_args({"W": 70.0}), timeout)
     a, b = rows.get("W184", {}), w70["targets"]["W184"]
-    cases["w184_arc_independent_of_ed"] = {
-        "default_W": got.get("W"), "arc_identical": a.get("displacement_arc_barn") == b.get("displacement_arc_barn")
-        and "displacement_arc_barn" in a, "nrt_differs": a.get("displacement_nrt_barn") != b.get("displacement_nrt_barn"),
-        "w70_recorded": w70["displacement"]["displacement_energy_eV"]}
-    cases["w184_arc_independent_of_ed"]["pass"] = (cases["w184_arc_independent_of_ed"]["arc_identical"]
-                                                   and cases["w184_arc_independent_of_ed"]["nrt_differs"]
-                                                   and got.get("W") == 90.0)
+    cmp = arc_nrt_comparison(a.get("displacement_arc_barn", []), b.get("displacement_arc_barn", []),
+                             a.get("displacement_nrt_barn", []), b.get("displacement_nrt_barn", []))
+    cmp.update(default_W=got.get("W"), w70_recorded=w70["displacement"]["displacement_energy_eV"],
+               amendment="Amendment A1: arc within 1e-3, NRT differs by more than 1e-2, groups above 1e-6 of the maximum")
+    cmp["pass"] = bool(cmp["pass"] and got.get("W") == 90.0)
+    cases["w184_arc_independent_of_ed"] = cmp
 
     # Fe-56 at Fe=40: arc column equals the reference binary's; the no-option candidate build is the same row
     fe_dir = stage_corpus(work / "fe56", ["n-Fe056.tendl"], tendl_dir)
@@ -771,13 +804,12 @@ def gate_g3(ref, cand, work, tendl_dir, timeout):
     cu33, _ = build_table(cand, cu_dir, work / "cu63_33.json", G3_ARGS + ed_args({"Cu": 33.0}), timeout)
     c33, c40 = cu33["targets"]["Cu63"], rows.get("Cu63", {})
     ref_ed = cu33["displacement"]["arc_dpa"]["parameters"]["Cu"]["reference_displacement_energy_eV"]
-    cases["cu63_arc_at_reference_energy"] = {
-        "default_Cu": got.get("Cu"), "arc_identical": c33.get("displacement_arc_barn") == c40.get("displacement_arc_barn")
-        and "displacement_arc_barn" in c40, "nrt_differs": c33.get("displacement_nrt_barn") != c40.get("displacement_nrt_barn"),
-        "reference_energy_recorded": ref_ed}
-    cases["cu63_arc_at_reference_energy"]["pass"] = (
-        cases["cu63_arc_at_reference_energy"]["arc_identical"] and cases["cu63_arc_at_reference_energy"]["nrt_differs"]
-        and got.get("Cu") == 40.0 and ref_ed == 33.0)
+    cmp = arc_nrt_comparison(c40.get("displacement_arc_barn", []), c33.get("displacement_arc_barn", []),
+                             c40.get("displacement_nrt_barn", []), c33.get("displacement_nrt_barn", []))
+    cmp.update(default_Cu=got.get("Cu"), reference_energy_recorded=ref_ed,
+               note="same numerical form as Amendment A1 (the amendment names W-184; Cu-63 is this checker's addition)")
+    cmp["pass"] = bool(cmp["pass"] and got.get("Cu") == 40.0 and ref_ed == 33.0)
+    cases["cu63_arc_at_reference_energy"] = cmp
     return {"pass": all(c["pass"] for c in cases.values()), "cases": cases}
 
 
@@ -1045,7 +1077,7 @@ def gate_g6(cand, work, args, table_path):
     new_spec = json.loads(new_path.read_text())
     dmg = new_spec.get("damage") or {}
     outputs = new_spec.get("options", {}).get("outputs", [])
-    case = {"damage_section": bool(dmg), "outputs_has_damage": "damage" in outputs,
+    case = {"damage_section": bool(dmg), "options_outputs": outputs,
             "spec_damage": dmg, "energies_in_new_spec": dmg.get("displacement_energy_eV")}
     table = json.loads(Path(table_path).read_text())
     composition = new_spec.get("material", {}).get("composition", {})
@@ -1080,7 +1112,10 @@ def gate_g6(cand, work, args, table_path):
     case["certificate_information"] = {"equal_apart_from_energy_source":
                                        strip_energy_source(cert_new, args.energy_source_key)[0]
                                        == strip_energy_source(cert_explicit, args.energy_source_key)[0]}
-    case["pass"] = bool(case["damage_section"] and case["outputs_has_damage"] and case["steps_compared"] > 0
+    case["every_step_has_damage_block"] = all(isinstance(r.get("steps"), list) and r["steps"]
+                                              and all(isinstance(s.get("damage"), dict) for s in r["steps"])
+                                              for r in results.values())
+    case["pass"] = bool(case["damage_section"] and case["every_step_has_damage_block"] and case["steps_compared"] > 0
                         and case["blocks_equal_apart_from_energy_source"]
                         and case["energy_source_field"]["new_is_table"] and case["energy_source_field"]["explicit_is_spec"])
     cases["new_equals_explicit"] = case
@@ -1484,12 +1519,12 @@ def self_check():
           and all(parse_tendl_name(f) is not None for (f, _e, _s) in G4_TARGETS.values()))
     # --- energy-source stripping
     result = {"ledger": {"damage": {"displacement_energy_source": {"Fe": "table"}, "table_sha256": "x"}},
-              "steps": [{"damage": {"dpa": 1.0, "energy_source": "table"}}]}
+              "steps": [{"damage": {"dpa": 1.0}}]}
     clean, found = strip_energy_source(result)
-    check("energy-source field stripped", len(found) == 2 and "displacement_energy_source" not in json.dumps(clean)
+    check("energy-source field stripped", len(found) == 1 and "displacement_energy_source" not in json.dumps(clean)
           and clean["steps"][0]["damage"] == {"dpa": 1.0} and set(source_values(found)) == {"table"})
     spec_side, found2 = strip_energy_source({"ledger": {"damage": {"displacement_energy_source": {"Fe": "spec"}, "table_sha256": "x"}},
-                                             "steps": [{"damage": {"dpa": 1.0, "energy_source": "spec"}}]})
+                                             "steps": [{"damage": {"dpa": 1.0}}]})
     check("blocks equal apart from the source", clean == spec_side and set(source_values(found2)) == {"spec"}
           and json_diff_paths(clean, spec_side) == [] and json_diff_paths({"a": [1, 2]}, {"a": [1, 3]}) == ["/a[1]: 2 != 3"])
     # --- catalog checks on synthetic 1.2.0 built from the real 1.1.0
@@ -1539,7 +1574,22 @@ def self_check():
     er = effective_row([{"damage_energy_barn_eV": [1.0, 2.0]}, {"damage_energy_barn_eV": [3.0, 4.0]}], [1.0, 3.0])
     check("effective row", er == {"damage_energy_barn_eV": [2.5, 3.5]})
     # --- G0 on the present protocol, and the example spec made absolute
-    check("G0 hash line", gate_g0()["pass"])
+    check("G0 hash line (protocol)", gate_g0()["protocol"]["in_protocol_hash_txt"] is True and "amendment_a" in gate_g0())
+    base = [1.0 + 0.01 * g for g in range(50)] + [1e-9]
+    near = [v * (1 + 9e-6) for v in base]
+    nrt_a = [v * 1.2 for v in base]
+    ok_cmp = arc_nrt_comparison(near, base, nrt_a, base)
+    check("A1: arc 9e-6 apart and NRT 20% apart passes", ok_cmp["pass"] and 8e-6 < ok_cmp["largest_arc_rel_diff"] < 1e-5
+          and abs(ok_cmp["smallest_nrt_rel_diff"] - 0.2) < 1e-9 and ok_cmp["arc_groups"] == 50 and not ok_cmp["arc_bitwise_identical"])
+    check("A1: arc 2e-3 apart fails", not arc_nrt_comparison([v * 1.002 for v in base], base, nrt_a, base)["pass"])
+    check("A1: NRT 5e-3 apart in one group fails",
+          not arc_nrt_comparison(near, base, [v * 1.2 for v in base[:10]] + [base[10] * 1.005] + [v * 1.2 for v in base[11:]], base)["pass"])
+    check("A1: floor ignores tiny groups, empty fails",
+          arc_nrt_comparison(near[:-1] + [5e-9], base, nrt_a[:-1] + [1e-9], base)["pass"]
+          and not arc_nrt_comparison([], [], [], [])["pass"])
+    check("energy-source key is exact", ENERGY_SOURCE_KEY == "displacement_energy_source"
+          and strip_energy_source({"displacement_energy_eV": {"Fe": 40.0}, "displacement_energy_source": {"Fe": "table"}})[0]
+          == {"displacement_energy_eV": {"Fe": 40.0}})
     abs_spec = absolute_spec(json.loads(p154.GATE_SPEC.read_text()), "/lib")
     check("spec paths", abs_spec["library"]["path"].startswith("/lib/activation/") and abs_spec["decay"]["primary"].startswith("/lib/decay/"))
     with tempfile.TemporaryDirectory() as tmp:
@@ -1593,7 +1643,7 @@ def main(argv=None):
     ap.add_argument("--fetch-env", action="append", help="KEY=VALUE for the fetch (for example a mirror setting)")
     ap.add_argument("--network-log", help="G7: file of requested URLs, one per line, from the fetch")
     ap.add_argument("--published", action="store_true", help="G7: clean fetch, verify and FNS run from the published release")
-    ap.add_argument("--energy-source-key", default=ENERGY_SOURCE_KEY, help="regex of the energy-source key (G6)")
+    ap.add_argument("--energy-source-key", default=ENERGY_SOURCE_KEY, help="exact name of the ledger.damage energy-source key (G6)")
     ap.add_argument("--njoy", default=njoy.DEFAULT_NJOY)
     ap.add_argument("--njoy-err", type=float, default=njoy.RECONR_ERR)
     ap.add_argument("--mode-information", action="store_true", help="G4: also build P154's other capture / continuum modes")
