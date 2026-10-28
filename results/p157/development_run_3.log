@@ -1,0 +1,35 @@
+P157 G0: PASS
+P157 G2: PASS
+P157 G3: PASS
+P157 G4: PASS
+P157 G5: FAIL
+P157 G6: PASS
+P157 G7: PASS
+  G5/ra_reduced: GateError: waste composition solve exited 1: native verification failed for component 'ra_reduced' step 4
+
+P157 G1, G8: external (not evaluated here)
+P157: FAIL (/home/connoravila/Documents/actinv/target/p157-wt/target/p157-dev/dev3.json)
+Command exited with non-zero status 1
+	Command being timed: "python3 controls/check_p157.py --reference /home/connoravila/Documents/actinv/target/p155-evid/actinv --candidate /home/connoravila/Documents/actinv/target/wt-p157-wt/release/actinv --out target/p157-dev/dev3.json"
+	User time (seconds): 888.83
+	System time (seconds): 21.30
+	Percent of CPU this job got: 99%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 15:11.99
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 1844100
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 72
+	Minor (reclaiming a frame) page faults: 9538340
+	Voluntary context switches: 12017
+	Involuntary context switches: 11834
+	Swaps: 0
+	File system inputs: 3704400
+	File system outputs: 2066248
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 1

@@ -1,0 +1,791 @@
+{
+ "candidate_sha256": "fd5c8585b88df65751049e767c01e56cc38731260aa74fc873e3aefd6e74103d",
+ "checker_sha256": "9abd2e1b7280ae9d83b51b98c6dc6dc116ece338f37ddedff40c9ec0997b09ce",
+ "data_home": "/home/connoravila/Documents/actinv/target/p157-wt",
+ "external_gates": {
+  "G1": "fmt, clippy -D warnings, workspace tests: coordinator",
+  "G8": "CI on the pushed commit and committed baselines: coordinator"
+ },
+ "gates": {
+  "G0": {
+   "pass": true,
+   "protocol": {
+    "in_protocol_hash_txt": true,
+    "path": "/home/connoravila/Documents/actinv/target/p157-wt/protocols/ACTINV-P157_PROTOCOL.md",
+    "sha256": "e2eeb8b6b5499ee7221f503f9729dd2d8e6639660245a689aee4f6ab06c66f65"
+   }
+  },
+  "G2": {
+   "cases": [
+    {
+     "candidate_exit": 0,
+     "candidate_stderr": "",
+     "command": "budget",
+     "diffs": [],
+     "id": "budget_p79_eurofer97",
+     "identical_apart_from_ms": true,
+     "input": "/home/connoravila/Documents/actinv/target/p157-wt/controls/p79/eurofer97_exvessel.json",
+     "pass": true,
+     "reference_exit": 0,
+     "reference_output": true,
+     "reference_stderr": ""
+    },
+    {
+     "candidate_exit": 0,
+     "candidate_stderr": "",
+     "command": "budget",
+     "diffs": [],
+     "id": "budget_p79_ss316ln",
+     "identical_apart_from_ms": true,
+     "input": "/home/connoravila/Documents/actinv/target/p157-wt/controls/p79/ss316ln_exvessel.json",
+     "pass": true,
+     "reference_exit": 0,
+     "reference_output": true,
+     "reference_stderr": ""
+    },
+    {
+     "candidate_exit": 0,
+     "candidate_stderr": "",
+     "command": "waste budget",
+     "diffs": [],
+     "id": "waste_budget_p146_d1",
+     "identical_apart_from_ms": true,
+     "input": "/home/connoravila/Documents/actinv/target/p157-wt/target/p157-work/g2_inputs/d1_budget.json",
+     "pass": true,
+     "reference_exit": 0,
+     "reference_output": true,
+     "reference_stderr": ""
+    },
+    {
+     "candidate_exit": 0,
+     "candidate_stderr": "",
+     "command": "waste budget",
+     "diffs": [],
+     "id": "waste_budget_p146_d2",
+     "identical_apart_from_ms": true,
+     "input": "/home/connoravila/Documents/actinv/target/p157-wt/target/p157-work/g2_inputs/d2_budget.json",
+     "pass": true,
+     "reference_exit": 0,
+     "reference_output": true,
+     "reference_stderr": ""
+    },
+    {
+     "candidate_exit": 0,
+     "candidate_stderr": "",
+     "command": "waste composition",
+     "diffs": [],
+     "id": "waste_composition_p108",
+     "identical_apart_from_ms": true,
+     "input": "/home/connoravila/Documents/actinv/target/p157-wt/target/p157-work/g2_inputs/p108_composition.json",
+     "pass": true,
+     "reference_exit": 0,
+     "reference_output": true,
+     "reference_stderr": ""
+    },
+    {
+     "candidate_exit": 0,
+     "candidate_stderr": "",
+     "command": "waste composition solve",
+     "diffs": [],
+     "id": "waste_composition_solve_p110_ranged_volume_1",
+     "identical_apart_from_ms": true,
+     "input": "/home/connoravila/Documents/actinv/target/p157-wt/target/p157-work/g2_inputs/p110_requests/ranged_volume_1.json",
+     "pass": true,
+     "reference_exit": 0,
+     "reference_output": true,
+     "reference_stderr": ""
+    },
+    {
+     "candidate_exit": 0,
+     "candidate_stderr": "",
+     "command": "waste composition solve",
+     "diffs": [],
+     "id": "waste_composition_solve_p110_high_fixed_volume_7",
+     "identical_apart_from_ms": true,
+     "input": "/home/connoravila/Documents/actinv/target/p157-wt/target/p157-work/g2_inputs/p110_requests/high_fixed_volume_7.json",
+     "pass": true,
+     "reference_exit": 0,
+     "reference_output": true,
+     "reference_stderr": ""
+    },
+    {
+     "candidate_exit": 0,
+     "candidate_stderr": "",
+     "command": "waste composition solve",
+     "diffs": [],
+     "id": "waste_composition_solve_p110_ranged_volume_point_1",
+     "identical_apart_from_ms": true,
+     "input": "/home/connoravila/Documents/actinv/target/p157-wt/target/p157-work/g2_inputs/p110_requests/ranged_volume_point_1.json",
+     "pass": true,
+     "reference_exit": 0,
+     "reference_output": true,
+     "reference_stderr": ""
+    },
+    {
+     "candidate_exit": 0,
+     "candidate_stderr": "",
+     "command": "waste composition solve",
+     "diffs": [],
+     "id": "waste_composition_solve_p110_low_fixed_external_h3",
+     "identical_apart_from_ms": true,
+     "input": "/home/connoravila/Documents/actinv/target/p157-wt/target/p157-work/g2_inputs/p110_requests/low_fixed_external_h3.json",
+     "pass": true,
+     "reference_exit": 0,
+     "reference_output": true,
+     "reference_stderr": ""
+    },
+    {
+     "candidate_exit": 0,
+     "candidate_stderr": "",
+     "command": "waste composition solve",
+     "diffs": [],
+     "id": "waste_composition_solve_p110_required_external_h3",
+     "identical_apart_from_ms": true,
+     "input": "/home/connoravila/Documents/actinv/target/p157-wt/target/p157-work/g2_inputs/p110_requests/required_external_h3.json",
+     "pass": true,
+     "reference_exit": 0,
+     "reference_output": true,
+     "reference_stderr": ""
+    },
+    {
+     "candidate_exit": 0,
+     "candidate_stderr": "",
+     "command": "waste composition solve",
+     "diffs": [],
+     "id": "waste_composition_solve_p110_caller_incomplete",
+     "identical_apart_from_ms": true,
+     "input": "/home/connoravila/Documents/actinv/target/p157-wt/target/p157-work/g2_inputs/p110_requests/caller_incomplete.json",
+     "pass": true,
+     "reference_exit": 0,
+     "reference_output": true,
+     "reference_stderr": ""
+    },
+    {
+     "candidate_exit": 0,
+     "candidate_stderr": "",
+     "command": "waste composition solve",
+     "diffs": [],
+     "id": "waste_composition_solve_p110_missing_fe58_target",
+     "identical_apart_from_ms": true,
+     "input": "/home/connoravila/Documents/actinv/target/p157-wt/target/p157-work/g2_inputs/p110_requests/missing_fe58_target.json",
+     "pass": true,
+     "reference_exit": 0,
+     "reference_output": true,
+     "reference_stderr": ""
+    },
+    {
+     "candidate_exit": 0,
+     "candidate_stderr": "",
+     "command": "waste composition solve",
+     "diffs": [],
+     "id": "waste_composition_solve_p110_missing_nb94_decay",
+     "identical_apart_from_ms": true,
+     "input": "/home/connoravila/Documents/actinv/target/p157-wt/target/p157-work/g2_inputs/p110_requests/missing_nb94_decay.json",
+     "pass": true,
+     "reference_exit": 0,
+     "reference_output": true,
+     "reference_stderr": ""
+    },
+    {
+     "candidate_exit": 0,
+     "candidate_stderr": "",
+     "command": "waste composition solve",
+     "diffs": [],
+     "id": "waste_composition_solve_p110_zero_response_reference",
+     "identical_apart_from_ms": true,
+     "input": "/home/connoravila/Documents/actinv/target/p157-wt/target/p157-work/g2_inputs/p110_requests/zero_response_reference.json",
+     "pass": true,
+     "reference_exit": 0,
+     "reference_output": true,
+     "reference_stderr": ""
+    }
+   ],
+   "pass": true
+  },
+  "G3": {
+   "cases": {
+    "ra_steel": {
+     "checks": 1095,
+     "command": {
+      "exit": 0,
+      "input": "/home/connoravila/Documents/actinv/target/p157-wt/target/p157-work/ra_steel/main/impurities.json",
+      "input_sha256": "23ee33a90980f100602f19fd16e691ce2865e22b36a77722073940956627693b",
+      "output_sha256": "2c4370fde1209317ef9a996f54fec8f9a9bdfa106d236f1f1c7f0292147c59d9",
+      "stderr_tail": "impurities: 15 element solves, 4 targets, verification passed (max rel dev 1.987450414440573e-15) -> /home/connoravila/Documents/actinv/target/p157-wt/target/p157-work/ra_steel/main/out.json\n"
+     },
+     "failure_list": [
+      {
+       "check": "ra_steel/activity:Nb94/step2/Co/others_worst/status",
+       "expected": [
+        "no_response"
+       ],
+       "observed": "infeasible"
+      },
+      {
+       "check": "ra_steel/activity:Nb94/step2/Ag/others_worst/status",
+       "expected": [
+        "no_response"
+       ],
+       "observed": "infeasible"
+      },
+      {
+       "check": "ra_steel/activity:Nb94/step3/Co/others_worst/status",
+       "expected": [
+        "no_response"
+       ],
+       "observed": "infeasible"
+      },
+      {
+       "check": "ra_steel/activity:Nb94/step3/Ag/others_worst/status",
+       "expected": [
+        "no_response"
+       ],
+       "observed": "infeasible"
+      },
+      {
+       "check": "ra_steel/activity:Nb94/step4/Co/others_worst/status",
+       "expected": [
+        "no_response"
+       ],
+       "observed": "infeasible"
+      },
+      {
+       "check": "ra_steel/activity:Nb94/step4/Ag/others_worst/status",
+       "expected": [
+        "no_response"
+       ],
+       "observed": "infeasible"
+      },
+      {
+       "check": "ra_steel/activity:Nb94/step5/Co/others_worst/status",
+       "expected": [
+        "no_response"
+       ],
+       "observed": "infeasible"
+      },
+      {
+       "check": "ra_steel/activity:Nb94/step5/Ag/others_worst/status",
+       "expected": [
+        "no_response"
+       ],
+       "observed": "infeasible"
+      }
+     ],
+     "failures": 8,
+     "max_rel_dev": 4.439700567249216e-14,
+     "notes": [
+      "ra_steel/activity:Nb94/step2: top nuclides not checked (no per-nuclide values for activity:Nb94)",
+      "ra_steel/activity:Nb94/step3: top nuclides not checked (no per-nuclide values for activity:Nb94)",
+      "ra_steel/activity:Nb94/step4: top nuclides not checked (no per-nuclide values for activity:Nb94)",
+      "ra_steel/activity:Nb94/step5: top nuclides not checked (no per-nuclide values for activity:Nb94)"
+     ],
+     "pass": false,
+     "solves": 15
+    },
+    "tungsten": {
+     "checks": 794,
+     "command": {
+      "exit": 0,
+      "input": "/home/connoravila/Documents/actinv/target/p157-wt/target/p157-work/tungsten/main/impurities.json",
+      "input_sha256": "1cc28f81d630aee4e8ee649f17ae53b063d900ae096e4c9809c6fef2faaeea32",
+      "output_sha256": "95fc025305b487cbba427bbc9836be86f6fe2468e6e4cc0093e2b812f06fa2ab",
+      "stderr_tail": "impurities: 7 element solves, 4 targets, verification passed (max rel dev 2.1809929078597658e-15) -> /home/connoravila/Documents/actinv/target/p157-wt/target/p157-work/tungsten/main/out.json\n"
+     },
+     "failure_list": [
+      {
+       "check": "tungsten/activity:Co60/step4/Ta/others_nominal/status",
+       "expected": [
+        "no_response"
+       ],
+       "observed": "infeasible"
+      },
+      {
+       "check": "tungsten/activity:Co60/step4/Mo/others_nominal/status",
+       "expected": [
+        "no_response"
+       ],
+       "observed": "infeasible"
+      },
+      {
+       "check": "tungsten/activity:Co60/step4/Ta/others_worst/status",
+       "expected": [
+        "no_response"
+       ],
+       "observed": "infeasible"
+      },
+      {
+       "check": "tungsten/activity:Co60/step4/Mo/others_worst/status",
+       "expected": [
+        "no_response"
+       ],
+       "observed": "infeasible"
+      },
+      {
+       "check": "tungsten/activity:Co60/step5/Ta/others_nominal/status",
+       "expected": [
+        "no_response"
+       ],
+       "observed": "infeasible"
+      },
+      {
+       "check": "tungsten/activity:Co60/step5/Mo/others_nominal/status",
+       "expected": [
+        "no_response"
+       ],
+       "observed": "infeasible"
+      },
+      {
+       "check": "tungsten/activity:Co60/step5/Ta/others_worst/status",
+       "expected": [
+        "no_response"
+       ],
+       "observed": "infeasible"
+      },
+      {
+       "check": "tungsten/activity:Co60/step5/Mo/others_worst/status",
+       "expected": [
+        "no_response"
+       ],
+       "observed": "infeasible"
+      },
+      {
+       "check": "tungsten/activity:Co60/step6/Ta/others_nominal/status",
+       "expected": [
+        "no_response"
+       ],
+       "observed": "infeasible"
+      },
+      {
+       "check": "tungsten/activity:Co60/step6/Mo/others_nominal/status",
+       "expected": [
+        "no_response"
+       ],
+       "observed": "infeasible"
+      },
+      {
+       "check": "tungsten/activity:Co60/step6/Ta/others_worst/status",
+       "expected": [
+        "no_response"
+       ],
+       "observed": "infeasible"
+      },
+      {
+       "check": "tungsten/activity:Co60/step6/Mo/others_worst/status",
+       "expected": [
+        "no_response"
+       ],
+       "observed": "infeasible"
+      }
+     ],
+     "failures": 12,
+     "max_rel_dev": 1.7400499654144087e-16,
+     "notes": [
+      "tungsten/activity:Co60/step4: top nuclides not checked (no per-nuclide values for activity:Co60)",
+      "tungsten/activity:Co60/step5: top nuclides not checked (no per-nuclide values for activity:Co60)",
+      "tungsten/activity:Co60/step6: top nuclides not checked (no per-nuclide values for activity:Co60)",
+      "tungsten/activity:Co60/step7: top nuclides not checked (no per-nuclide values for activity:Co60)"
+     ],
+     "pass": false,
+     "solves": 7
+    },
+    "vanadium": {
+     "checks": 819,
+     "command": {
+      "exit": 0,
+      "input": "/home/connoravila/Documents/actinv/target/p157-wt/target/p157-work/vanadium/main/impurities.json",
+      "input_sha256": "1d125a6edf2efff178e325f21c6e3b883b2d2a68010dd0fc33104d44924a8212",
+      "output_sha256": "6d323839052ac9423827742e42fa65fb7cf61b7c0dfb61526ff0c3a369b6d6d8",
+      "stderr_tail": "impurities: 9 element solves, 4 targets, verification passed (max rel dev 1.8258575702002718e-15) -> /home/connoravila/Documents/actinv/target/p157-wt/target/p157-work/vanadium/main/out.json\n"
+     },
+     "failure_list": [
+      {
+       "check": "vanadium/activity:Nb94/step4/Co/others_nominal/status",
+       "expected": [
+        "no_response"
+       ],
+       "observed": "infeasible"
+      },
+      {
+       "check": "vanadium/activity:Nb94/step4/Co/others_worst/status",
+       "expected": [
+        "no_response"
+       ],
+       "observed": "infeasible"
+      },
+      {
+       "check": "vanadium/activity:Nb94/step5/Co/others_nominal/status",
+       "expected": [
+        "no_response"
+       ],
+       "observed": "infeasible"
+      },
+      {
+       "check": "vanadium/activity:Nb94/step5/Co/others_worst/status",
+       "expected": [
+        "no_response"
+       ],
+       "observed": "infeasible"
+      },
+      {
+       "check": "vanadium/activity:Nb94/step6/Co/others_nominal/status",
+       "expected": [
+        "no_response"
+       ],
+       "observed": "infeasible"
+      },
+      {
+       "check": "vanadium/activity:Nb94/step6/Co/others_worst/status",
+       "expected": [
+        "no_response"
+       ],
+       "observed": "infeasible"
+      },
+      {
+       "check": "vanadium/activity:Nb94/step7/Co/others_worst/status",
+       "expected": [
+        "no_response"
+       ],
+       "observed": "infeasible"
+      }
+     ],
+     "failures": 7,
+     "max_rel_dev": 1.0077219672432516e-13,
+     "notes": [
+      "vanadium/activity:Nb94/step4: top nuclides not checked (no per-nuclide values for activity:Nb94)",
+      "vanadium/activity:Nb94/step5: top nuclides not checked (no per-nuclide values for activity:Nb94)",
+      "vanadium/activity:Nb94/step6: top nuclides not checked (no per-nuclide values for activity:Nb94)",
+      "vanadium/activity:Nb94/step7: top nuclides not checked (no per-nuclide values for activity:Nb94)"
+     ],
+     "pass": false,
+     "solves": 9
+    }
+   },
+   "pass": false
+  },
+  "G4": {
+   "cases": {
+    "ra_steel": {
+     "checks": 443,
+     "command": {
+      "exit": 0,
+      "input": "/home/connoravila/Documents/actinv/target/p157-wt/target/p157-work/ra_steel/main/impurities.json",
+      "input_sha256": "23ee33a90980f100602f19fd16e691ce2865e22b36a77722073940956627693b",
+      "output_sha256": "2c4370fde1209317ef9a996f54fec8f9a9bdfa106d236f1f1c7f0292147c59d9",
+      "stderr_tail": "impurities: 15 element solves, 4 targets, verification passed (max rel dev 1.987450414440573e-15) -> /home/connoravila/Documents/actinv/target/p157-wt/target/p157-work/ra_steel/main/out.json\n"
+     },
+     "enumerated": [
+      "Ni",
+      "Nb",
+      "Mo",
+      "Cu",
+      "N",
+      "Ag"
+     ],
+     "failure_list": [],
+     "failures": 0,
+     "full_solves": 379,
+     "held": [
+      "Co",
+      "Al"
+     ],
+     "max_rel_dev": 1.775244226990096e-15,
+     "notes": [
+      "ra_steel: corners enumerated over ['Ni', 'Nb', 'Mo', 'Cu', 'N', 'Ag']; held at worst setting: ['Co', 'Al']"
+     ],
+     "pass": true,
+     "verification_points": 77
+    },
+    "tungsten": {
+     "checks": 313,
+     "command": {
+      "exit": 0,
+      "input": "/home/connoravila/Documents/actinv/target/p157-wt/target/p157-work/tungsten/main/impurities.json",
+      "input_sha256": "1cc28f81d630aee4e8ee649f17ae53b063d900ae096e4c9809c6fef2faaeea32",
+      "output_sha256": "95fc025305b487cbba427bbc9836be86f6fe2468e6e4cc0093e2b812f06fa2ab",
+      "stderr_tail": "impurities: 7 element solves, 4 targets, verification passed (max rel dev 2.1809929078597658e-15) -> /home/connoravila/Documents/actinv/target/p157-wt/target/p157-work/tungsten/main/out.json\n"
+     },
+     "enumerated": [
+      "Re",
+      "Os",
+      "Ta",
+      "Mo",
+      "Co",
+      "Ni"
+     ],
+     "failure_list": [],
+     "failures": 0,
+     "full_solves": 496,
+     "held": [],
+     "max_rel_dev": 2.000950416442854e-15,
+     "notes": [
+      "tungsten: all 6 impurities enumerated (2^6 corners)"
+     ],
+     "pass": true,
+     "verification_points": 41
+    },
+    "vanadium": {
+     "checks": 382,
+     "command": {
+      "exit": 0,
+      "input": "/home/connoravila/Documents/actinv/target/p157-wt/target/p157-work/vanadium/main/impurities.json",
+      "input_sha256": "1d125a6edf2efff178e325f21c6e3b883b2d2a68010dd0fc33104d44924a8212",
+      "output_sha256": "6d323839052ac9423827742e42fa65fb7cf61b7c0dfb61526ff0c3a369b6d6d8",
+      "stderr_tail": "impurities: 9 element solves, 4 targets, verification passed (max rel dev 1.8258575702002718e-15) -> /home/connoravila/Documents/actinv/target/p157-wt/target/p157-work/vanadium/main/out.json\n"
+     },
+     "enumerated": [
+      "Nb",
+      "Mo",
+      "Al",
+      "Si",
+      "Cu",
+      "Co"
+     ],
+     "failure_list": [],
+     "failures": 0,
+     "full_solves": 634,
+     "held": [],
+     "max_rel_dev": 1.8258575702002718e-15,
+     "notes": [
+      "vanadium: all 6 impurities enumerated (2^6 corners)"
+     ],
+     "pass": true,
+     "verification_points": 59
+    }
+   },
+   "pass": true
+  },
+  "G5": {
+   "cases": {
+    "ra_reduced": {
+     "error": "GateError: waste composition solve exited 1: native verification failed for component 'ra_reduced' step 4\n",
+     "pass": false
+    },
+    "ra_steel": {
+     "checks": 792,
+     "command": {
+      "exit": 0,
+      "input": "/home/connoravila/Documents/actinv/target/p157-wt/target/p157-work/ra_steel/main/impurities.json",
+      "input_sha256": "23ee33a90980f100602f19fd16e691ce2865e22b36a77722073940956627693b",
+      "output_sha256": "2c4370fde1209317ef9a996f54fec8f9a9bdfa106d236f1f1c7f0292147c59d9",
+      "stderr_tail": "impurities: 15 element solves, 4 targets, verification passed (max rel dev 1.987450414440573e-15) -> /home/connoravila/Documents/actinv/target/p157-wt/target/p157-work/ra_steel/main/out.json\n"
+     },
+     "corner_solves": 192,
+     "failure_list": [],
+     "failures": 0,
+     "max_rel_dev": 0.0,
+     "notes": [
+      "ra_steel: waste composition solve skipped: 15 elements (limit 8)"
+     ],
+     "pass": true
+    },
+    "tungsten": {
+     "checks": 280,
+     "command": {
+      "exit": 0,
+      "input": "/home/connoravila/Documents/actinv/target/p157-wt/target/p157-work/tungsten/main/impurities.json",
+      "input_sha256": "1cc28f81d630aee4e8ee649f17ae53b063d900ae096e4c9809c6fef2faaeea32",
+      "output_sha256": "95fc025305b487cbba427bbc9836be86f6fe2468e6e4cc0093e2b812f06fa2ab",
+      "stderr_tail": "impurities: 7 element solves, 4 targets, verification passed (max rel dev 2.1809929078597658e-15) -> /home/connoravila/Documents/actinv/target/p157-wt/target/p157-work/tungsten/main/out.json\n"
+     },
+     "corner_solves": 64,
+     "failure_list": [],
+     "failures": 0,
+     "max_rel_dev": 0.0,
+     "notes": [
+      "tungsten: waste composition solve skipped: elements not among the 26 qualified: ['Os', 'Re']"
+     ],
+     "pass": true
+    },
+    "vanadium": {
+     "checks": 280,
+     "command": {
+      "exit": 0,
+      "input": "/home/connoravila/Documents/actinv/target/p157-wt/target/p157-work/vanadium/main/impurities.json",
+      "input_sha256": "1d125a6edf2efff178e325f21c6e3b883b2d2a68010dd0fc33104d44924a8212",
+      "output_sha256": "6d323839052ac9423827742e42fa65fb7cf61b7c0dfb61526ff0c3a369b6d6d8",
+      "stderr_tail": "impurities: 9 element solves, 4 targets, verification passed (max rel dev 1.8258575702002718e-15) -> /home/connoravila/Documents/actinv/target/p157-wt/target/p157-work/vanadium/main/out.json\n"
+     },
+     "corner_solves": 64,
+     "failure_list": [],
+     "failures": 0,
+     "max_rel_dev": 0.0,
+     "notes": [
+      "vanadium: waste composition solve skipped: 9 elements (limit 8)"
+     ],
+     "pass": true
+    }
+   },
+   "pass": false
+  },
+  "G6": {
+   "cases": [
+    {
+     "exit": 1,
+     "id": "self_shielding",
+     "message": "impurities refuses self_shielding: shielding factors depend on composition, so ci is not linear in it\n",
+     "output_written": false,
+     "pass": true,
+     "reason_names_cause": true
+    },
+    {
+     "exit": 1,
+     "id": "options_screen",
+     "message": "impurities refuses options.screen: the screened tier prunes by composition-dependent bounds\n",
+     "output_written": false,
+     "pass": true,
+     "reason_names_cause": true
+    },
+    {
+     "exit": 1,
+     "id": "schedule_feed",
+     "message": "impurities refuses schedule step 1: a feed adds atoms independent of composition (affine, not linear)\n",
+     "output_written": false,
+     "pass": true,
+     "reason_names_cause": true
+    },
+    {
+     "exit": 1,
+     "id": "uncertainty",
+     "message": "impurities refuses uncertainty: bands do not compose linearly across element runs\n",
+     "output_written": false,
+     "pass": true,
+     "reason_names_cause": true
+    },
+    {
+     "exit": 1,
+     "id": "min_above_nominal",
+     "message": "impurity co: min (0.002) exceeds nominal (0.001)\n",
+     "output_written": false,
+     "pass": true,
+     "reason_names_cause": true
+    },
+    {
+     "exit": 1,
+     "id": "unknown_endpoint",
+     "message": "unknown endpoint 'activity.nonsense' (activity.total, heat.total, activity:<nuclide>, dose.contact_proxy, clearance_index, waste_class)\n",
+     "output_written": false,
+     "pass": true,
+     "reason_names_cause": true
+    },
+    {
+     "exit": 1,
+     "id": "estimated_spectra_with_dose",
+     "message": "dose.contact_proxy refuses photon.missing_spectra \"estimate\": estimated spectra are not part of the grouped source this command sums\n",
+     "output_written": false,
+     "pass": true,
+     "reason_names_cause": true
+    },
+    {
+     "exit": 1,
+     "id": "dose_without_photon",
+     "message": "dose.contact_proxy needs the base spec's photon section (with a photon response)\n",
+     "output_written": false,
+     "pass": true,
+     "reason_names_cause": true
+    },
+    {
+     "exit": 1,
+     "id": "limit_on_waste_class",
+     "message": "endpoint waste_class takes no limit: the class limits are the part 61 table sums; set class to the class you require\n",
+     "output_written": false,
+     "pass": true,
+     "reason_names_cause": true
+    }
+   ],
+   "pass": true
+  },
+  "G7": {
+   "chapter_outputs": {
+    "note": "",
+    "pairs": [
+     {
+      "command": "actinv impurities examples/impurities_ra_steel/impurities.json impurities-result.json",
+      "excerpt_matches": true,
+      "exit": 0,
+      "pass": true
+     },
+     {
+      "command": "actinv impurities examples/impurities_ra_steel/impurities.json impurities-result.json",
+      "excerpt_matches": true,
+      "exit": 0,
+      "pass": true
+     },
+     {
+      "command": "actinv impurities examples/impurities_ra_steel/impurities.json impurities-result.json",
+      "excerpt_matches": true,
+      "exit": 0,
+      "pass": true
+     },
+     {
+      "command": "actinv impurities examples/impurities_ra_steel/impurities.json impurities-result.json",
+      "excerpt_matches": true,
+      "exit": 0,
+      "pass": true
+     }
+    ],
+    "pass": true
+   },
+   "check_p140_docs": {
+    "exit": 0,
+    "pass": true,
+    "tail": "docs/guide/cli.md:71 inspect groups fispact-162 --table\nPASS cmd:inspect:groups:to-file                                docs/guide/cli.md:71 inspect groups fispact-709 --out target/p157-work/p140-docs/\nH4 PASS: 102/102 gating items pass, 0 fail, 0 unclassified; record target/p157-work/p140_docs.json\n"
+   },
+   "example": {
+    "exit": 0,
+    "output": true,
+    "pass": true,
+    "stderr_tail": "impurities: 15 element solves, 4 targets, verification passed (max rel dev 1.987450414440573e-15) -> /home/connoravila/Documents/actinv/target/p157-wt/target/p157-work/g7_example/example_out.json\n",
+    "verification_ok": true
+   },
+   "pass": true,
+   "summary_link": {
+    "pass": true
+   }
+  }
+ },
+ "output_paths": {
+  "class_binding": "targets/[step={step}]/endpoints/[response={endpoint}]/worst_case/binding",
+  "class_nominal": "targets/[step={step}]/endpoints/[response={endpoint}]/nominal_class",
+  "class_worst": "targets/[step={step}]/endpoints/[response={endpoint}]/worst_case/class",
+  "contribution_max": "targets/[step={step}]/endpoints/[response={endpoint}]/impurities/{imp}/contribution_at_max",
+  "contribution_nominal": "targets/[step={step}]/endpoints/[response={endpoint}]/impurities/{imp}/contribution_nominal",
+  "gradient": "targets/[step={step}]/endpoints/[response={endpoint}]/impurities/{imp}/gradient_per_wt_pct",
+  "joint_k": "targets/[step={step}]/endpoints/[response={endpoint}]/joint_k/value",
+  "joint_k_status": "targets/[step={step}]/endpoints/[response={endpoint}]/joint_k/status",
+  "limit_status": "targets/[step={step}]/endpoints/[response={endpoint}]/impurities/{imp}/limits/{kind}/status",
+  "limit_value": "targets/[step={step}]/endpoints/[response={endpoint}]/impurities/{imp}/limits/{kind}/wt_pct",
+  "matrix_only": "targets/[step={step}]/endpoints/[response={endpoint}]/matrix_only",
+  "nominal": "targets/[step={step}]/endpoints/[response={endpoint}]/nominal",
+  "point_checks": "checks",
+  "point_composition": "composition_wt_pct",
+  "ranking": "targets/[step={step}]/endpoints/[response={endpoint}]/ranking",
+  "schema": "schema",
+  "summary_joint": "summary/{endpoint}/joint_k/value",
+  "summary_joint_step": "summary/{endpoint}/joint_k/step",
+  "summary_ranking": "summary/{endpoint}/ranking",
+  "summary_tightest_step": "summary/{endpoint}/tightest_limit/{kind}/{imp}/step",
+  "summary_tightest_value": "summary/{endpoint}/tightest_limit/{kind}/{imp}/wt_pct",
+  "summary_worst": "summary/{endpoint}/worst/value",
+  "top_nuclides": "targets/[step={step}]/endpoints/[response={endpoint}]/impurities/{imp}/top_nuclides",
+  "verification_dev": "verification/max_rel_dev",
+  "verification_ok": "verification/verified",
+  "verification_points": "verification/points",
+  "worst_corner": "targets/[step={step}]/endpoints/[response={endpoint}]/worst_case/corner",
+  "worst_value": "targets/[step={step}]/endpoints/[response={endpoint}]/worst_case/value"
+ },
+ "photon_response": {
+  "path": "/home/connoravila/nuclear-data/photon-response/nist-xcom-all.json",
+  "sha256": "9efa40486780c9eec663654e13f5835ba36a549b1bae0c9f75677957a5a0acd8"
+ },
+ "protocol": "protocols/ACTINV-P157_PROTOCOL.md",
+ "protocol_sha256": "e2eeb8b6b5499ee7221f503f9729dd2d8e6639660245a689aee4f6ab06c66f65",
+ "rank_by": "signed",
+ "reference_sha256": "3f56196285c0c28215aa9f722a0252676f2842bead964f06c4f0b738db62d9dd",
+ "rule_pack_sha256": "890268af81a53815b8e11c238e4a1694eabb79664a1ca087fd7fe22b9fabe5d7",
+ "solves": {
+  "memo_hits": 1324,
+  "run": 32
+ },
+ "verdict": "FAIL",
+ "waste_at": "section waste"
+}

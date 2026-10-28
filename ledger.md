@@ -4450,3 +4450,48 @@ Every workflow triggered on `ff381f9` (candidate `d9d6846` plus its evidence) pa
 desktop workflows are path-filtered and were not triggered. **P159-PASS** (`results/p159_verdict.json`): the P156
 shipped damage table and catalog 1.2.0 are qualified on CI, with P156's G0–G7 (entry 249) as their scientific
 evidence. P156 stays FAIL on G8 (entry 250).
+
+## Entry 254 — P157 development runs 1–4 disclosed (2026-10-28)
+
+Four development runs of `controls/check_p157.py` are disclosed in `results/p157/`. Runs 1–3 used v1.6.1
+(`3f561962…`) as reference; the evidence run uses the protocol's reference, master after P156's merge.
+
+| Run | Candidate | Checker | Result | What changed afterwards |
+| --- | --- | --- | --- | --- |
+| 1 | `3f51a5b` | `d895c81e…` | G3, G5, G7 fail | `top_nuclides` follow the sign of the contribution; the example's heat limit is 1.4e-2 W/g (1e-3 was infeasible at every target); handbook excerpts filled from a fresh run |
+| 2 | `fef5590` | `9abd2e1b…` | G3, G5 fail | A slope at round-off (below 1e-12 of the largest response) is `no response`, matching the checker's floor |
+| 3 | `e13063d` | `9abd2e1b…` | G5 fails | The checker records `waste composition solve`'s refusal as a skip |
+| 4 (G5 only) | `d63f484` | `ab3ce75a…` | G5 passes | — |
+
+Also disclosed:
+- **Verification.** Before run 1, the worked example's verification exited 3 because a full solve held a
+  nuclide at round-off level (Pd-115) that no pure-element run held. Verification now derives that nuclide's
+  properties from the decay data (`3f51a5b`).
+- **Checker edits after reading output.** Run 1 showed that `waste composition solve` caps a case at 64
+  witnesses. `ra_reduced` was cut from six impurities to five (Cu removed), with the self-check extended
+  (`fef5590`). Run 3 showed that the command still refuses `ra_reduced`: its native verification fails on
+  round-off nuclides. The protocol's G5 skips "a case it does not accept", so the checker now records that
+  refusal as a skip (`d63f484`). No tolerance was changed.
+- **A latent `waste composition solve` defect, not fixed here.** Its exact contributor-set comparison fails on
+  round-off nuclides. A repair was tried in `e13063d` and reverted in `d63f484`, because no realistic case
+  exercises it within the command's limits. On the five-impurity steel it exceeded 6 GB and was killed three
+  times; three- and two-impurity variants hit its 32 MiB result cap. The command is left byte-identical to the
+  reference (G2). It needs its own phase.
+
+## Entry 255 — P157 evidence: G0 and G2–G7 pass on 8702e67 (2026-10-28)
+
+- **G1** at `8702e67` (p157 merged with master at `ced67ff`): fmt, `cargo check --workspace --tests` and clippy
+  `-D warnings` are clean, and 1276 workspace tests passed with 0 failed (`results/p157/g1.log`). The checker
+  self-check passes after its last edit.
+- **Evidence run 1:** `controls/check_p157.py` (`ab3ce75a…`), candidate `21146a0c…` built from `8702e67`, reference
+  `e767e0d0…`, master's binary after P156's merge (`ced67ff`). G0 and G2–G7 passed in 16 min 48 s, peak RSS
+  1.8 GB. Record: `results/p157_screening.json`, log `results/p157/evidence_run_1.log`.
+- **G5's agreement with `waste composition solve` compared no case.** The command accepted none of the four:
+  - `ra_steel`: 15 elements, limit 8;
+  - `tungsten`: Os and Re are not among its 26 qualified elements;
+  - `vanadium`: 9 elements, limit 8;
+  - `ra_reduced`: refused by its own native verification (entry 254).
+
+  G5's other checks ran on every case and target: nominal class against `actinv waste`, the worst class against
+  every corner solve, and the separately maximised table sums.
+- **G8** is pending CI on the pushed commit.

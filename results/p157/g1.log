@@ -1,0 +1,49 @@
+commit 8702e6719f39107ee66e8bb26d64d845a4cbb3b1
+== cargo fmt --all -- --check
+fmt exit 0
+== cargo check --workspace --tests
+    Checking actinv-cli v1.6.1 (/home/connoravila/Documents/actinv/target/p157-wt/crates/actinv-cli)
+    Checking actinv-gui v0.5.0-preview.1 (/home/connoravila/Documents/actinv/target/p157-wt/crates/actinv-gui)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 9.95s
+check exit 0
+== cargo clippy --workspace --all-targets -- -D warnings
+    Checking actinv-cli v1.6.1 (/home/connoravila/Documents/actinv/target/p157-wt/crates/actinv-cli)
+    Checking actinv-gui v0.5.0-preview.1 (/home/connoravila/Documents/actinv/target/p157-wt/crates/actinv-gui)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 6.88s
+clippy exit 0
+== cargo test --workspace
+test result: ok. 196 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 5.23s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+test result: ok. 648 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 5.86s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 255 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.92s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 157 passed; 0 failed; 2 ignored; 0 measured; 0 filtered out; finished in 11.28s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.09s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test exit 0
+== cargo build --release -p actinv-cli
+    Finished `release` profile [optimized] target(s) in 0.25s
+release exit 0
+21146a0c38d5ec41a22d344e1b4e57beebb1ce414fc9dcc3a4a4ba2d6d7219b9  /home/connoravila/Documents/actinv/target/wt-p157-wt/release/actinv

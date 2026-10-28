@@ -1,0 +1,133 @@
+{
+ "candidate_sha256": "21146a0c38d5ec41a22d344e1b4e57beebb1ce414fc9dcc3a4a4ba2d6d7219b9",
+ "checker_sha256": "ab3ce75a2065b32ca7394c73a108300ae4a06145fe930904b7e1cba0fb281022",
+ "data_home": "/home/connoravila/Documents/actinv/target/p157-wt",
+ "external_gates": {
+  "G1": "fmt, clippy -D warnings, workspace tests: coordinator",
+  "G8": "CI on the pushed commit and committed baselines: coordinator"
+ },
+ "gates": {
+  "G5": {
+   "cases": {
+    "ra_reduced": {
+     "checks": 152,
+     "command": {
+      "exit": 0,
+      "input": "/home/connoravila/Documents/actinv/target/p157-wt/target/p157-work/ra_reduced/main/impurities.json",
+      "input_sha256": "1bd2fa9933f28adbc98463d3e2512ef134293a5937cd82804b4961befe9bf7d6",
+      "output_sha256": "7f2609ed64789c363b7c54cd2c84a9f7619729cc337b8fd6ef388109e07c4532",
+      "stderr_tail": "impurities: 7 element solves, 4 targets, verification passed (max rel dev 2.0478351164932828e-15) -> /home/connoravila/Documents/actinv/target/p157-wt/target/p157-work/ra_reduced/main/out.json\n"
+     },
+     "corner_solves": 32,
+     "failure_list": [],
+     "failures": 0,
+     "max_rel_dev": 0.0,
+     "notes": [
+      "ra_reduced: waste composition solve skipped: the command does not accept the case: waste composition solve exited 1: native verification failed for component 'ra_reduced' step 4\n"
+     ],
+     "pass": true
+    },
+    "ra_steel": {
+     "checks": 792,
+     "command": {
+      "exit": 0,
+      "input": "/home/connoravila/Documents/actinv/target/p157-wt/target/p157-work/ra_steel/main/impurities.json",
+      "input_sha256": "23ee33a90980f100602f19fd16e691ce2865e22b36a77722073940956627693b",
+      "output_sha256": "2bbeb4d25924b76f70f134050fbc5cb532f5758af4749e32ffa6df3ae52658ff",
+      "stderr_tail": "impurities: 15 element solves, 4 targets, verification passed (max rel dev 1.987450414440573e-15) -> /home/connoravila/Documents/actinv/target/p157-wt/target/p157-work/ra_steel/main/out.json\n"
+     },
+     "corner_solves": 192,
+     "failure_list": [],
+     "failures": 0,
+     "max_rel_dev": 0.0,
+     "notes": [
+      "ra_steel: waste composition solve skipped: 15 elements (limit 8)"
+     ],
+     "pass": true
+    },
+    "tungsten": {
+     "checks": 280,
+     "command": {
+      "exit": 0,
+      "input": "/home/connoravila/Documents/actinv/target/p157-wt/target/p157-work/tungsten/main/impurities.json",
+      "input_sha256": "1cc28f81d630aee4e8ee649f17ae53b063d900ae096e4c9809c6fef2faaeea32",
+      "output_sha256": "bca815bb96a33da52f50bd2172875e1ddf43f118f69de7e7489492a74988c922",
+      "stderr_tail": "impurities: 7 element solves, 4 targets, verification passed (max rel dev 2.1809929078597658e-15) -> /home/connoravila/Documents/actinv/target/p157-wt/target/p157-work/tungsten/main/out.json\n"
+     },
+     "corner_solves": 64,
+     "failure_list": [],
+     "failures": 0,
+     "max_rel_dev": 0.0,
+     "notes": [
+      "tungsten: waste composition solve skipped: elements not among the 26 qualified: ['Os', 'Re']"
+     ],
+     "pass": true
+    },
+    "vanadium": {
+     "checks": 280,
+     "command": {
+      "exit": 0,
+      "input": "/home/connoravila/Documents/actinv/target/p157-wt/target/p157-work/vanadium/main/impurities.json",
+      "input_sha256": "1d125a6edf2efff178e325f21c6e3b883b2d2a68010dd0fc33104d44924a8212",
+      "output_sha256": "a3d7d085f050d88359088a0ede6df8431d5f1e57e3ed07da1887382dbcb270c8",
+      "stderr_tail": "impurities: 9 element solves, 4 targets, verification passed (max rel dev 1.8258575702002718e-15) -> /home/connoravila/Documents/actinv/target/p157-wt/target/p157-work/vanadium/main/out.json\n"
+     },
+     "corner_solves": 64,
+     "failure_list": [],
+     "failures": 0,
+     "max_rel_dev": 0.0,
+     "notes": [
+      "vanadium: waste composition solve skipped: 9 elements (limit 8)"
+     ],
+     "pass": true
+    }
+   },
+   "pass": true
+  }
+ },
+ "output_paths": {
+  "class_binding": "targets/[step={step}]/endpoints/[response={endpoint}]/worst_case/binding",
+  "class_nominal": "targets/[step={step}]/endpoints/[response={endpoint}]/nominal_class",
+  "class_worst": "targets/[step={step}]/endpoints/[response={endpoint}]/worst_case/class",
+  "contribution_max": "targets/[step={step}]/endpoints/[response={endpoint}]/impurities/{imp}/contribution_at_max",
+  "contribution_nominal": "targets/[step={step}]/endpoints/[response={endpoint}]/impurities/{imp}/contribution_nominal",
+  "gradient": "targets/[step={step}]/endpoints/[response={endpoint}]/impurities/{imp}/gradient_per_wt_pct",
+  "joint_k": "targets/[step={step}]/endpoints/[response={endpoint}]/joint_k/value",
+  "joint_k_status": "targets/[step={step}]/endpoints/[response={endpoint}]/joint_k/status",
+  "limit_status": "targets/[step={step}]/endpoints/[response={endpoint}]/impurities/{imp}/limits/{kind}/status",
+  "limit_value": "targets/[step={step}]/endpoints/[response={endpoint}]/impurities/{imp}/limits/{kind}/wt_pct",
+  "matrix_only": "targets/[step={step}]/endpoints/[response={endpoint}]/matrix_only",
+  "nominal": "targets/[step={step}]/endpoints/[response={endpoint}]/nominal",
+  "point_checks": "checks",
+  "point_composition": "composition_wt_pct",
+  "ranking": "targets/[step={step}]/endpoints/[response={endpoint}]/ranking",
+  "schema": "schema",
+  "summary_joint": "summary/{endpoint}/joint_k/value",
+  "summary_joint_step": "summary/{endpoint}/joint_k/step",
+  "summary_ranking": "summary/{endpoint}/ranking",
+  "summary_tightest_step": "summary/{endpoint}/tightest_limit/{kind}/{imp}/step",
+  "summary_tightest_value": "summary/{endpoint}/tightest_limit/{kind}/{imp}/wt_pct",
+  "summary_worst": "summary/{endpoint}/worst/value",
+  "top_nuclides": "targets/[step={step}]/endpoints/[response={endpoint}]/impurities/{imp}/top_nuclides",
+  "verification_dev": "verification/max_rel_dev",
+  "verification_ok": "verification/verified",
+  "verification_points": "verification/points",
+  "worst_corner": "targets/[step={step}]/endpoints/[response={endpoint}]/worst_case/corner",
+  "worst_value": "targets/[step={step}]/endpoints/[response={endpoint}]/worst_case/value"
+ },
+ "photon_response": {
+  "path": "/home/connoravila/nuclear-data/photon-response/nist-xcom-all.json",
+  "sha256": "9efa40486780c9eec663654e13f5835ba36a549b1bae0c9f75677957a5a0acd8"
+ },
+ "protocol": "protocols/ACTINV-P157_PROTOCOL.md",
+ "protocol_sha256": "e2eeb8b6b5499ee7221f503f9729dd2d8e6639660245a689aee4f6ab06c66f65",
+ "rank_by": "signed",
+ "reference_sha256": "3f56196285c0c28215aa9f722a0252676f2842bead964f06c4f0b738db62d9dd",
+ "rule_pack_sha256": "890268af81a53815b8e11c238e4a1694eabb79664a1ca087fd7fe22b9fabe5d7",
+ "solves": {
+  "memo_hits": 362,
+  "run": 32
+ },
+ "verdict": "PASS",
+ "waste_at": "section waste"
+}
