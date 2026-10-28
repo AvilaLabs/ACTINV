@@ -12,7 +12,11 @@ njoy_continuum_recoil, NORDLUND_TABLE_1, FE_ABUNDANCE, TARGETS / BUILD_ED (P154 
 hard-codes (its four targets and their displacement energies) is parameterized by temporarily rebinding those module
 globals around the call (`p154_targets`), never by editing check_p154.py.
 
-  G0  This protocol's and Amendments A, B and C's SHA-256 are in protocols/protocol_hash.txt.
+Amendment D (w_table_d1, level_w_tables_d2, apply_d3, the G7 notice supersession) was added by the coordinating
+maintainer after development run 3, who had read the candidate's Reich-Moore code while diagnosing Al-27. Those
+changes concern only the ENDF / NJOY references and the gate bookkeeping, not anything the candidate computes.
+
+  G0  This protocol's and Amendments A, B, C and D's SHA-256 are in protocols/protocol_hash.txt.
   G1  External (fmt, clippy -D warnings, workspace tests): recorded; `--g1-log PATH` records the log's digest and tail.
   G2  Existing behaviour. examples/damage_demo.json and examples/fns_fe_5min.json run with reference and candidate are
       byte-identical apart from `ms`; `build-damage` without `--method` is byte-identical on the P23 corpus (both are
@@ -29,7 +33,8 @@ globals around the call (`p154_targets`), never by editing check_p154.py.
       equals the reference binary's, and the candidate's no-option build of Fe-56 is identical to it. Cu-63 at its default
       (40) and at Cu=33 (Nordlund's reference): the same numerical comparison as W-184 (item 2).
   G4  Wider accuracy. TENDL-2025 V-51, Ti-48, Cu-63, Ta-181, Mo-98, Nb-93, Mn-55, Co-59, Si-28, Al-27, Be-9, Li-7: P154's
-      G3 (elastic, 2 %), G4 (inelastic and disappearance, 5 %, Amendment C precondition set and references) and G5 (NJOY
+      G3 (elastic, 2 %), G4 (inelastic and disappearance, 5 %, Amendment C precondition set and references, with P156
+      Amendment D1-D3: LTT=3 step, HEATR's 64-point level rule, uncovered-vacuous comparisons reported) and G5 (NJOY
       MT=444 within computed plus uncovered bound) against NJOY at E_d equal to the candidate's standard energy of the
       element, with the NJOY-matching capture / continuum modes chosen per target from the file as check_p154 does. A
       target is a case; a case whose evaluation lacks a data form P154 covers is reported with its uncovered share (FNS
@@ -85,6 +90,7 @@ Usage: check_p156.py --reference REF --candidate CAND [--gates G2,G5] [--workdir
 Run inside the required systemd cgroup. Gates run serially. Exit 0 when every gate that ran passed.
 """
 import argparse
+import contextlib
 import copy
 import hashlib
 import json
@@ -126,6 +132,7 @@ ENERGY_SOURCE_KEY = "displacement_energy_source"   # ledger.damage map element -
 AMENDMENT_A = ROOT / "protocols" / "ACTINV-P156_AMENDMENT_A.md"
 AMENDMENT_B = ROOT / "protocols" / "ACTINV-P156_AMENDMENT_B.md"
 AMENDMENT_C = ROOT / "protocols" / "ACTINV-P156_AMENDMENT_C.md"
+AMENDMENT_D = ROOT / "protocols" / "ACTINV-P156_AMENDMENT_D.md"
 # Amendment C1: the build directory takes Pb-208 from the P10 working corpus (the shipped library index source)
 PB208_FILE = "n-Pb208.tendl"
 PB208_WORKING_SHA256 = "86788a14563ecdb844628a6a455864874ba5f5bca9b8142c10a59ea00df87c72"
@@ -603,16 +610,25 @@ def catalog_checks(old, new, repo_notice_dir=CATALOG_DIR):
         if bid not in bundles:
             problems.append(f"neutron bundle {bid} missing")
     old_bundles = {b["id"]: b for b in old.get("bundles", [])}
+    old_roles = {a["id"]: a.get("role") for a in old.get("artifacts", [])}
+    notices_superseded = {}
     for bid, b in old_bundles.items():
         nb = bundles.get(bid)
         if nb is None:
             problems.append(f"v1.1.0 bundle {bid} missing")
         else:
             lost = [a for a in b["artifacts"] if a not in nb["artifacts"]]
+            # a notice may be superseded by a new notice in the same bundle (the v1.1.0 notice artifacts stay in the
+            # catalog, byte-identical; protocol G7 requires the artifacts, not their bundle membership, unchanged)
+            gained_notice = [a for a in nb["artifacts"] if a in added and new_by_id[a].get("role") == "notice"]
+            superseded = [a for a in lost if old_roles.get(a) == "notice" and gained_notice]
+            if superseded:
+                notices_superseded[bid] = {"dropped": superseded, "by": gained_notice}
+            lost = [a for a in lost if a not in superseded]
             if lost:
                 problems.append(f"bundle {bid} lost artifacts {lost}")
     return {"problems": problems, "v110_artifacts_unchanged": unchanged, "added_artifacts": added,
-            "pass": not problems}
+            "notices_superseded": notices_superseded, "pass": not problems}
 
 
 def parse_sums(text):
@@ -700,6 +716,112 @@ def limit_modes(mode_information):
     p154.build_table = wrapped
 
 
+# ------------------------------------------------------------------------------ Amendment D (G4 references)
+
+D1_SIDE = 1e-9                  # relative offset of the left-hand W point at an LTT=3 switch energy
+D3_MIN_UNCOVERED = 10           # groups excluded as uncovered that make a vacuous comparison "reported"
+D_TAG = "P156-D"                # cache-key tag of the Amendment D references
+_P154_W_TABLE = p154.w_table
+_P154_LEVEL_W_TABLES = p154.level_w_tables
+_P154_B_VERSION = p154.B_VERSION
+_HEATR_GL = []                  # 64-point Gauss-Legendre rule (disbar's nq = 64), computed once
+
+
+def w_table_d1(mf4, ed, refine=p154.EL_REFINE):
+    """Amendment D1: p154.w_table, plus the Legendre (left-hand) W just below the switch energy E_t of an LTT=3
+    section. ENDF uses the Legendre representation up to E_t and the tabulated one above, so W steps at E_t; P154's
+    table keeps only the tabulated value at E_t and the linear W then spreads the step over the last refined interval
+    below it."""
+    out = _P154_W_TABLE(mf4, ed, refine)
+    if mf4["ltt"] != 3 or len(mf4["parts"]) != 2:
+        return out
+    legendre = mf4["parts"][0]
+    switch = legendre["energies"][-1]
+    awr, z = mf4["awr"], mf4["za"] // 1000
+    left = switch * (1.0 - D1_SIDE)
+    if left <= ed * (awr + 1.0) ** 2 / (4.0 * awr) or not out["x"] or out["x"][-1] < switch:
+        return out
+    value = p154.elastic_w(p154.legendre_pdf(legendre["data"][-1]), switch, awr, z, ed, lab=mf4["lct"] == 1)
+    points = dict(zip(out["x"], out["y"]))
+    points[left] = value
+    xs = sorted(points)
+    info = dict(out["info"], n_points=len(xs), ltt3_switch_eV=switch, ltt3_left_W=value,
+                ltt3_right_W=points.get(switch), amendment="P156 D1: W steps at the LTT=3 switch energy")
+    return {"x": xs, "y": [points[x] for x in xs], "ranges": [(len(xs), 2)], "info": info}
+
+
+def heatr_level_w(pdf, e, awr, z, ed, thresh):
+    """Amendment D2: disbar's damage per event of a discrete level at `e` -- the 64-point Gauss-Legendre rule over the
+    centre-of-mass cosine of pdf(mu) R(T(mu)), T = A E (1 + r^2 - 2 r mu) / (A + 1)^2, negative sums set to zero
+    (heatr.f90 disbar label 120). The pdf is the one p154.inelastic_w integrates exactly."""
+    if not _HEATR_GL:
+        _HEATR_GL.extend(zip(*p154.gauss_legendre(64)))
+    _breaks, fn = pdf
+    r = 0.0 if thresh >= e * (1.0 - p154.LADDER_SMALL) else math.sqrt(1.0 - thresh / e)
+    c = awr * e / (awr + 1.0) ** 2
+    total = sum(w * fn(u) * p154.df(c * (1.0 + r * r - 2.0 * r * u), z, awr, z, awr, ed) for u, w in _HEATR_GL)
+    return max(total, 0.0)
+
+
+def level_w_tables_d2(mf4, awr, z, ed, thresh, grid):
+    """Amendment D2: p154.level_w_tables with W_ladder from HEATR's 64-point rule at the ladder points (W_exact
+    unchanged)."""
+    exact, lad, ladder = _P154_LEVEL_W_TABLES(mf4, awr, z, ed, thresh, grid)
+    lad = dict(lad, y=[heatr_level_w(p154.mf4_pdf_at(mf4, e), e, awr, z, ed, thresh) for e in ladder])
+    return exact, lad, ladder
+
+
+def exact_elastic_cached_d1(target, work, record, ed, boundaries, reuse):
+    """p154.exact_elastic_cached with the D1 reference and a cache key that names it."""
+    cache = work / f"exact_elastic_{target}.json"
+    key = {"pendf_sha256": record.get("pendf_sha256"), "endf_sha256": record["endf"]["sha256"], "ed_eV": ed,
+           "amendment": D_TAG + "1"}
+    if reuse and cache.exists():
+        saved = json.loads(cache.read_text())
+        if saved.get("key") == key:
+            return saved["result"]
+    result = p154.exact_elastic_reference(record["endf"]["path"], record["pendf"], boundaries, ed)
+    cache.write_text(json.dumps({"key": key, "result": result}))
+    return result
+
+
+@contextlib.contextmanager
+def amendment_d_references():
+    """Rebind the P154 reference functions to their Amendment D1/D2 forms for the duration (check_p154.py itself is
+    sealed by the P154 verdict and is not edited)."""
+    saved = (p154.w_table, p154.level_w_tables, p154.exact_elastic_cached, p154.B_VERSION)
+    p154.w_table, p154.level_w_tables, p154.exact_elastic_cached = w_table_d1, level_w_tables_d2, exact_elastic_cached_d1
+    p154.B_VERSION = f"{_P154_B_VERSION}+{D_TAG}2"
+    try:
+        yield
+    finally:
+        p154.w_table, p154.level_w_tables, p154.exact_elastic_cached, p154.B_VERSION = saved
+
+
+def apply_d3(case):
+    """Amendment D3 on one target's G4 case: a channel comparison that is vacuous only because its groups are
+    uncovered (no group outside tolerance, at least D3_MIN_UNCOVERED groups excluded as uncovered) is reported, not
+    gating, and so is its precondition set when that has no group outside its bounds. Returns the case with
+    `amendment_d3` recorded and `pass` recomputed."""
+    if "inelastic_vs_446" not in case:
+        return case
+    reported = {}
+    for channel, pre in (("inelastic_vs_446", "b2_precondition"), ("disappearance_vs_447", "b1_precondition")):
+        ch, pc = case[channel], case[pre]
+        uncovered_vacuous = (ch.get("vacuous") is True and not ch.get("bad")
+                             and ch.get("with_uncovered_reported", {}).get("n", 0) >= D3_MIN_UNCOVERED)
+        if uncovered_vacuous:
+            reported[channel] = {"evaluated_groups": ch.get("evaluated_groups"),
+                                 "uncovered_groups": ch["with_uncovered_reported"]["n"]}
+            if not pc.get("pass") and not pc.get("bad"):
+                reported[pre] = {"set_size": pc.get("set_size"), "vacuous": pc.get("vacuous")}
+    gating = [k for k in ("inelastic_vs_446", "disappearance_vs_447", "b2_precondition", "b1_precondition")
+              if k not in reported]
+    case["amendment_d3"] = {"reported_not_gating": reported, "gating": gating}
+    case["pass"] = all(case[k].get("pass") is True for k in gating)
+    return case
+
+
 def p154_recorded_modes():
     """Capture / continuum mode per P154 target as recorded in results/p154_damage.json, else from the files."""
     modes = {}
@@ -725,7 +847,7 @@ def gate_g0():
     lines = HASH_LOG.read_text(encoding="utf-8").splitlines()
     out, ok = {}, True
     for label, path in (("protocol", PROTOCOL), ("amendment_a", AMENDMENT_A), ("amendment_b", AMENDMENT_B),
-                        ("amendment_c", AMENDMENT_C)):
+                        ("amendment_c", AMENDMENT_C), ("amendment_d", AMENDMENT_D)):
         if not path.is_file():
             out[label] = {"path": str(path), "present": False, "in_protocol_hash_txt": False}
             ok = False
@@ -905,11 +1027,16 @@ def gate_g4(cand, work, args, bounds):
     saved_dir = p154.TENDL_DIR
     p154.TENDL_DIR = Path(args.tendl_dir)
     try:
-        with p154_targets(targets, ed_map):
+        with p154_targets(targets, ed_map), amendment_d_references():
             limit_modes(args.mode_information)
             g3, g4, g5, tables, evidence, used = p154.gates_g3_g4_g5(cand, work, ns, bounds, spec)
     finally:
         p154.TENDL_DIR = saved_dir
+    for t in list(g4["cases"]):
+        g4["cases"][t] = apply_d3(g4["cases"][t])
+    g4["pass"] = len(g4["cases"]) == len(targets) and all(c.get("pass") is True for c in g4["cases"].values())
+    g4["amendment_d"] = {"D1": "elastic W steps at an LTT=3 switch energy", "D2": "B2 W_ladder by HEATR's 64-point rule",
+                         "D3": f"uncovered-vacuous comparisons reported (>= {D3_MIN_UNCOVERED} uncovered groups)"}
     per_target = {}
     for t in targets:
         entry = {"element": targets[t]["element"], "displacement_energy_eV": ed_map[targets[t]["element"]],
@@ -1634,6 +1761,57 @@ def self_check():
     check("catalog checks reject changes", not catalog_checks(old, changed, None)["pass"]
           and not catalog_checks(old, missing_bundle, None)["pass"] and not catalog_checks(old, proton, None)["pass"]
           and not catalog_checks(old, old, None)["pass"])
+    superseding = copy.deepcopy(new)
+    superseding["artifacts"].append({"id": "notice-new", "role": "notice", "path": "N.md", "bytes": 1, "sha256": "b" * 64})
+    dropped_data = copy.deepcopy(superseding)
+    for b in superseding["bundles"] + dropped_data["bundles"]:
+        if b["id"] in NEUTRON_BUNDLES:
+            b["artifacts"] = [a for a in b["artifacts"] if not a.startswith("actinv-data-notice")] + ["notice-new"]
+    first_neutron = next(b for b in dropped_data["bundles"] if b["id"] in NEUTRON_BUNDLES)
+    first_neutron["artifacts"] = [a for a in first_neutron["artifacts"] if "decay" not in a]
+    sup = catalog_checks(old, superseding, None)
+    check("a new notice may supersede an old one in a bundle; data may not be dropped",
+          sup["pass"] and set(sup["notices_superseded"]) == set(NEUTRON_BUNDLES)
+          and not catalog_checks(old, dropped_data, None)["pass"], str(sup["problems"]))
+    # --- Amendment D
+    leg = {"kind": "legendre", "energies": [1.0e7, 2.0e7], "data": [[0.2], [0.3]], "ranges": [(2, 2)]}
+    tab = {"kind": "tabulated", "energies": [2.0e7, 3.0e7],
+           "data": [{"x": [-1.0, 1.0], "y": [0.1, 0.9], "ranges": [(2, 2)]}] * 2, "ranges": [(2, 2)]}
+    mf4 = {"za": 26056, "awr": 55.45, "lct": 2, "li": 0, "ltt": 3, "parts": [leg, tab]}
+    w0, w1 = _P154_W_TABLE(mf4, 40.0), w_table_d1(mf4, 40.0)
+    left_d1 = p154.interp_value({"x": w1["x"], "y": w1["y"], "ranges": w1["ranges"]}, 2.0e7 * (1 - 1e-6))
+    left_exact = p154.elastic_w(p154.legendre_pdf([0.3]), 2.0e7, 55.45, 26, 40.0)
+    right = p154.elastic_w(p154.tabulated_pdf(tab["data"][0])[:2], 2.0e7, 55.45, 26, 40.0)
+    check("D1: W steps at the LTT=3 switch (left Legendre, right tabulated)",
+          abs(left_d1 / left_exact - 1) < 1e-5 and abs(w1["y"][w1["x"].index(2.0e7)] / right - 1) < 1e-12
+          and abs(left_exact / right - 1) > 1e-2 and len(w1["x"]) == len(w0["x"]) + 1
+          and w_table_d1(dict(mf4, ltt=1, parts=[leg]), 40.0) == _P154_W_TABLE(dict(mf4, ltt=1, parts=[leg]), 40.0),
+          f"{left_d1} {left_exact} {right}")
+    iso = p154.legendre_pdf([])
+    far = (heatr_level_w(iso, 5.0e6, 55.45, 26, 40.0, 9.0e5), p154.inelastic_w(iso, 5.0e6, 55.45, 26, 40.0, 9.0e5))
+    near = (heatr_level_w(iso, 8900.0, 179.4, 73, 90.0, 6271.9), p154.inelastic_w(iso, 8900.0, 179.4, 73, 90.0, 6271.9))
+    check("D2: 64-point rule equals the exact W far from the damage threshold, differs where the recoil straddles it",
+          abs(far[0] / far[1] - 1) < 1e-6 and near[1] > 0.0 and abs(near[0] / near[1] - 1) > 1e-4, f"{far} {near}")
+    vac = {"vacuous": True, "bad": [], "pass": False, "with_uncovered_reported": {"n": 40}, "evaluated_groups": 2}
+    okc = {"vacuous": False, "bad": [], "pass": True, "with_uncovered_reported": {"n": 0}}
+    pre_vac = {"vacuous": True, "bad": [], "pass": False, "set_size": 3}
+    pre_bad = {"vacuous": False, "bad": [{"group": 1}], "pass": False, "set_size": 40}
+    d3a = apply_d3({"inelastic_vs_446": dict(vac), "disappearance_vs_447": dict(okc), "b2_precondition": dict(pre_vac),
+                    "b1_precondition": dict(okc), "pass": False})
+    d3b = apply_d3({"inelastic_vs_446": dict(vac), "disappearance_vs_447": dict(okc), "b2_precondition": dict(pre_bad),
+                    "b1_precondition": dict(okc), "pass": False})
+    d3c = apply_d3({"inelastic_vs_446": dict(vac, with_uncovered_reported={"n": 9}), "disappearance_vs_447": dict(okc),
+                    "b2_precondition": dict(okc), "b1_precondition": dict(okc), "pass": False})
+    d3d = apply_d3({"inelastic_vs_446": dict(vac, bad=[{"group": 0}]), "disappearance_vs_447": dict(okc),
+                    "b2_precondition": dict(okc), "b1_precondition": dict(okc), "pass": False})
+    check("D3: uncovered-vacuous comparisons reported; bad groups and too few uncovered groups still fail",
+          d3a["pass"] and set(d3a["amendment_d3"]["reported_not_gating"]) == {"inelastic_vs_446", "b2_precondition"}
+          and not d3b["pass"] and not d3c["pass"] and not d3d["pass"])
+    with amendment_d_references():
+        inside_d = (p154.w_table is w_table_d1, p154.level_w_tables is level_w_tables_d2, p154.B_VERSION)
+    check("Amendment D rebinding restored", inside_d[0] and inside_d[1] and inside_d[2] != _P154_B_VERSION
+          and p154.w_table is _P154_W_TABLE and p154.level_w_tables is _P154_LEVEL_W_TABLES
+          and p154.B_VERSION == _P154_B_VERSION)
     # --- staging files, build logs, fetch output
     check("SHA256SUMS / SIZES parsing", parse_sums(f"{'a' * 64}  x.json\n{'B' * 64} *y.npz\njunk\n") == {"x.json": "a" * 64, "y.npz": "b" * 64}
           and parse_sizes("x.json 12\n34 y.npz\nbad line here\n") == {"x.json": 12, "y.npz": 34})
