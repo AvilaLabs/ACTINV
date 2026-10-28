@@ -245,26 +245,26 @@
       "id": "actinv-data-notice-v1-2",
       "role": "notice",
       "path": "ACTINV-DATA-NOTICE-v1.2.0.md",
-      "bytes": 7268,
-      "sha256": "3b36676afb259f664eb9b8b109bfd32fb71b448d38d8ca9575ea0119e2dcef2d",
+      "bytes": 7792,
+      "sha256": "62bcc8b293df06a1d02ebeaa94d84cb940ed4ab937caebc1d38c4fa8f91d66bf",
       "licence": "notice",
       "source": {
         "url": "https://github.com/AvilaLabs/ACTINV/releases/download/data-v1.2.0/ACTINV-DATA-NOTICE-v1.2.0.md",
-        "bytes": 7268,
-        "sha256": "3b36676afb259f664eb9b8b109bfd32fb71b448d38d8ca9575ea0119e2dcef2d"
+        "bytes": 7792,
+        "sha256": "62bcc8b293df06a1d02ebeaa94d84cb940ed4ab937caebc1d38c4fa8f91d66bf"
       }
     },
     {
       "id": "tendl-2025-neutron-damage",
       "role": "damage-table",
       "path": "damage/tendl-2025-neutron-damage-709g.json",
-      "bytes": 1,
-      "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+      "bytes": 49041599,
+      "sha256": "a6f074a0a516107391b8037fdd940fa966d4ea56c059a3a7e76ff9bec1730eed",
       "licence": "CC-BY-4.0",
       "source": {
         "url": "https://github.com/AvilaLabs/ACTINV/releases/download/data-v1.2.0/tendl-2025-neutron-damage-709g.json",
-        "bytes": 1,
-        "sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+        "bytes": 49041599,
+        "sha256": "a6f074a0a516107391b8037fdd940fa966d4ea56c059a3a7e76ff9bec1730eed"
       }
     }
   ],
