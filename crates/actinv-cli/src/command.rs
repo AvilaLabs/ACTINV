@@ -667,11 +667,18 @@ fn build_damage(args: &[String]) {
             &kinematic_options,
         )
         .unwrap_or_else(|error| die(error, 1));
+        // Without --continue-on-error a failure stops the build, so the count is shown only with it and the summary of
+        // an ordinary build is unchanged.
+        let failed = if kinematic_options.continue_on_error {
+            format!("{} failed evaluations, ", summary.failed_evaluations)
+        } else {
+            String::new()
+        };
         println!(
-            "{} damage targets, {} evaluations without a covered elastic channel, {} failed evaluations, {} cache hits, {} {}, sha256 {}",
+            "{} damage targets, {} evaluations without a covered elastic channel, {}{} cache hits, {} {}, sha256 {}",
             summary.targets,
             summary.uncovered_evaluations,
-            summary.failed_evaluations,
+            failed,
             summary.cache_hits,
             summary.projectile.name(),
             summary.output.display(),
