@@ -40,6 +40,16 @@ names, or links. Author and committer stay the repo owner's identity.
   an older in-progress run; cancelled (grey) runs on intermediate commits are
   accepted. Batch related commits into one push; push a protocol or
   amendment registration on its own, before its evidence run.
+- Superseded in part on 2026-10-28 (owner direction: CI waits cost too much
+  time): wait for CI only where its result decides something — for a phase's
+  G8 on its evidence commit, and before pushing code on top of a commit that
+  changed code. Bookkeeping pushes (protocol or amendment registrations,
+  verdict and ledger records, results-only commits) go out without waiting
+  for their own runs, and local work continues while any run is in progress.
+  Before an evidence or code push, run locally the CI steps the change can
+  reach — always `controls/check_public_examples.py` besides the manifest and
+  fmt gates — so CI confirms rather than discovers. A red run still blocks
+  further code pushes until it is fixed.
 - A red check must be fixed before starting new feature work. No new red X's.
 - Before pushing, run locally whatever cheap gates CI runs first (tracked-file
   manifest refresh via `scripts/refresh_manifest.py --write --index`,
