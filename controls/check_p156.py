@@ -16,7 +16,7 @@ Amendment D (w_table_d1, level_w_tables_d2, apply_d3, the G7 notice supersession
 maintainer after development run 3, who had read the candidate's Reich-Moore code while diagnosing Al-27. Those
 changes concern only the ENDF / NJOY references and the gate bookkeeping, not anything the candidate computes.
 
-  G0  This protocol's and Amendments A, B, C and D's SHA-256 are in protocols/protocol_hash.txt.
+  G0  This protocol's and Amendments A-E's SHA-256 are in protocols/protocol_hash.txt.
   G1  External (fmt, clippy -D warnings, workspace tests): recorded; `--g1-log PATH` records the log's digest and tail.
   G2  Existing behaviour. examples/damage_demo.json and examples/fns_fe_5min.json run with reference and candidate are
       byte-identical apart from `ms`; `build-damage` without `--method` is byte-identical on the P23 corpus (both are
@@ -70,8 +70,8 @@ changes concern only the ENDF / NJOY references and the gate bookkeeping, not an
       `damage-table`, id tendl-2025-neutron-damage, CC-BY-4.0, hosted on release data-v1.2.0, listed by the four neutron
       bundles and no other; v1.2.0 notice file present. With --staged DIR: SHA256SUMS and SIZES match the files and the
       table asset matches the catalog. With --fetch-check: a fetch into a directory seeded with copies of the v1.1.0
-      files downloads only the table (network log, else fetch output, else file identity: v1.1.0 files untouched and
-      every other v1.2.0 artifact byte-equal to a seeded file). With --published: clean `data fetch`, `data verify` and
+      files downloads only the table and the new notice, Amendment E1 (network log, else fetch output, else file
+      identity: v1.1.0 files untouched and every other v1.2.0 artifact byte-equal to a seeded file). With --published: clean `data fetch`, `data verify` and
       the G6 FNS run from that fetch.
   G8  External (CI).
 
@@ -133,6 +133,7 @@ AMENDMENT_A = ROOT / "protocols" / "ACTINV-P156_AMENDMENT_A.md"
 AMENDMENT_B = ROOT / "protocols" / "ACTINV-P156_AMENDMENT_B.md"
 AMENDMENT_C = ROOT / "protocols" / "ACTINV-P156_AMENDMENT_C.md"
 AMENDMENT_D = ROOT / "protocols" / "ACTINV-P156_AMENDMENT_D.md"
+AMENDMENT_E = ROOT / "protocols" / "ACTINV-P156_AMENDMENT_E.md"
 # Amendment C1: the build directory takes Pb-208 from the P10 working corpus (the shipped library index source)
 PB208_FILE = "n-Pb208.tendl"
 PB208_WORKING_SHA256 = "86788a14563ecdb844628a6a455864874ba5f5bca9b8142c10a59ea00df87c72"
@@ -847,7 +848,8 @@ def gate_g0():
     lines = HASH_LOG.read_text(encoding="utf-8").splitlines()
     out, ok = {}, True
     for label, path in (("protocol", PROTOCOL), ("amendment_a", AMENDMENT_A), ("amendment_b", AMENDMENT_B),
-                        ("amendment_c", AMENDMENT_C), ("amendment_d", AMENDMENT_D)):
+                        ("amendment_c", AMENDMENT_C), ("amendment_d", AMENDMENT_D),
+                        ("amendment_e", AMENDMENT_E)):
         if not path.is_file():
             out[label] = {"path": str(path), "present": False, "in_protocol_hash_txt": False}
             ok = False
@@ -1490,7 +1492,7 @@ def gate_g7(cand, work, args):
         cases["staged_assets"] = {"dir": str(staged), "files": listed, "problems": problems,
                                   "table_matches_catalog": table_ok, "pass": not problems and listed > 0}
     if args.fetch_check:
-        cases["fetch_downloads_only_table"] = fetch_check(cand, work, args, old, manifest, table_art)
+        cases["fetch_downloads_only_new_artifacts"] = fetch_check(cand, work, args, old, manifest, table_art)
     if args.published:
         cases["published"] = published_check(cand, work, args, manifest)
     return {"pass": all(c.get("pass") is True for c in cases.values()), "cases": cases}
@@ -1502,7 +1504,8 @@ def stat_key(path):
 
 
 def fetch_check(cand, work, args, old, new, table_art):
-    """A fetch of tendl-2025-neutron into a directory seeded (copies) with the v1.1.0 files downloads only the table."""
+    """A fetch of tendl-2025-neutron into a directory seeded (copies) with the v1.1.0 files downloads only the
+    artifacts new in catalog 1.2.0 (Amendment E1)."""
     out = work / "fetch_seeded"
     if out.exists():
         shutil.rmtree(out)
@@ -1531,6 +1534,9 @@ def fetch_check(cand, work, args, old, new, table_art):
     arts = [by_new[a] for a in new_bundle["artifacts"]]
     seeded_shas = {sha for _k, sha in seeded.values()}
     expected_new = [a["id"] for a in arts if a["sha256"] not in seeded_shas and a["role"] != "notice"]
+    # Amendment E1: the artifacts new in catalog 1.2.0 (the table and the new notice) are the allowed downloads
+    old_ids = {a["id"] for a in old["artifacts"]}
+    allowed = {a["id"] for a in arts if a["id"] not in old_ids}
     files_ok, untouched = [], []
     for a in arts:
         p = new_dir / a["path"]
@@ -1546,15 +1552,20 @@ def fetch_check(cand, work, args, old, new, table_art):
         urls = [ln.strip() for ln in Path(args.network_log).expanduser().read_text().splitlines() if ln.strip()]
         want = table_art["source"]["url"] if table_art else None
         case["observed_by"] = "network log"
-        case["downloads_only_table"] = bool(urls) and all(u == want for u in urls)
+        allowed_urls = {a["source"]["url"] for a in arts if a["id"] in allowed}
+        case["downloads_only_new_artifacts"] = bool(urls) and want in urls and all(u in allowed_urls for u in urls)
         case["urls"] = urls[:10]
     else:
         reported = downloaded_in_output(text, arts)
         case["downloaded_per_output"] = reported
         case["observed_by"] = "fetch output" if reported else "file identity (output names no download)"
-        case["downloads_only_table"] = (set(reported) <= {CATALOG_ID} if reported else expected_new == [CATALOG_ID])
+        case["downloads_only_new_artifacts"] = (CATALOG_ID in reported and set(reported) <= allowed if reported
+                                                else expected_new == [CATALOG_ID])
+    case["allowed_downloads"] = sorted(allowed)
+    case["amendment"] = "E1: only the artifacts new in catalog 1.2.0 (table, v1.2.0 notice) are downloaded"
     case["pass"] = bool(code == 0 and case["v110_files_untouched"] and case["v120_files_all_present_and_verified"]
-                        and case["downloads_only_table"] and expected_new == [CATALOG_ID])
+                        and case["downloads_only_new_artifacts"] and expected_new == [CATALOG_ID]
+                        and allowed <= {CATALOG_ID} | {a["id"] for a in arts if a["role"] == "notice"})
     return case
 
 
