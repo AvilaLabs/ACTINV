@@ -4277,3 +4277,13 @@ Development observation disclosed before registration: one timing build of eight
 Cu-63, Li-7, Nb-93, U-238) on master `a33c25b` took 7 min 41 s on two cores, peak RSS 384 MB, 1.0 MB of output. That
 measurement set the stable-or-one-year selection; the full 2,850-target corpus would take about 55 h. No other
 output was examined.
+
+## Entry 243 — P156 Amendment A registered (2026-10-27)
+
+- **P156 Amendment A** `db493a908e7a5526a19ed482b7b76ebf628d88473c10cf1b756812cd486d1342`: G3's W-184 arc comparison between NRT energies 90 and 70 eV becomes agreement within
+  the build's 1e-3 refinement tolerance instead of byte identity. The NRT columns must differ by more than 1e-2.
+
+The candidate's workspace tests, on the P156 branch before any checker run or table build, found this. Arc-dpa is
+bit-identical pointwise, but integrated over a recoil spectrum it differs by 9e-6. The NRT breakpoints are panel
+edges of the shared quadrature, and the incident-energy grid is refined on all three quantities. One other test
+failure in the same run was a wording mismatch in an import message. No checker gate has been run.
