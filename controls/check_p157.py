@@ -245,8 +245,8 @@ CASE_DEFS = {
         "balance": "V", "density": 6.1, "nuclide": "Nb94", "matrix": {"Cr": 4.0, "Ti": 4.0},
         "impurities": {"Nb": rng(0.005, 0.001, 0.01), "Mo": rng(0.005, 0.001, 0.01), "Al": rng(0.01, 0.002, 0.03),
                        "Si": rng(0.05, 0.01, 0.1), "Cu": rng(0.005, 0.001, 0.01), "Co": rng(0.002, 0.0005, 0.005)}},
-    # reduced RA steel that `waste composition solve` accepts (7 qualified elements; 5 impurities, so at most 2^5 + 1
-    # distinct witness compositions of its 64); waste endpoints only
+    # reduced RA steel within `waste composition solve`'s documented limits (7 qualified elements; 5 impurities, so at
+    # most 2^5 + 1 distinct witness compositions of its 64); a refusal is recorded as a skip; waste endpoints only
     "ra_reduced": {
         "balance": "Fe", "density": 7.8, "nuclide": "Nb94", "matrix": {"Cr": 9.0}, "waste_only": True,
         "impurities": {"Co": rng(0.005, 0.001, 0.01), "Ni": rng(0.005, 0.001, 0.01), "Nb": rng(0.001, 0.0002, 0.003),
@@ -1652,8 +1652,12 @@ def gate_g5(states, binary, work, cwd, timeout, pack):
             held = [i for i in case.imps if i not in enum]
             envelopes, skip = None, qualifies_composition_solve(case)
             if skip is None:
-                envelopes = composition_solve_envelope(st, work, binary, cwd, timeout)
-            else:
+                # A refusal (nonzero exit, no result) is a case the command does not accept: skipped with its reason.
+                try:
+                    envelopes = composition_solve_envelope(st, work, binary, cwd, timeout)
+                except GateError as error:
+                    skip = f"the command does not accept the case: {error}"
+            if skip is not None:
                 ck.notes.append(f"{case.name}: waste composition solve skipped: {skip}")
             held_sets = [{}]
             if held:

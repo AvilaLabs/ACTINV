@@ -949,21 +949,6 @@ fn run_doc(text: &str, wrapper_path: &Path) -> Result<Value, String> {
             full_total += 1;
             coverage_reasons.extend(scan.reasons.clone());
             coverage_evidence.push(json!({"composition_wt_percent":weights,"evidence":scan.evidence,"reasons":scan.reasons}));
-            // A full solve can hold a nuclide that no basis run has (one at round-off level), so its
-            // properties are derived from the decay data rather than left unknown.
-            let missing: BTreeSet<String> = actual_by_step
-                .values()
-                .flat_map(|inventory| inventory.activities_bq_per_g.keys())
-                .filter(|nuclide| !properties.contains_key(*nuclide))
-                .cloned()
-                .collect();
-            let mut witness_properties = properties.clone();
-            if !missing.is_empty() {
-                witness_properties.extend(crate::waste_composition_verify::derive_properties(
-                    item.prepared.as_ref().ok_or("component was not prepared")?,
-                    &missing,
-                )?);
-            }
             let mut checks = Vec::new();
             for step in &steps {
                 let external = external_for_step(&item.input.external_tritium, *step)?;
@@ -971,7 +956,7 @@ fn run_doc(text: &str, wrapper_path: &Path) -> Result<Value, String> {
                     &rules,
                     item.input.waste_type,
                     item.geometry,
-                    &witness_properties,
+                    &properties,
                     &basis
                         .iter()
                         .map(|(element, map)| (element.clone(), map[step].clone()))
@@ -992,6 +977,7 @@ fn run_doc(text: &str, wrapper_path: &Path) -> Result<Value, String> {
             }
             let cert = run_record["run_certificate"].clone();
             let evidence = run_record["audit_evidence"].clone();
+            let _ = actual_by_step;
             witness_records.push(json!({"composition_wt_percent":weights,"witness_ids":witness_ids,"run_certificate":cert,"audit_evidence":evidence,"coverage_reasons":scan.reasons,"targets":checks}));
         }
 
