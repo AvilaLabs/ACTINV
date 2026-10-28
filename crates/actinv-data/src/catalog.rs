@@ -4,7 +4,7 @@ use serde::{Deserialize, Serialize};
 use std::collections::{BTreeMap, BTreeSet};
 use std::path::Path;
 
-const CATALOG_JSON: &str = include_str!("../data/actinv-data-catalog-v1.1.0.json");
+const CATALOG_JSON: &str = include_str!("../data/actinv-data-catalog-v1.2.0.json");
 const MAX_ARTIFACT_BYTES: u64 = 2_000_000_000;
 
 #[derive(Clone, Copy, Debug, Deserialize, Eq, Ord, PartialEq, PartialOrd, Serialize)]
@@ -17,6 +17,7 @@ pub enum ArtifactRole {
     DecayPrimary,
     DecayFallback,
     Notice,
+    DamageTable,
 }
 
 impl ArtifactRole {
@@ -29,6 +30,7 @@ impl ArtifactRole {
             Self::DecayPrimary => "decay-primary",
             Self::DecayFallback => "decay-fallback",
             Self::Notice => "notice",
+            Self::DamageTable => "damage-table",
         }
     }
 }
@@ -326,8 +328,19 @@ impl DataCatalog {
                 self.default_bundle
             ));
         }
-        if referenced.len() != self.artifacts.len() {
-            let unreferenced: Vec<_> = artifact_ids.difference(&referenced).copied().collect();
+        // A superseded notice stays in the catalog so every earlier artifact keeps its identity.
+        let notices: BTreeSet<&str> = self
+            .artifacts
+            .iter()
+            .filter(|artifact| artifact.role == ArtifactRole::Notice)
+            .map(|artifact| artifact.id.as_str())
+            .collect();
+        let unreferenced: Vec<_> = artifact_ids
+            .difference(&referenced)
+            .copied()
+            .filter(|id| !notices.contains(id))
+            .collect();
+        if !unreferenced.is_empty() {
             return Err(format!(
                 "catalog has unreferenced artifacts: {}",
                 unreferenced.join(", ")
@@ -407,6 +420,50 @@ mod tests {
 
         let mut value: serde_json::Value = serde_json::from_str(CATALOG_JSON).unwrap();
         value["artifacts"][0]["source"]["url"] = serde_json::json!("http://example.invalid/data");
+        assert!(DataCatalog::parse(&serde_json::to_string(&value).unwrap()).is_err());
+    }
+
+    #[test]
+    fn damage_table_is_optional_unique_and_in_the_neutron_bundles_only() {
+        let catalog = embedded_catalog().unwrap();
+        assert_eq!(catalog.catalog_version, "1.2.0");
+        let table = catalog.artifact("tendl-2025-neutron-damage").unwrap();
+        assert_eq!(table.role, ArtifactRole::DamageTable);
+        for bundle in &catalog.bundles {
+            let has = bundle.artifacts.iter().any(|id| id == &table.id);
+            assert_eq!(has, bundle.projectile == "neutron", "{}", bundle.id);
+        }
+
+        let mut value: serde_json::Value = serde_json::from_str(CATALOG_JSON).unwrap();
+        let mut second = value["artifacts"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .find(|artifact| artifact["id"] == "tendl-2025-neutron-damage")
+            .unwrap()
+            .clone();
+        second["id"] = serde_json::json!("second-damage");
+        second["path"] = serde_json::json!("damage/second.json");
+        value["artifacts"].as_array_mut().unwrap().push(second);
+        let bundles = value["bundles"].as_array_mut().unwrap();
+        let neutron = bundles
+            .iter_mut()
+            .find(|bundle| bundle["id"] == "tendl-2025-neutron")
+            .unwrap();
+        neutron["artifacts"]
+            .as_array_mut()
+            .unwrap()
+            .push(serde_json::json!("second-damage"));
+        assert!(DataCatalog::parse(&serde_json::to_string(&value).unwrap()).is_err());
+    }
+
+    #[test]
+    fn only_superseded_notices_may_be_unreferenced() {
+        let mut value: serde_json::Value = serde_json::from_str(CATALOG_JSON).unwrap();
+        let mut stray = value["artifacts"][0].clone();
+        stray["id"] = serde_json::json!("stray-library");
+        stray["path"] = serde_json::json!("activation/stray.npz");
+        value["artifacts"].as_array_mut().unwrap().push(stray);
         assert!(DataCatalog::parse(&serde_json::to_string(&value).unwrap()).is_err());
     }
 

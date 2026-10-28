@@ -10,9 +10,13 @@ actinv data verify
 actinv data list
 ```
 
-The default bundle is `tendl-2025-neutron`, the full 2,850-target neutron library. Catalog 1.1.0 installs it under `actinv-data/v1.1.0/` with its index, ENDF/B-VIII.0 primary decay data, and JEFF-3.3 fallback decay data.
+The default bundle is `tendl-2025-neutron`, the full 2,850-target neutron library. Catalog 1.2.0 installs it under `actinv-data/v1.2.0/` with its index, ENDF/B-VIII.0 primary decay data, JEFF-3.3 fallback decay data, and the neutron damage table (see below).
 
-Downloads are checked by size and SHA-256 before installation. Correct existing files are reused. An incorrect existing file is left in place unless you explicitly request replacement with `--force`.
+Downloads are checked by size and SHA-256 before installation. Correct existing files are reused, and a file already present under an older version directory (`actinv-data/v1.1.0/`) with the same SHA-256 is copied and re-verified instead of downloaded again. An incorrect existing file is left in place unless you explicitly request replacement with `--force`.
+
+## Damage table
+
+Every neutron bundle also installs `tendl-2025-neutron-damage`, a table of damage energy and displacement cross sections on the 709-group structure. Naming it in a problem gives dpa, exact NRT dpa, arc-dpa and He/dpa with no table to build and no displacement energies to list: `actinv new` writes the `damage` section for you, and `actinv import-fispact` uses it for decks that give `ALLDISPEN` or `ATDISPEN`. The table covers every TENDL-2025 neutron target that the catalog's decay data lists as stable or with a half-life of at least one year; shorter-lived products are counted in the run's `covered_atom_fraction` and `uncovered_targets`, not given damage. It is built from the unmodified TENDL-2025 evaluations, with the standard displacement energies of NJOY2016 HEATR. Build your own with [`build-damage`](cli.md#build-data) for other energies or targets.
 
 ## Choose a bundle
 
@@ -43,7 +47,7 @@ actinv data verify --output /data/actinv
 actinv new problem.json --data-dir /data/actinv
 ```
 
-`--data-dir` writes absolute paths to the generated problem. To keep symbolic catalog references, set `ACTINV_DATA_DIR` to your installation root when using the default `actinv new` output. It names the root above `v1.1.0`, not the version folder itself.
+`--data-dir` writes absolute paths to the generated problem. To keep symbolic catalog references, set `ACTINV_DATA_DIR` to your installation root when using the default `actinv new` output. It names the root above `v1.2.0`, not the version folder itself.
 
 `actinv data fetch` and `verify` use `--output` for their destination; pass it explicitly when installing or checking a custom location.
 
