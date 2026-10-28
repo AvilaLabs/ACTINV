@@ -12,7 +12,7 @@ njoy_continuum_recoil, NORDLUND_TABLE_1, FE_ABUNDANCE, TARGETS / BUILD_ED (P154 
 hard-codes (its four targets and their displacement energies) is parameterized by temporarily rebinding those module
 globals around the call (`p154_targets`), never by editing check_p154.py.
 
-  G0  This protocol's and Amendments A and B's SHA-256 are in protocols/protocol_hash.txt.
+  G0  This protocol's and Amendments A, B and C's SHA-256 are in protocols/protocol_hash.txt.
   G1  External (fmt, clippy -D warnings, workspace tests): recorded; `--g1-log PATH` records the log's digest and tail.
   G2  Existing behaviour. examples/damage_demo.json and examples/fns_fe_5min.json run with reference and candidate are
       byte-identical apart from `ms`; `build-damage` without `--method` is byte-identical on the P23 corpus (both are
@@ -125,6 +125,11 @@ TOL_RUN = 1e-12
 ENERGY_SOURCE_KEY = "displacement_energy_source"   # ledger.damage map element -> "spec" | "table" (table-2 runs)
 AMENDMENT_A = ROOT / "protocols" / "ACTINV-P156_AMENDMENT_A.md"
 AMENDMENT_B = ROOT / "protocols" / "ACTINV-P156_AMENDMENT_B.md"
+AMENDMENT_C = ROOT / "protocols" / "ACTINV-P156_AMENDMENT_C.md"
+# Amendment C1: the build directory takes Pb-208 from the P10 working corpus (the shipped library index source)
+PB208_FILE = "n-Pb208.tendl"
+PB208_WORKING_SHA256 = "86788a14563ecdb844628a6a455864874ba5f5bca9b8142c10a59ea00df87c72"
+PB208_WORKING = Path.home() / "nuclear-data" / "p43-work" / "cov-inputs" / PB208_FILE
 TOL_ARC = 1e-3                        # Amendment A1: arc agreement across NRT energies (the build REFINE_TOLERANCE)
 TOL_NRT = 1e-2                        # Amendment A1: NRT must differ by more than this
 A1_FLOOR = 1e-6                       # groups above this fraction of the maximum
@@ -236,7 +241,10 @@ def stage_corpus(directory, files, tendl_dir):
         shutil.rmtree(directory)
     directory.mkdir(parents=True)
     for name in files:
-        copy_regular(Path(tendl_dir) / name, directory / name)
+        source = PB208_WORKING if name == PB208_FILE else Path(tendl_dir) / name
+        copy_regular(source, directory / name)
+        if name == PB208_FILE and sha256(directory / name) != PB208_WORKING_SHA256:
+            raise GateError(f"{source} is not the Amendment C Pb-208 working file")
     return directory
 
 
@@ -716,7 +724,8 @@ def p154_recorded_modes():
 def gate_g0():
     lines = HASH_LOG.read_text(encoding="utf-8").splitlines()
     out, ok = {}, True
-    for label, path in (("protocol", PROTOCOL), ("amendment_a", AMENDMENT_A), ("amendment_b", AMENDMENT_B)):
+    for label, path in (("protocol", PROTOCOL), ("amendment_a", AMENDMENT_A), ("amendment_b", AMENDMENT_B),
+                        ("amendment_c", AMENDMENT_C)):
         if not path.is_file():
             out[label] = {"path": str(path), "present": False, "in_protocol_hash_txt": False}
             ok = False
@@ -965,7 +974,8 @@ def gate_g5(cand, work, args):
     selection = select_targets(names, primary, fallback)
     sel = selection["selected"]
     sizes = {r["file"]: (tendl / r["file"]).stat().st_size for r in sel}
-    hashes = {r["file"]: sha256(tendl / r["file"]) for r in sel}
+    hashes = {r["file"]: (PB208_WORKING_SHA256 if r["file"] == PB208_FILE else sha256(tendl / r["file"]))
+              for r in sel}
     out = {"decay": {"primary": str(primary_path), "primary_sha256": sha256(primary_path),
                      "fallback": str(fallback_path), "fallback_sha256": sha256(fallback_path), "located_by": how,
                      "primary_records": len(primary) - 1, "fallback_records": len(fallback) - 1},
