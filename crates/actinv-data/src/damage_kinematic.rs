@@ -2548,7 +2548,7 @@ mod tests {
             continuum_recoil: ContinuumRecoil::Kinematic,
             grid_density: 1.0,
         };
-        let row = compute_row(evaluation, endf, &options, 40.0, Some((-0.568, 0.286)))
+        let row = compute_row(evaluation, endf, &options, 40.0, Some((40.0, -0.568, 0.286)))
             .unwrap()
             .unwrap();
         assert_eq!(row.damage_energy_barn_eV.len(), 5);
