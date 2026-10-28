@@ -48,6 +48,9 @@ pub const IRRADIATES_WITHOUT_FLUXES: &str =
     "the deck irradiates (FLUX, POWER or WALL) but no FLUXES file was found";
 /// Catalog identifier of the covariance sidecar paired with the default neutron library.
 const DEFAULT_COVARIANCE: &str = "tendl-2025-neutron-709g-covariance";
+/// Catalog identifier of the shipped neutron damage table that ALLDISPEN and ATDISPEN refer to
+/// when no `--damage` table is given.
+const DEFAULT_DAMAGE_TABLE: &str = "tendl-2025-neutron-damage";
 /// Length of the ranked variance-share table that `SENSITIVITY SIGMA` asks for (`uncertainty.voi.top`).
 const SENSITIVITY_VOI_TOP: usize = 10;
 /// The actinides FISPACT-II lets produce fission products when no FISYIELD narrows or widens the set:
@@ -796,7 +799,8 @@ pub struct ImportContext {
     /// `--damage`: the damage table ALLDISPEN and ATDISPEN refer to
     pub damage: Option<HashedFile>,
     /// the displacement energies in eV (element -> eV) the damage table records, when it is an
-    /// `actinv-damage-table-2` file; `None` for a table that records none
+    /// `actinv-damage-table-2` file; `None` for a table that records none. With no `damage` table
+    /// it holds the energies of the installed catalog table, when the caller found one
     pub damage_energies_ev: Option<BTreeMap<String, f64>>,
     /// the files file's `ggbins` entry: `None` when it has none (or there is no files file),
     /// `Err` with the reason when its path cannot be read, else the file's text
@@ -3721,14 +3725,32 @@ impl<'a> Interp<'a> {
 
     /// ALLDISPEN and ATDISPEN against `--damage` and the deck's elements. Without either keyword
     /// FISPACT-II still computes displacement rates, with its own default energies, so `--damage`
-    /// alone also yields a `damage` section.
+    /// alone also yields a `damage` section. A neutron deck that gives either keyword and no
+    /// `--damage` uses the catalog's shipped table.
     fn settle_damage(&mut self, elements: &BTreeSet<String>) -> Option<Value> {
         let rec = std::mem::take(&mut self.damage);
         let asked = !rec.entries.is_empty();
-        let table = self.ctx.damage.clone();
+        let mut table = self.ctx.damage.clone();
         if !asked && table.is_none() {
             return None;
         }
+        let from_catalog = table.is_none() && self.projectile.is_neutron();
+        if from_catalog {
+            table = actinv_data::catalog::embedded_catalog()
+                .ok()
+                .and_then(|catalog| {
+                    catalog
+                        .artifact(DEFAULT_DAMAGE_TABLE)
+                        .ok()
+                        .map(|artifact| HashedFile {
+                            path: format!("catalog:{DEFAULT_DAMAGE_TABLE}"),
+                            sha256: artifact.sha256.clone(),
+                        })
+                });
+        }
+        // the catalog table is not installed (or not readable) at import time: the deck's
+        // energies are written as given and the run compares them with the table's
+        let unchecked = from_catalog && self.ctx.damage_energies_ev.is_none();
         let recorded = self.ctx.damage_energies_ev.clone();
         let default_of = |symbol: &str| {
             DEFAULT_DISPLACEMENT_EV
@@ -3739,6 +3761,7 @@ impl<'a> Interp<'a> {
         let mut energies: BTreeMap<String, f64> = BTreeMap::new();
         let mut given: BTreeMap<String, f64> = BTreeMap::new();
         let mut filled: Vec<String> = Vec::new();
+        let mut deferred: Vec<String> = Vec::new();
         let mut shifted = false;
         for symbol in elements {
             match rec.atoms.get(symbol).copied().or(rec.all) {
@@ -3746,6 +3769,7 @@ impl<'a> Interp<'a> {
                     energies.insert(symbol.clone(), energy);
                     given.insert(symbol.clone(), energy);
                 }
+                None if unchecked => deferred.push(symbol.clone()),
                 None => {
                     let from_table = recorded.as_ref().and_then(|map| map.get(symbol)).copied();
                     let energy = from_table.unwrap_or_else(|| default_of(symbol));
@@ -3803,12 +3827,28 @@ impl<'a> Interp<'a> {
             );
             return None;
         }
-        let mut detail = format!(
-            "damage.table = --damage {}; damage.displacement_energy_eV = {}",
-            table.path,
-            json!(energies)
-        );
-        if recorded.is_some() {
+        let mut detail = if from_catalog {
+            format!(
+                "damage.table = {}, the catalog's shipped neutron damage table; damage.displacement_energy_eV = {}",
+                table.path,
+                json!(energies)
+            )
+        } else {
+            format!(
+                "damage.table = --damage {}; damage.displacement_energy_eV = {}",
+                table.path,
+                json!(energies)
+            )
+        };
+        if unchecked {
+            detail.push_str("; the catalog table is not installed here, so the deck's energies are written as given and the run compares them with the table's, refusing a mismatch (run `actinv data fetch` first to compare at import)");
+            if !deferred.is_empty() {
+                detail.push_str(&format!(
+                    "; no energy was given for {}, which takes the table's energy at run time",
+                    deferred.join(", ")
+                ));
+            }
+        } else if recorded.is_some() {
             if given.is_empty() {
                 detail.push_str("; the energies are the ones the table was built with");
             } else {
@@ -3843,7 +3883,7 @@ impl<'a> Interp<'a> {
                     .join(", ")
             ));
         }
-        let status = if shifted {
+        let status = if shifted || !deferred.is_empty() {
             Status::Approximated
         } else {
             Status::Mapped
@@ -7191,22 +7231,73 @@ ZERO
     }
 
     #[test]
-    fn p155_displacement_energies_without_a_table_name_the_option() {
+    fn p156_displacement_energies_without_a_table_use_the_catalog_table() {
+        let catalog = actinv_data::catalog::embedded_catalog().unwrap();
+        let sha256 = catalog
+            .artifact("tendl-2025-neutron-damage")
+            .unwrap()
+            .sha256
+            .clone();
+        // not installed: the deck's energies are written and the run compares them
         let conversion = convert(&steel_deck("ALLDISPEN 40"), &context()).unwrap();
-        assert_eq!(entry_status(&conversion, "ALLDISPEN"), vec!["unsupported"]);
+        assert_eq!(entry_status(&conversion, "ALLDISPEN"), vec!["mapped"]);
         let detail = entry_detail(&conversion, "ALLDISPEN");
         assert!(
-            detail.contains("--damage") && detail.contains("build-damage"),
+            detail.contains("catalog:tendl-2025-neutron-damage") && detail.contains("at run time"),
             "{detail}"
         );
-        assert!(
-            detail.contains("--displacement-energy Cr=40 --displacement-energy Fe=40"),
-            "{detail}"
+        assert_eq!(
+            conversion.spec["damage"],
+            json!({
+                "table": {"path": "catalog:tendl-2025-neutron-damage", "sha256": sha256},
+                "displacement_energy_eV": {"Cr": 40.0, "Fe": 40.0},
+            })
         );
-        assert!(conversion.spec.get("damage").is_none());
+        // an element the deck omits is left to the table, and the entry says so
+        let partial = convert(&steel_deck("ATDISPEN 1 Fe 40"), &context()).unwrap();
+        assert_eq!(entry_status(&partial, "ATDISPEN"), vec!["approximated"]);
+        assert!(entry_detail(&partial, "ATDISPEN").contains("Cr, which takes the table's energy"));
+        assert_eq!(
+            partial.spec["damage"]["displacement_energy_eV"],
+            json!({"Fe": 40.0})
+        );
+        // installed: the energies are compared at import, as for --damage
+        let installed = ImportContext {
+            damage_energies_ev: Some(
+                [("Fe".to_string(), 40.0), ("Cr".to_string(), 40.0)]
+                    .into_iter()
+                    .collect(),
+            ),
+            ..context()
+        };
+        let matching = convert(&steel_deck("ALLDISPEN 40"), &installed).unwrap();
+        assert_eq!(entry_status(&matching, "ALLDISPEN"), vec!["mapped"]);
+        assert_eq!(
+            matching.spec["damage"]["table"]["path"],
+            "catalog:tendl-2025-neutron-damage"
+        );
+        let mismatched = convert(&steel_deck("ALLDISPEN 30"), &installed).unwrap();
+        assert_eq!(entry_status(&mismatched, "ALLDISPEN"), vec!["unsupported"]);
+        assert!(mismatched.spec.get("damage").is_none());
         // no keyword and no table: nothing is added
         let plain = convert(&steel_deck(""), &context()).unwrap();
         assert!(plain.spec.get("damage").is_none());
+    }
+
+    #[test]
+    fn p156_a_charged_particle_deck_without_a_table_still_needs_one() {
+        let deck = "PROJECTILE 3\nFISPACT\n* t\nMASS 1E-3 1\n FE 100\nALLDISPEN 40\nFLUX 1E10\nTIME 1 HOURS ATOMS\nEND\n";
+        let ctx = ImportContext {
+            flux: Some(LoadedFlux {
+                values: vec![1.0; 162],
+                ..flux709()
+            }),
+            ..context()
+        };
+        let conversion = convert(deck, &ctx).unwrap();
+        assert_eq!(entry_status(&conversion, "ALLDISPEN"), vec!["unsupported"]);
+        assert!(entry_detail(&conversion, "ALLDISPEN").contains("--damage"));
+        assert!(conversion.spec.get("damage").is_none());
     }
 
     #[test]
