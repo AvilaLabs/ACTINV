@@ -1252,9 +1252,11 @@ fn summarize_clips(mt: i32, mut clipped: Vec<(f64, f64)>) -> Option<ZeroKClipRec
     clipped.dedup_by(|a, b| a.0 == b.0);
     let first = clipped.first()?;
     let last = clipped.last()?;
-    let (min_energy_ev, min_barn) = clipped
-        .iter()
-        .fold(*first, |best, &point| if point.1 < best.1 { point } else { best });
+    let (min_energy_ev, min_barn) =
+        clipped.iter().fold(
+            *first,
+            |best, &point| if point.1 < best.1 { point } else { best },
+        );
     Some(ZeroKClipRecord {
         mt,
         points: clipped.len(),
@@ -1283,7 +1285,6 @@ pub fn process_reaction(
         grid_density,
         None,
     )
-    .map(|(processed, _)| processed)
 }
 
 /// As `process_reaction`, but a finite negative 0 K value is set to zero and
@@ -1649,8 +1650,8 @@ mod tests {
             y: vec![-0.5, -0.5],
         };
         let evaluation = ultra_narrow_evaluation();
-        let error = process_reaction(&evaluation, &background, &groups, 102, 0.0, 0.01)
-            .unwrap_err();
+        let error =
+            process_reaction(&evaluation, &background, &groups, 102, 0.0, 0.01).unwrap_err();
         assert!(error.contains("nonfinite or negative"), "{error}");
         let (processed, record) =
             process_reaction_clipped(&evaluation, &background, &groups, 102, 0.0, 0.01).unwrap();
@@ -1662,15 +1663,9 @@ mod tests {
         assert!(record.low_ev <= record.min_energy_ev && record.min_energy_ev <= record.high_ev);
         assert!(processed.table.y.iter().all(|&value| value >= 0.0));
         // Nothing negative: no record.
-        let (_, none) = process_reaction_clipped(
-            &evaluation,
-            &zero_background(),
-            &groups,
-            102,
-            0.0,
-            0.01,
-        )
-        .unwrap();
+        let (_, none) =
+            process_reaction_clipped(&evaluation, &zero_background(), &groups, 102, 0.0, 0.01)
+                .unwrap();
         assert!(none.is_none());
     }
 

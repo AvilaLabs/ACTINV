@@ -44,9 +44,7 @@ use crate::endf_distributions::{
     Law1Energy, Mf6Body, Mf6Data, Mf6Particle,
 };
 use crate::groups::{GroupStructure, Tabulated};
-use crate::processing::{
-    has_resonance_contribution, process_reaction_clipped, ZeroKClipRecord,
-};
+use crate::processing::{has_resonance_contribution, process_reaction_clipped, ZeroKClipRecord};
 use crate::resonance::{validate_rmatrix_limited, RangeData};
 use rayon::prelude::*;
 use serde::{Deserialize, Serialize};
@@ -2682,10 +2680,8 @@ mod tests {
 
     #[test]
     fn continue_on_error_lists_failed_evaluations() {
-        let directory = std::env::temp_dir().join(format!(
-            "actinv-continue-on-error-{}",
-            std::process::id()
-        ));
+        let directory =
+            std::env::temp_dir().join(format!("actinv-continue-on-error-{}", std::process::id()));
         let _ = std::fs::remove_dir_all(&directory);
         let input = directory.join("evaluations");
         std::fs::create_dir_all(&input).unwrap();
@@ -2719,7 +2715,10 @@ mod tests {
         assert!(!table.failed[0].error.is_empty());
         assert_eq!(table.files.len(), 2);
         assert!(table.targets.contains_key("Fe56"));
-        assert!(table.targets["Fe56"].channels.get("zero_k_clipped").is_none());
+        assert!(table.targets["Fe56"]
+            .channels
+            .get("zero_k_clipped")
+            .is_none());
         std::fs::remove_dir_all(&directory).unwrap();
     }
 
