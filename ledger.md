@@ -4350,3 +4350,42 @@ The 0 K reconstructions of the four affected evaluations were compared before an
   bounds. (D4) The candidate's Reich–Moore reconstruction keeps channels of opposite AJ sign apart, as NJOY RECONR
   does. This changes Al-27, Cl-37, Mn-55 and Si-29. The shipped damage table is rebuilt. The activation library is not
   rebuilt: its capture resonance integrals move by at most 3e-5, and its thermal values not at all.
+
+## Entry 248 — P156 development run 4, evidence run 1 failed, Amendment E registered (2026-10-28)
+
+Development run 4 is disclosed. It ran gates G0 and G2–G7 on candidate `253da58`, with the table rebuilt by the
+Amendment D candidate: 389 targets, none failed, 25 min 9 s, peak RSS 432 MB. Only the Al-27, Cl-37, Mn-55 and
+Si-29 rows changed. Every gate passed except G2: the four P154 targets' tables were byte-identical, but the
+`build-damage` summary line had gained "0 failed evaluations". The candidate now prints that count only with
+`--continue-on-error true`. On `354138a`, G1 (fmt, `cargo check --tests`, clippy `-D warnings`, workspace tests)
+passed, and a G2-only rerun passed.
+
+With the owner's approval, the `data-v1.2.0` release was published on 2026-10-28: the table, the v1.2.0 notice,
+catalog 1.2.0, `SHA256SUMS` and `SIZES`. It is not marked Latest.
+
+Evidence run 1 on `354138a` failed one G7 sub-check and is preserved under `results/failures/p156/`. G0 and G2–G6
+passed, as did G7's catalog, staged-asset and published-release checks. A fetch into a directory holding the v1.1.0
+files downloaded the table and the new v1.2.0 notice. It copied every v1.1.0 artifact and left the v1.1.0 files
+untouched. The protocol required that the fetch download only the table.
+
+- **P156 Amendment E** `d739b36d0c7d08f78292d83edc41a64a96ad426dcc3214177d14f36d8847e7fb`: G7's fetch check allows exactly the artifacts new in catalog
+  1.2.0, the table and the v1.2.0 notice, to be downloaded. Every v1.1.0 artifact must still be copied, and the v1.1.0
+  files must be left untouched. This is P156's one repair round.
+
+## Entry 249 — P156 evidence: G0 and G2–G7 pass on 354138a (repair round, Amendment E); merged (2026-10-28)
+
+- **G1** at `354138a`: fmt, `cargo check --workspace --tests` and clippy `-D warnings` are clean, and 1255
+  workspace tests passed with 0 failed (`results/p156/g1.log`). The commits after it touch only the checker, the
+  protocols, the ledger and `results/`. The checker self-check passes after its last edit.
+- **Shipped table:** built from `1e366f0` with the item-6 command on the Amendment C corpus. 389 targets, none
+  failed. Fe-54 is clipped at 36 points. 25 min 9 s, peak RSS 432 MB, 49,041,569 bytes, SHA-256 `c9f1b2f2…`
+  (`results/p156/shipped_table_build/`). The commits from `1e366f0` to `354138a` change only the catalog, the
+  notice, the notes and the `build-damage` summary line. G5's seeded 16-file rebuild with the evidence binary
+  reproduces the shipped rows byte for byte.
+- **Evidence run 2:** `controls/check_p156.py` (`3c43cd54…`), candidate binary `e767e0d0…` built from `354138a`,
+  reference v1.6.1 (`3f561962…`). G0 and G2–G7 passed, including G7's staged assets, a fetch onto the v1.1.0 files
+  that downloads only the table and the v1.2.0 notice (Amendment E1), and a clean fetch, verify and FNS run from the
+  published `data-v1.2.0`. Record: `results/p156_damage.json`. Evidence run 1 is in `results/failures/p156/`, and
+  development runs 1–4 are in `results/p156/`.
+- Locally the mdbook build, `scripts/check_docs.py` and `scripts/test_prepare_web.py` pass. The P15 cache-integrity
+  baseline is unchanged with the P156 binary. **G8** is pending CI on the pushed commit.

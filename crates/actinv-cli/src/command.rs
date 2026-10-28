@@ -35,7 +35,7 @@ const USAGE: &str = "usage: actinv run SPEC.json [OUT.json]\n\
                     actinv import-flux fispact FLUXES OUT.ndjson --groups GROUPS.json\n\
                     actinv import-fispact DECK.i OUT.json [--fluxes FLUXES] [--files FILES] [--library LIB.npz] [--decay DECAY] [--covariance COV.npz] [--fission-yields FILE...] [--damage TABLE] [--self-shielding-table FILE] [--resonance FILE...] [--strict]\n\
                     actinv build-library INPUT OUTPUT.npz [--format auto|tendl|eaf] [--projectile auto|neutron|proton|deuteron|triton|helion|alpha|gamma] [--groups fispact-709|fispact-162|fispact-66|...|fispact-1102|PATH] [--temperature-K K] [--workers N] [--cache DIR] [--grid-density D] [--strict-states true|false] [--profile none|endfb8|tendl] [--decay PATH] [--decay-fallback PATH] [--continue-on-error true|false] [--spallation TABLE.json] [--splice-energy-MeV MEV]\n\
-                    actinv build-damage EVALUATION_DIR OUT.json [--projectile auto|neutron|proton|deuteron|triton|helion|alpha|gamma] [--groups fispact-709|fispact-162|fispact-66|...|fispact-1102|PATH] [--temperature-K K] [--cache DIR] [--method default|kinematic] [--displacement-energy EL=eV ...] [--capture-photons evaluated|one-photon|per-photon] [--continuum-recoil kinematic|evaluated] [--grid-density X]\n\
+                    actinv build-damage EVALUATION_DIR OUT.json [--projectile auto|neutron|proton|deuteron|triton|helion|alpha|gamma] [--groups fispact-709|fispact-162|fispact-66|...|fispact-1102|PATH] [--temperature-K K] [--cache DIR] [--method default|kinematic] [--displacement-energy EL=eV ... (default: NJOY HEATR standard energy of the element, else 25)] [--capture-photons evaluated|one-photon|per-photon] [--continuum-recoil kinematic|evaluated] [--grid-density X] [--continue-on-error true|false]\n\
                     actinv build-shielding EVALUATION_DIR OUT.json [--projectile auto|neutron] [--groups fispact-709|PATH] [--cache DIR]\n\
                     actinv build-covariance INPUT ACTIVATION.npz OUTPUT.cov.npz [--workers N] [--cache DIR]\n\
                     actinv mesh SPEC.json OUT.ndjson\n\
@@ -597,6 +597,7 @@ fn build_damage(args: &[String]) {
             "--capture-photons",
             "--continuum-recoil",
             "--grid-density",
+            "--continue-on-error",
         ],
     );
     let kinematic = match options.get("--method").copied().unwrap_or("default") {
@@ -611,10 +612,11 @@ fn build_damage(args: &[String]) {
         && (!displacement_energies.is_empty()
             || options.contains_key("--capture-photons")
             || options.contains_key("--continuum-recoil")
-            || options.contains_key("--grid-density"))
+            || options.contains_key("--grid-density")
+            || options.contains_key("--continue-on-error"))
     {
         die(
-            "--displacement-energy, --capture-photons, --continuum-recoil and --grid-density need --method kinematic",
+            "--displacement-energy, --capture-photons, --continuum-recoil, --grid-density and --continue-on-error need --method kinematic",
             2,
         );
     }
@@ -642,7 +644,7 @@ fn build_damage(args: &[String]) {
             cache: options.get("--cache").map(std::path::PathBuf::from),
             displacement_energy_eV: displacement_energies,
             default_displacement_energy_eV:
-                actinv_data::damage_kinematic::DEFAULT_DISPLACEMENT_ENERGY_EV,
+                actinv_data::damage_kinematic::OTHERWISE_DISPLACEMENT_ENERGY_EV,
             capture_photons: actinv_data::damage_kinematic::CapturePhotons::parse(
                 options
                     .get("--capture-photons")
@@ -658,6 +660,7 @@ fn build_damage(args: &[String]) {
             )
             .unwrap_or_else(|error| die(error, 2)),
             grid_density: parsed_option(&options, "--grid-density").unwrap_or(1.0),
+            continue_on_error: parsed_option(&options, "--continue-on-error").unwrap_or(false),
         };
         let summary = actinv_data::damage_kinematic::build_damage_kinematic(
             input,
@@ -665,10 +668,18 @@ fn build_damage(args: &[String]) {
             &kinematic_options,
         )
         .unwrap_or_else(|error| die(error, 1));
+        // Without --continue-on-error a failure stops the build, so the count is shown only with it and the summary of
+        // an ordinary build is unchanged.
+        let failed = if kinematic_options.continue_on_error {
+            format!("{} failed evaluations, ", summary.failed_evaluations)
+        } else {
+            String::new()
+        };
         println!(
-            "{} damage targets, {} evaluations without a covered elastic channel, {} cache hits, {} {}, sha256 {}",
+            "{} damage targets, {} evaluations without a covered elastic channel, {}{} cache hits, {} {}, sha256 {}",
             summary.targets,
             summary.uncovered_evaluations,
+            failed,
             summary.cache_hits,
             summary.projectile.name(),
             summary.output.display(),

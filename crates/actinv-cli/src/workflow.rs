@@ -264,17 +264,44 @@ pub fn check_files(spec: &Spec, hashes: bool) -> Result<(), String> {
     }
 }
 
+/// The data path of the example spec without its `actinv-data/v<version>/` prefix, whatever
+/// catalog version the template was written against.
+fn example_relative_path(path: &str) -> &str {
+    let rest = path.strip_prefix("actinv-data/").unwrap_or(path);
+    match rest.split_once('/') {
+        Some((version, tail))
+            if version.starts_with('v')
+                && version[1..]
+                    .bytes()
+                    .all(|b| b.is_ascii_digit() || b == b'.') =>
+        {
+            tail
+        }
+        _ => rest,
+    }
+}
+
+/// The catalog's shipped neutron damage table, which the example names so a dpa run needs no
+/// table built first.
+const EXAMPLE_DAMAGE_TABLE: &str = "tendl-2025-neutron-damage";
+
 /// Generate a complete editable example, with references valid from any working directory.
 /// The default data root emits portable `catalog:` references resolved against the
 /// installed data bundle at run time; an explicit `--data-dir` keeps absolute paths.
+/// The example also names the catalog damage table, so its run reports dpa without setup.
 pub fn new_example(data_root: &Path) -> Result<Spec, String> {
     let mut spec = Spec::from_json(IRON_EXAMPLE)?;
+    let catalog = crate::embedded_catalog()?;
+    let table = catalog.artifact(EXAMPLE_DAMAGE_TABLE)?;
+    let damage_ref = |path: String| -> Result<_, String> {
+        serde_json::from_value(serde_json::json!({
+            "table": {"path": path, "sha256": table.sha256},
+        }))
+        .map_err(|e| format!("cannot build the example damage section: {e}"))
+    };
     if data_root == Path::new("actinv-data") {
-        let catalog = crate::embedded_catalog()?;
         let to_catalog = |path: &mut String| -> Result<(), String> {
-            let relative = path
-                .strip_prefix(&format!("actinv-data/v{}/", catalog.catalog_version))
-                .unwrap_or(path);
+            let relative = example_relative_path(path);
             let artifact = catalog
                 .artifacts
                 .iter()
@@ -288,6 +315,7 @@ pub fn new_example(data_root: &Path) -> Result<Spec, String> {
         if let Some(p) = &mut spec.decay.fallback {
             to_catalog(p)?;
         }
+        spec.damage = Some(damage_ref(format!("catalog:{EXAMPLE_DAMAGE_TABLE}"))?);
         return Ok(spec);
     }
     let root: PathBuf = if data_root.is_absolute() {
@@ -296,10 +324,11 @@ pub fn new_example(data_root: &Path) -> Result<Spec, String> {
         std::env::current_dir()
             .map_err(|e| e.to_string())?
             .join(data_root)
-    };
+    }
+    .join(format!("v{}", catalog.catalog_version));
     let rewrite = |path: &mut String| {
         *path = root
-            .join(path.strip_prefix("actinv-data/").unwrap_or(path))
+            .join(example_relative_path(path))
             .to_string_lossy()
             .into_owned();
     };
@@ -308,6 +337,9 @@ pub fn new_example(data_root: &Path) -> Result<Spec, String> {
     if let Some(p) = &mut spec.decay.fallback {
         rewrite(p);
     }
+    spec.damage = Some(damage_ref(
+        root.join(&table.path).to_string_lossy().into_owned(),
+    )?);
     Ok(spec)
 }
 
@@ -327,6 +359,16 @@ mod tests {
             portable.decay.fallback.as_deref(),
             Some("catalog:jeff-3-3-decay")
         );
+        let damage = portable.damage.as_ref().unwrap();
+        assert_eq!(damage.table.path, "catalog:tendl-2025-neutron-damage");
+        assert!(damage.displacement_energy_eV.is_empty());
+        let explicit = s.damage.as_ref().unwrap();
+        assert!(explicit.table.path.starts_with("/example-data/v"));
+        assert!(explicit
+            .table
+            .path
+            .ends_with("/damage/tendl-2025-neutron-damage-709g.json"));
+        assert_eq!(explicit.table.sha256, damage.table.sha256);
     }
     #[test]
     fn missing_files_include_sidecars_and_recovery() {

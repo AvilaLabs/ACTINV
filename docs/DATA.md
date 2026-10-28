@@ -10,7 +10,7 @@ Install the recommended neutron activation and decay data with:
 actinv data fetch
 ```
 
-This downloads about 79 MiB and installs about 170 MiB under `actinv-data/v1.1.0/`. ACTINV streams each download to a
+This downloads about 79 MiB and installs about 170 MiB (plus the damage table) under `actinv-data/v1.2.0/`. ACTINV streams each download to a
 temporary file and checks both its byte count and SHA-256 before making it visible. The two decay archives come
 directly from the IAEA; both the downloaded ZIP and the one extracted member are verified. Existing correct files are
 reused, and an incorrect file is left untouched unless you explicitly request a verified replacement with `--force`.
@@ -39,7 +39,9 @@ benchmark (coverage loss on 1,172 fail-closed targets outweighed its confirmed-s
 pairings are supported. The patched corpus is preferred for thermal/mixed-spectrum problems where its zeroed (n,p) leak matters. Other bundles:
 `tendl-2025-patched-neutron`, `tendl-2025-neutron-covariance`, `tendl-2025-patched-neutron-covariance`,
 `tendl-2025-proton`, `tendl-2025-deuteron`, and `tendl-2025-alpha`; pass one after `fetch` or `verify`.
-Shared decay files are reused when multiple bundles use the same output directory.
+Shared decay files are reused when multiple bundles use the same output directory. A file that is absent from the
+current version directory but present under an older one (`v1.1.0/`) with the catalog's SHA-256 is copied there and
+re-verified instead of downloaded.
 
 `build-library --projectile gamma` reads raw TENDL-2025 `g`-sublibrary (photonuclear) ENDF-6 evaluations directly
 (public, CC-BY-4.0, 2,850 targets to 200 MeV on the CCFE-162 group structure); a built gamma library is not yet a
@@ -56,6 +58,17 @@ separate CC-BY-4.0 release assets. The ENDF/B-VIII.0 and JEFF-3.3 decay files re
 host. The installed `ACTINV-DATA-NOTICE.md` records attribution, source and builder identities, transformations,
 the patch scope, and terms. ACTINV's MIT/Apache-2.0 software licence does not replace a dataset's licence or
 source terms.
+
+Catalog 1.2.0 adds the artifact role `damage-table` (optional, at most one per bundle) and one artifact,
+`tendl-2025-neutron-damage` (`damage/tendl-2025-neutron-damage-709g.json`, CC-BY-4.0), referenced by the four neutron
+bundles. Every v1.1.0 artifact keeps its id, path, size and SHA-256. The table is an `actinv-damage-table-2` file on
+the 709-group structure, built with `actinv build-damage --method kinematic --projectile neutron --groups fispact-709
+--continuum-recoil evaluated` from the unmodified TENDL-2025 neutron evaluations (the patched library's ordinate
+repairs are not applied). Its targets are the evaluations whose nuclide the catalog's decay data (ENDF/B-VIII.0,
+JEFF-3.3 where ENDF/B-VIII.0 has no record) lists as stable or with a half-life of at least one Julian year
+(3.15576e7 s); shorter-lived products are not given damage, and the run reports their atom fraction instead. Displacement
+energies are the NJOY2016 HEATR defaults (a convention, not a material-specific measurement). The assets are hosted on
+release `data-v1.2.0`, with `ACTINV-DATA-NOTICE-v1.2.0.md`; see [`DATA_RELEASE_NOTES_v1.2.0.md`](DATA_RELEASE_NOTES_v1.2.0.md).
 
 Catalog v1.1.0 is published as the immutable
 [`data-v1.1.0` release](https://github.com/AvilaLabs/ACTINV/releases/tag/data-v1.1.0); catalog v1.0.0 remains at

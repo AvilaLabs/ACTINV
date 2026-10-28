@@ -1,0 +1,168 @@
+{
+ "candidate_sha256": "e767e0d0479b6becacbfdc609997bb5d59fcbd52c42cc8aeead4b4ada5ac6928",
+ "checker_sha256": "c517127fed9759dc57e3838058c7cd3b25c56516ed7e2fef64afb50e3039db49",
+ "default_displacement_energy_eV": 25.0,
+ "gates": {
+  "G2": {
+   "cases": {
+    "build_damage_default_p23_corpus": {
+     "corpus_files": {
+      "n-Co059.tendl": "8ff347217eb7948bd6a032a08f1807b49104ed81aa9a840cce9a72c3f7bbaa45",
+      "n-Fe056.tendl": "c02da8f3e3157ebf6e42267b799943084261484f9984e25d8ef1b98d8ef5ba84",
+      "n-Ni058.tendl": "45acb51d359617252039b9ae70711663c978c3571617179e35b1b317625b170b"
+     },
+     "output_byte_identical": true,
+     "output_sha256": "6689ba429fb9024195edb8c2b7804555a9793de0019c3d42b0332420c466212f",
+     "pass": true,
+     "stdout_identical": true
+    },
+    "damage_demo": {
+     "identical_apart_from_ms": true,
+     "pass": true,
+     "spec_sha256": "8e2cb8857363a87d3f0bd0dee6788d3a1d256102dfe7cd770aa47f89fd5f78c1"
+    },
+    "fns_fe_5min": {
+     "identical_apart_from_ms": true,
+     "pass": true,
+     "spec_sha256": "ed55ed00f6c00fc4a2351e18332e98e7feb33d9b7ca65e7ba861e0e5e8feef39"
+    },
+    "p154_target_Cr52": {
+     "args": [
+      "--method",
+      "kinematic",
+      "--groups",
+      "fispact-709",
+      "--projectile",
+      "neutron",
+      "--capture-photons",
+      "per-photon",
+      "--displacement-energy",
+      "Cr=40",
+      "--continuum-recoil",
+      "evaluated"
+     ],
+     "input_matches_pin": true,
+     "input_sha256": "796548d723c19db57930f7a3c4c81a6a53e4004346f74279946d0d70875f0a94",
+     "modes_from": "results/p154_damage.json",
+     "output_byte_identical": true,
+     "output_sha256": "6f53df3b859a2ce9e05a06b3e4ab22a92870620d2af705d0fb992ebeb2cb5ff1",
+     "pass": true,
+     "pinned_sha256": "796548d723c19db57930f7a3c4c81a6a53e4004346f74279946d0d70875f0a94",
+     "stdout_identical": true
+    },
+    "p154_target_Fe56": {
+     "args": [
+      "--method",
+      "kinematic",
+      "--groups",
+      "fispact-709",
+      "--projectile",
+      "neutron",
+      "--capture-photons",
+      "per-photon",
+      "--displacement-energy",
+      "Fe=40",
+      "--continuum-recoil",
+      "evaluated"
+     ],
+     "input_matches_pin": true,
+     "input_sha256": "f33f867a4f9c4579a62954fe31dc6e70768ab2424dc8f282a122a93f156d2e1e",
+     "modes_from": "results/p154_damage.json",
+     "output_byte_identical": true,
+     "output_sha256": "b394741232c5b2584119a7ec0a82a7deee1c2bac281899987128604917b6d211",
+     "pass": true,
+     "pinned_sha256": "f33f867a4f9c4579a62954fe31dc6e70768ab2424dc8f282a122a93f156d2e1e",
+     "stdout_identical": true
+    },
+    "p154_target_Ni58": {
+     "args": [
+      "--method",
+      "kinematic",
+      "--groups",
+      "fispact-709",
+      "--projectile",
+      "neutron",
+      "--capture-photons",
+      "per-photon",
+      "--displacement-energy",
+      "Ni=39",
+      "--continuum-recoil",
+      "evaluated"
+     ],
+     "input_matches_pin": true,
+     "input_sha256": "26c8ae72a203187fae84f9a11c3997086cd70153386e04cf204b4122ab368916",
+     "modes_from": "results/p154_damage.json",
+     "output_byte_identical": true,
+     "output_sha256": "53debba0774b3711345819420c586af267ee1313d9e453136ae48c97baf511bc",
+     "pass": true,
+     "pinned_sha256": "26c8ae72a203187fae84f9a11c3997086cd70153386e04cf204b4122ab368916",
+     "stdout_identical": true
+    },
+    "p154_target_W184": {
+     "args": [
+      "--method",
+      "kinematic",
+      "--groups",
+      "fispact-709",
+      "--projectile",
+      "neutron",
+      "--capture-photons",
+      "per-photon",
+      "--displacement-energy",
+      "W=70",
+      "--continuum-recoil",
+      "evaluated"
+     ],
+     "input_matches_pin": true,
+     "input_sha256": "cbf1c80e1557af58fcf4c40a78b3e1a0d2d70b08719a99ffe4a55b753aaa2a20",
+     "modes_from": "results/p154_damage.json",
+     "output_byte_identical": true,
+     "output_sha256": "ba2bf5011ed3196dba0522f309a8c961d7d8c7ed0d642ef638ca637033806301",
+     "pass": true,
+     "pinned_sha256": "cbf1c80e1557af58fcf4c40a78b3e1a0d2d70b08719a99ffe4a55b753aaa2a20",
+     "stdout_identical": true
+    }
+   },
+   "pass": true
+  }
+ },
+ "gates_run": [
+  "G2"
+ ],
+ "protocol": "protocols/ACTINV-P156_PROTOCOL.md",
+ "protocol_sha256": "b9b9fcef3dfaa6a4becf5f0578b8199a7b2e75946c3df4a4c1c4647bad586520",
+ "reference_sha256": "3f56196285c0c28215aa9f722a0252676f2842bead964f06c4f0b738db62d9dd",
+ "shipped_table": "/home/connoravila/Documents/actinv/actinv-data/v1.2.0/damage/tendl-2025-neutron-damage-709g.json",
+ "standard_displacement_energy_eV": {
+  "Ag": 60.0,
+  "Al": 27.0,
+  "Au": 30.0,
+  "Be": 31.0,
+  "C": 31.0,
+  "Ca": 40.0,
+  "Co": 40.0,
+  "Cr": 40.0,
+  "Cu": 40.0,
+  "Fe": 40.0,
+  "Mg": 25.0,
+  "Mn": 40.0,
+  "Mo": 60.0,
+  "Nb": 40.0,
+  "Ni": 40.0,
+  "Pb": 25.0,
+  "Si": 25.0,
+  "Ta": 90.0,
+  "Ti": 40.0,
+  "V": 40.0,
+  "W": 90.0,
+  "Zr": 40.0
+ },
+ "tolerances": {
+  "G5_row_sum": 1e-12,
+  "G6_run": 1e-12,
+  "P154_G3_elastic": 0.02,
+  "P154_G4": 0.05,
+  "P154_G4_uncovered_fraction": 0.005
+ },
+ "verdict": "PARTIAL"
+}

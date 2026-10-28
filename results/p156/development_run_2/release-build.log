@@ -1,0 +1,4 @@
+   Compiling actinv-data v1.6.1 (/home/connoravila/Documents/actinv/target/p156-wt/crates/actinv-data)
+   Compiling actinv-core v1.6.1 (/home/connoravila/Documents/actinv/target/p156-wt/crates/actinv-core)
+   Compiling actinv-cli v1.6.1 (/home/connoravila/Documents/actinv/target/p156-wt/crates/actinv-cli)
+    Finished `release` profile [optimized] target(s) in 4m 10s

@@ -2592,10 +2592,15 @@ pub fn reconstruct_legacy(range: &ResonanceRange, energy: f64) -> Result<CrossSe
         let (penetrability, shift) = penetration_shift(group.l, wave * penetration_radius)?;
         let phase = phase_shift(group.l, wave * phase_radius)?;
         let pi_over_k2 = std::f64::consts::PI / (wave * wave);
-        let mut by_spin: BTreeMap<u64, Vec<&LegacyResonance>> = BTreeMap::new();
+        // Reich-Moore: the sign of AJ selects the channel spin, and each (J, channel spin) is its own channel with the
+        // full g_J, as NJOY RECONR csrmat (kchanl) treats it; AJ >= 0 is one channel, AJ < 0 the other.
+        let mut by_spin: BTreeMap<(u64, bool), Vec<&LegacyResonance>> = BTreeMap::new();
         for resonance in &group.resonances {
             by_spin
-                .entry(resonance.spin.abs().to_bits())
+                .entry((
+                    resonance.spin.abs().to_bits(),
+                    reich_moore && resonance.spin < 0.0,
+                ))
                 .or_default()
                 .push(resonance);
         }
@@ -2957,6 +2962,57 @@ mod tests {
         let elastic = pi_over_k2 * 0.5 * (Complex64::new(1.0, 0.0) - collision).norm_sqr();
         let cancelled = total - elastic;
         assert!((cancelled - expected).abs() > 1e-3 * expected);
+    }
+
+    #[test]
+    fn reich_moore_sign_of_j_selects_separate_channel_spin() {
+        let resonance = |energy: f64, spin: f64| LegacyResonance {
+            energy,
+            spin,
+            total: 0.0,
+            neutron: 40.0,
+            capture: 1.0,
+            fission_a: 0.0,
+            fission_b: 0.0,
+        };
+        let range = |resonances: Vec<LegacyResonance>| ResonanceRange {
+            energy_min: 1e-5,
+            energy_max: 1e4,
+            lru: 1,
+            lrf: 3,
+            naps: 1,
+            scattering_radius: None,
+            data: RangeData::ReichMoore(LegacyResolved {
+                spin: 2.5,
+                ap: 0.43,
+                groups: vec![LegacyLGroup {
+                    awri: 26.75,
+                    apl: 0.43,
+                    qx: 0.0,
+                    l: 0,
+                    lrx: 0,
+                    resonances,
+                }],
+            }),
+        };
+        let energy = 1050.0;
+        let potential = reconstruct_legacy(&range(vec![]), energy).unwrap().elastic;
+        let only_a = reconstruct_legacy(&range(vec![resonance(1000.0, 2.0)]), energy).unwrap();
+        let only_b = reconstruct_legacy(&range(vec![resonance(1100.0, -2.0)]), energy).unwrap();
+        let both = reconstruct_legacy(
+            &range(vec![resonance(1000.0, 2.0), resonance(1100.0, -2.0)]),
+            energy,
+        )
+        .unwrap();
+        let merged = reconstruct_legacy(
+            &range(vec![resonance(1000.0, 2.0), resonance(1100.0, 2.0)]),
+            energy,
+        )
+        .unwrap();
+        let separate = only_a.elastic + only_b.elastic - potential;
+        assert!((both.elastic - separate).abs() <= 1e-12 * separate);
+        assert!((both.capture - (only_a.capture + only_b.capture)).abs() <= 1e-12 * both.capture);
+        assert!((merged.elastic - separate).abs() > 1e-3 * separate);
     }
 
     fn energy_dependent_unresolved_range() -> ResonanceRange {

@@ -18,6 +18,43 @@
 - Worked example `examples/impurities_ra_steel/` (illustrative values) and the handbook chapter "Screen a
   material's impurities".
 
+**Changed (P156: damage defaults)**
+
+- `build-damage --method kinematic` defaults each element's `E_d` to the per-element table NJOY2016 HEATR applies when
+  no `ed` is given (heatr.f90 at tag 2016.80: Be 31, C 31, Mg 25, Al 27, Si 25, Ca 40, Ti-Cu 40, Zr 40, Nb 40, Mo 60,
+  Ag 60, Ta 90, W 90, Au 30, Pb 25 eV; 25 eV otherwise), so an NRT value agrees with an NJOY-processed MT=444 library
+  at the same energies. The flat 25 eV default is gone; `--displacement-energy EL=eV` still overrides it.
+- arc-dpa displacements are counted at the reference `E_d` of the Nordlund et al. (2018) fit the constants come from
+  (Fe 40, Cu 33, Ni 39, Pd 41, Pt 42, W 70 eV), whatever `E_d` the NRT quantities use. Tables built at the reference
+  energy are unchanged.
+- With an `actinv-damage-table-2` file, an element that `damage.displacement_energy_eV` omits takes the energy the table
+  records; an explicit value must still equal it. The damage ledger names each element's source in
+  `displacement_energy_source` (`spec` or `table`), and `displacement_energy_eV` there lists the energies used.
+- `build-damage --method kinematic` sets a finite negative 0 K resonance reconstruction to zero as NJOY RECONR does
+  (recorded in `channels.zero_k_clipped`) instead of aborting, and `--continue-on-error true` lists a failing evaluation
+  in the table's `failed` array instead of stopping the build. Tables without either event are unchanged.
+
+**Fixed (P156)**
+
+- Reich–Moore (LRF=3) reconstruction keeps resonances of opposite AJ sign in separate channels, since the sign selects
+  the channel spin, as NJOY RECONR does. Before, they shared one R-matrix and interfered. TENDL-2025 Al-27, Cl-37,
+  Mn-55 and Si-29 are affected: Al-27's 0 K elastic moved by up to 10.9 % in 709-group groups between 0.33 and
+  0.8 MeV, and its capture by up to 16 % pointwise near 345 keV. Thermal values are unchanged, and capture resonance
+  integrals moved by at most 3e-5. The shipped v1.1.0 activation libraries predate the fix and are not rebuilt.
+
+**Added (P156: shipped damage table)**
+
+- Data catalog 1.2.0 adds the artifact role `damage-table` (optional, one per bundle) and the artifact
+  `tendl-2025-neutron-damage`, a kinematic damage table on the 709-group structure for the stable and long-lived
+  (half-life of at least one year) TENDL-2025 neutron targets, referenced by the four neutron bundles. Every v1.1.0
+  artifact keeps its id and hash. A superseded notice may stay in the catalog unreferenced.
+- `actinv data fetch` copies a file already present under an older version directory when its SHA-256 matches the
+  catalog's, re-verifies the copy, and reports it as `copied` instead of downloading it.
+- `actinv new` writes a `damage` section naming `catalog:tendl-2025-neutron-damage`, with no displacement energies.
+  `new --data-dir` now writes paths under the catalog's own version directory.
+- `actinv import-fispact` uses the catalog table when a neutron deck gives `ALLDISPEN` or `ATDISPEN` and `--damage`
+  is not given; the energies are compared with the installed table's, or at run time when it is not installed.
+
 **Added (P152, opt-in; defaults unchanged)**
 
 - `photon.missing_spectra: "estimate"` (FISPACT-II `SPEK`). A nuclide with a mean electromagnetic energy and no photon

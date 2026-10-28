@@ -36,15 +36,15 @@ use crate::builder::{
 };
 use crate::composition;
 use crate::displacement::{
-    arc_displacements, arc_dpa_entry, nrt_displacements, Partition, ARC_DPA_CITATION,
-    NEUTRON_REST_EV, NRT_KAPPA,
+    arc_displacements, arc_dpa_entry, nrt_displacements, standard_displacement_energy, Partition,
+    ARC_DPA_CITATION, NEUTRON_REST_EV, NRT_KAPPA,
 };
 use crate::endf_distributions::{
     interpolate, parse_damage_endf, AngularDistribution, AngularRecord, DamageEndf, Law1,
     Law1Energy, Mf6Body, Mf6Data, Mf6Particle,
 };
 use crate::groups::{GroupStructure, Tabulated};
-use crate::processing::{has_resonance_contribution, process_reaction};
+use crate::processing::{has_resonance_contribution, process_reaction_clipped, ZeroKClipRecord};
 use crate::resonance::{validate_rmatrix_limited, RangeData};
 use rayon::prelude::*;
 use serde::{Deserialize, Serialize};
@@ -56,8 +56,9 @@ use std::sync::OnceLock;
 
 pub const TABLE_FORMAT_2: &str = "actinv-damage-table-2";
 pub const TABLE_UNITS_2: &str = "damage_energy_barn_eV_per_group";
-/// Displacement energy used for an element with no `--displacement-energy` entry (eV).
-pub const DEFAULT_DISPLACEMENT_ENERGY_EV: f64 = 25.0;
+/// Displacement energy of an element that has neither a `--displacement-energy` entry nor a row in
+/// `STANDARD_DISPLACEMENT_ENERGIES` (eV).
+pub const OTHERWISE_DISPLACEMENT_ENERGY_EV: f64 = 25.0;
 /// Relative midpoint tolerance of the incident-energy grid refinement.
 pub const REFINE_TOLERANCE: f64 = 1.0e-3;
 pub const MAX_REFINE_PASSES: usize = 12;
@@ -80,6 +81,15 @@ pub struct Table2Source {
 pub struct Table2File {
     pub path: String,
     pub sha256: String,
+}
+
+/// An evaluation whose processing failed under `--continue-on-error`.
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct Table2Failed {
+    pub file: String,
+    pub sha256: String,
+    pub error: String,
 }
 
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
@@ -146,6 +156,9 @@ pub struct DamageTable2 {
     /// Evaluations with no damage row (no MT=2 cross section).
     #[serde(default)]
     pub uncovered: Vec<String>,
+    /// Evaluations skipped under `--continue-on-error`, sorted by file; absent when none failed.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub failed: Vec<Table2Failed>,
     pub displacement: Table2Displacement,
     #[serde(default)]
     pub model: serde_json::Value,
@@ -303,14 +316,40 @@ where
 struct Recoil {
     partition: Partition,
     ed: f64,
-    arc: Option<(f64, f64)>,
+    arc: Option<ArcRecoil>,
+    t_on: f64,
+    t_knee: f64,
+}
+
+/// The arc-dpa side of a recoil: the constants are defined at the reference `E_d` of the Nordlund et al. fit, so
+/// arc has its own partition threshold and breakpoints, independent of the `E_d` of the NRT quantities.
+#[derive(Clone, Copy, Debug)]
+struct ArcRecoil {
+    partition: Partition,
+    ed: f64,
+    b: f64,
+    c: f64,
     t_on: f64,
     t_knee: f64,
 }
 
 impl Recoil {
-    fn new(zr: f64, ar: f64, zl: f64, al: f64, ed: f64, arc: Option<(f64, f64)>) -> Self {
+    /// `arc` is the reference `E_d`, `b` and `c` of the element's arc-dpa fit.
+    fn new(zr: f64, ar: f64, zl: f64, al: f64, ed: f64, arc: Option<(f64, f64, f64)>) -> Self {
         let partition = Partition::new(zr, ar, zl, al, ed);
+        let arc = arc.map(|(ed_ref, b, c)| {
+            let partition = Partition::new(zr, ar, zl, al, ed_ref);
+            ArcRecoil {
+                partition,
+                ed: ed_ref,
+                b,
+                c,
+                t_on: partition.recoil_for_damage(ed_ref).unwrap_or(f64::INFINITY),
+                t_knee: partition
+                    .recoil_for_damage(2.0 * ed_ref / NRT_KAPPA)
+                    .unwrap_or(f64::INFINITY),
+            }
+        });
         Self {
             partition,
             ed,
@@ -324,16 +363,39 @@ impl Recoil {
 
     fn response(&self, t: f64) -> Resp {
         let d = self.partition.damage_energy(t);
-        if d <= 0.0 {
+        // arc counts displacements at its own reference E_d, with the partition cut at that E_d
+        let arc = self.arc.map_or(0.0, |a| {
+            let da = a.partition.damage_energy(t);
+            if da > 0.0 {
+                arc_displacements(da, a.ed, a.b, a.c)
+            } else {
+                0.0
+            }
+        });
+        if d <= 0.0 && arc <= 0.0 {
             return Resp::default();
         }
         Resp {
             d,
             nrt: nrt_displacements(d, self.ed),
-            arc: self
-                .arc
-                .map_or(0.0, |(b, c)| arc_displacements(d, self.ed, b, c)),
+            arc,
         }
+    }
+
+    /// Lowest recoil energy at which any quantity is nonzero. With an arc reference `E_d` below the NRT one
+    /// (W: 70 against 90 eV) the arc integral must not be truncated at the NRT threshold.
+    fn threshold(&self) -> f64 {
+        self.arc.map_or(self.ed, |a| self.ed.min(a.ed))
+    }
+
+    /// Recoil energies where the response is not smooth: `E_d` and the two NRT breakpoints, plus the arc ones
+    /// when its reference `E_d` differs.
+    fn breakpoints(&self) -> Vec<f64> {
+        let mut points = vec![self.ed, self.t_on, self.t_knee];
+        if let Some(a) = self.arc.filter(|a| a.ed != self.ed) {
+            points.extend([a.ed, a.t_on, a.t_knee]);
+        }
+        points
     }
 
     fn integrate<P: Fn(f64) -> f64>(
@@ -344,10 +406,17 @@ impl Recoil {
         nodes: usize,
         extra: &[f64],
     ) -> Resp {
+        // the NRT onset is a kink of its own only when arc starts below it; otherwise it is the threshold
+        let points = self.breakpoints();
+        let kinks = if self.threshold() < self.ed {
+            &points[..]
+        } else {
+            &points[1..]
+        };
         linear_response(
             &|t| self.response(t),
-            self.ed,
-            &[self.t_on, self.t_knee],
+            self.threshold(),
+            kinks,
             c0,
             c1,
             pdf,
@@ -776,7 +845,8 @@ fn spectrum_response<F: Fn(f64) -> f64>(
 /// `None` when the spectrum has no weight.
 fn per_photon_record_response(rec: &Law1Energy, lep: i32, rc: &Recoil, a1: f64) -> Option<Resp> {
     let scale = 1.0 / (2.0 * a1 * NEUTRON_REST_EV);
-    let cuts: Vec<f64> = [rc.ed, rc.t_on, rc.t_knee]
+    let cuts: Vec<f64> = rc
+        .breakpoints()
         .iter()
         .filter(|t| t.is_finite() && **t > 0.0)
         .map(|t| (t / scale).sqrt())
@@ -793,7 +863,8 @@ fn recoil_spectrum_table(
     yield_table: &Tabulated,
     rc: &Recoil,
 ) -> Option<Vec<(f64, Resp)>> {
-    let cuts: Vec<f64> = [rc.ed, rc.t_on, rc.t_knee]
+    let cuts: Vec<f64> = rc
+        .breakpoints()
         .iter()
         .copied()
         .filter(|t| t.is_finite() && *t > 0.0)
@@ -1210,12 +1281,14 @@ pub struct KinematicOptions {
     pub groups: GroupStructure,
     pub temperature_K: f64,
     pub cache: Option<PathBuf>,
-    /// Element symbol -> `E_d` (eV); elements absent use `default_displacement_energy_eV`.
+    /// Element symbol -> `E_d` (eV); elements absent use their standard energy, else `default_displacement_energy_eV`.
     pub displacement_energy_eV: BTreeMap<String, f64>,
     pub default_displacement_energy_eV: f64,
     pub capture_photons: CapturePhotons,
     pub continuum_recoil: ContinuumRecoil,
     pub grid_density: f64,
+    /// Record a failing evaluation in the table's `failed` array instead of aborting the build.
+    pub continue_on_error: bool,
 }
 
 /// Which table partial an MT belongs to (NJOY's MT=445/446/447 grouping).
@@ -1277,7 +1350,7 @@ struct Context {
     a_nucleon: i32,
     awr: f64,
     ed: f64,
-    arc: Option<(f64, f64)>,
+    arc: Option<(f64, f64, f64)>,
 }
 
 /// Whether an MF=6 ejectile's distribution is in the laboratory frame. LCT=3 gives light particles (ZAP 1 to 2004,
@@ -1483,7 +1556,7 @@ fn sigma_table(
     mt: i32,
     use_resonance: bool,
     options: &KinematicOptions,
-) -> Result<Option<Tabulated>, String> {
+) -> Result<(Option<Tabulated>, Option<ZeroKClipRecord>), String> {
     let groups = &options.groups;
     if use_resonance && matches!(mt, 2 | 102) {
         let resonance = evaluation
@@ -1504,13 +1577,20 @@ fn sigma_table(
                 .get(&mt)
                 .or(zero_background.as_ref())
                 .expect("an MF=3 or explicit zero background is present");
-            let reaction =
-                process_reaction(resonance, background, groups, mt, 0.0, options.grid_density)
-                    .map_err(|error| format!("MT{mt} resonance processing: {error}"))?;
-            return Ok(Some(reaction.table));
+            // NJOY RECONR sets a negative resonance-range cross section to zero.
+            let (reaction, clipped) = process_reaction_clipped(
+                resonance,
+                background,
+                groups,
+                mt,
+                0.0,
+                options.grid_density,
+            )
+            .map_err(|error| format!("MT{mt} resonance processing: {error}"))?;
+            return Ok((Some(reaction.table), clipped));
         }
     }
-    Ok(evaluation.mf3.get(&mt).cloned())
+    Ok((evaluation.mf3.get(&mt).cloned(), None))
 }
 
 /// Per-group arrays of one evaluation plus a note on every channel.
@@ -1519,7 +1599,7 @@ fn compute_row(
     endf: &DamageEndf,
     options: &KinematicOptions,
     ed: f64,
-    arc: Option<(f64, f64)>,
+    arc: Option<(f64, f64, f64)>,
 ) -> Result<Option<Table2Row>, String> {
     let metadata = &evaluation.metadata;
     let groups = &options.groups;
@@ -1565,6 +1645,7 @@ fn compute_row(
     let (mut uncovered_xs, mut uncovered_bound) = (zeros(), zeros());
     let mut covered_notes = Vec::new();
     let mut uncovered_notes = Vec::new();
+    let mut clip_notes = Vec::new();
     let mut photon_mode = "not_applicable".to_string();
     let mut lab_fallbacks = 0usize;
     let mut unresolved_segments = 0usize;
@@ -1574,9 +1655,20 @@ fn compute_row(
         if !is_channel_mt(mt) || is_redundant(mt, &present) {
             continue;
         }
-        let Some(sigma) = sigma_table(evaluation, mt, use_resonance, options)? else {
+        let (sigma, clipped) = sigma_table(evaluation, mt, use_resonance, options)?;
+        let Some(sigma) = sigma else {
             continue;
         };
+        if let Some(clipped) = clipped {
+            clip_notes.push(serde_json::json!({
+                "mt": clipped.mt,
+                "points": clipped.points,
+                "min_barn": clipped.min_barn,
+                "min_energy_eV": clipped.min_energy_ev,
+                "low_eV": clipped.low_ev,
+                "high_eV": clipped.high_ev,
+            }));
+        }
         if sigma.y.iter().all(|value| *value == 0.0) {
             continue;
         }
@@ -1594,7 +1686,7 @@ fn compute_row(
             };
         match covered {
             Some(Ok(model)) => {
-                let onsets = model.onsets(ed);
+                let onsets = model.onsets(ed.min(arc.map_or(ed, |a| a.0)));
                 let tabulation: Tabulation<3> = tabulate(&sigma, groups, &onsets, |e| {
                     let sigma_e = sigma.evaluate(e).unwrap_or(0.0);
                     let response = model.kernel(e);
@@ -1711,6 +1803,17 @@ fn compute_row(
     let total: Vec<f64> = (0..ng)
         .map(|g| elastic[g] + inelastic[g] + disappearance[g])
         .collect();
+    let mut channels = serde_json::json!({
+        "covered": covered_notes,
+        "uncovered": uncovered_notes,
+        "capture_photon_recoil": photon_mode,
+        "evaluated_recoil_channels": evaluated_recoil_channels,
+        "lab_frame_cm_fallback_evaluations": lab_fallbacks,
+        "unresolved_refinement_segments": unresolved_segments,
+    });
+    if !clip_notes.is_empty() {
+        channels["zero_k_clipped"] = clip_notes.into();
+    }
     Ok(Some(Table2Row {
         damage_energy_barn_eV: total,
         elastic,
@@ -1720,14 +1823,7 @@ fn compute_row(
         uncovered_damage_upper_barn_eV: uncovered_bound,
         displacement_nrt_barn: nrt,
         displacement_arc_barn: arc.map(|_| arc_values),
-        channels: serde_json::json!({
-            "covered": covered_notes,
-            "uncovered": uncovered_notes,
-            "capture_photon_recoil": photon_mode,
-            "evaluated_recoil_channels": evaluated_recoil_channels,
-            "lab_frame_cm_fallback_evaluations": lab_fallbacks,
-            "unresolved_refinement_segments": unresolved_segments,
-        }),
+        channels,
     }))
 }
 
@@ -1739,6 +1835,7 @@ fn compute_row(
 pub struct KinematicBuildSummary {
     pub targets: usize,
     pub uncovered_evaluations: usize,
+    pub failed_evaluations: usize,
     pub cache_hits: usize,
     pub projectile: Projectile,
     pub output: PathBuf,
@@ -1790,12 +1887,14 @@ fn kinematic_cache_key(
     format!("{:x}", hasher.finalize())
 }
 
-/// The displacement energy of an element: the explicit entry, else the default.
+/// The displacement energy of an element: the explicit entry, else the standard value of the element, else the
+/// options' `default_displacement_energy_eV` (`OTHERWISE_DISPLACEMENT_ENERGY_EV` on the command line).
 pub fn displacement_energy_for(options: &KinematicOptions, symbol: &str) -> f64 {
     options
         .displacement_energy_eV
         .get(symbol)
         .copied()
+        .or_else(|| standard_displacement_energy(symbol))
         .unwrap_or(options.default_displacement_energy_eV)
 }
 
@@ -1859,7 +1958,7 @@ fn kinematic_source(
         let name = damage_nuclide_name(metadata.za, metadata.liso);
         let symbol = composition::symbol_of(metadata.za / 1000);
         let ed = displacement_energy_for(options, symbol);
-        let arc = arc_dpa_entry(symbol).map(|entry| (entry.b, entry.c));
+        let arc = arc_dpa_entry(symbol).map(|entry| (entry.ed_eV, entry.b, entry.c));
         let empty = DamageEndf::default();
         let endf = distributions.get(&metadata.mat).unwrap_or(&empty);
         match compute_row(evaluation, endf, options, ed, arc)
@@ -1880,6 +1979,15 @@ fn kinematic_source(
         write_json_atomic(checkpoint, &entry)?;
     }
     Ok((entry, provenance, false))
+}
+
+fn failed_file_identity(path: &Path) -> Result<(String, String), String> {
+    let file = path
+        .file_name()
+        .and_then(|name| name.to_str())
+        .ok_or_else(|| format!("input filename '{}' is not UTF-8", path.display()))?
+        .to_owned();
+    Ok((file, sha256_file(path)?))
 }
 
 /// Build and atomically publish an `actinv-damage-table-2` from a neutron evaluation directory or file.
@@ -1942,9 +2050,25 @@ pub fn build_damage_kinematic(
     let mut provenance = Vec::new();
     let mut uncovered = Vec::new();
     let mut cache_hits = 0usize;
+    let mut failed = Vec::new();
     for path in &files {
-        let (entry, file_provenance, hit) = kinematic_source(path, options, projectile)
-            .map_err(|error| format!("{}: {error}", path.display()))?;
+        let (entry, file_provenance, hit) = match kinematic_source(path, options, projectile) {
+            Ok(result) => result,
+            Err(error) if options.continue_on_error => {
+                let (file, sha256) = failed_file_identity(path)?;
+                provenance.push(Table2File {
+                    path: file.clone(),
+                    sha256: sha256.clone(),
+                });
+                failed.push(Table2Failed {
+                    file,
+                    sha256,
+                    error,
+                });
+                continue;
+            }
+            Err(error) => return Err(format!("{}: {error}", path.display())),
+        };
         cache_hits += usize::from(hit);
         provenance.push(file_provenance);
         for (name, row) in entry.targets {
@@ -1959,6 +2083,7 @@ pub fn build_damage_kinematic(
         }
         uncovered.extend(entry.uncovered);
     }
+    failed.sort_by(|a, b| a.file.cmp(&b.file));
     let mut displacement_energy_eV = BTreeMap::new();
     let mut parameters = BTreeMap::new();
     for name in targets.keys() {
@@ -1998,6 +2123,7 @@ pub fn build_damage_kinematic(
         method: "kinematic".into(),
         files: provenance,
         uncovered,
+        failed,
         displacement: Table2Displacement {
             displacement_energy_eV,
             arc_dpa: Table2Arc {
@@ -2028,6 +2154,7 @@ pub fn build_damage_kinematic(
     Ok(KinematicBuildSummary {
         targets: table.targets.len(),
         uncovered_evaluations: table.uncovered.len(),
+        failed_evaluations: table.failed.len(),
         cache_hits,
         projectile,
         output: output.to_path_buf(),
@@ -2118,6 +2245,70 @@ mod tests {
         // above the maximum recoil energy nothing is produced
         let none = linear_response(&identity, 1.1 * (c0 + c1), &[], c0, c1, &pdf, 8, &[]);
         assert_eq!(none, Resp::default());
+    }
+
+    #[test]
+    fn arc_uses_its_reference_energy_whatever_the_nrt_energy() {
+        let (b, c) = (-0.56, 0.12);
+        let awr = 182.4;
+        let at = |ed: f64| Recoil::new(74.0, awr, 74.0, awr, ed, Some((70.0, b, c)));
+        let (rc90, rc70) = (at(90.0), at(70.0));
+        for t in [50.0, 69.9, 70.0, 85.0, 95.0, 400.0, 3.0e3, 5.0e4] {
+            let (r90, r70) = (rc90.response(t), rc70.response(t));
+            assert_eq!(r90.arc, r70.arc, "arc at T = {t}");
+        }
+        // a recoil between the two thresholds counts for arc only
+        let between = rc90.response(80.0);
+        assert!(between.arc > 0.0 && between.nrt == 0.0 && between.d == 0.0);
+        assert!(rc90.response(5.0e4).nrt < rc70.response(5.0e4).nrt);
+        assert_eq!(rc90.threshold(), 70.0);
+        // integrated over a recoil spectrum: the same arc, different NRT
+        let e = 2.0e6;
+        let (c0, c1) = two_body_cm_map(awr, 1.0, awr, 0.0, e).unwrap();
+        let (i90, i70) = (
+            rc90.integrate(c0, c1, &|_| 0.5, 8, &[]),
+            rc70.integrate(c0, c1, &|_| 0.5, 8, &[]),
+        );
+        assert!(i90.arc > 0.0);
+        // the NRT breakpoints are panel edges of the shared quadrature, so the integrals agree to its accuracy
+        assert!(
+            (i90.arc - i70.arc).abs() < 1e-4 * i70.arc,
+            "{i90:?} {i70:?}"
+        );
+        assert!(
+            (i90.nrt - i70.nrt).abs() > 1e-3 * i70.nrt,
+            "{i90:?} {i70:?}"
+        );
+        // Fe at its reference energy: arc is the plain arc count of the damage energy
+        let fe = Recoil::new(26.0, 55.45, 26.0, 55.45, 40.0, Some((40.0, -0.568, 0.286)));
+        for t in [40.0, 500.0, 2.0e4, 3.0e5] {
+            let r = fe.response(t);
+            assert_eq!(r.arc, arc_displacements(r.d, 40.0, -0.568, 0.286));
+        }
+        assert_eq!(fe.threshold(), 40.0);
+    }
+
+    #[test]
+    fn default_displacement_energies_are_the_standard_table() {
+        let mut options = KinematicOptions {
+            projectile: None,
+            groups: GroupStructure::fispact_709().unwrap(),
+            temperature_K: 0.0,
+            cache: None,
+            displacement_energy_eV: BTreeMap::new(),
+            default_displacement_energy_eV: OTHERWISE_DISPLACEMENT_ENERGY_EV,
+            capture_photons: CapturePhotons::Evaluated,
+            continuum_recoil: ContinuumRecoil::Kinematic,
+            grid_density: 1.0,
+            continue_on_error: false,
+        };
+        assert_eq!(displacement_energy_for(&options, "Fe"), 40.0);
+        assert_eq!(displacement_energy_for(&options, "W"), 90.0);
+        assert_eq!(displacement_energy_for(&options, "Be"), 31.0);
+        assert_eq!(displacement_energy_for(&options, "Xe"), 25.0);
+        options.displacement_energy_eV.insert("W".into(), 70.0);
+        assert_eq!(displacement_energy_for(&options, "W"), 70.0);
+        assert_eq!(displacement_energy_for(&options, "Fe"), 40.0);
     }
 
     #[test]
@@ -2285,6 +2476,7 @@ mod tests {
                 sha256: "0".repeat(64),
             }],
             uncovered: vec![],
+            failed: vec![],
             displacement: Table2Displacement {
                 displacement_energy_eV: BTreeMap::from([("Fe".to_string(), 40.0)]),
                 arc_dpa: Table2Arc {
@@ -2422,10 +2614,17 @@ mod tests {
             capture_photons: CapturePhotons::Evaluated,
             continuum_recoil: ContinuumRecoil::Kinematic,
             grid_density: 1.0,
+            continue_on_error: false,
         };
-        let row = compute_row(evaluation, endf, &options, 40.0, Some((-0.568, 0.286)))
-            .unwrap()
-            .unwrap();
+        let row = compute_row(
+            evaluation,
+            endf,
+            &options,
+            40.0,
+            Some((40.0, -0.568, 0.286)),
+        )
+        .unwrap()
+        .unwrap();
         assert_eq!(row.damage_energy_barn_eV.len(), 5);
         // independent value of the elastic damage in the group [1e6, 1e7]: sigma = 3 b, isotropic CM,
         // W(E) = 1/(2 c1) integral_{E_d}^{T_max} D(T) dT with the same Lindhard partition
@@ -2477,6 +2676,50 @@ mod tests {
         let mts: Vec<i64> = notes.iter().map(|n| n["mt"].as_i64().unwrap()).collect();
         assert_eq!(mts, vec![4, 16]);
         assert_eq!(row.channels["covered"][0]["mt"], 2);
+    }
+
+    #[test]
+    fn continue_on_error_lists_failed_evaluations() {
+        let directory =
+            std::env::temp_dir().join(format!("actinv-continue-on-error-{}", std::process::id()));
+        let _ = std::fs::remove_dir_all(&directory);
+        let input = directory.join("evaluations");
+        std::fs::create_dir_all(&input).unwrap();
+        std::fs::write(input.join("n-Fe056.tendl"), synthetic_tape()).unwrap();
+        std::fs::write(input.join("n-Bad000.tendl"), "not an ENDF tape\n").unwrap();
+        let mut options = KinematicOptions {
+            projectile: Some(Projectile::Neutron),
+            groups: GroupStructure {
+                name: "test".into(),
+                boundaries_ev: vec![1.0e-5, 1.0e3, 1.0e5, 1.0e6, 1.0e7, 2.0e7],
+            },
+            temperature_K: 0.0,
+            cache: None,
+            displacement_energy_eV: BTreeMap::new(),
+            default_displacement_energy_eV: 40.0,
+            capture_photons: CapturePhotons::Evaluated,
+            continuum_recoil: ContinuumRecoil::Kinematic,
+            grid_density: 1.0,
+            continue_on_error: false,
+        };
+        let output = directory.join("table.json");
+        assert!(build_damage_kinematic(&input, &output, &options).is_err());
+        options.continue_on_error = true;
+        let summary = build_damage_kinematic(&input, &output, &options).unwrap();
+        assert_eq!((summary.targets, summary.failed_evaluations), (1, 1));
+        let table: DamageTable2 =
+            serde_json::from_str(&std::fs::read_to_string(&output).unwrap()).unwrap();
+        assert_eq!(table.failed.len(), 1);
+        assert_eq!(table.failed[0].file, "n-Bad000.tendl");
+        assert_eq!(table.failed[0].sha256.len(), 64);
+        assert!(!table.failed[0].error.is_empty());
+        assert_eq!(table.files.len(), 2);
+        assert!(table.targets.contains_key("Fe56"));
+        assert!(table.targets["Fe56"]
+            .channels
+            .get("zero_k_clipped")
+            .is_none());
+        std::fs::remove_dir_all(&directory).unwrap();
     }
 
     fn g0_f(g0: f64, g1: f64, i: usize, n: usize) -> f64 {
