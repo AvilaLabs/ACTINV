@@ -4411,3 +4411,12 @@ already stale. No candidate source changed. Locally P13 passed, fns-iron (case, 
 the public examples, P12 source, release notes and prior verdicts. All five workflows triggered on `1b02817`
 succeeded, `controls` among them. A successor phase may requalify P156's G8 on that commit, as P150 did for P148.
 The shipped table, catalog 1.2.0 and the published `data-v1.2.0` are unchanged by this verdict.
+
+## Entry 251 — P159 registered: P156 qualified on CI after the catalog sweep (2026-10-28)
+
+**P159** `ccc354b6a5ea1e9405ceb342e4a799791d9c692139e3afcd55900713b87a1793` was registered before any evidence. As P150 did for P148, it qualifies the unchanged P156
+candidate on current master. Q1: the Rust sources are identical to `354138a`, and the P156 candidate binary
+`e767e0d0…` is used. Q2: the published `data-v1.2.0` assets match catalog 1.2.0. Q3: a local sweep of the catalog-sensitive
+CI steps under Python 3.12. Q4: CI green on the pushed evidence commit. P158 stays reserved for the uncertainty layer
+named in P157. Disclosed, not evidence: every workflow triggered on `1b02817` and on `aff750b` (controls 40700317660,
+fusion-isotope 40700317792, fns-iron 40700317982) succeeded before this registration. P156 stays FAIL on G8.
