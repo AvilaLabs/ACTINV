@@ -1505,15 +1505,37 @@ fn eval_composition(
     eval_activities(cx, &act, h3)
 }
 
-/// The class evaluation of a solved run at a step.
-fn eval_solved(cx: &waste_budget::Setup, t: &ElemTarget, step: u64) -> Result<Evaluation, String> {
-    let act: BTreeMap<String, f64> = t
+/// The class evaluation of a solved run at a step. A full solve can hold a nuclide that no element
+/// run has (one at round-off level, such as Pd115 a day after irradiation), so its properties are
+/// derived from the decay data here rather than left unknown.
+fn eval_solved(
+    cx: &waste_budget::Setup,
+    t: &ElemTarget,
+    step: u64,
+    prepared: &actinv_core::run::PreparedRun,
+) -> Result<Evaluation, String> {
+    let mut act: BTreeMap<String, f64> = t
         .activity
         .iter()
         .map(|(n, a)| (n.clone(), a * cx.b.mass_g))
         .collect();
     let (h3, _) = waste_budget::external_at(&cx.b.external_tritium, step)?;
-    eval_activities(cx, &act, h3)
+    let missing: BTreeSet<String> = act
+        .keys()
+        .filter(|n| !cx.b.nuclide_properties.contains_key(*n))
+        .cloned()
+        .collect();
+    if missing.is_empty() {
+        return eval_activities(cx, &act, h3);
+    }
+    let mut properties = cx.b.nuclide_properties.clone();
+    properties.extend(crate::waste_composition_verify::derive_properties(
+        prepared, &missing,
+    )?);
+    if h3 > 0.0 {
+        waste_budget::merge_activity(&mut act, "H3", h3)?;
+    }
+    evaluate_component(&cx.rules, cx.b.waste_type, cx.geometry, &act, &properties)
 }
 
 fn class_json(ev: &Evaluation, target: WasteClass) -> Result<Value, String> {
@@ -2305,6 +2327,7 @@ fn verify_requests(
         for &k in targets {
             solved.insert(k, extract_target(&res, k, want_photons)?);
         }
+        let prepared = cache.prepared().ok_or("no prepared run")?;
         let mut checks = Vec::new();
         let mut point_dev: f64 = 0.0;
         let mut point_pass = true;
@@ -2341,7 +2364,7 @@ fn verify_requests(
                         .iter()
                         .find(|c| c.endpoint == r.endpoint)
                         .ok_or("missing class context")?;
-                    let sv = snapshot(&eval_solved(&cx.setup, t, r.step)?)?;
+                    let sv = snapshot(&eval_solved(&cx.setup, t, r.step, prepared)?)?;
                     let dev = p
                         .raw
                         .iter()
@@ -2370,7 +2393,7 @@ fn verify_requests(
                         .iter()
                         .find(|c| c.endpoint == r.endpoint)
                         .ok_or("missing class context")?;
-                    let ev = eval_solved(&cx.setup, t, r.step)?;
+                    let ev = eval_solved(&cx.setup, t, r.step, prepared)?;
                     let s = constraint(&ev, *target, *table, *column)?.normalized_sum;
                     let dev = rel_dev(*predicted, s).max((s - 1.0).abs());
                     (
