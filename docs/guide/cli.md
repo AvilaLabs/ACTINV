@@ -1,6 +1,6 @@
 # Command line
 
-The `actinv` command is included with the Python package or can be installed independently with Rust. Run `actinv --version` to identify your executable and `actinv --help` to see its commands. The established examples here cover 1.6.1; the waste commands are documented separately in [Component waste classes and impurity limits](waste.md).
+The `actinv` command is included with the Python package or can be installed independently with Rust. Run `actinv --version` to identify your executable and `actinv help` to see its commands, grouped by task. `actinv help COMMAND`, or `--help` anywhere after a command, prints that command's page: what it answers, its usage, an example, where its output goes and its exit codes. The established examples here cover 1.6.1; the waste commands are documented separately in [Component waste classes and impurity limits](waste.md).
 
 The native waste composition workflow is `actinv waste composition solve
 SPEC.json [OUT.json]`. It runs the bounded pure-element basis and every
@@ -206,4 +206,4 @@ actinv waste package PACKAGE.json [OUT.json]
 [Screen a material's impurities](impurities.md). It exits 3, after writing its output, when a verification re-solve
 misses; a refused input (nonlinear options, a bad range, an unknown endpoint) exits 1 and writes nothing.
 
-Each workflow consumes its own document format. [Advanced workflows](workflows.md) links the schemas, examples, and applicability limits. Run `actinv COMMAND --help` for available help; some commands print the shared usage rather than a dedicated page.
+Each workflow consumes its own document format. [Advanced workflows](workflows.md) links the schemas, examples, and applicability limits. Every command has its own page: `actinv help COMMAND`. `actinv help exit-codes` lists what each exit code means.

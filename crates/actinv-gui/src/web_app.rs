@@ -1,13 +1,15 @@
 use crate::{
     model::{self, ResultDocument},
-    nav::Page,
+    nav::{Group, Page},
     views::{
+        check::{self, CheckAction},
         import::{self, ImportAction, ImportSlot, ImportState},
         material::{self, MaterialState},
         outputs::{self, OutputsAction, OutputsState},
         pathways::{self, PathwaysAction, PathwaysState},
         photons::{self, PhotonsAction, PhotonsState},
         steps::{self, StepsAction, StepsState},
+        summary::{self, SummaryAction},
         tables::{self, TablesAction, TablesState},
         waste::{self, Detected},
         Marks, Picker, Pinned, Target,
@@ -133,15 +135,28 @@ fn apply_pin(doc: &mut Value, field: PinField, name: &str, sha256: &str) {
 /// The setup page a view asked to open.
 fn page_for(target: Target) -> Page {
     match target {
-        Target::Overview => Page::Overview,
         Target::Material => Page::Material,
         Target::Schedule => Page::Schedule,
         Target::Spectrum => Page::Spectrum,
         Target::Outputs => Page::Outputs,
+        Target::CheckRun => Page::CheckRun,
     }
 }
 
 /// The pages the browser offers: the desktop's, less the two that run the solver.
+/// Whether the top bar ticks a setup step (see `views::check`); Check & run is ticked when every
+/// other step is.
+fn step_ready(problem: &Value, page: Page) -> bool {
+    match page {
+        Page::Material => check::ready(problem, Target::Material),
+        Page::Schedule => check::ready(problem, Target::Schedule),
+        Page::Spectrum => check::ready(problem, Target::Spectrum),
+        Page::Outputs => check::ready(problem, Target::Outputs),
+        Page::CheckRun => check::assess(problem).iter().all(|line| line.ready),
+        _ => false,
+    }
+}
+
 fn browser_pages() -> impl Iterator<Item = Page> {
     Page::ALL
         .into_iter()
@@ -197,9 +212,9 @@ impl Workbench {
                 BLUE
             };
         });
-        let problem = model::decode_problem(model::EXAMPLE).expect("bundled problem");
+        let problem = model::example();
         Self {
-            page: Page::Overview,
+            page: Page::Start,
             saved: problem.clone(),
             raw: String::new(),
             problem,
@@ -208,7 +223,7 @@ impl Workbench {
             result: None,
             comparison: None,
             pending_file: None,
-            status: "Open a result or try the example to get started.".into(),
+            status: "Start from the iron example, open a problem or a result, or drop a file anywhere in this window.".into(),
             error: false,
             step: 0,
             metric: 0,
@@ -362,7 +377,7 @@ impl Workbench {
                 self.raw.clear();
                 self.raw_source = Value::Null;
                 self.raw_dirty = false;
-                self.page = Page::Overview;
+                self.page = Page::CheckRun;
                 Ok(format!(
                     "Opened {name}. Data paths are preserved for the desktop app."
                 ))
@@ -374,15 +389,15 @@ impl Workbench {
                 if matches!(kind, FileKind::Compare) {
                     self.comparison = Some(result);
                 } else {
+                    self.step = summary::shutdown_step(&result).unwrap_or(0);
                     self.result = Some(result);
                     self.comparison = None;
-                    self.step = 0;
                     self.selected.clear();
                     self.tables = TablesState::default();
                     self.photons = PhotonsState::default();
                     self.pathways = PathwaysState::default();
                 }
-                self.page = Page::Charts;
+                self.page = Page::Summary;
                 Ok(format!("Opened {name}."))
             }
             FileKind::WasteResult => {
@@ -439,7 +454,7 @@ impl Workbench {
         self.raw.clear();
         self.raw_source = Value::Null;
         self.raw_dirty = false;
-        self.page = Page::Overview;
+        self.page = Page::CheckRun;
         self.report(Ok("Deck imported as a new problem. Add anything the report listed as required, then download it.".into()));
         true
     }
@@ -489,71 +504,191 @@ impl Workbench {
         ui.add_enabled_ui(!self.raw_dirty, |ui| body(self, ui));
     }
 
-    fn overview(&mut self, ui: &mut egui::Ui) {
+    fn load_example(&mut self) {
+        if self.replace_problem_allowed() {
+            self.problem = model::example();
+            self.saved = self.problem.clone();
+            self.raw_dirty = false;
+            self.raw.clear();
+            self.raw_source = Value::Null;
+            self.page = Page::CheckRun;
+            self.report(Ok("Iron example loaded: 1 g of iron, 5 minutes at the FNS 14 MeV source, then cooling.".into()));
+        }
+    }
+
+    fn tutorial(&mut self) {
+        self.result = Some(model::tutorial_result());
+        self.comparison = None;
+        self.step = 0;
+        self.selected.clear();
+        self.page = Page::Summary;
+        self.report(Ok(
+            "Tutorial: a fictional nuclide with a one-hour half-life. These are teaching values."
+                .into(),
+        ));
+    }
+
+    /// The home page: ways to begin, what is open, and where calculations run.
+    fn start(&mut self, ui: &mut egui::Ui) {
+        let accent = visuals::accent(ui);
         visuals::heading(
             ui,
-            "Overview & data",
-            "Open a result to explore it, or prepare a problem here and run it with the desktop app or the command line.",
+            "Welcome to ACTINV",
+            "What a material becomes under irradiation, and how it cools: activity, decay heat, dose and waste class.",
         );
         ui.group(|ui| {
-            ui.strong("Welcome to the ACTINV workbench");
-            ui.label("Open a result from ACTINV to inspect inventories, activity, decay heat, and photon spectra. Prepare a problem here and run it with the desktop app.");
+            ui.set_width(ui.available_width());
+            ui.strong("This browser workbench prepares problems and explores results");
+            ui.label("Calculations run in the desktop app or with `actinv run` on your computer. Set up a problem here, download it, run it there, then open the result here or in the app.");
             ui.horizontal_wrapped(|ui| {
-                if ui.button("Open result file…").clicked() {
-                    self.pick(FileKind::Result, &["json"], ui.ctx());
+                ui.hyperlink_to("Download ACTINV for your computer", "./download/");
+                ui.label("·");
+                ui.hyperlink_to("Command-line guide", "./docs/cli.html");
+            });
+        });
+        ui.add_space(12.);
+        ui.label(RichText::new("START A PROBLEM").small().color(accent));
+        let width = ((ui.available_width() - 28.) / 3.).clamp(200., 340.);
+        let choice = |ui: &mut egui::Ui, title: &str, text: &str, button: &str| {
+            ui.group(|ui| {
+                ui.set_width(width);
+                ui.set_min_height(140.);
+                ui.vertical(|ui| {
+                    ui.strong(title);
+                    // three lines of room for every description, so the buttons line up
+                    let lines = 3.2 * ui.text_style_height(&egui::TextStyle::Body);
+                    ui.scope(|ui| {
+                        ui.set_min_height(lines);
+                        ui.label(text);
+                    });
+                    ui.add_space(4.);
+                    ui.button(button).clicked()
+                })
+                .inner
+            })
+            .inner
+        };
+        let mut picked = None;
+        ui.horizontal_wrapped(|ui| {
+            if choice(ui, "From the iron example", "1 g of iron, 5 minutes at the FNS 14 MeV neutron source, then an hour of cooling.", "Load iron example") {
+                picked = Some(0);
+            }
+            if choice(ui, "Open a problem", "An ACTINV problem JSON from your computer, or one written by `actinv new`.", "Open problem…") {
+                picked = Some(1);
+            }
+            if choice(ui, "Import a FISPACT-II deck", "Convert an input deck. A report shows what was mapped and what you still need to add.", "Import deck…") {
+                picked = Some(2);
+            }
+        });
+        match picked {
+            Some(0) => self.load_example(),
+            Some(1) => self.pick(FileKind::Problem, &["json"], ui.ctx()),
+            Some(2) => {
+                self.import.get_or_insert_with(ImportState::default);
+            }
+            _ => {}
+        }
+        ui.add_space(16.);
+        ui.columns(2, |columns| {
+            let ui = &mut columns[0];
+            ui.label(RichText::new("CURRENT PROBLEM").small().color(accent));
+            ui.group(|ui| {
+                ui.set_width(ui.available_width());
+                ui.strong(self.problem["title"].as_str().unwrap_or("Untitled problem"));
+                let lines = check::assess(&self.problem);
+                for line in &lines {
+                    if line.ready {
+                        ui.label(&line.text);
+                    } else {
+                        ui.colored_label(ui.visuals().error_fg_color, &line.text);
+                    }
                 }
-                if ui.button("Try the results tutorial").clicked() {
-                    self.result = Some(model::tutorial_result());
-                    self.comparison = None;
-                    self.step = 0;
-                    self.selected.clear();
-                    self.page = Page::Charts;
-                    self.report(Ok("Tutorial: a fictional nuclide with a one-hour half-life. These are teaching values.".into()));
+                ui.horizontal_wrapped(|ui| {
+                    let (label, page) = match lines.iter().find(|line| !line.ready) {
+                        Some(line) => ("Fix what is missing >", page_for(line.target)),
+                        None => ("Check & download >", Page::CheckRun),
+                    };
+                    if ui.button(label).clicked() {
+                        self.page = page;
+                    }
+                    if ui.button("Edit from step 1").clicked() {
+                        self.page = Page::Material;
+                    }
+                });
+            });
+            let ui = &mut columns[1];
+            ui.label(RichText::new("RESULTS").small().color(accent));
+            ui.group(|ui| {
+                ui.set_width(ui.available_width());
+                match &self.result {
+                    Some(result) => {
+                        ui.strong(&result.label);
+                        if let Some(title) = result.value["spec_title"].as_str() {
+                            ui.label(title);
+                        }
+                        ui.horizontal(|ui| {
+                            if ui.button("View summary >").clicked() {
+                                self.page = Page::Summary;
+                            }
+                        });
+                    }
+                    None => {
+                        ui.label("Open a result saved from ACTINV to explore it here.");
+                        ui.horizontal_wrapped(|ui| {
+                            if ui.button("Open result…").clicked() {
+                                self.pick(FileKind::Result, &["json"], ui.ctx());
+                            }
+                            if ui
+                                .button("Try the results tutorial")
+                                .on_hover_text("A fictional nuclide with teaching values")
+                                .clicked()
+                            {
+                                self.tutorial();
+                            }
+                        });
+                    }
                 }
             });
         });
         ui.add_space(16.);
+        ui.group(|ui| {
+            ui.set_width(ui.available_width());
+            ui.strong("Your files stay on your device");
+            ui.label("Drop a problem, result, waste spec or FISPACT-II deck anywhere in this window; files are read locally in the browser and never uploaded. Download any edits before closing the tab; the browser asks first while edits are unsaved.");
+        });
+    }
+
+    /// The last setup step. The browser cannot run the solver, so this is where the problem is
+    /// handed to the desktop app or the command line.
+    fn check_run(&mut self, ui: &mut egui::Ui) {
+        visuals::heading(
+            ui,
+            "Check & run",
+            "Read the problem back, fix anything marked, then download it and run it on your computer.",
+        );
         ui.label("Calculation title");
         ui.add_enabled_ui(!self.raw_dirty, |ui| {
-            visuals::text_field(ui, &mut self.problem["title"]);
+            visuals::wide_text_field(ui, &mut self.problem["title"]);
         });
-        ui.horizontal_wrapped(|ui| {
-            if ui.button("Open problem…").clicked() {
-                self.pick(FileKind::Problem, &["json"], ui.ctx());
-            }
-            if ui.button("Load iron example").clicked() && self.replace_problem_allowed() {
-                self.problem = model::decode_problem(model::EXAMPLE).expect("bundled problem");
-                self.saved = self.problem.clone();
-                self.raw_dirty = false;
-                self.raw.clear();
-                self.raw_source = Value::Null;
-            }
-            if ui
-                .button("Import FISPACT-II deck…")
-                .on_hover_text("Convert a FISPACT-II input deck into an ACTINV problem")
-                .clicked()
-            {
-                self.import.get_or_insert_with(ImportState::default);
-            }
-            if ui.button("Validate problem").clicked() {
-                let result = if self.raw_dirty {
-                    Err("Apply the JSON edits first.".into())
-                } else {
-                    Spec::from_json(&self.problem.to_string()).map(|_| "Problem specification is valid. Nuclear-data files will be checked by the desktop app.".into())
-                };
-                self.report(result);
-            }
-            if ui.button("Download problem").clicked() {
-                self.export_problem();
-            }
-        });
-        ui.add_space(8.);
+        ui.add_space(12.);
+        let action = egui::Frame::group(ui.style())
+            .inner_margin(16.)
+            .show(ui, |ui| {
+                ui.heading("The problem");
+                check::show(ui, &self.problem)
+            })
+            .inner;
+        if let CheckAction::Open(target) = action {
+            self.page = page_for(target);
+        }
+        ui.add_space(12.);
         self.editors(ui, |this, ui| {
             egui::Frame::group(ui.style())
                 .inner_margin(16.)
                 .show(ui, |ui| {
-                    ui.heading("Nuclear data");
-                    ui.label("Paths are resolved by the program that runs the problem. The browser records them but does not read the files.");
+                    ui.set_width(ui.available_width());
+            ui.heading("Nuclear data");
+                    ui.label("The program that runs the problem reads these files; the browser records the paths but does not read them. `catalog:` names point into the standard data that `actinv data fetch` installs.");
                     ui.horizontal(|ui| {
                         ui.label("Activation library (.npz)");
                         visuals::text_field(ui, &mut this.problem["library"]["path"]);
@@ -563,94 +698,76 @@ impl Workbench {
                         visuals::text_field(ui, &mut this.problem["decay"]["primary"]);
                     });
                 });
-            ui.add_space(16.);
-            this.projectile_and_solver(ui);
-        });
-        ui.add_space(8.);
-        ui.label("Photons and dose, pathways, step summary, regulatory tables, self-shielding and uncertainty are chosen on the Outputs page.");
-        ui.horizontal_wrapped(|ui| {
-            if ui.small_button("Open Outputs").clicked() {
-                self.page = Page::Outputs;
-            }
-            if ui.button("Continue to material >").clicked() {
-                self.page = Page::Material;
-            }
-        });
-        ui.add_space(24.);
-        ui.group(|ui| {
-            ui.strong("Your files stay on your device");
-            ui.label("Drop an ACTINV problem or result JSON anywhere in this window, or use Open file. Files are read locally in the browser.");
-            ui.label("Download any edits before closing the tab. Files are not stored on a server.");
+            ui.add_space(12.);
+            egui::CollapsingHeader::new("Solver settings").show(ui, |ui| this.solver_settings(ui));
         });
         ui.add_space(16.);
-        ui.strong("Run activation calculations");
-        ui.label("The desktop app runs the solver, downloads evaluated nuclear data, and imports OpenMC and MCNP tallies.");
-        ui.hyperlink_to("Download ACTINV for your computer", "./download/");
-    }
-
-    fn projectile_and_solver(&mut self, ui: &mut egui::Ui) {
-        // Projectiles the picker offers; triton, helion and alpha stay in the JSON.
-        const PROJECTILES: [&str; 4] = ["neutron", "proton", "deuteron", "gamma"];
-        ui.horizontal(|ui| {
-            ui.label("Projectile");
-            let projectile = self.problem["projectile"]
-                .as_str()
-                .unwrap_or("neutron")
-                .to_owned();
-            if PROJECTILES.contains(&projectile.as_str()) {
-                egui::ComboBox::from_id_salt("projectile")
-                    .selected_text(&projectile)
-                    .show_ui(ui, |ui| {
-                        for choice in PROJECTILES {
-                            if ui.selectable_label(projectile == choice, choice).clicked() {
-                                self.problem["projectile"] = choice.into();
-                            }
-                        }
-                    });
-            } else {
-                ui.label(format!("{projectile} (set in Advanced JSON)"));
-            }
-        });
-        if self.problem["projectile"].as_str().unwrap_or("neutron") != "neutron" {
-            ui.label("Charged-particle and photonuclear problems need a library for that projectile and a temperature of 0 K.");
-        }
-        ui.add_space(16.);
         ui.group(|ui| {
-            ui.strong("Solver");
-            let mode = self.problem["options"]["mode"]
-                .as_str()
-                .unwrap_or("auto")
-                .to_owned();
-            ui.horizontal(|ui| {
-                ui.label("Solver mode");
-                egui::ComboBox::from_id_salt("mode")
-                    .selected_text(&mode)
-                    .show_ui(ui, |ui| {
-                        for choice in ["auto", "trace", "coupled"] {
-                            if ui.selectable_label(mode == choice, choice).clicked() {
-                                self.problem["options"]["mode"] = choice.into();
-                            }
-                        }
-                    });
-            });
-            ui.label("Trace mode supports ranked production pathways. Auto chooses an appropriate mode based on the problem.");
-            let mut temperature = self.problem["options"]["temperature_K"]
-                .as_f64()
-                .unwrap_or(293.6);
-            ui.horizontal(|ui| {
-                ui.label("Temperature (K)");
+            ui.set_width(ui.available_width());
+            ui.strong("Run it on your computer");
+            ui.label("1. Download the problem.");
+            ui.horizontal_wrapped(|ui| {
                 if ui
-                    .add(
-                        egui::DragValue::new(&mut temperature)
-                            .custom_parser(model::parse_finite)
-                            .speed(1.)
-                            .range(0.0..=f64::MAX),
-                    )
-                    .changed()
+                    .add(egui::Button::new(RichText::new("Download problem").color(Color32::WHITE)).fill(BLUE))
+                    .clicked()
                 {
-                    self.problem["options"]["temperature_K"] = json!(temperature);
+                    self.export_problem();
+                }
+                if ui.button("Validate only").clicked() {
+                    let result = if self.raw_dirty {
+                        Err("Apply the JSON edits first.".into())
+                    } else {
+                        Spec::from_json(&self.problem.to_string()).map(|_| "Problem specification is valid. Nuclear-data files are checked when it runs.".into())
+                    };
+                    self.report(result);
                 }
             });
+            ui.label("2. Run it with the desktop app (Open problem, then Run), or in a terminal:");
+            ui.code("actinv data fetch\nactinv run problem.json result.json");
+            ui.label("3. Open result.json here, or drop it into this window, to explore it.");
+            ui.horizontal_wrapped(|ui| {
+                ui.hyperlink_to("Download ACTINV", "./download/");
+                if ui.button("Open result…").clicked() {
+                    self.pick(FileKind::Result, &["json"], ui.ctx());
+                }
+            });
+        });
+    }
+
+    fn solver_settings(&mut self, ui: &mut egui::Ui) {
+        let mode = self.problem["options"]["mode"]
+            .as_str()
+            .unwrap_or("auto")
+            .to_owned();
+        ui.horizontal(|ui| {
+            ui.label("Solver mode");
+            egui::ComboBox::from_id_salt("mode")
+                .selected_text(&mode)
+                .show_ui(ui, |ui| {
+                    for choice in ["auto", "trace", "coupled"] {
+                        if ui.selectable_label(mode == choice, choice).clicked() {
+                            self.problem["options"]["mode"] = choice.into();
+                        }
+                    }
+                });
+        });
+        ui.label("Trace mode supports ranked production pathways. Auto chooses an appropriate mode based on the problem.");
+        let mut temperature = self.problem["options"]["temperature_K"]
+            .as_f64()
+            .unwrap_or(293.6);
+        ui.horizontal(|ui| {
+            ui.label("Temperature (K)");
+            if ui
+                .add(
+                    egui::DragValue::new(&mut temperature)
+                        .custom_parser(model::parse_finite)
+                        .speed(1.)
+                        .range(0.0..=f64::MAX),
+                )
+                .changed()
+            {
+                self.problem["options"]["temperature_K"] = json!(temperature);
+            }
         });
     }
 
@@ -663,10 +780,6 @@ impl Workbench {
         self.editors(ui, |this, ui| {
             let mut marks = Marks::default();
             material::show(ui, &mut this.problem, &mut this.material_view, &mut marks);
-            ui.add_space(20.);
-            if ui.button("Continue to irradiation & cooling >").clicked() {
-                this.page = Page::Schedule;
-            }
         });
     }
 
@@ -696,20 +809,46 @@ impl Workbench {
                 this.page = page_for(target);
             }
             ui.small(PIN_NOTE);
-            ui.add_space(16.);
-            if ui.button("Continue to spectrum >").clicked() {
-                this.page = Page::Spectrum;
+        });
+    }
+
+    fn projectile(&mut self, ui: &mut egui::Ui) {
+        // Projectiles the picker offers; triton, helion and alpha stay in the JSON.
+        const PROJECTILES: [&str; 4] = ["neutron", "proton", "deuteron", "gamma"];
+        ui.horizontal(|ui| {
+            ui.label("Projectile");
+            let projectile = self.problem["projectile"]
+                .as_str()
+                .unwrap_or("neutron")
+                .to_owned();
+            if PROJECTILES.contains(&projectile.as_str()) {
+                egui::ComboBox::from_id_salt("projectile")
+                    .selected_text(&projectile)
+                    .show_ui(ui, |ui| {
+                        for choice in PROJECTILES {
+                            if ui.selectable_label(projectile == choice, choice).clicked() {
+                                self.problem["projectile"] = choice.into();
+                            }
+                        }
+                    });
+            } else {
+                ui.label(format!("{projectile} (set in Advanced JSON)"));
             }
         });
+        if self.problem["projectile"].as_str().unwrap_or("neutron") != "neutron" {
+            ui.label("Charged-particle and photonuclear problems need a library for that projectile (named on Check & run) and a temperature of 0 K.");
+        }
+        ui.add_space(8.);
     }
 
     fn spectrum_page(&mut self, ui: &mut egui::Ui) {
         visuals::heading(
             ui,
-            "Incident spectrum",
-            "Review group values and explicitly choose the normalization used by the solver.",
+            "Source & spectrum",
+            "The particle that irradiates the material and its energy spectrum. Normalization is always explicit.",
         );
         self.editors(ui, |this, ui| {
+            this.projectile(ui);
             let accent = visuals::accent(ui);
             ui.horizontal(|ui| {
                 ui.label("Group structure");
@@ -719,7 +858,7 @@ impl Workbench {
             if ui
                 .checkbox(
                     &mut normalized,
-                    "Normalize group values to a total flux (particles / cm^2 / s)",
+                    "Normalize group values to a total flux (particles/cm²/s)",
                 )
                 .changed()
             {
@@ -732,7 +871,7 @@ impl Workbench {
             if normalized {
                 visuals::numeric(ui, &mut this.problem["spectrum"]["total"], 1e10);
             } else {
-                ui.label("Group values are absolute group fluxes (particles / cm^2 / s).");
+                ui.label("Group values are absolute group fluxes (particles/cm²/s).");
             }
             let mut descending = this.problem["spectrum"]["descending"]
                 .as_bool()
@@ -760,8 +899,9 @@ impl Workbench {
                 .y_axis_label(if normalized {
                     "Relative group weight"
                 } else {
-                    "Group flux / cm^2 / s"
+                    "Group flux (particles/cm²/s)"
                 })
+                .y_axis_formatter(|mark, _| crate::visuals::compact_number(mark.value))
                 .show(ui, |plot| {
                     plot.line(Line::new("Incident spectrum", points).color(accent))
                 });
@@ -830,8 +970,8 @@ impl Workbench {
     fn outputs_page(&mut self, ui: &mut egui::Ui) {
         visuals::heading(
             ui,
-            "Outputs",
-            "Choose what ACTINV should compute besides the inventory, activity and decay heat.",
+            "What to compute",
+            "Activity, decay heat and inventory are always computed. Add what else this problem should answer.",
         );
         self.editors(ui, |this, ui| {
             let mut marks = Marks::default();
@@ -860,7 +1000,7 @@ impl Workbench {
                 self.pick(FileKind::Result, &["json"], ui.ctx());
             }
             if ui
-                .add_enabled(self.result.is_some(), egui::Button::new("Compare result…"))
+                .add_enabled(self.result.is_some(), egui::Button::new("Compare with…"))
                 .clicked()
             {
                 self.pick(FileKind::Compare, &["json"], ui.ctx());
@@ -892,10 +1032,16 @@ impl Workbench {
         };
         let steps = result.steps().len();
         self.step = self.step.min(steps.saturating_sub(1));
-        ui.label(RichText::new(&result.label).strong());
-        if let Some(title) = result.value["spec_title"].as_str() {
-            ui.label(title);
-        }
+        // one line names the result: its title, then the file it came from
+        ui.horizontal_wrapped(|ui| match result.value["spec_title"].as_str() {
+            Some(title) => {
+                ui.label(RichText::new(title).strong());
+                ui.label(RichText::new(format!("· {}", result.label)).weak());
+            }
+            None => {
+                ui.label(RichText::new(&result.label).strong());
+            }
+        });
         if let Some(other) = &self.comparison {
             ui.label(format!(
                 "Comparison: {} · absolute physical time; normalization is as recorded in each result",
@@ -908,8 +1054,13 @@ impl Workbench {
                 egui::Slider::new(&mut self.step, 0..=steps.saturating_sub(1))
                     .custom_formatter(|v, _| format!("{}", v as usize + 1)),
             );
+            // the time in words; the exact time on hover
             ui.label(format!(
-                "of {steps} · t = {:.5e} s",
+                "of {steps} · {}",
+                crate::views::summary::when(result, self.step)
+            ))
+            .on_hover_text(format!(
+                "t = {:.6e} s from the start of the schedule",
                 model::number(&result.steps()[self.step]["t_s"])
             ));
         });
@@ -924,7 +1075,18 @@ impl Workbench {
             ui.group(|ui| {
                 ui.add_space(30.);
                 ui.heading("Your results will appear here");
-                ui.label("Open a result JSON, or try the tutorial from Overview & data, to explore activity, decay heat, and nuclide inventory.");
+                ui.label("Open a result saved from ACTINV to explore activity, decay heat, dose and the nuclide inventory.");
+                ui.horizontal_wrapped(|ui| {
+                    if ui.button("Open result…").clicked() {
+                        self.pick(FileKind::Result, &["json"], ui.ctx());
+                    }
+                    if ui.button("Try the results tutorial").clicked() {
+                        self.tutorial();
+                    }
+                    if ui.button("Set up a problem >").clicked() {
+                        self.page = Page::CheckRun;
+                    }
+                });
                 ui.add_space(30.);
             });
             return false;
@@ -932,10 +1094,56 @@ impl Workbench {
         true
     }
 
+    fn summary_page(&mut self, ui: &mut egui::Ui) {
+        if !self.result_page(
+            ui,
+            "Summary",
+            "The main answers at the selected time, how they change as the material cools, and what dominates them.",
+        ) {
+            return;
+        }
+        let Some(result) = &self.result else {
+            return;
+        };
+        match summary::show(ui, result, self.comparison.as_ref(), self.step) {
+            SummaryAction::None => {}
+            SummaryAction::Step(step) => self.step = step,
+            SummaryAction::Open(page) => self.page = page,
+            SummaryAction::Follow(nuclide) => {
+                self.selected = nuclide;
+                self.metric = 0;
+                self.page = Page::Charts;
+            }
+        }
+    }
+
+    /// Back and Continue between the numbered setup steps.
+    fn step_footer(&mut self, ui: &mut egui::Ui) {
+        let Some(number) = self.page.step() else {
+            return;
+        };
+        ui.add_space(20.);
+        ui.separator();
+        ui.horizontal_wrapped(|ui| {
+            if number > 1 && ui.button("< Back").clicked() {
+                self.page = Page::STEPS[number - 2];
+            }
+            if let Some(next) = self.page.next_step() {
+                if ui
+                    .button(format!("Continue to {} >", next.label().to_lowercase()))
+                    .clicked()
+                {
+                    self.page = next;
+                }
+            }
+            ui.label(RichText::new(format!("Step {number} of {}", Page::STEPS.len())).weak());
+        });
+    }
+
     fn charts(&mut self, ui: &mut egui::Ui) {
         if !self.result_page(
             ui,
-            "Charts",
+            "Time history",
             "Follow activity, decay heat and inventory through time, and pick the step to inspect.",
         ) {
             return;
@@ -1076,8 +1284,8 @@ impl Workbench {
     fn tables_page(&mut self, ui: &mut egui::Ui) {
         if !self.result_page(
             ui,
-            "Tables",
-            "Inventory, totals, dominant nuclides and the other report tables for the selected step.",
+            "Nuclides",
+            "The inventory, totals, dominant nuclides and the other report tables for the selected step.",
         ) {
             return;
         }
@@ -1149,8 +1357,8 @@ impl Workbench {
     fn ledger_page(&mut self, ui: &mut egui::Ui) {
         if !self.result_page(
             ui,
-            "Ledger & certificate",
-            "Inspect missing data, approximations, and the provenance behind the answer.",
+            "Evidence",
+            "The ledger of missing data and approximations, and the certificate of inputs and data behind the answer.",
         ) {
             return;
         }
@@ -1383,12 +1591,22 @@ impl eframe::App for Workbench {
                             } else {
                                 self.result.is_none()
                             };
-                            let label = if page.needs_result() && missing {
-                                RichText::new(page.label()).weak()
+                            let text = match page.step() {
+                                Some(n) => format!("{n} {}", page.label()),
+                                None => page.label().to_owned(),
+                            };
+                            // dimmed only when not selected: weak text on the selection fill
+                            // is unreadable
+                            let label = if page.needs_result() && missing && self.page != page {
+                                RichText::new(text).weak()
                             } else {
-                                RichText::new(page.label())
+                                RichText::new(text)
                             };
                             ui.selectable_value(&mut self.page, page, label);
+                            if step_ready(&self.problem, page) {
+                                visuals::tick(ui, visuals::accent(ui))
+                                    .on_hover_text("This step is filled in");
+                            }
                         }
                         ui.separator();
                         if ui.checkbox(&mut self.dark, "Dark theme").changed() {
@@ -1401,7 +1619,9 @@ impl eframe::App for Workbench {
                         if self.pending_file.is_some() {
                             ui.spinner();
                         }
-                        if self.raw_dirty || self.problem != self.saved {
+                        let unsaved = self.raw_dirty || self.problem != self.saved;
+                        crate::web::mark_unsaved(unsaved);
+                        if unsaved {
                             ui.label("Problem has unsaved changes");
                         }
                     });
@@ -1422,11 +1642,13 @@ impl eframe::App for Workbench {
                 ui.set_max_width(1100.);
                 ui.add_space(16.);
                 match self.page {
-                    Page::Overview => self.overview(ui),
+                    Page::Start => self.start(ui),
                     Page::Material => self.material_page(ui),
                     Page::Schedule => self.schedule_page(ui),
                     Page::Spectrum => self.spectrum_page(ui),
                     Page::Outputs => self.outputs_page(ui),
+                    Page::CheckRun => self.check_run(ui),
+                    Page::Summary => self.summary_page(ui),
                     Page::Charts => self.charts(ui),
                     Page::Tables => self.tables_page(ui),
                     Page::Photons => self.photons_page(ui),
@@ -1435,7 +1657,10 @@ impl eframe::App for Workbench {
                     Page::Waste => self.waste_page(ui),
                     Page::Advanced => self.advanced_page(ui),
                     // the browser never runs the solver
-                    Page::Sweep | Page::Assimilation => self.overview(ui),
+                    Page::Sweep | Page::Assimilation => self.start(ui),
+                }
+                if self.page.group() == Group::Setup && self.page != Page::CheckRun {
+                    self.step_footer(ui);
                 }
             });
         });

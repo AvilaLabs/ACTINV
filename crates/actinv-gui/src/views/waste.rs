@@ -424,7 +424,7 @@ fn fraction(value: f64) -> String {
 }
 
 fn time(t_s: f64) -> String {
-    format!("{t_s:.5e} s")
+    crate::model::readable_time(t_s)
 }
 
 fn nuclide_list(names: &[&str]) -> String {
@@ -858,7 +858,8 @@ mod tests {
         assert_eq!(fraction(0.0), "0.0000");
         assert_eq!(fraction(-0.25), "-0.2500");
         assert_eq!(fraction(1.5e-5), "1.5000e-5");
-        assert_eq!(time(0.0), "0.00000e0 s");
+        assert_eq!(time(0.0), "0 s");
+        assert_eq!(time(300.0), "5 min");
         let many: Vec<String> = (0..9).map(|i| format!("N{i}")).collect();
         let names: Vec<&str> = many.iter().map(String::as_str).collect();
         assert_eq!(nuclide_list(&names[..2]), "N0, N1");

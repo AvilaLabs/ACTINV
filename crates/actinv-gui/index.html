@@ -28,13 +28,17 @@
   </style>
 </head>
 <body>
-  <header><strong><img src="actinv-mark.svg" alt="">ACTINV · Avila Labs</strong><nav aria-label="Resources"><a href="./download/">Download desktop</a><a href="https://github.com/AvilaLabs/ACTINV/blob/master/docs/WEB.md">Help</a><a href="https://github.com/AvilaLabs/ACTINV">GitHub</a></nav></header>
+  <header><strong><img src="actinv-mark.svg" alt="">ACTINV · Avila Labs</strong><nav aria-label="Resources"><a href="./download/">Download desktop</a><a href="./docs/browser.html">Help</a><a href="https://github.com/AvilaLabs/ACTINV">GitHub</a></nav></header>
   <canvas id="actinv-canvas" aria-label="ACTINV workbench: open result files, compare plots, and edit problem specifications"></canvas>
   <div id="loading"><div><h1>Opening ACTINV…</h1><p>Explore results and prepare problems. Your files stay in this browser. Use the desktop app to run activation calculations.</p><noscript>Enable JavaScript to use the workbench, or <a href="./download/">download ACTINV</a>.</noscript></div></div>
   <script>
     window.addEventListener('unhandledrejection', () => {
       const loading = document.getElementById('loading');
       if (loading) loading.textContent = 'ACTINV could not start. Reload the page, or use the desktop download above.';
+    });
+    // The workbench marks the page while the problem has edits that were not downloaded.
+    window.addEventListener('beforeunload', (event) => {
+      if (document.documentElement.hasAttribute('data-unsaved')) event.preventDefault();
     });
   </script>
 </body>

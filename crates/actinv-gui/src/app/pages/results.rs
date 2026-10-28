@@ -3,6 +3,7 @@
 use crate::{
     app::{Desktop, BLUE},
     model,
+    nav::Page,
 };
 use eframe::egui::{self, RichText};
 
@@ -17,7 +18,7 @@ impl Desktop {
                 self.open_result(ui.ctx(), false);
             }
             if ui
-                .add_enabled(self.result.is_some(), egui::Button::new("Add comparison"))
+                .add_enabled(self.result.is_some(), egui::Button::new("Compare with…"))
                 .clicked()
             {
                 self.open_result(ui.ctx(), true);
@@ -45,17 +46,24 @@ impl Desktop {
         };
         let steps = result.steps().len();
         self.step = self.step.min(steps.saturating_sub(1));
-        ui.label(RichText::new(&result.label).strong());
-        if self.result_unsaved {
-            ui.colored_label(
-                BLUE,
-                "Unsaved result — Export JSON preserves every step and its evidence.",
-            );
-        }
-        ui.label("Results describe the inputs at the time of the calculation. Editing the problem does not update this result.");
-        if let Some(title) = result.value["spec_title"].as_str() {
-            ui.label(title);
-        }
+        // one line names the result: its title, then the file it came from
+        ui.horizontal_wrapped(|ui| {
+            match result.value["spec_title"].as_str() {
+                Some(title) => {
+                    ui.label(RichText::new(title).strong());
+                    ui.label(RichText::new(format!("· {}", result.label)).weak());
+                }
+                None => {
+                    ui.label(RichText::new(&result.label).strong());
+                }
+            }
+            if self.result_unsaved {
+                ui.colored_label(BLUE, "· not saved yet")
+                    .on_hover_text("Export JSON preserves every step and its evidence.");
+            }
+        })
+        .response
+        .on_hover_text("Results describe the inputs at the time of the calculation. Editing the problem does not update this result.");
         if let Some(other) = &self.comparison {
             ui.label(format!("Comparison: {} · absolute physical time; normalization is as recorded in each result",other.label));
         }
@@ -65,8 +73,13 @@ impl Desktop {
                 egui::Slider::new(&mut self.step, 0..=steps - 1)
                     .custom_formatter(|v, _| format!("{}", v as usize + 1)),
             );
+            // the time in words; the exact time on hover
             ui.label(format!(
-                "of {steps} · t = {:.5e} s",
+                "of {steps} · {}",
+                crate::views::summary::when(result, self.step)
+            ))
+            .on_hover_text(format!(
+                "t = {:.6e} s from the start of the schedule",
                 model::number(&result.steps()[self.step]["t_s"])
             ));
         });
@@ -79,7 +92,18 @@ impl Desktop {
         let card = ui.group(|ui| {
             ui.add_space(30.);
             ui.heading("Your results will appear here");
-            ui.label("Run a calculation or open a result JSON to explore activity, decay heat, and nuclide inventory.");
+            ui.label("Run a calculation or open a saved result to explore activity, decay heat, dose and the nuclide inventory.");
+            ui.horizontal_wrapped(|ui| {
+                if ui.button("Open result…").clicked() {
+                    self.open_result(ui.ctx(), false);
+                }
+                if ui.button("Try the results tutorial").clicked() {
+                    self.tutorial();
+                }
+                if ui.button("Check & run >").clicked() {
+                    self.page = Page::CheckRun;
+                }
+            });
             ui.add_space(30.);
         });
         for &anchor in anchors {

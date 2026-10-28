@@ -3,15 +3,17 @@
 mod advanced;
 mod assimilation;
 mod charts;
+mod check_run;
 mod ledger;
 mod material;
 mod outputs;
-mod overview;
 mod pathways;
 mod photons;
 mod results;
 mod schedule;
 mod spectrum;
+mod start;
+mod summary;
 mod sweep;
 mod tables;
 pub(super) mod waste;
@@ -23,11 +25,11 @@ use eframe::egui;
 /// The setup page a view asked to open.
 pub(super) fn page_for(target: Target) -> Page {
     match target {
-        Target::Overview => Page::Overview,
         Target::Material => Page::Material,
         Target::Schedule => Page::Schedule,
         Target::Spectrum => Page::Spectrum,
         Target::Outputs => Page::Outputs,
+        Target::CheckRun => Page::CheckRun,
     }
 }
 
@@ -35,11 +37,13 @@ impl Desktop {
     /// Render the body of the current page.
     pub(super) fn page_body(&mut self, ui: &mut egui::Ui) {
         match self.page {
-            Page::Overview => self.setup(ui),
+            Page::Start => self.start(ui),
             Page::Material => self.material(ui),
             Page::Schedule => self.schedule(ui),
             Page::Spectrum => self.spectrum(ui),
             Page::Outputs => self.outputs(ui),
+            Page::CheckRun => self.check_run(ui),
+            Page::Summary => self.summary_page(ui),
             Page::Charts => self.charts(ui),
             Page::Tables => self.tables(ui),
             Page::Photons => self.photons(ui),
@@ -50,6 +54,32 @@ impl Desktop {
             Page::Assimilation => self.assimilation(ui),
             Page::Advanced => self.advanced(ui),
         }
+        if self.page.group() == crate::nav::Group::Setup && self.page != Page::CheckRun {
+            self.step_footer(ui);
+        }
+    }
+
+    /// Back and Continue between the numbered setup steps.
+    fn step_footer(&mut self, ui: &mut egui::Ui) {
+        let Some(number) = self.page.step() else {
+            return;
+        };
+        ui.add_space(20.);
+        ui.separator();
+        ui.horizontal_wrapped(|ui| {
+            if number > 1 && ui.button("< Back").clicked() {
+                self.page = Page::STEPS[number - 2];
+            }
+            if let Some(next) = self.page.next_step() {
+                if ui
+                    .button(format!("Continue to {} >", next.label().to_lowercase()))
+                    .clicked()
+                {
+                    self.page = next;
+                }
+            }
+            ui.label(egui::RichText::new(format!("Step {number} of {}", Page::STEPS.len())).weak());
+        });
     }
 }
 
@@ -60,11 +90,11 @@ mod tests {
     #[test]
     fn every_target_opens_its_setup_page() {
         for (target, page) in [
-            (Target::Overview, Page::Overview),
             (Target::Material, Page::Material),
             (Target::Schedule, Page::Schedule),
             (Target::Spectrum, Page::Spectrum),
             (Target::Outputs, Page::Outputs),
+            (Target::CheckRun, Page::CheckRun),
         ] {
             assert_eq!(page_for(target), page);
             assert_eq!(page_for(target).group(), crate::nav::Group::Setup);

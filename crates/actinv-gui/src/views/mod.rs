@@ -1,12 +1,14 @@
 //! Page bodies shared by the desktop shell and the browser workbench. A view reads or edits the
 //! document or result it is given and returns what the shell must do next; no view opens a dialog,
 //! touches the file system, or runs the solver.
+pub mod check;
 pub mod import;
 pub mod material;
 pub mod outputs;
 pub mod pathways;
 pub mod photons;
 pub mod steps;
+pub mod summary;
 pub mod tables;
 pub mod waste;
 
@@ -25,6 +27,13 @@ pub trait Picker {
     fn pick(&mut self, title: &str, extensions: &[&str]) -> Option<Pinned>;
 }
 
+/// The end of a sentence telling the user to run the problem again: the desktop runs it itself,
+/// the browser cannot run it and says where it can be run.
+#[cfg(not(target_arch = "wasm32"))]
+pub const RUN_AGAIN: &str = "run it again";
+#[cfg(target_arch = "wasm32")]
+pub const RUN_AGAIN: &str = "download the problem and run it with the desktop app or `actinv run`";
+
 /// Screen rectangles of tour anchors, collected while a view renders.
 #[derive(Default)]
 pub struct Marks(pub Vec<(&'static str, egui::Rect)>);
@@ -38,9 +47,10 @@ impl Marks {
 /// A setup page a view can send the user to.
 #[derive(Clone, Copy, PartialEq, Eq, Debug)]
 pub enum Target {
-    Overview,
     Material,
     Schedule,
     Spectrum,
     Outputs,
+    /// Check & run: the title, nuclear data and solver settings.
+    CheckRun,
 }

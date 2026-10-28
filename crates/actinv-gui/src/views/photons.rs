@@ -50,7 +50,12 @@ const DOSE_FIELDS: [(&str, &[&str]); 4] = [
     ),
 ];
 
-const OUTPUTS_HINT: &str = "No photon source was recorded for this step. Turn on Decay photons and dose on the Outputs page, then run again.";
+fn outputs_hint() -> String {
+    format!(
+        "No photon source was recorded for this step. Turn on Decay photons and dose in What to compute, then {}.",
+        super::RUN_AGAIN
+    )
+}
 
 /// `step` is the zero-based selected step from the shell's result bar.
 pub fn show(
@@ -68,7 +73,7 @@ pub fn show(
     };
     let ps = &step_value["photon_source"];
     if !ps.is_object() {
-        ui.label(OUTPUTS_HINT);
+        ui.label(outputs_hint());
         if ui.button("Open Outputs").clicked() {
             action = PhotonsAction::Open(Target::Outputs);
         }
@@ -244,7 +249,7 @@ pub fn show(
     ui.add_space(8.);
     ui.horizontal(|ui| {
         ui.label(settings_line(ps));
-        if ui.small_button("Edit in Outputs").clicked() {
+        if ui.small_button("Edit in What to compute").clicked() {
             action = PhotonsAction::Open(Target::Outputs);
         }
     });
@@ -306,10 +311,19 @@ fn bars(groups: &Value) -> Vec<(f64, f64, f64)> {
             groups
                 .iter()
                 .map(|g| {
+                    let (low, high) = (model::number(&g["low_eV"]), model::number(&g["high_eV"]));
+                    // an empty group has no centroid; centring its bar on zero stretched the
+                    // energy axis below 0 MeV
+                    let centroid = model::number(&g["centroid_eV"]);
+                    let centre = if centroid > 0. {
+                        centroid
+                    } else {
+                        (low + high) / 2.
+                    };
                     (
-                        model::number(&g["centroid_eV"]) / 1e6,
+                        centre / 1e6,
                         model::number(&g["photons_s_g"]),
-                        (model::number(&g["high_eV"]) - model::number(&g["low_eV"])) / 1e6,
+                        (high - low) / 1e6,
                     )
                 })
                 .collect()
@@ -578,13 +592,13 @@ fn settings_line(ps: &Value) -> String {
     let point = &ps["point_source_dose"];
     if point.is_object() {
         format!(
-            "Source settings are edited on the Outputs page (point source at {} m, group structure {}).",
+            "Source settings are edited in What to compute (point source at {} m, group structure {}).",
             model::number(&point["distance_m"]),
             ps["group_structure"].as_str().unwrap_or("unknown")
         )
     } else {
         format!(
-            "Source settings are edited on the Outputs page (group structure {}).",
+            "Source settings are edited in What to compute (group structure {}).",
             ps["group_structure"].as_str().unwrap_or("unknown")
         )
     }

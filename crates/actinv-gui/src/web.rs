@@ -38,6 +38,24 @@ pub fn download(name: &str, bytes: &[u8]) -> Result<(), String> {
     result
 }
 
+/// Mark the page while the problem has unsaved edits, so the tab-close guard in `index.html`
+/// asks before the edits are lost.
+pub fn mark_unsaved(unsaved: bool) {
+    let Some(element) = web_sys::window()
+        .and_then(|window| window.document())
+        .and_then(|document| document.document_element())
+    else {
+        return;
+    };
+    if element.has_attribute("data-unsaved") != unsaved {
+        let _ = if unsaved {
+            element.set_attribute("data-unsaved", "")
+        } else {
+            element.remove_attribute("data-unsaved")
+        };
+    }
+}
+
 /// Test hook (`web/smoke.mjs`): convert a FISPACT-II deck exactly as the import dialog does.
 /// Returns `{"spec", "report", "placeholder"}` as JSON text, or `{"error"}`. `fluxes` is the text
 /// of a fluxes file; without it a decay-only deck converts and an irradiating one gets the

@@ -1,23 +1,19 @@
-//! Overview & data: nuclear data locations, projectile and solver settings. Requested outputs
-//! (photons, pathways, step summary, regulatory tables, self-shielding, uncertainty) are on Outputs.
+//! Check & run, the last setup step: the problem read back as sentences with a way to fix each
+//! part, the title, the nuclear data and solver settings, and the Run button.
 use crate::{
-    app::{heading, path_field, text_field, Desktop, Job, JobKind, JobOutput, ResultAction},
+    app::{heading, path_field, Desktop, Job, JobKind, JobOutput, BLUE},
     model,
     nav::Page,
     platform::Dialog,
 };
-use actinv_data::catalog::{embedded_catalog, DataCatalog};
-use eframe::egui;
+use actinv_data::catalog::{embedded_catalog, ArtifactRole, DataCatalog};
+use eframe::egui::{self, Color32, RichText};
 use serde_json::{json, Value};
 use std::{
     path::{Path, PathBuf},
     sync::mpsc,
     time::Instant,
 };
-
-/// Projectiles the picker offers. Triton, helion and alpha stay in the JSON; a document that
-/// already carries one shows it read-only.
-const PROJECTILES: [&str; 4] = ["neutron", "proton", "deuteron", "gamma"];
 
 /// Every `catalog:<artifact-id>` string in the document, once each.
 fn catalog_references(value: &Value, found: &mut Vec<String>) {
@@ -191,46 +187,132 @@ impl Desktop {
         });
     }
 
-    pub(super) fn setup(&mut self, ui: &mut egui::Ui) {
+    /// Download the standard bundle into `<chosen folder>/actinv-data` in the background.
+    pub(super) fn download_standard_data(&mut self, ctx: &egui::Context) {
+        let Some(folder) = self
+            .platform
+            .pick_folder(Dialog::new().title("Choose the parent folder for actinv-data"))
+        else {
+            return;
+        };
+        let (tx, rx) = mpsc::channel();
+        let ctx = ctx.clone();
+        std::thread::spawn(move || {
+            let output = actinv_cli::fetch_bundle(None, folder.join("actinv-data"), false)
+                .map(|s| JobOutput::Data(s.problem_fragment));
+            let _ = tx.send(output);
+            ctx.request_repaint();
+        });
+        self.job = Some(Job {
+            rx: Some(rx),
+            handle: None,
+            started: Instant::now(),
+            kind: JobKind::Data,
+            cancelled: false,
+        });
+        self.status = "Downloading and verifying standard neutron data… Files are checked before installation; cancellation is unavailable while files are being verified.".into();
+        self.error = false;
+    }
+
+    /// Whether the standard bundle is installed where `catalog:` references look for it.
+    pub(super) fn standard_data_installed(&self) -> Result<PathBuf, String> {
+        let catalog = embedded_catalog()?;
+        let bundle = catalog.bundle(None)?;
+        let references: Vec<String> = bundle
+            .artifacts
+            .iter()
+            .map(|id| format!("catalog:{id}"))
+            .collect();
+        let root = actinv_cli::workflow::catalog_data_root(&self.base);
+        match catalog_status(&references, &catalog, &root, &|path| path.exists()) {
+            CatalogStatus::Installed(_) => Ok(root.join(format!("v{}", catalog.catalog_version))),
+            CatalogStatus::Missing { .. } => Err(root.display().to_string()),
+        }
+    }
+
+    /// Library and decay files the problem names that are not on disk, as resolved for the run.
+    fn missing_data_files(&self) -> Vec<String> {
+        let Ok(spec) = model::resolve_inputs(&self.document, &self.base) else {
+            return Vec::new();
+        };
+        [
+            Some(&spec.library.path),
+            Some(&spec.decay.primary),
+            spec.decay.fallback.as_ref(),
+        ]
+        .into_iter()
+        .flatten()
+        .filter(|path| {
+            !path.is_empty() && !path.starts_with("catalog:") && !Path::new(path).exists()
+        })
+        .cloned()
+        .collect()
+    }
+
+    /// Point the problem's library and decay data at the installed standard bundle, by catalog
+    /// name, so it follows whatever catalog version is installed.
+    fn use_standard_data(&mut self) -> Result<(), String> {
+        let catalog = embedded_catalog()?;
+        let bundle = catalog.bundle(None)?;
+        let id = |role: ArtifactRole| -> Result<String, String> {
+            bundle
+                .artifacts
+                .iter()
+                .filter_map(|id| catalog.artifact(id).ok())
+                .find(|artifact| artifact.role == role)
+                .map(|artifact| format!("catalog:{}", artifact.id))
+                .ok_or_else(|| format!("the standard bundle has no {}", role.name()))
+        };
+        self.document["library"] = json!({"path": id(ArtifactRole::ActivationLibrary)?});
+        self.document["decay"] = json!({
+            "primary": id(ArtifactRole::DecayPrimary)?,
+            "fallback": id(ArtifactRole::DecayFallback)?,
+        });
+        self.document["projectile"] = json!(bundle.projectile);
+        Ok(())
+    }
+
+    pub(super) fn check_run(&mut self, ui: &mut egui::Ui) {
         heading(
             ui,
-            "Set up a calculation",
-            "Choose your evaluated data, then define the material and irradiation history.",
+            "Check & run",
+            "Read the problem back, fix anything marked, then run it.",
         );
-        ui.group(|ui| {
-            ui.strong("Welcome to ACTINV");
-            ui.label("Explore a small teaching result offline, or use the complete iron problem below for your first real calculation.");
-            if ui.button("Try offline results tutorial").clicked() {
-                if self.result_unsaved { self.result_guard = Some(ResultAction::Tutorial); }
-                else { self.result = Some(model::tutorial_result()); self.step = 0; self.selected.clear(); self.comparison = None; self.page = Page::Charts; self.reset_plot = true; self.tour.start(true); }
-            }
-            ui.label("Standard data: about 139 MiB download, 229 MiB installed. Each calculation run uses a private cache (about 282 MiB for the iron example).");
-        });
         ui.label("Calculation title");
-        text_field(ui, &mut self.document["title"]);
+        crate::visuals::wide_text_field(ui, &mut self.document["title"]);
+        ui.add_space(12.);
+        let checks = egui::Frame::group(ui.style())
+            .inner_margin(16.)
+            .show(ui, |ui| {
+                ui.heading("The problem");
+                crate::views::check::show(ui, &self.document)
+            });
+        self.tour
+            .mark("check", checks.response.rect.intersect(ui.clip_rect()));
+        if let crate::views::check::CheckAction::Open(target) = checks.inner {
+            self.page = super::page_for(target);
+        }
         ui.add_space(12.);
         let response=egui::Frame::group(ui.style()).inner_margin(16.).show(ui,|ui| {
+            ui.set_width(ui.available_width());
             ui.heading("Nuclear data");
-            ui.label("Paths are resolved against the input base folder. Existing CLI examples commonly use the repository root.");
-            ui.horizontal(|ui|{ui.label("Input base");let mut base=self.base.to_string_lossy().into_owned();if ui.add(egui::TextEdit::singleline(&mut base).desired_width((ui.available_width()-220.).max(150.))).changed(){self.base=PathBuf::from(base);}
-if ui.button("Choose folder").clicked(){if let Some(p)=self.platform.pick_folder(Dialog::new()){self.base=p;}}});
-            path_field(ui,"Activation library (.npz)",&mut self.document["library"]["path"],&*self.platform);
-            ui.collapsing("Activation library SHA-256 pin",|ui|{
-                ui.label("A declared hash must match the chosen library. Update or remove the pin when intentionally switching libraries. The solver always records the computed hash.");
-                let mut hash=self.document["library"]["sha256"].as_str().unwrap_or("").to_owned();
-                if ui.add(egui::TextEdit::singleline(&mut hash).desired_width(500.).hint_text("Optional SHA-256")).changed(){if hash.trim().is_empty(){self.document["library"].as_object_mut().unwrap().remove("sha256");}else{self.document["library"]["sha256"]=hash.into();}}
-            });
-            path_field(ui,"Primary decay data",&mut self.document["decay"]["primary"],&*self.platform);
-            if self.document["decay"]["fallback"].is_string(){path_field(ui,"Fallback decay data",&mut self.document["decay"]["fallback"],&*self.platform);if ui.small_button("Remove fallback").clicked(){self.document["decay"].as_object_mut().unwrap().remove("fallback");}}
-            else if ui.small_button("Add fallback decay data").clicked(){self.document["decay"]["fallback"]="".into();}
             self.catalog_line(ui);
-            self.fission_yield_files(ui);
-            if ui.add_enabled(self.job.is_none(),egui::Button::new("Download standard neutron data · 139 MiB…")).clicked() {
-                if let Some(folder)=self.platform.pick_folder(Dialog::new().title("Choose the parent folder for actinv-data")) {
-                    let (tx,rx)=mpsc::channel();let ctx=ui.ctx().clone();
-                    std::thread::spawn(move||{let output=actinv_cli::fetch_bundle(None,folder.join("actinv-data"),false).map(|s|JobOutput::Data(s.problem_fragment));let _=tx.send(output);ctx.request_repaint();});
-                    self.job=Some(Job{rx:Some(rx),handle:None,started:Instant::now(),kind:JobKind::Data,cancelled:false});self.status="Downloading and verifying standard neutron data… Files are checked before installation; cancellation is unavailable while files are being verified.".into();self.error=false;
+            let missing = self.missing_data_files();
+            let installed = self.standard_data_installed();
+            if !missing.is_empty() {
+                ui.colored_label(
+                    ui.visuals().error_fg_color,
+                    format!("Not found: {}.", missing.join(", ")),
+                );
+                if let Ok(dir) = &installed {
+                    ui.label(format!("The standard data are installed in {}.", dir.display()));
+                    if ui.button("Use the installed standard data").clicked() {
+                        let used = self.use_standard_data().map(|()| "The problem now uses the installed standard data.".into());
+                        self.report(used);
+                    }
                 }
+            } else if self.document["library"]["path"].as_str().is_some_and(|p| !p.starts_with("catalog:")) {
+                ui.label("Library and decay files found.");
             }
             if let Some(fragment)=&self.downloaded {
                 ui.label("Verified neutron data are ready. Applying paths keeps your material and spectrum; use a compatible neutron 709-group spectrum.");
@@ -239,53 +321,86 @@ if ui.button("Choose folder").clicked(){if let Some(p)=self.platform.pick_folder
                     self.document["projectile"]=fragment["projectile"].clone();
                 }
             }
-            ui.collapsing("Need the standard nuclear data?",|ui|{ui.label("Run this once in a terminal, then select the downloaded files above:");ui.code("actinv data fetch");ui.label("The standard download includes neutron activation and decay data. Data are versioned separately from the application.");});
+            ui.collapsing("Data files and input folder",|ui|{
+                ui.label("Relative paths are resolved against the input folder. `catalog:` names point into the installed standard data.");
+                ui.horizontal(|ui|{ui.label("Input folder");let mut base=self.base.to_string_lossy().into_owned();if ui.add(egui::TextEdit::singleline(&mut base).desired_width((ui.available_width()-220.).max(150.))).changed(){self.base=PathBuf::from(base);}
+if ui.button("Choose folder").clicked(){if let Some(p)=self.platform.pick_folder(Dialog::new()){self.base=p;}}});
+                path_field(ui,"Activation library (.npz)",&mut self.document["library"]["path"],&*self.platform);
+                ui.collapsing("Activation library SHA-256 pin",|ui|{
+                    ui.label("A declared hash must match the chosen library. Update or remove the pin when intentionally switching libraries. The solver always records the computed hash.");
+                    let mut hash=self.document["library"]["sha256"].as_str().unwrap_or("").to_owned();
+                    if ui.add(egui::TextEdit::singleline(&mut hash).desired_width(500.).hint_text("Optional SHA-256")).changed(){if hash.trim().is_empty(){self.document["library"].as_object_mut().unwrap().remove("sha256");}else{self.document["library"]["sha256"]=hash.into();}}
+                });
+                path_field(ui,"Primary decay data",&mut self.document["decay"]["primary"],&*self.platform);
+                if self.document["decay"]["fallback"].is_string(){path_field(ui,"Fallback decay data",&mut self.document["decay"]["fallback"],&*self.platform);if ui.small_button("Remove fallback").clicked(){self.document["decay"].as_object_mut().unwrap().remove("fallback");}}
+                else if ui.small_button("Add fallback decay data").clicked(){self.document["decay"]["fallback"]="".into();}
+                self.fission_yield_files(ui);
+            });
+            if installed.is_err() {
+                ui.horizontal_wrapped(|ui| {
+                    if ui.add_enabled(self.job.is_none(),egui::Button::new(format!("Download standard neutron data · {}…", standard_data_sizes().0))).clicked() {
+                        self.download_standard_data(ui.ctx());
+                    }
+                    ui.label("or run");
+                    ui.code("actinv data fetch");
+                    ui.label("in a terminal.");
+                });
+            }
         });
         self.tour
             .mark("inputs", response.response.rect.intersect(ui.clip_rect()));
-        ui.add_space(16.);
-        ui.horizontal(|ui| {
-            ui.label("Projectile");
-            let p = self.document["projectile"]
-                .as_str()
-                .unwrap_or("neutron")
-                .to_owned();
-            if PROJECTILES.contains(&p.as_str()) {
-                egui::ComboBox::from_id_salt("projectile")
-                    .selected_text(&p)
-                    .show_ui(ui, |ui| {
-                        for v in PROJECTILES {
-                            if ui.selectable_label(p == v, v).clicked() {
-                                self.document["projectile"] = v.into();
-                            }
-                        }
-                    });
-            } else {
-                ui.label(format!("{p} (set in Advanced JSON)"));
-            }
-        });
-        if self.document["projectile"].as_str().unwrap_or("neutron") != "neutron" {
-            ui.label("Charged-particle and photonuclear problems need a library for that projectile and a temperature of 0 K.");
-        }
-        ui.add_space(16.);
-        ui.group(|ui| {
-            ui.strong("Solver");
+        ui.add_space(12.);
+        egui::CollapsingHeader::new("Solver settings").show(ui, |ui| {
             let mut mode=self.document["options"]["mode"].as_str().unwrap_or("auto").to_owned();
             ui.horizontal(|ui|{ui.label("Solver mode");egui::ComboBox::from_id_salt("mode").selected_text(&mode).show_ui(ui,|ui|{for m in ["auto","trace","coupled"]{if ui.selectable_value(&mut mode,m.into(),m).changed(){self.document["options"]["mode"]=mode.clone().into();}}});});
             ui.label("Trace mode supports ranked production pathways. Auto chooses an appropriate mode based on the problem.");
             let mut temperature=self.document["options"]["temperature_K"].as_f64().unwrap_or(293.6);
             ui.horizontal(|ui|{ui.label("Temperature (K)");if ui.add(egui::DragValue::new(&mut temperature).custom_parser(model::parse_finite).speed(1.).range(0.0..=f64::MAX)).changed(){self.document["options"]["temperature_K"]=json!(temperature);}});
         });
-        ui.add_space(8.);
-        ui.label("Photons and dose, pathways, step summary, regulatory tables, self-shielding and uncertainty are chosen on the Outputs page.");
-        if ui.small_button("Open Outputs").clicked() {
-            self.page = Page::Outputs;
-        }
-        ui.add_space(8.);
-        if ui.button("Continue to material >").clicked() {
-            self.page = Page::Material;
-        }
+        ui.add_space(16.);
+        ui.horizontal_wrapped(|ui| {
+            let run = ui.add_enabled(
+                self.job.is_none(),
+                egui::Button::new(RichText::new("▶ Run calculation").color(Color32::WHITE)).fill(BLUE),
+            );
+            self.tour.reveal("run", &run);
+            if run.clicked() {
+                self.run(ui.ctx());
+            }
+            if ui.button("Validate only").clicked() {
+                let r = self.validate().map(|_| "Specification and input locations are valid. File hashes and evaluated data are checked during the solve.".into());
+                self.report(r);
+            }
+            if ui.button("< Back").clicked() {
+                self.page = Page::Outputs;
+            }
+        });
+        ui.label(RichText::new("Run solves in the background and opens the result on its Summary. A first run with new data also prepares a cache, so it takes longer.").weak());
     }
+}
+
+/// Download and installed sizes of the catalog's standard bundle, in whole MiB, so the text
+/// follows the embedded catalog instead of a release that has passed.
+pub(super) fn standard_data_sizes() -> (String, String) {
+    let mib = |bytes: u64| format!("{:.0} MiB", bytes as f64 / 1_048_576.0);
+    let Ok(catalog) = embedded_catalog() else {
+        return ("?".into(), "?".into());
+    };
+    let Ok(bundle) = catalog.bundle(None) else {
+        return ("?".into(), "?".into());
+    };
+    let installed = bundle
+        .artifacts
+        .iter()
+        .filter_map(|id| catalog.artifact(id).ok())
+        .map(|artifact| artifact.bytes)
+        .sum();
+    (
+        catalog
+            .source_download_bytes(bundle)
+            .map_or("?".into(), mib),
+        mib(installed),
+    )
 }
 
 #[cfg(test)]

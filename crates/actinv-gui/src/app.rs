@@ -241,25 +241,62 @@ impl Desktop {
             ),
             Default::default(),
         );
-        let document = model::decode_problem(model::EXAMPLE).expect("bundled example");
+        let document = model::example();
         let saved = document.clone();
         Self {
-            document, saved, saved_base:model::working_directory(), path:None,
-            base:model::working_directory(), page:Page::Overview,
-            status:"Start with the iron example, or open your own problem. Choose your installed nuclear data below.".into(),
-            error:false, logo, result:None, comparison:None, job:None,
-            step:0, metric:0, selected:String::new(), ledger_filter:String::new(),
-            reset_plot:false,
-            raw:String::new(), raw_dirty:false, raw_source:Value::Null, tour:Tour::default(), help:false,
-            pending:None, undo:vec![], redo:vec![], allow_close:false,
-            downloaded:None, capture:crate::capture::Capture::from_env(), platform:Box::new(platform::Native), suite:avila_account::ui_desktop::DesktopSuite::new(ctx,"actinv"),
-            result_unsaved:false, result_guard:None, result_load:None, spectrum_text:String::new(), log_time:false,
-            theme:"Light".into(),
-            transport:crate::transport::Import::default(), imported:None,
-            sweep:SweepUi::default(),
-            assay_text:String::new(), assay_pending:None,
-            tables:TablesState::default(), photons:PhotonsState::default(), pathways:PathwaysState::default(), outputs:OutputsState::default(), material_view:Default::default(), steps:Default::default(), waste:Default::default(),
-            import:None, import_spec:None, import_base:None,
+            document,
+            saved,
+            saved_base: model::working_directory(),
+            path: None,
+            base: model::working_directory(),
+            page: Page::Start,
+            status:
+                "Start from the iron example, open your own problem, or import a FISPACT-II deck."
+                    .into(),
+            error: false,
+            logo,
+            result: None,
+            comparison: None,
+            job: None,
+            step: 0,
+            metric: 0,
+            selected: String::new(),
+            ledger_filter: String::new(),
+            reset_plot: false,
+            raw: String::new(),
+            raw_dirty: false,
+            raw_source: Value::Null,
+            tour: Tour::default(),
+            help: false,
+            pending: None,
+            undo: vec![],
+            redo: vec![],
+            allow_close: false,
+            downloaded: None,
+            capture: crate::capture::Capture::from_env(),
+            platform: Box::new(platform::Native),
+            suite: avila_account::ui_desktop::DesktopSuite::new(ctx, "actinv"),
+            result_unsaved: false,
+            result_guard: None,
+            result_load: None,
+            spectrum_text: String::new(),
+            log_time: false,
+            theme: "Light".into(),
+            transport: crate::transport::Import::default(),
+            imported: None,
+            sweep: SweepUi::default(),
+            assay_text: String::new(),
+            assay_pending: None,
+            tables: TablesState::default(),
+            photons: PhotonsState::default(),
+            pathways: PathwaysState::default(),
+            outputs: OutputsState::default(),
+            material_view: Default::default(),
+            steps: Default::default(),
+            waste: Default::default(),
+            import: None,
+            import_spec: None,
+            import_base: None,
         }
     }
     fn dirty(&self) -> bool {
@@ -305,8 +342,8 @@ impl Desktop {
                             self.raw_dirty = false;
                             self.undo.clear();
                             self.redo.clear();
-                            self.page = Page::Overview;
-                            self.report(Ok("Problem opened. Relative input paths use the problem's folder; change Input base if needed.".into()));
+                            self.page = Page::CheckRun;
+                            self.report(Ok("Problem opened. Check & run summarizes it; relative input paths use the problem's folder.".into()));
                         }
                         Err(e) => self.report(Err(e)),
                     }
@@ -331,7 +368,7 @@ impl Desktop {
                         self.undo.clear();
                         self.redo.clear();
                         self.import = None;
-                        self.page = Page::Overview;
+                        self.page = Page::CheckRun;
                         self.report(Ok("Deck imported as a new problem. Add anything the report listed as required, then save it.".into()));
                     }
                     Err(e) => self.report(Err(format!(
@@ -340,7 +377,7 @@ impl Desktop {
                 }
             }
             Pending::Example => {
-                self.document = model::decode_problem(model::EXAMPLE).unwrap();
+                self.document = model::example();
                 self.saved = self.document.clone();
                 self.saved_base = self.base.clone();
                 self.path = None;
@@ -349,7 +386,8 @@ impl Desktop {
                 self.raw_dirty = false;
                 self.undo.clear();
                 self.redo.clear();
-                self.page = Page::Overview;
+                self.page = Page::CheckRun;
+                self.report(Ok("Iron example loaded: 1 g of iron, 5 minutes at the FNS 14 MeV source, then cooling. Run it as it is, or change any step.".into()));
             }
             Pending::Close => {}
         }
@@ -478,13 +516,13 @@ impl Desktop {
                 if compare {
                     self.comparison = Some(r);
                 } else {
+                    self.step = crate::views::summary::shutdown_step(&r).unwrap_or(0);
                     self.result = Some(r);
                     self.result_unsaved = false;
-                    self.step = 0;
                     self.selected.clear();
                 }
                 self.reset_plot = true;
-                self.page = Page::Charts;
+                self.page = Page::Summary;
                 self.report(Ok("Result loaded.".into()));
             }
             Err(e) => self.report(Err(e)),
@@ -601,7 +639,7 @@ impl Desktop {
                 let import=ui.button(if compact{"Import deck…"}else{"Import FISPACT-II deck…"}).on_hover_text("Convert a FISPACT-II input deck into an ACTINV problem (Ctrl+I)");self.tour.mark("import",import.rect);if import.clicked(){self.import.get_or_insert_with(ImportState::default);}
                 if ui.button(if self.dirty(){"Save •"}else{"Save"}).on_hover_text("Save problem (Ctrl+S)").clicked(){self.save_problem();}
                 let valid=ui.button("Validate");self.tour.mark("validate",valid.rect);if valid.clicked(){let r=self.validate().map(|_|"Specification and input locations are valid. File hashes and evaluated data are checked during the solve.".into());self.report(r);}
-                let run=ui.add_enabled(self.job.is_none(),egui::Button::new(RichText::new("▶ Run").color(Color32::WHITE)).fill(BLUE));self.tour.mark("run",run.rect);if run.clicked(){self.run(ui.ctx());}
+                let run=ui.add_enabled(self.job.is_none(),egui::Button::new(RichText::new("▶ Run").color(Color32::WHITE)).fill(BLUE));if run.clicked(){self.run(ui.ctx());}
                 ui.with_layout(egui::Layout::right_to_left(egui::Align::Center),|ui|{self.suite.controls(ui);if ui.button("? Help").clicked(){self.help=true;}
                 let before = self.theme.clone();
                 egui::ComboBox::from_id_salt("appearance").selected_text(&self.theme).width(80.).show_ui(ui,|ui| { for choice in ["Light","Dark","System"] { ui.selectable_value(&mut self.theme,choice.into(),choice); } });
@@ -621,7 +659,7 @@ if self.job.is_some(){ui.spinner();}});
             .min_size(165.)
             .resizable(true)
             .show(ui, |ui| {
-                // Fourteen pages and the foot do not fit the minimum window height; scroll then.
+                // The pages and the foot do not fit the minimum window height; scroll then.
                 egui::ScrollArea::vertical()
                     .auto_shrink([false, false])
                     .show(ui, |ui| {
@@ -637,23 +675,46 @@ if self.job.is_some(){ui.spinner();}});
                                 }
                                 group = Some(page.group());
                             }
-                            // Result pages dim until a result is loaded; they stay clickable
-                            // and explain themselves.
-                            let text = if page.needs_result() && self.result.is_none() {
-                                RichText::new(page.label()).weak()
-                            } else {
-                                RichText::new(page.label())
+                            // Setup steps are numbered and ticked when ready; result pages dim
+                            // until a result is loaded, and stay clickable to explain themselves.
+                            let label = match page.step() {
+                                Some(n) => format!("{n}  {}", page.label()),
+                                None => page.label().to_owned(),
                             };
-                            let r = ui.selectable_label(self.page == page, text);
-                            if r.clicked() {
-                                self.page = page;
-                            }
+                            // dimmed only when not selected: weak text on the selection fill
+                            // is unreadable
+                            let text = if page.needs_result()
+                                && self.result.is_none()
+                                && self.page != page
+                            {
+                                RichText::new(label).weak()
+                            } else {
+                                RichText::new(label)
+                            };
+                            // the tick sits at the sidebar's right edge so the ticks line up
+                            ui.horizontal(|ui| {
+                                if ui.selectable_label(self.page == page, text).clicked() {
+                                    // a message about the last action goes stale on another
+                                    // page; an error stays until it is dealt with
+                                    if self.page != page && !self.error && self.job.is_none() {
+                                        self.status.clear();
+                                    }
+                                    self.page = page;
+                                }
+                                if step_ready(&self.document, page) {
+                                    ui.with_layout(
+                                        egui::Layout::right_to_left(egui::Align::Center),
+                                        |ui| {
+                                            ui.add_space(8.);
+                                            crate::visuals::tick(ui, accent)
+                                                .on_hover_text("This step is filled in");
+                                        },
+                                    );
+                                }
+                            });
                         }
                         ui.add_space(24.);
                         ui.separator();
-                        if ui.button("Load iron example").clicked() {
-                            self.request(Pending::Example);
-                        }
                         if ui
                             .add_enabled(
                                 !self.undo.is_empty() && !self.raw_dirty,
@@ -787,23 +848,23 @@ impl eframe::App for Desktop {
                     }
                     Ok(JobOutput::Data(fragment)) => {
                         self.downloaded = Some(fragment);
-                        self.page = Page::Overview;
+                        self.page = Page::CheckRun;
                         self.report(Ok(
-                        "Data downloaded and verified. Use the installed paths below when ready."
+                        "Data downloaded and verified. Use the installed paths on Check & run when ready."
                             .into(),
                     ));
                     }
                     Ok(JobOutput::Calculation(v)) => {
                         match ResultDocument::parse(v, "Completed calculation".into()) {
                             Ok(r) => {
+                                self.step = crate::views::summary::shutdown_step(&r).unwrap_or(0);
                                 self.result = Some(r);
                                 self.result_unsaved = true;
-                                self.step = 0;
                                 self.selected.clear();
                                 self.reset_plot = true;
-                                self.page = Page::Charts;
+                                self.page = Page::Summary;
                                 self.report(Ok(
-                                "Calculation complete. Explore the results and review the ledger."
+                                "Calculation complete. Export JSON keeps it; Evidence lists the data and checks behind it."
                                     .into(),
                             ));
                             }
@@ -949,7 +1010,7 @@ impl Desktop {
                         match action {
                             ResultAction::Run => self.run(&ctx),
                             ResultAction::Open => self.open_result(&ctx, false),
-                            ResultAction::Tutorial => { self.result = Some(model::tutorial_result()); self.step=0; self.selected.clear(); self.comparison=None; self.page=Page::Charts; self.reset_plot=true; self.tour.start(true); },
+                            ResultAction::Tutorial => { self.result = Some(model::tutorial_result()); self.step=0; self.selected.clear(); self.comparison=None; self.page=Page::Summary; self.reset_plot=true; self.tour.start(true); },
                             ResultAction::Close => { if self.dirty() || self.job.is_some() { self.pending = Some(Pending::Close); } else { self.allow_close=true; ctx.send_viewport_cmd(egui::ViewportCommand::Close); } },
                         }
                     }
@@ -959,6 +1020,20 @@ impl Desktop {
         if let Some(capture) = &mut self.capture {
             capture.finish(&ctx);
         }
+    }
+}
+
+/// Whether the sidebar ticks a setup step: its part of the problem is filled in (see
+/// `views::check`); Check & run is ticked when every other step is.
+fn step_ready(document: &Value, page: Page) -> bool {
+    use crate::views::{check, Target};
+    match page {
+        Page::Material => check::ready(document, Target::Material),
+        Page::Schedule => check::ready(document, Target::Schedule),
+        Page::Spectrum => check::ready(document, Target::Spectrum),
+        Page::Outputs => check::ready(document, Target::Outputs),
+        Page::CheckRun => check::assess(document).iter().all(|line| line.ready),
+        _ => false,
     }
 }
 
@@ -1026,6 +1101,8 @@ mod ui_tests {
                     egui::Pos2::ZERO,
                     Vec2::new(900., 640.),
                 )),
+                // a clock that moves, so scrolling (the walkthrough reveals its target) finishes
+                time: Some(ctx.input(|i| i.time) + 1.),
                 ..Default::default()
             },
             |ui| app.render(ui),
@@ -1035,7 +1112,7 @@ mod ui_tests {
     }
     #[test]
     fn every_page_renders_in_both_themes_at_minimum_size_with_and_without_a_result() {
-        assert_eq!(Page::ALL.len(), 14);
+        assert_eq!(Page::ALL.len(), 16);
         for theme in [egui::ThemePreference::Light, egui::ThemePreference::Dark] {
             for with_result in [false, true] {
                 let ctx = egui::Context::default();
@@ -1071,7 +1148,8 @@ mod ui_tests {
             for (results, steps) in [(false, crate::tour::SETUP), (true, crate::tour::RESULTS)] {
                 for (index, step) in steps.iter().enumerate() {
                     app.tour.active = Some((results, index));
-                    for _ in 0..2 {
+                    // one frame opens the page, one scrolls the target into view, one shows it
+                    for _ in 0..3 {
                         frame_at_minimum_size(&ctx, &mut app);
                     }
                     assert_eq!(app.page, step.page, "step {} opens its page", step.target);
@@ -1092,19 +1170,54 @@ mod ui_tests {
         }
     }
     #[test]
-    fn the_sidebar_lists_every_page_in_three_captioned_groups() {
-        let captions: Vec<_> = [Group::Setup, Group::Results, Group::Tools]
-            .into_iter()
-            .map(|g| g.caption())
-            .collect();
+    fn the_app_opens_on_start_and_the_sidebar_follows_the_flow() {
+        let captions: Vec<_> = [
+            Group::Start,
+            Group::Setup,
+            Group::Results,
+            Group::Studies,
+            Group::Tools,
+        ]
+        .into_iter()
+        .map(|g| g.caption())
+        .collect();
         assert_eq!(
             captions,
-            [Some("CALCULATION"), Some("EXPLORE"), Some("TOOLS")]
+            [
+                None,
+                Some("SET UP"),
+                Some("RESULTS"),
+                Some("STUDIES"),
+                Some("TOOLS")
+            ]
         );
         let ctx = egui::Context::default();
         let mut app = Desktop::from_context(&ctx);
         frame_at_minimum_size(&ctx, &mut app);
-        assert_eq!(app.page, Page::Overview);
+        assert_eq!(app.page, Page::Start);
+        // the bundled example is complete, so every setup step is ticked
+        for page in Page::STEPS {
+            assert!(step_ready(&app.document, page), "{page:?}");
+        }
+        assert!(!step_ready(&app.document, Page::Summary));
+    }
+    #[test]
+    fn a_result_opens_on_its_summary_at_shutdown() {
+        let ctx = egui::Context::default();
+        let mut app = Desktop::from_context(&ctx);
+        let steps: Vec<Value> = [(300., 1.), (360., 0.), (3900., 0.)]
+            .into_iter()
+            .map(|(t, flux)| {
+                serde_json::json!({"t_s": t, "flux": flux, "inventory": [],
+                    "activity_Bq_per_g": {"Mn56": 1.0}, "heat_W_per_g": {"total": 0.0}})
+            })
+            .collect();
+        let result =
+            ResultDocument::parse(serde_json::json!({"steps": steps}), "r.json".into()).unwrap();
+        app.install_result(Ok(result), false);
+        assert_eq!(app.page, Page::Summary);
+        assert_eq!(app.step, 0);
+        frame_at_minimum_size(&ctx, &mut app);
     }
     #[test]
     fn an_idle_import_dialog_stays_open_and_changes_nothing() {
@@ -1130,7 +1243,7 @@ mod ui_tests {
         app.perform(Pending::ImportDeck);
         assert!(!app.error, "{}", app.status);
         assert_eq!(app.document, model::decode_problem(model::EXAMPLE).unwrap());
-        assert_eq!(app.page, Page::Overview);
+        assert_eq!(app.page, Page::CheckRun);
         assert!(app.path.is_none());
         assert_eq!(app.base, folder);
         assert!(app.import.is_none() && app.import_spec.is_none());
@@ -1234,7 +1347,7 @@ mod ui_tests {
         assert_eq!(app.document, before);
     }
     #[test]
-    fn opening_a_problem_through_the_platform_returns_to_the_overview() {
+    fn opening_a_problem_through_the_platform_opens_check_and_run() {
         let ctx = egui::Context::default();
         let path =
             std::env::temp_dir().join(format!("actinv-gui-open-{}.json", std::process::id()));
@@ -1243,7 +1356,7 @@ mod ui_tests {
         app.perform(Pending::Open);
         std::fs::remove_file(&path).ok();
         assert!(!app.error, "{}", app.status);
-        assert_eq!(app.page, Page::Overview);
+        assert_eq!(app.page, Page::CheckRun);
         assert_eq!(app.path.as_deref(), Some(path.as_path()));
         assert!(!app.dirty());
     }

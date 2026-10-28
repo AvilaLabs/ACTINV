@@ -15,8 +15,8 @@ impl Desktop {
     pub(super) fn outputs(&mut self, ui: &mut egui::Ui) {
         heading(
             ui,
-            "Outputs",
-            "Choose what ACTINV should compute besides the inventory, activity and decay heat.",
+            "What to compute",
+            "Activity, decay heat and inventory are always computed. Add what else this problem should answer.",
         );
         let mut marks = Marks::default();
         let mut picker = PlatformPicker(&*self.platform);

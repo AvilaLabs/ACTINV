@@ -748,7 +748,10 @@ fn steps_card(ui: &mut egui::Ui, state: &mut WasteState, steps: &[(u64, f64)]) {
                     for (number, t_s) in steps {
                         let mut on = !state.skipped.contains(number);
                         if ui
-                            .checkbox(&mut on, format!("Step {number} · {t_s:.4e} s"))
+                            .checkbox(
+                                &mut on,
+                                format!("Step {number} · {}", crate::model::readable_time(*t_s)),
+                            )
                             .changed()
                         {
                             if on {

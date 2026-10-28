@@ -34,7 +34,7 @@ impl Desktop {
         ui.group(|ui| {
             ui.label(RichText::new("Fold a measurement into these bands").strong());
             ui.label(
-                "Paste an actinv-assay-1 assay — scalar fields, an `entries` list (multi-nuclide count), or a `mixture` (linear-combination measurement) — then preview the Kalman update before applying it.",
+                "Paste or load a measurement (actinv-assay-1 JSON): one value, a list of nuclide counts, or a mixture. Preview how it narrows the bands before applying it to the result.",
             );
             ui.horizontal(|ui| {
                 if ui.button("Load assay file…").clicked() {

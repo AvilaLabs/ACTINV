@@ -1,7 +1,6 @@
 //! Material: the heading and navigation around the shared material view.
 use crate::{
     app::{heading, Desktop},
-    nav::Page,
     views::{material, Marks},
 };
 use eframe::egui;
@@ -13,10 +12,6 @@ impl Desktop {
         material::show(ui, &mut self.document, &mut self.material_view, &mut marks);
         for (anchor, rect) in marks.0 {
             self.tour.mark(anchor, rect);
-        }
-        ui.add_space(20.);
-        if ui.button("Continue to irradiation & cooling >").clicked() {
-            self.page = Page::Schedule;
         }
     }
 }

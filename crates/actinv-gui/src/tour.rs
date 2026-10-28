@@ -9,29 +9,32 @@ pub struct TourStep {
     pub text: &'static str,
 }
 pub const SETUP: &[TourStep] = &[
-    TourStep { target:"open",page:Page::Overview,title:"1. Open a calculation",text:"Click Open problem to load an ACTINV JSON file. Or keep the bundled iron example as your starting point. Next lets you explore without opening a file." },
-    TourStep { target:"import",page:Page::Overview,title:"2. Import a FISPACT-II deck",text:"Have a FISPACT-II deck? Import deck converts it into an ACTINV problem and shows a keyword report: what was mapped, approximated, noted or left unsupported, and which inputs you still need to add." },
-    TourStep { target:"inputs",page:Page::Overview,title:"3. Locate your nuclear data",text:"Choose the activation library and decay data. Relative paths use the input base folder shown here. ACTINV checks files before running; hashes remain part of the solver certificate." },
-    TourStep { target:"material",page:Page::Material,title:"4. Define the material",text:"Edit the mass, composition basis, optional density, and isotope amounts. Add an element or isotope using its symbol, such as FE or Fe56. Validation checks the composition before a solve." },
-    TourStep { target:"schedule",page:Page::Schedule,title:"5. Set irradiation and cooling",text:"Each row is a duration and what drives it: a flux multiplier, a wall loading or a power density. A flux of zero means cooling. Drag rows by their handle to reorder them, or use the arrow buttons. The timeline previews the sequence." },
-    TourStep { target:"spectrum",page:Page::Spectrum,title:"6. Inspect the incident spectrum",text:"The plot shows the supplied group values. Edit the JSON for custom energy boundaries or advanced settings; a wall-loading reference can be set here. Spectrum normalization is always explicit." },
-    TourStep { target:"outputs",page:Page::Outputs,title:"7. Choose what to compute",text:"Switch on the step summary, decay photons and dose, production pathways, regulatory tables, self-shielding or uncertainty. Inventory, activity and decay heat are always included. Conflicts between choices are reported here." },
-    TourStep { target:"validate",page:Page::Outputs,title:"8. Validate your inputs",text:"Click Validate to check the scientific specification and file locations. Any error appears in the status area with an explanation. Validation does not run the solver." },
-    TourStep { target:"run",page:Page::Outputs,title:"9. Run the calculation",text:"Click Run when your data are ready. The solver runs in the background. The result opens when it completes; you can then inspect charts, tables, photons, pathways, and the ledger." },
+    TourStep { target:"open",page:Page::Start,title:"1. Start a calculation",text:"Start from the iron example, open a problem you saved, or import a FISPACT-II deck. Whichever you choose, the numbered steps on the left walk you through the rest." },
+    TourStep { target:"import",page:Page::Start,title:"2. Import a FISPACT-II deck",text:"Import converts a FISPACT-II deck into an ACTINV problem and reports every keyword: what was mapped, approximated, noted or left unsupported, and which inputs you still need to add." },
+    TourStep { target:"material",page:Page::Material,title:"3. Define the material",text:"Edit the mass, composition basis, optional density, and isotope amounts. Add an element or isotope using its symbol, such as Fe or Fe56." },
+    TourStep { target:"schedule",page:Page::Schedule,title:"4. Set irradiation and cooling",text:"Each row is a duration and what drives it: a flux multiplier, a wall loading or a power density. A flux of zero means cooling. Drag rows by their handle to reorder them. The timeline previews the sequence." },
+    TourStep { target:"spectrum",page:Page::Spectrum,title:"5. Set the source",text:"Choose the projectile and review the incident group values. Paste or import a spectrum from a transport code; normalization is always explicit." },
+    TourStep { target:"outputs",page:Page::Outputs,title:"6. Choose what to compute",text:"Switch on decay photons and dose, production pathways, the step summary, regulatory tables, damage, self-shielding or uncertainty. Activity, decay heat and inventory are always included." },
+    TourStep { target:"check",page:Page::CheckRun,title:"7. Check the problem",text:"Each step is summarized in one sentence. Anything missing is marked, with a Fix button that takes you to it. A tick in the sidebar means a step is ready." },
+    TourStep { target:"inputs",page:Page::CheckRun,title:"8. Locate your nuclear data",text:"The iron example names the standard data, found wherever `actinv data fetch` or the download here installed them. Your own library and decay files can be chosen instead." },
+    TourStep { target:"run",page:Page::CheckRun,title:"9. Run the calculation",text:"Run solves in the background. When it completes, the result opens on its Summary: activity, heat, dose and what dominates them." },
 ];
 pub const RESULTS: &[TourStep] = &[
-    TourStep {target:"result_open",page:Page::Charts,title:"1. Open or compare results",text:"Open an existing ACTINV result JSON, or run a calculation. Add a comparison result to overlay another calculation, and pick the computed step with the slider. No demonstration values are substituted for your results."},
-    TourStep {target:"chart",page:Page::Charts,title:"2. Explore time histories",text:"Choose activity, total decay heat, or inventory. Drag to pan and scroll to zoom. Click a time on the chart to select the nearest computed step. Reset view restores the bounds."},
-    TourStep {target:"tables",page:Page::Tables,title:"3. Read the tables",text:"Switch between the inventory, step totals, dominant nuclides, elements and the other report tables, filter them, and export a table as CSV. Tables the problem did not request are explained, with a button to enable them."},
-    TourStep {target:"photons",page:Page::Photons,title:"4. Inspect photons and dose",text:"Decay photon groups, dose rates and any bremsstrahlung for the selected step, with dose against cooling time. Missing optional outputs are explained here; request them on the Outputs page before rerunning."},
-    TourStep {target:"pathways",page:Page::Pathways,title:"5. Trace production pathways",text:"See the first products that feed a nuclide, and the full routes with how much of the target they explain. Missing optional outputs are explained here; request them on the Outputs page before rerunning."},
-    TourStep {target:"ledger",page:Page::Ledger,title:"6. Read the evidence",text:"Expand ledger entries to inspect unaccounted data and approximations. The certificate records the solver's input provenance. These belong alongside the plotted answer."},
-    TourStep {target:"export",page:Page::Charts,title:"7. Export the result",text:"Save the complete original result as JSON, or export the selected inventory as CSV. The JSON retains all steps, optional responses, the ledger, and the certificate."},
+    TourStep {target:"result_open",page:Page::Summary,title:"1. Open or compare results",text:"Open a saved ACTINV result, or add a comparison result to see differences from another calculation. The step slider picks the time every results page shows."},
+    TourStep {target:"summary",page:Page::Summary,title:"2. Read the summary",text:"Activity, decay heat, contact dose and damage at the selected time, how each evolves, and which nuclides dominate. Jump to shutdown or round cooling times, or select a nuclide to follow it."},
+    TourStep {target:"chart",page:Page::Charts,title:"3. Explore time histories",text:"Choose activity, total decay heat, or inventory. Drag to pan and scroll to zoom. Click a time on the chart to select the nearest computed step."},
+    TourStep {target:"tables",page:Page::Tables,title:"4. Read the tables",text:"Switch between the inventory, step totals, dominant nuclides, elements and the other report tables, filter them, and export a table as CSV. Tables the problem did not request are explained, with a button to enable them."},
+    TourStep {target:"photons",page:Page::Photons,title:"5. Inspect photons and dose",text:"Decay photon groups, dose rates and any bremsstrahlung for the selected step, with dose against cooling time. Missing optional outputs are explained here; request them in What to compute before rerunning."},
+    TourStep {target:"pathways",page:Page::Pathways,title:"6. Trace production pathways",text:"See the first products that feed a nuclide, and the full routes with how much of the target they explain. Missing optional outputs are explained here; request them in What to compute before rerunning."},
+    TourStep {target:"ledger",page:Page::Ledger,title:"7. Read the evidence",text:"The ledger lists unaccounted data and approximations; the certificate records the inputs and data the solver used. Read them before relying on a number."},
+    TourStep {target:"export",page:Page::Summary,title:"8. Export the result",text:"Save the complete result as JSON, or export the selected inventory as CSV. The JSON keeps every step, optional response, the ledger and the certificate."},
 ];
 #[derive(Default)]
 pub struct Tour {
     pub active: Option<(bool, usize)>,
     pub anchors: BTreeMap<&'static str, Rect>,
+    /// The step whose target was last scrolled into view, so the user can scroll away again.
+    revealed: Option<(bool, usize)>,
 }
 impl Tour {
     pub fn start(&mut self, results: bool) {
@@ -43,6 +46,23 @@ impl Tour {
     }
     pub fn mark(&mut self, name: &'static str, rect: Rect) {
         self.anchors.insert(name, rect);
+    }
+    /// Mark a widget, and scroll it into view when it is the current step's target, so a small
+    /// window still shows what the step points at. The request repeats until the widget is
+    /// visible (egui can discard a pass, and a request with it); after that the user may
+    /// scroll away.
+    pub fn reveal(&mut self, name: &'static str, response: &egui::Response) {
+        self.mark(name, response.rect);
+        if self.step().is_some_and(|step| step.target == name) && self.revealed != self.active {
+            if response.interact_rect == response.rect {
+                self.revealed = self.active;
+            } else {
+                response.scroll_to_me_animation(
+                    Some(egui::Align::Center),
+                    egui::style::ScrollAnimation::none(),
+                );
+            }
+        }
     }
     pub fn show(&mut self, ctx: &egui::Context) {
         let Some((results, index)) = self.active else {
@@ -168,9 +188,9 @@ mod tests {
         let targets: Vec<_> = SETUP.iter().map(|s| s.target).collect();
         assert_eq!(&targets[..2], ["open", "import"]);
         let outputs = targets.iter().position(|t| *t == "outputs").unwrap();
-        assert_eq!(&targets[outputs + 1..], ["validate", "run"]);
-        for step in &SETUP[outputs..] {
-            assert_eq!(step.page, Page::Outputs);
+        assert_eq!(&targets[outputs + 1..], ["check", "inputs", "run"]);
+        for step in &SETUP[outputs + 1..] {
+            assert_eq!(step.page, Page::CheckRun);
         }
     }
     #[test]
@@ -180,6 +200,7 @@ mod tests {
             targets,
             [
                 "result_open",
+                "summary",
                 "chart",
                 "tables",
                 "photons",
@@ -188,7 +209,7 @@ mod tests {
                 "export"
             ]
         );
-        assert_eq!(RESULTS[0].page, RESULTS[6].page);
+        assert_eq!(RESULTS[0].page, RESULTS[7].page);
     }
     #[test]
     fn walkthrough_accepts_next_and_escape_input() {

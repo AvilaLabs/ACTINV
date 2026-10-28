@@ -73,7 +73,7 @@ resolution.
 
 ## Step summary
 
-The desktop **Tables** page shows these tables for the selected step; see [Use the desktop](desktop.md#explore-and-save-results).
+The desktop **Nuclides** page shows these tables for the selected step; see [Use the desktop](desktop.md#explore-and-save-results).
 
 When the problem declares [`summary`](specification.md#step-summary), each step gains a `summary` object. Every
 quantity is per gram of initial material, except the `absolute` and `per_cm3` totals. A state is counted with the
@@ -123,7 +123,7 @@ reach those shares of the total, counted over the full ranking rather than the t
 
 ## Depletion table
 
-The desktop **Tables** page shows this table on its **Depletion** tab.
+The desktop **Nuclides** page shows this table on its **Depletion** tab.
 
 With [`summary.depletion`](specification.md#step-summary) set to `true`, `steps[].summary.depletion` reports how
 much of each initial-material nuclide the step removed and which channels removed it. Without it the key is absent.

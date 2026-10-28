@@ -11,7 +11,7 @@ impl Desktop {
         let accent = crate::visuals::accent(ui);
         heading(
             ui,
-            "Charts",
+            "Time history",
             "Follow activity, decay heat and inventory through time, and pick the step to inspect.",
         );
         self.result_bar(ui);
@@ -34,10 +34,7 @@ impl Desktop {
             }
         });
         ui.horizontal(|ui| {
-            if ui
-                .checkbox(&mut self.log_time, "Logarithmic time")
-                .changed()
-            {
+            if ui.checkbox(&mut self.log_time, "Log time").changed() {
                 self.reset_plot = true;
             }
             if !self.selected.is_empty() {

@@ -11,8 +11,8 @@ impl Desktop {
     pub(super) fn tables(&mut self, ui: &mut egui::Ui) {
         heading(
             ui,
-            "Tables",
-            "Inventory, totals, dominant nuclides and the other report tables for the selected step.",
+            "Nuclides",
+            "The inventory, totals, dominant nuclides and the other report tables for the selected step.",
         );
         self.result_bar(ui);
         if self.result.is_none() {

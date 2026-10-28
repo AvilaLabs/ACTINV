@@ -93,6 +93,8 @@ fn rows(ui: &mut egui::Ui, steps: &mut Vec<Value>) {
             for (i, step) in steps.iter_mut().enumerate() {
                 let (drop, payload) =
                     ui.dnd_drop_zone::<usize, _>(egui::Frame::group(ui.style()), |ui| {
+                        // every row the same width, whatever its phase or buttons
+                        ui.set_width(ui.available_width());
                         ui.horizontal_wrapped(|ui| {
                             ui.dnd_drag_source(egui::Id::new(("schedule-drag", i)), i, |ui| {
                                 ui.label("::").on_hover_text("Drag to reorder");
@@ -128,11 +130,14 @@ fn rows(ui: &mut egui::Ui, steps: &mut Vec<Value>) {
                             if !drive.unit().is_empty() {
                                 ui.label(drive.unit());
                             }
-                            ui.label(if model::is_cooling(step) {
-                                "Cooling"
-                            } else {
-                                "Irradiation"
-                            });
+                            ui.add_sized(
+                                [90., 20.],
+                                egui::Label::new(if model::is_cooling(step) {
+                                    "Cooling"
+                                } else {
+                                    "Irradiation"
+                                }),
+                            );
                             if ui.add_enabled(i > 0, egui::Button::new("Up")).clicked() {
                                 swap = Some((i, i - 1));
                             }
@@ -239,7 +244,10 @@ fn requirements(
     }
     if drives.iter().any(|d| *d != Drive::Flux) {
         ui.add_space(4.);
+        #[cfg(not(target_arch = "wasm32"))]
         ui.label("Parameter sweeps over wall-loading or power steps are command-line only; the Sweep panel varies spectrum.total, which does not set those steps.");
+        #[cfg(target_arch = "wasm32")]
+        ui.label("Parameter sweeps over wall-loading or power steps are command-line only.");
     }
 }
 
@@ -247,9 +255,9 @@ fn requirements(
 fn wall_note(spectrum: &Value) -> String {
     match spectrum["wall_loading_MW_m2"].as_f64() {
         Some(reference) => format!(
-            "Wall loading: the spectrum is referenced to {reference} MW/m2 (Spectrum page); a step's multiplier is its loading divided by that."
+            "Wall loading: the spectrum is referenced to {reference} MW/m² (spectrum.wall_loading_MW_m2, in Advanced JSON); a step's multiplier is its loading divided by that."
         ),
-        None => "Wall loading: the spectrum has no reference loading (Spectrum page), so ACTINV uses 4.44e13 n/cm2/s per MW/m2 and needs a spectrum with a positive total.".into(),
+        None => "Wall loading: the spectrum has no reference loading (spectrum.wall_loading_MW_m2, in Advanced JSON), so ACTINV uses 4.44e13 n/cm²/s per MW/m² and needs a spectrum with a positive total.".into(),
     }
 }
 
@@ -403,7 +411,8 @@ fn timeline(ui: &mut egui::Ui, steps: &[Value]) {
         x += width;
     }
     ui.label(format!(
-        "Total duration: {total:.4e} s · cobalt = flux · teal = wall loading · amber = power · slate = cooling"
+        "Total duration: {} · cobalt = irradiation · slate = cooling",
+        model::readable_time(total)
     ));
 }
 
@@ -504,7 +513,7 @@ mod tests {
 
     #[test]
     fn wall_note_names_the_reference_or_the_default_current() {
-        assert!(wall_note(&json!({"wall_loading_MW_m2": 1.5})).contains("1.5 MW/m2"));
+        assert!(wall_note(&json!({"wall_loading_MW_m2": 1.5})).contains("1.5 MW/m²"));
         assert!(wall_note(&json!({})).contains("4.44e13"));
     }
 

@@ -2,7 +2,6 @@
 use super::page_for;
 use crate::{
     app::{heading, Desktop},
-    nav::Page,
     options::PlatformPicker,
     views::{
         steps::{self, StepsAction},
@@ -28,10 +27,6 @@ impl Desktop {
         }
         if let StepsAction::Open(target) = action {
             self.page = page_for(target);
-        }
-        ui.add_space(16.);
-        if ui.button("Continue to spectrum >").clicked() {
-            self.page = Page::Spectrum;
         }
     }
 }

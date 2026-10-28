@@ -44,9 +44,10 @@ pub fn show(ui: &mut egui::Ui, document: &mut Value, state: &mut MaterialState, 
             TableBuilder::new(ui)
                 .id_salt("material-table")
                 .striped(true)
+                .cell_layout(egui::Layout::left_to_right(egui::Align::Center))
+                .column(Column::exact(220.))
+                .column(Column::exact(160.))
                 .column(Column::remainder())
-                .column(Column::initial(180.))
-                .column(Column::initial(80.))
                 .header(28., |mut h| {
                     h.col(|ui| {
                         ui.strong("Element / isotope");
@@ -60,7 +61,7 @@ pub fn show(ui: &mut egui::Ui, document: &mut Value, state: &mut MaterialState, 
                     for (key, value) in composition.iter_mut() {
                         body.row(34., |mut row| {
                             row.col(|ui| {
-                                ui.label(key);
+                                ui.label(crate::views::check::display_name(key));
                             });
                             row.col(|ui| {
                                 numeric(ui, value, 0.1);
@@ -77,7 +78,11 @@ pub fn show(ui: &mut egui::Ui, document: &mut Value, state: &mut MaterialState, 
                 composition.remove(&key);
             }
             let total: f64 = composition.values().map(model::number).sum();
-            ui.label(format!("Composition total: {total:.6}"));
+            let unit = if wt_percent { " wt%" } else { "" };
+            ui.label(format!(
+                "Composition total: {}{unit}",
+                crate::visuals::compact_number(total)
+            ));
             if wt_percent && (total - 100.).abs() > 1e-6 {
                 ui.colored_label(ui.visuals().error_fg_color, "Weight percentages do not total 100%. Values are used as entered; ACTINV does not silently normalize them.");
             }
@@ -85,12 +90,14 @@ pub fn show(ui: &mut egui::Ui, document: &mut Value, state: &mut MaterialState, 
         ui.horizontal(|ui| {
             ui.add(
                 egui::TextEdit::singleline(&mut state.isotope)
-                    .hint_text("e.g. Fe56")
+                    .hint_text("Fe or Fe56")
                     .desired_width(150.),
             );
+            ui.label("amount");
             ui.add(
                 egui::DragValue::new(&mut state.amount)
                     .custom_parser(model::parse_finite)
+                    .custom_formatter(|n, _| crate::visuals::compact_number(n))
                     .speed(0.1),
             );
             if ui.button("Add element / isotope").clicked() {
@@ -110,8 +117,7 @@ pub fn show(ui: &mut egui::Ui, document: &mut Value, state: &mut MaterialState, 
 /// The optional density: a checkbox that sets or removes `material.density_g_cm3`, and its value.
 fn density(ui: &mut egui::Ui, document: &mut Value) {
     let mut enabled = document["material"]["density_g_cm3"].is_number();
-    ui.label("Density (g/cm3)");
-    if ui.checkbox(&mut enabled, "").changed() {
+    if ui.checkbox(&mut enabled, "Density (g/cm3)").changed() {
         set_density(document, enabled.then_some(DEFAULT_DENSITY_G_CM3));
     }
     if enabled {
@@ -176,7 +182,7 @@ fn add_component(document: &mut Value, name: &str, amount: f64) -> Result<(), St
 fn basis_label(basis: &str) -> &str {
     match basis {
         "wt_percent" => "Weight percent (%)",
-        "atom_fraction" => "Atomic ratios",
+        "atom_fraction" => "Atom fraction",
         "atoms_per_g" => "Atoms per gram",
         _ => basis,
     }

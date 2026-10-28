@@ -412,8 +412,11 @@ pub fn show(
         return not_recorded(
             ui,
             "No production pathways are recorded in this result.",
-            "Turn on Production pathways on the Outputs page and run again. First products need \
-             trace mode; the full routes also need a pathways section.",
+            &format!(
+                "Turn on Production pathways in What to compute, then {}. First products need \
+                 trace mode; the full routes also need a pathways section.",
+                super::RUN_AGAIN
+            ),
         );
     }
     let mut mode = state.mode.unwrap_or(if targets.is_empty() {
@@ -464,8 +467,11 @@ fn first_products_body(
         return not_recorded(
             ui,
             "No first products were recorded for this step.",
-            "First-product decomposition is available in trace mode. Turn on Production pathways \
-             on the Outputs page and run again.",
+            &format!(
+                "First-product decomposition is available in trace mode. Turn on Production \
+                 pathways in What to compute, then {}.",
+                super::RUN_AGAIN
+            ),
         );
     }
     if !nuclides.contains(&state.first_nuclide) {
@@ -522,7 +528,8 @@ fn first_products_body(
     ui.label("Source > first product > selected nuclide. Intermediate chain members are not enumerated here; the Full routes tab lists them. Diagram shows up to 12 ranked contributions.");
     if let Some(closure) = result.value["pathway_closure"].as_f64() {
         ui.label(format!(
-            "Worst relative difference between the listed chains and the inventory (pathway_closure): {closure:.3e}"
+            "Closure: the listed chains differ from the inventory by up to {:.1}% (pathway_closure = {closure:.3e}).",
+            100. * closure
         ));
     }
     json_tree(
@@ -545,8 +552,11 @@ fn routes_body(
         return not_recorded(
             ui,
             "No full routes were recorded.",
-            "Turn on Production pathways on the Outputs page and run again; choose the target \
-             nuclides there.",
+            &format!(
+                "Turn on Production pathways in What to compute and choose the target nuclides \
+                 there, then {}.",
+                super::RUN_AGAIN
+            ),
         );
     }
     if !targets.iter().any(|t| t.target == state.target) {

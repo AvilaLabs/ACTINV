@@ -43,8 +43,8 @@ pub fn spectrum(ui: &mut egui::Ui, doc: &Value) {
     }
     let color = accent(ui);
     ui.label(format!(
-        "Total incident flux: {:.5e} particles/cm²/s · {} groups",
-        flux.iter().sum::<f64>(),
+        "Total incident flux: {} particles/cm²/s · {} groups",
+        compact_number(flux.iter().sum::<f64>()),
         flux.len()
     ));
     Plot::new("spectrum-energy")
@@ -53,6 +53,7 @@ pub fn spectrum(ui: &mut egui::Ui, doc: &Value) {
         .x_axis_label("Energy (eV), logarithmic")
         .y_axis_label("Group-integrated flux (particles/cm²/s)")
         .x_axis_formatter(|mark, _| format!("{:.1e}", 10_f64.powf(mark.value)))
+        .y_axis_formatter(|mark, _| compact_number(mark.value))
         .show(ui, |p| {
             p.line(Line::new("Incident group flux", points).color(color))
         });
@@ -119,6 +120,23 @@ pub fn contributors(ui: &mut egui::Ui, step: &Value, selected: &mut String) {
     ui.label(format!("Top {} account for {:.2}% of activity; remaining nuclides {:.2}%. Select a nuclide to follow its history.",entries.len(),100.*covered/total,100.*(total-covered).max(0.)/total));
 }
 
+/// A check mark drawn with lines, so it never depends on a font having the glyph.
+pub fn tick(ui: &mut egui::Ui, color: Color32) -> egui::Response {
+    let size = ui.text_style_height(&egui::TextStyle::Body);
+    let (rect, response) = ui.allocate_exact_size(egui::vec2(size, size), egui::Sense::hover());
+    let r = rect.shrink(size * 0.18);
+    let points = vec![
+        egui::pos2(r.left(), r.center().y),
+        egui::pos2(r.left() + r.width() * 0.38, r.bottom() - r.height() * 0.08),
+        egui::pos2(r.right(), r.top() + r.height() * 0.1),
+    ];
+    ui.painter().add(egui::Shape::line(
+        points,
+        egui::Stroke::new(size * 0.13, color),
+    ));
+    response
+}
+
 /// The cobalt accent of the light theme: selection, run and links.
 pub const BLUE: egui::Color32 = egui::Color32::from_rgb(24, 0, 173);
 
@@ -143,12 +161,46 @@ pub fn text_field(ui: &mut egui::Ui, value: &mut Value) {
     }
 }
 
+/// A text field across the available width, for long values such as a title.
+pub fn wide_text_field(ui: &mut egui::Ui, value: &mut Value) {
+    let mut s = value.as_str().unwrap_or("").to_owned();
+    let width = ui.available_width().min(720.);
+    if ui
+        .add(egui::TextEdit::singleline(&mut s).desired_width(width))
+        .changed()
+    {
+        *value = s.into();
+    }
+}
+
+/// A number as people write it: plain in the everyday range, scientific when large or small, so
+/// a flux reads 1.12e10 rather than 11160000000.
+pub fn compact_number(n: f64) -> String {
+    if n != 0. && !(1e-3..1e6).contains(&n.abs()) {
+        let text = format!("{n:.4e}");
+        // trim trailing zeros of the mantissa: 1.1200e10 -> 1.12e10
+        match text.split_once('e') {
+            Some((mantissa, exponent)) if mantissa.contains('.') => {
+                format!(
+                    "{}e{exponent}",
+                    mantissa.trim_end_matches('0').trim_end_matches('.')
+                )
+            }
+            _ => text,
+        }
+    } else {
+        let text = format!("{n:.6}");
+        text.trim_end_matches('0').trim_end_matches('.').to_owned()
+    }
+}
+
 pub fn numeric(ui: &mut egui::Ui, value: &mut Value, speed: f64) {
     let mut n = model::number(value);
     if ui
         .add(
             egui::DragValue::new(&mut n)
                 .custom_parser(model::parse_finite)
+                .custom_formatter(|n, _| compact_number(n))
                 .speed(speed)
                 .range(0.0..=f64::MAX),
         )
@@ -176,9 +228,10 @@ pub fn json_tree(ui: &mut egui::Ui, label: &str, value: &Value) {
         }
         Value::Array(items) => {
             egui::CollapsingHeader::new(format!(
-                "{} · {} items",
+                "{} · {} {}",
                 label.replace('_', " "),
-                items.len()
+                items.len(),
+                if items.len() == 1 { "item" } else { "items" }
             ))
             .id_salt(label)
             .show(ui, |ui| {
@@ -203,5 +256,18 @@ pub fn json_tree(ui: &mut egui::Ui, label: &str, value: &Value) {
                 ui.label(value.to_string());
             });
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    #[test]
+    fn numbers_read_plainly_or_scientifically() {
+        assert_eq!(super::compact_number(1.116e10), "1.116e10");
+        assert_eq!(super::compact_number(3e9), "3e9");
+        assert_eq!(super::compact_number(2.5), "2.5");
+        assert_eq!(super::compact_number(300.), "300");
+        assert_eq!(super::compact_number(0.), "0");
+        assert_eq!(super::compact_number(1e-5), "1e-5");
     }
 }

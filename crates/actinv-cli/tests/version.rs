@@ -23,6 +23,8 @@ fn reports_help_without_error() {
         .expect("run actinv --help");
 
     assert!(output.status.success());
-    assert!(String::from_utf8_lossy(&output.stdout).starts_with("usage: actinv run"));
+    assert!(
+        String::from_utf8_lossy(&output.stdout).starts_with("ACTINV — activation and inventory")
+    );
     assert!(output.stderr.is_empty());
 }

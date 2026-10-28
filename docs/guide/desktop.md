@@ -4,18 +4,28 @@ The desktop edits a single-material problem, runs the shared ACTINV solver in th
 
 Install it from the [download page](https://actinv.avilalabs.org/download/). Published preview packages and current source builds can expose different features; see [Versions and releases](releases.md).
 
+## How the app is organized
+
+The sidebar follows a calculation from start to answer:
+
+- **Start** is the home page. Begin from the iron example, open a problem, or import a FISPACT-II deck. It also shows the current problem and result, and whether the standard nuclear data are installed.
+- **SET UP** holds the numbered steps: **1 Material**, **2 Irradiation & cooling**, **3 Source & spectrum**, **4 What to compute** and **5 Check & run**. A tick beside a step means its part of the problem is filled in. Each step ends with **Back** and **Continue**.
+- **RESULTS** opens on **Summary**, then **Time history**, **Nuclides**, **Photons & dose**, **Pathways**, **Waste class** and **Evidence**.
+- **STUDIES** holds **Sweep** and **Assimilation**, which run many calculations.
+- **TOOLS** holds **Advanced JSON**.
+
 ## Learn without downloading nuclear data
 
-In **Overview & data**, choose **Try offline results tutorial**. It shows a fictional one-hour decay example for learning the interface. Use the iron problem with verified data for an evaluated calculation.
+On **Start**, choose **Try the results tutorial**. It shows a fictional one-hour decay example for learning the interface. Use the iron problem with verified data for an evaluated calculation.
 
 ## Run a problem
 
-1. In **Overview & data**, keep the iron example or choose **Open problem**. To start from a FISPACT-II input instead, see [Import a FISPACT-II deck](#import-a-fispact-ii-deck).
-2. Choose your installed activation and decay files, or download the standard neutron data and apply the installed paths.
-3. Check **Input base**. Relative file paths use this folder. Opening a JSON problem sets the base to its directory; older repository examples may need the repository root.
-4. Review **Material**, **Irradiation & cooling**, and **Spectrum**. On **Material**, density is optional; a step that uses W/cm3, or geometry self-shielding without its own density, needs it. Spectrum values are integrated group fluxes, with explicit ordering and normalization.
-5. On **Outputs**, choose what to compute besides inventory, activity and decay heat, which every result includes. Apply or discard advanced JSON edits before returning to structured editing.
-6. Choose **Validate**, then **Run**. The background task reports preparation and solving. In current builds, cancelling a calculation stops its isolated worker without publishing a partial result.
+1. On **Start**, choose **Load iron example**, **Open problem…** or **Import deck…**. If the standard data are not installed, **Download standard data…** installs them, or run `actinv data fetch` in a terminal.
+2. Walk the numbered steps. On **Material**, density is optional; a step that uses W/cm3, or geometry self-shielding without its own density, needs it. On **Source & spectrum**, choose the projectile; spectrum values are integrated group fluxes, with explicit ordering and normalization. On **What to compute**, add what to compute besides inventory, activity and decay heat, which every result includes.
+3. **Check & run** reads the problem back in one sentence per step, such as "5 min irradiation, then 20 cooling steps to 57 min after shutdown". Anything missing is marked with a **Fix** button that opens the step. Under **Nuclear data**, a problem whose data files are not found, such as one written for an older data release, can switch to the installed standard data with **Use the installed standard data**. **Data files and input folder** holds the file paths; relative paths use the input folder, which opening a problem sets to its directory.
+4. Choose **Run calculation**. The background task reports preparation and solving. Cancelling a calculation stops its isolated worker without publishing a partial result. The result opens on **Summary** at shutdown.
+
+The toolbar keeps **Open problem**, **Import FISPACT-II deck…**, **Save**, **Validate** and **Run** on every page. Apply or discard advanced JSON edits before returning to structured editing.
 
 The current desktop uses a private prepared-data cache for each calculation, so setup time can recur between runs. CLI cache behavior is described in [Data setup](data.md#prepared-calculation-cache).
 
@@ -23,15 +33,15 @@ The current desktop uses a private prepared-data cache for each calculation, so 
 
 Choose **Import FISPACT-II deck…** in the toolbar (Ctrl/Cmd+I). Pick the deck, and optionally a fluxes file and a files file, then **Convert**. The dialog lists every keyword with its line and a status of mapped, approximated, noted or unsupported, and you can filter the list. **Strict** refuses the problem when any keyword is unsupported. **Download report** saves the same report as `actinv import-fispact`; see [Move a FISPACT-II deck to ACTINV](fispact-migration.md). **Use this problem** replaces the current problem, after asking about unsaved changes.
 
-A deck that irradiates but comes without a fluxes file converts with a flat placeholder spectrum, flagged as a required input. Replace it on **Spectrum** before running. Under **Required additions**, each input the deck implies but cannot supply has a button to the page where you add it.
+A deck that irradiates but comes without a fluxes file converts with a flat placeholder spectrum, flagged as a required input. Replace it on **Source & spectrum** before running. Under **Required additions**, each input the deck implies but cannot supply has a button to the page where you add it.
 
 ### Choose what drives each step
 
-On **Irradiation & cooling**, each row has a **Drive**: a flux multiplier, a wall loading (MW/m2), a power density (W/cm3) or a specific power (W/g). A flux multiplier of zero is cooling. A wall-loading step is scaled against the reference loading set on **Spectrum**. Power steps need a kerma table pinned by its SHA-256; the page shows a **Kerma table** field with **Choose and pin**. Power steps in W/cm3 also need a density on **Material**. Sweeps over wall-loading or power steps are command-line only. See [Kerma heating and power-driven steps](results.md#kerma-heating-and-power-driven-steps) for the result side.
+On **Irradiation & cooling**, each row has a **Drive**: a flux multiplier, a wall loading (MW/m2), a power density (W/cm3) or a specific power (W/g). A flux multiplier of zero is cooling. A wall-loading step is scaled against the reference loading, `spectrum.wall_loading_MW_m2` in **Advanced JSON**. Power steps need a kerma table pinned by its SHA-256; the page shows a **Kerma table** field with **Choose and pin**. Power steps in W/cm3 also need a density on **Material**. Sweeps over wall-loading or power steps are command-line only. See [Kerma heating and power-driven steps](results.md#kerma-heating-and-power-driven-steps) for the result side.
 
-### Choose outputs
+### Choose what to compute
 
-**Outputs** has one card for each optional calculation, with an enable box, its settings and a status that reports conflicts with other choices:
+**What to compute** has one card for each optional calculation, with an enable box, its settings and a status that reports conflicts with other choices:
 
 - **Step summary**, which feeds the dominant lists, element table and other [report tables](results.md#step-summary).
 - **Decay photons and dose**.
@@ -41,17 +51,18 @@ On **Irradiation & cooling**, each row has a **Drive**: a flux multiplier, a wal
 - **Uncertainty**, with its channels: MF=33 cross sections, half-lives, fission yields and flux tally statistics. The flux channel takes one relative error per flux group, pasted on the card; with flux alone no covariance file is needed.
 - **Gas production (H and He)**, for neutron activation; it cannot be combined with uncertainty.
 
-A result lacks an output you did not enable; the page that would show it says so and offers a link to **Outputs**.
+A result lacks an output you did not enable; the page that would show it says so and offers a link to **What to compute**.
 
 ## Explore and save results
 
-The pages under **EXPLORE** read one result. A bar at the top of each has **Open result**, **Add comparison**, **Export JSON**, **Export inventory CSV** and the **Computed step** slider. The chosen step is shared, so every page shows the same step. Add another result for a comparison; check both files' physical times and normalizations.
+The pages under **RESULTS** read one result. A bar at the top of each has **Open result**, **Compare with…**, **Export JSON**, **Export inventory CSV** and the **Computed step** slider. The chosen step is shared, so every page shows the same step. Add another result for a comparison; check both files' physical times and normalizations.
 
-- **Charts** plots activity, total heat or inventory against time. Click the plot to select the nearest step, and filter and select a nuclide to follow its history. Heat remains the whole-material response.
-- **Tables** shows the tables that `actinv report` writes: nuclides (atoms and grams, or activity and heat), step totals, dominant nuclides, elements, depletion, dose, photons, regulatory tables and the time series. Filter a table, click a header to sort it, and choose **Export CSV** for this step or all steps. The CSV is byte-identical to the `actinv report` output. A table the result cannot build gives its reason; when the result has no `summary`, **Enable and re-run** adds `summary: {}` to the problem and runs it again.
-- **Photons & dose** shows decay photon groups, dose rates, bremsstrahlung and dose against cooling time. **Export photon groups (CSV)** saves the groups of the selected step. A result with no photon source links to **Outputs**.
+- **Summary** is where a result opens. It gives activity, decay heat, contact dose and, when computed, damage at the selected time, each with a small curve of how it evolves, and the nuclides that dominate activity and heat. **Jump to** selects shutdown or the step nearest 1 h, 1 d, 1 y and so on after it. With a comparison loaded, each value shows its change against the comparison at the same time. Select a nuclide to follow it on **Time history**.
+- **Time history** plots activity, total heat or inventory against time. Click the plot to select the nearest step, and filter and select a nuclide to follow its history. Heat remains the whole-material response.
+- **Nuclides** shows the tables that `actinv report` writes: nuclides (atoms and grams, or activity and heat), step totals, dominant nuclides, elements, depletion, dose, photons, regulatory tables and the time series. Filter a table, click a header to sort it, and choose **Export CSV** for this step or all steps. The CSV is byte-identical to the `actinv report` output. A table the result cannot build gives its reason; when the result has no `summary`, **Enable and re-run** adds `summary: {}` to the problem and runs it again.
+- **Photons & dose** shows decay photon groups, dose rates, bremsstrahlung and dose against cooling time. **Export photon groups (CSV)** saves the groups of the selected step. A result with no photon source links to **What to compute**.
 - **Pathways** shows how a nuclide is produced. **Full routes** lists the routes for each target with the part of the inventory they explain and the residual; **First products (trace)** ranks the first products and needs trace mode.
-- **Ledger & certificate** shows incomplete inputs and calculation details.
+- **Evidence** shows the ledger of incomplete inputs and approximations, and the certificate of inputs and data.
 - **Waste class** classifies the loaded result as waste; see [Classify a result as waste](#classify-a-result-as-waste).
 
 Export the **full result JSON** to preserve the complete calculation. Inventory CSV contains the selected time step; saving the problem or exporting CSV does not save the full result.
@@ -64,7 +75,7 @@ Press **Load from decay data** to fill the table of nuclide properties (Z, half-
 
 **Classify** runs in the background. For each selected step the page shows the class, status, coverage, the governing table and column with its sum and margin, and the binding nuclides, a strip of the classes against cooling time, and the earliest selected step within Class A, B and C. These are read from the result; the page computes nothing else. **Save spec…** writes `waste-spec.json` and the `result.json` it reads into a folder you choose (it will not replace existing files), so `actinv waste waste-spec.json` there writes the same result. **Save result…** writes the evaluator's result exactly as the CLI writes it. The classification is nominal screening, not disposal acceptance; see [Component waste classes](waste.md).
 
-## Other tools
+## Studies and tools
 
 **Sweep** solves a family of generated problems along one parameter. **Assimilation** folds a measured value into the uncertainty bands of the loaded result. **Advanced JSON** exposes the complete problem. Mesh runs, bulk library building, and transport-source exports use the [CLI](cli.md).
 

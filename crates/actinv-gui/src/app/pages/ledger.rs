@@ -6,8 +6,8 @@ impl Desktop {
     pub(super) fn ledger(&mut self, ui: &mut egui::Ui) {
         heading(
             ui,
-            "Ledger & certificate",
-            "Inspect missing data, approximations, and the provenance behind the answer.",
+            "Evidence",
+            "The ledger of missing data and approximations, and the certificate of inputs and data behind the answer.",
         );
         self.result_bar(ui);
         let r = ui.scope(|ui| {

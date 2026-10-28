@@ -509,10 +509,24 @@ pub fn show(
     action
 }
 
-/// The "Enable and re-run" button; clicking it replaces `action`.
+/// The button that adds `summary: {}` to the problem; clicking it replaces `action`. The desktop
+/// runs the problem again at once; the browser only edits it.
 fn enable_summary_button(ui: &mut egui::Ui, action: TablesAction) -> TablesAction {
-    ui.label("This result has no `summary` section. Enabling it adds `summary: {}` to the problem and runs it again.");
-    if ui.button("Enable and re-run").clicked() {
+    #[cfg(not(target_arch = "wasm32"))]
+    let (label, text) = (
+        "Enable and re-run",
+        "This result has no `summary` section. Enable and re-run adds `summary: {}` to the problem and runs it again.".to_string(),
+    );
+    #[cfg(target_arch = "wasm32")]
+    let (label, text) = (
+        "Add to problem",
+        format!(
+            "This result has no `summary` section. Add to problem adds `summary: {{}}` to the problem; then {}.",
+            super::RUN_AGAIN
+        ),
+    );
+    ui.label(text);
+    if ui.button(label).clicked() {
         TablesAction::EnableSummary
     } else {
         action

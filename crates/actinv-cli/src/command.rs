@@ -22,49 +22,6 @@ use actinv_data::{
 };
 use std::collections::BTreeMap;
 
-const USAGE: &str = "usage: actinv run SPEC.json [OUT.json]\n\
-                    actinv new OUT.json [--data-dir DIR]\n\
-                    actinv doctor [SPEC.json]\n\
-                    actinv validate SPEC.json\n\
-                    actinv data list\n\
-                    actinv data fetch [BUNDLE] [--output DIR] [--force]\n\
-                    actinv data verify [BUNDLE] [--output DIR]\n\
-                    actinv data manifest\n\
-                    actinv import-flux openmc SOURCE.h5 OUT.ndjson --tally ID --source-rate RATE [--energy-floor-eV EV] [--window-rows N]\n\
-                    actinv import-flux {meshtal|mctal} SOURCE OUT.ndjson --tally ID --source-rate RATE [--energy-floor-eV EV]\n\
-                    actinv import-flux fispact FLUXES OUT.ndjson --groups GROUPS.json\n\
-                    actinv import-fispact DECK.i OUT.json [--fluxes FLUXES] [--files FILES] [--library LIB.npz] [--decay DECAY] [--covariance COV.npz] [--fission-yields FILE...] [--damage TABLE] [--self-shielding-table FILE] [--resonance FILE...] [--strict]\n\
-                    actinv build-library INPUT OUTPUT.npz [--format auto|tendl|eaf] [--projectile auto|neutron|proton|deuteron|triton|helion|alpha|gamma] [--groups fispact-709|fispact-162|fispact-66|...|fispact-1102|PATH] [--temperature-K K] [--workers N] [--cache DIR] [--grid-density D] [--strict-states true|false] [--profile none|endfb8|tendl] [--decay PATH] [--decay-fallback PATH] [--continue-on-error true|false] [--spallation TABLE.json] [--splice-energy-MeV MEV]\n\
-                    actinv build-damage EVALUATION_DIR OUT.json [--projectile auto|neutron|proton|deuteron|triton|helion|alpha|gamma] [--groups fispact-709|fispact-162|fispact-66|...|fispact-1102|PATH] [--temperature-K K] [--cache DIR] [--method default|kinematic] [--displacement-energy EL=eV ... (default: NJOY HEATR standard energy of the element, else 25)] [--capture-photons evaluated|one-photon|per-photon] [--continuum-recoil kinematic|evaluated] [--grid-density X] [--continue-on-error true|false]\n\
-                    actinv build-shielding EVALUATION_DIR OUT.json [--projectile auto|neutron] [--groups fispact-709|PATH] [--cache DIR]\n\
-                    actinv build-covariance INPUT ACTIVATION.npz OUTPUT.cov.npz [--workers N] [--cache DIR]\n\
-                    actinv mesh SPEC.json OUT.ndjson\n\
-                    actinv optimize OPTSPEC.json [OUTDIR] [--resume]\n\
-                    actinv decide DECISION.json [OUT.json]\n\
-                    actinv budget BUDGET.json [OUT.json] [--no-verify]\n\
-                    actinv impurities SPEC.json [OUT.json] [--no-verify]\n\
-                    actinv waste WASTE.json [OUT.json]\n\
-                    actinv waste budget BUDGET.json [OUT.json]\n\
-                    actinv waste budget uncertainty SPEC.json [OUT.json]\n\
-                    actinv waste bounds BOUNDS.json [OUT.json]\n\
-                    actinv waste composition COMPOSITION.json [OUT.json]\n\
-                    actinv waste composition solve SPEC.json [OUT.json]\n\
-                    actinv waste intrusion-screen SPEC.json [OUT.json]\n\
-                    actinv waste uncertainty SPEC.json [OUT.json]\n\
-                    actinv waste package SPEC.json [OUT.json]\n\
-                    actinv study {validate|build|run} STUDY.json [OUTDIR] [--revocations FILE]\n\
-                    actinv inspect {decay|xs|yields|library|groups} ... [--table] [--out OUT]\n\
-                    actinv report RESULT.json [--tables LIST] [--format csv|tsv|markdown|text] [--out DIR] [--step N|all] [--nuclides LIST]\n\
-                    actinv export-openmc RESULT.json STEP OUT.py\n\
-                    actinv export-openmc-mesh MESH_RESULT.ndjson STEP OUT.py\n\
-                    actinv export-r2s MESH_RESULT.ndjson STEP OUT.ndjson\n\
-                    actinv export-r2s-joint MESH_RESULT.ndjson SPEC.json STEP OUT.ndjson\n\
-                    actinv export-source {openmc|mcnp|serpent} R2S_SOURCE.ndjson OUT\n\
-                    actinv export-source alara R2S_SOURCE.ndjson OUT_DIR --shutdown-t-s T\n\
-                    actinv clearance INPUT STEP [--limits PATH] [--confidence T] OUT.ndjson\n\
-                    actinv reverse-qualified PROBLEM.json MEASUREMENTS.json OUT.ndjson\n\
-                    actinv export-mcnp RESULT.json STEP OUT.sdef";
-
 const DATA_USAGE: &str = "usage: actinv data list\n\
                               actinv data fetch [BUNDLE] [--output DIR] [--force]\n\
                               actinv data verify [BUNDLE] [--output DIR]\n\
@@ -75,7 +32,16 @@ fn die(message: impl std::fmt::Display, code: i32) -> ! {
     std::process::exit(code);
 }
 
+/// The text of an input file, or of stdin when the path is `-`.
 fn read(path: &str) -> String {
+    if path == "-" {
+        let mut text = String::new();
+        use std::io::Read;
+        std::io::stdin()
+            .read_to_string(&mut text)
+            .unwrap_or_else(|e| die(format!("cannot read stdin: {e}"), 2));
+        return text;
+    }
     std::fs::read_to_string(path).unwrap_or_else(|e| die(format!("cannot read {path}: {e}"), 2))
 }
 
@@ -338,7 +304,11 @@ fn data_command(args: &[String]) {
         "fetch" | "verify" => {
             let operation = args[0].as_str();
             let mut bundle = None;
-            let mut output = std::path::PathBuf::from("actinv-data");
+            // the same directory a run reads: $ACTINV_DATA_DIR, else ./actinv-data
+            let mut output = match std::env::var_os("ACTINV_DATA_DIR") {
+                Some(value) if !value.is_empty() => std::path::PathBuf::from(value),
+                _ => std::path::PathBuf::from("actinv-data"),
+            };
             let mut output_seen = false;
             let mut force = false;
             let mut index = 1;
@@ -370,12 +340,48 @@ fn data_command(args: &[String]) {
                     }
                 }
             }
+            let catalog = embedded_catalog().unwrap_or_else(|error| die(error, 1));
+            let chosen = catalog.bundle(bundle).unwrap_or_else(|error| die(error, 2));
+            if operation == "fetch" {
+                let installed: u64 = chosen
+                    .artifacts
+                    .iter()
+                    .filter_map(|id| catalog.artifact(id).ok())
+                    .map(|artifact| artifact.bytes)
+                    .sum();
+                eprintln!(
+                    "Installing {}: {} to download, {} on disk, into {}",
+                    chosen.id,
+                    human_bytes(
+                        catalog
+                            .source_download_bytes(chosen)
+                            .unwrap_or_else(|error| die(error, 1))
+                    ),
+                    human_bytes(installed),
+                    output
+                        .join(format!("v{}", catalog.catalog_version))
+                        .display()
+                );
+            }
             let summary = if operation == "fetch" {
                 fetch_bundle(bundle, &output, force)
             } else {
                 verify_bundle(bundle, &output)
             }
             .unwrap_or_else(|error| die(error, 1));
+            if operation == "fetch" {
+                eprintln!(
+                    "Installed and verified {} files in {}.\nNext: actinv new problem.json",
+                    summary.files.len(),
+                    summary.root
+                );
+            } else {
+                eprintln!(
+                    "Verified {} files in {}.",
+                    summary.files.len(),
+                    summary.root
+                );
+            }
             println!(
                 "{}",
                 serde_json::to_string_pretty(&summary).expect("serialise data-operation summary")
@@ -783,29 +789,133 @@ fn build_covariance(args: &[String]) {
     eprintln!("index -> {}", summary.index.display());
 }
 
+/// Where the standard bundle installs under a data root, and which of its files are absent or
+/// the wrong size there. Sizes only: `actinv data verify` checks the hashes.
+struct StandardData {
+    dir: std::path::PathBuf,
+    files: usize,
+    missing: Vec<String>,
+}
+
+fn standard_data(catalog: &crate::DataCatalog, root: &std::path::Path) -> StandardData {
+    let dir = root.join(format!("v{}", catalog.catalog_version));
+    let bundle = catalog.bundle(None).unwrap_or_else(|error| die(error, 1));
+    let missing = bundle
+        .artifacts
+        .iter()
+        .filter(|id| {
+            catalog.artifact(id).map_or(true, |artifact| {
+                std::fs::metadata(dir.join(&artifact.path))
+                    .map(|m| m.len())
+                    .ok()
+                    != Some(artifact.bytes)
+            })
+        })
+        .cloned()
+        .collect();
+    StandardData {
+        dir,
+        files: bundle.artifacts.len(),
+        missing,
+    }
+}
+
+/// The fetch command that installs the standard data where a run will look for it.
+fn fetch_hint(data_dir: Option<&str>) -> String {
+    match data_dir {
+        Some(dir) => format!("actinv data fetch --output {dir}"),
+        None => "actinv data fetch".to_string(),
+    }
+}
+
+/// `actinv doctor`: can ACTINV run here, and if not, the one thing to do next.
+fn doctor(problem: Option<&str>) {
+    println!(
+        "ACTINV {}\nWorking directory: {}\nCache override: {}",
+        env!("CARGO_PKG_VERSION"),
+        std::env::current_dir().unwrap_or_default().display(),
+        match std::env::var_os("ACTINV_CACHE_DIR") {
+            // Every cache user rejects an empty override; say so here too.
+            Some(value) if value.is_empty() => "set but empty (invalid)".to_string(),
+            Some(value) => value.to_string_lossy().into_owned(),
+            None => "platform default".to_string(),
+        }
+    );
+    match actinv_data::prepared::default_cache_root() {
+        Ok(path) => println!("Cache directory: {}", path.display()),
+        Err(error) => println!("Cache directory: {error}"),
+    }
+    let catalog = embedded_catalog().unwrap_or_else(|error| die(error, 1));
+    let root = crate::data_root().unwrap_or_else(|error| die(error, 1));
+    let from_env = std::env::var_os("ACTINV_DATA_DIR").is_some_and(|value| !value.is_empty());
+    println!(
+        "Data directory: {} ({})\nData catalog: {} (standard bundle {})",
+        root.display(),
+        if from_env {
+            "from ACTINV_DATA_DIR"
+        } else {
+            "default; set ACTINV_DATA_DIR to use another"
+        },
+        catalog.catalog_version,
+        catalog.default_bundle
+    );
+    if let Some(path) = problem {
+        let spec = Spec::from_json(
+            &crate::resolve_catalog_json(&read(path)).unwrap_or_else(|e| die(e, 2)),
+        )
+        .unwrap_or_else(|e| die(e, 2));
+        crate::workflow::check_files(&spec, false).unwrap_or_else(|e| die(e, 1));
+        println!("Input files are readable. Run `actinv validate SPEC.json --hashes` to check declared hashes.");
+        return;
+    }
+    let status = standard_data(&catalog, &root);
+    if status.missing.is_empty() {
+        println!(
+            "Standard data: installed ({} files in {}).\nReady. Next: actinv new problem.json",
+            status.files,
+            status.dir.display()
+        );
+    } else {
+        die(
+            format!(
+                "Standard data: not installed in {} (missing {}).\nNext: actinv data fetch",
+                status.dir.display(),
+                status.missing.join(", ")
+            ),
+            1,
+        );
+    }
+}
+
 /// Run the command-line interface with an explicit argv vector.
 ///
 /// The standalone binary supplies `std::env::args()`. Python console scripts must instead supply `sys.argv`, because
 /// Python's process argv also contains the interpreter and wrapper path.
 pub fn main_from(a: Vec<String>) {
     if a.len() < 2 {
-        die(USAGE, 2);
+        die(crate::help::LANDING, 2);
     }
-    if a.len() == 3 && matches!(a[2].as_str(), "--help" | "-h") {
-        match a[1].as_str() {
-            "run" => println!("usage: actinv run SPEC.json [OUT.json]\nRelative input paths use the current working directory. The solver verifies data and hashes.\nOmit OUT.json to write full JSON to stdout."),
-            "validate" => println!("usage: actinv validate SPEC.json [--schema|--files|--hashes]\nDefault: check the specification without requiring downloaded data.\n--files also checks readable input files and library indexes. --hashes also checks declared file hashes.\nEvaluated-data compatibility is checked by the solver during a run."),
-            "new" => println!("usage: actinv new OUT.json [--data-dir DIR]\nCreate the complete FNS iron example without overwriting an existing file.\nReferences default to portable catalog IDs resolved against ./actinv-data or $ACTINV_DATA_DIR; --data-dir saves absolute paths instead.\nNext: actinv data fetch, then actinv run OUT.json result.json"),
-            "doctor" => println!("usage: actinv doctor [SPEC.json]\nShow environment and check the example or supplied problem's input files."),
-            "import-fispact" => println!("{}\nConvert a FISPACT-II input deck into an actinv-spec-1 problem. The group fluxes come from --fluxes, else from the `fluxes` entry of the files file (--files, else DECK_files or files beside the deck). OUT.import.json lists every keyword with its line and a status: mapped, approximated, noted or unsupported. --strict fails when any keyword is unsupported. See docs/guide/fispact-migration.md.", crate::fispact_import::USAGE),
-            "optimize" => println!("usage: actinv optimize OPTSPEC.json [OUTDIR] [--resume]\nRun a bounded, seeded design search over an actinv-optimize-1 document.\nEvery candidate is solved through the identical run path and recorded in\nOUTDIR/optimize_ledger.jsonl (append-only); the ranked result lands in\nOUTDIR/optimize_result.json. --resume skips already-ledgered evaluations."),
-            "budget" => println!("usage: actinv budget BUDGET.json [OUT.json] [--no-verify]\nImpurity budgets for the IAEA clearance index from one coupled solve per element\n(activation at fixed flux is linear in composition). Every emitted limit is re-solved\nat that composition and compared with the prediction unless --no-verify is given.\nSee docs/BUDGET.md for the actinv-budget-1 schema."),
-            "impurities" => println!("usage: actinv impurities SPEC.json [OUT.json] [--no-verify]\nImpurity screening over declared composition ranges from one coupled solve per element:\nrankings, gradients, worst cases, limits and the Part 61 class for activity, heat, contact-dose\nproxy, clearance index and waste class at the target steps. Every reported composition is\nre-solved and compared with the prediction unless --no-verify is given (exit 3 on a miss).\nSee the impurities chapter of the handbook (docs/guide/impurities.md) for the actinv-impurities-1 schema."),
-            "waste" => println!("usage: actinv waste WASTE.json [OUT.json]\n       actinv waste budget BUDGET.json [OUT.json]\n       actinv waste budget uncertainty SPEC.json [OUT.json]\n       actinv waste bounds BOUNDS.json [OUT.json]\n       actinv waste composition COMPOSITION.json [OUT.json]\n       actinv waste composition solve SPEC.json [OUT.json]\n       actinv waste intrusion-screen SPEC.json [OUT.json]\n       actinv waste uncertainty SPEC.json [OUT.json]\n       actinv waste package SPEC.json [OUT.json]\nNominal component classification, verified class impurity budgets, impurity budgets under nuclear-data uncertainty as an order-statistic bound over sampled re-solves, conservative classification of declared activity boxes, caller-declared affine composition ranges, native solver-generated composition responses, opt-in screening against a pinned 2026 draft intrusion table, class probabilities under nuclear-data uncertainty from a sampled re-solve, and the class of one container of discrete items, with encapsulation, under the NRC concentration-averaging BTP. Draft screening is a review aid only; it does not assess dose, acceptance, or legal compliance. The probabilities are conditional on the sampled channels. The package class holds only under the readings recorded in its result and where the disposal site's licence adopts the BTP. See the public waste handbook at docs/guide/waste.md."),
-            "study" => println!("usage: actinv study validate STUDY.json\n       actinv study build STUDY.json [OUTDIR] [--revocations FILE]\n       actinv study run STUDY.json [OUTDIR] [--revocations FILE]\nValidate an actinv-study-1 document, expand it deterministically into actinv-spec-1 cases plus a manifest, or run the population and write study_record.json.\nSee docs/STUDY.md for the schema."),
-            "inspect" => println!("{}\n{}", crate::inspect::USAGE, crate::inspect::HELP),
-            "report" => println!("{}\n{}", crate::report::USAGE, crate::report::HELP),
-            _ => println!("{USAGE}\n\nSee docs/SPEC.md for format details and examples."),
+    if a[1] == "help" {
+        if a.len() > 3 {
+            die(crate::help::usage("help"), 2);
+        }
+        match a.get(2) {
+            None => println!("{}", crate::help::LANDING),
+            Some(name) => match crate::help::page(name) {
+                Some(text) => println!("{text}"),
+                None => die(crate::help::unknown(name), 2),
+            },
+        }
+        return;
+    }
+    // --help anywhere after the command shows that command's page; it is never a file name
+    if a[2..]
+        .iter()
+        .any(|arg| matches!(arg.as_str(), "--help" | "-h"))
+    {
+        match crate::help::page(&a[1]) {
+            Some(text) => println!("{text}"),
+            None => die(crate::help::unknown(&a[1]), 2),
         }
         return;
     }
@@ -895,7 +1005,7 @@ pub fn main_from(a: Vec<String>) {
         },
         "new" => {
             if a.len() != 3 && !(a.len() == 5 && a[3] == "--data-dir") {
-                die("usage: actinv new OUT.json [--data-dir DIR]", 2);
+                die(crate::help::usage("new"), 2);
             }
             let root = a.get(4).map(String::as_str).unwrap_or("actinv-data");
             let spec = crate::workflow::new_example(std::path::Path::new(root))
@@ -917,36 +1027,38 @@ pub fn main_from(a: Vec<String>) {
                 serde_json::to_string_pretty(&spec).expect("example serialization")
             )
             .unwrap_or_else(|e| die(e, 1));
-            println!("Created {} with the complete FNS iron spectrum.\nReview material and schedule, then validate and run.\nInstall data if needed: actinv data fetch --output {root}", a[2]);
+            eprintln!(
+                "Wrote {}: iron, 5 minutes at the FNS 14 MeV neutron source, then 20 cooling steps.",
+                a[2]
+            );
+            let data = match a.get(4) {
+                Some(dir) => Ok(std::path::PathBuf::from(dir)),
+                None => crate::data_root(),
+            };
+            let catalog = embedded_catalog().unwrap_or_else(|e| die(e, 1));
+            match data.map(|root| standard_data(&catalog, &root)) {
+                Ok(status) if status.missing.is_empty() => eprintln!(
+                    "Data: installed in {}.\nNext: actinv run {} result.json",
+                    status.dir.display(),
+                    a[2]
+                ),
+                Ok(status) => eprintln!(
+                    "Data: not installed in {}.\nNext: {}, then actinv run {} result.json",
+                    status.dir.display(),
+                    fetch_hint(a.get(4).map(String::as_str)),
+                    a[2]
+                ),
+                Err(e) => eprintln!("Data: {e}"),
+            }
         }
         "doctor" => {
             if a.len() > 3 {
-                die("usage: actinv doctor [SPEC.json]", 2);
+                die(crate::help::usage("doctor"), 2);
             }
-            println!(
-                "ACTINV {}\nWorking directory: {}\nCache override: {}",
-                env!("CARGO_PKG_VERSION"),
-                std::env::current_dir().unwrap_or_default().display(),
-                match std::env::var_os("ACTINV_CACHE_DIR") {
-                    // Every cache user rejects an empty override; say so here too.
-                    Some(value) if value.is_empty() => "set but empty (invalid)".to_string(),
-                    Some(value) => value.to_string_lossy().into_owned(),
-                    None => "platform default".to_string(),
-                }
-            );
-            let spec = if let Some(path) = a.get(2) {
-                Spec::from_json(
-                    &crate::resolve_catalog_json(&read(path)).unwrap_or_else(|e| die(e, 2)),
-                )
-            } else {
-                crate::workflow::new_example(std::path::Path::new("actinv-data"))
-            }
-            .unwrap_or_else(|e| die(e, 2));
-            crate::workflow::check_files(&spec, false).unwrap_or_else(|e| die(e, 1));
-            println!("Input files are readable. Run `actinv validate SPEC.json --hashes` to check declared hashes.");
+            doctor(a.get(2).map(String::as_str));
         }
         "--version" | "-V" if a.len() == 2 => println!("actinv {}", env!("CARGO_PKG_VERSION")),
-        "--help" | "-h" if a.len() == 2 => println!("{USAGE}"),
+        "--help" | "-h" if a.len() == 2 => println!("{}", crate::help::LANDING),
         "build-covariance" => build_covariance(&a[2..]),
         "build-damage" => build_damage(&a[2..]),
         "build-library" => build_library(&a[2..]),
@@ -1235,7 +1347,7 @@ pub fn main_from(a: Vec<String>) {
         }
         "mesh" => {
             if a.len() != 4 {
-                die(USAGE, 2);
+                die(crate::help::usage(&a[1]), 2);
             }
             let spec = MeshSpec::from_json(
                 &crate::resolve_catalog_json(&read(&a[2])).unwrap_or_else(|e| die(e, 2)),
@@ -1279,7 +1391,16 @@ pub fn main_from(a: Vec<String>) {
         }
         "validate" | "run" => {
             if a.len() < 3 {
-                die(USAGE, 2);
+                die(crate::help::usage(&a[1]), 2);
+            }
+            if let Some(option) = a
+                .get(3)
+                .filter(|arg| a[1] == "run" && arg.starts_with('-') && arg.as_str() != "-")
+            {
+                die(
+                    format!("unknown run option {option}\n{}", crate::help::usage("run")),
+                    2,
+                );
             }
             let profile = std::env::var_os("ACTINV_P14_PROFILE").is_some();
             let command_started = profile.then(std::time::Instant::now);
@@ -1294,10 +1415,7 @@ pub fn main_from(a: Vec<String>) {
             if a[1] == "validate" {
                 let level = a.get(3).map(String::as_str).unwrap_or("--schema");
                 if a.len() > 4 || !matches!(level, "--schema" | "--files" | "--hashes") {
-                    die(
-                        "usage: actinv validate SPEC.json [--schema|--files|--hashes]",
-                        2,
-                    );
+                    die(crate::help::usage("validate"), 2);
                 }
                 if level != "--schema" {
                     crate::workflow::check_files(&spec, level == "--hashes")
@@ -1312,7 +1430,18 @@ pub fn main_from(a: Vec<String>) {
                 return;
             }
             if a.len() > 4 {
-                die("usage: actinv run SPEC.json [OUT.json]", 2);
+                die(crate::help::usage("run"), 2);
+            }
+            // a person at a terminal is told what the silence is; scripts and pipes are not
+            let attended = {
+                use std::io::IsTerminal;
+                std::io::stderr().is_terminal()
+            };
+            if attended {
+                eprintln!(
+                    "Solving {} steps. A first run with new data also prepares a cache, so it takes longer.",
+                    spec.schedule.len()
+                );
             }
             let r = run(&spec, "cli").unwrap_or_else(|e| die(e, 1));
             // the result stays as computed; an unconverged power step is flagged on stderr only
@@ -1333,7 +1462,7 @@ pub fn main_from(a: Vec<String>) {
                 .map(|started| started.elapsed().as_secs_f64() * 1e3)
                 .unwrap_or(0.0);
             let output_started = profile.then(std::time::Instant::now);
-            if a.len() > 3 {
+            if a.len() > 3 && a[3] != "-" {
                 std::fs::write(&a[3], js)
                     .unwrap_or_else(|e| die(format!("cannot write {}: {e}", a[3]), 1));
                 eprintln!(
@@ -1344,6 +1473,9 @@ pub fn main_from(a: Vec<String>) {
                     r.ms,
                     a[3]
                 );
+                if attended {
+                    eprintln!("Next: actinv report {}", a[3]);
+                }
             } else {
                 println!("{js}");
             }
@@ -1372,7 +1504,7 @@ pub fn main_from(a: Vec<String>) {
         }
         "export-openmc" | "export-mcnp" => {
             if a.len() != 5 {
-                die(USAGE, 2);
+                die(crate::help::usage(&a[1]), 2);
             }
             let source = selected_source(&a[2], &a[3]);
             let fragment = if a[1] == "export-openmc" {
@@ -1387,7 +1519,7 @@ pub fn main_from(a: Vec<String>) {
         }
         "export-openmc-mesh" => {
             if a.len() != 5 {
-                die(USAGE, 2);
+                die(crate::help::usage(&a[1]), 2);
             }
             let step: usize = a[3]
                 .parse()
@@ -1408,7 +1540,7 @@ pub fn main_from(a: Vec<String>) {
         }
         "export-r2s" => {
             if a.len() != 5 {
-                die(USAGE, 2);
+                die(crate::help::usage(&a[1]), 2);
             }
             let step: usize = a[3]
                 .parse()
@@ -1429,7 +1561,7 @@ pub fn main_from(a: Vec<String>) {
         }
         "export-r2s-joint" => {
             if a.len() != 6 {
-                die(USAGE, 2);
+                die(crate::help::usage(&a[1]), 2);
             }
             let step: usize = a[4]
                 .parse()
@@ -1454,7 +1586,7 @@ pub fn main_from(a: Vec<String>) {
         "export-source" if a.len() >= 3 && a[2] == "alara" => {
             // actinv export-source alara R2S_SOURCE.ndjson OUT_DIR --shutdown-t-s T
             if a.len() < 5 {
-                die(USAGE, 2);
+                die(crate::help::usage(&a[1]), 2);
             }
             let out_dir = a[4].clone();
             let mut shutdown_t_s: Option<f64> = None;
@@ -1518,7 +1650,7 @@ pub fn main_from(a: Vec<String>) {
         }
         "export-source" => {
             if a.len() != 5 {
-                die(USAGE, 2);
+                die(crate::help::usage(&a[1]), 2);
             }
             let bytes = std::fs::read(&a[3])
                 .unwrap_or_else(|e| die(format!("cannot read {}: {e}", a[3]), 2));
@@ -1538,7 +1670,7 @@ pub fn main_from(a: Vec<String>) {
         "clearance" => {
             // actinv clearance INPUT STEP [--limits PATH] [--confidence T] OUT.ndjson
             if a.len() < 4 {
-                die(USAGE, 2);
+                die(crate::help::usage(&a[1]), 2);
             }
             let step: u64 = a[3]
                 .parse()
@@ -1579,7 +1711,7 @@ pub fn main_from(a: Vec<String>) {
                     }
                 }
             }
-            let out = out_path.unwrap_or_else(|| die(USAGE, 2));
+            let out = out_path.unwrap_or_else(|| die(crate::help::usage(&a[1]), 2));
             let bytes = std::fs::read(&a[2])
                 .unwrap_or_else(|e| die(format!("cannot read {}: {e}", a[2]), 2));
             let doc = actinv_core::clearance::emit_clearance(
@@ -1593,6 +1725,6 @@ pub fn main_from(a: Vec<String>) {
                 .unwrap_or_else(|e| die(format!("cannot write {out}: {e}"), 1));
             eprintln!("step {step} clearance evaluation -> {out}");
         }
-        _ => die(USAGE, 2),
+        _ => die(crate::help::unknown(&a[1]), 2),
     }
 }

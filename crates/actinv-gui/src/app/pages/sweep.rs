@@ -23,7 +23,7 @@ impl Desktop {
         heading(
             ui,
             "Sweep",
-            "Each point is a complete solver run on a generated spec — the same qualified path as a manual Run. Results stay bound to their parameters.",
+            "Vary one input over a range and see how a result responds. Every point is a full calculation, run the same way as Run.",
         );
         const AXES: [&str; 3] = [
             "Composition fraction (wt%)",
@@ -40,6 +40,7 @@ impl Desktop {
             },
         };
         ui.horizontal(|ui| {
+            ui.label("Vary");
             egui::ComboBox::from_id_salt("sweep-axis")
                 .selected_text(AXES[self.sweep.axis])
                 .show_ui(ui, |ui| {
@@ -58,10 +59,14 @@ impl Desktop {
                         self.sweep.element = elems.first().cloned().unwrap_or_default();
                     }
                     egui::ComboBox::from_id_salt("sweep-element")
-                        .selected_text(&self.sweep.element)
+                        .selected_text(crate::views::check::display_name(&self.sweep.element))
                         .show_ui(ui, |ui| {
                             for e in &elems {
-                                ui.selectable_value(&mut self.sweep.element, e.clone(), e);
+                                ui.selectable_value(
+                                    &mut self.sweep.element,
+                                    e.clone(),
+                                    crate::views::check::display_name(e),
+                                );
                             }
                         });
                 }
@@ -97,11 +102,20 @@ impl Desktop {
             ui.add(egui::DragValue::new(&mut self.sweep.lo).speed(0.05));
             ui.label("to");
             ui.add(egui::DragValue::new(&mut self.sweep.hi).speed(0.05));
-            ui.label("points");
+            ui.label(match self.sweep.axis {
+                0 => "wt%",
+                1 => "× the current flux",
+                _ => "s",
+            });
+            ui.label("in");
             ui.add(
                 egui::DragValue::new(&mut self.sweep.count)
                     .range(2..=crate::sweep::MAX_SWEEP_POINTS),
             );
+            ui.label("points");
+        });
+        ui.horizontal(|ui| {
+            ui.label("Report");
             egui::ComboBox::from_id_salt("sweep-response")
                 .selected_text(self.sweep.response.label())
                 .show_ui(ui, |ui| {
@@ -126,7 +140,7 @@ impl Desktop {
                     }
                 });
         });
-        ui.horizontal(|ui| {
+        ui.horizontal_wrapped(|ui| {
             if self.sweep.running {
                 if ui.button("Cancel sweep").clicked() {
                     if let Some(h) = &self.sweep.handle {
@@ -149,21 +163,18 @@ impl Desktop {
             {
                 self.run_sweep();
             }
-            ui.checkbox(
-                &mut self.sweep.screened,
-                "certified screening (warm cache — each point emits the P65 certificate)",
-            );
-            let live_resp = ui.add_enabled(
-                !flux_blocked || self.sweep.live,
-                egui::Checkbox::new(
-                    &mut self.sweep.live,
-                    "live (slider — solves only the newest position, certified)",
-                ),
-            );
-            ui.checkbox(
-                &mut self.sweep.frontier,
-                "frontier (activity vs heat Pareto of landed points)",
-            );
+            ui.checkbox(&mut self.sweep.screened, "Certify each point")
+                .on_hover_text("Reuses the warm cache and records a certificate for every point.");
+            let live_resp = ui
+                .add_enabled(
+                    !flux_blocked || self.sweep.live,
+                    egui::Checkbox::new(&mut self.sweep.live, "Live slider"),
+                )
+                .on_hover_text(
+                    "Solve as you drag a slider; only the newest position is solved, and certified.",
+                );
+            ui.checkbox(&mut self.sweep.frontier, "Activity–heat trade-off")
+                .on_hover_text("Plot the Pareto frontier of activity against heat over the finished points.");
             if live_resp.changed() {
                 if self.sweep.live {
                     // Entering live mode supersedes any batch sweep and

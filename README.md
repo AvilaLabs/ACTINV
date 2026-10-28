@@ -103,12 +103,9 @@ Problem files may also use portable symbolic references — `"path": "catalog:te
 installed artifact by ID and fills its declared hash from the embedded catalog. `actinv new` emits these by default;
 set `ACTINV_DATA_DIR` if your data lives somewhere other than `./actinv-data`.
 
-If you are working from the source checkout, the included iron example already uses those default paths:
-
-```bash
-actinv validate examples/fns_fe_5min.json
-actinv run examples/fns_fe_5min.json fns_fe_5min_result.json
-```
+The iron example in the source checkout, `examples/fns_fe_5min.json`, is a frozen validation input that names the
+`v1.1.0` data release. To run the same problem against the data you just installed, write it with `actinv new` as
+shown below; its `catalog:` references find whichever data release is installed.
 
 ### 3. Run a calculation
 

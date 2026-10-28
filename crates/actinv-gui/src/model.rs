@@ -17,6 +17,69 @@ pub fn decode_problem(text: &str) -> Result<Value, String> {
     serde_json::to_value(spec).map_err(|e| e.to_string())
 }
 
+/// The iron example as a new problem. On the desktop its data are `catalog:` references, as
+/// `actinv new` writes them, so it finds whatever catalog version is installed; the bundled file
+/// names the release it was frozen with. The browser never reads data and keeps the file.
+pub fn example() -> Value {
+    #[cfg(not(target_arch = "wasm32"))]
+    if let Ok(spec) = actinv_cli::workflow::new_example(Path::new("actinv-data")) {
+        if let Ok(value) = serde_json::to_value(spec) {
+            return value;
+        }
+    }
+    decode_problem(EXAMPLE).expect("bundled problem")
+}
+
+/// A duration for reading: the largest unit that keeps the number at least 1, three significant
+/// figures. Exact seconds stay available beside it wherever precision matters.
+pub fn readable_time(seconds: f64) -> String {
+    const UNITS: [(f64, &str); 6] = [
+        (365.25 * 86400., "y"),
+        (86400., "d"),
+        (3600., "h"),
+        (60., "min"),
+        (1., "s"),
+        (1e-3, "ms"),
+    ];
+    if !seconds.is_finite() || seconds <= 0. {
+        return "0 s".into();
+    }
+    let (size, unit) = UNITS
+        .iter()
+        .find(|(size, _)| seconds >= *size)
+        .copied()
+        .unwrap_or((1e-3, "ms"));
+    let value = seconds / size;
+    let digits = if value >= 100. {
+        0
+    } else if value >= 10. {
+        1
+    } else {
+        2
+    };
+    let text = format!("{value:.digits$}");
+    let text = if text.contains('.') {
+        text.trim_end_matches('0').trim_end_matches('.').to_owned()
+    } else {
+        text
+    };
+    format!("{text} {unit}")
+}
+
+/// A quantity with three significant figures in scientific notation, e.g. `1.23e9`.
+pub fn sci(value: f64) -> String {
+    if value == 0. {
+        "0".into()
+    } else {
+        format!("{value:.2e}")
+    }
+}
+
+/// Total activity of a result step, Bq/g.
+pub fn total_activity(step: &Value) -> f64 {
+    metric(step, 0, "")
+}
+
 #[cfg(not(target_arch = "wasm32"))]
 pub fn resolve_inputs(document: &Value, base: &Path) -> Result<Spec, String> {
     let mut spec = Spec::from_json(&document.to_string())?;
@@ -323,6 +386,35 @@ pub fn is_cooling(step: &Value) -> bool {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn readable_times_pick_the_unit_a_person_would() {
+        for (seconds, text) in [
+            (0., "0 s"),
+            (0.25, "250 ms"),
+            (66., "1.1 min"),
+            (300., "5 min"),
+            (3600., "1 h"),
+            (5400., "1.5 h"),
+            (86400. * 3., "3 d"),
+            (365.25 * 86400. * 10., "10 y"),
+            (365.25 * 86400. * 1234., "1234 y"),
+        ] {
+            assert_eq!(readable_time(seconds), text, "{seconds}");
+        }
+    }
+
+    #[test]
+    fn the_example_loads_as_a_problem() {
+        let example = example();
+        assert!(decode_problem(&example.to_string()).is_ok());
+        assert_eq!(example["material"]["composition"]["FE"], 100.0);
+        #[cfg(not(target_arch = "wasm32"))]
+        assert_eq!(
+            example["library"]["path"],
+            "catalog:tendl-2025-neutron-709g"
+        );
+    }
 
     #[test]
     fn numeric_editors_refuse_non_finite_text() {

@@ -8,7 +8,7 @@ actinv doctor problem.json
 actinv validate problem.json --hashes
 ```
 
-`doctor` reports the current working directory and supported input-file checks. Hash validation supplements those checks; evaluated-data compatibility is checked during a run.
+`doctor` reports the working directory, the data directory and where it came from (`ACTINV_DATA_DIR` or the default `./actinv-data`), the catalog version and the cache directory. Without a problem it reports whether the standard data are installed and, if not, the command that installs them; with one it checks that the problem's input files are readable. Hash validation supplements those checks; evaluated-data compatibility is checked during a run.
 
 | Symptom | Check and action |
 | --- | --- |

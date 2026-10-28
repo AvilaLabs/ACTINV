@@ -207,7 +207,7 @@ pub fn target_for_field(field: &str) -> Target {
         // power-driven steps pin their kerma table on the step
         "schedule" | "kerma" => Target::Schedule,
         "options" | "summary" | "outputs" | "photons" | "pathways" => Target::Outputs,
-        _ => Target::Overview,
+        _ => Target::CheckRun,
     }
 }
 
@@ -410,11 +410,11 @@ pub fn report_file_name(deck_name: &str) -> String {
 
 fn target_label(target: Target) -> &'static str {
     match target {
-        Target::Overview => "Overview & data",
+        Target::CheckRun => "Check & run",
         Target::Material => "Material",
         Target::Schedule => "Irradiation & cooling",
-        Target::Spectrum => "Spectrum",
-        Target::Outputs => "Outputs",
+        Target::Spectrum => "Source & spectrum",
+        Target::Outputs => "What to compute",
     }
 }
 
@@ -442,7 +442,7 @@ fn slot_row(
         }
     }
     ui.horizontal(|ui| {
-        if ui.button("Choose...").clicked() {
+        if ui.button("Choose…").clicked() {
             *action = ImportAction::Choose(which);
         }
         ui.weak(note);
@@ -714,7 +714,7 @@ pub fn spectrum_line(report: &Value) -> String {
         spectrum["groups"].as_u64().unwrap_or(0)
     );
     if let Some(total) = spectrum["total_cm2_s"].as_f64() {
-        line += &format!(", total {total:.3e} /cm2/s");
+        line += &format!(", total {total:.3e} particles/cm²/s");
     }
     if let Some(wall) = spectrum["wall_loading_mw_m2"].as_f64() {
         line += &format!(", wall loading {wall} MW/m2");
@@ -962,8 +962,8 @@ mod tests {
         assert_eq!(target_for_field("schedule[0].flux"), Target::Schedule);
         assert_eq!(target_for_field("options.outputs"), Target::Outputs);
         assert_eq!(target_for_field("summary.min_atoms"), Target::Outputs);
-        assert_eq!(target_for_field("library.path"), Target::Overview);
-        assert_eq!(target_for_field(""), Target::Overview);
+        assert_eq!(target_for_field("library.path"), Target::CheckRun);
+        assert_eq!(target_for_field(""), Target::CheckRun);
         // the importer's own report for a POWER deck with no DENSITY
         let done = convert_deck(&slot("p.i", POWER_DECK), Some(&fluxes_709()), None).unwrap();
         let fields: Vec<(&str, Target)> = done

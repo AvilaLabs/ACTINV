@@ -9,21 +9,49 @@ use egui_plot::{Line, Plot};
 use serde_json::json;
 use std::{sync::mpsc, time::Instant};
 
+/// Projectiles the picker offers. Triton, helion and alpha stay in the JSON; a document that
+/// already carries one shows it read-only.
+const PROJECTILES: [&str; 4] = ["neutron", "proton", "deuteron", "gamma"];
+
 impl Desktop {
     pub(super) fn spectrum(&mut self, ui: &mut egui::Ui) {
         let accent = crate::visuals::accent(ui);
         heading(
             ui,
-            "Incident spectrum",
-            "Review group values and explicitly choose the normalization used by the solver.",
+            "Source & spectrum",
+            "The particle that irradiates the material and its energy spectrum. Normalization is always explicit.",
         );
+        ui.horizontal(|ui| {
+            ui.label("Projectile");
+            let p = self.document["projectile"]
+                .as_str()
+                .unwrap_or("neutron")
+                .to_owned();
+            if PROJECTILES.contains(&p.as_str()) {
+                egui::ComboBox::from_id_salt("projectile")
+                    .selected_text(&p)
+                    .show_ui(ui, |ui| {
+                        for v in PROJECTILES {
+                            if ui.selectable_label(p == v, v).clicked() {
+                                self.document["projectile"] = v.into();
+                            }
+                        }
+                    });
+            } else {
+                ui.label(format!("{p} (set in Advanced JSON)"));
+            }
+        });
+        if self.document["projectile"].as_str().unwrap_or("neutron") != "neutron" {
+            ui.label("Charged-particle and photonuclear problems need a library for that projectile (chosen on Check & run) and a temperature of 0 K.");
+        }
+        ui.add_space(8.);
         let r=ui.scope(|ui|{
             ui.horizontal(|ui|{ui.label("Group structure");text_field(ui,&mut self.document["spectrum"]["structure"]);});
-            let mut normalized=self.document["spectrum"]["total"].is_number();if ui.checkbox(&mut normalized,"Normalize group values to a total flux (particles / cm^2 / s)").changed(){if normalized{self.document["spectrum"]["total"]=json!(1e12);}else{self.document["spectrum"].as_object_mut().unwrap().remove("total");}}
-            if normalized {numeric(ui,&mut self.document["spectrum"]["total"],1e10);}else{ui.label("Group values are absolute group fluxes (particles / cm^2 / s).");}
+            let mut normalized=self.document["spectrum"]["total"].is_number();if ui.checkbox(&mut normalized,"Normalize group values to a total flux (particles/cm²/s)").changed(){if normalized{self.document["spectrum"]["total"]=json!(1e12);}else{self.document["spectrum"].as_object_mut().unwrap().remove("total");}}
+            if normalized {numeric(ui,&mut self.document["spectrum"]["total"],1e10);}else{ui.label("Group values are absolute group fluxes (particles/cm²/s).");}
             let mut descending=self.document["spectrum"]["descending"].as_bool().unwrap_or(false);if ui.checkbox(&mut descending,"Input groups are highest-energy first").changed(){self.document["spectrum"]["descending"]=descending.into();}
             let points:Vec<[f64;2]>=self.document["spectrum"]["flux_per_group"].as_array().map(|a|a.iter().enumerate().map(|(i,v)|[i as f64+1.,model::number(v)]).collect()).unwrap_or_default();
-            Plot::new("incident").height(260.).allow_scroll(false).x_axis_label("Input group index").y_axis_label(if normalized{"Relative group weight"}else{"Group flux / cm^2 / s"}).show(ui,|p|p.line(Line::new("Incident spectrum",points).color(accent)));
+            Plot::new("incident").height(260.).allow_scroll(false).x_axis_label("Input group index").y_axis_label(if normalized{"Relative group weight"}else{"Group flux (particles/cm²/s)"}).y_axis_formatter(|mark,_|crate::visuals::compact_number(mark.value)).show(ui,|p|p.line(Line::new("Incident spectrum",points).color(accent)));
             ui.collapsing("Edit group values",|ui|{if let Some(values)=self.document["spectrum"]["flux_per_group"].as_array_mut(){egui::ScrollArea::vertical().max_height(200.).show_rows(ui,28.,values.len(),|ui,range|{for i in range {ui.horizontal(|ui|{ui.label(format!("Group {}",i+1));numeric(ui,&mut values[i],1.);});}});}});
             ui.label("Custom boundaries and optional photon, uncertainty, or response settings are available in Advanced JSON.");
             ui.collapsing("Import or paste group values", |ui| {
