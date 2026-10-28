@@ -1,6 +1,6 @@
 # Command line
 
-The `actinv` command is included with the Python package or can be installed independently with Rust. Run `actinv --version` to identify your executable and `actinv help` to see its commands, grouped by task. `actinv help COMMAND`, or `--help` anywhere after a command, prints that command's page: what it answers, its usage, an example, where its output goes and its exit codes. The established examples here cover 1.6.1; the waste commands are documented separately in [Component waste classes and impurity limits](waste.md).
+The `actinv` command is included with the Python package or can be installed independently with Rust. Run `actinv --version` to identify your executable and `actinv help` to see its commands, grouped by task. `actinv help COMMAND`, or `--help` anywhere after a command, prints that command's page: what it answers, its usage, an example, where its output goes and its exit codes. The established examples here cover 1.7.0; the waste commands are documented separately in [Component waste classes and impurity limits](waste.md).
 
 The native waste composition workflow is `actinv waste composition solve
 SPEC.json [OUT.json]`. It runs the bounded pure-element basis and every

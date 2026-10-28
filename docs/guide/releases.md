@@ -4,11 +4,24 @@ Software, nuclear data, and desktop packages have separate release histories. Re
 
 | Component | Version covered here | Release |
 | --- | --- | --- |
-| CLI, Python, and Rust workspace | 1.6.1 | [v1.6.1](https://github.com/AvilaLabs/ACTINV/releases/tag/v1.6.1) |
-| Embedded nuclear-data catalog | 1.1.0 | [data-v1.1.0](https://github.com/AvilaLabs/ACTINV/releases/tag/data-v1.1.0) |
-| Desktop preview | 0.5.0-preview.1, using solver 1.6.1 | [desktop preview](https://github.com/AvilaLabs/ACTINV/releases/tag/desktop-v0.5.0-preview.1) |
+| CLI, Python, and Rust workspace | 1.7.0 | [v1.7.0](https://github.com/AvilaLabs/ACTINV/releases/tag/v1.7.0) |
+| Embedded nuclear-data catalog | 1.2.0 | [data-v1.2.0](https://github.com/AvilaLabs/ACTINV/releases/tag/data-v1.2.0) |
+| Desktop preview | 0.6.0-preview.1, using solver 1.7.0 | [desktop preview](https://github.com/AvilaLabs/ACTINV/releases/tag/desktop-v0.6.0-preview.1) |
 
 Use `actinv --version` for the executable. `actinv data manifest` prints its embedded catalog. Source-built desktop candidates may use a newer solver than the published preview; inspect their package/build record.
+
+## New in 1.7.0
+
+Release 1.7.0 adds impurity screening for fusion materials (`actinv impurities`), a damage table in the data catalog
+(1.2.0) so that dpa, exact NRT dpa, arc-dpa and He/dpa need no table to build, FISPACT-II parity additions
+(estimated photon spectra, fission-yield and uncertainty keywords in `actinv import-fispact`, and
+`actinv build-damage --method kinematic`), `actinv new --material` with a cited material library and standard spectra,
+and `actinv report --format html`. The desktop 0.6.0-preview.1 reaches most of the command line: an Export page, and
+pages for impurity screens, certification, optimization, comparison, waste questions, transport meshes and
+measurements; the browser sets these up and opens two results solved ahead of time. The pathway closure no longer
+counts noise-level populations, and `actinv decide` computes the measurement-design blocks it used to leave null. See [What's new in 1.7](whats-new-1.7.md), the
+[1.7.0 release notes](https://github.com/AvilaLabs/ACTINV/blob/master/docs/RELEASE_NOTES_v1.7.0.md) and the
+[desktop 0.6.0-preview.1 notes](https://github.com/AvilaLabs/ACTINV/blob/master/docs/releases/desktop-v0.6.0-preview.1.md).
 
 ## New in 1.6.1
 
@@ -44,12 +57,14 @@ python -m pip install --upgrade actinv
 For an exact Rust CLI version:
 
 ```bash
-cargo install --locked --force actinv-cli --version 1.6.1
+cargo install --locked --force actinv-cli --version 1.7.0
 ```
 
 A software upgrade does not silently replace installed data. Revisit optional settings and coverage when a release changes their behavior, and retain the executable or source version for older results.
 
 ## Changes that may affect earlier results
+
+The [1.7.0 release notes](https://github.com/AvilaLabs/ACTINV/blob/master/docs/RELEASE_NOTES_v1.7.0.md) list the two default-result changes: `pathway_closure` counts only populations above 1e-12 of the step's largest, so the quick start reports 3.9e-15 instead of 4.117, and `actinv decide` computes the `design.top_reactions` blocks it reported as `ill_conditioned`. [Results that may change](whats-new-1.7.md#results-that-may-change) has the detail.
 
 The [1.6.0 release notes](https://github.com/AvilaLabs/ACTINV/blob/master/docs/RELEASE_NOTES_v1.6.0.md) describe the one default-result change: the new rate-pruning rule keeps or drops a few different noise-level nuclides, and the ledger's `rate_pruning` fields are renamed and extended. [Results that may change](whats-new-1.6.md#results-that-may-change) gives the measured effect.
 

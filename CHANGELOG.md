@@ -1,6 +1,97 @@
 # Changelog
 
-## Unreleased
+## v1.7.0 — 2026-10-29
+
+ACTINV 1.7.0 adds impurity screening for fusion materials (`actinv impurities`): which impurities of an alloy matter, at
+which cooling times, and how much of each can be tolerated, with optional bounds over the nuclear-data uncertainty
+(P158). The data catalog now ships a damage table, so dpa works with
+no setup, and the FISPACT-II parity additions P152-P155 extend photon, fission-yield, uncertainty and damage handling.
+The desktop and browser app is reorganised into numbered steps and now reaches most of the command line: new problems
+from a cited material library and standard spectra (P162), Export, Impurities, Certify, Optimize, Compare, four waste
+questions, Mesh & transport and Measurements pages, and results solved ahead of time in the browser.
+
+**Added (desktop and browser app, presentation only; results unchanged)**
+
+- The app is organised as numbered steps: Start, then five setup steps (Material, Irradiation & cooling, Source &
+  spectrum, What to compute, Check & run) ticked as they become ready, with Summary first among the result pages.
+  Guided tours cover setup and results; numbers and times are readable across pages; empty pages say what to do next.
+- A new **Export** page saves, into a new folder (desktop) or one zip (browser): a report page `report.html` to read,
+  share or print (the problem in sentences, activity, decay heat, contact dose and damage at shutdown and round cooling
+  times, charts, what dominates, plain-language caveats, the waste classes when classified), SVG charts, the FISPACT-II
+  style tables of `actinv report` in CSV, TSV, Markdown or text for all steps or one, and `result.json`/`problem.json`.
+  The result bar is Open result…, Compare with…, Save result…, Export…; the inventory CSV button is replaced by Export.
+- A new **Impurities** page, under Studies, sets up an impurity screen from the open problem (balance, fixed and
+  impurity elements with their ranges, the steps, the endpoints with optional limits, the waste class to meet, and
+  optional nuclear-data uncertainty with the number of calculations it takes), runs it with verification on the
+  desktop, and reads results: each endpoint's worst case, largest contributor and tightest limit, and per step every
+  impurity's contribution, nuclides and limits, with the bounds beside them. The browser sets up screens and reads
+  results but does not run them.
+- The sidebar groups pages as Start, Set up, Results, Studies and Tools; Studies and Tools fold away. **Start** asks
+  what you want to find out and opens the page that answers each question.
+- **New problem** opens an empty problem, and three cards fill it: a library material on Material (19 cited
+  compositions, P162), a standard spectrum at the flux you type on Source & spectrum (D-T fusion, Watt fission,
+  thermal Maxwellian, 1/E), and a standard schedule on Irradiation & cooling.
+- **Check & run** lists every setting changed from its default, each with an Edit button. Nuclear-data paths and
+  installation move to a new **Data** page under Tools, with **Verify the data** (every installed file against the
+  catalog) and the commands that build your own libraries. Validate and Run show their outcome in a chip beside the
+  buttons, and Run reads Running… N s while it works.
+- **Certify** (`actinv decide`) checks limits at the edge of the nuclear-data band and ranks the measurements that would
+  narrow the answer; **Optimize** (`actinv optimize`) searches up to 6 varied things for the best value of one quantity
+  under limits; **Compare** (`actinv study run`) ranks up to 200 combinations of library materials, standard spectra
+  and irradiation lengths. Optimize and Compare show their progress.
+- **Waste class** asks which waste question you have: the class of this result, with the draft intrusion screen
+  (`actinv waste`, `waste intrusion-screen`); the class of a container of items (`waste package`); every class
+  reachable when activities are ranges (`waste bounds`); and how sure the class is (`waste uncertainty`).
+- **Mesh & transport** imports a transport flux tally (OpenMC, MCNP meshtal or mctal, FISPACT-II, `actinv
+  import-flux`), activates every cell with optional bands and resume (`actinv mesh`), writes the shutdown-dose source
+  for OpenMC, MCNP, Serpent or ALARA (`export-r2s`, `export-r2s-joint`, `export-source`, `export-openmc-mesh`) and checks
+  which cells clear their limits (`actinv twin`); any cell opens on the result pages. **Export** also writes a step's
+  decay photons as an OpenMC or MCNP source (`export-openmc`, `export-mcnp`).
+- **Measurements** replaces Assimilation. It fits the irradiation flux to measured activities (`actinv reverse`, or
+  `reverse-qualified` with the nuclear-data uncertainty) and puts the fitted flux into the schedule, or narrows the
+  loaded result's bands with a measured value. What to compute gains **Unmodeled error**, with **Estimate from library
+  disagreement** (`actinv eval-spread`, over the responses that carry bands).
+- The browser's Start page opens two results solved ahead of time with 1.7.0 (the iron example, and an impurity screen
+  of a reduced-activation steel), served beside the app with a manifest of their version and SHA-256
+  (`scripts/web_examples.py`). Small windows: content stays within the window, Start cards wrap, and the desktop toolbar
+  wraps instead of covering Run.
+
+**Added (P162: a material library and standard spectra; existing commands unchanged)**
+
+- `actinv new OUT.json --material ID --source SHAPE --flux F [--irradiate DURATION]` writes 1 g of a library material
+  under a standard spectrum at total flux F, irradiated for DURATION (default 1 y) and cooled to 1 h, 1 d, 30 d, 1 y and
+  10 y; `actinv new --list` prints the materials and shapes. The library (`crates/actinv-core/data/materials-v1.json`)
+  has 19 cited compositions, each marked as nominal, specification maxima or a measured heat, with its density and a
+  note naming the trace elements it leaves out. The shapes (`fusion-14mev`, `fission`, `thermal`, `one-over-e`) are
+  computed on the 709-group structure and agree with their analytic integrals to 6e-14.
+
+**Fixed (P164)**
+
+- The measurement-design report (`design.top_reactions`) solved each covariance block by Cholesky factorisation, which
+  fails on the positive semi-definite blocks MF=33 often gives, so `actinv decide examples/decide/decision.json`
+  reported every block, Fe-56 included, as `ill_conditioned` and ranked the nulls as zero (Ca-43 to Ca-47 first). The
+  solve is now a pseudo-inverse with a range check, and computed blocks rank before uncomputed ones. Values of blocks
+  the old solve computed are unchanged to 1e-12; no other field, band, verdict or nominal result changes.
+
+**Added (CLI)**
+
+- `actinv report RESULT.json --format html [--problem PROBLEM.json] [--out DIR]` writes the same report page, and with
+  `--out` one SVG per chart beside `report.html`; `--tables`, `--step` and `--nuclides` are refused with `html`. Bare
+  `actinv` and `actinv help` group commands by task.
+- `examples/export_r2s` gives its flux mesh cell bounds, so its `export-source` commands run.
+
+**Fixed (P161)**
+
+- `pathway_closure` counts only populations above 1e-12 of the step's largest, the noise cut the code already applied
+  to nuclides without chains. Residues of the rational decay approximation had made the quick start
+  (`examples/fns_fe_5min.json`) report 4.117 (Mn-58 at 2.7e-28 atoms/g); it now reports 3.9e-15, and no other result
+  field changes. The Pathways page shows the selected nuclide's own coverage and describes `pathway_closure` as
+  whole-result.
+
+**Fixed (P157 Amendment A)**
+
+- `examples/impurities_ra_steel/base_spec.json` names its photon response `photon-response/nist-xcom-all.json`, a file
+  the user builds with `scripts/build_photon_response.py`; no data catalog ships it.
 
 **Changed (CLI)**
 

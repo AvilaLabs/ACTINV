@@ -1,14 +1,14 @@
 {
   "schema": "actinv-web-examples-1",
-  "actinv_version": "1.6.1",
+  "actinv_version": "1.7.0",
   "files": {
     "iron-result.json": {
       "command": "actinv run examples/fns_fe_5min.json iron-result.json",
-      "sha256": "7a7e9679bba5d032d07083e8b32c54e091dfdf6da694155da5887e7088fc05a7"
+      "sha256": "084f897c8d46681f4c51f4a190cb3829ebdd05df306655178a63a84cb8fea9d0"
     },
     "impurities-result.json": {
       "command": "actinv impurities examples/impurities_ra_steel/impurities.json impurities-result.json",
-      "sha256": "47b7bd71f555d544568ae8a18856793cfd459edf3f388154457fd889ef707bfd"
+      "sha256": "75046cd390fb7c9268ec4cf1492f725fe20f238505cb0ca2d9a1879354c59d73"
     }
   }
 }

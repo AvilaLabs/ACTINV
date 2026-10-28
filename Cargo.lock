@@ -15,7 +15,7 @@ dependencies = [
 
 [[package]]
 name = "actinv-cli"
-version = "1.6.1"
+version = "1.7.0"
 dependencies = [
  "actinv-core",
  "actinv-data",
@@ -30,7 +30,7 @@ dependencies = [
 
 [[package]]
 name = "actinv-core"
-version = "1.6.1"
+version = "1.7.0"
 dependencies = [
  "actinv-data",
  "hdf5-pure",
@@ -44,7 +44,7 @@ dependencies = [
 
 [[package]]
 name = "actinv-data"
-version = "1.6.1"
+version = "1.7.0"
 dependencies = [
  "flate2",
  "libm",
@@ -58,7 +58,7 @@ dependencies = [
 
 [[package]]
 name = "actinv-gui"
-version = "0.5.0-preview.1"
+version = "0.6.0-preview.1"
 dependencies = [
  "actinv-cli",
  "actinv-core",

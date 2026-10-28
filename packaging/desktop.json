@@ -1,7 +1,7 @@
 {
   "name": "actinv-desktop",
   "productName": "ACTINV",
-  "version": "0.5.0-preview.1",
+  "version": "0.6.0-preview.1",
   "identifier": "com.avilalabs.actinv",
   "publisher": "Avila Labs",
   "authors": [
