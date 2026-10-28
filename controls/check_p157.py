@@ -245,11 +245,12 @@ CASE_DEFS = {
         "balance": "V", "density": 6.1, "nuclide": "Nb94", "matrix": {"Cr": 4.0, "Ti": 4.0},
         "impurities": {"Nb": rng(0.005, 0.001, 0.01), "Mo": rng(0.005, 0.001, 0.01), "Al": rng(0.01, 0.002, 0.03),
                        "Si": rng(0.05, 0.01, 0.1), "Cu": rng(0.005, 0.001, 0.01), "Co": rng(0.002, 0.0005, 0.005)}},
-    # reduced RA steel that `waste composition solve` accepts (8 qualified elements); waste endpoints only
+    # reduced RA steel that `waste composition solve` accepts (7 qualified elements; 5 impurities, so at most 2^5 + 1
+    # distinct witness compositions of its 64); waste endpoints only
     "ra_reduced": {
         "balance": "Fe", "density": 7.8, "nuclide": "Nb94", "matrix": {"Cr": 9.0}, "waste_only": True,
         "impurities": {"Co": rng(0.005, 0.001, 0.01), "Ni": rng(0.005, 0.001, 0.01), "Nb": rng(0.001, 0.0002, 0.003),
-                       "Mo": rng(0.005, 0.001, 0.01), "Cu": rng(0.005, 0.001, 0.01), "Al": rng(0.01, 0.002, 0.02)}},
+                       "Mo": rng(0.005, 0.001, 0.01), "Al": rng(0.01, 0.002, 0.02)}},
 }
 LINEAR = ("activity.total", "heat.total", "clearance_index")
 
@@ -1579,6 +1580,8 @@ def qualifies_composition_solve(case):
         return f"elements not among the 26 qualified: {bad}"
     if len(case.targets) > 4:
         return "more than 4 targets"
+    if 2 ** len(case.imps) + 1 > 64:
+        return f"{len(case.imps)} impurities (up to 2^n + 1 distinct witness compositions, limit 64)"
     if case.base.get("photon"):
         return "non-default photon section in the base spec"
     return None
@@ -2244,7 +2247,8 @@ def self_check():
     clr = Clearance()
     expect(clr.index({"H3": 50.0, "Ag110m1": 1.0}) > 0.0 and nuc_key("Ag-110m") in clr.limits, "clearance table")
     expect(clr.limits[nuc_key("H-3")] == 100.0, "clearance H-3")
-    cases_ok = all(len(d["impurities"]) >= 6 for d in CASE_DEFS.values())
+    cases_ok = all(len(d["impurities"]) >= 6 for k, d in CASE_DEFS.items() if k != "ra_reduced") and \
+        2 ** len(CASE_DEFS["ra_reduced"]["impurities"]) + 1 <= 64
     expect(cases_ok and len(CASE_DEFS["ra_steel"]["impurities"]) == 8, "case definitions")
     expect(all(lo <= nom <= hi for d in CASE_DEFS.values() for (nom, lo, hi) in norm_imps(d["impurities"]).values()),
            "ranges ordered")

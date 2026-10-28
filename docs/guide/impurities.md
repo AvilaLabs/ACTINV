@@ -39,7 +39,7 @@ The document `impurities.json` uses the schema `actinv-impurities-1`:
  "targets": [2, 3, 4, 5],
  "endpoints": [
   {"endpoint": "activity.total"},
-  {"endpoint": "heat.total", "limit": 1e-3},
+  {"endpoint": "heat.total", "limit": 1.4e-2},
   {"endpoint": "dose.contact_proxy"},
   {"endpoint": "activity:Nb94", "limit": 100.0},
   {"endpoint": "clearance_index"},
@@ -80,13 +80,41 @@ The command refuses, and writes nothing, when the response would not be linear i
 
 ## Read the result
 
-The result `actinv-impurities-result-1` holds, for each target step, one entry per endpoint.
+The result `actinv-impurities-result-1` holds, for each target step, one entry per endpoint. From the repository
+root, with the data installed:
 
 ```sh
-actinv impurities impurities.json impurities-result.json
+actinv impurities examples/impurities_ra_steel/impurities.json impurities-result.json
 ```
 
-<!-- P157: excerpt from a fresh run -->
+Output, the cobalt entry of `activity.total` at step 2 (1 d of cooling), in Bq/g:
+
+```text
+            "Co": {
+              "contribution_at_max": 310378679.26071066,
+              "contribution_nominal": 155189339.63035533,
+              "gradient_per_wt_pct": 31037867926.071064,
+              "max_wt_pct": 0.01,
+              "min_wt_pct": 0.0,
+              "nominal_wt_pct": 0.005,
+              "top_nuclides": [
+                [
+                  "Co58",
+                  165792519.95582134
+                ],
+                [
+                  "Co58m1",
+                  17348137.37118505
+                ],
+                [
+                  "Fe59",
+                  10081400.746684032
+                ]
+              ]
+            },
+```
+
+Cobalt at its nominal 0.005 wt% adds 1.6e8 Bq/g at one day, mostly Co-58 made by (n,2n) on Co-59.
 
 For a scalar endpoint the entry gives:
 
@@ -96,13 +124,47 @@ For a scalar endpoint the entry gives:
 - `impurities.<element>`: the `gradient_per_wt_pct` at nominal, the `contribution_nominal` (the endpoint at nominal
   minus the endpoint with that impurity removed and the balance element taking its place), the `contribution_at_max`
   (the impurity at its range maximum against removed, the others at nominal) and the `top_nuclides` behind the
-  contribution. `ranking` lists the impurities by contribution at nominal. `top_nuclides` is `null` for
-  `heat.total`, which the run does not resolve by nuclide.
+  contribution: the three largest per-nuclide shares of the contribution's sign. For an impurity that lowers the
+  endpoint, they are the balance element's nuclides it displaces. `ranking` lists the impurities by contribution
+  at nominal. `top_nuclides` is `null` for `heat.total`, which the run does not resolve by nuclide.
 - With a `limit`: `limits.alone` (the impurity is the only one present), `limits.others_at_nominal` and
   `limits.others_at_worst` (the others at their worst-case values), each with a `wt_pct` and a `status`, and `joint_k`,
   the factor by which every impurity's nominal weight can be scaled to reach the limit.
 
-<!-- P157: excerpt from a fresh run -->
+```sh
+actinv impurities examples/impurities_ra_steel/impurities.json impurities-result.json
+```
+
+Output, the cobalt entry of `heat.total` at step 2, in W/g against the 1.4e-2 W/g limit:
+
+```text
+            "Co": {
+              "contribution_at_max": 0.00005761499161947032,
+              "contribution_nominal": 0.00002880749580973516,
+              "gradient_per_wt_pct": 0.005761499161947032,
+              "limits": {
+                "alone": {
+                  "status": "limit",
+                  "wt_pct": 0.06871907545895065
+                },
+                "others_at_nominal": {
+                  "status": "limit",
+                  "wt_pct": 0.06435931557971897
+                },
+                "others_at_worst": {
+                  "status": "limit",
+                  "wt_pct": 0.04183787399387127
+                }
+              },
+              "max_wt_pct": 0.01,
+              "min_wt_pct": 0.0,
+              "nominal_wt_pct": 0.005,
+              "top_nuclides": null
+            },
+```
+
+With the other impurities at nominal, cobalt may rise to 0.064 wt% before the steel's heat one day after shutdown
+reaches the limit; with the others at their worst case, to 0.042 wt%.
 
 A status is `limit` (the number exists), `no response` (the impurity does not raise the endpoint, or the limit lies
 beyond what the balance element can give up) or `infeasible` (the other constituents alone already reach the limit).
@@ -112,7 +174,60 @@ The `summary` gives, for each endpoint, the `tightest_limit` of each impurity ac
 binds it, the impurities `ranking` by their largest contribution across targets, and the `worst` value or class
 across targets.
 
-<!-- P157: excerpt from a fresh run -->
+```sh
+actinv impurities examples/impurities_ra_steel/impurities.json impurities-result.json
+```
+
+Output, the tightest `heat.total` limits with the others at nominal, from `summary`:
+
+```text
+        "others_at_nominal": {
+          "Ag": {
+            "status": "limit",
+            "step": 2,
+            "wt_pct": 0.12560332896898269
+          },
+          "Al": {
+            "status": "limit",
+            "step": 2,
+            "wt_pct": 0.1378665895018817
+          },
+          "Co": {
+            "status": "limit",
+            "step": 2,
+            "wt_pct": 0.06435931557971897
+          },
+          "Cu": {
+            "status": "limit",
+            "step": 2,
+            "wt_pct": 2.073400347459034
+          },
+          "Mo": {
+            "status": "limit",
+            "step": 2,
+            "wt_pct": 0.8845944427497271
+          },
+          "N": {
+            "status": "no response",
+            "step": null,
+            "wt_pct": null
+          },
+          "Nb": {
+            "status": "limit",
+            "step": 2,
+            "wt_pct": 0.1891269323069253
+          },
+          "Ni": {
+            "status": "limit",
+            "step": 2,
+            "wt_pct": 0.16134111838932721
+          }
+        },
+```
+
+Every heat limit binds at one day of cooling, where the iron, chromium and manganese products still dominate.
+Nitrogen gives no response. In place of iron it lowers the heat up to 10 y, and at 100 y the limit lies beyond what
+the balance element can give up.
 
 ### The waste class
 
@@ -122,7 +237,33 @@ at its own corner and the class is read from the maximised sums. That is a conse
 decreases when a sum increases. The impurities' class limits are those `actinv waste budget` gives, in
 `summary.<endpoint>.impurity_class_limits`; an open boundary is a supremum, not an attained maximum.
 
-<!-- P157: excerpt from a fresh run -->
+```sh
+actinv impurities examples/impurities_ra_steel/impurities.json impurities-result.json
+```
+
+Output, the start of the `waste_class:C` entry's `worst_case` at step 2:
+
+```text
+          "worst_case": {
+            "binding": {
+              "column": null,
+              "constraint": "table_1",
+              "corner": {
+                "Ag": "max",
+                "Al": "max",
+                "Co": "max",
+                "Cu": "max",
+                "Mo": "max",
+                "N": "max",
+                "Nb": "max",
+                "Ni": "max"
+              },
+              "normalized_sum_max": 0.7039397258233535,
+```
+
+With every impurity at its maximum, the Table 1 sum reaches 0.70 of its Class C limit, so the steel stays Class C
+over the declared ranges. The entry's `ranking` names the impurities behind it: nitrogen (C-14), then molybdenum and
+niobium (Nb-94).
 
 ## What to keep in mind
 

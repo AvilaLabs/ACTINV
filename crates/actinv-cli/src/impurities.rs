@@ -512,6 +512,14 @@ pub struct ScalarResult {
     pub joint: Option<Limit>,
 }
 
+/// Whether an impurity's nominal contribution is below zero.
+fn negative_at(res: &ScalarResult, element: &str) -> bool {
+    res.impurities
+        .get(element)
+        .and_then(|r| r.contribution_nominal)
+        .is_some_and(|c| c < 0.0)
+}
+
 fn sub(a: Option<f64>, b: Option<f64>) -> Option<f64> {
     Some(a? - b?)
 }
@@ -769,12 +777,14 @@ pub fn ranking(result: &ScalarResult) -> Vec<String> {
     v.into_iter().map(|(e, _)| e.clone()).collect()
 }
 
-/// The largest per-nuclide shares of an impurity's linear contribution `w (p_i - p_balance) / 100`.
+/// The largest per-nuclide shares of an impurity's linear contribution `w (p_i - p_balance) / 100`
+/// of the contribution's sign (`negative` for a contribution below zero).
 pub fn top_linear(
     parts: &BTreeMap<String, BTreeMap<String, f64>>,
     balance: &str,
     element: &str,
     weight: f64,
+    negative: bool,
 ) -> Vec<(String, f64)> {
     let empty = BTreeMap::new();
     let pi = parts.get(element).unwrap_or(&empty);
@@ -788,12 +798,17 @@ pub fn top_linear(
             (n.clone(), weight * (a - b) / 100.0)
         })
         .collect();
-    top_of(values)
+    top_of(values, negative)
 }
 
-fn top_of(values: BTreeMap<String, f64>) -> Vec<(String, f64)> {
-    let mut v: Vec<(String, f64)> = values.into_iter().filter(|(_, x)| *x > 0.0).collect();
-    v.sort_by(|a, b| b.1.total_cmp(&a.1).then(a.0.cmp(&b.0)));
+/// The shares behind a contribution: the largest positive ones, or for a negative contribution the
+/// most negative ones (the nuclides the impurity's balance displacement removes), by magnitude.
+fn top_of(values: BTreeMap<String, f64>, negative: bool) -> Vec<(String, f64)> {
+    let mut v: Vec<(String, f64)> = values
+        .into_iter()
+        .filter(|(_, x)| if negative { *x < 0.0 } else { *x > 0.0 })
+        .collect();
+    v.sort_by(|a, b| b.1.abs().total_cmp(&a.1.abs()).then(a.0.cmp(&b.0)));
     v.truncate(TOP_NUCLIDES);
     v
 }
@@ -1092,7 +1107,12 @@ impl DoseModel<'_> {
 
     /// Per-nuclide contribution of an impurity to the proxy: the nominal composition's nuclide
     /// proxies minus those with the impurity removed.
-    fn top_nuclides(&self, frame: &Frame, element: &str) -> Option<Vec<(String, f64)>> {
+    fn top_nuclides(
+        &self,
+        frame: &Frame,
+        element: &str,
+        negative: bool,
+    ) -> Option<Vec<(String, f64)>> {
         let nominal = frame.nominal();
         let with = self.proxy(&frame.comp(&nominal).ok()?).by_nuclide_Gy_h;
         let without = self
@@ -1102,7 +1122,7 @@ impl DoseModel<'_> {
             .iter()
             .map(|(n, v)| (n.clone(), v - without.get(n).copied().unwrap_or(0.0)))
             .collect();
-        Some(top_of(diff))
+        Some(top_of(diff, negative))
     }
 }
 
@@ -1922,7 +1942,10 @@ pub fn run_impurities_doc(text: &str, dir: &Path, verify: bool) -> Result<Value,
                     let res = analyse_scalar(&frame, &Evaluator::General(&f), ep.limit)?;
                     let mut top = BTreeMap::new();
                     for e in frame.imps.keys() {
-                        top.insert(e.clone(), model.top_nuclides(&frame, e));
+                        top.insert(
+                            e.clone(),
+                            model.top_nuclides(&frame, e, negative_at(&res, e)),
+                        );
                     }
                     let mut reasons: BTreeMap<&'static str, String> = BTreeMap::new();
                     let probes: [(&'static str, Option<Comp>); 3] = [
@@ -1968,7 +1991,15 @@ pub fn run_impurities_doc(text: &str, dir: &Path, verify: bool) -> Result<Value,
                         let resolved = parts.values().any(|p| !p.is_empty());
                         top.insert(
                             e.clone(),
-                            resolved.then(|| top_linear(&parts, &frame.balance, e, range.nominal)),
+                            resolved.then(|| {
+                                top_linear(
+                                    &parts,
+                                    &frame.balance,
+                                    e,
+                                    range.nominal,
+                                    negative_at(&res, e),
+                                )
+                            }),
                         );
                     }
                     eps.push(scalar_json(&res, &frame, ep, &top, &BTreeMap::new()));
@@ -2861,7 +2892,7 @@ mod tests {
     }
 
     #[test]
-    fn top_nuclides_are_the_largest_positive_shares() {
+    fn top_nuclides_are_the_largest_shares_of_the_contributions_sign() {
         let parts: BTreeMap<String, BTreeMap<String, f64>> = BTreeMap::from([
             ("Fe".into(), m(&[("Mn54", 1.0), ("Fe55", 5.0)])),
             (
@@ -2875,13 +2906,18 @@ mod tests {
                 ]),
             ),
         ]);
-        let top = top_linear(&parts, "Fe", "Nb", 100.0);
+        let top = top_linear(&parts, "Fe", "Nb", 100.0, false);
         let names: Vec<&str> = top.iter().map(|(n, _)| n.as_str()).collect();
         assert_eq!(names, vec!["Nb94", "Nb92", "Zr95"]);
         assert!((top[0].1 - 50.0).abs() < 1e-12);
         // Mn54 gains 2, Fe55 loses 4 (excluded)
-        let all = top_linear(&parts, "Fe", "Nb", 1.0);
+        let all = top_linear(&parts, "Fe", "Nb", 1.0, false);
         assert!(all.iter().all(|(n, _)| n != "Fe55"));
+        // A negative contribution is explained by the shares it removes, largest magnitude first.
+        let lost = top_linear(&parts, "Nb", "Fe", 100.0, true);
+        let names: Vec<&str> = lost.iter().map(|(n, _)| n.as_str()).collect();
+        assert_eq!(names, vec!["Nb94", "Nb92", "Zr95"]);
+        assert!((lost[0].1 + 50.0).abs() < 1e-12);
     }
 
     #[test]

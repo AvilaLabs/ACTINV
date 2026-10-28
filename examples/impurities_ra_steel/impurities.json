@@ -16,7 +16,7 @@
  "targets": [2, 3, 4, 5],
  "endpoints": [
   {"endpoint": "activity.total"},
-  {"endpoint": "heat.total", "limit": 1e-3},
+  {"endpoint": "heat.total", "limit": 1.4e-2},
   {"endpoint": "dose.contact_proxy"},
   {"endpoint": "activity:Nb94", "limit": 100.0},
   {"endpoint": "clearance_index"},
