@@ -4350,3 +4350,24 @@ The 0 K reconstructions of the four affected evaluations were compared before an
   bounds. (D4) The candidate's Reich–Moore reconstruction keeps channels of opposite AJ sign apart, as NJOY RECONR
   does. This changes Al-27, Cl-37, Mn-55 and Si-29. The shipped damage table is rebuilt. The activation library is not
   rebuilt: its capture resonance integrals move by at most 3e-5, and its thermal values not at all.
+
+## Entry 248 — P156 development run 4, evidence run 1 failed, Amendment E registered (2026-10-28)
+
+Development run 4 is disclosed. It ran gates G0 and G2–G7 on candidate `253da58`, with the table rebuilt by the
+Amendment D candidate: 389 targets, none failed, 25 min 9 s, peak RSS 432 MB. Only the Al-27, Cl-37, Mn-55 and
+Si-29 rows changed. Every gate passed except G2: the four P154 targets' tables were byte-identical, but the
+`build-damage` summary line had gained "0 failed evaluations". The candidate now prints that count only with
+`--continue-on-error true`. On `354138a`, G1 (fmt, `cargo check --tests`, clippy `-D warnings`, workspace tests)
+passed, and a G2-only rerun passed.
+
+With the owner's approval, the `data-v1.2.0` release was published on 2026-10-28: the table, the v1.2.0 notice,
+catalog 1.2.0, `SHA256SUMS` and `SIZES`. It is not marked Latest.
+
+Evidence run 1 on `354138a` failed one G7 sub-check and is preserved under `results/failures/p156/`. G0 and G2–G6
+passed, as did G7's catalog, staged-asset and published-release checks. A fetch into a directory holding the v1.1.0
+files downloaded the table and the new v1.2.0 notice. It copied every v1.1.0 artifact and left the v1.1.0 files
+untouched. The protocol required that the fetch download only the table.
+
+- **P156 Amendment E** `d739b36d0c7d08f78292d83edc41a64a96ad426dcc3214177d14f36d8847e7fb`: G7's fetch check allows exactly the artifacts new in catalog
+  1.2.0, the table and the v1.2.0 notice, to be downloaded. Every v1.1.0 artifact must still be copied, and the v1.1.0
+  files must be left untouched. This is P156's one repair round.
