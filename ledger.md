@@ -4420,3 +4420,25 @@ candidate on current master. Q1: the Rust sources are identical to `354138a`, an
 CI steps under Python 3.12. Q4: CI green on the pushed evidence commit. P158 stays reserved for the uncertainty layer
 named in P157. Disclosed, not evidence: every workflow triggered on `1b02817` and on `aff750b` (controls 40700317660,
 fusion-isotope 40700317792, fns-iron 40700317982) succeeded before this registration. P156 stays FAIL on G8.
+
+## Entry 252 — P159 Q1–Q3 recorded (2026-10-28)
+
+Candidate `d9d6846` (registration, entry 251).
+- **Q1.** The Rust sources (`crates/`, `Cargo.toml`, `Cargo.lock`) are identical to `354138a`, and both embedded
+  catalog 1.2.0 copies are identical to `4812ba1` (`4d113dfe…`). Release binary `e767e0d0…`, the P156 candidate
+  binary (`results/p159/q1.txt`).
+- **Q2.** The five `data-v1.2.0` assets, downloaded afresh, match catalog 1.2.0. The table and the v1.2.0 notice match
+  their catalog SHA-256 and sizes, the catalog asset is byte-identical to the embedded catalog, and `SHA256SUMS` and
+  `SIZES` agree with the downloads. The table's SHA-256 equals P156 G5's `c9f1b2f2…` (`results/p159/q2_assets.json`).
+  A clean `data fetch` installs under `v1.2.0/`, and `data verify` passes on it (`results/p159/q2_fetch_verify.log`).
+- **Q3.** Under Python 3.12.13 with `requirements-ci.txt`, all of these exit 0 (`results/p159/q3_ci_steps.txt`):
+  - the `build-and-control` steps before the build;
+  - every `current-controls` step, including the P13 contract, the public examples and the prior verdicts;
+  - every `fns-iron` step from a fresh `target/fns-data` and `target/fns-iron`, with matplotlib only, as that workflow
+    installs.
+
+  "P12 release payload evidence" fails in place on the untracked local `.claude/worktrees` directory, as known since
+  P150, and passes in a clean worktree of the candidate. `cargo fmt --all -- --check` passes. Not run locally: the
+  other `ci.yml` jobs and the other workflows, for which CI is the gate.
+
+Q4 (CI green on the pushed evidence commit) is pending.

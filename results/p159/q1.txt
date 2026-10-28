@@ -1,0 +1,13 @@
+candidate d9d684619463bc0c364341589a9e3f12f3de6544
+# Q1
+rust_sources_identical_to_354138a rc=0
+e767e0d0479b6becacbfdc609997bb5d59fcbd52c42cc8aeead4b4ada5ac6928  target/release/actinv
+crates/actinv-cli/data/actinv-data-catalog-v1.0.0.json
+crates/actinv-cli/data/actinv-data-catalog-v1.1.0.json
+crates/actinv-cli/data/actinv-data-catalog-v1.2.0.json
+crates/actinv-data/data/actinv-data-catalog-v1.1.0.json
+crates/actinv-data/data/actinv-data-catalog-v1.2.0.json
+identical_to_4812ba1 rc=0 4d113dfe325d0b933589d666ef2ff1b369a82c8adee98bb161151e970727d8a7  crates/actinv-cli/data/actinv-data-catalog-v1.2.0.json
+identical_to_4812ba1 rc=0 4d113dfe325d0b933589d666ef2ff1b369a82c8adee98bb161151e970727d8a7  crates/actinv-data/data/actinv-data-catalog-v1.2.0.json
+copies_identical rc=0
+p156_candidate_binary e767e0d0479b6becacbfdc609997bb5d59fcbd52c42cc8aeead4b4ada5ac6928
