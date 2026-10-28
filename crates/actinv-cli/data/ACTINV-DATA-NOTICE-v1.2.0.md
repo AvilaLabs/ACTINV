@@ -15,8 +15,12 @@ patched derivative; the ordinate repairs described below are not applied to it).
 neutron evaluations whose nuclide the catalog's decay data lists as stable or with a half-life of at least one
 Julian year. ACTINV computed the kinematic damage energy and displacement cross sections from each evaluation with
 `actinv build-damage --method kinematic` on the 709-group structure, and hashed every evaluation file into the
-table. The standard displacement energies are a convention, not a material-specific measurement. The table inherits
-the evaluation defects documented in `docs/DATA_LIMITATIONS.md`.
+table. Two departures from the distributed files, both recorded in the table: Pb-208 is built from the neutron working
+corpus file that the activation library also uses (SHA-256 `86788a14563ecdb844628a6a455864874ba5f5bca9b8142c10a59ea00df87c72`),
+because the distributed file carries a literal `NaN` that the P10 repairs replace; and where a 0 K resonance
+reconstruction goes negative (Fe-54's elastic near 3.5 keV), the value is set to zero as NJOY RECONR does, and the
+target's row records the clipped range as `zero_k_clipped`. The standard displacement energies are a convention, not a
+material-specific measurement. The table inherits the evaluation defects documented in `docs/DATA_LIMITATIONS.md`.
 
 Licence and attribution: the table is a transformation of TENDL-2025 evaluations that declare `CC-BY-4.0`, and is
 offered under CC-BY-4.0 with the attribution given in the TENDL section below. It was changed from the source form by

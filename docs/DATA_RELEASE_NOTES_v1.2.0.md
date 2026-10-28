@@ -22,8 +22,11 @@ where ENDF/B-VIII.0 has no record) lists as stable or with a half-life of at lea
 products are not given damage; a run counts them in `covered_atom_fraction` and `uncovered_targets`.
 
 **How it was made.** `actinv build-damage DIR OUT --method kinematic --projectile neutron --groups fispact-709
---continuum-recoil evaluated`, from the unmodified TENDL-2025 neutron files (the patched library's ordinate repairs are
-not applied). Displacement energies are the NJOY2016 HEATR defaults when no energy is given; the table records them and
+--continuum-recoil evaluated --continue-on-error true`, from the unmodified TENDL-2025 neutron files (the patched
+library's ordinate repairs are not applied), except Pb-208: the distributed file carries a literal `NaN`, so the
+table uses the repaired working-corpus file the activation library is built from (SHA-256 `86788a14…`). A negative
+0 K resonance reconstruction is set to zero, as NJOY RECONR does; this happens only for Fe-54's elastic between 3,491
+and 3,517 eV (at most −1e-4 b), and the row records it as `zero_k_clipped`. Displacement energies are the NJOY2016 HEATR defaults when no energy is given; the table records them and
 a run refuses a different value. Each evaluation file's SHA-256 is recorded in the table.
 
 **Fetching.** A file already installed under an older version directory with the catalog's SHA-256 is copied into
