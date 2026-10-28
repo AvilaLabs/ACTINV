@@ -41,7 +41,7 @@ standalone command.
 [PyPI](https://pypi.org/project/actinv/) · [crates.io](https://crates.io/crates/actinv-cli) ·
 [Desktop preview downloads — Windows, macOS, Linux](https://github.com/AvilaLabs/ACTINV/releases/tag/desktop-v0.5.0-preview.1) ·
 [v1.6.1 software release](https://github.com/AvilaLabs/ACTINV/releases/tag/v1.6.1) ·
-[v1.1.0 nuclear-data release](https://github.com/AvilaLabs/ACTINV/releases/tag/data-v1.1.0) ·
+[v1.2.0 nuclear-data release](https://github.com/AvilaLabs/ACTINV/releases/tag/data-v1.2.0) ·
 [Documentation](#documentation)
 
 [Explore the desktop interface ↓](#desktop-interface)
@@ -95,8 +95,8 @@ neutron data in one command:
 actinv data fetch
 ```
 
-The command downloads about 79 MiB, verifies every file with SHA-256 before installing it under
-`actinv-data/v1.1.0/`, and prints the exact paths to paste into a problem. Nothing is silently updated: a later data
+The command downloads about 186 MiB, verifies every file with SHA-256 before installing it under
+`actinv-data/v1.2.0/`, and prints the exact paths to paste into a problem. Nothing is silently updated: a later data
 release goes in a new version directory. See [Data setup](docs/DATA.md) for the other particle and covariance bundles.
 
 Problem files may also use portable symbolic references — `"path": "catalog:tendl-2025-neutron-709g"` resolves the

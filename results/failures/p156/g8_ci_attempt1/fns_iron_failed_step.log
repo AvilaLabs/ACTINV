@@ -1,0 +1,38 @@
+measured-decay-heat	Execute experimental case and check evidence	﻿2026-10-28T13:10:27.1616056Z ##[group]Run python controls/fns_iron.py --data-root target/fns-data --plot
+measured-decay-heat	Execute experimental case and check evidence	2026-10-28T13:10:27.1617101Z [36;1mpython controls/fns_iron.py --data-root target/fns-data --plot[0m
+measured-decay-heat	Execute experimental case and check evidence	2026-10-28T13:10:27.1617839Z [36;1mpython controls/test_fns_iron.py[0m
+measured-decay-heat	Execute experimental case and check evidence	2026-10-28T13:10:27.1642768Z shell: /usr/bin/bash -e {0}
+measured-decay-heat	Execute experimental case and check evidence	2026-10-28T13:10:27.1643049Z env:
+measured-decay-heat	Execute experimental case and check evidence	2026-10-28T13:10:27.1643268Z   CARGO_BUILD_JOBS: 1
+measured-decay-heat	Execute experimental case and check evidence	2026-10-28T13:10:27.1643506Z   RUST_TEST_THREADS: 1
+measured-decay-heat	Execute experimental case and check evidence	2026-10-28T13:10:27.1643723Z   RAYON_NUM_THREADS: 2
+measured-decay-heat	Execute experimental case and check evidence	2026-10-28T13:10:27.1643968Z   CARGO_HOME: /home/runner/.cargo
+measured-decay-heat	Execute experimental case and check evidence	2026-10-28T13:10:27.1644235Z   CARGO_INCREMENTAL: 0
+measured-decay-heat	Execute experimental case and check evidence	2026-10-28T13:10:27.1644457Z   CARGO_TERM_COLOR: always
+measured-decay-heat	Execute experimental case and check evidence	2026-10-28T13:10:27.1644690Z   CACHE_ON_FAILURE: false
+measured-decay-heat	Execute experimental case and check evidence	2026-10-28T13:10:27.1644992Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.15/x64
+measured-decay-heat	Execute experimental case and check evidence	2026-10-28T13:10:27.1645461Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.15/x64/lib/pkgconfig
+measured-decay-heat	Execute experimental case and check evidence	2026-10-28T13:10:27.1645915Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+measured-decay-heat	Execute experimental case and check evidence	2026-10-28T13:10:27.1646365Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+measured-decay-heat	Execute experimental case and check evidence	2026-10-28T13:10:27.1646760Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+measured-decay-heat	Execute experimental case and check evidence	2026-10-28T13:10:27.1647169Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.15/x64/lib
+measured-decay-heat	Execute experimental case and check evidence	2026-10-28T13:10:27.1647506Z ##[endgroup]
+measured-decay-heat	Execute experimental case and check evidence	2026-10-28T13:10:27.2532549Z Traceback (most recent call last):
+measured-decay-heat	Execute experimental case and check evidence	2026-10-28T13:10:27.2541724Z   File "/home/runner/work/ACTINV/ACTINV/controls/fns_iron.py", line 282, in <module>
+measured-decay-heat	Execute experimental case and check evidence	2026-10-28T13:10:27.2542372Z     main()
+measured-decay-heat	Execute experimental case and check evidence	2026-10-28T13:10:27.2543087Z   File "/home/runner/work/ACTINV/ACTINV/controls/fns_iron.py", line 250, in main
+measured-decay-heat	Execute experimental case and check evidence	2026-10-28T13:10:27.2544215Z     spec, rows, data_hashes = prepare(args.archive.resolve(), args.data_root.resolve(), output)
+measured-decay-heat	Execute experimental case and check evidence	2026-10-28T13:10:27.2544852Z                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+measured-decay-heat	Execute experimental case and check evidence	2026-10-28T13:10:27.2545384Z   File "/home/runner/work/ACTINV/ACTINV/controls/fns_iron.py", line 132, in prepare
+measured-decay-heat	Execute experimental case and check evidence	2026-10-28T13:10:27.2545833Z     pinned(path, artifact["sha256"])
+measured-decay-heat	Execute experimental case and check evidence	2026-10-28T13:10:27.2546331Z   File "/home/runner/work/ACTINV/ACTINV/controls/fns_iron.py", line 39, in pinned
+measured-decay-heat	Execute experimental case and check evidence	2026-10-28T13:10:27.2546868Z     require(digest(path) == expected, f"SHA-256 mismatch: {path}")
+measured-decay-heat	Execute experimental case and check evidence	2026-10-28T13:10:27.2547227Z             ^^^^^^^^^^^^
+measured-decay-heat	Execute experimental case and check evidence	2026-10-28T13:10:27.2547630Z   File "/home/runner/work/ACTINV/ACTINV/controls/fns_iron.py", line 27, in digest
+measured-decay-heat	Execute experimental case and check evidence	2026-10-28T13:10:27.2548066Z     with Path(path).open("rb") as stream:
+measured-decay-heat	Execute experimental case and check evidence	2026-10-28T13:10:27.2548589Z          ^^^^^^^^^^^^^^^^^^^^^
+measured-decay-heat	Execute experimental case and check evidence	2026-10-28T13:10:27.2549043Z   File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/pathlib.py", line 1013, in open
+measured-decay-heat	Execute experimental case and check evidence	2026-10-28T13:10:27.2629618Z     return io.open(self, mode, buffering, encoding, errors, newline)
+measured-decay-heat	Execute experimental case and check evidence	2026-10-28T13:10:27.2630519Z            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+measured-decay-heat	Execute experimental case and check evidence	2026-10-28T13:10:27.2632251Z FileNotFoundError: [Errno 2] No such file or directory: '/home/runner/work/ACTINV/ACTINV/target/fns-data/v1.1.0/activation/tendl-2025-neutron-709g.npz'
+measured-decay-heat	Execute experimental case and check evidence	2026-10-28T13:10:27.2750596Z ##[error]Process completed with exit code 1.

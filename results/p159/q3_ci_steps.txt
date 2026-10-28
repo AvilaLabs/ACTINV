@@ -1,0 +1,37 @@
+candidate d9d684619463bc0c364341589a9e3f12f3de6544
+e767e0d0479b6becacbfdc609997bb5d59fcbd52c42cc8aeead4b4ada5ac6928  target/release/actinv
+python Python 3.12.13 with requirements-ci.txt (ci.yml); Python 3.12.13 with matplotlib only (fns-iron.yml)
+cargo_fmt_check rc=0
+manifest refreshed after staging (registration d9d6846)
+# not run locally (CI is their gate): every other ci.yml job (build-and-control from the build on, build-release, rust-quality, seals, runtime-controls, p12-input-reliability, self-contained) and the desktop, docs, web and fusion-isotope workflows; the Rust sources are unchanged from 354138a (Q1)
+# not run: ci.yml build-and-control 1 (commit-trailer check, needs the push event range); fns-iron 'Build ACTINV CLI' (the P156 candidate binary above is used, Q1) and 'Plotting dependency' (installed in the venv)
+# ci.yml build-and-control, steps before the build (1, the commit-trailer step, needs the push event range)
+ 2 rc=0     1.1s Check tracked-file manifest before building
+ 3 rc=0     3.3s Preflight orchestration regression
+ 4 rc=0     0.1s Fusion isotope benchmark opening audit (no inventory reproduction claim)
+# ci.yml current-controls, every step (release binary in place: target/release/actinv)
+ 8 rc=0     0.1s CRAM coefficient control (G0 — needs no nuclear data)
+ 9 rc=0     0.0s Generated sources are reproducible
+10 rc=0     0.0s Release notes carry every known limitation
+11 rc=0     0.0s Prior phase verdict evidence remains green
+12 rc=0     0.1s CB1 competitive scorecard remains reproducible
+13 rc=0     2.8s P17 open diagnostic evidence and cause ledger
+14 rc=0     0.2s P17 held-out unseal authorization
+15 rc=0     0.2s P17 held-out failure evidence and post-failure diagnostics
+16 rc=0     4.3s P17 formal closure preserves the frozen failure verdict
+17 rc=0     0.1s P14 performance close remains reproducible
+18 rc=0     0.1s P12 release metadata and documentation
+19 rc=0     0.0s Rust release workflow contract
+20 rc=1     0.3s P12 release payload evidence
+21 rc=0     0.4s No undeclared dependencies
+22 rc=0    21.7s P13 verified data-distribution contract
+23 rc=0     0.2s Public examples are portable
+24 rc=0     0.1s CI result tolerance regression
+# fns-iron.yml, every step from a fresh target/fns-data and target/fns-iron; Python 3.12 with matplotlib only, as the workflow installs
+ 5 rc=0     3.6s Install exact-byte CI source seed
+ 6 rc=0     3.9s Fetch and verify pinned release data
+ 7 skipped      Plotting dependency
+ 8 rc=0     4.1s Execute experimental case and check evidence
+ 9 rc=0     6.3s Diagnose heat and compare both iron campaigns
+# 20 failed in place on the untracked local .claude/worktrees directory (IsADirectoryError, known since P150); rerun in a clean worktree of the candidate:
+20 rc=0     1.3s P12 release payload evidence

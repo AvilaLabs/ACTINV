@@ -1,0 +1,120 @@
+{
+ "amendments": [
+  "protocols/ACTINV-P156_AMENDMENT_A.md",
+  "protocols/ACTINV-P156_AMENDMENT_B.md",
+  "protocols/ACTINV-P156_AMENDMENT_C.md",
+  "protocols/ACTINV-P156_AMENDMENT_D.md",
+  "protocols/ACTINV-P156_AMENDMENT_E.md"
+ ],
+ "candidate": {
+  "binary_sha256": "e767e0d0479b6becacbfdc609997bb5d59fcbd52c42cc8aeead4b4ada5ac6928",
+  "commit": "354138a"
+ },
+ "checker": {
+  "path": "controls/check_p156.py",
+  "sha256": "3c43cd546a8832e43f9981b539354990611b4e14b8d734c2e6482c5aac3ac26b"
+ },
+ "ci": {
+  "cause": "P13 data-distribution control and controls/fns_iron.py were pinned to catalog 1.1.0 and its v1.1.0 install directory; P156 changed the embedded catalog to 1.2.0 without updating them",
+  "commit": "4812ba10b4029b8fe03585027c1bda9cc69e4022",
+  "failure_record": "results/failures/p156/g8_ci_attempt1/",
+  "repair_commit": {
+   "change": "controls, README and install guide only; no candidate source change",
+   "commit": "1b028173c34b5410c61153ecec69a235b884e0b5",
+   "runs": [
+    {
+     "conclusion": "success",
+     "name": "Build browser workbench",
+     "run_id": 40697857448
+    },
+    {
+     "conclusion": "success",
+     "name": "Build handbook",
+     "run_id": 40697857348
+    },
+    {
+     "conclusion": "success",
+     "name": "controls",
+     "run_id": 40697857330
+    },
+    {
+     "conclusion": "success",
+     "name": "fns-iron",
+     "run_id": 40697857346
+    },
+    {
+     "conclusion": "success",
+     "name": "fusion-isotope",
+     "run_id": 40697857425
+    }
+   ]
+  },
+  "runs": [
+   {
+    "conclusion": "success",
+    "name": "Build browser workbench",
+    "run_id": 40693413478
+   },
+   {
+    "conclusion": "success",
+    "name": "Build handbook",
+    "run_id": 40693413509
+   },
+   {
+    "conclusion": "failure",
+    "name": "controls",
+    "run_id": 40693413505
+   },
+   {
+    "conclusion": "success",
+    "name": "desktop builds",
+    "run_id": 40693413500
+   },
+   {
+    "conclusion": "failure",
+    "name": "fns-iron",
+    "run_id": 40693413532
+   },
+   {
+    "conclusion": "success",
+    "name": "fusion-isotope",
+    "run_id": 40693413522
+   }
+  ]
+ },
+ "development_runs": [
+  "results/p156/development_run_1/",
+  "results/p156/development_run_2/",
+  "results/p156/development_run_3.json",
+  "results/p156/development_run_3_g4_amendment_d_reuse.json",
+  "results/p156/development_run_4.json",
+  "results/p156/development_run_4b.json"
+ ],
+ "evidence_failures": [
+  "results/failures/p156/evidence_run_1.json",
+  "results/failures/p156/g8_ci_attempt1/"
+ ],
+ "gates": {
+  "G0": true,
+  "G1": true,
+  "G2": true,
+  "G3": true,
+  "G4": true,
+  "G5": true,
+  "G6": true,
+  "G7": true,
+  "G8": false
+ },
+ "protocol": "ACTINV-P156",
+ "protocol_sha256": "b9b9fcef3dfaa6a4becf5f0578b8199a7b2e75946c3df4a4c1c4647bad586520",
+ "record": {
+  "path": "results/p156_damage.json",
+  "sha256": "01441c08b457e5801a499b696347f5a897314b42c4b0b8666d0348b7d40e1f34"
+ },
+ "reference": {
+  "binary": "v1.6.1 release",
+  "binary_sha256": "3f56196285c0c28215aa9f722a0252676f2842bead964f06c4f0b738db62d9dd"
+ },
+ "repair_round_used_by": "Amendment E",
+ "verdict": "P156-FAIL"
+}

@@ -4389,3 +4389,64 @@ untouched. The protocol required that the fetch download only the table.
   development runs 1–4 are in `results/p156/`.
 - Locally the mdbook build, `scripts/check_docs.py` and `scripts/test_prepare_web.py` pass. The P15 cache-integrity
   baseline is unchanged with the P156 binary. **G8** is pending CI on the pushed commit.
+
+## Entry 250 — P156 G8 fails in CI; P156 closes FAIL; the repair is green (2026-10-28)
+
+On the P156 evidence commit `4812ba1`, two workflows failed. `controls` (run 40693413505) failed in "P13 verified
+data-distribution contract", and `fns-iron` (run 40693413532) failed in its case step. The handbook, browser
+workbench, desktop and fusion-isotope workflows passed. Both failures had one cause: the P13 control and
+`controls/fns_iron.py` pinned catalog 1.1.0 and its `v1.1.0/` install directory. P156 changed the embedded catalog to
+1.2.0, so `data manifest` no longer matched and `data fetch` installed under `v1.2.0/`. No gate criterion or computed
+value was involved. The data-version sweep that `4611b11` made for catalog 1.1.0 was not repeated for 1.2.0. G8
+requires CI green on the pushed commit, and Amendment E used P156's one repair round, so **P156 closes FAIL on G8**.
+G0–G7 stand as recorded in entry 249. Preserved: `results/failures/p156/g8_ci_attempt1/` (the six workflow
+conclusions and both failed steps' logs). Verdict record: `results/p156_verdict.json`.
+
+Repair, `1b02817`: the P13 contract is pinned to catalog 1.2.0. It admits the `damage-table` role and allows an
+unreferenced notice, as catalog 1.2.0 keeps the superseded v1.0.0 notice. Its evidence identity for the table is
+P156's G5 SHA-256, and its expected counts are 20 artifacts and 17 identities. `controls/fns_iron.py` reads each
+pinned artifact from `v1.2.0/`, falling back to `v1.1.0/`. The README and the install guide name `actinv-data/v1.2.0`
+and the default bundle's 1.2.0 sizes (about 186 MiB download, 276 MiB installed); the old 79/170 MiB figures were
+already stale. No candidate source changed. Locally P13 passed, fns-iron (case, tests and diagnosis) passed, as did
+the public examples, P12 source, release notes and prior verdicts. All five workflows triggered on `1b02817`
+succeeded, `controls` among them. A successor phase may requalify P156's G8 on that commit, as P150 did for P148.
+The shipped table, catalog 1.2.0 and the published `data-v1.2.0` are unchanged by this verdict.
+
+## Entry 251 — P159 registered: P156 qualified on CI after the catalog sweep (2026-10-28)
+
+**P159** `ccc354b6a5ea1e9405ceb342e4a799791d9c692139e3afcd55900713b87a1793` was registered before any evidence. As P150 did for P148, it qualifies the unchanged P156
+candidate on current master. Q1: the Rust sources are identical to `354138a`, and the P156 candidate binary
+`e767e0d0…` is used. Q2: the published `data-v1.2.0` assets match catalog 1.2.0. Q3: a local sweep of the catalog-sensitive
+CI steps under Python 3.12. Q4: CI green on the pushed evidence commit. P158 stays reserved for the uncertainty layer
+named in P157. Disclosed, not evidence: every workflow triggered on `1b02817` and on `aff750b` (controls 40700317660,
+fusion-isotope 40700317792, fns-iron 40700317982) succeeded before this registration. P156 stays FAIL on G8.
+
+## Entry 252 — P159 Q1–Q3 recorded (2026-10-28)
+
+Candidate `d9d6846` (registration, entry 251).
+- **Q1.** The Rust sources (`crates/`, `Cargo.toml`, `Cargo.lock`) are identical to `354138a`, and both embedded
+  catalog 1.2.0 copies are identical to `4812ba1` (`4d113dfe…`). Release binary `e767e0d0…`, the P156 candidate
+  binary (`results/p159/q1.txt`).
+- **Q2.** The five `data-v1.2.0` assets, downloaded afresh, match catalog 1.2.0. The table and the v1.2.0 notice match
+  their catalog SHA-256 and sizes, the catalog asset is byte-identical to the embedded catalog, and `SHA256SUMS` and
+  `SIZES` agree with the downloads. The table's SHA-256 equals P156 G5's `c9f1b2f2…` (`results/p159/q2_assets.json`).
+  A clean `data fetch` installs under `v1.2.0/`, and `data verify` passes on it (`results/p159/q2_fetch_verify.log`).
+- **Q3.** Under Python 3.12.13 with `requirements-ci.txt`, all of these exit 0 (`results/p159/q3_ci_steps.txt`):
+  - the `build-and-control` steps before the build;
+  - every `current-controls` step, including the P13 contract, the public examples and the prior verdicts;
+  - every `fns-iron` step from a fresh `target/fns-data` and `target/fns-iron`, with matplotlib only, as that workflow
+    installs.
+
+  "P12 release payload evidence" fails in place on the untracked local `.claude/worktrees` directory, as known since
+  P150, and passes in a clean worktree of the candidate. `cargo fmt --all -- --check` passes. Not run locally: the
+  other `ci.yml` jobs and the other workflows, for which CI is the gate.
+
+Q4 (CI green on the pushed evidence commit) is pending.
+
+## Entry 253 — P159 Q4: CI green; P159-PASS (2026-10-28)
+
+Every workflow triggered on `ff381f9` (candidate `d9d6846` plus its evidence) passed: controls 40714115970, fns-iron
+40714116060 and fusion-isotope 40714115961 (`results/p159/ci_runs.json`). The handbook, browser-workbench and
+desktop workflows are path-filtered and were not triggered. **P159-PASS** (`results/p159_verdict.json`): the P156
+shipped damage table and catalog 1.2.0 are qualified on CI, with P156's G0–G7 (entry 249) as their scientific
+evidence. P156 stays FAIL on G8 (entry 250).

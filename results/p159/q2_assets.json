@@ -1,0 +1,41 @@
+{
+ "catalog": "crates/actinv-data/data/actinv-data-catalog-v1.2.0.json",
+ "catalog_artifacts_in_release": [
+  "actinv-data-notice-v1-2",
+  "tendl-2025-neutron-damage"
+ ],
+ "checks": {
+  "ACTINV-DATA-NOTICE-v1.2.0.md matches catalog artifact actinv-data-notice-v1-2": true,
+  "SHA256SUMS agrees with downloads": true,
+  "SIZES agrees with downloads": true,
+  "actinv-data-catalog-v1.2.0.json byte-identical to embedded catalog": true,
+  "catalog notice names the downloaded v1.2.0 notice": true,
+  "release holds exactly the 5 expected assets": true,
+  "table sha256 equals P156 G5 table_sha256": true,
+  "tendl-2025-neutron-damage-709g.json matches catalog artifact tendl-2025-neutron-damage": true
+ },
+ "downloaded": {
+  "ACTINV-DATA-NOTICE-v1.2.0.md": {
+   "bytes": 8440,
+   "sha256": "417e15cf9043ad9ecbdc56980042ab539afe04a017ffc6965919ee24213ac169"
+  },
+  "SHA256SUMS": {
+   "bytes": 295,
+   "sha256": "c51495ae0aae00ed7c592925ce927cea5784ddd5f8e590db38827fa6e44283d1"
+  },
+  "SIZES": {
+   "bytes": 120,
+   "sha256": "b3b12d3e821881600626fea9d265a3c2de62746c8bf7fbbf13c1c7310b63f5ba"
+  },
+  "actinv-data-catalog-v1.2.0.json": {
+   "bytes": 14923,
+   "sha256": "4d113dfe325d0b933589d666ef2ff1b369a82c8adee98bb161151e970727d8a7"
+  },
+  "tendl-2025-neutron-damage-709g.json": {
+   "bytes": 49041569,
+   "sha256": "c9f1b2f2d60511f9da1b6c961b4a2bc4920d11604d4db32325565a265eed1069"
+  }
+ },
+ "pass": true,
+ "release": "data-v1.2.0"
+}

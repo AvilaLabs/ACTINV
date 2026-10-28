@@ -128,7 +128,10 @@ def prepare(archive_path, data_root, output):
     paths, hashes = {}, {}
     for name in selected:
         artifact = artifacts[name]
-        path = data_root / "v1.1.0" / artifact["path"]
+        # `data fetch` installs under the embedded catalog's version directory; the v1.1.0 artifacts are carried into
+        # v1.2.0 unchanged (same id and SHA-256), so the first directory holding the file is used and its hash pinned
+        candidates = [data_root / version / artifact["path"] for version in ("v1.2.0", "v1.1.0")]
+        path = next((c for c in candidates if c.is_file()), candidates[-1])
         pinned(path, artifact["sha256"])
         paths[name] = str(path.resolve())
         hashes[name] = artifact["sha256"]

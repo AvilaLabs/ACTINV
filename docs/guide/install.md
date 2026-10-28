@@ -51,6 +51,6 @@ actinv data fetch
 actinv data verify
 ```
 
-The default neutron bundle downloads about 79 MiB and installs about 170 MiB in `actinv-data/v1.1.0/` inside that folder. The first calculation creates a separate prepared-data cache. [Data setup](data.md) explains custom locations, other particles, covariance bundles, and offline installation.
+The default neutron bundle downloads about 186 MiB and installs about 276 MiB in `actinv-data/v1.2.0/` inside that folder. The first calculation creates a separate prepared-data cache. [Data setup](data.md) explains custom locations, other particles, covariance bundles, and offline installation.
 
 Continue with [Your first calculation](quick-start.md).
