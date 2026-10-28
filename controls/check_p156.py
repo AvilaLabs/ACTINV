@@ -809,8 +809,9 @@ def gate_g3(ref, cand, work, tendl_dir, timeout):
     cmp.update(default_Cu=got.get("Cu"), reference_energy_recorded=ref_ed,
                note="same numerical form as Amendment A1 (the amendment names W-184; Cu-63 is this checker's addition)")
     cmp["pass"] = bool(cmp["pass"] and got.get("Cu") == 40.0 and ref_ed == 33.0)
+    cmp["information"] = True       # reported, not gating: Amendment A1 names W-184 only
     cases["cu63_arc_at_reference_energy"] = cmp
-    return {"pass": all(c["pass"] for c in cases.values()), "cases": cases}
+    return {"pass": all(c["pass"] for c in cases.values() if not c.get("information")), "cases": cases}
 
 
 # ------------------------------------------------------------------------------ G4
