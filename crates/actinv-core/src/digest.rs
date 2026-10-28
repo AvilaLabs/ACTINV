@@ -477,7 +477,7 @@ pub fn caveats(result: &Value) -> Vec<String> {
     if let Some(closure) = result["pathway_closure"].as_f64() {
         if closure > 0.01 {
             notes.push(format!(
-                "The listed production pathways differ from the inventory by up to {:.1}% (pathway_closure).",
+                "Over the whole result, production chains differ from a population above noise level by up to {:.1}% (pathway_closure).",
                 100. * closure
             ));
         }
@@ -545,6 +545,15 @@ mod tests {
         assert_eq!(when(&steps, 1), "1 h after shutdown");
         let marks: Vec<_> = landmarks(&steps).into_iter().map(|m| m.0).collect();
         assert_eq!(marks, ["At shutdown", "~1 h", "~1 d"]);
+    }
+
+    #[test]
+    fn a_closure_gap_is_a_whole_result_caveat() {
+        let result = json!({"pathway_closure": 0.05, "steps": []});
+        assert_eq!(
+            caveats(&result),
+            ["Over the whole result, production chains differ from a population above noise level by up to 5.0% (pathway_closure)."]
+        );
     }
 
     #[test]

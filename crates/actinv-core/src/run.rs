@@ -272,6 +272,31 @@ pub(crate) fn name_of(za: i32, liso: i32) -> String {
 /// Adds one pathway source's column, over the `keep.len()` kept states, to the chains of each target.
 /// A source whose first product is the leakage state feeds only that sink, which is never a target,
 /// so its column carries no chain; anything else in it is round-off of an exact zero.
+/// The largest relative gap between a nuclide's chains and its population at one step. A nuclide with no
+/// chain at all is a gap of 1. Noise-level inventories, under 1e-12 of the step's largest, are not counted
+/// either way: they are residues of the rational decay approximation, and their chains need not agree
+/// with them (P161).
+fn closure_gap(inventory: &[NuclideOut], per: &BTreeMap<String, Vec<Pathway>>) -> f64 {
+    let largest = inventory
+        .iter()
+        .map(|n| n.atoms_per_g)
+        .fold(0.0f64, f64::max);
+    let mut gap = 0.0f64;
+    for n in inventory {
+        if n.atoms_per_g <= 1e-12 * largest {
+            continue;
+        }
+        gap = gap.max(match per.get(&n.nuclide) {
+            Some(v) => {
+                let sum: f64 = v.iter().map(|p| p.atoms_per_g).sum();
+                (sum - n.atoms_per_g).abs() / n.atoms_per_g
+            }
+            None => 1.0,
+        });
+    }
+    gap
+}
+
 fn attribute_pathway_column(
     per: &mut BTreeMap<String, Vec<Pathway>>,
     col: &[f64],
@@ -6772,27 +6797,8 @@ impl PreparedRun {
                         *chains = merged;
                     }
                 }
-                // closure is measured on the complete decomposition, before any chain is dropped for reporting;
-                // a nuclide present in the inventory with no chain at all is a gap of 1 (noise-level
-                // inventories, under 1e-12 of the largest, are not)
-                let inventory = &steps[pathways.len()].inventory;
-                let largest = inventory
-                    .iter()
-                    .map(|n| n.atoms_per_g)
-                    .fold(0.0f64, f64::max);
-                for n in inventory {
-                    if n.atoms_per_g <= 0.0 {
-                        continue;
-                    }
-                    match per.get(&n.nuclide) {
-                        Some(v) => {
-                            let sum: f64 = v.iter().map(|p| p.atoms_per_g).sum();
-                            closure = closure.max((sum - n.atoms_per_g).abs() / n.atoms_per_g);
-                        }
-                        None if n.atoms_per_g > 1e-12 * largest => closure = closure.max(1.0),
-                        None => {}
-                    }
-                }
+                // closure is measured on the complete decomposition, before any chain is dropped for reporting
+                closure = closure.max(closure_gap(&steps[pathways.len()].inventory, &per));
                 for v in per.values_mut() {
                     let tot: f64 = v.iter().map(|p| p.atoms_per_g).sum();
                     for p in v.iter_mut() {
@@ -9754,6 +9760,53 @@ mod gas_prepared_tests {
         let value = serde_json::to_value(&plain.steps[0]).unwrap();
         assert!(value.get("kerma").is_none() && value.get("power").is_none());
         assert!(plain.ledger.get("kerma").is_none());
+    }
+
+    fn closure_row(nuclide: &str, atoms_per_g: f64) -> NuclideOut {
+        NuclideOut {
+            nuclide: nuclide.to_owned(),
+            Z: 0,
+            A: 0,
+            LISO: 0,
+            atoms_per_g,
+        }
+    }
+
+    fn closure_chain(atoms_per_g: f64) -> Vec<Pathway> {
+        vec![Pathway {
+            from: "Fe58".to_owned(),
+            first_product: "Fe59".to_owned(),
+            atoms_per_g,
+            fraction: 1.0,
+        }]
+    }
+
+    #[test]
+    fn p161_a_noise_level_residue_does_not_raise_closure() {
+        // the quick start's Mn58 at step 20: 2.7e-28 atoms/g, listed chains summing to 1.38e-27
+        let inventory = [closure_row("Fe56", 1.0e22), closure_row("Mn58", 2.7e-28)];
+        let per = BTreeMap::from([
+            ("Fe56".to_owned(), closure_chain(1.0e22)),
+            ("Mn58".to_owned(), closure_chain(1.38e-27)),
+        ]);
+        assert_eq!(closure_gap(&inventory, &per), 0.0);
+    }
+
+    #[test]
+    fn p161_gaps_above_the_noise_cut_are_still_reported() {
+        // a resolved nuclide with a 10 % chain gap, and one with no chain at all
+        let inventory = [
+            closure_row("Fe56", 1.0e22),
+            closure_row("Co58", 1.0e12),
+            closure_row("Ni60", 1.0e11),
+        ];
+        let mut per = BTreeMap::from([
+            ("Fe56".to_owned(), closure_chain(1.0e22)),
+            ("Co58".to_owned(), closure_chain(1.1e12)),
+        ]);
+        assert!((closure_gap(&inventory, &per) - 1.0).abs() < 1e-15);
+        per.insert("Ni60".to_owned(), closure_chain(1.0e11));
+        assert!((closure_gap(&inventory, &per) - 0.1).abs() < 1e-12);
     }
 
     #[test]

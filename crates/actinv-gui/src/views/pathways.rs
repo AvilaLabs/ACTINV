@@ -398,6 +398,41 @@ fn inspector(ui: &mut egui::Ui, step_value: &Value, step: usize, node: &str) {
     });
 }
 
+/// How much of the selected nuclide's population its listed chains account for at one step. Chains under
+/// 1e-6 of the nuclide are not listed, so a full account reads 100.0000 %.
+fn coverage_note(result: &Value, step: usize, selected: &str) -> Option<String> {
+    let inventory = result["steps"][step]["inventory"].as_array()?;
+    let atoms = |row: &Value| row["atoms_per_g"].as_f64().unwrap_or(0.);
+    let population = atoms(inventory.iter().find(|row| row["nuclide"] == selected)?);
+    let largest = inventory.iter().map(atoms).fold(0f64, f64::max);
+    if population <= 1e-12 * largest {
+        return Some(format!(
+            "{selected} is at noise level at this step (under 1e-12 of the largest population), so its chains are not checked against it."
+        ));
+    }
+    let listed: f64 = result["pathways"][step][selected]
+        .as_array()?
+        .iter()
+        .map(atoms)
+        .sum();
+    Some(format!(
+        "The listed chains account for {:.4}% of {selected} at this step.",
+        100. * listed / population
+    ))
+}
+
+/// `pathway_closure` is one number for the whole result, not for the selected nuclide.
+fn closure_note(closure: f64) -> String {
+    let gap = if closure < 1e-6 {
+        "better than 0.0001%".to_owned()
+    } else {
+        format!("to within {:.4}%", 100. * closure)
+    };
+    format!(
+        "Over the whole result, chains match every population above noise level {gap} (pathway_closure = {closure:.2e})."
+    )
+}
+
 /// Pathways page body. `step` is the zero-based step selected in the shell's result bar.
 pub fn show(
     ui: &mut egui::Ui,
@@ -526,11 +561,11 @@ fn first_products_body(
     });
     inspector(ui, &result.steps()[step], step, &state.inspected);
     ui.label("Source > first product > selected nuclide. Intermediate chain members are not enumerated here; the Full routes tab lists them. Diagram shows up to 12 ranked contributions.");
+    if let Some(note) = coverage_note(&result.value, step, &selected) {
+        ui.label(note);
+    }
     if let Some(closure) = result.value["pathway_closure"].as_f64() {
-        ui.label(format!(
-            "Closure: the listed chains differ from the inventory by up to {:.1}% (pathway_closure = {closure:.3e}).",
-            100. * closure
-        ));
+        ui.label(egui::RichText::new(closure_note(closure)).weak());
     }
     json_tree(
         ui,
@@ -838,6 +873,28 @@ mod tests {
             value[k] = v.clone();
         }
         model::ResultDocument::parse(value, "test".into()).unwrap()
+    }
+
+    #[test]
+    fn coverage_is_the_selected_nuclides_own_and_closure_is_whole_result() {
+        let value = json!({
+            "steps": [{"inventory": [{"nuclide": "Fe56", "atoms_per_g": 1e22},
+                                     {"nuclide": "Co58", "atoms_per_g": 2e12},
+                                     {"nuclide": "Mn58", "atoms_per_g": 2.7e-28}]}],
+            "pathways": [{"Co58": [{"from": "Fe58", "first_product": "Fe59", "atoms_per_g": 2e12}],
+                          "Mn58": [{"from": "Fe58", "first_product": "Mn58", "atoms_per_g": 1.38e-27}]}]
+        });
+        assert_eq!(
+            coverage_note(&value, 0, "Co58").unwrap(),
+            "The listed chains account for 100.0000% of Co58 at this step."
+        );
+        assert!(coverage_note(&value, 0, "Mn58")
+            .unwrap()
+            .starts_with("Mn58 is at noise level at this step"));
+        assert_eq!(coverage_note(&value, 0, "Ni60"), None);
+        assert!(closure_note(2.3e-7).contains("Over the whole result"));
+        assert!(closure_note(2.3e-7).contains("better than 0.0001%"));
+        assert!(closure_note(0.05).contains("to within 5.0000%"));
     }
 
     fn routes_json() -> Value {
