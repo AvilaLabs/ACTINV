@@ -4299,3 +4299,19 @@ reconstruction is nonfinite or negative at 3493.98917819688 eV`. No table was wr
   builder is unchanged. The build command gains `--continue-on-error`, which lists a failing evaluation in `failed`.
   G5 fails if a stable nuclide of a structural or breeder element (Fe, Cr, Ni, W, V, Ti, Ta, Mo, Nb, Mn, Co, Cu, Al,
   Si, Be, Li) is among the failures.
+
+## Entry 245 — P157 registered (2026-10-27)
+
+Registered before any source change for the phase, as the 1.7 headline:
+- **P157** `e2eeb8b6b5499ee7221f503f9729dd2d8e6639660245a689aee4f6ab06c66f65`: impurity screening. A new command, `actinv impurities` (schema `actinv-impurities-1`), takes a
+  base run, a matrix, impurity ranges, targets and endpoints: activity, heat, nuclide activity, contact-dose proxy,
+  clearance index and Part 61 class. From one solve per element it gives, per target and endpoint:
+  - the value at nominal and the worst case over the ranges;
+  - each impurity's gradient, contribution and ranking, with its top product nuclides;
+  - limits alone, with the others at nominal and with the others at their worst case, plus the joint factor;
+  - the worst Part 61 class over the ranges.
+
+  Every number is verified by a full solve. The contact-dose proxy is not linear in composition, because the
+  material's attenuation enters it. It is therefore evaluated exactly at each composition, its limits are found by
+  bisection, and its worst case is a corner maximum. Nuclear-data uncertainty is deferred to P158. No output has been
+  examined.
