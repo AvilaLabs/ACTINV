@@ -1,0 +1,32 @@
+{
+ "schema": "actinv-impurities-1",
+ "base_spec": "base_spec.json",
+ "balance": "Fe",
+ "matrix": {"Cr": 9.0, "W": 1.1, "Mn": 0.4, "V": 0.2, "Ta": 0.12, "C": 0.11},
+ "impurities": {
+  "Co": {"nominal": 0.005, "min": 0.0, "max": 0.01},
+  "Ni": {"nominal": 0.005, "min": 0.0, "max": 0.05},
+  "Nb": {"nominal": 0.001, "min": 0.0, "max": 0.005},
+  "Mo": {"nominal": 0.005, "min": 0.0, "max": 0.02},
+  "Cu": {"nominal": 0.005, "min": 0.0, "max": 0.02},
+  "Al": {"nominal": 0.005, "min": 0.0, "max": 0.01},
+  "N": {"nominal": 0.03, "min": 0.015, "max": 0.045},
+  "Ag": {"nominal": 0.0001, "min": 0.0, "max": 0.0005}
+ },
+ "targets": [2, 3, 4, 5],
+ "endpoints": [
+  {"endpoint": "activity.total"},
+  {"endpoint": "heat.total", "limit": 1e-3},
+  {"endpoint": "dose.contact_proxy"},
+  {"endpoint": "activity:Nb94", "limit": 100.0},
+  {"endpoint": "clearance_index"},
+  {"endpoint": "waste_class", "class": "C"}
+ ],
+ "waste": {
+  "rules": "us-nrc-10cfr61.55-v1",
+  "mass_g": 1000.0,
+  "density_g_cm3": 7.8,
+  "waste_type": "activated_metal",
+  "external_tritium": {"status": "not_applicable"}
+ }
+}

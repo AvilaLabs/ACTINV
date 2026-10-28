@@ -1124,15 +1124,15 @@ fn scalar_json(
             "min_wt_pct": range.min,
             "max_wt_pct": range.max,
             "gradient_per_wt_pct": opt_num(r.gradient),
-            "contribution_at_nominal": opt_num(r.contribution_nominal),
+            "contribution_nominal": opt_num(r.contribution_nominal),
             "contribution_at_max": opt_num(r.contribution_max),
             "top_nuclides": top_json(top.get(e).unwrap_or(&None)),
         });
         if let (Some(a), Some(n), Some(w)) = (&r.alone, &r.others_nominal, &r.others_worst) {
-            entry["limits_wt_pct"] = json!({
+            entry["limits"] = json!({
                 "alone": limit_json(a, "wt_pct"),
                 "others_at_nominal": limit_json(n, "wt_pct"),
-                "others_at_worst_case": limit_json(w, "wt_pct"),
+                "others_at_worst": limit_json(w, "wt_pct"),
             });
         }
         imps.insert(e.clone(), entry);
@@ -1146,6 +1146,7 @@ fn scalar_json(
         )
     };
     let mut out = json!({
+        "response": ep.id,
         "unit": ep.unit(),
         "kind": if ep.is_linear_scalar() { "linear" } else { "nonlinear" },
         "limit": opt_num(ep.limit),
@@ -1160,7 +1161,7 @@ fn scalar_json(
         "ranking": ranking(res),
     });
     if let Some(j) = &res.joint {
-        out["joint"] = limit_json(j, "k");
+        out["joint_k"] = limit_json(j, "value");
     }
     if !reasons.is_empty() {
         out["unavailable"] = json!(reasons);
@@ -1191,7 +1192,7 @@ fn tightest<'a>(items: impl Iterator<Item = (u64, &'a Limit)>, key: &str) -> Val
     };
     let mut m = Map::new();
     m.insert(key.to_string(), opt_num(value));
-    m.insert("binding_step".into(), step.map_or(Value::Null, Value::from));
+    m.insert("step".into(), step.map_or(Value::Null, Value::from));
     m.insert("status".into(), Value::from(status));
     Value::Object(m)
 }
@@ -1532,15 +1533,15 @@ fn class_target(
     let mut pure: BTreeMap<String, [f64; 4]> = BTreeMap::new();
     for (e, by_step) in runs {
         let t = &by_step[&step];
-        let ev = eval_solved(s, t, step)?;
+        // A pure element at 100 wt% is the 1 g run scaled by the component mass.
+        let ev = eval_solved_without_external(s, t)?;
         if ev.coverage != actinv_core::waste::Coverage::Complete {
             return Err(format!(
                 "basis {e} has incomplete property coverage at step {step}: {:?}",
                 ev.unknown_nuclides
             ));
         }
-        // eval_solved scales a 1 g run by mass_g; a pure element at 100 wt% is exactly that run.
-        pure.insert(e.clone(), raw_sums(&eval_solved_without_external(s, t)?)?);
+        pure.insert(e.clone(), raw_sums(&ev)?);
     }
     let (h3, _) = waste_budget::external_at(&s.b.external_tritium, step)?;
     let offset = if h3 > 0.0 {
@@ -1549,11 +1550,11 @@ fn class_target(
         [0.0; 4]
     };
     let mut results = Vec::new();
-    for k in 0..4 {
+    for (k, off) in offset.iter().enumerate() {
         let r: BTreeMap<String, f64> = pure.iter().map(|(e, v)| (e.clone(), v[k])).collect();
         let eval = Evaluator::Linear {
             r: &r,
-            offset: offset[k],
+            offset: *off,
         };
         results.push(analyse_scalar(frame, &eval, None)?);
     }
@@ -1595,9 +1596,6 @@ fn class_target(
         let t1 = constraint(&corner_evs[0], *target, 1, None)?;
         let t2 = constraint(&corner_evs[1 + i], *target, 2, Some(1 + i as u8))?;
         checks[i] = [sum_check(t1), sum_check(t2)];
-        if *target == cx.target || (cx.target == WasteClass::C && i == 2) {
-            // reported below for the endpoint's target class
-        }
     }
     let worst = class_of_checks(&checks);
     let ti = CLASSES
@@ -1621,6 +1619,16 @@ fn class_target(
         }));
     }
 
+    let worst_binding = worst_rows
+        .iter()
+        .max_by(|a, b| {
+            let x = a["normalized_sum_max"].as_f64().unwrap_or(0.0);
+            let y = b["normalized_sum_max"].as_f64().unwrap_or(0.0);
+            x.total_cmp(&y)
+        })
+        .cloned()
+        .unwrap_or(Value::Null);
+
     // Attribution to the target class's binding constraint at nominal.
     let thr = table1_threshold(cx.target);
     let n_t1 = constraint(&nominal_ev, cx.target, 1, None)?.normalized_sum;
@@ -1643,7 +1651,7 @@ fn class_target(
             e.clone(),
             json!({
                 "gradient_normalized_sum_per_wt_pct": opt_num(g),
-                "contribution_at_nominal": opt_num(cn),
+                "contribution_nominal": opt_num(cn),
                 "contribution_at_max": opt_num(cm),
             }),
         );
@@ -1651,13 +1659,16 @@ fn class_target(
     order.sort_by(|a, b| b.1.total_cmp(&a.1).then(a.0.cmp(&b.0)));
 
     let json = json!({
+        "response": format!("waste_class:{}", class_name(cx.target)),
         "target_class": class_name(cx.target),
+        "nominal_class": class_name(nominal_ev.class),
         "matrix_only": class_json(&matrix_ev, cx.target)?,
         "nominal": class_json(&nominal_ev, cx.target)?,
         "worst_case": {
             "class": class_name(worst),
             "meets_target": waste_budget::class_at_most(worst, cx.target),
             "method": "each Part 61 table sum maximised over the range box at its own corner (exact, the sums are linear), then classified; a conservative bound, since the class is non-decreasing in every sum",
+            "binding": worst_binding,
             "target_class_constraints": worst_rows,
         },
         "binding_constraint_at_nominal": bname,
@@ -1844,7 +1855,7 @@ pub fn run_impurities_doc(text: &str, dir: &Path, verify: bool) -> Result<Value,
         BTreeMap::new();
     for &k in &spec.targets {
         let t_s = runs[&frame.balance][&k].t_s;
-        let mut eps = Map::new();
+        let mut eps: Vec<Value> = Vec::new();
         for (idx, ep) in endpoints.iter().enumerate() {
             match &ep.kind {
                 EndpointKind::WasteClass(_) => {
@@ -1853,7 +1864,7 @@ pub fn run_impurities_doc(text: &str, dir: &Path, verify: bool) -> Result<Value,
                         .find(|c| c.endpoint == idx)
                         .ok_or("missing class context")?;
                     let out = class_target(cx, &frame, &runs, k, &mut requests)?;
-                    eps.insert(ep.id.clone(), out.json);
+                    eps.push(out.json);
                     class_by_ep
                         .entry(ep.id.clone())
                         .or_default()
@@ -1885,10 +1896,7 @@ pub fn run_impurities_doc(text: &str, dir: &Path, verify: bool) -> Result<Value,
                             }
                         }
                     }
-                    eps.insert(
-                        ep.id.clone(),
-                        scalar_json(&res, &frame, ep, &top, &reasons),
-                    );
+                    eps.push(scalar_json(&res, &frame, ep, &top, &reasons));
                     register_scalar(&mut requests, &frame, &Evaluator::General(&f), ep, idx, k, &res)?;
                     scalar_by_ep
                         .entry(ep.id.clone())
@@ -1915,10 +1923,7 @@ pub fn run_impurities_doc(text: &str, dir: &Path, verify: bool) -> Result<Value,
                                 .then(|| top_linear(&parts, &frame.balance, e, range.nominal)),
                         );
                     }
-                    eps.insert(
-                        ep.id.clone(),
-                        scalar_json(&res, &frame, ep, &top, &BTreeMap::new()),
-                    );
+                    eps.push(scalar_json(&res, &frame, ep, &top, &BTreeMap::new()));
                     register_scalar(&mut requests, &frame, &eval, ep, idx, k, &res)?;
                     scalar_by_ep
                         .entry(ep.id.clone())
@@ -2006,9 +2011,9 @@ pub fn run_impurities_doc(text: &str, dir: &Path, verify: bool) -> Result<Value,
             summary.insert(
                 ep.id.clone(),
                 json!({
-                    "worst_class_over_ranges": worst,
-                    "worst_nominal_class": nominal,
-                    "impurities_by_largest_contribution": rank_largest(&largest),
+                    "worst": worst,
+                    "worst_nominal": nominal,
+                    "ranking": rank_largest(&largest),
                     "impurity_class_limits": class_limits.get(&ep.id),
                 }),
             );
@@ -2032,36 +2037,34 @@ pub fn run_impurities_doc(text: &str, dir: &Path, verify: bool) -> Result<Value,
             .max_by(|a, b| a.1.total_cmp(&b.1))
             .map(|(k, v)| json!({"value": v, "step": k}));
         let mut entry = json!({
-            "worst_value_over_targets": worst_value,
-            "impurities_by_largest_contribution": rank_largest(&largest),
+            "worst": worst_value,
+            "ranking": rank_largest(&largest),
         });
         if ep.limit.is_some() {
             let mut tight = Map::new();
-            for e in frame.imps.keys() {
-                let pick = |f: fn(&ImpurityResult) -> &Option<Limit>| {
-                    by_step
-                        .iter()
-                        .filter_map(|(k, r)| f(&r.impurities[e]).as_ref().map(|l| (*k, l)))
-                        .collect::<Vec<_>>()
-                };
-                let alone = pick(|r| &r.alone);
-                let nominal = pick(|r| &r.others_nominal);
-                let worst = pick(|r| &r.others_worst);
-                tight.insert(
-                    e.clone(),
-                    json!({
-                        "alone": tightest(alone.into_iter()),
-                        "others_at_nominal": tightest(nominal.into_iter()),
-                        "others_at_worst_case": tightest(worst.into_iter()),
-                    }),
-                );
+            for (kind, which) in [
+                (
+                    "alone",
+                    (|r: &ImpurityResult| &r.alone) as fn(&ImpurityResult) -> &Option<Limit>,
+                ),
+                ("others_at_nominal", |r: &ImpurityResult| &r.others_nominal),
+                ("others_at_worst", |r: &ImpurityResult| &r.others_worst),
+            ] {
+                let mut per = Map::new();
+                for e in frame.imps.keys() {
+                    per.insert(
+                        e.clone(),
+                        tightest(pick_limits(by_step, e, which).into_iter(), "wt_pct"),
+                    );
+                }
+                tight.insert(kind.to_string(), Value::Object(per));
             }
-            entry["tightest_limits_wt_pct"] = Value::Object(tight);
+            entry["tightest_limit"] = Value::Object(tight);
             let joint: Vec<(u64, &Limit)> = by_step
                 .iter()
                 .filter_map(|(k, r)| r.joint.as_ref().map(|l| (*k, l)))
                 .collect();
-            entry["joint"] = tightest_joint(joint.into_iter());
+            entry["joint_k"] = tightest(joint.into_iter(), "value");
         }
         summary.insert(ep.id.clone(), entry);
     }
@@ -2073,7 +2076,6 @@ pub fn run_impurities_doc(text: &str, dir: &Path, verify: bool) -> Result<Value,
             &base,
             &outputs,
             &spec.targets,
-            &frame,
             &limits,
             &class_cx,
             &mut cache,
@@ -2082,6 +2084,15 @@ pub fn run_impurities_doc(text: &str, dir: &Path, verify: bool) -> Result<Value,
         json!({"skipped": true, "verified": false})
     };
 
+    let ranges: BTreeMap<String, Value> = frame
+        .imps
+        .iter()
+        .map(|(e, r)| {
+            let range = json!({"nominal": r.nominal, "min": r.min, "max": r.max});
+            (e.clone(), range)
+        })
+        .collect();
+    let endpoint_ids: Vec<String> = endpoints.iter().map(|e| e.id.clone()).collect();
     let mut result = json!({
         "schema": "actinv-impurities-result-1",
         "impurities_sha256": sha256_hex(text.as_bytes()),
@@ -2090,10 +2101,8 @@ pub fn run_impurities_doc(text: &str, dir: &Path, verify: bool) -> Result<Value,
         "solver": {"mode": "coupled", "prune": "reach", "outputs": outputs},
         "balance": frame.balance,
         "matrix": frame.matrix,
-        "impurities": frame.imps.iter().map(|(e, r)| (e.clone(), json!({
-            "nominal": r.nominal, "min": r.min, "max": r.max,
-        }))).collect::<BTreeMap<_, _>>(),
-        "endpoints": endpoints.iter().map(|e| e.id.clone()).collect::<Vec<_>>(),
+        "impurities": ranges,
+        "endpoints": endpoint_ids,
         "element_solves": solves,
         "targets": targets_out,
         "summary": summary,
@@ -2243,7 +2252,6 @@ fn verify_requests(
     base: &Value,
     outputs: &[&str],
     targets: &[u64],
-    frame: &Frame,
     limits: &BTreeMap<String, f64>,
     class_cx: &[ClassContext],
     cache: &mut actinv_core::run::PreparedCache,
@@ -2366,7 +2374,6 @@ fn verify_requests(
             "ms": ms,
         }));
     }
-    let _ = frame;
     Ok(json!({
         "tolerance_rel": VERIFY_TOL,
         "points": points,
@@ -2619,7 +2626,6 @@ mod tests {
         let al = res.impurities["Al"].alone.clone().unwrap();
         assert_eq!(al.status, NO_RESPONSE);
         assert_eq!(al.value, None);
-        let _ = g;
     }
 
     #[test]
@@ -2679,7 +2685,7 @@ mod tests {
             Some(100.0 * s / (s + 0.01))
         };
         let ev = Evaluator::General(&func);
-        let res = analyse_scalar(&f, &ev, Some(60.0)).unwrap();
+        let res = analyse_scalar(&f, &ev, Some(80.0)).unwrap();
         assert!(!res.worst_exact);
         assert_eq!(res.corners_evaluated, 8);
         assert_eq!(res.worst_corner["Co"], "max");
@@ -2706,7 +2712,7 @@ mod tests {
         assert_eq!(lim.status, "limit");
         let mut w = f.nominal();
         w.insert("Co".into(), lim.value.unwrap());
-        assert!((func(&f.comp(&w).unwrap()).unwrap() - 60.0).abs() < 1e-6);
+        assert!((func(&f.comp(&w).unwrap()).unwrap() - 80.0).abs() < 1e-6);
         // Al does not enter the function
         assert_eq!(res.impurities["Al"].others_nominal.as_ref().unwrap().status, NO_RESPONSE);
     }
@@ -2804,15 +2810,18 @@ mod tests {
             (2, Limit::found(0.2)),
             (3, Limit::none(NO_RESPONSE, "")),
         ];
-        let v = tightest(lims.iter().map(|(k, l)| (*k, l)));
+        let v = tightest(lims.iter().map(|(k, l)| (*k, l)), "wt_pct");
         assert_eq!(v["wt_pct"], json!(0.2));
-        assert_eq!(v["binding_step"], json!(2));
+        assert_eq!(v["step"], json!(2));
         let blocked = [(1u64, Limit::found(0.5)), (2, Limit::none(INFEASIBLE, ""))];
-        let v = tightest(blocked.iter().map(|(k, l)| (*k, l)));
+        let v = tightest(blocked.iter().map(|(k, l)| (*k, l)), "wt_pct");
         assert_eq!(v["status"], json!(INFEASIBLE));
-        assert_eq!(v["binding_step"], json!(2));
+        assert_eq!(v["step"], json!(2));
         let none = [(1u64, Limit::none(NO_RESPONSE, ""))];
-        assert_eq!(tightest(none.iter().map(|(k, l)| (*k, l)))["status"], json!(NO_RESPONSE));
+        assert_eq!(
+            tightest(none.iter().map(|(k, l)| (*k, l)), "wt_pct")["status"],
+            json!(NO_RESPONSE)
+        );
     }
 
     #[test]
@@ -2828,16 +2837,5 @@ mod tests {
         let b = m(&[("Fe", 99.0), ("Co", 1.0 + 1e-15)]);
         assert_eq!(comp_key(&a), comp_key(&a.clone()));
         assert_ne!(comp_key(&a), comp_key(&b));
-    }
-
-    #[test]
-    fn nuclide_properties_type_is_available_for_the_waste_setup() {
-        // The waste setup serializes derived properties; keep the type in scope for the doc build.
-        let p = NuclideProperties {
-            z: 41,
-            half_life_s: 6.4e11,
-            alpha_emitting: false,
-        };
-        assert_eq!(serde_json::to_value(p).unwrap()["z"], json!(41));
     }
 }

@@ -42,6 +42,7 @@ const USAGE: &str = "usage: actinv run SPEC.json [OUT.json]\n\
                     actinv optimize OPTSPEC.json [OUTDIR] [--resume]\n\
                     actinv decide DECISION.json [OUT.json]\n\
                     actinv budget BUDGET.json [OUT.json] [--no-verify]\n\
+                    actinv impurities SPEC.json [OUT.json] [--no-verify]\n\
                     actinv waste WASTE.json [OUT.json]\n\
                     actinv waste budget BUDGET.json [OUT.json]\n\
                     actinv waste budget uncertainty SPEC.json [OUT.json]\n\
@@ -788,6 +789,7 @@ pub fn main_from(a: Vec<String>) {
             "import-fispact" => println!("{}\nConvert a FISPACT-II input deck into an actinv-spec-1 problem. The group fluxes come from --fluxes, else from the `fluxes` entry of the files file (--files, else DECK_files or files beside the deck). OUT.import.json lists every keyword with its line and a status: mapped, approximated, noted or unsupported. --strict fails when any keyword is unsupported. See docs/guide/fispact-migration.md.", crate::fispact_import::USAGE),
             "optimize" => println!("usage: actinv optimize OPTSPEC.json [OUTDIR] [--resume]\nRun a bounded, seeded design search over an actinv-optimize-1 document.\nEvery candidate is solved through the identical run path and recorded in\nOUTDIR/optimize_ledger.jsonl (append-only); the ranked result lands in\nOUTDIR/optimize_result.json. --resume skips already-ledgered evaluations."),
             "budget" => println!("usage: actinv budget BUDGET.json [OUT.json] [--no-verify]\nImpurity budgets for the IAEA clearance index from one coupled solve per element\n(activation at fixed flux is linear in composition). Every emitted limit is re-solved\nat that composition and compared with the prediction unless --no-verify is given.\nSee docs/BUDGET.md for the actinv-budget-1 schema."),
+            "impurities" => println!("usage: actinv impurities SPEC.json [OUT.json] [--no-verify]\nImpurity screening over declared composition ranges from one coupled solve per element:\nrankings, gradients, worst cases, limits and the Part 61 class for activity, heat, contact-dose\nproxy, clearance index and waste class at the target steps. Every reported composition is\nre-solved and compared with the prediction unless --no-verify is given (exit 3 on a miss).\nSee the impurities chapter of the handbook (docs/guide/impurities.md) for the actinv-impurities-1 schema."),
             "waste" => println!("usage: actinv waste WASTE.json [OUT.json]\n       actinv waste budget BUDGET.json [OUT.json]\n       actinv waste budget uncertainty SPEC.json [OUT.json]\n       actinv waste bounds BOUNDS.json [OUT.json]\n       actinv waste composition COMPOSITION.json [OUT.json]\n       actinv waste composition solve SPEC.json [OUT.json]\n       actinv waste intrusion-screen SPEC.json [OUT.json]\n       actinv waste uncertainty SPEC.json [OUT.json]\n       actinv waste package SPEC.json [OUT.json]\nNominal component classification, verified class impurity budgets, impurity budgets under nuclear-data uncertainty as an order-statistic bound over sampled re-solves, conservative classification of declared activity boxes, caller-declared affine composition ranges, native solver-generated composition responses, opt-in screening against a pinned 2026 draft intrusion table, class probabilities under nuclear-data uncertainty from a sampled re-solve, and the class of one container of discrete items, with encapsulation, under the NRC concentration-averaging BTP. Draft screening is a review aid only; it does not assess dose, acceptance, or legal compliance. The probabilities are conditional on the sampled channels. The package class holds only under the readings recorded in its result and where the disposal site's licence adopts the BTP. See the public waste handbook at docs/guide/waste.md."),
             "study" => println!("usage: actinv study validate STUDY.json\n       actinv study build STUDY.json [OUTDIR] [--revocations FILE]\n       actinv study run STUDY.json [OUTDIR] [--revocations FILE]\nValidate an actinv-study-1 document, expand it deterministically into actinv-spec-1 cases plus a manifest, or run the population and write study_record.json.\nSee docs/STUDY.md for the schema."),
             "inspect" => println!("{}\n{}", crate::inspect::USAGE, crate::inspect::HELP),
@@ -1138,6 +1140,47 @@ pub fn main_from(a: Vec<String>) {
             if let Some(out) = positional.get(1) {
                 eprintln!(
                     "budget: {} element solves, {} targets, verification {} (max rel dev {}) -> {}",
+                    doc["element_solves"].as_array().map_or(0, Vec::len),
+                    doc["targets"].as_array().map_or(0, Vec::len),
+                    if doc["verification"]["skipped"] == true {
+                        "skipped"
+                    } else if doc["verification"]["verified"] == true {
+                        "passed"
+                    } else {
+                        "FAILED"
+                    },
+                    doc["verification"]["max_rel_dev"],
+                    out
+                );
+            }
+            if doc["verification"]["skipped"] != true && doc["verification"]["verified"] != true {
+                std::process::exit(3);
+            }
+        }
+        "impurities" => {
+            const IMPURITIES_USAGE: &str =
+                "usage: actinv impurities SPEC.json [OUT.json] [--no-verify]";
+            let mut verify = true;
+            let mut positional = Vec::new();
+            for x in &a[2..] {
+                match x.as_str() {
+                    "--no-verify" => verify = false,
+                    f if f.starts_with("--") => die(format!("unknown impurities flag {f}"), 2),
+                    p => positional.push(p),
+                }
+            }
+            if positional.is_empty() || positional.len() > 2 {
+                die(IMPURITIES_USAGE, 2);
+            }
+            let doc = crate::impurities::run_impurities(
+                positional[0],
+                positional.get(1).copied(),
+                verify,
+            )
+            .unwrap_or_else(|e| die(e, 1));
+            if let Some(out) = positional.get(1) {
+                eprintln!(
+                    "impurities: {} element solves, {} targets, verification {} (max rel dev {}) -> {}",
                     doc["element_solves"].as_array().map_or(0, Vec::len),
                     doc["targets"].as_array().map_or(0, Vec::len),
                     if doc["verification"]["skipped"] == true {

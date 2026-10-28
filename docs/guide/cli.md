@@ -192,6 +192,7 @@ actinv reverse-qualified PROBLEM.json MEASUREMENTS.json OUT.ndjson
 actinv optimize OPTSPEC.json [OUTDIR] [--resume]
 actinv decide DECISION.json [OUT.json]
 actinv budget BUDGET.json [OUT.json] [--no-verify]
+actinv impurities SPEC.json [OUT.json] [--no-verify]
 actinv waste WASTE.json [OUT.json]
 actinv waste budget BUDGET.json [OUT.json]
 actinv waste bounds BOUNDS.json [OUT.json]
@@ -200,5 +201,9 @@ actinv waste composition solve NATIVE_COMPOSITION.json [OUT.json]
 actinv waste intrusion-screen INTRUSION.json [OUT.json]
 actinv waste package PACKAGE.json [OUT.json]
 ```
+
+`actinv impurities` screens a material's impurities over declared composition ranges from one solve per element; see
+[Screen a material's impurities](impurities.md). It exits 3, after writing its output, when a verification re-solve
+misses; a refused input (nonlinear options, a bad range, an unknown endpoint) exits 1 and writes nothing.
 
 Each workflow consumes its own document format. [Advanced workflows](workflows.md) links the schemas, examples, and applicability limits. Run `actinv COMMAND --help` for available help; some commands print the shared usage rather than a dedicated page.
