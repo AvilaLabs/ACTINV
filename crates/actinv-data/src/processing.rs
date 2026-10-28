@@ -9,6 +9,7 @@ use crate::resonance::{
 };
 use rayon::prelude::*;
 use std::collections::BTreeSet;
+use std::sync::Mutex;
 
 const LINEARIZATION_TOLERANCE: f64 = 2e-4;
 // Narrow RML resonances need ~log2(span/Γ) halvings to isolate; TENDL
@@ -992,10 +993,21 @@ fn evaluate_zero_k(
     analytic_lines: &[AnalyticLine],
     energy: f64,
     mt: i32,
+    clip: Option<&Mutex<Vec<(f64, f64)>>>,
 ) -> Result<f64, String> {
     let value = background.evaluate(energy)?
         + resonance_at(evaluation, energy, mt)?
         + analytic_wings_at(analytic_lines, energy, mt)?;
+    if let Some(clipped) = clip {
+        // NJOY RECONR sets a negative resonance-range cross section to zero.
+        if value.is_finite() && value < 0.0 {
+            clipped
+                .lock()
+                .map_err(|_| "zero-K clip record lock poisoned".to_string())?
+                .push((energy, value));
+            return Ok(0.0);
+        }
+    }
     if !value.is_finite() || value < -1e-10 {
         Err(format!(
             "MT={mt} zero-K reconstruction is nonfinite or negative at {energy} eV"
@@ -1223,6 +1235,36 @@ pub fn ultra_narrow_diagnostics(
     Ok(separate_ultra_narrow_lines(evaluation, groups, mt, temperature_k)?.diagnostics)
 }
 
+/// Negative 0 K values set to zero (as NJOY RECONR does) while reconstructing one reaction.
+#[derive(Clone, Debug, PartialEq)]
+pub struct ZeroKClipRecord {
+    pub mt: i32,
+    pub points: usize,
+    pub min_barn: f64,
+    pub min_energy_ev: f64,
+    pub low_ev: f64,
+    pub high_ev: f64,
+}
+
+fn summarize_clips(mt: i32, mut clipped: Vec<(f64, f64)>) -> Option<ZeroKClipRecord> {
+    // Bisection may evaluate one energy twice; count distinct energies.
+    clipped.sort_by(|a, b| a.0.total_cmp(&b.0));
+    clipped.dedup_by(|a, b| a.0 == b.0);
+    let first = clipped.first()?;
+    let last = clipped.last()?;
+    let (min_energy_ev, min_barn) = clipped
+        .iter()
+        .fold(*first, |best, &point| if point.1 < best.1 { point } else { best });
+    Some(ZeroKClipRecord {
+        mt,
+        points: clipped.len(),
+        min_barn,
+        min_energy_ev,
+        low_ev: first.0,
+        high_ev: last.0,
+    })
+}
+
 /// Reconstruct, Doppler broaden and linearize MT=2/18/102 from raw MF=2 plus its MF=3 background.
 pub fn process_reaction(
     evaluation: &ResonanceEvaluation,
@@ -1231,6 +1273,53 @@ pub fn process_reaction(
     mt: i32,
     temperature_k: f64,
     grid_density: f64,
+) -> Result<ProcessedReaction, String> {
+    process_reaction_impl(
+        evaluation,
+        background,
+        groups,
+        mt,
+        temperature_k,
+        grid_density,
+        None,
+    )
+    .map(|(processed, _)| processed)
+}
+
+/// As `process_reaction`, but a finite negative 0 K value is set to zero and
+/// reported instead of failing (NJOY RECONR practice). Nonfinite values still fail.
+pub fn process_reaction_clipped(
+    evaluation: &ResonanceEvaluation,
+    background: &Tabulated,
+    groups: &GroupStructure,
+    mt: i32,
+    temperature_k: f64,
+    grid_density: f64,
+) -> Result<(ProcessedReaction, Option<ZeroKClipRecord>), String> {
+    let clipped = Mutex::new(Vec::new());
+    let processed = process_reaction_impl(
+        evaluation,
+        background,
+        groups,
+        mt,
+        temperature_k,
+        grid_density,
+        Some(&clipped),
+    )?;
+    let clipped = clipped
+        .into_inner()
+        .map_err(|_| "zero-K clip record lock poisoned".to_string())?;
+    Ok((processed, summarize_clips(mt, clipped)))
+}
+
+fn process_reaction_impl(
+    evaluation: &ResonanceEvaluation,
+    background: &Tabulated,
+    groups: &GroupStructure,
+    mt: i32,
+    temperature_k: f64,
+    grid_density: f64,
+    clip: Option<&Mutex<Vec<(f64, f64)>>>,
 ) -> Result<ProcessedReaction, String> {
     if !matches!(mt, 2 | 18 | 102) {
         return Err(format!("MT={mt} is not resonance-processable"));
@@ -1299,21 +1388,44 @@ pub fn process_reaction(
     let initial = sorted_grid(initial, low, high)?;
     let initial_sigma: Vec<f64> = initial
         .par_iter()
-        .map(|&energy| evaluate_zero_k(&smooth_evaluation, background, &analytic_lines, energy, mt))
+        .map(|&energy| {
+            evaluate_zero_k(
+                &smooth_evaluation,
+                background,
+                &analytic_lines,
+                energy,
+                mt,
+                clip,
+            )
+        })
         .collect::<Result<_, _>>()?;
     let (zero_k_energy, zero_k_sigma, zero_k_passes) =
         linearize(initial, initial_sigma, |energies| {
             energies
                 .par_iter()
                 .map(|&energy| {
-                    evaluate_zero_k(&smooth_evaluation, background, &analytic_lines, energy, mt)
+                    evaluate_zero_k(
+                        &smooth_evaluation,
+                        background,
+                        &analytic_lines,
+                        energy,
+                        mt,
+                        clip,
+                    )
                 })
                 .collect()
         })
         .map_err(|error| format!("zero-K {error}"))?;
     let (zero_k_energy, zero_k_sigma) =
         insert_exact_discontinuities(zero_k_energy, zero_k_sigma, &discontinuities, |energy| {
-            evaluate_zero_k(&smooth_evaluation, background, &analytic_lines, energy, mt)
+            evaluate_zero_k(
+                &smooth_evaluation,
+                background,
+                &analytic_lines,
+                energy,
+                mt,
+                clip,
+            )
         })?;
     let zero_k_points = zero_k_energy.len();
 
@@ -1526,6 +1638,40 @@ mod tests {
             name: "analytic-line-test".into(),
             boundaries_ev: vec![1.0, 9.0, 11.0, 100.0],
         }
+    }
+
+    #[test]
+    fn negative_zero_k_fails_closed_but_clips_when_requested() {
+        let groups = test_groups();
+        let background = Tabulated {
+            interpolation: vec![(2, 2)],
+            x: vec![1.0, 100.0],
+            y: vec![-0.5, -0.5],
+        };
+        let evaluation = ultra_narrow_evaluation();
+        let error = process_reaction(&evaluation, &background, &groups, 102, 0.0, 0.01)
+            .unwrap_err();
+        assert!(error.contains("nonfinite or negative"), "{error}");
+        let (processed, record) =
+            process_reaction_clipped(&evaluation, &background, &groups, 102, 0.0, 0.01).unwrap();
+        let record = record.expect("negative values were clipped");
+        assert_eq!(record.mt, 102);
+        assert!(record.points >= 2);
+        assert!(record.min_barn < 0.0 && record.min_barn >= -0.5 - 1e-12);
+        assert!(record.low_ev >= 1.0 && record.high_ev <= 100.0);
+        assert!(record.low_ev <= record.min_energy_ev && record.min_energy_ev <= record.high_ev);
+        assert!(processed.table.y.iter().all(|&value| value >= 0.0));
+        // Nothing negative: no record.
+        let (_, none) = process_reaction_clipped(
+            &evaluation,
+            &zero_background(),
+            &groups,
+            102,
+            0.0,
+            0.01,
+        )
+        .unwrap();
+        assert!(none.is_none());
     }
 
     #[test]

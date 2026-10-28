@@ -718,6 +718,14 @@ to `elastic + inelastic + disappearance`), the three partials, `uncovered_xs_bar
 `displacement_nrt_barn`, `displacement_arc_barn` (when constants exist) and an informational `channels` record. The
 total feeds the linear `dpa` exactly as a table-1 file does.
 
+The 0 K resonance reconstruction sets a finite negative cross section to zero, as NJOY RECONR does for a negative
+resonance-range value. When that happens for an MT, the target's `channels.zero_k_clipped` array gains a record
+`{mt, points, min_barn, min_energy_eV, low_eV, high_eV}` (the number of distinct clipped energies, the most negative
+value and its energy, and the energy span of the clipped points); the key is absent for an evaluation with no negative
+value. A nonfinite value still fails the build. With `--continue-on-error true`, an evaluation whose processing fails is
+skipped: the top-level `failed` array lists `{file, sha256, error}` for each, sorted by file, the file still appears in
+`files`, and the array is absent from a table with no failure.
+
 With a table-2 file each step and each element add `dpa_nrt_rate_per_s`, `dpa_nrt` (exact NRT, integrated over the
 recoil spectrum), `dpa_arc_rate_per_s`, `dpa_arc` (absent unless every covered element has constants),
 `damage_energy_uncovered_upper_eV_per_g_s`, `dpa_uncovered_upper_bound_rate_per_s` and `dpa_uncovered_upper_bound`

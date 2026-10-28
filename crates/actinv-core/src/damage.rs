@@ -963,6 +963,7 @@ mod tests {
             method: "kinematic".into(),
             files: vec![],
             uncovered: vec![],
+            failed: vec![],
             displacement: kinematic::Table2Displacement {
                 displacement_energy_eV: BTreeMap::from([("Fe".to_string(), 40.0)]),
                 arc_dpa: kinematic::Table2Arc {

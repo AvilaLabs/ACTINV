@@ -14,6 +14,9 @@
 - With an `actinv-damage-table-2` file, an element that `damage.displacement_energy_eV` omits takes the energy the table
   records; an explicit value must still equal it. The damage ledger names each element's source in
   `displacement_energy_source` (`spec` or `table`), and `displacement_energy_eV` there lists the energies used.
+- `build-damage --method kinematic` sets a finite negative 0 K resonance reconstruction to zero as NJOY RECONR does
+  (recorded in `channels.zero_k_clipped`) instead of aborting, and `--continue-on-error true` lists a failing evaluation
+  in the table's `failed` array instead of stopping the build. Tables without either event are unchanged.
 
 **Added (P156: shipped damage table)**
 

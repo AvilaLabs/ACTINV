@@ -44,7 +44,9 @@ use crate::endf_distributions::{
     Law1Energy, Mf6Body, Mf6Data, Mf6Particle,
 };
 use crate::groups::{GroupStructure, Tabulated};
-use crate::processing::{has_resonance_contribution, process_reaction};
+use crate::processing::{
+    has_resonance_contribution, process_reaction_clipped, ZeroKClipRecord,
+};
 use crate::resonance::{validate_rmatrix_limited, RangeData};
 use rayon::prelude::*;
 use serde::{Deserialize, Serialize};
@@ -81,6 +83,15 @@ pub struct Table2Source {
 pub struct Table2File {
     pub path: String,
     pub sha256: String,
+}
+
+/// An evaluation whose processing failed under `--continue-on-error`.
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct Table2Failed {
+    pub file: String,
+    pub sha256: String,
+    pub error: String,
 }
 
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
@@ -147,6 +158,9 @@ pub struct DamageTable2 {
     /// Evaluations with no damage row (no MT=2 cross section).
     #[serde(default)]
     pub uncovered: Vec<String>,
+    /// Evaluations skipped under `--continue-on-error`, sorted by file; absent when none failed.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub failed: Vec<Table2Failed>,
     pub displacement: Table2Displacement,
     #[serde(default)]
     pub model: serde_json::Value,
@@ -1275,6 +1289,8 @@ pub struct KinematicOptions {
     pub capture_photons: CapturePhotons,
     pub continuum_recoil: ContinuumRecoil,
     pub grid_density: f64,
+    /// Record a failing evaluation in the table's `failed` array instead of aborting the build.
+    pub continue_on_error: bool,
 }
 
 /// Which table partial an MT belongs to (NJOY's MT=445/446/447 grouping).
@@ -1542,7 +1558,7 @@ fn sigma_table(
     mt: i32,
     use_resonance: bool,
     options: &KinematicOptions,
-) -> Result<Option<Tabulated>, String> {
+) -> Result<(Option<Tabulated>, Option<ZeroKClipRecord>), String> {
     let groups = &options.groups;
     if use_resonance && matches!(mt, 2 | 102) {
         let resonance = evaluation
@@ -1563,13 +1579,20 @@ fn sigma_table(
                 .get(&mt)
                 .or(zero_background.as_ref())
                 .expect("an MF=3 or explicit zero background is present");
-            let reaction =
-                process_reaction(resonance, background, groups, mt, 0.0, options.grid_density)
-                    .map_err(|error| format!("MT{mt} resonance processing: {error}"))?;
-            return Ok(Some(reaction.table));
+            // NJOY RECONR sets a negative resonance-range cross section to zero.
+            let (reaction, clipped) = process_reaction_clipped(
+                resonance,
+                background,
+                groups,
+                mt,
+                0.0,
+                options.grid_density,
+            )
+            .map_err(|error| format!("MT{mt} resonance processing: {error}"))?;
+            return Ok((Some(reaction.table), clipped));
         }
     }
-    Ok(evaluation.mf3.get(&mt).cloned())
+    Ok((evaluation.mf3.get(&mt).cloned(), None))
 }
 
 /// Per-group arrays of one evaluation plus a note on every channel.
@@ -1624,6 +1647,7 @@ fn compute_row(
     let (mut uncovered_xs, mut uncovered_bound) = (zeros(), zeros());
     let mut covered_notes = Vec::new();
     let mut uncovered_notes = Vec::new();
+    let mut clip_notes = Vec::new();
     let mut photon_mode = "not_applicable".to_string();
     let mut lab_fallbacks = 0usize;
     let mut unresolved_segments = 0usize;
@@ -1633,9 +1657,20 @@ fn compute_row(
         if !is_channel_mt(mt) || is_redundant(mt, &present) {
             continue;
         }
-        let Some(sigma) = sigma_table(evaluation, mt, use_resonance, options)? else {
+        let (sigma, clipped) = sigma_table(evaluation, mt, use_resonance, options)?;
+        let Some(sigma) = sigma else {
             continue;
         };
+        if let Some(clipped) = clipped {
+            clip_notes.push(serde_json::json!({
+                "mt": clipped.mt,
+                "points": clipped.points,
+                "min_barn": clipped.min_barn,
+                "min_energy_eV": clipped.min_energy_ev,
+                "low_eV": clipped.low_ev,
+                "high_eV": clipped.high_ev,
+            }));
+        }
         if sigma.y.iter().all(|value| *value == 0.0) {
             continue;
         }
@@ -1770,6 +1805,17 @@ fn compute_row(
     let total: Vec<f64> = (0..ng)
         .map(|g| elastic[g] + inelastic[g] + disappearance[g])
         .collect();
+    let mut channels = serde_json::json!({
+        "covered": covered_notes,
+        "uncovered": uncovered_notes,
+        "capture_photon_recoil": photon_mode,
+        "evaluated_recoil_channels": evaluated_recoil_channels,
+        "lab_frame_cm_fallback_evaluations": lab_fallbacks,
+        "unresolved_refinement_segments": unresolved_segments,
+    });
+    if !clip_notes.is_empty() {
+        channels["zero_k_clipped"] = clip_notes.into();
+    }
     Ok(Some(Table2Row {
         damage_energy_barn_eV: total,
         elastic,
@@ -1779,14 +1825,7 @@ fn compute_row(
         uncovered_damage_upper_barn_eV: uncovered_bound,
         displacement_nrt_barn: nrt,
         displacement_arc_barn: arc.map(|_| arc_values),
-        channels: serde_json::json!({
-            "covered": covered_notes,
-            "uncovered": uncovered_notes,
-            "capture_photon_recoil": photon_mode,
-            "evaluated_recoil_channels": evaluated_recoil_channels,
-            "lab_frame_cm_fallback_evaluations": lab_fallbacks,
-            "unresolved_refinement_segments": unresolved_segments,
-        }),
+        channels,
     }))
 }
 
@@ -1798,6 +1837,7 @@ fn compute_row(
 pub struct KinematicBuildSummary {
     pub targets: usize,
     pub uncovered_evaluations: usize,
+    pub failed_evaluations: usize,
     pub cache_hits: usize,
     pub projectile: Projectile,
     pub output: PathBuf,
@@ -1943,6 +1983,15 @@ fn kinematic_source(
     Ok((entry, provenance, false))
 }
 
+fn failed_file_identity(path: &Path) -> Result<(String, String), String> {
+    let file = path
+        .file_name()
+        .and_then(|name| name.to_str())
+        .ok_or_else(|| format!("input filename '{}' is not UTF-8", path.display()))?
+        .to_owned();
+    Ok((file, sha256_file(path)?))
+}
+
 /// Build and atomically publish an `actinv-damage-table-2` from a neutron evaluation directory or file.
 pub fn build_damage_kinematic(
     input: impl AsRef<Path>,
@@ -2003,9 +2052,25 @@ pub fn build_damage_kinematic(
     let mut provenance = Vec::new();
     let mut uncovered = Vec::new();
     let mut cache_hits = 0usize;
+    let mut failed = Vec::new();
     for path in &files {
-        let (entry, file_provenance, hit) = kinematic_source(path, options, projectile)
-            .map_err(|error| format!("{}: {error}", path.display()))?;
+        let (entry, file_provenance, hit) = match kinematic_source(path, options, projectile) {
+            Ok(result) => result,
+            Err(error) if options.continue_on_error => {
+                let (file, sha256) = failed_file_identity(path)?;
+                provenance.push(Table2File {
+                    path: file.clone(),
+                    sha256: sha256.clone(),
+                });
+                failed.push(Table2Failed {
+                    file,
+                    sha256,
+                    error,
+                });
+                continue;
+            }
+            Err(error) => return Err(format!("{}: {error}", path.display())),
+        };
         cache_hits += usize::from(hit);
         provenance.push(file_provenance);
         for (name, row) in entry.targets {
@@ -2020,6 +2085,7 @@ pub fn build_damage_kinematic(
         }
         uncovered.extend(entry.uncovered);
     }
+    failed.sort_by(|a, b| a.file.cmp(&b.file));
     let mut displacement_energy_eV = BTreeMap::new();
     let mut parameters = BTreeMap::new();
     for name in targets.keys() {
@@ -2059,6 +2125,7 @@ pub fn build_damage_kinematic(
         method: "kinematic".into(),
         files: provenance,
         uncovered,
+        failed,
         displacement: Table2Displacement {
             displacement_energy_eV,
             arc_dpa: Table2Arc {
@@ -2089,6 +2156,7 @@ pub fn build_damage_kinematic(
     Ok(KinematicBuildSummary {
         targets: table.targets.len(),
         uncovered_evaluations: table.uncovered.len(),
+        failed_evaluations: table.failed.len(),
         cache_hits,
         projectile,
         output: output.to_path_buf(),
@@ -2234,6 +2302,7 @@ mod tests {
             capture_photons: CapturePhotons::Evaluated,
             continuum_recoil: ContinuumRecoil::Kinematic,
             grid_density: 1.0,
+            continue_on_error: false,
         };
         assert_eq!(displacement_energy_for(&options, "Fe"), 40.0);
         assert_eq!(displacement_energy_for(&options, "W"), 90.0);
@@ -2409,6 +2478,7 @@ mod tests {
                 sha256: "0".repeat(64),
             }],
             uncovered: vec![],
+            failed: vec![],
             displacement: Table2Displacement {
                 displacement_energy_eV: BTreeMap::from([("Fe".to_string(), 40.0)]),
                 arc_dpa: Table2Arc {
@@ -2546,6 +2616,7 @@ mod tests {
             capture_photons: CapturePhotons::Evaluated,
             continuum_recoil: ContinuumRecoil::Kinematic,
             grid_density: 1.0,
+            continue_on_error: false,
         };
         let row = compute_row(
             evaluation,
@@ -2607,6 +2678,49 @@ mod tests {
         let mts: Vec<i64> = notes.iter().map(|n| n["mt"].as_i64().unwrap()).collect();
         assert_eq!(mts, vec![4, 16]);
         assert_eq!(row.channels["covered"][0]["mt"], 2);
+    }
+
+    #[test]
+    fn continue_on_error_lists_failed_evaluations() {
+        let directory = std::env::temp_dir().join(format!(
+            "actinv-continue-on-error-{}",
+            std::process::id()
+        ));
+        let _ = std::fs::remove_dir_all(&directory);
+        let input = directory.join("evaluations");
+        std::fs::create_dir_all(&input).unwrap();
+        std::fs::write(input.join("n-Fe056.tendl"), synthetic_tape()).unwrap();
+        std::fs::write(input.join("n-Bad000.tendl"), "not an ENDF tape\n").unwrap();
+        let mut options = KinematicOptions {
+            projectile: Some(Projectile::Neutron),
+            groups: GroupStructure {
+                name: "test".into(),
+                boundaries_ev: vec![1.0e-5, 1.0e3, 1.0e5, 1.0e6, 1.0e7, 2.0e7],
+            },
+            temperature_K: 0.0,
+            cache: None,
+            displacement_energy_eV: BTreeMap::new(),
+            default_displacement_energy_eV: 40.0,
+            capture_photons: CapturePhotons::Evaluated,
+            continuum_recoil: ContinuumRecoil::Kinematic,
+            grid_density: 1.0,
+            continue_on_error: false,
+        };
+        let output = directory.join("table.json");
+        assert!(build_damage_kinematic(&input, &output, &options).is_err());
+        options.continue_on_error = true;
+        let summary = build_damage_kinematic(&input, &output, &options).unwrap();
+        assert_eq!((summary.targets, summary.failed_evaluations), (1, 1));
+        let table: DamageTable2 =
+            serde_json::from_str(&std::fs::read_to_string(&output).unwrap()).unwrap();
+        assert_eq!(table.failed.len(), 1);
+        assert_eq!(table.failed[0].file, "n-Bad000.tendl");
+        assert_eq!(table.failed[0].sha256.len(), 64);
+        assert!(!table.failed[0].error.is_empty());
+        assert_eq!(table.files.len(), 2);
+        assert!(table.targets.contains_key("Fe56"));
+        assert!(table.targets["Fe56"].channels.get("zero_k_clipped").is_none());
+        std::fs::remove_dir_all(&directory).unwrap();
     }
 
     fn g0_f(g0: f64, g1: f64, i: usize, n: usize) -> f64 {
