@@ -4495,3 +4495,16 @@ Also disclosed:
   G5's other checks ran on every case and target: nominal class against `actinv waste`, the worst class against
   every corner solve, and the separately maximised table sums.
 - **G8** is pending CI on the pushed commit.
+
+## Entry 256 — P157 G8 failed on 78ebd9d; Amendment A registered (2026-10-28)
+
+CI on the evidence commit `78ebd9d` was red. The controls workflow failed "Public examples are portable": the
+worked example's `base_spec.json` named its photon response `actinv-data/v1.1.0/photon/nist-xcom-all.json`, which
+no data catalog holds. The file is built by the user with `scripts/build_photon_response.py`, and a copy in that
+directory on the development machine had hidden the defect locally. Handbook, desktop builds, fns-iron, browser
+workbench and fusion-isotope were green. The failed step and the run list are preserved under
+`results/failures/p157/g8_ci_attempt1/`.
+
+- **P157 Amendment A** `20085866bd7ab94327c9ac6cb846666265037f881106e77d6988900c992f080b`: the example names its photon response `photon-response/nist-xcom-all.json`,
+  outside the catalog namespace, with the same declared SHA-256. The full evidence run is repeated with the old
+  path removed from the data home. This is P157's one repair round.

@@ -1,0 +1,45 @@
+current-controls	Public examples are portable	﻿2026-10-28T20:53:20.0776891Z ##[group]Run python controls/check_public_examples.py
+current-controls	Public examples are portable	2026-10-28T20:53:20.0777334Z [36;1mpython controls/check_public_examples.py[0m
+current-controls	Public examples are portable	2026-10-28T20:53:20.0798075Z shell: /usr/bin/bash -e {0}
+current-controls	Public examples are portable	2026-10-28T20:53:20.0798358Z env:
+current-controls	Public examples are portable	2026-10-28T20:53:20.0798586Z   ACTINV_CI_DATA: /tmp/actinv-ci-data
+current-controls	Public examples are portable	2026-10-28T20:53:20.0798890Z   ACTINV_CI_OUT: /tmp/actinv-ci
+current-controls	Public examples are portable	2026-10-28T20:53:20.0799171Z   ACTINV_P8_WORK: /tmp/actinv-p8
+current-controls	Public examples are portable	2026-10-28T20:53:20.0799544Z   ACTINV_P9_WORK: /tmp/actinv-p9
+current-controls	Public examples are portable	2026-10-28T20:53:20.0800109Z   ACTINV_P9_RESULTS: /tmp/actinv-p9-results
+current-controls	Public examples are portable	2026-10-28T20:53:20.0800440Z   ACTINV_P10_WORK: /tmp/actinv-p10
+current-controls	Public examples are portable	2026-10-28T20:53:20.0800721Z   CARGO_HOME: /home/runner/.cargo
+current-controls	Public examples are portable	2026-10-28T20:53:20.0800988Z   CARGO_INCREMENTAL: 0
+current-controls	Public examples are portable	2026-10-28T20:53:20.0801218Z   CARGO_TERM_COLOR: always
+current-controls	Public examples are portable	2026-10-28T20:53:20.0801459Z   CACHE_ON_FAILURE: false
+current-controls	Public examples are portable	2026-10-28T20:53:20.0801768Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.15/x64
+current-controls	Public examples are portable	2026-10-28T20:53:20.0802219Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.15/x64/lib/pkgconfig
+current-controls	Public examples are portable	2026-10-28T20:53:20.0802709Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+current-controls	Public examples are portable	2026-10-28T20:53:20.0803110Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+current-controls	Public examples are portable	2026-10-28T20:53:20.0803501Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+current-controls	Public examples are portable	2026-10-28T20:53:20.0822403Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.15/x64/lib
+current-controls	Public examples are portable	2026-10-28T20:53:20.0823056Z   ACTINV_BIN: target/release/actinv
+current-controls	Public examples are portable	2026-10-28T20:53:20.0823456Z ##[endgroup]
+current-controls	Public examples are portable	2026-10-28T20:53:20.2047731Z {
+current-controls	Public examples are portable	2026-10-28T20:53:20.2048212Z  "examples": [
+current-controls	Public examples are portable	2026-10-28T20:53:20.2048726Z   "examples/damage_demo.json",
+current-controls	Public examples are portable	2026-10-28T20:53:20.2049242Z   "examples/damage_table_demo.json",
+current-controls	Public examples are portable	2026-10-28T20:53:20.2049937Z   "examples/feed_removal_demo.json",
+current-controls	Public examples are portable	2026-10-28T20:53:20.2050459Z   "examples/fns_fe_5min.json",
+current-controls	Public examples are portable	2026-10-28T20:53:20.2050949Z   "examples/mesh_demo.json",
+current-controls	Public examples are portable	2026-10-28T20:53:20.2051441Z   "examples/pulsed_demo.json",
+current-controls	Public examples are portable	2026-10-28T20:53:20.2051954Z   "examples/reverse_demo_measurements.json",
+current-controls	Public examples are portable	2026-10-28T20:53:20.2052512Z   "examples/reverse_demo_problem.json",
+current-controls	Public examples are portable	2026-10-28T20:53:20.2053055Z   "examples/shielding_demo.json",
+current-controls	Public examples are portable	2026-10-28T20:53:20.2053576Z   "examples/study_fe_smoke.json"
+current-controls	Public examples are portable	2026-10-28T20:53:20.2054055Z  ],
+current-controls	Public examples are portable	2026-10-28T20:53:20.2054484Z  "portable_paths": true,
+current-controls	Public examples are portable	2026-10-28T20:53:20.2054993Z  "default_bundle": "tendl-2025-neutron",
+current-controls	Public examples are portable	2026-10-28T20:53:20.2055535Z  "catalog_fragment_exact": true,
+current-controls	Public examples are portable	2026-10-28T20:53:20.2056032Z  "spec_valid": true,
+current-controls	Public examples are portable	2026-10-28T20:53:20.2056474Z  "errors": [
+current-controls	Public examples are portable	2026-10-28T20:53:20.2057412Z   "declared hash mismatch: examples/impurities_ra_steel/base_spec.json /photon/response: actinv-data/v1.1.0/photon/nist-xcom-all.json is not in the v1.1.0 data catalog"
+current-controls	Public examples are portable	2026-10-28T20:53:20.2058657Z  ],
+current-controls	Public examples are portable	2026-10-28T20:53:20.2059080Z  "pass": false
+current-controls	Public examples are portable	2026-10-28T20:53:20.2059513Z }
+current-controls	Public examples are portable	2026-10-28T20:53:20.2112874Z ##[error]Process completed with exit code 1.
