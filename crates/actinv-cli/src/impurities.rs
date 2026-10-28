@@ -201,7 +201,9 @@ fn parse_range(element: &str, value: &Value) -> Result<Range, String> {
     };
     for x in [range.nominal, range.min, range.max] {
         if !(x.is_finite() && x >= 0.0) {
-            return Err(format!("impurity {element}: wt% must be finite and nonnegative"));
+            return Err(format!(
+                "impurity {element}: wt% must be finite and nonnegative"
+            ));
         }
     }
     if range.min > range.nominal {
@@ -253,7 +255,9 @@ pub fn parse_endpoint(value: &Value) -> Result<Endpoint, String> {
                 Some(x) => Some(
                     x.as_f64()
                         .filter(|l| l.is_finite() && *l > 0.0)
-                        .ok_or_else(|| format!("endpoint {name}: limit must be a positive number"))?,
+                        .ok_or_else(|| {
+                            format!("endpoint {name}: limit must be a positive number")
+                        })?,
                 ),
             };
             let class = match o.get("class") {
@@ -288,9 +292,14 @@ pub fn parse_endpoint(value: &Value) -> Result<Endpoint, String> {
                         .into(),
                 );
             }
-            let text = class.ok_or("endpoint waste_class needs \"class\": \"A\", \"B\" or \"C\"")?;
+            let text =
+                class.ok_or("endpoint waste_class needs \"class\": \"A\", \"B\" or \"C\"")?;
             let target = parse_class("waste_class", &text)?;
-            (format!("waste_class:{text}"), EndpointKind::WasteClass(target), None)
+            (
+                format!("waste_class:{text}"),
+                EndpointKind::WasteClass(target),
+                None,
+            )
         }
         other => match other.strip_prefix("activity:") {
             Some(nuclide) if !nuclide.is_empty() => (
@@ -437,13 +446,19 @@ pub fn limit_linear(g: f64, v0: f64, cap: f64, limit: f64) -> Limit {
 /// is `None`.
 pub fn limit_bisect(f: &dyn Fn(f64) -> Option<f64>, cap: f64, limit: f64) -> Limit {
     let Some(f0) = f(0.0) else {
-        return Limit::none(UNAVAILABLE, "the endpoint is unavailable without the impurity");
+        return Limit::none(
+            UNAVAILABLE,
+            "the endpoint is unavailable without the impurity",
+        );
     };
     if f0 >= limit {
         return Limit::none(INFEASIBLE, "the other constituents alone reach the limit");
     }
     let Some(fc) = f(cap) else {
-        return Limit::none(UNAVAILABLE, "the endpoint is unavailable at the composition bound");
+        return Limit::none(
+            UNAVAILABLE,
+            "the endpoint is unavailable at the composition bound",
+        );
     };
     if fc < limit {
         return Limit::none(
@@ -459,7 +474,10 @@ pub fn limit_bisect(f: &dyn Fn(f64) -> Option<f64>, cap: f64, limit: f64) -> Lim
         let mid = 0.5 * (lo + hi);
         match f(mid) {
             None => {
-                return Limit::none(UNAVAILABLE, "the endpoint is unavailable inside the bracket")
+                return Limit::none(
+                    UNAVAILABLE,
+                    "the endpoint is unavailable inside the bracket",
+                )
             }
             Some(v) if v >= limit => hi = mid,
             Some(_) => lo = mid,
@@ -608,7 +626,10 @@ fn solve_joint(
     let nominal = frame.nominal();
     let total: f64 = nominal.values().sum();
     if total <= 0.0 {
-        return Ok(Limit::none(NO_RESPONSE, "every impurity has a nominal weight of zero"));
+        return Ok(Limit::none(
+            NO_RESPONSE,
+            "every impurity has a nominal weight of zero",
+        ));
     }
     let cap = (100.0 - frame.matrix_total()) / total;
     match eval {
@@ -849,12 +870,12 @@ fn raw_sums(ev: &Evaluation) -> Result<[f64; 4], String> {
     ])
 }
 
-fn constraint<'a>(
-    ev: &'a Evaluation,
+fn constraint(
+    ev: &Evaluation,
     target: WasteClass,
     table: u8,
     column: Option<u8>,
-) -> Result<&'a ClassConstraint, String> {
+) -> Result<&ClassConstraint, String> {
     ev.constraints
         .iter()
         .find(|c| c.target_class == target && c.table == table && c.column == column)
@@ -898,6 +919,8 @@ struct ElemTarget {
 
 /// element -> one-based step -> the quantities read from that element's run.
 type ElemRuns = BTreeMap<String, BTreeMap<u64, ElemTarget>>;
+/// Per step: the waste class at nominal, the worst class over the ranges, and each impurity's contribution.
+type ClassSpan = (WasteClass, WasteClass, Comp);
 
 fn extract_target(result: &Value, step: u64, photons: bool) -> Result<ElemTarget, String> {
     let st = budget::step_of(result, step)?;
@@ -1310,8 +1333,8 @@ fn parse_doc(text: &str, dir: &Path) -> Result<Parsed, String> {
                 .into(),
         );
     }
-    let mut spec: ImpuritiesSpec = serde_json::from_value(raw)
-        .map_err(|e| format!("cannot parse impurities spec: {e}"))?;
+    let mut spec: ImpuritiesSpec =
+        serde_json::from_value(raw).map_err(|e| format!("cannot parse impurities spec: {e}"))?;
     if spec.schema != "actinv-impurities-1" {
         return Err(format!(
             "impurities schema must be actinv-impurities-1, got '{}'",
@@ -1483,11 +1506,7 @@ fn eval_composition(
 }
 
 /// The class evaluation of a solved run at a step.
-fn eval_solved(
-    cx: &waste_budget::Setup,
-    t: &ElemTarget,
-    step: u64,
-) -> Result<Evaluation, String> {
+fn eval_solved(cx: &waste_budget::Setup, t: &ElemTarget, step: u64) -> Result<Evaluation, String> {
     let act: BTreeMap<String, f64> = t
         .activity
         .iter()
@@ -1573,7 +1592,12 @@ fn class_target(
 
     // Worst case: each raw sum maximised over the box at its own corner, then classified.
     let mut corner_evs = Vec::new();
-    let names = ["table_1", "table_2_column_1", "table_2_column_2", "table_2_column_3"];
+    let names = [
+        "table_1",
+        "table_2_column_1",
+        "table_2_column_2",
+        "table_2_column_3",
+    ];
     for (k, res) in results.iter().enumerate() {
         let comp = frame.comp(&res.worst_weights)?;
         let ev = eval_composition(s, runs, step, &comp)?;
@@ -1772,10 +1796,8 @@ pub fn run_impurities_doc(text: &str, dir: &Path, verify: bool) -> Result<Value,
         solves.push(json!({"element": e, "ms": ms, "mode": res["mode"]}));
         runs.insert(e.clone(), by_step);
     }
-    let response: Option<PhotonResponse> = cache
-        .prepared()
-        .and_then(|p| p.photon_response())
-        .cloned();
+    let response: Option<PhotonResponse> =
+        cache.prepared().and_then(|p| p.photon_response()).cloned();
 
     let mut warnings: Vec<String> = Vec::new();
     for ep in &endpoints {
@@ -1831,9 +1853,7 @@ pub fn run_impurities_doc(text: &str, dir: &Path, verify: bool) -> Result<Value,
         for e in &elements {
             let steps: Vec<Value> = runs[e]
                 .iter()
-                .map(|(k, t)| {
-                    json!({"step": k, "t_s": t.t_s, "activity_Bq_per_g": t.activity})
-                })
+                .map(|(k, t)| json!({"step": k, "t_s": t.t_s, "activity_Bq_per_g": t.activity}))
                 .collect();
             let run = json!({"mode": "coupled", "steps": steps});
             let (b, _record) = waste_budget::element_basis(&setup, e, &run)?;
@@ -1851,8 +1871,7 @@ pub fn run_impurities_doc(text: &str, dir: &Path, verify: bool) -> Result<Value,
     let mut requests: Vec<Request> = Vec::new();
     let mut targets_out = Vec::new();
     let mut scalar_by_ep: BTreeMap<String, BTreeMap<u64, ScalarResult>> = BTreeMap::new();
-    let mut class_by_ep: BTreeMap<String, BTreeMap<u64, (WasteClass, WasteClass, BTreeMap<String, f64>)>> =
-        BTreeMap::new();
+    let mut class_by_ep: BTreeMap<String, BTreeMap<u64, ClassSpan>> = BTreeMap::new();
     for &k in &spec.targets {
         let t_s = runs[&frame.balance][&k].t_s;
         let mut eps: Vec<Value> = Vec::new();
@@ -1897,7 +1916,15 @@ pub fn run_impurities_doc(text: &str, dir: &Path, verify: bool) -> Result<Value,
                         }
                     }
                     eps.push(scalar_json(&res, &frame, ep, &top, &reasons));
-                    register_scalar(&mut requests, &frame, &Evaluator::General(&f), ep, idx, k, &res)?;
+                    register_scalar(
+                        &mut requests,
+                        &frame,
+                        &Evaluator::General(&f),
+                        ep,
+                        idx,
+                        k,
+                        &res,
+                    )?;
                     scalar_by_ep
                         .entry(ep.id.clone())
                         .or_default()
@@ -1919,8 +1946,7 @@ pub fn run_impurities_doc(text: &str, dir: &Path, verify: bool) -> Result<Value,
                         let resolved = parts.values().any(|p| !p.is_empty());
                         top.insert(
                             e.clone(),
-                            resolved
-                                .then(|| top_linear(&parts, &frame.balance, e, range.nominal)),
+                            resolved.then(|| top_linear(&parts, &frame.balance, e, range.nominal)),
                         );
                     }
                     eps.push(scalar_json(&res, &frame, ep, &top, &BTreeMap::new()));
@@ -2408,7 +2434,13 @@ mod tests {
     }
 
     fn r() -> BTreeMap<String, f64> {
-        m(&[("Fe", 0.01), ("Ni", 10.0), ("Co", 1000.0), ("Nb", 2000.0), ("Al", 0.001)])
+        m(&[
+            ("Fe", 0.01),
+            ("Ni", 10.0),
+            ("Co", 1000.0),
+            ("Nb", 2000.0),
+            ("Al", 0.001),
+        ])
     }
 
     #[test]
@@ -2426,7 +2458,11 @@ mod tests {
         let nominal_over = parse_range("Co", &json!({"nominal": 0.05, "min": 0.0, "max": 0.03}));
         assert!(nominal_over.unwrap_err().contains("nominal"));
         assert!(parse_range("Co", &json!({"nominal": 0.01, "min": 0.0})).is_err());
-        assert!(parse_range("Co", &json!({"nominal": 0.01, "min": 0.0, "max": 1.0, "x": 1})).is_err());
+        assert!(parse_range(
+            "Co",
+            &json!({"nominal": 0.01, "min": 0.0, "max": 1.0, "x": 1})
+        )
+        .is_err());
         assert!(parse_range("Co", &json!(-1.0)).is_err());
         assert!(parse_range("Co", &json!("x")).is_err());
     }
@@ -2434,7 +2470,10 @@ mod tests {
     #[test]
     fn endpoint_parsing_and_refusals() {
         let ok = |v: Value| parse_endpoint(&v).unwrap();
-        assert_eq!(ok(json!("activity.total")).kind, EndpointKind::ActivityTotal);
+        assert_eq!(
+            ok(json!("activity.total")).kind,
+            EndpointKind::ActivityTotal
+        );
         assert_eq!(
             ok(json!({"endpoint": "heat.total", "limit": 1e-3})).limit,
             Some(1e-3)
@@ -2450,7 +2489,10 @@ mod tests {
         assert!(parse_endpoint(&json!("magnetism")).is_err());
         assert!(parse_endpoint(&json!("activity:")).is_err());
         // a limit on waste_class, a class on another endpoint, a missing or bad class
-        assert!(parse_endpoint(&json!({"endpoint": "waste_class", "class": "C", "limit": 1.0})).is_err());
+        assert!(
+            parse_endpoint(&json!({"endpoint": "waste_class", "class": "C", "limit": 1.0}))
+                .is_err()
+        );
         assert!(parse_endpoint(&json!({"endpoint": "heat.total", "class": "C"})).is_err());
         assert!(parse_endpoint(&json!("waste_class")).is_err());
         assert!(parse_endpoint(&json!({"endpoint": "waste_class", "class": "D"})).is_err());
@@ -2475,7 +2517,9 @@ mod tests {
     fn documents_with_nonlinear_or_unsupported_content_are_refused_before_any_solve() {
         let dir = Path::new(".");
         let refused = |extra: Value, needle: &str| {
-            let err = parse_doc(&doc(extra), dir).err().expect("accepted a bad document");
+            let err = parse_doc(&doc(extra), dir)
+                .err()
+                .expect("accepted a bad document");
             assert!(err.contains(needle), "{err}");
         };
         refused(json!({"uncertainty": {"covariance": {}}}), "uncertainty");
@@ -2488,7 +2532,10 @@ mod tests {
             json!({"endpoints": [{"endpoint": "waste_class", "class": "C", "limit": 1.0}]}),
             "waste_class",
         );
-        refused(json!({"endpoints": ["dose.contact_proxy"]}), "photon section");
+        refused(
+            json!({"endpoints": ["dose.contact_proxy"]}),
+            "photon section",
+        );
         refused(json!({"endpoints": ["waste_class:C"]}), "unknown endpoint");
         refused(
             json!({"endpoints": [{"endpoint": "waste_class", "class": "C"}]}),
@@ -2528,7 +2575,10 @@ mod tests {
         for e in [
             "Al", "B", "C", "Ca", "Co", "Cu", "Eu", "K", "Mg", "Mn", "Mo", "N", "Na",
         ] {
-            imps.insert(e.into(), json!({"nominal": 0.001, "min": 0.0, "max": 0.002}));
+            imps.insert(
+                e.into(),
+                json!({"nominal": 0.001, "min": 0.0, "max": 0.002}),
+            );
         }
         let many = json!({
             "endpoints": ["dose.contact_proxy"], "impurities": imps,
@@ -2542,7 +2592,15 @@ mod tests {
     fn linear_gradient_contribution_and_worst_corner_by_sign() {
         let f = frame();
         let rv = r();
-        let res = analyse_scalar(&f, &Evaluator::Linear { r: &rv, offset: 0.0 }, None).unwrap();
+        let res = analyse_scalar(
+            &f,
+            &Evaluator::Linear {
+                r: &rv,
+                offset: 0.0,
+            },
+            None,
+        )
+        .unwrap();
         // gradient = (r_i - r_balance) / 100
         let g_co = (1000.0 - 0.01) / 100.0;
         let g_al = (0.001 - 0.01) / 100.0;
@@ -2569,11 +2627,19 @@ mod tests {
                 .imps
                 .iter()
                 .enumerate()
-                .map(|(j, (e, rg))| (e.clone(), if (mask >> j) & 1 == 1 { rg.max } else { rg.min }))
+                .map(|(j, (e, rg))| {
+                    (
+                        e.clone(),
+                        if (mask >> j) & 1 == 1 { rg.max } else { rg.min },
+                    )
+                })
                 .collect();
-            let v = Evaluator::Linear { r: &rv, offset: 0.0 }
-                .value(&f.comp(&w).unwrap())
-                .unwrap();
+            let v = Evaluator::Linear {
+                r: &rv,
+                offset: 0.0,
+            }
+            .value(&f.comp(&w).unwrap())
+            .unwrap();
             assert!(v <= res.worst.unwrap() + 1e-15, "{v} > {:?}", res.worst);
         }
     }
@@ -2581,8 +2647,22 @@ mod tests {
     #[test]
     fn a_zero_gradient_ties_to_max() {
         let f = frame();
-        let rv = m(&[("Fe", 1.0), ("Co", 1.0), ("Nb", 1.0), ("Al", 1.0), ("Ni", 1.0)]);
-        let res = analyse_scalar(&f, &Evaluator::Linear { r: &rv, offset: 0.0 }, None).unwrap();
+        let rv = m(&[
+            ("Fe", 1.0),
+            ("Co", 1.0),
+            ("Nb", 1.0),
+            ("Al", 1.0),
+            ("Ni", 1.0),
+        ]);
+        let res = analyse_scalar(
+            &f,
+            &Evaluator::Linear {
+                r: &rv,
+                offset: 0.0,
+            },
+            None,
+        )
+        .unwrap();
         assert!(res.worst_corner.values().all(|c| *c == "max"));
     }
 
@@ -2590,10 +2670,13 @@ mod tests {
     fn linear_limits_in_three_contexts_and_their_statuses() {
         let f = frame();
         let rv = r();
-        let ev = Evaluator::Linear { r: &rv, offset: 0.0 };
+        let ev = Evaluator::Linear {
+            r: &rv,
+            offset: 0.0,
+        };
         let l = 0.5;
         let res = analyse_scalar(&f, &ev, Some(l)).unwrap();
-        let g = res.impurities["Co"].gradient.unwrap();
+        assert!(res.impurities["Co"].gradient.is_some());
         // alone: only Co present
         let alone = res.impurities["Co"].alone.clone().unwrap();
         assert_eq!(alone.status, "limit");
@@ -2632,12 +2715,18 @@ mod tests {
     fn linear_limits_infeasible_when_the_others_already_reach_the_limit() {
         let f = frame();
         let rv = r();
-        let ev = Evaluator::Linear { r: &rv, offset: 0.0 };
+        let ev = Evaluator::Linear {
+            r: &rv,
+            offset: 0.0,
+        };
         // matrix alone is 0.1099 > 0.05
         let res = analyse_scalar(&f, &ev, Some(0.05)).unwrap();
         for e in ["Co", "Nb"] {
             assert_eq!(res.impurities[e].alone.as_ref().unwrap().status, INFEASIBLE);
-            assert_eq!(res.impurities[e].others_nominal.as_ref().unwrap().status, INFEASIBLE);
+            assert_eq!(
+                res.impurities[e].others_nominal.as_ref().unwrap().status,
+                INFEASIBLE
+            );
         }
         assert_eq!(res.joint.as_ref().unwrap().status, INFEASIBLE);
         assert_eq!(res.joint.as_ref().unwrap().value, None);
@@ -2659,12 +2748,15 @@ mod tests {
         let f = |x: f64| -> Option<f64> { Some(3.0 * x + x * x / 10.0) };
         let want = {
             // solve x^2/10 + 3x - 7 = 0
-            let (a, b, c) = (0.1, 3.0, -7.0);
+            let (a, b, c): (f64, f64, f64) = (0.1, 3.0, -7.0);
             (-b + (b * b - 4.0 * a * c).sqrt()) / (2.0 * a)
         };
         let got = limit_bisect(&f, 50.0, 7.0);
         assert_eq!(got.status, "limit");
-        assert!((got.value.unwrap() - want).abs() <= 2e-9 * want, "{got:?} vs {want}");
+        assert!(
+            (got.value.unwrap() - want).abs() <= 2e-9 * want,
+            "{got:?} vs {want}"
+        );
         // not reached before the bound
         assert_eq!(limit_bisect(&f, 1.0, 7.0).status, NO_RESPONSE);
         // already reached with nothing added
@@ -2697,7 +2789,12 @@ mod tests {
                 .imps
                 .iter()
                 .enumerate()
-                .map(|(j, (e, rg))| (e.clone(), if (mask >> j) & 1 == 1 { rg.max } else { rg.min }))
+                .map(|(j, (e, rg))| {
+                    (
+                        e.clone(),
+                        if (mask >> j) & 1 == 1 { rg.max } else { rg.min },
+                    )
+                })
                 .collect();
             best = best.max(func(&f.comp(&w).unwrap()).unwrap());
         }
@@ -2714,14 +2811,25 @@ mod tests {
         w.insert("Co".into(), lim.value.unwrap());
         assert!((func(&f.comp(&w).unwrap()).unwrap() - 80.0).abs() < 1e-6);
         // Al does not enter the function
-        assert_eq!(res.impurities["Al"].others_nominal.as_ref().unwrap().status, NO_RESPONSE);
+        assert_eq!(
+            res.impurities["Al"].others_nominal.as_ref().unwrap().status,
+            NO_RESPONSE
+        );
     }
 
     #[test]
     fn ranking_orders_by_contribution_and_puts_missing_last() {
         let f = frame();
         let rv = r();
-        let res = analyse_scalar(&f, &Evaluator::Linear { r: &rv, offset: 0.0 }, None).unwrap();
+        let res = analyse_scalar(
+            &f,
+            &Evaluator::Linear {
+                r: &rv,
+                offset: 0.0,
+            },
+            None,
+        )
+        .unwrap();
         // Nb: 0.001 * 19.9999 ; Co: 0.0005 * 9.9999 ; Al negative
         assert_eq!(ranking(&res), vec!["Nb", "Co", "Al"]);
         let mut cut = res.clone();
@@ -2735,7 +2843,13 @@ mod tests {
             ("Fe".into(), m(&[("Mn54", 1.0), ("Fe55", 5.0)])),
             (
                 "Nb".into(),
-                m(&[("Nb94", 50.0), ("Mn54", 3.0), ("Nb92", 10.0), ("Zr95", 7.0), ("Fe55", 1.0)]),
+                m(&[
+                    ("Nb94", 50.0),
+                    ("Mn54", 3.0),
+                    ("Nb92", 10.0),
+                    ("Zr95", 7.0),
+                    ("Fe55", 1.0),
+                ]),
             ),
         ]);
         let top = top_linear(&parts, "Fe", "Nb", 100.0);
@@ -2755,36 +2869,68 @@ mod tests {
         };
         // A passes both: class A
         assert_eq!(
-            class_of_checks(&[[pass(0.5), pass(0.5)], [pass(0.5), pass(0.5)], [pass(0.5), pass(0.5)]]),
+            class_of_checks(&[
+                [pass(0.5), pass(0.5)],
+                [pass(0.5), pass(0.5)],
+                [pass(0.5), pass(0.5)]
+            ]),
             WasteClass::A
         );
         // Table 1 normalized for A/B at 0.1 fails A, passes B
         assert_eq!(
-            class_of_checks(&[[pass(1.5), pass(0.5)], [pass(0.9), pass(0.5)], [pass(0.09), pass(0.5)]]),
+            class_of_checks(&[
+                [pass(1.5), pass(0.5)],
+                [pass(0.9), pass(0.5)],
+                [pass(0.09), pass(0.5)]
+            ]),
             WasteClass::B
         );
         // Table 2 column 2 over: B fails, C passes
         assert_eq!(
-            class_of_checks(&[[pass(0.5), pass(2.0)], [pass(0.5), pass(1.2)], [pass(0.05), pass(0.4)]]),
+            class_of_checks(&[
+                [pass(0.5), pass(2.0)],
+                [pass(0.5), pass(1.2)],
+                [pass(0.05), pass(0.4)]
+            ]),
             WasteClass::C
         );
         // everything over
         assert_eq!(
-            class_of_checks(&[[pass(5.0), pass(5.0)], [pass(5.0), pass(5.0)], [pass(5.0), pass(5.0)]]),
+            class_of_checks(&[
+                [pass(5.0), pass(5.0)],
+                [pass(5.0), pass(5.0)],
+                [pass(5.0), pass(5.0)]
+            ]),
             WasteClass::AboveClassC
         );
         // a sum of exactly 1 passes for a single nuclide and fails for a mixture
-        let single = SumCheck { normalized_sum: 1.0, strict: false };
-        let mixture = SumCheck { normalized_sum: 1.0, strict: true };
+        let single = SumCheck {
+            normalized_sum: 1.0,
+            strict: false,
+        };
+        let mixture = SumCheck {
+            normalized_sum: 1.0,
+            strict: true,
+        };
         assert!(single.passes() && !mixture.passes());
         let low = pass(0.1);
-        assert_eq!(class_of_checks(&[[single, low], [low, low], [low, low]]), WasteClass::A);
-        assert_eq!(class_of_checks(&[[mixture, low], [low, low], [low, low]]), WasteClass::B);
+        assert_eq!(
+            class_of_checks(&[[single, low], [low, low], [low, low]]),
+            WasteClass::A
+        );
+        assert_eq!(
+            class_of_checks(&[[mixture, low], [low, low], [low, low]]),
+            WasteClass::B
+        );
         // the class is non-decreasing in every sum
         let sums = [0.05, 0.5, 0.99, 1.5, 12.0];
         let mut last = 0u8;
         for s in sums {
-            let c = class_of_checks(&[[pass(s * 10.0), pass(s)], [pass(s * 10.0), pass(s / 2.0)], [pass(s), pass(s / 4.0)]]);
+            let c = class_of_checks(&[
+                [pass(s * 10.0), pass(s)],
+                [pass(s * 10.0), pass(s / 2.0)],
+                [pass(s), pass(s / 4.0)],
+            ]);
             assert!(class_rank(c) >= last);
             last = class_rank(c);
         }

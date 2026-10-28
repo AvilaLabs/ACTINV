@@ -2840,8 +2840,13 @@ mod tests {
                 let (src, _) = run(&[("A", &n, 3.0)], &["H"], true);
                 let fractions = fractions(&["H"]);
                 let ungrouped = src.ungrouped_power_W_g;
-                let got =
-                    contact_proxy_of_groups(&response(), &fractions, 2.0, &grouped(&src), ungrouped);
+                let got = contact_proxy_of_groups(
+                    &response(),
+                    &fractions,
+                    2.0,
+                    &grouped(&src),
+                    ungrouped,
+                );
                 match src.contact_gamma_air_dose_proxy_Gy_h {
                     Some(expected) => {
                         let value = got.proxy_Gy_h.unwrap();
