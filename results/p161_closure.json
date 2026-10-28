@@ -1,0 +1,219 @@
+{
+ "candidate_sha256": "925a8f40d81c46af517758a1ddef36bcbd592b7a8edb8e44a3f0f7f82c88e8a2",
+ "cases": {
+  "damage_demo": {
+   "candidate_closure": 0.0,
+   "candidate_exit": 0,
+   "g2": true,
+   "g2_first_difference": null,
+   "g3": true,
+   "g4": true,
+   "listed_steps": 0,
+   "mode": "trace",
+   "recomputed": 0.0,
+   "recomputed_at": null,
+   "reference_closure": 0.0,
+   "reference_recomputed_at_any_level": {
+    "at": null,
+    "gap": 0.0
+   },
+   "spec": "examples/damage_demo.json",
+   "spec_sha256": "8e2cb8857363a87d3f0bd0dee6788d3a1d256102dfe7cd770aa47f89fd5f78c1",
+   "steps": 1
+  },
+  "feed_removal_demo": {
+   "candidate_closure": 0.0,
+   "candidate_exit": 0,
+   "g2": true,
+   "g2_first_difference": null,
+   "g3": true,
+   "g4": true,
+   "listed_steps": 0,
+   "mode": "trace",
+   "recomputed": 0.0,
+   "recomputed_at": null,
+   "reference_closure": 0.0,
+   "reference_recomputed_at_any_level": {
+    "at": null,
+    "gap": 0.0
+   },
+   "spec": "examples/feed_removal_demo.json",
+   "spec_sha256": "3af06bacef65212da06577b216106b54392ab1bccf10dcc64f1ef31b7081de67",
+   "steps": 2
+  },
+  "fns_fe_5min": {
+   "candidate_closure": 3.939414506920665e-15,
+   "candidate_exit": 0,
+   "g2": true,
+   "g2_first_difference": null,
+   "g3": true,
+   "g4": true,
+   "listed_steps": 21,
+   "mode": "trace",
+   "recomputed": 9.335158469996991e-07,
+   "recomputed_at": {
+    "atoms_per_g": 0.7223590137145198,
+    "fraction_of_largest": 6.114547202624957e-11,
+    "nuclide": "Cr56",
+    "step": 0
+   },
+   "reference_closure": 4.117132406456379,
+   "reference_recomputed_at_any_level": {
+    "at": {
+     "atoms_per_g": 2.70070915065423e-28,
+     "nuclide": "Mn58",
+     "step": 19
+    },
+    "gap": 4.117132406456319
+   },
+   "spec": "examples/fns_fe_5min.json",
+   "spec_sha256": "ed55ed00f6c00fc4a2351e18332e98e7feb33d9b7ca65e7ba861e0e5e8feef39",
+   "steps": 21
+  },
+  "fns_fe_5min_cram48": {
+   "candidate_closure": 6.566615527545883e-15,
+   "candidate_exit": 0,
+   "g2": true,
+   "g2_first_difference": null,
+   "g3": true,
+   "g4": true,
+   "listed_steps": 21,
+   "mode": "trace",
+   "recomputed": 9.335158502622481e-07,
+   "recomputed_at": {
+    "atoms_per_g": 0.1369572974151963,
+    "fraction_of_largest": 1.1593093949235047e-11,
+    "nuclide": "Cr56",
+    "step": 13
+   },
+   "reference_closure": 0.8887791080616487,
+   "reference_recomputed_at_any_level": {
+    "at": {
+     "atoms_per_g": 1.1276278908479664e-29,
+     "nuclide": "Mn58",
+     "step": 18
+    },
+    "gap": 0.8887791080617775
+   },
+   "spec": "target/p161-work/fns_fe_5min_cram48.json",
+   "spec_sha256": "cc4c27177cf1ce0e88e42f515670f3c7d7fba5bcd878d101f4d4aa30128b1ee9",
+   "steps": 21
+  },
+  "pulsed_demo": {
+   "candidate_closure": 1.9086086094829233e-15,
+   "candidate_exit": 0,
+   "g2": true,
+   "g2_first_difference": null,
+   "g3": true,
+   "g4": true,
+   "listed_steps": 11,
+   "mode": "trace",
+   "recomputed": 1.6912277484392608e-06,
+   "recomputed_at": {
+    "atoms_per_g": 0.17653794001799572,
+    "fraction_of_largest": 3.735872833444205e-11,
+    "nuclide": "Ti50",
+    "step": 3
+   },
+   "reference_closure": 0.5309107833654709,
+   "reference_recomputed_at_any_level": {
+    "at": {
+     "atoms_per_g": 9.038946376838843e-26,
+     "nuclide": "Cr57",
+     "step": 10
+    },
+    "gap": 0.5309107833654795
+   },
+   "spec": "examples/pulsed_demo.json",
+   "spec_sha256": "2ccad76c282d623afff5c80a79891ee268bfcbd3126c5f70f55635ce9425ac57",
+   "steps": 11
+  },
+  "reverse_demo_problem": {
+   "candidate_closure": 5.862250780835717e-16,
+   "candidate_exit": 0,
+   "g2": true,
+   "g2_first_difference": null,
+   "g3": true,
+   "g4": true,
+   "listed_steps": 1,
+   "mode": "trace",
+   "recomputed": 8.456470188490956e-07,
+   "recomputed_at": {
+    "atoms_per_g": 0.08826543546034912,
+    "fraction_of_largest": 3.735695428626036e-11,
+    "nuclide": "Ti50",
+    "step": 0
+   },
+   "reference_closure": 6.809039061469977e-16,
+   "reference_recomputed_at_any_level": {
+    "at": {
+     "atoms_per_g": 8.66832815171232e-07,
+     "nuclide": "Ti48",
+     "step": 0
+    },
+    "gap": 2.3424274815582124e-06
+   },
+   "spec": "examples/reverse_demo_problem.json",
+   "spec_sha256": "3e8297d12e547a818480ebd930b8a3d82e3e9ad72adde9261e97c24b457bcd49",
+   "steps": 1
+  },
+  "shielding_demo": {
+   "candidate_closure": 0.0,
+   "candidate_exit": 0,
+   "g2": true,
+   "g2_first_difference": null,
+   "g3": true,
+   "g4": true,
+   "listed_steps": 1,
+   "mode": "trace",
+   "recomputed": 0.0,
+   "recomputed_at": null,
+   "reference_closure": 3.7612360472944524e-16,
+   "reference_recomputed_at_any_level": {
+    "at": {
+     "atoms_per_g": 2.430328420550866e-05,
+     "nuclide": "Lu179",
+     "step": 0
+    },
+    "gap": 3.817647131784331e-09
+   },
+   "spec": "examples/shielding_demo.json",
+   "spec_sha256": "5da1f8e0d1028bba93a51c5b21125d6145aaf24d0f1a65c2c90acf735616afb1",
+   "steps": 1
+  }
+ },
+ "checker_sha256": "b15f73922d4ce068ec2567e5fc5c45b24bca60f203d02239c4faf9dea6be6010",
+ "g0": {
+  "ACTINV-P161_PROTOCOL.md": {
+   "in_protocol_hash_txt": true,
+   "sha256": "26daeb338508c5f45d2a64c7935da1ad599e0a3b5387d04322e871c4b42c280f"
+  },
+  "pass": true
+ },
+ "g1": {
+  "log": "results/p161/g1.log",
+  "missing_tests": [],
+  "pass": true,
+  "sha256": "ddd745d078a0e4718d9b0d50a58697b14a00af5684d178ba88a552697a45b645"
+ },
+ "gates": {
+  "G0": "PASS",
+  "G1": "PASS",
+  "G2": "PASS",
+  "G3": "PASS",
+  "G4": "PASS",
+  "G5": "in G1",
+  "G6": "external"
+ },
+ "pass": true,
+ "protocol": "protocols/ACTINV-P161_PROTOCOL.md",
+ "protocol_sha256": "26daeb338508c5f45d2a64c7935da1ad599e0a3b5387d04322e871c4b42c280f",
+ "reference_sha256": "672ba4a3a71d6780c58289bf5f12855467b4319fa081a4e37bfb850bb556acf5",
+ "schema": "actinv-p161-closure-1",
+ "skipped": {
+  "damage_table_demo": "reference exit 2: options`, `photon`, `fission_yields`, `uncertainty`, `radiological`, `damage`, `self_shielding`, `summary`, `pathways`, `kerma`, `overrides` at line 1 column 16",
+  "mesh_demo": "reference exit 2: ptions`, `photon`, `fission_yields`, `uncertainty`, `radiological`, `damage`, `self_shielding`, `summary`, `pathways`, `kerma`, `overrides` at line 1 column 235",
+  "reverse_demo_measurements": "reference exit 2: `options`, `photon`, `fission_yields`, `uncertainty`, `radiological`, `damage`, `self_shielding`, `summary`, `pathways`, `kerma`, `overrides` at line 1 column 9",
+  "study_fe_smoke": "reference exit 2: `options`, `photon`, `fission_yields`, `uncertainty`, `radiological`, `damage`, `self_shielding`, `summary`, `pathways`, `kerma`, `overrides` at line 1 column 8"
+ }
+}

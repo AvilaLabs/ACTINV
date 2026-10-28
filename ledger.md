@@ -4548,3 +4548,26 @@ variant of the quick start; the protocol discloses those values. The CRAM48 run 
 
 The CI rule in `AGENTS.md` is relaxed by owner direction. Only G8-type checks and code-on-code pushes wait for CI.
 Bookkeeping pushes do not, and the CI steps a change can reach run locally first.
+
+## Entry 260 — P161 evidence: G0–G5 pass on d9037ca (2026-10-28)
+
+- **G1** at `d9037ca`: fmt, `cargo check --workspace --tests`, clippy `-D warnings` (native and wasm32) and the
+  workspace tests pass, including the five named tests (`results/p161/g1.log`). The checker self-check passes after
+  its last edit.
+- **Evidence run 1:** `controls/check_p161.py` (`b15f7392…`), candidate `925a8f40…` built from `d9037ca`, reference
+  `672ba4a3…`. G0 and G2–G4 passed in 20 s, peak RSS 457 MB. Record: `results/p161_closure.json`, log
+  `results/p161/evidence_run_1.log`.
+
+  | Case | Reference closure | Candidate closure |
+  | --- | --- | --- |
+  | Quick start | 4.117 | 3.9e-15 |
+  | Quick start, CRAM48 | 0.889 | 6.6e-15 |
+  | `pulsed_demo` | 0.531 | 1.9e-15 |
+  | `reverse_demo_problem` | 6.8e-16 | 5.9e-16 |
+  | `shielding_demo`, `damage_demo`, `feed_removal_demo` | 0 | 0 |
+
+  Every other result field is identical. The checker's recomputation from the listed chains is 1.7e-6 or less, which
+  is the 1e-6 listing threshold. Four example files are not run specs and were skipped by the corpus rule.
+- **Local CI steps the change reaches:** with the candidate binary, the P15 cache-integrity control left
+  `results/p15_cache_integrity.json` unchanged, and `check_p15.py --no-write` and `check_public_examples.py` pass.
+- **G6** is pending CI on the pushed commit.

@@ -1,0 +1,53 @@
+commit d9037ca732daf67a5dc79644279168d2b8279542
+== cargo fmt --all -- --check
+== cargo check --workspace --tests
+    Checking egui_plot v0.37.0
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 3m 32s
+== cargo clippy --workspace --all-targets -- -D warnings
+    Checking actinv-cli v1.6.1 (/home/connoravila/Documents/actinv/target/p161-wt/crates/actinv-cli)
+   Compiling actinv-gui v0.5.0-preview.1 (/home/connoravila/Documents/actinv/target/p161-wt/crates/actinv-gui)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 1m 00s
+== cargo clippy -p actinv-gui --lib --no-default-features --target wasm32-unknown-unknown -- -D warnings
+    Checking console_error_panic_hook v0.1.7
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 2m 15s
+== cargo test --workspace
+test result: ok. 202 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 5.25s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.04s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+test digest::tests::a_closure_gap_is_a_whole_result_caveat ... ok
+test run::gas_prepared_tests::p140_ps_f4_trace_decay_fed_product_is_reported_or_flagged ... ok
+test run::gas_prepared_tests::p161_a_noise_level_residue_does_not_raise_closure ... ok
+test run::gas_prepared_tests::p161_gaps_above_the_noise_cut_are_still_reported ... ok
+test result: ok. 660 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 5.19s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 255 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.85s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test views::pathways::tests::coverage_is_the_selected_nuclides_own_and_closure_is_whole_result ... ok
+test result: ok. 176 passed; 0 failed; 2 ignored; 0 measured; 0 filtered out; finished in 12.25s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.06s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+== cargo build --release -p actinv-cli
+    Finished `release` profile [optimized] target(s) in 4m 02s
+925a8f40d81c46af517758a1ddef36bcbd592b7a8edb8e44a3f0f7f82c88e8a2  /home/connoravila/Documents/actinv/target/wt-p161-wt/release/actinv
+G1: PASS

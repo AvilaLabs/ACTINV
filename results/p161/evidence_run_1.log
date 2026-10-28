@@ -1,0 +1,40 @@
+P161 G0: PASS
+P161 G1: PASS
+P161 G2: PASS
+P161 G3: PASS
+P161 G4: PASS
+  damage_demo: closure 0.0 -> 0.0 (recomputed 0.0)
+  feed_removal_demo: closure 0.0 -> 0.0 (recomputed 0.0)
+  fns_fe_5min: closure 4.117132406456379 -> 3.939414506920665e-15 (recomputed 9.335158469996991e-07)
+  pulsed_demo: closure 0.5309107833654709 -> 1.9086086094829233e-15 (recomputed 1.6912277484392608e-06)
+  reverse_demo_problem: closure 6.809039061469977e-16 -> 5.862250780835717e-16 (recomputed 8.456470188490956e-07)
+  shielding_demo: closure 3.7612360472944524e-16 -> 0.0 (recomputed 0.0)
+  fns_fe_5min_cram48: closure 0.8887791080616487 -> 6.566615527545883e-15 (recomputed 9.335158502622481e-07)
+  skipped damage_table_demo: reference exit 2: options`, `photon`, `fission_yields`, `uncertainty`, `radiological`, `damage`, `self_shielding`, `summary`, `pathways`, `kerma`, `overrides` at line 1 column 16
+  skipped mesh_demo: reference exit 2: ptions`, `photon`, `fission_yields`, `uncertainty`, `radiological`, `damage`, `self_shielding`, `summary`, `pathways`, `kerma`, `overrides` at line 1 column 235
+  skipped reverse_demo_measurements: reference exit 2: `options`, `photon`, `fission_yields`, `uncertainty`, `radiological`, `damage`, `self_shielding`, `summary`, `pathways`, `kerma`, `overrides` at line 1 column 9
+  skipped study_fe_smoke: reference exit 2: `options`, `photon`, `fission_yields`, `uncertainty`, `radiological`, `damage`, `self_shielding`, `summary`, `pathways`, `kerma`, `overrides` at line 1 column 8
+P161: PASS (/home/connoravila/Documents/actinv/target/p161-wt/results/p161_closure.json)
+	Command being timed: "python3 controls/check_p161.py --reference /home/connoravila/Documents/actinv/target/p161-ref/actinv --candidate /home/connoravila/Documents/actinv/target/wt-p161-wt/release/actinv --g1-log results/p161/g1.log"
+	User time (seconds): 16.29
+	System time (seconds): 3.11
+	Percent of CPU this job got: 97%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:19.95
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 457396
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 121
+	Minor (reclaiming a frame) page faults: 955676
+	Voluntary context switches: 3568
+	Involuntary context switches: 342
+	Swaps: 0
+	File system inputs: 1282456
+	File system outputs: 109880
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0
