@@ -764,7 +764,7 @@
  },
  "photon": {
   "response": {
-   "path": "actinv-data/v1.1.0/photon/nist-xcom-all.json",
+   "path": "photon-response/nist-xcom-all.json",
    "sha256": "9efa40486780c9eec663654e13f5835ba36a549b1bae0c9f75677957a5a0acd8"
   }
  }

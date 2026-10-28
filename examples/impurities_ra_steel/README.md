@@ -11,5 +11,6 @@ position. The Part 61 class is a nominal U.S. classification, not disposal accep
 
 `base_spec.json` carries the ACTINV data references of the other examples (library and decay files under
 `actinv-data/v1.1.0/`, which this repository does not ship) and a `photon` section naming a photon response file,
-`actinv-data/v1.1.0/photon/nist-xcom-all.json`, built with `scripts/build_photon_response.py --elements all`; the
-contact-dose proxy is `null` without it. The handbook chapter `docs/guide/impurities.md` walks through the result.
+`photon-response/nist-xcom-all.json`. No data catalog ships that file: build it with
+`scripts/build_photon_response.py --elements all` and place it there, relative to the directory you run from, or edit
+the path. Without a `photon` section the contact-dose proxy is `null`. The handbook chapter `docs/guide/impurities.md` walks through the result.
