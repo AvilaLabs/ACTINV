@@ -4315,3 +4315,17 @@ Registered before any source change for the phase, as the 1.7 headline:
   material's attenuation enters it. It is therefore evaluated exactly at each composition, its limits are found by
   bisection, and its worst case is a corner maximum. Nuclear-data uncertainty is deferred to P158. No output has been
   examined.
+
+## Entry 246 — P156 development run 2 and Amendment C registered (2026-10-27)
+
+Development run 2 is disclosed. It ran the item-6 command with `--continue-on-error true` on candidate `71f717b`
+and finished in 32 min 6 s (peak RSS 464 MB), building 388 of the 389 selected targets into a 48.9 MB table. Fe-54
+was clipped at 36 points between 3,491 and 3,517 eV, with a minimum of −1e-4 b. The only failure was the distributed
+`n-Pb208.tendl`, which contains a literal `NaN` in MF=3 MT=1. Only the build summary, the `failed` list and the
+`zero_k_clipped` records were examined. No checker gate was run.
+
+The earlier estimate of about 7 h, taken from eight heavy targets, was about 13 times too high for the full selection.
+
+- **P156 Amendment C** `d77faef3eeb26042553e45b85ddc91cc7a544cd2a87383dba7475ecf9667a663`: the build directory takes `n-Pb208.tendl` from the P10 working corpus. That file has
+  SHA-256 `86788a14…`, the source the shipped activation library's index records. The distributed file is not
+  used, and the substitution is disclosed in the notice.
