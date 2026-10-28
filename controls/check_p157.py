@@ -75,6 +75,27 @@ The Part 61 classifier below is this script's own (10 CFR 61.55 sum-of-fractions
       SUMMARY.md links the chapter. An absent example or chapter fails the gate (the reason is recorded).
   G8  External (CI on the pushed commit, committed baselines).
 
+INTERFACE as documented by the implementation's author (differences from the protocol wording are marked *). Input
+`actinv-impurities-1`: schema, base_spec, balance, matrix, impurities, targets, endpoints, optional `limits`, optional
+`waste`. *An endpoint is a string id or {"endpoint": id, "limit": x, "class": "C"} (`name` is an alias); there is no
+`response` key in the input (this script's internal endpoints keep `response` and are converted by ep_input).
+`clearance_index` has the default limit 1 (set explicitly here). *A waste_class endpoint needs the top-level `waste`
+object (rules, mass_g, displaced_volume_cm3 or density_g_cm3, waste_type, external_tritium); nuclide properties are
+derived by the command from the run's decay data and are not supplied (this script derives its own for its classifier).
+*Also refused: photon.missing_spectra "estimate" with dose.contact_proxy (G6). Output `actinv-impurities-result-1`:
+`targets` is a list of {step, t_s, endpoints}, `endpoints` a list whose `response` is the id (activity.total, heat.total,
+dose.contact_proxy, activity:<nuclide>, clearance_index, waste_class:<CLASS>); top_nuclides are [nuclide, value] pairs
+(null for heat.total); the summary ranking is a list of {impurity, largest_contribution, step}. *Statuses: `limit`,
+`no response`, `infeasible`, `unavailable`; `no response` (with a detail) also stands for a limit beyond the composition
+bound (balance would go negative), which this script accepts in place of `limit` exactly then. *"others_at_worst" is the
+other impurities at the reported worst-case corner values with the impurity itself at 0 (the formula above). *Dose:
+the worst case is the maximum over the corners of the impurities with min < max (capped at 12; G4 enumerates at most 6
+and holds the rest, as above), the gradient is a central difference over +-1 % of the nominal weight (checked here by
+full solves to 1e-5 relative), limits are found by bisection. Worked example: examples/impurities_ra_steel/
+{base_spec.json,impurities.json}, targets steps 2 to 5; handbook chapter docs/guide/impurities.md. The verification
+points carry `checks` ({endpoint, step, role, predicted, solved, limit, rel_dev, pass}); each is compared with this
+script's own solve of the point's composition.
+
 CLASSIFIER (10 CFR 61.55, bundled rows). Concentrations: Ci/m3 rows use Bq / (3.7e10 volume_m3), nCi/g rows use
 Bq / (37 mass_g). Table 1 sum S1 = sum of fractions of the Table 1 limits (named nuclides; the alpha transuranic row
 for Z > 92 alpha emitters with half-life > 5 y); Table 2 column sums S2c = sums of fractions of that column's limits
@@ -89,7 +110,7 @@ filled by the caller). A path that is missing fails the check with "schema key n
 geometry and rule fields of the input live (WASTE_AT) is also one constant. RANK_BY and REASON_WORDS are the other
 interpretation points.
 
-Cases and schedule are declared here: a 3-step irradiation history (2 y at 1e4 times the spectrum, 1 y off, 3 y at
+Cases and schedule are declared here (the worked example replaces case 1 when present): a 3-step irradiation history (2 y at 1e4 times the spectrum, 1 y off, 3 y at
 1e4) and cooling segments of 1 d, 364 d, 3287 d and 32873 d (cooling times 1 d, 365 d, 3652 d and 36525 d, "1 d, 1 y,
 10 y, 100 y"); targets are steps 4 to 7. Spectrum, library and decay come from examples/optimize_ra_steel/base_spec.json
 (whose uncertainty section is dropped). The waste component is 1000 g with the displaced volume mass / density,
@@ -142,7 +163,7 @@ OUT = {
     "gradient": T + "/impurities/{imp}/gradient_per_wt_pct",
     "contribution_nominal": T + "/impurities/{imp}/contribution_nominal",
     "contribution_max": T + "/impurities/{imp}/contribution_at_max",
-    "top_nuclides": T + "/impurities/{imp}/top_nuclides",       # [name | {nuclide: name}] up to three
+    "top_nuclides": T + "/impurities/{imp}/top_nuclides",       # [[nuclide, value], ...] up to three; null for heat.total
     "ranking": T + "/ranking",                                   # [impurity | {impurity: name}] by contribution
     "limit_value": T + "/impurities/{imp}/limits/{kind}/wt_pct",
     "limit_status": T + "/impurities/{imp}/limits/{kind}/status",
@@ -155,15 +176,16 @@ OUT = {
     # summary per endpoint
     "summary_tightest_value": S + "/tightest_limit/{kind}/{imp}/wt_pct",
     "summary_tightest_step": S + "/tightest_limit/{kind}/{imp}/step",
-    "summary_ranking": S + "/ranking",
-    "summary_worst": S + "/worst",
+    "summary_ranking": S + "/ranking",                           # [{impurity, largest_contribution, step}]
+    "summary_worst": S + "/worst/value",
+    "summary_joint": S + "/joint_k/value",
+    "summary_joint_step": S + "/joint_k/step",
     # verification block
     "verification_ok": "verification/verified",
     "verification_dev": "verification/max_rel_dev",
     "verification_points": "verification/points",
     "point_composition": "composition_wt_pct",                   # relative to a point
-    "point_solved": "solved/{endpoint}/{step}",                  # relative to a point
-    "point_predicted": "predicted/{endpoint}/{step}",            # relative to a point (optional)
+    "point_checks": "checks",                                    # relative to a point: [{endpoint, step, role, predicted, solved, pass}]
 }
 # the "kind" path segment for each limit kind used here
 KIND_NAMES = {"alone": "alone", "others_nominal": "others_at_nominal", "others_worst": "others_at_worst"}
@@ -171,8 +193,9 @@ KIND_NAMES = {"alone": "alone", "others_nominal": "others_at_nominal", "others_w
 OUT_CS = {"envelope": "components/[id={id}]/targets/[step={step}]/class_envelope"}
 # `actinv waste` output
 OUT_WASTE = {"class": "components/[id={id}]/targets/[step={step}]/class"}
-# where the waste geometry and rule fields of the impurities input live: "top" (as `waste budget`) or "endpoint"
-WASTE_AT = "top"
+# where the waste geometry and rule fields of the impurities input live: the top-level `waste` object (the
+# implementation's documented input; the protocol text does not say). Nuclide properties are not supplied.
+WASTE_AT = "section waste"
 RANK_BY = "signed"                      # "signed": contribution descending; "abs": |contribution| descending
 REASON_WORDS = {
     "self_shielding": ("self_shield", "self-shield", "self shield", "shielding"),
@@ -182,6 +205,7 @@ REASON_WORDS = {
     "min_above_nominal": ("min", "nominal"),
     "unknown_endpoint": ("endpoint", "response", "unknown"),
     "dose_without_photon": ("photon",),
+    "estimated_spectra_with_dose": ("missing_spectra", "estimate"),
     "limit_on_waste_class": ("limit", "waste_class"),
 }
 REQUIRE_REASON = True
@@ -298,6 +322,8 @@ def el_key(text):
 
 
 def name_of(item):
+    if isinstance(item, (list, tuple)) and item:
+        return item[0]
     if isinstance(item, dict):
         for k in ("nuclide", "impurity", "element", "name", "id"):
             if k in item:
@@ -327,6 +353,8 @@ def class_rank(c):
 def norm_status(text):
     """'limit' | 'no_response' | 'infeasible' from a free status string; None when none matches."""
     t = str(text).lower()
+    if "unavailable" in t:
+        return "unavailable"
     if "infeasible" in t:
         return "infeasible"
     if "no " in t and "response" in t or "no_response" in t:
@@ -617,29 +645,49 @@ def make_base(data_home, photon=None):
 
 
 def endpoint_id(ep):
-    return ep["response"]
+    """The output id of an endpoint: the response, `waste_class:<CLASS>` for waste."""
+    return f"waste_class:{ep['class']}" if ep["response"] == "waste_class" else ep["response"]
+
+
+def ep_input(ep):
+    """The input form of an internal endpoint {"response": id, ...}: {"endpoint": id, "limit": x, "class": "C"}."""
+    out = {"endpoint": ep["response"]}
+    for k in ("limit", "class"):
+        if k in ep:
+            out[k] = ep[k]
+    return out
+
+
+def ep_internal(raw):
+    """Internal {"response": id, ...} of an input endpoint (string, or object with `endpoint` or `name`)."""
+    if isinstance(raw, str):
+        raw = {"endpoint": raw}
+    ep = {"response": raw.get("endpoint", raw.get("name"))}
+    for k in ("limit", "class"):
+        if k in raw:
+            ep[k] = raw[k]
+    if ep["response"] == "clearance_index" and "limit" not in ep:
+        ep["limit"] = 1.0
+    return ep
 
 
 def waste_fields(case):
-    vol = case.waste["displaced_volume_cm3"]
-    return {"rules": RULES_ID, "mass_g": case.waste["mass_g"], "displaced_volume_cm3": vol,
-            "waste_type": case.waste["waste_type"], "external_tritium": {"status": "not_applicable"},
-            "nuclide_properties": case.props}
+    return {"rules": RULES_ID, "mass_g": case.waste["mass_g"],
+            "displaced_volume_cm3": case.waste["displaced_volume_cm3"], "waste_type": case.waste["waste_type"],
+            "external_tritium": {"status": "not_applicable"}}
 
 
 def impurities_doc(case, base_name="base_spec.json"):
+    if case.doc is not None:          # the worked example: its own document, base_spec pointed at the written file
+        doc = copy.deepcopy(case.doc)
+        doc["base_spec"] = base_name
+        return doc
     doc = {"schema": "actinv-impurities-1", "base_spec": base_name, "balance": case.balance,
            "matrix": dict(case.matrix),
            "impurities": {i: dict(zip(("nominal", "min", "max"), v)) for i, v in case.imps.items()},
-           "targets": list(case.targets), "endpoints": copy.deepcopy(case.endpoints)}
+           "targets": list(case.targets), "endpoints": [ep_input(e) for e in case.endpoints]}
     if any(e["response"] == "waste_class" for e in case.endpoints):
-        wf = waste_fields(case)
-        if WASTE_AT == "top":
-            doc.update(wf)
-        else:
-            for e in doc["endpoints"]:
-                if e["response"] == "waste_class":
-                    e.update(wf)
+        doc["waste"] = waste_fields(case)
     return doc
 
 
@@ -813,7 +861,7 @@ def build_cases(data_home, photon, props_for):
         base = make_base(data_home, photon if not d.get("waste_only") else None)
         eps = [{"response": "waste_class", "class": "C"}] if d.get("waste_only") else \
             [{"response": "activity.total"}, {"response": "heat.total"}, {"response": f"activity:{d['nuclide']}"},
-             {"response": "clearance_index"}, {"response": "waste_class", "class": "C"}]
+             {"response": "clearance_index", "limit": 1.0}, {"response": "waste_class", "class": "C"}]
         if photon and not d.get("waste_only"):
             eps.insert(3, {"response": "dose.contact_proxy"})
         if name == "ra_steel" and example.is_file():
@@ -828,24 +876,24 @@ def build_cases(data_home, photon, props_for):
 
 
 def case_from_example(path, data_home, waste_default):
-    """The worked example as a case: its own endpoints, targets and base spec; waste geometry from its fields."""
+    """The worked example as a case: its own endpoints, targets and base spec; waste geometry from its `waste` section."""
     doc = json.loads(Path(path).read_text())
     b = doc["base_spec"]
     base = b if isinstance(b, dict) else json.loads((Path(path).parent / b).read_text())
     base = copy.deepcopy(base)
     base.pop("uncertainty", None)
     waste = dict(waste_default)
-    srcs = [doc] + [e for e in doc.get("endpoints", []) if e.get("response") == "waste_class"]
-    for src in srcs:
-        for k in ("mass_g", "waste_type"):
-            if k in src:
-                waste[k] = src[k]
-        if "displaced_volume_cm3" in src:
-            waste["displaced_volume_cm3"] = src["displaced_volume_cm3"]
-        elif "density_g_cm3" in src:
-            waste["displaced_volume_cm3"] = waste["mass_g"] / src["density_g_cm3"]
+    src = doc.get("waste") or {}
+    for k in ("mass_g", "waste_type"):
+        if k in src:
+            waste[k] = src[k]
+    if "displaced_volume_cm3" in src:
+        waste["displaced_volume_cm3"] = src["displaced_volume_cm3"]
+    elif "density_g_cm3" in src:
+        waste["displaced_volume_cm3"] = waste["mass_g"] / src["density_g_cm3"]
     return Case("ra_steel", el_key(doc["balance"]), {el_key(k): v for k, v in doc["matrix"].items()},
-                norm_imps(doc["impurities"]), doc["targets"], doc["endpoints"], base, waste, doc=doc)
+                norm_imps(doc["impurities"]), doc["targets"], [ep_internal(e) for e in doc["endpoints"]], base, waste,
+                doc=doc)
 
 
 class State:
@@ -1152,7 +1200,14 @@ def compare_linear(st, cmd, ck):
                                         REL_G3, sc)
                 ck.ok(good, f"{tag}/ranking", rank_by(a["contribution"]), why or [name_of(x) for x in rank])
             nv_all = {el: nuclide_values(st.pure_runs()[el], step, ep, st.clr) for el in case.elements}
-            if all(v is not None for v in nv_all.values()) and not ep["response"].startswith("activity:"):
+            if ep["response"] == "heat.total":
+                for i in imps:
+                    try:
+                        got = rd(cmd, "top_nuclides", imp=i, **kw)
+                        ck.ok(got is None, f"{tag}/{i}/top_nuclides", None, got)
+                    except SchemaError as error:
+                        ck.ok(False, f"{tag}/{i}/top_nuclides", "null", str(error))
+            elif ep["response"] in ("activity.total", "clearance_index") and all(v is not None for v in nv_all.values()):
                 for i in imps:
                     mine = top_nuclides(nv_all[i], nv_all[case.balance], imps[i][0], a["contribution"][i])
                     got = ck.guard(f"{tag}/{i}/top_nuclides", lambda: rd(cmd, "top_nuclides", imp=i, **kw))
@@ -1160,8 +1215,11 @@ def compare_linear(st, cmd, ck):
                         names = [nuc_key(name_of(x)) or name_of(x) for x in got]
                         vals = {n: imps[i][0] * (nv_all[i].get(n, 0.0) - nv_all[case.balance].get(n, 0.0)) / 100.0
                                 for n in set(nv_all[i]) | set(nv_all[case.balance])}
+                        reported = [x[1] if isinstance(x, (list, tuple)) and len(x) > 1 else None for x in got]
                         good = len(names) == len(mine) and all(n in vals for n in names) and \
-                            all(close(vals[n], mine[k][1], REL_G3, sc) for k, n in enumerate(names))
+                            all(close(vals[n], mine[k][1], REL_G3, sc) and
+                                (reported[k] is None or close(reported[k], mine[k][1], REL_G3, sc))
+                                for k, n in enumerate(names))
                         ck.ok(good, f"{tag}/{i}/top_nuclides", [m[0] for m in mine], names)
             else:
                 ck.notes.append(f"{tag}: top nuclides not checked (no per-nuclide values for {eid})")
@@ -1169,18 +1227,22 @@ def compare_linear(st, cmd, ck):
                 for kind, kname in KIND_NAMES.items():
                     for i in imps:
                         status, val = a["limits"][kind][i]
+                        beyond = status == "limit" and beyond_composition(case, a, kind, i, val)
                         st_got = ck.guard(f"{tag}/{i}/{kind}/status", lambda: rd(cmd, "limit_status", imp=i, kind=kname, **kw))
                         if st_got is not None:
-                            ck.ok(norm_status(st_got) == status, f"{tag}/{i}/{kind}/status", status, st_got)
-                        if status == "limit":
+                            allowed = {status} | ({"no_response"} if beyond else set())
+                            ck.ok(norm_status(st_got) in allowed, f"{tag}/{i}/{kind}/status", sorted(allowed), st_got)
+                        if status == "limit" and st_got is not None and norm_status(st_got) == "limit":
                             v = ck.guard(f"{tag}/{i}/{kind}/value", lambda: rd(cmd, "limit_value", imp=i, kind=kname, **kw))
                             if v is not None:
                                 ck.num(f"{tag}/{i}/{kind}/value", val, v, REL_G3)
                 status, val = a["joint"]
+                beyond = status == "limit" and composition(case, {i: val * v[0] for i, v in imps.items()}) is None
                 st_got = ck.guard(f"{tag}/joint/status", lambda: rd(cmd, "joint_k_status", **kw))
                 if st_got is not None:
-                    ck.ok(norm_status(st_got) == status, f"{tag}/joint/status", status, st_got)
-                if status == "limit":
+                    allowed = {status} | ({"no_response"} if beyond else set())
+                    ck.ok(norm_status(st_got) in allowed, f"{tag}/joint/status", sorted(allowed), st_got)
+                if status == "limit" and st_got is not None and norm_status(st_got) == "limit":
                     v = ck.guard(f"{tag}/joint/value", lambda: rd(cmd, "joint_k", **kw))
                     if v is not None:
                         ck.num(f"{tag}/joint/value", val, v, REL_G3)
@@ -1194,11 +1256,21 @@ def compare_linear(st, cmd, ck):
             best = {i: max(per_step[s]["contribution"][i] for s in case.targets) for i in imps}
             good, why = check_order(rk, best, [best[i] for i in rank_by(best)], REL_G3, sc)
             ck.ok(good, f"{case.name}/{eid}/summary/ranking", rank_by(best), why or [name_of(x) for x in rk])
+            for item in rk:
+                if isinstance(item, dict) and "largest_contribution" in item and name_of(item) in best:
+                    ck.num(f"{case.name}/{eid}/summary/ranking/{name_of(item)}", best[name_of(item)],
+                           item["largest_contribution"], REL_G3, sc)
         if L is not None:
+            jc = [(per_step[s]["joint"][1], s) for s in case.targets if per_step[s]["joint"][0] == "limit"]
+            if jc:
+                jv = ck.guard(f"{case.name}/{eid}/summary/joint", lambda: rd(cmd, "summary_joint", endpoint=eid))
+                if jv is not None:
+                    ck.num(f"{case.name}/{eid}/summary/joint", min(jc)[0], jv, REL_G3)
             for kind, kname in KIND_NAMES.items():
                 for i in imps:
                     cand = [(per_step[s]["limits"][kind][i][1], s) for s in case.targets
-                            if per_step[s]["limits"][kind][i][0] == "limit"]
+                            if per_step[s]["limits"][kind][i][0] == "limit"
+                            and not beyond_composition(case, per_step[s], kind, i, per_step[s]["limits"][kind][i][1])]
                     if not cand:
                         continue
                     val, stp = min(cand)
@@ -1211,6 +1283,21 @@ def compare_linear(st, cmd, ck):
                         if gs is not None:
                             ck.ok(int(gs) == stp or close(val, min(c[0] for c in cand if c[1] == int(gs)), REL_G3),
                                   f"{case.name}/{eid}/summary/{i}/{kind}/step", stp, gs)
+
+
+def limit_levels(case, a, kind, i, w):
+    """Impurity levels of the full material at a limit of `kind` for impurity i at w wt%."""
+    nominal = case.nominal()
+    if kind == "alone":
+        return {i: w}
+    if kind == "others_nominal":
+        return {**nominal, i: w}
+    return {**a["worst_level"], i: w}
+
+
+def beyond_composition(case, a, kind, i, w):
+    """True when the limit w leaves no balance (the command reports `no response`, with a detail, there)."""
+    return composition(case, limit_levels(case, a, kind, i, w)) is None
 
 
 def gate_g3(states):
@@ -1395,15 +1482,17 @@ def gate_g4_case(st, clr):
         compact, _ = st.solver.solve(full_spec(case, {el_key(k): v for k, v in comp.items() if v > 0.0},
                                                f"P157 checker {case.name} verification point"))
         n_points += 1
-        for ep in scalars:
-            for step in case.targets:
-                v = walk(pt, OUT["point_solved"].format(endpoint=endpoint_id(ep), step=step), True)
-                if v is MISSING:
-                    ck.ok(False, f"{case.name}/verification point/{endpoint_id(ep)}/{step}", "present",
-                          "schema key not found: " + OUT["point_solved"])
-                    continue
-                ck.num(f"{case.name}/verification point/{endpoint_id(ep)}/{step}",
-                       endpoint_value(compact, step, ep, clr), v, REL_G4)
+        by_id = {endpoint_id(e): e for e in scalars}
+        checks = ck.guard(f"{case.name}/verification point checks", lambda: walk(pt, OUT["point_checks"])) or []
+        ck.ok(bool(checks), f"{case.name}/verification point has checks", "non-empty", len(checks))
+        for c in checks:
+            ep = by_id.get(c.get("endpoint"))
+            if ep is None or c.get("solved") is None or not isinstance(c.get("step"), int):
+                continue
+            ck.ok(c.get("pass") is True, f"{case.name}/verification check {c.get('endpoint')}/{c.get('step')} passes",
+                  True, c.get("pass"))
+            ck.num(f"{case.name}/verification check {c.get('endpoint')}/{c.get('step')}/{c.get('role')}",
+                   endpoint_value(compact, c["step"], ep, clr), c["solved"], REL_G4)
     # (e) dose.contact_proxy by removing each impurity
     for ep in [e for e in scalars if e["response"] == "dose.contact_proxy"]:
         for step in case.targets:
@@ -1417,6 +1506,15 @@ def gate_g4_case(st, clr):
                 if got is not None:
                     ck.num(f"{case.name}/dose/step{step}/{i}/contribution", mine[i], got, REL_G4,
                            endpoint_value(base[0], step, ep, clr))
+            for i, (nom_i, _, _) in case.imps.items():
+                if nom_i > 0.0:    # central difference over +-1 % of the nominal weight (the documented gradient)
+                    h = 0.01 * nom_i
+                    up, dn = sv.at({**nominal, i: nom_i + h}, f"{i} +1%"), sv.at({**nominal, i: nom_i - h}, f"{i} -1%")
+                    gd = (endpoint_value(up[0], step, ep, clr) - endpoint_value(dn[0], step, ep, clr)) / (2.0 * h)
+                    gg = ck.guard(f"{case.name}/dose/step{step}/{i}/gradient", lambda: rd(cmd, "gradient", imp=i, **kw))
+                    if gg is not None:
+                        ck.num(f"{case.name}/dose/step{step}/{i}/gradient", gd, gg, 10.0 * REL_G4,
+                               endpoint_value(base[0], step, ep, clr) / nom_i)
             rank = ck.guard(f"{case.name}/dose/step{step}/ranking", lambda: rd(cmd, "ranking", **kw))
             if rank is not None:
                 good, why = check_order(rank, mine, [mine[i] for i in rank_by(mine)], REL_G4,
@@ -1566,7 +1664,8 @@ def gate_g5(states, binary, work, cwd, timeout, pack):
                 corner_rows += enumerate_corners(st, sv, enum, h)
             pure_acts = {el: [s["act"] for s in c["steps"]] for el, c in st.pure_runs().items()}
             for step in case.targets:
-                kw = {"endpoint": "waste_class", "step": step}
+                kw = {"endpoint": endpoint_id(next(e for e in case.endpoints if e["response"] == "waste_class")),
+                      "step": step}
                 tag = f"{case.name}/step{step}"
                 step_acts = {el: v[step - 1] for el, v in pure_acts.items()}
                 mine_n, _, unk = classify(pack, w["waste_type"], w["mass_g"], w["displaced_volume_cm3"],
@@ -1661,6 +1760,8 @@ def gate_g6(binary, work, cwd, timeout, data_home, photon):
         "uncertainty": variant(edit_base=lambda b: b.__setitem__("uncertainty", ra["uncertainty"])),
         "min_above_nominal": variant(edit_doc=minimum),
         "unknown_endpoint": variant(endpoints=[{"response": "activity.nonsense"}]),
+        "estimated_spectra_with_dose": variant(endpoints=dose, edit_base=lambda b: b["photon"].__setitem__(
+            "missing_spectra", "estimate")),
         "dose_without_photon": variant(endpoints=dose, edit_base=lambda b: b.pop("photon", None)),
         "limit_on_waste_class": variant(endpoints=[{"response": "waste_class", "class": "C", "limit": 1.0}]),
     }
@@ -1857,99 +1958,104 @@ class FakeSolver:
         return {"steps": steps}, None
 
 
-def put(doc, path, value):
-    node = doc
-    segs = path.split("/")
-    for k, seg in enumerate(segs):
-        m = re.fullmatch(r"\[([^=\]]+)=(.*)\]", seg)
-        key = m.group(2) if m else seg
-        if k == len(segs) - 1:
-            node[key] = value
-        else:
-            node = node.setdefault(key, {})
+def setp(doc, path, value):
+    """Set the value at a path of OUT (its parent must exist); delete the key when value is MISSING."""
+    parent, _, last = path.rpartition("/")
+    node = walk(doc, parent)
+    if value is MISSING:
+        del node[last]
+    else:
+        node[last] = value
 
 
 def fake_command(st, clr):
-    """The output document the checker expects, written through OUT from its own arithmetic (plumbing test)."""
-    case, doc = st.case, {"schema": "fake"}
-    solver = st.solver
-    surplus = {}
+    """The `actinv-impurities-result-1` document in the implementation's documented shape, written from the
+    checker's own arithmetic (plumbing test of OUT and the comparisons)."""
+    case, solver = st.case, st.solver
+    statuses = {"limit": "limit", "no_response": "no response", "infeasible": "infeasible"}
 
     def solve_at(levels):
-        comp = composition(case, levels)
-        return solver.solve(full_spec(case, comp, "x"))[0]
+        return solver.solve(full_spec(case, composition(case, levels), "x"))[0]
 
-    def put_out(key, value, **kw):
-        put(doc, OUT[key].format(**kw), value)
-
-    for ep in case.endpoints:
-        eid = endpoint_id(ep)
-        vals = {}
-        for step in case.targets:
-            kw = {"endpoint": eid, "step": step}
+    targets, per_ep = [], {}
+    for step in case.targets:
+        entries = []
+        for ep in case.endpoints:
+            eid, L = endpoint_id(ep), ep.get("limit")
+            e = {"response": eid, "limit": L, "impurities": {}}
+            imp_nodes = e["impurities"]
+            for i, (nom, lo, hi) in case.imps.items():
+                imp_nodes[i] = {"nominal_wt_pct": nom, "min_wt_pct": lo, "max_wt_pct": hi}
             if ep["response"] == "dose.contact_proxy":
-                cs = corners(list(case.imps), case.imps)
-                dv = [(endpoint_value(solve_at(lv), step, ep, clr), lab) for lab, lv in cs]
-                top, lab = max(dv, key=lambda x: x[0])
+                dv = [(endpoint_value(solve_at(lv), step, ep, clr), lv) for _, lv in corners(list(case.imps), case.imps)]
+                top, lv = max(dv, key=lambda x: x[0])
                 nomv = endpoint_value(solve_at(case.nominal()), step, ep, clr)
-                put_out("matrix_only", endpoint_value(solve_at({}), step, ep, clr), **kw)
-                put_out("nominal", nomv, **kw)
-                put_out("worst_value", top, **kw)
-                put_out("worst_corner", lab, **kw)
+                e.update({"kind": "nonlinear", "matrix_only": endpoint_value(solve_at({}), step, ep, clr), "nominal": nomv,
+                          "worst_case": {"value": top, "corner": lv, "method": "corner maximum"}})
                 contrib = {}
-                for i in case.imps:
+                for i, (nom, _, _) in case.imps.items():
                     contrib[i] = nomv - endpoint_value(solve_at({**case.nominal(), i: 0.0}), step, ep, clr)
-                    put_out("contribution_nominal", contrib[i], imp=i, **kw)
-                    put_out("gradient", contrib[i] / case.imps[i][0], imp=i, **kw)
-                put_out("ranking", rank_by(contrib), **kw)
-                continue
-            L = ep.get("limit")
-            a = analyse(st.r(ep, step), case.balance, case.matrix, case.imps, L)
-            vals[step] = a
-            for key, v in (("matrix_only", a["matrix_only"]), ("nominal", a["nominal"]), ("worst_value", a["worst"]),
-                           ("worst_corner", a["worst_corner"]), ("ranking", rank_by(a["contribution"]))):
-                put_out(key, v, **kw)
-            nv = {el: nuclide_values(st.pure_runs()[el], step, ep, clr) for el in case.elements}
-            for i in case.imps:
-                put_out("gradient", a["gradient"][i], imp=i, **kw)
-                put_out("contribution_nominal", a["contribution"][i], imp=i, **kw)
-                put_out("contribution_max", a["contribution_max"][i], imp=i, **kw)
-                if not ep["response"].startswith("activity:"):
-                    put_out("top_nuclides", [n for n, _ in top_nuclides(nv[i], nv[case.balance], case.imps[i][0],
-                                                                         a["contribution"][i])], imp=i, **kw)
+                    h = 0.01 * nom
+                    gd = (endpoint_value(solve_at({**case.nominal(), i: nom + h}), step, ep, clr)
+                          - endpoint_value(solve_at({**case.nominal(), i: nom - h}), step, ep, clr)) / (2.0 * h)
+                    imp_nodes[i].update({"gradient_per_wt_pct": gd, "contribution_nominal": contrib[i],
+                                         "contribution_at_max": 0.0, "top_nuclides": None})
+                e["ranking"] = rank_by(contrib)
+            else:
+                a = analyse(st.r(ep, step), case.balance, case.matrix, case.imps, L)
+                per_ep.setdefault(eid, {})[step] = a
+                nv = {el: nuclide_values(st.pure_runs()[el], step, ep, clr) for el in case.elements}
+                e.update({"kind": "linear", "matrix_only": a["matrix_only"], "nominal": a["nominal"],
+                          "worst_case": {"value": a["worst"], "corner": a["worst_level"], "method": "gradient sign"},
+                          "ranking": rank_by(a["contribution"])})
+                for i in case.imps:
+                    tn = None
+                    if ep["response"] in ("activity.total", "clearance_index"):
+                        tn = [[n, v] for n, v in top_nuclides(nv[i], nv[case.balance], case.imps[i][0], a["contribution"][i])]
+                    imp_nodes[i].update({"gradient_per_wt_pct": a["gradient"][i], "contribution_nominal": a["contribution"][i],
+                                         "contribution_at_max": a["contribution_max"][i], "top_nuclides": tn})
+                    if L is not None:
+                        imp_nodes[i]["limits"] = {}
+                        for kind, kname in KIND_NAMES.items():
+                            status, val = a["limits"][kind][i]
+                            node = {"status": statuses[status], "wt_pct": val}
+                            if status == "limit" and beyond_composition(case, a, kind, i, val):
+                                node = {"status": "no response", "wt_pct": None, "detail": "beyond the composition bound"}
+                            imp_nodes[i]["limits"][kname] = node
                 if L is not None:
-                    for kind, kname in KIND_NAMES.items():
-                        status, val = a["limits"][kind][i]
-                        put_out("limit_status", {"limit": "limit", "no_response": "no response",
-                                                 "infeasible": "infeasible: others exceed"}[status], imp=i, kind=kname, **kw)
-                        if val is not None:
-                            put_out("limit_value", val, imp=i, kind=kname, **kw)
-            if L is not None:
-                status, val = a["joint"]
-                put_out("joint_k_status", status, **kw)
-                if val is not None:
-                    put_out("joint_k", val, **kw)
-        if vals:
-            put_out("summary_worst", max(a["worst"] for a in vals.values()), endpoint=eid)
-            best = {i: max(vals[s]["contribution"][i] for s in case.targets) for i in case.imps}
-            put_out("summary_ranking", rank_by(best), endpoint=eid)
-            if ep.get("limit") is not None:
-                for kind, kname in KIND_NAMES.items():
-                    for i in case.imps:
-                        cand = [(vals[s]["limits"][kind][i][1], s) for s in case.targets if vals[s]["limits"][kind][i][0] == "limit"]
-                        if cand:
-                            put_out("summary_tightest_value", min(cand)[0], endpoint=eid, kind=kname, imp=i)
-                            put_out("summary_tightest_step", min(cand)[1], endpoint=eid, kind=kname, imp=i)
-    pts = []
-    comp = composition(case, case.nominal())
+                    status, val = a["joint"]
+                    e["joint_k"] = {"value": val, "status": statuses[status]}
+            entries.append(e)
+        targets.append({"step": step, "t_s": float(step), "endpoints": entries})
+    summary = {}
+    for eid, steps in per_ep.items():
+        ep = next(e for e in case.endpoints if endpoint_id(e) == eid)
+        worst_step = max(steps, key=lambda s_: steps[s_]["worst"])
+        node = {"worst": {"value": steps[worst_step]["worst"], "step": worst_step}}
+        best = {i: max((steps[s_]["contribution"][i], s_) for s_ in steps) for i in case.imps}
+        node["ranking"] = [{"impurity": i, "largest_contribution": best[i][0], "step": best[i][1]}
+                           for i in rank_by({i: best[i][0] for i in best})]
+        if ep.get("limit") is not None:
+            node["tightest_limit"] = {}
+            for kind, kname in KIND_NAMES.items():
+                node["tightest_limit"][kname] = {}
+                for i in case.imps:
+                    cand = [(steps[s_]["limits"][kind][i][1], s_) for s_ in steps if steps[s_]["limits"][kind][i][0] == "limit"
+                            and not beyond_composition(case, steps[s_], kind, i, steps[s_]["limits"][kind][i][1])]
+                    if cand:
+                        node["tightest_limit"][kname][i] = {"wt_pct": min(cand)[0], "step": min(cand)[1], "status": "limit"}
+            jc = [(steps[s_]["joint"][1], s_) for s_ in steps if steps[s_]["joint"][0] == "limit"]
+            if jc:
+                node["joint_k"] = {"value": min(jc)[0], "step": min(jc)[1], "status": "limit"}
+        summary[eid] = node
     compact = solve_at(case.nominal())
-    pts.append({"id": "nominal", "composition_wt_pct": comp, "solved": {
-        endpoint_id(e): {str(s): endpoint_value(compact, s, e, clr) for s in case.targets}
-        for e in case.endpoints if e["response"] != "waste_class"}})
-    put(doc, OUT["verification_ok"], True)
-    put(doc, OUT["verification_dev"], 1.0e-12)
-    put(doc, OUT["verification_points"], pts)
-    return doc
+    checks = [{"endpoint": endpoint_id(e), "step": s_, "role": "nominal", "predicted": endpoint_value(compact, s_, e, clr),
+               "solved": endpoint_value(compact, s_, e, clr), "limit": e.get("limit"), "rel_dev": 0.0, "pass": True}
+              for e in case.endpoints if e["response"] != "waste_class" for s_ in case.targets]
+    point = {"id": "nominal", "composition_wt_pct": composition(case, case.nominal()), "checks": checks,
+             "max_rel_dev": 0.0, "pass": True, "ms": 1}
+    return {"schema": "actinv-impurities-result-1", "targets": targets, "summary": summary,
+            "verification": {"tolerance_rel": 1.0e-6, "points": [point], "max_rel_dev": 1.0e-12, "verified": True}}
 
 
 def fake_state():
@@ -1957,7 +2063,7 @@ def fake_state():
     case = Case("fake", "Fe", {"Cr": 9.0}, norm_imps({"Co": rng(0.005, 0.001, 0.01), "Ni": rng(0.005, 0.001, 0.01),
                                                       "Nb": rng(0.001, 0.0002, 0.003)}), TARGETS,
                 [{"response": "activity.total"}, {"response": "heat.total", "limit": 1.0e-4},
-                 {"response": "activity:Co60", "limit": 0.5}, {"response": "clearance_index"},
+                 {"response": "activity:Co60", "limit": 0.5}, {"response": "clearance_index", "limit": 1.0},
                  {"response": "dose.contact_proxy"}], base,
                 {"mass_g": 1000.0, "displaced_volume_cm3": 128.2, "waste_type": WASTE_TYPE})
     case.props = {}
@@ -2101,7 +2207,9 @@ def self_check():
     expect("photon" in fs and fs["options"]["prune"] == "reach" and json.loads(json.dumps(fs)) == fs, "full spec keeps photon")
     doc = impurities_doc(c)
     expect(doc["schema"] == "actinv-impurities-1" and doc["impurities"]["Ni"] == {"nominal": 0.02, "min": 0.02, "max": 0.02}
-           and doc["rules"] == RULES_ID and doc["targets"] == TARGETS, "impurities doc")
+           and doc["waste"]["rules"] == RULES_ID and "nuclide_properties" not in doc["waste"]
+           and doc["targets"] == TARGETS and doc["endpoints"][1] == {"endpoint": "waste_class", "class": "C"}
+           and "response" not in json.dumps(doc["endpoints"]), "impurities doc")
     expect(canonical(doc) == canonical(json.loads(json.dumps(doc))), "impurities doc is JSON")
     expect("photon" in (qualifies_composition_solve(c) or ""), "photon base refused by composition solve")
     c2 = copy.deepcopy(c)
@@ -2111,7 +2219,7 @@ def self_check():
     expect("elements" in (qualifies_composition_solve(big) or ""), "nine elements refused")
 
     # schema lookup
-    out = {"targets": [{"step": 4, "endpoints": [{"response": "heat.total", "nominal": 2.0}]}], "summary": {"x": {"worst": 7}}}
+    out = {"targets": [{"step": 4, "endpoints": [{"response": "heat.total", "nominal": 2.0}]}], "summary": {"x": {"worst": {"value": 7, "step": 4}}}}
     expect(rd(out, "nominal", endpoint="heat.total", step=4) == 2.0, "list selectors")
     expect(rd(out, "summary_worst", endpoint="x") == 7, "dict selection")
     try:
@@ -2154,10 +2262,10 @@ def self_check():
     r4 = gate_g4_case(st, st.clr)
     expect(r4["pass"] and r4["checks"] > 60, f"G4 plumbing: {r4['checks']} checks, {r4['failure_list'][:3]}")
     mut = json.loads(json.dumps(st.cmd))
-    walk(mut, OUT["nominal"].format(endpoint="heat.total", step=5))
-    put(mut, OUT["nominal"].format(endpoint="heat.total", step=5), walk(mut, OUT["nominal"].format(endpoint="heat.total", step=5)) * 1.001)
-    put(mut, OUT["worst_value"].format(endpoint="dose.contact_proxy", step=4), 1.0e-9)
-    put(mut, OUT["limit_value"].format(endpoint="activity:Co60", step=6, imp="Co", kind="alone"), 1.0)
+    pn = OUT["nominal"].format(endpoint="heat.total", step=5)
+    setp(mut, pn, walk(mut, pn) * 1.001)
+    setp(mut, OUT["worst_value"].format(endpoint="dose.contact_proxy", step=4), 1.0e-9)
+    setp(mut, OUT["limit_value"].format(endpoint="activity:Co60", step=6, imp="Co", kind="others_at_nominal"), 1.0)
     st2 = fake_state()
     st2.pure_runs()
     st2.cmd, st2.rc = mut, 0
@@ -2167,10 +2275,26 @@ def self_check():
     r4b = gate_g4_case(st2, st2.clr)
     expect(not r4b["pass"], "a mutated dose worst value is caught by G4")
     gone = json.loads(json.dumps(st.cmd))
-    del gone["targets"]["4"]["endpoints"]["heat.total"]["nominal"]
+    setp(gone, OUT["nominal"].format(endpoint="heat.total", step=4), MISSING)
     ck3 = Checks()
     compare_linear(st, gone, ck3)
     expect(any("schema key not found" in str(f["observed"]) for f in ck3.failures), "missing key reported as schema failure")
+    bad = json.loads(json.dumps(st.cmd))
+    setp(bad, OUT["top_nuclides"].format(endpoint="activity.total", step=4, imp="Co"), [["Zz99", 1.0]])
+    ck4 = Checks()
+    compare_linear(st, bad, ck4)
+    expect(ck4.nfail >= 1, "wrong top nuclides are caught")
+    bv = json.loads(json.dumps(st.cmd))
+    setp(bv, "verification/points/0/checks/0/solved", 123.0)
+    st.cmd = bv
+    expect(not gate_g4_case(st, st.clr)["pass"], "a verification point that disagrees with the checker's solve is caught")
+    st.cmd = json.loads(json.dumps(st.cmd))
+    expect(ep_input({"response": "waste_class", "class": "C"}) == {"endpoint": "waste_class", "class": "C"}
+           and ep_internal("heat.total") == {"response": "heat.total"}
+           and ep_internal({"name": "clearance_index"}) == {"response": "clearance_index", "limit": 1.0}
+           and endpoint_id({"response": "waste_class", "class": "C"}) == "waste_class:C", "endpoint forms")
+    expect(norm_status("no response") == "no_response" and norm_status("unavailable") == "unavailable", "status vocabulary")
+    expect(name_of(["Co60", 1.0]) == "Co60" and name_of({"impurity": "Co", "step": 4}) == "Co", "name_of pairs and dicts")
     if fails:
         print("P157 self-check FAILED:")
         for x in fails:
