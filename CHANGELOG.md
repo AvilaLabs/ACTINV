@@ -2,6 +2,19 @@
 
 ## Unreleased
 
+**Changed (P156: damage defaults)**
+
+- `build-damage --method kinematic` defaults each element's `E_d` to the per-element table NJOY2016 HEATR applies when
+  no `ed` is given (heatr.f90 at tag 2016.80: Be 31, C 31, Mg 25, Al 27, Si 25, Ca 40, Ti-Cu 40, Zr 40, Nb 40, Mo 60,
+  Ag 60, Ta 90, W 90, Au 30, Pb 25 eV; 25 eV otherwise), so an NRT value agrees with an NJOY-processed MT=444 library
+  at the same energies. The flat 25 eV default is gone; `--displacement-energy EL=eV` still overrides it.
+- arc-dpa displacements are counted at the reference `E_d` of the Nordlund et al. (2018) fit the constants come from
+  (Fe 40, Cu 33, Ni 39, Pd 41, Pt 42, W 70 eV), whatever `E_d` the NRT quantities use. Tables built at the reference
+  energy are unchanged.
+- With an `actinv-damage-table-2` file, an element that `damage.displacement_energy_eV` omits takes the energy the table
+  records; an explicit value must still equal it. The damage ledger names each element's source in
+  `displacement_energy_source` (`spec` or `table`), and `displacement_energy_eV` there lists the energies used.
+
 **Added (P152, opt-in; defaults unchanged)**
 
 - `photon.missing_spectra: "estimate"` (FISPACT-II `SPEK`). A nuclide with a mean electromagnetic energy and no photon

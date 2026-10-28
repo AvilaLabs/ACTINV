@@ -86,6 +86,8 @@ struct Table2Meta {
     displacement_energy_eV: BTreeMap<String, f64>,
     /// Element symbol -> arc-dpa `(b, c)`.
     arc: BTreeMap<String, (f64, f64)>,
+    /// Element symbol -> the `E_d` of the arc-dpa fit, at which the table's arc column was integrated.
+    arc_reference_eV: BTreeMap<String, f64>,
     arc_citation: String,
 }
 
@@ -107,7 +109,9 @@ pub struct PreparedDamageTable {
 ///
 /// `dpa_uncovered_upper_bound` is the damage-energy bound divided by `E_d`: the exact NRT count never exceeds
 /// `T_d / E_d` (it is 0 below `E_d`, 1 up to `2.5 E_d`, `0.4 T_d / E_d` above), and the arc-dpa count never
-/// exceeds the NRT count, so the bound holds for both.
+/// exceeds the NRT count at the same `E_d`, so the bound holds for both. The arc column is integrated at the
+/// reference `E_d` of its fit, which can be below the NRT `E_d` (W: 70 against 90 eV); the divisor is then the
+/// lower of the two, which bounds both counts.
 #[derive(Debug, Serialize, Clone, Default)]
 pub struct DamageRecoilOut {
     pub dpa_nrt_rate_per_s: f64,
@@ -215,8 +219,35 @@ struct FormatProbe {
 pub struct DamagePlan {
     /// covered element Z -> displacement energy eV
     pub covered_elements: BTreeMap<i32, f64>,
+    /// covered element Z -> where its displacement energy came from: `"spec"` or, for an element a table-2 run
+    /// leaves out of `damage.displacement_energy_eV`, `"table"`
+    pub displacement_sources: BTreeMap<i32, &'static str>,
     /// uncovered composition nuclides, canonical names
     pub uncovered_targets: Vec<String>,
+}
+
+impl DamagePlan {
+    /// The spec's displacement energies plus the table's for the covered elements the spec left out.
+    pub fn effective_energies(&self, spec: &BTreeMap<String, f64>) -> BTreeMap<String, f64> {
+        let mut energies = spec.clone();
+        for (z, source) in &self.displacement_sources {
+            if *source == "table" {
+                energies.insert(
+                    composition::symbol_of(*z).to_string(),
+                    self.covered_elements[z],
+                );
+            }
+        }
+        energies
+    }
+
+    /// Covered element symbol -> `"spec"` or `"table"`.
+    pub fn energy_sources(&self) -> BTreeMap<String, &'static str> {
+        self.displacement_sources
+            .iter()
+            .map(|(z, source)| (composition::symbol_of(*z).to_string(), *source))
+            .collect()
+    }
 }
 
 impl PreparedDamageTable {
@@ -361,6 +392,7 @@ impl PreparedDamageTable {
             }
         }
         let mut arc = BTreeMap::new();
+        let mut arc_reference_eV = BTreeMap::new();
         for (symbol, parameter) in &table.displacement.arc_dpa.parameters {
             if composition::z_of(symbol).is_none()
                 || !parameter.b.is_finite()
@@ -371,6 +403,7 @@ impl PreparedDamageTable {
                 ));
             }
             arc.insert(symbol.clone(), (parameter.b, parameter.c));
+            arc_reference_eV.insert(symbol.clone(), parameter.reference_displacement_energy_eV);
         }
         let groups = table.boundaries_eV.len() - 1;
         let mut canonical_keys = BTreeSet::new();
@@ -464,6 +497,7 @@ impl PreparedDamageTable {
             table2: Some(Table2Meta {
                 displacement_energy_eV: table.displacement.displacement_energy_eV,
                 arc,
+                arc_reference_eV,
                 arc_citation: table.displacement.arc_dpa.citation,
             }),
         })
@@ -487,7 +521,7 @@ impl PreparedDamageTable {
                 "recoil_integrated": {
                     "dpa_nrt_rate_per_s": "sum_g displacement_nrt_barn_g * phi_g * flux_multiplier, exact NRT integrated over the recoil spectrum at the built E_d",
                     "dpa_arc_rate_per_s": "the same with the arc-dpa efficiency; absent when a covered element has no published constants",
-                    "dpa_uncovered_upper_bound": "damage-energy upper bound of the channels the table could not compute, divided by E_d (the NRT count never exceeds T_d / E_d, and arc-dpa never exceeds NRT)",
+                    "dpa_uncovered_upper_bound": "damage-energy upper bound of the channels the table could not compute, divided by E_d (the NRT count never exceeds T_d / E_d, and arc-dpa never exceeds NRT at the same E_d); the lower of E_d and the arc fit's own E_d where the two differ",
                     "he_appm_per_dpa": "cumulative He-3 + He-4 appm over the cumulative linear dpa; present with gas output",
                 },
             })
@@ -539,11 +573,23 @@ impl PreparedDamageTable {
             ));
         }
         let mut covered_elements_ed = BTreeMap::new();
+        let mut displacement_sources = BTreeMap::new();
         for &z in covered_elements.keys() {
             let symbol = composition::symbol_of(z);
-            match displacement_energy_eV.get(symbol) {
-                Some(&ed) if ed.is_finite() && ed > 0.0 => {
+            // an element the spec omits takes the energy a table-2 file records (the one its recoil integrals
+            // were built with); table 1 has none to offer
+            let table_energy = self
+                .table2
+                .as_ref()
+                .and_then(|meta| meta.displacement_energy_eV.get(symbol));
+            match (displacement_energy_eV.get(symbol), table_energy) {
+                (Some(&ed), _) if ed.is_finite() && ed > 0.0 => {
                     covered_elements_ed.insert(z, ed);
+                    displacement_sources.insert(z, "spec");
+                }
+                (None, Some(&built)) => {
+                    covered_elements_ed.insert(z, built);
+                    displacement_sources.insert(z, "table");
                 }
                 _ => {
                     return Err(format!(
@@ -574,6 +620,7 @@ impl PreparedDamageTable {
         }
         Ok(DamagePlan {
             covered_elements: covered_elements_ed,
+            displacement_sources,
             uncovered_targets: uncovered,
         })
     }
@@ -658,13 +705,20 @@ impl PreparedDamageTable {
             }
             let ed = plan.covered_elements[&z];
             let dpa_rate = NRT_KAPPA * (energy_rate_z / atoms_z) / (2.0 * ed);
+            // the uncovered bound must cover the arc count too, which counts at its fit's own E_d
+            let bound_ed = self
+                .table2
+                .as_ref()
+                .and_then(|meta| meta.arc_reference_eV.get(composition::symbol_of(z)))
+                .filter(|reference| reference.is_finite() && **reference > 0.0)
+                .map_or(ed, |reference| ed.min(*reference));
             let recoil = self.table2.as_ref().map(|_| DamageRecoilOut {
                 dpa_nrt_rate_per_s: nrt_rate_z / atoms_z,
                 dpa_nrt: 0.0, // caller accumulates
                 dpa_arc_rate_per_s: arc_rate_z.map(|rate| rate / atoms_z),
                 dpa_arc: arc_rate_z.map(|_| 0.0),
                 damage_energy_uncovered_upper_eV_per_g_s: uncovered_energy_z,
-                dpa_uncovered_upper_bound_rate_per_s: uncovered_energy_z / atoms_z / ed,
+                dpa_uncovered_upper_bound_rate_per_s: uncovered_energy_z / atoms_z / bound_ed,
                 dpa_uncovered_upper_bound: 0.0,
                 he_appm_per_dpa: None,
             });
@@ -1008,6 +1062,32 @@ mod tests {
         )
         .unwrap();
         assert!(one.plan(&composition, &other, false).is_ok());
+    }
+
+    #[test]
+    fn table2_energy_defaults_to_the_table_and_names_its_source() {
+        let table = PreparedDamageTable::from_json(&table2_json(true), "neutron").unwrap();
+        let composition = BTreeMap::from([((26056, 0), 2.0e22)]);
+        // omitted: the table's energy, source "table"
+        let plan = table.plan(&composition, &BTreeMap::new(), false).unwrap();
+        assert_eq!(plan.covered_elements[&26], 40.0);
+        assert_eq!(plan.displacement_sources[&26], "table");
+        // explicit and equal: source "spec", same fold
+        let ed = BTreeMap::from([("Fe".to_string(), 40.0)]);
+        let explicit = table.plan(&composition, &ed, false).unwrap();
+        assert_eq!(explicit.displacement_sources[&26], "spec");
+        assert_eq!(explicit.covered_elements, plan.covered_elements);
+        // explicit and different: still refused
+        let other = BTreeMap::from([("Fe".to_string(), 41.0)]);
+        assert!(table.plan(&composition, &other, false).is_err());
+        // table 1 records no energy, so an omitted element is still refused
+        let one = PreparedDamageTable::from_json(
+            &table_json(serde_json::json!({"Fe56": [4.0, 6.0]})),
+            "neutron",
+        )
+        .unwrap();
+        let error = one.plan(&composition, &BTreeMap::new(), false).unwrap_err();
+        assert!(error.contains("Fe") && error.contains("displacement_energy_eV"));
     }
 
     #[test]

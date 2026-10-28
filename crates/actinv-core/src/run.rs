@@ -7816,7 +7816,8 @@ impl PreparedRun {
             let mut damage_ledger = serde_json::json!({
                 "table_sha256": &prepared.sha256,
                 "require_complete": prepared.options.require_complete,
-                "displacement_energy_eV": prepared.options.displacement_energy_eV,
+                "displacement_energy_eV": plan
+                    .effective_energies(&prepared.options.displacement_energy_eV),
                 "covered_elements": plan
                     .covered_elements
                     .keys()
@@ -7833,6 +7834,9 @@ impl PreparedRun {
             // only a table-2 file adds keys: a table-1 run's ledger is unchanged
             if let Some(recoil) = prepared.table.recoil_ledger() {
                 damage_ledger["recoil"] = recoil;
+                // where each covered element's energy came from; table 1 always takes the spec's
+                damage_ledger["displacement_energy_source"] =
+                    serde_json::json!(plan.energy_sources());
             }
             ledger
                 .as_object_mut()
@@ -8305,10 +8309,14 @@ impl PreparedRun {
                 "require_complete".into(),
                 serde_json::Value::Bool(prepared.options.require_complete),
             );
+            let spec_energies = &prepared.options.displacement_energy_eV;
             metadata_object.insert(
                 "displacement_energy_eV".into(),
-                serde_json::to_value(&prepared.options.displacement_energy_eV)
-                    .expect("displacement energies serialize"),
+                match &damage_plan {
+                    Some(plan) => serde_json::to_value(plan.effective_energies(spec_energies)),
+                    None => serde_json::to_value(spec_energies),
+                }
+                .expect("displacement energies serialize"),
             );
             let certificate_object = certificate
                 .as_object_mut()

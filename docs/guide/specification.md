@@ -640,8 +640,9 @@ A table row is a per-group damage-energy production cross section in barn·eV, k
 element without its own row. Rows must be nonnegative, finite, and exactly `boundaries - 1` in length. Target keys
 are validated against the canonical naming rules — `fe56` is an error, not a synonym.
 
-`displacement_energy_eV` maps canonical element symbols to positive displacement energies; every covered element
-must have one, and a nuclide key there is an error. `require_complete: true` rejects the run when any material
+`displacement_energy_eV` maps canonical element symbols to positive displacement energies; with a table-1 file every
+covered element must have one, with an `actinv-damage-table-2` file an omitted element takes the energy the table
+records, and a nuclide key there is an error. `require_complete: true` rejects the run when any material
 composition nuclide lacks a row. Uncovered nuclides are otherwise named in the ledger's
 `damage.uncovered_targets` and reduce `covered_atom_fraction`; they are never treated as zero data.
 
@@ -664,7 +665,9 @@ carry MT=444; build tables from `heatr`-processed or equivalent damage-energy ev
 MF=6 `LAW=2` angular distribution and the MF=3 Q value; single-particle continua (MT=91, 649, 699, 749, 799, 849,
 and MT=103-107 when no level MTs exist) use MF=6 `LAW=1` Kalbach-Mann or Legendre distributions; capture uses the
 incident momentum plus the photon recoil. Recoil energy becomes damage energy through the Lindhard partition in
-Robinson's fit (NJOY HEATR `df`); a recoil below `E_d` produces none. Quadrature is Gauss-Legendre in the emission
+Robinson's fit (NJOY HEATR `df`); a recoil below `E_d` produces none. `E_d` defaults per element to the table NJOY2016
+HEATR applies when no `ed` is given (Be 31, C 31, Mg 25, Al 27, Si 25, Ca 40, Ti through Cu 40, Zr 40, Nb 40, Mo 60,
+Ag 60, Ta 90, W 90, Au 30, Pb 25 eV; 25 eV for any other element); `--displacement-energy EL=eV` overrides it. Quadrature is Gauss-Legendre in the emission
 cosine, split at the threshold and the NRT breakpoints, and the incident-energy grid is refined until a lin-lin
 midpoint agrees within 1e-3. The group collapse is the flat-lethargy weighting of the other builders.
 
@@ -706,7 +709,9 @@ A table-2 file has the table-1 fields (`format` `actinv-damage-table-2`, `source
 `boundaries_eV`, `units`, `targets`) and these additions. `displacement.displacement_energy_eV` maps each element to
 the `E_d` the recoil integrals were built with, and `displacement.arc_dpa` holds the constants `b`, `c` and the fit's
 reference displacement energy for the elements in Table 1 of Nordlund et al., Nat. Commun. 9, 1084 (2018) (Fe, Cu,
-Ni, Pd, Pt, W; other elements have no arc-dpa output). Each target row holds `damage_energy_barn_eV` (the total, equal
+Ni, Pd, Pt, W; other elements have no arc-dpa output). The arc-dpa displacement count is evaluated at that reference
+energy (Fe 40, Cu 33, Ni 39, Pd 41, Pt 42, W 70 eV), whatever `E_d` the damage energy and the NRT count use, because
+the constants are only defined there; a table built at the reference energy is unchanged by this. Each target row holds `damage_energy_barn_eV` (the total, equal
 to `elastic + inelastic + disappearance`), the three partials, `uncovered_xs_barn`, `uncovered_damage_upper_barn_eV`,
 `displacement_nrt_barn`, `displacement_arc_barn` (when constants exist) and an informational `channels` record. The
 total feeds the linear `dpa` exactly as a table-1 file does.
@@ -715,8 +720,12 @@ With a table-2 file each step and each element add `dpa_nrt_rate_per_s`, `dpa_nr
 recoil spectrum), `dpa_arc_rate_per_s`, `dpa_arc` (absent unless every covered element has constants),
 `damage_energy_uncovered_upper_eV_per_g_s`, `dpa_uncovered_upper_bound_rate_per_s` and `dpa_uncovered_upper_bound`
 (damage-energy bound divided by `E_d`). The step adds `he_appm_per_dpa`, the cumulative He-3 plus He-4 appm over the
-cumulative linear `dpa`, when gas output is requested. The spec's `displacement_energy_eV` must equal the table's build
-value for every covered element; otherwise validation fails and names the rebuild command.
+cumulative linear `dpa`, when gas output is requested. An explicit `displacement_energy_eV` in the spec must equal the
+table's build value for every covered element; otherwise validation fails and names the rebuild command. A covered
+element the spec omits takes the table's value, and the ledger's `damage.displacement_energy_eV` lists the energies
+used while `damage.displacement_energy_source` names each covered element's source, `"spec"` or `"table"`. Where an
+element's arc reference energy is below its `E_d`, `dpa_uncovered_upper_bound` divides by the lower energy so that it
+bounds the arc count as well.
 
 ## Kerma heating and power-driven steps
 

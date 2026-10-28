@@ -211,7 +211,8 @@ pub struct RadiologicalOptions {
 pub struct DamageOptions {
     pub table: HashedFileRef,
     /// Per-element displacement energies in eV, keyed by canonical element symbol ("Fe").
-    /// Mandatory for every element the table covers in the material.
+    /// Mandatory for every element a table-1 file covers in the material; with an `actinv-damage-table-2` file an
+    /// omitted element takes the energy the table records, and an explicit value must equal it.
     #[serde(default)]
     pub displacement_energy_eV: BTreeMap<String, f64>,
     #[serde(default)]

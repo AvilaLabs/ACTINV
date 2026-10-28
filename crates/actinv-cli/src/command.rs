@@ -35,7 +35,7 @@ const USAGE: &str = "usage: actinv run SPEC.json [OUT.json]\n\
                     actinv import-flux fispact FLUXES OUT.ndjson --groups GROUPS.json\n\
                     actinv import-fispact DECK.i OUT.json [--fluxes FLUXES] [--files FILES] [--library LIB.npz] [--decay DECAY] [--covariance COV.npz] [--fission-yields FILE...] [--damage TABLE] [--self-shielding-table FILE] [--resonance FILE...] [--strict]\n\
                     actinv build-library INPUT OUTPUT.npz [--format auto|tendl|eaf] [--projectile auto|neutron|proton|deuteron|triton|helion|alpha|gamma] [--groups fispact-709|fispact-162|fispact-66|...|fispact-1102|PATH] [--temperature-K K] [--workers N] [--cache DIR] [--grid-density D] [--strict-states true|false] [--profile none|endfb8|tendl] [--decay PATH] [--decay-fallback PATH] [--continue-on-error true|false] [--spallation TABLE.json] [--splice-energy-MeV MEV]\n\
-                    actinv build-damage EVALUATION_DIR OUT.json [--projectile auto|neutron|proton|deuteron|triton|helion|alpha|gamma] [--groups fispact-709|fispact-162|fispact-66|...|fispact-1102|PATH] [--temperature-K K] [--cache DIR] [--method default|kinematic] [--displacement-energy EL=eV ...] [--capture-photons evaluated|one-photon|per-photon] [--continuum-recoil kinematic|evaluated] [--grid-density X]\n\
+                    actinv build-damage EVALUATION_DIR OUT.json [--projectile auto|neutron|proton|deuteron|triton|helion|alpha|gamma] [--groups fispact-709|fispact-162|fispact-66|...|fispact-1102|PATH] [--temperature-K K] [--cache DIR] [--method default|kinematic] [--displacement-energy EL=eV ... (default: NJOY HEATR standard energy of the element, else 25)] [--capture-photons evaluated|one-photon|per-photon] [--continuum-recoil kinematic|evaluated] [--grid-density X]\n\
                     actinv build-shielding EVALUATION_DIR OUT.json [--projectile auto|neutron] [--groups fispact-709|PATH] [--cache DIR]\n\
                     actinv build-covariance INPUT ACTIVATION.npz OUTPUT.cov.npz [--workers N] [--cache DIR]\n\
                     actinv mesh SPEC.json OUT.ndjson\n\
@@ -641,7 +641,7 @@ fn build_damage(args: &[String]) {
             cache: options.get("--cache").map(std::path::PathBuf::from),
             displacement_energy_eV: displacement_energies,
             default_displacement_energy_eV:
-                actinv_data::damage_kinematic::DEFAULT_DISPLACEMENT_ENERGY_EV,
+                actinv_data::damage_kinematic::OTHERWISE_DISPLACEMENT_ENERGY_EV,
             capture_photons: actinv_data::damage_kinematic::CapturePhotons::parse(
                 options
                     .get("--capture-photons")
