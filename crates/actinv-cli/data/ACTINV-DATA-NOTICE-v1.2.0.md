@@ -19,8 +19,13 @@ table. Two departures from the distributed files, both recorded in the table: Pb
 corpus file that the activation library also uses (SHA-256 `86788a14563ecdb844628a6a455864874ba5f5bca9b8142c10a59ea00df87c72`),
 because the distributed file carries a literal `NaN` that the P10 repairs replace; and where a 0 K resonance
 reconstruction goes negative (Fe-54's elastic near 3.5 keV), the value is set to zero as NJOY RECONR does, and the
-target's row records the clipped range as `zero_k_clipped`. The standard displacement energies are a convention, not a
-material-specific measurement. The table inherits the evaluation defects documented in `docs/DATA_LIMITATIONS.md`.
+target's row records the clipped range as `zero_k_clipped`. The table was built after a correction to ACTINV's
+Reich–Moore reconstruction: resonances whose AJ values carry opposite signs (the two channel spins) are now separate
+channels, as NJOY RECONR treats them. Four evaluations change: Al-27, Cl-37, Mn-55 and Si-29. The v1.1.0 activation
+libraries were built before the correction and are unchanged. For those four nuclides, their resolved-range capture
+differs from the corrected 0 K reconstruction by up to 16 % at isolated Al-27 resonances near 345 keV (2.1 % for
+Si-29, 1.1 % for Cl-37, under 1e-4 for Mn-55); thermal capture is identical, and capture resonance integrals differ by
+at most 3e-5. The standard displacement energies are a convention, not a material-specific measurement. The table inherits the evaluation defects documented in `docs/DATA_LIMITATIONS.md`.
 
 Licence and attribution: the table is a transformation of TENDL-2025 evaluations that declare `CC-BY-4.0`, and is
 offered under CC-BY-4.0 with the attribution given in the TENDL section below. It was changed from the source form by

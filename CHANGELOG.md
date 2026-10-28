@@ -18,6 +18,14 @@
   (recorded in `channels.zero_k_clipped`) instead of aborting, and `--continue-on-error true` lists a failing evaluation
   in the table's `failed` array instead of stopping the build. Tables without either event are unchanged.
 
+**Fixed (P156)**
+
+- Reich–Moore (LRF=3) reconstruction keeps resonances of opposite AJ sign in separate channels, since the sign selects
+  the channel spin, as NJOY RECONR does. Before, they shared one R-matrix and interfered. TENDL-2025 Al-27, Cl-37,
+  Mn-55 and Si-29 are affected: Al-27's 0 K elastic moved by up to 10.9 % in 709-group groups between 0.33 and
+  0.8 MeV, and its capture by up to 16 % pointwise near 345 keV. Thermal values are unchanged, and capture resonance
+  integrals moved by at most 3e-5. The shipped v1.1.0 activation libraries predate the fix and are not rebuilt.
+
 **Added (P156: shipped damage table)**
 
 - Data catalog 1.2.0 adds the artifact role `damage-table` (optional, one per bundle) and the artifact

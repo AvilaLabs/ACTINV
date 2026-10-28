@@ -26,7 +26,11 @@ products are not given damage; a run counts them in `covered_atom_fraction` and 
 library's ordinate repairs are not applied), except Pb-208: the distributed file carries a literal `NaN`, so the
 table uses the repaired working-corpus file the activation library is built from (SHA-256 `86788a14…`). A negative
 0 K resonance reconstruction is set to zero, as NJOY RECONR does; this happens only for Fe-54's elastic between 3,491
-and 3,517 eV (at most −1e-4 b), and the row records it as `zero_k_clipped`. Displacement energies are the NJOY2016 HEATR defaults when no energy is given; the table records them and
+and 3,517 eV (at most −1e-4 b), and the row records it as `zero_k_clipped`. The build includes a correction to the
+Reich–Moore reconstruction: resonances of opposite AJ sign (the two channel spins) are separate channels, as in NJOY
+RECONR. This changes Al-27, Cl-37, Mn-55 and Si-29. The unchanged v1.1.0 activation libraries predate it; for those
+nuclides their resolved-range capture differs by up to 16 % near isolated Al-27 resonances (345 keV), with thermal
+capture identical and capture resonance integrals within 3e-5. Displacement energies are the NJOY2016 HEATR defaults when no energy is given; the table records them and
 a run refuses a different value. Each evaluation file's SHA-256 is recorded in the table.
 
 **Fetching.** A file already installed under an older version directory with the catalog's SHA-256 is copied into
