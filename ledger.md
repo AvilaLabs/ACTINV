@@ -4287,3 +4287,15 @@ The candidate's workspace tests, on the P156 branch before any checker run or ta
 bit-identical pointwise, but integrated over a recoil spectrum it differs by 9e-6. The NRT breakpoints are panel
 edges of the shared quadrature, and the incident-energy grid is refined on all three quantities. One other test
 failure in the same run was a wording mismatch in an import message. No checker gate has been run.
+
+## Entry 244 — P156 development run 1 and Amendment B registered (2026-10-27)
+
+Development run 1 is disclosed. The first build of the shipped table with the item-6 command, on candidate
+`1a04639` (binary built from that commit), stopped after 2 min 51 s on `n-Fe054.tendl`: `MT=2 zero-K
+reconstruction is nonfinite or negative at 3493.98917819688 eV`. No table was written and no checker gate was run.
+
+- **P156 Amendment B** `e14e1f6a4cdab260ba265cb0621d849358fe71135d0aa202723c84f4f235a723`: the damage build sets a finite negative 0 K reconstructed value to zero, as NJOY2016
+  RECONR does (`reconr.f90:2643`). Each clip is recorded as `zero_k_clipped` in the target's row. The library
+  builder is unchanged. The build command gains `--continue-on-error`, which lists a failing evaluation in `failed`.
+  G5 fails if a stable nuclide of a structural or breeder element (Fe, Cr, Ni, W, V, Ti, Ta, Mo, Nb, Mn, Co, Cu, Al,
+  Si, Be, Li) is among the failures.
