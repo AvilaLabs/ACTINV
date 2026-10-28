@@ -44,7 +44,7 @@ actinv doctor [SPEC.json]
 actinv run SPEC.json [OUT.json]
 ```
 
-`new` refuses to overwrite an existing file. `validate` defaults to schema checking; `--files` checks supported readable inputs and indexes, and `--hashes` additionally checks declared file hashes. The run validates evaluated-data compatibility and computes input hashes. Without an output path, `run` writes result JSON to standard output.
+`new` refuses to overwrite an existing file. The example it writes names the catalog's neutron damage table (`catalog:tendl-2025-neutron-damage`) in a `damage` section with no displacement energies, so the run reports dpa once the default bundle is installed; the run's default outputs already include `damage`. `validate` defaults to schema checking; `--files` checks supported readable inputs and indexes, and `--hashes` additionally checks declared file hashes. The run validates evaluated-data compatibility and computes input hashes. Without an output path, `run` writes result JSON to standard output.
 
 Schema checking does not open literal data paths. Symbolic `catalog:` references must resolve to installed artifacts before validation, so install their bundle first.
 
@@ -59,7 +59,7 @@ actinv data fetch [BUNDLE] [--output DIR] [--force]
 actinv data verify [BUNDLE] [--output DIR]
 ```
 
-See [Data setup](data.md) for bundle names and library/covariance pairing.
+See [Data setup](data.md) for bundle names and library/covariance pairing. `fetch` copies a file that an older version directory already holds with the same SHA-256 instead of downloading it again, and reports it as `copied`; neutron bundles include the shipped damage table.
 
 ## Query data files
 
@@ -145,7 +145,7 @@ acceptance. Omitting the `waste` block retains the existing twin result fields.
 actinv import-fispact DECK.i OUT.json [--fluxes FLUXES] [--files FILES] [--library LIB.npz] [--decay DECAY] [--covariance COV.npz] [--strict]
 ```
 
-Writes an `actinv-spec-1` problem and an `OUT.import.json` report that lists every deck keyword as mapped, approximated, noted or unsupported. `--strict` fails when any keyword is unsupported. Four more options, `--fission-yields FILE...`, `--resonance FILE...`, `--self-shielding-table FILE` and `--damage TABLE`, supply the data files that the fission, self-shielding and damage keywords need; each is hashed into the spec. The `--damage` table's own displacement energies are compared with `ALLDISPEN` and `ATDISPEN`, and `READGG` reads the group bins from the files file's `ggbins` entry. See [Move a FISPACT-II deck to ACTINV](fispact-migration.md) for the keyword table and limits.
+Writes an `actinv-spec-1` problem and an `OUT.import.json` report that lists every deck keyword as mapped, approximated, noted or unsupported. `--strict` fails when any keyword is unsupported. Four more options, `--fission-yields FILE...`, `--resonance FILE...`, `--self-shielding-table FILE` and `--damage TABLE`, supply the data files that the fission, self-shielding and damage keywords need; each is hashed into the spec. `--damage` is optional: a neutron deck that gives `ALLDISPEN` or `ATDISPEN` without it uses the catalog table `catalog:tendl-2025-neutron-damage`. The table's own displacement energies (the `--damage` file's, or the installed catalog table's) are compared with `ALLDISPEN` and `ATDISPEN`; when the catalog table is not installed at import time, the deck's energies are written and the run makes the comparison. `READGG` reads the group bins from the files file's `ggbins` entry. See [Move a FISPACT-II deck to ACTINV](fispact-migration.md) for the keyword table and limits.
 
 ## Export photon sources
 

@@ -2,6 +2,19 @@
 
 ## Unreleased
 
+**Added (P156: shipped damage table)**
+
+- Data catalog 1.2.0 adds the artifact role `damage-table` (optional, one per bundle) and the artifact
+  `tendl-2025-neutron-damage`, a kinematic damage table on the 709-group structure for the stable and long-lived
+  (half-life of at least one year) TENDL-2025 neutron targets, referenced by the four neutron bundles. Every v1.1.0
+  artifact keeps its id and hash. A superseded notice may stay in the catalog unreferenced.
+- `actinv data fetch` copies a file already present under an older version directory when its SHA-256 matches the
+  catalog's, re-verifies the copy, and reports it as `copied` instead of downloading it.
+- `actinv new` writes a `damage` section naming `catalog:tendl-2025-neutron-damage`, with no displacement energies.
+  `new --data-dir` now writes paths under the catalog's own version directory.
+- `actinv import-fispact` uses the catalog table when a neutron deck gives `ALLDISPEN` or `ATDISPEN` and `--damage`
+  is not given; the energies are compared with the installed table's, or at run time when it is not installed.
+
 **Added (P152, opt-in; defaults unchanged)**
 
 - `photon.missing_spectra: "estimate"` (FISPACT-II `SPEK`). A nuclide with a mean electromagnetic energy and no photon

@@ -654,7 +654,9 @@ inventories are used. The ledger records the table hash, covered elements, displ
 targets, model, and units; the certificate records the table's provenance and the computed input hash.
 
 Damage-energy production comes from ENDF-6 MF=3/MT=444 sections. TENDL-2025 and EAF-2010 as distributed do not
-carry MT=444; build tables from `heatr`-processed or equivalent damage-energy evaluations, or build an
+carry MT=444. For TENDL-2025 neutron targets that are stable or have a half-life of at least one year, the data
+catalog (1.2.0) ships a ready table, `catalog:tendl-2025-neutron-damage`, built with the kinematic method; for other
+data, build tables from `heatr`-processed or equivalent damage-energy evaluations, or build an
 `actinv-damage-table-2` table with `actinv build-damage --method kinematic`.
 
 ### Kinematic damage energy and the table-2 format
