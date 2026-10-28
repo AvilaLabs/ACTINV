@@ -1,0 +1,33 @@
+{
+ "all_triggered_green": true,
+ "candidate": "93985f7",
+ "commit": "ad145074f5978680c26261042cafccd78819bdba",
+ "not_triggered": {
+  "Build browser workbench": "paths filter (web.yml)",
+  "Build handbook": "paths filter (docs.yml)",
+  "desktop builds": "paths filter (desktop.yml)"
+ },
+ "runs": [
+  {
+   "conclusion": "success",
+   "databaseId": 40776955814,
+   "headSha": "ad145074f5978680c26261042cafccd78819bdba",
+   "name": "controls",
+   "url": "https://github.com/AvilaLabs/ACTINV/actions/runs/40776955814"
+  },
+  {
+   "conclusion": "success",
+   "databaseId": 40776955564,
+   "headSha": "ad145074f5978680c26261042cafccd78819bdba",
+   "name": "fns-iron",
+   "url": "https://github.com/AvilaLabs/ACTINV/actions/runs/40776955564"
+  },
+  {
+   "conclusion": "success",
+   "databaseId": 40776955834,
+   "headSha": "ad145074f5978680c26261042cafccd78819bdba",
+   "name": "fusion-isotope",
+   "url": "https://github.com/AvilaLabs/ACTINV/actions/runs/40776955834"
+  }
+ ]
+}

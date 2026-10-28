@@ -1,0 +1,28 @@
+{
+ "amendments": {
+  "protocols/ACTINV-P157_AMENDMENT_A.md": "20085866bd7ab94327c9ac6cb846666265037f881106e77d6988900c992f080b"
+ },
+ "evidence": [
+  "results/p157/g1.log",
+  "results/p157_screening.json",
+  "results/p157/evidence_run_2.log",
+  "results/p157/ci_runs.json",
+  "results/failures/p157/g8_ci_attempt1/"
+ ],
+ "gates": {
+  "G0": "PASS",
+  "G1": "PASS",
+  "G2": "PASS",
+  "G3": "PASS",
+  "G4": "PASS",
+  "G5": "PASS",
+  "G6": "PASS",
+  "G7": "PASS",
+  "G8": "PASS"
+ },
+ "protocol": "protocols/ACTINV-P157_PROTOCOL.md",
+ "protocol_sha256": "e2eeb8b6b5499ee7221f503f9729dd2d8e6639660245a689aee4f6ab06c66f65",
+ "repair_round": "Amendment A (ledger 256): G8 failed on 78ebd9d; repair 93985f7; evidence run 2 on 93985f7 (ledger 257)",
+ "schema": "actinv-p157-verdict-1",
+ "verdict": "P157-PASS"
+}

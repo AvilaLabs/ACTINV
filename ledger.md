@@ -4526,3 +4526,13 @@ workbench and fusion-isotope were green. The failed step and the run list are pr
   endpoints, and its verification passed (max rel dev 2.0e-15). Record: `results/p157_screening.json`, log
   `results/p157/evidence_run_2.log`. Evidence run 1's record is in `78ebd9d`.
 - **G8** is pending CI on the pushed commit.
+
+## Entry 258 — P157 G8: CI green on ad14507; P157-PASS (2026-10-28)
+
+Every workflow triggered on `ad14507` (repair `93985f7` plus evidence run 2) passed: controls 40776955814, fns-iron
+40776955564 and fusion-isotope 40776955834 (`results/p157/ci_runs.json`). The handbook, browser-workbench and
+desktop workflows are path-filtered and were not triggered. G8 holds after the phase's one repair round (Amendment A,
+entries 256–257). **P157-PASS** (`results/p157_verdict.json`): `actinv impurities` screens impurity ranges for
+activity, heat, contact dose, single nuclides, clearance and waste class, verified against full solves. Two
+caveats remain open: the latent `waste composition solve` defect on round-off nuclides needs its own phase
+(entry 254), and G5's agreement with that command compared no case (entry 255).
