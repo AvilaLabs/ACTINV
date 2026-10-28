@@ -4442,3 +4442,11 @@ Candidate `d9d6846` (registration, entry 251).
   other `ci.yml` jobs and the other workflows, for which CI is the gate.
 
 Q4 (CI green on the pushed evidence commit) is pending.
+
+## Entry 253 — P159 Q4: CI green; P159-PASS (2026-10-28)
+
+Every workflow triggered on `ff381f9` (candidate `d9d6846` plus its evidence) passed: controls 40714115970, fns-iron
+40714116060 and fusion-isotope 40714115961 (`results/p159/ci_runs.json`). The handbook, browser-workbench and
+desktop workflows are path-filtered and were not triggered. **P159-PASS** (`results/p159_verdict.json`): the P156
+shipped damage table and catalog 1.2.0 are qualified on CI, with P156's G0–G7 (entry 249) as their scientific
+evidence. P156 stays FAIL on G8 (entry 250).

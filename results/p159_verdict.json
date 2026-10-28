@@ -1,0 +1,21 @@
+{
+ "evidence": [
+  "results/p159/q1.txt",
+  "results/p159/q2_assets.json",
+  "results/p159/q2_fetch_verify.log",
+  "results/p159/q3_ci_steps.txt",
+  "results/p159/ci_runs.json",
+  "results/failures/p156/g8_ci_attempt1/"
+ ],
+ "gates": {
+  "Q1": "PASS",
+  "Q2": "PASS",
+  "Q3": "PASS",
+  "Q4": "PASS"
+ },
+ "p156_verdict": "P156-FAIL (G8, ledger 250)",
+ "protocol": "protocols/ACTINV-P159_PROTOCOL.md",
+ "protocol_sha256": "ccc354b6a5ea1e9405ceb342e4a799791d9c692139e3afcd55900713b87a1793",
+ "schema": "actinv-p159-verdict-1",
+ "verdict": "P159-PASS"
+}
