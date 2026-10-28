@@ -37,8 +37,7 @@ use crate::builder::{
 use crate::composition;
 use crate::displacement::{
     arc_displacements, arc_dpa_entry, nrt_displacements, standard_displacement_energy, Partition,
-    ARC_DPA_CITATION,
-    NEUTRON_REST_EV, NRT_KAPPA,
+    ARC_DPA_CITATION, NEUTRON_REST_EV, NRT_KAPPA,
 };
 use crate::endf_distributions::{
     interpolate, parse_damage_endf, AngularDistribution, AngularRecord, DamageEndf, Law1,
@@ -324,14 +323,7 @@ struct ArcRecoil {
 
 impl Recoil {
     /// `arc` is the reference `E_d`, `b` and `c` of the element's arc-dpa fit.
-    fn new(
-        zr: f64,
-        ar: f64,
-        zl: f64,
-        al: f64,
-        ed: f64,
-        arc: Option<(f64, f64, f64)>,
-    ) -> Self {
+    fn new(zr: f64, ar: f64, zl: f64, al: f64, ed: f64, arc: Option<(f64, f64, f64)>) -> Self {
         let partition = Partition::new(zr, ar, zl, al, ed);
         let arc = arc.map(|(ed_ref, b, c)| {
             let partition = Partition::new(zr, ar, zl, al, ed_ref);
@@ -2212,8 +2204,14 @@ mod tests {
             rc70.integrate(c0, c1, &|_| 0.5, 8, &[]),
         );
         assert!(i90.arc > 0.0);
-        assert!((i90.arc - i70.arc).abs() < 1e-9 * i70.arc, "{i90:?} {i70:?}");
-        assert!((i90.nrt - i70.nrt).abs() > 1e-3 * i70.nrt, "{i90:?} {i70:?}");
+        assert!(
+            (i90.arc - i70.arc).abs() < 1e-9 * i70.arc,
+            "{i90:?} {i70:?}"
+        );
+        assert!(
+            (i90.nrt - i70.nrt).abs() > 1e-3 * i70.nrt,
+            "{i90:?} {i70:?}"
+        );
         // Fe at its reference energy: arc is the plain arc count of the damage energy
         let fe = Recoil::new(26.0, 55.45, 26.0, 55.45, 40.0, Some((40.0, -0.568, 0.286)));
         for t in [40.0, 500.0, 2.0e4, 3.0e5] {
@@ -2548,9 +2546,15 @@ mod tests {
             continuum_recoil: ContinuumRecoil::Kinematic,
             grid_density: 1.0,
         };
-        let row = compute_row(evaluation, endf, &options, 40.0, Some((40.0, -0.568, 0.286)))
-            .unwrap()
-            .unwrap();
+        let row = compute_row(
+            evaluation,
+            endf,
+            &options,
+            40.0,
+            Some((40.0, -0.568, 0.286)),
+        )
+        .unwrap()
+        .unwrap();
         assert_eq!(row.damage_energy_barn_eV.len(), 5);
         // independent value of the elastic damage in the group [1e6, 1e7]: sigma = 3 b, isotropic CM,
         // W(E) = 1/(2 c1) integral_{E_d}^{T_max} D(T) dT with the same Lindhard partition

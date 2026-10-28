@@ -689,8 +689,8 @@ fn copy_sibling(
     parent: &Path,
     show_progress: bool,
 ) -> Result<TemporaryFile, String> {
-    let reader = File::open(source)
-        .map_err(|error| format!("cannot open {}: {error}", source.display()))?;
+    let reader =
+        File::open(source).map_err(|error| format!("cannot open {}: {error}", source.display()))?;
     let (temporary, file) = TemporaryFile::create(parent, &artifact.id)?;
     copy_verified(
         reader,
@@ -1072,7 +1072,11 @@ mod tests {
         // Three valid siblings are copied; the damaged primary and the removed notice are downloaded.
         assert_eq!(second.reused, 3);
         assert_eq!(second.downloaded, 2);
-        let statuses: Vec<_> = second.files.iter().map(|file| file.status.as_str()).collect();
+        let statuses: Vec<_> = second
+            .files
+            .iter()
+            .map(|file| file.status.as_str())
+            .collect();
         assert_eq!(
             statuses,
             ["copied", "copied", "downloaded", "copied", "downloaded"]
