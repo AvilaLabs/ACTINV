@@ -72,6 +72,42 @@ pub fn arc_dpa_entry(symbol: &str) -> Option<&'static ArcDpaEntry> {
     ARC_DPA_TABLE.iter().find(|entry| entry.symbol == symbol)
 }
 
+/// Standard displacement energies (eV) by element symbol: the per-element table NJOY2016 HEATR applies when no
+/// `ed` is given (`heatr.f90` at tag 2016.80, commit `ab27c6414a0f25b173f2b637e6dc7e428fdaff00`, lines 328-363).
+/// Elements not listed take 25 eV, as in HEATR.
+pub const STANDARD_DISPLACEMENT_ENERGIES: [(&str, f64); 22] = [
+    ("Be", 31.0),
+    ("C", 31.0),
+    ("Mg", 25.0),
+    ("Al", 27.0),
+    ("Si", 25.0),
+    ("Ca", 40.0),
+    ("Ti", 40.0),
+    ("V", 40.0),
+    ("Cr", 40.0),
+    ("Mn", 40.0),
+    ("Fe", 40.0),
+    ("Co", 40.0),
+    ("Ni", 40.0),
+    ("Cu", 40.0),
+    ("Zr", 40.0),
+    ("Nb", 40.0),
+    ("Mo", 60.0),
+    ("Ag", 60.0),
+    ("Ta", 90.0),
+    ("W", 90.0),
+    ("Au", 30.0),
+    ("Pb", 25.0),
+];
+
+/// The standard displacement energy of an element symbol, if the table lists it.
+pub fn standard_displacement_energy(symbol: &str) -> Option<f64> {
+    STANDARD_DISPLACEMENT_ENERGIES
+        .iter()
+        .find(|(name, _)| *name == symbol)
+        .map(|(_, ed)| *ed)
+}
+
 /// Lindhard partition of a recoil's kinetic energy into atomic motion (Robinson's fit), NJOY HEATR `df`.
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub struct Partition {
@@ -259,6 +295,30 @@ mod tests {
                 .abs()
                 < 1e-12
         );
+    }
+
+    #[test]
+    fn standard_energies_follow_the_heatr_table() {
+        for (symbol, ed) in [
+            ("Be", 31.0),
+            ("C", 31.0),
+            ("Mg", 25.0),
+            ("Al", 27.0),
+            ("Si", 25.0),
+            ("Ca", 40.0),
+            ("Ti", 40.0),
+            ("Cu", 40.0),
+            ("Zr", 40.0),
+            ("Mo", 60.0),
+            ("Ag", 60.0),
+            ("Ta", 90.0),
+            ("W", 90.0),
+            ("Au", 30.0),
+            ("Pb", 25.0),
+        ] {
+            assert_eq!(standard_displacement_energy(symbol), Some(ed), "{symbol}");
+        }
+        assert_eq!(standard_displacement_energy("Xe"), None);
     }
 
     #[test]

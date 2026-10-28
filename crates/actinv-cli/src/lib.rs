@@ -647,6 +647,62 @@ fn problem_fragment(
     Ok(fragment)
 }
 
+/// A valid copy of `artifact` under another version directory (`<output>/v*/<path>`), if any.
+/// Symlinked directories and files are never used.
+fn sibling_copy(
+    output: &Path,
+    root: &Path,
+    artifact: &DataArtifact,
+) -> Result<Option<PathBuf>, String> {
+    let entries = std::fs::read_dir(output)
+        .map_err(|error| format!("cannot list {}: {error}", output.display()))?;
+    let mut directories = Vec::new();
+    for entry in entries {
+        let entry = entry.map_err(|error| format!("cannot list {}: {error}", output.display()))?;
+        let name = entry.file_name();
+        let is_version = name
+            .to_str()
+            .is_some_and(|name| name.starts_with('v') && name.len() > 1);
+        let real = entry.file_type().is_ok_and(|kind| kind.is_dir());
+        if is_version && real && entry.path() != root {
+            directories.push(entry.path());
+        }
+    }
+    directories.sort();
+    for directory in directories {
+        let candidate = directory.join(&artifact.path);
+        if let Ok(metadata) = std::fs::symlink_metadata(&candidate) {
+            if metadata.is_file()
+                && matches!(existing_file(&candidate, artifact), Ok(ExistingFile::Valid))
+            {
+                return Ok(Some(candidate));
+            }
+        }
+    }
+    Ok(None)
+}
+
+/// Copy a sibling-version file into a temporary file beside the destination, re-hashing it.
+fn copy_sibling(
+    source: &Path,
+    artifact: &DataArtifact,
+    parent: &Path,
+    show_progress: bool,
+) -> Result<TemporaryFile, String> {
+    let reader =
+        File::open(source).map_err(|error| format!("cannot open {}: {error}", source.display()))?;
+    let (temporary, file) = TemporaryFile::create(parent, &artifact.id)?;
+    copy_verified(
+        reader,
+        file,
+        artifact.bytes,
+        &artifact.sha256,
+        &format!("copy {}", artifact.id),
+        show_progress,
+    )?;
+    Ok(temporary)
+}
+
 fn fetch_bundle_with(
     catalog: &DataCatalog,
     bundle_id: Option<&str>,
@@ -664,18 +720,42 @@ fn fetch_bundle_with(
     for id in &bundle.artifacts {
         let artifact = catalog.artifact(id)?;
         let destination = destination_for(&root, artifact, true)?;
-        let status = match existing_file(&destination, artifact)? {
-            ExistingFile::Valid => {
+        let existing = existing_file(&destination, artifact)?;
+        let sibling = if matches!(existing, ExistingFile::Missing) {
+            sibling_copy(output, &root, artifact)?
+        } else {
+            None
+        };
+        let status = match (existing, sibling) {
+            (ExistingFile::Valid, _) => {
                 reused += 1;
                 "reused"
             }
-            ExistingFile::Invalid(reason) if !force => {
+            (ExistingFile::Invalid(reason), _) if !force => {
                 return Err(format!(
                 "existing {} {reason}; rerun with --force to replace it after a verified download",
                 destination.display()
             ))
             }
-            existing => {
+            (_, Some(sibling)) => {
+                if show_progress {
+                    eprintln!("reusing {} from {}", artifact.id, sibling.display());
+                }
+                let parent = destination.parent().ok_or_else(|| {
+                    format!("data destination {} has no parent", destination.display())
+                })?;
+                let copy = copy_sibling(&sibling, artifact, parent, show_progress)?;
+                publish(&copy, &destination, false)?;
+                if !matches!(existing_file(&destination, artifact)?, ExistingFile::Valid) {
+                    return Err(format!(
+                        "copied data file {} failed post-copy verification",
+                        destination.display()
+                    ));
+                }
+                reused += 1;
+                "copied"
+            }
+            (existing, None) => {
                 if show_progress {
                     eprintln!("fetching {}", artifact.id);
                 }
@@ -931,7 +1011,7 @@ mod tests {
         // and controls still read this copy, so the two must never drift.
         assert_eq!(
             embedded_catalog_json(),
-            include_str!("../data/actinv-data-catalog-v1.1.0.json")
+            include_str!("../data/actinv-data-catalog-v1.2.0.json")
         );
         assert_eq!(embedded_catalog().unwrap().bundles.len(), 7);
     }
@@ -960,6 +1040,65 @@ mod tests {
             fetch_bundle_with(&catalog, None, &output.0, true, &downloader, false).unwrap();
         assert_eq!(repaired.downloaded, 1);
         assert_eq!(std::fs::read(&library).unwrap(), b"library");
+    }
+
+    #[test]
+    fn fetch_copies_a_matching_file_from_an_older_version_directory() {
+        let (mut catalog, downloader) = fixture_catalog();
+        let output = TestDirectory::new("sibling");
+        fetch_bundle_with(&catalog, None, &output.0, false, &downloader, false).unwrap();
+
+        // The next catalog version keeps every artifact id, path and hash.
+        catalog.catalog_version = "1.1.0".into();
+        let older = output.0.join("v1.0.0");
+        std::fs::write(older.join("decay/primary.dat"), b"changed").unwrap();
+        // The downloader knows only the damaged primary and the removed notice, so any other
+        // download would fail the fetch.
+        let wanted: Vec<_> = ["primary", "notice"]
+            .iter()
+            .map(|id| catalog.artifact(id).unwrap().source.url.clone())
+            .collect();
+        let only_missing = FakeDownloader {
+            payloads: downloader
+                .payloads
+                .iter()
+                .filter(|(url, _)| wanted.contains(url))
+                .map(|(url, bytes)| (url.clone(), bytes.clone()))
+                .collect(),
+        };
+        std::fs::remove_file(older.join("NOTICE.md")).unwrap();
+        let second =
+            fetch_bundle_with(&catalog, None, &output.0, false, &only_missing, false).unwrap();
+        // Three valid siblings are copied; the damaged primary and the removed notice are downloaded.
+        assert_eq!(second.reused, 3);
+        assert_eq!(second.downloaded, 2);
+        let statuses: Vec<_> = second
+            .files
+            .iter()
+            .map(|file| file.status.as_str())
+            .collect();
+        assert_eq!(
+            statuses,
+            ["copied", "copied", "downloaded", "copied", "downloaded"]
+        );
+        let new_root = output.0.join("v1.1.0");
+        assert_eq!(
+            std::fs::read(new_root.join("activation/test.npz")).unwrap(),
+            b"library"
+        );
+        // Copies, not links: the old file is untouched and is a distinct inode.
+        assert_eq!(
+            std::fs::read(older.join("activation/test.npz")).unwrap(),
+            b"library"
+        );
+        #[cfg(unix)]
+        {
+            use std::os::unix::fs::MetadataExt;
+            let old = std::fs::metadata(older.join("activation/test.npz")).unwrap();
+            let new = std::fs::metadata(new_root.join("activation/test.npz")).unwrap();
+            assert_ne!(old.ino(), new.ino());
+            assert_eq!(new.nlink(), 1);
+        }
     }
 
     #[cfg(unix)]

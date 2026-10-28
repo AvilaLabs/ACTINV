@@ -189,6 +189,21 @@ fn damage_energies_from_text(
         .map(Some)
 }
 
+/// The displacement energies of the catalog's damage table when it is installed where
+/// `catalog:` references resolve and its SHA-256 is the catalog's, else `None`: the run then
+/// compares the deck's energies with the table's.
+fn catalog_damage_energies(deck_dir: &Path) -> Option<BTreeMap<String, f64>> {
+    let catalog = actinv_data::catalog::embedded_catalog().ok()?;
+    let artifact = catalog.artifact("tendl-2025-neutron-damage").ok()?;
+    let path = crate::workflow::catalog_data_root(deck_dir)
+        .join(format!("v{}", catalog.catalog_version))
+        .join(&artifact.path);
+    if sha256_file(path.to_str()?).ok()? != artifact.sha256 {
+        return None;
+    }
+    damage_table_energies(path.to_str()?).ok().flatten()
+}
+
 /// Run the command. Returns the one-line summary to print.
 pub fn run(cli: &CliArgs) -> Result<String, String> {
     let deck_path = Path::new(&cli.deck);
@@ -313,12 +328,10 @@ pub fn run(cli: &CliArgs) -> Result<String, String> {
         covariance,
         fission_yields,
         damage: cli.damage.as_ref().map(hashed).transpose()?,
-        damage_energies_ev: cli
-            .damage
-            .as_ref()
-            .map(|path| damage_table_energies(path))
-            .transpose()?
-            .flatten(),
+        damage_energies_ev: match &cli.damage {
+            Some(path) => damage_table_energies(path)?,
+            None => catalog_damage_energies(deck_dir),
+        },
         gamma_groups,
         self_shielding_table: cli.self_shielding_table.as_ref().map(hashed).transpose()?,
         resonance: cli
