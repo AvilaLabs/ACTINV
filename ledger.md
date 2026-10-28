@@ -4262,3 +4262,18 @@ There was no repair round.
 Released: the importer maps the fission-yield, uncertainty, self-shielding, photon and displacement-energy keywords,
 and gains the `--fission-yields`, `--damage`, `--self-shielding-table` and `--resonance` data options. With P151–P155
 complete, the FISPACT-II parity wave is closed.
+
+## Entry 242 — P156 registered (2026-10-27)
+
+Registered before any source change for the phase, as the first ACTINV 1.7 phase:
+- **P156** `b9b9fcef3dfaa6a4becf5f0578b8199a7b2e75946c3df4a4c1c4647bad586520`: dpa without setup. One kinematic damage table, `tendl-2025-neutron-damage`, ships in data
+  catalog 1.2.0 for every TENDL-2025 neutron target that is stable or lives at least a year, referenced by all four
+  neutron bundles. `build-damage --method kinematic` defaults to NJOY2016 HEATR's per-element displacement energies
+  (W 90, Fe 40 eV) instead of a flat 25 eV; arc-dpa uses the energy its Nordlund (2018) fit was made at; a run takes an
+  element's energy from a table-2 file when the spec omits it; `actinv new` and `import-fispact` name the catalog
+  table. G4 extends P154's NJOY comparison to twelve more fusion-relevant targets.
+
+Development observation disclosed before registration: one timing build of eight targets (Fe-56, W-184, Be-9, Ta-181,
+Cu-63, Li-7, Nb-93, U-238) on master `a33c25b` took 7 min 41 s on two cores, peak RSS 384 MB, 1.0 MB of output. That
+measurement set the stable-or-one-year selection; the full 2,850-target corpus would take about 55 h. No other
+output was examined.
