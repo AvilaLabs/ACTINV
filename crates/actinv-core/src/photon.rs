@@ -1340,6 +1340,113 @@ fn response_lowest_energy(response: &PhotonResponse, fractions: &BTreeMap<String
     e_lo
 }
 
+/// One group's share of the contact proxy: `moment_rate` (eV/s/g) at energy `e` through the
+/// material, in Gy/h, with the FISPACT B/2 slab factor. `None` where the air or the material
+/// curve does not reach `e`.
+fn contact_term(
+    response: &PhotonResponse,
+    fractions: &BTreeMap<String, f64>,
+    build_up: f64,
+    e: f64,
+    moment_rate: f64,
+) -> Option<f64> {
+    let mu_air = curve_value(&response.air_mass_energy_absorption, e)?;
+    let mu_mat = material_mu(response, fractions, e)?;
+    // eV/s/g -> Gy/h, with the FISPACT B/2 slab factor.
+    Some((build_up / 2.0) * (mu_air / mu_mat) * moment_rate * EV * 1000.0 * 3600.0)
+}
+
+/// One nuclide's photon source in the step's groups: photons/s/g and power W/g per group, and
+/// the nuclide's total source power W/g (the group sum plus anything outside the structure).
+#[derive(Clone, Debug)]
+pub struct NuclideGroupSource {
+    pub photons_s_g: Vec<f64>,
+    pub power_W_g: Vec<f64>,
+    pub source_power_W_g: f64,
+}
+
+/// The contact proxy of a photon source built from grouped nuclide sources, and of each nuclide.
+#[derive(Clone, Debug, Default)]
+pub struct GroupedContactProxy {
+    pub proxy_Gy_h: Option<f64>,
+    /// Each nuclide's proxy; a nuclide with a group the response cannot evaluate is absent.
+    pub by_nuclide_Gy_h: BTreeMap<String, f64>,
+    /// Why `proxy_Gy_h` is `None`.
+    pub unavailable_reason: Option<String>,
+}
+
+/// The contact proxy `source_for_step` reports, for nuclide sources that were summed outside a
+/// run (a composition's photon source is linear in the pure elements' sources) and evaluated at
+/// `fractions`, the material's mass fractions. The terms, the response's lowest energy, the
+/// sub-threshold share and the exclusions are those of `source_for_step_with`.
+/// `ungrouped_power_W_g` is the power outside the group structure, which withholds the proxy.
+pub fn contact_proxy_of_groups(
+    response: &PhotonResponse,
+    fractions: &BTreeMap<String, f64>,
+    build_up: f64,
+    nuclides: &BTreeMap<String, NuclideGroupSource>,
+    ungrouped_power_W_g: f64,
+) -> GroupedContactProxy {
+    let mut out = GroupedContactProxy::default();
+    let missing: Vec<&str> = fractions
+        .keys()
+        .filter(|e| !response.element_mass_attenuation.contains_key(*e))
+        .map(String::as_str)
+        .collect();
+    if !missing.is_empty() {
+        out.unavailable_reason = Some(format!(
+            "the photon response has no attenuation curve for {}",
+            missing.join(", ")
+        ));
+        return out;
+    }
+    let response_e_lo = response_lowest_energy(response, fractions);
+    let mut contact_total = 0.0;
+    let mut excluded = ungrouped_power_W_g > 0.0;
+    let mut total_subthreshold = 0.0;
+    let mut response_total_power = 0.0;
+    for (name, source) in nuclides {
+        response_total_power += source.source_power_W_g / EV;
+        let mut contact_nuclide = 0.0;
+        let mut contact_ok = true;
+        for (count, power) in source.photons_s_g.iter().zip(&source.power_W_g) {
+            let moment_rate = power / EV;
+            if moment_rate <= 0.0 {
+                continue;
+            }
+            let e = moment_rate / count;
+            if e < response_e_lo {
+                total_subthreshold += moment_rate;
+                continue;
+            }
+            match contact_term(response, fractions, build_up, e, moment_rate) {
+                Some(term) => contact_nuclide += term,
+                None => {
+                    excluded = true;
+                    contact_ok = false;
+                }
+            }
+        }
+        if contact_ok {
+            contact_total += contact_nuclide;
+            out.by_nuclide_Gy_h.insert(name.clone(), contact_nuclide);
+        }
+    }
+    if excluded {
+        out.unavailable_reason = Some(
+            "photon power lies outside the group structure or above the response's highest energy"
+                .into(),
+        );
+    } else if total_subthreshold > SUBTHRESHOLD_POWER_TOLERANCE * response_total_power {
+        out.unavailable_reason = Some(format!(
+            "photon power below the response's lowest energy exceeds {SUBTHRESHOLD_POWER_TOLERANCE:e} of the total"
+        ));
+    } else {
+        out.proxy_Gy_h = Some(contact_total);
+    }
+    out
+}
+
 /// Opt-in treatments of the decay records' photon content. The default changes nothing.
 #[derive(Clone, Copy, Debug, Default)]
 pub struct SourceModel {
@@ -1571,21 +1678,12 @@ pub fn source_for_step_with(
                     diag.response_subthreshold_power_W_g += moment_rate * EV;
                     continue;
                 }
-                match (
-                    curve_value(&r.air_mass_energy_absorption, e),
-                    material_mu(r, material_mass_fractions, e),
-                ) {
-                    (Some(mu_air), Some(mu_mat)) => {
-                        // eV/s/g -> Gy/h, with the FISPACT B/2 slab factor.
-                        contact_nuclide += (build_up / 2.0)
-                            * (mu_air / mu_mat)
-                            * moment_rate
-                            * EV
-                            * 1000.0
-                            * 3600.0;
+                match contact_term(r, material_mass_fractions, build_up, e, moment_rate) {
+                    Some(term) => {
+                        contact_nuclide += term;
                         response_included_power += moment_rate;
                     }
-                    _ => {
+                    None => {
                         diag.response_excluded_power_W_g += moment_rate * EV;
                         contact_ok = false;
                     }
@@ -2574,7 +2672,10 @@ mod tests {
     }
 
     mod subthreshold {
-        use super::super::{source_for_step, PhotonResponse, ResponseCurve};
+        use super::super::{
+            contact_proxy_of_groups, source_for_step, NuclideGroupSource, PhotonResponse,
+            ResponseCurve,
+        };
         use crate::run::EV;
         use actinv_data::decay::{DiscreteRadiation, Nuclide, Spectrum};
         use std::collections::BTreeMap;
@@ -2706,6 +2807,63 @@ mod tests {
             );
             assert_eq!(diag.response_excluded_power_W_g, 0.0);
             assert!(src.dose_response_power_coverage.unwrap() < 1.0);
+        }
+
+        /// The grouped sources of a run's nuclides, as a composition's summed source would carry.
+        fn grouped(src: &super::super::PhotonSourceOut) -> BTreeMap<String, NuclideGroupSource> {
+            src.by_nuclide
+                .iter()
+                .map(|n| {
+                    (
+                        n.nuclide.clone(),
+                        NuclideGroupSource {
+                            photons_s_g: n.groups.iter().map(|g| g.photons_s_g).collect(),
+                            power_W_g: n.groups.iter().map(|g| g.power_W_g).collect(),
+                            source_power_W_g: n.source_power_W_g,
+                        },
+                    )
+                })
+                .collect()
+        }
+
+        #[test]
+        fn grouped_proxy_is_the_proxy_of_a_run() {
+            let cases: [&[(f64, f64)]; 5] = [
+                &[(1.0e4, 1.0), (1.0e6, 1.0)],
+                &[(500.0, 1.0e-6), (1.0e4, 1.0), (1.0e6, 1.0)],
+                &[(500.0, 1.0), (1.0e6, 1.0)],
+                &[(500.0, 1.0e-6), (1.0e6, 1.0), (5.0e7, 1.0e-3)],
+                &[(500.0, 1.0e-6), (1.0e6, 1.0), (2.0e8, 1.0e-3)],
+            ];
+            for lines in cases {
+                let n = nuclide(lines);
+                let (src, _) = run(&[("A", &n, 3.0)], &["H"], true);
+                let fractions = fractions(&["H"]);
+                let ungrouped = src.ungrouped_power_W_g;
+                let got =
+                    contact_proxy_of_groups(&response(), &fractions, 2.0, &grouped(&src), ungrouped);
+                match src.contact_gamma_air_dose_proxy_Gy_h {
+                    Some(expected) => {
+                        let value = got.proxy_Gy_h.unwrap();
+                        assert!(close(value, expected), "{lines:?}: {value} vs {expected}");
+                        assert!(got.unavailable_reason.is_none());
+                    }
+                    None => {
+                        assert!(got.proxy_Gy_h.is_none(), "{lines:?}");
+                        assert!(got.unavailable_reason.is_some());
+                    }
+                }
+            }
+        }
+
+        #[test]
+        fn grouped_proxy_without_a_curve_is_unavailable_with_a_reason() {
+            let n = nuclide(&[(1.0e6, 1.0)]);
+            let (src, _) = run(&[("A", &n, 1.0)], &["H"], true);
+            let fractions = fractions(&["H", "Xx"]);
+            let got = contact_proxy_of_groups(&response(), &fractions, 2.0, &grouped(&src), 0.0);
+            assert!(got.proxy_Gy_h.is_none());
+            assert!(got.unavailable_reason.unwrap().contains("Xx"));
         }
 
         #[test]

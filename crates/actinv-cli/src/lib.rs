@@ -7,6 +7,7 @@ pub mod command;
 pub mod decide;
 pub mod evalspread;
 pub mod fispact_import;
+pub mod impurities;
 pub mod inspect;
 pub mod optimize;
 pub mod report;

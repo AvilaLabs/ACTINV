@@ -2,6 +2,22 @@
 
 ## Unreleased
 
+**Added (P157, a new command; existing commands unchanged)**
+
+- `actinv impurities SPEC.json [OUT.json] [--no-verify]` (schema `actinv-impurities-1`, result
+  `actinv-impurities-result-1`). From one coupled solve per element it reports, at each target step and for each
+  endpoint (`activity.total`, `heat.total`, `activity:<nuclide>`, `dose.contact_proxy`, `clearance_index`,
+  `waste_class`), the value with the matrix alone, at nominal and at the worst case over the declared impurity
+  ranges, each impurity's gradient and contribution with the top product nuclides, a ranking, and with a `limit` each
+  impurity's limit alone, with the others at nominal and at their worst case plus the joint scale factor. The Part 61
+  class is given at nominal and over the ranges, with per-impurity class limits as `waste budget` reports them. Every
+  reported composition is re-solved in full; a miss exits 3 after writing. `self_shielding`, `options.screen`,
+  schedule `feed` and `uncertainty` are refused.
+- `photon::contact_proxy_of_groups`: the contact proxy of a photon source summed from grouped nuclide sources, using
+  the arithmetic of a run (the run path now calls the same per-group term). Run outputs are unchanged.
+- Worked example `examples/impurities_ra_steel/` (illustrative values) and the handbook chapter "Screen a
+  material's impurities".
+
 **Added (P152, opt-in; defaults unchanged)**
 
 - `photon.missing_spectra: "estimate"` (FISPACT-II `SPEK`). A nuclide with a mean electromagnetic energy and no photon
