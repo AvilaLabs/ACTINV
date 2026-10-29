@@ -1501,10 +1501,9 @@ fn build_isomer(
     })
 }
 
-/// Dense Cholesky solve `A x = b` for the small per-reaction covariance
-/// blocks; `None` when the block is not positive-definite to working
-/// precision — the caller names it `ill_conditioned` rather than emitting a
-/// fake reduction.
+/// Dense Cholesky solve `A x = b`, kept as the independent positive-definite
+/// reference for the P164 pseudo-inverse tests; `None` when not positive-definite.
+#[cfg(test)]
 fn cholesky_solve(matrix: &[f64], n: usize, rhs: &[f64]) -> Option<Vec<f64>> {
     let mut lower = vec![0.0; n * n];
     for i in 0..n {
@@ -1539,6 +1538,119 @@ fn cholesky_solve(matrix: &[f64], n: usize, rhs: &[f64]) -> Option<Vec<f64>> {
         x[i] = sum / lower[i * n + i];
     }
     Some(x)
+}
+
+/// Relative eigenvalue floor for the P164 pseudo-inverse: modes with
+/// `λ <= n · 1e-12 · λ_max` are treated as the block's null space. Block
+/// entries are products of relative covariances and cross sections carried in
+/// f64 (round-off ~1e-16), so exactly singular MF=33 blocks (fully correlated
+/// groups, MT sums) show null eigenvalues at ~1e-16·λ_max; the floor leaves four
+/// orders of headroom. A mode below the floor that carries real weight in `b`
+/// is caught by the range check, not silently dropped.
+const PSD_EIGENVALUE_FLOOR: f64 = 1.0e-12;
+/// A block is inconsistent when the part of `b` outside the kept eigenmodes
+/// exceeds this fraction of `‖b‖`. For a positive-semidefinite joint covariance
+/// `b` lies in the range of the block, so anything material is a defect.
+const PSD_RANGE_RESIDUAL: f64 = 1.0e-6;
+
+/// Symmetric eigendecomposition by cyclic Jacobi sweeps run to round-off
+/// (the study module's solver stops at 1e-12, too coarse to separate null
+/// modes from the floor above). Returns (eigenvalues, row-major eigenvectors
+/// with column j belonging to eigenvalue j), or `None` for nonfinite input.
+fn symmetric_eigen(a: &[f64], n: usize) -> Option<(Vec<f64>, Vec<f64>)> {
+    if a.iter().any(|v| !v.is_finite()) {
+        return None;
+    }
+    let mut m = a.to_vec();
+    // Symmetrise: the input is symmetric to round-off.
+    for i in 0..n {
+        for j in 0..i {
+            let avg = 0.5 * (m[i * n + j] + m[j * n + i]);
+            m[i * n + j] = avg;
+            m[j * n + i] = avg;
+        }
+    }
+    let mut v = vec![0.0f64; n * n];
+    for i in 0..n {
+        v[i * n + i] = 1.0;
+    }
+    let scale = m.iter().fold(0.0f64, |acc, x| acc.max(x.abs())).max(1e-300);
+    for _ in 0..100 {
+        let mut off = 0.0;
+        for i in 0..n {
+            for j in (i + 1)..n {
+                off += m[i * n + j] * m[i * n + j];
+            }
+        }
+        if off.sqrt() <= f64::EPSILON * 1.0e-2 * scale {
+            break;
+        }
+        for p in 0..n {
+            for q in (p + 1)..n {
+                let apq = m[p * n + q];
+                if apq == 0.0 {
+                    continue;
+                }
+                let theta = 0.5 * (m[q * n + q] - m[p * n + p]) / apq;
+                let t = theta.signum() / (theta.abs() + (theta * theta + 1.0).sqrt());
+                let t = if theta == 0.0 { 1.0 } else { t };
+                let c = 1.0 / (t * t + 1.0).sqrt();
+                let s = t * c;
+                for k in 0..n {
+                    let (kp, kq) = (m[k * n + p], m[k * n + q]);
+                    m[k * n + p] = c * kp - s * kq;
+                    m[k * n + q] = s * kp + c * kq;
+                }
+                for k in 0..n {
+                    let (pk, qk) = (m[p * n + k], m[q * n + k]);
+                    m[p * n + k] = c * pk - s * qk;
+                    m[q * n + k] = s * pk + c * qk;
+                }
+                for k in 0..n {
+                    let (kp, kq) = (v[k * n + p], v[k * n + q]);
+                    v[k * n + p] = c * kp - s * kq;
+                    v[k * n + q] = s * kp + c * kq;
+                }
+            }
+        }
+    }
+    Some(((0..n).map(|i| m[i * n + i]).collect(), v))
+}
+
+/// `bᵀ A⁺ b` for a symmetric positive-semidefinite block `A` (Moore–Penrose
+/// pseudo-inverse over the eigenmodes above the floor). `None` when the block
+/// is not positive-semidefinite (an eigenvalue below `-floor`), is nonfinite,
+/// or `b` is materially outside the kept range — the caller names it
+/// `ill_conditioned` rather than emitting a fake reduction. A zero `b` gives 0.
+fn psd_block_reduction(matrix: &[f64], n: usize, rhs: &[f64]) -> Option<f64> {
+    let (eigenvalues, vectors) = symmetric_eigen(matrix, n)?;
+    let lambda_max = eigenvalues.iter().cloned().fold(0.0f64, f64::max);
+    let floor = n as f64 * PSD_EIGENVALUE_FLOOR * lambda_max;
+    let mut reduction = 0.0;
+    let mut explained = 0.0;
+    for (k, &lambda) in eigenvalues.iter().enumerate() {
+        if lambda < -floor {
+            return None;
+        }
+        if lambda <= floor {
+            continue;
+        }
+        let mut projection = 0.0;
+        for (i, &b_i) in rhs.iter().enumerate() {
+            projection += vectors[i * n + k] * b_i;
+        }
+        reduction += projection * projection / lambda;
+        explained += projection * projection;
+    }
+    let norm_sq: f64 = rhs.iter().map(|b| b * b).sum();
+    let residual_sq = (norm_sq - explained).max(0.0);
+    if !norm_sq.is_finite() || !reduction.is_finite() {
+        return None;
+    }
+    if residual_sq.sqrt() > PSD_RANGE_RESIDUAL * norm_sq.sqrt() {
+        return None;
+    }
+    Some(reduction)
 }
 
 /// P60 measurement-design report: rank candidates by the variance a perfect
@@ -1708,12 +1820,8 @@ fn build_design(
             }
         }
         let rhs: Vec<f64> = rows.iter().map(|&row| sigma_s[row]).collect();
-        match cholesky_solve(&block, n, &rhs) {
-            Some(solution) => {
-                let mut reduction = 0.0;
-                for (index, &b_i) in rhs.iter().enumerate() {
-                    reduction += b_i * solution[index];
-                }
+        match psd_block_reduction(&block, n, &rhs) {
+            Some(reduction) => {
                 let (reduction, _) = clamp_roundoff(reduction)?;
                 reaction_entries.push(DesignReactionEntry {
                     target_za,
@@ -1746,12 +1854,7 @@ fn build_design(
             .total_cmp(&left.variance_reduction.abs())
     });
     parameter_entries.truncate(top);
-    reaction_entries.sort_by(|left, right| {
-        right
-            .variance_reduction
-            .unwrap_or(0.0)
-            .total_cmp(&left.variance_reduction.unwrap_or(0.0))
-    });
+    reaction_entries.sort_by(compare_reaction_entries);
     reaction_entries.truncate(top);
     for bucket in unranked.values_mut() {
         bucket.sensitivity_l2 = bucket.sensitivity_l2.sqrt();
@@ -1762,6 +1865,21 @@ fn build_design(
         top_reactions: reaction_entries,
         unranked,
     })
+}
+
+/// P164 ordering of reaction-block candidates: blocks with a computed
+/// reduction first, largest first; blocks without one (`ill_conditioned`) keep
+/// their relative order after every computed block.
+fn compare_reaction_entries(
+    left: &DesignReactionEntry,
+    right: &DesignReactionEntry,
+) -> std::cmp::Ordering {
+    match (left.variance_reduction, right.variance_reduction) {
+        (Some(l), Some(r)) => r.total_cmp(&l),
+        (Some(_), None) => std::cmp::Ordering::Less,
+        (None, Some(_)) => std::cmp::Ordering::Greater,
+        (None, None) => std::cmp::Ordering::Equal,
+    }
 }
 
 fn build_step_uncertainty(
@@ -11651,5 +11769,114 @@ mod fission_prepared_tests {
             .is_none());
         assert!(result.ledger.get("fission").is_none());
         assert!(result.ledger.get("spontaneous_fission").is_none());
+    }
+}
+
+#[cfg(test)]
+mod p164_design_order_tests {
+    use super::*;
+
+    fn entry(za: i32, reduction: Option<f64>) -> DesignReactionEntry {
+        DesignReactionEntry {
+            target_za: za,
+            target_liso: 0,
+            mts: vec![102],
+            status: if reduction.is_some() {
+                "emitted"
+            } else {
+                "ill_conditioned"
+            },
+            covered_parameters: 1,
+            variance_reduction: reduction,
+            share_of_total: None,
+            posterior_variance: None,
+        }
+    }
+
+    #[test]
+    fn p164_computed_reductions_outrank_uncomputed_blocks() {
+        // ZA order puts the ill-conditioned Ca blocks first; they must not lead.
+        let mut blocks = [
+            entry(20_043, None),
+            entry(20_044, None),
+            entry(26_056, Some(0.0)),
+            entry(26_054, Some(3.0e-9)),
+            entry(25_055, Some(1.0e-6)),
+        ];
+        blocks.sort_by(compare_reaction_entries);
+        let order: Vec<i32> = blocks.iter().map(|b| b.target_za).collect();
+        assert_eq!(order, vec![25_055, 26_054, 26_056, 20_043, 20_044]);
+        assert!(blocks[3..].iter().all(|b| b.status == "ill_conditioned"));
+    }
+
+    #[test]
+    fn p164_uncomputed_blocks_keep_their_relative_order() {
+        let mut blocks = [entry(20_047, None), entry(20_043, None)];
+        blocks.sort_by(compare_reaction_entries);
+        assert_eq!(blocks[0].target_za, 20_047);
+        assert_eq!(blocks[1].target_za, 20_043);
+    }
+
+    fn quad(matrix: &[f64], n: usize, v: &[f64]) -> f64 {
+        let mut total = 0.0;
+        for i in 0..n {
+            for j in 0..n {
+                total += v[i] * matrix[i * n + j] * v[j];
+            }
+        }
+        total
+    }
+
+    #[test]
+    fn p164_pseudo_inverse_matches_cholesky_on_positive_definite_blocks() {
+        let n = 3;
+        let a = [4.0, 1.0, 0.5, 1.0, 3.0, 0.25, 0.5, 0.25, 0.1];
+        let b = [0.7, -0.2, 1.0e-3];
+        let x = cholesky_solve(&a, n, &b).expect("positive definite");
+        let expected: f64 = b.iter().zip(&x).map(|(p, q)| p * q).sum();
+        let got = psd_block_reduction(&a, n, &b).expect("consistent");
+        assert!(
+            (got - expected).abs() <= 1.0e-12 * expected.abs(),
+            "{got:e} vs {expected:e}"
+        );
+    }
+
+    #[test]
+    fn p164_singular_block_in_range_gives_the_blocks_own_variance() {
+        // Rank-1 fully correlated pair: Cholesky refuses it, the pseudo-inverse
+        // must give b' A+ b = s' A s when b = A s.
+        let n = 2;
+        let a = [1.0, 1.0, 1.0, 1.0];
+        assert!(cholesky_solve(&a, n, &[1.0, 1.0]).is_none());
+        let s = [0.3, 0.9];
+        let b = [a[0] * s[0] + a[1] * s[1], a[2] * s[0] + a[3] * s[1]];
+        let expected = quad(&a, n, &s);
+        let got = psd_block_reduction(&a, n, &b).expect("b is in the range");
+        assert!(
+            (got - expected).abs() <= 1.0e-12 * expected,
+            "{got:e} vs {expected:e}"
+        );
+        // A rank-2 block of three parameters (one null mode), scaled small.
+        let a3 = [
+            2.0e-4, 1.0e-4, 3.0e-4, 1.0e-4, 1.0e-4, 2.0e-4, 3.0e-4, 2.0e-4, 5.0e-4,
+        ];
+        let s3 = [1.5, -0.5, 2.0];
+        let b3: Vec<f64> = (0..3)
+            .map(|i| (0..3).map(|j| a3[i * 3 + j] * s3[j]).sum())
+            .collect();
+        let expected3 = quad(&a3, 3, &s3);
+        let got3 = psd_block_reduction(&a3, 3, &b3).expect("b is in the range");
+        assert!((got3 - expected3).abs() <= 1.0e-10 * expected3);
+    }
+
+    #[test]
+    fn p164_vector_outside_the_range_is_ill_conditioned() {
+        let a = [1.0, 1.0, 1.0, 1.0];
+        assert!(psd_block_reduction(&a, 2, &[1.0, -1.0]).is_none());
+        // Not positive-semidefinite.
+        assert!(psd_block_reduction(&[1.0, 2.0, 2.0, 1.0], 2, &[1.0, 1.0]).is_none());
+        // A zero vector is a computed zero, not a failure — also on a zero block.
+        assert_eq!(psd_block_reduction(&a, 2, &[0.0, 0.0]), Some(0.0));
+        assert_eq!(psd_block_reduction(&[0.0; 4], 2, &[0.0, 0.0]), Some(0.0));
     }
 }
