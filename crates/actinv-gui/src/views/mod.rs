@@ -7,6 +7,7 @@ pub mod export;
 pub mod import;
 pub mod impurities;
 pub mod material;
+pub mod optimize;
 pub mod outputs;
 pub mod pathways;
 pub mod photons;

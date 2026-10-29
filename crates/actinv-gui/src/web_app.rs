@@ -188,6 +188,7 @@ pub struct Workbench {
     spectrum_text: String,
     material_view: MaterialState,
     certify: crate::views::certify::CertifyState,
+    optimize: crate::views::optimize::OptimizeState,
     /// folding groups (Studies, Tools) the visitor opened
     nav_open: Vec<crate::nav::Group>,
     source_view: crate::views::source::SourceState,
@@ -243,6 +244,7 @@ impl Workbench {
             spectrum_text: String::new(),
             material_view: MaterialState::default(),
             certify: Default::default(),
+            optimize: Default::default(),
             nav_open: Vec::new(),
             source_view: Default::default(),
             steps: StepsState::default(),
@@ -1507,6 +1509,27 @@ impl Workbench {
         }
     }
 
+    /// Optimize: the browser sets up the search and downloads it with the problem beside it.
+    fn optimize_page(&mut self, ui: &mut egui::Ui) {
+        use crate::views::optimize::{self, OptimizeAction};
+        visuals::heading(ui, "Optimize", optimize::QUESTION);
+        match optimize::show(ui, &self.problem, &mut self.optimize, false, false) {
+            OptimizeAction::None | OptimizeAction::UseDesign(..) => {}
+            OptimizeAction::Open(target) => self.page = page_for(target),
+            OptimizeAction::Search => {
+                let times = crate::views::certify::step_times(&self.problem);
+                let saved = optimize::optimize_spec(self.problem.clone(), &self.problem, &self.optimize, &times)
+                    .and_then(|(search, args)| {
+                        let pretty = |v: &serde_json::Value| serde_json::to_string_pretty(v).map_err(|e| e.to_string());
+                        web::download("search.json", pretty(&search)?.as_bytes())?;
+                        web::download("base_spec.json", pretty(&args["base_spec"])?.as_bytes())
+                    })
+                    .map(|()| "Two downloads started: search.json and base_spec.json. Keep them in one folder and run `actinv optimize search.json out` where the nuclear data are installed.".to_owned());
+                self.report(saved);
+            }
+        }
+    }
+
     fn impurities_page(&mut self, ui: &mut egui::Ui) {
         use crate::views::impurities::{self, Context, ImpuritiesAction};
         visuals::heading(
@@ -1844,6 +1867,7 @@ impl eframe::App for Workbench {
                     Page::Waste => self.waste_page(ui),
                     Page::Impurities => self.impurities_page(ui),
                     Page::Certify => self.certify_page(ui),
+                    Page::Optimize => self.optimize_page(ui),
                     Page::Data => self.data_page(ui),
                     Page::Advanced => self.advanced_page(ui),
                     // the browser never runs the solver

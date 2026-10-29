@@ -10,6 +10,7 @@ mod export;
 mod impurities;
 mod ledger;
 mod material;
+mod optimize;
 mod outputs;
 mod pathways;
 mod photons;
@@ -59,6 +60,7 @@ impl Desktop {
             Page::Waste => self.waste_page(ui),
             Page::Impurities => self.impurities_page(ui),
             Page::Certify => self.certify_page(ui),
+            Page::Optimize => self.optimize_page(ui),
             Page::Sweep => self.sweep_page(ui),
             Page::Assimilation => self.assimilation(ui),
             Page::Data => self.data_page(ui),

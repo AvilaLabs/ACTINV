@@ -140,6 +140,13 @@ pub struct Desktop {
     export: crate::views::export::ExportState,
     impurities: crate::views::impurities::ImpuritiesState,
     certify: crate::views::certify::CertifyState,
+    optimize: crate::views::optimize::OptimizeState,
+    /// where the running command writes, when it was last read, and how far it had got
+    command_progress: (
+        Option<std::path::PathBuf>,
+        Option<Instant>,
+        Option<crate::jobs::Progress>,
+    ),
     /// The import dialog; `Some` while it is open.
     import: Option<ImportState>,
     /// A converted deck waiting for the unsaved-changes guard, and the folder its deck came from.
@@ -234,6 +241,7 @@ impl Desktop {
             args,
         };
         job.check()?;
+        self.command_progress = (Some(job.out_dir.clone()), None, None);
         let started = Instant::now();
         self.job = Some(if command.solves() {
             let cache = std::env::temp_dir().join(format!(
@@ -411,6 +419,8 @@ impl Desktop {
             export: Default::default(),
             impurities: Default::default(),
             certify: Default::default(),
+            optimize: Default::default(),
+            command_progress: (None, None, None),
             import: None,
             import_spec: None,
             import_base: None,
@@ -1129,6 +1139,20 @@ impl Desktop {
             self.page = step.page;
         }
         self.toolbar(ui);
+        // a long command writes as it goes; read how far it has got once a second
+        if let Some(Job {
+            kind: JobKind::Command(command),
+            ..
+        }) = &self.job
+        {
+            let (dir, polled, last) = &mut self.command_progress;
+            if let Some(dir) = dir {
+                if polled.is_none_or(|t| t.elapsed() >= Duration::from_secs(1)) {
+                    *last = crate::jobs::progress(command, dir);
+                    *polled = Some(Instant::now());
+                }
+            }
+        }
         egui::Panel::bottom("status")
             .resizable(true)
             .default_size(76.)
@@ -1144,8 +1168,17 @@ impl Desktop {
                                 JobKind::Transport => "Reading / checking transport",
                                 JobKind::Command(command) => command.label(),
                             };
+                            let progress = match (job.kind, &self.command_progress.2) {
+                                (JobKind::Command(_), Some(p)) => match p.total {
+                                    Some(total) => {
+                                        format!(" · {} of at most {total} {}", p.done, p.note)
+                                    }
+                                    None => format!(" · {} {}", p.done, p.note),
+                                },
+                                _ => String::new(),
+                            };
                             ui.label(format!(
-                                "{stage} · {:.0}s",
+                                "{stage}{progress} · {:.0}s",
                                 job.started.elapsed().as_secs_f64()
                             ));
                             if matches!(
@@ -1331,7 +1364,7 @@ mod ui_tests {
     }
     #[test]
     fn every_page_renders_in_both_themes_at_minimum_size_with_and_without_a_result() {
-        assert_eq!(Page::ALL.len(), 20);
+        assert_eq!(Page::ALL.len(), 21);
         for theme in [egui::ThemePreference::Light, egui::ThemePreference::Dark] {
             for with_result in [false, true] {
                 let ctx = egui::Context::default();

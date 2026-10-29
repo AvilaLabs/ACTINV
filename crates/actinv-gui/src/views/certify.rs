@@ -18,7 +18,7 @@ pub enum Quantity {
 }
 
 impl Quantity {
-    const ALL: [Quantity; 6] = [
+    pub(crate) const ALL: [Quantity; 6] = [
         Quantity::Heat,
         Quantity::GammaHeat,
         Quantity::BetaHeat,
@@ -27,7 +27,7 @@ impl Quantity {
         Quantity::NuclideActivity,
     ];
 
-    fn label(self) -> &'static str {
+    pub(crate) fn label(self) -> &'static str {
         match self {
             Quantity::Heat => "Decay heat",
             Quantity::GammaHeat => "Gamma heat",
@@ -38,7 +38,7 @@ impl Quantity {
         }
     }
 
-    fn unit(self) -> &'static str {
+    pub(crate) fn unit(self) -> &'static str {
         match self {
             Quantity::Activity | Quantity::NuclideActivity => "Bq/g",
             _ => "W/g",
@@ -55,9 +55,9 @@ pub enum Band {
 }
 
 impl Band {
-    const ALL: [Band; 3] = [Band::Conservative, Band::Normal, Band::Nominal];
+    pub(crate) const ALL: [Band; 3] = [Band::Conservative, Band::Normal, Band::Nominal];
 
-    fn label(self) -> &'static str {
+    pub(crate) fn label(self) -> &'static str {
         match self {
             Band::Conservative => "Conservative band edge",
             Band::Normal => "Normal band edge",
@@ -66,7 +66,7 @@ impl Band {
     }
 
     /// The edge `decide` evaluates: the upper edge for an upper limit, the lower for a lower one.
-    fn edge(self, at_most: bool) -> &'static str {
+    pub(crate) fn edge(self, at_most: bool) -> &'static str {
         match (self, at_most) {
             (Band::Nominal, _) => "nominal",
             (Band::Conservative, true) => "conservative_upper",
@@ -92,7 +92,7 @@ pub struct Limit {
 }
 
 impl Limit {
-    fn new(step: usize, index: usize) -> Self {
+    pub(crate) fn new(step: usize, index: usize) -> Self {
         Self {
             name: format!("Limit {}", index + 1),
             quantity: Quantity::Heat,
@@ -105,7 +105,7 @@ impl Limit {
     }
 
     /// The response name `decide` and the uncertainty block use.
-    fn response(&self) -> Result<String, String> {
+    pub(crate) fn response(&self) -> Result<String, String> {
         Ok(match self.quantity {
             Quantity::Heat => "heat.total".into(),
             Quantity::GammaHeat => "heat.gamma".into(),
@@ -313,74 +313,7 @@ pub fn show(
     ui.heading("Limits");
     ui.label("Each limit is checked at the end of one step, at the edge of the nuclear-data band you choose. Values are per gram of material.");
     ui.add_space(6.);
-    let mut remove = None;
-    for (i, limit) in state.limits.iter_mut().enumerate() {
-        egui::Frame::group(ui.style())
-            .inner_margin(10.)
-            .show(ui, |ui| {
-                ui.set_width(ui.available_width());
-                ui.horizontal_wrapped(|ui| {
-                    ui.add(egui::TextEdit::singleline(&mut limit.name).desired_width(140.));
-                    egui::ComboBox::from_id_salt(("certify-quantity", i))
-                        .selected_text(limit.quantity.label())
-                        .show_ui(ui, |ui| {
-                            for q in Quantity::ALL {
-                                ui.selectable_value(&mut limit.quantity, q, q.label());
-                            }
-                        });
-                    if limit.quantity == Quantity::NuclideActivity {
-                        ui.add(
-                            egui::TextEdit::singleline(&mut limit.nuclide)
-                                .hint_text("Co60")
-                                .desired_width(70.),
-                        );
-                    }
-                    egui::ComboBox::from_id_salt(("certify-sense", i))
-                        .selected_text(if limit.at_most { "at most" } else { "at least" })
-                        .show_ui(ui, |ui| {
-                            ui.selectable_value(&mut limit.at_most, true, "at most");
-                            ui.selectable_value(&mut limit.at_most, false, "at least");
-                        });
-                    ui.add(
-                        egui::DragValue::new(&mut limit.limit)
-                            .custom_parser(model::parse_finite)
-                            .custom_formatter(|n, _| crate::visuals::compact_number(n))
-                            .speed(0.01),
-                    );
-                    ui.label(limit.quantity.unit());
-                    if ui.small_button("Remove").clicked() {
-                        remove = Some(i);
-                    }
-                });
-                ui.horizontal_wrapped(|ui| {
-                    ui.label("at");
-                    limit.step = limit.step.min(times.len() - 1);
-                    egui::ComboBox::from_id_salt(("certify-time", i))
-                        .selected_text(&times[limit.step].label)
-                        .show_ui(ui, |ui| {
-                            for (s, time) in times.iter().enumerate() {
-                                ui.selectable_value(
-                                    &mut limit.step,
-                                    s,
-                                    format!("step {}: {}", s + 1, time.label),
-                                );
-                            }
-                        });
-                    ui.label("checked at the");
-                    egui::ComboBox::from_id_salt(("certify-band", i))
-                        .selected_text(limit.band.label())
-                        .show_ui(ui, |ui| {
-                            for b in Band::ALL {
-                                ui.selectable_value(&mut limit.band, b, b.label());
-                            }
-                        });
-                });
-            });
-        ui.add_space(4.);
-    }
-    if let Some(i) = remove {
-        state.limits.remove(i);
-    }
+    limit_editor(ui, "certify", &mut state.limits, &times, true);
     ui.horizontal_wrapped(|ui| {
         if ui.button("+ Limit").clicked() {
             let n = state.limits.len();
@@ -422,6 +355,90 @@ pub fn show(
         verdict(ui, decision, &times);
     }
     action
+}
+
+/// The limit cards shared by Certify and Optimize. `banded` is false when the problem has no
+/// uncertainty, so every limit is checked on the nominal value.
+pub(crate) fn limit_editor(
+    ui: &mut egui::Ui,
+    salt: &'static str,
+    limits: &mut Vec<Limit>,
+    times: &[StepTime],
+    banded: bool,
+) {
+    let mut remove = None;
+    for (i, limit) in limits.iter_mut().enumerate() {
+        egui::Frame::group(ui.style())
+            .inner_margin(10.)
+            .show(ui, |ui| {
+                ui.set_width(ui.available_width());
+                ui.horizontal_wrapped(|ui| {
+                    ui.add(egui::TextEdit::singleline(&mut limit.name).desired_width(140.));
+                    egui::ComboBox::from_id_salt((salt, "quantity", i))
+                        .selected_text(limit.quantity.label())
+                        .show_ui(ui, |ui| {
+                            for q in Quantity::ALL {
+                                ui.selectable_value(&mut limit.quantity, q, q.label());
+                            }
+                        });
+                    if limit.quantity == Quantity::NuclideActivity {
+                        ui.add(
+                            egui::TextEdit::singleline(&mut limit.nuclide)
+                                .hint_text("Co60")
+                                .desired_width(70.),
+                        );
+                    }
+                    egui::ComboBox::from_id_salt((salt, "sense", i))
+                        .selected_text(if limit.at_most { "at most" } else { "at least" })
+                        .show_ui(ui, |ui| {
+                            ui.selectable_value(&mut limit.at_most, true, "at most");
+                            ui.selectable_value(&mut limit.at_most, false, "at least");
+                        });
+                    ui.add(
+                        egui::DragValue::new(&mut limit.limit)
+                            .custom_parser(model::parse_finite)
+                            .custom_formatter(|n, _| crate::visuals::compact_number(n))
+                            .speed(0.01),
+                    );
+                    ui.label(limit.quantity.unit());
+                    if ui.small_button("Remove").clicked() {
+                        remove = Some(i);
+                    }
+                });
+                ui.horizontal_wrapped(|ui| {
+                    ui.label("at");
+                    limit.step = limit.step.min(times.len() - 1);
+                    egui::ComboBox::from_id_salt((salt, "time", i))
+                        .selected_text(&times[limit.step].label)
+                        .show_ui(ui, |ui| {
+                            for (s, time) in times.iter().enumerate() {
+                                ui.selectable_value(
+                                    &mut limit.step,
+                                    s,
+                                    format!("step {}: {}", s + 1, time.label),
+                                );
+                            }
+                        });
+                    if banded {
+                        ui.label("checked at the");
+                        egui::ComboBox::from_id_salt((salt, "band", i))
+                            .selected_text(limit.band.label())
+                            .show_ui(ui, |ui| {
+                                for b in Band::ALL {
+                                    ui.selectable_value(&mut limit.band, b, b.label());
+                                }
+                            });
+                    } else {
+                        limit.band = Band::Nominal;
+                        ui.label("checked on the nominal value");
+                    }
+                });
+            });
+        ui.add_space(4.);
+    }
+    if let Some(i) = remove {
+        limits.remove(i);
+    }
 }
 
 /// The answer: the verdict, each limit's margin, and what to measure next.
@@ -644,7 +661,7 @@ fn key_time(key: &str) -> f64 {
 }
 
 /// A value to three significant figures, without trailing zeros: 764.1 becomes "764", 0.0123456 "0.0123".
-fn three(x: f64) -> String {
+pub(crate) fn three(x: f64) -> String {
     if x == 0. || !x.is_finite() {
         return crate::visuals::compact_number(x);
     }
@@ -666,7 +683,7 @@ fn three(x: f64) -> String {
 }
 
 /// "Activity of Co60", "Decay heat".
-fn response_words(response: &str) -> String {
+pub(crate) fn response_words(response: &str) -> String {
     match response {
         "heat.total" => "Decay heat".into(),
         "heat.gamma" => "Gamma heat".into(),
@@ -681,7 +698,7 @@ fn response_words(response: &str) -> String {
 }
 
 /// "12% under the limit", "8.5% over the limit", "at the limit".
-fn margin_words(violation: f64) -> String {
+pub(crate) fn margin_words(violation: f64) -> String {
     if !violation.is_finite() {
         return "not computable".into();
     }
