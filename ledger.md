@@ -4724,3 +4724,12 @@ compares the two binaries' run outputs instead.
   off-material and recorded. Record `results/p164_design_order.json`, log `results/p164/evidence_run_1.log`.
 - Before pushing, `g3_p15_cache_integrity.py` left `results/p15_cache_integrity.json` unchanged, `check_p15
   --no-write` and `check_public_examples` passed, all on the candidate binary. G6 is CI on this commit.
+
+## Entry 273 — P164 G6: CI green on 941ade3; P164-PASS (2026-10-29)
+
+Every workflow triggered on `941ade3` (candidate `f40f5a0` plus its evidence) passed: controls 40932836419, fns-iron
+40932836383, fusion-isotope 40932836389, browser workbench 40932836393 and desktop builds 40932836474
+(`results/p164/ci_runs.json`). **P164-PASS** (`results/p164_verdict.json`): the measurement-design report computes
+the reduction of singular covariance blocks with a pseudo-inverse and ranks computed blocks first, so the decide
+example now names Fe-56 and Fe-54 as the reactions to measure instead of listing Ca blocks it could not compute. The
+repair round was not used.

@@ -1,0 +1,22 @@
+{
+ "evidence": [
+  "results/p164/g1.log",
+  "results/p164_design_order.json",
+  "results/p164/evidence_run_1.log",
+  "results/p164/ci_runs.json"
+ ],
+ "gates": {
+  "G0": "PASS",
+  "G1": "PASS",
+  "G2": "PASS",
+  "G3": "PASS",
+  "G4": "PASS",
+  "G5": "PASS",
+  "G6": "PASS"
+ },
+ "protocol": "protocols/ACTINV-P164_PROTOCOL.md",
+ "protocol_sha256": "352308e0968ad12f3782a357cd77a19e83d7a726be75c7ba0e10e670e16a4141",
+ "repair_round": "not used",
+ "schema": "actinv-p164-verdict-1",
+ "verdict": "P164-PASS"
+}
