@@ -4692,3 +4692,18 @@ Every workflow triggered on `aeda0a5` (candidate `a60593c` plus its guide page a
 40910882545 and handbook 40910882502 (`results/p162/ci_runs.json`). **P162-PASS** (`results/p162_verdict.json`):
 ACTINV ships 19 cited material compositions and four analytic spectra on the 709-group structure, and `actinv new
 --material ID --source SHAPE --flux F` writes a problem from them that runs. The repair round was not used.
+
+## Entry 271 — P164 registered: the measurement-design block solve accepts singular covariance blocks (2026-10-29)
+
+**P164** `352308e0968ad12f3782a357cd77a19e83d7a726be75c7ba0e10e670e16a4141` was registered before its evidence run. The finding: `actinv decide examples/decide/decision.json`
+(1 g of iron, FNS 14 MeV) reports every `design.top_reactions` block as `ill_conditioned`, Fe-56 included,
+because the block solve is a Cholesky factorisation and MF=33 blocks are often only positive semi-definite. Nulls
+then ranked as zero, so Ca-43 to Ca-47 head the list. The candidate replaces the solve with an eigendecomposition
+pseudo-inverse with a range check, and orders computed blocks before uncomputed ones. Gates: G0 hash; G1 fmt, check,
+clippy and workspace tests, with five named unit tests; G2 decision and run outputs identical apart from timing keys,
+`top_reactions` and the run hash; G3 ordering and agreement with reference-computed blocks; G4 the reference shows
+the defect; G5 the candidate computes an Fe block within its invariants; G6 CI green on the evidence commit.
+Disclosed, not evidence: during development a preview of the checker on reference `111f2ce` and the uncommitted
+candidate, with a placeholder G1 log, showed G2 to G5 passing and computed Fe-56 and Fe-54 blocks. That preview
+first failed G2 on `run.result_sha256`, which hashes the run's design block; the registered G2 excludes that hash and
+compares the two binaries' run outputs instead.
