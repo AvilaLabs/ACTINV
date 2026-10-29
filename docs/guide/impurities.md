@@ -74,9 +74,10 @@ The document `impurities.json` uses the schema `actinv-impurities-1`:
   every element in the material.
 
 The command refuses, and writes nothing, when the response would not be linear in composition: `self_shielding`,
-`options.screen`, a schedule `feed`, power-driven steps and an `uncertainty` section. It also refuses a `min` above
-`nominal` or a `nominal` above `max`, an unknown endpoint, `dose.contact_proxy` without a `photon` section and a
-`limit` on `waste_class`.
+`options.screen`, a schedule `feed`, power-driven steps and an `uncertainty` section in the base spec (first-order
+bands do not compose across element runs; nuclear-data uncertainty is the `sampling` block, supported below). It also
+refuses a `min` above `nominal` or a `nominal` above `max`, an unknown endpoint, `dose.contact_proxy` without a
+`photon` section and a `limit` on `waste_class`.
 
 ## Read the result
 
@@ -264,6 +265,109 @@ Output, the start of the `waste_class:C` entry's `worst_case` at step 2:
 With every impurity at its maximum, the Table 1 sum reaches 0.70 of its Class C limit, so the steel stays Class C
 over the declared ranges. The entry's `ranking` names the impurities behind it: nitrogen (C-14), then molybdenum and
 niobium (Nb-94).
+
+## Add nuclear-data uncertainty
+
+Everything above uses the nominal nuclear data. Add a `sampling` block and every value and limit also gets a bound over
+the nuclear-data uncertainty. The worked example `examples/impurities_ra_steel/impurities_uncertainty.json` is
+`impurities.json` plus two keys:
+
+```json
+ "confidence_level": 0.95,
+ "sampling": {
+  "channels": {"cross_section_mf33": true, "decay_constants": true},
+  "covariance": {"path": "catalog:tendl-2025-neutron-709g-covariance"},
+  "samples": 72,
+  "seed": 158001
+ }
+```
+
+```sh
+actinv impurities examples/impurities_ra_steel/impurities_uncertainty.json impurities-uncertainty-result.json
+```
+
+`sampling` is the block of [`actinv waste budget uncertainty`](waste.md#budgets-under-nuclear-data-uncertainty):
+`samples` from 20 to 4096, a `seed`, the `channels` and `covariance` of `study.robustness`, and an optional
+`keep_samples` folder, relative to this file. `confidence_level` runs from 0.5 to 0.999 and defaults to 0.95.
+The composition channel is refused, because composition is what the screen varies. So are a base spec that enables gas
+production, declares its own rate, decay or yield scales, or switches library, projectile or spectrum during the
+schedule, and a `confidence_level` without `sampling`. Every refusal is made before any solve, and nothing is written.
+
+**Method.** At one fixed draw of the data the activation is again linear in composition, so the algorithm above applies
+to that draw unchanged. The command draws the factors of every sample once, from the sampling plan of the full alloy at
+the *plan composition* (the matrix, every impurity at its range maximum and the balance element taking the remainder, so
+every element the screen can contain is in the plan), and applies the same factors to every element solve of that
+sample. It then runs the whole screen on the sample's element responses: the matrix-only, nominal and worst-case value
+of every endpoint at every target, each impurity's contribution at nominal, the limits and `joint_k`, and for
+`waste_class` the nominal class, the worst class and the per-impurity class limits. The fields of the nominal screen
+are unchanged; the bands are added beside them.
+
+**Bounds.** With *n* samples, *k* is the largest index for which the lower end of the two-sided Clopper-Pearson interval
+at the confidence level of (*n* &minus; *k* + 1)/*n* is at least the confidence level. A value is reported by its
+median and its upper bound, the *k*-th largest per-sample value. A limit is reported by its lower bound, the *k*-th
+smallest per-sample limit. These are order-statistic (Wilks) tolerance bounds: exact for any distribution, one-sided,
+and they need no normality. **At least 72 samples are needed at confidence 0.95**; a document with fewer is refused,
+and the refusal names the minimum for your level (528 at 0.99).
+
+**Reading the result.** Each per-target endpoint entry gains an `uncertainty` object:
+
+- `matrix_only`, `nominal` and `worst_case`, and each impurity's `contribution_nominal`: the `median`, the
+  `upper_bound` and its `status` (`bounded`, or `unbounded` when a failed sample or an unavailable proxy reaches the
+  rank), with the value of every sample in `by_sample`.
+- With a `limit`, each impurity's `limits.alone`, `limits.others_at_nominal` and `limits.others_at_worst`, and
+  `joint_k`: the `bound`, the `status` and the per-sample limits (`by_sample`, `sorted`). A sample whose limit lies
+  beyond the balance element's reach enters at that cap (`capped`); a sample that fails or is infeasible enters at 0, so
+  it can only lower the bound. The limit is `not_established` when any sample (or the nominal data) has a positive
+  lower bound, and `unbounded` when the *k*-th smallest has no response.
+- For `waste_class`, the `frequency` of each class at nominal and over the ranges, and `meets_target`: the probability
+  that the target class is met at nominal and at the worst case, with its Clopper-Pearson `lower` bound at the
+  confidence level. Each impurity's class limit, over all targets, is under `uncertainty.impurity_class_limits`.
+- `ranking`: for each impurity the fraction of samples in which it is the largest contributor at nominal.
+
+The top-level `uncertainty` block gives the `confidence_level`, the `order_statistic` (`k`, `n` and
+`minimum_samples`), the `sampling` it ran, the plan composition, the `coverage` of the sampled channels, the
+`failed_samples`, `not_claimed` and `verification_pass`. With `keep_samples`, each sample writes `sample_NNNN.json`: its
+factor block, the factors each element solve actually carried, the element responses used and the sample's screen
+values, enough to recompute every band.
+
+**Verification.** Unless `--no-verify` is given, the nominal checks above still run. For every established limit, the
+samples at sorted ranks *k* &minus; 2 to *k* + 2 are re-solved with the full alloy and that sample's own factors at 0.99
+and 1.01 times their own limit: the 0.99 point must meet the limit and the 1.01 point must not, unless the limit is
+capped. For every upper bound, the sample that holds it is re-solved at the composition the value belongs to (its own
+worst-case corner for `worst_case`) and must agree to 1e-6 relative. Differences smaller than 1e-12 times the
+endpoint's largest value in that sample are ignored. That is round-off, such as a trace nuclide that one solve keeps
+at 1e-162 Bq/g and another sets to zero. A point decided this way records `rel_dev_before_floor` and `floor`. The
+results are in `verification.uncertainty`, and a miss exits 3 after writing.
+
+The worked example's 72 samples take about 45 minutes on one laptop core: 15 element solves per sample, 1,080 in all, plus
+356 re-solves that verify the bounds. Its heat at step 2 (1 d of cooling) shows what the bounds add. With the
+nominal data, the worst case, 1.38e-2 W/g, is just under the 1.4e-2 W/g limit. Over the nuclear-data uncertainty, the
+steel exceeds that limit in 30 of the 72 samples even without its impurities. The 95% upper bound on the worst case is
+2.5e-2 W/g, and the cobalt limit's lower bound is 0: no cobalt share meets the limit at 95% confidence.
+
+```sh
+actinv impurities examples/impurities_ra_steel/impurities_uncertainty.json impurities-uncertainty-result.json
+```
+
+Output, the end of `uncertainty.worst_case` in the `heat.total` entry at step 2, after its 72 per-sample values:
+
+```text
+              ],
+              "median": 0.013621176480236313,
+              "order_statistic_rank": 1,
+              "status": "bounded",
+              "upper_bound": 0.025141681784584535,
+              "upper_bound_sample": 68,
+              "valid_samples": 72
+            }
+```
+
+**What the bands do not claim.** They are conditional on the sampled channels and assume, per sample, that the
+activation response is linear in composition, as the nominal screen does. Composition, geometry, flux-shape and model
+uncertainty are not sampled. Measured coverage of these channels on the FNS corpus is below nominal
+(`docs/DATA_LIMITATIONS.md`), so a bound can be optimistic. The upper bound on a value and the lower bound on a limit
+are one-sided order-statistic tolerance bounds. They are not two-sided intervals and not a design margin. The worked
+example's composition and history are illustrative.
 
 ## In the desktop app and the browser
 

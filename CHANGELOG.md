@@ -2,6 +2,28 @@
 
 ## Unreleased
 
+**Added (P158, an optional block; outputs without it unchanged)**
+
+- `actinv impurities` takes an optional `sampling` block (the block of `actinv waste budget uncertainty`) and
+  `confidence_level` (0.5 to 0.999, default 0.95). The factors of each correlated draw of the nuclear data are drawn
+  once from the sampling plan of the full alloy at the plan composition (matrix, every impurity at its range maximum,
+  balance remainder) and applied to every element solve of that sample, so the screen is again linear within a sample
+  and P157's algorithm runs on each sample's responses. Each per-target endpoint entry gains an `uncertainty` object:
+  median and k-th largest upper bound of the matrix-only, nominal and worst-case values and of each impurity's
+  contribution, k-th smallest lower bound of each limit and of `joint_k` (statuses as `waste budget uncertainty`),
+  class frequencies and the probability of meeting the target class with a Clopper-Pearson lower bound, and the
+  fraction of samples in which each impurity is the largest contributor. A top-level `uncertainty` block carries the
+  order statistic, coverage, failed samples and what is not claimed. The composition channel, a base spec with its
+  own rate, decay or yield scales or gas production, and fewer samples than the order-statistic minimum (72 at 0.95)
+  are refused before any solve. Verification re-solves the samples at ranks k - 2 to k + 2 of every established limit
+  at 0.99 and 1.01 times their own limit with their own factors, and the sample behind every upper bound at its own
+  composition, to 1e-6 relative above an absolute floor of 1e-12 times the endpoint's largest value in that sample
+  (Amendment A: round-off far below the solver's numerical floor is not a disagreement); a miss exits 3 after
+  writing. `keep_samples` writes each sample's factors, element responses and screen.
+- `sample_stats::order_index`, the order-statistic index of `waste budget uncertainty`, is now shared.
+- Worked example `examples/impurities_ra_steel/impurities_uncertainty.json` and the handbook section "Add nuclear-data
+  uncertainty".
+
 **Added (P157, a new command; existing commands unchanged)**
 
 - `actinv impurities SPEC.json [OUT.json] [--no-verify]` (schema `actinv-impurities-1`, result

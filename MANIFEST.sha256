@@ -10,7 +10,7 @@ dad9e835adaca596f82e3374ac2ce1a524b54499c677e09bf7f2914d58c4bc72  ./.github/work
 45506fb0fb8f0a34c49c35c97d5e7a4584894562c516f2e77c712134bea58d2e  ./.github/workflows/web.yml
 79e13422a5e89cdf3e37984d7faa609cdd0bd1eaf8972c12dbff9fe175bf720e  ./.gitignore
 16dd72b64fb3e0742540afc653c764b76f788c6c2540002f004b45a56653c325  ./AGENTS.md
-e66bb6fd9043172e650cd168fee0a4ae938354beb597a691187c08edce86cb50  ./CHANGELOG.md
+5ddc21c4d6d35b5fd51769655777c691da041d95b700c94cc1d7ccd5df2d71f8  ./CHANGELOG.md
 9fa4ac1939083cf154751d27b790640cf8e53949d4bde498915e594e45059c5a  ./COMPETITIVE_BENCHMARK.md
 06debfb88cbe4179817b24708768586cc46b4ef0a9c94a4d6de3007a2f1fe8a1  ./CONTRIBUTING.md
 186e564bfc9ba41cd60759afd489f8c215578295ecbe2fb9f9786c4af597c154  ./Cargo.lock
@@ -277,6 +277,7 @@ ac5fcddd00b546179ec252a7f1b7d50428afc2b1fcc467d89323174404a31fb7  ./controls/che
 ce04ef5c779b4c52e8cee6c378af887a1b30772f63c1a5878e580bebddbc5e3d  ./controls/check_p155.py
 3c43cd546a8832e43f9981b539354990611b4e14b8d734c2e6482c5aac3ac26b  ./controls/check_p156.py
 ab3ce75a2065b32ca7394c73a108300ae4a06145fe930904b7e1cba0fb281022  ./controls/check_p157.py
+788a22387eb836348ce9dcad709c04902a1ed226af44f0997a9e66279a7dcb72  ./controls/check_p158.py
 3923f2a5d61580af1c60924581c01e90532131d1b0019da991717a8e46d60de3  ./controls/check_p16.py
 b15f73922d4ce068ec2567e5fc5c45b24bca60f203d02239c4faf9dea6be6010  ./controls/check_p161.py
 5f0afe1712eb9b0a3077aec2e9515ee1192d728b35726ce2c78466b0e8a564d3  ./controls/check_p17.py
@@ -954,7 +955,8 @@ f94367b7bff4b23b0db198c08e8894b06e17b5fc1b43d01fe4a7a5cd78ce35e2  ./crates/actin
 dd9d19b9f71194417bc089ecb995d73cc631970c02305340999beb5fec8db59c  ./crates/actinv-cli/src/evalspread.rs
 785188378697b1e52c005cb238e751815f65a05d396febf9e2034e0b9886d6d5  ./crates/actinv-cli/src/fispact_import.rs
 33bfc91b5f03b1f455e0c77fd818766452e9104311ad5b912f80154e4800b325  ./crates/actinv-cli/src/help.rs
-90f9e0e65b066d1825ca29293ac599cc34563ab89ff922d52f4e6845bf7a51b7  ./crates/actinv-cli/src/impurities.rs
+f0250aa38690892072a991c39ea6f1a9933f559a52e1fbe58064a70b888a39c2  ./crates/actinv-cli/src/impurities.rs
+0b165f4ed67d247d1ea6093a3365397836a2b9c0085c0bee23f4b42726a3ac91  ./crates/actinv-cli/src/impurities/uncertainty.rs
 14666ebeea2b004865f134dbbdacb997d0017699990e6498ab86b716277fb22b  ./crates/actinv-cli/src/inspect.rs
 1c482756db164daa378455ce0cf58727cbe645007bf96db90535082216241224  ./crates/actinv-cli/src/lib.rs
 7d4f384ac0075b5246757fe30fe53c6efd023da3ba11f54c77d95a7037830c28  ./crates/actinv-cli/src/optimize.rs
@@ -965,7 +967,7 @@ a325a7e32907cc3192ed32bd3dd8b78742e4bdc748b3ea0dc3331536707b37e6  ./crates/actin
 18acc9564e52f5286f33a4b6edc33c0a00ee5ba903f0c3bcb031d92568ff8c15  ./crates/actinv-cli/src/waste.rs
 86e3199305a8a8526bfd95dbdedb587de932118d9a71027884ebb215801315e4  ./crates/actinv-cli/src/waste_bounds.rs
 1ee6f5dfd4553c816187685d046f35f792852487128adff8996bcc3f300258bf  ./crates/actinv-cli/src/waste_budget.rs
-d2c8442830f68209e9e2fb2c4c63be0a5957f66bf7c16d30db642f4ec27e6c0d  ./crates/actinv-cli/src/waste_budget_uncertainty.rs
+47e640b379605a7bf641eb4a8780be006eb86aa0a2cd71ed0b948e9d536759a1  ./crates/actinv-cli/src/waste_budget_uncertainty.rs
 43a6dda19d960d7ebe408d56aec5d743e2fa7619acf1f3f5620f0c872fffd65b  ./crates/actinv-cli/src/waste_composition.rs
 42140a7e5469f3a3cf57adca42ceb8ee506b12d71f2c0ce40ab50b49e0155bbd  ./crates/actinv-cli/src/waste_composition_solve.rs
 34d079b9f66c2910e1406fedfb32c1d8b43d4245588da68ef4cf1446368be3fe  ./crates/actinv-cli/src/waste_composition_verify.rs
@@ -1032,7 +1034,7 @@ a4142ec9565a7ced2478eda446fa5468b0f04275805d37bb83ac3afa59b34a4e  ./crates/actin
 a33b321098406b4a4ee3e63345ac5e7acd21ed8e4f9f97f8f03293582884bf39  ./crates/actinv-core/src/report_page.rs
 01dbc34053810258d87529e4d15d19388a74f3454ab615377ccf73a614f31401  ./crates/actinv-core/src/reverse.rs
 e265b5ff8a8f7cf2238d2eafc640f78a05d276dd860b665951416bd32d03a58c  ./crates/actinv-core/src/run.rs
-9a6095419add86f4c60c84641b57c7996728a261ad1288dacb2828a73ea18385  ./crates/actinv-core/src/sample_stats.rs
+7fb58b75d997c84206d224ac9e8ff92f84c10154599ab0570e070615a9711dea  ./crates/actinv-core/src/sample_stats.rs
 68777a6656615c09cc5ebf0a65d685eda077f4d0e78c470f62d8f6f9c38a64f1  ./crates/actinv-core/src/shielding.rs
 f5d25dc6e3e471873e5fbc07c267269eb6da6d940587a6c36ca28635f1922e5f  ./crates/actinv-core/src/source_adapter.rs
 0ab2864aacdfb87a2522132df003c00388ce2cd0e49a445ed4c87f67c99f0fbc  ./crates/actinv-core/src/sparse.rs
@@ -1238,7 +1240,7 @@ bd19b63358e8f637bc37cfe2a5f98290f86af7f3ad31d1698730195c25bd7bed  ./docs/guide/c
 ad272dc87c112bfb5295c3feb7bc00aacb2aa964ca2fb1fe1a7e63dc241ac192  ./docs/guide/data.md
 0c389cf5d83efa6dd5994c25f526bd7028accbeac9ef6912ae241e48fba76e04  ./docs/guide/desktop.md
 feb943c57e5e4d6cf37ece3668b4fc4eda055ad224265c75edfdb38f180d0d56  ./docs/guide/fispact-migration.md
-0437066b9c70337af3249e36025413c44a42506cff047273619e4a55e7f449e9  ./docs/guide/impurities.md
+1914a56786f6eb588781b5907461dcfa0219e61e0c78e5d2da090fbded86bc93  ./docs/guide/impurities.md
 20af4608e208b8a3444e7900add697e7586177a42d3b2bbed2ab98b1f40e6809  ./docs/guide/index.md
 c965beca929c7c496a33e61675c5e2ec4eeeeedd218a4dac015eb2589c569c41  ./docs/guide/install.md
 d885a057493012d295c42728543e07a1b6b3a5258b585047e3ece8a5f758d39f  ./docs/guide/method.md
@@ -1324,9 +1326,10 @@ ada48af2808490010dc17ecd90573f3fcb4e3c3c0824c07020a2017a17ce7d55  ./examples/fns
 3f1f93ce31453642e1ec5fc733831659f166e5652e3376b883e762de17fca0da  ./examples/fusion_medical_isotopes/ac225/README.md
 1a6f04eadc6887ac0da1739ed0abd07194009e7b3b6d5f9aedfd81a5ea7262fe  ./examples/fusion_medical_isotopes/ac225/reduced_case.json
 758c5cc20becc41bab8600a24b64a9ee15da2262998588b149f89eb7f6f651c7  ./examples/fusion_medical_isotopes/ac225/reference.json
-01213a6e923ebb6d313192af247ca2147b3d47980a2e51855f2b387dcc36609e  ./examples/impurities_ra_steel/README.md
+94517c974bc24d47a99ca97d657eb2653ab783851b3080d47dc35b6555dae5be  ./examples/impurities_ra_steel/README.md
 e340dfc3efc931397563aded14dd75d2882f0085cc653f25ed6b4104dba77a07  ./examples/impurities_ra_steel/base_spec.json
 f26b9c99dd11e9a5cb015d868495e5048f695eadf0a5b56810a0c09218d877aa  ./examples/impurities_ra_steel/impurities.json
+69d910ab72c084fbd117e69b75c222198969faa6042555f165cb9e8eebed0874  ./examples/impurities_ra_steel/impurities_uncertainty.json
 40fe2c96a11711fbb8fcfad70440c36b2764513329bddcdeea9132a0c3030a14  ./examples/mesh_demo.json
 56b3290f9fb4fceeb4433f8e11bdf2f60f6685774fb7af1110c1f612d47a4161  ./examples/mesh_flux.ndjson
 816c1ab6e9ab952e9a21adcc890dc14a3b7edb337252091f1adfc9f0ba4a4c96  ./examples/openmc_pipeline/.gitignore

@@ -14,3 +14,8 @@ position. The Part 61 class is a nominal U.S. classification, not disposal accep
 `photon-response/nist-xcom-all.json`. No data catalog ships that file: build it with
 `scripts/build_photon_response.py --elements all` and place it there, relative to the directory you run from, or edit
 the path. Without a `photon` section the contact-dose proxy is `null`. The handbook chapter `docs/guide/impurities.md` walks through the result.
+
+`impurities_uncertainty.json` is the same screen with a `sampling` block: 72 correlated draws of the cross-section
+(MF=33) and decay-constant data, each applied to every element solve of its sample, and a bound at confidence 0.95 on
+every value and limit. It needs the catalog covariance `tendl-2025-neutron-709g-covariance`; see the handbook section
+"Add nuclear-data uncertainty".

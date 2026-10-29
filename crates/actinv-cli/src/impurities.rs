@@ -15,6 +15,11 @@
 //!
 //! Every reported composition (nominal, worst-case corners, limits) is re-solved in full unless
 //! `--no-verify` is given, and the result carries the predicted and solved values side by side.
+//!
+//! With a `sampling` block (P158) the same screen is repeated once per correlated draw of the nuclear
+//! data. Every element run of one sample carries the same factors, so the response is again linear in
+//! composition within the sample, and the bands in `uncertainty` are order statistics of the
+//! per-sample results (see `uncertainty`).
 
 use std::collections::{BTreeMap, BTreeSet};
 use std::path::{Path, PathBuf};
@@ -23,12 +28,15 @@ use actinv_core::clearance::{table_key, LimitsTable};
 use actinv_core::photon::{
     contact_proxy_of_groups, GroupedContactProxy, NuclideGroupSource, PhotonResponse,
 };
+use actinv_core::spec::LibraryRef;
 use actinv_core::waste::{evaluate_component, ClassConstraint, Evaluation, WasteClass, WasteType};
 use serde::Deserialize;
 use serde_json::{json, Map, Value};
 
 use crate::optimize::sha256_hex;
 use crate::{budget, waste_budget};
+
+mod uncertainty;
 
 /// Relative agreement required between composed and solved values.
 pub const VERIFY_TOL: f64 = 1e-6;
@@ -73,6 +81,12 @@ pub struct ImpuritiesSpec {
     /// Component geometry and rules, required by a `waste_class` endpoint.
     #[serde(default)]
     pub waste: Option<WasteInput>,
+    /// Nuclear-data sampling (P158), the block of `actinv waste budget uncertainty`.
+    #[serde(default)]
+    pub sampling: Option<Value>,
+    /// Confidence of the bands, from 0.5 to 0.999 (default 0.95); needs `sampling`.
+    #[serde(default)]
+    pub confidence_level: Option<f64>,
 }
 
 fn default_rules() -> String {
@@ -402,6 +416,8 @@ pub struct Limit {
     pub value: Option<f64>,
     pub status: &'static str,
     pub detail: Option<String>,
+    /// The cap, when the limit lies beyond it (the balance element would be exhausted).
+    pub capped_at: Option<f64>,
 }
 
 impl Limit {
@@ -410,6 +426,7 @@ impl Limit {
             value: Some(x),
             status: "limit",
             detail: None,
+            capped_at: None,
         }
     }
 
@@ -418,6 +435,15 @@ impl Limit {
             value: None,
             status,
             detail: Some(detail.to_string()),
+            capped_at: None,
+        }
+    }
+
+    /// No response because the limit lies beyond `cap`.
+    fn beyond(cap: f64, detail: &str) -> Self {
+        Limit {
+            capped_at: Some(cap),
+            ..Limit::none(NO_RESPONSE, detail)
         }
     }
 }
@@ -433,8 +459,8 @@ pub fn limit_linear(g: f64, v0: f64, cap: f64, limit: f64) -> Limit {
     } else {
         let x = (limit - v0) / g;
         if x >= cap {
-            Limit::none(
-                NO_RESPONSE,
+            Limit::beyond(
+                cap,
                 "the limit lies beyond the composition bound (the balance element would be exhausted)",
             )
         } else {
@@ -463,8 +489,8 @@ pub fn limit_bisect(f: &dyn Fn(f64) -> Option<f64>, cap: f64, limit: f64) -> Lim
         );
     };
     if fc < limit {
-        return Limit::none(
-            NO_RESPONSE,
+        return Limit::beyond(
+            cap,
             "the limit is not reached before the balance element is exhausted",
         );
     }
@@ -1016,6 +1042,20 @@ fn extract_target(result: &Value, step: u64, photons: bool) -> Result<ElemTarget
     })
 }
 
+/// A value check's deviation. Past the tolerance, a difference within `floor` is numerical noise far
+/// below the endpoint's scale (a nuclide populated far below the solver's numerical floor, which one
+/// solve keeps and another zeroes as a negative round-off population), so the deviation is what is
+/// left after it; the raw deviation is returned beside it.
+fn value_dev(predicted: f64, solved: f64, floor: f64) -> (f64, Option<f64>) {
+    let raw = rel_dev(predicted, solved);
+    if raw <= VERIFY_TOL || floor <= 0.0 {
+        return (raw, None);
+    }
+    let scale = predicted.abs().max(solved.abs());
+    let left = ((solved - predicted).abs() - floor).max(0.0) / scale;
+    (left, Some(raw))
+}
+
 /// A linear endpoint's value for a run at one step.
 fn linear_value(kind: &EndpointKind, t: &ElemTarget, limits: &BTreeMap<String, f64>) -> f64 {
     match kind {
@@ -1354,6 +1394,117 @@ struct Parsed {
     base: Value,
     base_text: String,
     base_label: String,
+    sampling: Option<SamplingConfig>,
+}
+
+/// The validated `sampling` block (P158).
+struct SamplingConfig {
+    block: crate::waste_budget_uncertainty::SamplingSpec,
+    samples: u32,
+    confidence: f64,
+    /// index of the reported order statistic
+    k: usize,
+    /// fewest samples for which any bound exists at the confidence level
+    minimum_samples: u64,
+    /// the covariance sidecar with its path resolved against the document's folder
+    covariance: Option<LibraryRef>,
+}
+
+const DEFAULT_CONFIDENCE: f64 = 0.95;
+
+/// Every refusal of the `sampling` block that needs no solve. The base spec is checked as JSON, so the
+/// refusals come before any spec is built.
+fn parse_sampling(
+    spec: &ImpuritiesSpec,
+    base: &Value,
+    dir: &Path,
+) -> Result<Option<SamplingConfig>, String> {
+    let Some(raw) = spec.sampling.as_ref().filter(|v| !v.is_null()) else {
+        if spec.confidence_level.is_some() {
+            return Err("confidence_level needs a sampling block".into());
+        }
+        return Ok(None);
+    };
+    let mut value = raw.clone();
+    if let Value::Object(map) = &mut value {
+        map.retain(|key, _| !key.starts_with('_'));
+    }
+    let block: crate::waste_budget_uncertainty::SamplingSpec = serde_json::from_value(value)
+        .map_err(|e| format!("cannot parse impurities sampling: {e}"))?;
+    let confidence = spec.confidence_level.unwrap_or(DEFAULT_CONFIDENCE);
+    if !(0.5..=0.999).contains(&confidence) {
+        return Err("confidence_level must be from 0.5 to 0.999".into());
+    }
+    if !block.channels.composition_rel_std.is_empty() {
+        return Err(
+            "composition channel is refused: composition is what the impurity screen varies".into(),
+        );
+    }
+    let min_samples = crate::waste_budget_uncertainty::MIN_SAMPLES;
+    let max_samples = u64::from(actinv_core::study::MAX_ROBUSTNESS_SAMPLES);
+    if !(min_samples..=max_samples).contains(&block.samples) {
+        return Err(format!(
+            "sampling.samples must be between {min_samples} and {max_samples}"
+        ));
+    }
+    let minimum_samples = actinv_core::sample_stats::min_trials_all_successes(confidence);
+    let Some(k) = actinv_core::sample_stats::order_index(block.samples, confidence) else {
+        return Err(format!(
+            "{} samples cannot establish any bound at confidence {confidence}; at least {minimum_samples} are needed",
+            block.samples
+        ));
+    };
+    let covariance =
+        crate::waste_budget_uncertainty::resolve_covariance(block.covariance.as_ref(), dir)?;
+    let yields_declared = base
+        .pointer("/fission_yields/files")
+        .and_then(Value::as_array)
+        .is_some_and(|files| !files.is_empty());
+    actinv_core::study::validate_channels(
+        &block.channels,
+        covariance.as_ref(),
+        yields_declared,
+        "sampling",
+    )?;
+
+    let set = |pointer: &str| base.pointer(pointer).is_some_and(|v| !v.is_null());
+    if base.pointer("/options/gas").and_then(Value::as_bool) == Some(true) {
+        return Err(
+            "the base spec enables options.gas, which impurities sampling does not support".into(),
+        );
+    }
+    if set("/options/rate_scale") || set("/options/decay_scale") || set("/options/yield_scale") {
+        return Err("the base spec declares options.rate_scale, decay_scale or yield_scale, which the sampler writes itself".into());
+    }
+    if let Some(steps) = base.get("schedule").and_then(Value::as_array) {
+        for (index, step) in steps.iter().enumerate() {
+            let number = index + 1;
+            let has = |key: &str| step.get(key).is_some_and(|v| !v.is_null());
+            if has("library") || has("projectile") {
+                return Err(format!(
+                    "schedule step {number} switches library or projectile, which impurities sampling does not support"
+                ));
+            }
+            if has("wall_loading_MW_m2") || has("partition") {
+                return Err(format!(
+                    "schedule step {number} declares wall_loading_MW_m2 or partition, which impurities sampling does not support"
+                ));
+            }
+            if has("spectrum") {
+                return Err(format!(
+                    "schedule step {number} declares its own spectrum; the sampler perturbs only the base spectrum"
+                ));
+            }
+        }
+    }
+    Ok(Some(SamplingConfig {
+        samples: block.samples as u32,
+        block,
+        confidence,
+        k: k as usize,
+        minimum_samples,
+        covariance,
+    }))
 }
 
 fn parse_doc(text: &str, dir: &Path) -> Result<Parsed, String> {
@@ -1361,7 +1512,7 @@ fn parse_doc(text: &str, dir: &Path) -> Result<Parsed, String> {
         serde_json::from_str(text).map_err(|e| format!("cannot parse impurities spec: {e}"))?;
     if raw.get("uncertainty").is_some_and(|v| !v.is_null()) {
         return Err(
-            "impurities refuses uncertainty: sampled bands are a separate phase (P158) and do not compose linearly across element runs"
+            "impurities refuses an uncertainty section: first-order bands do not compose linearly across element runs; use sampling for nuclear-data bands"
                 .into(),
         );
     }
@@ -1479,6 +1630,7 @@ fn parse_doc(text: &str, dir: &Path) -> Result<Parsed, String> {
     {
         return Err("a waste_class endpoint needs a waste section (rules, mass_g, displaced_volume_cm3 or density_g_cm3, waste_type, external_tritium)".into());
     }
+    let sampling = parse_sampling(&spec, &base, dir)?;
     Ok(Parsed {
         spec,
         frame,
@@ -1486,6 +1638,7 @@ fn parse_doc(text: &str, dir: &Path) -> Result<Parsed, String> {
         base,
         base_text,
         base_label,
+        sampling,
     })
 }
 
@@ -1496,6 +1649,29 @@ struct ClassContext {
     target: WasteClass,
     setup: waste_budget::Setup,
     basis: BTreeMap<String, waste_budget::Basis>,
+    /// The fixed external-tritium offset of each class constraint.
+    external: BTreeMap<waste_budget::ConstraintKey, f64>,
+    /// The `actinv-waste-budget-1` document the setup was built from, so a sampled screen can rebuild
+    /// it with the properties of nuclides only a sample makes active.
+    doc: Value,
+}
+
+/// The class basis of every element of a set of element runs.
+fn class_basis(
+    setup: &waste_budget::Setup,
+    runs: &ElemRuns,
+) -> Result<BTreeMap<String, waste_budget::Basis>, String> {
+    let mut basis = BTreeMap::new();
+    for (e, by_step) in runs {
+        let steps: Vec<Value> = by_step
+            .iter()
+            .map(|(k, t)| json!({"step": k, "t_s": t.t_s, "activity_Bq_per_g": t.activity}))
+            .collect();
+        let run = json!({"mode": "coupled", "steps": steps});
+        let (b, _record) = waste_budget::element_basis(setup, e, &run)?;
+        basis.insert(e.clone(), b);
+    }
+    Ok(basis)
 }
 
 fn eval_activities(
@@ -1761,6 +1937,89 @@ fn class_target(
     })
 }
 
+/// One sample's class at a target: at nominal and over the ranges, and each impurity's nominal
+/// contribution to the target class's binding constraint.
+struct ClassLevel {
+    nominal: WasteClass,
+    worst: WasteClass,
+    contributions: Comp,
+}
+
+/// The class arithmetic of `class_target` on any set of element runs, without the JSON or the
+/// verification requests.
+fn class_levels(
+    cx: &ClassContext,
+    frame: &Frame,
+    runs: &ElemRuns,
+    step: u64,
+) -> Result<ClassLevel, String> {
+    let s = &cx.setup;
+    let mut pure: BTreeMap<String, [f64; 4]> = BTreeMap::new();
+    for (e, by_step) in runs {
+        let ev = eval_solved_without_external(s, &by_step[&step])?;
+        if ev.coverage != actinv_core::waste::Coverage::Complete {
+            return Err(format!(
+                "basis {e} has incomplete property coverage at step {step}: {:?}",
+                ev.unknown_nuclides
+            ));
+        }
+        pure.insert(e.clone(), raw_sums(&ev)?);
+    }
+    let (h3, _) = waste_budget::external_at(&s.b.external_tritium, step)?;
+    let offset = if h3 > 0.0 {
+        raw_sums(&eval_activities(s, &BTreeMap::new(), h3)?)?
+    } else {
+        [0.0; 4]
+    };
+    let mut results = Vec::new();
+    for (k, off) in offset.iter().enumerate() {
+        let r: BTreeMap<String, f64> = pure.iter().map(|(e, v)| (e.clone(), v[k])).collect();
+        let eval = Evaluator::Linear {
+            r: &r,
+            offset: *off,
+        };
+        results.push(analyse_scalar(frame, &eval, None)?);
+    }
+    let nominal_ev = eval_composition(s, runs, step, &frame.comp(&frame.nominal())?)?;
+    let mut corner_evs = Vec::new();
+    for res in &results {
+        let comp = frame.comp(&res.worst_weights)?;
+        corner_evs.push(eval_composition(s, runs, step, &comp)?);
+    }
+    let mut checks = [[SumCheck {
+        normalized_sum: 0.0,
+        strict: false,
+    }; 2]; 3];
+    for (i, target) in CLASSES.iter().enumerate() {
+        let t1 = constraint(&corner_evs[0], *target, 1, None)?;
+        let t2 = constraint(&corner_evs[1 + i], *target, 2, Some(1 + i as u8))?;
+        checks[i] = [sum_check(t1), sum_check(t2)];
+    }
+    let worst = class_of_checks(&checks);
+    let ti = CLASSES
+        .iter()
+        .position(|c| *c == cx.target)
+        .ok_or("class endpoint target must be A, B or C")?;
+    let thr = table1_threshold(cx.target);
+    let n_t1 = constraint(&nominal_ev, cx.target, 1, None)?.normalized_sum;
+    let n_t2 = constraint(&nominal_ev, cx.target, 2, Some(1 + ti as u8))?.normalized_sum;
+    let (bk, scale) = if n_t1 >= n_t2 {
+        (0usize, 1.0 / thr)
+    } else {
+        (1 + ti, 1.0)
+    };
+    let mut contributions = BTreeMap::new();
+    for (e, r) in &results[bk].impurities {
+        let cn = r.contribution_nominal.map(|x| x * scale);
+        contributions.insert(e.clone(), cn.unwrap_or(0.0));
+    }
+    Ok(ClassLevel {
+        nominal: nominal_ev.class,
+        worst,
+        contributions,
+    })
+}
+
 /// A solved run's class evaluation without the external tritium: the linear basis of the sums.
 fn eval_solved_without_external(
     cx: &waste_budget::Setup,
@@ -1798,6 +2057,7 @@ pub fn run_impurities_doc(text: &str, dir: &Path, verify: bool) -> Result<Value,
         base,
         base_text,
         base_label,
+        sampling,
     } = parse_doc(text, dir)?;
 
     let table = if endpoints.iter().any(|e| e.kind == EndpointKind::Clearance) {
@@ -1826,6 +2086,12 @@ pub fn run_impurities_doc(text: &str, dir: &Path, verify: bool) -> Result<Value,
         vec!["ledger", "photons"]
     } else {
         vec!["ledger"]
+    };
+
+    // The factor blocks of every sample, drawn before any solve so a bad covariance or plan refuses early.
+    let drawn = match &sampling {
+        Some(cfg) => Some(uncertainty::draw(cfg, &frame, &base, &outputs)?),
+        None => None,
     };
 
     // One solve per element, as a pure material.
@@ -1903,21 +2169,15 @@ pub fn run_impurities_doc(text: &str, dir: &Path, verify: bool) -> Result<Value,
             doc["density_g_cm3"] = Value::from(v);
         }
         let setup = waste_budget::setup(&doc.to_string(), dir)?;
-        let mut basis = BTreeMap::new();
-        for e in &elements {
-            let steps: Vec<Value> = runs[e]
-                .iter()
-                .map(|(k, t)| json!({"step": k, "t_s": t.t_s, "activity_Bq_per_g": t.activity}))
-                .collect();
-            let run = json!({"mode": "coupled", "steps": steps});
-            let (b, _record) = waste_budget::element_basis(&setup, e, &run)?;
-            basis.insert(e.clone(), b);
-        }
+        let basis = class_basis(&setup, &runs)?;
+        let external = waste_budget::external_basis(&setup)?;
         class_cx.push(ClassContext {
             endpoint: idx,
             target,
             setup,
             basis,
+            external,
+            doc,
         });
     }
 
@@ -2160,7 +2420,7 @@ pub fn run_impurities_doc(text: &str, dir: &Path, verify: bool) -> Result<Value,
         summary.insert(ep.id.clone(), entry);
     }
 
-    let verification = if verify {
+    let mut verification = if verify {
         verify_requests(
             &requests,
             &endpoints,
@@ -2174,6 +2434,48 @@ pub fn run_impurities_doc(text: &str, dir: &Path, verify: bool) -> Result<Value,
     } else {
         json!({"skipped": true, "verified": false})
     };
+
+    // Nuclear-data bands: the screen repeated per sample, on a prepared cache of its own.
+    let mut uncertainty_block: Option<Value> = None;
+    if let (Some(cfg), Some(drawn)) = (&sampling, &drawn) {
+        let u = uncertainty::run(&uncertainty::Inputs {
+            cfg,
+            drawn,
+            screen: uncertainty::ScreenInputs {
+                frame: &frame,
+                endpoints: &endpoints,
+                targets: &spec.targets,
+                limits: &limits,
+                response: response.as_ref(),
+                build_up,
+                class_cx: &class_cx,
+            },
+            base: &base,
+            outputs: &outputs,
+            dir,
+            want_dose,
+            verify,
+            prepared: cache.prepared(),
+        })?;
+        for t in &mut targets_out {
+            let step = t["step"].as_u64().unwrap_or(0);
+            if let Some(eps) = t["endpoints"].as_array_mut() {
+                for (idx, e) in eps.iter_mut().enumerate() {
+                    if let Some(band) = u.bands.get(&(step, idx)) {
+                        e["uncertainty"] = band.clone();
+                    }
+                }
+            }
+        }
+        if let Some(v) = u.verification {
+            let pass = v["verified"] == true;
+            verification["uncertainty"] = v;
+            if verification["skipped"] != true {
+                verification["verified"] = Value::from(verification["verified"] == true && pass);
+            }
+        }
+        uncertainty_block = Some(u.summary);
+    }
 
     let ranges: BTreeMap<String, Value> = frame
         .imps
@@ -2200,6 +2502,9 @@ pub fn run_impurities_doc(text: &str, dir: &Path, verify: bool) -> Result<Value,
         "verification": verification,
         "elapsed_ms": started.elapsed().as_millis() as u64,
     });
+    if let Some(u) = uncertainty_block {
+        result["uncertainty"] = u;
+    }
     if let Some(t) = &table {
         result["clearance_limits"] = json!({"source": t.source, "sha256": t.sha256});
     }
@@ -2627,6 +2932,134 @@ mod tests {
         );
         // the same document with none of the above parses
         assert!(parse_doc(&doc(json!({})), dir).is_ok());
+    }
+
+    fn sampling(extra: Value) -> Value {
+        let mut block =
+            json!({"channels": {"decay_constants": true}, "samples": 100, "seed": 158001});
+        for (k, x) in extra.as_object().unwrap() {
+            block[k] = x.clone();
+        }
+        block
+    }
+
+    #[test]
+    fn a_sampling_block_is_parsed_and_every_refusal_comes_before_any_solve() {
+        let dir = Path::new(".");
+        let refused = |extra: Value, needle: &str| {
+            let err = parse_doc(&doc(extra), dir)
+                .err()
+                .expect("accepted a bad document");
+            assert!(err.contains(needle), "{err}");
+        };
+        // without sampling there is nothing sampled
+        assert!(parse_doc(&doc(json!({})), dir).unwrap().sampling.is_none());
+        let parsed = parse_doc(&doc(json!({"sampling": sampling(json!({}))})), dir).unwrap();
+        let cfg = parsed.sampling.unwrap();
+        assert_eq!(cfg.samples, 100);
+        assert_eq!(cfg.confidence, 0.95);
+        assert_eq!(cfg.minimum_samples, 72);
+        assert_eq!(
+            cfg.k as u64,
+            actinv_core::sample_stats::order_index(100, 0.95).unwrap()
+        );
+        // comment keys in the block are ignored, as in the other sampling blocks
+        assert!(parse_doc(
+            &doc(json!({"sampling": sampling(json!({"_note": "x"}))})),
+            dir
+        )
+        .is_ok());
+        // a higher level moves the minimum
+        let at_99 = parse_doc(
+            &doc(json!({"sampling": sampling(json!({"samples": 600})), "confidence_level": 0.99})),
+            dir,
+        )
+        .unwrap()
+        .sampling
+        .unwrap();
+        assert_eq!(at_99.minimum_samples, 528);
+        // the composition channel
+        refused(
+            json!({"sampling": sampling(json!({"channels": {"composition_rel_std": {"Fe": 0.01}}}))}),
+            "composition",
+        );
+        // too few samples names the minimum, 72 at 0.95
+        refused(json!({"sampling": sampling(json!({"samples": 50}))}), "72");
+        refused(
+            json!({"sampling": sampling(json!({"samples": 100})), "confidence_level": 0.99}),
+            "528",
+        );
+        refused(
+            json!({"sampling": sampling(json!({"samples": 10}))}),
+            "between 20",
+        );
+        refused(
+            json!({"sampling": sampling(json!({"samples": 5000}))}),
+            "between 20",
+        );
+        // a confidence level outside 0.5 to 0.999, or one without sampling
+        refused(
+            json!({"sampling": sampling(json!({})), "confidence_level": 0.4}),
+            "confidence_level",
+        );
+        refused(
+            json!({"sampling": sampling(json!({})), "confidence_level": 0.9999}),
+            "confidence_level",
+        );
+        refused(json!({"confidence_level": 0.95}), "needs a sampling");
+        // unknown keys, channels that need a covariance, an empty channel set
+        refused(json!({"sampling": sampling(json!({"x": 1}))}), "sampling");
+        refused(
+            json!({"sampling": sampling(json!({"channels": {"cross_section_mf33": true}}))}),
+            "covariance",
+        );
+        refused(
+            json!({"sampling": sampling(json!({"channels": {}}))}),
+            "no channel",
+        );
+        // the base spec: own scales, gas, switches
+        let base = |options: Value, schedule: Value| {
+            json!({"sampling": sampling(json!({})),
+                "base_spec": {"spec": "actinv-spec-1", "options": options, "schedule": schedule}})
+        };
+        refused(
+            base(json!({"rate_scale": {"Fe56": 1.0}}), json!([])),
+            "rate_scale",
+        );
+        refused(
+            base(json!({"decay_scale": {"Mn54": 1.0}}), json!([])),
+            "decay_scale",
+        );
+        refused(
+            base(json!({"yield_scale": {"Cs137": 1.0}}), json!([])),
+            "yield_scale",
+        );
+        refused(base(json!({"gas": true}), json!([])), "gas");
+        refused(
+            base(
+                json!({}),
+                json!([{"dt": "1 s", "flux": 1.0, "projectile": "proton"}]),
+            ),
+            "projectile",
+        );
+        refused(
+            base(
+                json!({}),
+                json!([{"dt": "1 s", "flux": 1.0, "spectrum": {}}]),
+            ),
+            "spectrum",
+        );
+        assert!(parse_doc(&doc(base(json!({"gas": false}), json!([]))), dir).is_ok());
+        // the base spec's own first-order uncertainty section stays refused, as does a top-level one
+        refused(
+            json!({"sampling": sampling(json!({})),
+                "base_spec": {"spec": "actinv-spec-1", "uncertainty": {"covariance": {}}}}),
+            "uncertainty",
+        );
+        refused(
+            json!({"sampling": sampling(json!({})), "uncertainty": {"covariance": {}}}),
+            "use sampling",
+        );
     }
 
     #[test]
@@ -3077,6 +3510,21 @@ mod tests {
         assert_eq!(rel_dev(0.0, 0.0), 0.0);
         assert!((rel_dev(1.0, 1.0 + 1e-8) - 1e-8).abs() < 1e-12);
         assert_eq!(rel_dev(1.0, 2.0), rel_dev(2.0, 1.0));
+    }
+
+    #[test]
+    fn value_floor_absorbs_only_noise_below_it() {
+        // Within the tolerance nothing changes, whatever the floor.
+        assert_eq!(
+            value_dev(1.0, 1.0 + 1e-8, 5.0),
+            (rel_dev(1.0, 1.0 + 1e-8), None)
+        );
+        // A nuclide far below the numerical floor, zeroed in the solve, against an endpoint at 0.1.
+        assert_eq!(value_dev(2.08e-162, 0.0, 1e-13), (0.0, Some(1.0)));
+        // A difference beyond the floor still fails, by what is left after it.
+        let (dev, raw) = value_dev(1.0, 0.5, 0.1);
+        assert!((dev - 0.4).abs() < 1e-12 && raw == Some(0.5));
+        assert_eq!(value_dev(1.0, 0.5, 0.0), (0.5, None));
     }
 
     #[test]

@@ -544,6 +544,21 @@ pub fn min_trials_all_successes(confidence: f64) -> u64 {
     n
 }
 
+/// The index of the reported order statistic: the largest `k` for which the lower end of the two-sided
+/// Clopper-Pearson interval of `(n - k + 1) / n` at `confidence` is at least `confidence`. None when even
+/// `k = 1` (every sample a success) falls short, i.e. below [`min_trials_all_successes`] samples.
+pub fn order_index(n: u64, confidence: f64) -> Option<u64> {
+    let mut found = None;
+    for k in 1..=n {
+        if clopper_pearson(n - k + 1, n, confidence).0 >= confidence {
+            found = Some(k);
+        } else {
+            break;
+        }
+    }
+    found
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -869,5 +884,14 @@ mod tests {
         assert_eq!(min_trials_all_successes(0.99), 528);
         assert!(clopper_pearson(72, 72, 0.95).0 >= 0.95);
         assert!(clopper_pearson(71, 71, 0.95).0 < 0.95);
+    }
+
+    #[test]
+    fn order_index_is_one_at_the_minimum_and_absent_below_it() {
+        assert_eq!(order_index(72, 0.95), Some(1));
+        assert_eq!(order_index(71, 0.95), None);
+        assert_eq!(order_index(528, 0.99), Some(1));
+        assert_eq!(order_index(527, 0.99), None);
+        assert!(order_index(300, 0.95).unwrap() > 1);
     }
 }

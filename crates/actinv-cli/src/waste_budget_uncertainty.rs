@@ -12,7 +12,7 @@ use std::collections::BTreeMap;
 use std::path::{Path, PathBuf};
 
 use actinv_core::run::PreparedCache;
-use actinv_core::sample_stats::{clopper_pearson, min_trials_all_successes};
+use actinv_core::sample_stats::{min_trials_all_successes, order_index};
 use actinv_core::spec::{LibraryRef, Spec};
 use actinv_core::study::{self, FactorBlock, RobustChannels, MAX_ROBUSTNESS_SAMPLES};
 use actinv_core::waste::{evaluate_component, Coverage};
@@ -31,7 +31,7 @@ use crate::waste_budget::{
 const SPEC_SCHEMA: &str = "actinv-waste-budget-uncertainty-spec-1";
 const RESULT_SCHEMA: &str = "actinv-waste-budget-uncertainty-1";
 /// Fewest samples a sampling block may ask for.
-const MIN_SAMPLES: u64 = 20;
+pub(crate) const MIN_SAMPLES: u64 = 20;
 const DEFAULT_CONFIDENCE: f64 = 0.95;
 /// Name of the joint specification scale factor among the quantities.
 const JOINT: &str = "joint_scale_factor";
@@ -62,15 +62,15 @@ struct UncertaintySpec {
 
 #[derive(Debug, Deserialize)]
 #[serde(deny_unknown_fields)]
-struct SamplingSpec {
+pub(crate) struct SamplingSpec {
     #[serde(default)]
-    channels: RobustChannels,
+    pub(crate) channels: RobustChannels,
     #[serde(default)]
-    covariance: Option<LibraryRef>,
-    samples: u64,
-    seed: u64,
+    pub(crate) covariance: Option<LibraryRef>,
+    pub(crate) samples: u64,
+    pub(crate) seed: u64,
     #[serde(default)]
-    keep_samples: Option<String>,
+    pub(crate) keep_samples: Option<String>,
 }
 
 /// A spec that passed every check that needs no solve.
@@ -183,21 +183,6 @@ pub fn run(path: &str, output: Option<&str>) -> Result<Value, String> {
     Ok(result)
 }
 
-/// The index of the reported order statistic: the largest `k` for which the lower end of the two-sided
-/// Clopper-Pearson interval of `(n - k + 1) / n` at `confidence` is at least `confidence`. None when even
-/// `k = 1` (every sample a success) falls short, i.e. below [`min_trials_all_successes`] samples.
-fn order_index(n: u64, confidence: f64) -> Option<u64> {
-    let mut found = None;
-    for k in 1..=n {
-        if clopper_pearson(n - k + 1, n, confidence).0 >= confidence {
-            found = Some(k);
-        } else {
-            break;
-        }
-    }
-    found
-}
-
 /// Remove the keys that start with an underscore (comments), at the top level and in the sampling block.
 fn strip_comment_keys(value: &mut Value) {
     if let Value::Object(map) = value {
@@ -210,7 +195,7 @@ fn strip_comment_keys(value: &mut Value) {
 
 /// The covariance sidecar as the sampler reads it: catalog references resolved, a relative path taken against
 /// the spec's folder.
-fn resolve_covariance(
+pub(crate) fn resolve_covariance(
     reference: Option<&LibraryRef>,
     base: &Path,
 ) -> Result<Option<LibraryRef>, String> {
@@ -805,6 +790,7 @@ fn solve_sample(
 #[cfg(test)]
 mod tests {
     use super::*;
+    use actinv_core::sample_stats::clopper_pearson;
     use std::sync::atomic::{AtomicUsize, Ordering};
 
     struct Scratch(PathBuf);
