@@ -168,7 +168,7 @@ fn step_ready(problem: &Value, page: Page) -> bool {
 fn browser_pages() -> impl Iterator<Item = Page> {
     Page::ALL
         .into_iter()
-        .filter(|page| !matches!(page, Page::Sweep | Page::Assimilation))
+        .filter(|page| !matches!(page, Page::Sweep | Page::Mesh | Page::Assimilation))
 }
 
 pub struct Workbench {
@@ -1452,7 +1452,7 @@ impl Workbench {
         if !self.result_page(
             ui,
             "Export",
-            "Save what this result answers: a report to read and share, charts and tables for your own documents, and the files to rerun or reuse it.",
+            "Save what this result answers: a report to read and share, charts and tables for your own documents, a photon source for transport, and the files to rerun or reuse it.",
         ) {
             return;
         }
@@ -2139,7 +2139,7 @@ impl eframe::App for Workbench {
                     Page::Data => self.data_page(ui),
                     Page::Advanced => self.advanced_page(ui),
                     // the browser never runs the solver
-                    Page::Sweep | Page::Assimilation => self.start(ui),
+                    Page::Sweep | Page::Mesh | Page::Assimilation => self.start(ui),
                 }
                 if self.page.group() == Group::Setup && self.page != Page::CheckRun {
                     self.step_footer(ui);
@@ -2213,6 +2213,7 @@ mod tests {
         let pages: Vec<_> = browser_pages().collect();
         assert_eq!(pages.len(), Page::ALL.len() - 2);
         assert!(!pages.contains(&Page::Sweep) && !pages.contains(&Page::Assimilation));
+        assert!(!pages.contains(&Page::Mesh));
         assert!(pages.contains(&Page::Advanced));
     }
 

@@ -4,7 +4,7 @@ use crate::nav::Page;
 use eframe::egui::{self, RichText};
 
 /// A question, a short note on what it needs or gives, and the page that answers it.
-const QUESTIONS: [(&str, &str, Page); 8] = [
+const QUESTIONS: [(&str, &str, Page); 9] = [
     (
         "What does the material become, and how fast does it cool?",
         "Activity, heat, dose and nuclides over time",
@@ -39,6 +39,11 @@ const QUESTIONS: [(&str, &str, Page); 8] = [
         "How does the answer change as one input moves?",
         "A curve over one element, the flux or a step length",
         Page::Sweep,
+    ),
+    (
+        "What does every cell of a transport mesh become, and what dose source does it give back?",
+        "Activates a flux mesh; shutdown-dose sources for OpenMC, MCNP, Serpent and ALARA",
+        Page::Mesh,
     ),
     (
         "Does the calculation agree with what was measured?",

@@ -2,7 +2,7 @@
 
 Open [ACTINV in your browser](https://actinv.avilalabs.org/) to learn the interface, edit a problem, import a FISPACT-II deck, or inspect result files without installation. A laptop or desktop with WebGL enabled works best.
 
-The browser has the same pages and controls as the [desktop app](desktop.md), under the same names, laid out the same way: **Start**, the numbered setup steps ending in **Check & run**, and the results, which open on **Summary**. It leaves out what runs or downloads things: the **Sweep** and **Assimilation** studies, the run button, the nuclear-data download and **Verify the data**. The **Data** page only records the library and decay paths. On **Check & run** the browser hands the problem over instead: **Download problem**, run it with the desktop app or `actinv run`, then open the result here. The pages that differ only in how they choose a file are described below.
+The browser has the same pages and controls as the [desktop app](desktop.md), under the same names, laid out the same way: **Start**, the numbered setup steps ending in **Check & run**, and the results, which open on **Summary**. It leaves out what runs or downloads things: the **Sweep**, **Mesh & transport** and **Assimilation** studies, the run button, the nuclear-data download and **Verify the data**. The **Data** page only records the library and decay paths. On **Check & run** the browser hands the problem over instead: **Download problem**, run it with the desktop app or `actinv run`, then open the result here. The pages that differ only in how they choose a file are described below.
 
 ## Explore results
 
@@ -17,7 +17,7 @@ For a real calculation, open or drop a result JSON produced by ACTINV. Use **Com
 - **Waste class** reads waste results, edits waste specs and sets up the container, ranges and how-sure questions; see [Read waste results and edit waste specs](#read-waste-results-and-edit-waste-specs).
 - **Impurities** sets up an impurity screen of the open problem and reads screen results. The browser does not screen: **Save screen…** downloads `impurities.json`, which you run with the desktop app or `actinv impurities`, and **Open result…** shows the result; see [Screen a material's impurities](impurities.md#in-the-desktop-app-and-the-browser).
 
-**Download result** saves the complete result JSON. **Export…** opens the **Export** page, which downloads a report page, charts, tables and the result and problem files as one zip; it offers the same choices as the [desktop Export page](desktop.md#export-a-result) except the waste classification.
+**Download result** saves the complete result JSON. **Export…** opens the **Export** page, which downloads a report page, charts, tables, a transport photon source and the result and problem files as one zip; it offers the same choices as the [desktop Export page](desktop.md#export-a-result) except the waste classification.
 
 ### Read waste results and edit waste specs
 

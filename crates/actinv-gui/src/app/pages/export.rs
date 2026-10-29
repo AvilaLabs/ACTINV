@@ -12,7 +12,7 @@ use eframe::egui;
 use std::path::{Path, PathBuf};
 
 /// `parent/name`, or `parent/name-2`, `-3`, … when that exists already.
-fn fresh_folder(parent: &Path, name: &str) -> PathBuf {
+pub(super) fn fresh_folder(parent: &Path, name: &str) -> PathBuf {
     let mut path = parent.join(name);
     let mut n = 2;
     while path.exists() {
@@ -41,13 +41,18 @@ impl Desktop {
         heading(
             ui,
             "Export",
-            "Save what this result answers: a report to read and share, charts and tables for your own documents, and the files to rerun or reuse it.",
+            "Save what this result answers: a report to read and share, charts and tables for your own documents, a photon source for transport, and the files to rerun or reuse it.",
         );
         self.result_bar(ui);
         let Some(result) = &self.result else {
             self.no_result(ui, &[]);
             return;
         };
+        if self.capture.is_some()
+            && std::env::var("ACTINV_GUI_CAPTURE_EXPORT").as_deref() == Ok("transport")
+        {
+            self.export.choose_transport();
+        }
         let context = Context {
             problem: Some(&self.document),
             waste: self.waste.view_for(result).map(waste::report_section),

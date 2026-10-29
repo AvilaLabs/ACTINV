@@ -8,6 +8,8 @@ pub mod export;
 pub mod import;
 pub mod impurities;
 pub mod material;
+#[cfg(not(target_arch = "wasm32"))]
+pub mod mesh;
 pub mod optimize;
 pub mod outputs;
 pub mod pathways;

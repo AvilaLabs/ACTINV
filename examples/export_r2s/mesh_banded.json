@@ -42,8 +42,8 @@
   "temperature_K": 293.6
  },
  "flux": {
-  "path": "examples/mesh_flux.ndjson",
-  "sha256": "56b3290f9fb4fceeb4433f8e11bdf2f60f6685774fb7af1110c1f612d47a4161"
+  "path": "examples/export_r2s/mesh_flux_boxes.ndjson",
+  "sha256": "b9b1e8d1a713292507611b17be5afaaa671d734383cf7a0b1d1a68b31311b7e7"
  },
  "uncertainty": {
   "covariance": {

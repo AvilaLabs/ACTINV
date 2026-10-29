@@ -1,7 +1,8 @@
 mesh_banded.ndjson
 r2s.ndjson
 r2s_joint.ndjson
-source.py
+source_openmc.xml
+mesh_source.py
 source.sdef
 source.serpent
 alara/

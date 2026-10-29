@@ -11,6 +11,7 @@ mod export;
 mod impurities;
 mod ledger;
 mod material;
+pub(super) mod mesh;
 mod optimize;
 mod outputs;
 mod pathways;
@@ -64,6 +65,7 @@ impl Desktop {
             Page::Optimize => self.optimize_page(ui),
             Page::Compare => self.compare_page(ui),
             Page::Sweep => self.sweep_page(ui),
+            Page::Mesh => self.mesh_page(ui),
             Page::Assimilation => self.assimilation(ui),
             Page::Data => self.data_page(ui),
             Page::Advanced => self.advanced(ui),

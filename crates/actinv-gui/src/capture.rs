@@ -115,10 +115,10 @@ mod tests {
 
     #[test]
     fn shot_count_covers_every_page_and_both_tours() {
-        // `scripts/desktop_smoke.py` expects this many screenshots: 22 pages, 9 setup-tour
+        // `scripts/desktop_smoke.py` expects this many screenshots: 23 pages, 9 setup-tour
         // steps and 8 results-tour steps.
-        assert_eq!(Capture::total(), 39);
-        assert_eq!(Page::ALL.len(), 22);
+        assert_eq!(Capture::total(), 40);
+        assert_eq!(Page::ALL.len(), 23);
         assert_eq!(SETUP.len(), 9);
         assert_eq!(RESULTS.len(), 8);
         assert_eq!(

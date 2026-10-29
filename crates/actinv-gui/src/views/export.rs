@@ -1,11 +1,18 @@
 //! Export: one page to save what a result answers. A report page to read and print, the charts,
-//! any of the FISPACT-style tables in a chosen format, and the result and problem files to
-//! rerun or reuse. The view builds the files; the shell writes them (into a folder on the
-//! desktop, as one zip download in the browser). The report and charts come from
+//! any of the FISPACT-style tables in a chosen format, the decay photons as a source for a
+//! transport code, and the result and problem files to rerun or reuse. The view builds the
+//! files; the shell writes them (into a folder on the desktop, as one zip download in the
+//! browser). The report and charts come from
 //! `actinv_core::report_page` and the tables from `actinv_core::report`, so they match
-//! `actinv report` file for file.
-use crate::{model::ResultDocument, visuals::BLUE};
+//! `actinv report` file for file, and the transport sources from `actinv_core::photon`, so they
+//! match `actinv export-openmc` and `actinv export-mcnp`.
+use crate::{
+    model::{self, ResultDocument},
+    views::summary,
+    visuals::BLUE,
+};
 use actinv_core::{
+    photon::{export_mcnp, export_openmc, PhotonSourceOut},
     report::{self, Format, Request, StepSelect, TableKind, NAMED_TABLES},
     report_page::{self, PageOptions, Section},
 };
@@ -23,7 +30,8 @@ const FORMATS: [(Format, &str); 4] = [
 /// Each table and whether the result can build it, with the reason when it cannot.
 type Availability = Vec<(TableKind, Result<(), String>)>;
 
-/// What the user chose to export. Everything is chosen until it is unticked.
+/// What the user chose to export. Everything but the transport source is chosen until it is
+/// unticked; the transport source is for the few who run photon transport next.
 pub struct ExportState {
     report: bool,
     include_problem: bool,
@@ -36,6 +44,11 @@ pub struct ExportState {
     skipped: Vec<TableKind>,
     result_json: bool,
     problem_json: bool,
+    transport: bool,
+    openmc: bool,
+    mcnp: bool,
+    /// Every step with decay photons, not only the selected one.
+    transport_all: bool,
     /// Which tables this result can build, and why not, for the result it was worked out for.
     available: Option<(String, Availability)>,
     pub message: Option<Result<String, String>>,
@@ -54,9 +67,21 @@ impl Default for ExportState {
             skipped: Vec::new(),
             result_json: true,
             problem_json: true,
+            transport: false,
+            openmc: true,
+            mcnp: true,
+            transport_all: false,
             available: None,
             message: None,
         }
+    }
+}
+
+impl ExportState {
+    /// Tick the transport source (screenshots).
+    #[cfg_attr(target_arch = "wasm32", allow(dead_code))]
+    pub fn choose_transport(&mut self) {
+        self.transport = true;
     }
 }
 
@@ -118,6 +143,80 @@ fn availability(result: &ResultDocument) -> Availability {
             .map(|kind| (*kind, Err(reason.clone())))
             .collect(),
     }
+}
+
+/// The steps the transport source is written for: (step index, step number, the source or why
+/// there is none). One step, the selected one, unless every step is chosen; then only the
+/// steps that carry decay photons.
+fn transport_steps(
+    result: &ResultDocument,
+    state: &ExportState,
+    step: usize,
+) -> Vec<(usize, u64, Result<PhotonSourceOut, String>)> {
+    let Some(steps) = result.value["steps"].as_array() else {
+        return Vec::new();
+    };
+    let source = |value: &Value| match value.get("photon_source") {
+        Some(source) if source.is_object() => serde_json::from_value(source.clone())
+            .map_err(|e| format!("its photon source cannot be read: {e}")),
+        _ => {
+            Err("it has no decay photons; ask for photons or dose under What to compute".to_owned())
+        }
+    };
+    let row = |i: usize, value: &Value| {
+        (
+            i,
+            value["step"].as_u64().unwrap_or(i as u64 + 1),
+            source(value),
+        )
+    };
+    if state.transport_all {
+        steps
+            .iter()
+            .enumerate()
+            .map(|(i, value)| row(i, value))
+            .filter(|(_, _, source)| source.is_ok())
+            .collect()
+    } else {
+        steps
+            .get(step)
+            .map(|value| vec![row(step, value)])
+            .unwrap_or_default()
+    }
+}
+
+/// The transport source files: for one step at the top of `transport/`, for every step in a
+/// folder per step. The names match `actinv export-openmc` and `actinv export-mcnp`.
+fn transport_files(
+    result: &ResultDocument,
+    state: &ExportState,
+    step: usize,
+) -> Result<Vec<(String, Vec<u8>)>, String> {
+    let steps = transport_steps(result, state, step);
+    if steps.is_empty() {
+        return Err("No step of this result has decay photons for a transport source.".into());
+    }
+    let mut out = Vec::new();
+    for (_, number, source) in steps {
+        let source = source.map_err(|reason| format!("Step {number}: {reason}."))?;
+        let folder = if state.transport_all {
+            format!("transport/step-{number:02}/")
+        } else {
+            "transport/".to_owned()
+        };
+        let mut add = |name: &str, text: Result<String, String>| -> Result<(), String> {
+            let text = text.map_err(|reason| format!("Step {number}: {reason}."))?;
+            out.push((format!("{folder}{name}"), text.into_bytes()));
+            Ok(())
+        };
+        if state.openmc {
+            add("photon_source_openmc.py", export_openmc(&source))?;
+        }
+        if state.mcnp {
+            add("photon_source_mcnp.txt", export_mcnp(&source))?;
+        }
+    }
+    Ok(out)
 }
 
 /// A file-system-safe short name: lower case, words joined by hyphens.
@@ -203,6 +302,9 @@ pub fn files(
             }
         }
     }
+    if state.transport && (state.openmc || state.mcnp) {
+        out.extend(transport_files(result, state, context.step)?);
+    }
     if state.result_json {
         let json = serde_json::to_vec_pretty(&result.value).map_err(|e| e.to_string())?;
         out.push(("result.json".into(), json));
@@ -271,7 +373,7 @@ pub fn show(
     };
 
     let charts = report_page::charts(&result.value);
-    let count = files_count(state, &charts, context);
+    let count = files_count(result, state, &charts, context);
     ui.horizontal_wrapped(|ui| {
         let save = ui.add_enabled(
             count > 0,
@@ -439,6 +541,98 @@ pub fn show(
     });
 
     frame(ui, &mut |ui| {
+        let codes = match (state.openmc, state.mcnp) {
+            (true, true) => "transport/ · .py, .txt",
+            (true, false) => "transport/ · .py",
+            (false, true) => "transport/ · .txt",
+            (false, false) => "transport/",
+        };
+        choice(
+            ui,
+            &mut state.transport,
+            "Transport source",
+            codes,
+            "The decay photons as the source of a photon transport run: their energy spectrum and total strength, as an OpenMC Python fragment and an MCNP SDEF card. The source sits at a point; put in your geometry's spatial distribution.",
+        );
+        if !state.transport {
+            return;
+        }
+        ui.indent("transport-options", |ui| {
+            egui::Grid::new("export-transport-options")
+                .num_columns(2)
+                .spacing([12., 8.])
+                .show(ui, |ui| {
+                    ui.label("Codes");
+                    ui.horizontal(|ui| {
+                        ui.checkbox(&mut state.openmc, "OpenMC")
+                            .on_hover_text("photon_source_openmc.py: an openmc.IndependentSource");
+                        ui.checkbox(&mut state.mcnp, "MCNP")
+                            .on_hover_text("photon_source_mcnp.txt: MODE P, SDEF, SI1 and SP1");
+                    });
+                    ui.end_row();
+                    ui.label("Steps");
+                    ui.horizontal_wrapped(|ui| {
+                        ui.selectable_value(
+                            &mut state.transport_all,
+                            false,
+                            format!(
+                                "Step {}, {}",
+                                context.step + 1,
+                                summary::when(result, context.step)
+                            ),
+                        );
+                        ui.selectable_value(
+                            &mut state.transport_all,
+                            true,
+                            "Every step with photons",
+                        );
+                    });
+                    ui.end_row();
+                });
+            ui.add_space(4.);
+            let steps = transport_steps(result, state, context.step);
+            let weak = ui.visuals().weak_text_color();
+            let error = ui.visuals().error_fg_color;
+            match steps.as_slice() {
+                [] => {
+                    ui.colored_label(
+                        error,
+                        "No step of this result has decay photons. Ask for photons or dose under What to compute and run again.",
+                    );
+                }
+                [(index, number, Ok(source))] if !state.transport_all => {
+                    ui.colored_label(
+                        weak,
+                        format!(
+                            "Step {number}, {}: {} photons/s.",
+                            summary::when(result, *index),
+                            model::sci(source.total_photons_s)
+                        ),
+                    );
+                }
+                [(_, number, Err(reason))] if !state.transport_all => {
+                    ui.colored_label(error, format!("Step {number}: {reason}."));
+                }
+                [_] => {
+                    ui.colored_label(weak, "1 step, in its own folder, transport/step-NN/.");
+                }
+                many => {
+                    ui.colored_label(
+                        weak,
+                        format!(
+                            "{} steps, each in its own folder, transport/step-NN/.",
+                            many.len()
+                        ),
+                    );
+                }
+            }
+            if !state.openmc && !state.mcnp {
+                ui.colored_label(error, "Choose OpenMC, MCNP or both.");
+            }
+        });
+    });
+
+    frame(ui, &mut |ui| {
         ui.horizontal(|ui| {
             ui.label(RichText::new("Files to rerun or reuse").strong());
         });
@@ -471,6 +665,7 @@ pub fn show(
 
 /// How many files the current choice writes.
 fn files_count(
+    result: &ResultDocument,
     state: &ExportState,
     charts: &[(String, String, String)],
     context: &Context,
@@ -483,9 +678,17 @@ fn files_count(
     } else {
         0
     };
+    let transport = if state.transport {
+        let steps = transport_steps(result, state, context.step);
+        steps.iter().filter(|(_, _, s)| s.is_ok()).count()
+            * (usize::from(state.openmc) + usize::from(state.mcnp))
+    } else {
+        0
+    };
     usize::from(state.report)
         + if state.charts { charts.len() } else { 0 }
         + tables
+        + transport
         + usize::from(state.result_json)
         + usize::from(state.problem_json && context.problem.is_some())
 }
@@ -587,6 +790,7 @@ mod tests {
         assert_eq!(
             files.len(),
             files_count(
+                &result,
                 &state,
                 &report_page::charts(&result.value),
                 &context(Some(&problem))
@@ -610,6 +814,94 @@ mod tests {
         assert!(files.iter().all(|f| f.0.ends_with(".md")));
         state.tables = false;
         assert!(super::files(&result, &state, &context(None), None).is_err());
+    }
+
+    /// The tutorial result with decay photons at steps 2 and 3: two groups, 3e9 photons/s.
+    fn with_photons() -> ResultDocument {
+        let mut result = result();
+        let source = serde_json::json!({
+            "group_structure": "test-2", "boundaries_eV": [0., 1e6, 2e6], "lines": [],
+            "groups": [
+                {"low_eV": 0., "high_eV": 1e6, "centroid_eV": 5e5, "photons_s_g": 1e9,
+                 "photons_s": 1e9, "power_W_g": 0., "power_W": 0.},
+                {"low_eV": 1e6, "high_eV": 2e6, "centroid_eV": 1.5e6, "photons_s_g": 2e9,
+                 "photons_s": 2e9, "power_W_g": 0., "power_W": 0.}
+            ],
+            "by_nuclide": [], "grouped_photons_s_g": 3e9, "grouped_photons_s": 3e9,
+            "total_photons_s_g": 3e9, "total_photons_s": 3e9, "source_power_W_g": 0.,
+            "source_power_W": 0., "ungrouped_power_W_g": 0., "unrepresented_gamma_power_W_g": 0.,
+            "represented_gamma_power_fraction": 1., "contact_gamma_air_dose_proxy_Gy_h": null,
+            "dose_response_power_coverage": null
+        });
+        for i in [1, 2] {
+            result.value["steps"][i]["photon_source"] = source.clone();
+        }
+        result
+    }
+
+    #[test]
+    fn the_transport_source_matches_the_cli_exporters() {
+        let result = with_photons();
+        let mut state = ExportState {
+            report: false,
+            charts: false,
+            tables: false,
+            result_json: false,
+            transport: true,
+            ..Default::default()
+        };
+        let mut ctx = context(None);
+        ctx.step = 1;
+        let files = files(&result, &state, &ctx, None).unwrap();
+        let names: Vec<&str> = files.iter().map(|f| f.0.as_str()).collect();
+        assert_eq!(
+            names,
+            [
+                "transport/photon_source_openmc.py",
+                "transport/photon_source_mcnp.txt"
+            ]
+        );
+        let source: PhotonSourceOut =
+            serde_json::from_value(result.value["steps"][1]["photon_source"].clone()).unwrap();
+        assert_eq!(files[0].1, export_openmc(&source).unwrap().into_bytes());
+        assert_eq!(files[1].1, export_mcnp(&source).unwrap().into_bytes());
+        let charts = report_page::charts(&result.value);
+        assert_eq!(files_count(&result, &state, &charts, &ctx), 2);
+
+        // Every step with photons: a folder per step, steps without photons left out.
+        state.transport_all = true;
+        state.mcnp = false;
+        let files = super::files(&result, &state, &ctx, None).unwrap();
+        let names: Vec<&str> = files.iter().map(|f| f.0.as_str()).collect();
+        assert_eq!(
+            names,
+            [
+                "transport/step-02/photon_source_openmc.py",
+                "transport/step-03/photon_source_openmc.py"
+            ]
+        );
+        assert_eq!(files_count(&result, &state, &charts, &ctx), 2);
+
+        // A step without photons is refused with the reason, not skipped silently.
+        state.transport_all = false;
+        ctx.step = 0;
+        let refused = super::files(&result, &state, &ctx, None).unwrap_err();
+        assert!(
+            refused.contains("Step 1") && refused.contains("photons"),
+            "{refused}"
+        );
+        assert_eq!(files_count(&result, &state, &charts, &ctx), 0);
+    }
+
+    #[test]
+    fn the_transport_source_is_not_chosen_until_ticked() {
+        let result = with_photons();
+        let state = ExportState::default();
+        let mut ctx = context(None);
+        ctx.step = 1;
+        assert!(!state.transport);
+        let files = files(&result, &state, &ctx, None).unwrap();
+        assert!(files.iter().all(|f| !f.0.starts_with("transport/")));
     }
 
     #[test]

@@ -11,7 +11,7 @@ The sidebar follows a calculation from start to answer:
 - **Start** is the home page. Begin a **New problem**, load the iron example, open a problem, or import a FISPACT-II deck. Under **What do you want to find out?** each question opens the page that answers it, such as **Certify** for whether a design meets its limits. Start also shows the current problem and result, and whether the standard nuclear data are installed.
 - **SET UP** holds the numbered steps: **1 Material**, **2 Irradiation & cooling**, **3 Source & spectrum**, **4 What to compute** and **5 Check & run**. A tick beside a step means its part of the problem is filled in. Each step ends with **Back** and **Continue**.
 - **RESULTS** opens on **Summary**, then **Time history**, **Nuclides**, **Photons & dose**, **Pathways**, **Waste class**, **Evidence** and **Export**. These pages are dimmed until a result is loaded.
-- **STUDIES** holds **Impurities**, **Certify**, **Optimize**, **Sweep**, **Compare** and **Assimilation**, which run many calculations. The group is folded away until you open it or one of its pages is current. [Certify, optimize and compare designs](studies.md) describes **Certify**, **Optimize** and **Compare**.
+- **STUDIES** holds **Impurities**, **Certify**, **Optimize**, **Sweep**, **Mesh & transport**, **Compare** and **Assimilation**, which run many calculations. The group is folded away until you open it or one of its pages is current. [Certify, optimize and compare designs](studies.md) describes **Certify**, **Optimize** and **Compare**.
 - **TOOLS** holds **Data** and **Advanced JSON**, folded the same way. See [Check the nuclear data](#check-the-nuclear-data).
 
 ## Learn without downloading nuclear data
@@ -106,9 +106,10 @@ The pages under **RESULTS** read one result. A bar at the top of each has **Open
 - **Report** (`report.html`): one page to read, share or print to PDF, with the problem in sentences, activity, decay heat, contact dose and damage at shutdown and at round cooling times, charts, the nuclides that dominate and the caveats. When **Waste class** has classified this result, its classes are included. Untick **Describe the problem as it is set up now** if you changed the setup after the run.
 - **Charts** (`charts/*.svg`): each quantity as the material cools, and the decay photon spectrum at shutdown.
 - **Tables** (`tables/`): the FISPACT-II style tables of `actinv report`, as CSV, TSV, Markdown or fixed-width text, for all steps or only the selected one, optionally restricted to named nuclides. A table the result cannot build is greyed, with the reason on hover.
+- **Transport source** (`transport/`, not ticked by default): the decay photons of the selected step, or of every step that has them, as the source of a photon transport run: `photon_source_openmc.py` (an `openmc.IndependentSource`) and `photon_source_mcnp.txt` (an SDEF card). The source sits at the origin; replace it with your geometry's spatial distribution. A step without decay photons gives its reason; ask for photons or dose under **What to compute**.
 - **Files to rerun or reuse**: `result.json` and `problem.json`.
 
-The report, charts and tables are the files `actinv report` writes; see [the CLI reference](cli.md).
+The report, charts and tables are the files `actinv report` writes, and the transport sources the files `actinv export-openmc` and `actinv export-mcnp` write; see [the CLI reference](cli.md).
 
 ### Classify a result as waste
 
@@ -137,7 +138,18 @@ Three studies compare designs or check limits: **Certify**, **Optimize** and **C
 
 **Impurities** screens the trace elements of the open problem's material: which drive activity, decay heat, contact dose, a nuclide's activity, the clearance index or the waste class, the worst case over their specified ranges, and how far each may rise before a limit is reached. It runs `actinv impurities` in the background; see [Screen a material's impurities](impurities.md#in-the-desktop-app-and-the-browser).
 
-**Sweep** solves a family of generated problems along one parameter. **Assimilation** folds a measured value into the uncertainty bands of the loaded result. **Advanced JSON** exposes the complete problem. Mesh runs, bulk library building, and transport-source exports use the [CLI](cli.md).
+**Sweep** solves a family of generated problems along one parameter. **Assimilation** folds a measured value into the uncertainty bands of the loaded result. **Advanced JSON** exposes the complete problem. Bulk library building uses the [CLI](cli.md).
+
+### Activate a transport mesh
+
+**Mesh & transport** takes the flux of a transport run cell by cell and walks four steps; each opens once the one before it is done.
+
+1. **The flux on the mesh** imports an OpenMC statepoint, an MCNP meshtal or mctal tally, or FISPACT-II fluxes (`actinv import-flux`). A tally needs its ID and the source rate, in source particles per second, that makes the per-particle tally a flux. An ACTINV flux file that `import-flux` wrote already is read directly. The flux is pinned by its SHA-256.
+2. **Activate every cell** solves the problem as it is set up now in every cell (`actinv mesh`): the material, the irradiation and cooling, the library and what to compute, with each cell's flux in place of the spectrum. The schedule's flux multipliers scale it. A step with its own spectrum is refused; pathways, KERMA and named overrides are left out. **Uncertainty bands** bands the activity, the heat and the nuclides that carry the decay photons in the open result; the banded source and the facility check need them, and they need the TENDL-2025 covariance from **Data**. A run cancelled from the toolbar keeps the cells it finished; **Resume** solves the rest. The table lists each cell's activity, heat and contact dose at a chosen step, highest activity first; **Open** loads one cell's result on the result pages.
+3. **The shutdown-dose source** writes the decay photons of every cell at one step for the photon transport run. The banded source (`actinv export-r2s`) carries each cell's independent and fully correlated sigma, and is converted for OpenMC (XML), MCNP (SDEF), Serpent or ALARA (`actinv export-source`). **Correlate the bands between cells** adds the cell-to-cell correlated sigma (`actinv export-r2s-joint`) and takes about as long as the mesh run. **One OpenMC source per cell** (`actinv export-openmc-mesh`) needs no bands. Every source needs the cell bounds a flux mesh with geometry carries. **Save to folder…** copies the files out.
+4. **Facility check** applies clearance limits to the band of every cell (`actinv twin`): a cell clears only when its whole band does. Each limit names a banded response, at most or at least a value, and **When** picks the step it applies at, or every step. **Components** name groups of cells for one verdict each. The answer lists what binds each limit and the cells that do not clear.
+
+The browser leaves this page out: it reads and writes files on your disk.
 
 ## Guided help
 

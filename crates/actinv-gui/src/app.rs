@@ -142,6 +142,9 @@ pub struct Desktop {
     certify: crate::views::certify::CertifyState,
     optimize: crate::views::optimize::OptimizeState,
     compare: crate::views::compare::CompareState,
+    mesh: crate::views::mesh::MeshState,
+    /// The command the Mesh & transport page started, read once it stops.
+    mesh_pending: Option<pages::mesh::Pending>,
     /// the outcome of the last Validate or run, shown briefly beside the buttons: when, whether it
     /// went well, the short word, and the full message on hover
     flash: Option<(Instant, bool, String, String)>,
@@ -235,13 +238,25 @@ impl Desktop {
         args: Value,
         message: &str,
     ) -> Result<(), String> {
+        self.start_command_in(command, document, args, message, job_folder(command))
+    }
+
+    /// `start_command` writing into `out_dir`: a new folder, or one a stopped run resumes in.
+    pub(crate) fn start_command_in(
+        &mut self,
+        command: crate::jobs::Command,
+        document: Value,
+        args: Value,
+        message: &str,
+        out_dir: std::path::PathBuf,
+    ) -> Result<(), String> {
         if self.job.is_some() {
             return Err("Another calculation is running; wait for it or cancel it first.".into());
         }
         let job = crate::jobs::Job {
             command,
             document,
-            out_dir: job_folder(command),
+            out_dir,
             args,
         };
         job.check()?;
@@ -425,6 +440,8 @@ impl Desktop {
             certify: Default::default(),
             optimize: Default::default(),
             compare: Default::default(),
+            mesh: Default::default(),
+            mesh_pending: None,
             flash: None,
             command_progress: (None, None, None),
             import: None,
@@ -1463,7 +1480,7 @@ mod ui_tests {
     }
     #[test]
     fn every_page_renders_in_both_themes_at_minimum_size_with_and_without_a_result() {
-        assert_eq!(Page::ALL.len(), 22);
+        assert_eq!(Page::ALL.len(), 23);
         for theme in [egui::ThemePreference::Light, egui::ThemePreference::Dark] {
             for with_result in [false, true] {
                 let ctx = egui::Context::default();

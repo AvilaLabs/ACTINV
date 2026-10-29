@@ -201,8 +201,13 @@ Working branch: `app17` (worktree `target/app17-wt`), not yet on master except t
 | Stage 1: Start page "What do you want to find out?" | moved to Stage 2, so it can route to Certify/Optimize | |
 | Stage 2: Certify page (decide): limits at band edges, verdict, margins, what to measure next | done, screenshots checked, on master | `dfce05a` |
 | Stage 2: Optimize page: what to vary, goal, limits, status-bar progress, best design, Use this design | done, screenshots checked | `4a7cd6e` |
-| Stage 2: Sweep & study page, Start page routing, Impurities budget/waste budget | not started | |
-| Stages 3-6 | not started | |
+| Stage 2: Compare page (study run), Start page routing, outcome chip | done, screenshots checked, on master | `d8b6e68`, `28a20bd`, `4983ae7` |
+| P164 singular covariance blocks in the measurement design | P164-PASS, on master (ledger 273) | `c8d9514` ... `d6f7d35` |
+| Stage 3: Waste page asks which question (class with intrusion screen, container, ranges, how sure) | done, screenshots checked, on master, CI green | `a935c4e` |
+| Stage 4: Export gains the transport photon source (OpenMC, MCNP; one step or every step) | done, screenshots checked | this commit |
+| Stage 4: Mesh & transport page: flux import, mesh run with resume, cell table, banded/per-cell source for OpenMC/MCNP/Serpent/ALARA, facility check | done, screenshots checked; components' waste class stays CLI (`twin` `waste` block) | this commit |
+| Stage 4: `examples/export_r2s` flux had no cell bounds, so its `export-source` commands failed; it now has `mesh_flux_boxes.ndjson` and the whole chain was run | done | this commit |
+| Stages 5-6 | not started | |
 
 Capture notes: `ACTINV_GUI_CAPTURE_PROBLEM=FILE` loads a problem before the screenshots; capture closes after its
-planned shots (38 with 21 pages) (it used to run until killed when the problem counted as unsaved). Screenshot files are named `00.png`.
+planned shots (40 with 23 pages) (it used to run until killed when the problem counted as unsaved). Screenshot files are named `00.png`. `ACTINV_GUI_CAPTURE_MESH=DIR/mesh.ndjson` loads a mesh result and, beside it, `flux.ndjson`, `mesh_spec.json`, `r2s.ndjson` and `twin.json`; `ACTINV_GUI_CAPTURE_EXPORT=transport` ticks the transport source.
