@@ -1,0 +1,190 @@
+{
+ "binary_sha256": "0080b97717b22b1a377b73ac1929a6c053dceea52adcbfb7a6bb63c2047b1345",
+ "checker_sha256": "1f43e9b49ec1a7292c0e9ae4a09421991e20e7ec430079fc2610a8abab8b8742",
+ "g0": {
+  "ACTINV-P162_AMENDMENT_A.md": {
+   "in_protocol_hash_txt": true,
+   "sha256": "f72ec5512bcbdad54c88b408b9c0155610f7cfb46893a250cd6e9c530204bd61"
+  },
+  "ACTINV-P162_PROTOCOL.md": {
+   "in_protocol_hash_txt": true,
+   "sha256": "d4f6c8cac4c40b1e3ad7a66f6c0fed51f65a5f0f40057e15558f8dd5cc125b44"
+  },
+  "pass": true
+ },
+ "g1": {
+  "log": "results/p162/g1.log",
+  "pass": true,
+  "sha256": "26e96ce1f7dad4fe1ff86bdc8a33096102f2dc920d8cc6c13150b9c784fd5c9f"
+ },
+ "g2": {
+  "entries": {
+   "al6061": "ok",
+   "beryllium-s65": "ok",
+   "concrete-ordinary": "ok",
+   "copper": "ok",
+   "eurofer97": "ok",
+   "eurofer97-3-measured": "ok",
+   "graphite-reactor": "ok",
+   "inconel718": "ok",
+   "niobium": "ok",
+   "pb-15.7li": "ok",
+   "ss304": "ok",
+   "ss304l": "ok",
+   "ss316": "ok",
+   "tantalum": "ok",
+   "titanium-grade2": "ok",
+   "tungsten": "ok",
+   "v-4cr-4ti": "ok",
+   "water": "ok",
+   "zircaloy4": "ok"
+  },
+  "ids_ok": true,
+  "pass": true,
+  "schema_ok": true
+ },
+ "g3": {
+  "fission": {
+   "groups_checked": 680,
+   "max_rel_error": 5.780635765668869e-14,
+   "pass": true,
+   "quadrature_groups": 153,
+   "quadrature_max_rel_error": 5.861977570020827e-14,
+   "total_rel_error": 0.0
+  },
+  "fusion-14mev": {
+   "groups_checked": 1,
+   "max_rel_error": 0.0,
+   "nonzero_groups": [
+    620
+   ],
+   "pass": true,
+   "total_rel_error": 0.0
+  },
+  "one-over-e": {
+   "groups_checked": 316,
+   "max_rel_error": 2.4036570753109704e-15,
+   "pass": true,
+   "quadrature_groups": 315,
+   "quadrature_max_rel_error": 4.218847493575595e-15,
+   "total_rel_error": 0.0
+  },
+  "pass": true,
+  "thermal": {
+   "groups_checked": 265,
+   "max_rel_error": 1.2412875188842846e-14,
+   "pass": true,
+   "quadrature_groups": 122,
+   "quadrature_max_rel_error": 1.4876988529977098e-14,
+   "total_rel_error": 0.0
+  }
+ },
+ "g4": {
+  "atomic_weights_used": {
+   "Li": 6.94,
+   "Pb": 207.2
+  },
+  "derived": {
+   "Li": 0.6199277898315184,
+   "Pb": 99.38007221016848
+  },
+  "library": {
+   "Li": 0.6199277898315184,
+   "Pb": 99.38007221016848
+  },
+  "pass": true,
+  "relative_errors": {
+   "Li": 0.0,
+   "Pb": 0.0
+  }
+ },
+ "g5": {
+  "eurofer97_fusion-14mev": {
+   "ledger_reads_back": true,
+   "new_exit": 0,
+   "pass": true,
+   "problem_matches_library": true,
+   "problem_material": {
+    "basis": "wt_percent",
+    "elements": [
+     "Al",
+     "B",
+     "C",
+     "Co",
+     "Cr",
+     "Cu",
+     "Fe",
+     "Mn",
+     "Mo",
+     "N",
+     "Nb",
+     "Ni",
+     "O",
+     "P",
+     "Si",
+     "Ta",
+     "Ti",
+     "V",
+     "W"
+    ],
+    "max_abs_difference": 0.0
+   },
+   "problem_sha256": "8d882ec8a833697391a69250d6a6efa0d6bfcd5c313865ccca3d244a5d635aae",
+   "problem_unchanged_by_run": true,
+   "result_ledger": {
+    "composition_basis": "wt_percent",
+    "composition_elements_unknown": [],
+    "composition_input_total": 100.0,
+    "composition_not_summing_to_100": false
+   },
+   "run_exit": 0,
+   "run_stderr": ""
+  },
+  "pass": true,
+  "ss316_fission": {
+   "ledger_reads_back": true,
+   "new_exit": 0,
+   "pass": true,
+   "problem_matches_library": true,
+   "problem_material": {
+    "basis": "wt_percent",
+    "elements": [
+     "C",
+     "Cr",
+     "Fe",
+     "Mn",
+     "Mo",
+     "Ni",
+     "P",
+     "S",
+     "Si"
+    ],
+    "max_abs_difference": 0.0
+   },
+   "problem_sha256": "825c668cf886abc57025823bf575c225297d7dca7ef63b824cbd5059cff94aee",
+   "problem_unchanged_by_run": true,
+   "result_ledger": {
+    "composition_basis": "wt_percent",
+    "composition_elements_unknown": [],
+    "composition_input_total": 100.0,
+    "composition_not_summing_to_100": false
+   },
+   "run_exit": 0,
+   "run_stderr": ""
+  }
+ },
+ "gates": {
+  "G0": "PASS",
+  "G1": "PASS",
+  "G2": "PASS",
+  "G3": "PASS",
+  "G4": "PASS",
+  "G5": "PASS",
+  "G6": "external"
+ },
+ "library_sha256": "76d54b359cd8b7182dcd0d3461ee4766266eebe8d8195d6e097202d3d9ced552",
+ "pass": true,
+ "protocol": "protocols/ACTINV-P162_PROTOCOL.md",
+ "protocol_sha256": "d4f6c8cac4c40b1e3ad7a66f6c0fed51f65a5f0f40057e15558f8dd5cc125b44",
+ "schema": "actinv-p162-library-1"
+}

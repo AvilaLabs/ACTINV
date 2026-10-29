@@ -4663,3 +4663,24 @@ totals and flags. G5 now checks that the problem `actinv new` writes carries the
 `actinv run` on that file exits 0, and that the result's ledger reads the composition back (wt_percent basis, total
 100, no unknown elements). Development run 1 passed G2-G4, and G3 agreed with the independent recomputation to 6e-14
 relative. Record: `results/failures/p162/dev_run_1/g5.json`. This is not the repair round.
+
+## Entry 269 — P162 evidence: G0 to G5 pass on a60593c (2026-10-29)
+
+- **G1** at `a60593c`: `cargo fmt --check`, `cargo check --workspace --tests` and clippy `-D warnings` are clean, and
+  1376 workspace tests passed with 0 failed (`results/p162/g1.log`). The checker's self-check passes after its last
+  edit.
+- **Evidence run 1:** `controls/check_p162.py` (`1f43e9b4…`) as amended by Amendment A, binary `0080b977…` built from
+  `a60593c`, library `76d54b35…`. Record `results/p162_library.json`, log `results/p162/evidence_run_1.log`.
+- **G2:** all 19 entries match `results/p162/sources.json` by the protocol's rules. Three PNNL alloys (304, 304L,
+  6061) sum to 100.001 in the record, and their largest element takes up the 0.001.
+- **G3:** every group of the four spectra agrees with the independent 100-digit recomputation to 6e-14 relative or
+  better (Watt 5.8e-14, Maxwellian 1.2e-14, 1/E 2.4e-15, the 14.1 MeV line exactly). Quadrature agrees to the same
+  level. Development found one defect in the checker, not the code: its Watt error-function arguments were rounded
+  to float before the 100-digit arithmetic, which turned the cancelling low-energy groups negative. The checker now
+  carries every quantity in Decimal.
+- **G4:** Pb-15.7Li is 0.61993 wt% Li with Li 6.94 and Pb 207.2.
+- **G5:** both cases write the library composition exactly (largest difference 0), the run leaves the problem
+  unchanged, and the ledger reads back 100 wt% with no unknown element.
+- Before pushing, the CI steps this push reaches passed locally on the same binary: `check_p103 --g0-only`,
+  `check_p103_failure`, `test_p105_children`, `check_p105 --no-write`, `check_p105_verdict` and
+  `check_public_examples`. G6 is CI on this commit.
