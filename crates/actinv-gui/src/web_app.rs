@@ -142,6 +142,8 @@ fn page_for(target: Target) -> Page {
         Target::Spectrum => Page::Spectrum,
         Target::Outputs => Page::Outputs,
         Target::CheckRun => Page::CheckRun,
+        Target::Data => Page::Data,
+        Target::Advanced => Page::Advanced,
     }
 }
 
@@ -701,25 +703,13 @@ impl Workbench {
             self.page = page_for(target);
         }
         ui.add_space(12.);
-        self.editors(ui, |this, ui| {
-            egui::Frame::group(ui.style())
-                .inner_margin(16.)
-                .show(ui, |ui| {
-                    ui.set_width(ui.available_width());
-            ui.heading("Nuclear data");
-                    ui.label("The program that runs the problem reads these files; the browser records the paths but does not read them. `catalog:` names point into the standard data that `actinv data fetch` installs.");
-                    ui.horizontal(|ui| {
-                        ui.label("Activation library (.npz)");
-                        visuals::text_field(ui, &mut this.problem["library"]["path"]);
-                    });
-                    ui.horizontal(|ui| {
-                        ui.label("Primary decay data");
-                        visuals::text_field(ui, &mut this.problem["decay"]["primary"]);
-                    });
-                });
-            ui.add_space(12.);
-            egui::CollapsingHeader::new("Solver settings").show(ui, |ui| this.solver_settings(ui));
-        });
+        let review = egui::Frame::group(ui.style())
+            .inner_margin(16.)
+            .show(ui, |ui| crate::views::review::show(ui, &self.problem))
+            .inner;
+        if let Some(target) = review {
+            self.page = page_for(target);
+        }
         ui.add_space(16.);
         ui.group(|ui| {
             ui.set_width(ui.available_width());
@@ -753,40 +743,37 @@ impl Workbench {
         });
     }
 
-    fn solver_settings(&mut self, ui: &mut egui::Ui) {
-        let mode = self.problem["options"]["mode"]
-            .as_str()
-            .unwrap_or("auto")
-            .to_owned();
-        ui.horizontal(|ui| {
-            ui.label("Solver mode");
-            egui::ComboBox::from_id_salt("mode")
-                .selected_text(&mode)
-                .show_ui(ui, |ui| {
-                    for choice in ["auto", "trace", "coupled"] {
-                        if ui.selectable_label(mode == choice, choice).clicked() {
-                            self.problem["options"]["mode"] = choice.into();
-                        }
-                    }
+    /// Data: the paths the problem records. The browser cannot read the files; the program that
+    /// runs the problem does.
+    fn data_page(&mut self, ui: &mut egui::Ui) {
+        visuals::heading(
+            ui,
+            "Data",
+            "The nuclear data this problem uses: the standard data ACTINV installs, or files of your own.",
+        );
+        self.editors(ui, |this, ui| {
+            egui::Frame::group(ui.style())
+                .inner_margin(16.)
+                .show(ui, |ui| {
+                    ui.set_width(ui.available_width());
+                    ui.heading("This problem's data");
+                    ui.label("The program that runs the problem reads these files; the browser records the paths but does not read them. `catalog:` names point into the standard data that `actinv data fetch` installs.");
+                    ui.horizontal(|ui| {
+                        ui.label("Activation library (.npz)");
+                        visuals::text_field(ui, &mut this.problem["library"]["path"]);
+                    });
+                    ui.horizontal(|ui| {
+                        ui.label("Primary decay data");
+                        visuals::text_field(ui, &mut this.problem["decay"]["primary"]);
+                    });
                 });
         });
-        ui.label("Trace mode supports ranked production pathways. Auto chooses an appropriate mode based on the problem.");
-        let mut temperature = self.problem["options"]["temperature_K"]
-            .as_f64()
-            .unwrap_or(293.6);
-        ui.horizontal(|ui| {
-            ui.label("Temperature (K)");
-            if ui
-                .add(
-                    egui::DragValue::new(&mut temperature)
-                        .custom_parser(model::parse_finite)
-                        .speed(1.)
-                        .range(0.0..=f64::MAX),
-                )
-                .changed()
-            {
-                self.problem["options"]["temperature_K"] = json!(temperature);
-            }
+        ui.add_space(12.);
+        egui::Frame::group(ui.style()).inner_margin(16.).show(ui, |ui| {
+            ui.set_width(ui.available_width());
+            ui.heading("Build your own data");
+            ui.label("Libraries are built from evaluated nuclear data files with the command line (`actinv build-library`, `build-damage`, `build-shielding`, `build-covariance`). Point the problem at what you built above.");
+            ui.hyperlink_to("Download ACTINV", "./download/");
         });
     }
 
@@ -1761,6 +1748,7 @@ impl eframe::App for Workbench {
                     Page::Export => self.export_page(ui),
                     Page::Waste => self.waste_page(ui),
                     Page::Impurities => self.impurities_page(ui),
+                    Page::Data => self.data_page(ui),
                     Page::Advanced => self.advanced_page(ui),
                     // the browser never runs the solver
                     Page::Sweep | Page::Assimilation => self.start(ui),

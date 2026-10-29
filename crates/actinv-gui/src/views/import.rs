@@ -207,6 +207,7 @@ pub fn target_for_field(field: &str) -> Target {
         // power-driven steps pin their kerma table on the step
         "schedule" | "kerma" => Target::Schedule,
         "options" | "summary" | "outputs" | "photons" | "pathways" => Target::Outputs,
+        "library" | "decay" | "fission_yields" => Target::Data,
         _ => Target::CheckRun,
     }
 }
@@ -411,6 +412,8 @@ pub fn report_file_name(deck_name: &str) -> String {
 fn target_label(target: Target) -> &'static str {
     match target {
         Target::CheckRun => "Check & run",
+        Target::Data => "Data",
+        Target::Advanced => "Advanced JSON",
         Target::Material => "Material",
         Target::Schedule => "Irradiation & cooling",
         Target::Spectrum => "Source & spectrum",
@@ -962,7 +965,7 @@ mod tests {
         assert_eq!(target_for_field("schedule[0].flux"), Target::Schedule);
         assert_eq!(target_for_field("options.outputs"), Target::Outputs);
         assert_eq!(target_for_field("summary.min_atoms"), Target::Outputs);
-        assert_eq!(target_for_field("library.path"), Target::CheckRun);
+        assert_eq!(target_for_field("library.path"), Target::Data);
         assert_eq!(target_for_field(""), Target::CheckRun);
         // the importer's own report for a POWER deck with no DENSITY
         let done = convert_deck(&slot("p.i", POWER_DECK), Some(&fluxes_709()), None).unwrap();

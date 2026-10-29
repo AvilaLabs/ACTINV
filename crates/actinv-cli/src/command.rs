@@ -96,8 +96,8 @@ pub fn mesh_photon_cells(path: &str, step: usize) -> Result<Vec<MeshPhotonCell>,
     let mut cells = Vec::new();
     let mut seen_header = false;
     for (line_no, line) in std::io::BufRead::lines(reader).enumerate() {
-        let line = line
-            .map_err(|e| (2, format!("cannot read {path} line {}: {e}", line_no + 1)))?;
+        let line =
+            line.map_err(|e| (2, format!("cannot read {path} line {}: {e}", line_no + 1)))?;
         if line.trim().is_empty() {
             continue;
         }

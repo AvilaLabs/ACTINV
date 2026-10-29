@@ -9,6 +9,7 @@ pub mod material;
 pub mod outputs;
 pub mod pathways;
 pub mod photons;
+pub mod review;
 pub mod steps;
 pub mod summary;
 pub mod tables;
@@ -53,6 +54,10 @@ pub enum Target {
     Schedule,
     Spectrum,
     Outputs,
-    /// Check & run: the title, nuclear data and solver settings.
+    /// Check & run: the title, the review and the Run button.
     CheckRun,
+    /// The nuclear data the problem uses.
+    Data,
+    /// The full-document editor, for settings no page edits.
+    Advanced,
 }

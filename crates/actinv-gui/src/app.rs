@@ -1136,7 +1136,7 @@ mod ui_tests {
     }
     #[test]
     fn every_page_renders_in_both_themes_at_minimum_size_with_and_without_a_result() {
-        assert_eq!(Page::ALL.len(), 18);
+        assert_eq!(Page::ALL.len(), 19);
         for theme in [egui::ThemePreference::Light, egui::ThemePreference::Dark] {
             for with_result in [false, true] {
                 let ctx = egui::Context::default();

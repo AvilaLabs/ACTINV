@@ -502,7 +502,10 @@ fn study_job(job: &Job, execute: bool) -> Result<Outcome, String> {
         return Ok(Outcome::new(
             "study_validate.json",
             summary,
-            format!("ok: {} — {cases} cases, {responses} responses", study.study_id),
+            format!(
+                "ok: {} — {cases} cases, {responses} responses",
+                study.study_id
+            ),
         ));
     }
     let study = Study::from_json(&resolve_catalog_json(&text)?)?;
@@ -573,7 +576,9 @@ fn twin_job(job: &Job) -> Result<Outcome, String> {
     let doc = twin::run(utf8(&input)?, Some(utf8(&out)?))?;
     let cleared = doc["facility"]["cleared"].as_u64().unwrap_or(0);
     let restricted = doc["facility"]["restricted"].as_u64().unwrap_or(0);
-    let binding = doc["facility"]["binding_cells"].as_array().map_or(0, Vec::len);
+    let binding = doc["facility"]["binding_cells"]
+        .as_array()
+        .map_or(0, Vec::len);
     Ok(Outcome {
         exit: verification_exit(&doc),
         ..Outcome::new(
@@ -786,8 +791,8 @@ fn export_source_job(job: &Job) -> Result<Outcome, String> {
         let shutdown_t_s = required_f64(&job.args, "shutdown_t_s")?;
         let message =
             write_alara_export(&bytes, shutdown_t_s, &job.out_dir).map_err(failure_message)?;
-        let index = read_bounded_json(&job.path("actinv-alara-index.json"))
-            .unwrap_or_else(|| json!({}));
+        let index =
+            read_bounded_json(&job.path("actinv-alara-index.json")).unwrap_or_else(|| json!({}));
         return Ok(Outcome::new(
             "actinv-alara-index.json",
             json!({"format": "alara", "step": index["step"], "cooling_s": index["cooling_s"]}),
@@ -838,7 +843,11 @@ fn data_verify_job(job: &Job) -> Result<Outcome, String> {
                     "root": summary.root,
                     "files": summary.files.len(),
                 }),
-                format!("Verified {} files in {}.", summary.files.len(), summary.root),
+                format!(
+                    "Verified {} files in {}.",
+                    summary.files.len(),
+                    summary.root
+                ),
             ))
         }
         Err(error) => {
@@ -1109,9 +1118,7 @@ fn arg_opt_u64(args: &Value, key: &str) -> Result<Option<u64>, String> {
 /// The one-based `args.step`, a number or a numeric string.
 fn step_arg(args: &Value) -> Result<usize, String> {
     let step = match args.get("step") {
-        Some(Value::Number(n)) => n
-            .as_u64()
-            .ok_or("args.step must be a positive integer")?,
+        Some(Value::Number(n)) => n.as_u64().ok_or("args.step must be a positive integer")?,
         Some(Value::String(text)) => text
             .parse::<u64>()
             .map_err(|_| format!("STEP must be a positive integer, got '{text}'"))?,
@@ -1267,8 +1274,7 @@ mod tests {
             assert_eq!(value, json!(command.name()));
             assert_eq!(serde_json::from_value::<Command>(value).unwrap(), command);
         }
-        let unique: std::collections::BTreeSet<_> =
-            Command::ALL.iter().map(|c| c.name()).collect();
+        let unique: std::collections::BTreeSet<_> = Command::ALL.iter().map(|c| c.name()).collect();
         assert_eq!(unique.len(), Command::ALL.len());
     }
 
@@ -1296,20 +1302,32 @@ mod tests {
         // a file is not a directory
         let file = scratch.path("full/old.json");
         let on_file = job(Command::Doctor, &file, Value::Null, json!({}));
-        assert!(on_file.prepare_out_dir().unwrap_err().contains("not a directory"));
+        assert!(on_file
+            .prepare_out_dir()
+            .unwrap_err()
+            .contains("not a directory"));
     }
 
     #[test]
     fn verification_maps_to_exit_three() {
-        assert_eq!(verification_exit(&json!({"verification": {"verified": true}})), 0);
-        assert_eq!(verification_exit(&json!({"verification": {"skipped": true}})), 0);
+        assert_eq!(
+            verification_exit(&json!({"verification": {"verified": true}})),
+            0
+        );
+        assert_eq!(
+            verification_exit(&json!({"verification": {"skipped": true}})),
+            0
+        );
         assert_eq!(
             verification_exit(&json!({"verification": {"verified": false, "max_rel_dev": 1.0}})),
             3
         );
         assert_eq!(verification_exit(&json!({"verification": {}})), 3);
         // no verification object, no check: exit 0 (a decision that is not certified)
-        assert_eq!(verification_exit(&json!({"verdict": {"certified": false}})), 0);
+        assert_eq!(
+            verification_exit(&json!({"verdict": {"certified": false}})),
+            0
+        );
         assert_eq!(verification_exit(&json!({"verification": "text"})), 0);
     }
 
@@ -1351,7 +1369,10 @@ mod tests {
         let scratch = Scratch::new("opt-progress");
         let dir = scratch.path("run");
         assert!(progress(&Command::Optimize, &dir).is_none());
-        scratch.write("run/optimize_ledger.jsonl", "{\"eval_id\":0}\n{\"eval_id\":1}\n{\"eval_id\":2}\n{\"eval");
+        scratch.write(
+            "run/optimize_ledger.jsonl",
+            "{\"eval_id\":0}\n{\"eval_id\":1}\n{\"eval_id\":2}\n{\"eval",
+        );
         // no spec yet: the count alone
         let p = progress(&Command::Optimize, &dir).unwrap();
         assert_eq!((p.done, p.total), (3, None));
@@ -1414,7 +1435,10 @@ mod tests {
         assert_eq!(result.summary["schema"], "actinv-waste-bounds-result-1");
         assert_eq!(
             result.files,
-            vec![PathBuf::from("input.json"), PathBuf::from("waste_bounds.json")]
+            vec![
+                PathBuf::from("input.json"),
+                PathBuf::from("waste_bounds.json")
+            ]
         );
         let written: Value =
             serde_json::from_str(&std::fs::read_to_string(out.join("waste_bounds.json")).unwrap())
@@ -1454,7 +1478,9 @@ mod tests {
         let result = run(&job(Command::ExportSource, &alara, Value::Null, args)).unwrap();
         assert_eq!(result.primary, Some(alara.join("actinv-alara-index.json")));
         assert_eq!(result.summary["step"], 4);
-        assert!(result.files.contains(&PathBuf::from("actinv-alara-index.json")));
+        assert!(result
+            .files
+            .contains(&PathBuf::from("actinv-alara-index.json")));
         assert_eq!(result.files.len(), 2, "{:?}", result.files);
 
         let missing = json!({"format": "mcnp", "input": scratch.path("none.ndjson")});
@@ -1506,15 +1532,24 @@ mod tests {
             ))
         };
         let result = run_step(json!(2), "ok").unwrap();
-        assert_eq!(result.primary, Some(scratch.path("ok/photon_source_mcnp.txt")));
-        assert!(!std::fs::read_to_string(scratch.path("ok/photon_source_mcnp.txt"))
-            .unwrap()
-            .is_empty());
+        assert_eq!(
+            result.primary,
+            Some(scratch.path("ok/photon_source_mcnp.txt"))
+        );
+        assert!(
+            !std::fs::read_to_string(scratch.path("ok/photon_source_mcnp.txt"))
+                .unwrap()
+                .is_empty()
+        );
         // the step may be given as text, as on the command line
         assert!(run_step(json!("2"), "text").is_ok());
         // the refusals are the command line's
-        assert!(run_step(json!(0), "zero").unwrap_err().contains("one-based"));
-        assert!(run_step(json!(3), "absent").unwrap_err().contains("has no step 3"));
+        assert!(run_step(json!(0), "zero")
+            .unwrap_err()
+            .contains("one-based"));
+        assert!(run_step(json!(3), "absent")
+            .unwrap_err()
+            .contains("has no step 3"));
         assert!(run_step(json!(1), "bare")
             .unwrap_err()
             .contains("has no photon_source"));

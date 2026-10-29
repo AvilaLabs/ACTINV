@@ -52,12 +52,13 @@ pub enum Page {
     Impurities,
     Sweep,
     Assimilation,
+    Data,
     Advanced,
 }
 
 impl Page {
     /// Every page in sidebar order. Pages of one group are contiguous.
-    pub const ALL: [Page; 18] = [
+    pub const ALL: [Page; 19] = [
         Page::Start,
         Page::Material,
         Page::Schedule,
@@ -75,6 +76,7 @@ impl Page {
         Page::Impurities,
         Page::Sweep,
         Page::Assimilation,
+        Page::Data,
         Page::Advanced,
     ];
 
@@ -106,6 +108,7 @@ impl Page {
             Page::Impurities => "Impurities",
             Page::Sweep => "Sweep",
             Page::Assimilation => "Assimilation",
+            Page::Data => "Data",
             Page::Advanced => "Advanced JSON",
         }
     }
@@ -125,7 +128,7 @@ impl Page {
             | Page::Ledger
             | Page::Export => Group::Results,
             Page::Impurities | Page::Sweep | Page::Assimilation => Group::Studies,
-            Page::Advanced => Group::Tools,
+            Page::Data | Page::Advanced => Group::Tools,
         }
     }
 
@@ -174,6 +177,7 @@ mod tests {
                 "Impurities",
                 "Sweep",
                 "Assimilation",
+                "Data",
                 "Advanced JSON",
             ]
         );
@@ -186,7 +190,7 @@ mod tests {
         expected.extend([Group::Setup; 5]);
         expected.extend([Group::Results; 8]);
         expected.extend([Group::Studies; 3]);
-        expected.push(Group::Tools);
+        expected.extend([Group::Tools; 2]);
         assert_eq!(groups, expected);
         assert_eq!(Group::Start.caption(), None);
         assert_eq!(Group::Setup.caption(), Some("SET UP"));

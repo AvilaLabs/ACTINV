@@ -4,6 +4,7 @@ mod advanced;
 mod assimilation;
 mod charts;
 mod check_run;
+mod data;
 mod export;
 mod impurities;
 mod ledger;
@@ -32,6 +33,8 @@ pub(super) fn page_for(target: Target) -> Page {
         Target::Spectrum => Page::Spectrum,
         Target::Outputs => Page::Outputs,
         Target::CheckRun => Page::CheckRun,
+        Target::Data => Page::Data,
+        Target::Advanced => Page::Advanced,
     }
 }
 
@@ -56,6 +59,7 @@ impl Desktop {
             Page::Impurities => self.impurities_page(ui),
             Page::Sweep => self.sweep_page(ui),
             Page::Assimilation => self.assimilation(ui),
+            Page::Data => self.data_page(ui),
             Page::Advanced => self.advanced(ui),
         }
         if self.page.group() == crate::nav::Group::Setup && self.page != Page::CheckRun {
@@ -103,5 +107,7 @@ mod tests {
             assert_eq!(page_for(target), page);
             assert_eq!(page_for(target).group(), crate::nav::Group::Setup);
         }
+        assert_eq!(page_for(Target::Data), Page::Data);
+        assert_eq!(page_for(Target::Advanced), Page::Advanced);
     }
 }

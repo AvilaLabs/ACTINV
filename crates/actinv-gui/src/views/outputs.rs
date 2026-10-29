@@ -1671,6 +1671,64 @@ fn gas_card(ui: &mut egui::Ui, doc: &mut Value, problem: &Option<String>) {
     }
 }
 
+/// Solver settings most problems leave alone, collapsed, with how many differ from their defaults
+/// in the header so a changed one is seen without opening it.
+fn solver_card(ui: &mut egui::Ui, doc: &mut Value) {
+    let changed = crate::views::review::changes(doc)
+        .map(|found| {
+            crate::views::review::count(&found, &["options.mode", "options.temperature_K"])
+        })
+        .unwrap_or(0);
+    let title = match changed {
+        0 => "Solver settings".to_owned(),
+        n => format!("Solver settings · {n} changed"),
+    };
+    ui.add_space(4.);
+    egui::CollapsingHeader::new(title)
+        .id_salt("solver-settings")
+        .show(ui, |ui| {
+            let mode = str_at(doc, "options.mode");
+            let mode = if mode.is_empty() { "auto" } else { mode }.to_owned();
+            ui.horizontal(|ui| {
+                ui.label("Solver mode");
+                egui::ComboBox::from_id_salt("mode")
+                    .selected_text(&mode)
+                    .show_ui(ui, |ui| {
+                        for choice in ["auto", "trace", "coupled"] {
+                            if ui.selectable_label(mode == choice, choice).clicked() {
+                                if choice == "auto" {
+                                    remove(doc, "options.mode");
+                                } else {
+                                    set(doc, "options.mode", json!(choice));
+                                }
+                            }
+                        }
+                    });
+            });
+            ui.weak(
+                "Auto chooses the mode from the problem. Trace also ranks production pathways.",
+            );
+            let mut temperature = doc["options"]["temperature_K"].as_f64().unwrap_or(293.6);
+            ui.horizontal(|ui| {
+                ui.label("Temperature (K)");
+                if ui
+                    .add(
+                        egui::DragValue::new(&mut temperature)
+                            .custom_parser(crate::model::parse_finite)
+                            .speed(1.)
+                            .range(0.0..=f64::MAX),
+                    )
+                    .changed()
+                {
+                    set(doc, "options.temperature_K", json!(temperature));
+                }
+            });
+            ui.weak(
+                "Settings no page edits are in Advanced JSON; Check & run lists any you changed.",
+            );
+        });
+}
+
 fn uncertainty_card(
     ui: &mut egui::Ui,
     doc: &mut Value,
@@ -1783,6 +1841,7 @@ pub fn show(
     geometry_card(ui, document, state, picker, &problem, &mut action);
     uncertainty_card(ui, document, state, picker, &problem);
     gas_card(ui, document, &problem);
+    solver_card(ui, document);
 
     match &state.problem {
         Some(message) => {
