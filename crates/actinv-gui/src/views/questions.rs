@@ -12,7 +12,7 @@ const QUESTIONS: [(&str, &str, Page); 8] = [
     ),
     (
         "What waste class will it be?",
-        "From a run's result, against the class limits",
+        "For a run, a container of items or activity ranges, and how sure",
         Page::Waste,
     ),
     (

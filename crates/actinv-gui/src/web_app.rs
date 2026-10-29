@@ -12,7 +12,9 @@ use crate::{
         summary::{self, SummaryAction},
         tables::{self, TablesAction, TablesState},
         waste::{self, Detected},
-        Marks, Picker, Pinned, Target,
+        waste_bounds,
+        waste_forms::{self, Question},
+        waste_package, waste_uncertainty, Marks, Picker, Pinned, Target,
     },
     visuals::{self, BLUE},
     web,
@@ -59,6 +61,8 @@ enum FileKind {
     WasteSpec,
     /// An `actinv-impurities-result-1` for the Impurities page.
     ScreenResult,
+    /// A container, ranges or how-sure result for the Waste class page.
+    WasteAnswer,
 }
 
 /// A file choice a shared view asked for while it was drawn.
@@ -199,7 +203,14 @@ pub struct Workbench {
     photons: PhotonsState,
     pathways: PathwaysState,
     /// The waste result on the Waste class page: its file name and what it parsed to.
-    waste_result: Option<(String, waste::WasteView)>,
+    waste_result: Option<(String, waste::WasteView, Value)>,
+    /// The waste question open, the forms of the other three, and the results opened for them.
+    waste_question: Question,
+    waste_properties: waste_forms::Properties,
+    waste_package: waste_package::PackageState,
+    waste_bounds: waste_bounds::BoundsState,
+    waste_sure: waste_uncertainty::SureState,
+    waste_answers: Vec<(Question, String, Value)>,
     export: crate::views::export::ExportState,
     /// The waste spec in the editor on the Waste class page.
     waste_spec: String,
@@ -255,6 +266,12 @@ impl Workbench {
             photons: PhotonsState::default(),
             pathways: PathwaysState::default(),
             waste_result: None,
+            waste_question: Question::Class,
+            waste_properties: waste_forms::Properties::default(),
+            waste_package: waste_package::PackageState::default(),
+            waste_bounds: waste_bounds::BoundsState::default(),
+            waste_sure: waste_uncertainty::SureState::default(),
+            waste_answers: Vec::new(),
             export: Default::default(),
             waste_spec: String::new(),
             impurities: Default::default(),
@@ -371,7 +388,8 @@ impl Workbench {
             | FileKind::Compare
             | FileKind::WasteResult
             | FileKind::WasteSpec
-            | FileKind::ScreenResult => {}
+            | FileKind::ScreenResult
+            | FileKind::WasteAnswer => {}
         }
         let text = std::str::from_utf8(bytes).map_err(|_| "Choose an ACTINV JSON text file")?;
         let kind = if matches!(kind, FileKind::Auto) {
@@ -381,6 +399,7 @@ impl Workbench {
                 _ if value["schema"] == crate::views::impurities::RESULT_SCHEMA => {
                     FileKind::ScreenResult
                 }
+                _ if waste_answer_question(&value).is_some() => FileKind::WasteAnswer,
                 Some(Detected::Spec) => FileKind::WasteSpec,
                 Some(Detected::Result) => FileKind::WasteResult,
                 None if value.get("steps").is_some() => FileKind::Result,
@@ -424,7 +443,21 @@ impl Workbench {
                 Ok(format!("Opened {name}."))
             }
             FileKind::WasteResult => {
-                self.waste_result = Some((name.clone(), waste::read_result(text)?));
+                let value: Value =
+                    serde_json::from_str(text).map_err(|error| format!("Invalid JSON: {error}"))?;
+                self.waste_result = Some((name.clone(), waste::read_result(text)?, value));
+                self.waste_question = Question::Class;
+                self.page = Page::Waste;
+                Ok(format!("Opened {name}."))
+            }
+            FileKind::WasteAnswer => {
+                let value: Value =
+                    serde_json::from_str(text).map_err(|error| format!("Invalid JSON: {error}"))?;
+                let question = waste_answer_question(&value)
+                    .ok_or("Choose a container, ranges or how-sure waste result")?;
+                self.waste_answers.retain(|(q, ..)| *q != question);
+                self.waste_answers.push((question, name.clone(), value));
+                self.waste_question = question;
                 self.page = Page::Waste;
                 Ok(format!("Opened {name}."))
             }
@@ -1604,8 +1637,32 @@ impl Workbench {
         visuals::heading(
             ui,
             "Waste class",
-            "Read the Part 61 classes in a waste result, and edit a waste spec to run with the desktop app or `actinv waste`. The browser does not classify.",
+            "Which waste question do you have? The browser sets each one up and reads its result; the desktop app and the `actinv waste` commands compute the answer.",
         );
+        waste_forms::question_tiles(ui, &mut self.waste_question);
+        match self.waste_question {
+            Question::Class => self.waste_class(ui),
+            Question::Container => self.waste_container(ui),
+            Question::Ranges => self.waste_ranges(ui),
+            Question::HowSure => self.waste_sure(ui),
+        }
+        let question = self.waste_question;
+        if question != Question::Class {
+            if let Some((_, name, value)) = self.waste_answers.iter().find(|(q, ..)| *q == question)
+            {
+                ui.add_space(12.);
+                ui.separator();
+                waste_forms::section(ui, "Answer", name);
+                match question {
+                    Question::Container => waste_package::show_result(ui, value),
+                    Question::Ranges => waste_bounds::show_result(ui, value),
+                    _ => waste_uncertainty::show_result(ui, value),
+                }
+            }
+        }
+    }
+
+    fn waste_class(&mut self, ui: &mut egui::Ui) {
         ui.horizontal_wrapped(|ui| {
             if ui.button("Open waste result…").clicked() {
                 self.pick(FileKind::WasteResult, &["json"], ui.ctx());
@@ -1616,9 +1673,10 @@ impl Workbench {
         });
         ui.add_space(8.);
         match &self.waste_result {
-            Some((name, parsed)) => {
+            Some((name, parsed, value)) => {
                 ui.label(RichText::new(name).strong());
                 waste::show(ui, parsed);
+                waste::show_intrusion(ui, value);
             }
             None => {
                 ui.group(|ui| {
@@ -1631,6 +1689,190 @@ impl Workbench {
         }
         ui.add_space(16.);
         self.waste_spec_editor(ui);
+    }
+
+    /// The download row under a browser waste form, and the button that opens its result.
+    fn waste_download_row(&mut self, ui: &mut egui::Ui, label: &str) -> bool {
+        let mut download = false;
+        ui.add_space(8.);
+        ui.horizontal_wrapped(|ui| {
+            if waste_forms::primary(ui, true, label).clicked() {
+                download = true;
+            }
+            if ui.button("Open its result…").clicked() {
+                self.pick(FileKind::WasteAnswer, &["json"], ui.ctx());
+            }
+        });
+        download
+    }
+
+    fn waste_container(&mut self, ui: &mut egui::Ui) {
+        let steps: Vec<(u64, String)> = self
+            .result
+            .as_ref()
+            .map(|r| {
+                r.steps()
+                    .iter()
+                    .enumerate()
+                    .map(|(i, s)| {
+                        (
+                            s["step"].as_u64().unwrap_or(i as u64 + 1),
+                            model::readable_time(model::number(&s["t_s"])),
+                        )
+                    })
+                    .collect()
+            })
+            .unwrap_or_default();
+        waste_package::show_form(ui, &mut self.waste_package, &steps, false);
+        let declared: Vec<(u64, String)> = (1..=self.waste_package.declared_steps)
+            .map(|n| (n, String::new()))
+            .collect();
+        let targets = self
+            .waste_package
+            .targets(if steps.is_empty() { &declared } else { &steps });
+        let mut active = self.waste_package.declared_nuclides(&targets);
+        if let Some(result) = self
+            .result
+            .as_ref()
+            .filter(|_| self.waste_package.uses_this_result())
+        {
+            for step in result
+                .steps()
+                .iter()
+                .enumerate()
+                .filter(|(i, s)| targets.contains(&s["step"].as_u64().unwrap_or(*i as u64 + 1)))
+            {
+                for (name, a) in step.1["activity_Bq_per_g"]
+                    .as_object()
+                    .into_iter()
+                    .flatten()
+                {
+                    if a.as_f64().is_some_and(|a| a > 0.) {
+                        active.insert(name.clone());
+                    }
+                }
+            }
+        }
+        waste_forms::section(ui, "Nuclide properties", "Z, half-life and alpha emission of every nuclide with activity. The browser has no decay data, so enter them here.");
+        waste_forms::properties_card(
+            ui,
+            "package",
+            &mut self.waste_properties,
+            &active,
+            &Value::Null,
+            None,
+        );
+        if self.waste_download_row(ui, "Download the container spec") {
+            let uses_result = self.waste_package.uses_this_result();
+            let saved = self
+                .waste_properties
+                .map(&active)
+                .and_then(|p| waste_package::package_spec(&self.waste_package, &targets, "result.json", p))
+                .and_then(|spec| serde_json::to_string_pretty(&spec).map_err(|e| e.to_string()))
+                .and_then(|text| web::download("package-spec.json", text.as_bytes()))
+                .map(|()| {
+                    if uses_result {
+                        "Download started. Put the run result beside it as result.json and run `actinv waste package package-spec.json`.".to_owned()
+                    } else {
+                        "Download started. Run `actinv waste package package-spec.json`.".to_owned()
+                    }
+                });
+            self.report(saved);
+        }
+    }
+
+    fn waste_ranges(&mut self, ui: &mut egui::Ui) {
+        if self.waste_bounds.mass_g.is_none() {
+            self.waste_bounds.mass_g = self.problem["material"]["mass_g"].as_f64();
+            let density = self.problem["material"]["density_g_cm3"].as_f64();
+            self.waste_bounds.component.density_g_cm3 = density.unwrap_or(0.);
+            self.waste_bounds.component.use_density = density.is_some();
+        }
+        let steps: Vec<(u64, String)> = self
+            .result
+            .as_ref()
+            .map(|r| {
+                r.steps()
+                    .iter()
+                    .enumerate()
+                    .map(|(i, s)| (i as u64 + 1, model::readable_time(model::number(&s["t_s"]))))
+                    .collect()
+            })
+            .unwrap_or_default();
+        if let waste_bounds::BoundsAction::Fill {
+            time,
+            step,
+            spread_pct,
+        } = waste_bounds::show_form(ui, &mut self.waste_bounds, &steps)
+        {
+            if let Some(result) = &self.result {
+                let activity: Vec<(String, f64)> = result
+                    .steps()
+                    .get(step)
+                    .and_then(|s| s["activity_Bq_per_g"].as_object())
+                    .into_iter()
+                    .flatten()
+                    .filter_map(|(n, a)| a.as_f64().map(|a| (n.clone(), a)))
+                    .collect();
+                self.waste_bounds.fill(time, &activity, spread_pct);
+            }
+        }
+        let active = self.waste_bounds.nuclides();
+        waste_forms::section(ui, "Nuclide properties", "Z, half-life and alpha emission of every nuclide with a range. The browser has no decay data, so enter them here.");
+        waste_forms::properties_card(
+            ui,
+            "bounds",
+            &mut self.waste_properties,
+            &active,
+            &Value::Null,
+            None,
+        );
+        if self.waste_download_row(ui, "Download the ranges spec") {
+            let saved = self
+                .waste_properties
+                .map(&active)
+                .and_then(|p| waste_bounds::bounds_spec(&self.waste_bounds, p))
+                .and_then(|spec| serde_json::to_string_pretty(&spec).map_err(|e| e.to_string()))
+                .and_then(|text| web::download("bounds-spec.json", text.as_bytes()))
+                .map(|()| "Download started. Run `actinv waste bounds bounds-spec.json`; it needs no nuclear data.".to_owned());
+            self.report(saved);
+        }
+    }
+
+    fn waste_sure(&mut self, ui: &mut egui::Ui) {
+        if let Some(why) = waste_uncertainty::unsupported(&self.problem) {
+            waste_forms::card(ui, |ui| {
+                ui.colored_label(ui.visuals().warn_fg_color, why);
+            });
+            return;
+        }
+        if self.waste_sure.component.density_g_cm3 == 0. {
+            let density = self.problem["material"]["density_g_cm3"].as_f64();
+            self.waste_sure.component.density_g_cm3 = density.unwrap_or(0.);
+            self.waste_sure.component.use_density = density.is_some();
+        }
+        let steps: Vec<(u64, String)> = crate::views::certify::step_times(&self.problem)
+            .into_iter()
+            .enumerate()
+            .map(|(i, t)| (i as u64 + 1, t.label))
+            .collect();
+        let mass = self.problem["material"]["mass_g"].as_f64().unwrap_or(1.);
+        waste_uncertainty::show_form(ui, &mut self.waste_sure, &steps, mass, None);
+        if self.waste_download_row(ui, "Download the sampling spec") {
+            let targets: Vec<u64> = steps
+                .iter()
+                .map(|(n, _)| *n)
+                .filter(|n| !self.waste_sure.skipped.contains(n))
+                .collect();
+            let pretty = |v: &Value| serde_json::to_string_pretty(v).map_err(|e| e.to_string());
+            let saved = waste_uncertainty::uncertainty_spec(&self.waste_sure, "problem.json", &targets, mass)
+                .and_then(|spec| {
+                    web::download("uncertainty.json", pretty(&spec)?.as_bytes())?;
+                    web::download("problem.json", pretty(&waste_uncertainty::sampled_problem(&self.problem))?.as_bytes())
+                })
+                .map(|()| "Two downloads started: uncertainty.json and problem.json. Keep them in one folder and run `actinv waste uncertainty uncertainty.json` where the nuclear data are installed.".to_owned());
+            self.report(saved);
+        }
     }
 
     fn waste_spec_editor(&mut self, ui: &mut egui::Ui) {
@@ -1984,5 +2226,15 @@ mod tests {
         assert!(crate::model::parse_group_values("0,0", 2).is_err());
         assert!(crate::model::parse_group_values("1,x", 2).is_err());
         assert!(crate::model::parse_group_values("1,-1", 2).is_err());
+    }
+}
+
+/// The question a container, ranges or how-sure waste result answers, from its schema.
+fn waste_answer_question(value: &Value) -> Option<Question> {
+    match value["schema"].as_str()? {
+        "actinv-waste-package-1" => Some(Question::Container),
+        "actinv-waste-bounds-result-1" => Some(Question::Ranges),
+        "actinv-waste-uncertainty-result-1" => Some(Question::HowSure),
+        _ => None,
     }
 }

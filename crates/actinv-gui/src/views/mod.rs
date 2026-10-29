@@ -19,6 +19,10 @@ pub mod steps;
 pub mod summary;
 pub mod tables;
 pub mod waste;
+pub mod waste_bounds;
+pub mod waste_forms;
+pub mod waste_package;
+pub mod waste_uncertainty;
 
 use eframe::egui;
 

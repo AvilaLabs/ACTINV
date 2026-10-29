@@ -214,6 +214,18 @@ impl Desktop {
         self.error = false;
     }
 
+    /// Whether the catalog artifact `reference` (`catalog:<id>`) is installed.
+    pub(super) fn catalog_installed(&self, reference: &str) -> bool {
+        let root = actinv_cli::workflow::catalog_data_root(&self.base);
+        embedded_catalog().is_ok_and(|catalog| {
+            matches!(
+                catalog_status(&[reference.to_owned()], &catalog, &root, &|path| path
+                    .exists()),
+                CatalogStatus::Installed(_)
+            )
+        })
+    }
+
     /// Whether the standard bundle is installed where `catalog:` references look for it.
     pub(super) fn standard_data_installed(&self) -> Result<PathBuf, String> {
         let catalog = embedded_catalog()?;

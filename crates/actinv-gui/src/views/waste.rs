@@ -668,6 +668,100 @@ fn unknown_lines(ui: &mut egui::Ui, steps: &[StepClass]) {
     }
 }
 
+/// The draft intrusion screen of an intrusion-screen result, one line per step and the table rows
+/// that apply; nothing for any other result.
+pub fn show_intrusion(ui: &mut egui::Ui, value: &Value) {
+    let screen = &value["draft_intrusion_screen"];
+    let Some(targets) = screen["targets"].as_array() else {
+        return;
+    };
+    ui.add_space(8.);
+    ui.heading("Draft intrusion screen");
+    ui.label("Against the intrusion table of the February 2026 draft NUREG-1556 Vol. 22, for the whole container. A screen, not a dose: it says whether the draft would ask for a closer review.");
+    ui.add_space(4.);
+    for target in targets {
+        let indicator = target["assessment_indicator"].as_str().unwrap_or("");
+        let (words, colour) = match indicator {
+            "review_indicated" => ("Review indicated", ui.visuals().warn_fg_color),
+            "indeterminate" => ("Indeterminate", ui.visuals().weak_text_color()),
+            _ => ("No review indicated by the checks implemented", accent(ui)),
+        };
+        egui::Frame::group(ui.style())
+            .inner_margin(12.)
+            .show(ui, |ui| {
+                ui.set_width(ui.available_width());
+                ui.horizontal_wrapped(|ui| {
+                    ui.label(
+                        RichText::new(format!(
+                            "Step {} · {}",
+                            target["step"],
+                            time(target["t_s"].as_f64().unwrap_or(0.))
+                        ))
+                        .strong(),
+                    );
+                    ui.label(RichText::new(words).heading().color(colour));
+                });
+                let rows: Vec<&Value> = target["rows"]
+                    .as_array()
+                    .into_iter()
+                    .flatten()
+                    .filter(|r| r["applicability"] != "false")
+                    .collect();
+                if rows.is_empty() {
+                    ui.weak("No row of the draft table applies to this inventory.");
+                    return;
+                }
+                ui.push_id(("intrusion-rows", target["step"].to_string()), |ui| {
+                    TableBuilder::new(ui)
+                        .striped(true)
+                        .cell_layout(egui::Layout::left_to_right(egui::Align::Center))
+                        .column(Column::auto().at_least(180.))
+                        .column(Column::auto().at_least(150.))
+                        .column(Column::auto().at_least(140.))
+                        .column(Column::remainder().at_least(160.))
+                        .header(24., |mut h| {
+                            for t in ["Row", "Concentration", "Draft value", "Indicator"] {
+                                h.col(|ui| {
+                                    ui.strong(t);
+                                });
+                            }
+                        })
+                        .body(|body| {
+                            body.rows(24., rows.len(), |mut row| {
+                                let r = rows[row.index()];
+                                let unit = r["unit"].as_str().unwrap_or("");
+                                row.col(|ui| {
+                                    ui.label(r["row_id"].as_str().unwrap_or("").replace('_', " "));
+                                });
+                                row.col(|ui| {
+                                    ui.monospace(format!(
+                                        "{} {unit}",
+                                        fraction(r["known_concentration"].as_f64().unwrap_or(0.))
+                                    ));
+                                });
+                                row.col(|ui| {
+                                    ui.monospace(match r["limit"].as_f64() {
+                                        Some(limit) => format!("{} {unit}", fraction(limit)),
+                                        None => "–".into(),
+                                    });
+                                });
+                                row.col(|ui| {
+                                    ui.label(
+                                        r["assessment_indicator"]
+                                            .as_str()
+                                            .unwrap_or("")
+                                            .replace('_', " "),
+                                    );
+                                });
+                            });
+                        });
+                });
+            });
+        ui.add_space(6.);
+    }
+    ui.small("Disposal acceptance not assessed, intrusion dose not calculated, legal compliance not determined.");
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

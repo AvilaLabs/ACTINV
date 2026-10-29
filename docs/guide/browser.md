@@ -14,7 +14,7 @@ For a real calculation, open or drop a result JSON produced by ACTINV. Use **Com
 - **Photons & dose** shows decay photon groups, dose rates, bremsstrahlung and dose against cooling time, and downloads the groups of the selected step as CSV. A result with no photon source links to **What to compute**.
 - **Pathways** shows first products and full production routes, when the result recorded them.
 - **Evidence** shows the ledger of missing data and approximations, and the certificate of inputs and data.
-- **Waste class** reads waste results and edits waste specs; see [Read waste results and edit waste specs](#read-waste-results-and-edit-waste-specs).
+- **Waste class** reads waste results, edits waste specs and sets up the container, ranges and how-sure questions; see [Read waste results and edit waste specs](#read-waste-results-and-edit-waste-specs).
 - **Impurities** sets up an impurity screen of the open problem and reads screen results. The browser does not screen: **Save screen…** downloads `impurities.json`, which you run with the desktop app or `actinv impurities`, and **Open result…** shows the result; see [Screen a material's impurities](impurities.md#in-the-desktop-app-and-the-browser).
 
 **Download result** saves the complete result JSON. **Export…** opens the **Export** page, which downloads a report page, charts, tables and the result and problem files as one zip; it offers the same choices as the [desktop Export page](desktop.md#export-a-result) except the waste classification.
@@ -23,7 +23,7 @@ For a real calculation, open or drop a result JSON produced by ACTINV. Use **Com
 
 **Waste class** opens an `actinv-waste-result-1` file, an intrusion-screen result, or a twin result that has `waste_classification`, and shows what the desktop page shows: for each selected step the class, status, coverage, governing table and column with its sum and margin, and the binding nuclides, a class strip against cooling time, and the earliest selected step within Class A, B and C. All of it is read from the file. The browser does not classify: the evaluator is not built for the web, so run a spec with the desktop app or `actinv waste` and open the result here. A file that is not one of these three, or is not valid JSON, shows an error message and changes nothing.
 
-The same page opens an `actinv-waste-spec-1` file (or starts from a skeleton), lets you edit it as JSON, checks its structure and downloads it as `waste-spec.json`. The `input` member names the run result the spec reads, so keep that result next to the spec when you run it. Dropping a waste file on the window opens it. See [Component waste classes](waste.md) for the document formats.
+The same page opens an `actinv-waste-spec-1` file (or starts from a skeleton), lets you edit it as JSON, checks its structure and downloads it as `waste-spec.json`. The `input` member names the run result the spec reads, so keep that result next to the spec when you run it. Dropping a waste file on the window opens it. The other three waste questions of the [desktop page](desktop.md#classify-a-result-as-waste) are set up here too: a container of items, activity ranges, and how sure the class is. The browser has no decay data, so enter each nuclide's properties in the table. Each form downloads its spec (`package-spec.json`, `bounds-spec.json`, or `uncertainty.json` with the `problem.json` it samples) to run with the CLI, and **Open its result…** shows the answer. See [Component waste classes](waste.md) for the document formats.
 
 ## Edit a problem
 
