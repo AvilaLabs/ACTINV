@@ -313,6 +313,7 @@ impl Desktop {
             }
             if ui.button("Validate only").clicked() {
                 let r = self.validate().map(|_| "Specification and input locations are valid. File hashes and evaluated data are checked during the solve.".into());
+                self.flash_outcome(&r, "Valid", "Not valid");
                 self.report(r);
             }
             if ui.button("< Back").clicked() {

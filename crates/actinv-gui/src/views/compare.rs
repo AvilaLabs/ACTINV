@@ -508,7 +508,9 @@ pub fn show(
             .join(", ")
     ));
     let cases = case_count(state);
-    ui.label(format!("{cases} combinations, one solve each."));
+    ui.label(format!(
+        "{cases} combinations, one solve each. The app compares up to {MAX_CASES}."
+    ));
     if cases > MAX_CASES {
         ui.colored_label(
             ui.visuals().error_fg_color,

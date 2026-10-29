@@ -42,7 +42,7 @@ impl Desktop {
             }
         });
         if self.document["projectile"].as_str().unwrap_or("neutron") != "neutron" {
-            ui.label("Charged-particle and photonuclear problems need a library for that projectile (chosen on Check & run) and a temperature of 0 K.");
+            ui.label("Charged-particle and photonuclear problems need a library for that projectile (chosen on Check & run) and a temperature of 0 K. The standard spectra are neutron shapes, so import this projectile's group values from transport below.");
         }
         ui.add_space(8.);
         let source = crate::views::source::applies(&self.document);

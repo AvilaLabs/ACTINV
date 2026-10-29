@@ -436,7 +436,12 @@ impl Desktop {
         self.raw_dirty || self.document != self.saved || self.base != self.saved_base
     }
     /// Show a short outcome beside Validate and Run: `ok` or `failed`, with the full message on hover.
-    fn flash_outcome(&mut self, result: &Result<String, String>, ok: &str, failed: &str) {
+    pub(crate) fn flash_outcome(
+        &mut self,
+        result: &Result<String, String>,
+        ok: &str,
+        failed: &str,
+    ) {
         let (good, word, message) = match result {
             Ok(message) => (true, ok, message),
             Err(message) => (false, failed, message),
@@ -1124,6 +1129,7 @@ impl eframe::App for Desktop {
             }
             self.job = None;
             if cancelled {
+                self.flash = Some((Instant::now(), true, "Cancelled".into(), String::new()));
                 self.report(Ok(
                     "Calculation cancelled; the previous result and current problem were kept."
                         .into(),
