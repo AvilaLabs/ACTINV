@@ -4644,3 +4644,12 @@ Every workflow triggered on `7fa6465` (candidate `785ef37` plus its evidence) pa
 `sampling` block gives order-statistic bounds over the nuclear-data uncertainty on every value and limit, and class
 probabilities, each verified by re-solving the samples behind it. Outputs without `sampling` are unchanged (G2). The
 repair round was not used.
+
+## Entry 267 — P162 registered: a cited material library and analytic source spectra for new problems (2026-10-29)
+
+P162 (`protocols/ACTINV-P162_PROTOCOL.md`, sha256 `d4f6c8cac4c40b1e3ad7a66f6c0fed51f65a5f0f40057e15558f8dd5cc125b44`) is registered before any implementation. It covers the
+starting data the app's New problem flow and `actinv new --material ID --source SHAPE` will ship: 19 cited material
+compositions (PNNL-15870 Rev. 1, ASTM B708/B393/B265/B760, the EUROFER97 specification table, the Materion S-65 sheet,
+NIFS-HEAT-2 and the Pb-15.7Li correlation paper) and four closed-form spectra on the 709-group structure. The research
+record behind the compositions is `results/p162/sources.json`. F82H, SS316L(N)-IG and CuCrZr-IG are excluded until
+their specifications are read from a primary source. Gates G0-G6; one repair round.

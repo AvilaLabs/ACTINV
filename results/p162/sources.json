@@ -1,0 +1,750 @@
+{
+ "schema": "actinv-p162-sources-1",
+ "note": "Research record behind the P162 material library: compositions, limits and citations as read from each source (2026-10-29). Entries marked excluded are not shipped.",
+ "excluded": {
+  "f82h": "trace values only from search summaries of papers that could not be opened; no density",
+  "ss316ln_ig": "two secondary sources disagree on Nb and B; ITER specification not read",
+  "cucrzr_ig": "limits from a mirrored copy of the ITER specification, not the original; no density"
+ },
+ "materials": [
+  {
+   "id": "eurofer97",
+   "name": "EUROFER97 (EUROFER97-3 heat specification)",
+   "category": "fusion steel",
+   "density_g_cm3": null,
+   "density_hint_unverified": 7.8,
+   "composition_wt_percent": {
+    "Fe": "balance",
+    "Cr": 9.0,
+    "C": 0.105,
+    "Mn": 0.4,
+    "V": 0.2,
+    "W": 1.1,
+    "Ta": 0.12,
+    "N": 0.03
+   },
+   "ranges": {
+    "Cr": [
+     8.5,
+     9.5
+    ],
+    "C": [
+     0.09,
+     0.12
+    ],
+    "N": [
+     0.015,
+     0.045
+    ],
+    "V": [
+     0.15,
+     0.25
+    ],
+    "Mn": [
+     0.2,
+     0.6
+    ],
+    "Ta": [
+     0.1,
+     0.14
+    ],
+    "W": [
+     1.0,
+     1.2
+    ]
+   },
+   "impurity_limits_wt_percent": {
+    "O": 0.01,
+    "B": 0.002,
+    "Al": 0.01,
+    "Si": 0.05,
+    "P": 0.005,
+    "Ti": 0.02,
+    "Co": 0.01,
+    "Ni": 0.01,
+    "Cu": 0.01,
+    "Nb": 0.005,
+    "Mo": 0.005
+   },
+   "typical_analysis_wt_percent": {
+    "Cr": 9.0,
+    "C": 0.102,
+    "N": 0.043,
+    "O": 0.0004,
+    "B": 0.0004,
+    "Al": 0.0015,
+    "Si": 0.0184,
+    "P": 0.0017,
+    "Ti": 0.00018,
+    "V": 0.2117,
+    "Mn": 0.529,
+    "Co": 0.002,
+    "Ni": 0.0099,
+    "Cu": 0.0015,
+    "Nb": "<0.0004",
+    "Mo": 0.0021,
+    "Ta": 0.125,
+    "W": 1.152
+   },
+   "nominal_choice_note": "Majors at spec midpoints (Mn 0.40, C 0.105, N 0.030, W 1.10, Ta 0.12). For trace elements offer two modes: 'typical' = measured KIT analysis of EUROFER97-3 (Co 20 ppm, Ni 99 ppm, Cu 15 ppm, Mo 21 ppm, Nb <4 ppm, B 4 ppm, Al 15 ppm) and 'spec-max' = the specification limits. Activation of Co/Nb/Mo/Ni/Cu is dominated by these, so spec-max is the conservative default if the user does not know the heat. The specification does NOT limit Ag, Eu or Tb; no value available.",
+   "source": {
+    "citation": "V. Chakin, C. Bonnekoh, R. Gaisin, R. Ziegler, M. Duerrschnabel, M. Klimenkov, B. Gorr, M. Rieth, 'Charpy impact properties of EUROFER97-3 after neutron irradiation at 330 C and 540 C to damage doses of 21-23 dpa', Nuclear Materials and Energy 46 (2026) 102079, DOI 10.1016/j.nme.2026.102079",
+    "table": "Table 3 'Chemical composition of EUROFER97-3 steel in wt.%' (columns Specification / Analysis; analysis measured at KIT)",
+    "url": "https://doi.org/10.1016/j.nme.2026.102079 (KIT copy: https://publikationen.bibliothek.kit.edu/1000190155)"
+   },
+   "confidence": "medium",
+   "notes": "Text of Table 3 read directly from the PDF. This is a 2026 paper reproducing the EUROFER97-3 specification, not the original Lindau et al., Fusion Eng. Des. 75-79 (2005) 989 or the ENEA/KIT 'Chemical specification of EUROFER 97' (not retrieved). Fe 'not defined' in the spec; balance. Odd: spec O max 0.01 vs measured 0.0004. A EUROfusion preprint (Testani et al., WPMAT-CPR(18)18575) states Ni, Mo, Cu, Nb, Al, B, Co 'as low as possible (ALAP)' and As+Sn+Sb+Zr ~0.05 total (not itemised). Density could not be verified from a primary source; ~7.8 g/cm3 is the commonly quoted RT value (unverified here)."
+  },
+  {
+   "id": "f82h",
+   "name": "F82H (RAFM, IEA/mod3)",
+   "category": "fusion steel",
+   "density_g_cm3": null,
+   "density_hint_unverified": 7.78,
+   "composition_wt_percent": {
+    "Fe": "balance",
+    "Cr": 8.0,
+    "W": 2.0,
+    "V": 0.2,
+    "Ta": 0.04,
+    "C": 0.1
+   },
+   "ranges": {},
+   "impurity_limits_wt_percent": {},
+   "typical_analysis_wt_percent": {
+    "note_IEA_heat_trace_as_reported_by_search_summary_of_HFIR_capsule_paper": {
+     "Mo": 0.0028,
+     "Co": 0.0026,
+     "Ni": 0.02,
+     "Cu": 0.01,
+     "Ti": 0.004,
+     "N": 0.007,
+     "B": 0.0002,
+     "Nb": 0.0002
+    },
+    "F82H_mod3_INL_NSUF_sample_5451": {
+     "Cr": 8.16,
+     "W": 1.98,
+     "V": 0.2,
+     "Mn": 0.13,
+     "Si": 0.1,
+     "C": 0.097,
+     "N": 0.007,
+     "P": 0.005,
+     "Ti": 0.005,
+     "Ni": "0.1 as listed (suspect; verify)"
+    }
+   },
+   "nominal_choice_note": "Use Fe-8Cr-2W-0.2V-0.04Ta-0.1C nominal. The IEA heat (7.65 Cr, 2 W, 0.16 V, 0.02 Ta, 0.11 Si, 0.16 Mn, 0.09 C per several JNM papers) and mod3 differ slightly. Trace values below are heat analyses, not a specification; treat as typical, not limits.",
+   "source": {
+    "citation": "JAEA R&D Review 2010, '3-10 Further Improvement of the Fusion Reactor Structural Material' (nominal Fe-8Cr-2W-0.2V-0.04Ta-0.1C); trace values: INL NSUF sample records (F82H-IEA HA-1, F82H-mod3) and an F82H IEA-heat HFIR creep-capsule paper (J. Nucl. Mater./Nucl. Mater. Energy 2017, Elsevier S2352179117301242)",
+    "table": "HFIR capsule paper Table 1 (not opened directly)",
+    "url": "https://rdreview.jaea.go.jp/review_en/2010/e2010_3_10.html ; https://nsuf.inl.gov/Library/Sample/5451"
+   },
+   "confidence": "low",
+   "notes": "NOT verified from a primary table: ScienceDirect/IAEA PDFs returned 403/402. Trace values (Mo 28 ppm, Co 26 ppm, Ni 0.02, Cu 0.01, Nb 2 ppm, B 2 ppm) come from a search-engine summary of the HFIR capsule paper and must be checked against Hirose/Shiba/Tanigawa heat certificates (e.g. Fusion Eng. Des. 'Materials design data for reduced activation martensitic steel type F82H', 2002; Shiba et al., Fusion Sci. Technol. 2012 for mod3: Ti<10 ppm, N<20 ppm, Ta 0.1). No density verified."
+  },
+  {
+   "id": "ss316ln_ig",
+   "name": "SS316L(N)-IG (ITER grade)",
+   "category": "austenitic stainless",
+   "density_g_cm3": null,
+   "density_hint_unverified": "~7.93-8.0 (PNNL SS316L 8.00 as proxy)",
+   "composition_wt_percent": {
+    "Fe": "balance",
+    "Cr": 17.5,
+    "Ni": 12.25,
+    "Mo": 2.5,
+    "Mn": 1.8,
+    "N": 0.07,
+    "C": 0.02,
+    "Si": 0.3,
+    "P": 0.015,
+    "S": 0.005
+   },
+   "ranges": {
+    "C": [
+     0,
+     0.03
+    ],
+    "Mn": [
+     1.6,
+     2.0
+    ],
+    "Si": [
+     0,
+     0.5
+    ],
+    "P": [
+     0,
+     0.025
+    ],
+    "S": [
+     0,
+     0.01
+    ],
+    "Cr": [
+     17.0,
+     18.0
+    ],
+    "Ni": [
+     12.0,
+     12.5
+    ],
+    "Mo": [
+     2.3,
+     2.7
+    ],
+    "N": [
+     0.06,
+     0.08
+    ]
+   },
+   "impurity_limits_wt_percent": {
+    "Cu": 0.3,
+    "B": "0.0010 (IAEA FEC 2025 table) vs 0.0020 (ITER plate spec, Russian-language IDM copy)",
+    "Co": 0.05,
+    "Nb": "0.10 (FEC 2025 table) vs 0.01 (ITER plate spec)",
+    "Ta": 0.01,
+    "Ti": 0.1
+   },
+   "nominal_choice_note": "Majors at range midpoints; C, Si, P, S are max-only so I suggest ~50-60% of max (same convention as PNNL). For activation use Co 0.05, Ta 0.01 (agreed by both sources) and the CONSERVATIVE Nb 0.10 and B 0.0010 unless the user chooses otherwise; sources disagree on Nb and B.",
+   "source": {
+    "citation": "(a) S.W. Kim et al. (KFE), IAEA FEC 2025 paper/synopsis on SS316L(N)-IG, Table 1 (https://conferences.iaea.org/event/392/papers/36393/); (b) ITER specification for 316L(N)-IG hot-rolled plate 5-100 mm (Word doc mirrored at a-k-d.ru, document no./version not legible), citing RCC-MR 2007 RM 3321",
+    "table": "(a) Table 1; (b) chemical composition table",
+    "url": "https://www.a-k-d.ru/tender/document/0bcecd24d5d4a85ada8bce2085b44c65"
+   },
+   "confidence": "low",
+   "notes": "The primary ITER Materials Properties Handbook / IDM procurement spec was not accessed. (a) was reported through a search summary only (direct fetch returned 403); (b) was text-recovered from a corrupted .doc binary. Both agree on all majors, Cu 0.30, Co 0.05, Ta 0.01, Ti 0.10; they disagree on Nb (0.10 vs 0.01) and B (0.0010 vs 0.0020). ITER nuclear analysis separately cites Co<=0.05, Nb<=0.1, Ta<=0.05 inside cryostat (Barabash-type statement, secondary). Do not treat as final until the ITER_D spec is checked."
+  },
+  {
+   "id": "ss304",
+   "name": "Stainless steel 304 (PNNL generic)",
+   "category": "austenitic stainless",
+   "density_g_cm3": 8.0,
+   "composition_wt_percent": {
+    "C": 0.04,
+    "Si": 0.5,
+    "P": 0.023,
+    "S": 0.015,
+    "Cr": 19.0,
+    "Mn": 1.0,
+    "Fe": 70.173,
+    "Ni": 9.25
+   },
+   "ranges": {},
+   "impurity_limits_wt_percent": {},
+   "nominal_choice_note": "PNNL: Cr, Fe, Ni at average of allowed range; C, Si, P, S, Mn set at 50% of upper limit to sum to unity. Contains NO Co, Mo, Cu, Nb, Ta, so activation of generic 304 is under-predicted; add Co (typically 0.05-0.2 wt%, unverified here) if known.",
+   "source": {
+    "citation": "PNNL-15870 Rev. 1, \"Compendium of Material Composition Data for Radiation Transport Modeling\", McConn, Gesh, Pagh, Rucker, Williams III, Pacific Northwest National Laboratory, March 4, 2011 (PIET-43741-TM-963)",
+    "table": "Material #298 'Steel, Stainless 304', printed p. 285 (PDF 'Page N of 357' footer differs slightly)",
+    "url": "https://www.osti.gov/biblio/1023125 (full text PDF: https://digital.library.unt.edu/ark:/67531/metadc835293/m2/1/high_res_d/1023125.pdf)"
+   },
+   "confidence": "high",
+   "notes": "Density 8.00 (MatWeb; other sources 8.03). PNNL weight fractions sum to 1.00001."
+  },
+  {
+   "id": "ss304l",
+   "name": "Stainless steel 304L (PNNL generic)",
+   "category": "austenitic stainless",
+   "density_g_cm3": 8.0,
+   "composition_wt_percent": {
+    "C": 0.015,
+    "Si": 0.5,
+    "P": 0.023,
+    "S": 0.015,
+    "Cr": 19.0,
+    "Mn": 1.0,
+    "Fe": 69.448,
+    "Ni": 10.0
+   },
+   "ranges": {},
+   "impurity_limits_wt_percent": {},
+   "nominal_choice_note": "Cr, Ni at range average; C, Si, P, S, Mn at 50% of upper limit; Fe by difference. No Co/Mo/Cu/Nb.",
+   "source": {
+    "citation": "PNNL-15870 Rev. 1, \"Compendium of Material Composition Data for Radiation Transport Modeling\", McConn, Gesh, Pagh, Rucker, Williams III, Pacific Northwest National Laboratory, March 4, 2011 (PIET-43741-TM-963)",
+    "table": "Material #299 'Steel, Stainless 304L', printed p. 287 (PDF 'Page N of 357' footer differs slightly)",
+    "url": "https://www.osti.gov/biblio/1023125 (full text PDF: https://digital.library.unt.edu/ark:/67531/metadc835293/m2/1/high_res_d/1023125.pdf)"
+   },
+   "confidence": "high",
+   "notes": ""
+  },
+  {
+   "id": "ss316",
+   "name": "Stainless steel 316 (PNNL generic)",
+   "category": "austenitic stainless",
+   "density_g_cm3": 8.0,
+   "composition_wt_percent": {
+    "C": 0.041,
+    "Si": 0.507,
+    "P": 0.023,
+    "S": 0.015,
+    "Cr": 17.0,
+    "Mn": 1.014,
+    "Fe": 66.9,
+    "Ni": 12.0,
+    "Mo": 2.5
+   },
+   "ranges": {},
+   "impurity_limits_wt_percent": {},
+   "nominal_choice_note": "Cr, Fe, Ni, Mo at range average; C, Si, P, S, Mn at 50.7% of upper limit. No Co/Cu/Nb.",
+   "source": {
+    "citation": "PNNL-15870 Rev. 1, \"Compendium of Material Composition Data for Radiation Transport Modeling\", McConn, Gesh, Pagh, Rucker, Williams III, Pacific Northwest National Laboratory, March 4, 2011 (PIET-43741-TM-963)",
+    "table": "Material #300 'Steel, Stainless 316', printed p. 288 (PDF 'Page N of 357' footer differs slightly)",
+    "url": "https://www.osti.gov/biblio/1023125 (full text PDF: https://digital.library.unt.edu/ark:/67531/metadc835293/m2/1/high_res_d/1023125.pdf)"
+   },
+   "confidence": "high",
+   "notes": "Also PNNL #301 SS316L: C 0.03, Si 1.0, P 0.045, S 0.03, Cr 17, Mn 2.0, Fe 65.395, Ni 12, Mo 2.5 wt% (specified maxima used as values), density 8.00."
+  },
+  {
+   "id": "w_pure",
+   "name": "Tungsten (pure)",
+   "category": "refractory metal",
+   "density_g_cm3": 19.3,
+   "composition_wt_percent": {
+    "W": 100.0
+   },
+   "ranges": {},
+   "impurity_limits_wt_percent": {
+    "C": 0.01,
+    "O": "0.010 (reported for information only on powder blend)",
+    "N": 0.01,
+    "Fe": 0.01,
+    "Ni": 0.01,
+    "Si": 0.01
+   },
+   "nominal_choice_note": "Use W 100 as base. If impurity mode wanted, ASTM B760 maxima are the only citable ones; ITER-grade W purity >= 99.94 wt% with density >= 19.0 g/cm3. ASTM B760 does not limit Co, Nb, Ta, Mo, Ag, so those cannot be filled from a source.",
+   "source": {
+    "citation": "PNNL-15870 Rev.1 #331 Tungsten (density 19.3, NIST ESTAR); ASTM B760-07 'Standard Specification for Tungsten Plate, Sheet, and Foil', Table 1 (max %, check-analysis tolerance in adjacent column); ITER-grade W: E. Gaganidze et al., INNUMAT Workshop 2023 slide 'W MPH - Baseline material' citing Hirai et al., Fusion Eng. Des. 125 (2017) (density >=19.0 g/cm3 ASTM B311, purity >=99.94%)",
+    "table": "PNNL printed p. 318; ASTM B760-07 Table 1",
+    "url": "https://www.osti.gov/biblio/1023125 (full text PDF: https://digital.library.unt.edu/ark:/67531/metadc835293/m2/1/high_res_d/1023125.pdf) ; https://gsalloy.com/wp-content/uploads/2024/04/ASTM-B760.pdf ; https://indico.kit.edu/event/3644/attachments/7119/11262/1_INNUMAT_WS_23_DEMO_MPH_Gaganidze.pdf"
+   },
+   "confidence": "medium",
+   "notes": "ASTM B760 copy read directly (2007 edition). No Plansee datasheet retrieved."
+  },
+  {
+   "id": "cucrzr_ig",
+   "name": "CuCrZr-IG (ITER grade)",
+   "category": "copper alloy",
+   "density_g_cm3": null,
+   "density_hint_unverified": 8.9,
+   "composition_wt_percent": {
+    "Cu": "balance",
+    "Cr": 0.75,
+    "Zr": 0.11
+   },
+   "ranges": {
+    "Cr": [
+     0.6,
+     0.9
+    ],
+    "Zr": [
+     0.07,
+     0.15
+    ]
+   },
+   "impurity_limits_wt_percent": {
+    "impurities_total": "<0.15",
+    "Co": 0.05,
+    "Nb": 0.1,
+    "Ta": 0.01,
+    "O": "as low as possible (EUROfusion MPH slide: <0.002)",
+    "others_MPH": "<0.03"
+   },
+   "nominal_choice_note": "Cr 0.75 and Zr 0.11 are range midpoints. Co, Nb, Ta are 'content shall be reported' elements; use the limits (Co 0.05, Nb 0.10, Ta 0.01) as conservative activation inputs, or tighter if the user has a heat analysis.",
+   "source": {
+    "citation": "'Material Specification for the Supply of CuCrZr IG Alloy Plates for the ITER First Wall', ITER_D_2ABAKH v. 2.0 (IDM); EUROfusion MPH numbers: E. Gaganidze et al., INNUMAT Workshop Madrid 16-17 Nov 2023, slide 'CuCrZr MPH - Reference composition'",
+    "table": "Table 1 'Chemical composition of CuCrZr-IG alloy (wt. %)'",
+    "url": "https://www.a-k-d.ru/tender/document/d36e0a81cfe8f925e942d3c97c7754c8 ; https://indico.kit.edu/event/3644/attachments/7119/11262/1_INNUMAT_WS_23_DEMO_MPH_Gaganidze.pdf"
+   },
+   "confidence": "medium",
+   "notes": "Cr/Zr/impurity values recovered from a mirrored Word copy (binary strings and a summarized extraction; Cr/Zr ranges also confirmed by MPH slide). Document states the IG grade is within UNS C18150/CW106C ranges. Density not verified; ~8.9 g/cm3 is the typical value (unverified)."
+  },
+  {
+   "id": "inconel718",
+   "name": "Inconel 718 (PNNL)",
+   "category": "nickel superalloy",
+   "density_g_cm3": 8.19,
+   "composition_wt_percent": {
+    "B": 0.005,
+    "C": 0.073,
+    "Al": 0.5,
+    "Si": 0.318,
+    "P": 0.014,
+    "S": 0.014,
+    "Ti": 0.9,
+    "Cr": 19.0,
+    "Mn": 0.318,
+    "Fe": 17.0,
+    "Ni": 52.5,
+    "Co": 0.91,
+    "Cu": 0.273,
+    "Nb": 5.125,
+    "Mo": 3.05
+   },
+   "ranges": {},
+   "impurity_limits_wt_percent": {
+    "Co_max": 1.0,
+    "Cu_max": 0.3
+   },
+   "nominal_choice_note": "PNNL: Al, Ti, Cr, Fe, Ni, Nb, Mo at average of allowed range; B, C, Si, P, S, Mn, Co, Cu at 91% of upper limit (so Co 0.91 wt% is a ~1% max-based value, likely high for modern heats; Cu max 0.30 inferred from 91%). Note Nb is a primary constituent (5.1 wt%) and Co 0.91 is high.",
+   "source": {
+    "citation": "PNNL-15870 Rev. 1, \"Compendium of Material Composition Data for Radiation Transport Modeling\", McConn, Gesh, Pagh, Rucker, Williams III, Pacific Northwest National Laboratory, March 4, 2011 (PIET-43741-TM-963)",
+    "table": "Material #156 'Inconel-718', printed p. 163 (PDF 'Page N of 357' footer differs slightly)",
+    "url": "https://www.osti.gov/biblio/1023125 (full text PDF: https://digital.library.unt.edu/ark:/67531/metadc835293/m2/1/high_res_d/1023125.pdf)"
+   },
+   "confidence": "high",
+   "notes": "Values from MatWeb/Special Metals bulletin as quoted by PNNL."
+  },
+  {
+   "id": "v4cr4ti",
+   "name": "V-4Cr-4Ti",
+   "category": "vanadium alloy",
+   "density_g_cm3": 6.05,
+   "composition_wt_percent": {
+    "V": "balance",
+    "Cr": 4.0,
+    "Ti": 4.0
+   },
+   "ranges": {},
+   "impurity_limits_wt_percent": {},
+   "typical_analysis_wt_percent": {
+    "Cr": 4.02,
+    "Ti": 4.15,
+    "Y": "<0.01",
+    "C": 0.012,
+    "N": 0.009,
+    "O": 0.012
+   },
+   "nominal_choice_note": "Nominal V-4Cr-4Ti; measured NIFS-HEAT-2 analysis shown. Interstitials C+N+O ~0.033 wt%. No citable values found for Nb, Mo, Co, Ni, Fe, Al, Si, Cu, Ag trace elements (these dominate low-activation performance): left out.",
+   "source": {
+    "citation": "T. Miyazawa, T. Muroga, Y. Hishinuma, 'Effect of Chromium Content on Mechanical Properties of V-xCr-4Ti-0.15Y Alloys', J. Plasma Fusion Res. SERIES 11 (2015), Table 1 (NIFS-HEAT-2 'V-4Cr-4Ti'); density: qedfusion 'Properties of V-4Cr-4Ti' citing Metals Handbook 9th ed. Vol. 2, ASM 1979",
+    "table": "Table 1 'Chemical composition of the alloys (wt.%)'",
+    "url": "https://www.jspf.or.jp/JPFRS/PDF/Vol11/jpfrs2015_11-089.pdf ; https://qedfusion.org/LIB/PROPS/vprop.html"
+   },
+   "confidence": "medium",
+   "notes": "Density 6.05 g/cm3 from a secondary web table (6.05x10^3 kg/m3); not tied to the alloy specification. Other heats differ (e.g. ANL BL-47 O ~350 wppm, N ~220, C ~200, Si ~870 per garbled extraction, not used)."
+  },
+  {
+   "id": "zircaloy4",
+   "name": "Zircaloy-4",
+   "category": "zirconium alloy",
+   "density_g_cm3": 6.56,
+   "composition_wt_percent": {
+    "O": 0.1196,
+    "Cr": 0.0997,
+    "Fe": 0.1994,
+    "Zr": 98.1858,
+    "Sn": 1.3955
+   },
+   "ranges": {
+    "Sn": [
+     1.2,
+     1.7
+    ],
+    "Fe": [
+     0.18,
+     0.24
+    ],
+    "Cr": [
+     0.07,
+     0.13
+    ],
+    "Fe+Cr": [
+     0.28,
+     0.37
+    ]
+   },
+   "impurity_limits_wt_percent": {
+    "Hf_typical_reactor_grade": 0.01,
+    "O_product_spec_example": "900-1400 ppm; N <80 ppm; H <25 ppm (1999 IGORR paper, product-specific)"
+   },
+   "nominal_choice_note": "PNNL composition is a normalized nominal (Sn 1.3955, Fe 0.1994, Cr 0.0997, O 0.1196). ASTM B350/B353 R60804 ranges are from secondary sources (patent text, MakeItFrom), not the standard. Ni, Co, N, Hf, Nb limits (relevant to Co-60/Nb-94/Zr-93 activation) not verified.",
+   "source": {
+    "citation": "PNNL-15870 Rev. 1, \"Compendium of Material Composition Data for Radiation Transport Modeling\", McConn, Gesh, Pagh, Rucker, Williams III, Pacific Northwest National Laboratory, March 4, 2011 (PIET-43741-TM-963)",
+    "table": "Material #369 'Zircaloy-4', printed p. ~350 (PDF 'Page N of 357' footer differs slightly)",
+    "url": "https://www.osti.gov/biblio/1023125 (full text PDF: https://digital.library.unt.edu/ark:/67531/metadc835293/m2/1/high_res_d/1023125.pdf)"
+   },
+   "confidence": "medium",
+   "notes": "Ranges: secondary only. Original ASTM B353 text not retrieved."
+  },
+  {
+   "id": "al6061",
+   "name": "Aluminium 6061",
+   "category": "aluminium alloy",
+   "density_g_cm3": 2.7,
+   "composition_wt_percent": {
+    "Mg": 1.0,
+    "Al": 97.2,
+    "Si": 0.6,
+    "Ti": 0.088,
+    "Cr": 0.195,
+    "Mn": 0.088,
+    "Fe": 0.409,
+    "Cu": 0.275,
+    "Zn": 0.146
+   },
+   "ranges": {},
+   "impurity_limits_wt_percent": {},
+   "nominal_choice_note": "PNNL: Mg, Al, Si, Cr, Cu at average of allowed range; Ti, Mn, Fe, Zn at 58.4% of their upper limits. Sums to 1.00001. Co/Ag/Ta/Eu not specified; trace-sensitive activation (Mn, Zn, Cu, Fe, Cr) is covered.",
+   "source": {
+    "citation": "PNNL-15870 Rev. 1, \"Compendium of Material Composition Data for Radiation Transport Modeling\", McConn, Gesh, Pagh, Rucker, Williams III, Pacific Northwest National Laboratory, March 4, 2011 (PIET-43741-TM-963)",
+    "table": "Material #13 'Aluminum, Alloy 6061-O', printed p. 27 (PDF 'Page N of 357' footer differs slightly)",
+    "url": "https://www.osti.gov/biblio/1023125 (full text PDF: https://digital.library.unt.edu/ark:/67531/metadc835293/m2/1/high_res_d/1023125.pdf)"
+   },
+   "confidence": "high",
+   "notes": ""
+  },
+  {
+   "id": "be_s65",
+   "name": "Beryllium S-65 (nuclear grade)",
+   "category": "beryllium",
+   "density_g_cm3": 1.85,
+   "composition_wt_percent": {
+    "Be": "balance (>=99.2 assay)"
+   },
+   "ranges": {},
+   "impurity_limits_wt_percent": {
+    "BeO": 0.9,
+    "Al": 0.05,
+    "C": 0.09,
+    "Fe": 0.08,
+    "Mg": 0.01,
+    "Cr": 0.01,
+    "Ni": 0.025,
+    "Cu": 0.025,
+    "Ti": 0.025,
+    "Zr": 0.025,
+    "Zn": 0.005,
+    "Mn": 0.005,
+    "Ag": 0.005,
+    "Co": 0.005,
+    "Pb": 0.005,
+    "Ca": 0.005,
+    "Mo": 0.005,
+    "Si": 0.045,
+    "U": 0.015,
+    "other_metallic": 0.04
+   },
+   "nominal_choice_note": "Base Be = remaining. BeO 0.90 max implies O up to 0.576 wt% (0.90*16/25.01) if BeO is taken at its limit. Use limits as conservative inputs; typical values are lower. All limits are maxima (Be assay min 99.2).",
+   "source": {
+    "citation": "Materion, 'S-65 and S-65-H Nuclear-Grade Beryllium' data sheet (undated)",
+    "table": "'Chemical Composition' table; 'Typical Physical Properties' (density 1.85 g/cm3, min bulk density 99.0% of theoretical for S-65)",
+    "url": "https://hkvxni.files.cmp.optimizely.com/download/c2e44162f75e11eea40756b8ca9c2abc ; PNNL-15870 #24 Beryllium: 1.848 g/cm3 (NIST ESTAR)"
+   },
+   "confidence": "high",
+   "notes": "Table read directly from the PDF. U limit may be lower on request. Ag 0.005 and Co 0.005 wt% (50 ppm) are specified maxima."
+  },
+  {
+   "id": "pbli_eutectic",
+   "name": "Pb-15.7Li eutectic (natural Li)",
+   "category": "breeder",
+   "density_g_cm3": null,
+   "density_hint_unverified": "9.88 g/cm3 at 573 K (300 C) from correlation below; solid at room T",
+   "composition_wt_percent": {
+    "Pb": 99.38,
+    "Li": 0.62
+   },
+   "ranges": {},
+   "impurity_limits_wt_percent": {},
+   "density_correlation": "rho[kg/m3] = 10581.8 - 1.229*T[K], valid 508-997 K (Khairulin, as recommended in Favuzza 2024); gives 9.88 g/cm3 at 573 K and 9.84 g/cm3 at 600 K",
+   "nominal_choice_note": "CRITICAL: '15.7' is ATOM percent Li (Pb84.3Li15.7). Weight fractions computed here: Li 15.7*6.941/(15.7*6.941+84.3*207.2) = 0.6200 wt%, Pb 99.380 wt%. Natural Li isotopics (7.5% Li-6) assumed; no enrichment. Impurity limits (e.g. Bi, Ag, Fe) not found.",
+   "source": {
+    "citation": "P. Favuzza, 'Chemistry and relevant thermophysical properties of Pb84.3Li15.7 liquid solutions: Updated view and identification of new and coherent values', Results in Materials 23 (2024) 100622, DOI 10.1016/j.rinma.2024.100622",
+    "table": "Eq. (20) / Table 4 (density correlations, Khairulin 15.7 at.% Li)",
+    "url": "https://doi.org/10.1016/j.rinma.2024.100622"
+   },
+   "confidence": "medium",
+   "notes": "Density correlation read directly from paper text. Mas de les Valls et al., J. Nucl. Mater. 376 (2008) 353 is the other standard reference (not retrieved)."
+  },
+  {
+   "id": "concrete_nbs03",
+   "name": "Concrete, Ordinary (NBS 03)",
+   "category": "concrete",
+   "density_g_cm3": 2.35,
+   "composition_wt_percent": {
+    "H": 0.8485,
+    "C": 5.0064,
+    "O": 47.3483,
+    "Mg": 2.4183,
+    "Al": 3.6063,
+    "Si": 14.51,
+    "S": 0.297,
+    "K": 0.1697,
+    "Ca": 24.6924,
+    "Fe": 1.1031
+   },
+   "ranges": {},
+   "impurity_limits_wt_percent": {},
+   "nominal_choice_note": "Contains no Na, Co, Eu, Cs etc. which dominate concrete activation; PNNL #96 (NBS 04) has Na 1.7101 wt% (H 0.5558, O 49.8076, Mg 0.2565, Al 4.5746, Si 31.5092, S 0.1283, K 1.9239, Ca 8.2941, Fe 1.2398, no C) and #97 (NIST) Na 1.5208 wt%. Suggest offering NBS 04 or an ordinary concrete with an explicit Na and trace Co/Eu note.",
+   "source": {
+    "citation": "PNNL-15870 Rev. 1, \"Compendium of Material Composition Data for Radiation Transport Modeling\", McConn, Gesh, Pagh, Rucker, Williams III, Pacific Northwest National Laboratory, March 4, 2011 (PIET-43741-TM-963); weight fractions from Shultis & Faw (1996) Table 8.8 / ANSI/ANS-6.4-1985",
+    "table": "Material #95, printed p. 107",
+    "url": "https://www.osti.gov/biblio/1023125 (full text PDF: https://digital.library.unt.edu/ark:/67531/metadc835293/m2/1/high_res_d/1023125.pdf)"
+   },
+   "confidence": "high",
+   "notes": "Sums to 1.000000."
+  },
+  {
+   "id": "water",
+   "name": "Water (light, liquid)",
+   "category": "coolant",
+   "density_g_cm3": 0.998207,
+   "composition_wt_percent": {
+    "H": 11.1894,
+    "O": 88.8106
+   },
+   "ranges": {},
+   "impurity_limits_wt_percent": {},
+   "nominal_choice_note": "Density at 20 C, 1 atm (Tanaka et al. 2001). Use 1.0 for simplicity if desired. Natural isotopics assumed.",
+   "source": {
+    "citation": "PNNL-15870 Rev. 1, \"Compendium of Material Composition Data for Radiation Transport Modeling\", McConn, Gesh, Pagh, Rucker, Williams III, Pacific Northwest National Laboratory, March 4, 2011 (PIET-43741-TM-963)",
+    "table": "Material #354 'Water, Liquid', printed p. 338 (PDF 'Page N of 357' footer differs slightly)",
+    "url": "https://www.osti.gov/biblio/1023125 (full text PDF: https://digital.library.unt.edu/ark:/67531/metadc835293/m2/1/high_res_d/1023125.pdf)"
+   },
+   "confidence": "high",
+   "notes": ""
+  },
+  {
+   "id": "graphite_reactor",
+   "name": "Graphite (reactor/nuclear grade)",
+   "category": "moderator",
+   "density_g_cm3": 1.7,
+   "composition_wt_percent": {
+    "C": 99.9999,
+    "B": 0.0001
+   },
+   "ranges": {},
+   "impurity_limits_wt_percent": {
+    "boron_equivalent_nuclear_grade": 0.0005
+   },
+   "nominal_choice_note": "PNNL uses 1.0 ppm boron equivalent for nuclear graphite (from ANL-GenIV-059); nuclear grade defined as <=5 ppm boron equivalent (Bolewski et al. 2005, NIM B 237:602). Densities in other sources: 1.67-1.78 (H-451 1.74, 2020 1.78). Element-by-element ash impurities (Fe, V, Ca, Ti, Co, Eu...) were NOT found in a citable source; left out. Boron equivalent is a neutron-absorption surrogate, not an activation composition.",
+   "source": {
+    "citation": "PNNL-15870 Rev. 1, \"Compendium of Material Composition Data for Radiation Transport Modeling\", McConn, Gesh, Pagh, Rucker, Williams III, Pacific Northwest National Laboratory, March 4, 2011 (PIET-43741-TM-963)",
+    "table": "Material #63 'Carbon, Graphite (Reactor Grade)', printed p. 70 (PDF 'Page N of 357' footer differs slightly)",
+    "url": "https://www.osti.gov/biblio/1023125 (full text PDF: https://digital.library.unt.edu/ark:/67531/metadc835293/m2/1/high_res_d/1023125.pdf)"
+   },
+   "confidence": "medium",
+   "notes": "For activation, use vendor ash analyses (ASTM C1233-type) or add measured impurities."
+  },
+  {
+   "id": "tantalum",
+   "name": "Tantalum",
+   "category": "refractory metal",
+   "density_g_cm3": 16.654,
+   "composition_wt_percent": {
+    "Ta": 100.0
+   },
+   "ranges": {},
+   "impurity_limits_wt_percent": {
+    "C": 0.01,
+    "O": 0.015,
+    "N": 0.01,
+    "H": 0.0015,
+    "Fe": 0.01,
+    "Mo": 0.02,
+    "Nb": 0.1,
+    "Ni": 0.01,
+    "Si": 0.005,
+    "Ti": 0.01,
+    "W": 0.05
+   },
+   "nominal_choice_note": "Pure Ta per PNNL; ASTM B708 limits (R05200 EB/VAC cast, max wt%) given for reference.",
+   "source": {
+    "citation": "PNNL-15870 Rev. 1, \"Compendium of Material Composition Data for Radiation Transport Modeling\", McConn, Gesh, Pagh, Rucker, Williams III, Pacific Northwest National Laboratory, March 4, 2011 (PIET-43741-TM-963) ; ASTM B708-05 'Standard Specification for Tantalum and Tantalum Alloy Plate, Sheet, and Strip', Table 1",
+    "table": "PNNL #309 p. 297; ASTM B708 Table 1 (R05200)",
+    "url": "https://www.osti.gov/biblio/1023125 (full text PDF: https://digital.library.unt.edu/ark:/67531/metadc835293/m2/1/high_res_d/1023125.pdf)"
+   },
+   "confidence": "high",
+   "notes": "B708 text read directly from PDF copy (2005 edition)."
+  },
+  {
+   "id": "niobium",
+   "name": "Niobium",
+   "category": "refractory metal",
+   "density_g_cm3": 8.57,
+   "composition_wt_percent": {
+    "Nb": 100.0
+   },
+   "ranges": {},
+   "impurity_limits_wt_percent": {
+    "C": 0.01,
+    "N": 0.01,
+    "O": 0.015,
+    "H": 0.0015,
+    "Zr": 0.02,
+    "Ta": 0.1,
+    "Fe": 0.005,
+    "Si": 0.005,
+    "W": 0.03,
+    "Ni": 0.005,
+    "Mo": 0.01,
+    "Hf": 0.02,
+    "Ti": 0.02,
+    "B_when_specified": "2 ppm",
+    "Al_when_specified": 0.002,
+    "Be_when_specified": 0.005
+   },
+   "nominal_choice_note": "Pure Nb per PNNL; limits are ASTM B393 Type 1 (R04200 reactor grade), max wt%, per ingot.",
+   "source": {
+    "citation": "PNNL-15870 Rev. 1, \"Compendium of Material Composition Data for Radiation Transport Modeling\", McConn, Gesh, Pagh, Rucker, Williams III, Pacific Northwest National Laboratory, March 4, 2011 (PIET-43741-TM-963) ; ASTM B393-05 'Standard Specification for Niobium and Niobium Alloy Strip, Sheet, and Plate', Table 2",
+    "table": "PNNL #205 p. 201; ASTM B393 Table 2 Type 1",
+    "url": "https://www.osti.gov/biblio/1023125 (full text PDF: https://digital.library.unt.edu/ark:/67531/metadc835293/m2/1/high_res_d/1023125.pdf)"
+   },
+   "confidence": "high",
+   "notes": "B393 text read directly (2005 edition)."
+  },
+  {
+   "id": "titanium_gr2",
+   "name": "Titanium Grade 2",
+   "category": "titanium",
+   "density_g_cm3": 4.54,
+   "composition_wt_percent": {
+    "Ti": "balance"
+   },
+   "ranges": {},
+   "impurity_limits_wt_percent": {
+    "N": 0.03,
+    "C": 0.08,
+    "H": 0.015,
+    "Fe": 0.3,
+    "O": 0.25,
+    "residuals_each": 0.1,
+    "residuals_total": 0.4
+   },
+   "nominal_choice_note": "PNNL gives only pure Ti (4.54 g/cm3, NIST). Grade 2 limits from ASTM B265 Table 2. Grade 2 density typically ~4.51 (unverified). Use Ti balance + Fe (e.g. 0.15) + O if impurity mode desired; all are maxima.",
+   "source": {
+    "citation": "PNNL-15870 Rev. 1, \"Compendium of Material Composition Data for Radiation Transport Modeling\", McConn, Gesh, Pagh, Rucker, Williams III, Pacific Northwest National Laboratory, March 4, 2011 (PIET-43741-TM-963) ; ASTM B265-08b 'Titanium and Titanium Alloy Strip, Sheet, and Plate', Table 2",
+    "table": "PNNL #324 p. 312; ASTM B265 Table 2 Grade 2",
+    "url": "https://www.osti.gov/biblio/1023125 (full text PDF: https://digital.library.unt.edu/ark:/67531/metadc835293/m2/1/high_res_d/1023125.pdf)"
+   },
+   "confidence": "high",
+   "notes": "B265 table read directly from PDF copy."
+  },
+  {
+   "id": "copper_ofhc",
+   "name": "Copper OFHC (C10100/OFE)",
+   "category": "copper",
+   "density_g_cm3": 8.96,
+   "composition_wt_percent": {
+    "Cu": 100.0
+   },
+   "ranges": {},
+   "impurity_limits_wt_percent": {
+    "Cu_min_excl_Ag": 99.99,
+    "O": 0.0005,
+    "Bi": 0.0001,
+    "Cd": 0.0001,
+    "Mn": 5e-05
+   },
+   "nominal_choice_note": "Pure Cu per PNNL #102. UNS C10100 limits (copper.org datasheet via search summary): Cu >=99.99 (excl. Ag), O <=5 ppm, Bi 1 ppm, Cd 1 ppm, Mn 0.5 ppm; the remaining limits (Ag, Fe, Pb, Ni, Se, S, Te, Zn, P, Sb, As, Sn) could not be read reliably.",
+   "source": {
+    "citation": "PNNL-15870 Rev. 1, \"Compendium of Material Composition Data for Radiation Transport Modeling\", McConn, Gesh, Pagh, Rucker, Williams III, Pacific Northwest National Laboratory, March 4, 2011 (PIET-43741-TM-963) ; copper.org UNS C10100 composition data (ASTM B170 Grade 1)",
+    "table": "PNNL #102 p. 116",
+    "url": "https://uns.copper.org/wrought/coppers.php ; https://www.osti.gov/biblio/1023125 (full text PDF: https://digital.library.unt.edu/ark:/67531/metadc835293/m2/1/high_res_d/1023125.pdf)"
+   },
+   "confidence": "medium",
+   "notes": "ASTM B170 itself not retrieved. Ag limit (important for Ag-110m) not verified."
+  }
+ ]
+}
