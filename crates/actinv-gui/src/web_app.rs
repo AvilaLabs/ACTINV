@@ -189,6 +189,7 @@ pub struct Workbench {
     material_view: MaterialState,
     certify: crate::views::certify::CertifyState,
     optimize: crate::views::optimize::OptimizeState,
+    compare: crate::views::compare::CompareState,
     /// folding groups (Studies, Tools) the visitor opened
     nav_open: Vec<crate::nav::Group>,
     source_view: crate::views::source::SourceState,
@@ -245,6 +246,7 @@ impl Workbench {
             material_view: MaterialState::default(),
             certify: Default::default(),
             optimize: Default::default(),
+            compare: Default::default(),
             nav_open: Vec::new(),
             source_view: Default::default(),
             steps: StepsState::default(),
@@ -1530,6 +1532,23 @@ impl Workbench {
         }
     }
 
+    /// Compare: the browser sets up the study and downloads it.
+    fn compare_page(&mut self, ui: &mut egui::Ui) {
+        use crate::views::compare::{self, CompareAction};
+        visuals::heading(ui, "Compare", compare::QUESTION);
+        match compare::show(ui, &self.problem, &mut self.compare, false, false) {
+            CompareAction::None => {}
+            CompareAction::Open(target) => self.page = page_for(target),
+            CompareAction::Compare => {
+                let saved = compare::study_spec(&self.problem, &self.problem, &self.compare)
+                    .and_then(|study| serde_json::to_string_pretty(&study).map_err(|e| e.to_string()))
+                    .and_then(|text| web::download("compare.json", text.as_bytes()))
+                    .map(|()| "Download started. Run `actinv study run compare.json out` where the nuclear data are installed.".to_owned());
+                self.report(saved);
+            }
+        }
+    }
+
     fn impurities_page(&mut self, ui: &mut egui::Ui) {
         use crate::views::impurities::{self, Context, ImpuritiesAction};
         visuals::heading(
@@ -1868,6 +1887,7 @@ impl eframe::App for Workbench {
                     Page::Impurities => self.impurities_page(ui),
                     Page::Certify => self.certify_page(ui),
                     Page::Optimize => self.optimize_page(ui),
+                    Page::Compare => self.compare_page(ui),
                     Page::Data => self.data_page(ui),
                     Page::Advanced => self.advanced_page(ui),
                     // the browser never runs the solver

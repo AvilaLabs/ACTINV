@@ -106,6 +106,7 @@ impl Default for OptimizeState {
     }
 }
 
+#[cfg_attr(target_arch = "wasm32", allow(dead_code))]
 impl OptimizeState {
     /// Set the form to the search that produced a result, so the two read together.
     pub fn show_search(&mut self, search: &Value, document: &Value) {
@@ -183,6 +184,7 @@ impl OptimizeState {
 }
 
 /// The quantity a response name stands for, and its nuclide for a one-nuclide activity.
+#[cfg_attr(target_arch = "wasm32", allow(dead_code))]
 fn quantity_of(response: &str) -> Option<(Quantity, String)> {
     Some(match response {
         "heat.total" => (Quantity::Heat, String::new()),

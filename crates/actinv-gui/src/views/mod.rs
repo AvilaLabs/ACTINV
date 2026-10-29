@@ -3,6 +3,7 @@
 //! touches the file system, or runs the solver.
 pub mod certify;
 pub mod check;
+pub mod compare;
 pub mod export;
 pub mod import;
 pub mod impurities;

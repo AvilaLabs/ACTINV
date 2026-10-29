@@ -21,7 +21,7 @@ pub struct MaterialState {
 const DEFAULT_DENSITY_G_CM3: f64 = 1.;
 
 /// The shipped material library (P162), read once.
-fn library() -> &'static [MaterialPreset] {
+pub(crate) fn library() -> &'static [MaterialPreset] {
     static LIBRARY: OnceLock<Vec<MaterialPreset>> = OnceLock::new();
     LIBRARY.get_or_init(|| presets::materials().unwrap_or_default())
 }

@@ -114,7 +114,7 @@ pub fn starting_card(ui: &mut egui::Ui, document: &mut Value, state: &mut Source
 }
 
 /// The short name on a shape's button.
-fn shape_name(shape: SpectrumShape) -> &'static str {
+pub(crate) fn shape_name(shape: SpectrumShape) -> &'static str {
     match shape {
         SpectrumShape::Fusion14MeV => "D-T fusion (14.1 MeV)",
         SpectrumShape::Fission => "Fission (Watt)",

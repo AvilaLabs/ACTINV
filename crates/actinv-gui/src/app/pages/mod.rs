@@ -5,6 +5,7 @@ mod assimilation;
 mod certify;
 mod charts;
 mod check_run;
+mod compare;
 mod data;
 mod export;
 mod impurities;
@@ -61,6 +62,7 @@ impl Desktop {
             Page::Impurities => self.impurities_page(ui),
             Page::Certify => self.certify_page(ui),
             Page::Optimize => self.optimize_page(ui),
+            Page::Compare => self.compare_page(ui),
             Page::Sweep => self.sweep_page(ui),
             Page::Assimilation => self.assimilation(ui),
             Page::Data => self.data_page(ui),
