@@ -83,6 +83,25 @@ impl Drop for CacheGuard {
 }
 
 pub fn spawn(spec: Spec, cache: PathBuf) -> Result<Handle, String> {
+    spawn_input(serde_json::to_vec(&spec).map_err(|e| e.to_string())?, cache)
+}
+
+/// Run an `actinv-impurities-1` screen in the worker. The document must embed its base spec:
+/// the worker resolves no path relative to a document file.
+pub fn spawn_impurities(document: &Value, cache: PathBuf) -> Result<Handle, String> {
+    if document["schema"] != IMPURITIES_SCHEMA || !document["base_spec"].is_object() {
+        return Err("an impurities screen needs an actinv-impurities-1 document with its base spec embedded".into());
+    }
+    spawn_input(
+        serde_json::to_vec(document).map_err(|e| e.to_string())?,
+        cache,
+    )
+}
+
+/// The schema that makes the worker run an impurities screen instead of a calculation.
+pub const IMPURITIES_SCHEMA: &str = "actinv-impurities-1";
+
+fn spawn_input(input: Vec<u8>, cache: PathBuf) -> Result<Handle, String> {
     // A Rust unit-test executable does not run our application main. Launching
     // current_exe from it would recursively run the entire test suite.
     if cfg!(test) {
@@ -91,7 +110,6 @@ pub fn spawn(spec: Spec, cache: PathBuf) -> Result<Handle, String> {
     let exe = std::env::current_exe().map_err(|e| e.to_string())?;
     let (tx, rx) = mpsc::channel();
     let (cancel_tx, cancel_rx) = mpsc::channel();
-    let input = serde_json::to_vec(&spec).map_err(|e| e.to_string())?;
     let supervisor = thread::Builder::new()
         .name("actinv-solver-worker".into())
         .spawn(move || {
@@ -187,6 +205,24 @@ pub fn spawn(spec: Spec, cache: PathBuf) -> Result<Handle, String> {
         cancel: cancel_tx,
         supervisor: Some(supervisor),
     })
+}
+
+/// Run an impurities screen on a thread with the solver's stack. Verification is on: every
+/// reported composition is re-solved, as `actinv impurities` does without `--no-verify`.
+pub fn screen_in_solver_thread(document: String) -> Result<Value, String> {
+    let (tx, rx) = mpsc::sync_channel(1);
+    thread::Builder::new()
+        .stack_size(crate::model::SOLVER_STACK_BYTES)
+        .spawn(move || {
+            let dir = std::env::current_dir().unwrap_or_default();
+            let _ = tx.send(actinv_cli::impurities::run_impurities_doc(
+                &document, &dir, true,
+            ));
+        })
+        .map_err(|e| e.to_string())?
+        .join()
+        .map_err(|_| "impurities thread panicked".to_owned())?;
+    rx.recv().map_err(|e| e.to_string())?
 }
 
 pub fn run_in_solver_thread(spec: Spec) -> Result<Value, String> {

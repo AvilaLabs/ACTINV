@@ -57,6 +57,8 @@ enum FileKind {
     WasteResult,
     /// An `actinv-waste-spec-1` document for the editor on the Waste class page.
     WasteSpec,
+    /// An `actinv-impurities-result-1` for the Impurities page.
+    ScreenResult,
 }
 
 /// A file choice a shared view asked for while it was drawn.
@@ -193,6 +195,7 @@ pub struct Workbench {
     export: crate::views::export::ExportState,
     /// The waste spec in the editor on the Waste class page.
     waste_spec: String,
+    impurities: crate::views::impurities::ImpuritiesState,
     /// The deck import dialog while it is open.
     import: Option<ImportState>,
     dark: bool,
@@ -241,6 +244,7 @@ impl Workbench {
             waste_result: None,
             export: Default::default(),
             waste_spec: String::new(),
+            impurities: Default::default(),
             import: None,
             dark: false,
             suite: avila_account::ui_web::WebSuite::new(&cc.egui_ctx, "actinv"),
@@ -353,13 +357,17 @@ impl Workbench {
             | FileKind::Result
             | FileKind::Compare
             | FileKind::WasteResult
-            | FileKind::WasteSpec => {}
+            | FileKind::WasteSpec
+            | FileKind::ScreenResult => {}
         }
         let text = std::str::from_utf8(bytes).map_err(|_| "Choose an ACTINV JSON text file")?;
         let kind = if matches!(kind, FileKind::Auto) {
             let value: Value =
                 serde_json::from_str(text).map_err(|error| format!("Invalid JSON: {error}"))?;
             match waste::detect(&value) {
+                _ if value["schema"] == crate::views::impurities::RESULT_SCHEMA => {
+                    FileKind::ScreenResult
+                }
                 Some(Detected::Spec) => FileKind::WasteSpec,
                 Some(Detected::Result) => FileKind::WasteResult,
                 None if value.get("steps").is_some() => FileKind::Result,
@@ -405,6 +413,15 @@ impl Workbench {
             FileKind::WasteResult => {
                 self.waste_result = Some((name.clone(), waste::read_result(text)?));
                 self.page = Page::Waste;
+                Ok(format!("Opened {name}."))
+            }
+            FileKind::ScreenResult => {
+                let value: Value =
+                    serde_json::from_str(text).map_err(|error| format!("Invalid JSON: {error}"))?;
+                crate::views::impurities::check_result(&value)?;
+                self.impurities.result = Some((name.clone(), value));
+                self.impurities.showing_result = true;
+                self.page = Page::Impurities;
                 Ok(format!("Opened {name}."))
             }
             FileKind::WasteSpec => {
@@ -1445,6 +1462,51 @@ impl Workbench {
 
     /// The waste class page: a viewer for waste results and an editor for waste specs. The
     /// browser never classifies; the evaluator runs in the desktop app and the CLI.
+    fn impurities_page(&mut self, ui: &mut egui::Ui) {
+        use crate::views::impurities::{self, Context, ImpuritiesAction};
+        visuals::heading(
+            ui,
+            "Impurities",
+            "Which trace elements drive activity, heat, dose or waste class, the worst case over their specified ranges, and how far each may rise before a limit is reached.",
+        );
+        let context = Context {
+            can_screen: false,
+            running: false,
+        };
+        match impurities::show(ui, &self.problem, &mut self.impurities, &context) {
+            ImpuritiesAction::None | ImpuritiesAction::Screen => {}
+            ImpuritiesAction::SaveScreen => {
+                let saved = impurities::screen_document(
+                    &self.impurities,
+                    &self.problem,
+                    self.problem.clone(),
+                )
+                .and_then(|screen| {
+                    serde_json::to_string_pretty(&screen).map_err(|e| e.to_string())
+                })
+                .and_then(|text| web::download("impurities.json", text.as_bytes()))
+                .map(|()| {
+                    "Download started. Keep impurities.json beside the nuclear data the problem names, and run `actinv impurities impurities.json result.json`.".to_owned()
+                });
+                self.impurities.message = Some(saved.clone());
+                self.report(saved);
+            }
+            ImpuritiesAction::OpenResult => {
+                self.pick(FileKind::ScreenResult, &["json"], ui.ctx());
+            }
+            ImpuritiesAction::SaveResult => {
+                if let Some((name, value)) = &self.impurities.result {
+                    let saved = serde_json::to_string_pretty(value)
+                        .map_err(|e| e.to_string())
+                        .and_then(|text| web::download(name, text.as_bytes()))
+                        .map(|()| "Download started.".to_owned());
+                    self.report(saved);
+                }
+            }
+            ImpuritiesAction::GoTo(target) => self.page = page_for(target),
+        }
+    }
+
     fn waste_page(&mut self, ui: &mut egui::Ui) {
         visuals::heading(
             ui,
@@ -1698,6 +1760,7 @@ impl eframe::App for Workbench {
                     Page::Ledger => self.ledger_page(ui),
                     Page::Export => self.export_page(ui),
                     Page::Waste => self.waste_page(ui),
+                    Page::Impurities => self.impurities_page(ui),
                     Page::Advanced => self.advanced_page(ui),
                     // the browser never runs the solver
                     Page::Sweep | Page::Assimilation => self.start(ui),

@@ -5,6 +5,7 @@ mod assimilation;
 mod charts;
 mod check_run;
 mod export;
+mod impurities;
 mod ledger;
 mod material;
 mod outputs;
@@ -52,6 +53,7 @@ impl Desktop {
             Page::Ledger => self.ledger(ui),
             Page::Export => self.export_page(ui),
             Page::Waste => self.waste_page(ui),
+            Page::Impurities => self.impurities_page(ui),
             Page::Sweep => self.sweep_page(ui),
             Page::Assimilation => self.assimilation(ui),
             Page::Advanced => self.advanced(ui),

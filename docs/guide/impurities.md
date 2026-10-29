@@ -265,6 +265,23 @@ With every impurity at its maximum, the Table 1 sum reaches 0.70 of its Class C 
 over the declared ranges. The entry's `ranking` names the impurities behind it: nitrogen (C-14), then molybdenum and
 niobium (Nb-94).
 
+## In the desktop app and the browser
+
+The **Impurities** page, under **STUDIES**, screens the material of the problem that is open. **Composition** lists
+its elements: choose the **Balance** (the largest at first), keep an element **Fixed** at its share from **Material**,
+or make it an **Impurity** with a nominal, minimum and maximum in wt%. Add an impurity the material does not list by
+its symbol. **When** selects the steps to screen; every cooling step after the last irradiation is selected at first.
+**What matters** chooses the endpoints, each with an optional limit, the activity of single nuclides, and the waste
+class with the class to meet; the waste class uses the material's mass and density as the component. The page needs
+a composition in wt%, and it explains on the page what it refuses, as the command does.
+
+**Screen impurities** runs the screen in the background, with verification, and shows the result: whether it was
+verified, an overview with each endpoint's worst case, largest contributor and tightest limit over all screened
+steps, and for a chosen step, each endpoint's nominal, impurity-free and worst-case values with every impurity's
+contribution, the nuclides it acts through and its limits. **Save screen…** writes the `actinv-impurities-1`
+document with the problem embedded, and **Save result…** and **Open result…** write and read results, including
+those of `actinv impurities`. The browser sets up screens and reads results but does not run them.
+
 ## What to keep in mind
 
 - **Linearity.** At fixed flux the coupled activation is linear in the initial composition. That holds without

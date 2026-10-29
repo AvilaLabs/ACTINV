@@ -52,8 +52,15 @@ fn calculation_worker() -> Result<(), String> {
     std::io::stdin()
         .read_to_string(&mut input)
         .map_err(|e| e.to_string())?;
-    let spec = actinv_core::spec::Spec::from_json(&input).map_err(|e| e.to_string())?;
-    let result = worker::run_in_solver_thread(spec)?;
+    let schema = serde_json::from_str::<serde_json::Value>(&input)
+        .ok()
+        .and_then(|v| v["schema"].as_str().map(str::to_owned));
+    let result = if schema.as_deref() == Some(worker::IMPURITIES_SCHEMA) {
+        worker::screen_in_solver_thread(input)?
+    } else {
+        let spec = actinv_core::spec::Spec::from_json(&input).map_err(|e| e.to_string())?;
+        worker::run_in_solver_thread(spec)?
+    };
     serde_json::to_writer(std::io::stdout(), &result).map_err(|e| e.to_string())?;
     std::io::stdout().flush().map_err(|e| e.to_string())?;
     Ok(())

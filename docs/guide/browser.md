@@ -15,6 +15,7 @@ For a real calculation, open or drop a result JSON produced by ACTINV. Use **Com
 - **Pathways** shows first products and full production routes, when the result recorded them.
 - **Evidence** shows the ledger of missing data and approximations, and the certificate of inputs and data.
 - **Waste class** reads waste results and edits waste specs; see [Read waste results and edit waste specs](#read-waste-results-and-edit-waste-specs).
+- **Impurities** sets up an impurity screen of the open problem and reads screen results. The browser does not screen: **Save screen…** downloads `impurities.json`, which you run with the desktop app or `actinv impurities`, and **Open result…** shows the result; see [Screen a material's impurities](impurities.md#in-the-desktop-app-and-the-browser).
 
 **Download result** saves the complete result JSON. **Export…** opens the **Export** page, which downloads a report page, charts, tables and the result and problem files as one zip; it offers the same choices as the [desktop Export page](desktop.md#export-a-result) except the waste classification.
 

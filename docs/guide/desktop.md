@@ -11,7 +11,7 @@ The sidebar follows a calculation from start to answer:
 - **Start** is the home page. Begin from the iron example, open a problem, or import a FISPACT-II deck. It also shows the current problem and result, and whether the standard nuclear data are installed.
 - **SET UP** holds the numbered steps: **1 Material**, **2 Irradiation & cooling**, **3 Source & spectrum**, **4 What to compute** and **5 Check & run**. A tick beside a step means its part of the problem is filled in. Each step ends with **Back** and **Continue**.
 - **RESULTS** opens on **Summary**, then **Time history**, **Nuclides**, **Photons & dose**, **Pathways**, **Waste class** and **Evidence**.
-- **STUDIES** holds **Sweep** and **Assimilation**, which run many calculations.
+- **STUDIES** holds **Impurities**, **Sweep** and **Assimilation**, which run many calculations.
 - **TOOLS** holds **Advanced JSON**.
 
 ## Learn without downloading nuclear data
@@ -88,6 +88,8 @@ Press **Load from decay data** to fill the table of nuclide properties (Z, half-
 **Classify** runs in the background. For each selected step the page shows the class, status, coverage, the governing table and column with its sum and margin, and the binding nuclides, a strip of the classes against cooling time, and the earliest selected step within Class A, B and C. These are read from the result; the page computes nothing else. **Save spec…** writes `waste-spec.json` and the `result.json` it reads into a folder you choose (it will not replace existing files), so `actinv waste waste-spec.json` there writes the same result. **Save result…** writes the evaluator's result exactly as the CLI writes it. The classification is nominal screening, not disposal acceptance; see [Component waste classes](waste.md).
 
 ## Studies and tools
+
+**Impurities** screens the trace elements of the open problem's material: which drive activity, decay heat, contact dose, a nuclide's activity, the clearance index or the waste class, the worst case over their specified ranges, and how far each may rise before a limit is reached. It runs `actinv impurities` in the background; see [Screen a material's impurities](impurities.md#in-the-desktop-app-and-the-browser).
 
 **Sweep** solves a family of generated problems along one parameter. **Assimilation** folds a measured value into the uncertainty bands of the loaded result. **Advanced JSON** exposes the complete problem. Mesh runs, bulk library building, and transport-source exports use the [CLI](cli.md).
 

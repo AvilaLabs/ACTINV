@@ -49,6 +49,7 @@ pub enum Page {
     Waste,
     Ledger,
     Export,
+    Impurities,
     Sweep,
     Assimilation,
     Advanced,
@@ -56,7 +57,7 @@ pub enum Page {
 
 impl Page {
     /// Every page in sidebar order. Pages of one group are contiguous.
-    pub const ALL: [Page; 17] = [
+    pub const ALL: [Page; 18] = [
         Page::Start,
         Page::Material,
         Page::Schedule,
@@ -71,6 +72,7 @@ impl Page {
         Page::Waste,
         Page::Ledger,
         Page::Export,
+        Page::Impurities,
         Page::Sweep,
         Page::Assimilation,
         Page::Advanced,
@@ -101,6 +103,7 @@ impl Page {
             Page::Waste => "Waste class",
             Page::Ledger => "Evidence",
             Page::Export => "Export",
+            Page::Impurities => "Impurities",
             Page::Sweep => "Sweep",
             Page::Assimilation => "Assimilation",
             Page::Advanced => "Advanced JSON",
@@ -121,7 +124,7 @@ impl Page {
             | Page::Waste
             | Page::Ledger
             | Page::Export => Group::Results,
-            Page::Sweep | Page::Assimilation => Group::Studies,
+            Page::Impurities | Page::Sweep | Page::Assimilation => Group::Studies,
             Page::Advanced => Group::Tools,
         }
     }
@@ -168,6 +171,7 @@ mod tests {
                 "Waste class",
                 "Evidence",
                 "Export",
+                "Impurities",
                 "Sweep",
                 "Assimilation",
                 "Advanced JSON",
@@ -181,7 +185,7 @@ mod tests {
         let mut expected = vec![Group::Start];
         expected.extend([Group::Setup; 5]);
         expected.extend([Group::Results; 8]);
-        expected.extend([Group::Studies; 2]);
+        expected.extend([Group::Studies; 3]);
         expected.push(Group::Tools);
         assert_eq!(groups, expected);
         assert_eq!(Group::Start.caption(), None);

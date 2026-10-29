@@ -4,6 +4,7 @@
 pub mod check;
 pub mod export;
 pub mod import;
+pub mod impurities;
 pub mod material;
 pub mod outputs;
 pub mod pathways;

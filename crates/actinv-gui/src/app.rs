@@ -25,6 +25,7 @@ mod pages;
 use crate::visuals::{heading, json_tree, numeric, text_field, BLUE};
 enum JobOutput {
     Calculation(Value),
+    Screen(Value),
     Data(Value),
     Spectrum(crate::transport::Preview),
 }
@@ -32,6 +33,8 @@ type JobResult = Result<JobOutput, String>;
 #[derive(Clone, Copy, PartialEq, Eq)]
 enum JobKind {
     Calculation,
+    /// An impurity screen in the worker; it answers an `actinv-impurities-result-1`.
+    Screen,
     Data,
     Transport,
 }
@@ -110,6 +113,7 @@ pub struct Desktop {
     /// The Waste class page: its inputs, loaded properties, overrides and last classification.
     waste: pages::waste::WasteState,
     export: crate::views::export::ExportState,
+    impurities: crate::views::impurities::ImpuritiesState,
     /// The import dialog; `Some` while it is open.
     import: Option<ImportState>,
     /// A converted deck waiting for the unsaved-changes guard, and the folder its deck came from.
@@ -296,6 +300,7 @@ impl Desktop {
             steps: Default::default(),
             waste: Default::default(),
             export: Default::default(),
+            impurities: Default::default(),
             import: None,
             import_spec: None,
             import_base: None,
@@ -782,7 +787,16 @@ impl eframe::App for Desktop {
         }
         let result = self.job.as_ref().and_then(|job| {
             let received = if let Some(handle) = &job.handle {
-                handle.rx.try_recv().map(|v| v.map(JobOutput::Calculation))
+                let screen = job.kind == JobKind::Screen;
+                handle.rx.try_recv().map(|v| {
+                    v.map(|value| {
+                        if screen {
+                            JobOutput::Screen(value)
+                        } else {
+                            JobOutput::Calculation(value)
+                        }
+                    })
+                })
             } else {
                 job.rx
                     .as_ref()
@@ -857,6 +871,9 @@ impl eframe::App for Desktop {
                             .into(),
                     ));
                     }
+                    Ok(JobOutput::Screen(v)) => {
+                        self.screen_finished("Completed screen".into(), v);
+                    }
                     Ok(JobOutput::Calculation(v)) => {
                         match ResultDocument::parse(v, "Completed calculation".into()) {
                             Ok(r) => {
@@ -930,6 +947,7 @@ impl Desktop {
                             ui.spinner();
                             let stage = match job.kind {
                                 JobKind::Calculation => "Preparing / solving",
+                                JobKind::Screen => "Screening impurities",
                                 JobKind::Data => "Downloading / verifying",
                                 JobKind::Transport => "Reading / checking transport",
                             };
@@ -937,7 +955,7 @@ impl Desktop {
                                 "{stage} · {:.0}s",
                                 job.started.elapsed().as_secs_f64()
                             ));
-                            if job.kind == JobKind::Calculation
+                            if matches!(job.kind, JobKind::Calculation | JobKind::Screen)
                                 && ui.button("Cancel calculation").clicked()
                             {
                                 if let Some(handle) = &job.handle {
@@ -969,7 +987,10 @@ impl Desktop {
         self.navigation(ui);
         let before = self.document.clone();
         egui::CentralPanel::default().show(ui,|ui|{
-            egui::ScrollArea::vertical().id_salt(("page",self.page)).show(ui,|ui|{
+            let mut area=egui::ScrollArea::vertical().id_salt(("page",self.page));
+            // a capture can show the lower part of a long page: ACTINV_GUI_CAPTURE_SCROLL pixels down
+            if let Some(offset)=self.capture.as_ref().and(std::env::var("ACTINV_GUI_CAPTURE_SCROLL").ok()).and_then(|v|v.parse::<f32>().ok()){area=area.vertical_scroll_offset(offset);}
+            area.show(ui,|ui|{
                 ui.add_space(12.);
                 if self.raw_dirty && self.page.group()==Group::Setup{ui.colored_label(BLUE,"Apply or discard your pending edits in Advanced JSON to resume editing here.");}
                 ui.add_enabled_ui(!self.raw_dirty||self.page.group()!=Group::Setup,|ui|{self.page_body(ui);});
@@ -1115,7 +1136,7 @@ mod ui_tests {
     }
     #[test]
     fn every_page_renders_in_both_themes_at_minimum_size_with_and_without_a_result() {
-        assert_eq!(Page::ALL.len(), 17);
+        assert_eq!(Page::ALL.len(), 18);
         for theme in [egui::ThemePreference::Light, egui::ThemePreference::Dark] {
             for with_result in [false, true] {
                 let ctx = egui::Context::default();
