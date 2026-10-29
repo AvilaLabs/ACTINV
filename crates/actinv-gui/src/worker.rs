@@ -1,3 +1,4 @@
+use crate::jobs::Job;
 use actinv_core::spec::Spec;
 use serde_json::Value;
 use std::{
@@ -94,6 +95,17 @@ pub fn spawn_impurities(document: &Value, cache: PathBuf) -> Result<Handle, Stri
     }
     spawn_input(
         serde_json::to_vec(document).map_err(|e| e.to_string())?,
+        cache,
+    )
+}
+
+/// Run a job (see `jobs`) in the worker. Its files go to the job's `out_dir`, which the worker
+/// does not clean up: only the private cache is removed.
+#[allow(dead_code)]
+pub fn spawn_job(job: &Job, cache: PathBuf) -> Result<Handle, String> {
+    job.check()?;
+    spawn_input(
+        serde_json::to_vec(&job.to_value()).map_err(|e| e.to_string())?,
         cache,
     )
 }

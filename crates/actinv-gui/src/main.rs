@@ -2,6 +2,7 @@
 
 mod app;
 mod capture;
+mod jobs;
 mod model;
 mod nav;
 mod options;
@@ -57,6 +58,8 @@ fn calculation_worker() -> Result<(), String> {
         .and_then(|v| v["schema"].as_str().map(str::to_owned));
     let result = if schema.as_deref() == Some(worker::IMPURITIES_SCHEMA) {
         worker::screen_in_solver_thread(input)?
+    } else if schema.as_deref() == Some(jobs::JOB_SCHEMA) {
+        jobs::run_on_solver_stack(jobs::Job::from_json(&input)?)?.to_value()
     } else {
         let spec = actinv_core::spec::Spec::from_json(&input).map_err(|e| e.to_string())?;
         worker::run_in_solver_thread(spec)?

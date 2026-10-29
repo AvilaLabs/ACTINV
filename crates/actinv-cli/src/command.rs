@@ -45,6 +45,29 @@ fn read(path: &str) -> String {
     std::fs::read_to_string(path).unwrap_or_else(|e| die(format!("cannot read {path}: {e}"), 2))
 }
 
+/// The photon source of one step of a result document; `label` names the result in messages.
+/// Every failure is a bad input (exit status 2 on the command line).
+pub fn photon_source_at(
+    result_text: &str,
+    label: &str,
+    step: usize,
+) -> Result<PhotonSourceOut, String> {
+    let result: serde_json::Value = serde_json::from_str(result_text)
+        .map_err(|e| format!("cannot parse result {label}: {e}"))?;
+    let steps = result["steps"]
+        .as_array()
+        .ok_or_else(|| format!("{label} has no result steps array"))?;
+    let selected = steps
+        .iter()
+        .find(|value| value["step"].as_u64() == Some(step as u64))
+        .ok_or_else(|| format!("{label} has no step {step}"))?;
+    let value = selected.get("photon_source").ok_or_else(|| {
+        format!("step {step} has no photon_source; request photons or dose in the run spec")
+    })?;
+    serde_json::from_value(value.clone())
+        .map_err(|e| format!("cannot decode photon_source at step {step}: {e}"))
+}
+
 fn selected_source(result_path: &str, requested_step: &str) -> PhotonSourceOut {
     let step: usize = requested_step.parse().unwrap_or_else(|_| {
         die(
@@ -55,90 +78,73 @@ fn selected_source(result_path: &str, requested_step: &str) -> PhotonSourceOut {
     if step == 0 {
         die("STEP is one-based and must be positive", 2);
     }
-    let result: serde_json::Value = serde_json::from_str(&read(result_path))
-        .unwrap_or_else(|e| die(format!("cannot parse result {result_path}: {e}"), 2));
-    let steps = result["steps"]
-        .as_array()
-        .unwrap_or_else(|| die(format!("{result_path} has no result steps array"), 2));
-    let selected = steps
-        .iter()
-        .find(|value| value["step"].as_u64() == Some(step as u64))
-        .unwrap_or_else(|| die(format!("{result_path} has no step {step}"), 2));
-    let value = selected.get("photon_source").unwrap_or_else(|| {
-        die(
-            format!("step {step} has no photon_source; request photons or dose in the run spec"),
-            2,
-        )
-    });
-    serde_json::from_value(value.clone()).unwrap_or_else(|e| {
-        die(
-            format!("cannot decode photon_source at step {step}: {e}"),
-            2,
-        )
-    })
+    photon_source_at(&read(result_path), result_path, step).unwrap_or_else(|e| die(e, 2))
 }
+
+/// A command failure: the message for stderr and the process exit status.
+pub type Failure = (i32, String);
 
 /// Stream an `actinv-mesh-result-1` file and collect every cell's
 /// step-`step` photon source into a spatial-source fragment. Cells
 /// without photons in the export group structure contribute no entry;
 /// missing bounds, a missing step, or an unrequested photon source are
 /// hard errors — the spatial contract never silently drops geometry.
-fn collect_mesh_photon_cells(path: &str, step: usize) -> Vec<MeshPhotonCell> {
+pub fn mesh_photon_cells(path: &str, step: usize) -> Result<Vec<MeshPhotonCell>, Failure> {
     let file = std::fs::File::open(path)
-        .unwrap_or_else(|e| die(format!("cannot open mesh result {path}: {e}"), 2));
+        .map_err(|e| (2, format!("cannot open mesh result {path}: {e}")))?;
     let reader = std::io::BufReader::new(file);
     let mut cells = Vec::new();
     let mut seen_header = false;
     for (line_no, line) in std::io::BufRead::lines(reader).enumerate() {
         let line = line
-            .unwrap_or_else(|e| die(format!("cannot read {path} line {}: {e}", line_no + 1), 2));
+            .map_err(|e| (2, format!("cannot read {path} line {}: {e}", line_no + 1)))?;
         if line.trim().is_empty() {
             continue;
         }
         let record: serde_json::Value = serde_json::from_str(&line)
-            .unwrap_or_else(|e| die(format!("cannot parse {path} line {}: {e}", line_no + 1), 2));
+            .map_err(|e| (2, format!("cannot parse {path} line {}: {e}", line_no + 1)))?;
         match record["record"].as_str() {
             Some("header") => {
                 if record["schema"].as_str() != Some("actinv-mesh-result-1") {
-                    die(format!("{path} is not an actinv-mesh-result-1 file"), 2);
+                    return Err((2, format!("{path} is not an actinv-mesh-result-1 file")));
                 }
                 seen_header = true;
             }
             Some("cell") => {
                 if !seen_header {
-                    die(format!("{path} cell record precedes its header"), 2);
+                    return Err((2, format!("{path} cell record precedes its header")));
                 }
                 let id = record["id"].as_str().unwrap_or("?").to_string();
                 let bounds: [[f64; 2]; 3] = serde_json::from_value(record["bounds_cm"].clone())
-                    .unwrap_or_else(|_| {
-                        die(
-                            format!("cell '{id}' has no bounds_cm; cannot place its source"),
+                    .map_err(|_| {
+                        (
                             1,
+                            format!("cell '{id}' has no bounds_cm; cannot place its source"),
                         )
-                    });
+                    })?;
                 let volume: f64 = serde_json::from_value(record["volume_cm3"].clone())
-                    .unwrap_or_else(|_| die(format!("cell '{id}' has no volume_cm3"), 1));
+                    .map_err(|_| (1, format!("cell '{id}' has no volume_cm3")))?;
                 let steps = record["result"]["steps"]
                     .as_array()
-                    .unwrap_or_else(|| die(format!("cell '{id}' result has no steps"), 1));
+                    .ok_or_else(|| (1, format!("cell '{id}' result has no steps")))?;
                 let selected = steps
                     .iter()
                     .find(|v| v["step"].as_u64() == Some(step as u64))
-                    .unwrap_or_else(|| die(format!("cell '{id}' has no step {step}"), 1));
+                    .ok_or_else(|| (1, format!("cell '{id}' has no step {step}")))?;
                 let source: PhotonSourceOut = serde_json::from_value(
-                    selected.get("photon_source").cloned().unwrap_or_else(|| {
-                        die(
+                    selected.get("photon_source").cloned().ok_or_else(|| {
+                        (
+                            1,
                             format!(
                                 "cell '{id}' step {step} has no photon_source; \
                                          request photons in the mesh spec"
                             ),
-                            1,
                         )
-                    }),
+                    })?,
                 )
-                .unwrap_or_else(|e| die(format!("cell '{id}' step {step} photon_source: {e}"), 1));
+                .map_err(|e| (1, format!("cell '{id}' step {step} photon_source: {e}")))?;
                 if let Some(cell) =
-                    mesh_cell_from_source(id, bounds, volume, &source).unwrap_or_else(|e| die(e, 1))
+                    mesh_cell_from_source(id, bounds, volume, &source).map_err(|e| (1, e))?
                 {
                     cells.push(cell);
                 }
@@ -147,9 +153,13 @@ fn collect_mesh_photon_cells(path: &str, step: usize) -> Vec<MeshPhotonCell> {
         }
     }
     if !seen_header {
-        die(format!("{path} has no actinv-mesh-result-1 header"), 2);
+        return Err((2, format!("{path} has no actinv-mesh-result-1 header")));
     }
-    cells
+    Ok(cells)
+}
+
+fn collect_mesh_photon_cells(path: &str, step: usize) -> Vec<MeshPhotonCell> {
+    mesh_photon_cells(path, step).unwrap_or_else(|(code, message)| die(message, code))
 }
 
 fn valued_options(args: &[String]) -> BTreeMap<&str, &str> {
@@ -267,6 +277,45 @@ fn study_command(args: &[String]) {
         }
         _ => die(STUDY_USAGE, 2),
     }
+}
+
+/// Write the ALARA export of the R2S source `bytes` into `out_dir` and return its one-line
+/// summary. The caller decides whether `out_dir` may already hold files.
+pub fn write_alara_export(
+    bytes: &[u8],
+    shutdown_t_s: f64,
+    out_dir: &std::path::Path,
+) -> Result<String, Failure> {
+    let export = actinv_core::source_adapter::export_source_alara(bytes, shutdown_t_s)
+        .map_err(|e| (1, e))?;
+    std::fs::create_dir_all(out_dir)
+        .map_err(|e| (1, format!("cannot create {}: {e}", out_dir.display())))?;
+    for file in &export.files {
+        std::fs::write(out_dir.join(&file.name), &file.text).map_err(|e| {
+            (
+                1,
+                format!("cannot write {}/{}: {e}", out_dir.display(), file.name),
+            )
+        })?;
+    }
+    let index_text = serde_json::to_string_pretty(&export.index)
+        .map_err(|e| (1, format!("cannot serialize alara index: {e}")))?;
+    std::fs::write(out_dir.join("actinv-alara-index.json"), index_text).map_err(|e| {
+        (
+            1,
+            format!(
+                "cannot write {}/actinv-alara-index.json: {e}",
+                out_dir.display()
+            ),
+        )
+    })?;
+    Ok(format!(
+        "step {} alara source: {} cells, cooling {} s -> {}",
+        export.index["step"],
+        export.files.len(),
+        export.index["cooling_s"],
+        out_dir.display()
+    ))
 }
 
 fn data_command(args: &[String]) {
@@ -798,8 +847,15 @@ struct StandardData {
 }
 
 fn standard_data(catalog: &crate::DataCatalog, root: &std::path::Path) -> StandardData {
+    try_standard_data(catalog, root).unwrap_or_else(|error| die(error, 1))
+}
+
+fn try_standard_data(
+    catalog: &crate::DataCatalog,
+    root: &std::path::Path,
+) -> Result<StandardData, String> {
     let dir = root.join(format!("v{}", catalog.catalog_version));
-    let bundle = catalog.bundle(None).unwrap_or_else(|error| die(error, 1));
+    let bundle = catalog.bundle(None).map_err(|error| error.to_string())?;
     let missing = bundle
         .artifacts
         .iter()
@@ -813,11 +869,11 @@ fn standard_data(catalog: &crate::DataCatalog, root: &std::path::Path) -> Standa
         })
         .cloned()
         .collect();
-    StandardData {
+    Ok(StandardData {
         dir,
         files: bundle.artifacts.len(),
         missing,
-    }
+    })
 }
 
 /// The fetch command that installs the standard data where a run will look for it.
@@ -828,9 +884,28 @@ fn fetch_hint(data_dir: Option<&str>) -> String {
     }
 }
 
-/// `actinv doctor`: can ACTINV run here, and if not, the one thing to do next.
-fn doctor(problem: Option<&str>) {
-    println!(
+/// What `actinv doctor` found: the text for stdout, and the failure that ended the check, if any.
+pub struct DoctorReport {
+    pub text: String,
+    pub failure: Option<Failure>,
+}
+
+/// `actinv doctor`: can ACTINV run here, and if not, the one thing to do next. `problem` reads
+/// the problem document whose input files are to be checked; it runs after the header is written,
+/// so a failure there still reports the header.
+pub fn doctor_report(problem: Option<&dyn Fn() -> Result<String, Failure>>) -> DoctorReport {
+    let mut text = String::new();
+    let failure = doctor_into(&mut text, problem).err();
+    DoctorReport { text, failure }
+}
+
+fn doctor_into(
+    text: &mut String,
+    problem: Option<&dyn Fn() -> Result<String, Failure>>,
+) -> Result<(), Failure> {
+    use std::fmt::Write;
+    let _ = writeln!(
+        text,
         "ACTINV {}\nWorking directory: {}\nCache override: {}",
         env!("CARGO_PKG_VERSION"),
         std::env::current_dir().unwrap_or_default().display(),
@@ -842,13 +917,18 @@ fn doctor(problem: Option<&str>) {
         }
     );
     match actinv_data::prepared::default_cache_root() {
-        Ok(path) => println!("Cache directory: {}", path.display()),
-        Err(error) => println!("Cache directory: {error}"),
+        Ok(path) => {
+            let _ = writeln!(text, "Cache directory: {}", path.display());
+        }
+        Err(error) => {
+            let _ = writeln!(text, "Cache directory: {error}");
+        }
     }
-    let catalog = embedded_catalog().unwrap_or_else(|error| die(error, 1));
-    let root = crate::data_root().unwrap_or_else(|error| die(error, 1));
+    let catalog = embedded_catalog().map_err(|error| (1, error.to_string()))?;
+    let root = crate::data_root().map_err(|error| (1, error.to_string()))?;
     let from_env = std::env::var_os("ACTINV_DATA_DIR").is_some_and(|value| !value.is_empty());
-    println!(
+    let _ = writeln!(
+        text,
         "Data directory: {} ({})\nData catalog: {} (standard bundle {})",
         root.display(),
         if from_env {
@@ -859,31 +939,45 @@ fn doctor(problem: Option<&str>) {
         catalog.catalog_version,
         catalog.default_bundle
     );
-    if let Some(path) = problem {
+    if let Some(read_problem) = problem {
         let spec = Spec::from_json(
-            &crate::resolve_catalog_json(&read(path)).unwrap_or_else(|e| die(e, 2)),
+            &crate::resolve_catalog_json(&read_problem()?)
+                .map_err(|error| (2, error.to_string()))?,
         )
-        .unwrap_or_else(|e| die(e, 2));
-        crate::workflow::check_files(&spec, false).unwrap_or_else(|e| die(e, 1));
-        println!("Input files are readable. Run `actinv validate SPEC.json --hashes` to check declared hashes.");
-        return;
+        .map_err(|error| (2, error.to_string()))?;
+        crate::workflow::check_files(&spec, false).map_err(|error| (1, error.to_string()))?;
+        text.push_str("Input files are readable. Run `actinv validate SPEC.json --hashes` to check declared hashes.\n");
+        return Ok(());
     }
-    let status = standard_data(&catalog, &root);
+    let status = try_standard_data(&catalog, &root).map_err(|error| (1, error))?;
     if status.missing.is_empty() {
-        println!(
+        let _ = writeln!(
+            text,
             "Standard data: installed ({} files in {}).\nReady. Next: actinv new problem.json",
             status.files,
             status.dir.display()
         );
+        Ok(())
     } else {
-        die(
+        Err((
+            1,
             format!(
                 "Standard data: not installed in {} (missing {}).\nNext: actinv data fetch",
                 status.dir.display(),
                 status.missing.join(", ")
             ),
-            1,
-        );
+        ))
+    }
+}
+
+fn doctor(problem: Option<&str>) {
+    let report = match problem {
+        Some(path) => doctor_report(Some(&|| Ok(read(path)))),
+        None => doctor_report(None),
+    };
+    print!("{}", report.text);
+    if let Some((code, message)) = report.failure {
+        die(message, code);
     }
 }
 
@@ -1618,32 +1712,9 @@ pub fn main_from(a: Vec<String>) {
             }
             let bytes = std::fs::read(&a[3])
                 .unwrap_or_else(|e| die(format!("cannot read {}: {e}", a[3]), 2));
-            let export = actinv_core::source_adapter::export_source_alara(&bytes, shutdown_t_s)
-                .unwrap_or_else(|e| die(e, 1));
-            std::fs::create_dir_all(out_path)
-                .unwrap_or_else(|e| die(format!("cannot create {out_dir}: {e}"), 1));
-            for file in &export.files {
-                std::fs::write(out_path.join(&file.name), &file.text).unwrap_or_else(|e| {
-                    die(format!("cannot write {}/{}: {e}", out_dir, file.name), 1)
-                });
-            }
-            let index_text = serde_json::to_string_pretty(&export.index)
-                .unwrap_or_else(|e| die(format!("cannot serialize alara index: {e}"), 1));
-            std::fs::write(out_path.join("actinv-alara-index.json"), index_text).unwrap_or_else(
-                |e| {
-                    die(
-                        format!("cannot write {out_dir}/actinv-alara-index.json: {e}"),
-                        1,
-                    )
-                },
-            );
-            eprintln!(
-                "step {} alara source: {} cells, cooling {} s -> {}",
-                export.index["step"],
-                export.files.len(),
-                export.index["cooling_s"],
-                out_dir
-            );
+            let line = write_alara_export(&bytes, shutdown_t_s, out_path)
+                .unwrap_or_else(|(code, message)| die(message, code));
+            eprintln!("{line}");
         }
         "export-source" => {
             if a.len() != 5 {
