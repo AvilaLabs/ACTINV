@@ -343,6 +343,144 @@ pub fn new_example(data_root: &Path) -> Result<Spec, String> {
     Ok(spec)
 }
 
+/// Cooling steps after an irradiation, as durations that accumulate to 1 h, 1 d, 30 d, 1 y and
+/// 10 y after shutdown (a year is 365.25 days).
+const NEW_COOLING_STEPS: [&str; 5] = ["1 h", "23 h", "29 d", "335.25 d", "9 y"];
+
+/// What `actinv new` was asked for.
+#[derive(Debug, PartialEq)]
+pub enum NewRequest {
+    /// `actinv new --list`
+    List,
+    /// the iron example (no library options) or a library material under a standard spectrum
+    Problem {
+        out: String,
+        data_dir: Option<String>,
+        library: Option<NewLibrary>,
+    },
+}
+
+#[derive(Debug, PartialEq)]
+pub struct NewLibrary {
+    pub material: String,
+    pub source: String,
+    pub flux: f64,
+    pub irradiate: String,
+}
+
+/// Parse the arguments after `new`. Errors are the message to print (exit 2).
+pub fn parse_new_args(args: &[String]) -> Result<NewRequest, String> {
+    let usage = || crate::help::usage("new");
+    if args.first().map(String::as_str) == Some("--list") {
+        return if args.len() == 1 {
+            Ok(NewRequest::List)
+        } else {
+            Err(usage())
+        };
+    }
+    let out = match args.first() {
+        Some(first) if !first.starts_with("--") => first.clone(),
+        _ => return Err(usage()),
+    };
+    let (mut material, mut source, mut flux, mut irradiate, mut data_dir) =
+        (None, None, None, None, None);
+    let mut rest = args[1..].iter();
+    while let Some(flag) = rest.next() {
+        let slot = match flag.as_str() {
+            "--material" => &mut material,
+            "--source" => &mut source,
+            "--flux" => &mut flux,
+            "--irradiate" => &mut irradiate,
+            "--data-dir" => &mut data_dir,
+            _ => return Err(usage()),
+        };
+        match rest.next() {
+            Some(value) if slot.is_none() => *slot = Some(value.clone()),
+            _ => return Err(usage()),
+        }
+    }
+    if material.is_none() && source.is_none() && flux.is_none() && irradiate.is_none() {
+        return Ok(NewRequest::Problem {
+            out,
+            data_dir,
+            library: None,
+        });
+    }
+    let (Some(material), Some(source), Some(flux)) = (material, source, flux) else {
+        return Err(format!(
+            "--material, --source and --flux go together (and --irradiate needs them): choose a material and a source and give the flux.\n{}",
+            usage()
+        ));
+    };
+    let flux: f64 = flux.trim().parse().map_err(|_| {
+        format!("--flux '{flux}' is not a number (particles per cm^2 per s, e.g. 1e12)")
+    })?;
+    Ok(NewRequest::Problem {
+        out,
+        data_dir,
+        library: Some(NewLibrary {
+            material,
+            source,
+            flux,
+            irradiate: irradiate.unwrap_or_else(|| "1 y".into()),
+        }),
+    })
+}
+
+/// The `actinv new --list` text: one tab-separated line per library material (id, name, basis),
+/// then one per source shape (id, label).
+pub fn new_list() -> Result<String, String> {
+    let mut lines = Vec::new();
+    for m in actinv_core::presets::materials()? {
+        lines.push(format!("material\t{}\t{}\t{}", m.id, m.name, m.basis));
+    }
+    for shape in actinv_core::presets::SpectrumShape::ALL {
+        lines.push(format!("source\t{}\t{}", shape.id(), shape.label()));
+    }
+    Ok(lines.join("\n"))
+}
+
+/// A problem built from a library material and a standard source spectrum: one irradiation at
+/// `flux` for `irradiate`, then cooling to 10 y. Data references are those of the iron example.
+pub fn new_problem(
+    data_root: &Path,
+    material_id: &str,
+    source_id: &str,
+    flux: f64,
+    irradiate: &str,
+) -> Result<Spec, String> {
+    let preset = actinv_core::presets::material(material_id)?;
+    let shape = actinv_core::presets::SpectrumShape::from_id(source_id)?;
+    let flux_per_group = actinv_core::presets::spectrum(shape, flux)?;
+    let irradiate = irradiate.trim();
+    let seconds = actinv_core::spec::parse_duration(irradiate)?;
+    if !seconds.is_finite() || seconds <= 0.0 {
+        return Err(format!(
+            "--irradiate '{irradiate}' must be a positive duration such as '1 y' or '5 min'"
+        ));
+    }
+    let mut spec = new_example(data_root)?;
+    spec.title = format!("{} under a {}", preset.name, shape.label());
+    spec.material.mass_g = 1.0;
+    spec.material.basis = "wt_percent".into();
+    spec.material.composition = preset.composition_wt_percent;
+    spec.spectrum.structure = "fispact-709".into();
+    spec.spectrum.flux_per_group = flux_per_group;
+    spec.spectrum.total = Some(flux);
+    spec.spectrum.descending = true;
+    let mut steps = vec![serde_json::json!({"dt": irradiate, "flux": 1.0})];
+    steps.extend(
+        NEW_COOLING_STEPS
+            .iter()
+            .map(|dt| serde_json::json!({"dt": dt, "flux": 0.0})),
+    );
+    spec.schedule = serde_json::from_value(serde_json::Value::Array(steps))
+        .map_err(|e| format!("cannot build the schedule: {e}"))?;
+    let text = serde_json::to_string(&spec).map_err(|e| e.to_string())?;
+    Spec::from_json(&text)?;
+    Ok(spec)
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -370,6 +508,127 @@ mod tests {
             .ends_with("/damage/tendl-2025-neutron-damage-709g.json"));
         assert_eq!(explicit.table.sha256, damage.table.sha256);
     }
+    fn strings(parts: &[&str]) -> Vec<String> {
+        parts.iter().map(|p| p.to_string()).collect()
+    }
+
+    #[test]
+    fn new_arguments_keep_the_plain_forms_and_require_a_full_library_set() {
+        assert_eq!(
+            parse_new_args(&strings(&["p.json"])).unwrap(),
+            NewRequest::Problem {
+                out: "p.json".into(),
+                data_dir: None,
+                library: None
+            }
+        );
+        assert_eq!(
+            parse_new_args(&strings(&["p.json", "--data-dir", "d"])).unwrap(),
+            NewRequest::Problem {
+                out: "p.json".into(),
+                data_dir: Some("d".into()),
+                library: None
+            }
+        );
+        assert_eq!(
+            parse_new_args(&strings(&["--list"])).unwrap(),
+            NewRequest::List
+        );
+        assert!(parse_new_args(&strings(&["--list", "x"])).is_err());
+        assert!(parse_new_args(&strings(&[])).is_err());
+        assert!(parse_new_args(&strings(&["p.json", "extra"])).is_err());
+        assert!(parse_new_args(&strings(&["p.json", "--material", "ss316"]))
+            .unwrap_err()
+            .contains("go together"));
+        assert!(parse_new_args(&strings(&["p.json", "--irradiate", "1 d"])).is_err());
+        let full = parse_new_args(&strings(&[
+            "p.json",
+            "--material",
+            "ss316",
+            "--source",
+            "fission",
+            "--flux",
+            "1e13",
+        ]))
+        .unwrap();
+        let NewRequest::Problem {
+            library: Some(lib), ..
+        } = full
+        else {
+            panic!("expected a library request");
+        };
+        assert_eq!((lib.flux, lib.irradiate.as_str()), (1e13, "1 y"));
+        assert!(parse_new_args(&strings(&[
+            "p.json",
+            "--material",
+            "a",
+            "--source",
+            "b",
+            "--flux",
+            "lots"
+        ]))
+        .is_err());
+    }
+
+    #[test]
+    fn new_list_names_every_material_and_shape() {
+        let list = new_list().unwrap();
+        assert_eq!(
+            list.lines().filter(|l| l.starts_with("material\t")).count(),
+            19
+        );
+        assert_eq!(
+            list.lines().filter(|l| l.starts_with("source\t")).count(),
+            4
+        );
+        assert!(list.lines().all(|l| l.split('\t').count() >= 3));
+    }
+
+    #[test]
+    fn library_problem_passes_spec_validation_for_every_material_and_source() {
+        for material in actinv_core::presets::materials().unwrap() {
+            for shape in actinv_core::presets::SpectrumShape::ALL {
+                let spec = new_problem(
+                    Path::new("actinv-data"),
+                    &material.id,
+                    shape.id(),
+                    1e12,
+                    "1 y",
+                )
+                .unwrap();
+                let text = serde_json::to_string_pretty(&spec).unwrap();
+                let parsed = Spec::from_json(&text).unwrap();
+                assert_eq!(parsed.material.composition, material.composition_wt_percent);
+                assert_eq!(parsed.schedule.len(), 6);
+                assert_eq!(parsed.spectrum.flux_per_group.len(), 709);
+                let sum: f64 = parsed.spectrum.flux_per_group.iter().sum();
+                assert!((sum / 1e12 - 1.0).abs() < 1e-12);
+            }
+        }
+    }
+
+    #[test]
+    fn library_problem_cools_to_ten_years_and_refuses_bad_input() {
+        let spec =
+            new_problem(Path::new("actinv-data"), "ss316", "thermal", 1e13, "5 min").unwrap();
+        assert_eq!(spec.schedule[0].dt, "5 min");
+        assert_eq!(spec.schedule[0].flux, 1.0);
+        let cooling: f64 = spec.schedule[1..]
+            .iter()
+            .map(|s| actinv_core::spec::parse_duration(&s.dt).unwrap())
+            .sum();
+        assert!((cooling / actinv_core::spec::parse_duration("10 y").unwrap() - 1.0).abs() < 1e-12);
+        assert!(spec.schedule[1..].iter().all(|s| s.flux == 0.0));
+        let err = |m: &str, s: &str, f: f64, d: &str| {
+            new_problem(Path::new("actinv-data"), m, s, f, d).unwrap_err()
+        };
+        assert!(err("nope", "thermal", 1e12, "1 y").contains("unknown material"));
+        assert!(err("ss316", "flat", 1e12, "1 y").contains("unknown source"));
+        assert!(err("ss316", "thermal", 0.0, "1 y").contains("flux"));
+        assert!(err("ss316", "thermal", 1e12, "0 s").contains("positive"));
+        assert!(err("ss316", "thermal", 1e12, "soon").contains("bad duration"));
+    }
+
     #[test]
     fn missing_files_include_sidecars_and_recovery() {
         let s = new_example(Path::new("/nonexistent-actinv-test-data")).unwrap();

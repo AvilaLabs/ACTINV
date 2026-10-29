@@ -4653,3 +4653,13 @@ compositions (PNNL-15870 Rev. 1, ASTM B708/B393/B265/B760, the EUROFER97 specifi
 NIFS-HEAT-2 and the Pb-15.7Li correlation paper) and four closed-form spectra on the 709-group structure. The research
 record behind the compositions is `results/p162/sources.json`. F82H, SS316L(N)-IG and CuCrZr-IG are excluded until
 their specifications are read from a primary source. Gates G0-G6; one repair round.
+
+## Entry 268 — P162 Amendment A registered before the evidence run: G5 checks the composition where a run records it (2026-10-29)
+
+P162 Amendment A (`protocols/ACTINV-P162_AMENDMENT_A.md`, sha256 `f72ec5512bcbdad54c88b408b9c0155610f7cfb46893a250cd6e9c530204bd61`) is registered before any evidence run. In
+development run 1, both G5 cases wrote and ran with exit 0. G5 still failed, because it asked for the results'
+material blocks, and a run result has none: the composition is recorded only in the ledger's `composition_*`
+totals and flags. G5 now checks that the problem `actinv new` writes carries the library composition to 1e-9, that
+`actinv run` on that file exits 0, and that the result's ledger reads the composition back (wt_percent basis, total
+100, no unknown elements). Development run 1 passed G2-G4, and G3 agreed with the independent recomputation to 6e-14
+relative. Record: `results/failures/p162/dev_run_1/g5.json`. This is not the repair round.
