@@ -1,0 +1,86 @@
+{
+ "run": "P158 development run 1: examples/impurities_ra_steel/impurities_uncertainty.json at 72 samples",
+ "binary": "actinv release build of the uncommitted P158 candidate under development on d4f0fa9 (before Amendment A)",
+ "command": "actinv impurities examples/impurities_ra_steel/impurities_uncertainty.json target/p158-work/dev1/out.json",
+ "exit_code": 3,
+ "wall_time": "54:15.53",
+ "max_rss_kb": 2498228,
+ "failed_samples": 0,
+ "uncertainty_verification": {
+  "verified": false,
+  "solves": 356,
+  "points": 501,
+  "skipped": 126,
+  "failed_points": [
+   {
+    "endpoint": "activity:Nb94",
+    "pass": false,
+    "predicted": 2.0801952913185868e-162,
+    "rel_dev": 1.0,
+    "role": "value_matrix_only",
+    "sample": 54,
+    "solved": 0.0,
+    "step": 2
+   },
+   {
+    "endpoint": "activity:Nb94",
+    "pass": false,
+    "predicted": 2.0801132639462348e-162,
+    "rel_dev": 1.0,
+    "role": "value_matrix_only",
+    "sample": 54,
+    "solved": 0.0,
+    "step": 3
+   },
+   {
+    "endpoint": "activity:Nb94",
+    "pass": false,
+    "predicted": 2.0793731371371736e-162,
+    "rel_dev": 1.0,
+    "role": "value_matrix_only",
+    "sample": 54,
+    "solved": 0.0,
+    "step": 4
+   },
+   {
+    "endpoint": "activity:Nb94",
+    "pass": false,
+    "predicted": 2.071986337578932e-162,
+    "rel_dev": 1.0,
+    "role": "value_matrix_only",
+    "sample": 54,
+    "solved": 0.0,
+    "step": 5
+   }
+  ],
+  "max_rel_dev_of_passing_points_with_a_deviation": 2.759472070043875e-15
+ },
+ "activity_Nb94_sample_54_Bq_per_g": {
+  "2": {
+   "matrix_only": 2.0801952913185868e-162,
+   "nominal": 106.15801595620388,
+   "worst_case": 442.2395554591676
+  },
+  "3": {
+   "matrix_only": 2.0801132639462348e-162,
+   "nominal": 106.1538298765895,
+   "worst_case": 442.2221168326908
+  },
+  "4": {
+   "matrix_only": 2.0793731371371736e-162,
+   "nominal": 106.11605919518581,
+   "worst_case": 442.06476941805704
+  },
+  "5": {
+   "matrix_only": 2.071986337578932e-162,
+   "nominal": 105.73909074965492,
+   "worst_case": 440.4943712124001
+  }
+ },
+ "top_level_verification": {
+  "verified": false,
+  "note": "false because the per-sample verification below failed; its nominal-data points agree to max_rel_dev",
+  "max_rel_dev": 1.987450414440573e-15,
+  "tolerance_rel": 1e-06
+ }
+}

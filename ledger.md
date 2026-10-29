@@ -4589,3 +4589,16 @@ the uncertainty bands on impurity limits; the other is impurity screening in the
   from the full alloy's sampling plan, which is P146's mechanism. P157's algorithm runs per sample. Values get
   upper order-statistic bounds, limits get lower ones, and the waste class gets probabilities. Reference `925a8f40…`,
   built from `3814c21`.
+
+## Entry 263 — P158 Amendment A registered before the evidence run: value checks get P157's absolute floor (2026-10-29)
+
+Development run 1 of the worked example at 72 samples (54 min, 2.5 GB, no failed sample) failed its per-sample
+verification on 4 of 501 points. All four were `activity:Nb94` matrix-only at sample 54: composed 2.08e-162 Bq/g
+against a solved 0. That population is about 156 orders of magnitude below the solver's numerical floor, so both
+numbers are round-off; the same sample's nominal Nb-94 is 106 Bq/g. All the other points agreed to 2.8e-15. The
+record is in `results/failures/p158/dev_run_1/verification.json`.
+
+- **P158 Amendment A** `5405dd03249710c840e8089dfb0efd84c339a971f43d4ea7506b0cc181c9d19c`: a value point's check gets P157's absolute floor of 1e-12 times the endpoint's
+  scale in the sample, and records the raw deviation and the floor when the floor decides it. Limit points,
+  contribution points and P157's nominal-data verification are unchanged. Registered before any evidence run, so
+  the phase's repair round is still available.
