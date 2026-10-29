@@ -1,0 +1,215 @@
+{
+ "candidate_sha256": "36593c73802655de93eed3134df0a6e8fa64bdcf558856fa660b1ce92efe26a6",
+ "checker_sha256": "b8db77b710a034ffe947aca7fb5ba01210bcc2abc67e565df196038af1748876",
+ "decide": {
+  "candidate_exit": 0,
+  "candidate_run_exit": 0,
+  "g2": true,
+  "g2_first_difference": null,
+  "g2_run_first_difference": null,
+  "g3": true,
+  "g4": true,
+  "g5": true,
+  "per_constraint": {
+   "activity.total@2678700": {
+    "candidate": [
+     [
+      26056,
+      "emitted",
+      147.8950415785721
+     ],
+     [
+      26054,
+      "emitted",
+      118.1800037026479
+     ],
+     [
+      26055,
+      "emitted",
+      3.6490684021712986e-22
+     ],
+     [
+      25055,
+      "emitted",
+      2.697629501176169e-22
+     ],
+     [
+      25054,
+      "emitted",
+      2.4360444460937243e-23
+     ]
+    ],
+    "invariant_problems": [],
+    "off_material_targets_listed": [
+     "MN"
+    ],
+    "on_material_computed_blocks": 3,
+    "problems": [],
+    "reference": [
+     [
+      20043,
+      "ill_conditioned",
+      null
+     ],
+     [
+      20044,
+      "ill_conditioned",
+      null
+     ],
+     [
+      20045,
+      "ill_conditioned",
+      null
+     ],
+     [
+      20046,
+      "ill_conditioned",
+      null
+     ],
+     [
+      20047,
+      "ill_conditioned",
+      null
+     ]
+    ],
+    "reference_exercises_defect": true,
+    "reference_ill_conditioned_dropped": [
+     [
+      20043,
+      0
+     ],
+     [
+      20044,
+      0
+     ],
+     [
+      20045,
+      0
+     ],
+     [
+      20046,
+      0
+     ],
+     [
+      20047,
+      0
+     ]
+    ]
+   },
+   "activity.total@86700": {
+    "candidate": [
+     [
+      26056,
+      "emitted",
+      14707.28780720386
+     ],
+     [
+      26054,
+      "emitted",
+      769.3734602224469
+     ],
+     [
+      26057,
+      "emitted",
+      0.16571682704795768
+     ],
+     [
+      25056,
+      "emitted",
+      1.1481373112665592e-20
+     ],
+     [
+      26055,
+      "emitted",
+      4.351511485724412e-22
+     ]
+    ],
+    "invariant_problems": [],
+    "off_material_targets_listed": [
+     "MN"
+    ],
+    "on_material_computed_blocks": 4,
+    "problems": [],
+    "reference": [
+     [
+      20043,
+      "ill_conditioned",
+      null
+     ],
+     [
+      20044,
+      "ill_conditioned",
+      null
+     ],
+     [
+      20045,
+      "ill_conditioned",
+      null
+     ],
+     [
+      20046,
+      "ill_conditioned",
+      null
+     ],
+     [
+      20047,
+      "ill_conditioned",
+      null
+     ]
+    ],
+    "reference_exercises_defect": true,
+    "reference_ill_conditioned_dropped": [
+     [
+      20043,
+      0
+     ],
+     [
+      20044,
+      0
+     ],
+     [
+      20045,
+      0
+     ],
+     [
+      20046,
+      0
+     ],
+     [
+      20047,
+      0
+     ]
+    ]
+   }
+  },
+  "reference_exit": 0,
+  "reference_run_exit": 0
+ },
+ "g0": {
+  "ACTINV-P164_PROTOCOL.md": {
+   "in_protocol_hash_txt": true,
+   "sha256": "352308e0968ad12f3782a357cd77a19e83d7a726be75c7ba0e10e670e16a4141"
+  },
+  "pass": true
+ },
+ "g1": {
+  "log": "results/p164/g1.log",
+  "missing_tests": [],
+  "pass": true,
+  "sha256": "4ccec08215dd27c8848d9d50f3b2b2fed79d435478ca1a8d08a718a78e4acbfb"
+ },
+ "gates": {
+  "G0": "PASS",
+  "G1": "PASS",
+  "G2": "PASS",
+  "G3": "PASS",
+  "G4": "PASS",
+  "G5": "PASS",
+  "G6": "external"
+ },
+ "pass": true,
+ "protocol": "protocols/ACTINV-P164_PROTOCOL.md",
+ "protocol_sha256": "352308e0968ad12f3782a357cd77a19e83d7a726be75c7ba0e10e670e16a4141",
+ "reference_sha256": "0080b97717b22b1a377b73ac1929a6c053dceea52adcbfb7a6bb63c2047b1345",
+ "schema": "actinv-p164-design-order-1"
+}

@@ -4707,3 +4707,20 @@ Disclosed, not evidence: during development a preview of the checker on referenc
 candidate, with a placeholder G1 log, showed G2 to G5 passing and computed Fe-56 and Fe-54 blocks. That preview
 first failed G2 on `run.result_sha256`, which hashes the run's design block; the registered G2 excludes that hash and
 compares the two binaries' run outputs instead.
+
+## Entry 272 — P164 evidence: G0 to G5 pass on f40f5a0 (2026-10-29)
+
+- **Candidate:** `f40f5a0`, the registered protocol on `c8d9514` plus the pseudo-inverse block solve, the ordering
+  guard, five unit tests and `controls/check_p164.py` (`b8db77b7…`). Candidate binary `36593c73…`; reference binary
+  `0080b977…` built from `c8d9514` in its own worktree (the same digest as the P162 binary: no core or CLI source
+  changed between them).
+- **G1:** fmt, `cargo check --workspace --tests`, clippy with `-D warnings`, 1403 workspace tests passed with 0
+  failed (including the five P164 tests), and the release build (`results/p164/g1.log`).
+- **G2:** the decision outputs match apart from the excluded keys, and the two binaries' `actinv run` outputs of the
+  run spec match apart from timing keys and `top_reactions`.
+- **G3-G5:** the reference lists only Ca-43 to Ca-47, all `ill_conditioned`. The candidate computes the Fe blocks
+  first: at 1 d of cooling Fe-56 14707, Fe-54 769 and Fe-57 0.166, and at 31 d Fe-56 148 and Fe-54 118 (variance
+  units of the response), each at least its largest single parameter and at most the total variance. Mn is listed
+  off-material and recorded. Record `results/p164_design_order.json`, log `results/p164/evidence_run_1.log`.
+- Before pushing, `g3_p15_cache_integrity.py` left `results/p15_cache_integrity.json` unchanged, `check_p15
+  --no-write` and `check_public_examples` passed, all on the candidate binary. G6 is CI on this commit.

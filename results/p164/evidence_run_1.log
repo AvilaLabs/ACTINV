@@ -1,0 +1,13 @@
+P164 G0: PASS
+P164 G1: PASS
+P164 G2: PASS
+P164 G3: PASS
+P164 G4: PASS
+P164 G5: PASS
+  activity.total@2678700: reference [[20043, 'ill_conditioned', None], [20044, 'ill_conditioned', None], [20045, 'ill_conditioned', None], [20046, 'ill_conditioned', None], [20047, 'ill_conditioned', None]]
+    candidate [[26056, 'emitted', 147.8950415785721], [26054, 'emitted', 118.1800037026479], [26055, 'emitted', 3.6490684021712986e-22], [25055, 'emitted', 2.697629501176169e-22], [25054, 'emitted', 2.4360444460937243e-23]]
+    off-material ['MN']
+  activity.total@86700: reference [[20043, 'ill_conditioned', None], [20044, 'ill_conditioned', None], [20045, 'ill_conditioned', None], [20046, 'ill_conditioned', None], [20047, 'ill_conditioned', None]]
+    candidate [[26056, 'emitted', 14707.28780720386], [26054, 'emitted', 769.3734602224469], [26057, 'emitted', 0.16571682704795768], [25056, 'emitted', 1.1481373112665592e-20], [26055, 'emitted', 4.351511485724412e-22]]
+    off-material ['MN']
+P164: PASS (/home/connoravila/Documents/actinv/target/p164-wt/results/p164_design_order.json)
