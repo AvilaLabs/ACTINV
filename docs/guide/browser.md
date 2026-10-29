@@ -2,7 +2,7 @@
 
 Open [ACTINV in your browser](https://actinv.avilalabs.org/) to learn the interface, edit a problem, import a FISPACT-II deck, or inspect result files without installation. A laptop or desktop with WebGL enabled works best.
 
-The browser has the same pages and controls as the [desktop app](desktop.md), under the same names, laid out the same way: **Start**, the numbered setup steps ending in **Check & run**, and the results, which open on **Summary**. It leaves out what runs or downloads things: the **Sweep** and **Assimilation** studies, the run button and the nuclear-data download. On **Check & run** the browser hands the problem over instead: **Download problem**, run it with the desktop app or `actinv run`, then open the result here. The pages that differ only in how they choose a file are described below.
+The browser has the same pages and controls as the [desktop app](desktop.md), under the same names, laid out the same way: **Start**, the numbered setup steps ending in **Check & run**, and the results, which open on **Summary**. It leaves out what runs or downloads things: the **Sweep** and **Assimilation** studies, the run button, the nuclear-data download and **Verify the data**. The **Data** page only records the library and decay paths. On **Check & run** the browser hands the problem over instead: **Download problem**, run it with the desktop app or `actinv run`, then open the result here. The pages that differ only in how they choose a file are described below.
 
 ## Explore results
 
@@ -40,6 +40,16 @@ Some options point at a data file with its SHA-256: the kerma table, the photon 
 Choose **Import deck…** on **Start**. The dialog is the one the desktop shows: it lists every keyword of the deck with its line and a status of mapped, approximated, noted or unsupported, and **Strict** refuses a deck with any unsupported keyword. **Download report** saves the report that `actinv import-fispact` writes (see [Move a FISPACT-II deck to ACTINV](fispact-migration.md)). **Use this problem** replaces the current problem, after asking about unsaved changes.
 
 Each file is chosen on its own: the deck, an optional fluxes file and an optional files file. Dropping a file on the window while the dialog is open takes it as the deck. A deck that irradiates but has no fluxes file converts with a flat placeholder spectrum and a required-input note; a decay-only deck needs none. Each file is read on your device, up to 32 MiB, and non-UTF-8 bytes are replaced rather than refused. The files file is read only for the names it lists, and the browser cannot follow those names to other files, so choose the fluxes file yourself.
+
+## Set up studies in the browser
+
+**Certify**, **Optimize** and **Compare** (see [Certify, optimize and compare designs](studies.md)) have the same inputs and checks as in the desktop, but the browser does not solve them. Their main button becomes a download, and the page notes the command that runs it:
+
+- **Certify**: **Download the decision file** gives `decision.json`; run `actinv decide decision.json verdict.json` where the nuclear data and the covariance file are installed.
+- **Optimize**: **Download the search file** gives `search.json` and `base_spec.json`. Keep them in one folder and run `actinv optimize search.json out`. **Use this design** is a desktop button.
+- **Compare**: **Download the study file** gives `compare.json`; run `actinv study run compare.json out`.
+
+The starting cards on **Material**, **Source & spectrum** and **Irradiation & cooling** work in the browser, as does **New problem** on **Start**; see [Start a new problem](desktop.md#start-a-new-problem).
 
 ## Keep your edits
 
