@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://schemas.avilalabs.com/actinv/study/actinv-study-1.schema.json",
   "title": "ACTINV study document v1 (actinv-study-1)",
-  "description": "One versioned study document: a shared library/decay context, a materials x spectra x schedules case grid, the responses to extract and an optional predeclared comparison. Unknown fields are errors; recognised unqualified-family fields (robustness, refinement, spatial_handoff) are refused at validation with family_not_qualified.",
+  "description": "One versioned study document: a shared library/decay context, a materials x spectra x schedules case grid, the responses to extract and an optional predeclared comparison. Unknown fields are errors; the recognised unqualified-family field spatial_handoff is refused at validation with family_not_qualified. Robustness and refinement are run.",
   "type": "object",
   "additionalProperties": false,
   "required": [

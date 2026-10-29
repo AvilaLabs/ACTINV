@@ -150,6 +150,12 @@ pub fn run_decide_doc(dtext: &str, base_dir: &Path, spec_path: &str) -> Result<V
         unc.entry("design").or_insert_with(|| json!({}));
     }
     let eff_text = serde_json::to_string(&doc).map_err(|e| format!("effective spec: {e}"))?;
+    // `catalog:` data names resolve as in `actinv run`; a spec without them is unchanged.
+    let eff_text = if eff_text.contains("\"catalog:") {
+        crate::resolve_catalog_json(&eff_text)?
+    } else {
+        eff_text
+    };
     let effective_sha = sha256_hex(eff_text.as_bytes());
     let spec = Spec::from_json(&eff_text).map_err(|e| format!("run spec invalid: {e}"))?;
     spec.validate()?;

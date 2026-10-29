@@ -211,5 +211,8 @@ actinv waste package PACKAGE.json [OUT.json]
 `actinv impurities` screens a material's impurities over declared composition ranges from one solve per element; see
 [Screen a material's impurities](impurities.md). It exits 3, after writing its output, when a verification re-solve
 misses; a refused input (nonlinear options, a bad range, an unknown endpoint) exits 1 and writes nothing.
+`actinv waste budget` and `actinv waste budget uncertainty` likewise exit 3, after writing the full result, when a
+verification point misses. `actinv study run` records a case that fails in `study_record.json`, whose verdict is then
+`incomplete`, and exits 0; read the verdict.
 
 Each workflow consumes its own document format. [Advanced workflows](workflows.md) links the schemas, examples, and applicability limits. Every command has its own page: `actinv help COMMAND`. `actinv help exit-codes` lists what each exit code means.

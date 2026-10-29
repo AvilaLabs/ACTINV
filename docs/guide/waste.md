@@ -557,6 +557,9 @@ An open mixture boundary has a supremum and an interior verified composition;
 the supremum is not an attained maximum. Composition bounds, infeasible cases
 and absence of a positive response are reported explicitly.
 
+`actinv waste budget` writes its result even when a verification point misses; the `verification` block shows the
+miss and the command exits 3 (`verified` false). Refused input still exits 1 and writes nothing.
+
 Budgets require fixed rates and coupled mode with reach pruning. Self-shielding,
 uncertainty, composition-dependent screening and schedule feed are refused.
 Nominal classification may consume other supported run configurations, but that
@@ -631,7 +634,7 @@ The `actinv-waste-budget-uncertainty-1` result carries:
   sample's own supremum and with that sample's own factors, and classified with the waste evaluator; every sample at
   rank k or above is re-solved at 0.99 times the reported budget. A row records the classes at the target steps and
   whether they are all at most the target class. `verification_pass` is true when each 0.99 point is inside the class
-  and each 1.01 point is outside it.
+  and each 1.01 point is outside it. The command exits 3, after writing the result, when it is false.
 - `failed_samples`, `coverage` (the channels sampled, the inputs they left uncovered and a fixed statement) and
   `not_claimed`.
 

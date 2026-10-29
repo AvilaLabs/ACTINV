@@ -183,6 +183,16 @@ pub fn run(path: &str, output: Option<&str>) -> Result<Value, String> {
     Ok(result)
 }
 
+/// The process exit code for an uncertainty result: 3 when a verification point failed (the result is still
+/// written), 0 otherwise.
+pub fn exit_code(doc: &Value) -> i32 {
+    if doc["verification_pass"] == true {
+        0
+    } else {
+        3
+    }
+}
+
 /// Remove the keys that start with an underscore (comments), at the top level and in the sampling block.
 fn strip_comment_keys(value: &mut Value) {
     if let Value::Object(map) = value {
@@ -791,6 +801,13 @@ fn solve_sample(
 mod tests {
     use super::*;
     use actinv_core::sample_stats::clopper_pearson;
+
+    #[test]
+    fn failed_verification_exits_three_and_a_pass_exits_zero() {
+        assert_eq!(exit_code(&json!({"verification_pass":true})), 0);
+        assert_eq!(exit_code(&json!({"verification_pass":false})), 3);
+        assert_eq!(exit_code(&json!({})), 3);
+    }
     use std::sync::atomic::{AtomicUsize, Ordering};
 
     struct Scratch(PathBuf);
