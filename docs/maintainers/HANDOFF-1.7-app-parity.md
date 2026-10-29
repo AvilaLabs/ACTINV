@@ -1,0 +1,183 @@
+# Handoff: 1.7 app parity and setup flow
+
+Owner-approved plan, 2026-10-29. Release 1.7.0 is held until this is done. A session that picks this up should read
+this file, `AGENTS.md`, `docs/maintainers/AGENTS.md`, and the status table at the bottom, then continue from the first
+item not marked done. Keep the status table current: update it in the same commit as the work.
+
+## Why
+
+The desktop app lags the CLI: many commands have no page. The owner also found that checking a problem means flipping
+through many pages, and that there is no way to start a problem from scratch (only the iron example, open, or a
+FISPACT-II deck). The owner asked for every relevant CLI feature in the app for 1.7, a single place to review a
+problem, and a "New problem" path.
+
+## Standing rules (owner)
+
+- Keep the app's visual look (theme, colours, fonts, widget style). New pages and navigation are fine.
+- UI design and page implementation are done by the coordinating session, never delegated to subagents. Subagents
+  (Sonnet only) may do plumbing, CLI fixes, examples, tests and research, and may not run builds or tests.
+- UI/CLI changes need regression tests; physics or data changes need a protocol phase (P162 below).
+- Screenshot every changed page in Light and Dark, top and scrolled, before the owner reviews
+  (`ACTINV_GUI_CAPTURE_DIR`, `_THEME`, `_RESULT`, `_SCREEN`, `_SCROLL`).
+- Releases, website and handbook deploys need the owner's OK. Pushes to GitHub are authorized.
+- The desktop app runs calculations. The browser sets up and reads every page but runs nothing, and says where to get
+  the desktop app or CLI.
+
+## Navigation
+
+Sidebar groups, in order:
+
+- **Start**
+- **Set up**: 1 Material, 2 Irradiation & cooling, 3 Source & spectrum, 4 What to compute, 5 Check & run
+- **Results**: Summary, Time history, Nuclides, Photons & dose, Pathways, Evidence, Export
+- **Studies**: Impurities, Optimize, Certify, Waste, Measurements, Sweep & study, Mesh & transport
+- **Tools**: Data, Advanced JSON
+
+Set up and Results are always open. Studies and Tools collapse, and open when the current page is in them. The Start
+page asks "What do you want to find out?" and links each question to its page.
+
+## Stage 1: setting a problem up correctly
+
+1. **Complete review on Check & run.**
+   - It lists every setting that differs from its default as a plain sentence. Each sentence has Edit, which opens the
+     page that sets it.
+   - Changes are found by parsing the document with `Spec::from_json` and comparing it, serialized, with a baseline
+     spec that has the same material, schedule, spectrum, projectile and data. Every differing leaf is listed, so
+     nothing is hidden. Unknown keys fall back to "Section · Key: value (default X)".
+   - The rest of the problem is one line: "All other settings at their defaults".
+   - Module: `crates/actinv-gui/src/views/review.rs`.
+2. **Settings move off Check & run.** Nuclear data and data files go to the new **Data** page (Tools). Solver mode and
+   temperature go to an "Advanced settings" section on What to compute. Collapsed sections show "· N changed".
+3. **Data page.**
+   - Shows which data are installed, with a download option, and runs Verify (`data verify` and `doctor` through the
+     job layer).
+   - Shows which library and decay files the problem uses, and lets the user pick their own.
+   - Lists the CLI commands for building data. The `build-*` commands stay CLI-only.
+4. **New problem.** A Start card placed before the example.
+   - Material, source and irradiation start missing, not prefilled.
+   - Solver, data and outputs start at their defaults.
+5. **Material library** on the Material step: pick a material, or type a composition, or "Save to my materials".
+6. **Starting spectra** on the Source step: 14.1 MeV line, fission (Watt), thermal (Maxwellian) and 1/E, each with a
+   total flux and labelled as a generic shape.
+7. **Irradiation quick picks**: irradiate for a time, then cool to 1 h, 1 d, 1 month, 1 year and 10 years (editable).
+8. **CLI**: `actinv new problem.json --material ID --source SHAPE` uses the same library and spectra. Bare
+   `actinv new` still writes the iron example.
+9. **P162 protocol** for the library compositions and the spectrum shapes:
+   - each composition cites its source and sums to 100 wt%;
+   - group integrals of each shape match the closed-form CDF on the 709-group structure;
+   - the screens themselves are not part of the phase.
+
+   Compositions are researched into the scratchpad file `materials_research.json`. Prefer PNNL-15870 Rev. 1 and the
+   defining specifications for fusion materials. Trace elements matter (Co, Nb, Ag, Eu, Ta, N).
+
+## Stage 2: design questions
+
+- **Impurities** already covers `budget` and `waste budget`, with or without uncertainty. The page says so; there is
+  no separate page.
+- **Optimize** (`optimize`):
+  - Inputs: axes taken from the open problem (element fraction, flux scale, step length), objective(s), and
+    constraints with an edge.
+  - Runs as a job with progress from `optimize_ledger.jsonl`, plus Cancel and Resume.
+  - Results: best feasible design, a ranked table, and a Pareto chart when there are two objectives.
+  - Sweep gets an "Optimize this" button.
+- **Certify** (`decide`):
+  - Uses the open problem, which must have uncertainty. Constraints are entered as a table.
+  - Results: certified or not, the binding constraints, where nominal would over-certify, and what to measure next.
+- **Sweep & study** (`study`):
+  - Builds a grid of materials × spectra × schedules from the open problem, or opens a study file.
+  - Runs as a resumable job.
+  - Results: population, rule verdicts and a case table. Sweep stays as the quick one-parameter tool.
+
+## Stage 3: Waste page
+
+The page starts by asking which question:
+
+1. **Classify this result**: today's page, plus an optional draft intrusion screen (`waste intrusion-screen`).
+2. **A container of several items** (`waste package`): items from result files or declared Bq, with screen and
+   encapsulation.
+3. **From measured activity ranges** (`waste bounds`): a form only, no solve.
+4. **How sure is the class?** (`waste uncertainty`): a sampling job.
+
+`waste composition solve` is left out because of P157's round-off/scale defect; Impurities gives the class over
+ranges instead.
+
+## Stage 4: Mesh & transport
+
+- **Export page** gains "Photon source for a transport code": `export-openmc` and `export-mcnp` for a chosen step.
+  Only steps with a photon source are offered.
+- **Mesh & transport page:**
+  1. `import-flux` from openmc, meshtal, mctal or fispact;
+  2. `mesh` run as a resumable job;
+  3. cell results;
+  4. exports: `export-openmc-mesh`, `export-r2s`, `export-r2s-joint`, and `export-source` for
+     openmc, mcnp, serpent or alara.
+- **Facility check** (`twin`): a section after a banded mesh run. It shows cells that clear, the binding cell, and the
+  components' waste class.
+
+## Stage 5: Measurements and leftovers
+
+- **Measurements** page: Assimilation, plus "Flux from measurements" (`reverse`) with a `reverse-qualified` checkbox.
+- **`eval-spread`**: a button in the uncertainty settings, "Estimate from library disagreement", which fills in
+  `uncertainty.unmodeled_relative`.
+- Left out: `surrogate` (an optimizer internal) and `build-*` (CLI-only).
+
+## Stage 6: browser and finish
+
+- The browser opens on example results computed ahead of time (iron, impurities). They are served next to the wasm
+  and fetched on click.
+- Check small screens: laptop and narrow widths.
+- Do a full screenshot pass.
+- Update CHANGELOG, `docs/RELEASE_NOTES_v1.7.0.md`, `docs/guide/whats-new-1.7.md`,
+  `docs/releases/desktop-v0.6.0-preview.1.md` and the handbook pages.
+- Rebase `release-1.7.0`, rerun the release gates, then get the owner's OK for the atomic tag push.
+
+## Plumbing (subagents, reviewed before any build)
+
+- **Job layer** `crates/actinv-gui/src/jobs.rs`. Branch `app17-jobs`, worktree `target/app17-jobs-wt`.
+  - The envelope `actinv-gui-job-1` is {command, document, out_dir, args}. The result `actinv-gui-job-result-1` is
+    {exit 0|3, primary, summary, files, message}.
+  - It runs in the worker child (`worker::spawn_job`), or on a thread for post-processing commands.
+  - Nothing it calls may print to stdout or exit.
+  - It reports progress for optimize, study and mesh.
+  - The spawn, cancel and reap code in `worker.rs` stays unchanged.
+- **CLI fixes**. Branch `app17-cli`, worktree `target/app17-cli-wt`.
+  - `waste budget` writes its result and exits 3 on a verification miss; today it exits 1 with no output.
+  - `waste budget uncertainty` exits 3 when `verification_pass` is false.
+  - Help text: `export-r2s-joint` takes MESH_SPEC; the `export-source openmc` output format is fixed.
+  - The study schema description matches the code, and the exit code when a `study run` case fails is settled.
+- **Examples** for every new page, under `examples/<command>/` with a README. Branch `app17-ex`, worktree
+  `target/app17-ex-wt`. Each must pass `controls/check_public_examples.py`.
+
+Main GUI work: branch `app17`, worktree `target/app17-wt`. Merge the plumbing branches into it after review and a
+bounded build.
+
+## Command facts that matter for the pages
+
+- Exit codes are 0 done, 1 failed, 2 usage or input, and 3 a check failed with output written (budget, impurities,
+  and the waste-budget pair after the fix).
+- Several outcomes are exit 0 and must be read from the output: decide "not certified", optimize `infeasible`, and
+  `verification` fields.
+- `optimize` takes `base_spec` as a path only, writes a folder (`optimize_result.json`, `optimize_ledger.jsonl`,
+  `candidates/`), allows at most 64 evaluations, and can take hours with bands.
+- `decide` needs an `uncertainty` block. `run_spec` can be embedded.
+- `study` has a key `study`, not `schema`. Case ids are `{material}__{spectrum}__{schedule}`, with at most 1024 cases.
+- `mesh` and `twin` use the key `spec`. Mesh flux comes from `import-flux` and is pinned by sha256.
+- `waste uncertainty` needs at least 72 samples to establish a class at 0.95, takes exactly one component, and
+  `problem` is a path.
+- `waste package` items reference result files or give declared Bq per step.
+- `reverse` takes a problem and `actinv-reverse-input-1` measurements (step, nuclide, activity_Bq_per_g, sigma), and
+  works only in the linear trace regime.
+- `eval-spread` needs `decay.fallback` and runs exactly 2 solves.
+
+## Status
+
+| Item | State | Commit |
+|---|---|---|
+| Plan approved by owner | done | |
+| Job layer (agent) | in progress | |
+| CLI fixes (agent) | in progress | |
+| Examples (agent) | in progress | |
+| Material compositions research (agent) | in progress | |
+| Stage 1.1 review on Check & run | in progress | |
+| Stage 1.2-1.9 | not started | |
+| Stages 2-6 | not started | |
