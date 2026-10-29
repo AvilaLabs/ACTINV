@@ -25,6 +25,14 @@ try {
   assert.ok(canvas.width > 1000 && canvas.height > 700, "workbench fills the viewport");
   if (process.env.ACTINV_WEB_SCREENSHOT) await page.screenshot({ path: process.env.ACTINV_WEB_SCREENSHOT });
 
+  // The Start page fetches the example results from beside the app.
+  const examples = await (await fetch(`${base}/examples/manifest.json`)).json();
+  for (const name of Object.keys(examples.files)) {
+    const response = await fetch(`${base}/examples/${name}`);
+    assert.ok(response.ok, `examples/${name} is served`);
+    JSON.parse(await response.text());
+  }
+
   // The workbench is a canvas, so no control is reachable. The wasm module exports two hooks that
   // run the moved importer and report code in the browser; Trunk exposes its bindings on window.
   await page.waitForFunction(() => window.wasmBindings

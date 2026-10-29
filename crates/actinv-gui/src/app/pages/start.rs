@@ -43,51 +43,64 @@ impl Desktop {
         // page's scroll bar takes its own room once the page is taller than the window
         let gap = ui.spacing().item_spacing.x;
         let bar = ui.spacing().scroll.bar_width + ui.spacing().scroll.bar_outer_margin;
-        let width = ((ui.available_width() - bar - 3. * gap) / 4. - 14.).clamp(180., 300.);
-        ui.horizontal_wrapped(|ui| {
-            let new = choice(
-                ui,
-                width,
+        // Four to a row when they fit at 180, else two: a framed card is a group, and egui wraps
+        // single widgets, not groups.
+        let available = ui.available_width() - bar;
+        let per_row = if available >= 4. * (180. + 14.) + 3. * gap {
+            4
+        } else {
+            2
+        };
+        let width =
+            ((available - (per_row - 1) as f32 * gap) / per_row as f32 - 14.).clamp(180., 300.);
+        let cards = [
+            (
                 "New problem",
                 "Start from nothing: pick a material, an irradiation and a source. Nothing is filled in for you.",
                 "New problem",
-            );
-            if new.clicked() {
-                self.request(Pending::New);
-            }
-            let example = choice(
-                ui,
-                width,
+            ),
+            (
                 "From the iron example",
                 "1 g of iron, 5 minutes at the FNS 14 MeV neutron source, then an hour of cooling. Run it as it is, or change any step.",
                 "Load iron example",
-            );
-            if example.clicked() {
-                self.request(Pending::Example);
-            }
-            let open = choice(
-                ui,
-                width,
+            ),
+            (
                 "Open a problem",
                 "An ACTINV problem you saved, or one written by `actinv new`.",
                 "Open problem…",
-            );
-            self.tour.mark("open", open.rect);
-            if open.clicked() {
-                self.request(Pending::Open);
-            }
-            let import = choice(
-                ui,
-                width,
+            ),
+            (
                 "Import a FISPACT-II deck",
                 "Convert an input deck. A report shows what was mapped and what you still need to add.",
                 "Import deck…",
-            );
-            self.tour.mark("import", import.rect);
-            if import.clicked() {
+            ),
+        ];
+        let mut clicked = None;
+        for (row, chunk) in cards.chunks(per_row).enumerate() {
+            ui.horizontal(|ui| {
+                for (i, (title, text, button)) in chunk.iter().enumerate() {
+                    let index = row * per_row + i;
+                    let card = choice(ui, width, title, text, button);
+                    match index {
+                        2 => self.tour.mark("open", card.rect),
+                        3 => self.tour.mark("import", card.rect),
+                        _ => {}
+                    }
+                    if card.clicked() {
+                        clicked = Some(index);
+                    }
+                }
+            });
+        }
+        match clicked {
+            Some(0) => self.request(Pending::New),
+            Some(1) => self.request(Pending::Example),
+            Some(2) => self.request(Pending::Open),
+            Some(3) => {
                 self.import.get_or_insert_with(ImportState::default);
             }
-        });
+            _ => {}
+        }
         ui.add_space(16.);
         if let Some(page) = crate::views::questions::show(ui, |_| true) {
             self.page = page;
@@ -105,11 +118,13 @@ impl Desktop {
                 );
                 let lines = check::assess(&self.document);
                 for line in &lines {
-                    if line.ready {
-                        ui.label(&line.text);
+                    let text = RichText::new(&line.text);
+                    let text = if line.ready {
+                        text
                     } else {
-                        ui.colored_label(ui.visuals().error_fg_color, &line.text);
-                    }
+                        text.color(ui.visuals().error_fg_color)
+                    };
+                    crate::visuals::unjustified(ui, text);
                 }
                 ui.horizontal_wrapped(|ui| {
                     let first_missing = lines.iter().find(|line| !line.ready);
@@ -142,7 +157,10 @@ impl Desktop {
                         });
                     }
                     None => {
-                        ui.label("Open a result saved from ACTINV, or run the problem.");
+                        crate::visuals::unjustified(
+                            ui,
+                            "Open a result saved from ACTINV, or run the problem.",
+                        );
                         ui.horizontal_wrapped(|ui| {
                             if ui.button("Open result…").clicked() {
                                 self.open_result(ui.ctx(), false);

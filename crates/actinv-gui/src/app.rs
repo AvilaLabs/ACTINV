@@ -104,6 +104,8 @@ pub struct Desktop {
     /// File dialogs; native `rfd` in the application, scripted in tests.
     platform: Box<dyn Platform>,
     suite: avila_account::ui_desktop::DesktopSuite,
+    /// The width of the toolbar's right-hand group last frame, which the left-hand group leaves free.
+    toolbar_right: f32,
     result_unsaved: bool,
     result_guard: Option<ResultAction>,
     /// A result file being read and validated off the UI thread: (is comparison, outcome).
@@ -413,6 +415,7 @@ impl Desktop {
             capture: crate::capture::Capture::from_env(),
             platform: Box::new(platform::Native),
             suite: avila_account::ui_desktop::DesktopSuite::new(ctx, "actinv"),
+            toolbar_right: 300.,
             result_unsaved: false,
             result_guard: None,
             result_load: None,
@@ -845,34 +848,107 @@ impl Desktop {
     }
     fn toolbar(&mut self, ui: &mut egui::Ui) {
         let accent = crate::visuals::accent(ui);
-        let bar = egui::Panel::top("toolbar").show(ui,|ui| {
+        let bar = egui::Panel::top("toolbar").show(ui, |ui| {
+            // Below 1100 px the two file buttons shorten and the subtitle goes, so the toolbar fits
+            // the minimum window; narrower still, the left side wraps rather than run under the
+            // right, whose width is kept from the frame before.
+            let compact = ui.ctx().content_rect().width() < 1100.;
             ui.horizontal(|ui| {
-                ui.image((self.logo.id(),Vec2::splat(44.)));
-                ui.vertical(|ui|{ui.label(RichText::new("ACTINV").size(24.).strong());ui.label(RichText::new("AVILA LABS  /  ACTIVATION & INVENTORY").size(10.).color(accent));});
-                ui.separator();
-                // Below 1100 px the two file buttons shorten so the toolbar still fits the minimum window.
-                let compact=ui.ctx().content_rect().width()<1100.;
-                let open=ui.button(if compact{"Open"}else{"Open problem"}).on_hover_text("Load an ACTINV specification (Ctrl+O)");self.tour.mark("open",open.rect);if open.clicked(){self.request(Pending::Open);}
-                let import=ui.button(if compact{"Import deck…"}else{"Import FISPACT-II deck…"}).on_hover_text("Convert a FISPACT-II input deck into an ACTINV problem (Ctrl+I)");self.tour.mark("import",import.rect);if import.clicked(){self.import.get_or_insert_with(ImportState::default);}
-                if ui.button(if self.dirty(){"Save •"}else{"Save"}).on_hover_text("Save problem (Ctrl+S)").clicked(){self.save_problem();}
-                let valid=ui.button("Validate");self.tour.mark("validate",valid.rect);if valid.clicked(){let r=self.validate().map(|_|"Specification and input locations are valid. File hashes and evaluated data are checked during the solve.".into());self.flash_outcome(&r,"Valid","Not valid");self.report(r);}
-                match &self.job {
-                    None => {
-                        let run=ui.add(egui::Button::new(RichText::new("▶ Run").color(Color32::WHITE)).fill(BLUE));
-                        if run.clicked(){self.run(ui.ctx());}
+                let left = (ui.available_width() - self.toolbar_right - 12.).max(240.);
+                ui.allocate_ui_with_layout(
+                    egui::vec2(left, 0.),
+                    egui::Layout::left_to_right(egui::Align::Center).with_main_wrap(true),
+                    |ui| {
+                        ui.image((self.logo.id(), Vec2::splat(44.)));
+                        ui.vertical(|ui| {
+                            ui.label(RichText::new("ACTINV").size(24.).strong());
+                            if !compact {
+                                ui.label(
+                                    RichText::new("AVILA LABS  /  ACTIVATION & INVENTORY")
+                                        .size(10.)
+                                        .color(accent),
+                                );
+                            }
+                        });
+                        ui.separator();
+                        let open = ui
+                            .button(if compact { "Open" } else { "Open problem" })
+                            .on_hover_text("Load an ACTINV specification (Ctrl+O)");
+                        self.tour.mark("open", open.rect);
+                        if open.clicked() {
+                            self.request(Pending::Open);
+                        }
+                        let import = ui
+                            .button(if compact { "Import deck…" } else { "Import FISPACT-II deck…" })
+                            .on_hover_text("Convert a FISPACT-II input deck into an ACTINV problem (Ctrl+I)");
+                        self.tour.mark("import", import.rect);
+                        if import.clicked() {
+                            self.import.get_or_insert_with(ImportState::default);
+                        }
+                        if ui
+                            .button(if self.dirty() { "Save •" } else { "Save" })
+                            .on_hover_text("Save problem (Ctrl+S)")
+                            .clicked()
+                        {
+                            self.save_problem();
+                        }
+                        let valid = ui.button("Validate");
+                        self.tour.mark("validate", valid.rect);
+                        if valid.clicked() {
+                            let r = self.validate().map(|_| "Specification and input locations are valid. File hashes and evaluated data are checked during the solve.".into());
+                            self.flash_outcome(&r, "Valid", "Not valid");
+                            self.report(r);
+                        }
+                        match &self.job {
+                            None => {
+                                let run = ui.add(
+                                    egui::Button::new(RichText::new("▶ Run").color(Color32::WHITE))
+                                        .fill(BLUE),
+                                );
+                                if run.clicked() {
+                                    self.run(ui.ctx());
+                                }
+                            }
+                            Some(job) => {
+                                let what = if job.kind == JobKind::Calculation {
+                                    "Running"
+                                } else {
+                                    "Working"
+                                };
+                                ui.add_enabled(
+                                    false,
+                                    egui::Button::new(format!(
+                                        "{what}… {:.0} s",
+                                        job.started.elapsed().as_secs_f64()
+                                    )),
+                                );
+                                ui.spinner();
+                            }
+                        }
+                        self.flash_chip(ui);
+                    },
+                );
+                self.toolbar_right = ui
+                    .with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
+                    self.suite.controls(ui);
+                    if ui.button("? Help").clicked() {
+                        self.help = true;
                     }
-                    Some(job) => {
-                        let what=if job.kind==JobKind::Calculation{"Running"}else{"Working"};
-                        ui.add_enabled(false,egui::Button::new(format!("{what}… {:.0} s",job.started.elapsed().as_secs_f64())));
-                        ui.spinner();
+                    let before = self.theme.clone();
+                    egui::ComboBox::from_id_salt("appearance")
+                        .selected_text(&self.theme)
+                        .width(80.)
+                        .show_ui(ui, |ui| {
+                            for choice in ["Light", "Dark", "System"] {
+                                ui.selectable_value(&mut self.theme, choice.into(), choice);
+                            }
+                        });
+                    if before != self.theme {
+                        self.apply_theme(ui.ctx());
                     }
-                }
-                self.flash_chip(ui);
-                ui.with_layout(egui::Layout::right_to_left(egui::Align::Center),|ui|{self.suite.controls(ui);if ui.button("? Help").clicked(){self.help=true;}
-                let before = self.theme.clone();
-                egui::ComboBox::from_id_salt("appearance").selected_text(&self.theme).width(80.).show_ui(ui,|ui| { for choice in ["Light","Dark","System"] { ui.selectable_value(&mut self.theme,choice.into(),choice); } });
-                if before != self.theme { self.apply_theme(ui.ctx()); }
-});
+                    ui.min_rect().width()
+                })
+                .inner;
             });
         });
         self.suite.show(ui.ctx(), bar.response.rect.bottom());
@@ -1243,6 +1319,17 @@ impl Desktop {
                 }
             }
             capture.prepare(&ctx, &mut self.page, &mut self.tour, &mut self.result);
+            // a small window, `ACTINV_GUI_CAPTURE_WIDTH` points wide, by zooming in: the window
+            // manager decides the window's own size
+            if let Some(width) = std::env::var("ACTINV_GUI_CAPTURE_WIDTH")
+                .ok()
+                .and_then(|w| w.parse::<f32>().ok())
+            {
+                let natural = ctx.content_rect().width() * ctx.zoom_factor();
+                if (natural / width - ctx.zoom_factor()).abs() > 0.01 {
+                    ctx.set_zoom_factor(natural / width);
+                }
+            }
             // a screenshot of the outcome chip, held one second into its life
             if let Some(word) = std::env::var_os("ACTINV_GUI_CAPTURE_FLASH") {
                 let word = word.to_string_lossy().into_owned();

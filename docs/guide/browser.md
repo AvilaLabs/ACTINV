@@ -6,7 +6,7 @@ The browser has the same pages and controls as the [desktop app](desktop.md), un
 
 ## Explore results
 
-On **Start**, choose **Try the results tutorial** for a fictional one-hour decay example. A result opens on **Summary**: activity, decay heat, contact dose and the dominant nuclides at the selected time. On **Time history**, switch between activity, heat and inventory, click the plot to select a step, and select a nuclide to follow its history.
+On **Start**, **Iron example's result** opens what ACTINV computes for the iron example the Start page loads as a problem, and **Impurity screen of a steel** opens an impurity screen on the **Impurities** page. Both were computed ahead of time with the desktop solver and are fetched when you click. Under **Results**, **Try the results tutorial** opens a fictional one-hour decay example instead. A result opens on **Summary**: activity, decay heat, contact dose and the dominant nuclides at the selected time. On **Time history**, switch between activity, heat and inventory, click the plot to select a step, and select a nuclide to follow its history.
 
 For a real calculation, open or drop a result JSON produced by ACTINV. Use **Compare with…** to overlay a second file. Plots use each result's recorded time and normalization; the browser does not rescale results to make them comparable. The bar at the top of each results page has the file actions and the **Computed step** slider, and the chosen step is shared by every page.
 

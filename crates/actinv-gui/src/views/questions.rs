@@ -73,7 +73,10 @@ pub fn show(ui: &mut egui::Ui, has: impl Fn(Page) -> bool) -> Option<Page> {
                         .frame(false)
                         .wrap(),
                 );
-                ui.weak(format!("{note} · {}", page.label()));
+                crate::visuals::unjustified(
+                    ui,
+                    RichText::new(format!("{note} · {}", page.label())).weak(),
+                );
                 ui.add_space(6.);
                 if row
                     .on_hover_cursor(egui::CursorIcon::PointingHand)

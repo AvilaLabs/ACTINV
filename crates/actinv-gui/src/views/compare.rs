@@ -378,7 +378,7 @@ pub fn show(
     }
     let column = |ui: &mut egui::Ui, title: &str, note: &str| {
         ui.strong(title);
-        ui.weak(note);
+        crate::visuals::unjustified(ui, egui::RichText::new(note).weak());
         ui.add_space(4.);
     };
     let this_box =
@@ -508,9 +508,13 @@ pub fn show(
             .join(", ")
     ));
     let cases = case_count(state);
-    ui.label(format!(
-        "{cases} combinations, one solve each. The app compares up to {MAX_CASES}."
-    ));
+    ui.label(if cases == 1 {
+        format!(
+            "1 case, one solve. Tick more above to compare; the app compares up to {MAX_CASES}."
+        )
+    } else {
+        format!("{cases} combinations, one solve each. The app compares up to {MAX_CASES}.")
+    });
     if cases > MAX_CASES {
         ui.colored_label(
             ui.visuals().error_fg_color,

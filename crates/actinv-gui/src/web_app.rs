@@ -65,6 +65,58 @@ enum FileKind {
     WasteAnswer,
 }
 
+/// A result computed ahead of time that the Start page can open.
+struct WebExample {
+    file: &'static str,
+    kind: FileKind,
+    /// The name the result pages show for it.
+    label: &'static str,
+    button: &'static str,
+    text: &'static str,
+}
+
+const EXAMPLES: [WebExample; 2] = [
+    WebExample {
+        file: "iron-result.json",
+        kind: FileKind::Result,
+        label: "Example result: the iron example",
+        button: "Iron example's result",
+        text: "1 g of iron after 5 minutes at the FNS 14 MeV source, with an hour of cooling: the iron example, as ACTINV solved it.",
+    },
+    WebExample {
+        file: "impurities-result.json",
+        kind: FileKind::ScreenResult,
+        label: "Example screen: impurities in a reduced-activation steel",
+        button: "Impurity screen of a steel",
+        text: "Which trace elements of a fusion steel drive its decay heat and its Nb-94 after two years at the first wall, and how far each may rise.",
+    },
+];
+
+/// Fetch a file served beside the app.
+async fn fetch_bytes(url: &str) -> Result<Vec<u8>, String> {
+    use wasm_bindgen::JsCast;
+    use wasm_bindgen_futures::JsFuture;
+    let failed = |_: wasm_bindgen::JsValue| {
+        format!("Could not fetch {url}; check the connection and try again.")
+    };
+    let window = web_sys::window().ok_or("No browser window")?;
+    let response: web_sys::Response = JsFuture::from(window.fetch_with_str(url))
+        .await
+        .map_err(failed)?
+        .dyn_into()
+        .map_err(failed)?;
+    if !response.ok() {
+        return Err(format!(
+            "Could not fetch {url}: HTTP {}.",
+            response.status()
+        ));
+    }
+    let buffer = JsFuture::from(response.array_buffer().map_err(failed)?)
+        .await
+        .map_err(failed)?;
+    Ok(js_sys::Uint8Array::new(&buffer).to_vec())
+}
+
 /// A file choice a shared view asked for while it was drawn.
 struct PinRequest {
     title: String,
@@ -331,6 +383,26 @@ impl Workbench {
                     let _ = tx.send(Ok((kind, name, bytes)));
                 }
             }
+            ctx.request_repaint();
+        });
+    }
+
+    /// Open a result computed ahead of time (`scripts/web_examples.py`) and served beside the app
+    /// at `examples/`, as if the visitor had opened the file.
+    fn open_example(&mut self, example: &WebExample, ctx: &egui::Context) {
+        if self.pending_file.is_some() {
+            return;
+        }
+        let (tx, rx) = mpsc::channel();
+        self.pending_file = Some(rx);
+        self.report(Ok(format!("Fetching {}…", example.label)));
+        let ctx = ctx.clone();
+        let (file, kind, label) = (example.file, example.kind, example.label);
+        wasm_bindgen_futures::spawn_local(async move {
+            let read = fetch_bytes(&format!("./examples/{file}"))
+                .await
+                .map(|bytes| (kind, label.to_owned(), bytes));
+            let _ = tx.send(read);
             ctx.request_repaint();
         });
     }
@@ -623,10 +695,30 @@ impl Workbench {
                 ui.label("·");
                 ui.hyperlink_to("Command-line guide", "./docs/cli.html");
             });
+            ui.add_space(6.);
+            ui.label("See what it computes without installing anything: these results were solved ahead of time.");
+            for example in &EXAMPLES {
+                ui.horizontal_wrapped(|ui| {
+                    if ui.button(example.button).clicked() {
+                        self.open_example(example, ui.ctx());
+                    }
+                    ui.weak(example.text);
+                });
+            }
         });
         ui.add_space(12.);
         ui.label(RichText::new("START A PROBLEM").small().color(accent));
-        let width = ((ui.available_width() - 42.) / 4.).clamp(200., 300.);
+        // Four cards to a row when they fit at 200, else two: each adds its frame's margins and
+        // stroke (14) and the gap to the next (8), and egui wraps single widgets, not groups.
+        let available = ui.available_width();
+        let per_row = if available >= 4. * (200. + 14.) + 3. * 8. {
+            4
+        } else {
+            2
+        };
+        let width = ((available - (per_row as f32) * 14. - (per_row - 1) as f32 * 8.)
+            / per_row as f32)
+            .clamp(160., 300.);
         let choice = |ui: &mut egui::Ui, title: &str, text: &str, button: &str| {
             ui.group(|ui| {
                 ui.set_width(width);
@@ -646,21 +738,22 @@ impl Workbench {
             })
             .inner
         };
+        let cards = [
+            (3, "New problem", "Start from nothing: pick a material, an irradiation and a source. Nothing is filled in for you.", "New problem"),
+            (0, "From the iron example", "1 g of iron, 5 minutes at the FNS 14 MeV neutron source, then an hour of cooling.", "Load iron example"),
+            (1, "Open a problem", "An ACTINV problem JSON from your computer, or one written by `actinv new`.", "Open problem…"),
+            (2, "Import a FISPACT-II deck", "Convert an input deck. A report shows what was mapped and what you still need to add.", "Import deck…"),
+        ];
         let mut picked = None;
-        ui.horizontal_wrapped(|ui| {
-            if choice(ui, "New problem", "Start from nothing: pick a material, an irradiation and a source. Nothing is filled in for you.", "New problem") {
-                picked = Some(3);
-            }
-            if choice(ui, "From the iron example", "1 g of iron, 5 minutes at the FNS 14 MeV neutron source, then an hour of cooling.", "Load iron example") {
-                picked = Some(0);
-            }
-            if choice(ui, "Open a problem", "An ACTINV problem JSON from your computer, or one written by `actinv new`.", "Open problem…") {
-                picked = Some(1);
-            }
-            if choice(ui, "Import a FISPACT-II deck", "Convert an input deck. A report shows what was mapped and what you still need to add.", "Import deck…") {
-                picked = Some(2);
-            }
-        });
+        for row in cards.chunks(per_row) {
+            ui.horizontal(|ui| {
+                for (id, title, text, button) in row {
+                    if choice(ui, title, text, button) {
+                        picked = Some(*id);
+                    }
+                }
+            });
+        }
         match picked {
             Some(0) => self.load_example(),
             Some(3) => self.new_problem(),
@@ -685,11 +778,13 @@ impl Workbench {
                 ui.strong(self.problem["title"].as_str().unwrap_or("Untitled problem"));
                 let lines = check::assess(&self.problem);
                 for line in &lines {
-                    if line.ready {
-                        ui.label(&line.text);
+                    let text = RichText::new(&line.text);
+                    let text = if line.ready {
+                        text
                     } else {
-                        ui.colored_label(ui.visuals().error_fg_color, &line.text);
-                    }
+                        text.color(ui.visuals().error_fg_color)
+                    };
+                    visuals::unjustified(ui, text);
                 }
                 ui.horizontal_wrapped(|ui| {
                     let (label, page) = match lines.iter().find(|line| !line.ready) {
@@ -721,7 +816,10 @@ impl Workbench {
                         });
                     }
                     None => {
-                        ui.label("Open a result saved from ACTINV to explore it here.");
+                        visuals::unjustified(
+                            ui,
+                            "Open a result saved from ACTINV to explore it here.",
+                        );
                         ui.horizontal_wrapped(|ui| {
                             if ui.button("Open result…").clicked() {
                                 self.pick(FileKind::Result, &["json"], ui.ctx());
@@ -2117,7 +2215,9 @@ impl eframe::App for Workbench {
         });
         egui::CentralPanel::default().show(ui, |ui| {
             egui::ScrollArea::vertical().show(ui, |ui| {
-                ui.set_max_width(1100.);
+                // At most 1100 wide, but never wider than the window: `set_max_width` alone widens
+                // a narrower window's content past its edge, where it is clipped.
+                ui.set_max_width(ui.available_width().min(1100.));
                 ui.add_space(16.);
                 match self.page {
                     Page::Start => self.start(ui),

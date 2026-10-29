@@ -1,9 +1,12 @@
-"""Regression checks for combining the handbook with the browser bundle."""
+"""Regression checks for combining the handbook and the example results with the browser bundle."""
+import hashlib
+import json
 from pathlib import Path
 import tempfile
 import unittest
 
-from prepare_web import prepare
+from prepare_web import ROOT, prepare
+from web_examples import EXAMPLES, workspace_version
 
 
 class HandbookPackaging(unittest.TestCase):
@@ -43,6 +46,21 @@ class HandbookPackaging(unittest.TestCase):
         with self.assertRaises(ValueError):
             prepare(self.bundle, overlapping)
         self.assertEqual((overlapping / "index.html").read_text(), "keep me")
+
+
+class ExampleResults(unittest.TestCase):
+    def test_examples_are_current_and_served(self):
+        manifest = json.loads((ROOT / "web/examples/manifest.json").read_text())
+        self.assertEqual(manifest["actinv_version"], workspace_version(),
+                         "recompute the browser examples: scripts/web_examples.py")
+        self.assertEqual(sorted(manifest["files"]), sorted(name for name, _ in EXAMPLES))
+        for name, entry in manifest["files"].items():
+            data = (ROOT / "web/examples" / name).read_bytes()
+            self.assertEqual(hashlib.sha256(data).hexdigest(), entry["sha256"], name)
+        with tempfile.TemporaryDirectory() as temp:
+            prepare(Path(temp))
+            for name in manifest["files"]:
+                self.assertTrue((Path(temp) / "examples" / name).is_file(), name)
 
 
 if __name__ == "__main__":

@@ -259,6 +259,15 @@ pub fn json_tree(ui: &mut egui::Ui, label: &str, value: &Value) {
     }
 }
 
+/// A wrapped label with ordinary word spacing. The columns of `ui.columns` have a justified
+/// layout, in which egui spreads a wrapped line's characters across the whole width.
+pub fn unjustified(ui: &mut egui::Ui, text: impl Into<egui::WidgetText>) -> egui::Response {
+    ui.with_layout(egui::Layout::top_down(egui::Align::Min), |ui| {
+        ui.label(text)
+    })
+    .inner
+}
+
 #[cfg(test)]
 mod tests {
     #[test]

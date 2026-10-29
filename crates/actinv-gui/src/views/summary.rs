@@ -311,7 +311,7 @@ pub fn show(
                         sparkline(ui, &format!("spark-{}", q.title), result, q, index);
                     }
                     None => {
-                        ui.label(RichText::new(absent(q, step)).weak());
+                        crate::visuals::unjustified(ui, RichText::new(absent(q, step)).weak());
                     }
                 }
                 // in a row of its own so the column layout does not stretch it
