@@ -141,6 +141,10 @@ pub struct Desktop {
     impurities: crate::views::impurities::ImpuritiesState,
     certify: crate::views::certify::CertifyState,
     optimize: crate::views::optimize::OptimizeState,
+    compare: crate::views::compare::CompareState,
+    /// the outcome of the last Validate or run, shown briefly beside the buttons: when, whether it
+    /// went well, the short word, and the full message on hover
+    flash: Option<(Instant, bool, String, String)>,
     /// where the running command writes, when it was last read, and how far it had got
     command_progress: (
         Option<std::path::PathBuf>,
@@ -420,6 +424,8 @@ impl Desktop {
             impurities: Default::default(),
             certify: Default::default(),
             optimize: Default::default(),
+            compare: Default::default(),
+            flash: None,
             command_progress: (None, None, None),
             import: None,
             import_spec: None,
@@ -429,6 +435,55 @@ impl Desktop {
     fn dirty(&self) -> bool {
         self.raw_dirty || self.document != self.saved || self.base != self.saved_base
     }
+    /// Show a short outcome beside Validate and Run: `ok` or `failed`, with the full message on hover.
+    fn flash_outcome(&mut self, result: &Result<String, String>, ok: &str, failed: &str) {
+        let (good, word, message) = match result {
+            Ok(message) => (true, ok, message),
+            Err(message) => (false, failed, message),
+        };
+        self.flash = Some((Instant::now(), good, word.to_owned(), message.clone()));
+    }
+
+    /// The outcome chip: it fades in so a repeated click visibly blinks, stays a few seconds (a
+    /// failure longer), then fades out.
+    fn flash_chip(&mut self, ui: &mut egui::Ui) {
+        let Some((at, good, word, message)) = &self.flash else {
+            return;
+        };
+        let age = at.elapsed().as_secs_f32();
+        let life = if *good { 4. } else { 8. };
+        if age >= life {
+            self.flash = None;
+            return;
+        }
+        let alpha = (age / 0.15).min(1.).min((life - age) / 0.8);
+        let colour = if *good {
+            crate::visuals::accent(ui)
+        } else {
+            ui.visuals().error_fg_color
+        };
+        let galley = ui.painter().layout_no_wrap(
+            word.clone(),
+            egui::TextStyle::Button.resolve(ui.style()),
+            colour.gamma_multiply(alpha),
+        );
+        let size = egui::vec2(galley.size().x + 22., ui.spacing().interact_size.y + 4.);
+        let (rect, response) = ui.allocate_exact_size(size, egui::Sense::hover());
+        let painter = ui.painter();
+        painter.rect_filled(rect, size.y / 2., colour.gamma_multiply(alpha * 0.12));
+        painter.rect_stroke(
+            rect,
+            size.y / 2.,
+            egui::Stroke::new(1., colour.gamma_multiply(alpha)),
+            egui::StrokeKind::Inside,
+        );
+        painter.galley(rect.center() - galley.size() / 2., galley, colour);
+        if !message.is_empty() {
+            response.on_hover_text(message.as_str());
+        }
+        ui.ctx().request_repaint_after(Duration::from_millis(30));
+    }
+
     fn report(&mut self, result: Result<String, String>) {
         match result {
             Ok(s) => {
@@ -587,7 +642,11 @@ impl Desktop {
             return;
         }
         match self.validate() {
-            Err(e) => self.report(Err(e)),
+            Err(e) => {
+                let e = Err(e);
+                self.flash_outcome(&e, "", "Not valid");
+                self.report(e);
+            }
             Ok(spec) => {
                 let cache = std::env::temp_dir().join(format!(
                     "actinv-gui-calc-{}-{}",
@@ -773,13 +832,24 @@ impl Desktop {
                 let open=ui.button(if compact{"Open"}else{"Open problem"}).on_hover_text("Load an ACTINV specification (Ctrl+O)");self.tour.mark("open",open.rect);if open.clicked(){self.request(Pending::Open);}
                 let import=ui.button(if compact{"Import deck…"}else{"Import FISPACT-II deck…"}).on_hover_text("Convert a FISPACT-II input deck into an ACTINV problem (Ctrl+I)");self.tour.mark("import",import.rect);if import.clicked(){self.import.get_or_insert_with(ImportState::default);}
                 if ui.button(if self.dirty(){"Save •"}else{"Save"}).on_hover_text("Save problem (Ctrl+S)").clicked(){self.save_problem();}
-                let valid=ui.button("Validate");self.tour.mark("validate",valid.rect);if valid.clicked(){let r=self.validate().map(|_|"Specification and input locations are valid. File hashes and evaluated data are checked during the solve.".into());self.report(r);}
-                let run=ui.add_enabled(self.job.is_none(),egui::Button::new(RichText::new("▶ Run").color(Color32::WHITE)).fill(BLUE));if run.clicked(){self.run(ui.ctx());}
+                let valid=ui.button("Validate");self.tour.mark("validate",valid.rect);if valid.clicked(){let r=self.validate().map(|_|"Specification and input locations are valid. File hashes and evaluated data are checked during the solve.".into());self.flash_outcome(&r,"Valid","Not valid");self.report(r);}
+                match &self.job {
+                    None => {
+                        let run=ui.add(egui::Button::new(RichText::new("▶ Run").color(Color32::WHITE)).fill(BLUE));
+                        if run.clicked(){self.run(ui.ctx());}
+                    }
+                    Some(job) => {
+                        let what=if job.kind==JobKind::Calculation{"Running"}else{"Working"};
+                        ui.add_enabled(false,egui::Button::new(format!("{what}… {:.0} s",job.started.elapsed().as_secs_f64())));
+                        ui.spinner();
+                    }
+                }
+                self.flash_chip(ui);
                 ui.with_layout(egui::Layout::right_to_left(egui::Align::Center),|ui|{self.suite.controls(ui);if ui.button("? Help").clicked(){self.help=true;}
                 let before = self.theme.clone();
                 egui::ComboBox::from_id_salt("appearance").selected_text(&self.theme).width(80.).show_ui(ui,|ui| { for choice in ["Light","Dark","System"] { ui.selectable_value(&mut self.theme,choice.into(),choice); } });
                 if before != self.theme { self.apply_theme(ui.ctx()); }
-if self.job.is_some(){ui.spinner();}});
+});
             });
         });
         self.suite.show(ui.ctx(), bar.response.rect.bottom());
@@ -1036,6 +1106,22 @@ impl eframe::App for Desktop {
         }
         if let Some(result) = result {
             let cancelled = self.job.as_ref().is_some_and(|job| job.cancelled);
+            let took = self
+                .job
+                .as_ref()
+                .map_or(0., |job| job.started.elapsed().as_secs_f64());
+            if !cancelled {
+                let outcome = match &result {
+                    Ok(JobOutput::Command(done)) if done.exit != 0 => Err(done.message.clone()),
+                    Ok(_) => Ok(format!(
+                        "Finished in {}.",
+                        crate::model::readable_time(took)
+                    )),
+                    Err(error) => Err(error.clone()),
+                };
+                let done = format!("Finished in {}", crate::model::readable_time(took));
+                self.flash_outcome(&outcome, &done, "Failed");
+            }
             self.job = None;
             if cancelled {
                 self.report(Ok(
@@ -1133,6 +1219,13 @@ impl Desktop {
                 }
             }
             capture.prepare(&ctx, &mut self.page, &mut self.tour, &mut self.result);
+            // a screenshot of the outcome chip, held one second into its life
+            if let Some(word) = std::env::var_os("ACTINV_GUI_CAPTURE_FLASH") {
+                let word = word.to_string_lossy().into_owned();
+                let good = !word.starts_with("Not") && !word.starts_with("Failed");
+                let at = Instant::now() - Duration::from_secs(1);
+                self.flash = Some((at, good, word, String::new()));
+            }
         }
         self.tour.anchors.clear();
         if let Some(step) = self.tour.step() {
@@ -1364,7 +1457,7 @@ mod ui_tests {
     }
     #[test]
     fn every_page_renders_in_both_themes_at_minimum_size_with_and_without_a_result() {
-        assert_eq!(Page::ALL.len(), 21);
+        assert_eq!(Page::ALL.len(), 22);
         for theme in [egui::ThemePreference::Light, egui::ThemePreference::Dark] {
             for with_result in [false, true] {
                 let ctx = egui::Context::default();
