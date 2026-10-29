@@ -1,0 +1,50 @@
+{
+ "all_triggered_green": true,
+ "candidate": "a60593c",
+ "commit": "aeda0a5ec6b4ab3677aa612e40957501b0d372b7",
+ "not_triggered": {},
+ "runs": [
+  {
+   "conclusion": "success",
+   "databaseId": 40910882545,
+   "headSha": "aeda0a5ec6b4ab3677aa612e40957501b0d372b7",
+   "name": "Build browser workbench",
+   "url": "https://github.com/AvilaLabs/ACTINV/actions/runs/40910882545"
+  },
+  {
+   "conclusion": "success",
+   "databaseId": 40910882502,
+   "headSha": "aeda0a5ec6b4ab3677aa612e40957501b0d372b7",
+   "name": "Build handbook",
+   "url": "https://github.com/AvilaLabs/ACTINV/actions/runs/40910882502"
+  },
+  {
+   "conclusion": "success",
+   "databaseId": 40910882505,
+   "headSha": "aeda0a5ec6b4ab3677aa612e40957501b0d372b7",
+   "name": "controls",
+   "url": "https://github.com/AvilaLabs/ACTINV/actions/runs/40910882505"
+  },
+  {
+   "conclusion": "success",
+   "databaseId": 40910882573,
+   "headSha": "aeda0a5ec6b4ab3677aa612e40957501b0d372b7",
+   "name": "desktop builds",
+   "url": "https://github.com/AvilaLabs/ACTINV/actions/runs/40910882573"
+  },
+  {
+   "conclusion": "success",
+   "databaseId": 40910882495,
+   "headSha": "aeda0a5ec6b4ab3677aa612e40957501b0d372b7",
+   "name": "fns-iron",
+   "url": "https://github.com/AvilaLabs/ACTINV/actions/runs/40910882495"
+  },
+  {
+   "conclusion": "success",
+   "databaseId": 40910882616,
+   "headSha": "aeda0a5ec6b4ab3677aa612e40957501b0d372b7",
+   "name": "fusion-isotope",
+   "url": "https://github.com/AvilaLabs/ACTINV/actions/runs/40910882616"
+  }
+ ]
+}

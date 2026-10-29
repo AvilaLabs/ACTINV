@@ -4684,3 +4684,11 @@ relative. Record: `results/failures/p162/dev_run_1/g5.json`. This is not the rep
 - Before pushing, the CI steps this push reaches passed locally on the same binary: `check_p103 --g0-only`,
   `check_p103_failure`, `test_p105_children`, `check_p105 --no-write`, `check_p105_verdict` and
   `check_public_examples`. G6 is CI on this commit.
+
+## Entry 270 — P162 G6: CI green on aeda0a5; P162-PASS (2026-10-29)
+
+Every workflow triggered on `aeda0a5` (candidate `a60593c` plus its guide page and evidence) passed: controls
+40910882505, fns-iron 40910882495, desktop builds 40910882573, fusion-isotope 40910882616, browser workbench
+40910882545 and handbook 40910882502 (`results/p162/ci_runs.json`). **P162-PASS** (`results/p162_verdict.json`):
+ACTINV ships 19 cited material compositions and four analytic spectra on the 709-group structure, and `actinv new
+--material ID --source SHAPE --flux F` writes a problem from them that runs. The repair round was not used.
