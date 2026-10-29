@@ -977,14 +977,24 @@ pub fn main_from(a: Vec<String>) {
                         2,
                     );
                 }
-                crate::waste_budget_uncertainty::run(&a[4], a.get(5).map(String::as_str))
+                let doc = crate::waste_budget_uncertainty::run(&a[4], a.get(5).map(String::as_str))
                     .unwrap_or_else(|e| die(e, 1));
+                let code = crate::waste_budget_uncertainty::exit_code(&doc);
+                if code != 0 {
+                    eprintln!("waste budget uncertainty: verification failed");
+                    std::process::exit(code);
+                }
             } else if a.get(2).is_some_and(|arg| arg == "budget") {
                 if a.len() < 4 || a.len() > 5 {
                     die("usage: actinv waste budget BUDGET.json [OUT.json]", 2);
                 }
-                crate::waste_budget::run(&a[3], a.get(4).map(String::as_str))
+                let doc = crate::waste_budget::run(&a[3], a.get(4).map(String::as_str))
                     .unwrap_or_else(|e| die(e, 1));
+                let code = crate::waste_budget::exit_code(&doc);
+                if code != 0 {
+                    eprintln!("waste budget: verification failed");
+                    std::process::exit(code);
+                }
             } else {
                 if a.len() < 3 || a.len() > 4 {
                     die("usage: actinv waste WASTE.json [OUT.json]", 2);

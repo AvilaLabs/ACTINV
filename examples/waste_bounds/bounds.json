@@ -1,0 +1,31 @@
+{
+ "schema": "actinv-waste-bounds-spec-1",
+ "rules": "us-nrc-10cfr61.55-v1",
+ "components": [
+  {
+   "id": "example-component",
+   "mass_g": 1000,
+   "displaced_volume_cm3": 128.2,
+   "waste_type": "activated_metal",
+   "nuclide_properties": {
+    "C14": {"z": 6, "half_life_s": 180808200000, "alpha_emitting": false},
+    "Nb94": {"z": 41, "half_life_s": 640000000000, "alpha_emitting": false}
+   },
+   "external_tritium": {"status": "not_applicable"},
+   "targets": [
+    {
+     "step": 1,
+     "t_s": 0,
+     "activity_bounds_bq": {
+      "C14": {"lower_bq": 100, "upper_bq": 200},
+      "Nb94": {"lower_bq": 50000, "upper_bq": 200000}
+     },
+     "inventory_coverage": "complete",
+     "unbounded_inventory_reasons": [],
+     "bounds_source": "illustrative declared enclosure",
+     "bounds_assumptions": "artificial input; not measured or probability-based"
+    }
+   ]
+  }
+ ]
+}

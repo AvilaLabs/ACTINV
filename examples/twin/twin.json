@@ -1,0 +1,8 @@
+{
+ "spec": "actinv-twin-1",
+ "mesh_output": "../export_r2s/mesh_banded.ndjson",
+ "limits": [
+  {"name": "total_activity", "response": "activity.total", "limit": 500.0, "sense": "le"}
+ ],
+ "components": {"plate": ["cell-a", "cell-b"]}
+}

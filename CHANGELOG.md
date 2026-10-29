@@ -2,6 +2,17 @@
 
 ## Unreleased
 
+**Changed (CLI)**
+
+- `actinv waste budget` now writes its full result, with the verification block showing the miss, and exits 3 when a
+  verification point misses, as `actinv budget` and `actinv impurities` do. It used to exit 1 and write nothing.
+  `actinv waste budget uncertainty` now exits 3, after writing, when `verification_pass` is false; it used to exit 0.
+- `actinv help study` says what `study run` does when a case fails: the case is recorded in `study_record.json`,
+  whose verdict is then `incomplete`, and the command exits 0. Exit 1 means the study could not run.
+- `actinv decide` resolves `catalog:` data names in its run spec, as `actinv run` does; it used to refuse them.
+- Help: `export-r2s-joint` names its third argument `MESH_SPEC.json` (an `actinv-mesh-spec-1` document), and the
+  `export-source openmc` example writes `source.xml`, the `<sources>` XML fragment it produces.
+
 **Added (P158, an optional block; outputs without it unchanged)**
 
 - `actinv impurities` takes an optional `sampling` block (the block of `actinv waste budget uncertainty`) and

@@ -43,7 +43,8 @@ Exit codes
   0  done
   1  the work failed: a solve, a file check, a download, a write
   2  bad usage, or an input that cannot be read or is invalid
-  3  a check ran and failed: verification in budget or impurities
+  3  a check ran and failed: verification in budget, waste budget, waste budget
+     uncertainty or impurities; the output is still written
 
 Messages go to stderr. Data go to stdout only when no output file is given.";
 
@@ -194,7 +195,9 @@ usage: actinv study validate STUDY.json\n       actinv study build STUDY.json [O
   run        build, solve every case and write study_record.json\n\n\
   actinv study run examples/study_fe_smoke.json\n\n\
 OUTDIR defaults to STUDY.study-out. Schema: docs/STUDY.md.\n\n\
-Exit: 0 done, 1 a case failed, 2 bad usage or an invalid study.",
+Exit: 0 done (a case that fails is recorded in study_record.json, whose\n\
+verdict is then incomplete), 1 the study could not run, 2 bad usage or an\n\
+invalid study.",
         "waste" => "actinv waste: classify radioactive waste\n\n\
 usage: actinv waste WASTE.json [OUT.json]\n       actinv waste budget BUDGET.json [OUT.json]\n       actinv waste budget uncertainty SPEC.json [OUT.json]\n       actinv waste bounds BOUNDS.json [OUT.json]\n       actinv waste composition COMPOSITION.json [OUT.json]\n       actinv waste composition solve SPEC.json [OUT.json]\n       actinv waste intrusion-screen SPEC.json [OUT.json]\n       actinv waste uncertainty SPEC.json [OUT.json]\n       actinv waste package SPEC.json [OUT.json]\n\n\
   (none)              the US Part 61 class of a component from run results\n\
@@ -210,7 +213,9 @@ usage: actinv waste WASTE.json [OUT.json]\n       actinv waste budget BUDGET.jso
 Writes OUT.json, or stdout without it. Paths inside a spec are read from the\n\
 spec's directory. The class is the nominal U.S. classification, not disposal\n\
 acceptance; the intrusion screen is a review aid. Handbook: docs/guide/waste.md.\n\n\
-Exit: 0 done, 1 the evaluation failed, 2 bad usage.",
+Exit: 0 done, 1 the evaluation failed, 2 bad usage. `budget` and `budget\n\
+uncertainty` exit 3 when a verification point misses; the result is still\n\
+written.",
         "import-fispact" => {
             return Some(format!(
                 "actinv import-fispact: convert a FISPACT-II deck into a problem\n\n{}\n\n\
@@ -257,16 +262,18 @@ with uncertainty bands, as actinv-r2s-source-1 for `export-source`.\n\n\
   actinv export-r2s mesh.ndjson 3 r2s.ndjson\n\n\
 Exit: 0 written, 1 the export failed, 2 bad usage or no such step.",
         "export-r2s-joint" => "actinv export-r2s-joint: a shutdown-dose source with joint bands\n\n\
-usage: actinv export-r2s-joint MESH_RESULT.ndjson PROBLEM.json STEP OUT.ndjson\n\n\
+usage: actinv export-r2s-joint MESH_RESULT.ndjson MESH_SPEC.json STEP OUT.ndjson\n\n\
 As export-r2s, with the cell-to-cell correlation of the nuclear-data\n\
-uncertainty carried jointly (actinv-r2s-joint-1).\n\n\
-  actinv export-r2s-joint mesh.ndjson problem.json 3 r2s.ndjson\n\n\
+uncertainty carried jointly (actinv-r2s-joint-1). MESH_SPEC.json is the\n\
+actinv-mesh-spec-1 document the mesh was run from.\n\n\
+  actinv export-r2s-joint mesh.ndjson mesh-spec.json 3 r2s.ndjson\n\n\
 Exit: 0 written, 1 the export failed, 2 bad usage or no such step.",
         "export-source" => "actinv export-source: a shutdown-dose source for a transport code\n\n\
 usage: actinv export-source {openmc|mcnp|serpent} R2S_SOURCE.ndjson OUT\n       actinv export-source alara R2S_SOURCE.ndjson OUT_DIR --shutdown-t-s T\n\n\
-Converts an export-r2s source into the input of OpenMC, MCNP, Serpent or\n\
-ALARA. The ALARA form writes one file per cell into an empty OUT_DIR.\n\n\
-  actinv export-source openmc r2s.ndjson source.py\n\n\
+Converts an export-r2s source into the input of OpenMC (a <sources> XML\n\
+fragment), MCNP, Serpent or ALARA. The ALARA form writes one file per cell\n\
+into an empty OUT_DIR.\n\n\
+  actinv export-source openmc r2s.ndjson source.xml\n\n\
 Exit: 0 written, 1 the export failed, 2 bad usage.",
         "clearance" => "actinv clearance: clearance against declared limits\n\n\
 usage: actinv clearance INPUT STEP [--limits PATH] [--confidence T] OUT.ndjson\n\n\

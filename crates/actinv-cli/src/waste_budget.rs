@@ -525,9 +525,19 @@ pub fn run(path: &str, output: Option<&str>) -> Result<Value, String> {
     let text = std::fs::read_to_string(&spec_path)
         .map_err(|error| format!("cannot read waste budget {path}: {error}"))?;
     let dir = spec_path.parent().unwrap_or_else(|| Path::new("."));
-    let result = run_doc(&text, dir)?;
+    let result = run_doc_unchecked(&text, dir)?;
     waste::output_doc(&result, output)?;
     Ok(result)
+}
+
+/// The process exit code for a budget result: 3 when a verification point missed (the result is still
+/// written), 0 otherwise.
+pub fn exit_code(doc: &Value) -> i32 {
+    if doc["verification"]["verified"] == true {
+        0
+    } else {
+        3
+    }
 }
 
 /// Every refusal of the nominal budget that needs no solve: the document, its constituents, the rule pack and
@@ -909,7 +919,18 @@ pub(crate) fn intervals_from_basis(
     })
 }
 
+/// The budget with the verification block as computed; a miss is an error. Callers that build on the nominal
+/// budget (uncertainty, impurities) refuse a missed verification.
 pub(crate) fn run_doc(text: &str, dir: &Path) -> Result<Value, String> {
+    let doc = run_doc_unchecked(text, dir)?;
+    if exit_code(&doc) != 0 {
+        return Err("waste class budget verification failed".into());
+    }
+    Ok(doc)
+}
+
+/// The budget with the verification block as computed, a missed point included, so the caller can write it.
+pub(crate) fn run_doc_unchecked(text: &str, dir: &Path) -> Result<Value, String> {
     let s = setup(text, dir)?;
     let b = &s.b;
     let rules = &s.rules;
@@ -1093,9 +1114,6 @@ pub(crate) fn run_doc(text: &str, dir: &Path) -> Result<Value, String> {
         "joint_specification_margin":interval_json(&joint,"scale_factor","joint_interior",&verification_rows,None),
         "verification":{"tolerance_relative":VERIFY_REL,"tolerance_absolute_near_zero":VERIFY_ABS,"inset_relative":INSET_REL,"points":verification_rows,"verified":all_verified},
     });
-    if !all_verified {
-        return Err("waste class budget verification failed".into());
-    }
     Ok(doc)
 }
 
@@ -1182,6 +1200,13 @@ fn external_map(
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn missed_verification_exits_three_and_a_pass_exits_zero() {
+        assert_eq!(exit_code(&json!({"verification":{"verified":true}})), 0);
+        assert_eq!(exit_code(&json!({"verification":{"verified":false}})), 3);
+        assert_eq!(exit_code(&json!({})), 3);
+    }
 
     fn key() -> ConstraintKey {
         ConstraintKey {
