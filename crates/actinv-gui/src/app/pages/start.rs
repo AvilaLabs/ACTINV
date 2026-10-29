@@ -39,9 +39,11 @@ impl Desktop {
             "What a material becomes under irradiation, and how it cools: activity, decay heat, dose and waste class.",
         );
         ui.label(RichText::new("START A PROBLEM").small().color(accent));
-        // each card's frame adds its margin and stroke (7 a side) to the width it is given
+        // each card's frame adds its margin and stroke (7 a side) to the width it is given, and the
+        // page's scroll bar takes its own room once the page is taller than the window
         let gap = ui.spacing().item_spacing.x;
-        let width = ((ui.available_width() - 3. * gap) / 4. - 14.).clamp(180., 300.);
+        let bar = ui.spacing().scroll.bar_width + ui.spacing().scroll.bar_outer_margin;
+        let width = ((ui.available_width() - bar - 3. * gap) / 4. - 14.).clamp(180., 300.);
         ui.horizontal_wrapped(|ui| {
             let new = choice(
                 ui,
@@ -86,6 +88,10 @@ impl Desktop {
                 self.import.get_or_insert_with(ImportState::default);
             }
         });
+        ui.add_space(16.);
+        if let Some(page) = crate::views::questions::show(ui, |_| true) {
+            self.page = page;
+        }
         ui.add_space(16.);
         ui.columns(2, |columns| {
             let ui = &mut columns[0];

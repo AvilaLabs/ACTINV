@@ -638,6 +638,12 @@ impl Workbench {
             _ => {}
         }
         ui.add_space(16.);
+        if let Some(page) =
+            crate::views::questions::show(ui, |page| browser_pages().any(|p| p == page))
+        {
+            self.page = page;
+        }
+        ui.add_space(16.);
         ui.columns(2, |columns| {
             let ui = &mut columns[0];
             ui.label(RichText::new("CURRENT PROBLEM").small().color(accent));
@@ -870,7 +876,7 @@ impl Workbench {
             }
         });
         if self.problem["projectile"].as_str().unwrap_or("neutron") != "neutron" {
-            ui.label("Charged-particle and photonuclear problems need a library for that projectile (named on Check & run) and a temperature of 0 K.");
+            ui.label("Charged-particle and photonuclear problems need a library for that projectile (named on Check & run) and a temperature of 0 K. The standard spectra are neutron shapes, so import this projectile's group values from transport below.");
         }
         ui.add_space(8.);
     }

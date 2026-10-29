@@ -12,6 +12,7 @@ pub mod optimize;
 pub mod outputs;
 pub mod pathways;
 pub mod photons;
+pub mod questions;
 pub mod review;
 pub mod source;
 pub mod steps;
