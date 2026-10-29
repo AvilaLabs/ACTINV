@@ -13,9 +13,6 @@ actinv data fetch tendl-2025-neutron-covariance
 actinv decide examples/decide/decision.json verdict.json
 ```
 
-`decide` does not resolve `catalog:` references, so `run_spec.json` names the files under `actinv-data/v1.2.0/`
-directly. Run from the directory that holds `actinv-data`.
-
 Expected runtime: one solve with first-order bands, seconds once the data are installed; the first run on a machine
 also builds the prepared-data cache, which takes longer. Not timed.
 
