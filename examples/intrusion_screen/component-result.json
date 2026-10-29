@@ -1,0 +1,10 @@
+{
+ "entry_point": "hand-written stand-in for an actinv run result",
+ "mode": "coupled",
+ "steps": [
+  {"step": 1, "t_s": 315576000.0,
+   "activity_Bq_per_g": {"C14": 0.02, "Fe55": 0.5, "Mn54": 0.001, "Co60": 3.0, "Ni63": 40.0, "Nb94": 0.08}},
+  {"step": 2, "t_s": 946728000.0,
+   "activity_Bq_per_g": {"C14": 0.02, "Fe55": 0.0, "Mn54": 0.0, "Co60": 0.05, "Ni63": 32.0, "Nb94": 0.08}}
+ ]
+}

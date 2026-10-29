@@ -1,0 +1,44 @@
+{
+ "schema": "actinv-waste-intrusion-screen-spec-1",
+ "draft_rules": "us-nrc-nureg1556-v22-draft-2026-02-v1",
+ "package_basis": "single_component_container",
+ "waste_form": "metal",
+ "inventory_coverage": "complete",
+ "unbounded_inventory_reasons": [],
+ "waste_spec": {
+  "schema": "actinv-waste-spec-1",
+  "rules": "us-nrc-10cfr61.55-v1",
+  "input": "component-result.json",
+  "targets": [1, 2],
+  "nuclide_properties": {
+   "C14": {"z": 6, "half_life_s": 180808200000, "alpha_emitting": false},
+   "Fe55": {"z": 26, "half_life_s": 86600000, "alpha_emitting": false},
+   "Mn54": {"z": 25, "half_life_s": 26980000, "alpha_emitting": false},
+   "Co60": {"z": 27, "half_life_s": 166340000, "alpha_emitting": false},
+   "Ni63": {"z": 28, "half_life_s": 3159000000, "alpha_emitting": false},
+   "Nb94": {"z": 41, "half_life_s": 640000000000, "alpha_emitting": false}
+  },
+  "components": [
+   {
+    "id": "whole-container",
+    "mass_g": 1000,
+    "displaced_volume_cm3": 128.2,
+    "waste_type": "activated_metal",
+    "external_tritium": {"status": "not_applicable"}
+   }
+  ]
+ },
+ "site_wac": {
+  "source": "artificial site-WAC example",
+  "membership_coverage": "complete",
+  "nuclides": {
+   "C14": {"status": "listed", "limit": {"value": 100, "unit": "nCi/g"}},
+   "Nb94": {"status": "listed_no_numeric_limit"}
+  }
+ },
+ "dot_rq": {
+  "source": "artificial caller-declared RQ example",
+  "coverage": "complete",
+  "nuclides": {"Co60": 370000000000, "C14": 3700000000000}
+ }
+}

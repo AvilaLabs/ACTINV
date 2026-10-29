@@ -1,0 +1,72 @@
+{
+ "spec": "actinv-mesh-spec-1",
+ "title": "Banded mesh demonstration: two-cell Fe activation with MF=33 bands",
+ "projectile": "neutron",
+ "library": {
+  "path": "catalog:tendl-2025-neutron-709g",
+  "sha256": "ec4c72bf598dc8ad3d533d9cfafdcf493e2d1f949a3e4db6251495659b68cc44"
+ },
+ "decay": {
+  "primary": "catalog:endfb-viii-0-decay",
+  "fallback": "catalog:jeff-3-3-decay"
+ },
+ "material": {
+  "mass_g": 1.0,
+  "basis": "wt_percent",
+  "composition": {
+   "FE": 100.0
+  }
+ },
+ "schedule": [
+  {
+   "dt": "300 s",
+   "flux": 1.0
+  },
+  {
+   "dt": "86400 s",
+   "flux": 0.0
+  },
+  {
+   "dt": "2592000 s",
+   "flux": 0.0
+  },
+  {
+   "dt": "31536000 s",
+   "flux": 0.0
+  }
+ ],
+ "options": {
+  "mode": "auto",
+  "prune": "rate",
+  "bmin_atoms_per_g": 1e-08,
+  "temperature_K": 293.6
+ },
+ "flux": {
+  "path": "examples/mesh_flux.ndjson",
+  "sha256": "56b3290f9fb4fceeb4433f8e11bdf2f60f6685774fb7af1110c1f612d47a4161"
+ },
+ "uncertainty": {
+  "covariance": {
+   "path": "catalog:tendl-2025-neutron-709g-covariance",
+   "sha256": "c19dec86b44ad5d90b66c9ab94d53e18641a1d354a89402a4da7986b6c530cde"
+  },
+  "responses": [
+   "activity.total",
+   "heat.total",
+   "activity:Mn56",
+   "activity:Fe55",
+   "activity:Fe59",
+   "activity:Mn54",
+   "activity:Co58",
+   "activity:Cr51",
+   "activity:Co57",
+   "activity:Co60",
+   "activity:Mn52",
+   "activity:Ni57",
+   "activity:Fe53",
+   "activity:V52"
+  ],
+  "confidence_level": 0.95
+ },
+ "threads": 1
+}

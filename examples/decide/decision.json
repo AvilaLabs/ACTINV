@@ -1,0 +1,11 @@
+{
+ "schema": "actinv-decide-1",
+ "run_spec": "run_spec.json",
+ "decision": {
+  "measurement_top": 5,
+  "constraints": [
+   {"name": "activity_1d", "response": "activity.total", "time_s": 86700.0, "edge": "conservative_upper", "sense": "le", "limit": 1500.0},
+   {"name": "activity_31d", "response": "activity.total", "time_s": 2678700.0, "edge": "conservative_upper", "sense": "le", "limit": 500.0}
+  ]
+ }
+}

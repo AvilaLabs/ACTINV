@@ -1,0 +1,23 @@
+{
+ "schema": "actinv-waste-uncertainty-spec-1",
+ "problem": "problem.json",
+ "rules": "us-nrc-10cfr61.55-v1",
+ "targets": [2, 3, 4],
+ "nuclide_properties": "from_decay_data",
+ "components": [
+  {
+   "id": "iron-block",
+   "mass_g": 1000,
+   "density_g_cm3": 7.8,
+   "waste_type": "activated_metal",
+   "external_tritium": {"status": "not_applicable"}
+  }
+ ],
+ "sampling": {
+  "channels": {"cross_section_mf33": true, "decay_constants": true},
+  "covariance": {"path": "catalog:tendl-2025-neutron-709g-covariance"},
+  "samples": 72,
+  "seed": 20261029
+ },
+ "confidence_level": 0.95
+}
