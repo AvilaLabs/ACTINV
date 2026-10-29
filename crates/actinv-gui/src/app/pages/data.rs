@@ -92,6 +92,17 @@ impl Desktop {
                     self.report(Err(e));
                 }
             }
+            if let Some(done) = self.command_result(crate::jobs::Command::DataVerify) {
+                if done.exit == 0 {
+                    ui.label(&done.message);
+                } else {
+                    ui.colored_label(
+                        ui.visuals().error_fg_color,
+                        format!("Verification failed: {}", done.message),
+                    );
+                    ui.label("Fetch the data again to replace a changed file: actinv data fetch --force.");
+                }
+            }
         });
         ui.add_space(12.);
         egui::Frame::group(ui.style()).inner_margin(16.).show(ui, |ui| {

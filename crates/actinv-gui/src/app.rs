@@ -127,11 +127,14 @@ pub struct Desktop {
     pathways: PathwaysState,
     outputs: OutputsState,
     material_view: crate::views::material::MaterialState,
+    source_view: crate::views::source::SourceState,
     steps: crate::views::steps::StepsState,
     /// Folding sidebar groups the user opened.
     nav_open: Vec<crate::nav::Group>,
     /// Screenshot mode's replacement problem, once read (`ACTINV_GUI_CAPTURE_PROBLEM`).
     capture_problem: Option<Option<Value>>,
+    /// The latest result of each command the pages ran, for the page that asked to show it.
+    command_results: Vec<crate::jobs::JobResult>,
     /// The Waste class page: its inputs, loaded properties, overrides and last classification.
     waste: pages::waste::WasteState,
     export: crate::views::export::ExportState,
@@ -264,22 +267,29 @@ impl Desktop {
         Ok(())
     }
 
-    /// Hand a finished command to the page that asked for it.
+    /// Keep a finished command's result for the page that asked for it, and say how it ended.
     fn command_finished(&mut self, done: crate::jobs::JobResult) {
-        match done.command {
-            _ => {
-                let message = if done.message.is_empty() {
-                    format!("{} finished.", done.command.label())
-                } else {
-                    done.message.clone()
-                };
-                self.report(if done.exit == 0 {
-                    Ok(message)
-                } else {
-                    Err(message)
-                });
-            }
-        }
+        let message = if done.message.is_empty() {
+            format!("{} finished.", done.command.label())
+        } else {
+            done.message.clone()
+        };
+        self.report(if done.exit == 0 {
+            Ok(message)
+        } else {
+            Err(message)
+        });
+        self.command_results
+            .retain(|kept| kept.command != done.command);
+        self.command_results.push(done);
+    }
+
+    /// The latest result of `command`, if it has run.
+    pub(crate) fn command_result(
+        &self,
+        command: crate::jobs::Command,
+    ) -> Option<&crate::jobs::JobResult> {
+        self.command_results.iter().find(|r| r.command == command)
     }
 
     fn stop_calculation_for_close(&mut self) {
@@ -391,9 +401,11 @@ impl Desktop {
             pathways: PathwaysState::default(),
             outputs: OutputsState::default(),
             material_view: Default::default(),
+            source_view: Default::default(),
             steps: Default::default(),
             nav_open: Vec::new(),
             capture_problem: None,
+            command_results: Vec::new(),
             waste: Default::default(),
             export: Default::default(),
             impurities: Default::default(),

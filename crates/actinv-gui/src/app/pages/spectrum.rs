@@ -45,13 +45,18 @@ impl Desktop {
             ui.label("Charged-particle and photonuclear problems need a library for that projectile (chosen on Check & run) and a temperature of 0 K.");
         }
         ui.add_space(8.);
+        let source = crate::views::source::applies(&self.document);
+        let started_empty = !crate::views::source::has_flux(&self.document);
+        if source && started_empty {
+            crate::views::source::starting_card(ui, &mut self.document, &mut self.source_view);
+        }
         let r=ui.scope(|ui|{
             ui.horizontal(|ui|{ui.label("Group structure");text_field(ui,&mut self.document["spectrum"]["structure"]);});
             let mut normalized=self.document["spectrum"]["total"].is_number();if ui.checkbox(&mut normalized,"Normalize group values to a total flux (particles/cm²/s)").changed(){if normalized{self.document["spectrum"]["total"]=json!(1e12);}else{self.document["spectrum"].as_object_mut().unwrap().remove("total");}}
             if normalized {numeric(ui,&mut self.document["spectrum"]["total"],1e10);}else{ui.label("Group values are absolute group fluxes (particles/cm²/s).");}
             let mut descending=self.document["spectrum"]["descending"].as_bool().unwrap_or(false);if ui.checkbox(&mut descending,"Input groups are highest-energy first").changed(){self.document["spectrum"]["descending"]=descending.into();}
             let points:Vec<[f64;2]>=self.document["spectrum"]["flux_per_group"].as_array().map(|a|a.iter().enumerate().map(|(i,v)|[i as f64+1.,model::number(v)]).collect()).unwrap_or_default();
-            Plot::new("incident").height(260.).allow_scroll(false).x_axis_label("Input group index").y_axis_label(if normalized{"Relative group weight"}else{"Group flux (particles/cm²/s)"}).y_axis_formatter(|mark,_|crate::visuals::compact_number(mark.value)).show(ui,|p|p.line(Line::new("Incident spectrum",points).color(accent)));
+            if crate::views::source::has_flux(&self.document) { Plot::new("incident").height(260.).allow_scroll(false).x_axis_label("Input group index").y_axis_label(if normalized{"Relative group weight"}else{"Group flux (particles/cm²/s)"}).y_axis_formatter(|mark,_|crate::visuals::compact_number(mark.value)).show(ui,|p|p.line(Line::new("Incident spectrum",points).color(accent))); }
             ui.collapsing("Edit group values",|ui|{if let Some(values)=self.document["spectrum"]["flux_per_group"].as_array_mut(){egui::ScrollArea::vertical().max_height(200.).show_rows(ui,28.,values.len(),|ui,range|{for i in range {ui.horizontal(|ui|{ui.label(format!("Group {}",i+1));numeric(ui,&mut values[i],1.);});}});}});
             ui.label("Custom boundaries and optional photon, uncertainty, or response settings are available in Advanced JSON.");
             ui.collapsing("Import or paste group values", |ui| {
@@ -82,9 +87,14 @@ impl Desktop {
                 "incident-boundaries",
             );
         }
-        egui::CollapsingHeader::new("Spectrum by physical energy")
-            .open(self.capture.as_ref().map(|_| true))
-            .show(ui, |ui| crate::visuals::spectrum(ui, &self.document));
+        if crate::views::source::has_flux(&self.document) {
+            egui::CollapsingHeader::new("Spectrum by physical energy")
+                .open(self.capture.as_ref().map(|_| true))
+                .show(ui, |ui| crate::visuals::spectrum(ui, &self.document));
+        }
+        if source && !started_empty {
+            crate::views::source::starting_card(ui, &mut self.document, &mut self.source_view);
+        }
         let request = ui
             .add_enabled_ui(self.job.is_none(), |ui| {
                 self.transport.show(ui, &self.document)

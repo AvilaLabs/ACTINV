@@ -187,6 +187,9 @@ pub struct Workbench {
     ledger_filter: String,
     spectrum_text: String,
     material_view: MaterialState,
+    /// folding groups (Studies, Tools) the visitor opened
+    nav_open: Vec<crate::nav::Group>,
+    source_view: crate::views::source::SourceState,
     steps: StepsState,
     outputs: OutputsState,
     tables: TablesState,
@@ -238,6 +241,8 @@ impl Workbench {
             ledger_filter: String::new(),
             spectrum_text: String::new(),
             material_view: MaterialState::default(),
+            nav_open: Vec::new(),
+            source_view: Default::default(),
             steps: StepsState::default(),
             outputs: OutputsState::default(),
             tables: TablesState::default(),
@@ -872,6 +877,11 @@ impl Workbench {
         );
         self.editors(ui, |this, ui| {
             this.projectile(ui);
+            let source = crate::views::source::applies(&this.problem);
+            let started_empty = !crate::views::source::has_flux(&this.problem);
+            if source && started_empty {
+                crate::views::source::starting_card(ui, &mut this.problem, &mut this.source_view);
+            }
             let accent = visuals::accent(ui);
             ui.horizontal(|ui| {
                 ui.label("Group structure");
@@ -915,19 +925,21 @@ impl Workbench {
                         .collect()
                 })
                 .unwrap_or_default();
-            Plot::new("incident")
-                .height(260.)
-                .allow_scroll(false)
-                .x_axis_label("Input group index")
-                .y_axis_label(if normalized {
-                    "Relative group weight"
-                } else {
-                    "Group flux (particles/cm²/s)"
-                })
-                .y_axis_formatter(|mark, _| crate::visuals::compact_number(mark.value))
-                .show(ui, |plot| {
-                    plot.line(Line::new("Incident spectrum", points).color(accent))
-                });
+            if !started_empty {
+                Plot::new("incident")
+                    .height(260.)
+                    .allow_scroll(false)
+                    .x_axis_label("Input group index")
+                    .y_axis_label(if normalized {
+                        "Relative group weight"
+                    } else {
+                        "Group flux (particles/cm²/s)"
+                    })
+                    .y_axis_formatter(|mark, _| crate::visuals::compact_number(mark.value))
+                    .show(ui, |plot| {
+                        plot.line(Line::new("Incident spectrum", points).color(accent))
+                    });
+            }
             ui.collapsing("Edit group values", |ui| {
                 if let Some(values) = this.problem["spectrum"]["flux_per_group"].as_array_mut() {
                     egui::ScrollArea::vertical().max_height(200.).show_rows(
@@ -954,9 +966,11 @@ impl Workbench {
                     this.problem["spectrum"]["boundaries_eV"] = boundaries;
                 }
             }
-            ui.collapsing("Spectrum by physical energy", |ui| {
-                visuals::spectrum(ui, &this.problem)
-            });
+            if !started_empty {
+                ui.collapsing("Spectrum by physical energy", |ui| {
+                    visuals::spectrum(ui, &this.problem)
+                });
+            }
             ui.collapsing("Import or paste group values", |ui| {
                 ui.label("Paste one flux column from a spreadsheet, or open a one-column CSV/text file. Optional header: flux. Set normalization and energy order above explicitly.");
                 if ui.button("Open CSV / text").clicked() {
@@ -987,6 +1001,10 @@ impl Workbench {
                 }
             });
             ui.label("Custom boundaries and optional photon, uncertainty, or response settings are available in Advanced JSON.");
+            if source && !started_empty {
+                ui.add_space(8.);
+                crate::views::source::starting_card(ui, &mut this.problem, &mut this.source_view);
+            }
         });
     }
 
@@ -1682,15 +1700,52 @@ impl eframe::App for Workbench {
                 |ui| {
                     ui.horizontal_wrapped(|ui| {
                         let mut group = None;
-                        for page in browser_pages() {
-                            if group != Some(page.group()) {
+                        let pages: Vec<Page> = browser_pages().collect();
+                        for page in pages.iter().copied() {
+                            let g = page.group();
+                            // a folding group shows its pages while open or while one of them is shown
+                            let open =
+                                !g.folds() || self.page.group() == g || self.nav_open.contains(&g);
+                            if group != Some(g) {
                                 if group.is_some() {
                                     ui.separator();
                                 }
-                                if let Some(caption) = page.group().caption() {
-                                    ui.label(RichText::new(caption).small().weak());
+                                if let Some(caption) = g.caption() {
+                                    if g.folds() {
+                                        let count = pages.iter().filter(|p| p.group() == g).count();
+                                        let text = if open {
+                                            caption.to_owned()
+                                        } else {
+                                            format!("{caption} · {count}")
+                                        };
+                                        let header = ui
+                                            .add(
+                                                egui::Label::new(
+                                                    RichText::new(text).small().weak(),
+                                                )
+                                                .sense(egui::Sense::click()),
+                                            )
+                                            .on_hover_text(if open {
+                                                "Hide these pages"
+                                            } else {
+                                                "Show these pages"
+                                            })
+                                            .on_hover_cursor(egui::CursorIcon::PointingHand);
+                                        if header.clicked() && self.page.group() != g {
+                                            if open {
+                                                self.nav_open.retain(|o| *o != g);
+                                            } else {
+                                                self.nav_open.push(g);
+                                            }
+                                        }
+                                    } else {
+                                        ui.label(RichText::new(caption).small().weak());
+                                    }
                                 }
-                                group = Some(page.group());
+                                group = Some(g);
+                            }
+                            if !open {
+                                continue;
                             }
                             // pages that read a result are dimmed until one is open; the waste page
                             // reads a waste result, not a run result
