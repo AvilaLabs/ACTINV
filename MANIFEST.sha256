@@ -1111,7 +1111,6 @@ ba3dad3e79ca77e324554f943598000c523e4d777c4190b1682926d37bba8ab6  ./crates/actin
 7329c26208f667e1622d8530f4e3be366e34cc8f941e24fa1cabc4719b63c4bb  ./crates/actinv-gui/index.html
 37784f72ee98586b3d69f0b51ca9751a7e831187d20b700f58d4676caf2ec139  ./crates/actinv-gui/src/app.rs
 8bcfcfe488abe4b95eeac6c2148897793180c6aa54db60db36862fc491c60110  ./crates/actinv-gui/src/app/pages/advanced.rs
-6eea7a39b914bb13ef7330235f5f1310a4081d47a5fbdf59bcf49b47a41b2614  ./crates/actinv-gui/src/app/pages/assimilation.rs
 91d21c10ffdfd097bc9cb0e911cb942b5674212dfba807b4288aa74f1f0505a3  ./crates/actinv-gui/src/app/pages/certify.rs
 ff4321be8985276230d62f67cb6333abcb65d825341ade50f8d1e60aefa3739d  ./crates/actinv-gui/src/app/pages/charts.rs
 1f4a2efd2edb85ec34ae4fe083c4475137d12cc9621423658441434906e7b7e3  ./crates/actinv-gui/src/app/pages/check_run.rs
@@ -1121,6 +1120,7 @@ fc6e48169fb99d0eee9fe577183ff216cb58c687df757699ad5bb1c1bab734db  ./crates/actin
 5869b441be31673f0e7dfeaf98db68ef3b43c462f0c33a7a28df1735f6860951  ./crates/actinv-gui/src/app/pages/impurities.rs
 730fa2e6a56e857d6c3b003654d733b879770aeb9cb8cd6a1b501cc7d5473615  ./crates/actinv-gui/src/app/pages/ledger.rs
 7e35bdbfbd452a13569bdb033c16ab865694a61ea221d22c7bed3e7084a3070a  ./crates/actinv-gui/src/app/pages/material.rs
+6eea7a39b914bb13ef7330235f5f1310a4081d47a5fbdf59bcf49b47a41b2614  ./crates/actinv-gui/src/app/pages/measurements.rs
 f130f3f16a460cbd8039bc770b026028191a7dbd333c7059c768e256a7a45a98  ./crates/actinv-gui/src/app/pages/mesh.rs
 79a9d31b33760555be44e6293c72f64109b96cc45cf03668828021b541722af1  ./crates/actinv-gui/src/app/pages/mod.rs
 69848b23e5d46f7867662f9b9958253aca32417536d9e390bff6007978bce762  ./crates/actinv-gui/src/app/pages/optimize.rs
@@ -6304,7 +6304,7 @@ d7114d89f0cf50aec941694fd26d72db23d3c160dc8ecd5292e7f397faf1bae3  ./scripts/chec
 de81f9426c43b082b1e7fb35d9e13a18639828e9bca06268510d3679448de2f5  ./scripts/ci_data.sha256
 905a71a71084f721b5dba4cf85697a0f84e04e5b6cb086d7d65e6e296ba8ff99  ./scripts/ci_data_seed.json
 475eb2706733b10957324ad94ec106cba94972cc86fb0504e253be1037715cf9  ./scripts/ci_tendl_files.txt
-0ea1b305b1e180bc52f38edc44a50c314646f76f150a723c7a45ea103ccc7f6c  ./scripts/desktop_smoke.py
+1e6b562d0d358655245f2c9b7c3d3c4ce9d3241aa35abcd37fd12f44a015146f  ./scripts/desktop_smoke.py
 e510ed36bf2155f1ced7f8248096f7b1ded4a649162c009e887559b8923c76f7  ./scripts/diagnose_p10_eaf_precision.py
 e5c957e91b944346386d67205bacb500aa8dc7f82417f35f6b7f755d634cfed3  ./scripts/diagnose_p10_eaf_tail.py
 e3b59683775fe379d73b0b307a145c499ecf21ba8d98e0fdf6bad2b082be7bd9  ./scripts/fetch_ci_data.sh
