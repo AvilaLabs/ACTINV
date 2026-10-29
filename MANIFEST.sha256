@@ -1138,7 +1138,7 @@ fca73b56415eed0dbdd827e4e692ca5e3602c5b32ef38cb2afeaa73dbc553c03  ./crates/actin
 029e34d026db3edf4e5d28174cce211d49baa60087fd181a1251c00764928ac3  ./crates/actinv-gui/src/capture.rs
 e6cf57bce6a4167d189a6184648ee8151cba67ba18c0f0228be962b958092f56  ./crates/actinv-gui/src/jobs.rs
 83c540fd256c8c15709dc7485ee4a1d1b2818665b0d972a9bb92a57cccf8f7b4  ./crates/actinv-gui/src/lib.rs
-32f513f9fb192add9753239df57b57fe3c104c1ae7f7bde82cf2b95d78e83ffe  ./crates/actinv-gui/src/main.rs
+25fcad67999394c8480394e6528025dd94d8ac1eb452ef371c35a5543649bef3  ./crates/actinv-gui/src/main.rs
 7120e20847bee3c54b13165859068c75ef7e89aab442dfafc828c6bb2b4c1b72  ./crates/actinv-gui/src/model.rs
 d016137c5b4bc339d68a399bf4486d409defe7eb689ad8f9366b159f59f327ad  ./crates/actinv-gui/src/nav.rs
 a839b0b781873450168624827f606a436e31c6dafe1b7f280d5a418c30d80386  ./crates/actinv-gui/src/options.rs

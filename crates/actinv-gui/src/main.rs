@@ -38,6 +38,9 @@ fn main() -> eframe::Result {
                 .with_icon(icon)
                 .with_inner_size([1320.0, 860.0])
                 .with_min_inner_size([900.0, 640.0]),
+            // Screenshot runs leave the window you use alone: eframe saves the window's size even
+            // when the app saves nothing else.
+            persist_window: std::env::var_os("ACTINV_GUI_CAPTURE_DIR").is_none(),
             ..Default::default()
         },
         Box::new(|cc| Ok(Box::new(app::Desktop::new(cc)))),
