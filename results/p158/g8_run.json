@@ -1,0 +1,79 @@
+{
+ "binary_note": "built from the P158 working tree before the rebase onto e11d742; the candidate commit 785ef37 rebuilds to the same SHA-256",
+ "binary_sha256": "286b20e26d06eafca380d0677626e696b383586ac1826a2c387f465c350ef1a3",
+ "command": "actinv impurities examples/impurities_ra_steel/impurities_uncertainty.json impurities-uncertainty-result.json",
+ "exit": 0,
+ "failed_samples": [],
+ "max_rss_kb": 2498140,
+ "order_statistic": {
+  "k": 1,
+  "minimum_samples": 72,
+  "n": 72
+ },
+ "output_bytes": 3114812,
+ "output_sha256": "be955aca25f329444a5144f80df527062bc5473baf4a384b38b06654a37136dd",
+ "runtime_s": 2678.4,
+ "stderr": "impurities: 15 element solves, 4 targets, verification passed (max rel dev 1.987450414440573e-15) -> target/p158-work/g8run/impurities-uncertainty-result.json",
+ "verification": {
+  "decided_by_floor": [
+   {
+    "endpoint": "activity:Nb94",
+    "floor": 4.422395554591676e-10,
+    "pass": true,
+    "predicted": 2.0801952913185868e-162,
+    "rel_dev": 0.0,
+    "rel_dev_before_floor": 1.0,
+    "role": "value_matrix_only",
+    "sample": 54,
+    "solved": 0.0,
+    "step": 2
+   },
+   {
+    "endpoint": "activity:Nb94",
+    "floor": 4.422221168326908e-10,
+    "pass": true,
+    "predicted": 2.0801132639462348e-162,
+    "rel_dev": 0.0,
+    "rel_dev_before_floor": 1.0,
+    "role": "value_matrix_only",
+    "sample": 54,
+    "solved": 0.0,
+    "step": 3
+   },
+   {
+    "endpoint": "activity:Nb94",
+    "floor": 4.42064769418057e-10,
+    "pass": true,
+    "predicted": 2.0793731371371736e-162,
+    "rel_dev": 0.0,
+    "rel_dev_before_floor": 1.0,
+    "role": "value_matrix_only",
+    "sample": 54,
+    "solved": 0.0,
+    "step": 4
+   },
+   {
+    "endpoint": "activity:Nb94",
+    "floor": 4.404943712124001e-10,
+    "pass": true,
+    "predicted": 2.071986337578932e-162,
+    "rel_dev": 0.0,
+    "rel_dev_before_floor": 1.0,
+    "role": "value_matrix_only",
+    "sample": 54,
+    "solved": 0.0,
+    "step": 5
+   }
+  ],
+  "nominal_max_rel_dev": 1.987450414440573e-15,
+  "nominal_points": 77,
+  "uncertainty_max_rel_dev": 2.759472070043875e-15,
+  "uncertainty_points": 501,
+  "uncertainty_skipped": 126,
+  "uncertainty_solves": 356,
+  "uncertainty_verified": true,
+  "verified": true
+ },
+ "verification_pass": true,
+ "wall_time": "44:38.39"
+}

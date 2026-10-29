@@ -1,0 +1,419 @@
+{
+ "candidate": "/home/connoravila/Documents/actinv/target/wt-p158-wt/release/actinv",
+ "candidate_sha256": "286b20e26d06eafca380d0677626e696b383586ac1826a2c387f465c350ef1a3",
+ "checker_sha256": "788a22387eb836348ce9dcad709c04902a1ed226af44f0997a9e66279a7dcb72",
+ "data_home": "/home/connoravila/Documents/actinv/target/p158-wt",
+ "external_gates": {
+  "G1": "fmt, check --tests, clippy -D warnings, workspace tests: coordinator",
+  "G9": "CI on the pushed evidence commit: coordinator"
+ },
+ "g1_log": {
+  "path": "results/p158/g1.log",
+  "sha256": "71d2e4a608e0db77efc1bcafd8626b91d4cf1781045bde20aa346bf1821365be"
+ },
+ "g4_solves": {
+  "memo_hits": 170,
+  "run": 70
+ },
+ "gates": {
+  "G0": {
+   "amendment_a": {
+    "in_protocol_hash_txt": true,
+    "path": "/home/connoravila/Documents/actinv/target/p158-wt/protocols/ACTINV-P158_AMENDMENT_A.md",
+    "sha256": "5405dd03249710c840e8089dfb0efd84c339a971f43d4ea7506b0cc181c9d19c"
+   },
+   "pass": true,
+   "protocol": {
+    "in_protocol_hash_txt": true,
+    "path": "/home/connoravila/Documents/actinv/target/p158-wt/protocols/ACTINV-P158_PROTOCOL.md",
+    "sha256": "b241b26cca545d109523c4c534ce9387b4c64a2cd7f70660dc5ad8e6072b3887"
+   }
+  },
+  "G2": {
+   "cases": [
+    {
+     "candidate_exit": 0,
+     "candidate_output": true,
+     "candidate_output_sha256": "161ede32654f7f21914e81e4af8760f362ec32366857fd8ac61f987005a5ba49",
+     "candidate_stderr": "",
+     "command": "impurities",
+     "diffs": [],
+     "id": "impurities_ra_steel",
+     "identical_apart_from_timing": true,
+     "input_sha256": "23ee33a90980f100602f19fd16e691ce2865e22b36a77722073940956627693b",
+     "pass": true,
+     "reference_exit": 0,
+     "reference_output": true,
+     "reference_output_sha256": "c6b881709766431a12b61f29db13f3330719b2c854433cc2f9fca608b8d608ac",
+     "reference_stderr": ""
+    },
+    {
+     "candidate_exit": 0,
+     "candidate_output": true,
+     "candidate_output_sha256": "3d2082e6eb095f9b9707114a3bb93a1f376a3b7f7813d34acb7358241a830f08",
+     "candidate_stderr": "",
+     "command": "impurities",
+     "diffs": [],
+     "id": "impurities_tungsten",
+     "identical_apart_from_timing": true,
+     "input_sha256": "1cc28f81d630aee4e8ee649f17ae53b063d900ae096e4c9809c6fef2faaeea32",
+     "pass": true,
+     "reference_exit": 0,
+     "reference_output": true,
+     "reference_output_sha256": "f96777fffc9ce96b05deb37cea77cec2a503369a3183942f0eb70ee88d8bdbc8",
+     "reference_stderr": ""
+    },
+    {
+     "candidate_exit": 0,
+     "candidate_output": true,
+     "candidate_output_sha256": "0cab8ce4624563100bb73643f549fbd8bc8a241530ae843a5af1d50dd776d89d",
+     "candidate_stderr": "",
+     "command": "impurities",
+     "diffs": [],
+     "id": "impurities_vanadium",
+     "identical_apart_from_timing": true,
+     "input_sha256": "1d125a6edf2efff178e325f21c6e3b883b2d2a68010dd0fc33104d44924a8212",
+     "pass": true,
+     "reference_exit": 0,
+     "reference_output": true,
+     "reference_output_sha256": "b0b047882ea81fc76c9ed087afe8c0aa5341ce65a3ec373941903f1b17ae51fe",
+     "reference_stderr": ""
+    },
+    {
+     "candidate_exit": 0,
+     "candidate_output": true,
+     "candidate_output_sha256": "e8460502526eaab47c2fe4abe4df53b175da9383ac3cfb997cf71381e0426004",
+     "candidate_stderr": "",
+     "command": "impurities",
+     "diffs": [],
+     "id": "impurities_ra_reduced",
+     "identical_apart_from_timing": true,
+     "input_sha256": "1bd2fa9933f28adbc98463d3e2512ef134293a5937cd82804b4961befe9bf7d6",
+     "pass": true,
+     "reference_exit": 0,
+     "reference_output": true,
+     "reference_output_sha256": "d25546b770066a64669cab45a40336b10ee48a04d6cd094bb1b339df7854a609",
+     "reference_stderr": ""
+    },
+    {
+     "candidate_exit": 0,
+     "candidate_output": true,
+     "candidate_output_sha256": "db10a5a2d9c1c711b51f4040150c1e83a2bc2636c7d030c7caf9e1c9e529fb4a",
+     "candidate_stderr": "",
+     "command": "waste budget uncertainty",
+     "diffs": [],
+     "id": "waste_budget_uncertainty_p146_d1",
+     "identical_apart_from_timing": true,
+     "input_sha256": "73673776dcb9b71144cc46768f0e3ca75c86e07dc19f6c83bef3749bbf621c8b",
+     "pass": true,
+     "reference_exit": 0,
+     "reference_output": true,
+     "reference_output_sha256": "db10a5a2d9c1c711b51f4040150c1e83a2bc2636c7d030c7caf9e1c9e529fb4a",
+     "reference_stderr": ""
+    }
+   ],
+   "pass": true
+  },
+  "G3": {
+   "case": {
+    "exit": 0,
+    "flags": [
+     "--no-verify"
+    ],
+    "input": "/home/connoravila/Documents/actinv/target/p158-wt/target/p158-work/ev1/g4_case/impurities.json",
+    "input_sha256": "cf637d721a290b9eb5f0d93dda528ff658ba0ceaa9706f176458762d428254ef",
+    "output_sha256": "f4a261e7691c4e6b7e2ca2f5beadf9a928ddda9fa695423586a959baaa93287a",
+    "reused": false,
+    "seconds": 640.1,
+    "stderr_tail": "impurities: 15 element solves, 4 targets, verification skipped (max rel dev null) -> /home/connoravila/Documents/actinv/target/p158-wt/target/p158-work/ev1/g4_case/out.json\n"
+   },
+   "checks": 1602,
+   "decay_scale_entries": 3293,
+   "elements": [
+    "Ag",
+    "Al",
+    "C",
+    "Co",
+    "Cr",
+    "Cu",
+    "Fe",
+    "Mn",
+    "Mo",
+    "N",
+    "Nb",
+    "Ni",
+    "Ta",
+    "V",
+    "W"
+   ],
+   "failure_list": [],
+   "failures": 0,
+   "max_rel_dev": 0.0,
+   "notes": [],
+   "pass": true,
+   "rate_scale_entries": 711,
+   "samples": 20,
+   "yield_scale_entries": 0
+  },
+  "G4": {
+   "case": {
+    "exit": 0,
+    "flags": [
+     "--no-verify"
+    ],
+    "input": "/home/connoravila/Documents/actinv/target/p158-wt/target/p158-work/ev1/g4_case/impurities.json",
+    "input_sha256": "cf637d721a290b9eb5f0d93dda528ff658ba0ceaa9706f176458762d428254ef",
+    "output_sha256": "f4a261e7691c4e6b7e2ca2f5beadf9a928ddda9fa695423586a959baaa93287a",
+    "reused": false,
+    "seconds": 640.1,
+    "stderr_tail": "impurities: 15 element solves, 4 targets, verification skipped (max rel dev null) -> /home/connoravila/Documents/actinv/target/p158-wt/target/p158-work/ev1/g4_case/out.json\n"
+   },
+   "checks": 240,
+   "endpoints": [
+    "activity.total",
+    "activity:Nb94",
+    "clearance_index",
+    "heat.total"
+   ],
+   "failure_list": [],
+   "failures": 0,
+   "max_rel_dev": 1.0,
+   "memo_hits": 170,
+   "notes": [],
+   "pass": true,
+   "per_sample": [
+    {
+     "points_compared": 48,
+     "sample": 0
+    },
+    {
+     "points_compared": 48,
+     "sample": 2
+    },
+    {
+     "points_compared": 48,
+     "sample": 10
+    },
+    {
+     "points_compared": 48,
+     "sample": 17
+    },
+    {
+     "points_compared": 48,
+     "sample": 19
+    }
+   ],
+   "picked": [
+    0,
+    2,
+    10,
+    17,
+    19
+   ],
+   "samples": 20,
+   "seed": 158001,
+   "solves": 70,
+   "steps": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "tolerance_rel": 1e-06
+  },
+  "G5": {
+   "band_groups_compared": 28,
+   "case": {
+    "exit": 0,
+    "flags": [
+     "--no-verify"
+    ],
+    "input": "/home/connoravila/Documents/actinv/target/p158-wt/target/p158-work/ev1/g4_case/impurities.json",
+    "input_sha256": "cf637d721a290b9eb5f0d93dda528ff658ba0ceaa9706f176458762d428254ef",
+    "output_sha256": "f4a261e7691c4e6b7e2ca2f5beadf9a928ddda9fa695423586a959baaa93287a",
+    "reused": false,
+    "seconds": 640.1,
+    "stderr_tail": "impurities: 15 element solves, 4 targets, verification skipped (max rel dev null) -> /home/connoravila/Documents/actinv/target/p158-wt/target/p158-work/ev1/g4_case/out.json\n"
+   },
+   "checks": 30,
+   "ci_tolerance_rel": 1e-12,
+   "confidence_level": 0.5,
+   "failure_list": [],
+   "failures": 0,
+   "k": 8,
+   "max_rel_dev": 0.0,
+   "minimum_samples": 2,
+   "n": 20,
+   "notes": [],
+   "pass": true
+  },
+  "G6": {
+   "cases": [
+    {
+     "exit": 1,
+     "id": "samples_below_minimum",
+     "message": "71 samples cannot establish any bound at confidence 0.95; at least 72 are needed\n",
+     "output_written": false,
+     "pass": true,
+     "reason_names_cause": true
+    },
+    {
+     "exit": 1,
+     "id": "composition_channel",
+     "message": "composition channel is refused: composition is what the impurity screen varies\n",
+     "output_written": false,
+     "pass": true,
+     "reason_names_cause": true
+    },
+    {
+     "exit": 1,
+     "id": "base_rate_scale",
+     "message": "the base spec declares options.rate_scale, decay_scale or yield_scale, which the sampler writes itself\n",
+     "output_written": false,
+     "pass": true,
+     "reason_names_cause": true
+    },
+    {
+     "exit": 1,
+     "id": "base_decay_scale",
+     "message": "the base spec declares options.rate_scale, decay_scale or yield_scale, which the sampler writes itself\n",
+     "output_written": false,
+     "pass": true,
+     "reason_names_cause": true
+    },
+    {
+     "exit": 1,
+     "id": "base_yield_scale",
+     "message": "the base spec declares options.rate_scale, decay_scale or yield_scale, which the sampler writes itself\n",
+     "output_written": false,
+     "pass": true,
+     "reason_names_cause": true
+    },
+    {
+     "exit": 1,
+     "id": "base_gas",
+     "message": "the base spec enables options.gas, which impurities sampling does not support\n",
+     "output_written": false,
+     "pass": true,
+     "reason_names_cause": true
+    },
+    {
+     "exit": 1,
+     "id": "base_uncertainty",
+     "message": "impurities refuses uncertainty: bands do not compose linearly across element runs\n",
+     "output_written": false,
+     "pass": true,
+     "reason_names_cause": true
+    },
+    {
+     "exit": 1,
+     "id": "confidence_without_sampling",
+     "message": "confidence_level needs a sampling block\n",
+     "output_written": false,
+     "pass": true,
+     "reason_names_cause": true
+    }
+   ],
+   "pass": true,
+   "worked_example_verification": {
+    "pass": true,
+    "source": "precomputed",
+    "uncertainty_verification_pass": true,
+    "verification_uncertainty_verified": true,
+    "verification_verified": true
+   }
+  },
+  "G7": {
+   "case": {
+    "exit": 0,
+    "flags": [
+     "--no-verify"
+    ],
+    "input": "/home/connoravila/Documents/actinv/target/p158-wt/target/p158-work/ev1/g4_case/impurities.json",
+    "input_sha256": "cf637d721a290b9eb5f0d93dda528ff658ba0ceaa9706f176458762d428254ef",
+    "output_sha256": "f4a261e7691c4e6b7e2ca2f5beadf9a928ddda9fa695423586a959baaa93287a",
+    "reused": false,
+    "seconds": 640.1,
+    "stderr_tail": "impurities: 15 element solves, 4 targets, verification skipped (max rel dev null) -> /home/connoravila/Documents/actinv/target/p158-wt/target/p158-work/ev1/g4_case/out.json\n"
+   },
+   "checks": 6,
+   "endpoints_with_different_values": 20,
+   "failure_list": [],
+   "failures": 0,
+   "max_rel_dev": 0.0,
+   "notes": [],
+   "other_seed": {
+    "exit": 0,
+    "flags": [
+     "--no-verify"
+    ],
+    "input": "/home/connoravila/Documents/actinv/target/p158-wt/target/p158-work/ev1/g7_other_seed/impurities.json",
+    "input_sha256": "c28ec731ed3f33a6a8735cda305d99fbfe1edd0b42fa10c999fbb43a8785524d",
+    "output_sha256": "143eabd7e70fb92cb14f0fd3422fcc18dd45658ccc9624d33da3e589408403ce",
+    "reused": false,
+    "seconds": 652.0,
+    "stderr_tail": "impurities: 15 element solves, 4 targets, verification skipped (max rel dev null) -> /home/connoravila/Documents/actinv/target/p158-wt/target/p158-work/ev1/g7_other_seed/out.json\n"
+   },
+   "pass": true,
+   "repeat": {
+    "exit": 0,
+    "flags": [
+     "--no-verify"
+    ],
+    "input": "/home/connoravila/Documents/actinv/target/p158-wt/target/p158-work/ev1/g7_repeat/impurities.json",
+    "input_sha256": "cf637d721a290b9eb5f0d93dda528ff658ba0ceaa9706f176458762d428254ef",
+    "output_sha256": "bdef729a970417488282704f62dd8cd5972f698c369b59b4698ea8f963fc3115",
+    "reused": false,
+    "seconds": 639.2,
+    "stderr_tail": "impurities: 15 element solves, 4 targets, verification skipped (max rel dev null) -> /home/connoravila/Documents/actinv/target/p158-wt/target/p158-work/ev1/g7_repeat/out.json\n"
+   },
+   "seeds": [
+    158001,
+    158002
+   ]
+  },
+  "G8": {
+   "checks": 13,
+   "command": "actinv impurities examples/impurities_ra_steel/impurities_uncertainty.json impurities-uncertainty-result.json",
+   "excerpt_notes": [],
+   "excerpts": [
+    {
+     "command": "actinv impurities examples/impurities_ra_steel/impurities_uncertainty.json impurities-uncertainty-result.json",
+     "excerpt_matches": true,
+     "pass": true,
+     "same_command_as_run": true
+    }
+   ],
+   "exit": 0,
+   "failure_list": [],
+   "failures": 0,
+   "localised_input": false,
+   "max_rel_dev": 0.0,
+   "notes": [],
+   "output": "target/p158-work/g8run/impurities-uncertainty-result.json",
+   "output_sha256": "be955aca25f329444a5144f80df527062bc5473baf4a384b38b06654a37136dd",
+   "pass": true,
+   "runtime_s": 2678.4,
+   "source": "precomputed"
+  }
+ },
+ "gates_requested": [
+  "G0",
+  "G2",
+  "G3",
+  "G4",
+  "G5",
+  "G6",
+  "G7",
+  "G8"
+ ],
+ "photon_response": {
+  "path": "/home/connoravila/nuclear-data/photon-response/nist-xcom-all.json",
+  "sha256": "9efa40486780c9eec663654e13f5835ba36a549b1bae0c9f75677957a5a0acd8"
+ },
+ "protocol": "protocols/ACTINV-P158_PROTOCOL.md",
+ "protocol_sha256": "b241b26cca545d109523c4c534ce9387b4c64a2cd7f70660dc5ad8e6072b3887",
+ "reference": "/home/connoravila/Documents/actinv/target/p158-ref/actinv",
+ "reference_sha256": "925a8f40d81c46af517758a1ddef36bcbd592b7a8edb8e44a3f0f7f82c88e8a2",
+ "verdict": "PASS"
+}

@@ -4602,3 +4602,36 @@ record is in `results/failures/p158/dev_run_1/verification.json`.
   scale in the sample, and records the raw deviation and the floor when the floor decides it. Limit points,
   contribution points and P157's nominal-data verification are unchanged. Registered before any evidence run, so
   the phase's repair round is still available.
+
+## Entry 264 — P158 development runs disclosed (2026-10-29)
+
+- **Development run 1** of the worked example (entry 263) failed the per-sample verification on round-off Nb-94.
+  Amendment A followed; record `results/failures/p158/dev_run_1/verification.json`.
+- **Development pass** of `controls/check_p158.py` (`788a2238…`) on candidate binary `286b20e2…`, reference
+  `925a8f40…`: G0 and G2–G5 and G7 passed in 1 h 30 min. G6's eight refusal cases passed; its worked-example part
+  needs G8's output and was not evaluated in that pass. Record `results/p158/development_pass.json`, log
+  `results/p158/development_pass.log`.
+- **Checker edits before the pass:** the Clopper–Pearson self-check called the Python `beta_quantile` with the Rust
+  argument order, and its expected value was wrong; both were fixed against R's `binom.test(10, 20)`. No tolerance
+  was changed.
+- **The worked example at 72 samples** with binary `286b20e2…`: exit 0 in 44 min 38 s, peak RSS 2.5 GB, no failed
+  sample. Both verifications passed: 77 nominal points to 2.0e-15, and 501 per-sample points (356 re-solves, 126
+  capped-limit points skipped) to 2.8e-15. Amendment A's floor decided four points, the Nb-94 matrix-only values of
+  sample 54 at steps 2–5 (2.08e-162 against 0 Bq/g, floor 4.4e-10). Its output (`be955aca…`, 3.1 MB, not tracked) is
+  recorded in `results/p158/g8_run.json`, and the handbook's excerpt and runtime are taken from it.
+
+## Entry 265 — P158 evidence: G0 to G8 pass on 785ef37 (2026-10-29)
+
+- **G1** at `785ef37` (P158 rebased onto `e11d742`): fmt, `cargo check --workspace --tests` and clippy `-D warnings`
+  are clean, and 1339 workspace tests passed with 0 failed (`results/p158/g1.log`). The checker self-check passes
+  after its last edit.
+- **Evidence run 1:** `controls/check_p158.py` (`788a2238…`), candidate `286b20e2…` built from `785ef37`, reference
+  `925a8f40…`. G0 and G2–G8 passed in 1 h 22 min, peak RSS 1.5 GB. Record `results/p158_bands.json`, log
+  `results/p158/evidence_run_1.log`.
+- **G8 used the precomputed worked-example run** of entry 264 (`--g8-output`). The binary that made it is
+  byte-identical to the candidate built from `785ef37` (`286b20e2…` both), so the run is the candidate's.
+- **What the bands show on the worked example.** At step 2 (1 d of cooling) the nominal worst-case heat, 1.38e-2
+  W/g, is just under the 1.4e-2 W/g limit. Over the sampled cross sections and decay constants, the steel without
+  impurities exceeds that limit in 30 of the 72 samples. The 95% upper bound on the worst case is 2.5e-2 W/g, and
+  the cobalt limit's lower bound is 0.
+- **G9** is pending CI on the pushed commit.

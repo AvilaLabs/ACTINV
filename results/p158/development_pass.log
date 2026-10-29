@@ -1,0 +1,34 @@
+P158 G0: PASS
+P158 G2: PASS
+P158 G3: PASS
+P158 G4: PASS
+P158 G5: PASS
+P158 G6: FAIL
+P158 G7: PASS
+P158 G1, G9: external (not evaluated here)
+P158: FAIL (/tmp/claude-1000/-home-connoravila-Documents-actinv/db07f885-75fa-4723-828a-f670dc9930c5/scratchpad/p158_devpass.json)
+Command exited with non-zero status 1
+	Command being timed: "/tmp/claude-1000/-home-connoravila-Documents-actinv/db07f885-75fa-4723-828a-f670dc9930c5/scratchpad/bounded.sh /home/connoravila/Documents/actinv/target/p158-wt timeout 14400 python3 controls/check_p158.py --reference /home/connoravila/Documents/actinv/target/p158-ref/actinv --candidate /home/connoravila/Documents/actinv/target/wt-p158-wt/release/actinv --gates G0,G2,G3,G4,G5,G6,G7 --work target/p158-work/devpass --out /tmp/claude-1000/-home-connoravila-Documents-actinv/db07f885-75fa-4723-828a-f670dc9930c5/scratchpad/p158_devpass.json"
+	User time (seconds): 5322.09
+	System time (seconds): 66.22
+	Percent of CPU this job got: 99%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 1:29:50
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 1503044
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 250
+	Minor (reclaiming a frame) page faults: 23143796
+	Voluntary context switches: 62263
+	Involuntary context switches: 93972
+	Swaps: 0
+	File system inputs: 3914272
+	File system outputs: 18282160
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 1
+rc=1

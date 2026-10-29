@@ -1,0 +1,34 @@
+P158 G0: PASS
+P158 G2: PASS
+P158 G3: PASS
+P158 G4: PASS
+P158 G5: PASS
+P158 G6: PASS
+P158 G7: PASS
+P158 G8: PASS
+P158 G1, G9: external (not evaluated here)
+P158: PASS (/home/connoravila/Documents/actinv/target/p158-wt/results/p158_bands.json)
+	Command being timed: "/tmp/claude-1000/-home-connoravila-Documents-actinv/db07f885-75fa-4723-828a-f670dc9930c5/scratchpad/bounded.sh /home/connoravila/Documents/actinv/target/p158-wt timeout 14400 python3 controls/check_p158.py --reference /home/connoravila/Documents/actinv/target/p158-ref/actinv --candidate /home/connoravila/Documents/actinv/target/wt-p158-wt/release/actinv --gates G0,G2,G3,G4,G5,G6,G7,G8 --work target/p158-work/ev1 --g1-log results/p158/g1.log --g8-output target/p158-work/g8run/impurities-uncertainty-result.json --g8-runtime 2678.4 --g8-log target/p158-work/g8run/log.txt --out results/p158_bands.json"
+	User time (seconds): 4873.52
+	System time (seconds): 53.63
+	Percent of CPU this job got: 99%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 1:22:08
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 1501344
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 432
+	Minor (reclaiming a frame) page faults: 23315991
+	Voluntary context switches: 55251
+	Involuntary context switches: 28397
+	Swaps: 0
+	File system inputs: 2786952
+	File system outputs: 18268224
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0
+rc=0
