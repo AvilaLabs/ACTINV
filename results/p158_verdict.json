@@ -1,0 +1,31 @@
+{
+ "amendments": {
+  "protocols/ACTINV-P158_AMENDMENT_A.md": "5405dd03249710c840e8089dfb0efd84c339a971f43d4ea7506b0cc181c9d19c"
+ },
+ "evidence": [
+  "results/p158/g1.log",
+  "results/p158_bands.json",
+  "results/p158/evidence_run_1.log",
+  "results/p158/g8_run.json",
+  "results/p158/development_pass.json",
+  "results/p158/ci_runs.json",
+  "results/failures/p158/dev_run_1/"
+ ],
+ "gates": {
+  "G0": "PASS",
+  "G1": "PASS",
+  "G2": "PASS",
+  "G3": "PASS",
+  "G4": "PASS",
+  "G5": "PASS",
+  "G6": "PASS",
+  "G7": "PASS",
+  "G8": "PASS",
+  "G9": "PASS"
+ },
+ "protocol": "protocols/ACTINV-P158_PROTOCOL.md",
+ "protocol_sha256": "b241b26cca545d109523c4c534ce9387b4c64a2cd7f70660dc5ad8e6072b3887",
+ "repair_round": "not used (Amendment A was registered before the evidence run, ledger 263)",
+ "schema": "actinv-p158-verdict-1",
+ "verdict": "P158-PASS"
+}

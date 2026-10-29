@@ -4635,3 +4635,12 @@ record is in `results/failures/p158/dev_run_1/verification.json`.
   impurities exceeds that limit in 30 of the 72 samples. The 95% upper bound on the worst case is 2.5e-2 W/g, and
   the cobalt limit's lower bound is 0.
 - **G9** is pending CI on the pushed commit.
+
+## Entry 266 — P158 G9: CI green on 7fa6465; P158-PASS (2026-10-29)
+
+Every workflow triggered on `7fa6465` (candidate `785ef37` plus its evidence) passed: controls 40830075207, fns-iron
+40830075139, desktop builds 40830075226, fusion-isotope 40830075145, browser workbench 40830075190 and handbook
+40830075188 (`results/p158/ci_runs.json`). **P158-PASS** (`results/p158_verdict.json`): `actinv impurities` with a
+`sampling` block gives order-statistic bounds over the nuclear-data uncertainty on every value and limit, and class
+probabilities, each verified by re-solving the samples behind it. Outputs without `sampling` are unchanged (G2). The
+repair round was not used.
