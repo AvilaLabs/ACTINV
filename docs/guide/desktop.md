@@ -8,11 +8,11 @@ Install it from the [download page](https://actinv.avilalabs.org/download/). Pub
 
 The sidebar follows a calculation from start to answer:
 
-- **Start** is the home page. Begin from the iron example, open a problem, or import a FISPACT-II deck. It also shows the current problem and result, and whether the standard nuclear data are installed.
+- **Start** is the home page. Begin a **New problem**, load the iron example, open a problem, or import a FISPACT-II deck. Under **What do you want to find out?** each question opens the page that answers it, such as **Certify** for whether a design meets its limits. Start also shows the current problem and result, and whether the standard nuclear data are installed.
 - **SET UP** holds the numbered steps: **1 Material**, **2 Irradiation & cooling**, **3 Source & spectrum**, **4 What to compute** and **5 Check & run**. A tick beside a step means its part of the problem is filled in. Each step ends with **Back** and **Continue**.
-- **RESULTS** opens on **Summary**, then **Time history**, **Nuclides**, **Photons & dose**, **Pathways**, **Waste class** and **Evidence**.
-- **STUDIES** holds **Impurities**, **Sweep** and **Assimilation**, which run many calculations.
-- **TOOLS** holds **Advanced JSON**.
+- **RESULTS** opens on **Summary**, then **Time history**, **Nuclides**, **Photons & dose**, **Pathways**, **Waste class**, **Evidence** and **Export**. These pages are dimmed until a result is loaded.
+- **STUDIES** holds **Impurities**, **Certify**, **Optimize**, **Sweep**, **Compare** and **Assimilation**, which run many calculations. The group is folded away until you open it or one of its pages is current. [Certify, optimize and compare designs](studies.md) describes **Certify**, **Optimize** and **Compare**.
+- **TOOLS** holds **Data** and **Advanced JSON**, folded the same way. See [Check the nuclear data](#check-the-nuclear-data).
 
 ## Learn without downloading nuclear data
 
@@ -20,12 +20,43 @@ On **Start**, choose **Try the results tutorial**. It shows a fictional one-hour
 
 ## Run a problem
 
-1. On **Start**, choose **Load iron example**, **Open problem…** or **Import deck…**. If the standard data are not installed, **Download standard data…** installs them, or run `actinv data fetch` in a terminal.
+1. On **Start**, choose **New problem**, **Load iron example**, **Open problem…** or **Import deck…**. If the standard data are not installed, **Download standard data…** installs them, or run `actinv data fetch` in a terminal.
 2. Walk the numbered steps. On **Material**, density is optional; a step that uses W/cm3, or geometry self-shielding without its own density, needs it. On **Source & spectrum**, choose the projectile; spectrum values are integrated group fluxes, with explicit ordering and normalization. On **What to compute**, add what to compute besides inventory, activity and decay heat, which every result includes.
-3. **Check & run** reads the problem back in one sentence per step, such as "5 min irradiation, then 20 cooling steps to 57 min after shutdown". Anything missing is marked with a **Fix** button that opens the step. Under **Nuclear data**, a problem whose data files are not found, such as one written for an older data release, can switch to the installed standard data with **Use the installed standard data**. **Data files and input folder** holds the file paths; relative paths use the input folder, which opening a problem sets to its directory.
+3. **Check & run** reads the problem back in one sentence per step, such as "5 min irradiation, then 20 cooling steps to 57 min after shutdown". Anything missing is marked with a **Fix** button that opens the step. Under **Settings you changed** it lists every setting that differs from its default, each with an **Edit** button that opens the page that sets it. Under **Nuclear data** it says whether the data the problem names are installed; **Edit** opens the **Data** page.
 4. Choose **Run calculation**. The background task reports preparation and solving. Cancelling a calculation stops its isolated worker without publishing a partial result. The result opens on **Summary** at shutdown.
 
 The toolbar keeps **Open problem**, **Import FISPACT-II deck…**, **Save**, **Validate** and **Run** on every page. Apply or discard advanced JSON edits before returning to structured editing.
+
+### Start a new problem
+
+**New problem** on **Start** opens a blank problem on **Material**. The material, the schedule and the source are empty and nothing is filled in for you: each step is ticked once its part is complete, and **Check & run** marks what is still missing. The three starting cards below fill the empty parts quickly. Each card is open while its part is empty and folds under the page's own controls once it is filled.
+
+**Material** has **Start from a library material**. Choose a material from the list, grouped by category, then **Use this material**. The library holds 19 cited compositions of common reactor and fusion materials: steels (EUROFER97 at its specification maxima, EUROFER97-3 as one measured heat, and stainless 304, 304L and 316), Inconel 718, Zircaloy-4, aluminium 6061, ordinary concrete, water, reactor graphite, tungsten, tantalum, niobium, titanium grade 2, copper, beryllium S-65, V-4Cr-4Ti and Pb-15.7Li. Below the list the page shows the largest elements, what kind of composition it is, the density and the citation. The kinds differ:
+
+- **Nominal composition**: generic values, not a real heat.
+- **Specification maxima**: trace elements at their allowed maximum, the main element the balance. Trace activation is overstated by design.
+- **Measured heat**: a published analysis of one batch, not the specification.
+
+The entry sets the composition in weight percent and sets the density from the same source, or removes the density when the source gives none. It names an untitled problem after the material. On a filled table the card is the folded **Library materials** heading, and its button reads **Replace the composition with this one**. Check a composition against your own material certificate before relying on it; each entry's note names the trace elements it leaves out. `actinv new` does the same from a terminal; see [Command line](cli.md#create-check-and-solve).
+
+**Source & spectrum** has **Start from a standard spectrum**. Pick a shape, type the **Total flux (n/cm²/s)** and choose **Use this spectrum**. The shapes are generic textbook shapes on the 709-group structure, not a facility's spectrum; for a real facility import its group values from transport. The card appears for neutron problems only. Once the spectrum has flux, it is the folded **Standard spectra** heading and its button reads **Replace the group values with this spectrum**.
+
+- **D-T fusion (14.1 MeV)**: all flux in the group that contains 14.1 MeV.
+- **Fission (Watt)**: a Watt spectrum for U-235 thermal fission (a = 0.988 MeV, b = 2.249 per MeV).
+- **Thermal (Maxwellian)**: a Maxwellian at kT = 0.0253 eV.
+- **Slowing down (1/E)**: flux per unit energy proportional to 1/E from 0.5 eV to 1 MeV, zero outside.
+
+**Irradiation & cooling** has **Start with a standard schedule**. Type the length in **Irradiate for** (30 d or 2 y; it starts at 1 y) and choose **Use this schedule**. It irradiates at the source's full flux for that time, then cools with results at 1 h, 1 d, 30 d, 1 y and 10 y after shutdown. Afterwards the card is the folded **Standard schedule** heading, and its button, **Replace the steps with this schedule**, overwrites every step. Edit the steps below it as usual.
+
+### Read the outcome beside Validate and Run
+
+**Validate** and **Run** show their outcome in a small chip beside the buttons, so you need not look at the status bar. **Validate** gives **Valid** or **Not valid**. While a calculation runs, the **Run** button is replaced by a disabled **Running… N s** counting seconds; other background jobs read **Working… N s**. When a job ends the chip reads **Finished in** and the time, or **Failed**. A cancelled calculation shows **Cancelled**. **Validate only** on **Check & run** shows the same chip. The chip fades after about 4 seconds, or 8 seconds for a failure; hover over it for the full message, which also stays in the status bar.
+
+### Check the nuclear data
+
+**Data**, under **TOOLS**, is where the nuclear data are set. **This problem's data** reports whether the files the problem names are installed. If some are not found, it lists them; when the standard data are installed, **Use the installed standard data** points the problem at them, which fixes a problem written for an older data release. **Data files and input folder** holds the library, decay and fission-yield paths, with a SHA-256 pin for the library; relative paths use the input folder, which opening a problem sets to its directory. If the standard data are missing, **Download standard neutron data** installs them with their size shown, or run `actinv data fetch`.
+
+**Check the installed data** has **Verify the data**. It reads every installed standard file and compares it with the SHA-256 the catalog records, then names any file that was changed or cut short. It reads and hashes every file, so it takes a while. If it fails, `actinv data fetch --force` replaces the changed file. The command-line equivalent is `actinv data verify`; see [Choose and install nuclear data](data.md). **Build your own data** lists the `actinv build-*` commands, which libraries, damage tables, shielding factors and covariance files still need.
 
 The current desktop uses a private prepared-data cache for each calculation, so setup time can recur between runs. CLI cache behavior is described in [Data setup](data.md#prepared-calculation-cache).
 
@@ -88,6 +119,8 @@ Press **Load from decay data** to fill the table of nuclide properties (Z, half-
 **Classify** runs in the background. For each selected step the page shows the class, status, coverage, the governing table and column with its sum and margin, and the binding nuclides, a strip of the classes against cooling time, and the earliest selected step within Class A, B and C. These are read from the result; the page computes nothing else. **Save spec…** writes `waste-spec.json` and the `result.json` it reads into a folder you choose (it will not replace existing files), so `actinv waste waste-spec.json` there writes the same result. **Save result…** writes the evaluator's result exactly as the CLI writes it. The classification is nominal screening, not disposal acceptance; see [Component waste classes](waste.md).
 
 ## Studies and tools
+
+Three studies compare designs or check limits: **Certify**, **Optimize** and **Compare**. They are described in [Certify, optimize and compare designs](studies.md).
 
 **Impurities** screens the trace elements of the open problem's material: which drive activity, decay heat, contact dose, a nuclide's activity, the clearance index or the waste class, the worst case over their specified ranges, and how far each may rise before a limit is reached. It runs `actinv impurities` in the background; see [Screen a material's impurities](impurities.md#in-the-desktop-app-and-the-browser).
 
