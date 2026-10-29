@@ -131,6 +131,22 @@ ranges instead.
   `docs/releases/desktop-v0.6.0-preview.1.md` and the handbook pages.
 - Rebase `release-1.7.0`, rerun the release gates, then get the owner's OK for the atomic tag push.
 
+## After the app work: adoption roadmap (owner agreed 2026-10-29)
+
+Adoption over new physics. The owner said some of it may go in 1.7.
+
+- **1.7, after Stage 6:** OpenMC flux-mode speed comparison, as its own protocol. The recorded 19 s vs 850 s
+  (`results/openmc_r2s_demo.json`) used OpenMC's default per-nuclide reaction-rate tallies, not its flux-only mode.
+  Run a scaled comparison against flux mode before any public speed claim; the release notes quote whatever it
+  measures.
+- **1.8:** `pip install actinv[openmc]` packaging (ACTINV as the activation step in an OpenMC R2S script), then an
+  upstream conversation about a backend. Also an ACTINV-labelled export that pypact can load, scoped from what
+  pypact's `Output` reads. This is not a copy of FISPACT's `.out` format.
+- **1.9:** the whole-plant flagship, built with one or two fusion design partners. CAD and an operating scenario go
+  in; per-component waste class, dose maps and decay heat come out. It builds on `actinv twin` and `twin_waste`.
+  New work: a compact scenario format, per-component histories and replacements, CAD-tag mapping, one command and
+  one report.
+
 ## Plumbing (subagents, reviewed before any build)
 
 - **Job layer** `crates/actinv-gui/src/jobs.rs`. Branch `app17-jobs`, worktree `target/app17-jobs-wt`.
@@ -180,11 +196,13 @@ Working branch: `app17` (worktree `target/app17-wt`), not yet on master except t
 | Job layer: `actinv-gui-job-1`, 22 commands, worker for solves | done | `6ebc67f` |
 | CLI fixes: waste budget exit 3, decide `catalog:` names, help pages | done | `4a49ebd` |
 | Examples for the new pages (none run yet) | done, unrun | `6ee7062`, `c887a87` |
-| P162 material library and spectra: registered, Amendment A (G5), candidate, evidence G0-G5 pass | evidence pushed, G6 CI pending | `4e52a7f`, `ff21b53`, `a60593c`, `aeda0a5` |
+| P162 material library and spectra | P162-PASS, on master (ledger 270) | `4e52a7f` ... `14eab3d` |
 | Stage 1: review on Check & run, Data page with Verify, solver settings card, New problem, standard schedule, folding Studies/Tools (desktop and browser), library and spectrum cards | done, screenshots checked | `d4e8634`, `dd4358f`, `91c14e2` |
 | Stage 1: Start page "What do you want to find out?" | moved to Stage 2, so it can route to Certify/Optimize | |
-| Stage 2: Certify (decide), Optimize, Sweep & study pages | not started | |
+| Stage 2: Certify page (decide): limits at band edges, verdict, margins, what to measure next | done, screenshots checked, on master | `dfce05a` |
+| Stage 2: Optimize page: what to vary, goal, limits, status-bar progress, best design, Use this design | done, screenshots checked | `4a7cd6e` |
+| Stage 2: Sweep & study page, Start page routing, Impurities budget/waste budget | not started | |
 | Stages 3-6 | not started | |
 
 Capture notes: `ACTINV_GUI_CAPTURE_PROBLEM=FILE` loads a problem before the screenshots; capture closes after its
-36th shot (it used to run until killed when the problem counted as unsaved). Screenshot files are named `00.png`.
+planned shots (38 with 21 pages) (it used to run until killed when the problem counted as unsaved). Screenshot files are named `00.png`.
