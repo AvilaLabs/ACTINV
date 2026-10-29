@@ -61,7 +61,7 @@ pub enum Page {
     Sweep,
     Mesh,
     Compare,
-    Assimilation,
+    Measurements,
     Data,
     Advanced,
 }
@@ -89,7 +89,7 @@ impl Page {
         Page::Sweep,
         Page::Mesh,
         Page::Compare,
-        Page::Assimilation,
+        Page::Measurements,
         Page::Data,
         Page::Advanced,
     ];
@@ -125,7 +125,7 @@ impl Page {
             Page::Sweep => "Sweep",
             Page::Mesh => "Mesh & transport",
             Page::Compare => "Compare",
-            Page::Assimilation => "Assimilation",
+            Page::Measurements => "Measurements",
             Page::Data => "Data",
             Page::Advanced => "Advanced JSON",
         }
@@ -151,7 +151,7 @@ impl Page {
             | Page::Sweep
             | Page::Mesh
             | Page::Compare
-            | Page::Assimilation => Group::Studies,
+            | Page::Measurements => Group::Studies,
             Page::Data | Page::Advanced => Group::Tools,
         }
     }
@@ -204,7 +204,7 @@ mod tests {
                 "Sweep",
                 "Mesh & transport",
                 "Compare",
-                "Assimilation",
+                "Measurements",
                 "Data",
                 "Advanced JSON",
             ]

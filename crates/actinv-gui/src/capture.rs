@@ -125,6 +125,17 @@ mod tests {
             Capture::total(),
             Page::ALL.len() + SETUP.len() + RESULTS.len()
         );
+        let smoke = include_str!("../../../scripts/desktop_smoke.py");
+        let expected = format!(
+            "EXPECTED_SCREENSHOTS = {} + {} + {}",
+            Page::ALL.len(),
+            SETUP.len(),
+            RESULTS.len()
+        );
+        assert!(
+            smoke.contains(&expected),
+            "scripts/desktop_smoke.py must read `{expected}`"
+        );
     }
 
     #[test]

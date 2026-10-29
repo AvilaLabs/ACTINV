@@ -11,7 +11,7 @@ The sidebar follows a calculation from start to answer:
 - **Start** is the home page. Begin a **New problem**, load the iron example, open a problem, or import a FISPACT-II deck. Under **What do you want to find out?** each question opens the page that answers it, such as **Certify** for whether a design meets its limits. Start also shows the current problem and result, and whether the standard nuclear data are installed.
 - **SET UP** holds the numbered steps: **1 Material**, **2 Irradiation & cooling**, **3 Source & spectrum**, **4 What to compute** and **5 Check & run**. A tick beside a step means its part of the problem is filled in. Each step ends with **Back** and **Continue**.
 - **RESULTS** opens on **Summary**, then **Time history**, **Nuclides**, **Photons & dose**, **Pathways**, **Waste class**, **Evidence** and **Export**. These pages are dimmed until a result is loaded.
-- **STUDIES** holds **Impurities**, **Certify**, **Optimize**, **Sweep**, **Mesh & transport**, **Compare** and **Assimilation**, which run many calculations. The group is folded away until you open it or one of its pages is current. [Certify, optimize and compare designs](studies.md) describes **Certify**, **Optimize** and **Compare**.
+- **STUDIES** holds **Impurities**, **Certify**, **Optimize**, **Sweep**, **Mesh & transport**, **Compare** and **Measurements**, which run many calculations. The group is folded away until you open it or one of its pages is current. [Certify, optimize and compare designs](studies.md) describes **Certify**, **Optimize** and **Compare**.
 - **TOOLS** holds **Data** and **Advanced JSON**, folded the same way. See [Check the nuclear data](#check-the-nuclear-data).
 
 ## Learn without downloading nuclear data
@@ -79,7 +79,7 @@ On **Irradiation & cooling**, each row has a **Drive**: a flux multiplier, a wal
 - **Production pathways**, including **Full routes with closure**.
 - **Regulatory tables**.
 - **Geometry self-shielding**.
-- **Uncertainty**, with its channels: MF=33 cross sections, half-lives, fission yields and flux tally statistics. The flux channel takes one relative error per flux group, pasted on the card; with flux alone no covariance file is needed.
+- **Uncertainty**, with its channels: MF=33 cross sections, half-lives, fission yields and flux tally statistics. The flux channel takes one relative error per flux group, pasted on the card; with flux alone no covariance file is needed. **Unmodeled error** adds a share of each value to every band, for error the data do not model. **Estimate from library disagreement** solves the problem with the decay library and again with the fallback library from **Data** (`actinv eval-spread`) and sets it to the largest difference among the banded responses. That difference bounds how far the choice of library moves the answer; it is not a measured uncertainty.
 - **Gas production (H and He)**, for neutron activation; it cannot be combined with uncertainty.
 
 A result lacks an output you did not enable; the page that would show it says so and offers a link to **What to compute**.
@@ -138,7 +138,7 @@ Three studies compare designs or check limits: **Certify**, **Optimize** and **C
 
 **Impurities** screens the trace elements of the open problem's material: which drive activity, decay heat, contact dose, a nuclide's activity, the clearance index or the waste class, the worst case over their specified ranges, and how far each may rise before a limit is reached. It runs `actinv impurities` in the background; see [Screen a material's impurities](impurities.md#in-the-desktop-app-and-the-browser).
 
-**Sweep** solves a family of generated problems along one parameter. **Assimilation** folds a measured value into the uncertainty bands of the loaded result. **Advanced JSON** exposes the complete problem. Bulk library building uses the [CLI](cli.md).
+**Sweep** solves a family of generated problems along one parameter. **Advanced JSON** exposes the complete problem. Bulk library building uses the [CLI](cli.md).
 
 ### Activate a transport mesh
 
@@ -150,6 +150,13 @@ Three studies compare designs or check limits: **Certify**, **Optimize** and **C
 4. **Facility check** applies clearance limits to the band of every cell (`actinv twin`): a cell clears only when its whole band does. Each limit names a banded response, at most or at least a value, and **When** picks the step it applies at, or every step. **Components** name groups of cells for one verdict each. The answer lists what binds each limit and the cells that do not clear.
 
 The browser leaves this page out: it reads and writes files on your disk.
+
+### Bring in measurements
+
+**Measurements** answers two questions.
+
+- **What flux explains these activities?** fits the irradiation flux to activities measured in a sample after the run (`actinv reverse`). Each row names when it was measured (a step of the schedule), the nuclide, its activity per gram and one standard deviation. **One flux for each irradiation step** fits every irradiation step on its own, where the measurements can tell them apart. **Count the nuclear-data uncertainty** (`actinv reverse-qualified`) gives each flux a confidence interval, says which steps the measurements can tell apart, and checks the measurements agree; it needs the TENDL-2025 covariance and every uncertainty. The answer is the flux as a multiple of the spectrum's total, with how well the fit reproduces each measurement; **Use this flux** puts it into the schedule. **Load measurements…** and **Save measurements…** read and write the `reverse` input.
+- **How does a measurement narrow the bands?** folds a measured value with its uncertainty into the bands of the loaded result at one step (`actinv assimilate`). It narrows the band of what it measures and, through their shared data, the bands of everything correlated with it. The result needs uncertainty bands at that step. **Preview** shows each band before and after; **Apply to the result** replaces the loaded result's bands. **Load a measurement file…** reads an `actinv-assay-1` file instead, which may also hold a mixture such as a gross-gamma count.
 
 ## Guided help
 

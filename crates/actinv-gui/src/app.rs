@@ -116,11 +116,11 @@ pub struct Desktop {
     /// Interactive parameter sweep (P48): the current sweep generation,
     /// its handle, and only the completed points admitted for display.
     sweep: SweepUi,
-    /// Assay panel state: the pasted `actinv-assay-1` document and the
-    /// pending preview — (assimilation summary, updated result) —
-    /// awaiting Apply.
-    assay_text: String,
-    assay_pending: Option<(Value, Value)>,
+    /// The Measurements page, and the flux fit it started: (command, folder), read once it stops.
+    measurements: crate::views::measurements::MeasurementsState,
+    measure_pending: Option<(crate::jobs::Command, std::path::PathBuf)>,
+    /// The folder of a running library-disagreement estimate for the uncertainty card.
+    spread_pending: Option<std::path::PathBuf>,
     /// Per-page state of the shared views.
     tables: TablesState,
     photons: PhotonsState,
@@ -422,8 +422,9 @@ impl Desktop {
             transport: crate::transport::Import::default(),
             imported: None,
             sweep: SweepUi::default(),
-            assay_text: String::new(),
-            assay_pending: None,
+            measurements: Default::default(),
+            measure_pending: None,
+            spread_pending: None,
             tables: TablesState::default(),
             photons: PhotonsState::default(),
             pathways: PathwaysState::default(),

@@ -2,7 +2,7 @@
 
 Open [ACTINV in your browser](https://actinv.avilalabs.org/) to learn the interface, edit a problem, import a FISPACT-II deck, or inspect result files without installation. A laptop or desktop with WebGL enabled works best.
 
-The browser has the same pages and controls as the [desktop app](desktop.md), under the same names, laid out the same way: **Start**, the numbered setup steps ending in **Check & run**, and the results, which open on **Summary**. It leaves out what runs or downloads things: the **Sweep**, **Mesh & transport** and **Assimilation** studies, the run button, the nuclear-data download and **Verify the data**. The **Data** page only records the library and decay paths. On **Check & run** the browser hands the problem over instead: **Download problem**, run it with the desktop app or `actinv run`, then open the result here. The pages that differ only in how they choose a file are described below.
+The browser has the same pages and controls as the [desktop app](desktop.md), under the same names, laid out the same way: **Start**, the numbered setup steps ending in **Check & run**, and the results, which open on **Summary**. It leaves out what runs or downloads things: the **Sweep**, **Mesh & transport** and **Measurements** studies, the run button, the nuclear-data download and **Verify the data**. The **Data** page only records the library and decay paths. On **Check & run** the browser hands the problem over instead: **Download problem**, run it with the desktop app or `actinv run`, then open the result here. The pages that differ only in how they choose a file are described below.
 
 ## Explore results
 

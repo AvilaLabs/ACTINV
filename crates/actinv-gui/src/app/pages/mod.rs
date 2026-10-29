@@ -1,7 +1,6 @@
 //! One module per page of the desktop shell. Each adds its renderer to `Desktop`;
 //! `page_body` is the single place that maps a `Page` to its renderer.
 mod advanced;
-mod assimilation;
 mod certify;
 mod charts;
 mod check_run;
@@ -11,6 +10,7 @@ mod export;
 mod impurities;
 mod ledger;
 mod material;
+mod measurements;
 pub(super) mod mesh;
 mod optimize;
 mod outputs;
@@ -66,7 +66,7 @@ impl Desktop {
             Page::Compare => self.compare_page(ui),
             Page::Sweep => self.sweep_page(ui),
             Page::Mesh => self.mesh_page(ui),
-            Page::Assimilation => self.assimilation(ui),
+            Page::Measurements => self.measurements_page(ui),
             Page::Data => self.data_page(ui),
             Page::Advanced => self.advanced(ui),
         }

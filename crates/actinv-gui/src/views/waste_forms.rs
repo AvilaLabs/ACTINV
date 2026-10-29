@@ -49,6 +49,16 @@ impl Question {
 
 /// The questions as tiles, two to a row; the chosen one is outlined in the accent colour.
 pub fn question_tiles(ui: &mut egui::Ui, chosen: &mut Question) {
+    let items: Vec<(Question, &str, &str)> = Question::ALL
+        .iter()
+        .map(|q| (*q, q.title(), q.note()))
+        .collect();
+    tiles(ui, &items, chosen);
+}
+
+/// Choices as tiles, two to a row: (value, title, note). The chosen one is outlined in the
+/// accent colour. The Waste class and Measurements pages open with them.
+pub fn tiles<T: Copy + PartialEq>(ui: &mut egui::Ui, items: &[(T, &str, &str)], chosen: &mut T) {
     let accent = accent(ui);
     let gap = 10.;
     // leave room for the page's scroll bar, which floats over the right edge
@@ -58,21 +68,21 @@ pub fn question_tiles(ui: &mut egui::Ui, chosen: &mut Question) {
     let font_note = egui::FontId::proportional(13.);
     let weak = ui.visuals().weak_text_color();
     let text = ui.visuals().text_color();
-    for pair in Question::ALL.chunks(2) {
+    for pair in items.chunks(2) {
         ui.horizontal(|ui| {
             ui.spacing_mut().item_spacing.x = gap;
-            for &question in pair {
-                let selected = *chosen == question;
+            for &(value, title_text, note_text) in pair {
+                let selected = *chosen == value;
                 let wrap = width - 28.;
                 let title = ui.painter().layout(
-                    question.title().to_owned(),
+                    title_text.to_owned(),
                     font_title.clone(),
                     if selected { accent } else { text },
                     wrap,
                 );
-                let note =
-                    ui.painter()
-                        .layout(question.note().to_owned(), font_note.clone(), weak, wrap);
+                let note = ui
+                    .painter()
+                    .layout(note_text.to_owned(), font_note.clone(), weak, wrap);
                 let height = 14. + title.size().y + 4. + note.size().y + 14.;
                 let (rect, response) =
                     ui.allocate_exact_size(egui::vec2(width, height), egui::Sense::click());
@@ -100,7 +110,7 @@ pub fn question_tiles(ui: &mut egui::Ui, chosen: &mut Question) {
                     .on_hover_cursor(egui::CursorIcon::PointingHand)
                     .clicked()
                 {
-                    *chosen = question;
+                    *chosen = value;
                 }
             }
         });
@@ -150,12 +160,26 @@ pub fn amount(ui: &mut egui::Ui, value: &mut f64, width: f32) -> egui::Response 
                 if v != 0. && !(1e-3..1e6).contains(&v.abs()) {
                     format!("{v:.4e}")
                 } else {
-                    format!("{v}")
+                    six_figures(v)
                 }
             })
             .speed(0.)
             .range(0.0..=f64::MAX),
     )
+}
+
+/// At most six significant figures, without trailing zeros: 92688.94235555886 reads 92688.9.
+fn six_figures(v: f64) -> String {
+    if v == 0. {
+        return "0".into();
+    }
+    let decimals = (5 - v.abs().log10().floor() as i32).max(0) as usize;
+    let text = format!("{v:.decimals$}");
+    if text.contains('.') {
+        text.trim_end_matches('0').trim_end_matches('.').to_string()
+    } else {
+        text
+    }
 }
 
 /// One component's shape for the class tables: waste type and the volume its concentrations use.
@@ -600,6 +624,15 @@ mod tests {
             half_life_s: 8.66e7,
             alpha_emitting: false,
         }
+    }
+
+    #[test]
+    fn amounts_read_with_six_figures() {
+        assert_eq!(six_figures(92688.94235555886), "92688.9");
+        assert_eq!(six_figures(0.37825668476170266), "0.378257");
+        assert_eq!(six_figures(5.798636483245069), "5.79864");
+        assert_eq!(six_figures(250.), "250");
+        assert_eq!(six_figures(0.), "0");
     }
 
     #[test]

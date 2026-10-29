@@ -47,8 +47,8 @@ const QUESTIONS: [(&str, &str, Page); 9] = [
     ),
     (
         "Does the calculation agree with what was measured?",
-        "Fits the flux to measured activities",
-        Page::Assimilation,
+        "Fits the flux to measured activities, or narrows the bands with a measured value",
+        Page::Measurements,
     ),
 ];
 

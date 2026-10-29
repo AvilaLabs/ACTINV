@@ -21,6 +21,19 @@ pub const DEFAULT_OUTPUTS: [&str; 5] = ["inventory", "activity", "heat", "photon
 pub enum OutputsAction {
     None,
     Open(Target),
+    /// Run `eval-spread` and put its suggestion into `uncertainty.unmodeled_relative`.
+    EstimateSpread,
+}
+
+/// What the shell lets the uncertainty card do about the unmodeled error.
+#[derive(Default)]
+pub struct Spread {
+    /// The shell can run `eval-spread` (the desktop app can, the browser cannot).
+    pub can_run: bool,
+    /// An estimate is running.
+    pub running: bool,
+    /// What the last estimate found.
+    pub note: Option<String>,
 }
 
 /// A name list being edited: the text box and the reason the last entry was refused.
@@ -51,6 +64,7 @@ pub struct OutputsState {
     uncertainty_ids: IdsDraft,
     table_ids: IdsDraft,
     relative_error: ListDraft,
+    pub spread: Spread,
 }
 
 impl OutputsState {
@@ -1729,12 +1743,150 @@ fn solver_card(ui: &mut egui::Ui, doc: &mut Value) {
         });
 }
 
+/// The ways a spec declares the unmodeled error; they exclude each other.
+const UNMODELED: [&str; 3] = [
+    "uncertainty.unmodeled_relative",
+    "uncertainty.unmodeled_table",
+    "uncertainty.unmodeled_evalspread",
+];
+
+/// Declare an unmodeled relative error `u` in place of any other source; 0 declares none.
+pub fn set_unmodeled(doc: &mut Value, u: f64) {
+    for path in UNMODELED {
+        remove(doc, path);
+    }
+    if u > 0. {
+        set(doc, UNMODELED[0], json!(u));
+    }
+}
+
+/// The unmodeled error an `eval-spread` answer suggests, and what it was, in words. Every band
+/// gains the term, so it is the largest spread among the banded responses; the solver's own
+/// `suggested_unmodeled_relative` (the largest over every nuclide, which a nuclide with next to no
+/// activity can set) stands in only when the answer has no banded responses. The browser never
+/// runs the estimate.
+#[cfg(not(target_arch = "wasm32"))]
+pub fn spread_estimate(doc: &Value) -> Option<(f64, String)> {
+    let worst = |key: &str, prefix: &str| {
+        doc[key]
+            .as_object()
+            .into_iter()
+            .flatten()
+            .filter_map(|(name, v)| {
+                Some((v["max_abs_ln_ratio"].as_f64()?, format!("{prefix}{name}")))
+            })
+            .max_by(|a, b| a.0.total_cmp(&b.0))
+    };
+    let (u, what) = match worst("per_response_nominal", "") {
+        Some((u, name)) => (u, format!("the banded responses, largest for {name}")),
+        None => {
+            let u = doc["suggested_unmodeled_relative"].as_f64()?;
+            let name = [
+                worst("per_nuclide_activity", "the activity of "),
+                worst("per_heat_component", "decay heat, "),
+            ]
+            .into_iter()
+            .flatten()
+            .max_by(|a, b| a.0.total_cmp(&b.0))
+            .map_or(String::new(), |(_, name)| format!(", largest for {name}"));
+            (u, format!("any nuclide or heat{name}"))
+        }
+    };
+    if u <= 0. {
+        return Some((
+            0.,
+            "The two decay libraries give the same answer, so no unmodeled error was added.".into(),
+        ));
+    }
+    Some((
+        u,
+        format!(
+            "Set to {}: the two decay libraries differ by up to that much over {what}. It bounds \
+             how far the choice of library moves the answer; it is not a measured uncertainty.",
+            percent_words(u)
+        ),
+    ))
+}
+
+#[cfg(not(target_arch = "wasm32"))]
+fn percent_words(u: f64) -> String {
+    let percent = u * 100.;
+    if percent >= 10. {
+        format!("{percent:.0} %")
+    } else if percent >= 0.1 {
+        format!("{percent:.2} %")
+    } else {
+        format!("{percent:.2e} %")
+    }
+}
+
+fn unmodeled_row(ui: &mut egui::Ui, doc: &mut Value, spread: &Spread, action: &mut OutputsAction) {
+    ui.horizontal_wrapped(|ui| {
+        ui.label("Unmodeled error");
+        let mut percent = f64_at(doc, UNMODELED[0], 0.) * 100.;
+        if ui
+            .add(
+                egui::DragValue::new(&mut percent)
+                    .custom_parser(crate::model::parse_finite)
+                    .range(0.0..=1000.0)
+                    .max_decimals(3)
+                    .speed(0.1)
+                    .suffix(" %"),
+            )
+            .on_hover_text(
+                "Error the data do not model, as a share of each value, added to every band. \
+                 0 adds nothing.",
+            )
+            .changed()
+        {
+            set_unmodeled(doc, percent / 100.);
+        }
+        if spread.can_run {
+            let fallback = !str_at(doc, "decay.fallback").is_empty();
+            let button = ui
+                .add_enabled(
+                    fallback && !spread.running,
+                    egui::Button::new("Estimate from library disagreement"),
+                )
+                .on_hover_text(
+                    "Solves with the decay library and again with the fallback library, and \
+                     uses the largest difference between the two answers",
+                )
+                .on_disabled_hover_text(if fallback {
+                    "Estimating…"
+                } else {
+                    "Needs a fallback decay library: add one under Nuclear data"
+                });
+            if button.clicked() {
+                *action = OutputsAction::EstimateSpread;
+            }
+            if spread.running {
+                ui.spinner();
+            }
+        }
+    });
+    if let Some(source) = UNMODELED[1..].iter().find(|path| !get(doc, path).is_null()) {
+        let what = if source.ends_with("table") {
+            "a calibrated-error table"
+        } else {
+            "an eval-spread file"
+        };
+        ui.weak(format!(
+            "The unmodeled error now comes from {what} (Advanced JSON); a value here replaces it."
+        ));
+    }
+    if let Some(note) = &spread.note {
+        ui.weak(note);
+    }
+}
+
 fn uncertainty_card(
     ui: &mut egui::Ui,
     doc: &mut Value,
     st: &mut OutputsState,
     picker: &mut dyn Picker,
     problem: &Option<String>,
+    action: &mut OutputsAction,
 ) {
     let enabled = get(doc, "uncertainty").is_object();
     let mut on = enabled;
@@ -1758,10 +1910,14 @@ fn uncertainty_card(
             for (id, label) in CHANNELS {
                 let mut value = chosen.iter().any(|c| c == id);
                 let last = value && chosen.len() == 1;
-                if ui
-                    .add_enabled(!last, egui::Checkbox::new(&mut value, label))
-                    .changed()
-                {
+                // The last channel stays ticked; disabling it instead hid its tick in the dark theme.
+                let response = ui.checkbox(&mut value, label);
+                let response = if last {
+                    response.on_hover_text("At least one channel is needed")
+                } else {
+                    response
+                };
+                if response.changed() && !last {
                     set_channel(doc, id, value);
                 }
             }
@@ -1803,6 +1959,7 @@ fn uncertainty_card(
             "uncertainty.require_complete",
             false,
         );
+        unmodeled_row(ui, doc, &st.spread, action);
     });
     if on != enabled {
         set_uncertainty(doc, on);
@@ -1839,7 +1996,7 @@ pub fn show(
     pathways_card(ui, document, state, &problem);
     regulatory_card(ui, document, state, picker, &problem);
     geometry_card(ui, document, state, picker, &problem, &mut action);
-    uncertainty_card(ui, document, state, picker, &problem);
+    uncertainty_card(ui, document, state, picker, &problem, &mut action);
     gas_card(ui, document, &problem);
     solver_card(ui, document);
 
@@ -1892,6 +2049,35 @@ mod tests {
             doc["uncertainty"]["covariance"],
             json!({"path": "", "sha256": ""})
         );
+    }
+
+    #[test]
+    fn an_unmodeled_error_replaces_the_other_sources_and_zero_removes_it() {
+        let mut doc = json!({"uncertainty": {"unmodeled_table": {"path": "t.json"}}});
+        set_unmodeled(&mut doc, 0.032);
+        assert_eq!(doc["uncertainty"], json!({"unmodeled_relative": 0.032}));
+        set_unmodeled(&mut doc, 0.);
+        assert_eq!(doc["uncertainty"], json!({}));
+    }
+
+    #[test]
+    fn the_estimate_is_the_largest_spread_among_the_banded_responses() {
+        let mut doc = json!({
+            "suggested_unmodeled_relative": 1.55,
+            "per_nuclide_activity": {"Ti51": {"max_abs_ln_ratio": 1.55}, "Co60": {"max_abs_ln_ratio": 0.01}},
+            "per_heat_component": {"total": {"max_abs_ln_ratio": 0.0075}},
+            "per_response_nominal": {"heat.total": {"max_abs_ln_ratio": 0.0075}, "activity:Co60": {"max_abs_ln_ratio": 0.01}},
+        });
+        let (u, note) = spread_estimate(&doc).unwrap();
+        assert_eq!(u, 0.01);
+        assert!(note.starts_with("Set to 1.00 %"), "{note}");
+        assert!(note.contains("largest for activity:Co60"), "{note}");
+        doc["per_response_nominal"] = json!({});
+        let (u, note) = spread_estimate(&doc).unwrap();
+        assert_eq!(u, 1.55);
+        assert!(note.contains("largest for the activity of Ti51"), "{note}");
+        doc["suggested_unmodeled_relative"] = json!(0.0);
+        assert!(spread_estimate(&doc).unwrap().1.contains("same answer"));
     }
 
     #[test]
