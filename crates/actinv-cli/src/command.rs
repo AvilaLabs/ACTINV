@@ -1108,19 +1108,40 @@ pub fn main_from(a: Vec<String>) {
             Err(crate::report::ReportError::Failure(message)) => die(message, 1),
         },
         "new" => {
-            if a.len() != 3 && !(a.len() == 5 && a[3] == "--data-dir") {
-                die(crate::help::usage("new"), 2);
+            let (out, data_dir, library) =
+                match crate::workflow::parse_new_args(&a[2..]).unwrap_or_else(|e| die(e, 2)) {
+                    crate::workflow::NewRequest::List => {
+                        println!(
+                            "{}",
+                            crate::workflow::new_list().unwrap_or_else(|e| die(e, 1))
+                        );
+                        return;
+                    }
+                    crate::workflow::NewRequest::Problem {
+                        out,
+                        data_dir,
+                        library,
+                    } => (out, data_dir, library),
+                };
+            let root = data_dir.as_deref().unwrap_or("actinv-data");
+            let spec = match &library {
+                None => crate::workflow::new_example(std::path::Path::new(root)),
+                Some(l) => crate::workflow::new_problem(
+                    std::path::Path::new(root),
+                    &l.material,
+                    &l.source,
+                    l.flux,
+                    &l.irradiate,
+                ),
             }
-            let root = a.get(4).map(String::as_str).unwrap_or("actinv-data");
-            let spec = crate::workflow::new_example(std::path::Path::new(root))
-                .unwrap_or_else(|e| die(e, 2));
+            .unwrap_or_else(|e| die(e, 2));
             let mut file = std::fs::OpenOptions::new()
                 .write(true)
                 .create_new(true)
-                .open(&a[2])
+                .open(&out)
                 .unwrap_or_else(|e| {
                     die(
-                        format!("Cannot create {}: {e}; choose a new filename", a[2]),
+                        format!("Cannot create {out}: {e}; choose a new filename"),
                         2,
                     )
                 });
@@ -1131,26 +1152,38 @@ pub fn main_from(a: Vec<String>) {
                 serde_json::to_string_pretty(&spec).expect("example serialization")
             )
             .unwrap_or_else(|e| die(e, 1));
-            eprintln!(
-                "Wrote {}: iron, 5 minutes at the FNS 14 MeV neutron source, then 20 cooling steps.",
-                a[2]
-            );
-            let data = match a.get(4) {
+            match &library {
+                None => eprintln!(
+                    "Wrote {out}: iron, 5 minutes at the FNS 14 MeV neutron source, then 20 cooling steps."
+                ),
+                Some(l) => {
+                    let material = actinv_core::presets::material(&l.material)
+                        .map(|m| m.name)
+                        .unwrap_or_else(|_| l.material.clone());
+                    let shape = actinv_core::presets::SpectrumShape::from_id(&l.source)
+                        .map(|s| s.label())
+                        .unwrap_or("");
+                    eprintln!(
+                        "Wrote {out}: {material}, {shape} at {:e} /cm\u{b2}/s for {}, then cooling to 10 y. Edit the schedule before running if it is not yours.",
+                        l.flux,
+                        l.irradiate.trim()
+                    );
+                }
+            }
+            let data = match data_dir.as_deref() {
                 Some(dir) => Ok(std::path::PathBuf::from(dir)),
                 None => crate::data_root(),
             };
             let catalog = embedded_catalog().unwrap_or_else(|e| die(e, 1));
             match data.map(|root| standard_data(&catalog, &root)) {
                 Ok(status) if status.missing.is_empty() => eprintln!(
-                    "Data: installed in {}.\nNext: actinv run {} result.json",
+                    "Data: installed in {}.\nNext: actinv run {out} result.json",
                     status.dir.display(),
-                    a[2]
                 ),
                 Ok(status) => eprintln!(
-                    "Data: not installed in {}.\nNext: {}, then actinv run {} result.json",
+                    "Data: not installed in {}.\nNext: {}, then actinv run {out} result.json",
                     status.dir.display(),
-                    fetch_hint(a.get(4).map(String::as_str)),
-                    a[2]
+                    fetch_hint(data_dir.as_deref()),
                 ),
                 Err(e) => eprintln!("Data: {e}"),
             }

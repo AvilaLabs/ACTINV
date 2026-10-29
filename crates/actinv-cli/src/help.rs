@@ -8,7 +8,7 @@ ACTINV — activation and inventory
 
 Start here
   data fetch               install the standard nuclear data (about 186 MiB)
-  new problem.json         write an example problem to edit
+  new problem.json         write a problem to edit (iron, or a library material)
   run problem.json [OUT]   solve it; the result goes to OUT or stdout
   report result.json       read a result as tables or a report page
 
@@ -117,13 +117,28 @@ Prints one line to stdout: the level checked, the group and step counts.\n\
 A `catalog:` reference must resolve to installed data even for --schema.\n\
 Whether the evaluated data suit the problem is checked by the solve itself.\n\n\
 Exit: 0 valid, 1 a file check failed, 2 bad usage or an invalid problem.",
-        "new" => "actinv new: write an example problem to start from\n\n\
-usage: actinv new OUT.json [--data-dir DIR]\n\n\
-Writes iron irradiated for 5 minutes at the FNS 14 MeV neutron source, then\n\
-cooled over 20 steps: the measured benchmark ACTINV is checked against. It\n\
-never overwrites a file. Data references are portable `catalog:` ids, read\n\
-from ./actinv-data or $ACTINV_DATA_DIR; --data-dir writes absolute paths.\n\n\
-  actinv new problem.json\n\n\
+        "new" => "actinv new: write a problem to start from\n\n\
+usage: actinv new OUT.json [--data-dir DIR]\n       actinv new OUT.json --material ID --source SHAPE --flux F [--irradiate DURATION] [--data-dir DIR]\n       actinv new --list\n\n\
+Without options, writes iron irradiated for 5 minutes at the FNS 14 MeV neutron\n\
+source, then cooled over 20 steps: the measured benchmark ACTINV is checked\n\
+against. With --material, --source and --flux (all three), writes 1 g of a\n\
+library material under a standard spectrum shape at total flux F (neutrons per\n\
+cm^2 per s), irradiated for DURATION (default 1 y), then cooled to 1 h, 1 d,\n\
+30 d, 1 y and 10 y after shutdown. It never overwrites a file. Data references\n\
+are portable `catalog:` ids, read from ./actinv-data or $ACTINV_DATA_DIR;\n\
+--data-dir writes absolute paths.\n\n\
+  --list   print the library materials (id, name, basis) and the source shapes\n\
+           (id, label), one per line, tab-separated\n\n\
+The shapes are generic, not any facility's spectrum, on the 709-group structure:\n\
+  fusion-14mev   a D-T line, all flux in the group holding 14.1 MeV\n\
+  fission        a Watt spectrum (U-235 thermal fission)\n\
+  thermal        a Maxwellian at kT = 0.0253 eV\n\
+  one-over-e     flux per unit energy proportional to 1/E, 0.5 eV to 1 MeV\n\
+A library composition is a starting point, not a material certificate: its\n\
+note names the trace elements it leaves out, and specification maxima\n\
+overstate trace elements.\n\n\
+  actinv new problem.json\n\
+  actinv new problem.json --material ss316 --source fission --flux 1e13\n\n\
 Exit: 0 written, 2 bad usage or the file exists.\n\
 Next: actinv run problem.json result.json",
         "doctor" => "actinv doctor: check that ACTINV can run here\n\n\
