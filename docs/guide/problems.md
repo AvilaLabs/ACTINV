@@ -1,6 +1,6 @@
 # Describe a problem
 
-An `actinv-spec-1` JSON problem contains data references, a material, a spectrum, and a schedule. The CLI, desktop, and Python interface use the same contract. Start with `actinv new problem.json` and edit that complete example.
+An `actinv-spec-1` JSON problem contains data references, a material, a spectrum, and a schedule. The CLI, desktop, and Python interface use the same contract. Start with `actinv new problem.json` and edit that complete example, or with `actinv new problem.json --material ss316 --source fission --flux 1e13` for a library material under a standard spectrum ([commands](cli.md#create-check-and-solve)).
 
 Unknown fields are errors. Numbers must be finite; misspelt options are rejected instead of being ignored. See [Problem specification](specification.md) for the full field reference.
 

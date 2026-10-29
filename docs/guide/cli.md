@@ -39,12 +39,14 @@ result is conditional on and what it does not claim.
 
 ```text
 actinv new OUT.json [--data-dir DIR]
+actinv new OUT.json --material ID --source SHAPE --flux F [--irradiate DURATION] [--data-dir DIR]
+actinv new --list
 actinv validate SPEC.json [--schema|--files|--hashes]
 actinv doctor [SPEC.json]
 actinv run SPEC.json [OUT.json]
 ```
 
-`new` refuses to overwrite an existing file. The example it writes names the catalog's neutron damage table (`catalog:tendl-2025-neutron-damage`) in a `damage` section with no displacement energies, so the run reports dpa once the default bundle is installed; the run's default outputs already include `damage`. `validate` defaults to schema checking; `--files` checks supported readable inputs and indexes, and `--hashes` additionally checks declared file hashes. The run validates evaluated-data compatibility and computes input hashes. Without an output path, `run` writes result JSON to standard output.
+`new` refuses to overwrite an existing file. With `--material`, `--source` and `--flux` it writes 1 g of a library material under a standard spectrum shape at total flux F (n/cm²/s), irradiated for DURATION (default `1 y`), then cooled to 1 h, 1 d, 30 d, 1 y and 10 y after shutdown. `new --list` prints the library materials and the shapes (`fusion-14mev`, `fission`, `thermal`, `one-over-e`), tab-separated. Each library composition is cited and carries a note naming the trace elements it leaves out; it is a starting point, not your material certificate. The shapes are textbook spectra on the 709-group structure, not a facility's spectrum. Without these options, `new` writes the iron example. The example it writes names the catalog's neutron damage table (`catalog:tendl-2025-neutron-damage`) in a `damage` section with no displacement energies, so the run reports dpa once the default bundle is installed; the run's default outputs already include `damage`. `validate` defaults to schema checking; `--files` checks supported readable inputs and indexes, and `--hashes` additionally checks declared file hashes. The run validates evaluated-data compatibility and computes input hashes. Without an output path, `run` writes result JSON to standard output.
 
 Schema checking does not open literal data paths. Symbolic `catalog:` references must resolve to installed artifacts before validation, so install their bundle first.
 
