@@ -72,6 +72,30 @@ impl Desktop {
         ui.add_space(12.);
         egui::Frame::group(ui.style()).inner_margin(16.).show(ui, |ui| {
             ui.set_width(ui.available_width());
+            ui.heading("Check the installed data");
+            let root = actinv_cli::workflow::catalog_data_root(&self.base);
+            ui.label(format!(
+                "Reads every installed standard file under {} and compares it with the SHA-256 the catalog records. A file that was changed or cut short is named.",
+                root.display()
+            ));
+            if ui
+                .add_enabled(self.job.is_none(), egui::Button::new("Verify the data"))
+                .clicked()
+            {
+                let started = self.start_command(
+                    crate::jobs::Command::DataVerify,
+                    serde_json::Value::Null,
+                    serde_json::json!({"output": root.display().to_string()}),
+                    "Verifying the installed data: every file is read and hashed.",
+                );
+                if let Err(e) = started {
+                    self.report(Err(e));
+                }
+            }
+        });
+        ui.add_space(12.);
+        egui::Frame::group(ui.style()).inner_margin(16.).show(ui, |ui| {
+            ui.set_width(ui.available_width());
             ui.heading("Build your own data");
             ui.label("Libraries are built from evaluated nuclear data files with the command line. Building changes every result made with the library, so it is done there, where each step is recorded.");
             ui.add_space(4.);

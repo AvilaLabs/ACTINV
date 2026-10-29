@@ -164,6 +164,49 @@ impl Command {
         }
     }
 
+    /// What the status bar says while the command runs.
+    pub fn label(self) -> &'static str {
+        match self {
+            Command::Decide => "Certifying the design",
+            Command::Optimize => "Searching designs",
+            Command::StudyRun => "Running the study",
+            Command::StudyValidate => "Checking the study",
+            Command::WastePackage => "Classifying the container",
+            Command::WasteBounds => "Classifying activity ranges",
+            Command::WasteUncertainty => "Sampling the waste class",
+            Command::WasteIntrusionScreen => "Screening for intrusion",
+            Command::Mesh => "Solving the mesh",
+            Command::Twin => "Checking the facility",
+            Command::Reverse | Command::ReverseQualified => "Fitting the flux to measurements",
+            Command::EvalSpread => "Solving with both decay libraries",
+            Command::ImportFlux => "Importing the mesh flux",
+            Command::ExportOpenmc
+            | Command::ExportMcnp
+            | Command::ExportOpenmcMesh
+            | Command::ExportR2s
+            | Command::ExportR2sJoint
+            | Command::ExportSource => "Writing the source",
+            Command::DataVerify => "Verifying the data",
+            Command::Doctor => "Checking the installation",
+        }
+    }
+
+    /// Whether the command solves problems, so it runs in the isolated worker; the others read
+    /// files and run on a thread.
+    pub fn solves(self) -> bool {
+        matches!(
+            self,
+            Command::Decide
+                | Command::Optimize
+                | Command::StudyRun
+                | Command::WasteUncertainty
+                | Command::Mesh
+                | Command::Reverse
+                | Command::ReverseQualified
+                | Command::EvalSpread
+        )
+    }
+
     /// Whether the command reads `Job::document`; `doctor` takes one optionally.
     fn needs_document(self) -> bool {
         matches!(

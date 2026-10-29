@@ -537,6 +537,19 @@ impl Workbench {
         }
     }
 
+    fn new_problem(&mut self) {
+        if self.replace_problem_allowed() {
+            self.problem = model::blank();
+            // nothing to download yet: the first download is the first save
+            self.saved = Value::Null;
+            self.raw_dirty = false;
+            self.raw.clear();
+            self.raw_source = Value::Null;
+            self.page = Page::Material;
+            self.report(Ok("New problem. Fill in the material, the irradiation and the source; each step is ticked when it is complete.".into()));
+        }
+    }
+
     fn tutorial(&mut self) {
         self.result = Some(model::tutorial_result());
         self.comparison = None;
@@ -569,7 +582,7 @@ impl Workbench {
         });
         ui.add_space(12.);
         ui.label(RichText::new("START A PROBLEM").small().color(accent));
-        let width = ((ui.available_width() - 28.) / 3.).clamp(200., 340.);
+        let width = ((ui.available_width() - 42.) / 4.).clamp(200., 300.);
         let choice = |ui: &mut egui::Ui, title: &str, text: &str, button: &str| {
             ui.group(|ui| {
                 ui.set_width(width);
@@ -591,6 +604,9 @@ impl Workbench {
         };
         let mut picked = None;
         ui.horizontal_wrapped(|ui| {
+            if choice(ui, "New problem", "Start from nothing: pick a material, an irradiation and a source. Nothing is filled in for you.", "New problem") {
+                picked = Some(3);
+            }
             if choice(ui, "From the iron example", "1 g of iron, 5 minutes at the FNS 14 MeV neutron source, then an hour of cooling.", "Load iron example") {
                 picked = Some(0);
             }
@@ -603,6 +619,7 @@ impl Workbench {
         });
         match picked {
             Some(0) => self.load_example(),
+            Some(3) => self.new_problem(),
             Some(1) => self.pick(FileKind::Problem, &["json"], ui.ctx()),
             Some(2) => {
                 self.import.get_or_insert_with(ImportState::default);

@@ -11,10 +11,84 @@ use serde_json::{json, Value};
 /// Slate block of a cooling step in the timeline.
 const COOLING: Color32 = Color32::from_rgb(146, 169, 198);
 
-/// Message about the last kerma-table choice that gave nothing.
+/// Message about the last kerma-table choice that gave nothing, and the irradiation time typed
+/// into the standard schedule.
 #[derive(Default)]
 pub struct StepsState {
     pin_note: Option<String>,
+    standard_irradiation: String,
+}
+
+/// The cooling times the standard schedule reports, after shutdown, and the step that reaches each
+/// from the one before.
+const STANDARD_COOLING: [(&str, &str); 5] = [
+    ("1 h", "1 h"),
+    ("1 d", "23 h"),
+    ("30 d", "29 d"),
+    ("1 y", "335.25 d"),
+    ("10 y", "9 y"),
+];
+
+/// One irradiation at the source's full flux for `irradiation`, then cooling steps that end at
+/// each standard cooling time.
+pub fn standard_schedule(irradiation: &str) -> Value {
+    let mut steps = vec![json!({"dt": irradiation, "flux": 1.0})];
+    steps.extend(
+        STANDARD_COOLING
+            .iter()
+            .map(|(_, dt)| json!({"dt": dt, "flux": 0.0})),
+    );
+    Value::Array(steps)
+}
+
+/// The standard schedule card: open on an empty schedule, where it is the quickest way to a
+/// complete step, and collapsed under the step list otherwise.
+fn standard_card(ui: &mut egui::Ui, document: &mut Value, state: &mut StepsState) {
+    let empty = document["schedule"].as_array().is_none_or(Vec::is_empty);
+    if state.standard_irradiation.is_empty() {
+        state.standard_irradiation = "1 y".into();
+    }
+    let body = |ui: &mut egui::Ui, state: &mut StepsState, document: &mut Value| {
+        ui.label(format!(
+            "Irradiate at the source's full flux, then cool, with results at {} after shutdown.",
+            STANDARD_COOLING.map(|(at, _)| at).join(", ")
+        ));
+        ui.horizontal_wrapped(|ui| {
+            ui.label("Irradiate for");
+            ui.add(egui::TextEdit::singleline(&mut state.standard_irradiation).desired_width(90.));
+            let valid = actinv_core::spec::parse_duration(state.standard_irradiation.trim())
+                .is_ok_and(|s| s > 0.);
+            let label = if empty {
+                "Use this schedule"
+            } else {
+                "Replace the steps with this schedule"
+            };
+            if ui.add_enabled(valid, egui::Button::new(label)).clicked() {
+                document["schedule"] = standard_schedule(state.standard_irradiation.trim());
+            }
+            if !valid {
+                ui.colored_label(
+                    ui.visuals().error_fg_color,
+                    "Enter a duration such as 30 d or 2 y.",
+                );
+            }
+        });
+    };
+    if empty {
+        egui::Frame::group(ui.style())
+            .inner_margin(12.)
+            .show(ui, |ui| {
+                ui.set_width(ui.available_width());
+                ui.strong("Start with a standard schedule");
+                body(ui, state, document);
+                ui.weak("Or add steps one by one below.");
+            });
+        ui.add_space(8.);
+    } else {
+        egui::CollapsingHeader::new("Standard schedule")
+            .id_salt("standard-schedule")
+            .show(ui, |ui| body(ui, state, document));
+    }
 }
 
 pub enum StepsAction {
@@ -31,8 +105,18 @@ pub fn show(
 ) -> StepsAction {
     let mut action = StepsAction::None;
     let r = ui.scope(|ui| {
+        let started_empty = document["schedule"].as_array().is_none_or(Vec::is_empty);
+        if started_empty {
+            standard_card(ui, document, state);
+        }
+        if !document["schedule"].is_array() {
+            document["schedule"] = json!([]);
+        }
         if let Some(steps) = document["schedule"].as_array_mut() {
             rows(ui, steps);
+        }
+        if !started_empty {
+            standard_card(ui, document, state);
         }
         let kinds = drives(document);
         requirements(ui, document, state, picker, &kinds, &mut action);
@@ -419,6 +503,26 @@ fn timeline(ui: &mut egui::Ui, steps: &[Value]) {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn the_standard_schedule_cools_to_each_standard_time_after_shutdown() {
+        let steps = standard_schedule("2 y");
+        let steps = steps.as_array().unwrap();
+        assert_eq!(steps[0], json!({"dt": "2 y", "flux": 1.0}));
+        let mut after = 0.;
+        for (step, (at, _)) in steps[1..].iter().zip(STANDARD_COOLING) {
+            assert_eq!(step["flux"], json!(0.0));
+            after += actinv_core::spec::parse_duration(step["dt"].as_str().unwrap()).unwrap();
+            let expected = actinv_core::spec::parse_duration(at).unwrap();
+            assert!(
+                (after - expected).abs() <= 1e-9 * expected,
+                "{at}: {after} vs {expected}"
+            );
+        }
+        let mut doc = crate::model::blank();
+        doc["schedule"] = standard_schedule("1 y");
+        assert!(crate::views::check::ready(&doc, Target::Schedule));
+    }
     use crate::views::Pinned;
     use actinv_core::spec::Spec;
 

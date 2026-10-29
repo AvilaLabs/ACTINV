@@ -70,6 +70,10 @@ impl Capture {
         ctx.request_repaint();
     }
     pub fn finish(&mut self, ctx: &egui::Context) {
+        // every planned shot is taken; the window is closing
+        if self.shot >= Self::total() {
+            return;
+        }
         let screenshot = ctx.input(|i| {
             i.events.iter().find_map(|e| {
                 if let egui::Event::Screenshot { image, .. } = e {

@@ -22,6 +22,12 @@ pub enum Group {
 
 impl Group {
     /// Sidebar caption; `None` for a group listed without one.
+    /// Whether the sidebar folds the group's pages away until it is opened or one of its pages is
+    /// current. The setup steps and the results are always listed.
+    pub fn folds(self) -> bool {
+        matches!(self, Group::Studies | Group::Tools)
+    }
+
     pub fn caption(self) -> Option<&'static str> {
         match self {
             Group::Start => None,

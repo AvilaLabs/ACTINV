@@ -1,4 +1,4 @@
-//! Start: the home page. Three ways to begin a problem, the problem and result already open, and
+//! Start: the home page. Four ways to begin a problem, the problem and result already open, and
 //! whether the standard nuclear data are installed, since nothing runs without them.
 use super::check_run::standard_data_sizes;
 use crate::{
@@ -39,8 +39,20 @@ impl Desktop {
             "What a material becomes under irradiation, and how it cools: activity, decay heat, dose and waste class.",
         );
         ui.label(RichText::new("START A PROBLEM").small().color(accent));
-        let width = ((ui.available_width() - 28.) / 3.).clamp(200., 320.);
+        // each card's frame adds its margin and stroke (7 a side) to the width it is given
+        let gap = ui.spacing().item_spacing.x;
+        let width = ((ui.available_width() - 3. * gap) / 4. - 14.).clamp(180., 300.);
         ui.horizontal_wrapped(|ui| {
+            let new = choice(
+                ui,
+                width,
+                "New problem",
+                "Start from nothing: pick a material, an irradiation and a source. Nothing is filled in for you.",
+                "New problem",
+            );
+            if new.clicked() {
+                self.request(Pending::New);
+            }
             let example = choice(
                 ui,
                 width,

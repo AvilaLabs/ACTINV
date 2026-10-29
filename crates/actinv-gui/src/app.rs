@@ -28,6 +28,8 @@ enum JobOutput {
     Screen(Value),
     Data(Value),
     Spectrum(crate::transport::Preview),
+    /// A CLI command run through the job layer, in the worker or on a thread.
+    Command(crate::jobs::JobResult),
 }
 type JobResult = Result<JobOutput, String>;
 #[derive(Clone, Copy, PartialEq, Eq)]
@@ -37,6 +39,8 @@ enum JobKind {
     Screen,
     Data,
     Transport,
+    /// A CLI command run through the job layer.
+    Command(crate::jobs::Command),
 }
 struct Job {
     rx: Option<Receiver<JobResult>>,
@@ -44,6 +48,20 @@ struct Job {
     started: Instant,
     kind: JobKind,
     cancelled: bool,
+}
+
+/// A folder of its own for each command job, under the system temporary folder; pages offer to
+/// save what they need from it.
+pub(crate) fn job_folder(command: crate::jobs::Command) -> std::path::PathBuf {
+    std::env::temp_dir().join("actinv-gui-jobs").join(format!(
+        "{}-{}-{}",
+        command.name(),
+        std::process::id(),
+        std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .unwrap_or_default()
+            .as_nanos()
+    ))
 }
 impl Drop for Job {
     fn drop(&mut self) {
@@ -110,6 +128,10 @@ pub struct Desktop {
     outputs: OutputsState,
     material_view: crate::views::material::MaterialState,
     steps: crate::views::steps::StepsState,
+    /// Folding sidebar groups the user opened.
+    nav_open: Vec<crate::nav::Group>,
+    /// Screenshot mode's replacement problem, once read (`ACTINV_GUI_CAPTURE_PROBLEM`).
+    capture_problem: Option<Option<Value>>,
     /// The Waste class page: its inputs, loaded properties, overrides and last classification.
     waste: pages::waste::WasteState,
     export: crate::views::export::ExportState,
@@ -184,10 +206,82 @@ enum ResultAction {
 enum Pending {
     Open,
     ImportDeck,
+    New,
     Example,
     Close,
 }
 impl Desktop {
+    /// Run `command` on `document` through the job layer: a solving command in the isolated
+    /// worker, a file command on a thread. Its files go to a fresh job folder.
+    pub(crate) fn start_command(
+        &mut self,
+        command: crate::jobs::Command,
+        document: Value,
+        args: Value,
+        message: &str,
+    ) -> Result<(), String> {
+        if self.job.is_some() {
+            return Err("Another calculation is running; wait for it or cancel it first.".into());
+        }
+        let job = crate::jobs::Job {
+            command,
+            document,
+            out_dir: job_folder(command),
+            args,
+        };
+        job.check()?;
+        let started = Instant::now();
+        self.job = Some(if command.solves() {
+            let cache = std::env::temp_dir().join(format!(
+                "actinv-gui-job-cache-{}-{}",
+                std::process::id(),
+                std::time::SystemTime::now()
+                    .duration_since(std::time::UNIX_EPOCH)
+                    .unwrap_or_default()
+                    .as_nanos()
+            ));
+            Job {
+                rx: None,
+                handle: Some(crate::worker::spawn_job(&job, cache)?),
+                started,
+                kind: JobKind::Command(command),
+                cancelled: false,
+            }
+        } else {
+            let (tx, rx) = mpsc::channel();
+            std::thread::spawn(move || {
+                let _ = tx.send(crate::jobs::run(&job).map(JobOutput::Command));
+            });
+            Job {
+                rx: Some(rx),
+                handle: None,
+                started,
+                kind: JobKind::Command(command),
+                cancelled: false,
+            }
+        });
+        self.report(Ok(message.into()));
+        Ok(())
+    }
+
+    /// Hand a finished command to the page that asked for it.
+    fn command_finished(&mut self, done: crate::jobs::JobResult) {
+        match done.command {
+            _ => {
+                let message = if done.message.is_empty() {
+                    format!("{} finished.", done.command.label())
+                } else {
+                    done.message.clone()
+                };
+                self.report(if done.exit == 0 {
+                    Ok(message)
+                } else {
+                    Err(message)
+                });
+            }
+        }
+    }
+
     fn stop_calculation_for_close(&mut self) {
         if let Some(job) = &self.job {
             if let Some(handle) = &job.handle {
@@ -298,6 +392,8 @@ impl Desktop {
             outputs: OutputsState::default(),
             material_view: Default::default(),
             steps: Default::default(),
+            nav_open: Vec::new(),
+            capture_problem: None,
             waste: Default::default(),
             export: Default::default(),
             impurities: Default::default(),
@@ -382,6 +478,19 @@ impl Desktop {
                         "The converted deck is not a valid ACTINV problem: {e}"
                     ))),
                 }
+            }
+            Pending::New => {
+                self.document = model::blank();
+                // a new problem has no file and no clean copy until it is saved
+                self.saved = Value::Null;
+                self.path = None;
+                self.base = model::working_directory();
+                self.saved_base = self.base.clone();
+                self.raw_dirty = false;
+                self.undo.clear();
+                self.redo.clear();
+                self.page = Page::Material;
+                self.report(Ok("New problem. Fill in the material, the irradiation and the source; each step is ticked when it is complete.".into()));
             }
             Pending::Example => {
                 self.document = model::example();
@@ -672,14 +781,70 @@ if self.job.is_some(){ui.spinner();}});
                         ui.add_space(8.);
                         let mut group = None;
                         for page in Page::ALL {
-                            if group != Some(page.group()) {
+                            let g = page.group();
+                            if group != Some(g) {
                                 if group.is_some() {
                                     ui.add_space(10.);
                                 }
-                                if let Some(caption) = page.group().caption() {
-                                    ui.label(RichText::new(caption).small().color(accent));
+                                if let Some(caption) = g.caption() {
+                                    if g.folds() {
+                                        // the current page keeps its group open
+                                        let here = self.page.group() == g;
+                                        let open = here || self.nav_open.contains(&g);
+                                        let header = ui
+                                            .horizontal(|ui| {
+                                                ui.spacing_mut().item_spacing.x = 4.;
+                                                // a painted triangle: the UI font has no arrow glyphs
+                                                let (rect, mark) = ui.allocate_exact_size(
+                                                    egui::vec2(8., 8.),
+                                                    egui::Sense::click(),
+                                                );
+                                                let (c, r) = (rect.center(), 3.5);
+                                                let points = if open {
+                                                    vec![
+                                                        c + egui::vec2(-r, -r * 0.6),
+                                                        c + egui::vec2(r, -r * 0.6),
+                                                        c + egui::vec2(0., r * 0.8),
+                                                    ]
+                                                } else {
+                                                    vec![
+                                                        c + egui::vec2(-r * 0.6, -r),
+                                                        c + egui::vec2(r * 0.8, 0.),
+                                                        c + egui::vec2(-r * 0.6, r),
+                                                    ]
+                                                };
+                                                ui.painter().add(egui::Shape::convex_polygon(
+                                                    points,
+                                                    accent,
+                                                    egui::Stroke::NONE,
+                                                ));
+                                                let label = ui.add(
+                                                    egui::Label::new(
+                                                        RichText::new(caption)
+                                                            .small()
+                                                            .color(accent),
+                                                    )
+                                                    .sense(egui::Sense::click()),
+                                                );
+                                                mark | label
+                                            })
+                                            .inner
+                                            .on_hover_cursor(egui::CursorIcon::PointingHand);
+                                        if header.clicked() && !here {
+                                            if open {
+                                                self.nav_open.retain(|o| *o != g);
+                                            } else {
+                                                self.nav_open.push(g);
+                                            }
+                                        }
+                                    } else {
+                                        ui.label(RichText::new(caption).small().color(accent));
+                                    }
                                 }
-                                group = Some(page.group());
+                                group = Some(g);
+                            }
+                            if g.folds() && self.page.group() != g && !self.nav_open.contains(&g) {
+                                continue;
                             }
                             // Setup steps are numbered and ticked when ready; result pages dim
                             // until a result is loaded, and stay clickable to explain themselves.
@@ -787,14 +952,14 @@ impl eframe::App for Desktop {
         }
         let result = self.job.as_ref().and_then(|job| {
             let received = if let Some(handle) = &job.handle {
-                let screen = job.kind == JobKind::Screen;
+                let kind = job.kind;
                 handle.rx.try_recv().map(|v| {
-                    v.map(|value| {
-                        if screen {
-                            JobOutput::Screen(value)
-                        } else {
-                            JobOutput::Calculation(value)
+                    v.and_then(|value| match kind {
+                        JobKind::Screen => Ok(JobOutput::Screen(value)),
+                        JobKind::Command(_) => {
+                            crate::jobs::JobResult::from_value(&value).map(JobOutput::Command)
                         }
+                        _ => Ok(JobOutput::Calculation(value)),
                     })
                 })
             } else {
@@ -865,12 +1030,13 @@ impl eframe::App for Desktop {
                     }
                     Ok(JobOutput::Data(fragment)) => {
                         self.downloaded = Some(fragment);
-                        self.page = Page::CheckRun;
+                        self.page = Page::Data;
                         self.report(Ok(
-                        "Data downloaded and verified. Use the installed paths on Check & run when ready."
-                            .into(),
-                    ));
+                            "Data downloaded and verified. Use them for this problem on this page."
+                                .into(),
+                        ));
                     }
+                    Ok(JobOutput::Command(done)) => self.command_finished(done),
                     Ok(JobOutput::Screen(v)) => {
                         self.screen_finished("Completed screen".into(), v);
                     }
@@ -908,6 +1074,7 @@ impl Desktop {
         let ctx = ui.ctx().clone();
         if ctx.input(|i| i.viewport().close_requested())
             && !self.allow_close
+            && self.capture.is_none()
             && (self.dirty() || self.job.is_some() || self.result_unsaved)
         {
             ctx.send_viewport_cmd(egui::ViewportCommand::CancelClose);
@@ -930,6 +1097,17 @@ impl Desktop {
             self.help = true;
         }
         if let Some(capture) = &mut self.capture {
+            if self.capture_problem.is_none() {
+                // a problem to show instead of the example, for screenshots of setup states
+                self.capture_problem = Some(
+                    std::env::var_os("ACTINV_GUI_CAPTURE_PROBLEM")
+                        .and_then(|path| std::fs::read_to_string(path).ok())
+                        .and_then(|text| model::decode_problem(&text).ok()),
+                );
+                if let Some(Some(problem)) = &self.capture_problem {
+                    self.document = problem.clone();
+                }
+            }
             capture.prepare(&ctx, &mut self.page, &mut self.tour, &mut self.result);
         }
         self.tour.anchors.clear();
@@ -950,13 +1128,16 @@ impl Desktop {
                                 JobKind::Screen => "Screening impurities",
                                 JobKind::Data => "Downloading / verifying",
                                 JobKind::Transport => "Reading / checking transport",
+                                JobKind::Command(command) => command.label(),
                             };
                             ui.label(format!(
                                 "{stage} · {:.0}s",
                                 job.started.elapsed().as_secs_f64()
                             ));
-                            if matches!(job.kind, JobKind::Calculation | JobKind::Screen)
-                                && ui.button("Cancel calculation").clicked()
+                            if matches!(
+                                job.kind,
+                                JobKind::Calculation | JobKind::Screen | JobKind::Command(_)
+                            ) && ui.button("Cancel calculation").clicked()
                             {
                                 if let Some(handle) = &job.handle {
                                     handle.request_cancel();

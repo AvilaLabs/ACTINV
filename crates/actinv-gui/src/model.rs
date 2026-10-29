@@ -30,6 +30,32 @@ pub fn example() -> Value {
     decode_problem(EXAMPLE).expect("bundled problem")
 }
 
+/// A new problem: the example's data references and solver defaults, with the material, the
+/// irradiation and the source left empty, so every setup step starts missing rather than
+/// carrying the example's choices forward unseen.
+pub fn blank() -> Value {
+    let mut doc = example();
+    let groups = doc["spectrum"]["flux_per_group"]
+        .as_array()
+        .map_or(709, Vec::len);
+    doc["title"] = "".into();
+    doc["material"]["composition"] = serde_json::json!({});
+    doc["material"]["basis"] = "wt_percent".into();
+    doc["material"]["mass_g"] = serde_json::json!(1.0);
+    doc["schedule"] = serde_json::json!([]);
+    if let Some(spectrum) = doc["spectrum"].as_object_mut() {
+        spectrum.remove("total");
+        spectrum.insert(
+            "flux_per_group".into(),
+            serde_json::json!(vec![0.0; groups]),
+        );
+    }
+    if let Some(options) = doc["options"].as_object_mut() {
+        options.remove("outputs");
+    }
+    doc
+}
+
 /// A duration for reading: the largest unit that keeps the number at least 1, three significant
 /// figures. Exact seconds stay available beside it wherever precision matters.
 pub fn readable_time(seconds: f64) -> String {
@@ -388,6 +414,21 @@ pub fn is_cooling(step: &Value) -> bool {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn a_new_problem_starts_with_material_irradiation_and_source_missing() {
+        let doc = blank();
+        let lines = crate::views::check::assess(&doc);
+        assert!(
+            !lines[0].ready && !lines[1].ready && !lines[2].ready,
+            "{lines:?}"
+        );
+        assert!(lines[3].ready);
+        assert_eq!(doc["library"], example()["library"]);
+        assert_eq!(doc["title"], "");
+        // the solver refuses it until the three steps are filled in
+        assert!(actinv_core::spec::Spec::from_json(&doc.to_string()).is_err());
+    }
 
     #[test]
     fn readable_times_pick_the_unit_a_person_would() {
