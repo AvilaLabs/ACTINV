@@ -1,0 +1,49 @@
+{
+ "date": "2026-10-29",
+ "g3_max_rel_error": {
+  "fission": 5.780635765668869e-14,
+  "fusion-14mev": 0.0,
+  "one-over-e": 2.4036570753109704e-15,
+  "thermal": 1.2412875188842846e-14
+ },
+ "g5": {
+  "eurofer97_fusion-14mev": {
+   "composition_equal": false,
+   "new_exit": 0,
+   "pass": false,
+   "result_material_found": false,
+   "run_exit": 0,
+   "run_stderr": ""
+  },
+  "pass": false,
+  "ss316_fission": {
+   "composition_equal": false,
+   "new_exit": 0,
+   "pass": false,
+   "result_material_found": false,
+   "run_exit": 0,
+   "run_stderr": ""
+  }
+ },
+ "gates": {
+  "G2": "PASS",
+  "G3": "PASS",
+  "G4": "PASS",
+  "G5": "FAIL"
+ },
+ "result_top_level_keys": [
+  "spec_title",
+  "entry_point",
+  "mode",
+  "pruned_states",
+  "total_states",
+  "steps",
+  "pathways",
+  "pathway_closure",
+  "ledger",
+  "certificate",
+  "ms"
+ ],
+ "run": "development run 1 (not an evidence run)",
+ "schema": "actinv-p162-dev-failure-1"
+}
