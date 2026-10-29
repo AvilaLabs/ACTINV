@@ -1042,6 +1042,43 @@ fn extract_target(result: &Value, step: u64, photons: bool) -> Result<ElemTarget
     })
 }
 
+/// The line `actinv impurities` writes to stderr after writing `out`: the solves, the targets and the
+/// verification, with the re-solves of the samples behind the bounds when the screen has them.
+pub fn summary_line(doc: &Value, out: &str) -> String {
+    let v = &doc["verification"];
+    let samples = doc["uncertainty"]["order_statistic"]["n"].as_u64();
+    let status = if v["skipped"] == true {
+        "skipped"
+    } else if v["verified"] == true {
+        "passed"
+    } else {
+        "FAILED"
+    };
+    let mut detail = format!("max rel dev {}", v["max_rel_dev"]);
+    if let Some(points) = v["uncertainty"]["points"].as_array() {
+        let missed = points.iter().filter(|p| p["pass"] == false).count();
+        detail += &if missed > 0 {
+            format!(
+                "; samples behind the bounds: {missed} of {} points missed, max rel dev {}",
+                points.len(),
+                v["uncertainty"]["max_rel_dev"]
+            )
+        } else {
+            format!(
+                "; samples behind the bounds: {} points, max rel dev {}",
+                points.len(),
+                v["uncertainty"]["max_rel_dev"]
+            )
+        };
+    }
+    format!(
+        "impurities: {} element solves{}, {} targets, verification {status} ({detail}) -> {out}",
+        doc["element_solves"].as_array().map_or(0, Vec::len),
+        samples.map_or(String::new(), |n| format!(" × {n} samples")),
+        doc["targets"].as_array().map_or(0, Vec::len),
+    )
+}
+
 /// A value check's deviation. Past the tolerance, a difference within `floor` is numerical noise far
 /// below the endpoint's scale (a nuclide populated far below the solver's numerical floor, which one
 /// solve keeps and another zeroes as a negative round-off population), so the deviation is what is
@@ -3510,6 +3547,37 @@ mod tests {
         assert_eq!(rel_dev(0.0, 0.0), 0.0);
         assert!((rel_dev(1.0, 1.0 + 1e-8) - 1e-8).abs() < 1e-12);
         assert_eq!(rel_dev(1.0, 2.0), rel_dev(2.0, 1.0));
+    }
+
+    #[test]
+    fn the_summary_line_names_the_sample_checks_and_what_missed() {
+        let mut doc = json!({
+            "element_solves": [1, 2, 3],
+            "targets": [{}, {}],
+            "verification": {"verified": true, "max_rel_dev": 2e-15},
+        });
+        assert_eq!(
+            summary_line(&doc, "out.json"),
+            "impurities: 3 element solves, 2 targets, verification passed (max rel dev 2e-15) -> out.json",
+            "a screen without bounds keeps its line"
+        );
+        doc["uncertainty"] = json!({"order_statistic": {"n": 72}});
+        doc["verification"]["uncertainty"] =
+            json!({"max_rel_dev": 3e-15, "points": [{"pass": true}, {"pass": true}]});
+        assert_eq!(
+            summary_line(&doc, "out.json"),
+            "impurities: 3 element solves × 72 samples, 2 targets, verification passed (max rel dev 2e-15; \
+             samples behind the bounds: 2 points, max rel dev 3e-15) -> out.json"
+        );
+        doc["verification"]["verified"] = json!(false);
+        doc["verification"]["uncertainty"] =
+            json!({"max_rel_dev": 1.0, "points": [{"pass": true}, {"pass": false}]});
+        assert_eq!(
+            summary_line(&doc, "out.json"),
+            "impurities: 3 element solves × 72 samples, 2 targets, verification FAILED (max rel dev 2e-15; \
+             samples behind the bounds: 1 of 2 points missed, max rel dev 1.0) -> out.json",
+            "a miss in the samples is named, not hidden behind the nominal deviation"
+        );
     }
 
     #[test]

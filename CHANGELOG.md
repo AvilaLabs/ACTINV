@@ -21,6 +21,8 @@
   (Amendment A: round-off far below the solver's numerical floor is not a disagreement); a miss exits 3 after
   writing. `keep_samples` writes each sample's factors, element responses and screen.
 - `sample_stats::order_index`, the order-statistic index of `waste budget uncertainty`, is now shared.
+- With bounds, the line `actinv impurities` writes to stderr gives the sample count and the re-solves of the samples
+  behind the bounds, with how many missed.
 - Worked example `examples/impurities_ra_steel/impurities_uncertainty.json` and the handbook section "Add nuclear-data
   uncertainty".
 

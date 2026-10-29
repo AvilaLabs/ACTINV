@@ -1302,20 +1302,7 @@ pub fn main_from(a: Vec<String>) {
             )
             .unwrap_or_else(|e| die(e, 1));
             if let Some(out) = positional.get(1) {
-                eprintln!(
-                    "impurities: {} element solves, {} targets, verification {} (max rel dev {}) -> {}",
-                    doc["element_solves"].as_array().map_or(0, Vec::len),
-                    doc["targets"].as_array().map_or(0, Vec::len),
-                    if doc["verification"]["skipped"] == true {
-                        "skipped"
-                    } else if doc["verification"]["verified"] == true {
-                        "passed"
-                    } else {
-                        "FAILED"
-                    },
-                    doc["verification"]["max_rel_dev"],
-                    out
-                );
+                eprintln!("{}", crate::impurities::summary_line(&doc, out));
             }
             if doc["verification"]["skipped"] != true && doc["verification"]["verified"] != true {
                 std::process::exit(3);

@@ -10,7 +10,7 @@ dad9e835adaca596f82e3374ac2ce1a524b54499c677e09bf7f2914d58c4bc72  ./.github/work
 45506fb0fb8f0a34c49c35c97d5e7a4584894562c516f2e77c712134bea58d2e  ./.github/workflows/web.yml
 79e13422a5e89cdf3e37984d7faa609cdd0bd1eaf8972c12dbff9fe175bf720e  ./.gitignore
 16dd72b64fb3e0742540afc653c764b76f788c6c2540002f004b45a56653c325  ./AGENTS.md
-5ddc21c4d6d35b5fd51769655777c691da041d95b700c94cc1d7ccd5df2d71f8  ./CHANGELOG.md
+2597f11c1d6600708fd9862326acc72e9bc36ec78c3253a5b90bbff1f8fff4c6  ./CHANGELOG.md
 9fa4ac1939083cf154751d27b790640cf8e53949d4bde498915e594e45059c5a  ./COMPETITIVE_BENCHMARK.md
 06debfb88cbe4179817b24708768586cc46b4ef0a9c94a4d6de3007a2f1fe8a1  ./CONTRIBUTING.md
 186e564bfc9ba41cd60759afd489f8c215578295ecbe2fb9f9786c4af597c154  ./Cargo.lock
@@ -950,12 +950,12 @@ ed55ed00f6c00fc4a2351e18332e98e7feb33d9b7ca65e7ba861e0e5e8feef39  ./crates/actin
 b0f78a7666b9752c35948029d02cd52cd03a8b9596566a425b5512f30bd72237  ./crates/actinv-cli/src/assimilate.rs
 1b47334f832ba5a39dfb16cd01f108c1ddc7926c89506cdadd13c9d75b16b78e  ./crates/actinv-cli/src/bin/actinv.rs
 b8f0bd217bcabfa5774f96dae89880f3148dab77befdf368b80a24dfa8909802  ./crates/actinv-cli/src/budget.rs
-2f5bd78199b7cc39417fb9b7a7635ceeec8ad811b5e9af54c25f4749a6655da9  ./crates/actinv-cli/src/command.rs
+44003d0ad26ea56bde84d21ccfeb2dfa64d781818a432eb58f106a921303c434  ./crates/actinv-cli/src/command.rs
 f94367b7bff4b23b0db198c08e8894b06e17b5fc1b43d01fe4a7a5cd78ce35e2  ./crates/actinv-cli/src/decide.rs
 dd9d19b9f71194417bc089ecb995d73cc631970c02305340999beb5fec8db59c  ./crates/actinv-cli/src/evalspread.rs
 785188378697b1e52c005cb238e751815f65a05d396febf9e2034e0b9886d6d5  ./crates/actinv-cli/src/fispact_import.rs
 33bfc91b5f03b1f455e0c77fd818766452e9104311ad5b912f80154e4800b325  ./crates/actinv-cli/src/help.rs
-f0250aa38690892072a991c39ea6f1a9933f559a52e1fbe58064a70b888a39c2  ./crates/actinv-cli/src/impurities.rs
+c8350699b79eb6c4049bbd5c3ccacea2777ceee205a04164f090c7a231a2352a  ./crates/actinv-cli/src/impurities.rs
 0b165f4ed67d247d1ea6093a3365397836a2b9c0085c0bee23f4b42726a3ac91  ./crates/actinv-cli/src/impurities/uncertainty.rs
 14666ebeea2b004865f134dbbdacb997d0017699990e6498ab86b716277fb22b  ./crates/actinv-cli/src/inspect.rs
 1c482756db164daa378455ce0cf58727cbe645007bf96db90535082216241224  ./crates/actinv-cli/src/lib.rs
