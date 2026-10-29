@@ -1,0 +1,26 @@
+{
+ "amendments": {
+  "protocols/ACTINV-P162_AMENDMENT_A.md": "f72ec5512bcbdad54c88b408b9c0155610f7cfb46893a250cd6e9c530204bd61"
+ },
+ "evidence": [
+  "results/p162/g1.log",
+  "results/p162_library.json",
+  "results/p162/evidence_run_1.log",
+  "results/p162/ci_runs.json",
+  "results/failures/p162/dev_run_1/"
+ ],
+ "gates": {
+  "G0": "PASS",
+  "G1": "PASS",
+  "G2": "PASS",
+  "G3": "PASS",
+  "G4": "PASS",
+  "G5": "PASS",
+  "G6": "PASS"
+ },
+ "protocol": "protocols/ACTINV-P162_PROTOCOL.md",
+ "protocol_sha256": "d4f6c8cac4c40b1e3ad7a66f6c0fed51f65a5f0f40057e15558f8dd5cc125b44",
+ "repair_round": "not used (Amendment A was registered before the evidence run, ledger 268)",
+ "schema": "actinv-p162-verdict-1",
+ "verdict": "P162-PASS"
+}
