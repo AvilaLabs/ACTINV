@@ -4579,3 +4579,13 @@ Every workflow triggered on `9158722` (candidate `d9037ca` plus its evidence) pa
 (`results/p161/ci_runs.json`). The handbook workflow is path-filtered and was not triggered. **P161-PASS**
 (`results/p161_verdict.json`): `pathway_closure` counts only populations above 1e-12 of the step's largest. The quick
 start's closure falls from 4.117 to 3.9e-15, and no other result field changes.
+
+## Entry 262 — P158 registered: nuclear-data uncertainty bands for impurity screening (2026-10-29)
+
+The owner held the 1.7.0 release (`release-1.7.0`, local, untagged) for two items in the agreed 1.7 scope. One is
+the uncertainty bands on impurity limits; the other is impurity screening in the app.
+
+- **P158 protocol** `b241b26cca545d109523c4c534ce9387b4c64a2cd7f70660dc5ad8e6072b3887`: every element solve of one sample uses that sample's factor block, drawn
+  from the full alloy's sampling plan, which is P146's mechanism. P157's algorithm runs per sample. Values get
+  upper order-statistic bounds, limits get lower ones, and the waste class gets probabilities. Reference `925a8f40…`,
+  built from `3814c21`.
