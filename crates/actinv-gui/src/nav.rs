@@ -21,13 +21,13 @@ pub enum Group {
 }
 
 impl Group {
-    /// Sidebar caption; `None` for a group listed without one.
     /// Whether the sidebar folds the group's pages away until it is opened or one of its pages is
     /// current. The setup steps and the results are always listed.
     pub fn folds(self) -> bool {
         matches!(self, Group::Studies | Group::Tools)
     }
 
+    /// Sidebar caption; `None` for a group listed without one.
     pub fn caption(self) -> Option<&'static str> {
         match self {
             Group::Start => None,
@@ -56,6 +56,7 @@ pub enum Page {
     Ledger,
     Export,
     Impurities,
+    Certify,
     Sweep,
     Assimilation,
     Data,
@@ -64,7 +65,7 @@ pub enum Page {
 
 impl Page {
     /// Every page in sidebar order. Pages of one group are contiguous.
-    pub const ALL: [Page; 19] = [
+    pub const ALL: [Page; 20] = [
         Page::Start,
         Page::Material,
         Page::Schedule,
@@ -80,6 +81,7 @@ impl Page {
         Page::Ledger,
         Page::Export,
         Page::Impurities,
+        Page::Certify,
         Page::Sweep,
         Page::Assimilation,
         Page::Data,
@@ -112,6 +114,7 @@ impl Page {
             Page::Ledger => "Evidence",
             Page::Export => "Export",
             Page::Impurities => "Impurities",
+            Page::Certify => "Certify",
             Page::Sweep => "Sweep",
             Page::Assimilation => "Assimilation",
             Page::Data => "Data",
@@ -133,7 +136,7 @@ impl Page {
             | Page::Waste
             | Page::Ledger
             | Page::Export => Group::Results,
-            Page::Impurities | Page::Sweep | Page::Assimilation => Group::Studies,
+            Page::Impurities | Page::Certify | Page::Sweep | Page::Assimilation => Group::Studies,
             Page::Data | Page::Advanced => Group::Tools,
         }
     }
@@ -181,6 +184,7 @@ mod tests {
                 "Evidence",
                 "Export",
                 "Impurities",
+                "Certify",
                 "Sweep",
                 "Assimilation",
                 "Data",
@@ -195,7 +199,7 @@ mod tests {
         let mut expected = vec![Group::Start];
         expected.extend([Group::Setup; 5]);
         expected.extend([Group::Results; 8]);
-        expected.extend([Group::Studies; 3]);
+        expected.extend([Group::Studies; 4]);
         expected.extend([Group::Tools; 2]);
         assert_eq!(groups, expected);
         assert_eq!(Group::Start.caption(), None);

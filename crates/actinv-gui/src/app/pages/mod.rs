@@ -2,6 +2,7 @@
 //! `page_body` is the single place that maps a `Page` to its renderer.
 mod advanced;
 mod assimilation;
+mod certify;
 mod charts;
 mod check_run;
 mod data;
@@ -57,6 +58,7 @@ impl Desktop {
             Page::Export => self.export_page(ui),
             Page::Waste => self.waste_page(ui),
             Page::Impurities => self.impurities_page(ui),
+            Page::Certify => self.certify_page(ui),
             Page::Sweep => self.sweep_page(ui),
             Page::Assimilation => self.assimilation(ui),
             Page::Data => self.data_page(ui),

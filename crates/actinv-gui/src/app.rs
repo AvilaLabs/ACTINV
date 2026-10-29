@@ -139,6 +139,7 @@ pub struct Desktop {
     waste: pages::waste::WasteState,
     export: crate::views::export::ExportState,
     impurities: crate::views::impurities::ImpuritiesState,
+    certify: crate::views::certify::CertifyState,
     /// The import dialog; `Some` while it is open.
     import: Option<ImportState>,
     /// A converted deck waiting for the unsaved-changes guard, and the folder its deck came from.
@@ -409,6 +410,7 @@ impl Desktop {
             waste: Default::default(),
             export: Default::default(),
             impurities: Default::default(),
+            certify: Default::default(),
             import: None,
             import_spec: None,
             import_base: None,
@@ -1329,7 +1331,7 @@ mod ui_tests {
     }
     #[test]
     fn every_page_renders_in_both_themes_at_minimum_size_with_and_without_a_result() {
-        assert_eq!(Page::ALL.len(), 19);
+        assert_eq!(Page::ALL.len(), 20);
         for theme in [egui::ThemePreference::Light, egui::ThemePreference::Dark] {
             for with_result in [false, true] {
                 let ctx = egui::Context::default();

@@ -187,6 +187,7 @@ pub struct Workbench {
     ledger_filter: String,
     spectrum_text: String,
     material_view: MaterialState,
+    certify: crate::views::certify::CertifyState,
     /// folding groups (Studies, Tools) the visitor opened
     nav_open: Vec<crate::nav::Group>,
     source_view: crate::views::source::SourceState,
@@ -241,6 +242,7 @@ impl Workbench {
             ledger_filter: String::new(),
             spectrum_text: String::new(),
             material_view: MaterialState::default(),
+            certify: Default::default(),
             nav_open: Vec::new(),
             source_view: Default::default(),
             steps: StepsState::default(),
@@ -1484,6 +1486,27 @@ impl Workbench {
 
     /// The waste class page: a viewer for waste results and an editor for waste specs. The
     /// browser never classifies; the evaluator runs in the desktop app and the CLI.
+    fn certify_page(&mut self, ui: &mut egui::Ui) {
+        use crate::views::certify::{self, CertifyAction};
+        visuals::heading(
+            ui,
+            "Certify",
+            "Does the design meet its limits once the nuclear-data uncertainty is counted, and which measurement would narrow the answer most?",
+        );
+        match certify::show(ui, &self.problem, &mut self.certify, false, false) {
+            CertifyAction::None => {}
+            CertifyAction::Open(target) => self.page = page_for(target),
+            CertifyAction::Certify => {
+                let times = certify::step_times(&self.problem);
+                let saved = certify::decide_spec(self.problem.clone(), &self.certify.limits, &times, self.certify.top)
+                    .and_then(|decision| serde_json::to_string_pretty(&decision).map_err(|e| e.to_string()))
+                    .and_then(|text| web::download("decision.json", text.as_bytes()))
+                    .map(|()| "Download started. Run `actinv decide decision.json verdict.json` where the nuclear data and the covariance file are installed.".to_owned());
+                self.report(saved);
+            }
+        }
+    }
+
     fn impurities_page(&mut self, ui: &mut egui::Ui) {
         use crate::views::impurities::{self, Context, ImpuritiesAction};
         visuals::heading(
@@ -1820,6 +1843,7 @@ impl eframe::App for Workbench {
                     Page::Export => self.export_page(ui),
                     Page::Waste => self.waste_page(ui),
                     Page::Impurities => self.impurities_page(ui),
+                    Page::Certify => self.certify_page(ui),
                     Page::Data => self.data_page(ui),
                     Page::Advanced => self.advanced_page(ui),
                     // the browser never runs the solver

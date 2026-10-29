@@ -1,6 +1,7 @@
 //! Page bodies shared by the desktop shell and the browser workbench. A view reads or edits the
 //! document or result it is given and returns what the shell must do next; no view opens a dialog,
 //! touches the file system, or runs the solver.
+pub mod certify;
 pub mod check;
 pub mod export;
 pub mod import;
