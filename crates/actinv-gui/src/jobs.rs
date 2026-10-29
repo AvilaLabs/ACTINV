@@ -619,9 +619,10 @@ fn twin_job(job: &Job) -> Result<Outcome, String> {
     let doc = twin::run(utf8(&input)?, Some(utf8(&out)?))?;
     let cleared = doc["facility"]["cleared"].as_u64().unwrap_or(0);
     let restricted = doc["facility"]["restricted"].as_u64().unwrap_or(0);
+    // one binding cell per (response, time) limit, keyed by the limit
     let binding = doc["facility"]["binding_cells"]
-        .as_array()
-        .map_or(0, Vec::len);
+        .as_object()
+        .map_or(0, Map::len);
     Ok(Outcome {
         exit: verification_exit(&doc),
         ..Outcome::new(
