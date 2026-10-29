@@ -171,13 +171,20 @@ bounded build.
 
 ## Status
 
+Working branch: `app17` (worktree `target/app17-wt`), not yet on master except through P162. The release branch
+`release-1.7.0` (worktree `target/rel17-wt`) is rebased at the end.
+
 | Item | State | Commit |
 |---|---|---|
-| Plan approved by owner | done | |
-| Job layer (agent) | in progress | |
-| CLI fixes (agent) | in progress | |
-| Examples (agent) | in progress | |
-| Material compositions research (agent) | in progress | |
-| Stage 1.1 review on Check & run | in progress | |
-| Stage 1.2-1.9 | not started | |
-| Stages 2-6 | not started | |
+| Plan approved by owner | done | `149584e` |
+| Job layer: `actinv-gui-job-1`, 22 commands, worker for solves | done | `6ebc67f` |
+| CLI fixes: waste budget exit 3, decide `catalog:` names, help pages | done | `4a49ebd` |
+| Examples for the new pages (none run yet) | done, unrun | `6ee7062`, `c887a87` |
+| P162 material library and spectra: registered, Amendment A (G5), candidate, evidence G0-G5 pass | evidence pushed, G6 CI pending | `4e52a7f`, `ff21b53`, `a60593c`, `aeda0a5` |
+| Stage 1: review on Check & run, Data page with Verify, solver settings card, New problem, standard schedule, folding Studies/Tools (desktop and browser), library and spectrum cards | done, screenshots checked | `d4e8634`, `dd4358f`, `91c14e2` |
+| Stage 1: Start page "What do you want to find out?" | moved to Stage 2, so it can route to Certify/Optimize | |
+| Stage 2: Certify (decide), Optimize, Sweep & study pages | not started | |
+| Stages 3-6 | not started | |
+
+Capture notes: `ACTINV_GUI_CAPTURE_PROBLEM=FILE` loads a problem before the screenshots; capture closes after its
+36th shot (it used to run until killed when the problem counted as unsaved). Screenshot files are named `00.png`.
