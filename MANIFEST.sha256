@@ -1140,7 +1140,7 @@ d303bb67c7b03fa452f04e867243b020ec0c7422329242e542e20a937b40e338  ./crates/actin
 b3357e9c04a7d15632b732f35f8dc8a5b885e87fa30df5929c331fda6d1c0671  ./crates/actinv-gui/src/views/check.rs
 2fdfb4f341380aeb03244160f25791052defeb52461a136425758da26ed2360c  ./crates/actinv-gui/src/views/export.rs
 643d1654261235bff783c7fa7d57d530188999fdf966cc3d90800b9415c2cd03  ./crates/actinv-gui/src/views/import.rs
-416565c1968e248366c9ad75e58f586bca570e6105b100c68647c9ea3900dab2  ./crates/actinv-gui/src/views/impurities.rs
+b1403df6e861005f54978d3d88fecef79cfac05e87e477c359468310634e7c3a  ./crates/actinv-gui/src/views/impurities.rs
 13db247f2b7b8d93923af865365eedee0f097f65116789a80b2d199a1339038c  ./crates/actinv-gui/src/views/material.rs
 972ef5c3eef8f3c53aae7fa6f91f92b5e12b2181c2e8fff197e6b484aaae1d43  ./crates/actinv-gui/src/views/mod.rs
 78f49bff91b378805959ce1b10c911711384ac9b801644cc127e8feb7ede408f  ./crates/actinv-gui/src/views/outputs.rs
@@ -1240,7 +1240,7 @@ bd19b63358e8f637bc37cfe2a5f98290f86af7f3ad31d1698730195c25bd7bed  ./docs/guide/c
 ad272dc87c112bfb5295c3feb7bc00aacb2aa964ca2fb1fe1a7e63dc241ac192  ./docs/guide/data.md
 0c389cf5d83efa6dd5994c25f526bd7028accbeac9ef6912ae241e48fba76e04  ./docs/guide/desktop.md
 feb943c57e5e4d6cf37ece3668b4fc4eda055ad224265c75edfdb38f180d0d56  ./docs/guide/fispact-migration.md
-1914a56786f6eb588781b5907461dcfa0219e61e0c78e5d2da090fbded86bc93  ./docs/guide/impurities.md
+18f20e637d3103ec4bbdbeca8e09ac892bb9e7ad8f0b7b69b12ec0667a92924f  ./docs/guide/impurities.md
 20af4608e208b8a3444e7900add697e7586177a42d3b2bbed2ab98b1f40e6809  ./docs/guide/index.md
 c965beca929c7c496a33e61675c5e2ec4eeeeedd218a4dac015eb2589c569c41  ./docs/guide/install.md
 d885a057493012d295c42728543e07a1b6b3a5258b585047e3ece8a5f758d39f  ./docs/guide/method.md

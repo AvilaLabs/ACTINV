@@ -376,15 +376,24 @@ its elements: choose the **Balance** (the largest at first), keep an element **F
 or make it an **Impurity** with a nominal, minimum and maximum in wt%. Add an impurity the material does not list by
 its symbol. **When** selects the steps to screen; every cooling step after the last irradiation is selected at first.
 **What matters** chooses the endpoints, each with an optional limit, the activity of single nuclides, and the waste
-class with the class to meet; the waste class uses the material's mass and density as the component. The page needs
-a composition in wt%, and it explains on the page what it refuses, as the command does.
+class with the class to meet; the waste class uses the material's mass and density as the component.
+**Nuclear-data uncertainty** is optional. It adds the `sampling` block of
+[Add nuclear-data uncertainty](#add-nuclear-data-uncertainty): a confidence of 90, 95 or 99%, the number of samples
+(at least the minimum for that confidence), cross sections, decay constants or both, and a seed. The page shows how
+many calculations that takes before you start. The page needs a composition in wt%, and it explains on the page what
+it refuses, as the command does.
 
 **Screen impurities** runs the screen in the background, with verification, and shows the result: whether it was
 verified, an overview with each endpoint's worst case, largest contributor and tightest limit over all screened
 steps, and for a chosen step, each endpoint's nominal, impurity-free and worst-case values with every impurity's
-contribution, the nuclides it acts through and its limits. **Save screen…** writes the `actinv-impurities-1`
-document with the problem embedded, and **Save result…** and **Open result…** write and read results, including
-those of `actinv impurities`. The browser sets up screens and reads results but does not run them.
+contribution, the nuclides it acts through and its limits. A screen with nuclear-data uncertainty shows each bound in
+grey beside its nominal figure: an upper bound on each value and contribution, a lower bound on each limit. A bound
+that only restates the nominal figure, such as no limit for an impurity that does not raise the endpoint, is left out.
+When the material exceeds a limit without impurities in some samples, the card says so once, instead of a 0 beside
+every limit. For the waste class, it shows how many samples meet the target class and the lower bound on that
+probability. **Save screen…** writes the `actinv-impurities-1` document with the problem embedded, and **Save
+result…** and **Open result…** write and read results, including those of `actinv impurities`. The browser sets up
+screens and reads results but does not run them.
 
 ## What to keep in mind
 

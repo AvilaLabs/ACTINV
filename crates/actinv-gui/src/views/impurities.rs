@@ -94,6 +94,9 @@ pub struct ImpuritiesState {
     waste: bool,
     target_class: &'static str,
     activated_metal: bool,
+    /// Bounds over the nuclear-data uncertainty: off unless asked for, since every sample repeats
+    /// every element calculation.
+    bands: Bands,
     pub result: Option<(String, Value)>,
     /// The result step on show, as an index into `targets`.
     step: usize,
@@ -121,12 +124,52 @@ impl Default for ImpuritiesState {
             waste: false,
             target_class: "C",
             activated_metal: true,
+            bands: Bands::default(),
             result: None,
             step: 0,
             showing_result: false,
             message: None,
         }
     }
+}
+
+/// The `sampling` block and `confidence_level` of a screen with nuclear-data bounds.
+#[derive(Clone, Debug, PartialEq)]
+struct Bands {
+    on: bool,
+    confidence: f64,
+    samples: u32,
+    seed: u64,
+    cross_sections: bool,
+    decay: bool,
+}
+
+impl Default for Bands {
+    fn default() -> Self {
+        Self {
+            on: false,
+            confidence: 0.95,
+            samples: minimum_samples(0.95),
+            seed: 1,
+            cross_sections: true,
+            decay: true,
+        }
+    }
+}
+
+/// The confidence levels offered.
+const CONFIDENCES: [f64; 3] = [0.9, 0.95, 0.99];
+/// The covariance the cross-section channel samples.
+const COVARIANCE: &str = "catalog:tendl-2025-neutron-709g-covariance";
+
+/// Fewest samples whose largest value is an upper bound at `confidence`: (1 − c)/2 ≥ cⁿ, so 72 at
+/// 0.95. `actinv impurities` refuses fewer.
+fn minimum_samples(confidence: f64) -> u32 {
+    (((1. - confidence) / 2.).ln() / confidence.ln()).ceil() as u32
+}
+
+fn percent(confidence: f64) -> String {
+    format!("{}%", compact_number(confidence * 100.))
 }
 
 /// What the shell must do after the page was drawn.
@@ -394,6 +437,19 @@ pub fn problems(state: &ImpuritiesState, document: &Value) -> Vec<String> {
     if state.waste && !document["material"]["density_g_cm3"].is_number() {
         out.push("Waste class needs the material's density; set it on Material.".into());
     }
+    let b = &state.bands;
+    if b.on {
+        if !b.cross_sections && !b.decay {
+            out.push("Choose cross sections, decay constants or both to sample.".into());
+        }
+        let least = minimum_samples(b.confidence);
+        if b.samples < least {
+            out.push(format!(
+                "At {} confidence a bound needs at least {least} samples.",
+                percent(b.confidence)
+            ));
+        }
+    }
     out
 }
 
@@ -464,6 +520,19 @@ pub fn screen_document(
             "waste_type": if state.activated_metal { "activated_metal" } else { "general" },
             "external_tritium": {"status": "not_applicable"},
         });
+    }
+    let b = &state.bands;
+    if b.on {
+        let mut sampling = json!({
+            "channels": {"cross_section_mf33": b.cross_sections, "decay_constants": b.decay},
+            "samples": b.samples,
+            "seed": b.seed,
+        });
+        if b.cross_sections {
+            sampling["covariance"] = json!({"path": COVARIANCE});
+        }
+        screen["sampling"] = sampling;
+        screen["confidence_level"] = json!(b.confidence);
     }
     Ok(screen)
 }
@@ -903,12 +972,84 @@ fn setup_view(
         }
     });
 
+    // 4. Nuclear-data uncertainty: optional bounds from repeated screens over sampled data.
+    let elements = state
+        .rows
+        .iter()
+        .filter(|r| r.role != Role::Balance)
+        .count()
+        + 1;
+    card(ui, |ui| {
+        ui.horizontal(|ui| {
+            ui.label(RichText::new("4  Nuclear-data uncertainty").strong());
+            ui.label(RichText::new("optional").color(muted(ui)));
+        });
+        ui.label(RichText::new("Repeat the screen over samples of the nuclear data to put a bound on every value and limit: an upper bound on each value, a lower bound on each limit.").color(muted(ui)));
+        ui.add_space(6.);
+        let b = &mut state.bands;
+        ui.checkbox(&mut b.on, "Add bounds over the nuclear-data uncertainty");
+        if !b.on {
+            return;
+        }
+        ui.add_space(4.);
+        egui::Grid::new("impurity-bands")
+            .num_columns(2)
+            .spacing([18., 6.])
+            .show(ui, |ui| {
+                ui.label("Confidence");
+                ui.horizontal(|ui| {
+                    for c in CONFIDENCES {
+                        if ui
+                            .selectable_label(b.confidence == c, percent(c))
+                            .clicked()
+                            && b.confidence != c
+                        {
+                            b.confidence = c;
+                            b.samples = b.samples.max(minimum_samples(c));
+                        }
+                    }
+                });
+                ui.end_row();
+                ui.label("Samples");
+                ui.horizontal(|ui| {
+                    let least = minimum_samples(b.confidence);
+                    ui.add(egui::DragValue::new(&mut b.samples).range(least..=4096));
+                    ui.label(
+                        RichText::new(format!("at least {least} at {}", percent(b.confidence)))
+                            .color(muted(ui)),
+                    );
+                });
+                ui.end_row();
+                ui.label("Sample");
+                ui.horizontal(|ui| {
+                    ui.checkbox(&mut b.cross_sections, "cross sections")
+                        .on_hover_text("Correlated draws from the TENDL-2025 covariance in the data catalog (MF=33).");
+                    ui.checkbox(&mut b.decay, "decay constants");
+                });
+                ui.end_row();
+                ui.label("Seed");
+                ui.add(egui::DragValue::new(&mut b.seed))
+                    .on_hover_text("The same seed draws the same samples, so a screen can be repeated exactly.");
+                ui.end_row();
+            });
+        ui.add_space(4.);
+        ui.label(RichText::new(format!(
+            "Each sample repeats every element calculation: {elements} × {} = {} calculations, plus re-solves of the samples behind the bounds. 72 samples of a 15-element steel take about an hour.",
+            b.samples,
+            elements as u64 * u64::from(b.samples),
+        )).color(muted(ui)));
+    });
+
     let problems = problems(state, document);
     ui.add_space(4.);
     ui.horizontal_wrapped(|ui| {
         if context.running {
             ui.spinner();
-            ui.label("Screening… each element is solved once, then every reported composition is re-solved as a check. Cancel from the status bar.");
+            ui.label(if state.bands.on {
+                "Screening over the nuclear-data samples… every sample solves each element once, then the samples behind the bounds are re-solved as a check. Cancel from the status bar."
+            } else {
+                "Screening… each element is solved once, then every reported composition is re-solved as a check. Cancel from the status bar."
+            });
         } else if context.can_screen {
             let r = primary(ui, problems.is_empty(), "Screen impurities");
             if r.clicked() {
@@ -931,14 +1072,8 @@ fn setup_view(
     }
     if let Some(first) = problems.first() {
         ui.colored_label(ui.visuals().warn_fg_color, first);
-    } else if context.can_screen && !context.running {
-        let n = state
-            .rows
-            .iter()
-            .filter(|r| r.role != Role::Balance)
-            .count()
-            + 1;
-        ui.label(RichText::new(format!("One calculation per element ({n}), then a full re-solve of each reported composition.")).color(muted(ui)));
+    } else if context.can_screen && !context.running && !state.bands.on {
+        ui.label(RichText::new(format!("One calculation per element ({elements}), then a full re-solve of each reported composition.")).color(muted(ui)));
     }
     match &state.message {
         Some(Ok(text)) => {
@@ -1013,6 +1148,77 @@ fn limit_text(v: &Value) -> (String, Option<&'static str>) {
     }
 }
 
+/// A result's nuclear-data bounds: (confidence, samples), when it has them.
+fn bands_of(result: &Value) -> Option<(f64, u64)> {
+    let u = &result["uncertainty"];
+    Some((
+        u["confidence_level"].as_f64()?,
+        u["order_statistic"]["n"].as_u64()?,
+    ))
+}
+
+/// The upper bound on a value over the samples, as read.
+fn value_bound(v: &Value) -> Option<String> {
+    match v["status"].as_str()? {
+        "bounded" => v["upper_bound"].as_f64().map(short),
+        other => Some(other.replace('_', " ")),
+    }
+}
+
+/// The lower bound on a limit over the samples, and why when it is not simply a share.
+fn limit_bound(l: &Value) -> Option<(String, Option<String>)> {
+    let n = l["by_sample"].as_array().map_or(0, Vec::len);
+    let count = |s: &str| l["sample_status"][s].as_u64().unwrap_or(0);
+    Some(match l["status"].as_str()? {
+        "established" => {
+            let bound = l["bound"].as_f64()?;
+            let over = count("infeasible") + count("failed");
+            if bound == 0. && over > 0 {
+                (
+                    "0".into(),
+                    Some(format!("In {over} of {n} samples the limit is exceeded even without this impurity (or the sample failed), so the bound is 0.")),
+                )
+            } else {
+                (format!("≥ {}", short(bound)), None)
+            }
+        }
+        "not_established" => (
+            "not established".into(),
+            Some(l["reason"].as_str().map_or_else(
+                || "Some samples need a positive share of this impurity to meet the limit, so no lower bound applies.".to_owned(),
+                str::to_owned,
+            )),
+        ),
+        "unbounded" => (
+            "any share".into(),
+            Some("The limit is not reached in enough samples to bound it.".into()),
+        ),
+        other => (other.replace('_', " "), l["reason"].as_str().map(str::to_owned)),
+    })
+}
+
+/// A figure with its bound beside it, the bound muted, in one grid cell; each with an optional
+/// explanation on hover.
+fn with_bound(
+    ui: &mut egui::Ui,
+    text: String,
+    why: Option<&str>,
+    bound: Option<(String, Option<String>)>,
+) {
+    ui.horizontal(|ui| {
+        let r = ui.label(text);
+        if let Some(why) = why {
+            r.on_hover_text(why);
+        }
+        if let Some((b, why)) = bound {
+            let r = ui.label(RichText::new(b).color(muted(ui)));
+            if let Some(why) = why {
+                r.on_hover_text(why);
+            }
+        }
+    });
+}
+
 fn result_view(
     ui: &mut egui::Ui,
     label: &str,
@@ -1080,29 +1286,80 @@ fn result_view(
         .color(muted(ui)),
     );
     let verification = &result["verification"];
+    // with bounds, the samples behind them are re-solved too; verified covers both
+    let sampled = verification["uncertainty"]
+        .as_object()
+        .filter(|u| u.get("skipped").and_then(Value::as_bool) != Some(true));
+    let sampled_points = sampled
+        .and_then(|u| u.get("points"))
+        .and_then(Value::as_array);
     ui.add_space(4.);
     match verification["verified"].as_bool() {
         Some(true) => {
-            ui.horizontal(|ui| {
+            ui.horizontal_top(|ui| {
                 crate::visuals::tick(ui, good(ui));
-                ui.colored_label(good(ui), format!(
-                    "Verified: every reported composition ({}) was re-solved as a full alloy; largest difference {} (tolerance {}).",
+                ui.add(egui::Label::new(RichText::new(format!(
+                    "Verified: every reported composition ({}) was re-solved as a full alloy; largest difference {} (tolerance {}).{}",
                     verification["points"].as_array().map_or(0, Vec::len),
                     number_or_dash(&verification["max_rel_dev"]),
                     number_or_dash(&verification["tolerance_rel"]),
-                ));
+                    sampled_points.map_or(String::new(), |p| format!(
+                        " The samples behind the bounds were re-solved too ({} points); largest difference {}.",
+                        p.len(),
+                        number_or_dash(&verification["uncertainty"]["max_rel_dev"]),
+                    )),
+                )).color(good(ui))).wrap());
             });
         }
         Some(false) => {
-            ui.colored_label(ui.visuals().error_fg_color, format!(
-                "Verification failed: a re-solved composition differs from the screen by {} (tolerance {}). Do not rely on these numbers.",
-                number_or_dash(&verification["max_rel_dev"]),
-                number_or_dash(&verification["tolerance_rel"]),
-            ));
+            let nominal_ok = verification["max_rel_dev"]
+                .as_f64()
+                .zip(verification["tolerance_rel"].as_f64())
+                .is_some_and(|(d, t)| d <= t);
+            let message = match sampled {
+                Some(u) if nominal_ok => {
+                    let missed = sampled_points.map_or(0, |p| {
+                        p.iter().filter(|x| x["pass"].as_bool() == Some(false)).count()
+                    });
+                    format!(
+                        "Verification failed: {missed} of the {} checks on the samples behind the bounds differ from the screen (largest difference {}). The nominal figures were confirmed; do not rely on the bounds.",
+                        sampled_points.map_or(0, Vec::len),
+                        number_or_dash(u.get("max_rel_dev").unwrap_or(&Value::Null)),
+                    )
+                }
+                _ => format!(
+                    "Verification failed: a re-solved composition differs from the screen by {} (tolerance {}). Do not rely on these numbers.",
+                    number_or_dash(&verification["max_rel_dev"]),
+                    number_or_dash(&verification["tolerance_rel"]),
+                ),
+            };
+            ui.colored_label(ui.visuals().error_fg_color, message);
         }
         None => {
             ui.colored_label(ui.visuals().warn_fg_color, "Not verified: this screen was run without re-solving its compositions (--no-verify).");
         }
+    }
+    let bands = bands_of(result);
+    if let Some((confidence, n)) = bands {
+        let u = &result["uncertainty"];
+        let channels: Vec<&str> = u["sampling"]["channels"]
+            .as_object()
+            .into_iter()
+            .flatten()
+            .filter(|(_, on)| on.as_bool() == Some(true))
+            .map(|(c, _)| match c.as_str() {
+                "cross_section_mf33" => "cross sections",
+                "decay_constants" => "decay constants",
+                other => other,
+            })
+            .collect();
+        let failed = u["failed_samples"].as_array().map_or(0, Vec::len);
+        ui.label(format!(
+            "Nuclear-data bounds at {} confidence from {n} samples of {}{}. Grey figures are these bounds: an upper bound on each value and change, a lower bound on each limit.",
+            percent(confidence),
+            if channels.is_empty() { "the data".to_owned() } else { channels.join(" and ") },
+            if failed > 0 { format!(" ({failed} failed, counted against the bounds)") } else { String::new() },
+        ));
     }
     ui.add_space(10.);
 
@@ -1140,12 +1397,25 @@ fn result_view(
                             step_name(worst["step"].as_u64().unwrap_or(0))
                         ));
                     } else {
-                        ui.label(format!(
-                            "{} {} · {}",
-                            value_or_dash(&worst["value"]),
-                            shown_unit(units.get(id).copied().unwrap_or("")),
-                            step_name(worst["step"].as_u64().unwrap_or(0))
-                        ));
+                        let step = worst["step"].as_u64().unwrap_or(0);
+                        let bound = bands.and_then(|(confidence, _)| {
+                            let band = &endpoint_at(result, id, step)?["uncertainty"]["worst_case"];
+                            Some((
+                                format!("≤ {} at {}", value_bound(band)?, percent(confidence)),
+                                None,
+                            ))
+                        });
+                        with_bound(
+                            ui,
+                            format!(
+                                "{} {} · {}",
+                                value_or_dash(&worst["value"]),
+                                shown_unit(units.get(id).copied().unwrap_or("")),
+                                step_name(step)
+                            ),
+                            None,
+                            bound,
+                        );
                     }
                     let top = &s["ranking"][0];
                     ui.label(top["impurity"].as_str().map_or("—".into(), display_name));
@@ -1216,15 +1486,28 @@ fn result_view(
             .as_str()
             .is_some_and(|r| r.starts_with("waste_class:"))
         {
+            let id = endpoint["response"].as_str().unwrap_or("");
             class_card(
                 ui,
                 endpoint,
-                &summary[endpoint["response"].as_str().unwrap_or("")],
+                &summary[id],
+                bands.map(|b| (b, &result["uncertainty"]["impurity_class_limits"][id])),
             );
         } else {
-            scalar_card(ui, endpoint);
+            scalar_card(ui, endpoint, bands);
         }
     }
+}
+
+/// One endpoint's entry at one result step.
+fn endpoint_at<'a>(result: &'a Value, id: &str, step: u64) -> Option<&'a Value> {
+    result["targets"]
+        .as_array()?
+        .iter()
+        .find(|t| t["step"].as_u64() == Some(step))?["endpoints"]
+        .as_array()?
+        .iter()
+        .find(|e| e["response"] == id)
 }
 
 /// A bar for a contribution: its length is its share of the largest, accent when it adds and grey
@@ -1254,18 +1537,44 @@ fn shown_unit(unit: &str) -> &str {
     }
 }
 
-fn scalar_card(ui: &mut egui::Ui, e: &Value) {
+fn scalar_card(ui: &mut egui::Ui, e: &Value, bands: Option<(f64, u64)>) {
     let id = e["response"].as_str().unwrap_or("");
     let unit = shown_unit(e["unit"].as_str().unwrap_or(""));
     let limit = e["limit"].as_f64();
     let worst = e["worst_case"]["value"].as_f64();
+    let u = bands.map(|b| (b, &e["uncertainty"]));
+    let at = |confidence: f64| format!("at {}", percent(confidence));
     card(ui, |ui| {
         ui.horizontal(|ui| {
             ui.label(RichText::new(scalar_name(id)).strong());
             ui.label(RichText::new(unit).color(muted(ui)));
             if let (Some(limit), Some(worst)) = (limit, worst) {
+                let worst_bound = u.and_then(|((c, _), u)| {
+                    (u["worst_case"]["status"] == "bounded")
+                        .then(|| (c, u["worst_case"]["upper_bound"].as_f64()))
+                });
                 ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
-                    if worst <= limit {
+                    if let Some((c, bound)) = worst_bound.filter(|_| worst <= limit) {
+                        if bound.is_some_and(|b| b <= limit) {
+                            ui.colored_label(
+                                good(ui),
+                                format!(
+                                    "worst case within the limit of {} {unit}, also {}",
+                                    short(limit),
+                                    at(c)
+                                ),
+                            );
+                        } else {
+                            ui.colored_label(
+                                ui.visuals().warn_fg_color,
+                                format!(
+                                    "worst case within the limit of {} {unit}, but not {}",
+                                    short(limit),
+                                    at(c)
+                                ),
+                            );
+                        }
+                    } else if worst <= limit {
                         ui.colored_label(
                             good(ui),
                             format!("worst case within the limit of {} {unit}", short(limit)),
@@ -1308,6 +1617,19 @@ fn scalar_card(ui: &mut egui::Ui, e: &Value) {
                 e["worst_case"]["method"].as_str().unwrap_or("")
             ));
         });
+        if let Some(((c, _), u)) = u {
+            let up = |key: &str| value_bound(&u[key]).unwrap_or_else(|| "—".into());
+            ui.label(
+                RichText::new(format!(
+                    "Upper bounds {}: nominal {} · without impurities {} · worst case {}",
+                    at(c),
+                    up("nominal"),
+                    up("matrix_only"),
+                    up("worst_case")
+                ))
+                .color(muted(ui)),
+            );
+        }
         if let Some(k) = e.get("joint_k").filter(|k| k.is_object()) {
             let text = match k["status"].as_str() {
                 Some("limit") => format!(
@@ -1322,7 +1644,27 @@ fn scalar_card(ui: &mut egui::Ui, e: &Value) {
                 Some(other) => other.to_owned(),
                 None => String::new(),
             };
-            ui.label(RichText::new(text).color(muted(ui)));
+            let bound = u
+                .and_then(|((c, _), u)| {
+                    let b = limit_bound(&u["joint_k"])?;
+                    // a bound of 0 because samples are over without impurities is said below
+                    (b.0 != "0" || over_without(e, u).is_none()).then_some((c, b))
+                })
+                .map_or(String::new(), |(c, (b, _))| {
+                    format!(" Bound {}: {b}×.", at(c))
+                });
+            ui.label(RichText::new(format!("{text}{bound}")).color(muted(ui)));
+        }
+        if let Some(((c, _), u)) = u {
+            if let Some((over, n)) = over_without(e, u) {
+                ui.colored_label(
+                    ui.visuals().warn_fg_color,
+                    format!(
+                        "Without impurities the limit is already exceeded in {over} of the {n} samples, so {} no share of any impurity is assured: the bounds on the limits are 0.",
+                        at(c)
+                    ),
+                );
+            }
         }
         ui.add_space(6.);
         let rows: Vec<(&str, &Value)> = e["ranking"]
@@ -1376,7 +1718,18 @@ fn scalar_card(ui: &mut egui::Ui, e: &Value) {
                         }
                     };
                     let c = v["contribution_nominal"].as_f64().unwrap_or(0.);
-                    ui.label(signed(c));
+                    let band = u.and_then(|(_, u)| {
+                        let b = &u["impurities"][el]["contribution_nominal"];
+                        let text = match b["upper_bound"].as_f64() {
+                            Some(x) if b["status"] == "bounded" && signed(x) == "≈ 0" => {
+                                return None
+                            }
+                            Some(x) if b["status"] == "bounded" => format!("≤ {}", signed(x)),
+                            _ => value_bound(b)?,
+                        };
+                        Some((text, None))
+                    });
+                    with_bound(ui, signed(c), None, band);
                     bar(ui, c, largest);
                     ui.label(signed(v["contribution_at_max"].as_f64().unwrap_or(0.)));
                     let nuclides = v["top_nuclides"]
@@ -1397,11 +1750,18 @@ fn scalar_card(ui: &mut egui::Ui, e: &Value) {
                     }
                     if has_limits {
                         for which in ["alone", "others_at_nominal", "others_at_worst"] {
-                            let (text, why) = limit_text(&v["limits"][which]);
-                            let r = ui.label(text);
-                            if let Some(why) = why {
-                                r.on_hover_text(why);
-                            }
+                            let nominal = &v["limits"][which];
+                            let (text, why) = limit_text(nominal);
+                            let band = u.and_then(|(_, u)| {
+                                let band = &u["impurities"][el]["limits"][which];
+                                // the note above the table says why every bound is 0
+                                limit_bound(band).filter(|(b, _)| {
+                                    *b != text
+                                        && !restates(nominal, band)
+                                        && !(*b == "0" && over_without(e, u).is_some())
+                                })
+                            });
+                            with_bound(ui, text, why, band);
                         }
                     }
                     ui.end_row();
@@ -1417,6 +1777,39 @@ fn scalar_card(ui: &mut egui::Ui, e: &Value) {
     });
 }
 
+/// A limit's bound that only restates its nominal limit: 0 where the limit is already exceeded,
+/// unbounded where the impurity does not raise the endpoint, or every sample at the balance cap
+/// where any share is allowed.
+fn restates(nominal: &Value, band: &Value) -> bool {
+    let established = band["status"] == "established";
+    match nominal["status"].as_str() {
+        Some("infeasible") => established && band["bound"].as_f64() == Some(0.),
+        Some("no response" | "composition_bound") => {
+            band["status"] == "unbounded"
+                || (established
+                    && band["sample_status"]["capped"].as_u64().is_some_and(|c| {
+                        c > 0 && Some(c) == band["by_sample"].as_array().map(|b| b.len() as u64)
+                    }))
+        }
+        _ => false,
+    }
+}
+
+/// When the endpoint is within its limit without impurities at the nominal data but not in some
+/// samples: (samples over the limit, samples).
+fn over_without(e: &Value, u: &Value) -> Option<(usize, usize)> {
+    let limit = e["limit"].as_f64()?;
+    if e["matrix_only"].as_f64()? > limit {
+        return None;
+    }
+    let samples = u["matrix_only"]["by_sample"].as_array()?;
+    let over = samples
+        .iter()
+        .filter(|v| v.as_f64().is_some_and(|v| v > limit))
+        .count();
+    (over > 0).then_some((over, samples.len()))
+}
+
 /// Whether any impurity of a scalar endpoint lowers it.
 fn rows_negative(e: &Value) -> bool {
     e["impurities"].as_object().is_some_and(|m| {
@@ -1425,7 +1818,8 @@ fn rows_negative(e: &Value) -> bool {
     })
 }
 
-fn class_card(ui: &mut egui::Ui, e: &Value, summary: &Value) {
+/// `bands`: the result's (confidence, samples) and this endpoint's class-limit bounds.
+fn class_card(ui: &mut egui::Ui, e: &Value, summary: &Value, bands: Option<((f64, u64), &Value)>) {
     let target = e["target_class"].as_str().unwrap_or("?");
     card(ui, |ui| {
         ui.horizontal(|ui| {
@@ -1463,6 +1857,26 @@ fn class_card(ui: &mut egui::Ui, e: &Value, summary: &Value) {
                 ui.label(format!("binding: {}", b.replace('_', " ")));
             }
         });
+        if let Some(((confidence, n), _)) = bands {
+            let meets = &e["uncertainty"]["meets_target"];
+            let part = |which: &str| {
+                let m = &meets[which];
+                format!(
+                    "in {} of {n} (probability ≥ {}%)",
+                    m["count"].as_u64().unwrap_or(0),
+                    m["lower"].as_f64().map_or("—".into(), |p| short(p * 100.)),
+                )
+            };
+            ui.label(
+                RichText::new(format!(
+                    "Over the samples, at {} confidence: class {target} at nominal {} · at the worst case {}",
+                    percent(confidence),
+                    part("nominal"),
+                    part("worst_case"),
+                ))
+                .color(muted(ui)),
+            );
+        }
         ui.add_space(6.);
         let rows: Vec<(&str, &Value)> = e["ranking"]
             .as_array()
@@ -1506,10 +1920,9 @@ fn class_card(ui: &mut egui::Ui, e: &Value, summary: &Value) {
                             }
                             _ => limit_text(l),
                         };
-                        let r = ui.label(text);
-                        if let Some(why) = why {
-                            r.on_hover_text(why);
-                        }
+                        let band =
+                            bands.and_then(|(_, b)| limit_bound(&b["impurities"][el][which]));
+                        with_bound(ui, text, why, band);
                     }
                     ui.end_row();
                 }
@@ -1677,7 +2090,48 @@ mod tests {
                  "ranking": ["Co"], "impurities": {"Co": {"contribution_at_max": 0.1}}}]}],
             "verification": {"verified": true, "max_rel_dev": 1e-15, "tolerance_rel": 1e-6, "points": [{}]}
         });
-        for dark in [false, true] {
+        // the same screen with nuclear-data bounds
+        let mut banded = result.clone();
+        let value = |m: f64| json!({"status": "bounded", "median": m, "upper_bound": 1.5 * m, "by_sample": [m]});
+        let limit = |b: f64| {
+            json!({"status": "established", "bound": b, "by_sample": [b],
+            "sample_status": {"bound": 1, "infeasible": 0, "failed": 0}})
+        };
+        banded["uncertainty"] = json!({
+            "confidence_level": 0.95, "order_statistic": {"k": 1, "n": 72, "minimum_samples": 72},
+            "sampling": {"channels": {"cross_section_mf33": true, "decay_constants": true}},
+            "failed_samples": [],
+            "impurity_class_limits": {"waste_class:C": {"impurities": {"Co": {
+                "alone": {"status": "unbounded", "by_sample": []}, "others_at_nominal": limit(1.2)}}}},
+        });
+        let heat = &mut banded["targets"][0]["endpoints"][0];
+        heat["uncertainty"] = json!({
+            "matrix_only": value(8e-4), "nominal": value(9e-4), "worst_case": value(1e-3),
+            "joint_k": {"status": "established", "bound": 0.0, "by_sample": [0.0, 7.0],
+                "sample_status": {"bound": 1, "infeasible": 1, "failed": 0}},
+            "impurities": {"Co": {"contribution_nominal": value(1e-4),
+                "limits": {"alone": limit(0.05), "others_at_nominal": {"status": "not_established", "reason": null},
+                           "others_at_worst": limit(0.0)}}},
+        });
+        banded["targets"][0]["endpoints"][1]["uncertainty"] = json!({"meets_target": {
+            "nominal": {"count": 72, "lower": 0.95}, "worst_case": {"count": 70, "lower": 0.903}}});
+        assert_eq!(bands_of(&banded), Some((0.95, 72)));
+        assert_eq!(bands_of(&result), None);
+        assert_eq!(
+            limit_bound(&banded["targets"][0]["endpoints"][0]["uncertainty"]["joint_k"])
+                .map(|b| b.0),
+            Some("0".to_owned())
+        );
+        assert_eq!(
+            limit_bound(&limit(0.05)).map(|b| b.0),
+            Some("≥ 0.05".to_owned())
+        );
+        for (result, dark) in [
+            (&result, false),
+            (&result, true),
+            (&banded, false),
+            (&banded, true),
+        ] {
             let ctx = egui::Context::default();
             ctx.set_visuals(if dark {
                 egui::Visuals::dark()
@@ -1689,6 +2143,7 @@ mod tests {
                 showing_result: true,
                 ..Default::default()
             };
+            state.bands.on = bands_of(result).is_some();
             let context = Context {
                 can_screen: true,
                 running: false,
@@ -1709,6 +2164,50 @@ mod tests {
             });
             output.textures_delta.clear();
         }
+    }
+
+    #[test]
+    fn bounds_need_enough_samples_and_a_channel_and_go_into_the_screen() {
+        assert_eq!(
+            CONFIDENCES.map(minimum_samples),
+            [29, 72, 528],
+            "(1 - c)/2 >= c^n"
+        );
+        let mut state = ImpuritiesState::default();
+        sync(&mut state, &problem());
+        for r in &mut state.rows {
+            if r.element == "Co" {
+                r.role = Role::Impurity;
+                r.min = 0.;
+                r.nominal = 0.005;
+                r.max = 0.01;
+            }
+        }
+        state.targets = Some(default_targets(&schedule(&problem())));
+        let plain = screen_document(&state, &problem(), json!({})).unwrap();
+        assert!(plain.get("sampling").is_none() && plain.get("confidence_level").is_none());
+
+        state.bands.on = true;
+        state.bands.samples = 71;
+        assert!(problems(&state, &problem())
+            .iter()
+            .any(|p| p.contains("at least 72 samples")));
+        state.bands.samples = 72;
+        state.bands.cross_sections = false;
+        state.bands.decay = false;
+        assert!(problems(&state, &problem())
+            .iter()
+            .any(|p| p.contains("decay constants or both")));
+        state.bands.decay = true;
+        let screen = screen_document(&state, &problem(), json!({})).unwrap();
+        assert_eq!(
+            screen["sampling"],
+            json!({"channels": {"cross_section_mf33": false, "decay_constants": true}, "samples": 72, "seed": 1})
+        );
+        assert_eq!(screen["confidence_level"], json!(0.95));
+        state.bands.cross_sections = true;
+        let screen = screen_document(&state, &problem(), json!({})).unwrap();
+        assert_eq!(screen["sampling"]["covariance"]["path"], COVARIANCE);
     }
 
     #[test]
