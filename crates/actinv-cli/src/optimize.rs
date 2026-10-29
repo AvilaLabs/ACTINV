@@ -14,7 +14,7 @@ use std::io::Write;
 use std::path::{Path, PathBuf};
 
 pub const OPT_SCHEMA: &str = "actinv-optimize-1";
-const MAX_EVALS: usize = 64;
+pub const MAX_EVALS: usize = 64;
 const TIME_REL_TOL: f64 = 1e-3;
 const TINY: f64 = 1e-300;
 
