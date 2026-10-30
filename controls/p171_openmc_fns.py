@@ -179,6 +179,7 @@ def run_actinv_arm(arm, out):
     os.environ["ACTINV_CB1_FNS_WORK"] = str(ROOT / "target" / f"p171-actinv-{arm}")
     import cb2_fns  # noqa: E402  (loads the Python module named by ACTINV_PYTHON_MODULE at import)
     cb2_fns.RESULT = Path(out)
+    cb2_fns.RESULT.parent.mkdir(parents=True, exist_ok=True)  # Amendment A: cb2_fns writes without creating it
     cb2_fns.EXPECTED["library"] = sha256_file(library)
     cb2_fns.EXPECTED["library_index"] = sha256_file(index)
     cb2_fns.main()

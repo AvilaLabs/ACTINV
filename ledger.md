@@ -5006,3 +5006,13 @@ The comparison is reported whatever it shows; no sentence may rank the codes.
 - **Disclosed:** the 21-experiment exploratory record and the earlier 132-experiment ACTINV values were seen; the
   module was import-checked. No arm of this protocol has been run.
 - One amendment slot remains: a split of the OpenMC cases if the smoke test shows one process does not fit in 6 GiB.
+
+## Entry 292 — P171 Amendment A registered: the ACTINV arm creates its result directory (2026-10-30)
+
+`protocols/ACTINV-P171_AMENDMENT_A.md` (SHA-256 `9675d292…`), the protocol's one repair round.
+- **Smoke test:** OpenMC's driver on the smallest chunk (5 experiments) finished in 96 s at a 2.4 GB peak in its
+  6 GiB scope. No default split is needed; amendment slot 1 stays unused. No heat value was computed or read.
+- **Stop:** the ACTINV TENDL-2025 arm solved all 132 experiments, then `cb2_fns.py` failed to write its result because
+  `results/p171/` did not exist. Only progress lines (points, wall time) were printed; no C/E or heat was seen.
+- **Repair:** `run_actinv_arm` creates the directory. A new selftest case fails on the registered harness and passes
+  on the amended one. The stopped run's work directory is deleted and every arm runs on this registration commit.

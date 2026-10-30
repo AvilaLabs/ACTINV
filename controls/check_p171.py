@@ -25,6 +25,7 @@ import copy
 import hashlib
 import json
 import math
+import os
 import random
 import statistics
 import subprocess
@@ -287,6 +288,47 @@ def synthetic_record(sens=()):
     return record
 
 
+def actinv_arm_writes_into_new_directory():
+    """run_actinv_arm against a stand-in cb2_fns that writes its result as the real one does."""
+    import tempfile
+    import types
+    fake = types.ModuleType("cb2_fns")
+    fake.EXPECTED = {}
+
+    def fake_main():
+        fake.RESULT.write_text(json.dumps({"experiments": []}))
+    fake.main = fake_main
+    saved = {name: getattr(p171, name) for name in ("require_bounded", "sha256_file", "environment_record")}
+    saved_env = {key: os.environ.get(key) for key in ("ACTINV_LIBRARY", "ACTINV_CB1_FNS_WORK")}
+    saved_module = sys.modules.get("cb2_fns")
+    sys.modules["cb2_fns"] = fake
+    p171.require_bounded = lambda gib: {}
+    p171.sha256_file = lambda path: "s" * 64
+    p171.environment_record = lambda cg: {}
+    try:
+        with tempfile.TemporaryDirectory() as tmp:
+            out = Path(tmp) / "not-yet" / "actinv_tendl2025.json"
+            try:
+                p171.run_actinv_arm("tendl2025", out)
+            except FileNotFoundError:
+                return ["the ACTINV arm does not create its result directory"]
+            if json.loads(out.read_text()).get("p171", {}).get("arm") != "tendl2025":
+                return ["the ACTINV arm record lacks its p171 block"]
+            return []
+    finally:
+        for name, value in saved.items():
+            setattr(p171, name, value)
+        for key, value in saved_env.items():
+            if value is None:
+                os.environ.pop(key, None)
+            else:
+                os.environ[key] = value
+        if saved_module is None:
+            sys.modules.pop("cb2_fns", None)
+        else:
+            sys.modules["cb2_fns"] = saved_module
+
+
 def selftest():
     failures = []
     saved_pin = p171.ACTINV_MODULE_SHA256
@@ -371,6 +413,8 @@ def selftest():
         if p171.match_cooling_index([10.0, 100.0, 1000.0], 99.0) != (1, True) or \
                 p171.match_cooling_index([10.0, 100.0, 1000.0], 300.0)[1]:
             failures.append("cooling boundary matching wrong")
+        # Amendment A: the ACTINV arm must create its result directory (cb2_fns writes without creating it)
+        failures += actinv_arm_writes_into_new_directory()
     finally:
         p171.ACTINV_MODULE_SHA256 = saved_pin
     print("selftest:", "PASS" if not failures else "FAIL")
