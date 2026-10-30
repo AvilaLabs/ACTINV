@@ -5040,3 +5040,21 @@ deleted unread, and no OpenMC arm was run.
   - The harness catches `SystemExit` and records it.
   - G2 follows the protocol text.
   - A full-pipeline rehearsal on a small subset, printing gates only, runs before registration.
+
+## Entry 294 — P172 registered: P171's comparison with the full ENDF/B-VIII.1 library, repaired harness and a rehearsal (2026-10-30)
+
+`protocols/ACTINV-P172_PROTOCOL.md` (SHA-256 `b83e7d28…`), P171's successor. The question, arms, chain, cross
+sections, module (`f33ea3ed…`), scoring and sentences are P171's.
+- **Identical data, now actually identical.** `controls/p172_endf8_stage.py` stages every neutron nuclide of OpenMC's
+  ENDF/B-VIII.1 HDF5 library (557) from NNDC's release archive (`decff900…`). P171's 269 IAEA tapes carry the same
+  data, differing only in format.
+- **The library build.** The pinned P163 binary built 551 targets (`ecaca7c0…`, index `ff59cccf…`). The six
+  tapes the builder refuses are actinides that no FNS material contains (U-235, U-238, Pu-239, Pu-241, Am-241,
+  Th-229). All 255 FNS composition isotopes are targets.
+- **Harness.** `controls/p172_openmc_fns.py` catches `cb2_fns`'s closing `SystemExit` and records its exit code.
+  `controls/check_p172.py` G2 requires the four `cb2_fns` checks the protocol names, and non-positive calculations
+  fall under the 5% drop rule. A selftest case fails on a harness without the fix and passes with it.
+- **Rehearsal.** The rehearsal ran every mode, assembly and the checker, with OpenMC on the smallest chunk and outputs
+  under `target/`. All modes exited 0 and G1 passed. G2's problems all came from the experiments it did not run or
+  from its size, and the summary completed. Only exit codes, gate lines and problem kinds were read, and the outputs
+  were deleted.
