@@ -1,0 +1,111 @@
+{
+  "release": "v1.7.0",
+  "tag": {
+    "name": "v1.7.0",
+    "object": "9b85960d6ae61de4ac8161a438c248507f792c2b",
+    "commit": "ee1d906236f12fdaac34b40d6979389ba160a397",
+    "message": "ACTINV 1.7.0",
+    "signed": false
+  },
+  "workflows": {
+    "release_artifacts": 40960101303,
+    "publish_crates": 40960101398,
+    "publish_pypi": 40960101307,
+    "controls": 40960101463,
+    "desktop_builds": 40960101422,
+    "browser_workbench": 40960101528,
+    "handbook": 40960101792,
+    "fns_iron": 40960101502,
+    "fusion_isotope": 40960101491,
+    "all_conclusion": "success"
+  },
+  "github_release": {
+    "url": "https://github.com/AvilaLabs/ACTINV/releases/tag/v1.7.0",
+    "id": "RE_kwDOUDaWv84ZirGt",
+    "published_at": "2026-10-30T00:10:34Z",
+    "notes": "docs/RELEASE_NOTES_v1.7.0.md",
+    "assets_sha256": {
+      "actinv-1.7.0-linux-x86_64.tar.gz": "9be1068ea22c2c5d9e130e5c5f42848df926e47fd4686084d6b1ecf46369259f",
+      "actinv-1.7.0-macos-aarch64.tar.gz": "a2ed6e9d70a69195cb76beb576cc3a81c7a200183b0aa1cfc3ae7af276a0570e",
+      "actinv-1.7.0-macos-x86_64.tar.gz": "d4d0b6c4671d8cca6433c91d5a40f8c9f1d5a62d4b880c100fafd060a2af268d",
+      "actinv-1.7.0-windows-x86_64.zip": "acf9e7a50c9991a159364271ec8780a952894ffc88f934d6920dacaf9c6ea9b0"
+    },
+    "sha256sums_asset": "SHA256SUMS",
+    "verified_via": "GitHub asset digests equal the local SHA256SUMS"
+  },
+  "desktop_release": {
+    "url": "https://github.com/AvilaLabs/ACTINV/releases/tag/desktop-v0.6.0-preview.1",
+    "id": "RE_kwDOUDaWv84ZirJP",
+    "published_at": "2026-10-30T00:11:04Z",
+    "prerelease": true,
+    "source_run": 40960101422,
+    "assets_sha256": {
+      "ACTINV-Desktop-0.6.0-preview.1-linux-x86_64.AppImage": "ac53cd4bbcaacec06d7c9caf8041f471cdce822b1805beea55fd7ebe76f4cb3b",
+      "ACTINV-Desktop-0.6.0-preview.1-macos-aarch64.dmg": "28ef9327eb6c7ff3e582b658364331815059ba0b33e9e496b447592a45476247",
+      "ACTINV-Desktop-0.6.0-preview.1-macos-x86_64.dmg": "342a5da4722a7af635c4d54c3e8f1bf6293ab6ca3091f418951194748cac82a1",
+      "ACTINV-Desktop-0.6.0-preview.1-windows-x86_64-portable.zip": "0bc23f989a1fd6c2d09bfa74ef4463ff9382d02babe4e46b248f8065edd8705d",
+      "ACTINV-Desktop-0.6.0-preview.1-windows-x86_64-setup.exe": "c9f4372a9356d8d13d479e7c3203aac7208a5ba3940fb990bb36a1da867a2c1b",
+      "BUILD-REPORTS.zip": "14bb439829190b8bfb8fcdef8c9140df524031b79f154346b8113ce0255028a6",
+      "DESKTOP_INSTALL.md": "0b182ba85c3ca90ec6b062ebf5ad7e26f0b6f6ffd1be5bf87c21347a82759aa5",
+      "LICENSE-APACHE": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+      "LICENSE-MIT": "4f722528d1cb3662dcc69ff215f00088cd74706a21ad5c8fd35b167ce804e5e9",
+      "RELEASE-VERIFICATION.json": "c89390e8ab006439d40ca81445427b431fca8ed690e67760461c6b3c8303282f",
+      "actinv.png": "aec3b5ca3c83eddd977c8a37e7fac382f902f2f0ecabb2e3aec4f5550f98f01c",
+      "install-linux.sh": "371becebd005e36a596da0a9c2b9ceae85acdb870a659b55ca3fc1350c783e7e"
+    },
+    "sha256sums_asset": "SHA256SUMS.txt",
+    "native_rendering": "linux and both macOS builds rendered 40 captures each; Windows native rendering not demonstrated, as in 0.5.0"
+  },
+  "zenodo": {
+    "version_doi": "10.5281/zenodo.23786085",
+    "desktop_version_doi": "10.5281/zenodo.23786097",
+    "concept_doi": "10.5281/zenodo.22665067",
+    "note": "archived by the GitHub releases"
+  },
+  "published": {
+    "pypi": {
+      "package": "actinv",
+      "version": "1.7.0",
+      "files": {
+        "actinv-1.7.0-cp39-abi3-macosx_10_12_x86_64.whl": "3e912ac4c90bac723626b7e3bf43f038856edb32f9b93b6a62fcbcc9fed7e6d5",
+        "actinv-1.7.0-cp39-abi3-macosx_11_0_arm64.whl": "7e79009f64957849d2b945cc4fa1972f39517d7bbddf58702cc52075dc37f39f",
+        "actinv-1.7.0-cp39-abi3-manylinux_2_17_aarch64.manylinux2014_aarch64.whl": "264ebc11b5c8e8d5229b151842045c8e557b55a65617307cde13eaaaec0094f8",
+        "actinv-1.7.0-cp39-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl": "d97f6d60cccedba3b6e137f41d28bf92a0356beded2fc686eb1edf5bc478a7d9",
+        "actinv-1.7.0-cp39-abi3-win_amd64.whl": "c1144dd75882b10decef13246b3073ee40b707c40232ab102dc431fbd6cd9dd8",
+        "actinv-1.7.0.tar.gz": "f55b92955fb7d9b42b7cae47163588a4c6fee07ca01fc69c475b132f79d7fd4d"
+      },
+      "verified_via": "pypi.org/pypi/actinv/1.7.0/json; fresh venv pip install actinv==1.7.0 (bounded scope): actinv --version -> actinv 1.7.0, import actinv -> 1.7.0, actinv new --list prints the material library"
+    },
+    "crates_io": {
+      "actinv-data": {
+        "version": "1.7.0",
+        "created_at": "2026-10-30T00:10:40.141942Z",
+        "checksum": "2a835ad2297cebc63be6bb468a257c4d1945724a6db9a519b96596f56f5d8d5b",
+        "yanked": false
+      },
+      "actinv-core": {
+        "version": "1.7.0",
+        "created_at": "2026-10-30T00:12:37.752562Z",
+        "checksum": "83270d774237fb4ea4427498a7f59949bdc65b0020f4d5b77d98c45ac8f80f6e",
+        "yanked": false
+      },
+      "actinv-cli": {
+        "version": "1.7.0",
+        "created_at": "2026-10-30T00:14:14.377068Z",
+        "checksum": "84a54a89302e76b98830085fc16a86ff6d2521ec82faaea4809860cf20b522e5",
+        "yanked": false
+      }
+    },
+    "crates_smoke": "cargo install --locked actinv-cli --version 1.7.0 into a clean root (bounded scope): actinv --version -> actinv 1.7.0"
+  },
+  "website": {
+    "url": "https://actinv.avilalabs.org/",
+    "bundle": "actinv-web artifact of Build browser workbench run 40960101528 at ee1d906 (examples manifest actinv_version 1.7.0)",
+    "worker_version_id": "b0e7db10-3bc1-4f96-ab66-316d5e62e69d",
+    "checked": "/, /download/, /download/releases.json and /docs/ return 200; handbook reads ACTINV 1.7.0; releases.json points at desktop-v0.6.0-preview.1 and its installer link resolves"
+  },
+  "avilalabs_org": {
+    "pull_request": "https://github.com/AvilaLabs/AvilaLabs.org/pull/34",
+    "status": "merged as 80eb4ee with the stacked #32 and #33 (owner approval, 2026-10-29); Cloudflare deploys main"
+  }
+}

@@ -285,29 +285,30 @@ created.
 
 ## v1.7.0 (impurity screening, damage tables) with desktop-v0.6.0-preview.1
 
-- [ ] Bump the workspace, `python`, `pyproject.toml`, inter-crate versions and `release-artifacts.yml` to 1.7.0 and
+- [x] Bump the workspace, `python`, `pyproject.toml`, inter-crate versions and `release-artifacts.yml` to 1.7.0 and
   the desktop to 0.6.0-preview.1 (`crates/actinv-gui/Cargo.toml`, `packaging/desktop.json`, `packaging/windows.rc`);
   update README release links, the DATA_LIMITATIONS header, `DESKTOP.md`, `DESKTOP_INSTALL.md` and the handbook's
   version references; refresh `MANIFEST.sha256`.
-- [ ] Write `docs/RELEASE_NOTES_v1.7.0.md`, `docs/releases/desktop-v0.6.0-preview.1.md` and the handbook
+- [x] Write `docs/RELEASE_NOTES_v1.7.0.md`, `docs/releases/desktop-v0.6.0-preview.1.md` and the handbook
   page "What's new in 1.7".
-- [ ] Rename the changelog's Unreleased section to v1.7.0 with the release date.
-- [ ] Recompute the browser's example results with the 1.7.0 release binary
+- [x] Rename the changelog's Unreleased section to v1.7.0 with the release date.
+- [x] Recompute the browser's example results with the 1.7.0 release binary
   (`ACTINV_BIN=target/release/actinv python3 scripts/web_examples.py`, with the photon response the impurities
   example names) and commit `web/examples/`; `scripts/test_prepare_web.py` refuses a manifest of another version.
-- [ ] Pre-tag gates: `cargo publish --workspace --dry-run` packages and verifies `actinv-data`, `actinv-core` and
+- [x] Pre-tag gates: `cargo publish --workspace --dry-run` packages and verifies `actinv-data`, `actinv-core` and
   `actinv-cli`; every `include_str!`/`include_bytes!` in `crates/` resolving inside its package; `cargo check
   --workspace --tests`, fmt and clippy `--all-targets -D warnings`; local CI replay green.
-- [ ] Push the release commit and the `v1.7.0` tag in one atomic push; confirm `controls` and every other
+- [x] Push the release commit and the `v1.7.0` tag in one atomic push; confirm `controls` and every other
   workflow green on the release commit (the publish gates need a controls run on the tag commit itself).
-- [ ] Approve the `crates.io` and `pypi` environment gates; confirm all three crates and the wheel/sdist set
+- [x] Approve the `crates.io` and `pypi` environment gates; confirm all three crates and the wheel/sdist set
   land at 1.7.0.
-- [ ] Attach packaged platform archives and `SHA256SUMS` to the `v1.7.0` GitHub release; paste the release notes.
-- [ ] Desktop: attach the `desktop builds` artifacts and checksums from the release commit to a
+- [x] Attach packaged platform archives and `SHA256SUMS` to the `v1.7.0` GitHub release; paste the release notes.
+- [x] Desktop: attach the `desktop builds` artifacts and checksums from the release commit to a
   `desktop-v0.6.0-preview.1` GitHub pre-release and paste its notes.
-- [ ] Production smoke from PyPI and crates.io; record the release in `results/release_v1.7.0.json`.
-- [ ] Zenodo: archive the release as a new version under the GitHub-linked concept record
-  10.5281/zenodo.22665067.
-- [ ] Handbook and website: deploy the `actinv-web` bundle CI built from the release commit and check
-  `/`, `/download/` and `/docs/` live; update AvilaLabs.org `/actinv` and `/actinv/docs`.
-- [ ] Remind the owner to rerun FARIS restart/cooling runs affected by P133.
+- [x] Production smoke from PyPI and crates.io; record the release in `results/release_v1.7.0.json`.
+- [x] Zenodo: archive the release as a new version under the GitHub-linked concept record
+  10.5281/zenodo.22665067 (archived by the GitHub releases as 10.5281/zenodo.23786085, desktop 10.5281/zenodo.23786097).
+- [x] Handbook and website: deploy the `actinv-web` bundle CI built from the release commit and check
+  `/`, `/download/` and `/docs/` live; update AvilaLabs.org `/actinv` and `/actinv/docs`
+  (deployed as worker version b0e7db10; AvilaLabs.org PR #34 merged with the stacked #32 and #33).
+- [x] Remind the owner to rerun FARIS restart/cooling runs affected by P133 (reminded 2026-10-29; FARIS on hold).
