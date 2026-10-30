@@ -4968,3 +4968,14 @@ Decimal overflowed. No record was written.
   - **Successor:** below-floor states should leave the activity, heat and dose totals and be reported as a bound, or
     the step should move to CRAM-48 when that bound is material. A successor protocol will decide which.
 - **G4** is CI on this commit.
+
+## Entry 289 — P169 G5: CI green on 2500b2a; P169-PASS (2026-10-30)
+
+Every workflow triggered on `2500b2a`, the evidence under Amendment A, passed: controls 41083545309, fns-iron
+41083545308 and fusion-isotope 41083545346 (`results/p169/ci_runs.json`). **P169-PASS.**
+- Neither JEFF-3.3 decay data nor JEFF-3.3 mean energies for the ten short-lived fission products lowered the
+  short-time median |ln C/E| on the P166 points by the registered 0.005 (A 0.057, B 0.060, D 0.057).
+- ENDF/B-VIII.0 was kept. On the held-out Dickens and Yarnell U-235 total heat (111 points) it has a median |ln C/E|
+  of 0.019 and a geometric-mean C/E of 0.991.
+- The short-time bias is not explained by the choice between these two decay libraries. Sentences are limited to the
+  verdict's allowed sentences.
