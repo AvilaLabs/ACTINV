@@ -4979,3 +4979,11 @@ Every workflow triggered on `2500b2a`, the evidence under Amendment A, passed: c
   of 0.019 and a geometric-mean C/E of 0.991.
 - The short-time bias is not explained by the choice between these two decay libraries. Sentences are limited to the
   verdict's allowed sentences.
+
+## Entry 290 — P168 G4: CI green on da2eb32; P168-PASS (2026-10-30)
+
+Every workflow triggered on `da2eb32`, the evidence under Amendment A, passed: controls 41086605503, fns-iron
+41086605363 and fusion-isotope 41086605332 (`results/p168/ci_runs.json`). **P168-PASS.**
+- The map stands as recorded in entry 288: 34 of 38 runs hold. The 6b and 7 breaks are a harness convention and
+  numerical dust; the 5d CRAM-16 break is a real limit (a below-floor state left in the activity table).
+- The 5d repair goes to a successor protocol. Sentences are limited to the verdict's allowed sentences.

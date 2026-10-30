@@ -100,3 +100,20 @@ Stages 1–3 do not need SINBAD.
   | P169 | short-time fission decay heat, choosing on CoNDERC and scoring on Dickens/Yarnell |
   | P170 | FNS per-element library selection, choosing on the 2000 campaign and scoring on 1996 and 7-hour |
   | P171 | ACTINV against OpenMC depletion on FNS decay heat |
+- 2026-10-30: results.
+  - **P169 PASS, no change.** None of the three decay-data candidates met the registered rule (short-time median
+    at least 0.005 lower, long-time no more than 0.005 worse); ENDF/B-VIII.0 stays the default. On the held-out
+    Dickens/Yarnell data ACTINV's median |ln C/E| is 0.019 (geometric-mean C/E 0.991). The short-time bias is not
+    fixed by swapping decay libraries; the fission-yield side is the next suspect.
+  - **P168 evidence: 34 of 38 runs hold** (19 cases × CRAM 16/48). Of the four breaks:
+    - 6b (trace, both orders): the harness read bulk nuclides from the inventory table, but trace mode reports them in
+      the summary; the trace products themselves match. A harness convention, not a solver error.
+    - 7 (W burn-up, CRAM-16): the failing nuclide sits at about 10⁻⁹⁴ atoms/g, with total activity about
+      10⁻⁹⁹ Bq/g. Numerical dust; no user-visible number is wrong.
+    - 5d (three equal half-lives, CRAM-16): **a real limit.** Cu-58 comes out at 1.2 × 10⁵ atoms/g against a
+      reference of 1.9 × 10⁻⁵, i.e. 83 Bq/g where the truth is 1.4 × 10⁻⁸. ACTINV flags it (numerical floor
+      2.1 × 10⁶ atoms/g, one state below the floor), but the value still appears in the activity table. CRAM-48 holds.
+      Successor protocol: keep below-floor states out of the activity and heat totals (or report them as a bound),
+      or switch to CRAM-48 automatically when the floor is hit.
+  - **P170 dropped.** The held-out gain was not significant (selection 0.0705 vs TENDL-2017 0.0676 on the test set);
+    TENDL-2017 remains the strongest library on FNS.
