@@ -4928,3 +4928,15 @@ reported whatever it shows; breaks are repaired under successor protocols.
 - **No source change.** The binary is the P163 build `186cc258…`. The crates tree may differ from d6f516b only in the
   browser crate.
 - **Disclosed:** all 38 generated problems passed `actinv validate --hashes`. No case has been run.
+
+## Entry 287 — P168 Amendment A registered: the comparison's overflow and M3's scope (2026-10-30)
+
+`protocols/ACTINV-P168_AMENDMENT_A.md`, the protocol's one repair round. The first evidence run, on a9aeda0, printed
+"holds" for case 1a and 1b at both orders and then stopped on case 2. The comparison had formed |N − R| / R even for
+unscored nuclides whose reference lies far below a double's range (down to 10⁻⁴³⁴⁷²⁹¹⁹⁸⁹⁰² atoms/g), and Python's
+Decimal overflowed. No record was written.
+- **Fix 1:** relative errors are formed only where M2 or M3 uses them.
+- **Fix 2:** M3, used by trace case 6b only, covers references of at least 10⁻³⁰⁰ atoms/g. Case 6b's references reach
+  10⁻¹¹²⁰, which no double can carry. The floor was set from the reference files alone.
+- **Test:** two regression cases join the selftest; the first fails on the registered code.
+- **Rerun:** the whole evidence run is repeated on this commit.

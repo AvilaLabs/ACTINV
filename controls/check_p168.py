@@ -423,6 +423,23 @@ def _compare_tests(failures):
         failures.append(f"M3 must cover Q: {got['worst']}")
     if "M3" in run([exact, exact])["worst"]:
         failures.append("M3 must be absent outside the trace case")
+    # Amendment A: a nuclide far below float range that no metric scores must not stop the comparison
+    tiny = compare.Reference(_synthetic_reference(), 2)
+    for step in tiny.steps:
+        step["inv"]["Q"] = Decimal("1.2e-434729198902")
+    try:
+        got = compare.compare_run(tiny, _result([dict(exact, Q=1e-300), dict(exact, Q=0.0)]), False, 2)
+        if compare.status_of(got["worst"]) != "holds":
+            failures.append(f"an unscored nuclide far below float range must not change the status: {got['worst']}")
+    except Exception as error:  # noqa: BLE001
+        failures.append(f"an unscored nuclide far below float range stopped the comparison: {error!r}")
+    # Amendment A: M3 leaves out references below 1e-300 atoms/g, which a double cannot carry
+    deep = compare.Reference(_synthetic_reference(), 2)
+    for step in deep.steps:
+        step["inv"]["Q"] = Decimal("1e-1120")
+    got = compare.compare_run(deep, _result([dict(exact, Q=0.0), dict(exact, Q=0.0)]), True, 2)
+    if got["worst"]["M3"]["value"] != 0.0:
+        failures.append(f"M3 must leave out references below the floor: {got['worst']}")
     nan = dict(exact, P=float("nan"))
     if compare.status_of(run([nan, exact])["worst"]) != "breaks" or run([nan, exact])["worst"]["M1"]["value"] != math.inf:
         failures.append("NaN must break with an infinite error")

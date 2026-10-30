@@ -6,6 +6,7 @@
   M3  (trace case only) max_i |N_i - R_i| / R_i over every reference nuclide with R_i > 0.
 """
 import math
+import decimal
 from decimal import Decimal, getcontext
 
 from p168 import cases
@@ -34,6 +35,19 @@ def _error(got, ref):
     return abs(Decimal(got) - ref)
 
 
+M3_FLOOR = Decimal(cases.M3_FLOOR)
+
+
+def _relative(e, r):
+    """|got - ref| / ref as a float; infinite when not finite or beyond Decimal's exponent range."""
+    if e is None:
+        return INF
+    try:
+        return float(e / r)
+    except decimal.Overflow:
+        return INF
+
+
 def step_metrics(reference, step, got, trace):
     """Metrics of one step. `got` maps nuclide name to atoms/g (float). Returns metric -> (value, nuclide) or None."""
     inv = step["inv"]
@@ -54,10 +68,13 @@ def step_metrics(reference, step, got, trace):
         r = inv[name]
         if r <= 0:
             continue
-        rel = INF if e is None else float(e / r)
-        if reference.lam[name] > 0 and reference.lam[name] * r >= cut and total > 0 and rel > best2[0]:
+        scored = reference.lam[name] > 0 and reference.lam[name] * r >= cut and total > 0
+        if not (scored or (trace and r >= M3_FLOOR)):
+            continue  # Amendment A: the relative error is formed only where M2 or M3 uses it
+        rel = _relative(e, r)
+        if scored and rel > best2[0]:
             best2 = (rel, name)
-        if trace and rel > best3[0]:
+        if trace and r >= M3_FLOOR and rel > best3[0]:
             best3 = (rel, name)
     out["M2"] = best2
     out["M3"] = best3 if trace else None

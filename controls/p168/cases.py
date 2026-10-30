@@ -4,6 +4,7 @@ ORDERS = (16, 48)  # options.cram_order values, each case is run once per order
 TIMEOUT_S = 1800  # per ACTINV run, killed and reaped at the limit
 OUTPUTS = ["inventory"]  # options.outputs of every run
 ACTIVITY_FRACTION = 1e-6  # M2 covers nuclides whose reference activity is at least this share of the total
+M3_FLOOR = "1e-300"  # Amendment A: M3 covers references a double can carry (atoms/g)
 THRESHOLDS = {"M1": 1e-10, "M2": 1e-6, "M3": 1e-6}  # "holds" needs every metric at or below its threshold at every step
 TIME_TOLERANCE = 1e-9  # relative agreement of the reported t_s with the reference cumulative time
 
