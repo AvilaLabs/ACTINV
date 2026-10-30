@@ -4733,3 +4733,20 @@ Every workflow triggered on `941ade3` (candidate `f40f5a0` plus its evidence) pa
 the reduction of singular covariance blocks with a pseudo-inverse and ranks computed blocks first, so the decide
 example now names Fe-56 and Fe-54 as the reactions to measure instead of listing Ca blocks it could not compute. The
 repair round was not used.
+
+## Entry 274 — P163 registered: ACTINV against OpenMC's flux mode on the steel-cube R2S demo (2026-10-29)
+
+**P163** `961db9aa251193b14a52cae0f66546c64e9d94b8fc8d3acad35b075ae260d93f` was registered before its evidence run. The question: how much faster is ACTINV than OpenMC 0.15.3's
+own activation path when OpenMC is given its fastest documented setting (`reaction_rate_mode="flux"` on the same 709
+groups), not only its default, as mesh cells grow from 8 to 64 to 512. Arms: ACTINV through the adapter, OpenMC flux
+mode, and OpenMC's default (8 cells, once, the arm behind the recorded 19 s vs 850 s demo). Same model, seeds,
+particles, threads (2) and schedule; OpenMC uses ENDF/B-VIII.1 and the P32 chain, ACTINV TENDL-2025, so each speed
+sentence names both. Gates: G0 hash; G1 environment, pins and per-run limits; G2 the plan carried out, censorings and
+rule skips recorded; G3 configuration fidelity; G4 dose agreement within 5% between the arms; G5 timing validity; G6
+the claims the registered rule allows, and a release-notes scan; G7 CI on the evidence commit. A result that leaves
+ACTINV slower is a PASS with no speed claim. Memory: each run gets its own scope, 6 GiB for ACTINV and 9 GiB for
+OpenMC (owner's exception to the 6 GiB rule, 2026-10-29), because OpenMC's flux mode outgrew 6 GiB at 8 cells.
+Disclosed, not evidence: three development runs at 8 cells (`results/failures/p163/smoke1.json` to `smoke3.json`).
+The first lost its OpenMC run and the harness to the shared 6 GiB scope; the second found that the harness recorded
+the `micro_kwargs` keys after OpenMC had added its own; the third passed G3 to G6, with G1 and G2 failing as a smoke
+record must. Their timings are not quoted.
