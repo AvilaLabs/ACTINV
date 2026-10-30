@@ -4767,3 +4767,11 @@ record must. Their timings are not quoted.
 - **G6:** allowed claims in `results/p163_verdict.json`: at least 6.5x faster than OpenMC 0.15.3 flux mode at every
   measured size (8, 64, 512 mesh cells), and the per-size and default-mode sentences. Before pushing,
   `check_public_examples` passed on that binary. G7 is CI on this commit.
+
+## Entry 276 — P163 G7: CI green on 833be5a; P163-PASS (2026-10-29)
+
+Every workflow triggered on `833be5a` (the evidence on registration `d6f516b`) passed: controls 40994511443, fns-iron
+40994511669 and fusion-isotope 40994511532 (`results/p163/ci_runs.json`). **P163-PASS** (`results/p163_verdict.json`):
+ACTINV is at least 6.5x faster than OpenMC 0.15.3 flux mode from model to photon source at every measured size (8,
+64, 512 mesh cells; 9.2x, 8.2x and 6.5x worst case), and 42x against OpenMC's default mode at 8 cells, with doses
+within 2.1%. Speed sentences in releases and documentation are limited to the verdict's allowed sentences.
