@@ -1,0 +1,152 @@
+{
+ "case": "5c_defective_capture_decay",
+ "description": "Mn-55 -(n,g)-> Mn-56 -> Fe-56 with sigma*phi equal to the Mn-56 decay constant (Jordan block); sigma = 1 b, flux = 7.466008123187161648... n/cm2/s (reference uses the full 50-digit value)",
+ "mass_g": 1.0,
+ "conventions": {
+  "year_s": "31557600",
+  "ln2": "6.931471805599453094172321214581765680755e-1",
+  "barn_cm2": "1e-24",
+  "rate_per_s": "sigma_b * 1e-24 * flux_n_cm2_s * flux_multiplier",
+  "inventory_unit": "atoms per gram of material (linear in the initial atoms)",
+  "precision": "mpmath scaling-and-squaring Taylor expm; per-case working precision of 120 to 500 digits, cross-checked at twice that (precision_cross_check_max_rel_diff); output 30 significant digits"
+ },
+ "nuclides": [
+  {
+   "name": "Mn55",
+   "za": 25055,
+   "liso": 0,
+   "awr": "54.5270",
+   "half_life_s": null,
+   "lambda_per_s": "0"
+  },
+  {
+   "name": "Mn56",
+   "za": 25056,
+   "liso": 0,
+   "awr": "55.5184",
+   "half_life_s": "9284.04",
+   "lambda_per_s": "7.46600812318716107876777912911e-5"
+  },
+  {
+   "name": "Fe56",
+   "za": 26056,
+   "liso": 0,
+   "awr": "55.5184",
+   "half_life_s": null,
+   "lambda_per_s": "0"
+  }
+ ],
+ "decays": {
+  "Mn56": [
+   {
+    "to": "Fe56",
+    "rtyp": 1,
+    "rfs": 0,
+    "branching": "1"
+   }
+  ]
+ },
+ "reactions": [
+  {
+   "from": "Mn55",
+   "mt": 102,
+   "products": [
+    {
+     "to": "Mn56",
+     "sigma_b": "1"
+    }
+   ],
+   "loss_sigma_b": "1.00000000000000000000000000000"
+  }
+ ],
+ "flux_n_cm2_s": "7.4660081231871616484204692712186817268397742246704e+19",
+ "initial_atoms_per_g": {
+  "Mn55": "1e22"
+ },
+ "schedule": [
+  {
+   "dt_s": "1000",
+   "dt_spec": "1000.0 s",
+   "flux_multiplier": "1",
+   "label": "irr to 1000 s"
+  },
+  {
+   "dt_s": "9000",
+   "dt_spec": "9000.0 s",
+   "flux_multiplier": "1",
+   "label": "irr to 9000 s"
+  },
+  {
+   "dt_s": "90000",
+   "dt_spec": "90000.0 s",
+   "flux_multiplier": "1",
+   "label": "irr to 90000 s"
+  },
+  {
+   "dt_s": "10000",
+   "dt_spec": "10000.0 s",
+   "flux_multiplier": "0",
+   "label": "cool 1e4 s"
+  }
+ ],
+ "reference_steps": [
+  {
+   "step": 1,
+   "t_end_s": "1.00000000000000000000000000000e+3",
+   "label": "irr to 1000 s",
+   "inventory_atoms_per_g": {
+    "Mn55": "9.28058897355591705739169811918e+21",
+    "Mn56": "6.92889526645296739890917568000e+20",
+    "Fe56": "2.65214997987862027173843128237e+19"
+   },
+   "activity_Bq_per_g": {
+    "Mn56": "5.17311883440509235104483827542e+16"
+   },
+   "total_activity_Bq_per_g": "5.17311883440509235104483827542e+16"
+  },
+  {
+   "step": 2,
+   "t_end_s": "1.00000000000000000000000000000e+4",
+   "label": "irr to 9000 s",
+   "inventory_atoms_per_g": {
+    "Mn55": "4.73974947377079690034808704024e+21",
+    "Mn56": "3.53870080730448417227819951659e+21",
+    "Fe56": "1.72154971892471892737371344318e+21"
+   },
+   "activity_Bq_per_g": {
+    "Mn56": "2.64199689728642436250854871626e+17"
+   },
+   "total_activity_Bq_per_g": "2.64199689728642436250854871626e+17"
+  },
+  {
+   "step": 3,
+   "t_end_s": "1.00000000000000000000000000000e+5",
+   "label": "irr to 90000 s",
+   "inventory_atoms_per_g": {
+    "Mn55": "5.72207927405896869306684197207e+18",
+    "Mn56": "4.27210903416451539731673630034e+19",
+    "Fe56": "9.95155683038429587733376579502e+21"
+   },
+   "activity_Bq_per_g": {
+    "Mn56": "3.18956007522135290101731313070e+15"
+   },
+   "total_activity_Bq_per_g": "3.18956007522135290101731313070e+15"
+  },
+  {
+   "step": 4,
+   "t_end_s": "1.10000000000000000000000000000e+5",
+   "label": "cool 1e4 s",
+   "inventory_atoms_per_g": {
+    "Mn55": "5.72207927405896869306684197207e+18",
+    "Mn56": "2.02487265465727292512154548411e+19",
+    "Fe56": "9.97402919417936830205571770319e+21"
+   },
+   "activity_Bq_per_g": {
+    "Mn56": "1.51177156880907507903984612312e+15"
+   },
+   "total_activity_Bq_per_g": "1.51177156880907507903984612312e+15"
+  }
+ ],
+ "actinv_mode": "coupled",
+ "precision_cross_check_max_rel_diff": "1.99e-299"
+}

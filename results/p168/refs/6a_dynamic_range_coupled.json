@@ -1,0 +1,236 @@
+{
+ "case": "6a_dynamic_range_coupled",
+ "description": "1 kg (mass_g = 1000, so 1e25 atoms) stable Si-28 matrix at 1e22 atoms/g with a 1 ppb Na-23 impurity (1e13 atoms/g); Na-23(n,g)Na-24 with a synthetic lam = 1e-3 s^-1, then Na-24 -> Mg-24 (synthetic lam 1e-15 s^-1) -> Al-24 stable; flux 1e14. Al-24 is about 1e-12 of the Mg-24 inventory, ~1e-30 of the matrix. Full coupled reference (matrix and impurity deplete).",
+ "mass_g": 1000.0,
+ "conventions": {
+  "year_s": "31557600",
+  "ln2": "6.931471805599453094172321214581765680755e-1",
+  "barn_cm2": "1e-24",
+  "rate_per_s": "sigma_b * 1e-24 * flux_n_cm2_s * flux_multiplier",
+  "inventory_unit": "atoms per gram of material (linear in the initial atoms)",
+  "precision": "mpmath scaling-and-squaring Taylor expm; per-case working precision of 120 to 500 digits, cross-checked at twice that (precision_cross_check_max_rel_diff); output 30 significant digits"
+ },
+ "nuclides": [
+  {
+   "name": "Si28",
+   "za": 14028,
+   "liso": 0,
+   "awr": "27.7592",
+   "half_life_s": null,
+   "lambda_per_s": "0"
+  },
+  {
+   "name": "Si29",
+   "za": 14029,
+   "liso": 0,
+   "awr": "28.7506",
+   "half_life_s": null,
+   "lambda_per_s": "0"
+  },
+  {
+   "name": "Na23",
+   "za": 11023,
+   "liso": 0,
+   "awr": "22.8022",
+   "half_life_s": null,
+   "lambda_per_s": "0"
+  },
+  {
+   "name": "Na24",
+   "za": 11024,
+   "liso": 0,
+   "awr": "23.7936",
+   "half_life_s": "693.1472",
+   "lambda_per_s": "9.99999971953930289868057061268e-4"
+  },
+  {
+   "name": "Mg24",
+   "za": 12024,
+   "liso": 0,
+   "awr": "23.7936",
+   "half_life_s": "6.931472e14",
+   "lambda_per_s": "9.99999971953930289868057061268e-16"
+  },
+  {
+   "name": "Al24",
+   "za": 13024,
+   "liso": 0,
+   "awr": "23.7936",
+   "half_life_s": null,
+   "lambda_per_s": "0"
+  }
+ ],
+ "decays": {
+  "Na24": [
+   {
+    "to": "Mg24",
+    "rtyp": 1,
+    "rfs": 0,
+    "branching": "1"
+   }
+  ],
+  "Mg24": [
+   {
+    "to": "Al24",
+    "rtyp": 1,
+    "rfs": 0,
+    "branching": "1"
+   }
+  ]
+ },
+ "reactions": [
+  {
+   "from": "Si28",
+   "mt": 102,
+   "products": [
+    {
+     "to": "Si29",
+     "sigma_b": "0.17"
+    }
+   ],
+   "loss_sigma_b": "1.70000000000000000000000000000e-1"
+  },
+  {
+   "from": "Na23",
+   "mt": 102,
+   "products": [
+    {
+     "to": "Na24",
+     "sigma_b": "0.53"
+    }
+   ],
+   "loss_sigma_b": "5.30000000000000000000000000000e-1"
+  }
+ ],
+ "flux_n_cm2_s": "1e14",
+ "initial_atoms_per_g": {
+  "Si28": "1e22",
+  "Na23": "1e13"
+ },
+ "schedule": [
+  {
+   "dt_s": "3600",
+   "dt_spec": "3600.0 s",
+   "flux_multiplier": "1",
+   "label": "irradiate 1 h"
+  },
+  {
+   "dt_s": "600",
+   "dt_spec": "600.0 s",
+   "flux_multiplier": "0",
+   "label": "cool 10 min"
+  },
+  {
+   "dt_s": "3000",
+   "dt_spec": "3000.0 s",
+   "flux_multiplier": "0",
+   "label": "cool 1 h"
+  },
+  {
+   "dt_s": "82800",
+   "dt_spec": "82800.0 s",
+   "flux_multiplier": "0",
+   "label": "cool 1 d"
+  },
+  {
+   "dt_s": "2505600",
+   "dt_spec": "2505600.0 s",
+   "flux_multiplier": "0",
+   "label": "cool 30 d"
+  }
+ ],
+ "reference_steps": [
+  {
+   "step": 1,
+   "t_end_s": "3.60000000000000000000000000000e+3",
+   "label": "irradiate 1 h",
+   "inventory_atoms_per_g": {
+    "Si28": "9.99999938800001872719966466042e+21",
+    "Si29": "6.11999981272800335339582738260e+14",
+    "Na23": "9.99999809200018202318856890445e+12",
+    "Na24": "5.15518366297537597920214644557e+5",
+    "Mg24": "1.39248145167723191494176466797e+6",
+    "Al24": "2.04191823356940127601559247281e-6"
+   },
+   "activity_Bq_per_g": {
+    "Na24": "5.15518351839273559886141563722e+2",
+    "Mg24": "1.39248141262360005113639386681e-9"
+   },
+   "total_activity_Bq_per_g": "5.15518351840666041298765163773e+2"
+  },
+  {
+   "step": 2,
+   "t_end_s": "4.20000000000000000000000000000e+3",
+   "label": "cool 10 min",
+   "inventory_atoms_per_g": {
+    "Si28": "9.99999938800001872719966466042e+21",
+    "Si29": "6.11999981272800335339582738260e+14",
+    "Na23": "9.99999809200018202318856890445e+12",
+    "Na24": "2.82922482805189389956767448729e+5",
+    "Mg24": "1.62507733516866791893002675456e+6",
+    "Al24": "2.95412220875451050984530662758e-6"
+   },
+   "activity_Bq_per_g": {
+    "Na24": "2.82922474870325714638819844434e+2",
+    "Mg24": "1.62507728959163569243411421314e-9"
+   },
+   "total_activity_Bq_per_g": "2.82922474871950791928411480127e+2"
+  },
+  {
+   "step": 3,
+   "t_end_s": "7.20000000000000000000000000000e+3",
+   "label": "cool 1 h",
+   "inventory_atoms_per_g": {
+    "Si28": "9.99999938800001872719966466042e+21",
+    "Si29": "6.11999981272800335339582738260e+14",
+    "Na23": "9.99999809200018202318856890445e+12",
+    "Na24": "1.40858821793886257297377826909e+4",
+    "Mg24": "1.89391393578901352046430434321e+6",
+    "Al24": "8.40928490150658789896179690191e-6"
+   },
+   "activity_Bq_per_g": {
+    "Na24": "1.40858817843349921978991276041e+1",
+    "Mg24": "1.89391388267217125233527872575e-9"
+   },
+   "total_activity_Bq_per_g": "1.40858817862289060805712988565e+1"
+  },
+  {
+   "step": 4,
+   "t_end_s": "9.00000000000000000000000000000e+4",
+   "label": "cool 1 d",
+   "inventory_atoms_per_g": {
+    "Si28": "9.99999938800001872719966466042e+21",
+    "Si29": "6.11999981272800335339582738260e+14",
+    "Na23": "9.99999809200018202318856890445e+12",
+    "Na24": "1.54597319066365561471473718832e-32",
+    "Mg24": "1.90799981781043385158576211563e+6",
+    "Al24": "1.66377579509786598176747964938e-4"
+   },
+   "activity_Bq_per_g": {
+    "Na24": "1.54597314730518373936675040862e-35",
+    "Mg24": "1.90799976429853795435528764565e-9"
+   },
+   "total_activity_Bq_per_g": "1.90799976429853795435528766111e-9"
+  },
+  {
+   "step": 5,
+   "t_end_s": "2.59560000000000000000000000000e+6",
+   "label": "cool 30 d",
+   "inventory_atoms_per_g": {
+    "Si28": "9.99999938800001872719966466042e+21",
+    "Si29": "6.11999981272800335339582738260e+14",
+    "Na23": "9.99999809200018202318856890445e+12",
+    "Na24": "1.04949076275415062865719760837e-1120",
+    "Mg24": "1.90799981302974964814858642179e+6",
+    "Al24": "4.94706178294696229201683137477e-3"
+   },
+   "activity_Bq_per_g": {
+    "Na24": "1.04949073332005953631474458980e-1123",
+    "Mg24": "1.90799975951785388499751438353e-9"
+   },
+   "total_activity_Bq_per_g": "1.90799975951785388499751438353e-9"
+  }
+ ],
+ "actinv_mode": "coupled",
+ "precision_cross_check_max_rel_diff": "9.65e-498"
+}

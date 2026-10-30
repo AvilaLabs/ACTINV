@@ -4907,3 +4907,24 @@ and whether the reduction holds on measurements the choice was not made on.
 - **Reading:** the large ENDF/B-VIII.0 and JEFF-3.3 differences for these nuclides are mostly in how the decay energy
   splits between beta and gamma, and they barely move total heat. The short-time bias is not explained by the choice
   between these two decay libraries. G5 is CI on this commit.
+
+## Entry 286 — P168 registered: limits map against high-precision reference solutions (2026-10-30)
+
+`protocols/ACTINV-P168_PROTOCOL.md`. Nineteen synthetic stress cases, each run at CRAM orders 16 and 48 and checked
+against references solved with mpmath (120–500 working digits, stored to 30 significant digits;
+`results/p168/refs/`, manifest `998cff38…`). The cases cover:
+- 10⁹-year cooling;
+- ns steps;
+- flux to 10¹⁶ n/cm²/s;
+- 10⁴-pulse and 10⁵-pulse trains;
+- reaction and isomer loops;
+- defective (equal-rate) systems;
+- a 28-order dynamic range in coupled and trace modes;
+- 45% target burn-up.
+
+Each case and order is classified *holds*, *breaks* or *fails to run*. *Holds* means a normalized error of at most
+10⁻¹⁰, and a relative error of at most 10⁻⁶ on every nuclide carrying at least a millionth of the activity. The map is
+reported whatever it shows; breaks are repaired under successor protocols.
+- **No source change.** The binary is the P163 build `186cc258…`. The crates tree may differ from d6f516b only in the
+  browser crate.
+- **Disclosed:** all 38 generated problems passed `actinv validate --hashes`. No case has been run.

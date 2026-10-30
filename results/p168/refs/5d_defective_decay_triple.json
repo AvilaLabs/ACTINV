@@ -1,0 +1,176 @@
+{
+ "case": "5d_defective_decay_triple",
+ "description": "Three radioactive members of identical half-life 1000 s in a chain (Jordan block size 3), decay only",
+ "mass_g": 1.0,
+ "conventions": {
+  "year_s": "31557600",
+  "ln2": "6.931471805599453094172321214581765680755e-1",
+  "barn_cm2": "1e-24",
+  "rate_per_s": "sigma_b * 1e-24 * flux_n_cm2_s * flux_multiplier",
+  "inventory_unit": "atoms per gram of material (linear in the initial atoms)",
+  "precision": "mpmath scaling-and-squaring Taylor expm; per-case working precision of 120 to 500 digits, cross-checked at twice that (precision_cross_check_max_rel_diff); output 30 significant digits"
+ },
+ "nuclides": [
+  {
+   "name": "Co58",
+   "za": 27058,
+   "liso": 0,
+   "awr": "57.5012",
+   "half_life_s": "1000",
+   "lambda_per_s": "6.93147180559945309417232121458e-4"
+  },
+  {
+   "name": "Ni58",
+   "za": 28058,
+   "liso": 0,
+   "awr": "57.5012",
+   "half_life_s": "1000",
+   "lambda_per_s": "6.93147180559945309417232121458e-4"
+  },
+  {
+   "name": "Cu58",
+   "za": 29058,
+   "liso": 0,
+   "awr": "57.5012",
+   "half_life_s": "1000",
+   "lambda_per_s": "6.93147180559945309417232121458e-4"
+  },
+  {
+   "name": "Zn58",
+   "za": 30058,
+   "liso": 0,
+   "awr": "57.5012",
+   "half_life_s": null,
+   "lambda_per_s": "0"
+  }
+ ],
+ "decays": {
+  "Co58": [
+   {
+    "to": "Ni58",
+    "rtyp": 1,
+    "rfs": 0,
+    "branching": "1"
+   }
+  ],
+  "Ni58": [
+   {
+    "to": "Cu58",
+    "rtyp": 1,
+    "rfs": 0,
+    "branching": "1"
+   }
+  ],
+  "Cu58": [
+   {
+    "to": "Zn58",
+    "rtyp": 1,
+    "rfs": 0,
+    "branching": "1"
+   }
+  ]
+ },
+ "reactions": [],
+ "flux_n_cm2_s": "0",
+ "initial_atoms_per_g": {
+  "Co58": "1e22"
+ },
+ "schedule": [
+  {
+   "dt_s": "100",
+   "dt_spec": "100.0 s",
+   "flux_multiplier": "0",
+   "label": "100 s"
+  },
+  {
+   "dt_s": "900",
+   "dt_spec": "900.0 s",
+   "flux_multiplier": "0",
+   "label": "900 s"
+  },
+  {
+   "dt_s": "9000",
+   "dt_spec": "9000.0 s",
+   "flux_multiplier": "0",
+   "label": "9000 s"
+  },
+  {
+   "dt_s": "90000",
+   "dt_spec": "90000.0 s",
+   "flux_multiplier": "0",
+   "label": "90000 s"
+  }
+ ],
+ "reference_steps": [
+  {
+   "step": 1,
+   "t_end_s": "1.00000000000000000000000000000e+2",
+   "label": "100 s",
+   "inventory_atoms_per_g": {
+    "Co58": "9.33032991536807415981343266150e+21",
+    "Ni58": "6.46729187453149373733118365408e+20",
+    "Cu58": "2.24139256434487422749742953789e+19",
+    "Zn58": "5.26971535327724178474677713363e+17"
+   },
+   "activity_Bq_per_g": {
+    "Co58": "6.46729187453149373733118365408e+18",
+    "Ni58": "4.48278512868974845499485907577e+17",
+    "Cu58": "1.55361493650367537121209569796e+16"
+   },
+   "total_activity_Bq_per_g": "6.93110653676550533654279051864e+18"
+  },
+  {
+   "step": 2,
+   "t_end_s": "1.00000000000000000000000000000e+3",
+   "label": "900 s",
+   "inventory_atoms_per_g": {
+    "Co58": "5.00000000000000000000000000000e+21",
+    "Ni58": "3.46573590279972654708616060729e+21",
+    "Cu58": "1.20113253479550356166775631582e+21",
+    "Zn58": "3.33131562404769891246083076892e+20"
+   },
+   "activity_Bq_per_g": {
+    "Co58": "3.46573590279972654708616060729e+18",
+    "Ni58": "2.40226506959100712333551263163e+18",
+    "Cu58": "8.32561629972323699297133956529e+17"
+   },
+   "total_activity_Bq_per_g": "6.70056260236305736971880719545e+18"
+  },
+  {
+   "step": 3,
+   "t_end_s": "1.00000000000000000000000000000e+4",
+   "label": "9000 s",
+   "inventory_atoms_per_g": {
+    "Co58": "9.76562500000000000000000000000e+18",
+    "Ni58": "6.76901543515571591227765743612e+19",
+    "Cu58": "2.34596198202246789388233655433e+20",
+    "Zn58": "9.68794802244619605148898977021e+21"
+   },
+   "activity_Bq_per_g": {
+    "Co58": "6.76901543515571591227765743612e+15",
+    "Ni58": "4.69192396404493578776467310866e+16",
+    "Cu58": "1.62609693353969472518971475885e+17"
+   },
+   "total_activity_Bq_per_g": "2.16297948429574546308895864407e+17"
+  },
+  {
+   "step": 4,
+   "t_end_s": "1.00000000000000000000000000000e+5",
+   "label": "90000 s",
+   "inventory_atoms_per_g": {
+    "Co58": "7.88860905221011805411728565283e-9",
+    "Ni58": "5.46796712307910573328985671646e-7",
+    "Cu58": "1.89505299737837879928373935986e-5",
+    "Zn58": "9.99999999999999999999999998049e+21"
+   },
+   "activity_Bq_per_g": {
+    "Co58": "5.46796712307910573328985671646e-12",
+    "Ni58": "3.79010599475675759856747871971e-10",
+    "Cu58": "1.31355064214449669467439944620e-8"
+   },
+   "total_activity_Bq_per_g": "1.35199849880437218123340321906e-8"
+  }
+ ],
+ "actinv_mode": "coupled",
+ "precision_cross_check_max_rel_diff": "9.52e-300"
+}

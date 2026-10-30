@@ -1,0 +1,30 @@
+{
+ "schema": "actinv-p168-refs-1",
+ "mpmath_version": "1.3.0",
+ "digits": {
+  "working": "120 to 500 per case (each file's precision_cross_check_max_rel_diff), cross-checked at twice that",
+  "recorded": 30
+ },
+ "generator": "controls/p168/make_cases.py",
+ "files": {
+  "1a_u238_chain_pure_parent.json": "0514f6f801483ed365910b4f78de254f122c9bf8c23f1f8f705e6f32a7911a50",
+  "1b_u238_chain_equilibrated.json": "1987310b2c4ddb02de58dad9995f714461ef764906bb71b5a1ffc7dcc1596cef",
+  "2_very_short_times.json": "5d5fa65aa3b217ff1d9e8e1806b54a8156af68070b6d9aa1e07c5b340a56c0b0",
+  "3_co59_flux1e14.json": "24f085c5ba1d3dd5eb113a465902c6ff1c4717705bd28506c82355244d32ad4e",
+  "3_co59_flux1e15.json": "03684e750795e01fee11914cb5b9fb794dc5f4e8234edbf19ba64503e82e9010",
+  "3_co59_flux1e16.json": "1fe95baf89ebdb74b79e147d2c7bbe667e6c0ccb87c897235fbe694a4aedf712",
+  "4_pulse_train_0p1s_1e4.json": "96f339efd15001a519ee5b743988f857519b96b2900e824e75c18b1c1989de5d",
+  "4_pulse_train_0p1s_1e5.json": "18db643ea5cc1bfbe75bb15036e8eaa86cf9375d01ba133285907f4f0f507d0e",
+  "4_pulse_train_0p1s_1e6.json": "d1a1a8fe635edad79b9da2bf6163fa33cf30ed87b9241b9147a2157b5b9dbd70",
+  "4_pulse_train_1s_1e6.json": "ca5c99b197e97e5cc1fa76265f76d4b1aca531dd593376ac2ef76e2778c082a9",
+  "5a_loop_strong.json": "7b5d413df677e7a2b4e2d01438feae50b58aa0c6451358bbac173f0d4e1efa8f",
+  "5a_loop_weak.json": "39f1914e3b1fbd711b93bde02036a908e59416b66cc269b3706f96516bb38d59",
+  "5b_isomer_loop.json": "4cb9c1db28f19e668d386dbfdbe1aad1e47581e433e086c8b8488319bea9a66b",
+  "5b_isomer_loop_strong.json": "1e2e0e00d58f71b6479f6b7168e81704b08510f6f33acb7f6de45a3f2aa2098b",
+  "5c_defective_capture_decay.json": "3222c33c76cb74004d41af655a0cddf12507829adf7b9a53ac6c15e139862b36",
+  "5d_defective_decay_triple.json": "d8e875f16e1ebcdaaa38483d510cb9d82af03e86b4a80d2e2d703d316b959440",
+  "6a_dynamic_range_coupled.json": "2d2ecb62144f322669789d7002844e20515b9752f59cfe68a4a5e766f37399e4",
+  "6b_dynamic_range_trace.json": "0336a48074942e7cfc74ffcbd358d7b57402ccff4e3f72a2886463151901a102",
+  "7_tungsten_burnup.json": "577a4385e8384e877c14db62f289c94b39d08bf4ec543ba57def9b8474029bf8"
+ }
+}
