@@ -318,15 +318,22 @@ fn decay_loss(n: usize, decay: &[(usize, usize, f64)]) -> Vec<f64> {
 /// Merges duplicate triplets per edge and attaches each edge's largest rate and loss share.
 fn bound_edges(problem: &PruneProblem<'_>, decay_loss: &[f64], phi_max: f64) -> Vec<BoundEdge> {
     let mut edges = Vec::new();
+    // A stable sort keeps each edge's triplets in their input order, so every sum adds the same values in
+    // the same order as accumulating them one by one.
     let off_diagonal_sums = |triplets: &[(usize, usize, f64)]| -> Vec<((usize, usize), f64)> {
-        let mut sums: HashMap<(usize, usize), f64> = HashMap::new();
-        for &(i, j, v) in triplets {
-            if i != j && v > 0.0 {
-                *sums.entry((j, i)).or_default() += v;
+        let mut keyed: Vec<((usize, usize), f64)> = triplets
+            .iter()
+            .filter(|&&(i, j, v)| i != j && v > 0.0)
+            .map(|&(i, j, v)| ((j, i), v))
+            .collect();
+        keyed.sort_by_key(|(key, _)| *key);
+        let mut sums: Vec<((usize, usize), f64)> = Vec::new();
+        for (key, v) in keyed {
+            match sums.last_mut() {
+                Some((last, sum)) if *last == key => *sum += v,
+                _ => sums.push((key, v)),
             }
         }
-        let mut sums: Vec<_> = sums.into_iter().collect();
-        sums.sort_by_key(|(key, _)| *key);
         sums
     };
     // Decay: the share is the branch fraction, the largest at any flux or removal rate.
@@ -526,19 +533,24 @@ fn propagate(
                 }
             }
             Some(start) => {
+                let sweep = Sweep::new(&internal, t_total);
                 let mut th = start;
                 let mut po = th.clone();
+                let mut new_th = th.clone();
+                let mut new_po = po.clone();
+                // A member whose in-component predecessors all kept their bounds in the last sweep would
+                // recompute the same sum and take the same minimum, so only the others are recomputed.
+                let mut dirty = vec![true; members.len()];
+                let mut next_dirty = vec![false; members.len()];
                 for _ in 0..MAX_SWEEPS {
-                    let mut new_th = th.clone();
-                    let mut new_po = po.clone();
                     let mut largest_drop = 0.0f64;
                     for (m, &i) in members.iter().enumerate() {
-                        let mut t = b[m];
-                        let mut f = fext[m];
-                        for (from, e) in &internal[m] {
-                            t += transfer(e, t_total, po[*from], th[*from]);
-                            f += e.rate * po[*from];
+                        if !dirty[m] {
+                            new_th[m] = th[m];
+                            new_po[m] = po[m];
+                            continue;
                         }
+                        let (t, f) = sweep.inflow(m, b[m], fext[m], &po, &th);
                         let t = t.min(th[m]);
                         let p = population_cap(t, n0[i], f, lam[i]).min(po[m]);
                         for (old, new) in [(th[m], t), (po[m], p)] {
@@ -546,11 +558,18 @@ fn propagate(
                                 largest_drop = largest_drop.max((old - new) / old);
                             }
                         }
+                        if t.to_bits() != th[m].to_bits() || p.to_bits() != po[m].to_bits() {
+                            for &next in sweep.successors(m) {
+                                next_dirty[next] = true;
+                            }
+                        }
                         new_th[m] = t;
                         new_po[m] = p;
                     }
-                    th = new_th;
-                    po = new_po;
+                    std::mem::swap(&mut th, &mut new_th);
+                    std::mem::swap(&mut po, &mut new_po);
+                    std::mem::swap(&mut dirty, &mut next_dirty);
+                    next_dirty.fill(false);
                     if largest_drop <= SWEEP_TOLERANCE {
                         break;
                     }
@@ -575,6 +594,84 @@ fn propagate(
         population: pop,
         inflow_rate: rate,
         unbounded,
+    }
+}
+
+/// A cyclic component's internal edges laid out flat for the tightening sweeps: for member `m`, the
+/// entries `offsets[m]..offsets[m + 1]` are its incoming edges in their original order.
+struct Sweep {
+    offsets: Vec<usize>,
+    from: Vec<usize>,
+    rate_times_duration: Vec<f64>,
+    share: Vec<f64>,
+    rate: Vec<f64>,
+    successor_offsets: Vec<usize>,
+    successors: Vec<usize>,
+}
+
+impl Sweep {
+    fn new(internal: &[Vec<(usize, BoundEdge)>], t_total: f64) -> Self {
+        let edges: usize = internal.iter().map(Vec::len).sum();
+        let mut sweep = Sweep {
+            offsets: Vec::with_capacity(internal.len() + 1),
+            from: Vec::with_capacity(edges),
+            rate_times_duration: Vec::with_capacity(edges),
+            share: Vec::with_capacity(edges),
+            rate: Vec::with_capacity(edges),
+            successor_offsets: vec![0; internal.len() + 1],
+            successors: vec![0; edges],
+        };
+        sweep.offsets.push(0);
+        for row in internal {
+            for (from, e) in row {
+                sweep.from.push(*from);
+                // `transfer` evaluates `rate * t_total * population` left to right, so this product is
+                // the same first factor.
+                sweep.rate_times_duration.push(e.rate * t_total);
+                sweep.share.push(e.share);
+                sweep.rate.push(e.rate);
+                sweep.successor_offsets[from + 1] += 1;
+            }
+            sweep.offsets.push(sweep.from.len());
+        }
+        for m in 0..internal.len() {
+            sweep.successor_offsets[m + 1] += sweep.successor_offsets[m];
+        }
+        let mut fill = sweep.successor_offsets.clone();
+        for (m, row) in internal.iter().enumerate() {
+            for (from, _) in row {
+                sweep.successors[fill[*from]] = m;
+                fill[*from] += 1;
+            }
+        }
+        sweep
+    }
+
+    /// Member `m`'s throughput and inflow-rate sums, exactly as `transfer` and `rate * population` add them.
+    fn inflow(&self, m: usize, b: f64, fext: f64, po: &[f64], th: &[f64]) -> (f64, f64) {
+        let mut t = b;
+        let mut f = fext;
+        for k in self.offsets[m]..self.offsets[m + 1] {
+            let from = self.from[k];
+            let (population, throughput) = (po[from], th[from]);
+            if throughput > 0.0 && population > 0.0 {
+                let by_rate = self.rate_times_duration[k] * population;
+                t += if self.share[k].is_infinite() {
+                    by_rate
+                } else {
+                    by_rate.min(self.share[k] * throughput)
+                };
+            } else {
+                t += 0.0;
+            }
+            f += self.rate[k] * population;
+        }
+        (t, f)
+    }
+
+    /// The members that have `m` as an in-component predecessor.
+    fn successors(&self, m: usize) -> &[usize] {
+        &self.successors[self.successor_offsets[m]..self.successor_offsets[m + 1]]
     }
 }
 
