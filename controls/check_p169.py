@@ -62,6 +62,17 @@ def g0():
     return problems
 
 
+GUI_CRATE = "crates/actinv-gui/"
+
+
+def changed_crate_paths(head):
+    """Paths under crates/ that differ between the P166 source commit and `head`; None if git cannot tell."""
+    try:
+        return c166.git("diff", "--name-only", c166.SOURCE_COMMIT, head, "--", "crates").split()
+    except Exception:
+        return None
+
+
 def g1_record(record, label, source_tree):
     problems = []
     for name, digest in INPUT_PINS.items():
@@ -73,7 +84,10 @@ def g1_record(record, label, source_tree):
     if environment.get("binary_sha256") != c166.BINARY_SHA256:
         problems.append(f"{label}: binary is not the pinned P163 release binary")
     if environment.get("crates_tree") != source_tree:
-        problems.append(f"{label}: crates tree is not {c166.SOURCE_COMMIT}'s")
+        # Amendment A: the CLI binary does not link actinv-gui, so a tree that differs only there is accepted.
+        changed = changed_crate_paths(environment.get("git_head", ""))
+        if changed is None or not changed or any(not path.startswith(GUI_CRATE) for path in changed):
+            problems.append(f"{label}: crates tree differs from {c166.SOURCE_COMMIT}'s outside {GUI_CRATE}")
     if not environment.get("clean_tree"):
         problems.append(f"{label}: tracked tree was not clean")
     if not c166.cgroup_ok(environment.get("cgroup", {})):
@@ -376,6 +390,18 @@ def selftest():
     run("p9 file hash", lambda a, b, c, d: b["inputs"]["yarnell"].update(sha256="0" * 64), "G1")
     run("cgroup", lambda a, b, c, d: a["environment"]["cgroup"].update({"memory.max": "max"}), "G1")
     run("dirty", lambda a, b, c, d: a["environment"].update(clean_tree=False), "G1")
+    global changed_crate_paths
+    real_changed = changed_crate_paths
+    try:
+        changed_crate_paths = lambda head: ["crates/actinv-gui/src/web_app.rs"]
+        run("tree differs in gui only", lambda a, b, c, d: [r["environment"].update(crates_tree="other")
+                                                             for r in (a, b)], None)
+        changed_crate_paths = lambda head: ["crates/actinv-gui/src/web_app.rs", "crates/actinv-core/src/run.rs"]
+        run("tree differs in core", lambda a, b, c, d: a["environment"].update(crates_tree="other"), "G1")
+        changed_crate_paths = lambda head: []
+        run("tree differs, git silent", lambda a, b, c, d: b["environment"].update(crates_tree="other"), "G1")
+    finally:
+        changed_crate_paths = real_changed
     run("wrong train record", lambda a, b, c, d: b["train_record"].update(sha256="other"), "G1")
     run("smoke train", lambda a, b, c, d: a.update(smoke=True), "G1")
     run("B primary", lambda a, b, c, d: a["candidates"]["B"]["datasets"]["SC78-U235-1h"]["model"][

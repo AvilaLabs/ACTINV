@@ -4876,3 +4876,14 @@ and whether the reduction holds on measurements the choice was not made on.
 - **Disclosed:** the P166 record, an unregistered diagnosis that shaped the candidates, the P9 baselines, and one
   decay-only parse check of the JEFF-3.3 file.
 - **Gates:** G0–G5 decide the verdict, whatever the selection and the held-out score.
+
+## Entry 284 — P169 Amendment A registered: G1's source condition excludes the browser crate (2026-10-30)
+
+`protocols/ACTINV-P169_AMENDMENT_A.md`, the protocol's one repair round.
+- **Defect:** the train and test records were written on e932d36. G1 then failed only on the crates-tree condition.
+  The sole change under `crates/` since d6f516b is `crates/actinv-gui/src/web_app.rs`, the browser redesign. The
+  command-line binary does not link that crate, and the pinned binary is unchanged.
+- **Change:** G1 now accepts a tree whose differences from d6f516b lie only under `crates/actinv-gui/`. Nothing is
+  rerun, and no record, candidate, rule or pin changes.
+- **Disclosed:** the selection and the held-out numbers were seen before this amendment. The amendment cannot change
+  them.
