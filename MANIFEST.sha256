@@ -1333,6 +1333,7 @@ a5a219af4f739d730691c147fac5bdba66f150e1639b4d2c8c6837dde6b66b48  ./docs/images/
 d0a980eaa3928f2d3c65f1410ae0a0781c59aafce9adf3695d212f27bc475b6b  ./docs/images/desktop/results.png
 08780ea5784b5b0451cbf86ba83246a876bf3bd904787176fc8aa20b96392bf1  ./docs/images/desktop/schedule.png
 5430360e7b2f9f74f1192094ccf5fce1bb1f58c42ae28756c6214fd5c115dd61  ./docs/images/desktop/walkthrough.png
+d32e478b6970ec9010cef2c97daf74a145deac1a0b62f479b25b8fad882e3206  ./docs/maintainers/ACCURACY_PROGRAM.md
 32672bb79351e60b4951b064628b5d085839b0feb07a3774513d0c2d39ed1089  ./docs/maintainers/AGENTS.md
 8521498862326e55426f442d7805f58c76630eb05f2b96c8a318590ac1db5557  ./docs/maintainers/CI_DATA_CACHE_NOTICE.md
 ee09626af6c747dccb4630c53851469ba9fead0aea5414b3409e995bd0221eda  ./docs/maintainers/CI_DATA_RECOVERY.md
