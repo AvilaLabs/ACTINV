@@ -5016,3 +5016,27 @@ The comparison is reported whatever it shows; no sentence may rank the codes.
   `results/p171/` did not exist. Only progress lines (points, wall time) were printed; no C/E or heat was seen.
 - **Repair:** `run_actinv_arm` creates the directory. A new selftest case fails on the registered harness and passes
   on the amended one. The stopped run's work directory is deleted and every arm runs on this registration commit.
+
+## Entry 293 — P171 verdict: P171-FAIL; the identical-data library lacks 15 FNS elements, and the harness drops its own record block (2026-10-30)
+
+Under Amendment A both ACTINV arms ran in the bounded scope on e49511e. P171 cannot pass, and its one repair round is
+used, so **P171-FAIL**. No C/E, heat or summary statistic of either arm was read. The arm records and logs were
+deleted unread, and no OpenMC arm was run.
+- **Harness.** `cb2_fns.main()` ends with `raise SystemExit`, so `run_actinv_arm` never added its `p171` block (module
+  digest, environment, cgroup). Assembly and G1 cannot succeed. The Amendment A selftest's stand-in returned
+  normally, so it did not catch this.
+- **Library coverage (design).** The ENDF/B-VIII.1 arm's own check failed. Ir 2000exp_5min tracked 2 states and
+  calculated zero heat at all 19 points. The cause:
+  - `endf8_fns_709g_pristine.npz` (269 targets, 66 elements) was staged by `controls/endf8_fns_stage.py` from the
+    nuclides reachable in the 21-experiment exploratory OpenMC run, not from the 73 FNS materials.
+  - As, Ba, Ce, Cs, Dy, Er, Eu, Gd, Ho, Ir, La, Nd, Pr, Sm and Tb have no target in it. Those experiments ran on the
+    sample's other constituents only.
+  - OpenMC's ENDF/B-VIII.1 library has 557 nuclides, so the "identical data" arm was not identical. The protocol's
+    "all 269 pristine tapes" described the build, not the evaluation.
+- **G2 wording.** The checker required every `cb2_fns` check, including the positive-pairs check. The protocol text
+  named only identities, certificate inputs and alignment, plus the 5% drop rule.
+- **Successor:**
+  - ENDF/B-VIII.1 is restaged and built for every nuclide in OpenMC's HDF5 library, with build failures listed.
+  - The harness catches `SystemExit` and records it.
+  - G2 follows the protocol text.
+  - A full-pipeline rehearsal on a small subset, printing gates only, runs before registration.
