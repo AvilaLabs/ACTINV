@@ -4791,3 +4791,22 @@ sentences; G5 CI on the evidence commit. Accuracy is reported, not gated. This a
 to the fission-yield and decay-data evidence; it is not a second integral-activation facility.
 Disclosed, not evidence: development runs re-scored only P9's Yarnell set through the new harness (geometric-mean C/E
 0.98451141684 against P9's 0.98451141694).
+
+## Entry 278 — P166 evidence: G0 to G4 pass on c6a7235 (2026-10-30)
+
+- **Run:** `results/p166_conderc.json`, harness on the registration commit `c6a7235` in the bounded scope, 37 s for
+  the 24 ACTINV runs; binary `186cc258…` (crates tree of d6f516b). Re-extraction from the pinned report reproduced the
+  table CSV byte for byte. Every run: trace mode, the parent's ENDF/B-VIII.0 yields at exactly 0.0253 eV, exact rate
+  closure, parent background below 10⁻⁶ of the heat.
+- **Total decay heat, 692 points (primary):** ACTINV median |ln C/E| 0.046, p90 0.103, geometric-mean C/E 0.960, 83%
+  within 2σ. ORIGEN (ENDF/B-VII.0 yields, ENDF/B-VII.1 decay) on the same points: 0.042 and 0.962, 81% within 2σ.
+  Secondary view (Schrock limited to 600–10,000 s): ACTINV 0.040 and 0.973 over 615 points.
+- **By laboratory:** IRT 0.042 (530 points), CEA Cadarache 0.066 (42), UC Berkeley 0.091 (120, mostly the early
+  cooling times the compiler flags as unreliable). By parent: U-235 0.047 (519), Pu-239 0.044 (152), U-233 0.015 (21).
+- **Gamma and beta (Friesenhahn):** median |ln C/E| 0.042 (gamma) and 0.057 (beta); geometric means 0.993 and 0.956.
+  On Table 1, the only table with ORIGEN's split, the two codes agree within 1% (gamma 1.066 against 1.068, beta 0.984
+  against 0.975).
+- **Reading:** ACTINV and ORIGEN track each other closely series by series, so the residuals belong to the yield and
+  decay data and the measurements rather than the solver. The Friesenhahn 1979 measurements sit above both codes'
+  calculations (geometric-mean C/E 0.95–0.98), while the 1976 measurement of the same 24 h U-235 irradiation sits
+  below them (1.027). G5 is CI on this commit.
