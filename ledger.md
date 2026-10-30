@@ -4861,3 +4861,18 @@ library has a median |ln C/E| of 0.038 and a geometric-mean C/E of 1.023, 25 of 
 the same points give 0.047 (ENDF/B-VIII.0), 0.051 (JEFF-3.3), 0.057 (JENDL-4) and 0.030 (IRDFF-II, 27 points). ACTINV's
 measured activation evidence now spans two independent facilities. Sentences about this comparison are limited to the
 verdict's allowed sentences.
+
+## Entry 283 — P169 registered: short-time fission decay heat with other decay data (2026-10-30)
+
+`protocols/ACTINV-P169_PROTOCOL.md`. ACTINV and ORIGEN are both low below about 1000 s of cooling on the P166 points,
+and they agree with each other to about 0.5% at every time. P169 asks whether other open decay data reduces that bias,
+and whether the reduction holds on measurements the choice was not made on.
+- **Candidates:** A, ENDF/B-VIII.0 (baseline); B, JEFF-3.3 with ENDF/B-VIII.0 as fallback; D, ENDF/B-VIII.0 with the
+  mean energies of ten short-lived fission products from JEFF-3.3.
+- **Choice:** on the P166 points, by a fixed rule (short-time median lower by at least 0.005, long-time median no more
+  than 0.005 worse).
+- **Held-out score:** once, on P9 Dickens and Yarnell (U-235, 111 total-heat points).
+- **No source change.** The binary is the P163 build `186cc258…`.
+- **Disclosed:** the P166 record, an unregistered diagnosis that shaped the candidates, the P9 baselines, and one
+  decay-only parse check of the JEFF-3.3 file.
+- **Gates:** G0–G5 decide the verdict, whatever the selection and the held-out score.
