@@ -4987,3 +4987,22 @@ Every workflow triggered on `da2eb32`, the evidence under Amendment A, passed: c
 - The map stands as recorded in entry 288: 34 of 38 runs hold. The 6b and 7 breaks are a harness convention and
   numerical dust; the 5d CRAM-16 break is a real limit (a below-floor state left in the activity table).
 - The 5d repair goes to a successor protocol. Sentences are limited to the verdict's allowed sentences.
+
+## Entry 291 — P171 registered: ACTINV and OpenMC depletion against the FNS decay-heat measurements (2026-10-30)
+
+`protocols/ACTINV-P171_PROTOCOL.md` (SHA-256 `7d9ea35c…`). All 132 JAEA FNS experiments (73 materials), scored as
+median |ln C/E| on the points every primary arm calculates, with a 95% bootstrap interval for the OpenMC − ACTINV
+difference (2,000 resamples of experiments, seed 171). Arms:
+- ACTINV with its shipped TENDL-2025 data;
+- OpenMC 0.15.3 depletion with its published ENDF/B-VIII.1 fast-spectrum chain (`chain_endfb81_fast.xml`) and
+  ENDF/B-VIII.1 cross sections;
+- ACTINV with ENDF/B-VIII.1, the same evaluations as OpenMC;
+- sensitivities: OpenMC with ENDF/B-VIII.1 isomer branching added to the published chain, and OpenMC with the P32
+  chain (which also reproduces the sealed exploratory record).
+
+The comparison is reported whatever it shows; no sentence may rank the codes.
+- **No source change.** The ACTINV Python module was built before registration from crates tree `fd259e18…`
+  (SHA-256 `f33ea3ed…`); both ACTINV arms must use it and the run's crates tree must be the build's.
+- **Disclosed:** the 21-experiment exploratory record and the earlier 132-experiment ACTINV values were seen; the
+  module was import-checked. No arm of this protocol has been run.
+- One amendment slot remains: a split of the OpenMC cases if the smoke test shows one process does not fit in 6 GiB.
