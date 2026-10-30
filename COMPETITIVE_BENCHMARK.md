@@ -1,11 +1,34 @@
 # ACTINV competitive benchmark
 
-*Latest first: OpenMC shutdown-dose speed (P163, 2026-10-29), the FISPACT-II parity tracker (2026-10-15, live), the decay-aware TENDL-2023 FNS corpus (2026-09-26 — the
+*Latest first: fission decay heat at five laboratories (P166, 2026-10-30), OpenMC shutdown-dose speed (P163, 2026-10-29), the FISPACT-II parity tracker (2026-10-15, live), the decay-aware TENDL-2023 FNS corpus (2026-09-26 — the
 isomer-routing fix arm), then CB3 identical-data FISPACT comparison
 (2026-09-20), then the CB2 refresh (2026-09-18). Frozen/superseded
 records live in `docs/history/COMPETITIVE_BENCHMARK_ARCHIVE.md`.*
 
-## OpenMC shutdown-dose speed — P163 · 2026-10-29 · ACTINV 1.7.0 · latest
+## Fission decay heat — P166 · 2026-10-30 · ACTINV 1.7.0 · latest
+
+`results/p166_conderc.json`, verdict `results/p166_verdict.json`. Measured fission-product decay heat from the IAEA
+CoNDERC fission compilation (Gauld 2019, Tables 1–11), extracted with every printed ORIGEN ratio reproduced:
+Friesenhahn 1976 and 1979 (IRT), Schrock 1978 (UC Berkeley), Fiche 1976 (CEA Cadarache); U-233, U-235 and Pu-239
+thermal fission; irradiations from a 1 s pulse to 35 days, cooling from 0.75 s to 1.5 × 10⁵ s. ACTINV: ENDF/B-VIII.0
+independent yields at 0.0253 eV and ENDF/B-VIII.0 decay data, the P9 model. ORIGEN (SCALE 6.1.3, the compiler's
+calculations): ENDF/B-VII.0 yields, ENDF/B-VII.1 decay data. Different data, so this is context, not a code ranking.
+
+| view | points | ACTINV median abs(ln C/E) | ACTINV GM C/E | ORIGEN median abs(ln C/E) | ORIGEN GM C/E |
+|---|---:|---:|---:|---:|---:|
+| all total heat | 692 | 0.046 | 0.960 | 0.042 | 0.962 |
+| Schrock limited to 600–10,000 s | 615 | 0.040 | 0.973 | 0.039 | 0.976 |
+| IRT (Friesenhahn) | 530 | 0.042 | 0.973 | 0.040 | 0.976 |
+| CEA Cadarache (Fiche) | 42 | 0.066 | 0.971 | 0.065 | 0.977 |
+| UC Berkeley (Schrock) | 120 | 0.091 | 0.899 | 0.083 | 0.901 |
+| gamma heat (Friesenhahn) | 514 | 0.042 | 0.993 | — | — |
+| beta heat (Friesenhahn) | 514 | 0.057 | 0.956 | — | — |
+
+By parent (total heat): U-235 0.047 over 519 points, Pu-239 0.044 over 152, U-233 0.015 over 21. With P9's Oak
+Ridge and Los Alamos U-235 sets, ACTINV's fission decay heat is now checked against five laboratories. This tests
+fission yields and decay data; it is not a second integral-activation facility.
+
+## OpenMC shutdown-dose speed — P163 · 2026-10-29 · ACTINV 1.7.0
 
 `results/p163_speed.json`, verdict `results/p163_verdict.json` (P163-PASS). The steel-cube R2S problem of
 `contrib/openmc_r2s` on a 2, 4 and 8 per side mesh, timed from model to photon source (OpenMC's neutron transport

@@ -336,6 +336,8 @@ download verified inputs, run the CLI, and compare all twenty experimental measu
 The repository carries executable controls and compact evidence for every release phase. Highlights include:
 
 - 132 IAEA FNS decay-heat experiments across 73 materials;
+- fission-product decay heat after U-233, U-235 and Pu-239 thermal fission, measured at five laboratories;
+- 120 IRDFF-II spectrum-averaged cross sections in the Cf-252 and U-235 fission spectra;
 - independent decay-photon, transport-import, fission-yield, pulse-history, and mesh checks;
 - complete deterministic TENDL-2025 neutron/proton/deuteron/alpha and EAF-2010 library builds;
 - independent CRAM, sensitivity, MF=33 covariance, and uncertainty-propagation checks;

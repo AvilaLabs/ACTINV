@@ -63,6 +63,24 @@ ACTINV has smaller median and tail errors and bias closer to 1 in this subset. T
 
 See the [ENDF-8 comparison](https://github.com/AvilaLabs/ACTINV/blob/master/results/FNS_ENDF8_HEADTOHEAD.md) for per-experiment results and shared data-driven misses.
 
+## Fission decay heat: five laboratories
+
+Fission-product decay heat tests the fission yields and decay data behind every fission inventory. Protocol P166 scored ACTINV against the measured tables of the IAEA CoNDERC fission compilation (Gauld, 2019): Friesenhahn 1976 and 1979 (IRT), Schrock 1978 (UC Berkeley) and Fiche 1976 (CEA Cadarache), for U-233, U-235 and Pu-239 thermal fission, with irradiations from a 1 s pulse to 35 days. ACTINV used ENDF/B-VIII.0 yields and decay data. The compiler's ORIGEN calculations, printed in the same tables, used ENDF/B-VII.0 yields and ENDF/B-VII.1 decay data.
+
+Against 692 measured total decay-heat points from 12 fission decay-heat experiments at IRT, UC Berkeley and CEA Cadarache (U-233, U-235 and Pu-239 thermal fission), ACTINV with ENDF/B-VIII.0 yields and decay data has a median |ln C/E| of 0.046 and a geometric-mean C/E of 0.960.
+
+On the same points, ORIGEN with ENDF/B-VII.0 yields and ENDF/B-VII.1 decay data (Gauld, 2019) has a median |ln C/E| of 0.042 and a geometric-mean C/E of 0.962.
+
+| Laboratory | Points | ACTINV median abs log error | ORIGEN median abs log error |
+| --- | ---: | ---: | ---: |
+| IRT (Friesenhahn) | 530 | 0.042 | 0.040 |
+| CEA Cadarache (Fiche) | 42 | 0.066 | 0.065 |
+| UC Berkeley (Schrock) | 120 | 0.091 | 0.083 |
+
+The two codes track each other closely, so the remaining differences come from the data and the measurements rather than the solver. The UC Berkeley scatter is mostly at cooling times the compiler flags as unreliable; limited to 600–10,000 s, the pooled ACTINV figure is 0.040. ACTINV's separately measured gamma and beta heat (Friesenhahn) have median |ln C/E| of 0.042 and 0.057. The earlier P9 comparison covers the Oak Ridge (Dickens) and Los Alamos (Yarnell) U-235 measurements, with geometric-mean C/E 1.007 and 0.985.
+
+Evidence: [scored points](https://github.com/AvilaLabs/ACTINV/blob/master/results/p166_conderc.json) and [verdict](https://github.com/AvilaLabs/ACTINV/blob/master/results/p166_verdict.json).
+
 ## Speed: numerical kernel versus a full calculation
 
 ### A full shutdown-dose calculation with OpenMC

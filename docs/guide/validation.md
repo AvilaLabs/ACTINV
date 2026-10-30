@@ -8,6 +8,8 @@ ACTINV carries numerical controls, reader and data-processing checks, and compar
 | --- | --- | --- |
 | Analytic and independent CRAM controls | Time integration, network accounting, and numerical comparisons | Does not establish evaluated-data accuracy |
 | IAEA FNS decay-heat experiments | Recorded irradiation/cooling cases across 73 materials and 132 experiments | Results depend on evaluation choice and the benchmark metric |
+| IRDFF-II spectrum-averaged cross sections | 120 measured reaction cross sections in the Cf-252 and U-235 fission spectra (IRDFF-II Tables 18–20), with TENDL-2025: median absolute log error 0.014 to 0.024 per table | Tests cross sections in fission spectra, not 14 MeV fields or irradiation histories |
+| Fission decay-heat experiments | Fission-product heat after thermal fission of U-233, U-235 and Pu-239, measured at five laboratories (Oak Ridge, Los Alamos, IRT, UC Berkeley, CEA Cadarache), from 0.75 s to 1.5 × 10⁵ s; see [the benchmark](benchmarks.md#fission-decay-heat-five-laboratories) | Tests fission yields and decay data, not activation cross sections; thermal fission only |
 | FNG/ITER cell-620 history | Supplied activation history and selected nuclides over recorded times | Does not validate complete shutdown-dose transport |
 | Photon and response controls | Reader agreement, source conservation, unit conversions, and screening responses | Limited reference cases; contact dose remains a slab proxy |
 | Import and mesh controls | Supported tally subsets, normalization, rebinning, and independent-cell output | Does not qualify the originating transport calculation |
