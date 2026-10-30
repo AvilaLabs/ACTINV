@@ -1,0 +1,1332 @@
+{
+ "schema": "actinv-p168-limits-1",
+ "protocol": "ACTINV-P168",
+ "environment": {
+  "binary_sha256": "186cc2587bb61766b3b3c426c61cd44f00ed472401026dea2ca3dd595c8d1194",
+  "git_head": "9a7705564f76b79349d8dc8796a509f06216e39c",
+  "crates_tree": "fd259e18ecdeaff326672fce811996610a599bc1",
+  "clean_tree": true,
+  "cgroup": {
+   "path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p1575018-i5758523.scope",
+   "memory.max": "6442450944",
+   "memory.swap.max": "0",
+   "pids.max": "128",
+   "cpu.max": "200000 100000"
+  },
+  "python": "3.14.4",
+  "platform": "Linux-7.0.0-38-generic-x86_64-with-glibc2.43",
+  "numpy": "2.3.5"
+ },
+ "refs_manifest_sha256": "998cff380f68d808ffecb45386419fecd8e568798ae4b01b00568835908c7974",
+ "constants": {
+  "orders": [
+   16,
+   48
+  ],
+  "timeout_s": 1800,
+  "thresholds": {
+   "M1": 1e-10,
+   "M2": 1e-06,
+   "M3": 1e-06
+  },
+  "activity_fraction": 1e-06
+ },
+ "runs": [
+  {
+   "case": "1a_u238_chain_pure_parent",
+   "cram_order": 16,
+   "mode": "coupled",
+   "pulses_run": null,
+   "steps_scheduled": 3,
+   "decay_only": true,
+   "binary_sha256": "186cc2587bb61766b3b3c426c61cd44f00ed472401026dea2ca3dd595c8d1194",
+   "wall_s": 0.0036832679761573672,
+   "exit_status": 0,
+   "timed_out": false,
+   "stderr_tail": "3 steps, 17 of 17 states, 0.9 ms -> /home/connoravila/Documents/actinv/target/nav-wt/target/p168-run/1a_u238_chain_pure_parent/cram16/result.json\n",
+   "result_bytes": 15328,
+   "steps_compared": 3,
+   "time_error": 0.0,
+   "status": "holds",
+   "reason": null,
+   "worst": {
+    "M1": {
+     "value": 2.9248674917102215e-16,
+     "step": 1,
+     "label": "1e3 y",
+     "nuclide": "U238"
+    },
+    "M2": {
+     "value": 1.1150628190322993e-12,
+     "step": 1,
+     "label": "1e3 y",
+     "nuclide": "Th230"
+    }
+   },
+   "first_failure": null
+  },
+  {
+   "case": "1a_u238_chain_pure_parent",
+   "cram_order": 48,
+   "mode": "coupled",
+   "pulses_run": null,
+   "steps_scheduled": 3,
+   "decay_only": true,
+   "binary_sha256": "186cc2587bb61766b3b3c426c61cd44f00ed472401026dea2ca3dd595c8d1194",
+   "wall_s": 0.007712156046181917,
+   "exit_status": 0,
+   "timed_out": false,
+   "stderr_tail": "3 steps, 17 of 17 states, 1.1 ms -> /home/connoravila/Documents/actinv/target/nav-wt/target/p168-run/1a_u238_chain_pure_parent/cram48/result.json\n",
+   "result_bytes": 15317,
+   "steps_compared": 3,
+   "time_error": 0.0,
+   "status": "holds",
+   "reason": null,
+   "worst": {
+    "M1": {
+     "value": 3.809316270828881e-15,
+     "step": 3,
+     "label": "1e9 y",
+     "nuclide": "U238"
+    },
+    "M2": {
+     "value": 3.823629502932472e-15,
+     "step": 3,
+     "label": "1e9 y",
+     "nuclide": "Rn222"
+    }
+   },
+   "first_failure": null
+  },
+  {
+   "case": "1b_u238_chain_equilibrated",
+   "cram_order": 16,
+   "mode": "coupled",
+   "pulses_run": null,
+   "steps_scheduled": 3,
+   "decay_only": true,
+   "binary_sha256": "186cc2587bb61766b3b3c426c61cd44f00ed472401026dea2ca3dd595c8d1194",
+   "wall_s": 0.0036664550425484776,
+   "exit_status": 0,
+   "timed_out": false,
+   "stderr_tail": "3 steps, 17 of 17 states, 1.1 ms -> /home/connoravila/Documents/actinv/target/nav-wt/target/p168-run/1b_u238_chain_equilibrated/cram16/result.json\n",
+   "result_bytes": 20189,
+   "steps_compared": 3,
+   "time_error": 0.0,
+   "status": "holds",
+   "reason": null,
+   "worst": {
+    "M1": {
+     "value": 2.9248674917102215e-16,
+     "step": 1,
+     "label": "1e3 y",
+     "nuclide": "U238"
+    },
+    "M2": {
+     "value": 5.398117950828326e-16,
+     "step": 1,
+     "label": "1e3 y",
+     "nuclide": "Th234"
+    }
+   },
+   "first_failure": null
+  },
+  {
+   "case": "1b_u238_chain_equilibrated",
+   "cram_order": 48,
+   "mode": "coupled",
+   "pulses_run": null,
+   "steps_scheduled": 3,
+   "decay_only": true,
+   "binary_sha256": "186cc2587bb61766b3b3c426c61cd44f00ed472401026dea2ca3dd595c8d1194",
+   "wall_s": 0.003620865987613797,
+   "exit_status": 0,
+   "timed_out": false,
+   "stderr_tail": "3 steps, 17 of 17 states, 1.2 ms -> /home/connoravila/Documents/actinv/target/nav-wt/target/p168-run/1b_u238_chain_equilibrated/cram48/result.json\n",
+   "result_bytes": 20141,
+   "steps_compared": 3,
+   "time_error": 0.0,
+   "status": "holds",
+   "reason": null,
+   "worst": {
+    "M1": {
+     "value": 3.809316270828881e-15,
+     "step": 3,
+     "label": "1e9 y",
+     "nuclide": "U238"
+    },
+    "M2": {
+     "value": 3.823629502932472e-15,
+     "step": 3,
+     "label": "1e9 y",
+     "nuclide": "Rn222"
+    }
+   },
+   "first_failure": null
+  },
+  {
+   "case": "2_very_short_times",
+   "cram_order": 16,
+   "mode": "coupled",
+   "pulses_run": null,
+   "steps_scheduled": 5,
+   "decay_only": true,
+   "binary_sha256": "186cc2587bb61766b3b3c426c61cd44f00ed472401026dea2ca3dd595c8d1194",
+   "wall_s": 0.0036714610178023577,
+   "exit_status": 0,
+   "timed_out": false,
+   "stderr_tail": "5 steps, 17 of 17 states, 1.0 ms -> /home/connoravila/Documents/actinv/target/nav-wt/target/p168-run/2_very_short_times/cram16/result.json\n",
+   "result_bytes": 22530,
+   "steps_compared": 5,
+   "time_error": 0.0,
+   "status": "holds",
+   "reason": null,
+   "worst": {
+    "M1": {
+     "value": 1.092054967516287e-15,
+     "step": 5,
+     "label": "1e3 s",
+     "nuclide": "Tc90"
+    },
+    "M2": {
+     "value": 2.660946629107987e-14,
+     "step": 3,
+     "label": "1 ms",
+     "nuclide": "Ge70"
+    }
+   },
+   "first_failure": null
+  },
+  {
+   "case": "2_very_short_times",
+   "cram_order": 48,
+   "mode": "coupled",
+   "pulses_run": null,
+   "steps_scheduled": 5,
+   "decay_only": true,
+   "binary_sha256": "186cc2587bb61766b3b3c426c61cd44f00ed472401026dea2ca3dd595c8d1194",
+   "wall_s": 0.007795376004651189,
+   "exit_status": 0,
+   "timed_out": false,
+   "stderr_tail": "5 steps, 17 of 17 states, 1.4 ms -> /home/connoravila/Documents/actinv/target/nav-wt/target/p168-run/2_very_short_times/cram48/result.json\n",
+   "result_bytes": 22473,
+   "steps_compared": 5,
+   "time_error": 0.0,
+   "status": "holds",
+   "reason": null,
+   "worst": {
+    "M1": {
+     "value": 4.802251042776507e-15,
+     "step": 5,
+     "label": "1e3 s",
+     "nuclide": "Ti50"
+    },
+    "M2": {
+     "value": 2.3049717176160014e-15,
+     "step": 4,
+     "label": "1 s",
+     "nuclide": "Ge70"
+    }
+   },
+   "first_failure": null
+  },
+  {
+   "case": "3_co59_flux1e14",
+   "cram_order": 16,
+   "mode": "coupled",
+   "pulses_run": null,
+   "steps_scheduled": 8,
+   "decay_only": false,
+   "binary_sha256": "186cc2587bb61766b3b3c426c61cd44f00ed472401026dea2ca3dd595c8d1194",
+   "wall_s": 0.03206088999286294,
+   "exit_status": 0,
+   "timed_out": false,
+   "stderr_tail": "8 steps, 8 of 8 states, 17.6 ms -> /home/connoravila/Documents/actinv/target/nav-wt/target/p168-run/3_co59_flux1e14/cram16/result.json\n",
+   "result_bytes": 18131,
+   "steps_compared": 8,
+   "time_error": 0.0,
+   "status": "holds",
+   "reason": null,
+   "worst": {
+    "M1": {
+     "value": 1.4198414805419628e-15,
+     "step": 8,
+     "label": "cool 10 y",
+     "nuclide": "Ni60"
+    },
+    "M2": {
+     "value": 3.299436939737985e-12,
+     "step": 5,
+     "label": "cool 1 d",
+     "nuclide": "Co61"
+    }
+   },
+   "first_failure": null
+  },
+  {
+   "case": "3_co59_flux1e14",
+   "cram_order": 48,
+   "mode": "coupled",
+   "pulses_run": null,
+   "steps_scheduled": 8,
+   "decay_only": false,
+   "binary_sha256": "186cc2587bb61766b3b3c426c61cd44f00ed472401026dea2ca3dd595c8d1194",
+   "wall_s": 0.007829137030057609,
+   "exit_status": 0,
+   "timed_out": false,
+   "stderr_tail": "8 steps, 8 of 8 states, 1.4 ms -> /home/connoravila/Documents/actinv/target/nav-wt/target/p168-run/3_co59_flux1e14/cram48/result.json\n",
+   "result_bytes": 18321,
+   "steps_compared": 8,
+   "time_error": 0.0,
+   "status": "holds",
+   "reason": null,
+   "worst": {
+    "M1": {
+     "value": 2.1913795078680693e-15,
+     "step": 8,
+     "label": "cool 10 y",
+     "nuclide": "Ni60"
+    },
+    "M2": {
+     "value": 4.382393868701494e-15,
+     "step": 8,
+     "label": "cool 10 y",
+     "nuclide": "Co60"
+    }
+   },
+   "first_failure": null
+  },
+  {
+   "case": "3_co59_flux1e15",
+   "cram_order": 16,
+   "mode": "coupled",
+   "pulses_run": null,
+   "steps_scheduled": 8,
+   "decay_only": false,
+   "binary_sha256": "186cc2587bb61766b3b3c426c61cd44f00ed472401026dea2ca3dd595c8d1194",
+   "wall_s": 0.01602250209543854,
+   "exit_status": 0,
+   "timed_out": false,
+   "stderr_tail": "8 steps, 8 of 8 states, 7.9 ms -> /home/connoravila/Documents/actinv/target/nav-wt/target/p168-run/3_co59_flux1e15/cram16/result.json\n",
+   "result_bytes": 18141,
+   "steps_compared": 8,
+   "time_error": 0.0,
+   "status": "holds",
+   "reason": null,
+   "worst": {
+    "M1": {
+     "value": 2.0517583147845956e-15,
+     "step": 6,
+     "label": "cool 30 d",
+     "nuclide": "Ni60"
+    },
+    "M2": {
+     "value": 3.288313941511882e-12,
+     "step": 5,
+     "label": "cool 1 d",
+     "nuclide": "Co61"
+    }
+   },
+   "first_failure": null
+  },
+  {
+   "case": "3_co59_flux1e15",
+   "cram_order": 48,
+   "mode": "coupled",
+   "pulses_run": null,
+   "steps_scheduled": 8,
+   "decay_only": false,
+   "binary_sha256": "186cc2587bb61766b3b3c426c61cd44f00ed472401026dea2ca3dd595c8d1194",
+   "wall_s": 0.00786600704304874,
+   "exit_status": 0,
+   "timed_out": false,
+   "stderr_tail": "8 steps, 8 of 8 states, 1.3 ms -> /home/connoravila/Documents/actinv/target/nav-wt/target/p168-run/3_co59_flux1e15/cram48/result.json\n",
+   "result_bytes": 18331,
+   "steps_compared": 8,
+   "time_error": 0.0,
+   "status": "holds",
+   "reason": null,
+   "worst": {
+    "M1": {
+     "value": 3.883402629804069e-15,
+     "step": 8,
+     "label": "cool 10 y",
+     "nuclide": "Ni60"
+    },
+    "M2": {
+     "value": 7.618888142504897e-15,
+     "step": 8,
+     "label": "cool 10 y",
+     "nuclide": "Co60"
+    }
+   },
+   "first_failure": null
+  },
+  {
+   "case": "3_co59_flux1e16",
+   "cram_order": 16,
+   "mode": "coupled",
+   "pulses_run": null,
+   "steps_scheduled": 8,
+   "decay_only": false,
+   "binary_sha256": "186cc2587bb61766b3b3c426c61cd44f00ed472401026dea2ca3dd595c8d1194",
+   "wall_s": 0.01577904401347041,
+   "exit_status": 0,
+   "timed_out": false,
+   "stderr_tail": "8 steps, 8 of 8 states, 7.8 ms -> /home/connoravila/Documents/actinv/target/nav-wt/target/p168-run/3_co59_flux1e16/cram16/result.json\n",
+   "result_bytes": 16809,
+   "steps_compared": 8,
+   "time_error": 0.0,
+   "status": "holds",
+   "reason": null,
+   "worst": {
+    "M1": {
+     "value": 7.632486336550436e-16,
+     "step": 2,
+     "label": "irradiate to 1 y",
+     "nuclide": "Co60"
+    },
+    "M2": {
+     "value": 3.4875173585279802e-12,
+     "step": 5,
+     "label": "cool 1 d",
+     "nuclide": "Co61"
+    }
+   },
+   "first_failure": null
+  },
+  {
+   "case": "3_co59_flux1e16",
+   "cram_order": 48,
+   "mode": "coupled",
+   "pulses_run": null,
+   "steps_scheduled": 8,
+   "decay_only": false,
+   "binary_sha256": "186cc2587bb61766b3b3c426c61cd44f00ed472401026dea2ca3dd595c8d1194",
+   "wall_s": 0.008131660986691713,
+   "exit_status": 0,
+   "timed_out": false,
+   "stderr_tail": "8 steps, 8 of 8 states, 2.8 ms -> /home/connoravila/Documents/actinv/target/nav-wt/target/p168-run/3_co59_flux1e16/cram48/result.json\n",
+   "result_bytes": 18181,
+   "steps_compared": 8,
+   "time_error": 0.0,
+   "status": "holds",
+   "reason": null,
+   "worst": {
+    "M1": {
+     "value": 6.000638859231023e-15,
+     "step": 8,
+     "label": "cool 10 y",
+     "nuclide": "Ni61"
+    },
+    "M2": {
+     "value": 5.578569308616756e-15,
+     "step": 7,
+     "label": "cool 1 y",
+     "nuclide": "Co60"
+    }
+   },
+   "first_failure": null
+  },
+  {
+   "case": "4_pulse_train_0p1s_1e4",
+   "cram_order": 16,
+   "mode": "coupled",
+   "pulses_run": 10000,
+   "steps_scheduled": 20000,
+   "decay_only": false,
+   "binary_sha256": "186cc2587bb61766b3b3c426c61cd44f00ed472401026dea2ca3dd595c8d1194",
+   "wall_s": 0.3652852129889652,
+   "exit_status": 0,
+   "timed_out": false,
+   "stderr_tail": "20000 steps, 5 of 5 states, 227.2 ms -> /home/connoravila/Documents/actinv/target/nav-wt/target/p168-run/4_pulse_train_0p1s_1e4/cram16/result.json\n",
+   "result_bytes": 23994238,
+   "steps_compared": 220,
+   "time_error": 1.7669507529751716e-13,
+   "status": "holds",
+   "reason": null,
+   "worst": {
+    "M1": {
+     "value": 3.60257041943506e-12,
+     "step": 19999,
+     "label": "end of pulse 10000",
+     "nuclide": "Au197"
+    },
+    "M2": {
+     "value": 3.6082607463755186e-12,
+     "step": 20000,
+     "label": "end of period 10000",
+     "nuclide": "Au198"
+    }
+   },
+   "first_failure": null
+  },
+  {
+   "case": "4_pulse_train_0p1s_1e4",
+   "cram_order": 48,
+   "mode": "coupled",
+   "pulses_run": 10000,
+   "steps_scheduled": 20000,
+   "decay_only": false,
+   "binary_sha256": "186cc2587bb61766b3b3c426c61cd44f00ed472401026dea2ca3dd595c8d1194",
+   "wall_s": 0.616503536934033,
+   "exit_status": 0,
+   "timed_out": false,
+   "stderr_tail": "20000 steps, 5 of 5 states, 500.2 ms -> /home/connoravila/Documents/actinv/target/nav-wt/target/p168-run/4_pulse_train_0p1s_1e4/cram48/result.json\n",
+   "result_bytes": 24074038,
+   "steps_compared": 220,
+   "time_error": 1.7669507529751716e-13,
+   "status": "holds",
+   "reason": null,
+   "worst": {
+    "M1": {
+     "value": 1.6917613295435775e-12,
+     "step": 19999,
+     "label": "end of pulse 10000",
+     "nuclide": "Au197"
+    },
+    "M2": {
+     "value": 2.3170590237583757e-12,
+     "step": 20000,
+     "label": "end of period 10000",
+     "nuclide": "Au198"
+    }
+   },
+   "first_failure": null
+  },
+  {
+   "case": "4_pulse_train_0p1s_1e5",
+   "cram_order": 16,
+   "mode": "coupled",
+   "pulses_run": 100000,
+   "steps_scheduled": 200000,
+   "decay_only": false,
+   "binary_sha256": "186cc2587bb61766b3b3c426c61cd44f00ed472401026dea2ca3dd595c8d1194",
+   "wall_s": 3.5239661569939926,
+   "exit_status": 0,
+   "timed_out": false,
+   "stderr_tail": "200000 steps, 5 of 5 states, 2257.9 ms -> /home/connoravila/Documents/actinv/target/nav-wt/target/p168-run/4_pulse_train_0p1s_1e5/cram16/result.json\n",
+   "result_bytes": 240706987,
+   "steps_compared": 12,
+   "time_error": 1.871031210799189e-12,
+   "status": "holds",
+   "reason": null,
+   "worst": {
+    "M1": {
+     "value": 3.908537598256123e-11,
+     "step": 200000,
+     "label": "end of period 100000",
+     "nuclide": "Au197"
+    },
+    "M2": {
+     "value": 3.8817340009874324e-11,
+     "step": 199999,
+     "label": "end of pulse 100000",
+     "nuclide": "Au198"
+    }
+   },
+   "first_failure": null
+  },
+  {
+   "case": "4_pulse_train_0p1s_1e5",
+   "cram_order": 48,
+   "mode": "coupled",
+   "pulses_run": 100000,
+   "steps_scheduled": 200000,
+   "decay_only": false,
+   "binary_sha256": "186cc2587bb61766b3b3c426c61cd44f00ed472401026dea2ca3dd595c8d1194",
+   "wall_s": 6.483192307990976,
+   "exit_status": 0,
+   "timed_out": false,
+   "stderr_tail": "200000 steps, 5 of 5 states, 5361.2 ms -> /home/connoravila/Documents/actinv/target/nav-wt/target/p168-run/4_pulse_train_0p1s_1e5/cram48/result.json\n",
+   "result_bytes": 241506468,
+   "steps_compared": 12,
+   "time_error": 1.871031210799189e-12,
+   "status": "holds",
+   "reason": null,
+   "worst": {
+    "M1": {
+     "value": 1.7407783648469363e-11,
+     "step": 199999,
+     "label": "end of pulse 100000",
+     "nuclide": "Au197"
+    },
+    "M2": {
+     "value": 2.2222044416262784e-11,
+     "step": 200000,
+     "label": "end of period 100000",
+     "nuclide": "Au198"
+    }
+   },
+   "first_failure": null
+  },
+  {
+   "case": "4_pulse_train_0p1s_1e6",
+   "cram_order": 16,
+   "mode": "coupled",
+   "pulses_run": 1000,
+   "steps_scheduled": 2000,
+   "decay_only": false,
+   "binary_sha256": "186cc2587bb61766b3b3c426c61cd44f00ed472401026dea2ca3dd595c8d1194",
+   "wall_s": 0.06426962395198643,
+   "exit_status": 0,
+   "timed_out": false,
+   "stderr_tail": "2000 steps, 5 of 5 states, 26.3 ms -> /home/connoravila/Documents/actinv/target/nav-wt/target/p168-run/4_pulse_train_0p1s_1e6/cram16/result.json\n",
+   "result_bytes": 2399607,
+   "steps_compared": 8,
+   "time_error": 1.4367330592803153e-14,
+   "status": "holds",
+   "reason": null,
+   "worst": {
+    "M1": {
+     "value": 1.0627719865760861e-13,
+     "step": 1999,
+     "label": "end of pulse 1000",
+     "nuclide": "Au197"
+    },
+    "M2": {
+     "value": 1.557958805258559e-13,
+     "step": 2000,
+     "label": "end of period 1000",
+     "nuclide": "Au198"
+    }
+   },
+   "first_failure": null
+  },
+  {
+   "case": "4_pulse_train_0p1s_1e6",
+   "cram_order": 48,
+   "mode": "coupled",
+   "pulses_run": 1000,
+   "steps_scheduled": 2000,
+   "decay_only": false,
+   "binary_sha256": "186cc2587bb61766b3b3c426c61cd44f00ed472401026dea2ca3dd595c8d1194",
+   "wall_s": 0.11444177106022835,
+   "exit_status": 0,
+   "timed_out": false,
+   "stderr_tail": "2000 steps, 5 of 5 states, 60.0 ms -> /home/connoravila/Documents/actinv/target/nav-wt/target/p168-run/4_pulse_train_0p1s_1e6/cram48/result.json\n",
+   "result_bytes": 2407185,
+   "steps_compared": 8,
+   "time_error": 1.4367330592803153e-14,
+   "status": "holds",
+   "reason": null,
+   "worst": {
+    "M1": {
+     "value": 6.91714860957638e-14,
+     "step": 2000,
+     "label": "end of period 1000",
+     "nuclide": "Au197"
+    },
+    "M2": {
+     "value": 5.370569675187868e-13,
+     "step": 2000,
+     "label": "end of period 1000",
+     "nuclide": "Au198"
+    }
+   },
+   "first_failure": null
+  },
+  {
+   "case": "4_pulse_train_1s_1e6",
+   "cram_order": 16,
+   "mode": "coupled",
+   "pulses_run": 1000,
+   "steps_scheduled": 2000,
+   "decay_only": false,
+   "binary_sha256": "186cc2587bb61766b3b3c426c61cd44f00ed472401026dea2ca3dd595c8d1194",
+   "wall_s": 0.06443240400403738,
+   "exit_status": 0,
+   "timed_out": false,
+   "stderr_tail": "2000 steps, 5 of 5 states, 24.1 ms -> /home/connoravila/Documents/actinv/target/nav-wt/target/p168-run/4_pulse_train_1s_1e6/cram16/result.json\n",
+   "result_bytes": 2382934,
+   "steps_compared": 8,
+   "time_error": 0.0,
+   "status": "holds",
+   "reason": null,
+   "worst": {
+    "M1": {
+     "value": 3.170557260885907e-13,
+     "step": 2000,
+     "label": "end of period 1000",
+     "nuclide": "Au197"
+    },
+    "M2": {
+     "value": 3.6298470926272515e-13,
+     "step": 2000,
+     "label": "end of period 1000",
+     "nuclide": "Au198"
+    }
+   },
+   "first_failure": null
+  },
+  {
+   "case": "4_pulse_train_1s_1e6",
+   "cram_order": 48,
+   "mode": "coupled",
+   "pulses_run": 1000,
+   "steps_scheduled": 2000,
+   "decay_only": false,
+   "binary_sha256": "186cc2587bb61766b3b3c426c61cd44f00ed472401026dea2ca3dd595c8d1194",
+   "wall_s": 0.1144991930341348,
+   "exit_status": 0,
+   "timed_out": false,
+   "stderr_tail": "2000 steps, 5 of 5 states, 59.8 ms -> /home/connoravila/Documents/actinv/target/nav-wt/target/p168-run/4_pulse_train_1s_1e6/cram48/result.json\n",
+   "result_bytes": 2390662,
+   "steps_compared": 8,
+   "time_error": 0.0,
+   "status": "holds",
+   "reason": null,
+   "worst": {
+    "M1": {
+     "value": 1.3811613054430312e-13,
+     "step": 2000,
+     "label": "end of period 1000",
+     "nuclide": "Au197"
+    },
+    "M2": {
+     "value": 7.19543903181504e-14,
+     "step": 200,
+     "label": "end of period 100",
+     "nuclide": "Au198"
+    }
+   },
+   "first_failure": null
+  },
+  {
+   "case": "5a_loop_weak",
+   "cram_order": 16,
+   "mode": "coupled",
+   "pulses_run": null,
+   "steps_scheduled": 6,
+   "decay_only": false,
+   "binary_sha256": "186cc2587bb61766b3b3c426c61cd44f00ed472401026dea2ca3dd595c8d1194",
+   "wall_s": 0.03233969793654978,
+   "exit_status": 0,
+   "timed_out": false,
+   "stderr_tail": "6 steps, 5 of 5 states, 17.2 ms -> /home/connoravila/Documents/actinv/target/nav-wt/target/p168-run/5a_loop_weak/cram16/result.json\n",
+   "result_bytes": 12245,
+   "steps_compared": 6,
+   "time_error": 0.0,
+   "status": "holds",
+   "reason": null,
+   "worst": {
+    "M1": {
+     "value": 8.675600910365696e-16,
+     "step": 3,
+     "label": "irr to 1 y",
+     "nuclide": "Fe56"
+    },
+    "M2": {
+     "value": 5.83033881692707e-14,
+     "step": 6,
+     "label": "cool 10 h",
+     "nuclide": "Mn56"
+    }
+   },
+   "first_failure": null
+  },
+  {
+   "case": "5a_loop_weak",
+   "cram_order": 48,
+   "mode": "coupled",
+   "pulses_run": null,
+   "steps_scheduled": 6,
+   "decay_only": false,
+   "binary_sha256": "186cc2587bb61766b3b3c426c61cd44f00ed472401026dea2ca3dd595c8d1194",
+   "wall_s": 0.008351369993761182,
+   "exit_status": 0,
+   "timed_out": false,
+   "stderr_tail": "6 steps, 5 of 5 states, 2.1 ms -> /home/connoravila/Documents/actinv/target/nav-wt/target/p168-run/5a_loop_weak/cram48/result.json\n",
+   "result_bytes": 12277,
+   "steps_compared": 6,
+   "time_error": 0.0,
+   "status": "holds",
+   "reason": null,
+   "worst": {
+    "M1": {
+     "value": 2.7409596024974267e-15,
+     "step": 5,
+     "label": "cool 1 h",
+     "nuclide": "Fe56"
+    },
+    "M2": {
+     "value": 2.63942395799565e-15,
+     "step": 4,
+     "label": "irr to 10 y",
+     "nuclide": "Mn56"
+    }
+   },
+   "first_failure": null
+  },
+  {
+   "case": "5a_loop_strong",
+   "cram_order": 16,
+   "mode": "coupled",
+   "pulses_run": null,
+   "steps_scheduled": 6,
+   "decay_only": false,
+   "binary_sha256": "186cc2587bb61766b3b3c426c61cd44f00ed472401026dea2ca3dd595c8d1194",
+   "wall_s": 0.03223529597744346,
+   "exit_status": 0,
+   "timed_out": false,
+   "stderr_tail": "6 steps, 5 of 5 states, 13.0 ms -> /home/connoravila/Documents/actinv/target/nav-wt/target/p168-run/5a_loop_strong/cram16/result.json\n",
+   "result_bytes": 12257,
+   "steps_compared": 6,
+   "time_error": 0.0,
+   "status": "holds",
+   "reason": null,
+   "worst": {
+    "M1": {
+     "value": 4.771627108440164e-16,
+     "step": 2,
+     "label": "irr to 30 d",
+     "nuclide": "Mn55"
+    },
+    "M2": {
+     "value": 1.1656005078432503e-15,
+     "step": 4,
+     "label": "irr to 10 y",
+     "nuclide": "Mn56"
+    }
+   },
+   "first_failure": null
+  },
+  {
+   "case": "5a_loop_strong",
+   "cram_order": 48,
+   "mode": "coupled",
+   "pulses_run": null,
+   "steps_scheduled": 6,
+   "decay_only": false,
+   "binary_sha256": "186cc2587bb61766b3b3c426c61cd44f00ed472401026dea2ca3dd595c8d1194",
+   "wall_s": 0.008278368972241879,
+   "exit_status": 0,
+   "timed_out": false,
+   "stderr_tail": "6 steps, 5 of 5 states, 2.4 ms -> /home/connoravila/Documents/actinv/target/nav-wt/target/p168-run/5a_loop_strong/cram48/result.json\n",
+   "result_bytes": 12286,
+   "steps_compared": 6,
+   "time_error": 0.0,
+   "status": "holds",
+   "reason": null,
+   "worst": {
+    "M1": {
+     "value": 3.223018773316831e-15,
+     "step": 6,
+     "label": "cool 10 h",
+     "nuclide": "Fe56"
+    },
+    "M2": {
+     "value": 4.5406565829603265e-15,
+     "step": 6,
+     "label": "cool 10 h",
+     "nuclide": "Mn56"
+    }
+   },
+   "first_failure": null
+  },
+  {
+   "case": "5b_isomer_loop",
+   "cram_order": 16,
+   "mode": "coupled",
+   "pulses_run": null,
+   "steps_scheduled": 7,
+   "decay_only": false,
+   "binary_sha256": "186cc2587bb61766b3b3c426c61cd44f00ed472401026dea2ca3dd595c8d1194",
+   "wall_s": 0.03259511606302112,
+   "exit_status": 0,
+   "timed_out": false,
+   "stderr_tail": "7 steps, 7 of 7 states, 18.1 ms -> /home/connoravila/Documents/actinv/target/nav-wt/target/p168-run/5b_isomer_loop/cram16/result.json\n",
+   "result_bytes": 16024,
+   "steps_compared": 7,
+   "time_error": 0.0,
+   "status": "holds",
+   "reason": null,
+   "worst": {
+    "M1": {
+     "value": 6.969499227265198e-16,
+     "step": 3,
+     "label": "irr to 30 d",
+     "nuclide": "Pt192"
+    },
+    "M2": {
+     "value": 1.4545361598704959e-13,
+     "step": 4,
+     "label": "irr to 1 y",
+     "nuclide": "Ir192m1"
+    }
+   },
+   "first_failure": null
+  },
+  {
+   "case": "5b_isomer_loop",
+   "cram_order": 48,
+   "mode": "coupled",
+   "pulses_run": null,
+   "steps_scheduled": 7,
+   "decay_only": false,
+   "binary_sha256": "186cc2587bb61766b3b3c426c61cd44f00ed472401026dea2ca3dd595c8d1194",
+   "wall_s": 0.01649707299657166,
+   "exit_status": 0,
+   "timed_out": false,
+   "stderr_tail": "7 steps, 7 of 7 states, 3.5 ms -> /home/connoravila/Documents/actinv/target/nav-wt/target/p168-run/5b_isomer_loop/cram48/result.json\n",
+   "result_bytes": 16056,
+   "steps_compared": 7,
+   "time_error": 0.0,
+   "status": "holds",
+   "reason": null,
+   "worst": {
+    "M1": {
+     "value": 3.2793489195257456e-15,
+     "step": 3,
+     "label": "irr to 30 d",
+     "nuclide": "Ir192"
+    },
+    "M2": {
+     "value": 3.2793489195257456e-15,
+     "step": 3,
+     "label": "irr to 30 d",
+     "nuclide": "Ir192"
+    }
+   },
+   "first_failure": null
+  },
+  {
+   "case": "5b_isomer_loop_strong",
+   "cram_order": 16,
+   "mode": "coupled",
+   "pulses_run": null,
+   "steps_scheduled": 7,
+   "decay_only": false,
+   "binary_sha256": "186cc2587bb61766b3b3c426c61cd44f00ed472401026dea2ca3dd595c8d1194",
+   "wall_s": 0.03267269709613174,
+   "exit_status": 0,
+   "timed_out": false,
+   "stderr_tail": "7 steps, 7 of 7 states, 11.1 ms -> /home/connoravila/Documents/actinv/target/nav-wt/target/p168-run/5b_isomer_loop_strong/cram16/result.json\n",
+   "result_bytes": 16072,
+   "steps_compared": 7,
+   "time_error": 0.0,
+   "status": "holds",
+   "reason": null,
+   "worst": {
+    "M1": {
+     "value": 1.5933594568413638e-14,
+     "step": 5,
+     "label": "cool 10 min",
+     "nuclide": "Pt192"
+    },
+    "M2": {
+     "value": 6.994055905310795e-13,
+     "step": 1,
+     "label": "irr to 1 h",
+     "nuclide": "Ir192m1"
+    }
+   },
+   "first_failure": null
+  },
+  {
+   "case": "5b_isomer_loop_strong",
+   "cram_order": 48,
+   "mode": "coupled",
+   "pulses_run": null,
+   "steps_scheduled": 7,
+   "decay_only": false,
+   "binary_sha256": "186cc2587bb61766b3b3c426c61cd44f00ed472401026dea2ca3dd595c8d1194",
+   "wall_s": 0.008376959944143891,
+   "exit_status": 0,
+   "timed_out": false,
+   "stderr_tail": "7 steps, 7 of 7 states, 2.7 ms -> /home/connoravila/Documents/actinv/target/nav-wt/target/p168-run/5b_isomer_loop_strong/cram48/result.json\n",
+   "result_bytes": 16098,
+   "steps_compared": 7,
+   "time_error": 0.0,
+   "status": "holds",
+   "reason": null,
+   "worst": {
+    "M1": {
+     "value": 1.9934132280337867e-14,
+     "step": 7,
+     "label": "cool 30 d",
+     "nuclide": "Pt192"
+    },
+    "M2": {
+     "value": 6.187113344301171e-14,
+     "step": 7,
+     "label": "cool 30 d",
+     "nuclide": "Ir192"
+    }
+   },
+   "first_failure": null
+  },
+  {
+   "case": "5c_defective_capture_decay",
+   "cram_order": 16,
+   "mode": "coupled",
+   "pulses_run": null,
+   "steps_scheduled": 4,
+   "decay_only": false,
+   "binary_sha256": "186cc2587bb61766b3b3c426c61cd44f00ed472401026dea2ca3dd595c8d1194",
+   "wall_s": 0.03261212108191103,
+   "exit_status": 0,
+   "timed_out": false,
+   "stderr_tail": "4 steps, 5 of 5 states, 16.9 ms -> /home/connoravila/Documents/actinv/target/nav-wt/target/p168-run/5c_defective_capture_decay/cram16/result.json\n",
+   "result_bytes": 10037,
+   "steps_compared": 4,
+   "time_error": 0.0,
+   "status": "holds",
+   "reason": null,
+   "worst": {
+    "M1": {
+     "value": 1.332873886998921e-15,
+     "step": 3,
+     "label": "irr to 90000 s",
+     "nuclide": "Fe56"
+    },
+    "M2": {
+     "value": 2.81726912669498e-13,
+     "step": 4,
+     "label": "cool 1e4 s",
+     "nuclide": "Mn56"
+    }
+   },
+   "first_failure": null
+  },
+  {
+   "case": "5c_defective_capture_decay",
+   "cram_order": 48,
+   "mode": "coupled",
+   "pulses_run": null,
+   "steps_scheduled": 4,
+   "decay_only": false,
+   "binary_sha256": "186cc2587bb61766b3b3c426c61cd44f00ed472401026dea2ca3dd595c8d1194",
+   "wall_s": 0.01679562998469919,
+   "exit_status": 0,
+   "timed_out": false,
+   "stderr_tail": "4 steps, 5 of 5 states, 2.6 ms -> /home/connoravila/Documents/actinv/target/nav-wt/target/p168-run/5c_defective_capture_decay/cram48/result.json\n",
+   "result_bytes": 10059,
+   "steps_compared": 4,
+   "time_error": 0.0,
+   "status": "holds",
+   "reason": null,
+   "worst": {
+    "M1": {
+     "value": 8.62451509233063e-16,
+     "step": 2,
+     "label": "irr to 9000 s",
+     "nuclide": "Mn55"
+    },
+    "M2": {
+     "value": 5.195833529877226e-16,
+     "step": 3,
+     "label": "irr to 90000 s",
+     "nuclide": "Mn56"
+    }
+   },
+   "first_failure": null
+  },
+  {
+   "case": "5d_defective_decay_triple",
+   "cram_order": 16,
+   "mode": "coupled",
+   "pulses_run": null,
+   "steps_scheduled": 4,
+   "decay_only": true,
+   "binary_sha256": "186cc2587bb61766b3b3c426c61cd44f00ed472401026dea2ca3dd595c8d1194",
+   "wall_s": 0.008461661986075342,
+   "exit_status": 0,
+   "timed_out": false,
+   "stderr_tail": "4 steps, 6 of 6 states, 1.9 ms -> /home/connoravila/Documents/actinv/target/nav-wt/target/p168-run/5d_defective_decay_triple/cram16/result.json\n",
+   "result_bytes": 9951,
+   "steps_compared": 4,
+   "time_error": 0.0,
+   "status": "breaks",
+   "reason": null,
+   "worst": {
+    "M1": {
+     "value": 8.283938816615378e-15,
+     "step": 2,
+     "label": "900 s",
+     "nuclide": "Zn58"
+    },
+    "M2": {
+     "value": 6320434718.878766,
+     "step": 4,
+     "label": "90000 s",
+     "nuclide": "Cu58"
+    }
+   },
+   "first_failure": {
+    "metric": "M2",
+    "value": 6320434718.878766,
+    "step": 4,
+    "label": "90000 s",
+    "nuclide": "Cu58"
+   }
+  },
+  {
+   "case": "5d_defective_decay_triple",
+   "cram_order": 48,
+   "mode": "coupled",
+   "pulses_run": null,
+   "steps_scheduled": 4,
+   "decay_only": true,
+   "binary_sha256": "186cc2587bb61766b3b3c426c61cd44f00ed472401026dea2ca3dd595c8d1194",
+   "wall_s": 0.008262385963462293,
+   "exit_status": 0,
+   "timed_out": false,
+   "stderr_tail": "4 steps, 6 of 6 states, 2.0 ms -> /home/connoravila/Documents/actinv/target/nav-wt/target/p168-run/5d_defective_decay_triple/cram48/result.json\n",
+   "result_bytes": 10337,
+   "steps_compared": 4,
+   "time_error": 0.0,
+   "status": "holds",
+   "reason": null,
+   "worst": {
+    "M1": {
+     "value": 1.048576000001951e-15,
+     "step": 4,
+     "label": "90000 s",
+     "nuclide": "Zn58"
+    },
+    "M2": {
+     "value": 1.268478973294831e-14,
+     "step": 4,
+     "label": "90000 s",
+     "nuclide": "Cu58"
+    }
+   },
+   "first_failure": null
+  },
+  {
+   "case": "6a_dynamic_range_coupled",
+   "cram_order": 16,
+   "mode": "coupled",
+   "pulses_run": null,
+   "steps_scheduled": 5,
+   "decay_only": false,
+   "binary_sha256": "186cc2587bb61766b3b3c426c61cd44f00ed472401026dea2ca3dd595c8d1194",
+   "wall_s": 0.032570176059380174,
+   "exit_status": 0,
+   "timed_out": false,
+   "stderr_tail": "5 steps, 8 of 8 states, 15.7 ms -> /home/connoravila/Documents/actinv/target/nav-wt/target/p168-run/6a_dynamic_range_coupled/cram16/result.json\n",
+   "result_bytes": 13832,
+   "steps_compared": 5,
+   "time_error": 0.0,
+   "status": "holds",
+   "reason": null,
+   "worst": {
+    "M1": {
+     "value": 1.8674884496298696e-16,
+     "step": 2,
+     "label": "cool 10 min",
+     "nuclide": "Si28"
+    },
+    "M2": {
+     "value": 2.9215351105685474e-14,
+     "step": 5,
+     "label": "cool 30 d",
+     "nuclide": "Mg24"
+    }
+   },
+   "first_failure": null
+  },
+  {
+   "case": "6a_dynamic_range_coupled",
+   "cram_order": 48,
+   "mode": "coupled",
+   "pulses_run": null,
+   "steps_scheduled": 5,
+   "decay_only": false,
+   "binary_sha256": "186cc2587bb61766b3b3c426c61cd44f00ed472401026dea2ca3dd595c8d1194",
+   "wall_s": 0.016660897061228752,
+   "exit_status": 0,
+   "timed_out": false,
+   "stderr_tail": "5 steps, 8 of 8 states, 3.4 ms -> /home/connoravila/Documents/actinv/target/nav-wt/target/p168-run/6a_dynamic_range_coupled/cram48/result.json\n",
+   "result_bytes": 13990,
+   "steps_compared": 5,
+   "time_error": 0.0,
+   "status": "holds",
+   "reason": null,
+   "worst": {
+    "M1": {
+     "value": 6.521120063752956e-16,
+     "step": 1,
+     "label": "irradiate 1 h",
+     "nuclide": "Si28"
+    },
+    "M2": {
+     "value": 8.883524503919531e-16,
+     "step": 4,
+     "label": "cool 1 d",
+     "nuclide": "Mg24"
+    }
+   },
+   "first_failure": null
+  },
+  {
+   "case": "6b_dynamic_range_trace",
+   "cram_order": 16,
+   "mode": "trace",
+   "pulses_run": null,
+   "steps_scheduled": 5,
+   "decay_only": false,
+   "binary_sha256": "186cc2587bb61766b3b3c426c61cd44f00ed472401026dea2ca3dd595c8d1194",
+   "wall_s": 0.008184712030924857,
+   "exit_status": 0,
+   "timed_out": false,
+   "stderr_tail": "5 steps, 8 of 8 states, 2.6 ms -> /home/connoravila/Documents/actinv/target/nav-wt/target/p168-run/6b_dynamic_range_trace/cram16/result.json\n",
+   "result_bytes": 12285,
+   "steps_compared": 5,
+   "time_error": 0.0,
+   "status": "breaks",
+   "reason": null,
+   "worst": {
+    "M1": {
+     "value": 1.0,
+     "step": 1,
+     "label": "irradiate 1 h",
+     "nuclide": "Si28"
+    },
+    "M2": {
+     "value": 2.8316044852735243e-14,
+     "step": 4,
+     "label": "cool 1 d",
+     "nuclide": "Mg24"
+    },
+    "M3": {
+     "value": 1.935809486704188e+20,
+     "step": 4,
+     "label": "cool 1 d",
+     "nuclide": "Na24"
+    }
+   },
+   "first_failure": {
+    "metric": "M1",
+    "value": 1.0,
+    "step": 1,
+    "label": "irradiate 1 h",
+    "nuclide": "Si28"
+   }
+  },
+  {
+   "case": "6b_dynamic_range_trace",
+   "cram_order": 48,
+   "mode": "trace",
+   "pulses_run": null,
+   "steps_scheduled": 5,
+   "decay_only": false,
+   "binary_sha256": "186cc2587bb61766b3b3c426c61cd44f00ed472401026dea2ca3dd595c8d1194",
+   "wall_s": 0.008289426914416254,
+   "exit_status": 0,
+   "timed_out": false,
+   "stderr_tail": "5 steps, 8 of 8 states, 2.7 ms -> /home/connoravila/Documents/actinv/target/nav-wt/target/p168-run/6b_dynamic_range_trace/cram48/result.json\n",
+   "result_bytes": 12222,
+   "steps_compared": 5,
+   "time_error": 0.0,
+   "status": "breaks",
+   "reason": null,
+   "worst": {
+    "M1": {
+     "value": 1.0,
+     "step": 1,
+     "label": "irradiate 1 h",
+     "nuclide": "Si28"
+    },
+    "M2": {
+     "value": 2.9232867932753197e-15,
+     "step": 4,
+     "label": "cool 1 d",
+     "nuclide": "Mg24"
+    },
+    "M3": {
+     "value": 8915.22845838562,
+     "step": 4,
+     "label": "cool 1 d",
+     "nuclide": "Na24"
+    }
+   },
+   "first_failure": {
+    "metric": "M1",
+    "value": 1.0,
+    "step": 1,
+    "label": "irradiate 1 h",
+    "nuclide": "Si28"
+   }
+  },
+  {
+   "case": "7_tungsten_burnup",
+   "cram_order": 16,
+   "mode": "coupled",
+   "pulses_run": null,
+   "steps_scheduled": 9,
+   "decay_only": false,
+   "binary_sha256": "186cc2587bb61766b3b3c426c61cd44f00ed472401026dea2ca3dd595c8d1194",
+   "wall_s": 0.03270399000030011,
+   "exit_status": 0,
+   "timed_out": false,
+   "stderr_tail": "9 steps, 7 of 7 states, 16.5 ms -> /home/connoravila/Documents/actinv/target/nav-wt/target/p168-run/7_tungsten_burnup/cram16/result.json\n",
+   "result_bytes": 18691,
+   "steps_compared": 9,
+   "time_error": 0.0,
+   "status": "breaks",
+   "reason": null,
+   "worst": {
+    "M1": {
+     "value": 1.5773110262601704e-15,
+     "step": 7,
+     "label": "cool 1 d",
+     "nuclide": "W186"
+    },
+    "M2": {
+     "value": 1.0,
+     "step": 9,
+     "label": "cool 1 y",
+     "nuclide": "W187"
+    }
+   },
+   "first_failure": {
+    "metric": "M2",
+    "value": 1.0,
+    "step": 9,
+    "label": "cool 1 y",
+    "nuclide": "W187"
+   }
+  },
+  {
+   "case": "7_tungsten_burnup",
+   "cram_order": 48,
+   "mode": "coupled",
+   "pulses_run": null,
+   "steps_scheduled": 9,
+   "decay_only": false,
+   "binary_sha256": "186cc2587bb61766b3b3c426c61cd44f00ed472401026dea2ca3dd595c8d1194",
+   "wall_s": 0.008134374977089465,
+   "exit_status": 0,
+   "timed_out": false,
+   "stderr_tail": "9 steps, 7 of 7 states, 3.0 ms -> /home/connoravila/Documents/actinv/target/nav-wt/target/p168-run/7_tungsten_burnup/cram48/result.json\n",
+   "result_bytes": 19073,
+   "steps_compared": 9,
+   "time_error": 0.0,
+   "status": "breaks",
+   "reason": null,
+   "worst": {
+    "M1": {
+     "value": 2.2637279925385897e-15,
+     "step": 9,
+     "label": "cool 1 y",
+     "nuclide": "Re187"
+    },
+    "M2": {
+     "value": 1.2883402666064308e+79,
+     "step": 9,
+     "label": "cool 1 y",
+     "nuclide": "W187"
+    }
+   },
+   "first_failure": {
+    "metric": "M2",
+    "value": 1.2883402666064308e+79,
+    "step": 9,
+    "label": "cool 1 y",
+    "nuclide": "W187"
+   }
+  }
+ ]
+}

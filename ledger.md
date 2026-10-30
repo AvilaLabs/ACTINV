@@ -4940,3 +4940,31 @@ Decimal overflowed. No record was written.
   10⁻¹¹²⁰, which no double can carry. The floor was set from the reference files alone.
 - **Test:** two regression cases join the selftest; the first fails on the registered code.
 - **Rerun:** the whole evidence run is repeated on this commit.
+
+## Entry 288 — P168 evidence: G0 to G3 pass on 9a77055; 34 of 38 runs hold (2026-10-30)
+
+- **Run:** `results/p168_limits.json`, made by the harness on the amendment commit 9a77055 inside the bounded scope,
+  with binary `186cc258…`. Verdict file: `results/p168_verdict.json`.
+- **Holds at both CRAM orders (15 cases):** 10³–10⁹-year cooling from pure parent and from equilibrium; 1 ns, 1 µs and
+  1 ms steps with λ to 10⁹ s⁻¹; Co-59 at 10¹⁴, 10¹⁵ and 10¹⁶ n/cm²/s (σφt to 63); pulse trains of 10⁴ and 10⁵ explicit
+  pulses (200,000 steps, 3.5 s at CRAM-16) and the truncated 10⁶ trains; weak and strong reaction loops; isomer loops;
+  the defective capture–decay case; the 28-order dynamic range in coupled mode.
+- **Breaks:** 5d (three equal half-lives) at CRAM-16 only; 6b (trace) and 7 (tungsten burn-up) at both orders.
+- **Diagnosis** (after the record, by rerunning those four problems outside the record; not evidence):
+  - **6b:** every trace product equals the reference, Al-24 included at 2 × 10⁻⁶ atoms/g. The failing entries are the
+    bulk nuclides Si-28 and Na-23. Trace mode holds them constant and reports them in the step summary, not in
+    `inventory`, and the harness read only `inventory`. The break is a harness convention.
+  - **7:** every nuclide above 10⁻¹⁰ of the inventory equals the reference. The failures are W-187 and Re-188 at
+    10⁻⁹⁴ and 10⁻¹³⁸ atoms/g after a year of cooling, when the reference activity of the whole sample is
+    3.8 × 10⁻⁹⁹ Bq/g. CRAM-16 omits them, and CRAM-48 prints about 10⁻¹⁴ atoms/g. M2's relative activity share picked
+    numerical dust because M2 has no absolute floor.
+  - **5d at CRAM-16 is a real limit:**
+    - In one 90,000 s step, Cu-58 decayed from a population near 10²⁰ to a reference 1.9 × 10⁻⁵ atoms/g. CRAM-16
+      left 1.2 × 10⁵ atoms/g.
+    - The activity table reports 83 Bq/g, where the reference total is 1.4 × 10⁻⁸ Bq/g.
+    - The step flags it (`numerical_floor_atoms_per_g` 2.1 × 10⁶, `n_states_below_floor` 1), but the below-floor
+      state stays in the activity table.
+    - CRAM-48 holds.
+  - **Successor:** below-floor states should leave the activity, heat and dose totals and be reported as a bound, or
+    the step should move to CRAM-48 when that bound is material. A successor protocol will decide which.
+- **G4** is CI on this commit.

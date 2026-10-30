@@ -1,0 +1,493 @@
+{
+ "allowed_sentences": [
+  "On 19 synthetic stress cases checked against high-precision reference solutions (30 significant digits recorded), ACTINV's CRAM-16 solver held to 1e-10 normalized error and 1e-06 relative error on the nuclides carrying activity in 16 cases, broke that bound in 3 and did not run to completion in 0.",
+  "With CRAM-48 the solver held in 17 cases, broke in 2 and did not run to completion in 0.",
+  "The largest normalized error (M1) over the cases that ran at CRAM-16 was 1.00e+00 (6b_dynamic_range_trace).",
+  "The largest normalized error (M1) over the cases that ran at CRAM-48 was 1.00e+00 (6b_dynamic_range_trace).",
+  "CRAM-48 held in 1 of the 3 cases where CRAM-16 broke: 5d_defective_decay_triple."
+ ],
+ "gates": {
+  "G0": {
+   "pass": true,
+   "problems": []
+  },
+  "G1": {
+   "pass": true,
+   "problems": []
+  },
+  "G2": {
+   "pass": true,
+   "problems": []
+  },
+  "G3": {
+   "pass": true,
+   "problems": []
+  }
+ },
+ "protocol": "ACTINV-P168",
+ "summary": {
+  "counts": {
+   "16": {
+    "breaks": 3,
+    "fails-to-run": 0,
+    "holds": 16
+   },
+   "48": {
+    "breaks": 2,
+    "fails-to-run": 0,
+    "holds": 17
+   }
+  },
+  "limits_map": [
+   {
+    "case": "1a_u238_chain_pure_parent",
+    "cram_order": 16,
+    "first_failure": null,
+    "reason": null,
+    "status": "holds",
+    "wall_s": 0.0036832679761573672,
+    "worst_M1": 2.9248674917102215e-16,
+    "worst_M2": 1.1150628190322993e-12,
+    "worst_M3": null
+   },
+   {
+    "case": "1a_u238_chain_pure_parent",
+    "cram_order": 48,
+    "first_failure": null,
+    "reason": null,
+    "status": "holds",
+    "wall_s": 0.007712156046181917,
+    "worst_M1": 3.809316270828881e-15,
+    "worst_M2": 3.823629502932472e-15,
+    "worst_M3": null
+   },
+   {
+    "case": "1b_u238_chain_equilibrated",
+    "cram_order": 16,
+    "first_failure": null,
+    "reason": null,
+    "status": "holds",
+    "wall_s": 0.0036664550425484776,
+    "worst_M1": 2.9248674917102215e-16,
+    "worst_M2": 5.398117950828326e-16,
+    "worst_M3": null
+   },
+   {
+    "case": "1b_u238_chain_equilibrated",
+    "cram_order": 48,
+    "first_failure": null,
+    "reason": null,
+    "status": "holds",
+    "wall_s": 0.003620865987613797,
+    "worst_M1": 3.809316270828881e-15,
+    "worst_M2": 3.823629502932472e-15,
+    "worst_M3": null
+   },
+   {
+    "case": "2_very_short_times",
+    "cram_order": 16,
+    "first_failure": null,
+    "reason": null,
+    "status": "holds",
+    "wall_s": 0.0036714610178023577,
+    "worst_M1": 1.092054967516287e-15,
+    "worst_M2": 2.660946629107987e-14,
+    "worst_M3": null
+   },
+   {
+    "case": "2_very_short_times",
+    "cram_order": 48,
+    "first_failure": null,
+    "reason": null,
+    "status": "holds",
+    "wall_s": 0.007795376004651189,
+    "worst_M1": 4.802251042776507e-15,
+    "worst_M2": 2.3049717176160014e-15,
+    "worst_M3": null
+   },
+   {
+    "case": "3_co59_flux1e14",
+    "cram_order": 16,
+    "first_failure": null,
+    "reason": null,
+    "status": "holds",
+    "wall_s": 0.03206088999286294,
+    "worst_M1": 1.4198414805419628e-15,
+    "worst_M2": 3.299436939737985e-12,
+    "worst_M3": null
+   },
+   {
+    "case": "3_co59_flux1e14",
+    "cram_order": 48,
+    "first_failure": null,
+    "reason": null,
+    "status": "holds",
+    "wall_s": 0.007829137030057609,
+    "worst_M1": 2.1913795078680693e-15,
+    "worst_M2": 4.382393868701494e-15,
+    "worst_M3": null
+   },
+   {
+    "case": "3_co59_flux1e15",
+    "cram_order": 16,
+    "first_failure": null,
+    "reason": null,
+    "status": "holds",
+    "wall_s": 0.01602250209543854,
+    "worst_M1": 2.0517583147845956e-15,
+    "worst_M2": 3.288313941511882e-12,
+    "worst_M3": null
+   },
+   {
+    "case": "3_co59_flux1e15",
+    "cram_order": 48,
+    "first_failure": null,
+    "reason": null,
+    "status": "holds",
+    "wall_s": 0.00786600704304874,
+    "worst_M1": 3.883402629804069e-15,
+    "worst_M2": 7.618888142504897e-15,
+    "worst_M3": null
+   },
+   {
+    "case": "3_co59_flux1e16",
+    "cram_order": 16,
+    "first_failure": null,
+    "reason": null,
+    "status": "holds",
+    "wall_s": 0.01577904401347041,
+    "worst_M1": 7.632486336550436e-16,
+    "worst_M2": 3.4875173585279802e-12,
+    "worst_M3": null
+   },
+   {
+    "case": "3_co59_flux1e16",
+    "cram_order": 48,
+    "first_failure": null,
+    "reason": null,
+    "status": "holds",
+    "wall_s": 0.008131660986691713,
+    "worst_M1": 6.000638859231023e-15,
+    "worst_M2": 5.578569308616756e-15,
+    "worst_M3": null
+   },
+   {
+    "case": "4_pulse_train_0p1s_1e4",
+    "cram_order": 16,
+    "first_failure": null,
+    "reason": null,
+    "status": "holds",
+    "wall_s": 0.3652852129889652,
+    "worst_M1": 3.60257041943506e-12,
+    "worst_M2": 3.6082607463755186e-12,
+    "worst_M3": null
+   },
+   {
+    "case": "4_pulse_train_0p1s_1e4",
+    "cram_order": 48,
+    "first_failure": null,
+    "reason": null,
+    "status": "holds",
+    "wall_s": 0.616503536934033,
+    "worst_M1": 1.6917613295435775e-12,
+    "worst_M2": 2.3170590237583757e-12,
+    "worst_M3": null
+   },
+   {
+    "case": "4_pulse_train_0p1s_1e5",
+    "cram_order": 16,
+    "first_failure": null,
+    "reason": null,
+    "status": "holds",
+    "wall_s": 3.5239661569939926,
+    "worst_M1": 3.908537598256123e-11,
+    "worst_M2": 3.8817340009874324e-11,
+    "worst_M3": null
+   },
+   {
+    "case": "4_pulse_train_0p1s_1e5",
+    "cram_order": 48,
+    "first_failure": null,
+    "reason": null,
+    "status": "holds",
+    "wall_s": 6.483192307990976,
+    "worst_M1": 1.7407783648469363e-11,
+    "worst_M2": 2.2222044416262784e-11,
+    "worst_M3": null
+   },
+   {
+    "case": "4_pulse_train_0p1s_1e6",
+    "cram_order": 16,
+    "first_failure": null,
+    "reason": null,
+    "status": "holds",
+    "wall_s": 0.06426962395198643,
+    "worst_M1": 1.0627719865760861e-13,
+    "worst_M2": 1.557958805258559e-13,
+    "worst_M3": null
+   },
+   {
+    "case": "4_pulse_train_0p1s_1e6",
+    "cram_order": 48,
+    "first_failure": null,
+    "reason": null,
+    "status": "holds",
+    "wall_s": 0.11444177106022835,
+    "worst_M1": 6.91714860957638e-14,
+    "worst_M2": 5.370569675187868e-13,
+    "worst_M3": null
+   },
+   {
+    "case": "4_pulse_train_1s_1e6",
+    "cram_order": 16,
+    "first_failure": null,
+    "reason": null,
+    "status": "holds",
+    "wall_s": 0.06443240400403738,
+    "worst_M1": 3.170557260885907e-13,
+    "worst_M2": 3.6298470926272515e-13,
+    "worst_M3": null
+   },
+   {
+    "case": "4_pulse_train_1s_1e6",
+    "cram_order": 48,
+    "first_failure": null,
+    "reason": null,
+    "status": "holds",
+    "wall_s": 0.1144991930341348,
+    "worst_M1": 1.3811613054430312e-13,
+    "worst_M2": 7.19543903181504e-14,
+    "worst_M3": null
+   },
+   {
+    "case": "5a_loop_weak",
+    "cram_order": 16,
+    "first_failure": null,
+    "reason": null,
+    "status": "holds",
+    "wall_s": 0.03233969793654978,
+    "worst_M1": 8.675600910365696e-16,
+    "worst_M2": 5.83033881692707e-14,
+    "worst_M3": null
+   },
+   {
+    "case": "5a_loop_weak",
+    "cram_order": 48,
+    "first_failure": null,
+    "reason": null,
+    "status": "holds",
+    "wall_s": 0.008351369993761182,
+    "worst_M1": 2.7409596024974267e-15,
+    "worst_M2": 2.63942395799565e-15,
+    "worst_M3": null
+   },
+   {
+    "case": "5a_loop_strong",
+    "cram_order": 16,
+    "first_failure": null,
+    "reason": null,
+    "status": "holds",
+    "wall_s": 0.03223529597744346,
+    "worst_M1": 4.771627108440164e-16,
+    "worst_M2": 1.1656005078432503e-15,
+    "worst_M3": null
+   },
+   {
+    "case": "5a_loop_strong",
+    "cram_order": 48,
+    "first_failure": null,
+    "reason": null,
+    "status": "holds",
+    "wall_s": 0.008278368972241879,
+    "worst_M1": 3.223018773316831e-15,
+    "worst_M2": 4.5406565829603265e-15,
+    "worst_M3": null
+   },
+   {
+    "case": "5b_isomer_loop",
+    "cram_order": 16,
+    "first_failure": null,
+    "reason": null,
+    "status": "holds",
+    "wall_s": 0.03259511606302112,
+    "worst_M1": 6.969499227265198e-16,
+    "worst_M2": 1.4545361598704959e-13,
+    "worst_M3": null
+   },
+   {
+    "case": "5b_isomer_loop",
+    "cram_order": 48,
+    "first_failure": null,
+    "reason": null,
+    "status": "holds",
+    "wall_s": 0.01649707299657166,
+    "worst_M1": 3.2793489195257456e-15,
+    "worst_M2": 3.2793489195257456e-15,
+    "worst_M3": null
+   },
+   {
+    "case": "5b_isomer_loop_strong",
+    "cram_order": 16,
+    "first_failure": null,
+    "reason": null,
+    "status": "holds",
+    "wall_s": 0.03267269709613174,
+    "worst_M1": 1.5933594568413638e-14,
+    "worst_M2": 6.994055905310795e-13,
+    "worst_M3": null
+   },
+   {
+    "case": "5b_isomer_loop_strong",
+    "cram_order": 48,
+    "first_failure": null,
+    "reason": null,
+    "status": "holds",
+    "wall_s": 0.008376959944143891,
+    "worst_M1": 1.9934132280337867e-14,
+    "worst_M2": 6.187113344301171e-14,
+    "worst_M3": null
+   },
+   {
+    "case": "5c_defective_capture_decay",
+    "cram_order": 16,
+    "first_failure": null,
+    "reason": null,
+    "status": "holds",
+    "wall_s": 0.03261212108191103,
+    "worst_M1": 1.332873886998921e-15,
+    "worst_M2": 2.81726912669498e-13,
+    "worst_M3": null
+   },
+   {
+    "case": "5c_defective_capture_decay",
+    "cram_order": 48,
+    "first_failure": null,
+    "reason": null,
+    "status": "holds",
+    "wall_s": 0.01679562998469919,
+    "worst_M1": 8.62451509233063e-16,
+    "worst_M2": 5.195833529877226e-16,
+    "worst_M3": null
+   },
+   {
+    "case": "5d_defective_decay_triple",
+    "cram_order": 16,
+    "first_failure": {
+     "label": "90000 s",
+     "metric": "M2",
+     "nuclide": "Cu58",
+     "step": 4,
+     "value": 6320434718.878766
+    },
+    "reason": null,
+    "status": "breaks",
+    "wall_s": 0.008461661986075342,
+    "worst_M1": 8.283938816615378e-15,
+    "worst_M2": 6320434718.878766,
+    "worst_M3": null
+   },
+   {
+    "case": "5d_defective_decay_triple",
+    "cram_order": 48,
+    "first_failure": null,
+    "reason": null,
+    "status": "holds",
+    "wall_s": 0.008262385963462293,
+    "worst_M1": 1.048576000001951e-15,
+    "worst_M2": 1.268478973294831e-14,
+    "worst_M3": null
+   },
+   {
+    "case": "6a_dynamic_range_coupled",
+    "cram_order": 16,
+    "first_failure": null,
+    "reason": null,
+    "status": "holds",
+    "wall_s": 0.032570176059380174,
+    "worst_M1": 1.8674884496298696e-16,
+    "worst_M2": 2.9215351105685474e-14,
+    "worst_M3": null
+   },
+   {
+    "case": "6a_dynamic_range_coupled",
+    "cram_order": 48,
+    "first_failure": null,
+    "reason": null,
+    "status": "holds",
+    "wall_s": 0.016660897061228752,
+    "worst_M1": 6.521120063752956e-16,
+    "worst_M2": 8.883524503919531e-16,
+    "worst_M3": null
+   },
+   {
+    "case": "6b_dynamic_range_trace",
+    "cram_order": 16,
+    "first_failure": {
+     "label": "irradiate 1 h",
+     "metric": "M1",
+     "nuclide": "Si28",
+     "step": 1,
+     "value": 1.0
+    },
+    "reason": null,
+    "status": "breaks",
+    "wall_s": 0.008184712030924857,
+    "worst_M1": 1.0,
+    "worst_M2": 2.8316044852735243e-14,
+    "worst_M3": 1.935809486704188e+20
+   },
+   {
+    "case": "6b_dynamic_range_trace",
+    "cram_order": 48,
+    "first_failure": {
+     "label": "irradiate 1 h",
+     "metric": "M1",
+     "nuclide": "Si28",
+     "step": 1,
+     "value": 1.0
+    },
+    "reason": null,
+    "status": "breaks",
+    "wall_s": 0.008289426914416254,
+    "worst_M1": 1.0,
+    "worst_M2": 2.9232867932753197e-15,
+    "worst_M3": 8915.22845838562
+   },
+   {
+    "case": "7_tungsten_burnup",
+    "cram_order": 16,
+    "first_failure": {
+     "label": "cool 1 y",
+     "metric": "M2",
+     "nuclide": "W187",
+     "step": 9,
+     "value": 1.0
+    },
+    "reason": null,
+    "status": "breaks",
+    "wall_s": 0.03270399000030011,
+    "worst_M1": 1.5773110262601704e-15,
+    "worst_M2": 1.0,
+    "worst_M3": null
+   },
+   {
+    "case": "7_tungsten_burnup",
+    "cram_order": 48,
+    "first_failure": {
+     "label": "cool 1 y",
+     "metric": "M2",
+     "nuclide": "W187",
+     "step": 9,
+     "value": 1.2883402666064308e+79
+    },
+    "reason": null,
+    "status": "breaks",
+    "wall_s": 0.008134374977089465,
+    "worst_M1": 2.2637279925385897e-15,
+    "worst_M2": 1.2883402666064308e+79,
+    "worst_M3": null
+   }
+  ]
+ },
+ "verdict": "P168-PASS (pending G4, CI on the evidence commit)"
+}
