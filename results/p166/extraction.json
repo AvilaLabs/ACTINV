@@ -1,0 +1,170 @@
+{
+ "schema": "actinv-p166-extraction-1",
+ "pdf": {
+  "path": "/home/connoravila/nuclear-data/conderc-fission/references/Gauld_SummaryReport_2019.pdf",
+  "sha256": "71f22abd8993f72656b00ae80bff02099bbb1bea8f8db4781e33b58f9d273f74"
+ },
+ "pdftotext": "pdftotext version 26.01.0",
+ "csv_sha256": "0160b82fedf141e71b81f7ff9ad1e26783ef77c999a22ff0b6d8db79759a0cb9",
+ "rows": 1720,
+ "printed_ratio_checks": 800,
+ "printed_ratio_failures": 0,
+ "anomalies": [
+  {
+   "table": 2,
+   "cooling_time_s": "38.00",
+   "total": "3.3194",
+   "gamma": "1.5904",
+   "beta": "1.7210",
+   "action": "gamma and beta not scored at this time; total kept"
+  },
+  {
+   "table": 2,
+   "cooling_time_s": "260.00",
+   "total": "1.4456",
+   "gamma": "0.7252",
+   "beta": "0.7193",
+   "action": "gamma and beta not scored at this time; total kept"
+  },
+  {
+   "table": 4,
+   "cooling_time_s": "1.35",
+   "total": "8.2162",
+   "gamma": "3.9275",
+   "beta": "4.2007",
+   "action": "gamma and beta not scored at this time; total kept"
+  },
+  {
+   "table": 4,
+   "cooling_time_s": "1.7",
+   "total": "8.0232",
+   "gamma": "3.0151",
+   "beta": "4.2082",
+   "action": "gamma and beta not scored at this time; total kept"
+  },
+  {
+   "table": 5,
+   "cooling_time_s": "2.94",
+   "total": "9.9514",
+   "gamma": "5.1005",
+   "beta": "4.8430",
+   "action": "gamma and beta not scored at this time; total kept"
+  },
+  {
+   "table": 5,
+   "cooling_time_s": "4.25",
+   "total": "9.4443",
+   "gamma": "4.8739",
+   "beta": "4.5708",
+   "action": "gamma and beta not scored at this time; total kept"
+  },
+  {
+   "table": 5,
+   "cooling_time_s": "5259.3",
+   "total": "0.8855",
+   "gamma": "0.4954",
+   "beta": "0.3891",
+   "action": "gamma and beta not scored at this time; total kept"
+  },
+  {
+   "table": 5,
+   "cooling_time_s": "104933.8",
+   "total": "0.0416",
+   "gamma": "0.0213",
+   "beta": "0.0282",
+   "action": "gamma and beta not scored at this time; total kept"
+  },
+  {
+   "table": 6,
+   "cooling_time_s": "8.25",
+   "total": "9.0799",
+   "gamma": "4.8393",
+   "beta": "4.2486",
+   "action": "gamma and beta not scored at this time; total kept"
+  },
+  {
+   "table": 6,
+   "cooling_time_s": "43.60",
+   "total": "6.5336",
+   "gamma": "3.6301",
+   "beta": "2.9235",
+   "action": "gamma and beta not scored at this time; total kept"
+  },
+  {
+   "table": 6,
+   "cooling_time_s": "5587.8",
+   "total": "1.3301",
+   "gamma": "0.7104",
+   "beta": "0.6258",
+   "action": "gamma and beta not scored at this time; total kept"
+  },
+  {
+   "table": 6,
+   "cooling_time_s": "106580.0",
+   "total": "0.1302",
+   "gamma": "0.0698",
+   "beta": "0.0611",
+   "action": "gamma and beta not scored at this time; total kept"
+  },
+  {
+   "table": 7,
+   "cooling_time_s": "1.5",
+   "total": "12.0488",
+   "gamma": "6.5397",
+   "beta": "5.5101",
+   "action": "gamma and beta not scored at this time; total kept"
+  },
+  {
+   "table": 7,
+   "cooling_time_s": "108.45",
+   "total": "5.9907",
+   "gamma": "3.4616",
+   "beta": "2.5298",
+   "action": "gamma and beta not scored at this time; total kept"
+  },
+  {
+   "table": 7,
+   "cooling_time_s": "258.75",
+   "total": "4.9355",
+   "gamma": "2.8566",
+   "beta": "2.0785",
+   "action": "gamma and beta not scored at this time; total kept"
+  },
+  {
+   "table": 7,
+   "cooling_time_s": "13944.6",
+   "total": "1.3736",
+   "gamma": "0.7359",
+   "beta": "0.6379",
+   "action": "gamma and beta not scored at this time; total kept"
+  }
+ ],
+ "points_by_dataset_channel": {
+  "FI76-Pu239-pulse/total": 21,
+  "FI76-U233-pulse/total": 21,
+  "FR76-U235-24h/beta": 86,
+  "FR76-U235-24h/gamma": 86,
+  "FR76-U235-24h/total": 86,
+  "FR79-Pu239-1000s/beta": 55,
+  "FR79-Pu239-1000s/gamma": 55,
+  "FR79-Pu239-1000s/total": 57,
+  "FR79-Pu239-24h/beta": 74,
+  "FR79-Pu239-24h/gamma": 74,
+  "FR79-Pu239-24h/total": 74,
+  "FR79-U235-1000s/beta": 70,
+  "FR79-U235-1000s/gamma": 70,
+  "FR79-U235-1000s/total": 72,
+  "FR79-U235-20000s/beta": 73,
+  "FR79-U235-20000s/gamma": 73,
+  "FR79-U235-20000s/total": 77,
+  "FR79-U235-24h/beta": 77,
+  "FR79-U235-24h/gamma": 77,
+  "FR79-U235-24h/total": 81,
+  "FR79-U235-35d/beta": 79,
+  "FR79-U235-35d/gamma": 79,
+  "FR79-U235-35d/total": 83,
+  "SC78-U235-1h/total": 25,
+  "SC78-U235-22.35h/total": 37,
+  "SC78-U235-4h/total": 58
+ }
+}

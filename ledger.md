@@ -4775,3 +4775,19 @@ Every workflow triggered on `833be5a` (the evidence on registration `d6f516b`) p
 ACTINV is at least 6.5x faster than OpenMC 0.15.3 flux mode from model to photon source at every measured size (8,
 64, 512 mesh cells; 9.2x, 8.2x and 6.5x worst case), and 42x against OpenMC's default mode at 8 cells, with doses
 within 2.1%. Speed sentences in releases and documentation are limited to the verdict's allowed sentences.
+
+## Entry 277 — P166 registered: fission decay heat against the rest of the open CoNDERC fission tables (2026-10-30)
+
+**P166** `70113e9b113daf8346ff36d972d7eeedc49b3c5af560034d9a18d3ee92467e6d` was registered before any ACTINV run on its data. The question: with the P9 model unchanged
+(ENDF/B-VIII.0 independent yields at 0.0253 eV, ENDF/B-VIII.0 decay data, constant fission rate, trace mode), how close
+is ACTINV's fission-product decay heat to the measured tables of Gauld's 2019 CoNDERC report: Friesenhahn 1976 and 1979
+(IRT), Schrock 1978 (UC Berkeley) and Fiche 1976 (CEA Cadarache), for U-233, U-235 and Pu-239 thermal fission. The
+measured values were extracted from the pinned report (`controls/p166_extract.py`, 1,720 points in
+`results/p166/conderc_fission_tables.csv`); all 800 printed ORIGEN ratios reproduce from the extracted numbers, and 16
+rows whose gamma and beta do not sum to the printed total keep only the total. Johnson 1965 and Gunst 1975 are excluded
+for the compiler's stated reasons. Gates: G0 hash; G1 pins, byte-identical re-extraction, the P163 binary and its
+crates tree, the bounded scope; G2 model fidelity per run; G3 every point scored once; G4 the registered summary and
+sentences; G5 CI on the evidence commit. Accuracy is reported, not gated. This adds laboratories and fissile nuclides
+to the fission-yield and decay-data evidence; it is not a second integral-activation facility.
+Disclosed, not evidence: development runs re-scored only P9's Yarnell set through the new harness (geometric-mean C/E
+0.98451141684 against P9's 0.98451141694).
