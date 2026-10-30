@@ -4820,3 +4820,19 @@ Pu-239 thermal fission), ACTINV with ENDF/B-VIII.0 yields and decay data has a m
 geometric-mean C/E of 0.960; ORIGEN with ENDF/B-VII.0 yields and ENDF/B-VII.1 decay data has 0.042 and 0.962 on the
 same points. With P9's Oak Ridge and Los Alamos sets, fission decay heat is checked against five laboratories.
 Sentences about this comparison are limited to the verdict's allowed sentences.
+
+## Entry 280 — P167 registered: activation reaction rates in the NPI Řež quasi-monoenergetic fields (2026-10-30)
+
+**P167** `a9a2675cb1c9db6306ac0d88934a98b5b89bff962aa1dedf6ac5e5f6f306ec48` was registered before any scored ACTINV calculation on its data. The question: how close are
+reaction rates from ACTINV's shipped TENDL-2025 library (catalog 1.2.0) to the rates measured in the two 7Li(p,n)
+quasi-monoenergetic fields (12.4 and 14.4 MeV protons) of NPI CAS Řež, published with their spectra by Matěj, Košťál,
+Majerle et al. (arXiv:2306.09353v1). This is a second, independent integral-activation facility with open data. 29
+scored reactions; ⁵⁸Ni(n,p) and ²⁷Al(n,α) are the authors' spectrum normalization and are diagnostics only;
+⁵⁸Ni(n,2n) is secondary. ACTINV's own `inspect xs` rebin and collapse compute the rates, cross-checked by an
+independent fold. The extracted tables (`results/p167/rez_tables.json`) were checked by reproducing all 27 of the
+authors' IRDFF-II C/E values within 0.30 percentage points. Gates: G0 hash; G1 pins, re-extraction, binary and
+bounded scope; G2 registered spectra and reactions, the IRDFF-II reproduction, ACTINV equal to the independent fold;
+G3 the registered summary and sentences; G4 CI on the evidence commit. Accuracy is reported, not gated.
+Disclosed, not evidence: one ACTINV value was seen while learning the output format (⁵⁹Co(n,2n) at 14.4 MeV,
+2.206 × 10⁻¹⁸ s⁻¹ against 2.38 × 10⁻¹⁸ measured), and one full run whose output was limited to the mechanical agreement
+(6 × 10⁻¹⁶) and then deleted.

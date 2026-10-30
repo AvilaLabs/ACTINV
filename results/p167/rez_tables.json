@@ -1,0 +1,1958 @@
+{
+ "fields": {
+  "12.4": {
+   "published_rows": 13,
+   "rates": [
+    {
+     "E50_MeV": 6.78,
+     "published": {
+      "E50_MeV": 6.78,
+      "ENDF/B-VIII": 2.0,
+      "IRDFF-II": 1.9,
+      "JEFF-3.3": -2.3,
+      "JENDL-4": 5.2,
+      "element_reaction": "Fe(n,p)",
+      "uncertainty_percent": 4.2
+     },
+     "rate_per_s": 4.51e-18,
+     "reaction": "54Fe(n,p)",
+     "status": "scored",
+     "uncertainty_percent": 4.1
+    },
+    {
+     "E50_MeV": 7.43,
+     "published": {
+      "E50_MeV": 7.43,
+      "ENDF/B-VIII": 23.6,
+      "IRDFF-II": 7.8,
+      "JEFF-3.3": 8.4,
+      "JENDL-4": 11.7,
+      "element_reaction": "Ti(n,p)",
+      "uncertainty_percent": 3.7
+     },
+     "rate_per_s": 9.35e-19,
+     "reaction": "47Ti(n,p)",
+     "status": "scored",
+     "uncertainty_percent": 3.6
+    },
+    {
+     "E50_MeV": 9.61,
+     "published": {
+      "E50_MeV": 9.61,
+      "ENDF/B-VIII": 4.8,
+      "IRDFF-II": 11.7,
+      "JEFF-3.3": 12.2,
+      "JENDL-4": 9.8,
+      "element_reaction": "Ti(n,p)",
+      "uncertainty_percent": 8.3
+     },
+     "rate_per_s": 1.46e-18,
+     "reaction": "46Ti(n,p)",
+     "status": "scored",
+     "uncertainty_percent": 8.2
+    },
+    {
+     "E50_MeV": 10.05,
+     "published": {
+      "E50_MeV": 10.05,
+      "ENDF/B-VIII": 3.2,
+      "IRDFF-II": 3.2,
+      "JEFF-3.3": -7.1,
+      "JENDL-4": -5.5,
+      "element_reaction": "Co(n,p)",
+      "uncertainty_percent": 4.1
+     },
+     "rate_per_s": 2.21e-19,
+     "reaction": "59Co(n,p)",
+     "status": "scored",
+     "uncertainty_percent": 3.9
+    },
+    {
+     "E50_MeV": 10.25,
+     "published": {
+      "E50_MeV": 10.25,
+      "ENDF/B-VIII": 18.1,
+      "IRDFF-II": 18.1,
+      "JEFF-3.3": 18.8,
+      "JENDL-4": 20.9,
+      "element_reaction": "Ni(n,p)",
+      "uncertainty_percent": 6.9
+     },
+     "rate_per_s": 4.68e-19,
+     "reaction": "60Ni(n,p)",
+     "status": "scored",
+     "uncertainty_percent": 6.8
+    },
+    {
+     "E50_MeV": 10.3,
+     "published": {
+      "E50_MeV": 10.3,
+      "ENDF/B-VIII": -2.5,
+      "IRDFF-II": -2.5,
+      "JEFF-3.3": -4.0,
+      "JENDL-4": 0.2,
+      "element_reaction": "Fe(n,p)",
+      "uncertainty_percent": 3.9
+     },
+     "rate_per_s": 3.51e-19,
+     "reaction": "56Fe(n,p)",
+     "status": "scored",
+     "uncertainty_percent": 3.6
+    },
+    {
+     "E50_MeV": 10.37,
+     "published": {
+      "E50_MeV": 10.37,
+      "ENDF/B-VIII": 7.7,
+      "IRDFF-II": 3.7,
+      "JEFF-3.3": 8.4,
+      "JENDL-4": 10.3,
+      "element_reaction": "Mg(n,p)",
+      "uncertainty_percent": 4.1
+     },
+     "rate_per_s": 5.81e-19,
+     "reaction": "24Mg(n,p)",
+     "status": "scored",
+     "uncertainty_percent": 3.7
+    },
+    {
+     "E50_MeV": 10.43,
+     "published": {
+      "E50_MeV": 10.43,
+      "ENDF/B-VIII": 1.7,
+      "IRDFF-II": -1.9,
+      "JEFF-3.3": -4.6,
+      "JENDL-4": 1.0,
+      "element_reaction": "Co(n,a)",
+      "uncertainty_percent": 4.0
+     },
+     "rate_per_s": 7.07e-20,
+     "reaction": "59Co(n,a)",
+     "status": "scored",
+     "uncertainty_percent": 3.6
+    },
+    {
+     "E50_MeV": 10.45,
+     "published": {
+      "E50_MeV": 10.45,
+      "ENDF/B-VIII": 10.6,
+      "IRDFF-II": -0.5,
+      "JEFF-3.3": 0.1,
+      "JENDL-4": -1.9,
+      "element_reaction": "Ti(n,p)",
+      "uncertainty_percent": 4.1
+     },
+     "rate_per_s": 1.37e-19,
+     "reaction": "48Ti(n,p)",
+     "status": "scored",
+     "uncertainty_percent": 3.7
+    },
+    {
+     "E50_MeV": 10.57,
+     "published": {
+      "E50_MeV": 10.57,
+      "ENDF/B-VIII": 12.2,
+      "IRDFF-II": -1.7,
+      "JEFF-3.3": -1.2,
+      "JENDL-4": 8.4,
+      "element_reaction": "V(n,a)",
+      "uncertainty_percent": 5.3
+     },
+     "rate_per_s": 1.99e-20,
+     "reaction": "51V(n,a)",
+     "status": "scored",
+     "uncertainty_percent": 4.9
+    },
+    {
+     "E50_MeV": 10.6,
+     "published": {
+      "E50_MeV": 10.6,
+      "ENDF/B-VIII": -6.1,
+      "IRDFF-II": -3.4,
+      "JEFF-3.3": -5.5,
+      "JENDL-4": 22.6,
+      "element_reaction": "Au(n,2n)",
+      "uncertainty_percent": 4.3
+     },
+     "rate_per_s": 4.29e-18,
+     "reaction": "197Au(n,2n)",
+     "status": "scored",
+     "uncertainty_percent": 3.8
+    },
+    {
+     "E50_MeV": 10.89,
+     "published": {
+      "E50_MeV": 10.89,
+      "ENDF/B-VIII": -18.1,
+      "IRDFF-II": null,
+      "JEFF-3.3": -20.9,
+      "JENDL-4": -10.6,
+      "element_reaction": "Ni(n,x)",
+      "uncertainty_percent": 3.7
+     },
+     "rate_per_s": 1.89e-19,
+     "reaction": "58Ni(n,x)57Co",
+     "status": "scored",
+     "uncertainty_percent": 3.7
+    },
+    {
+     "E50_MeV": 11.27,
+     "published": {
+      "E50_MeV": 11.27,
+      "ENDF/B-VIII": 14.0,
+      "IRDFF-II": -2.7,
+      "JEFF-3.3": -2.7,
+      "JENDL-4": 11.7,
+      "element_reaction": "Co(n,2n)",
+      "uncertainty_percent": 6.2
+     },
+     "rate_per_s": 4.78e-20,
+     "reaction": "59Co(n,2n)",
+     "status": "scored",
+     "uncertainty_percent": 5.7
+    },
+    {
+     "E50_MeV": 6.71,
+     "published": null,
+     "rate_per_s": 5.76e-18,
+     "reaction": "58Ni(n,p)",
+     "status": "normalization",
+     "uncertainty_percent": 3.6
+    },
+    {
+     "E50_MeV": 10.44,
+     "published": null,
+     "rate_per_s": 3.66e-19,
+     "reaction": "27Al(n,a)",
+     "status": "normalization",
+     "uncertainty_percent": 3.7
+    }
+   ],
+   "spectrum": [
+    {
+     "E_low_MeV": 0.9,
+     "E_up_MeV": 1.0,
+     "flux": 10700.0,
+     "uncertainty_percent": 12.7
+    },
+    {
+     "E_low_MeV": 1.0,
+     "E_up_MeV": 1.1,
+     "flux": 1129000.0,
+     "uncertainty_percent": 6.1
+    },
+    {
+     "E_low_MeV": 1.1,
+     "E_up_MeV": 1.2,
+     "flux": 1387000.0,
+     "uncertainty_percent": 5.9
+    },
+    {
+     "E_low_MeV": 1.2,
+     "E_up_MeV": 1.3,
+     "flux": 1620000.0,
+     "uncertainty_percent": 6.1
+    },
+    {
+     "E_low_MeV": 1.3,
+     "E_up_MeV": 1.4,
+     "flux": 1173000.0,
+     "uncertainty_percent": 6.0
+    },
+    {
+     "E_low_MeV": 1.4,
+     "E_up_MeV": 1.5,
+     "flux": 777300.0,
+     "uncertainty_percent": 6.1
+    },
+    {
+     "E_low_MeV": 1.5,
+     "E_up_MeV": 1.6,
+     "flux": 686700.0,
+     "uncertainty_percent": 5.9
+    },
+    {
+     "E_low_MeV": 1.6,
+     "E_up_MeV": 1.7,
+     "flux": 605800.0,
+     "uncertainty_percent": 6.1
+    },
+    {
+     "E_low_MeV": 1.7,
+     "E_up_MeV": 1.8,
+     "flux": 458700.0,
+     "uncertainty_percent": 5.9
+    },
+    {
+     "E_low_MeV": 1.8,
+     "E_up_MeV": 1.9,
+     "flux": 389800.0,
+     "uncertainty_percent": 6.6
+    },
+    {
+     "E_low_MeV": 1.9,
+     "E_up_MeV": 2.0,
+     "flux": 324400.0,
+     "uncertainty_percent": 5.9
+    },
+    {
+     "E_low_MeV": 2.0,
+     "E_up_MeV": 2.1,
+     "flux": 294000.0,
+     "uncertainty_percent": 6.2
+    },
+    {
+     "E_low_MeV": 2.1,
+     "E_up_MeV": 2.2,
+     "flux": 270800.0,
+     "uncertainty_percent": 6.1
+    },
+    {
+     "E_low_MeV": 2.2,
+     "E_up_MeV": 2.3,
+     "flux": 234600.0,
+     "uncertainty_percent": 7.1
+    },
+    {
+     "E_low_MeV": 2.3,
+     "E_up_MeV": 2.4,
+     "flux": 234500.0,
+     "uncertainty_percent": 6.9
+    },
+    {
+     "E_low_MeV": 2.4,
+     "E_up_MeV": 2.5,
+     "flux": 231600.0,
+     "uncertainty_percent": 6.7
+    },
+    {
+     "E_low_MeV": 2.5,
+     "E_up_MeV": 2.6,
+     "flux": 238300.0,
+     "uncertainty_percent": 6.0
+    },
+    {
+     "E_low_MeV": 2.6,
+     "E_up_MeV": 2.7,
+     "flux": 245100.0,
+     "uncertainty_percent": 5.9
+    },
+    {
+     "E_low_MeV": 2.7,
+     "E_up_MeV": 2.8,
+     "flux": 245000.0,
+     "uncertainty_percent": 6.0
+    },
+    {
+     "E_low_MeV": 2.8,
+     "E_up_MeV": 2.9,
+     "flux": 250000.0,
+     "uncertainty_percent": 6.0
+    },
+    {
+     "E_low_MeV": 2.9,
+     "E_up_MeV": 3.0,
+     "flux": 243600.0,
+     "uncertainty_percent": 6.0
+    },
+    {
+     "E_low_MeV": 3.0,
+     "E_up_MeV": 3.1,
+     "flux": 246500.0,
+     "uncertainty_percent": 6.0
+    },
+    {
+     "E_low_MeV": 3.1,
+     "E_up_MeV": 3.2,
+     "flux": 236000.0,
+     "uncertainty_percent": 5.9
+    },
+    {
+     "E_low_MeV": 3.2,
+     "E_up_MeV": 3.3,
+     "flux": 216300.0,
+     "uncertainty_percent": 6.0
+    },
+    {
+     "E_low_MeV": 3.3,
+     "E_up_MeV": 3.4,
+     "flux": 210400.0,
+     "uncertainty_percent": 6.0
+    },
+    {
+     "E_low_MeV": 3.4,
+     "E_up_MeV": 3.5,
+     "flux": 203900.0,
+     "uncertainty_percent": 6.1
+    },
+    {
+     "E_low_MeV": 3.5,
+     "E_up_MeV": 3.6,
+     "flux": 195000.0,
+     "uncertainty_percent": 6.1
+    },
+    {
+     "E_low_MeV": 3.6,
+     "E_up_MeV": 3.7,
+     "flux": 186300.0,
+     "uncertainty_percent": 6.2
+    },
+    {
+     "E_low_MeV": 3.7,
+     "E_up_MeV": 3.8,
+     "flux": 176100.0,
+     "uncertainty_percent": 6.2
+    },
+    {
+     "E_low_MeV": 3.8,
+     "E_up_MeV": 3.9,
+     "flux": 165800.0,
+     "uncertainty_percent": 6.2
+    },
+    {
+     "E_low_MeV": 3.9,
+     "E_up_MeV": 4.0,
+     "flux": 149300.0,
+     "uncertainty_percent": 6.0
+    },
+    {
+     "E_low_MeV": 4.0,
+     "E_up_MeV": 4.1,
+     "flux": 140000.0,
+     "uncertainty_percent": 6.0
+    },
+    {
+     "E_low_MeV": 4.1,
+     "E_up_MeV": 4.2,
+     "flux": 138200.0,
+     "uncertainty_percent": 6.2
+    },
+    {
+     "E_low_MeV": 4.2,
+     "E_up_MeV": 4.3,
+     "flux": 133500.0,
+     "uncertainty_percent": 6.4
+    },
+    {
+     "E_low_MeV": 4.3,
+     "E_up_MeV": 4.4,
+     "flux": 129600.0,
+     "uncertainty_percent": 6.0
+    },
+    {
+     "E_low_MeV": 4.4,
+     "E_up_MeV": 4.5,
+     "flux": 124600.0,
+     "uncertainty_percent": 6.0
+    },
+    {
+     "E_low_MeV": 4.5,
+     "E_up_MeV": 4.6,
+     "flux": 124000.0,
+     "uncertainty_percent": 6.3
+    },
+    {
+     "E_low_MeV": 4.6,
+     "E_up_MeV": 4.7,
+     "flux": 123300.0,
+     "uncertainty_percent": 7.0
+    },
+    {
+     "E_low_MeV": 4.7,
+     "E_up_MeV": 4.8,
+     "flux": 122400.0,
+     "uncertainty_percent": 6.5
+    },
+    {
+     "E_low_MeV": 4.8,
+     "E_up_MeV": 4.9,
+     "flux": 122300.0,
+     "uncertainty_percent": 6.2
+    },
+    {
+     "E_low_MeV": 4.9,
+     "E_up_MeV": 5.0,
+     "flux": 123500.0,
+     "uncertainty_percent": 6.4
+    },
+    {
+     "E_low_MeV": 5.0,
+     "E_up_MeV": 5.1,
+     "flux": 120800.0,
+     "uncertainty_percent": 6.7
+    },
+    {
+     "E_low_MeV": 5.1,
+     "E_up_MeV": 5.2,
+     "flux": 127000.0,
+     "uncertainty_percent": 6.4
+    },
+    {
+     "E_low_MeV": 5.2,
+     "E_up_MeV": 5.3,
+     "flux": 132900.0,
+     "uncertainty_percent": 6.3
+    },
+    {
+     "E_low_MeV": 5.3,
+     "E_up_MeV": 5.4,
+     "flux": 143900.0,
+     "uncertainty_percent": 6.1
+    },
+    {
+     "E_low_MeV": 5.4,
+     "E_up_MeV": 5.5,
+     "flux": 156000.0,
+     "uncertainty_percent": 6.2
+    },
+    {
+     "E_low_MeV": 5.5,
+     "E_up_MeV": 5.6,
+     "flux": 169700.0,
+     "uncertainty_percent": 6.3
+    },
+    {
+     "E_low_MeV": 5.6,
+     "E_up_MeV": 5.7,
+     "flux": 185500.0,
+     "uncertainty_percent": 6.9
+    },
+    {
+     "E_low_MeV": 5.7,
+     "E_up_MeV": 5.8,
+     "flux": 191100.0,
+     "uncertainty_percent": 7.6
+    },
+    {
+     "E_low_MeV": 5.8,
+     "E_up_MeV": 5.9,
+     "flux": 199900.0,
+     "uncertainty_percent": 8.5
+    },
+    {
+     "E_low_MeV": 5.9,
+     "E_up_MeV": 6.0,
+     "flux": 204100.0,
+     "uncertainty_percent": 8.4
+    },
+    {
+     "E_low_MeV": 6.0,
+     "E_up_MeV": 6.1,
+     "flux": 205100.0,
+     "uncertainty_percent": 8.3
+    },
+    {
+     "E_low_MeV": 6.1,
+     "E_up_MeV": 6.2,
+     "flux": 201200.0,
+     "uncertainty_percent": 7.2
+    },
+    {
+     "E_low_MeV": 6.2,
+     "E_up_MeV": 6.3,
+     "flux": 196000.0,
+     "uncertainty_percent": 6.6
+    },
+    {
+     "E_low_MeV": 6.3,
+     "E_up_MeV": 6.4,
+     "flux": 180900.0,
+     "uncertainty_percent": 6.2
+    },
+    {
+     "E_low_MeV": 6.4,
+     "E_up_MeV": 6.5,
+     "flux": 166600.0,
+     "uncertainty_percent": 6.4
+    },
+    {
+     "E_low_MeV": 6.5,
+     "E_up_MeV": 6.6,
+     "flux": 146600.0,
+     "uncertainty_percent": 6.3
+    },
+    {
+     "E_low_MeV": 6.6,
+     "E_up_MeV": 6.7,
+     "flux": 128800.0,
+     "uncertainty_percent": 6.2
+    },
+    {
+     "E_low_MeV": 6.7,
+     "E_up_MeV": 6.8,
+     "flux": 110400.0,
+     "uncertainty_percent": 6.2
+    },
+    {
+     "E_low_MeV": 6.8,
+     "E_up_MeV": 6.9,
+     "flux": 93730.0,
+     "uncertainty_percent": 6.5
+    },
+    {
+     "E_low_MeV": 6.9,
+     "E_up_MeV": 7.0,
+     "flux": 81670.0,
+     "uncertainty_percent": 6.2
+    },
+    {
+     "E_low_MeV": 7.0,
+     "E_up_MeV": 7.1,
+     "flux": 70740.0,
+     "uncertainty_percent": 6.2
+    },
+    {
+     "E_low_MeV": 7.1,
+     "E_up_MeV": 7.2,
+     "flux": 62240.0,
+     "uncertainty_percent": 6.1
+    },
+    {
+     "E_low_MeV": 7.2,
+     "E_up_MeV": 7.3,
+     "flux": 55010.0,
+     "uncertainty_percent": 6.1
+    },
+    {
+     "E_low_MeV": 7.3,
+     "E_up_MeV": 7.4,
+     "flux": 49450.0,
+     "uncertainty_percent": 6.2
+    },
+    {
+     "E_low_MeV": 7.4,
+     "E_up_MeV": 7.5,
+     "flux": 44330.0,
+     "uncertainty_percent": 6.7
+    },
+    {
+     "E_low_MeV": 7.5,
+     "E_up_MeV": 7.6,
+     "flux": 41130.0,
+     "uncertainty_percent": 7.0
+    },
+    {
+     "E_low_MeV": 7.6,
+     "E_up_MeV": 7.7,
+     "flux": 37870.0,
+     "uncertainty_percent": 7.5
+    },
+    {
+     "E_low_MeV": 7.7,
+     "E_up_MeV": 7.8,
+     "flux": 35450.0,
+     "uncertainty_percent": 7.3
+    },
+    {
+     "E_low_MeV": 7.8,
+     "E_up_MeV": 7.9,
+     "flux": 33300.0,
+     "uncertainty_percent": 7.2
+    },
+    {
+     "E_low_MeV": 7.9,
+     "E_up_MeV": 8.0,
+     "flux": 31820.0,
+     "uncertainty_percent": 7.0
+    },
+    {
+     "E_low_MeV": 8.0,
+     "E_up_MeV": 8.1,
+     "flux": 30070.0,
+     "uncertainty_percent": 6.9
+    },
+    {
+     "E_low_MeV": 8.1,
+     "E_up_MeV": 8.2,
+     "flux": 29470.0,
+     "uncertainty_percent": 7.2
+    },
+    {
+     "E_low_MeV": 8.2,
+     "E_up_MeV": 8.3,
+     "flux": 28880.0,
+     "uncertainty_percent": 7.6
+    },
+    {
+     "E_low_MeV": 8.3,
+     "E_up_MeV": 8.4,
+     "flux": 28540.0,
+     "uncertainty_percent": 7.6
+    },
+    {
+     "E_low_MeV": 8.4,
+     "E_up_MeV": 8.5,
+     "flux": 28200.0,
+     "uncertainty_percent": 8.1
+    },
+    {
+     "E_low_MeV": 8.5,
+     "E_up_MeV": 8.6,
+     "flux": 28100.0,
+     "uncertainty_percent": 7.9
+    },
+    {
+     "E_low_MeV": 8.6,
+     "E_up_MeV": 8.7,
+     "flux": 28040.0,
+     "uncertainty_percent": 8.2
+    },
+    {
+     "E_low_MeV": 8.7,
+     "E_up_MeV": 8.8,
+     "flux": 28640.0,
+     "uncertainty_percent": 7.9
+    },
+    {
+     "E_low_MeV": 8.8,
+     "E_up_MeV": 8.9,
+     "flux": 29290.0,
+     "uncertainty_percent": 7.7
+    },
+    {
+     "E_low_MeV": 8.9,
+     "E_up_MeV": 9.0,
+     "flux": 30560.0,
+     "uncertainty_percent": 7.6
+    },
+    {
+     "E_low_MeV": 9.0,
+     "E_up_MeV": 9.1,
+     "flux": 32050.0,
+     "uncertainty_percent": 7.6
+    },
+    {
+     "E_low_MeV": 9.1,
+     "E_up_MeV": 9.2,
+     "flux": 34260.0,
+     "uncertainty_percent": 7.4
+    },
+    {
+     "E_low_MeV": 9.2,
+     "E_up_MeV": 9.3,
+     "flux": 37190.0,
+     "uncertainty_percent": 7.8
+    },
+    {
+     "E_low_MeV": 9.3,
+     "E_up_MeV": 9.4,
+     "flux": 41230.0,
+     "uncertainty_percent": 8.0
+    },
+    {
+     "E_low_MeV": 9.4,
+     "E_up_MeV": 9.5,
+     "flux": 45770.0,
+     "uncertainty_percent": 8.4
+    },
+    {
+     "E_low_MeV": 9.5,
+     "E_up_MeV": 9.6,
+     "flux": 53880.0,
+     "uncertainty_percent": 8.6
+    },
+    {
+     "E_low_MeV": 9.6,
+     "E_up_MeV": 9.7,
+     "flux": 62130.0,
+     "uncertainty_percent": 8.9
+    },
+    {
+     "E_low_MeV": 9.7,
+     "E_up_MeV": 9.8,
+     "flux": 72390.0,
+     "uncertainty_percent": 8.1
+    },
+    {
+     "E_low_MeV": 9.8,
+     "E_up_MeV": 9.9,
+     "flux": 85210.0,
+     "uncertainty_percent": 8.0
+    },
+    {
+     "E_low_MeV": 9.9,
+     "E_up_MeV": 10.0,
+     "flux": 98620.0,
+     "uncertainty_percent": 8.2
+    },
+    {
+     "E_low_MeV": 10.0,
+     "E_up_MeV": 10.1,
+     "flux": 113200.0,
+     "uncertainty_percent": 8.5
+    },
+    {
+     "E_low_MeV": 10.1,
+     "E_up_MeV": 10.2,
+     "flux": 138600.0,
+     "uncertainty_percent": 7.2
+    },
+    {
+     "E_low_MeV": 10.2,
+     "E_up_MeV": 10.3,
+     "flux": 169100.0,
+     "uncertainty_percent": 6.9
+    },
+    {
+     "E_low_MeV": 10.3,
+     "E_up_MeV": 10.4,
+     "flux": 198000.0,
+     "uncertainty_percent": 6.7
+    },
+    {
+     "E_low_MeV": 10.4,
+     "E_up_MeV": 10.5,
+     "flux": 232400.0,
+     "uncertainty_percent": 6.7
+    },
+    {
+     "E_low_MeV": 10.5,
+     "E_up_MeV": 10.6,
+     "flux": 260300.0,
+     "uncertainty_percent": 6.6
+    },
+    {
+     "E_low_MeV": 10.6,
+     "E_up_MeV": 10.7,
+     "flux": 292500.0,
+     "uncertainty_percent": 6.8
+    },
+    {
+     "E_low_MeV": 10.7,
+     "E_up_MeV": 10.8,
+     "flux": 290800.0,
+     "uncertainty_percent": 7.0
+    },
+    {
+     "E_low_MeV": 10.8,
+     "E_up_MeV": 10.9,
+     "flux": 288800.0,
+     "uncertainty_percent": 8.4
+    },
+    {
+     "E_low_MeV": 10.9,
+     "E_up_MeV": 11.0,
+     "flux": 235200.0,
+     "uncertainty_percent": 8.0
+    },
+    {
+     "E_low_MeV": 11.0,
+     "E_up_MeV": 11.1,
+     "flux": 191500.0,
+     "uncertainty_percent": 8.3
+    },
+    {
+     "E_low_MeV": 11.1,
+     "E_up_MeV": 11.2,
+     "flux": 137000.0,
+     "uncertainty_percent": 8.7
+    },
+    {
+     "E_low_MeV": 11.2,
+     "E_up_MeV": 11.3,
+     "flux": 97480.0,
+     "uncertainty_percent": 9.8
+    },
+    {
+     "E_low_MeV": 11.3,
+     "E_up_MeV": 11.4,
+     "flux": 61840.0,
+     "uncertainty_percent": 11.3
+    },
+    {
+     "E_low_MeV": 11.4,
+     "E_up_MeV": 11.5,
+     "flux": 38820.0,
+     "uncertainty_percent": 13.4
+    },
+    {
+     "E_low_MeV": 11.5,
+     "E_up_MeV": 11.6,
+     "flux": 7889.0,
+     "uncertainty_percent": 17.2
+    },
+    {
+     "E_low_MeV": 11.6,
+     "E_up_MeV": 11.7,
+     "flux": 1622.0,
+     "uncertainty_percent": 21.1
+    },
+    {
+     "E_low_MeV": 11.7,
+     "E_up_MeV": 11.8,
+     "flux": 1273.0,
+     "uncertainty_percent": 21.0
+    },
+    {
+     "E_low_MeV": 11.8,
+     "E_up_MeV": 11.9,
+     "flux": 999.8,
+     "uncertainty_percent": 21.5
+    },
+    {
+     "E_low_MeV": 11.9,
+     "E_up_MeV": 12.0,
+     "flux": 1120.0,
+     "uncertainty_percent": 21.0
+    },
+    {
+     "E_low_MeV": 12.0,
+     "E_up_MeV": 12.1,
+     "flux": 1253.0,
+     "uncertainty_percent": 21.3
+    },
+    {
+     "E_low_MeV": 12.1,
+     "E_up_MeV": 12.2,
+     "flux": 1190.0,
+     "uncertainty_percent": 21.9
+    }
+   ]
+  },
+  "14.4": {
+   "published_rows": 16,
+   "rates": [
+    {
+     "E50_MeV": 7.75,
+     "published": {
+      "E50_MeV": 7.75,
+      "ENDF/B-VIII": -1.0,
+      "IRDFF-II": -1.2,
+      "JEFF-3.3": -3.0,
+      "JENDL-4": 0.6,
+      "element_reaction": "Fe(n,p)",
+      "uncertainty_percent": 3.9
+     },
+     "rate_per_s": 8.71e-18,
+     "reaction": "54Fe(n,p)",
+     "status": "scored",
+     "uncertainty_percent": 3.6
+    },
+    {
+     "E50_MeV": 8.37,
+     "published": {
+      "E50_MeV": 8.37,
+      "ENDF/B-VIII": 15.9,
+      "IRDFF-II": 1.3,
+      "JEFF-3.3": 1.3,
+      "JENDL-4": 2.1,
+      "element_reaction": "Ti(n,p)",
+      "uncertainty_percent": 6.8
+     },
+     "rate_per_s": 1.99e-18,
+     "reaction": "47Ti(n,p)",
+     "status": "scored",
+     "uncertainty_percent": 3.5
+    },
+    {
+     "E50_MeV": 10.04,
+     "published": {
+      "E50_MeV": 10.04,
+      "ENDF/B-VIII": 4.2,
+      "IRDFF-II": 7.8,
+      "JEFF-3.3": 7.8,
+      "JENDL-4": 2.9,
+      "element_reaction": "Ti(n,p)",
+      "uncertainty_percent": 4.1
+     },
+     "rate_per_s": 3.3e-18,
+     "reaction": "46Ti(n,p)",
+     "status": "scored",
+     "uncertainty_percent": 3.9
+    },
+    {
+     "E50_MeV": 12.13,
+     "published": {
+      "E50_MeV": 12.13,
+      "ENDF/B-VIII": 4.8,
+      "IRDFF-II": 7.2,
+      "JEFF-3.3": -1.7,
+      "JENDL-4": -1.3,
+      "element_reaction": "Co(n,p)",
+      "uncertainty_percent": 4.6
+     },
+     "rate_per_s": 5.01e-19,
+     "reaction": "59Co(n,p)",
+     "status": "scored",
+     "uncertainty_percent": 4.4
+    },
+    {
+     "E50_MeV": 12.24,
+     "published": {
+      "E50_MeV": 12.24,
+      "ENDF/B-VIII": 9.8,
+      "IRDFF-II": 3.8,
+      "JEFF-3.3": 1.2,
+      "JENDL-4": 7.9,
+      "element_reaction": "Ni(n,p)",
+      "uncertainty_percent": 5.3
+     },
+     "rate_per_s": 1.33e-18,
+     "reaction": "60Ni(n,p)",
+     "status": "scored",
+     "uncertainty_percent": 5.4
+    },
+    {
+     "E50_MeV": 12.29,
+     "published": {
+      "E50_MeV": 12.29,
+      "ENDF/B-VIII": -61.7,
+      "IRDFF-II": -5.4,
+      "JEFF-3.3": -17.4,
+      "JENDL-4": -5.5,
+      "element_reaction": "Fe(n,a)",
+      "uncertainty_percent": 6.4
+     },
+     "rate_per_s": 6.78e-19,
+     "reaction": "54Fe(n,a)",
+     "status": "scored",
+     "uncertainty_percent": 5.8
+    },
+    {
+     "E50_MeV": 12.31,
+     "published": {
+      "E50_MeV": 12.31,
+      "ENDF/B-VIII": 10.1,
+      "IRDFF-II": 3.0,
+      "JEFF-3.3": 10.1,
+      "JENDL-4": 10.1,
+      "element_reaction": "Mg(n,p)",
+      "uncertainty_percent": 5.0
+     },
+     "rate_per_s": 1.55e-18,
+     "reaction": "24Mg(n,p)",
+     "status": "scored",
+     "uncertainty_percent": 3.6
+    },
+    {
+     "E50_MeV": 12.31,
+     "published": {
+      "E50_MeV": 12.31,
+      "ENDF/B-VIII": -1.6,
+      "IRDFF-II": -1.7,
+      "JEFF-3.3": -2.5,
+      "JENDL-4": -3.9,
+      "element_reaction": "Fe(n,p)",
+      "uncertainty_percent": 5.0
+     },
+     "rate_per_s": 9.37e-19,
+     "reaction": "56Fe(n,p)",
+     "status": "scored",
+     "uncertainty_percent": 3.5
+    },
+    {
+     "E50_MeV": 12.4,
+     "published": {
+      "E50_MeV": 12.4,
+      "ENDF/B-VIII": -0.9,
+      "IRDFF-II": -2.9,
+      "JEFF-3.3": -5.0,
+      "JENDL-4": -3.2,
+      "element_reaction": "Co(n,a)",
+      "uncertainty_percent": 5.3
+     },
+     "rate_per_s": 2.05e-19,
+     "reaction": "59Co(n,a)",
+     "status": "scored",
+     "uncertainty_percent": 3.5
+    },
+    {
+     "E50_MeV": 12.41,
+     "published": {
+      "E50_MeV": 12.41,
+      "ENDF/B-VIII": 0.5,
+      "IRDFF-II": 2.2,
+      "JEFF-3.3": 2.3,
+      "JENDL-4": -3.9,
+      "element_reaction": "Ti(n,p)",
+      "uncertainty_percent": 5.4
+     },
+     "rate_per_s": 3.99e-19,
+     "reaction": "48Ti(n,p)",
+     "status": "scored",
+     "uncertainty_percent": 3.6
+    },
+    {
+     "E50_MeV": 12.5,
+     "published": {
+      "E50_MeV": 12.5,
+      "ENDF/B-VIII": 1.5,
+      "IRDFF-II": -4.8,
+      "JEFF-3.3": -5.0,
+      "JENDL-4": -0.4,
+      "element_reaction": "V(n,a)",
+      "uncertainty_percent": 6.3
+     },
+     "rate_per_s": 7.12e-20,
+     "reaction": "51V(n,a)",
+     "status": "scored",
+     "uncertainty_percent": 4.2
+    },
+    {
+     "E50_MeV": 12.5,
+     "published": {
+      "E50_MeV": 12.5,
+      "ENDF/B-VIII": 4.2,
+      "IRDFF-II": 2.9,
+      "JEFF-3.3": 4.2,
+      "JENDL-4": 16.0,
+      "element_reaction": "Au(n,2n)",
+      "uncertainty_percent": 6.2
+     },
+     "rate_per_s": 1.1e-17,
+     "reaction": "197Au(n,2n)",
+     "status": "scored",
+     "uncertainty_percent": 3.8
+    },
+    {
+     "E50_MeV": 12.57,
+     "published": {
+      "E50_MeV": 12.57,
+      "ENDF/B-VIII": -10.2,
+      "IRDFF-II": null,
+      "JEFF-3.3": -7.7,
+      "JENDL-4": 2.5,
+      "element_reaction": "Ni(n,x)",
+      "uncertainty_percent": 6.6
+     },
+     "rate_per_s": 2.09e-18,
+     "reaction": "58Ni(n,x)57Co",
+     "status": "scored",
+     "uncertainty_percent": 3.5
+    },
+    {
+     "E50_MeV": 12.58,
+     "published": {
+      "E50_MeV": 12.58,
+      "ENDF/B-VIII": -4.0,
+      "IRDFF-II": -7.2,
+      "JEFF-3.3": -6.4,
+      "JENDL-4": -13.5,
+      "element_reaction": "Co(n,2n)",
+      "uncertainty_percent": 6.7
+     },
+     "rate_per_s": 2.38e-18,
+     "reaction": "59Co(n,2n)",
+     "status": "scored",
+     "uncertainty_percent": 3.6
+    },
+    {
+     "E50_MeV": 12.64,
+     "published": {
+      "E50_MeV": 12.64,
+      "ENDF/B-VIII": 40.1,
+      "IRDFF-II": 10.7,
+      "JEFF-3.3": 40.1,
+      "JENDL-4": 75.7,
+      "element_reaction": "F(n,2n)",
+      "uncertainty_percent": 7.3
+     },
+     "rate_per_s": 5.72e-20,
+     "reaction": "19F(n,2n)",
+     "status": "scored",
+     "uncertainty_percent": 3.6
+    },
+    {
+     "E50_MeV": 12.58,
+     "published": {
+      "E50_MeV": 12.58,
+      "ENDF/B-VIII": -3.9,
+      "IRDFF-II": -2.8,
+      "JEFF-3.3": 4.9,
+      "JENDL-4": -1.0,
+      "element_reaction": "Mn(n,2n)",
+      "uncertainty_percent": 6.8
+     },
+     "rate_per_s": 2.56e-18,
+     "reaction": "55Mn(n,2n)",
+     "status": "scored",
+     "uncertainty_percent": 3.8
+    },
+    {
+     "E50_MeV": 12.85,
+     "published": null,
+     "rate_per_s": 6.17e-21,
+     "reaction": "58Ni(n,2n)",
+     "status": "secondary",
+     "uncertainty_percent": 3.8
+    },
+    {
+     "E50_MeV": 7.64,
+     "published": null,
+     "rate_per_s": 1.07e-17,
+     "reaction": "58Ni(n,p)",
+     "status": "normalization",
+     "uncertainty_percent": 3.5
+    },
+    {
+     "E50_MeV": 10.28,
+     "published": null,
+     "rate_per_s": 9.29e-19,
+     "reaction": "27Al(n,a)",
+     "status": "normalization",
+     "uncertainty_percent": 3.6
+    }
+   ],
+   "spectrum": [
+    {
+     "E_low_MeV": 1.0,
+     "E_up_MeV": 1.1,
+     "flux": 1494000.0,
+     "uncertainty_percent": 6.0
+    },
+    {
+     "E_low_MeV": 1.1,
+     "E_up_MeV": 1.2,
+     "flux": 1342000.0,
+     "uncertainty_percent": 5.9
+    },
+    {
+     "E_low_MeV": 1.2,
+     "E_up_MeV": 1.3,
+     "flux": 1184000.0,
+     "uncertainty_percent": 5.9
+    },
+    {
+     "E_low_MeV": 1.3,
+     "E_up_MeV": 1.4,
+     "flux": 1012000.0,
+     "uncertainty_percent": 5.9
+    },
+    {
+     "E_low_MeV": 1.4,
+     "E_up_MeV": 1.5,
+     "flux": 799800.0,
+     "uncertainty_percent": 5.9
+    },
+    {
+     "E_low_MeV": 1.5,
+     "E_up_MeV": 1.6,
+     "flux": 778200.0,
+     "uncertainty_percent": 5.9
+    },
+    {
+     "E_low_MeV": 1.6,
+     "E_up_MeV": 1.7,
+     "flux": 755700.0,
+     "uncertainty_percent": 5.9
+    },
+    {
+     "E_low_MeV": 1.7,
+     "E_up_MeV": 1.8,
+     "flux": 671700.0,
+     "uncertainty_percent": 5.9
+    },
+    {
+     "E_low_MeV": 1.8,
+     "E_up_MeV": 1.9,
+     "flux": 666700.0,
+     "uncertainty_percent": 6.5
+    },
+    {
+     "E_low_MeV": 1.9,
+     "E_up_MeV": 2.0,
+     "flux": 601000.0,
+     "uncertainty_percent": 5.9
+    },
+    {
+     "E_low_MeV": 2.0,
+     "E_up_MeV": 2.1,
+     "flux": 595300.0,
+     "uncertainty_percent": 6.5
+    },
+    {
+     "E_low_MeV": 2.1,
+     "E_up_MeV": 2.2,
+     "flux": 506000.0,
+     "uncertainty_percent": 6.2
+    },
+    {
+     "E_low_MeV": 2.2,
+     "E_up_MeV": 2.3,
+     "flux": 407600.0,
+     "uncertainty_percent": 6.4
+    },
+    {
+     "E_low_MeV": 2.3,
+     "E_up_MeV": 2.4,
+     "flux": 374600.0,
+     "uncertainty_percent": 6.0
+    },
+    {
+     "E_low_MeV": 2.4,
+     "E_up_MeV": 2.5,
+     "flux": 343500.0,
+     "uncertainty_percent": 6.0
+    },
+    {
+     "E_low_MeV": 2.5,
+     "E_up_MeV": 2.6,
+     "flux": 349200.0,
+     "uncertainty_percent": 5.9
+    },
+    {
+     "E_low_MeV": 2.6,
+     "E_up_MeV": 2.7,
+     "flux": 354800.0,
+     "uncertainty_percent": 5.9
+    },
+    {
+     "E_low_MeV": 2.7,
+     "E_up_MeV": 2.8,
+     "flux": 357900.0,
+     "uncertainty_percent": 5.9
+    },
+    {
+     "E_low_MeV": 2.8,
+     "E_up_MeV": 2.9,
+     "flux": 360600.0,
+     "uncertainty_percent": 6.1
+    },
+    {
+     "E_low_MeV": 2.9,
+     "E_up_MeV": 3.0,
+     "flux": 309900.0,
+     "uncertainty_percent": 6.2
+    },
+    {
+     "E_low_MeV": 3.0,
+     "E_up_MeV": 3.1,
+     "flux": 274300.0,
+     "uncertainty_percent": 7.0
+    },
+    {
+     "E_low_MeV": 3.1,
+     "E_up_MeV": 3.2,
+     "flux": 249300.0,
+     "uncertainty_percent": 5.9
+    },
+    {
+     "E_low_MeV": 3.2,
+     "E_up_MeV": 3.3,
+     "flux": 218100.0,
+     "uncertainty_percent": 6.5
+    },
+    {
+     "E_low_MeV": 3.3,
+     "E_up_MeV": 3.4,
+     "flux": 218700.0,
+     "uncertainty_percent": 5.9
+    },
+    {
+     "E_low_MeV": 3.4,
+     "E_up_MeV": 3.5,
+     "flux": 219300.0,
+     "uncertainty_percent": 6.1
+    },
+    {
+     "E_low_MeV": 3.5,
+     "E_up_MeV": 3.6,
+     "flux": 223200.0,
+     "uncertainty_percent": 6.0
+    },
+    {
+     "E_low_MeV": 3.6,
+     "E_up_MeV": 3.7,
+     "flux": 227200.0,
+     "uncertainty_percent": 6.6
+    },
+    {
+     "E_low_MeV": 3.7,
+     "E_up_MeV": 3.8,
+     "flux": 226800.0,
+     "uncertainty_percent": 5.9
+    },
+    {
+     "E_low_MeV": 3.8,
+     "E_up_MeV": 3.9,
+     "flux": 229300.0,
+     "uncertainty_percent": 6.4
+    },
+    {
+     "E_low_MeV": 3.9,
+     "E_up_MeV": 4.0,
+     "flux": 218300.0,
+     "uncertainty_percent": 6.0
+    },
+    {
+     "E_low_MeV": 4.0,
+     "E_up_MeV": 4.1,
+     "flux": 218400.0,
+     "uncertainty_percent": 5.9
+    },
+    {
+     "E_low_MeV": 4.1,
+     "E_up_MeV": 4.2,
+     "flux": 219200.0,
+     "uncertainty_percent": 5.9
+    },
+    {
+     "E_low_MeV": 4.2,
+     "E_up_MeV": 4.3,
+     "flux": 213800.0,
+     "uncertainty_percent": 6.3
+    },
+    {
+     "E_low_MeV": 4.3,
+     "E_up_MeV": 4.4,
+     "flux": 220200.0,
+     "uncertainty_percent": 6.3
+    },
+    {
+     "E_low_MeV": 4.4,
+     "E_up_MeV": 4.5,
+     "flux": 226100.0,
+     "uncertainty_percent": 6.3
+    },
+    {
+     "E_low_MeV": 4.5,
+     "E_up_MeV": 4.6,
+     "flux": 238100.0,
+     "uncertainty_percent": 5.9
+    },
+    {
+     "E_low_MeV": 4.6,
+     "E_up_MeV": 4.7,
+     "flux": 251000.0,
+     "uncertainty_percent": 6.1
+    },
+    {
+     "E_low_MeV": 4.7,
+     "E_up_MeV": 4.8,
+     "flux": 250300.0,
+     "uncertainty_percent": 5.9
+    },
+    {
+     "E_low_MeV": 4.8,
+     "E_up_MeV": 4.9,
+     "flux": 257300.0,
+     "uncertainty_percent": 5.9
+    },
+    {
+     "E_low_MeV": 4.9,
+     "E_up_MeV": 5.0,
+     "flux": 256100.0,
+     "uncertainty_percent": 5.9
+    },
+    {
+     "E_low_MeV": 5.0,
+     "E_up_MeV": 5.1,
+     "flux": 244900.0,
+     "uncertainty_percent": 6.0
+    },
+    {
+     "E_low_MeV": 5.1,
+     "E_up_MeV": 5.2,
+     "flux": 249600.0,
+     "uncertainty_percent": 6.0
+    },
+    {
+     "E_low_MeV": 5.2,
+     "E_up_MeV": 5.3,
+     "flux": 249700.0,
+     "uncertainty_percent": 6.0
+    },
+    {
+     "E_low_MeV": 5.3,
+     "E_up_MeV": 5.4,
+     "flux": 251600.0,
+     "uncertainty_percent": 6.1
+    },
+    {
+     "E_low_MeV": 5.4,
+     "E_up_MeV": 5.5,
+     "flux": 253400.0,
+     "uncertainty_percent": 6.8
+    },
+    {
+     "E_low_MeV": 5.5,
+     "E_up_MeV": 5.6,
+     "flux": 253500.0,
+     "uncertainty_percent": 6.0
+    },
+    {
+     "E_low_MeV": 5.6,
+     "E_up_MeV": 5.7,
+     "flux": 250600.0,
+     "uncertainty_percent": 6.5
+    },
+    {
+     "E_low_MeV": 5.7,
+     "E_up_MeV": 5.8,
+     "flux": 227800.0,
+     "uncertainty_percent": 6.5
+    },
+    {
+     "E_low_MeV": 5.8,
+     "E_up_MeV": 5.9,
+     "flux": 208600.0,
+     "uncertainty_percent": 6.6
+    },
+    {
+     "E_low_MeV": 5.9,
+     "E_up_MeV": 6.0,
+     "flux": 198000.0,
+     "uncertainty_percent": 6.5
+    },
+    {
+     "E_low_MeV": 6.0,
+     "E_up_MeV": 6.1,
+     "flux": 183600.0,
+     "uncertainty_percent": 6.5
+    },
+    {
+     "E_low_MeV": 6.1,
+     "E_up_MeV": 6.2,
+     "flux": 174700.0,
+     "uncertainty_percent": 5.9
+    },
+    {
+     "E_low_MeV": 6.2,
+     "E_up_MeV": 6.3,
+     "flux": 164400.0,
+     "uncertainty_percent": 6.7
+    },
+    {
+     "E_low_MeV": 6.3,
+     "E_up_MeV": 6.4,
+     "flux": 168500.0,
+     "uncertainty_percent": 5.9
+    },
+    {
+     "E_low_MeV": 6.4,
+     "E_up_MeV": 6.5,
+     "flux": 172800.0,
+     "uncertainty_percent": 6.4
+    },
+    {
+     "E_low_MeV": 6.5,
+     "E_up_MeV": 6.6,
+     "flux": 167400.0,
+     "uncertainty_percent": 6.0
+    },
+    {
+     "E_low_MeV": 6.6,
+     "E_up_MeV": 6.7,
+     "flux": 162300.0,
+     "uncertainty_percent": 5.9
+    },
+    {
+     "E_low_MeV": 6.7,
+     "E_up_MeV": 6.8,
+     "flux": 165100.0,
+     "uncertainty_percent": 6.0
+    },
+    {
+     "E_low_MeV": 6.8,
+     "E_up_MeV": 6.9,
+     "flux": 166500.0,
+     "uncertainty_percent": 6.0
+    },
+    {
+     "E_low_MeV": 6.9,
+     "E_up_MeV": 7.0,
+     "flux": 171900.0,
+     "uncertainty_percent": 6.0
+    },
+    {
+     "E_low_MeV": 7.0,
+     "E_up_MeV": 7.1,
+     "flux": 176200.0,
+     "uncertainty_percent": 6.0
+    },
+    {
+     "E_low_MeV": 7.1,
+     "E_up_MeV": 7.2,
+     "flux": 176300.0,
+     "uncertainty_percent": 6.6
+    },
+    {
+     "E_low_MeV": 7.2,
+     "E_up_MeV": 7.3,
+     "flux": 177100.0,
+     "uncertainty_percent": 7.5
+    },
+    {
+     "E_low_MeV": 7.3,
+     "E_up_MeV": 7.4,
+     "flux": 200600.0,
+     "uncertainty_percent": 7.0
+    },
+    {
+     "E_low_MeV": 7.4,
+     "E_up_MeV": 7.5,
+     "flux": 227500.0,
+     "uncertainty_percent": 8.0
+    },
+    {
+     "E_low_MeV": 7.5,
+     "E_up_MeV": 7.6,
+     "flux": 244200.0,
+     "uncertainty_percent": 7.1
+    },
+    {
+     "E_low_MeV": 7.6,
+     "E_up_MeV": 7.7,
+     "flux": 261400.0,
+     "uncertainty_percent": 7.7
+    },
+    {
+     "E_low_MeV": 7.7,
+     "E_up_MeV": 7.8,
+     "flux": 272100.0,
+     "uncertainty_percent": 6.3
+    },
+    {
+     "E_low_MeV": 7.8,
+     "E_up_MeV": 7.9,
+     "flux": 287200.0,
+     "uncertainty_percent": 6.5
+    },
+    {
+     "E_low_MeV": 7.9,
+     "E_up_MeV": 8.0,
+     "flux": 300700.0,
+     "uncertainty_percent": 6.5
+    },
+    {
+     "E_low_MeV": 8.0,
+     "E_up_MeV": 8.1,
+     "flux": 310800.0,
+     "uncertainty_percent": 6.7
+    },
+    {
+     "E_low_MeV": 8.1,
+     "E_up_MeV": 8.2,
+     "flux": 293600.0,
+     "uncertainty_percent": 6.3
+    },
+    {
+     "E_low_MeV": 8.2,
+     "E_up_MeV": 8.3,
+     "flux": 276500.0,
+     "uncertainty_percent": 8.3
+    },
+    {
+     "E_low_MeV": 8.3,
+     "E_up_MeV": 8.4,
+     "flux": 240300.0,
+     "uncertainty_percent": 9.1
+    },
+    {
+     "E_low_MeV": 8.4,
+     "E_up_MeV": 8.5,
+     "flux": 208200.0,
+     "uncertainty_percent": 12.6
+    },
+    {
+     "E_low_MeV": 8.5,
+     "E_up_MeV": 8.6,
+     "flux": 173200.0,
+     "uncertainty_percent": 10.8
+    },
+    {
+     "E_low_MeV": 8.6,
+     "E_up_MeV": 8.7,
+     "flux": 142600.0,
+     "uncertainty_percent": 13.0
+    },
+    {
+     "E_low_MeV": 8.7,
+     "E_up_MeV": 8.8,
+     "flux": 123500.0,
+     "uncertainty_percent": 11.9
+    },
+    {
+     "E_low_MeV": 8.8,
+     "E_up_MeV": 8.9,
+     "flux": 105300.0,
+     "uncertainty_percent": 12.4
+    },
+    {
+     "E_low_MeV": 8.9,
+     "E_up_MeV": 9.0,
+     "flux": 85610.0,
+     "uncertainty_percent": 12.7
+    },
+    {
+     "E_low_MeV": 9.0,
+     "E_up_MeV": 9.1,
+     "flux": 68700.0,
+     "uncertainty_percent": 14.8
+    },
+    {
+     "E_low_MeV": 9.1,
+     "E_up_MeV": 9.2,
+     "flux": 58040.0,
+     "uncertainty_percent": 11.4
+    },
+    {
+     "E_low_MeV": 9.2,
+     "E_up_MeV": 9.3,
+     "flux": 49080.0,
+     "uncertainty_percent": 8.6
+    },
+    {
+     "E_low_MeV": 9.3,
+     "E_up_MeV": 9.4,
+     "flux": 44000.0,
+     "uncertainty_percent": 8.6
+    },
+    {
+     "E_low_MeV": 9.4,
+     "E_up_MeV": 9.5,
+     "flux": 39370.0,
+     "uncertainty_percent": 9.4
+    },
+    {
+     "E_low_MeV": 9.5,
+     "E_up_MeV": 9.6,
+     "flux": 35840.0,
+     "uncertainty_percent": 8.0
+    },
+    {
+     "E_low_MeV": 9.6,
+     "E_up_MeV": 9.7,
+     "flux": 32400.0,
+     "uncertainty_percent": 7.2
+    },
+    {
+     "E_low_MeV": 9.7,
+     "E_up_MeV": 9.8,
+     "flux": 28930.0,
+     "uncertainty_percent": 9.3
+    },
+    {
+     "E_low_MeV": 9.8,
+     "E_up_MeV": 9.9,
+     "flux": 25650.0,
+     "uncertainty_percent": 12.2
+    },
+    {
+     "E_low_MeV": 9.9,
+     "E_up_MeV": 10.0,
+     "flux": 22080.0,
+     "uncertainty_percent": 10.4
+    },
+    {
+     "E_low_MeV": 10.0,
+     "E_up_MeV": 10.1,
+     "flux": 18930.0,
+     "uncertainty_percent": 10.2
+    },
+    {
+     "E_low_MeV": 10.1,
+     "E_up_MeV": 10.2,
+     "flux": 18190.0,
+     "uncertainty_percent": 10.9
+    },
+    {
+     "E_low_MeV": 10.2,
+     "E_up_MeV": 10.3,
+     "flux": 17730.0,
+     "uncertainty_percent": 12.1
+    },
+    {
+     "E_low_MeV": 10.3,
+     "E_up_MeV": 10.4,
+     "flux": 16900.0,
+     "uncertainty_percent": 11.1
+    },
+    {
+     "E_low_MeV": 10.4,
+     "E_up_MeV": 10.5,
+     "flux": 16090.0,
+     "uncertainty_percent": 11.4
+    },
+    {
+     "E_low_MeV": 10.5,
+     "E_up_MeV": 10.6,
+     "flux": 16390.0,
+     "uncertainty_percent": 11.6
+    },
+    {
+     "E_low_MeV": 10.6,
+     "E_up_MeV": 10.7,
+     "flux": 16650.0,
+     "uncertainty_percent": 12.0
+    },
+    {
+     "E_low_MeV": 10.7,
+     "E_up_MeV": 10.8,
+     "flux": 18250.0,
+     "uncertainty_percent": 11.7
+    },
+    {
+     "E_low_MeV": 10.8,
+     "E_up_MeV": 10.9,
+     "flux": 19580.0,
+     "uncertainty_percent": 11.8
+    },
+    {
+     "E_low_MeV": 10.9,
+     "E_up_MeV": 11.0,
+     "flux": 20570.0,
+     "uncertainty_percent": 13.0
+    },
+    {
+     "E_low_MeV": 11.0,
+     "E_up_MeV": 11.1,
+     "flux": 22100.0,
+     "uncertainty_percent": 15.4
+    },
+    {
+     "E_low_MeV": 11.1,
+     "E_up_MeV": 11.2,
+     "flux": 25960.0,
+     "uncertainty_percent": 14.8
+    },
+    {
+     "E_low_MeV": 11.2,
+     "E_up_MeV": 11.3,
+     "flux": 32150.0,
+     "uncertainty_percent": 15.2
+    },
+    {
+     "E_low_MeV": 11.3,
+     "E_up_MeV": 11.4,
+     "flux": 39440.0,
+     "uncertainty_percent": 15.5
+    },
+    {
+     "E_low_MeV": 11.4,
+     "E_up_MeV": 11.5,
+     "flux": 48500.0,
+     "uncertainty_percent": 15.9
+    },
+    {
+     "E_low_MeV": 11.5,
+     "E_up_MeV": 11.6,
+     "flux": 60040.0,
+     "uncertainty_percent": 16.8
+    },
+    {
+     "E_low_MeV": 11.6,
+     "E_up_MeV": 11.7,
+     "flux": 73240.0,
+     "uncertainty_percent": 18.2
+    },
+    {
+     "E_low_MeV": 11.7,
+     "E_up_MeV": 11.8,
+     "flux": 92110.0,
+     "uncertainty_percent": 21.9
+    },
+    {
+     "E_low_MeV": 11.8,
+     "E_up_MeV": 11.9,
+     "flux": 122000.0,
+     "uncertainty_percent": 25.9
+    },
+    {
+     "E_low_MeV": 11.9,
+     "E_up_MeV": 12.0,
+     "flux": 175100.0,
+     "uncertainty_percent": 23.8
+    },
+    {
+     "E_low_MeV": 12.0,
+     "E_up_MeV": 12.1,
+     "flux": 241600.0,
+     "uncertainty_percent": 22.0
+    },
+    {
+     "E_low_MeV": 12.1,
+     "E_up_MeV": 12.2,
+     "flux": 317900.0,
+     "uncertainty_percent": 22.3
+    },
+    {
+     "E_low_MeV": 12.2,
+     "E_up_MeV": 12.3,
+     "flux": 412900.0,
+     "uncertainty_percent": 22.7
+    },
+    {
+     "E_low_MeV": 12.3,
+     "E_up_MeV": 12.4,
+     "flux": 526700.0,
+     "uncertainty_percent": 15.1
+    },
+    {
+     "E_low_MeV": 12.4,
+     "E_up_MeV": 12.5,
+     "flux": 673800.0,
+     "uncertainty_percent": 13.0
+    },
+    {
+     "E_low_MeV": 12.5,
+     "E_up_MeV": 12.6,
+     "flux": 685800.0,
+     "uncertainty_percent": 7.3
+    },
+    {
+     "E_low_MeV": 12.6,
+     "E_up_MeV": 12.7,
+     "flux": 699200.0,
+     "uncertainty_percent": 8.3
+    },
+    {
+     "E_low_MeV": 12.7,
+     "E_up_MeV": 12.8,
+     "flux": 592500.0,
+     "uncertainty_percent": 17.9
+    },
+    {
+     "E_low_MeV": 12.8,
+     "E_up_MeV": 12.9,
+     "flux": 498200.0,
+     "uncertainty_percent": 27.4
+    },
+    {
+     "E_low_MeV": 12.9,
+     "E_up_MeV": 13.0,
+     "flux": 265000.0,
+     "uncertainty_percent": 39.2
+    },
+    {
+     "E_low_MeV": 13.0,
+     "E_up_MeV": 13.1,
+     "flux": 140100.0,
+     "uncertainty_percent": 49.4
+    },
+    {
+     "E_low_MeV": 13.1,
+     "E_up_MeV": 13.2,
+     "flux": 50300.0,
+     "uncertainty_percent": 55.0
+    },
+    {
+     "E_low_MeV": 13.2,
+     "E_up_MeV": 13.3,
+     "flux": 17710.0,
+     "uncertainty_percent": 60.7
+    },
+    {
+     "E_low_MeV": 13.3,
+     "E_up_MeV": 13.4,
+     "flux": 6952.0,
+     "uncertainty_percent": 34.1
+    },
+    {
+     "E_low_MeV": 13.4,
+     "E_up_MeV": 13.5,
+     "flux": 2684.0,
+     "uncertainty_percent": 39.7
+    },
+    {
+     "E_low_MeV": 13.5,
+     "E_up_MeV": 13.6,
+     "flux": 3151.0,
+     "uncertainty_percent": 11.2
+    }
+   ]
+  }
+ },
+ "pdf_sha256": "7ef44f1d94aa629639dec2e08555717d8582c85a3b8cbcc382834c847b6064c5",
+ "schema": "actinv-p167-tables-1"
+}
