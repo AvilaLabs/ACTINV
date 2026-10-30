@@ -1,0 +1,468 @@
+{
+ "allowed_sentences": [
+  "Against 29 measured reaction rates in two quasi-monoenergetic 7Li(p,n) neutron fields at NPI Řež (12.4 and 14.4 MeV protons; Matěj et al., 2023), ACTINV with its TENDL-2025 library has a median |ln C/E| of 0.038 and a geometric-mean C/E of 1.023.",
+  "On the same points the authors' calculations give a median |ln C/E| of 0.047 with ENDF/B-VIII.0, 0.051 with JEFF-3.3 and 0.057 with JENDL-4, and 0.030 with IRDFF-II on the 27 points it covers.",
+  "25 of the 29 ACTINV values are within 2σ of the measurement."
+ ],
+ "gates": {
+  "G0": {
+   "pass": true,
+   "problems": []
+  },
+  "G1": {
+   "pass": true,
+   "problems": []
+  },
+  "G2": {
+   "pass": true,
+   "problems": []
+  },
+  "G3": {
+   "pass": true,
+   "problems": []
+  }
+ },
+ "protocol": "ACTINV-P167",
+ "summary": {
+  "by_field": {
+   "12.4": {
+    "ACTINV_TENDL-2025": {
+     "geometric_mean_C_over_E": 1.0463119964888126,
+     "max_abs_log_C_over_E": 0.16384617313475372,
+     "median_abs_log_C_over_E": 0.039337557121867615,
+     "p90_abs_log_C_over_E": 0.13717218153488922,
+     "points": 13,
+     "within_1_sigma": 0.5384615384615384,
+     "within_2_sigma": 0.6923076923076923,
+     "within_2_sigma_count": 9
+    },
+    "ENDF/B-VIII": {
+     "geometric_mean_C_over_E": 1.049366421509058,
+     "max_abs_log_C_over_E": 0.211880359035499,
+     "median_abs_log_C_over_E": 0.07417939817425147,
+     "p90_abs_log_C_over_E": 0.1996711951290677,
+     "points": 13,
+     "within_1_sigma": 0.38461538461538464,
+     "within_2_sigma": 0.5384615384615384,
+     "within_2_sigma_count": 7
+    },
+    "IRDFF-II": {
+     "geometric_mean_C_over_E": 1.0261823834102228,
+     "max_abs_log_C_over_E": 0.16636153721522529,
+     "median_abs_log_C_over_E": 0.029434931927751515,
+     "p90_abs_log_C_over_E": 0.11064652008706365,
+     "points": 12,
+     "within_1_sigma": 0.75,
+     "within_2_sigma": 0.8333333333333334,
+     "within_2_sigma_count": 10
+    },
+    "JEFF-3.3": {
+     "geometric_mean_C_over_E": 0.9949664895934531,
+     "max_abs_log_C_over_E": 0.23445731121448313,
+     "median_abs_log_C_over_E": 0.05657035148839435,
+     "p90_abs_log_C_over_E": 0.17227122094045313,
+     "points": 13,
+     "within_1_sigma": 0.3076923076923077,
+     "within_2_sigma": 0.6923076923076923,
+     "within_2_sigma_count": 9
+    },
+    "JENDL-4": {
+     "geometric_mean_C_over_E": 1.0603562527291706,
+     "max_abs_log_C_over_E": 0.20375683751401963,
+     "median_abs_log_C_over_E": 0.09349034308733897,
+     "p90_abs_log_C_over_E": 0.18979357163265567,
+     "points": 13,
+     "within_1_sigma": 0.23076923076923078,
+     "within_2_sigma": 0.6153846153846154,
+     "within_2_sigma_count": 8
+    }
+   },
+   "14.4": {
+    "ACTINV_TENDL-2025": {
+     "geometric_mean_C_over_E": 1.004395169214387,
+     "max_abs_log_C_over_E": 0.11276430607577005,
+     "median_abs_log_C_over_E": 0.035264656788514696,
+     "p90_abs_log_C_over_E": 0.07591293826615785,
+     "points": 16,
+     "within_1_sigma": 0.75,
+     "within_2_sigma": 1.0,
+     "within_2_sigma_count": 16
+    },
+    "ENDF/B-VIII": {
+     "geometric_mean_C_over_E": 0.9777737154428419,
+     "max_abs_log_C_over_E": 0.959720289801491,
+     "median_abs_log_C_over_E": 0.04114194333117521,
+     "p90_abs_log_C_over_E": 0.33718626735486995,
+     "points": 16,
+     "within_1_sigma": 0.5,
+     "within_2_sigma": 0.75,
+     "within_2_sigma_count": 12
+    },
+    "IRDFF-II": {
+     "geometric_mean_C_over_E": 1.0073558170232828,
+     "max_abs_log_C_over_E": 0.10165365372649982,
+     "median_abs_log_C_over_E": 0.02955880224154443,
+     "p90_abs_log_C_over_E": 0.07510747248680548,
+     "points": 15,
+     "within_1_sigma": 0.7333333333333333,
+     "within_2_sigma": 1.0,
+     "within_2_sigma_count": 15
+    },
+    "JEFF-3.3": {
+     "geometric_mean_C_over_E": 1.0082929499426665,
+     "max_abs_log_C_over_E": 0.33718626735486995,
+     "median_abs_log_C_over_E": 0.04956531190085532,
+     "p90_abs_log_C_over_E": 0.1911605054611589,
+     "points": 16,
+     "within_1_sigma": 0.6875,
+     "within_2_sigma": 0.8125,
+     "within_2_sigma_count": 13
+    },
+    "JENDL-4": {
+     "geometric_mean_C_over_E": 1.0397380814348818,
+     "max_abs_log_C_over_E": 0.5636078092049602,
+     "median_abs_log_C_over_E": 0.03615203085870233,
+     "p90_abs_log_C_over_E": 0.14842000511827322,
+     "points": 16,
+     "within_1_sigma": 0.6875,
+     "within_2_sigma": 0.75,
+     "within_2_sigma_count": 12
+    }
+   }
+  },
+  "diagnostics": [
+   {
+    "calculated": 5.801205424638712e-18,
+    "ce": 1.007153719555332,
+    "field": "12.4",
+    "measured": 5.76e-18,
+    "reaction": "58Ni(n,p)",
+    "sigma": 0.036000000000000004,
+    "status": "normalization"
+   },
+   {
+    "calculated": 3.633630140176982e-19,
+    "ce": 0.992795120266935,
+    "field": "12.4",
+    "measured": 3.66e-19,
+    "reaction": "27Al(n,a)",
+    "sigma": 0.037000000000000005,
+    "status": "normalization"
+   },
+   {
+    "calculated": 7.132462783915747e-21,
+    "ce": 1.1559907267286462,
+    "field": "14.4",
+    "measured": 6.17e-21,
+    "reaction": "58Ni(n,2n)",
+    "sigma": 0.038,
+    "status": "secondary"
+   },
+   {
+    "calculated": 1.0668909048969802e-17,
+    "ce": 0.9970943036420375,
+    "field": "14.4",
+    "measured": 1.07e-17,
+    "reaction": "58Ni(n,p)",
+    "sigma": 0.035,
+    "status": "normalization"
+   },
+   {
+    "calculated": 9.274575301389894e-19,
+    "ce": 0.9983396449289444,
+    "field": "14.4",
+    "measured": 9.29e-19,
+    "reaction": "27Al(n,a)",
+    "sigma": 0.036000000000000004,
+    "status": "normalization"
+   }
+  ],
+  "points": [
+   {
+    "calculated": 4.593238728724324e-18,
+    "ce": 1.0184564808701384,
+    "field": "12.4",
+    "measured": 4.51e-18,
+    "reaction": "54Fe(n,p)",
+    "sigma": 0.042
+   },
+   {
+    "calculated": 1.0047403044524605e-18,
+    "ce": 1.0745885609117225,
+    "field": "12.4",
+    "measured": 9.35e-19,
+    "reaction": "47Ti(n,p)",
+    "sigma": 0.037000000000000005
+   },
+   {
+    "calculated": 1.629477212930106e-18,
+    "ce": 1.1160802828288399,
+    "field": "12.4",
+    "measured": 1.46e-18,
+    "reaction": "46Ti(n,p)",
+    "sigma": 0.083
+   },
+   {
+    "calculated": 2.283803564324688e-19,
+    "ce": 1.033395277974972,
+    "field": "12.4",
+    "measured": 2.21e-19,
+    "reaction": "59Co(n,p)",
+    "sigma": 0.040999999999999995
+   },
+   {
+    "calculated": 5.513194851920482e-19,
+    "ce": 1.178033088017197,
+    "field": "12.4",
+    "measured": 4.68e-19,
+    "reaction": "60Ni(n,p)",
+    "sigma": 0.069
+   },
+   {
+    "calculated": 3.426755909510776e-19,
+    "ce": 0.976283734903355,
+    "field": "12.4",
+    "measured": 3.51e-19,
+    "reaction": "56Fe(n,p)",
+    "sigma": 0.039
+   },
+   {
+    "calculated": 6.057971426353941e-19,
+    "ce": 1.042680107806186,
+    "field": "12.4",
+    "measured": 5.81e-19,
+    "reaction": "24Mg(n,p)",
+    "sigma": 0.040999999999999995
+   },
+   {
+    "calculated": 6.935830645278958e-20,
+    "ce": 0.9810227221045202,
+    "field": "12.4",
+    "measured": 7.07e-20,
+    "reaction": "59Co(n,a)",
+    "sigma": 0.04
+   },
+   {
+    "calculated": 1.3619224088675558e-19,
+    "ce": 0.9941039480785079,
+    "field": "12.4",
+    "measured": 1.37e-19,
+    "reaction": "48Ti(n,p)",
+    "sigma": 0.040999999999999995
+   },
+   {
+    "calculated": 1.948785096948316e-20,
+    "ce": 0.979288993441365,
+    "field": "12.4",
+    "measured": 1.99e-20,
+    "reaction": "51V(n,a)",
+    "sigma": 0.053
+   },
+   {
+    "calculated": 4.124518046786793e-18,
+    "ce": 0.9614261181321195,
+    "field": "12.4",
+    "measured": 4.29e-18,
+    "reaction": "197Au(n,2n)",
+    "sigma": 0.043
+   },
+   {
+    "calculated": 2.167878437207185e-19,
+    "ce": 1.1470256281519497,
+    "field": "12.4",
+    "measured": 1.89e-19,
+    "reaction": "58Ni(n,x)57Co",
+    "sigma": 0.037000000000000005
+   },
+   {
+    "calculated": 5.4010917354791347e-20,
+    "ce": 1.1299355095144634,
+    "field": "12.4",
+    "measured": 4.78e-20,
+    "reaction": "59Co(n,2n)",
+    "sigma": 0.062
+   },
+   {
+    "calculated": 8.60655300617137e-18,
+    "ce": 0.9881231924421778,
+    "field": "14.4",
+    "measured": 8.71e-18,
+    "reaction": "54Fe(n,p)",
+    "sigma": 0.039
+   },
+   {
+    "calculated": 2.014363485319304e-18,
+    "ce": 1.0122429574468865,
+    "field": "14.4",
+    "measured": 1.99e-18,
+    "reaction": "47Ti(n,p)",
+    "sigma": 0.068
+   },
+   {
+    "calculated": 3.555438781890406e-18,
+    "ce": 1.077405691481941,
+    "field": "14.4",
+    "measured": 3.3e-18,
+    "reaction": "46Ti(n,p)",
+    "sigma": 0.040999999999999995
+   },
+   {
+    "calculated": 5.364184720185845e-19,
+    "ce": 1.0706955529313065,
+    "field": "14.4",
+    "measured": 5.01e-19,
+    "reaction": "59Co(n,p)",
+    "sigma": 0.046
+   },
+   {
+    "calculated": 1.374515996197931e-18,
+    "ce": 1.0334706738330308,
+    "field": "14.4",
+    "measured": 1.33e-18,
+    "reaction": "60Ni(n,p)",
+    "sigma": 0.053
+   },
+   {
+    "calculated": 6.40627749571043e-19,
+    "ce": 0.9448786866829544,
+    "field": "14.4",
+    "measured": 6.78e-19,
+    "reaction": "54Fe(n,a)",
+    "sigma": 0.064
+   },
+   {
+    "calculated": 1.6094001313690084e-18,
+    "ce": 1.0383226653993602,
+    "field": "14.4",
+    "measured": 1.55e-18,
+    "reaction": "24Mg(n,p)",
+    "sigma": 0.05
+   },
+   {
+    "calculated": 9.162839552122395e-19,
+    "ce": 0.9778910941432654,
+    "field": "14.4",
+    "measured": 9.37e-19,
+    "reaction": "56Fe(n,p)",
+    "sigma": 0.05
+   },
+   {
+    "calculated": 1.988311289524894e-19,
+    "ce": 0.9699079461097044,
+    "field": "14.4",
+    "measured": 2.05e-19,
+    "reaction": "59Co(n,a)",
+    "sigma": 0.053
+   },
+   {
+    "calculated": 4.06663825997356e-19,
+    "ce": 1.019207583953273,
+    "field": "14.4",
+    "measured": 3.99e-19,
+    "reaction": "48Ti(n,p)",
+    "sigma": 0.054000000000000006
+   },
+   {
+    "calculated": 6.757965858646452e-20,
+    "ce": 0.9491525082368613,
+    "field": "14.4",
+    "measured": 7.12e-20,
+    "reaction": "51V(n,a)",
+    "sigma": 0.063
+   },
+   {
+    "calculated": 1.1367532535835265e-17,
+    "ce": 1.0334120487122969,
+    "field": "14.4",
+    "measured": 1.1e-17,
+    "reaction": "197Au(n,2n)",
+    "sigma": 0.062
+   },
+   {
+    "calculated": 2.0084512510635968e-18,
+    "ce": 0.9609814598390415,
+    "field": "14.4",
+    "measured": 2.09e-18,
+    "reaction": "58Ni(n,x)57Co",
+    "sigma": 0.066
+   },
+   {
+    "calculated": 2.206014622708992e-18,
+    "ce": 0.9268969002978957,
+    "field": "14.4",
+    "measured": 2.38e-18,
+    "reaction": "59Co(n,2n)",
+    "sigma": 0.067
+   },
+   {
+    "calculated": 6.40278538099692e-20,
+    "ce": 1.1193680736008602,
+    "field": "14.4",
+    "measured": 5.72e-20,
+    "reaction": "19F(n,2n)",
+    "sigma": 0.073
+   },
+   {
+    "calculated": 2.4828678995080403e-18,
+    "ce": 0.9698702732453283,
+    "field": "14.4",
+    "measured": 2.56e-18,
+    "reaction": "55Mn(n,2n)",
+    "sigma": 0.068
+   }
+  ],
+  "pooled": {
+   "ACTINV_TENDL-2025": {
+    "geometric_mean_C_over_E": 1.0229736936162759,
+    "max_abs_log_C_over_E": 0.16384617313475372,
+    "median_abs_log_C_over_E": 0.03760658942481386,
+    "p90_abs_log_C_over_E": 0.12216055986948625,
+    "points": 29,
+    "within_1_sigma": 0.6551724137931034,
+    "within_2_sigma": 0.8620689655172413,
+    "within_2_sigma_count": 25
+   },
+   "ENDF/B-VIII": {
+    "geometric_mean_C_over_E": 1.0092422166712673,
+    "max_abs_log_C_over_E": 0.959720289801491,
+    "median_abs_log_C_over_E": 0.04688358589885046,
+    "p90_abs_log_C_over_E": 0.211880359035499,
+    "points": 29,
+    "within_1_sigma": 0.4482758620689655,
+    "within_2_sigma": 0.6551724137931034,
+    "within_2_sigma_count": 19
+   },
+   "IRDFF-II": {
+    "geometric_mean_C_over_E": 1.0156801573977414,
+    "max_abs_log_C_over_E": 0.16636153721522529,
+    "median_abs_log_C_over_E": 0.02955880224154443,
+    "p90_abs_log_C_over_E": 0.10165365372649982,
+    "points": 27,
+    "within_1_sigma": 0.7407407407407407,
+    "within_2_sigma": 0.9259259259259259,
+    "within_2_sigma_count": 25
+   },
+   "JEFF-3.3": {
+    "geometric_mean_C_over_E": 1.0022970881501576,
+    "max_abs_log_C_over_E": 0.33718626735486995,
+    "median_abs_log_C_over_E": 0.05129329438755058,
+    "p90_abs_log_C_over_E": 0.1911605054611589,
+    "points": 29,
+    "within_1_sigma": 0.5172413793103449,
+    "within_2_sigma": 0.7586206896551724,
+    "within_2_sigma_count": 22
+   },
+   "JENDL-4": {
+    "geometric_mean_C_over_E": 1.0489306613074263,
+    "max_abs_log_C_over_E": 0.5636078092049602,
+    "median_abs_log_C_over_E": 0.05657035148839435,
+    "p90_abs_log_C_over_E": 0.18979357163265567,
+    "points": 29,
+    "within_1_sigma": 0.4827586206896552,
+    "within_2_sigma": 0.6896551724137931,
+    "within_2_sigma_count": 20
+   }
+  }
+ },
+ "verdict": "P167-PASS (pending G4, CI on the evidence commit)"
+}

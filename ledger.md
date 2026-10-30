@@ -4836,3 +4836,18 @@ G3 the registered summary and sentences; G4 CI on the evidence commit. Accuracy 
 Disclosed, not evidence: one ACTINV value was seen while learning the output format (⁵⁹Co(n,2n) at 14.4 MeV,
 2.206 × 10⁻¹⁸ s⁻¹ against 2.38 × 10⁻¹⁸ measured), and one full run whose output was limited to the mechanical agreement
 (6 × 10⁻¹⁶) and then deleted.
+
+## Entry 281 — P167 evidence: G0 to G3 pass on d2814a2 (2026-10-30)
+
+- **Run:** `results/p167_rez.json`, harness on the registration commit `d2814a2` in the bounded scope; binary
+  `186cc258…` (crates tree of d6f516b). A fresh extraction equalled the pinned tables; all 27 IRDFF-II folds reproduced
+  the published values within 0.35 points; ACTINV's `inspect xs` equalled the independent fold on every row.
+- **29 scored reaction rates:** ACTINV/TENDL-2025 median |ln C/E| 0.038, p90 0.122, maximum 0.164, geometric-mean C/E
+  1.023; 25 of 29 within 2σ. 12.4 MeV field: 0.039 (13 points, 9 within 2σ); 14.4 MeV field: 0.035 (16, all within 2σ).
+- **Authors' columns on the same points (context):** ENDF/B-VIII.0 0.047, JEFF-3.3 0.051, JENDL-4 0.057; IRDFF-II 0.030
+  on its 27 points (a dosimetry library fitted partly to integral data).
+- **Largest ACTINV deviations:** ⁶⁰Ni(n,p) at 12.4 MeV 1.178 (every library is high there; IRDFF-II 1.181),
+  ⁵⁸Ni(n,x)⁵⁷Co at 12.4 MeV 1.147 (the authors' libraries are 11–21% low), ⁵⁹Co(n,2n) at 12.4 MeV 1.130 and
+  ¹⁹F(n,2n) at 14.4 MeV 1.119.
+- **Diagnostics:** the normalization reactions ⁵⁸Ni(n,p) and ²⁷Al(n,α) are 0.993–1.007 in both fields; the secondary
+  ⁵⁸Ni(n,2n), set by the spectrum's poorly known tail, is 1.156. G4 is CI on this commit.

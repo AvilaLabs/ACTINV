@@ -1,0 +1,1141 @@
+{
+ "environment": {
+  "binary": "/home/connoravila/Documents/actinv/target/wt-p163-wt/release/actinv",
+  "binary_sha256": "186cc2587bb61766b3b3c426c61cd44f00ed472401026dea2ca3dd595c8d1194",
+  "cgroup": {
+   "cpu.max": "200000 100000",
+   "memory.max": "6442450944",
+   "memory.swap.max": "0",
+   "path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p1471057-i5673609.scope",
+   "pids.max": "128"
+  },
+  "clean_tree": true,
+  "crates_tree": "a65c5e17d2b0b370b8d34b80a4be5012939cda64",
+  "git_head": "d2814a2a8ec291455e59feadfee1b6bcff2584d1"
+ },
+ "fields": {
+  "12.4": {
+   "rates": [
+    {
+     "E50_MeV": 6.78,
+     "actinv_rate": 4.593238728724324e-18,
+     "actinv_rate_equal_lethargy": 4.593000742937402e-18,
+     "actinv_rows": [
+      {
+       "mt": 103,
+       "product": "Mn54",
+       "product_lfs": 0,
+       "reaction_rate_per_target_atom_per_s": 4.593238728724324e-18
+      }
+     ],
+     "independent_fold_rate": 4.593238728724324e-18,
+     "irdff_rate": 4.5945845461062206e-18,
+     "published": {
+      "E50_MeV": 6.78,
+      "ENDF/B-VIII": 2.0,
+      "IRDFF-II": 1.9,
+      "JEFF-3.3": -2.3,
+      "JENDL-4": 5.2,
+      "element_reaction": "Fe(n,p)",
+      "uncertainty_percent": 4.2
+     },
+     "rate_per_s": 4.51e-18,
+     "reaction": "54Fe(n,p)",
+     "status": "scored",
+     "uncertainty_percent": 4.1
+    },
+    {
+     "E50_MeV": 7.43,
+     "actinv_rate": 1.0047403044524605e-18,
+     "actinv_rate_equal_lethargy": 1.0046665805807688e-18,
+     "actinv_rows": [
+      {
+       "mt": 103,
+       "product": "Sc47",
+       "product_lfs": 0,
+       "reaction_rate_per_target_atom_per_s": 1.0047403044524605e-18
+      }
+     ],
+     "independent_fold_rate": 1.0047403044524607e-18,
+     "irdff_rate": 1.00764235805508e-18,
+     "published": {
+      "E50_MeV": 7.43,
+      "ENDF/B-VIII": 23.6,
+      "IRDFF-II": 7.8,
+      "JEFF-3.3": 8.4,
+      "JENDL-4": 11.7,
+      "element_reaction": "Ti(n,p)",
+      "uncertainty_percent": 3.7
+     },
+     "rate_per_s": 9.35e-19,
+     "reaction": "47Ti(n,p)",
+     "status": "scored",
+     "uncertainty_percent": 3.6
+    },
+    {
+     "E50_MeV": 9.61,
+     "actinv_rate": 1.629477212930106e-18,
+     "actinv_rate_equal_lethargy": 1.6294252215828724e-18,
+     "actinv_rows": [
+      {
+       "mt": 103,
+       "product": "Sc46",
+       "product_lfs": 0,
+       "reaction_rate_per_target_atom_per_s": 1.1154248448203136e-18
+      },
+      {
+       "mt": 103,
+       "product": "Sc46m1",
+       "product_lfs": 1,
+       "reaction_rate_per_target_atom_per_s": 5.140523681097923e-19
+      }
+     ],
+     "independent_fold_rate": 1.6294772129301064e-18,
+     "irdff_rate": 1.6299646772453361e-18,
+     "published": {
+      "E50_MeV": 9.61,
+      "ENDF/B-VIII": 4.8,
+      "IRDFF-II": 11.7,
+      "JEFF-3.3": 12.2,
+      "JENDL-4": 9.8,
+      "element_reaction": "Ti(n,p)",
+      "uncertainty_percent": 8.3
+     },
+     "rate_per_s": 1.46e-18,
+     "reaction": "46Ti(n,p)",
+     "status": "scored",
+     "uncertainty_percent": 8.2
+    },
+    {
+     "E50_MeV": 10.05,
+     "actinv_rate": 2.283803564324688e-19,
+     "actinv_rate_equal_lethargy": 2.2837433139972635e-19,
+     "actinv_rows": [
+      {
+       "mt": 103,
+       "product": "Fe59",
+       "product_lfs": 0,
+       "reaction_rate_per_target_atom_per_s": 2.283803564324688e-19
+      }
+     ],
+     "independent_fold_rate": 2.2838035643246876e-19,
+     "irdff_rate": 2.284766383740127e-19,
+     "published": {
+      "E50_MeV": 10.05,
+      "ENDF/B-VIII": 3.2,
+      "IRDFF-II": 3.2,
+      "JEFF-3.3": -7.1,
+      "JENDL-4": -5.5,
+      "element_reaction": "Co(n,p)",
+      "uncertainty_percent": 4.1
+     },
+     "rate_per_s": 2.21e-19,
+     "reaction": "59Co(n,p)",
+     "status": "scored",
+     "uncertainty_percent": 3.9
+    },
+    {
+     "E50_MeV": 10.25,
+     "actinv_rate": 5.513194851920482e-19,
+     "actinv_rate_equal_lethargy": 5.513071357257632e-19,
+     "actinv_rows": [
+      {
+       "mt": 103,
+       "product": "Co60",
+       "product_lfs": 0,
+       "reaction_rate_per_target_atom_per_s": 1.93315071684828e-19
+      },
+      {
+       "mt": 103,
+       "product": "Co60m1",
+       "product_lfs": 1,
+       "reaction_rate_per_target_atom_per_s": 3.5800441350722028e-19
+      }
+     ],
+     "independent_fold_rate": 5.513194851920482e-19,
+     "irdff_rate": 5.525473902315292e-19,
+     "published": {
+      "E50_MeV": 10.25,
+      "ENDF/B-VIII": 18.1,
+      "IRDFF-II": 18.1,
+      "JEFF-3.3": 18.8,
+      "JENDL-4": 20.9,
+      "element_reaction": "Ni(n,p)",
+      "uncertainty_percent": 6.9
+     },
+     "rate_per_s": 4.68e-19,
+     "reaction": "60Ni(n,p)",
+     "status": "scored",
+     "uncertainty_percent": 6.8
+    },
+    {
+     "E50_MeV": 10.3,
+     "actinv_rate": 3.426755909510776e-19,
+     "actinv_rate_equal_lethargy": 3.426677520686973e-19,
+     "actinv_rows": [
+      {
+       "mt": 103,
+       "product": "Mn56",
+       "product_lfs": 0,
+       "reaction_rate_per_target_atom_per_s": 3.426755909510776e-19
+      }
+     ],
+     "independent_fold_rate": 3.4267559095107744e-19,
+     "irdff_rate": 3.4275568579972225e-19,
+     "published": {
+      "E50_MeV": 10.3,
+      "ENDF/B-VIII": -2.5,
+      "IRDFF-II": -2.5,
+      "JEFF-3.3": -4.0,
+      "JENDL-4": 0.2,
+      "element_reaction": "Fe(n,p)",
+      "uncertainty_percent": 3.9
+     },
+     "rate_per_s": 3.51e-19,
+     "reaction": "56Fe(n,p)",
+     "status": "scored",
+     "uncertainty_percent": 3.6
+    },
+    {
+     "E50_MeV": 10.37,
+     "actinv_rate": 6.057971426353941e-19,
+     "actinv_rate_equal_lethargy": 6.05788054606421e-19,
+     "actinv_rows": [
+      {
+       "mt": 103,
+       "product": "Na24",
+       "product_lfs": 0,
+       "reaction_rate_per_target_atom_per_s": 6.057971426353941e-19
+      }
+     ],
+     "independent_fold_rate": 6.057971426353941e-19,
+     "irdff_rate": 6.0249380025276e-19,
+     "published": {
+      "E50_MeV": 10.37,
+      "ENDF/B-VIII": 7.7,
+      "IRDFF-II": 3.7,
+      "JEFF-3.3": 8.4,
+      "JENDL-4": 10.3,
+      "element_reaction": "Mg(n,p)",
+      "uncertainty_percent": 4.1
+     },
+     "rate_per_s": 5.81e-19,
+     "reaction": "24Mg(n,p)",
+     "status": "scored",
+     "uncertainty_percent": 3.7
+    },
+    {
+     "E50_MeV": 10.43,
+     "actinv_rate": 6.935830645278958e-20,
+     "actinv_rate_equal_lethargy": 6.935721381731148e-20,
+     "actinv_rows": [
+      {
+       "mt": 34,
+       "product": "Mn56",
+       "product_lfs": 0,
+       "reaction_rate_per_target_atom_per_s": 0.0
+      },
+      {
+       "mt": 107,
+       "product": "Mn56",
+       "product_lfs": 0,
+       "reaction_rate_per_target_atom_per_s": 6.935830645278958e-20
+      },
+      {
+       "mt": 116,
+       "product": "Mn56",
+       "product_lfs": 0,
+       "reaction_rate_per_target_atom_per_s": 0.0
+      }
+     ],
+     "independent_fold_rate": 6.935830645278955e-20,
+     "irdff_rate": 6.938171776098893e-20,
+     "published": {
+      "E50_MeV": 10.43,
+      "ENDF/B-VIII": 1.7,
+      "IRDFF-II": -1.9,
+      "JEFF-3.3": -4.6,
+      "JENDL-4": 1.0,
+      "element_reaction": "Co(n,a)",
+      "uncertainty_percent": 4.0
+     },
+     "rate_per_s": 7.07e-20,
+     "reaction": "59Co(n,a)",
+     "status": "scored",
+     "uncertainty_percent": 3.6
+    },
+    {
+     "E50_MeV": 10.45,
+     "actinv_rate": 1.3619224088675558e-19,
+     "actinv_rate_equal_lethargy": 1.361901007795351e-19,
+     "actinv_rows": [
+      {
+       "mt": 103,
+       "product": "Sc48",
+       "product_lfs": 0,
+       "reaction_rate_per_target_atom_per_s": 1.3619224088675558e-19
+      }
+     ],
+     "independent_fold_rate": 1.3619224088675563e-19,
+     "irdff_rate": 1.3627695704200823e-19,
+     "published": {
+      "E50_MeV": 10.45,
+      "ENDF/B-VIII": 10.6,
+      "IRDFF-II": -0.5,
+      "JEFF-3.3": 0.1,
+      "JENDL-4": -1.9,
+      "element_reaction": "Ti(n,p)",
+      "uncertainty_percent": 4.1
+     },
+     "rate_per_s": 1.37e-19,
+     "reaction": "48Ti(n,p)",
+     "status": "scored",
+     "uncertainty_percent": 3.7
+    },
+    {
+     "E50_MeV": 10.57,
+     "actinv_rate": 1.948785096948316e-20,
+     "actinv_rate_equal_lethargy": 1.948767499068106e-20,
+     "actinv_rows": [
+      {
+       "mt": 34,
+       "product": "Sc48",
+       "product_lfs": 0,
+       "reaction_rate_per_target_atom_per_s": 0.0
+      },
+      {
+       "mt": 107,
+       "product": "Sc48",
+       "product_lfs": 0,
+       "reaction_rate_per_target_atom_per_s": 1.948785096948316e-20
+      },
+      {
+       "mt": 116,
+       "product": "Sc48",
+       "product_lfs": 0,
+       "reaction_rate_per_target_atom_per_s": 0.0
+      }
+     ],
+     "independent_fold_rate": 1.948785096948316e-20,
+     "irdff_rate": 1.950790589578527e-20,
+     "published": {
+      "E50_MeV": 10.57,
+      "ENDF/B-VIII": 12.2,
+      "IRDFF-II": -1.7,
+      "JEFF-3.3": -1.2,
+      "JENDL-4": 8.4,
+      "element_reaction": "V(n,a)",
+      "uncertainty_percent": 5.3
+     },
+     "rate_per_s": 1.99e-20,
+     "reaction": "51V(n,a)",
+     "status": "scored",
+     "uncertainty_percent": 4.9
+    },
+    {
+     "E50_MeV": 10.6,
+     "actinv_rate": 4.124518046786793e-18,
+     "actinv_rate_equal_lethargy": 4.124482077408251e-18,
+     "actinv_rows": [
+      {
+       "mt": 16,
+       "product": "Au196",
+       "product_lfs": 0,
+       "reaction_rate_per_target_atom_per_s": 2.6825652282455604e-18
+      },
+      {
+       "mt": 16,
+       "product": "Au196m1",
+       "product_lfs": 1,
+       "reaction_rate_per_target_atom_per_s": 1.4289952069288799e-18
+      },
+      {
+       "mt": 16,
+       "product": "Au196m2",
+       "product_lfs": 2,
+       "reaction_rate_per_target_atom_per_s": 1.2957611612352712e-20
+      }
+     ],
+     "independent_fold_rate": 4.124518046786795e-18,
+     "irdff_rate": 4.144712202743879e-18,
+     "published": {
+      "E50_MeV": 10.6,
+      "ENDF/B-VIII": -6.1,
+      "IRDFF-II": -3.4,
+      "JEFF-3.3": -5.5,
+      "JENDL-4": 22.6,
+      "element_reaction": "Au(n,2n)",
+      "uncertainty_percent": 4.3
+     },
+     "rate_per_s": 4.29e-18,
+     "reaction": "197Au(n,2n)",
+     "status": "scored",
+     "uncertainty_percent": 3.8
+    },
+    {
+     "E50_MeV": 10.89,
+     "actinv_rate": 2.167878437207185e-19,
+     "actinv_rate_equal_lethargy": 2.1678729058916847e-19,
+     "actinv_rows": [
+      {
+       "mt": 28,
+       "product": "Co57",
+       "product_lfs": 0,
+       "reaction_rate_per_target_atom_per_s": 2.1117997880180794e-19
+      },
+      {
+       "mt": 104,
+       "product": "Co57",
+       "product_lfs": 0,
+       "reaction_rate_per_target_atom_per_s": 5.6078649189105604e-21
+      }
+     ],
+     "independent_fold_rate": 2.1678784372071841e-19,
+     "irdff_rate": null,
+     "published": {
+      "E50_MeV": 10.89,
+      "ENDF/B-VIII": -18.1,
+      "IRDFF-II": null,
+      "JEFF-3.3": -20.9,
+      "JENDL-4": -10.6,
+      "element_reaction": "Ni(n,x)",
+      "uncertainty_percent": 3.7
+     },
+     "rate_per_s": 1.89e-19,
+     "reaction": "58Ni(n,x)57Co",
+     "status": "scored",
+     "uncertainty_percent": 3.7
+    },
+    {
+     "E50_MeV": 11.27,
+     "actinv_rate": 5.4010917354791347e-20,
+     "actinv_rate_equal_lethargy": 5.4010917354791335e-20,
+     "actinv_rows": [
+      {
+       "mt": 16,
+       "product": "Co58",
+       "product_lfs": 0,
+       "reaction_rate_per_target_atom_per_s": 1.6575422467750628e-20
+      },
+      {
+       "mt": 16,
+       "product": "Co58m1",
+       "product_lfs": 1,
+       "reaction_rate_per_target_atom_per_s": 3.743549488704072e-20
+      }
+     ],
+     "independent_fold_rate": 5.4010917354791335e-20,
+     "irdff_rate": 4.6505557662099984e-20,
+     "published": {
+      "E50_MeV": 11.27,
+      "ENDF/B-VIII": 14.0,
+      "IRDFF-II": -2.7,
+      "JEFF-3.3": -2.7,
+      "JENDL-4": 11.7,
+      "element_reaction": "Co(n,2n)",
+      "uncertainty_percent": 6.2
+     },
+     "rate_per_s": 4.78e-20,
+     "reaction": "59Co(n,2n)",
+     "status": "scored",
+     "uncertainty_percent": 5.7
+    },
+    {
+     "E50_MeV": 6.71,
+     "actinv_rate": 5.801205424638712e-18,
+     "actinv_rate_equal_lethargy": 5.8008231322922175e-18,
+     "actinv_rows": [
+      {
+       "mt": 103,
+       "product": "Co58",
+       "product_lfs": 0,
+       "reaction_rate_per_target_atom_per_s": 3.71688211730584e-18
+      },
+      {
+       "mt": 103,
+       "product": "Co58m1",
+       "product_lfs": 1,
+       "reaction_rate_per_target_atom_per_s": 2.0843233073328717e-18
+      }
+     ],
+     "independent_fold_rate": 5.801205424638715e-18,
+     "irdff_rate": 5.805144222744919e-18,
+     "published": null,
+     "rate_per_s": 5.76e-18,
+     "reaction": "58Ni(n,p)",
+     "status": "normalization",
+     "uncertainty_percent": 3.6
+    },
+    {
+     "E50_MeV": 10.44,
+     "actinv_rate": 3.633630140176982e-19,
+     "actinv_rate_equal_lethargy": 3.633579934492655e-19,
+     "actinv_rows": [
+      {
+       "mt": 34,
+       "product": "Na24",
+       "product_lfs": 0,
+       "reaction_rate_per_target_atom_per_s": 0.0
+      },
+      {
+       "mt": 107,
+       "product": "Na24",
+       "product_lfs": 0,
+       "reaction_rate_per_target_atom_per_s": 3.633630140176982e-19
+      },
+      {
+       "mt": 116,
+       "product": "Na24",
+       "product_lfs": 0,
+       "reaction_rate_per_target_atom_per_s": 0.0
+      }
+     ],
+     "independent_fold_rate": 3.6336301401769817e-19,
+     "irdff_rate": 3.637135591320908e-19,
+     "published": null,
+     "rate_per_s": 3.66e-19,
+     "reaction": "27Al(n,a)",
+     "status": "normalization",
+     "uncertainty_percent": 3.7
+    }
+   ],
+   "spectrum_bins": 113,
+   "spectrum_integral": 21533546.8,
+   "spectrum_range_MeV": [
+    0.9,
+    12.2
+   ]
+  },
+  "14.4": {
+   "rates": [
+    {
+     "E50_MeV": 7.75,
+     "actinv_rate": 8.60655300617137e-18,
+     "actinv_rate_equal_lethargy": 8.606220368593662e-18,
+     "actinv_rows": [
+      {
+       "mt": 103,
+       "product": "Mn54",
+       "product_lfs": 0,
+       "reaction_rate_per_target_atom_per_s": 8.60655300617137e-18
+      }
+     ],
+     "independent_fold_rate": 8.606553006171371e-18,
+     "irdff_rate": 8.610431675808691e-18,
+     "published": {
+      "E50_MeV": 7.75,
+      "ENDF/B-VIII": -1.0,
+      "IRDFF-II": -1.2,
+      "JEFF-3.3": -3.0,
+      "JENDL-4": 0.6,
+      "element_reaction": "Fe(n,p)",
+      "uncertainty_percent": 3.9
+     },
+     "rate_per_s": 8.71e-18,
+     "reaction": "54Fe(n,p)",
+     "status": "scored",
+     "uncertainty_percent": 3.6
+    },
+    {
+     "E50_MeV": 8.37,
+     "actinv_rate": 2.014363485319304e-18,
+     "actinv_rate_equal_lethargy": 2.0142635822716526e-18,
+     "actinv_rows": [
+      {
+       "mt": 103,
+       "product": "Sc47",
+       "product_lfs": 0,
+       "reaction_rate_per_target_atom_per_s": 2.014363485319304e-18
+      }
+     ],
+     "independent_fold_rate": 2.014363485319304e-18,
+     "irdff_rate": 2.017126978750175e-18,
+     "published": {
+      "E50_MeV": 8.37,
+      "ENDF/B-VIII": 15.9,
+      "IRDFF-II": 1.3,
+      "JEFF-3.3": 1.3,
+      "JENDL-4": 2.1,
+      "element_reaction": "Ti(n,p)",
+      "uncertainty_percent": 6.8
+     },
+     "rate_per_s": 1.99e-18,
+     "reaction": "47Ti(n,p)",
+     "status": "scored",
+     "uncertainty_percent": 3.5
+    },
+    {
+     "E50_MeV": 10.04,
+     "actinv_rate": 3.555438781890406e-18,
+     "actinv_rate_equal_lethargy": 3.5553576556882065e-18,
+     "actinv_rows": [
+      {
+       "mt": 103,
+       "product": "Sc46",
+       "product_lfs": 0,
+       "reaction_rate_per_target_atom_per_s": 2.473909402502435e-18
+      },
+      {
+       "mt": 103,
+       "product": "Sc46m1",
+       "product_lfs": 1,
+       "reaction_rate_per_target_atom_per_s": 1.0815293793879705e-18
+      }
+     ],
+     "independent_fold_rate": 3.5554387818904065e-18,
+     "irdff_rate": 3.557895267266879e-18,
+     "published": {
+      "E50_MeV": 10.04,
+      "ENDF/B-VIII": 4.2,
+      "IRDFF-II": 7.8,
+      "JEFF-3.3": 7.8,
+      "JENDL-4": 2.9,
+      "element_reaction": "Ti(n,p)",
+      "uncertainty_percent": 4.1
+     },
+     "rate_per_s": 3.3e-18,
+     "reaction": "46Ti(n,p)",
+     "status": "scored",
+     "uncertainty_percent": 3.9
+    },
+    {
+     "E50_MeV": 12.13,
+     "actinv_rate": 5.364184720185845e-19,
+     "actinv_rate_equal_lethargy": 5.364078145144564e-19,
+     "actinv_rows": [
+      {
+       "mt": 103,
+       "product": "Fe59",
+       "product_lfs": 0,
+       "reaction_rate_per_target_atom_per_s": 5.364184720185845e-19
+      }
+     ],
+     "independent_fold_rate": 5.364184720185844e-19,
+     "irdff_rate": 5.369712654979888e-19,
+     "published": {
+      "E50_MeV": 12.13,
+      "ENDF/B-VIII": 4.8,
+      "IRDFF-II": 7.2,
+      "JEFF-3.3": -1.7,
+      "JENDL-4": -1.3,
+      "element_reaction": "Co(n,p)",
+      "uncertainty_percent": 4.6
+     },
+     "rate_per_s": 5.01e-19,
+     "reaction": "59Co(n,p)",
+     "status": "scored",
+     "uncertainty_percent": 4.4
+    },
+    {
+     "E50_MeV": 12.24,
+     "actinv_rate": 1.374515996197931e-18,
+     "actinv_rate_equal_lethargy": 1.3744911904208758e-18,
+     "actinv_rows": [
+      {
+       "mt": 103,
+       "product": "Co60",
+       "product_lfs": 0,
+       "reaction_rate_per_target_atom_per_s": 5.082984559515411e-19
+      },
+      {
+       "mt": 103,
+       "product": "Co60m1",
+       "product_lfs": 1,
+       "reaction_rate_per_target_atom_per_s": 8.662175402463899e-19
+      }
+     ],
+     "independent_fold_rate": 1.3745159961979304e-18,
+     "irdff_rate": 1.3780274233287377e-18,
+     "published": {
+      "E50_MeV": 12.24,
+      "ENDF/B-VIII": 9.8,
+      "IRDFF-II": 3.8,
+      "JEFF-3.3": 1.2,
+      "JENDL-4": 7.9,
+      "element_reaction": "Ni(n,p)",
+      "uncertainty_percent": 5.3
+     },
+     "rate_per_s": 1.33e-18,
+     "reaction": "60Ni(n,p)",
+     "status": "scored",
+     "uncertainty_percent": 5.4
+    },
+    {
+     "E50_MeV": 12.29,
+     "actinv_rate": 6.40627749571043e-19,
+     "actinv_rate_equal_lethargy": 6.406172126070201e-19,
+     "actinv_rows": [
+      {
+       "mt": 34,
+       "product": "Cr51",
+       "product_lfs": 0,
+       "reaction_rate_per_target_atom_per_s": 0.0
+      },
+      {
+       "mt": 107,
+       "product": "Cr51",
+       "product_lfs": 0,
+       "reaction_rate_per_target_atom_per_s": 6.40627749571043e-19
+      },
+      {
+       "mt": 116,
+       "product": "Cr51",
+       "product_lfs": 0,
+       "reaction_rate_per_target_atom_per_s": 0.0
+      }
+     ],
+     "independent_fold_rate": 6.406277495710429e-19,
+     "irdff_rate": 6.413484955329888e-19,
+     "published": {
+      "E50_MeV": 12.29,
+      "ENDF/B-VIII": -61.7,
+      "IRDFF-II": -5.4,
+      "JEFF-3.3": -17.4,
+      "JENDL-4": -5.5,
+      "element_reaction": "Fe(n,a)",
+      "uncertainty_percent": 6.4
+     },
+     "rate_per_s": 6.78e-19,
+     "reaction": "54Fe(n,a)",
+     "status": "scored",
+     "uncertainty_percent": 5.8
+    },
+    {
+     "E50_MeV": 12.31,
+     "actinv_rate": 1.6094001313690084e-18,
+     "actinv_rate_equal_lethargy": 1.6093749700590819e-18,
+     "actinv_rows": [
+      {
+       "mt": 103,
+       "product": "Na24",
+       "product_lfs": 0,
+       "reaction_rate_per_target_atom_per_s": 1.6094001313690084e-18
+      }
+     ],
+     "independent_fold_rate": 1.6094001313690082e-18,
+     "irdff_rate": 1.5955417326649851e-18,
+     "published": {
+      "E50_MeV": 12.31,
+      "ENDF/B-VIII": 10.1,
+      "IRDFF-II": 3.0,
+      "JEFF-3.3": 10.1,
+      "JENDL-4": 10.1,
+      "element_reaction": "Mg(n,p)",
+      "uncertainty_percent": 5.0
+     },
+     "rate_per_s": 1.55e-18,
+     "reaction": "24Mg(n,p)",
+     "status": "scored",
+     "uncertainty_percent": 3.6
+    },
+    {
+     "E50_MeV": 12.31,
+     "actinv_rate": 9.162839552122395e-19,
+     "actinv_rate_equal_lethargy": 9.16268703491797e-19,
+     "actinv_rows": [
+      {
+       "mt": 103,
+       "product": "Mn56",
+       "product_lfs": 0,
+       "reaction_rate_per_target_atom_per_s": 9.162839552122395e-19
+      }
+     ],
+     "independent_fold_rate": 9.162839552122395e-19,
+     "irdff_rate": 9.207475088498838e-19,
+     "published": {
+      "E50_MeV": 12.31,
+      "ENDF/B-VIII": -1.6,
+      "IRDFF-II": -1.7,
+      "JEFF-3.3": -2.5,
+      "JENDL-4": -3.9,
+      "element_reaction": "Fe(n,p)",
+      "uncertainty_percent": 5.0
+     },
+     "rate_per_s": 9.37e-19,
+     "reaction": "56Fe(n,p)",
+     "status": "scored",
+     "uncertainty_percent": 3.5
+    },
+    {
+     "E50_MeV": 12.4,
+     "actinv_rate": 1.988311289524894e-19,
+     "actinv_rate_equal_lethargy": 1.9882818451108513e-19,
+     "actinv_rows": [
+      {
+       "mt": 34,
+       "product": "Mn56",
+       "product_lfs": 0,
+       "reaction_rate_per_target_atom_per_s": 0.0
+      },
+      {
+       "mt": 107,
+       "product": "Mn56",
+       "product_lfs": 0,
+       "reaction_rate_per_target_atom_per_s": 1.988311289524894e-19
+      },
+      {
+       "mt": 116,
+       "product": "Mn56",
+       "product_lfs": 0,
+       "reaction_rate_per_target_atom_per_s": 0.0
+      }
+     ],
+     "independent_fold_rate": 1.9883112895248937e-19,
+     "irdff_rate": 1.9900801415343092e-19,
+     "published": {
+      "E50_MeV": 12.4,
+      "ENDF/B-VIII": -0.9,
+      "IRDFF-II": -2.9,
+      "JEFF-3.3": -5.0,
+      "JENDL-4": -3.2,
+      "element_reaction": "Co(n,a)",
+      "uncertainty_percent": 5.3
+     },
+     "rate_per_s": 2.05e-19,
+     "reaction": "59Co(n,a)",
+     "status": "scored",
+     "uncertainty_percent": 3.5
+    },
+    {
+     "E50_MeV": 12.41,
+     "actinv_rate": 4.06663825997356e-19,
+     "actinv_rate_equal_lethargy": 4.06658692684282e-19,
+     "actinv_rows": [
+      {
+       "mt": 103,
+       "product": "Sc48",
+       "product_lfs": 0,
+       "reaction_rate_per_target_atom_per_s": 4.06663825997356e-19
+      }
+     ],
+     "independent_fold_rate": 4.06663825997356e-19,
+     "irdff_rate": 4.0732038279656473e-19,
+     "published": {
+      "E50_MeV": 12.41,
+      "ENDF/B-VIII": 0.5,
+      "IRDFF-II": 2.2,
+      "JEFF-3.3": 2.3,
+      "JENDL-4": -3.9,
+      "element_reaction": "Ti(n,p)",
+      "uncertainty_percent": 5.4
+     },
+     "rate_per_s": 3.99e-19,
+     "reaction": "48Ti(n,p)",
+     "status": "scored",
+     "uncertainty_percent": 3.6
+    },
+    {
+     "E50_MeV": 12.5,
+     "actinv_rate": 6.757965858646452e-20,
+     "actinv_rate_equal_lethargy": 6.757903266656319e-20,
+     "actinv_rows": [
+      {
+       "mt": 34,
+       "product": "Sc48",
+       "product_lfs": 0,
+       "reaction_rate_per_target_atom_per_s": 0.0
+      },
+      {
+       "mt": 107,
+       "product": "Sc48",
+       "product_lfs": 0,
+       "reaction_rate_per_target_atom_per_s": 6.757965858646452e-20
+      },
+      {
+       "mt": 116,
+       "product": "Sc48",
+       "product_lfs": 0,
+       "reaction_rate_per_target_atom_per_s": 0.0
+      }
+     ],
+     "independent_fold_rate": 6.757965858646452e-20,
+     "irdff_rate": 6.774825370833915e-20,
+     "published": {
+      "E50_MeV": 12.5,
+      "ENDF/B-VIII": 1.5,
+      "IRDFF-II": -4.8,
+      "JEFF-3.3": -5.0,
+      "JENDL-4": -0.4,
+      "element_reaction": "V(n,a)",
+      "uncertainty_percent": 6.3
+     },
+     "rate_per_s": 7.12e-20,
+     "reaction": "51V(n,a)",
+     "status": "scored",
+     "uncertainty_percent": 4.2
+    },
+    {
+     "E50_MeV": 12.5,
+     "actinv_rate": 1.1367532535835265e-17,
+     "actinv_rate_equal_lethargy": 1.136746869005257e-17,
+     "actinv_rows": [
+      {
+       "mt": 16,
+       "product": "Au196",
+       "product_lfs": 0,
+       "reaction_rate_per_target_atom_per_s": 7.89005606503817e-18
+      },
+      {
+       "mt": 16,
+       "product": "Au196m1",
+       "product_lfs": 1,
+       "reaction_rate_per_target_atom_per_s": 3.4184077987476973e-18
+      },
+      {
+       "mt": 16,
+       "product": "Au196m2",
+       "product_lfs": 2,
+       "reaction_rate_per_target_atom_per_s": 5.90686720493982e-20
+      }
+     ],
+     "independent_fold_rate": 1.1367532535835268e-17,
+     "irdff_rate": 1.1351701833029402e-17,
+     "published": {
+      "E50_MeV": 12.5,
+      "ENDF/B-VIII": 4.2,
+      "IRDFF-II": 2.9,
+      "JEFF-3.3": 4.2,
+      "JENDL-4": 16.0,
+      "element_reaction": "Au(n,2n)",
+      "uncertainty_percent": 6.2
+     },
+     "rate_per_s": 1.1e-17,
+     "reaction": "197Au(n,2n)",
+     "status": "scored",
+     "uncertainty_percent": 3.8
+    },
+    {
+     "E50_MeV": 12.57,
+     "actinv_rate": 2.0084512510635968e-18,
+     "actinv_rate_equal_lethargy": 2.0084508450313403e-18,
+     "actinv_rows": [
+      {
+       "mt": 28,
+       "product": "Co57",
+       "product_lfs": 0,
+       "reaction_rate_per_target_atom_per_s": 1.961004738883155e-18
+      },
+      {
+       "mt": 104,
+       "product": "Co57",
+       "product_lfs": 0,
+       "reaction_rate_per_target_atom_per_s": 4.7446512180441797e-20
+      }
+     ],
+     "independent_fold_rate": 2.0084512510635964e-18,
+     "irdff_rate": null,
+     "published": {
+      "E50_MeV": 12.57,
+      "ENDF/B-VIII": -10.2,
+      "IRDFF-II": null,
+      "JEFF-3.3": -7.7,
+      "JENDL-4": 2.5,
+      "element_reaction": "Ni(n,x)",
+      "uncertainty_percent": 6.6
+     },
+     "rate_per_s": 2.09e-18,
+     "reaction": "58Ni(n,x)57Co",
+     "status": "scored",
+     "uncertainty_percent": 3.5
+    },
+    {
+     "E50_MeV": 12.58,
+     "actinv_rate": 2.206014622708992e-18,
+     "actinv_rate_equal_lethargy": 2.206014622708992e-18,
+     "actinv_rows": [
+      {
+       "mt": 16,
+       "product": "Co58",
+       "product_lfs": 0,
+       "reaction_rate_per_target_atom_per_s": 7.236773106298724e-19
+      },
+      {
+       "mt": 16,
+       "product": "Co58m1",
+       "product_lfs": 1,
+       "reaction_rate_per_target_atom_per_s": 1.4823373120791196e-18
+      }
+     ],
+     "independent_fold_rate": 2.2060146227089924e-18,
+     "irdff_rate": 2.20934391448055e-18,
+     "published": {
+      "E50_MeV": 12.58,
+      "ENDF/B-VIII": -4.0,
+      "IRDFF-II": -7.2,
+      "JEFF-3.3": -6.4,
+      "JENDL-4": -13.5,
+      "element_reaction": "Co(n,2n)",
+      "uncertainty_percent": 6.7
+     },
+     "rate_per_s": 2.38e-18,
+     "reaction": "59Co(n,2n)",
+     "status": "scored",
+     "uncertainty_percent": 3.6
+    },
+    {
+     "E50_MeV": 12.64,
+     "actinv_rate": 6.40278538099692e-20,
+     "actinv_rate_equal_lethargy": 6.402785380996921e-20,
+     "actinv_rows": [
+      {
+       "mt": 16,
+       "product": "F18",
+       "product_lfs": 0,
+       "reaction_rate_per_target_atom_per_s": 6.40278538099692e-20
+      }
+     ],
+     "independent_fold_rate": 6.402785380996921e-20,
+     "irdff_rate": 6.323772841269741e-20,
+     "published": {
+      "E50_MeV": 12.64,
+      "ENDF/B-VIII": 40.1,
+      "IRDFF-II": 10.7,
+      "JEFF-3.3": 40.1,
+      "JENDL-4": 75.7,
+      "element_reaction": "F(n,2n)",
+      "uncertainty_percent": 7.3
+     },
+     "rate_per_s": 5.72e-20,
+     "reaction": "19F(n,2n)",
+     "status": "scored",
+     "uncertainty_percent": 3.6
+    },
+    {
+     "E50_MeV": 12.58,
+     "actinv_rate": 2.4828678995080403e-18,
+     "actinv_rate_equal_lethargy": 2.4828678995080403e-18,
+     "actinv_rows": [
+      {
+       "mt": 16,
+       "product": "Mn54",
+       "product_lfs": 0,
+       "reaction_rate_per_target_atom_per_s": 2.4828678995080403e-18
+      }
+     ],
+     "independent_fold_rate": 2.4828678995080403e-18,
+     "irdff_rate": 2.4864030568819097e-18,
+     "published": {
+      "E50_MeV": 12.58,
+      "ENDF/B-VIII": -3.9,
+      "IRDFF-II": -2.8,
+      "JEFF-3.3": 4.9,
+      "JENDL-4": -1.0,
+      "element_reaction": "Mn(n,2n)",
+      "uncertainty_percent": 6.8
+     },
+     "rate_per_s": 2.56e-18,
+     "reaction": "55Mn(n,2n)",
+     "status": "scored",
+     "uncertainty_percent": 3.8
+    },
+    {
+     "E50_MeV": 12.85,
+     "actinv_rate": 7.132462783915747e-21,
+     "actinv_rate_equal_lethargy": 7.132462783915749e-21,
+     "actinv_rows": [
+      {
+       "mt": 16,
+       "product": "Ni57",
+       "product_lfs": 0,
+       "reaction_rate_per_target_atom_per_s": 7.132462783915747e-21
+      }
+     ],
+     "independent_fold_rate": 7.132462783915744e-21,
+     "irdff_rate": 5.93799906984e-21,
+     "published": null,
+     "rate_per_s": 6.17e-21,
+     "reaction": "58Ni(n,2n)",
+     "status": "secondary",
+     "uncertainty_percent": 3.8
+    },
+    {
+     "E50_MeV": 7.64,
+     "actinv_rate": 1.0668909048969802e-17,
+     "actinv_rate_equal_lethargy": 1.0668404240849954e-17,
+     "actinv_rows": [
+      {
+       "mt": 103,
+       "product": "Co58",
+       "product_lfs": 0,
+       "reaction_rate_per_target_atom_per_s": 6.670652590905878e-18
+      },
+      {
+       "mt": 103,
+       "product": "Co58m1",
+       "product_lfs": 1,
+       "reaction_rate_per_target_atom_per_s": 3.998256458063923e-18
+      }
+     ],
+     "independent_fold_rate": 1.0668909048969802e-17,
+     "irdff_rate": 1.0678739872564139e-17,
+     "published": null,
+     "rate_per_s": 1.07e-17,
+     "reaction": "58Ni(n,p)",
+     "status": "normalization",
+     "uncertainty_percent": 3.5
+    },
+    {
+     "E50_MeV": 10.28,
+     "actinv_rate": 9.274575301389894e-19,
+     "actinv_rate_equal_lethargy": 9.274421627107474e-19,
+     "actinv_rows": [
+      {
+       "mt": 34,
+       "product": "Na24",
+       "product_lfs": 0,
+       "reaction_rate_per_target_atom_per_s": 0.0
+      },
+      {
+       "mt": 107,
+       "product": "Na24",
+       "product_lfs": 0,
+       "reaction_rate_per_target_atom_per_s": 9.274575301389894e-19
+      },
+      {
+       "mt": 116,
+       "product": "Na24",
+       "product_lfs": 0,
+       "reaction_rate_per_target_atom_per_s": 0.0
+      }
+     ],
+     "independent_fold_rate": 9.274575301389896e-19,
+     "irdff_rate": 9.272453073605597e-19,
+     "published": null,
+     "rate_per_s": 9.29e-19,
+     "reaction": "27Al(n,a)",
+     "status": "normalization",
+     "uncertainty_percent": 3.6
+    }
+   ],
+   "spectrum_bins": 126,
+   "spectrum_integral": 32695817.0,
+   "spectrum_range_MeV": [
+    1.0,
+    13.6
+   ]
+  }
+ },
+ "inputs": {
+  "irdff_groups": {
+   "path": "/home/connoravila/nuclear-data/p17-irdff/IRDFF-II_g725.zip",
+   "sha256": "6ec2b33c0f67bed46d46be062a24ccedaa5ffea9bbba919958da4b1349f48c85"
+  },
+  "library": {
+   "path": "/home/connoravila/Documents/actinv/actinv-data/v1.2.0/activation/tendl-2025-neutron-709g.npz",
+   "sha256": "ec4c72bf598dc8ad3d533d9cfafdcf493e2d1f949a3e4db6251495659b68cc44"
+  },
+  "library_index": {
+   "path": "/home/connoravila/Documents/actinv/actinv-data/v1.2.0/activation/tendl-2025-neutron-709g_index.json",
+   "sha256": "8bd19b4001c246758e739cd0067a0087e1ce5c2157438dae97bd52e1d3beb3fb"
+  },
+  "pdf": {
+   "path": "/home/connoravila/nuclear-data/npi-rez-pli/2306.09353v1.pdf",
+   "sha256": "7ef44f1d94aa629639dec2e08555717d8582c85a3b8cbcc382834c847b6064c5"
+  }
+ },
+ "schema": "actinv-p167-rez-1",
+ "tables": {
+  "path": "results/p167/rez_tables.json",
+  "sha256": "7a2281ba2a2a5b6be0aeb9ab813ee09da1817f0be1daee16cd751b216574921a"
+ }
+}
