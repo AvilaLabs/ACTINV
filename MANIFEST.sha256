@@ -1181,7 +1181,7 @@ a39b5155e624e5540f1c2d88868b22b1f5be1765d872a1e17e70e00dd98821ac  ./crates/actin
 22736b9953c82f108784f40fff7840bdea2a4e82748ef1153096e1fe60ee8668  ./crates/actinv-gui/src/views/waste_uncertainty.rs
 60263898d33d04a0d3c0d99887718ce7a4e4b65df36188bad7d6dcc976e0c43e  ./crates/actinv-gui/src/visuals.rs
 7705990dcfc780a361ba99bba200aced6539c196cf831db257181fdb7a24112f  ./crates/actinv-gui/src/web.rs
-dde5733c32e21340e74a7c39bbaf41223856cdb33e950bf97744ec5b65fc88c0  ./crates/actinv-gui/src/web_app.rs
+f89418648b433beb758b1f29bfb6631c7dd77e7f774b838e5682c4720580375c  ./crates/actinv-gui/src/web_app.rs
 675fc95f420adc3ae414933ed45512aec4017dd9f4b217d5e4b0e90a12451391  ./crates/actinv-gui/src/worker.rs
 3b2e1bde3099de437f81a76a2c0ac9315803a83ecc81c005dc69de11305c1016  ./data/clearance_iaea_2004.json
 df5b6970c892117944416a67e40072227cafd7ec677917f71b1b2e7bce1cae23  ./data/cram_coefficients.json

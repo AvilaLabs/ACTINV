@@ -27,6 +27,160 @@ use sha2::{Digest, Sha256};
 use std::sync::mpsc::{self, Receiver};
 
 const MAX_FILE_BYTES: usize = 32 * 1024 * 1024;
+/// Below this width the sidebar hides behind a Menu button so the page keeps its room.
+const NARROW: f32 = 760.;
+
+/// The studies the browser sets up, in the order the studies page lists them: page, card title,
+/// what it answers.
+const STUDIES: [(Page, &str, &str); 5] = [
+    (Page::Waste, "Waste class", "Which class the waste falls in, which package takes it, over which ranges, and how sure."),
+    (Page::Impurities, "Impurities", "Which trace elements drive activity, heat, dose or waste class, and how far each may rise."),
+    (Page::Compare, "Compare", "How materials, spectra or irradiation lengths compare, every case solved the same way."),
+    (Page::Certify, "Certify", "Whether the design meets its limits once the nuclear-data uncertainty is counted."),
+    (Page::Optimize, "Optimize", "Which design, within the ranges you give, does best while meeting every limit."),
+];
+
+/// What a toolbar click asks for, applied after the bar is drawn.
+enum ToolbarAction {
+    Open,
+    Import,
+    Download,
+    OpenResult,
+}
+
+/// Cards of the same width, `most` to a row when they fit at 200 and two otherwise, each with a
+/// title, up to three lines of text and one button. Returns the index of the card clicked.
+fn card_grid(ui: &mut egui::Ui, cards: &[(&str, &str, &str)], most: usize) -> Option<usize> {
+    // each card adds its frame's margins and stroke (14) and the gap to the next (8), and egui
+    // wraps single widgets, not groups
+    let available = ui.available_width();
+    let per_row = if available >= most as f32 * (200. + 14.) + (most - 1) as f32 * 8. {
+        most
+    } else {
+        2
+    };
+    let width = ((available - (per_row as f32) * 14. - (per_row - 1) as f32 * 8.) / per_row as f32)
+        .clamp(160., 300.);
+    let mut picked = None;
+    for (row, chunk) in cards.chunks(per_row).enumerate() {
+        ui.horizontal(|ui| {
+            for (i, (title, text, button)) in chunk.iter().enumerate() {
+                let clicked = ui
+                    .group(|ui| {
+                        ui.set_width(width);
+                        ui.set_min_height(140.);
+                        ui.vertical(|ui| {
+                            ui.strong(*title);
+                            // three lines of room for every description, so the buttons line up
+                            let lines = 3.2 * ui.text_style_height(&egui::TextStyle::Body);
+                            ui.scope(|ui| {
+                                ui.set_min_height(lines);
+                                ui.label(*text);
+                            });
+                            ui.add_space(4.);
+                            ui.button(*button).clicked()
+                        })
+                        .inner
+                    })
+                    .inner;
+                if clicked {
+                    picked = Some(row * per_row + i);
+                }
+            }
+        });
+    }
+    picked
+}
+
+/// The four file actions of the toolbar, shortened on a mid-width window.
+fn file_buttons(ui: &mut egui::Ui, compact: bool, unsaved: bool) -> Option<ToolbarAction> {
+    let mut action = None;
+    if ui
+        .button(if compact { "Open" } else { "Open problem…" })
+        .on_hover_text("Open an ACTINV problem from your computer")
+        .clicked()
+    {
+        action = Some(ToolbarAction::Open);
+    }
+    if ui
+        .button(if compact {
+            "Import deck…"
+        } else {
+            "Import FISPACT-II deck…"
+        })
+        .on_hover_text("Convert a FISPACT-II input deck into an ACTINV problem")
+        .clicked()
+    {
+        action = Some(ToolbarAction::Import);
+    }
+    let download = if compact {
+        "Download"
+    } else {
+        "Download problem"
+    };
+    if ui
+        .button(if unsaved {
+            format!("{download} •")
+        } else {
+            download.into()
+        })
+        .on_hover_text(if unsaved {
+            "The problem has changes you have not downloaded"
+        } else {
+            "Save the problem to your computer"
+        })
+        .clicked()
+    {
+        action = Some(ToolbarAction::Download);
+    }
+    ui.separator();
+    if ui
+        .button(if compact {
+            "Open result"
+        } else {
+            "Open result…"
+        })
+        .on_hover_text("Open a result saved from ACTINV to explore it")
+        .clicked()
+    {
+        action = Some(ToolbarAction::OpenResult);
+    }
+    action
+}
+
+/// A folding sidebar caption with a painted triangle: the UI font has no arrow glyphs.
+fn fold_header(ui: &mut egui::Ui, caption: &str, open: bool, accent: Color32) -> egui::Response {
+    ui.horizontal(|ui| {
+        ui.spacing_mut().item_spacing.x = 4.;
+        let (rect, mark) = ui.allocate_exact_size(egui::vec2(8., 8.), egui::Sense::click());
+        let (c, r) = (rect.center(), 3.5);
+        let points = if open {
+            vec![
+                c + egui::vec2(-r, -r * 0.6),
+                c + egui::vec2(r, -r * 0.6),
+                c + egui::vec2(0., r * 0.8),
+            ]
+        } else {
+            vec![
+                c + egui::vec2(-r * 0.6, -r),
+                c + egui::vec2(r * 0.8, 0.),
+                c + egui::vec2(-r * 0.6, r),
+            ]
+        };
+        ui.painter().add(egui::Shape::convex_polygon(
+            points,
+            accent,
+            egui::Stroke::NONE,
+        ));
+        let label = ui.add(
+            egui::Label::new(RichText::new(caption).small().color(accent))
+                .sense(egui::Sense::click()),
+        );
+        mark | label
+    })
+    .inner
+    .on_hover_cursor(egui::CursorIcon::PointingHand)
+}
 const FILE_TOO_LARGE: &str =
     "This workbench accepts files up to 32 MiB. Use the desktop app for larger results.";
 /// Shown beside the pickers: a browser cannot reveal where a file lives on disk.
@@ -246,8 +400,13 @@ pub struct Workbench {
     certify: crate::views::certify::CertifyState,
     optimize: crate::views::optimize::OptimizeState,
     compare: crate::views::compare::CompareState,
-    /// folding groups (Studies, Tools) the visitor opened
+    /// folding groups (Tools) the visitor opened
     nav_open: Vec<crate::nav::Group>,
+    /// The studies page of cards is shown over `hub_from`; any other page change closes it.
+    hub: bool,
+    hub_from: Page,
+    /// On a narrow window the sidebar hides behind the Menu button.
+    menu_open: bool,
     source_view: crate::views::source::SourceState,
     steps: StepsState,
     outputs: OutputsState,
@@ -311,6 +470,9 @@ impl Workbench {
             optimize: Default::default(),
             compare: Default::default(),
             nav_open: Vec::new(),
+            hub: false,
+            hub_from: Page::Start,
+            menu_open: false,
             source_view: Default::default(),
             steps: StepsState::default(),
             outputs: OutputsState::default(),
@@ -708,57 +870,21 @@ impl Workbench {
         });
         ui.add_space(12.);
         ui.label(RichText::new("START A PROBLEM").small().color(accent));
-        // Four cards to a row when they fit at 200, else two: each adds its frame's margins and
-        // stroke (14) and the gap to the next (8), and egui wraps single widgets, not groups.
-        let available = ui.available_width();
-        let per_row = if available >= 4. * (200. + 14.) + 3. * 8. {
-            4
-        } else {
-            2
-        };
-        let width = ((available - (per_row as f32) * 14. - (per_row - 1) as f32 * 8.)
-            / per_row as f32)
-            .clamp(160., 300.);
-        let choice = |ui: &mut egui::Ui, title: &str, text: &str, button: &str| {
-            ui.group(|ui| {
-                ui.set_width(width);
-                ui.set_min_height(140.);
-                ui.vertical(|ui| {
-                    ui.strong(title);
-                    // three lines of room for every description, so the buttons line up
-                    let lines = 3.2 * ui.text_style_height(&egui::TextStyle::Body);
-                    ui.scope(|ui| {
-                        ui.set_min_height(lines);
-                        ui.label(text);
-                    });
-                    ui.add_space(4.);
-                    ui.button(button).clicked()
-                })
-                .inner
-            })
-            .inner
-        };
-        let cards = [
-            (3, "New problem", "Start from nothing: pick a material, an irradiation and a source. Nothing is filled in for you.", "New problem"),
-            (0, "From the iron example", "1 g of iron, 5 minutes at the FNS 14 MeV neutron source, then an hour of cooling.", "Load iron example"),
-            (1, "Open a problem", "An ACTINV problem JSON from your computer, or one written by `actinv new`.", "Open problem…"),
-            (2, "Import a FISPACT-II deck", "Convert an input deck. A report shows what was mapped and what you still need to add.", "Import deck…"),
-        ];
-        let mut picked = None;
-        for row in cards.chunks(per_row) {
-            ui.horizontal(|ui| {
-                for (id, title, text, button) in row {
-                    if choice(ui, title, text, button) {
-                        picked = Some(*id);
-                    }
-                }
-            });
-        }
+        let picked = card_grid(
+            ui,
+            &[
+                ("New problem", "Start from nothing: pick a material, an irradiation and a source. Nothing is filled in for you.", "New problem"),
+                ("From the iron example", "1 g of iron, 5 minutes at the FNS 14 MeV neutron source, then an hour of cooling.", "Load iron example"),
+                ("Open a problem", "An ACTINV problem JSON from your computer, or one written by `actinv new`.", "Open problem…"),
+                ("Import a FISPACT-II deck", "Convert an input deck. A report shows what was mapped and what you still need to add.", "Import deck…"),
+            ],
+            4,
+        );
         match picked {
-            Some(0) => self.load_example(),
-            Some(3) => self.new_problem(),
-            Some(1) => self.pick(FileKind::Problem, &["json"], ui.ctx()),
-            Some(2) => {
+            Some(1) => self.load_example(),
+            Some(0) => self.new_problem(),
+            Some(2) => self.pick(FileKind::Problem, &["json"], ui.ctx()),
+            Some(3) => {
                 self.import.get_or_insert_with(ImportState::default);
             }
             _ => {}
@@ -2009,6 +2135,231 @@ impl Workbench {
         );
     }
 
+    /// Global actions, the same on every page: the problem and result files on the left, the
+    /// appearance and the account on the right. On a narrow window the files move into the menu.
+    /// Returns the bar's bottom edge.
+    fn toolbar(&mut self, ui: &mut egui::Ui) -> f32 {
+        let width = ui.ctx().content_rect().width();
+        let (narrow, compact) = (width < NARROW, width < 1100.);
+        let unsaved = self.raw_dirty || self.problem != self.saved;
+        crate::web::mark_unsaved(unsaved);
+        let mut action = None;
+        let bar = egui::Panel::top("toolbar").show(ui, |ui| {
+            egui::containers::Sides::new().shrink_left().show(
+                ui,
+                |ui| {
+                    ui.horizontal_wrapped(|ui| {
+                        if narrow {
+                            let text = if self.menu_open { "Close menu" } else { "Menu" };
+                            if ui.selectable_label(self.menu_open, text).clicked() {
+                                self.menu_open = !self.menu_open;
+                            }
+                        } else {
+                            action = file_buttons(ui, compact, unsaved);
+                        }
+                        if self.pending_file.is_some() {
+                            ui.spinner();
+                        }
+                    });
+                },
+                |ui| {
+                    self.suite.controls(ui);
+                    let text = if self.dark {
+                        "Light theme"
+                    } else {
+                        "Dark theme"
+                    };
+                    if ui.button(text).clicked() {
+                        self.dark = !self.dark;
+                        ui.ctx().set_theme(if self.dark {
+                            egui::ThemePreference::Dark
+                        } else {
+                            egui::ThemePreference::Light
+                        });
+                    }
+                },
+            );
+        });
+        if let Some(action) = action {
+            self.file_action(action, &ui.ctx().clone());
+        }
+        bar.response.rect.bottom()
+    }
+
+    fn file_action(&mut self, action: ToolbarAction, ctx: &egui::Context) {
+        match action {
+            ToolbarAction::Open => self.pick(FileKind::Problem, &["json"], ctx),
+            ToolbarAction::Import => {
+                self.import.get_or_insert_with(ImportState::default);
+            }
+            ToolbarAction::Download => self.export_problem(),
+            ToolbarAction::OpenResult => self.pick(FileKind::Result, &["json"], ctx),
+        }
+    }
+
+    /// The sidebar of a wide window. A narrow window shows the same list full width, from the
+    /// Menu button.
+    fn sidebar(&mut self, ui: &mut egui::Ui) {
+        if ui.ctx().content_rect().width() < NARROW {
+            return;
+        }
+        egui::Panel::left("navigation")
+            .default_size(215.)
+            .resizable(false)
+            .show(ui, |ui| {
+                egui::ScrollArea::vertical()
+                    .auto_shrink([false, false])
+                    .show(ui, |ui| self.nav_list(ui, false));
+            });
+    }
+
+    /// The pages in the order a calculation is set up and read. Results are listed once there is
+    /// one to read, and the studies open from one page of cards. In the narrow menu the file
+    /// actions come first.
+    fn nav_list(&mut self, ui: &mut egui::Ui, narrow: bool) {
+        let accent = visuals::accent(ui);
+        ui.spacing_mut().item_spacing.y = 3.;
+        ui.spacing_mut().button_padding.y = 5.;
+        ui.add_space(8.);
+        if narrow {
+            let unsaved = self.raw_dirty || self.problem != self.saved;
+            let action = ui
+                .horizontal_wrapped(|ui| file_buttons(ui, false, unsaved))
+                .inner;
+            if let Some(action) = action {
+                self.menu_open = false;
+                self.file_action(action, &ui.ctx().clone());
+            }
+            ui.add_space(10.);
+        }
+        let mut go = None;
+        let mut hub = false;
+        let item = |ui: &mut egui::Ui, selected: bool, text: String, ready: bool| {
+            ui.horizontal(|ui| {
+                let clicked = ui.selectable_label(selected, text).clicked();
+                // the tick sits at the list's right edge so the ticks line up
+                if ready {
+                    ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
+                        ui.add_space(8.);
+                        visuals::tick(ui, accent).on_hover_text("This step is filled in");
+                    });
+                }
+                clicked
+            })
+            .inner
+        };
+        let current = if self.hub { None } else { Some(self.page) };
+        if item(ui, current == Some(Page::Start), "Start".into(), false) {
+            go = Some(Page::Start);
+        }
+        ui.add_space(10.);
+        ui.label(
+            RichText::new(Group::Setup.caption().unwrap_or_default())
+                .small()
+                .color(accent),
+        );
+        for page in Page::STEPS {
+            let n = page.step().unwrap_or_default();
+            let ready = step_ready(&self.problem, page);
+            if item(
+                ui,
+                current == Some(page),
+                format!("{n}  {}", page.label()),
+                ready,
+            ) {
+                go = Some(page);
+            }
+        }
+        ui.add_space(10.);
+        ui.label(
+            RichText::new(Group::Results.caption().unwrap_or_default())
+                .small()
+                .color(accent),
+        );
+        let results = browser_pages().filter(|p| p.needs_result() && *p != Page::Waste);
+        let mut listed = false;
+        for page in results {
+            // a result page without a result is listed only while it is shown
+            if self.result.is_some() || current == Some(page) {
+                listed = true;
+                if item(ui, current == Some(page), page.label().into(), false) {
+                    go = Some(page);
+                }
+            }
+        }
+        if !listed {
+            ui.label(RichText::new("Open a result to explore it here.").weak());
+        }
+        ui.add_space(10.);
+        ui.label(
+            RichText::new(Group::Studies.caption().unwrap_or_default())
+                .small()
+                .color(accent),
+        );
+        let in_study = current.is_some_and(|p| STUDIES.iter().any(|s| s.0 == p));
+        if item(ui, self.hub, "All studies".into(), false) {
+            hub = true;
+        }
+        // inside a study, its neighbours are one click away
+        if in_study {
+            for (page, title, _) in STUDIES {
+                ui.horizontal(|ui| {
+                    ui.add_space(12.);
+                    if ui.selectable_label(current == Some(page), title).clicked() {
+                        go = Some(page);
+                    }
+                });
+            }
+        }
+        ui.add_space(10.);
+        let here = current.is_some_and(|p| p.group() == Group::Tools);
+        let open = here || !Group::Tools.folds() || self.nav_open.contains(&Group::Tools);
+        if fold_header(ui, Group::Tools.caption().unwrap_or_default(), open, accent).clicked()
+            && !here
+        {
+            if open {
+                self.nav_open.retain(|g| *g != Group::Tools);
+            } else {
+                self.nav_open.push(Group::Tools);
+            }
+        }
+        if open {
+            for page in [Page::Data, Page::Advanced] {
+                if item(ui, current == Some(page), page.label().into(), false) {
+                    go = Some(page);
+                }
+            }
+        }
+        if let Some(page) = go {
+            self.page = page;
+            self.hub = false;
+            self.menu_open = false;
+        } else if hub {
+            self.hub = true;
+            self.hub_from = self.page;
+            self.menu_open = false;
+        }
+    }
+
+    /// The studies, one card each. The browser sets a study up and reads its result; the desktop
+    /// app or the command line runs it.
+    fn studies_hub(&mut self, ui: &mut egui::Ui) {
+        visuals::heading(
+            ui,
+            "Studies",
+            "Questions that take many calculations. Set one up here and download it; the desktop app or the command line runs it, and its result opens here.",
+        );
+        let cards: Vec<_> = STUDIES
+            .iter()
+            .map(|(_, title, text)| (*title, *text, "Open"))
+            .collect();
+        // five cards sit three and two; four to a row would leave one alone
+        if let Some(i) = card_grid(ui, &cards, 3) {
+            self.page = STUDIES[i].0;
+            self.hub = false;
+        }
+    }
+
     fn advanced_page(&mut self, ui: &mut egui::Ui) {
         visuals::heading(
             ui,
@@ -2107,105 +2458,8 @@ impl eframe::App for Workbench {
     }
 
     fn ui(&mut self, ui: &mut egui::Ui, _: &mut eframe::Frame) {
-        let nav = egui::Panel::top("navigation").show(ui, |ui| {
-            egui::containers::Sides::new().shrink_left().show(
-                ui,
-                |ui| {
-                    ui.horizontal_wrapped(|ui| {
-                        let mut group = None;
-                        let pages: Vec<Page> = browser_pages().collect();
-                        for page in pages.iter().copied() {
-                            let g = page.group();
-                            // a folding group shows its pages while open or while one of them is shown
-                            let open =
-                                !g.folds() || self.page.group() == g || self.nav_open.contains(&g);
-                            if group != Some(g) {
-                                if group.is_some() {
-                                    ui.separator();
-                                }
-                                if let Some(caption) = g.caption() {
-                                    if g.folds() {
-                                        let count = pages.iter().filter(|p| p.group() == g).count();
-                                        let text = if open {
-                                            caption.to_owned()
-                                        } else {
-                                            format!("{caption} · {count}")
-                                        };
-                                        let header = ui
-                                            .add(
-                                                egui::Label::new(
-                                                    RichText::new(text).small().weak(),
-                                                )
-                                                .sense(egui::Sense::click()),
-                                            )
-                                            .on_hover_text(if open {
-                                                "Hide these pages"
-                                            } else {
-                                                "Show these pages"
-                                            })
-                                            .on_hover_cursor(egui::CursorIcon::PointingHand);
-                                        if header.clicked() && self.page.group() != g {
-                                            if open {
-                                                self.nav_open.retain(|o| *o != g);
-                                            } else {
-                                                self.nav_open.push(g);
-                                            }
-                                        }
-                                    } else {
-                                        ui.label(RichText::new(caption).small().weak());
-                                    }
-                                }
-                                group = Some(g);
-                            }
-                            if !open {
-                                continue;
-                            }
-                            // pages that read a result are dimmed until one is open; the waste page
-                            // reads a waste result, not a run result
-                            let missing = if page == Page::Waste {
-                                self.waste_result.is_none()
-                            } else {
-                                self.result.is_none()
-                            };
-                            let text = match page.step() {
-                                Some(n) => format!("{n} {}", page.label()),
-                                None => page.label().to_owned(),
-                            };
-                            // dimmed only when not selected: weak text on the selection fill
-                            // is unreadable
-                            let label = if page.needs_result() && missing && self.page != page {
-                                RichText::new(text).weak()
-                            } else {
-                                RichText::new(text)
-                            };
-                            ui.selectable_value(&mut self.page, page, label);
-                            if step_ready(&self.problem, page) {
-                                visuals::tick(ui, visuals::accent(ui))
-                                    .on_hover_text("This step is filled in");
-                            }
-                        }
-                        ui.separator();
-                        if ui.checkbox(&mut self.dark, "Dark theme").changed() {
-                            ui.ctx().set_theme(if self.dark {
-                                egui::ThemePreference::Dark
-                            } else {
-                                egui::ThemePreference::Light
-                            });
-                        }
-                        if self.pending_file.is_some() {
-                            ui.spinner();
-                        }
-                        let unsaved = self.raw_dirty || self.problem != self.saved;
-                        crate::web::mark_unsaved(unsaved);
-                        if unsaved {
-                            ui.label("Problem has unsaved changes");
-                        }
-                    });
-                },
-                |ui| self.suite.controls(ui),
-            );
-        });
-        self.suite.prompt(ui.ctx(), nav.response.rect.bottom());
+        let bottom = self.toolbar(ui);
+        self.suite.prompt(ui.ctx(), bottom);
         egui::Panel::bottom("status").show(ui, |ui| {
             ui.label(RichText::new(&self.status).color(if self.error {
                 ui.visuals().error_fg_color
@@ -2213,12 +2467,25 @@ impl eframe::App for Workbench {
                 ui.visuals().text_color()
             }));
         });
+        self.sidebar(ui);
+        // a page change made anywhere else closes the studies page
+        if self.hub && self.page != self.hub_from {
+            self.hub = false;
+        }
         egui::CentralPanel::default().show(ui, |ui| {
             egui::ScrollArea::vertical().show(ui, |ui| {
                 // At most 1100 wide, but never wider than the window: `set_max_width` alone widens
                 // a narrower window's content past its edge, where it is clipped.
                 ui.set_max_width(ui.available_width().min(1100.));
+                if self.menu_open && ui.ctx().content_rect().width() < NARROW {
+                    self.nav_list(ui, true);
+                    return;
+                }
                 ui.add_space(16.);
+                if self.hub {
+                    self.studies_hub(ui);
+                    return;
+                }
                 match self.page {
                     Page::Start => self.start(ui),
                     Page::Material => self.material_page(ui),
