@@ -1,0 +1,220 @@
+{
+ "allowed_sentences": [
+  "On the 391 P166 train points with cooling time below 1000 s, ENDF/B-VIII.0 decay data gives a median |ln C/E| of 0.057; at 1000 s and above (301 points) it is 0.028.",
+  "On the 391 P166 train points with cooling time below 1000 s, JEFF-3.3 decay data (ENDF/B-VIII.0 for nuclides JEFF-3.3 lacks) gives a median |ln C/E| of 0.060; at 1000 s and above (301 points) it is 0.027.",
+  "On the 391 P166 train points with cooling time below 1000 s, ENDF/B-VIII.0 decay data with JEFF-3.3 mean energies for ten short-lived nuclides gives a median |ln C/E| of 0.057; at 1000 s and above (301 points) it is 0.027.",
+  "By the registered rule the selected decay data is ENDF/B-VIII.0 decay data.",
+  "No candidate met the rule, so ENDF/B-VIII.0 decay data was kept; on the held-out Dickens and Yarnell U-235 total decay heat (111 points) its median |ln C/E| is 0.019 and its geometric-mean C/E is 0.991.",
+  "On the same train points, ORIGEN as printed by Gauld (2019) has a median |ln C/E| of 0.053 below 1000 s and 0.033 at 1000 s and above."
+ ],
+ "gates": {
+  "G0": {
+   "pass": true,
+   "problems": []
+  },
+  "G1": {
+   "pass": true,
+   "problems": []
+  },
+  "G2": {
+   "pass": true,
+   "problems": []
+  },
+  "G3": {
+   "pass": true,
+   "problems": []
+  },
+  "G4": {
+   "pass": true,
+   "problems": []
+  }
+ },
+ "protocol": "ACTINV-P169",
+ "summary": {
+  "selection": {
+   "eligible": [],
+   "rule": {
+    "long_margin": 0.005,
+    "min_gain": 0.005,
+    "short_s": 1000.0
+   },
+   "selected": "A",
+   "windows": {
+    "A": {
+     "long_median_abs_log": 0.02753215581783717,
+     "long_points": 301,
+     "short_median_abs_log": 0.0571744070576389,
+     "short_points": 391
+    },
+    "B": {
+     "long_median_abs_log": 0.027298955846251804,
+     "long_points": 301,
+     "short_median_abs_log": 0.06034858639667674,
+     "short_points": 391
+    },
+    "D": {
+     "long_median_abs_log": 0.0274731182966524,
+     "long_points": 301,
+     "short_median_abs_log": 0.05749859266582428,
+     "short_points": 391
+    }
+   }
+  },
+  "test": {
+   "A": {
+    "all": {
+     "geometric_mean_C_over_E": 0.9909368328453166,
+     "max_abs_log_C_over_E": 0.08144673428598555,
+     "median_abs_log_C_over_E": 0.018596130978208076,
+     "p90_abs_log_C_over_E": 0.04456368071995879,
+     "points": 111,
+     "within_1_sigma": 0.6216216216216216,
+     "within_2_sigma": 0.990990990990991
+    },
+    "by_dataset": {
+     "P9-Dickens-pulse": {
+      "beta": {
+       "geometric_mean_C_over_E": 0.9881751183252734,
+       "max_abs_log_C_over_E": 0.07202671761619979,
+       "median_abs_log_C_over_E": 0.02547420786957235,
+       "p90_abs_log_C_over_E": 0.05737140903804327,
+       "points": 32,
+       "within_1_sigma": 0.71875,
+       "within_2_sigma": 0.96875
+      },
+      "gamma": {
+       "geometric_mean_C_over_E": 1.0183072498677788,
+       "max_abs_log_C_over_E": 0.172637060402324,
+       "median_abs_log_C_over_E": 0.05014202622454239,
+       "p90_abs_log_C_over_E": 0.1592761008917647,
+       "points": 32,
+       "within_1_sigma": 0.34375,
+       "within_2_sigma": 0.75
+      },
+      "total": {
+       "geometric_mean_C_over_E": 1.0069797095840318,
+       "max_abs_log_C_over_E": 0.06682898973642842,
+       "median_abs_log_C_over_E": 0.025482811914718448,
+       "p90_abs_log_C_over_E": 0.055519165299932595,
+       "points": 32,
+       "within_1_sigma": 0.71875,
+       "within_2_sigma": 1.0
+      }
+     },
+     "P9-Yarnell-20000s": {
+      "total": {
+       "geometric_mean_C_over_E": 0.9845114168388449,
+       "max_abs_log_C_over_E": 0.08144673428598555,
+       "median_abs_log_C_over_E": 0.01421893131709016,
+       "p90_abs_log_C_over_E": 0.03807617016117433,
+       "points": 79,
+       "within_1_sigma": 0.5822784810126582,
+       "within_2_sigma": 0.9873417721518988
+      }
+     }
+    },
+    "long": {
+     "geometric_mean_C_over_E": 1.005771324594685,
+     "max_abs_log_C_over_E": 0.06682898973642842,
+     "median_abs_log_C_over_E": 0.005707168168673002,
+     "p90_abs_log_C_over_E": 0.0550228124843907,
+     "points": 49,
+     "within_1_sigma": 0.8775510204081632,
+     "within_2_sigma": 1.0
+    },
+    "short": {
+     "geometric_mean_C_over_E": 0.9793677524954955,
+     "max_abs_log_C_over_E": 0.08144673428598555,
+     "median_abs_log_C_over_E": 0.027790078027577932,
+     "p90_abs_log_C_over_E": 0.044112010464863516,
+     "points": 62,
+     "within_1_sigma": 0.41935483870967744,
+     "within_2_sigma": 0.9838709677419355
+    }
+   }
+  },
+  "train": {
+   "A": {
+    "long": {
+     "geometric_mean_C_over_E": 0.9892987655376814,
+     "max_abs_log_C_over_E": 0.4005956245862875,
+     "median_abs_log_C_over_E": 0.02753215581783717,
+     "p90_abs_log_C_over_E": 0.08995079765827022,
+     "points": 301,
+     "within_1_sigma": 0.7109634551495017,
+     "within_2_sigma": 0.8704318936877077
+    },
+    "short": {
+     "geometric_mean_C_over_E": 0.9374147993285994,
+     "max_abs_log_C_over_E": 0.28459247620672745,
+     "median_abs_log_C_over_E": 0.0571744070576389,
+     "p90_abs_log_C_over_E": 0.13913023782687242,
+     "points": 391,
+     "within_1_sigma": 0.23017902813299232,
+     "within_2_sigma": 0.7902813299232737
+    }
+   },
+   "B": {
+    "long": {
+     "geometric_mean_C_over_E": 1.0020764850421258,
+     "max_abs_log_C_over_E": 0.3748046487341092,
+     "median_abs_log_C_over_E": 0.027298955846251804,
+     "p90_abs_log_C_over_E": 0.09229963209357672,
+     "points": 301,
+     "within_1_sigma": 0.6777408637873754,
+     "within_2_sigma": 0.8504983388704319
+    },
+    "short": {
+     "geometric_mean_C_over_E": 0.9351448388229487,
+     "max_abs_log_C_over_E": 0.2901168182839157,
+     "median_abs_log_C_over_E": 0.06034858639667674,
+     "p90_abs_log_C_over_E": 0.14265859823026067,
+     "points": 391,
+     "within_1_sigma": 0.23273657289002558,
+     "within_2_sigma": 0.7723785166240409
+    }
+   },
+   "D": {
+    "long": {
+     "geometric_mean_C_over_E": 0.9891389787347246,
+     "max_abs_log_C_over_E": 0.4005956245862875,
+     "median_abs_log_C_over_E": 0.0274731182966524,
+     "p90_abs_log_C_over_E": 0.08995079765827022,
+     "points": 301,
+     "within_1_sigma": 0.7109634551495017,
+     "within_2_sigma": 0.8704318936877077
+    },
+    "short": {
+     "geometric_mean_C_over_E": 0.9372544397620084,
+     "max_abs_log_C_over_E": 0.28369661788490436,
+     "median_abs_log_C_over_E": 0.05749859266582428,
+     "p90_abs_log_C_over_E": 0.13982693732056964,
+     "points": 391,
+     "within_1_sigma": 0.21739130434782608,
+     "within_2_sigma": 0.7979539641943734
+    }
+   },
+   "ORIGEN": {
+    "long": {
+     "geometric_mean_C_over_E": 0.9931373995691257,
+     "max_abs_log_C_over_E": 0.3993860620317823,
+     "median_abs_log_C_over_E": 0.03332700411606701,
+     "p90_abs_log_C_over_E": 0.08824063344435944,
+     "points": 301,
+     "within_1_sigma": 0.6677740863787376,
+     "within_2_sigma": 0.8704318936877077
+    },
+    "short": {
+     "geometric_mean_C_over_E": 0.9390960252134919,
+     "max_abs_log_C_over_E": 0.2846584627520333,
+     "median_abs_log_C_over_E": 0.05263953199767522,
+     "p90_abs_log_C_over_E": 0.14162944713192477,
+     "points": 391,
+     "within_1_sigma": 0.30179028132992325,
+     "within_2_sigma": 0.7698209718670077
+    }
+   }
+  }
+ },
+ "verdict": "P169-PASS (pending G5, CI on the evidence commit)"
+}

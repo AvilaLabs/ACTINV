@@ -1,0 +1,2310 @@
+{
+ "candidates": {
+  "A": {
+   "datasets": {
+    "P9-Dickens-pulse": {
+     "irradiation_s": 1e-06,
+     "laboratory": "Dickens",
+     "model": {
+      "certificate_inputs": {
+       "decay_fallback": null,
+       "decay_overrides": null,
+       "decay_primary": {
+        "path": "/home/connoravila/nuclear-data/endfb-viii.0-decay/bulk/endf-b-viii-0_decay.dat",
+        "sha256": "6f04cf009086c179021f243a58dadc2d5bb078de5ba39c4fe46ccad77d228ddb"
+       },
+       "fission_yields": [
+        {
+         "awr": 233.025,
+         "cumulative_tables": 3,
+         "independent": [
+          {
+           "energy_eV": 0.0253,
+           "products": 1247,
+           "sum": 1.9999997676275973
+          },
+          {
+           "energy_eV": 500000.0,
+           "products": 1260,
+           "sum": 1.999999511259158
+          },
+          {
+           "energy_eV": 14000000.0,
+           "products": 1237,
+           "sum": 1.9999996103156326
+          }
+         ],
+         "parent": "U235",
+         "parent_LISO": 0,
+         "parent_ZA": 92235,
+         "path": "/home/connoravila/nuclear-data/endfb-viii.0-nfpy/nfy-092_U_235.endf",
+         "sha256": "9e1320293a544fc03f33f804a15a9e3ccc3be026552ee6dbc03b8d3e24615e41",
+         "sha256_declared": "9e1320293a544fc03f33f804a15a9e3ccc3be026552ee6dbc03b8d3e24615e41"
+        }
+       ],
+       "library": {
+        "path": "/home/connoravila/Documents/actinv/target/preflight-tmp/p169-test/A/U235-fission.npz",
+        "sha256": "917e58403785484e8da0b86f19a7c449ff5ff42722777b77eff5e63ddb73053b"
+       },
+       "library_index": {
+        "path": "/home/connoravila/Documents/actinv/target/preflight-tmp/p169-test/A/U235-fission_index.json",
+        "sha256": "2691a02c48bda05c809951d34a83c9311170f68224450dc6fe29b89b49d800c0"
+       },
+       "photon_response": null
+      },
+      "cooling_times_s": [
+       2.7,
+       3.7,
+       4.7,
+       6.2,
+       8.7,
+       12.7,
+       17.7,
+       22.7,
+       30.2,
+       40.2,
+       44.7,
+       53.7,
+       68.7,
+       83.0,
+       90.0,
+       100.0,
+       110.0,
+       140.0,
+       190.0,
+       260.0,
+       350.0,
+       500.0,
+       700.0,
+       1000.0,
+       1400.0,
+       1800.0,
+       2250.0,
+       2750.0,
+       3500.0,
+       5000.0,
+       8000.0,
+       12000.0
+      ],
+      "decay_ledger": {
+       "decay_nuclides_from_fallback": 0,
+       "decay_overrides_applied": [],
+       "max_leakage_fraction": 0.004012262583830217
+      },
+      "fission_rate_per_parent_s": 100.0,
+      "fission_rate_per_parent_s_independent": 100.0,
+      "fission_yield_balance": {
+       "fission_rate_per_parent_s": 100.0,
+       "leakage_yield_sum": 0.008024524183222475,
+       "mapped_yield_sum": 1.9919752434443752,
+       "raw_yield_sum": 1.9999997676275973
+      },
+      "fission_yields": {
+       "energy": "fixed",
+       "fixed_energy_eV": 0.0253,
+       "selection": [
+        {
+         "clamped": false,
+         "effective_yield_sum": 1.9999997676275973,
+         "lower_energy_eV": 0.0253,
+         "mode": "fixed",
+         "parent": "U235",
+         "parent_LISO": 0,
+         "parent_ZA": 92235,
+         "products": 1247,
+         "requested_energy_eV": 0.0253,
+         "upper_energy_eV": 0.0253,
+         "upper_weight": 0.0
+        }
+       ]
+      },
+      "irradiation_s": 1e-06,
+      "max_background_fraction": 3.133401696443631e-08,
+      "max_relative_time_error": 2.0417894705750008e-16,
+      "mode": "trace",
+      "normalization": "integrated",
+      "numerical_floor_atoms_per_g_max": 0.14597792790639183,
+      "parent": "U235",
+      "relative_rate_closure": 0.0
+     },
+     "normalization": "integrated",
+     "parent": "U235",
+     "points": [
+      {
+       "C_over_E": 1.0079709790114033,
+       "calculated": 0.2400912207488199,
+       "channel": "beta",
+       "cooling_time_s": 2.7,
+       "log_C_over_E": 0.007939378571427408,
+       "measured": 0.2381925925925926,
+       "residual_over_sigma": 0.09605021494470208,
+       "run": "",
+       "sigma": 0.019767037037037038
+      },
+      {
+       "C_over_E": 0.8852429119972532,
+       "calculated": 0.16448469040399333,
+       "channel": "gamma",
+       "cooling_time_s": 2.7,
+       "log_C_over_E": -0.12189319480302759,
+       "measured": 0.1858074074074074,
+       "residual_over_sigma": -1.6410037884222552,
+       "run": "",
+       "sigma": 0.012993703703703703
+      },
+      {
+       "C_over_E": 0.9558445605666358,
+       "calculated": 0.4052780936802536,
+       "channel": "total",
+       "cooling_time_s": 2.7,
+       "log_C_over_E": -0.045159972700044064,
+       "measured": 0.424,
+       "residual_over_sigma": -0.7800794299894337,
+       "run": "",
+       "sigma": 0.023999999999999997
+      },
+      {
+       "C_over_E": 0.9986139292811755,
+       "calculated": 0.19259214260985436,
+       "channel": "beta",
+       "cooling_time_s": 3.7,
+       "log_C_over_E": -0.0013870322034030312,
+       "measured": 0.19285945945945943,
+       "residual_over_sigma": -0.022408127586460064,
+       "run": "",
+       "sigma": 0.011929459459459456
+      },
+      {
+       "C_over_E": 0.9044384274879742,
+       "calculated": 0.13127068225124106,
+       "channel": "gamma",
+       "cooling_time_s": 3.7,
+       "log_C_over_E": -0.10044104999847343,
+       "measured": 0.14514054054054054,
+       "residual_over_sigma": -1.710045840400137,
+       "run": "",
+       "sigma": 0.008110810810810809
+      },
+      {
+       "C_over_E": 0.9596653564309057,
+       "calculated": 0.32436689047364603,
+       "channel": "total",
+       "cooling_time_s": 3.7,
+       "log_C_over_E": -0.041170642341984136,
+       "measured": 0.3379999999999999,
+       "residual_over_sigma": -0.8520693453971178,
+       "run": "",
+       "sigma": 0.015999999999999997
+      },
+      {
+       "C_over_E": 0.9988854838362796,
+       "calculated": 0.16024673506650103,
+       "channel": "beta",
+       "cooling_time_s": 4.7,
+       "log_C_over_E": -0.001115137698710089,
+       "measured": 0.16042553191489362,
+       "residual_over_sigma": -0.01993748813602126,
+       "run": "",
+       "sigma": 0.008967872340425532
+      },
+      {
+       "C_over_E": 0.9225046536207476,
+       "calculated": 0.10938549860911546,
+       "channel": "gamma",
+       "cooling_time_s": 4.7,
+       "log_C_over_E": -0.08066285850484245,
+       "measured": 0.11857446808510638,
+       "residual_over_sigma": -1.5499069275850463,
+       "run": "",
+       "sigma": 0.00592872340425532
+      },
+      {
+       "C_over_E": 0.9677825171674098,
+       "calculated": 0.2700113222897073,
+       "channel": "total",
+       "cooling_time_s": 4.7,
+       "log_C_over_E": -0.03274788929589003,
+       "measured": 0.27899999999999997,
+       "residual_over_sigma": -0.7490564758577215,
+       "run": "",
+       "sigma": 0.012
+      },
+      {
+       "C_over_E": 1.0011426168590336,
+       "calculated": 0.12714511234109727,
+       "channel": "beta",
+       "cooling_time_s": 6.2,
+       "log_C_over_E": 0.0011419645692212746,
+       "measured": 0.127,
+       "residual_over_sigma": 0.024185390182877395,
+       "run": "",
+       "sigma": 0.005999999999999999
+      },
+      {
+       "C_over_E": 0.9326752479589623,
+       "calculated": 0.08767147330814246,
+       "channel": "gamma",
+       "cooling_time_s": 6.2,
+       "log_C_over_E": -0.06969821165339235,
+       "measured": 0.094,
+       "residual_over_sigma": -1.4878793177929082,
+       "run": "",
+       "sigma": 0.004253387096774193
+      },
+      {
+       "C_over_E": 0.9732016992819418,
+       "calculated": 0.21507757554130913,
+       "channel": "total",
+       "cooling_time_s": 6.2,
+       "log_C_over_E": -0.027163921997493876,
+       "measured": 0.221,
+       "residual_over_sigma": -0.722246885206204,
+       "run": "",
+       "sigma": 0.0082
+      },
+      {
+       "C_over_E": 0.9896322486288999,
+       "calculated": 0.09302543137111659,
+       "channel": "beta",
+       "cooling_time_s": 8.7,
+       "log_C_over_E": -0.010421870895512553,
+       "measured": 0.094,
+       "residual_over_sigma": -0.22490045281924909,
+       "run": "",
+       "sigma": 0.004333333333333333
+      },
+      {
+       "C_over_E": 0.9425291810626625,
+       "calculated": 0.06597704267438638,
+       "channel": "gamma",
+       "cooling_time_s": 8.7,
+       "log_C_over_E": -0.05918839879956867,
+       "measured": 0.07,
+       "residual_over_sigma": -1.346454132986018,
+       "run": "",
+       "sigma": 0.0029878160919540233
+      },
+      {
+       "C_over_E": 0.9704769294347328,
+       "calculated": 0.15915821642729622,
+       "channel": "total",
+       "cooling_time_s": 8.7,
+       "log_C_over_E": -0.02996764849000804,
+       "measured": 0.16400000000000003,
+       "residual_over_sigma": -0.8347902711558305,
+       "run": "",
+       "sigma": 0.0058000000000000005
+      },
+      {
+       "C_over_E": 1.0273844958096674,
+       "calculated": 0.06289696421196979,
+       "channel": "beta",
+       "cooling_time_s": 12.7,
+       "log_C_over_E": 0.027016248232149407,
+       "measured": 0.061220472440944876,
+       "residual_over_sigma": 0.5965828544374008,
+       "run": "",
+       "sigma": 0.0028101574803149603
+      },
+      {
+       "C_over_E": 0.9485282173893467,
+       "calculated": 0.04721728653807441,
+       "channel": "gamma",
+       "cooling_time_s": 12.7,
+       "log_C_over_E": -0.05284374056159788,
+       "measured": 0.04977952755905512,
+       "residual_over_sigma": -1.2938038633237254,
+       "run": "",
+       "sigma": 0.0019803937007874016
+      },
+      {
+       "C_over_E": 0.9927802891023672,
+       "calculated": 0.11019861209036276,
+       "channel": "total",
+       "cooling_time_s": 12.7,
+       "log_C_over_E": -0.0072458991341489394,
+       "measured": 0.111,
+       "residual_over_sigma": -0.2289679741820689,
+       "run": "",
+       "sigma": 0.0035
+      },
+      {
+       "C_over_E": 1.0429766874494744,
+       "calculated": 0.042970639522918345,
+       "channel": "beta",
+       "cooling_time_s": 17.7,
+       "log_C_over_E": 0.04207882433017514,
+       "measured": 0.0412,
+       "residual_over_sigma": 0.9836886238435251,
+       "run": "",
+       "sigma": 0.0018
+      },
+      {
+       "C_over_E": 0.9560153175093863,
+       "calculated": 0.03479895755734166,
+       "channel": "gamma",
+       "cooling_time_s": 17.7,
+       "log_C_over_E": -0.0449813435597366,
+       "measured": 0.036399999999999995,
+       "residual_over_sigma": -1.1377248769492763,
+       "run": "",
+       "sigma": 0.0014072316384180791
+      },
+      {
+       "C_over_E": 1.0028522524624919,
+       "calculated": 0.07782020162470239,
+       "channel": "total",
+       "cooling_time_s": 17.7,
+       "log_C_over_E": 0.0028481925086137816,
+       "measured": 0.07759887005649717,
+       "residual_over_sigma": 0.09623111661096702,
+       "run": "",
+       "sigma": 0.0023
+      },
+      {
+       "C_over_E": 1.0242208400812516,
+       "calculated": 0.0317508460425188,
+       "channel": "beta",
+       "cooling_time_s": 22.7,
+       "log_C_over_E": 0.023932167506995297,
+       "measured": 0.031,
+       "residual_over_sigma": 0.5363186017991431,
+       "run": "",
+       "sigma": 0.0014000000000000002
+      },
+      {
+       "C_over_E": 0.965876604615182,
+       "calculated": 0.027624070891994208,
+       "channel": "gamma",
+       "cooling_time_s": 22.7,
+       "log_C_over_E": -0.0347191914224757,
+       "measured": 0.028600000000000004,
+       "residual_over_sigma": -0.8474004801182558,
+       "run": "",
+       "sigma": 0.0011516740088105728
+      },
+      {
+       "C_over_E": 0.9968372766958158,
+       "calculated": 0.05941062342034226,
+       "channel": "total",
+       "cooling_time_s": 22.7,
+       "log_C_over_E": -0.0031677352839937817,
+       "measured": 0.05959911894273128,
+       "residual_over_sigma": -0.11087971905236747,
+       "run": "",
+       "sigma": 0.0017000000000000001
+      },
+      {
+       "C_over_E": 1.0028437781633674,
+       "calculated": 0.022363416253043094,
+       "channel": "beta",
+       "cooling_time_s": 30.2,
+       "log_C_over_E": 0.002839742275881522,
+       "measured": 0.0223,
+       "residual_over_sigma": 0.0704625033812151,
+       "run": "",
+       "sigma": 0.0009000000000000001
+      },
+      {
+       "C_over_E": 0.9536673940405742,
+       "calculated": 0.021266782887104804,
+       "channel": "gamma",
+       "cooling_time_s": 30.2,
+       "log_C_over_E": -0.047440311887486895,
+       "measured": 0.0223,
+       "residual_over_sigma": -1.2915213911189949,
+       "run": "",
+       "sigma": 0.0008000000000000001
+      },
+      {
+       "C_over_E": 0.9788197736679667,
+       "calculated": 0.04365471368057564,
+       "channel": "total",
+       "cooling_time_s": 30.2,
+       "log_C_over_E": -0.021407745668385415,
+       "measured": 0.044599337748344375,
+       "residual_over_sigma": -0.7871867231406109,
+       "run": "",
+       "sigma": 0.0012000000000000001
+      },
+      {
+       "C_over_E": 1.002264459565439,
+       "calculated": 0.01593600490709048,
+       "channel": "beta",
+       "cooling_time_s": 40.2,
+       "log_C_over_E": 0.0022618995408636737,
+       "measured": 0.015899999999999997,
+       "residual_over_sigma": 0.051435581557831137,
+       "run": "",
+       "sigma": 0.0006999999999999999
+      },
+      {
+       "C_over_E": 0.9661996010723038,
+       "calculated": 0.016425393218229164,
+       "channel": "gamma",
+       "cooling_time_s": 40.2,
+       "log_C_over_E": -0.0343848397450625,
+       "measured": 0.016999999999999998,
+       "residual_over_sigma": -0.9267107689636334,
+       "run": "",
+       "sigma": 0.0006200497512437811
+      },
+      {
+       "C_over_E": 0.9841231510722731,
+       "calculated": 0.03237814128378578,
+       "channel": "total",
+       "cooling_time_s": 40.2,
+       "log_C_over_E": -0.016004236232200292,
+       "measured": 0.03290049751243781,
+       "residual_over_sigma": -0.669687472630807,
+       "run": "",
+       "sigma": 0.00078
+      },
+      {
+       "C_over_E": 0.993971539449145,
+       "calculated": 0.014114395860177856,
+       "channel": "beta",
+       "cooling_time_s": 44.7,
+       "log_C_over_E": -0.006046705080401018,
+       "measured": 0.014199999999999997,
+       "residual_over_sigma": -0.14267356637023543,
+       "run": "",
+       "sigma": 0.0006
+      },
+      {
+       "C_over_E": 0.9560780180709991,
+       "calculated": 0.014914817081907585,
+       "channel": "gamma",
+       "cooling_time_s": 44.7,
+       "log_C_over_E": -0.04491576039967995,
+       "measured": 0.0156,
+       "residual_over_sigma": -1.1898864195311156,
+       "run": "",
+       "sigma": 0.0005758389261744965
+      },
+      {
+       "C_over_E": 0.9745886301682044,
+       "calculated": 0.029043613294117785,
+       "channel": "total",
+       "cooling_time_s": 44.7,
+       "log_C_over_E": -0.02573981479283919,
+       "measured": 0.02980089485458613,
+       "residual_over_sigma": -0.8704385752509701,
+       "run": "",
+       "sigma": 0.0008699999999999999
+      },
+      {
+       "C_over_E": 1.001790814980846,
+       "calculated": 0.011484403046747832,
+       "channel": "beta",
+       "cooling_time_s": 53.7,
+       "log_C_over_E": 0.0017892133835228615,
+       "measured": 0.01146387337057728,
+       "residual_over_sigma": 0.044771101785194764,
+       "run": "",
+       "sigma": 0.0004585474860335195
+      },
+      {
+       "C_over_E": 0.9648492918155781,
+       "calculated": 0.012577897546416708,
+       "channel": "gamma",
+       "cooling_time_s": 53.7,
+       "log_C_over_E": -0.035783364123999566,
+       "measured": 0.013036126629422717,
+       "residual_over_sigma": -1.0112563908035468,
+       "run": "",
+       "sigma": 0.00045312849162011166
+      },
+      {
+       "C_over_E": 0.9825404622792072,
+       "calculated": 0.024073156167984226,
+       "channel": "total",
+       "cooling_time_s": 53.7,
+       "log_C_over_E": -0.017613753105335056,
+       "measured": 0.02450093109869646,
+       "residual_over_sigma": -0.6481438344124777,
+       "run": "",
+       "sigma": 0.00066
+      },
+      {
+       "C_over_E": 1.0082348653308664,
+       "calculated": 0.008712499419975575,
+       "channel": "beta",
+       "cooling_time_s": 68.7,
+       "log_C_over_E": 0.00820114382888896,
+       "measured": 0.008641339155749635,
+       "residual_over_sigma": 0.21575136379902496,
+       "run": "",
+       "sigma": 0.000329825327510917
+      },
+      {
+       "C_over_E": 0.9729037587670489,
+       "calculated": 0.009883399319410822,
+       "channel": "gamma",
+       "cooling_time_s": 68.7,
+       "log_C_over_E": -0.027470113541213485,
+       "measured": 0.010158660844250364,
+       "residual_over_sigma": -0.7722340230511496,
+       "run": "",
+       "sigma": 0.00035644832605531294
+      },
+      {
+       "C_over_E": 0.9894838615720444,
+       "calculated": 0.01860287271625113,
+       "channel": "total",
+       "cooling_time_s": 68.7,
+       "log_C_over_E": -0.010571823752112238,
+       "measured": 0.018800582241630278,
+       "residual_over_sigma": -0.40348882730438207,
+       "run": "",
+       "sigma": 0.00049
+      },
+      {
+       "C_over_E": 1.0105489168493365,
+       "calculated": 0.007013818247342136,
+       "channel": "beta",
+       "cooling_time_s": 83.0,
+       "log_C_over_E": 0.010493665249344248,
+       "measured": 0.0069406024096385546,
+       "residual_over_sigma": 0.2747994270325256,
+       "run": "",
+       "sigma": 0.00026643373493975906
+      },
+      {
+       "C_over_E": 0.9818745958474703,
+       "calculated": 0.008109692670979714,
+       "channel": "gamma",
+       "cooling_time_s": 83.0,
+       "log_C_over_E": -0.018291681585351792,
+       "measured": 0.008259397590361445,
+       "residual_over_sigma": -0.5170186122699485,
+       "run": "",
+       "sigma": 0.00028955421686746986
+      },
+      {
+       "C_over_E": 0.9952738511659164,
+       "calculated": 0.01512816253772193,
+       "channel": "total",
+       "cooling_time_s": 83.0,
+       "log_C_over_E": -0.0047373523892017,
+       "measured": 0.015200000000000002,
+       "residual_over_sigma": -0.17959365569517916,
+       "run": "",
+       "sigma": 0.0004
+      },
+      {
+       "C_over_E": 0.989026158683315,
+       "calculated": 0.0063792187235073815,
+       "channel": "beta",
+       "cooling_time_s": 90.0,
+       "log_C_over_E": -0.011034498079973606,
+       "measured": 0.00645,
+       "residual_over_sigma": -0.2359375883087284,
+       "run": "",
+       "sigma": 0.00030000000000000003
+      },
+      {
+       "C_over_E": 0.9964143111029147,
+       "calculated": 0.007423286617716714,
+       "channel": "gamma",
+       "cooling_time_s": 90.0,
+       "log_C_over_E": -0.0035921328882286786,
+       "measured": 0.00745,
+       "residual_over_sigma": -0.09968093227313492,
+       "run": "",
+       "sigma": 0.0002679888888888889
+      },
+      {
+       "C_over_E": 0.9932616301688834,
+       "calculated": 0.013806336659347478,
+       "channel": "total",
+       "cooling_time_s": 90.0,
+       "log_C_over_E": -0.006761175149956926,
+       "measured": 0.0139,
+       "residual_over_sigma": -0.2601759462570024,
+       "run": "",
+       "sigma": 0.00035999999999999997
+      },
+      {
+       "C_over_E": 1.0306510279652583,
+       "calculated": 0.005628282198615478,
+       "channel": "beta",
+       "cooling_time_s": 100.0,
+       "log_C_over_E": 0.030190668557658756,
+       "measured": 0.0054608999999999994,
+       "residual_over_sigma": 0.7983887365393697,
+       "run": "",
+       "sigma": 0.00020965000000000003
+      },
+      {
+       "C_over_E": 1.0084021656121718,
+       "calculated": 0.006594042601154552,
+       "channel": "gamma",
+       "cooling_time_s": 100.0,
+       "log_C_over_E": 0.00836706390188393,
+       "measured": 0.0065391,
+       "residual_over_sigma": 0.24632414774513345,
+       "run": "",
+       "sigma": 0.00022305
+      },
+      {
+       "C_over_E": 1.0187701158302185,
+       "calculated": 0.01222524138996262,
+       "channel": "total",
+       "cooling_time_s": 100.0,
+       "log_C_over_E": 0.018596130978208076,
+       "measured": 0.012,
+       "residual_over_sigma": 0.7508046332087351,
+       "run": "",
+       "sigma": 0.0003
+      },
+      {
+       "C_over_E": 1.0338859130790876,
+       "calculated": 0.005017166367287428,
+       "channel": "beta",
+       "cooling_time_s": 110.0,
+       "log_C_over_E": 0.03332443448537193,
+       "measured": 0.004852727272727273,
+       "residual_over_sigma": 0.8658832169275732,
+       "run": "",
+       "sigma": 0.0001899090909090909
+      },
+      {
+       "C_over_E": 1.0099034240872866,
+       "calculated": 0.0059051807488449334,
+       "channel": "gamma",
+       "cooling_time_s": 110.0,
+       "log_C_over_E": 0.009854706565753834,
+       "measured": 0.005847272727272727,
+       "residual_over_sigma": 0.27183384000950406,
+       "run": "",
+       "sigma": 0.0002130272727272727
+      },
+      {
+       "C_over_E": 1.0209886567566004,
+       "calculated": 0.010924578627295624,
+       "channel": "total",
+       "cooling_time_s": 110.0,
+       "log_C_over_E": 0.02077142918604332,
+       "measured": 0.0107,
+       "residual_over_sigma": 0.8637639511370183,
+       "run": "",
+       "sigma": 0.00026
+      },
+      {
+       "C_over_E": 1.0156039513038515,
+       "calculated": 0.003732344521041654,
+       "channel": "beta",
+       "cooling_time_s": 140.0,
+       "log_C_over_E": 0.015483461451148263,
+       "measured": 0.0036749999999999994,
+       "residual_over_sigma": 0.38229680694436446,
+       "run": "",
+       "sigma": 0.00015000000000000001
+      },
+      {
+       "C_over_E": 1.0088907556670959,
+       "calculated": 0.004413897056043545,
+       "channel": "gamma",
+       "cooling_time_s": 140.0,
+       "log_C_over_E": 0.008851465606092563,
+       "measured": 0.004375,
+       "residual_over_sigma": 0.2602555843097022,
+       "run": "",
+       "sigma": 0.00014945714285714287
+      },
+      {
+       "C_over_E": 1.0120836297255162,
+       "calculated": 0.008147273219290405,
+       "channel": "total",
+       "cooling_time_s": 140.0,
+       "log_C_over_E": 0.012011205519628644,
+       "measured": 0.00805,
+       "residual_over_sigma": 0.4863660964520271,
+       "run": "",
+       "sigma": 0.0002
+      },
+      {
+       "C_over_E": 0.9695380353702759,
+       "calculated": 0.0025602437815069926,
+       "channel": "beta",
+       "cooling_time_s": 190.0,
+       "log_C_over_E": -0.030935573124397358,
+       "measured": 0.002640684210526316,
+       "residual_over_sigma": -0.7223936055996327,
+       "run": "",
+       "sigma": 0.00011135263157894736
+      },
+      {
+       "C_over_E": 1.0436103795328873,
+       "calculated": 0.003004883843847666,
+       "channel": "gamma",
+       "cooling_time_s": 190.0,
+       "log_C_over_E": 0.04268622012297249,
+       "measured": 0.002879315789473684,
+       "residual_over_sigma": 1.0088772974905544,
+       "run": "",
+       "sigma": 0.00012446315789473684
+      },
+      {
+       "C_over_E": 1.008233484211062,
+       "calculated": 0.005565448832845063,
+       "channel": "total",
+       "cooling_time_s": 190.0,
+       "log_C_over_E": 0.008199773988589098,
+       "measured": 0.00552,
+       "residual_over_sigma": 0.32463452032187784,
+       "run": "",
+       "sigma": 0.00014
+      },
+      {
+       "C_over_E": 1.0405828419185799,
+       "calculated": 0.0017547828732276977,
+       "channel": "beta",
+       "cooling_time_s": 260.0,
+       "log_C_over_E": 0.03978098109559364,
+       "measured": 0.001686346153846154,
+       "residual_over_sigma": 1.095729234509599,
+       "run": "",
+       "sigma": 6.245769230769231e-05
+      },
+      {
+       "C_over_E": 1.026659785185125,
+       "calculated": 0.0020262710337221033,
+       "channel": "gamma",
+       "cooling_time_s": 260.0,
+       "log_C_over_E": 0.02631060555314848,
+       "measured": 0.0019736538461538463,
+       "residual_over_sigma": 0.7811161794990756,
+       "run": "",
+       "sigma": 6.736153846153845e-05
+      },
+      {
+       "C_over_E": 1.0330973724693644,
+       "calculated": 0.0037811363832378733,
+       "channel": "total",
+       "cooling_time_s": 260.0,
+       "log_C_over_E": 0.03256144752414161,
+       "measured": 0.00366,
+       "residual_over_sigma": 1.3459598137541475,
+       "run": "",
+       "sigma": 9e-05
+      },
+      {
+       "C_over_E": 0.9825422757161016,
+       "calculated": 0.0012481936344332866,
+       "channel": "beta",
+       "cooling_time_s": 350.0,
+       "log_C_over_E": -0.017611907445750995,
+       "measured": 0.0012703714285714287,
+       "residual_over_sigma": -0.45040199305731404,
+       "run": "",
+       "sigma": 4.9239999999999996e-05
+      },
+      {
+       "C_over_E": 1.0801828707963488,
+       "calculated": 0.0014254401786705988,
+       "channel": "gamma",
+       "cooling_time_s": 350.0,
+       "log_C_over_E": 0.07713035161373452,
+       "measured": 0.0013196285714285713,
+       "residual_over_sigma": 1.9170753978004764,
+       "run": "",
+       "sigma": 5.519428571428571e-05
+      },
+      {
+       "C_over_E": 1.0322990396237426,
+       "calculated": 0.002673654512625493,
+       "channel": "total",
+       "cooling_time_s": 350.0,
+       "log_C_over_E": 0.03178839216226974,
+       "measured": 0.00259,
+       "residual_over_sigma": 1.2485748153058673,
+       "run": "",
+       "sigma": 6.7e-05
+      },
+      {
+       "C_over_E": 0.9957043987691077,
+       "calculated": 0.0008511082059798578,
+       "channel": "beta",
+       "cooling_time_s": 500.0,
+       "log_C_over_E": -0.004304853832357426,
+       "measured": 0.00085478,
+       "residual_over_sigma": -0.12171154932849987,
+       "run": "",
+       "sigma": 3.0168e-05
+      },
+      {
+       "C_over_E": 1.0410818948563432,
+       "calculated": 0.0009736406097075493,
+       "channel": "gamma",
+       "cooling_time_s": 500.0,
+       "log_C_over_E": 0.04026045594906821,
+       "measured": 0.0009352200000000001,
+       "residual_over_sigma": 1.2187733062920079,
+       "run": "",
+       "sigma": 3.1524000000000005e-05
+      },
+      {
+       "C_over_E": 1.0194143797591857,
+       "calculated": 0.0018247517397689426,
+       "channel": "total",
+       "cooling_time_s": 500.0,
+       "log_C_over_E": 0.019228324925143786,
+       "measured": 0.0017900000000000001,
+       "residual_over_sigma": 0.7092191789580095,
+       "run": "",
+       "sigma": 4.9000000000000005e-05
+      },
+      {
+       "C_over_E": 0.9475742420011828,
+       "calculated": 0.0006040515057259826,
+       "channel": "beta",
+       "cooling_time_s": 700.0,
+       "log_C_over_E": -0.05384998942112958,
+       "measured": 0.0006374714285714286,
+       "residual_over_sigma": -1.3420885773513982,
+       "run": "",
+       "sigma": 2.490142857142857e-05
+      },
+      {
+       "C_over_E": 1.1255546550357964,
+       "calculated": 0.0007006899314642129,
+       "channel": "gamma",
+       "cooling_time_s": 700.0,
+       "log_C_over_E": 0.11827594085713924,
+       "measured": 0.0006225285714285715,
+       "residual_over_sigma": 3.1765531830555642,
+       "run": "",
+       "sigma": 2.4605714285714285e-05
+      },
+      {
+       "C_over_E": 1.0355092675861008,
+       "calculated": 0.0013047416771584872,
+       "channel": "total",
+       "cooling_time_s": 700.0,
+       "log_C_over_E": 0.034893351679314705,
+       "measured": 0.00126,
+       "residual_over_sigma": 1.1472224912432591,
+       "run": "",
+       "sigma": 3.9e-05
+      },
+      {
+       "C_over_E": 0.9495467269242276,
+       "calculated": 0.0004218741153051651,
+       "channel": "beta",
+       "cooling_time_s": 1000.0,
+       "log_C_over_E": -0.05177053780352012,
+       "measured": 0.00044429,
+       "residual_over_sigma": -1.3075823773455602,
+       "run": "",
+       "sigma": 1.7143e-05
+      },
+      {
+       "C_over_E": 1.1121865278543368,
+       "calculated": 0.0005011178838553286,
+       "channel": "gamma",
+       "cooling_time_s": 1000.0,
+       "log_C_over_E": 0.10632792263766506,
+       "measured": 0.00045057,
+       "residual_over_sigma": 2.4219195944290437,
+       "run": "",
+       "sigma": 2.0871e-05
+      },
+      {
+       "C_over_E": 1.0255466720862372,
+       "calculated": 0.0009229920048776135,
+       "channel": "total",
+       "cooling_time_s": 1000.0,
+       "log_C_over_E": 0.02522580903659771,
+       "measured": 0.0009000000000000001,
+       "residual_over_sigma": 0.8211430313433355,
+       "run": "",
+       "sigma": 2.8e-05
+      },
+      {
+       "C_over_E": 0.9305060345759874,
+       "calculated": 0.000297761931064316,
+       "channel": "beta",
+       "cooling_time_s": 1400.0,
+       "log_C_over_E": -0.07202671761619979,
+       "measured": 0.00032,
+       "residual_over_sigma": -1.7790455148547228,
+       "run": "",
+       "sigma": 1.25e-05
+      },
+      {
+       "C_over_E": 1.1582962899929494,
+       "calculated": 0.00036486333134777907,
+       "channel": "gamma",
+       "cooling_time_s": 1400.0,
+       "log_C_over_E": 0.14695020997507713,
+       "measured": 0.000315,
+       "residual_over_sigma": 4.020773176298277,
+       "run": "",
+       "sigma": 1.2401428571428572e-05
+      },
+      {
+       "C_over_E": 1.0435043503170218,
+       "calculated": 0.0006626252624513089,
+       "channel": "total",
+       "cooling_time_s": 1400.0,
+       "log_C_over_E": 0.04258461649338737,
+       "measured": 0.000635,
+       "residual_over_sigma": 1.381263122565441,
+       "run": "",
+       "sigma": 2e-05
+      },
+      {
+       "C_over_E": 0.9383155635547394,
+       "calculated": 0.0002255449971573495,
+       "channel": "beta",
+       "cooling_time_s": 1800.0,
+       "log_C_over_E": -0.06366896485285507,
+       "measured": 0.0002403722222222222,
+       "residual_over_sigma": -1.9122307886201109,
+       "run": "",
+       "sigma": 7.75388888888889e-06
+      },
+      {
+       "C_over_E": 1.174758825684861,
+       "calculated": 0.0002850291233007496,
+       "channel": "gamma",
+       "cooling_time_s": 1800.0,
+       "log_C_over_E": 0.16106287179219744,
+       "measured": 0.0002426277777777778,
+       "residual_over_sigma": 4.75292202897928,
+       "run": "",
+       "sigma": 8.92111111111111e-06
+      },
+      {
+       "C_over_E": 1.057089276311321,
+       "calculated": 0.0005105741204583681,
+       "channel": "total",
+       "cooling_time_s": 1800.0,
+       "log_C_over_E": 0.055519165299932595,
+       "measured": 0.000483,
+       "residual_over_sigma": 1.8382746972245398,
+       "run": "",
+       "sigma": 1.5e-05
+      },
+      {
+       "C_over_E": 0.9305447200842077,
+       "calculated": 0.00017280422239679313,
+       "channel": "beta",
+       "cooling_time_s": 2250.0,
+       "log_C_over_E": -0.07198514378149475,
+       "measured": 0.00018570222222222222,
+       "residual_over_sigma": -2.153175516190493,
+       "run": "",
+       "sigma": 5.990222222222223e-06
+      },
+      {
+       "C_over_E": 1.1884346967904742,
+       "calculated": 0.0002261564818332344,
+       "channel": "gamma",
+       "cooling_time_s": 2250.0,
+       "log_C_over_E": 0.172637060402324,
+       "measured": 0.00019029777777777778,
+       "residual_over_sigma": 4.997651395241414,
+       "run": "",
+       "sigma": 7.175111111111111e-06
+      },
+      {
+       "C_over_E": 1.0610657027394375,
+       "calculated": 0.00039896070423002853,
+       "channel": "total",
+       "cooling_time_s": 2250.0,
+       "log_C_over_E": 0.05927378301091359,
+       "measured": 0.00037600000000000003,
+       "residual_over_sigma": 1.9133920191690412,
+       "run": "",
+       "sigma": 1.2e-05
+      },
+      {
+       "C_over_E": 0.9472262008829265,
+       "calculated": 0.00013363122796165096,
+       "channel": "beta",
+       "cooling_time_s": 2750.0,
+       "log_C_over_E": -0.05421735382984874,
+       "measured": 0.00014107636363636363,
+       "residual_over_sigma": -1.6130247463530956,
+       "run": "",
+       "sigma": 4.615636363636363e-06
+      },
+      {
+       "C_over_E": 1.1726616749220173,
+       "calculated": 0.00018167301090319136,
+       "channel": "gamma",
+       "cooling_time_s": 2750.0,
+       "log_C_over_E": 0.1592761008917647,
+       "measured": 0.00015492363636363635,
+       "residual_over_sigma": 4.316440557667895,
+       "run": "",
+       "sigma": 6.197090909090909e-06
+      },
+      {
+       "C_over_E": 1.065217023192035,
+       "calculated": 0.0003153042388648423,
+       "channel": "total",
+       "cooling_time_s": 2750.0,
+       "log_C_over_E": 0.06317855604664765,
+       "measured": 0.000296,
+       "residual_over_sigma": 1.9499231176608425,
+       "run": "",
+       "sigma": 9.899999999999998e-06
+      },
+      {
+       "C_over_E": 0.9442433037346737,
+       "calculated": 9.631281698093671e-05,
+       "channel": "beta",
+       "cooling_time_s": 3500.0,
+       "log_C_over_E": -0.05737140903804327,
+       "measured": 0.000102,
+       "residual_over_sigma": -1.5370764916387256,
+       "run": "",
+       "sigma": 3.7e-06
+      },
+      {
+       "C_over_E": 1.1779730744738568,
+       "calculated": 0.00013782284971344125,
+       "channel": "gamma",
+       "cooling_time_s": 3500.0,
+       "log_C_over_E": 0.16379522798502652,
+       "measured": 0.000117,
+       "residual_over_sigma": 4.01808214781367,
+       "run": "",
+       "sigma": 5.182285714285715e-06
+      },
+      {
+       "C_over_E": 1.0691126333076617,
+       "calculated": 0.00023413566669437793,
+       "channel": "total",
+       "cooling_time_s": 3500.0,
+       "log_C_over_E": 0.06682898973642842,
+       "measured": 0.000219,
+       "residual_over_sigma": 1.8919583367972401,
+       "run": "",
+       "sigma": 8.000000000000001e-06
+      },
+      {
+       "C_over_E": 0.9493246730309447,
+       "calculated": 5.83834673914031e-05,
+       "channel": "beta",
+       "cooling_time_s": 5000.0,
+       "log_C_over_E": -0.05200441766952929,
+       "measured": 6.15e-05,
+       "residual_over_sigma": -1.2466130434387612,
+       "run": "",
+       "sigma": 2.5e-06
+      },
+      {
+       "C_over_E": 1.1405808028781397,
+       "calculated": 8.953559302593399e-05,
+       "channel": "gamma",
+       "cooling_time_s": 5000.0,
+       "log_C_over_E": 0.1315376088763589,
+       "measured": 7.850000000000001e-05,
+       "residual_over_sigma": 2.624148244146567,
+       "run": "",
+       "sigma": 4.2054000000000004e-06
+      },
+      {
+       "C_over_E": 1.0565647172666937,
+       "calculated": 0.00014791906041733709,
+       "channel": "total",
+       "cooling_time_s": 5000.0,
+       "log_C_over_E": 0.0550228124843907,
+       "measured": 0.00014,
+       "residual_over_sigma": 1.298206625792967,
+       "run": "",
+       "sigma": 6.1e-06
+      },
+      {
+       "C_over_E": 0.9652775131422483,
+       "calculated": 3.113019979883751e-05,
+       "channel": "beta",
+       "cooling_time_s": 8000.0,
+       "log_C_over_E": -0.03533964060013957,
+       "measured": 3.2250000000000005e-05,
+       "residual_over_sigma": -0.5599001005812471,
+       "run": "",
+       "sigma": 2e-06
+      },
+      {
+       "C_over_E": 1.039333498075873,
+       "calculated": 4.858884103504706e-05,
+       "channel": "gamma",
+       "cooling_time_s": 8000.0,
+       "log_C_over_E": 0.03857964047535834,
+       "measured": 4.675e-05,
+       "residual_over_sigma": 0.5403985115118843,
+       "run": "",
+       "sigma": 3.40275e-06
+      },
+      {
+       "C_over_E": 1.0091017827073996,
+       "calculated": 7.971904083388456e-05,
+       "channel": "total",
+       "cooling_time_s": 8000.0,
+       "log_C_over_E": 0.009060611117842515,
+       "measured": 7.9e-05,
+       "residual_over_sigma": 0.15631322475751386,
+       "run": "",
+       "sigma": 4.6e-06
+      },
+      {
+       "C_over_E": 0.9684743375408523,
+       "calculated": 1.9175791883308877e-05,
+       "channel": "beta",
+       "cooling_time_s": 12000.0,
+       "log_C_over_E": -0.032033293604517864,
+       "measured": 1.98e-05,
+       "residual_over_sigma": -0.4623763827341653,
+       "run": "",
+       "sigma": 1.3499999999999998e-06
+      },
+      {
+       "C_over_E": 0.9464253435819042,
+       "calculated": 2.6973122292084273e-05,
+       "channel": "gamma",
+       "cooling_time_s": 12000.0,
+       "log_C_over_E": -0.055063187743812476,
+       "measured": 2.85e-05,
+       "residual_over_sigma": -0.56254129424914,
+       "run": "",
+       "sigma": 2.7142500000000003e-06
+      },
+      {
+       "C_over_E": 0.9554640616023424,
+       "calculated": 4.614891417539314e-05,
+       "channel": "total",
+       "cooling_time_s": 12000.0,
+       "log_C_over_E": -0.0455581281469527,
+       "measured": 4.83e-05,
+       "residual_over_sigma": -0.5660752170018057,
+       "run": "",
+       "sigma": 3.8e-06
+      }
+     ]
+    },
+    "P9-Yarnell-20000s": {
+     "irradiation_s": 20000.0,
+     "laboratory": "Yarnell",
+     "model": {
+      "certificate_inputs": {
+       "decay_fallback": null,
+       "decay_overrides": null,
+       "decay_primary": {
+        "path": "/home/connoravila/nuclear-data/endfb-viii.0-decay/bulk/endf-b-viii-0_decay.dat",
+        "sha256": "6f04cf009086c179021f243a58dadc2d5bb078de5ba39c4fe46ccad77d228ddb"
+       },
+       "fission_yields": [
+        {
+         "awr": 233.025,
+         "cumulative_tables": 3,
+         "independent": [
+          {
+           "energy_eV": 0.0253,
+           "products": 1247,
+           "sum": 1.9999997676275973
+          },
+          {
+           "energy_eV": 500000.0,
+           "products": 1260,
+           "sum": 1.999999511259158
+          },
+          {
+           "energy_eV": 14000000.0,
+           "products": 1237,
+           "sum": 1.9999996103156326
+          }
+         ],
+         "parent": "U235",
+         "parent_LISO": 0,
+         "parent_ZA": 92235,
+         "path": "/home/connoravila/nuclear-data/endfb-viii.0-nfpy/nfy-092_U_235.endf",
+         "sha256": "9e1320293a544fc03f33f804a15a9e3ccc3be026552ee6dbc03b8d3e24615e41",
+         "sha256_declared": "9e1320293a544fc03f33f804a15a9e3ccc3be026552ee6dbc03b8d3e24615e41"
+        }
+       ],
+       "library": {
+        "path": "/home/connoravila/Documents/actinv/target/preflight-tmp/p169-test/A/U235-fission.npz",
+        "sha256": "917e58403785484e8da0b86f19a7c449ff5ff42722777b77eff5e63ddb73053b"
+       },
+       "library_index": {
+        "path": "/home/connoravila/Documents/actinv/target/preflight-tmp/p169-test/A/U235-fission_index.json",
+        "sha256": "2691a02c48bda05c809951d34a83c9311170f68224450dc6fe29b89b49d800c0"
+       },
+       "photon_response": null
+      },
+      "cooling_times_s": [
+       10.0,
+       15.0,
+       20.0,
+       25.0,
+       30.0,
+       35.0,
+       40.0,
+       45.0,
+       50.0,
+       55.0,
+       60.0,
+       65.0,
+       70.0,
+       75.0,
+       80.0,
+       85.0,
+       90.0,
+       95.0,
+       100.0,
+       110.0,
+       120.0,
+       130.0,
+       140.0,
+       150.0,
+       160.0,
+       170.0,
+       180.0,
+       190.0,
+       200.0,
+       250.0,
+       300.0,
+       350.0,
+       400.0,
+       450.0,
+       500.0,
+       600.0,
+       700.0,
+       800.0,
+       900.0,
+       1000.0,
+       1100.0,
+       1200.0,
+       1300.0,
+       1400.0,
+       1500.0,
+       1600.0,
+       1700.0,
+       1800.0,
+       1900.0,
+       2000.0,
+       2500.0,
+       3000.0,
+       3500.0,
+       4000.0,
+       4500.0,
+       5000.0,
+       6000.0,
+       7000.0,
+       8000.0,
+       9000.0,
+       10000.0,
+       15000.0,
+       19462.0,
+       20000.0,
+       21294.0,
+       25000.0,
+       30000.0,
+       35000.0,
+       40000.0,
+       45000.0,
+       50000.0,
+       55000.0,
+       60000.0,
+       61106.0,
+       70442.0,
+       80297.0,
+       89779.0,
+       99578.0,
+       100547.0
+      ],
+      "decay_ledger": {
+       "decay_nuclides_from_fallback": 0,
+       "decay_overrides_applied": [],
+       "max_leakage_fraction": 0.004012262589000793
+      },
+      "fission_rate_per_parent_s": 100.0,
+      "fission_rate_per_parent_s_independent": 100.0,
+      "fission_yield_balance": {
+       "fission_rate_per_parent_s": 100.0,
+       "leakage_yield_sum": 0.008024524183222475,
+       "mapped_yield_sum": 1.9919752434443752,
+       "raw_yield_sum": 1.9999997676275973
+      },
+      "fission_yields": {
+       "energy": "fixed",
+       "fixed_energy_eV": 0.0253,
+       "selection": [
+        {
+         "clamped": false,
+         "effective_yield_sum": 1.9999997676275973,
+         "lower_energy_eV": 0.0253,
+         "mode": "fixed",
+         "parent": "U235",
+         "parent_LISO": 0,
+         "parent_ZA": 92235,
+         "products": 1247,
+         "requested_energy_eV": 0.0253,
+         "upper_energy_eV": 0.0253,
+         "upper_weight": 0.0
+        }
+       ]
+      },
+      "irradiation_s": 20000.0,
+      "max_background_fraction": 3.245243551162207e-17,
+      "max_relative_time_error": 0.0,
+      "mode": "trace",
+      "normalization": "rate",
+      "numerical_floor_atoms_per_g_max": 3343504244.694911,
+      "parent": "U235",
+      "relative_rate_closure": 0.0
+     },
+     "normalization": "rate",
+     "parent": "U235",
+     "points": [
+      {
+       "C_over_E": 0.921781807912418,
+       "calculated": 7.581655370079638,
+       "channel": "total",
+       "cooling_time_s": 10.0,
+       "log_C_over_E": -0.08144673428598555,
+       "measured": 8.225,
+       "residual_over_sigma": -1.9077607826239513,
+       "run": "",
+       "sigma": 0.337225
+      },
+      {
+       "C_over_E": 0.944392279084417,
+       "calculated": 7.01494584903905,
+       "channel": "total",
+       "cooling_time_s": 15.0,
+       "log_C_over_E": -0.05721364927601449,
+       "measured": 7.428,
+       "residual_over_sigma": -1.8535906971860985,
+       "run": "",
+       "sigma": 0.22284
+      },
+      {
+       "C_over_E": 0.9544762075492653,
+       "calculated": 6.618338023146606,
+       "channel": "total",
+       "cooling_time_s": 20.0,
+       "log_C_over_E": -0.046592562738568585,
+       "measured": 6.934,
+       "residual_over_sigma": -1.7509150942590255,
+       "run": "",
+       "sigma": 0.180284
+      },
+      {
+       "C_over_E": 0.9568467746183299,
+       "calculated": 6.317102406030214,
+       "channel": "total",
+       "cooling_time_s": 25.0,
+       "log_C_over_E": -0.044112010464863516,
+       "measured": 6.602,
+       "residual_over_sigma": -1.7980510575695887,
+       "run": "",
+       "sigma": 0.158448
+      },
+      {
+       "C_over_E": 0.9564146929781089,
+       "calculated": 6.075146129796948,
+       "channel": "total",
+       "cooling_time_s": 30.0,
+       "log_C_over_E": -0.04456368071995879,
+       "measured": 6.352,
+       "residual_over_sigma": -1.895013348777877,
+       "run": "",
+       "sigma": 0.146096
+      },
+      {
+       "C_over_E": 0.9604005115644618,
+       "calculated": 5.872849128216684,
+       "channel": "total",
+       "cooling_time_s": 35.0,
+       "log_C_over_E": -0.04040488197747374,
+       "measured": 6.115,
+       "residual_over_sigma": -1.7999767470699195,
+       "run": "",
+       "sigma": 0.13453
+      },
+      {
+       "C_over_E": 0.9631151194722786,
+       "calculated": 5.698752161917472,
+       "channel": "total",
+       "cooling_time_s": 40.0,
+       "log_C_over_E": -0.03758233178215329,
+       "measured": 5.917,
+       "residual_over_sigma": -1.7564228822724488,
+       "run": "",
+       "sigma": 0.124257
+      },
+      {
+       "C_over_E": 0.9626396136840353,
+       "calculated": 5.545766814433727,
+       "channel": "total",
+       "cooling_time_s": 45.0,
+       "log_C_over_E": -0.03807617016117433,
+       "measured": 5.761,
+       "residual_over_sigma": -1.7790660150459412,
+       "run": "",
+       "sigma": 0.120981
+      },
+      {
+       "C_over_E": 0.964735336590099,
+       "calculated": 5.409271032260685,
+       "channel": "total",
+       "cooling_time_s": 50.0,
+       "log_C_over_E": -0.03590147786095001,
+       "measured": 5.607,
+       "residual_over_sigma": -1.763233170495051,
+       "run": "",
+       "sigma": 0.11214
+      },
+      {
+       "C_over_E": 0.9660266930707865,
+       "calculated": 5.286098064483344,
+       "channel": "total",
+       "cooling_time_s": 55.0,
+       "log_C_over_E": -0.03456381257293781,
+       "measured": 5.472,
+       "residual_over_sigma": -1.6986653464606767,
+       "run": "",
+       "sigma": 0.10944
+      },
+      {
+       "C_over_E": 0.9667372292926768,
+       "calculated": 5.173977651174407,
+       "channel": "total",
+       "cooling_time_s": 60.0,
+       "log_C_over_E": -0.03382855851973609,
+       "measured": 5.352,
+       "residual_over_sigma": -1.663138535366159,
+       "run": "",
+       "sigma": 0.10704
+      },
+      {
+       "C_over_E": 0.9659458644298609,
+       "calculated": 5.07121578825677,
+       "channel": "total",
+       "cooling_time_s": 65.0,
+       "log_C_over_E": -0.034647487302849445,
+       "measured": 5.25,
+       "residual_over_sigma": -1.7923229247441637,
+       "run": "",
+       "sigma": 0.09975
+      },
+      {
+       "C_over_E": 0.9691342857673574,
+       "calculated": 4.97650455741538,
+       "channel": "total",
+       "cooling_time_s": 70.0,
+       "log_C_over_E": -0.03135209488968346,
+       "measured": 5.135,
+       "residual_over_sigma": -1.6245112754022435,
+       "run": "",
+       "sigma": 0.097565
+      },
+      {
+       "C_over_E": 0.9701935053711251,
+       "calculated": 4.888805073565099,
+       "channel": "total",
+       "cooling_time_s": 75.0,
+       "log_C_over_E": -0.03025973730688241,
+       "measured": 5.039,
+       "residual_over_sigma": -1.5687628752039384,
+       "run": "",
+       "sigma": 0.095741
+      },
+      {
+       "C_over_E": 0.9694036717975812,
+       "calculated": 4.807272808444205,
+       "channel": "total",
+       "cooling_time_s": 80.0,
+       "log_C_over_E": -0.031074167876795598,
+       "measured": 4.959,
+       "residual_over_sigma": -1.6997960112454853,
+       "run": "",
+       "sigma": 0.089262
+      },
+      {
+       "C_over_E": 0.970106262053035,
+       "calculated": 4.731208240032651,
+       "channel": "total",
+       "cooling_time_s": 85.0,
+       "log_C_over_E": -0.030349664976424724,
+       "measured": 4.877,
+       "residual_over_sigma": -1.6607632192758368,
+       "run": "",
+       "sigma": 0.087786
+      },
+      {
+       "C_over_E": 0.9702317535664102,
+       "calculated": 4.660023112379468,
+       "channel": "total",
+       "cooling_time_s": 90.0,
+       "log_C_over_E": -0.030220314819348948,
+       "measured": 4.803,
+       "residual_over_sigma": -1.6537914685327657,
+       "run": "",
+       "sigma": 0.086454
+      },
+      {
+       "C_over_E": 0.9690330417683983,
+       "calculated": 4.5932166179822085,
+       "channel": "total",
+       "cooling_time_s": 95.0,
+       "log_C_over_E": -0.03145656884052637,
+       "measured": 4.74,
+       "residual_over_sigma": -1.720386568422313,
+       "run": "",
+       "sigma": 0.08532
+      },
+      {
+       "C_over_E": 0.9513561699712608,
+       "calculated": 4.5303580814031434,
+       "channel": "total",
+       "cooling_time_s": 100.0,
+       "log_C_over_E": -0.049866765026390855,
+       "measured": 4.762,
+       "residual_over_sigma": -2.7024350015966228,
+       "run": "",
+       "sigma": 0.085716
+      },
+      {
+       "C_over_E": 0.9711918851038521,
+       "calculated": 4.415038309682112,
+       "channel": "total",
+       "cooling_time_s": 110.0,
+       "log_C_over_E": -0.029231214247383275,
+       "measured": 4.546,
+       "residual_over_sigma": -1.6004508275637714,
+       "run": "",
+       "sigma": 0.081828
+      },
+      {
+       "C_over_E": 0.9721756818119996,
+       "calculated": 4.311599148836218,
+       "channel": "total",
+       "cooling_time_s": 120.0,
+       "log_C_over_E": -0.028218748248736793,
+       "measured": 4.435,
+       "residual_over_sigma": -1.6367245992941364,
+       "run": "",
+       "sigma": 0.075395
+      },
+      {
+       "C_over_E": 0.9710223807000807,
+       "calculated": 4.218121221761151,
+       "channel": "total",
+       "cooling_time_s": 130.0,
+       "log_C_over_E": -0.029405761831742188,
+       "measured": 4.344,
+       "residual_over_sigma": -1.7045658411717246,
+       "run": "",
+       "sigma": 0.073848
+      },
+      {
+       "C_over_E": 0.9708909676557227,
+       "calculated": 4.133082849310411,
+       "channel": "total",
+       "cooling_time_s": 140.0,
+       "log_C_over_E": -0.02954110571273452,
+       "measured": 4.257,
+       "residual_over_sigma": -1.712296020251605,
+       "run": "",
+       "sigma": 0.072369
+      },
+      {
+       "C_over_E": 0.9720182422202577,
+       "calculated": 4.055260106542915,
+       "channel": "total",
+       "cooling_time_s": 150.0,
+       "log_C_over_E": -0.028380706981494877,
+       "measured": 4.172,
+       "residual_over_sigma": -1.6459857517495506,
+       "run": "",
+       "sigma": 0.070924
+      },
+      {
+       "C_over_E": 0.9735231018999683,
+       "calculated": 3.9836565329746696,
+       "channel": "total",
+       "cooling_time_s": 160.0,
+       "log_C_over_E": -0.02683372368620551,
+       "measured": 4.092,
+       "residual_over_sigma": -1.5574645941195164,
+       "run": "",
+       "sigma": 0.069564
+      },
+      {
+       "C_over_E": 0.9742482677319534,
+       "calculated": 3.9174522845501847,
+       "channel": "total",
+       "cooling_time_s": 170.0,
+       "log_C_over_E": -0.026089112817808197,
+       "measured": 4.021,
+       "residual_over_sigma": -1.514807780473327,
+       "run": "",
+       "sigma": 0.068357
+      },
+      {
+       "C_over_E": 0.9737289232319347,
+       "calculated": 3.8559665359984616,
+       "channel": "total",
+       "cooling_time_s": 180.0,
+       "log_C_over_E": -0.02662232697938324,
+       "measured": 3.96,
+       "residual_over_sigma": -1.545357456945014,
+       "run": "",
+       "sigma": 0.06732
+      },
+      {
+       "C_over_E": 0.9730095247336094,
+       "calculated": 3.798629184560011,
+       "channel": "total",
+       "cooling_time_s": 190.0,
+       "log_C_over_E": -0.02736140780641907,
+       "measured": 3.904,
+       "residual_over_sigma": -1.686904704149415,
+       "run": "",
+       "sigma": 0.062464
+      },
+      {
+       "C_over_E": 0.9747421228221875,
+       "calculated": 3.7449592358828445,
+       "channel": "total",
+       "cooling_time_s": 200.0,
+       "log_C_over_E": -0.025582332380924347,
+       "measured": 3.842,
+       "residual_over_sigma": -1.5786173236132803,
+       "run": "",
+       "sigma": 0.061472
+      },
+      {
+       "C_over_E": 0.9745753873897807,
+       "calculated": 3.5191917238644983,
+       "channel": "total",
+       "cooling_time_s": 250.0,
+       "log_C_over_E": -0.02575340295505094,
+       "measured": 3.611,
+       "residual_over_sigma": -1.5890382881387066,
+       "run": "",
+       "sigma": 0.057776
+      },
+      {
+       "C_over_E": 0.9782974621407903,
+       "calculated": 3.3428424281350804,
+       "channel": "total",
+       "cooling_time_s": 300.0,
+       "log_C_over_E": -0.021941501674433688,
+       "measured": 3.417,
+       "residual_over_sigma": -1.3564086162006046,
+       "run": "",
+       "sigma": 0.054672
+      },
+      {
+       "C_over_E": 0.9810292775146648,
+       "calculated": 3.1981554446978073,
+       "channel": "total",
+       "cooling_time_s": 350.0,
+       "log_C_over_E": -0.019152975300783914,
+       "measured": 3.26,
+       "residual_over_sigma": -1.1856701553334446,
+       "run": "",
+       "sigma": 0.05216
+      },
+      {
+       "C_over_E": 0.9815558352538467,
+       "calculated": 3.0752144318503016,
+       "channel": "total",
+       "cooling_time_s": 400.0,
+       "log_C_over_E": -0.01861637920781383,
+       "measured": 3.133,
+       "residual_over_sigma": -1.152760296634583,
+       "run": "",
+       "sigma": 0.050128
+      },
+      {
+       "C_over_E": 0.9841023712657565,
+       "calculated": 2.9680527517375217,
+       "channel": "total",
+       "cooling_time_s": 450.0,
+       "log_C_over_E": -0.016025351502052795,
+       "measured": 3.016,
+       "residual_over_sigma": -0.993601795890217,
+       "run": "",
+       "sigma": 0.048256
+      },
+      {
+       "C_over_E": 0.9858816802592746,
+       "calculated": 2.8728592162755264,
+       "channel": "total",
+       "cooling_time_s": 500.0,
+       "log_C_over_E": -0.01421893131709016,
+       "measured": 2.914,
+       "residual_over_sigma": -0.8823949837953354,
+       "run": "",
+       "sigma": 0.046624
+      },
+      {
+       "C_over_E": 0.9900955950068835,
+       "calculated": 2.7089015479388334,
+       "channel": "total",
+       "cooling_time_s": 600.0,
+       "log_C_over_E": -0.009953779902163722,
+       "measured": 2.736,
+       "residual_over_sigma": -0.6602936662077677,
+       "run": "",
+       "sigma": 0.04104
+      },
+      {
+       "C_over_E": 0.9924670158145135,
+       "calculated": 2.5704895709595896,
+       "channel": "total",
+       "cooling_time_s": 700.0,
+       "log_C_over_E": -0.007561500409292926,
+       "measured": 2.59,
+       "residual_over_sigma": -0.502198945699105,
+       "run": "",
+       "sigma": 0.03885
+      },
+      {
+       "C_over_E": 0.995323041350287,
+       "calculated": 2.4504853278044068,
+       "channel": "total",
+       "cooling_time_s": 800.0,
+       "log_C_over_E": -0.004687929842059575,
+       "measured": 2.462,
+       "residual_over_sigma": -0.3117972433142008,
+       "run": "",
+       "sigma": 0.03693
+      },
+      {
+       "C_over_E": 0.9946863000284685,
+       "calculated": 2.3444756091671004,
+       "channel": "total",
+       "cooling_time_s": 900.0,
+       "log_C_over_E": -0.005327867886880314,
+       "measured": 2.357,
+       "residual_over_sigma": -0.35424666476876826,
+       "run": "",
+       "sigma": 0.035355
+      },
+      {
+       "C_over_E": 0.9980123980121279,
+       "calculated": 2.2495199451193364,
+       "channel": "total",
+       "cooling_time_s": 1000.0,
+       "log_C_over_E": -0.001989579889992517,
+       "measured": 2.254,
+       "residual_over_sigma": -0.13250679919147024,
+       "run": "",
+       "sigma": 0.03381
+      },
+      {
+       "C_over_E": 0.9974887913398669,
+       "calculated": 2.1635531884161714,
+       "channel": "total",
+       "cooling_time_s": 1100.0,
+       "log_C_over_E": -0.002514367033264436,
+       "measured": 2.169,
+       "residual_over_sigma": -0.16741391067553857,
+       "run": "",
+       "sigma": 0.032535
+      },
+      {
+       "C_over_E": 0.9985953687280521,
+       "calculated": 2.0850671299041728,
+       "channel": "total",
+       "cooling_time_s": 1200.0,
+       "log_C_over_E": -0.0014056186912012522,
+       "measured": 2.088,
+       "residual_over_sigma": -0.09364208479653009,
+       "run": "",
+       "sigma": 0.03132
+      },
+      {
+       "C_over_E": 1.000957455855153,
+       "calculated": 2.012925443724713,
+       "channel": "total",
+       "cooling_time_s": 1300.0,
+       "log_C_over_E": 0.0009569977866593624,
+       "measured": 2.011,
+       "residual_over_sigma": 0.06383039034354143,
+       "run": "",
+       "sigma": 0.030165
+      },
+      {
+       "C_over_E": 1.0006422122744172,
+       "calculated": 1.9462491028737416,
+       "channel": "total",
+       "cooling_time_s": 1400.0,
+       "log_C_over_E": 0.0006420061443625931,
+       "measured": 1.945,
+       "residual_over_sigma": 0.04281415162781769,
+       "run": "",
+       "sigma": 0.029175
+      },
+      {
+       "C_over_E": 1.000712792810281,
+       "calculated": 1.8843421888617593,
+       "channel": "total",
+       "cooling_time_s": 1500.0,
+       "log_C_over_E": 0.000712538894138402,
+       "measured": 1.883,
+       "residual_over_sigma": 0.04751952068540616,
+       "run": "",
+       "sigma": 0.028245
+      },
+      {
+       "C_over_E": 1.0008998829741411,
+       "calculated": 1.8266422864278076,
+       "channel": "total",
+       "cooling_time_s": 1600.0,
+       "log_C_over_E": 0.0008994783221989447,
+       "measured": 1.825,
+       "residual_over_sigma": 0.059992198276077276,
+       "run": "",
+       "sigma": 0.027375
+      },
+      {
+       "C_over_E": 1.0037862333729308,
+       "calculated": 1.7726864881365958,
+       "channel": "total",
+       "cooling_time_s": 1700.0,
+       "log_C_over_E": 0.003779083632727594,
+       "measured": 1.766,
+       "residual_over_sigma": 0.2524155581953862,
+       "run": "",
+       "sigma": 0.02649
+      },
+      {
+       "C_over_E": 1.004132717817394,
+       "calculated": 1.7220876110568306,
+       "channel": "total",
+       "cooling_time_s": 1800.0,
+       "log_C_over_E": 0.004124201594482784,
+       "measured": 1.715,
+       "residual_over_sigma": 0.2582948635871186,
+       "run": "",
+       "sigma": 0.02744
+      },
+      {
+       "C_over_E": 1.0033057183479197,
+       "calculated": 1.6745172439226779,
+       "channel": "total",
+       "cooling_time_s": 1900.0,
+       "log_C_over_E": 0.0033002664726272733,
+       "measured": 1.669,
+       "residual_over_sigma": 0.19445402046585938,
+       "run": "",
+       "sigma": 0.028373
+      },
+      {
+       "C_over_E": 1.0041241188348768,
+       "calculated": 1.6296934448690052,
+       "channel": "total",
+       "cooling_time_s": 2000.0,
+       "log_C_over_E": 0.0041156379662055,
+       "measured": 1.623,
+       "residual_over_sigma": 0.22911771304871806,
+       "run": "",
+       "sigma": 0.029214
+      },
+      {
+       "C_over_E": 1.0071245187404374,
+       "calculated": 1.4391809372800852,
+       "channel": "total",
+       "cooling_time_s": 2500.0,
+       "log_C_over_E": 0.007099259260261981,
+       "measured": 1.429,
+       "residual_over_sigma": 0.35622593702187466,
+       "run": "",
+       "sigma": 0.02858
+      },
+      {
+       "C_over_E": 1.0027730670102208,
+       "calculated": 1.290568937242154,
+       "channel": "total",
+       "cooling_time_s": 3000.0,
+       "log_C_over_E": 0.0027692291533515947,
+       "measured": 1.287,
+       "residual_over_sigma": 0.11554445875919854,
+       "run": "",
+       "sigma": 0.030888
+      },
+      {
+       "C_over_E": 1.0069269820938969,
+       "calculated": 1.1710560801752021,
+       "channel": "total",
+       "cooling_time_s": 3500.0,
+       "log_C_over_E": 0.006903100773657131,
+       "measured": 1.163,
+       "residual_over_sigma": 0.26642238822680386,
+       "run": "",
+       "sigma": 0.030238
+      },
+      {
+       "C_over_E": 0.9996290752219342,
+       "calculated": 1.0726019977131354,
+       "channel": "total",
+       "cooling_time_s": 4000.0,
+       "log_C_over_E": -0.00037099358767725074,
+       "measured": 1.073,
+       "residual_over_sigma": -0.011591399314556036,
+       "run": "",
+       "sigma": 0.034336
+      },
+      {
+       "C_over_E": 1.017773661539504,
+       "calculated": 0.9898866632133217,
+       "channel": "total",
+       "cooling_time_s": 4500.0,
+       "log_C_over_E": 0.017617557002725975,
+       "measured": 0.9726,
+       "residual_over_sigma": 0.5924553846501381,
+       "run": "",
+       "sigma": 0.029178
+      },
+      {
+       "C_over_E": 1.0193542121225825,
+       "calculated": 0.9192536284921449,
+       "channel": "total",
+       "cooling_time_s": 5000.0,
+       "log_C_over_E": 0.019169301417659646,
+       "measured": 0.9018,
+       "residual_over_sigma": 0.6451404040860805,
+       "run": "",
+       "sigma": 0.027054
+      },
+      {
+       "C_over_E": 1.0057176720427663,
+       "calculated": 0.804574137634213,
+       "channel": "total",
+       "cooling_time_s": 6000.0,
+       "log_C_over_E": 0.005701388196946952,
+       "measured": 0.8,
+       "residual_over_sigma": 0.219910463183317,
+       "run": "",
+       "sigma": 0.0208
+      },
+      {
+       "C_over_E": 1.0065306517012929,
+       "calculated": 0.7150393749685985,
+       "channel": "total",
+       "cooling_time_s": 7000.0,
+       "log_C_over_E": 0.006509419385908505,
+       "measured": 0.7104,
+       "residual_over_sigma": 0.26122606805171467,
+       "run": "",
+       "sigma": 0.01776
+      },
+      {
+       "C_over_E": 1.002380402172901,
+       "calculated": 0.6429267899536987,
+       "channel": "total",
+       "cooling_time_s": 8000.0,
+       "log_C_over_E": 0.0023775735036729163,
+       "measured": 0.6414,
+       "residual_over_sigma": 0.09521608691604015,
+       "run": "",
+       "sigma": 0.016035
+      },
+      {
+       "C_over_E": 1.0010207358916716,
+       "calculated": 0.5834949869512553,
+       "channel": "total",
+       "cooling_time_s": 9000.0,
+       "log_C_over_E": 0.0010202152950223528,
+       "measured": 0.5829,
+       "residual_over_sigma": 0.04639708598507243,
+       "run": "",
+       "sigma": 0.0128238
+      },
+      {
+       "C_over_E": 1.0036713976091984,
+       "calculated": 0.5336520821088108,
+       "channel": "total",
+       "cooling_time_s": 10000.0,
+       "log_C_over_E": 0.0036646744794928436,
+       "measured": 0.5317,
+       "residual_over_sigma": 0.18356988045992245,
+       "run": "",
+       "sigma": 0.010634
+      },
+      {
+       "C_over_E": 0.999063988245591,
+       "calculated": 0.37125217803206156,
+       "channel": "total",
+       "cooling_time_s": 15000.0,
+       "log_C_over_E": -0.0009364500869555351,
+       "measured": 0.3716,
+       "residual_over_sigma": -0.04680058772045506,
+       "run": "",
+       "sigma": 0.007432
+      },
+      {
+       "C_over_E": 0.9875781816223047,
+       "calculated": 0.2908417744877687,
+       "channel": "total",
+       "cooling_time_s": 19462.0,
+       "log_C_over_E": -0.012499614077645787,
+       "measured": 0.2945,
+       "residual_over_sigma": -0.6210909188847661,
+       "run": "",
+       "sigma": 0.00589
+      },
+      {
+       "C_over_E": 1.0000322799418937,
+       "calculated": 0.28340914813553264,
+       "channel": "total",
+       "cooling_time_s": 20000.0,
+       "log_C_over_E": 3.2279420907585336e-05,
+       "measured": 0.2834,
+       "residual_over_sigma": 0.0016139970946815513,
+       "run": "",
+       "sigma": 0.005668
+      },
+      {
+       "C_over_E": 0.9946780537850755,
+       "calculated": 0.2669715896359143,
+       "channel": "total",
+       "cooling_time_s": 21294.0,
+       "log_C_over_E": -0.005336158216781176,
+       "measured": 0.2684,
+       "residual_over_sigma": -0.24190664613293467,
+       "run": "",
+       "sigma": 0.0059048
+      },
+      {
+       "C_over_E": 0.9871277379487824,
+       "calculated": 0.22871749688273288,
+       "channel": "total",
+       "cooling_time_s": 25000.0,
+       "log_C_over_E": -0.012955827508588202,
+       "measured": 0.2317,
+       "residual_over_sigma": -0.5851028205098894,
+       "run": "",
+       "sigma": 0.0050974
+      },
+      {
+       "C_over_E": 0.9840267563281728,
+       "calculated": 0.19099959340329833,
+       "channel": "total",
+       "cooling_time_s": 30000.0,
+       "log_C_over_E": -0.016102190909143246,
+       "measured": 0.1941,
+       "residual_over_sigma": -0.6944888552968349,
+       "run": "",
+       "sigma": 0.0044643
+      },
+      {
+       "C_over_E": 0.988873011627511,
+       "calculated": 0.16306515961737655,
+       "channel": "total",
+       "cooling_time_s": 35000.0,
+       "log_C_over_E": -0.011189356384591868,
+       "measured": 0.1649,
+       "residual_over_sigma": -0.5057721987495003,
+       "run": "",
+       "sigma": 0.0036278
+      },
+      {
+       "C_over_E": 0.9970764425030683,
+       "calculated": 0.14138543954693508,
+       "channel": "total",
+       "cooling_time_s": 40000.0,
+       "log_C_over_E": -0.0029278394388560446,
+       "measured": 0.1418,
+       "residual_over_sigma": -0.13288897713326298,
+       "run": "",
+       "sigma": 0.0031196
+      },
+      {
+       "C_over_E": 0.9836716728235179,
+       "calculated": 0.12404099794304559,
+       "channel": "total",
+       "cooling_time_s": 45000.0,
+       "log_C_over_E": -0.01646310343847063,
+       "measured": 0.1261,
+       "residual_over_sigma": -0.7421966898400993,
+       "run": "",
+       "sigma": 0.0027742
+      },
+      {
+       "C_over_E": 0.9952618575080457,
+       "calculated": 0.10987690906888825,
+       "channel": "total",
+       "cooling_time_s": 50000.0,
+       "log_C_over_E": -0.004749403072661953,
+       "measured": 0.1104,
+       "residual_over_sigma": -0.21537011327064687,
+       "run": "",
+       "sigma": 0.0024288
+      },
+      {
+       "C_over_E": 0.9922728104363745,
+       "calculated": 0.09813578095215744,
+       "channel": "total",
+       "cooling_time_s": 55000.0,
+       "log_C_over_E": -0.007757198985186997,
+       "measured": 0.0989,
+       "residual_over_sigma": -0.3512358892557036,
+       "run": "",
+       "sigma": 0.0021758
+      },
+      {
+       "C_over_E": 0.9976003274033944,
+       "calculated": 0.0882876289752004,
+       "channel": "total",
+       "cooling_time_s": 60000.0,
+       "log_C_over_E": -0.002402556425311247,
+       "measured": 0.0885,
+       "residual_over_sigma": -0.10907602711843647,
+       "run": "",
+       "sigma": 0.001947
+      },
+      {
+       "C_over_E": 1.0037674763816369,
+       "calculated": 0.08632400296882077,
+       "channel": "total",
+       "cooling_time_s": 61106.0,
+       "log_C_over_E": 0.003760397217312304,
+       "measured": 0.086,
+       "residual_over_sigma": 0.17124892643804301,
+       "run": "",
+       "sigma": 0.001892
+      },
+      {
+       "C_over_E": 0.9922176427120879,
+       "calculated": 0.07223344438944,
+       "channel": "total",
+       "cooling_time_s": 70442.0,
+       "log_C_over_E": -0.007812797866212888,
+       "measured": 0.0728,
+       "residual_over_sigma": -0.35374351308691415,
+       "run": "",
+       "sigma": 0.0016016
+      },
+      {
+       "C_over_E": 0.979782912809266,
+       "calculated": 0.061040475468017275,
+       "channel": "total",
+       "cooling_time_s": 80297.0,
+       "log_C_over_E": -0.020424249397719266,
+       "measured": 0.0623,
+       "residual_over_sigma": -0.9189585086697262,
+       "run": "",
+       "sigma": 0.0013706
+      },
+      {
+       "C_over_E": 0.9894835977788475,
+       "calculated": 0.05273947576161257,
+       "channel": "total",
+       "cooling_time_s": 89779.0,
+       "log_C_over_E": -0.010572090348913104,
+       "measured": 0.0533,
+       "residual_over_sigma": -0.4780182827796585,
+       "run": "",
+       "sigma": 0.0011726
+      },
+      {
+       "C_over_E": 1.0057234850792747,
+       "calculated": 0.045961563268122854,
+       "channel": "total",
+       "cooling_time_s": 99578.0,
+       "log_C_over_E": 0.005707168168673002,
+       "measured": 0.0457,
+       "residual_over_sigma": 0.26015841269430734,
+       "run": "",
+       "sigma": 0.0010054
+      },
+      {
+       "C_over_E": 0.9884604838945652,
+       "calculated": 0.045370336210760545,
+       "channel": "total",
+       "cooling_time_s": 100547.0,
+       "log_C_over_E": -0.011606612997970616,
+       "measured": 0.0459,
+       "residual_over_sigma": -0.5245234593379463,
+       "run": "",
+       "sigma": 0.0010098
+      }
+     ]
+    }
+   },
+   "decay": {
+    "primary": "/home/connoravila/nuclear-data/endfb-viii.0-decay/bulk/endf-b-viii-0_decay.dat"
+   }
+  }
+ },
+ "environment": {
+  "binary": "/home/connoravila/Documents/actinv/target/wt-p163-wt/release/actinv",
+  "binary_sha256": "186cc2587bb61766b3b3c426c61cd44f00ed472401026dea2ca3dd595c8d1194",
+  "cgroup": {
+   "cpu.max": "200000 100000",
+   "memory.max": "6442450944",
+   "memory.swap.max": "0",
+   "path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p1542717-i5743138.scope",
+   "pids.max": "128"
+  },
+  "clean_tree": true,
+  "crates_tree": "fd259e18ecdeaff326672fce811996610a599bc1",
+  "git_head": "e932d36b60c3cbfc770cccc4ae70e919f50aa80d",
+  "host": "connoravila",
+  "python": "3.14.4",
+  "threads": {
+   "RAYON_NUM_THREADS": "2"
+  }
+ },
+ "inputs": {
+  "Pu239": {
+   "path": "/home/connoravila/nuclear-data/endfb-viii.0-nfpy/nfy-094_Pu_239.endf",
+   "sha256": "a2713aa6d0283b879040a07fa29d3e99b2d660b619c6d11a2a71aa9d5c5a2605"
+  },
+  "U233": {
+   "path": "/home/connoravila/nuclear-data/endfb-viii.0-nfpy/nfy-092_U_233.endf",
+   "sha256": "8e7e7e1d174471d457bb66c52d66e188beb6bc40eead968136fe4ab59aa588cb"
+  },
+  "U235": {
+   "path": "/home/connoravila/nuclear-data/endfb-viii.0-nfpy/nfy-092_U_235.endf",
+   "sha256": "9e1320293a544fc03f33f804a15a9e3ccc3be026552ee6dbc03b8d3e24615e41"
+  },
+  "decay": {
+   "path": "/home/connoravila/nuclear-data/endfb-viii.0-decay/bulk/endf-b-viii-0_decay.dat",
+   "sha256": "6f04cf009086c179021f243a58dadc2d5bb078de5ba39c4fe46ccad77d228ddb"
+  },
+  "dickens": {
+   "path": "/home/connoravila/nuclear-data/conderc-fission/fission/expDataSystem/U235_thermal/Dickens_pulse.csv",
+   "sha256": "2a0442af2c232a86b07c198680461f5acfd3530bcf78bb3d23967f34a018f47b"
+  },
+  "jeff_decay": {
+   "path": "/home/connoravila/nuclear-data/jeff-3.3-decay/bulk/jeff-3-3_decay.dat",
+   "sha256": "850b8b7f85f8d88b6ad826c4cd341aaaffabd525c8ecf3c588a0ad437bf5d123"
+  },
+  "nfpy_archive": {
+   "path": "/home/connoravila/nuclear-data/endfb-viii.0-nfpy.zip",
+   "sha256": "92c5371fdb21eecf4989f48828671b904186abc6386b3d7510c8fcee2ee5ffcf"
+  },
+  "overrides_D": {
+   "path": "/home/connoravila/Documents/actinv/target/preflight-tmp/p169-test/overrides_D.json",
+   "sha256": "d5458572e9dec58a90e3576d46ffc7c2f4c6b33521e0bc50cd25b7a8bbd827a1"
+  },
+  "p166_record": {
+   "path": "/home/connoravila/Documents/actinv/target/nav-wt/results/p166_conderc.json",
+   "sha256": "2f080d9e84d47ee1e7cedc9b97ee064026412252da23ce0ccf00c0b5f60cb6bf"
+  },
+  "yarnell": {
+   "path": "/home/connoravila/nuclear-data/conderc-fission/fission/expDataSystem/U235_thermal/Yarnell_20000.csv",
+   "sha256": "3d35f4bb7bcf167a5ec2dae8371093b65bea9d6a687156a0be552be23a3aad0c"
+  }
+ },
+ "schema": "actinv-p169-test-1",
+ "selected": "A",
+ "train_record": {
+  "path": "results/p169_train.json",
+  "sha256": "4a284c8a9c801690700df11dd7a9943e165a377b912cafc50ac3975ac2c500b3"
+ }
+}

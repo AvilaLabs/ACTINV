@@ -4887,3 +4887,23 @@ and whether the reduction holds on measurements the choice was not made on.
   rerun, and no record, candidate, rule or pin changes.
 - **Disclosed:** the selection and the held-out numbers were seen before this amendment. The amendment cannot change
   them.
+
+## Entry 285 — P169 evidence: G0 to G4 pass on 30b6740; no candidate met the rule (2026-10-30)
+
+- **Runs:** `results/p169_train.json` and `results/p169_test.json`, made by the harness on the registration commit
+  e932d36 inside the bounded scope, with binary `186cc258…`. Checked under Amendment A (`results/p169_verdict.json`).
+- **Train, P166 points (median |ln C/E|, below 1000 s / at or above 1000 s):**
+
+  | Decay data | Below 1000 s | 1000 s and above |
+  |---|---|---|
+  | A, ENDF/B-VIII.0 | 0.057 | 0.028 |
+  | B, JEFF-3.3 with ENDF/B-VIII.0 fallback | 0.060 | 0.027 |
+  | D, ENDF/B-VIII.0 with JEFF-3.3 energies for ten short-lived nuclides | 0.057 | 0.027 |
+
+  ORIGEN as printed by Gauld (2019) gives 0.053 and 0.033 on the same points.
+- **Selection:** no candidate lowered the short-time median by 0.005, so ENDF/B-VIII.0 was kept.
+- **Held-out, Dickens and Yarnell U-235 total heat (111 points):** ENDF/B-VIII.0 has a median |ln C/E| of 0.019 and a
+  geometric-mean C/E of 0.991. 99% of the points are within 2σ.
+- **Reading:** the large ENDF/B-VIII.0 and JEFF-3.3 differences for these nuclides are mostly in how the decay energy
+  splits between beta and gamma, and they barely move total heat. The short-time bias is not explained by the choice
+  between these two decay libraries. G5 is CI on this commit.
