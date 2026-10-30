@@ -1,0 +1,23 @@
+geometry rectangular
+
+mat_loading
+    zone1 mix1
+end
+
+mixture mix1
+    material fe56 1.0 1.0
+end
+
+flux neutron_flux flux.txt 2.0 0 default
+
+schedule irradiate
+    300 s neutron_flux once 0 s
+end
+
+pulsehistory once
+    1 0 s
+end
+
+cooling
+    1 h
+end
