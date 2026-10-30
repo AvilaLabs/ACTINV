@@ -4810,3 +4810,13 @@ Disclosed, not evidence: development runs re-scored only P9's Yarnell set throug
   decay data and the measurements rather than the solver. The Friesenhahn 1979 measurements sit above both codes'
   calculations (geometric-mean C/E 0.95–0.98), while the 1976 measurement of the same 24 h U-235 irradiation sits
   below them (1.027). G5 is CI on this commit.
+
+## Entry 279 — P166 G5: CI green on 6fe0bf1; P166-PASS (2026-10-30)
+
+Every workflow triggered on `6fe0bf1` (the evidence on registration `c6a7235`) passed: controls 41062033887, fns-iron
+41062033744 and fusion-isotope 41062033810 (`results/p166/ci_runs.json`). **P166-PASS** (`results/p166_verdict.json`):
+against 692 measured total decay-heat points from the IRT, UC Berkeley and CEA Cadarache experiments (U-233, U-235 and
+Pu-239 thermal fission), ACTINV with ENDF/B-VIII.0 yields and decay data has a median |ln C/E| of 0.046 and a
+geometric-mean C/E of 0.960; ORIGEN with ENDF/B-VII.0 yields and ENDF/B-VII.1 decay data has 0.042 and 0.962 on the
+same points. With P9's Oak Ridge and Los Alamos sets, fission decay heat is checked against five laboratories.
+Sentences about this comparison are limited to the verdict's allowed sentences.
