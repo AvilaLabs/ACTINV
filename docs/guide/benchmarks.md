@@ -63,6 +63,25 @@ ACTINV has smaller median and tail errors and bias closer to 1 in this subset. T
 
 See the [ENDF-8 comparison](https://github.com/AvilaLabs/ACTINV/blob/master/results/FNS_ENDF8_HEADTOHEAD.md) for per-experiment results and shared data-driven misses.
 
+## Activation reaction rates: a second facility
+
+The FNS experiments above all come from one facility. Protocol P167 adds an independent one with open data: the 7Li(p,n) quasi-monoenergetic neutron source of the Nuclear Physics Institute of the Czech Academy of Sciences at Řež, where foils were irradiated in fields from 12.4 MeV and 14.4 MeV protons and the spectrum at the foils was measured (Matěj, Košťál, Majerle et al., arXiv:2306.09353). ACTINV computed each reaction rate with its shipped TENDL-2025 library and its own spectrum rebin and collapse (`actinv inspect xs`).
+
+Against 29 measured reaction rates in two quasi-monoenergetic 7Li(p,n) neutron fields at NPI Řež (12.4 and 14.4 MeV protons; Matěj et al., 2023), ACTINV with its TENDL-2025 library has a median |ln C/E| of 0.038 and a geometric-mean C/E of 1.023.
+
+On the same points the authors' calculations give a median |ln C/E| of 0.047 with ENDF/B-VIII.0, 0.051 with JEFF-3.3 and 0.057 with JENDL-4, and 0.030 with IRDFF-II on the 27 points it covers.
+
+25 of the 29 ACTINV values are within 2σ of the measurement.
+
+| Field | Points | ACTINV median abs log error | ACTINV within 2σ |
+| --- | ---: | ---: | ---: |
+| 12.4 MeV protons | 13 | 0.039 | 9 |
+| 14.4 MeV protons | 16 | 0.035 | 16 |
+
+IRDFF-II is a dosimetry library fitted partly to integral measurements like these, so it is a reference rather than a peer. The largest ACTINV deviation is ⁶⁰Ni(n,p) in the 12.4 MeV field, 18% high, where every library is high by about the same amount. The authors normalized the spectra to ⁵⁸Ni(n,p) and ²⁷Al(n,α), so those two reactions are not counted; ACTINV reproduces them within 1%. This checks activation cross sections between about 1 and 13 MeV; it does not check inventories or decay heat.
+
+Evidence: [reaction rates](https://github.com/AvilaLabs/ACTINV/blob/master/results/p167_rez.json) and [verdict](https://github.com/AvilaLabs/ACTINV/blob/master/results/p167_verdict.json).
+
 ## Fission decay heat: five laboratories
 
 Fission-product decay heat tests the fission yields and decay data behind every fission inventory. Protocol P166 scored ACTINV against the measured tables of the IAEA CoNDERC fission compilation (Gauld, 2019): Friesenhahn 1976 and 1979 (IRT), Schrock 1978 (UC Berkeley) and Fiche 1976 (CEA Cadarache), for U-233, U-235 and Pu-239 thermal fission, with irradiations from a 1 s pulse to 35 days. ACTINV used ENDF/B-VIII.0 yields and decay data. The compiler's ORIGEN calculations, printed in the same tables, used ENDF/B-VII.0 yields and ENDF/B-VII.1 decay data.

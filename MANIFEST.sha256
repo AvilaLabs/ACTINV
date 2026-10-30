@@ -11,7 +11,7 @@ e8cd62b9364edfdfcf9fd29d49e69de655e2819f338477e872815c8160a98b62  ./.github/work
 79e13422a5e89cdf3e37984d7faa609cdd0bd1eaf8972c12dbff9fe175bf720e  ./.gitignore
 16dd72b64fb3e0742540afc653c764b76f788c6c2540002f004b45a56653c325  ./AGENTS.md
 d920ac833a28a72b09b418595fb5788f80d9a938434ae16ad679530cd3a00ac3  ./CHANGELOG.md
-144bec460c303a385e2322145e3fa7888f7da139efd36dc7afcb60248b66ff37  ./COMPETITIVE_BENCHMARK.md
+fcf4c9f02aef7a3e784a2927d571f78b52e98ddc644748d4b57235e424e8ac89  ./COMPETITIVE_BENCHMARK.md
 06debfb88cbe4179817b24708768586cc46b4ef0a9c94a4d6de3007a2f1fe8a1  ./CONTRIBUTING.md
 4a8532c04eb7b6eaf410eb3cbd612194192fa907a86c05b447b3c55e30e6ed41  ./Cargo.lock
 5d675ad4c936af8597a1220c877af3c0aebcf586dddc6f2f2cc58cbc2b217fcd  ./Cargo.toml
@@ -1263,7 +1263,7 @@ dfb8c8f7c7ffbd5aaac73e21a5198af7b662b862fb416c90f6418086da05ae45  ./docs/defects
 8e502b8b5b1c79654008fbfec98882f6ab4f437f5a3490a4d103a299993dbeb1  ./docs/defects/unitarity-violating-partial-cross-sections.md
 0ca16ed2f29d3a0329c4dac78cf29181055cfd472d6ce1ad7940873da352e647  ./docs/guide/SUMMARY.md
 29b9a4871b61c1e5af86963b6f73f4319b50a1fe0c1e5a7e0461c3afe3ac1fd9  ./docs/guide/account.md
-c55c1cc2eea7e3ea1f2a8f8dbfe07fbdd37d1cf2caaec7fb157d55b6d1c6079d  ./docs/guide/benchmarks.md
+500599cf1b561ec4059de4a8b03877fbcda2f0f3411f4101216f6e750b17864e  ./docs/guide/benchmarks.md
 60bff8f41b5d855161397fa948970c2fe52fc9cc6b69cace1a1f355744678802  ./docs/guide/browser.md
 d46de91860b224b263d08f432d1378447e06e6a0780f4ca11eac3538bc63e805  ./docs/guide/cli.md
 07928f227e9685aae31bf6abb134ac9e33addb3196a8e28ba932f100547a74c7  ./docs/guide/data-limits.md
@@ -1284,7 +1284,7 @@ df538569c15135d41ea9af2374e80c37103f28fa0f8b3df1f65dc4b29ef66cf7  ./docs/guide/r
 aa2c83ec2b1a1b09d14d1a37891ff3eb0eb49ed994ca174eebb93da6344b69ae  ./docs/guide/specification.md
 4c9d53ead637d2bdc27586ca7cd18e737cee9212ac3c58cc56707679d2daa5da  ./docs/guide/studies.md
 8d054bebc2be64d0a8d05f18ced2676e81adf4cf7620fbcfcb9b20ffda2c0060  ./docs/guide/troubleshooting.md
-362c8af21e35c2e0f9be156f13691ef658a00dedfe4e37ad2864c29ca3efba53  ./docs/guide/validation.md
+bf2aedf8ecf698a1f56bf75927411a336f1add2770f48bd398cd1fc23abd46d9  ./docs/guide/validation.md
 dc7d60f0c995706a71308d3f9c67baa25df58729f3ea2f64f50e18670e2d85bd  ./docs/guide/waste.md
 e12d1136a0c49aaf3ca56c76fe0e2cb510b0b6fa06793f796e1e491b59de7549  ./docs/guide/whats-new-1.6.md
 aac4c7df699a72f91289651067580f11679df36d9de7caf616f0154d00702311  ./docs/guide/whats-new-1.7.md

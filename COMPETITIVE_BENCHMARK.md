@@ -1,11 +1,31 @@
 # ACTINV competitive benchmark
 
-*Latest first: fission decay heat at five laboratories (P166, 2026-10-30), OpenMC shutdown-dose speed (P163, 2026-10-29), the FISPACT-II parity tracker (2026-10-15, live), the decay-aware TENDL-2023 FNS corpus (2026-09-26 — the
+*Latest first: activation reaction rates at NPI Řež (P167, 2026-10-30), fission decay heat at five laboratories (P166, 2026-10-30), OpenMC shutdown-dose speed (P163, 2026-10-29), the FISPACT-II parity tracker (2026-10-15, live), the decay-aware TENDL-2023 FNS corpus (2026-09-26 — the
 isomer-routing fix arm), then CB3 identical-data FISPACT comparison
 (2026-09-20), then the CB2 refresh (2026-09-18). Frozen/superseded
 records live in `docs/history/COMPETITIVE_BENCHMARK_ARCHIVE.md`.*
 
-## Fission decay heat — P166 · 2026-10-30 · ACTINV 1.7.0 · latest
+## Activation reaction rates, NPI Řež — P167 · 2026-10-30 · ACTINV 1.7.0 · latest
+
+`results/p167_rez.json`, verdict `results/p167_verdict.json`. A second, independent integral-activation facility:
+the 7Li(p,n) quasi-monoenergetic source on the NPI CAS U-120M cyclotron, fields from 12.4 and 14.4 MeV protons, with
+the measured reaction rates and evaluated foil spectra published by Matěj, Košťál, Majerle et al. (arXiv:2306.09353).
+ACTINV: the shipped TENDL-2025 709-group library (catalog 1.2.0) through `actinv inspect xs`, production of the
+measured product summed over states. Other columns: the authors' own folds with the same spectra (their Tables 6–7).
+The spectrum reading was checked by reproducing the authors' 27 IRDFF-II values within 0.3 points.
+
+| view | points | ACTINV/TENDL-2025 | ENDF/B-VIII.0 | JEFF-3.3 | JENDL-4 | IRDFF-II |
+|---|---:|---:|---:|---:|---:|---:|
+| both fields, median abs(ln C/E) | 29 | 0.038 | 0.047 | 0.051 | 0.057 | 0.030 (27) |
+| 12.4 MeV protons | 13 | 0.039 | 0.074 | 0.057 | 0.093 | 0.029 |
+| 14.4 MeV protons | 16 | 0.035 | 0.041 | 0.050 | 0.036 | 0.030 |
+
+ACTINV geometric-mean C/E 1.023; 25 of 29 within 2σ of the authors' comparison uncertainty. IRDFF-II is a dosimetry
+library fitted partly to integral data, a reference rather than a peer. The normalization reactions ⁵⁸Ni(n,p) and
+²⁷Al(n,α) are excluded from scoring (ACTINV 0.993–1.007). This measures activation cross sections from about 1 to
+13 MeV; it is not a decay-heat or inventory benchmark.
+
+## Fission decay heat — P166 · 2026-10-30 · ACTINV 1.7.0
 
 `results/p166_conderc.json`, verdict `results/p166_verdict.json`. Measured fission-product decay heat from the IAEA
 CoNDERC fission compilation (Gauld 2019, Tables 1–11), extracted with every printed ORIGEN ratio reproduced:
