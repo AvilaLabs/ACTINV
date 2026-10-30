@@ -28,6 +28,7 @@
 - [Problem specification](specification.md)
 - [Advanced workflows](workflows.md)
 - [Move a FISPACT-II deck to ACTINV](fispact-migration.md)
+- [Use ACTINV with OpenMC](openmc.md)
 
 # Science and releases
 

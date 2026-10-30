@@ -18,14 +18,14 @@ d920ac833a28a72b09b418595fb5788f80d9a938434ae16ad679530cd3a00ac3  ./CHANGELOG.md
 69bb1d4c16fc5fb2832a33b1b9902022dc18d250a8af98e199e8b9f4d69f7575  ./EXTERNAL_EVIDENCE.md
 cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30  ./LICENSE-APACHE
 4f722528d1cb3662dcc69ff215f00088cd74706a21ad5c8fd35b167ce804e5e9  ./LICENSE-MIT
-068d4a41a3bb15048c37a942778a2371a2c4bc003b730b3b0e00c0e7251cbf16  ./README.md
+42e52385cecd00ab7d52fca764a6ecd6414b7f2834964a49038cb219d540685d  ./README.md
 72c26f76b9541d51c25c6b1efb89ad02ffb0410e5831ec11c176fbda30b8bc72  ./book.toml
 59a1965306cf3cf4603b9fe5fce3a193afed625f82c42e0f4715fe0440bab3ce  ./contrib/jade/README.md
 38789b6bf4037959b92de43730937a63c730af4bb178ad2155e47bcee1897aa2  ./contrib/jade/jade-actinv-code-target.patch
 373f73b2cc8a4e83990fb0b02ece6019681646d101011d4d44d9737b83890e6a  ./contrib/nucleide_r2s/README.md
 af21e311852059a536c2e6b46da7d3b652766f5fd783a2f76c0af3bfb671b2bf  ./contrib/nucleide_r2s/demo.py
 87f5dbcfcf7e8d8e52c83b9c645f7ccb4408533cf5666e9206575ea25740088e  ./contrib/nucleide_r2s/test_nucleide_r2s.py
-e16618350a91adc56d7fcf427cb26888ef9234bc113c68e9fe9a37936e843f88  ./contrib/openmc_r2s/README.md
+44cbadb448951ca434296f9d3551cbb832807e484c564078dc7c6a8fdd0ebed5  ./contrib/openmc_r2s/README.md
 e30a24f510eb60ba27ca28f8c7f06acf9d5bfaeb300578d269f37afa700a2ae7  ./contrib/openmc_r2s/actinv_openmc_r2s.py
 558e5ce9b0fee6a48a11020455b03302c7ddc042997282bd0f8f48967ef8e848  ./contrib/openmc_r2s/demo_steel_cube.py
 5ff57d3a24d240684a35112cbf701eed3292b768224a1b0ecea27a1c6d78fbfb  ./contrib/openmc_r2s/test_actinv_openmc_r2s.py
@@ -1256,7 +1256,7 @@ dfb8c8f7c7ffbd5aaac73e21a5198af7b662b862fb416c90f6418086da05ae45  ./docs/defects
 2a77dcfdc893688d4fea08eb30bb4092038d30df4826a69c19e4abdc2931f97f  ./docs/defects/tendl2023-o18-width-inconsistency.md
 245f5933ab759ab1961691ab03111502c748ae54395af2fa3802b818ab2f5c9f  ./docs/defects/tendl2023-orphan-product-sections.md
 8e502b8b5b1c79654008fbfec98882f6ab4f437f5a3490a4d103a299993dbeb1  ./docs/defects/unitarity-violating-partial-cross-sections.md
-f721b7ccf846a7d61f6bd3ec93b72e8d07c125fca601dbfbff4045891f8df685  ./docs/guide/SUMMARY.md
+0ca16ed2f29d3a0329c4dac78cf29181055cfd472d6ce1ad7940873da352e647  ./docs/guide/SUMMARY.md
 29b9a4871b61c1e5af86963b6f73f4319b50a1fe0c1e5a7e0461c3afe3ac1fd9  ./docs/guide/account.md
 446f4da7ecaec31bd2cf168be1c0e24130de123f6c32a3372161257ccd0948b7  ./docs/guide/benchmarks.md
 60bff8f41b5d855161397fa948970c2fe52fc9cc6b69cace1a1f355744678802  ./docs/guide/browser.md
@@ -1269,6 +1269,7 @@ feb943c57e5e4d6cf37ece3668b4fc4eda055ad224265c75edfdb38f180d0d56  ./docs/guide/f
 b6a0ebc5349dc5d735ff1c51e1f4bdb323e6794a9e5113d9f8251341da686ad7  ./docs/guide/index.md
 0ef2df19097157d4926b63982bc3bddacd8df8d33364af9fbe86169df25a6fd8  ./docs/guide/install.md
 d885a057493012d295c42728543e07a1b6b3a5258b585047e3ece8a5f758d39f  ./docs/guide/method.md
+01c6ee656157076820df51b9fbdcc2fe1be86a685c608dd8a0adfff0ccad3311  ./docs/guide/openmc.md
 e78782a3d6c6955569583827ca5632854629431345d7c437d1a1eee78df848fa  ./docs/guide/problems.md
 54ee2e3d7dcfdfdbfae0c451d6a5ed45bd320dbee5f38a6eceadc3ffad38f19b  ./docs/guide/python.md
 fe3c97eb7c2e3a8da854b114b8fb547138a2d84fd23401a76797d9c6db2197b3  ./docs/guide/qualification.md

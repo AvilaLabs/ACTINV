@@ -95,7 +95,15 @@ ACTINV:
 irradiation at 1e17 n/s, 1e6 s of cooling, and a shutdown photon dose tally 30 cm out, once with
 `ActinvR2SManager` and once with stock `openmc.deplete.R2SManager`. The result in
 `results/openmc_r2s_demo.json` is a dose ratio (ACTINV / OpenMC) of **1.019 ± 0.011**, with total
-wall time **19 s** (ACTINV) vs **850 s** (OpenMC's own depletion) end to end.
+wall time **19 s** (ACTINV) vs **850 s** (OpenMC's own depletion) end to end. That OpenMC run used its default
+tally mode (per-nuclide reaction-rate tallies), not its fastest one.
+
+Protocol P163 (`results/p163_speed.json`, `results/p163_verdict.json`) then timed the same problem against OpenMC's
+flux mode on the library's 709 groups, at 8, 64 and 512 mesh cells with repeated runs. Its allowed claim:
+
+ACTINV is at least 6.5x faster than OpenMC 0.15.3 flux mode at every measured size (8, 64, 512 mesh cells).
+
+The handbook page [Use ACTINV with OpenMC](../../docs/guide/openmc.md) has the per-size times.
 
 This is a single-case engineering demo, not a validation study: one geometry, one nuclide
 inventory (SS316-type steel), one irradiation history, and Monte Carlo statistical uncertainty

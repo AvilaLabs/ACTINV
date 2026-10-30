@@ -244,6 +244,10 @@ actinv import-flux openmc statepoint.h5 flux.ndjson \
 actinv mesh mesh.json mesh-result.ndjson
 ```
 
+ACTINV can also replace the activation step inside OpenMC's own shutdown-dose workflow
+(`contrib/openmc_r2s`). On the steel-cube R2S problem, ACTINV is at least 6.5x faster than OpenMC 0.15.3 flux mode at every measured size (8, 64, 512 mesh cells), with shutdown doses within 2.1%
+(protocol P163). See [Use ACTINV with OpenMC](docs/guide/openmc.md).
+
 Selected decay-photon steps can be exported as OpenMC or MCNP source fragments:
 
 ```bash
