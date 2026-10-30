@@ -1,0 +1,355 @@
+{
+ "allowed_claims": {
+  "allowed_sentences": [
+   "ACTINV is at least 9.2x faster than OpenMC 0.15.3 flux mode from model to photon source (steps 1 and 2) at 8 mesh cells, worst case over 3 ACTINV and 3 OpenMC runs",
+   "ACTINV is at least 8.2x faster than OpenMC 0.15.3 flux mode from model to photon source (steps 1 and 2) at 64 mesh cells, worst case over 3 ACTINV and 2 OpenMC runs",
+   "ACTINV is at least 6.5x faster than OpenMC 0.15.3 flux mode from model to photon source (steps 1 and 2) at 512 mesh cells, worst case over 3 ACTINV and 1 OpenMC runs",
+   "Against OpenMC 0.15.3 in its default tally mode (per-nuclide reaction-rate tallies, one energy group), one run at 8 mesh cells, ACTINV's steps 1 and 2 are at least 42x faster; this is not OpenMC's fastest mode",
+   "ACTINV is at least 6.5x faster than OpenMC 0.15.3 flux mode at every measured size (8, 64, 512 mesh cells)"
+  ],
+  "general": {
+   "cells_measured": [
+    8,
+    64,
+    512
+   ],
+   "quotable_multiplier": 6.5
+  },
+  "reference_default": {
+   "openmc_default_h1_s": 458.3157465379918,
+   "quotable_multiplier": 42.0,
+   "worst_case_ratio_vs_actinv": 42.39447236814354
+  },
+  "sizes": {
+   "8": {
+    "actinv_h1_s": [
+     10.81071955699008,
+     10.730382082983851,
+     10.810743027017452
+    ],
+    "actinv_spread": 1.007489103688212,
+    "activation_only_median_ratio": 37.101507229305334,
+    "activation_only_worst_case_ratio": 36.38740620109585,
+    "class": "faster",
+    "median_ratio": 9.210878994045911,
+    "memory_peak_gib": {
+     "actinv": 1.73822021484375,
+     "openmc_flux": 9.0
+    },
+    "openmc_censored": false,
+    "openmc_flux_h1_s": [
+     99.49465059593786,
+     99.57622967800125,
+     102.04676122998353
+    ],
+    "openmc_spread": 1.0256507321625778,
+    "peak_rss_gib": {
+     "actinv": 1.0317039489746094,
+     "openmc_flux": 6.375633239746094
+    },
+    "quotable_multiplier": 9.2,
+    "worst_case_ratio": 9.203312884904191
+   },
+   "64": {
+    "actinv_h1_s": [
+     16.783282624091953,
+     16.44263264001347,
+     16.57559697306715
+    ],
+    "actinv_spread": 1.0207174843309157,
+    "activation_only_median_ratio": 15.892448442454942,
+    "activation_only_worst_case_ratio": 15.728983355665688,
+    "class": "faster",
+    "median_ratio": 8.373628110682745,
+    "memory_peak_gib": {
+     "actinv": 1.8152084350585938,
+     "openmc_flux": 8.810455322265625
+    },
+    "openmc_censored": false,
+    "openmc_flux_h1_s": [
+     139.22294342704117,
+     138.37282610300463
+    ],
+    "openmc_spread": 1.0061436724823682,
+    "peak_rss_gib": {
+     "actinv": 1.036224365234375,
+     "openmc_flux": 6.39019775390625
+    },
+    "quotable_multiplier": 8.2,
+    "worst_case_ratio": 8.244681877928585
+   },
+   "512": {
+    "actinv_h1_s": [
+     64.50593727501109,
+     66.41211740800645,
+     64.51742806495167
+    ],
+    "actinv_spread": 1.0295504602137422,
+    "activation_only_median_ratio": 7.658387558682968,
+    "activation_only_worst_case_ratio": 7.460958470973898,
+    "class": "faster",
+    "median_ratio": 6.744624959923855,
+    "memory_peak_gib": {
+     "actinv": 2.1704330444335938,
+     "openmc_flux": 8.859169006347656
+    },
+    "openmc_censored": false,
+    "openmc_flux_h1_s": [
+     435.14585567696486
+    ],
+    "openmc_spread": 1.0,
+    "peak_rss_gib": {
+     "actinv": 1.057098388671875,
+     "openmc_flux": 6.505561828613281
+    },
+    "quotable_multiplier": 6.5,
+    "worst_case_ratio": 6.552205721790537
+   }
+  }
+ },
+ "checker_sha256": "503150b9e11228711280025452e11212bd7e60871ad4c22e3a8de20c359fd573",
+ "details": {
+  "G0": {
+   "ACTINV-P163_PROTOCOL.md": {
+    "in_protocol_hash_txt": true,
+    "sha256": "961db9aa251193b14a52cae0f66546c64e9d94b8fc8d3acad35b075ae260d93f"
+   },
+   "pass": true
+  },
+  "G1": {
+   "pass": true,
+   "problems": []
+  },
+  "G2": {
+   "attempts": 16,
+   "pass": true,
+   "problems": [],
+   "skips": 0
+  },
+  "G3": {
+   "pass": true,
+   "problems": []
+  },
+  "G4": {
+   "bad_sizes": [],
+   "default": [
+    {
+     "arm": "openmc_flux",
+     "ratio": 0.9993138303581686,
+     "rep": 0,
+     "vs": "default arm"
+    },
+    {
+     "arm": "openmc_flux",
+     "ratio": 0.997355239524487,
+     "rep": 1,
+     "vs": "default arm"
+    },
+    {
+     "arm": "openmc_flux",
+     "ratio": 1.004909593286124,
+     "rep": 2,
+     "vs": "default arm"
+    },
+    {
+     "arm": "actinv",
+     "ratio": 1.0184850668781371,
+     "rep": 0,
+     "vs": "default arm"
+    },
+    {
+     "arm": "actinv",
+     "ratio": 1.0083595771076472,
+     "rep": 1,
+     "vs": "default arm"
+    },
+    {
+     "arm": "actinv",
+     "ratio": 1.0143658941001936,
+     "rep": 2,
+     "vs": "default arm"
+    }
+   ],
+   "pairs": [
+    {
+     "cells": 8,
+     "dose_ratio": 1.0191844002730326,
+     "photon_ratio": 1.3760507752596118,
+     "rep": 0,
+     "track_length_ratio": 1.0
+    },
+    {
+     "cells": 8,
+     "dose_ratio": 1.0110335185970516,
+     "photon_ratio": 1.3765548128521976,
+     "rep": 1,
+     "track_length_ratio": 1.0
+    },
+    {
+     "cells": 8,
+     "dose_ratio": 1.0094101010451564,
+     "photon_ratio": 1.3759769773011894,
+     "rep": 2,
+     "track_length_ratio": 1.0
+    },
+    {
+     "cells": 64,
+     "dose_ratio": 1.0182508567284092,
+     "photon_ratio": 1.3742936229436087,
+     "rep": 0,
+     "track_length_ratio": 1.0
+    },
+    {
+     "cells": 64,
+     "dose_ratio": 1.0207810453364257,
+     "photon_ratio": 1.3748766897343947,
+     "rep": 1,
+     "track_length_ratio": 1.0
+    },
+    {
+     "cells": 512,
+     "dose_ratio": 1.014934410830271,
+     "photon_ratio": 1.3704420981296563,
+     "rep": 0,
+     "track_length_ratio": 1.0
+    }
+   ],
+   "pass": true,
+   "problems": []
+  },
+  "G5": {
+   "load_average_start": 1.81396484375,
+   "pass": true,
+   "problems": []
+  },
+  "G6": {
+   "claims": {
+    "allowed_sentences": [
+     "ACTINV is at least 9.2x faster than OpenMC 0.15.3 flux mode from model to photon source (steps 1 and 2) at 8 mesh cells, worst case over 3 ACTINV and 3 OpenMC runs",
+     "ACTINV is at least 8.2x faster than OpenMC 0.15.3 flux mode from model to photon source (steps 1 and 2) at 64 mesh cells, worst case over 3 ACTINV and 2 OpenMC runs",
+     "ACTINV is at least 6.5x faster than OpenMC 0.15.3 flux mode from model to photon source (steps 1 and 2) at 512 mesh cells, worst case over 3 ACTINV and 1 OpenMC runs",
+     "Against OpenMC 0.15.3 in its default tally mode (per-nuclide reaction-rate tallies, one energy group), one run at 8 mesh cells, ACTINV's steps 1 and 2 are at least 42x faster; this is not OpenMC's fastest mode",
+     "ACTINV is at least 6.5x faster than OpenMC 0.15.3 flux mode at every measured size (8, 64, 512 mesh cells)"
+    ],
+    "general": {
+     "cells_measured": [
+      8,
+      64,
+      512
+     ],
+     "quotable_multiplier": 6.5
+    },
+    "reference_default": {
+     "openmc_default_h1_s": 458.3157465379918,
+     "quotable_multiplier": 42.0,
+     "worst_case_ratio_vs_actinv": 42.39447236814354
+    },
+    "sizes": {
+     "8": {
+      "actinv_h1_s": [
+       10.81071955699008,
+       10.730382082983851,
+       10.810743027017452
+      ],
+      "actinv_spread": 1.007489103688212,
+      "activation_only_median_ratio": 37.101507229305334,
+      "activation_only_worst_case_ratio": 36.38740620109585,
+      "class": "faster",
+      "median_ratio": 9.210878994045911,
+      "memory_peak_gib": {
+       "actinv": 1.73822021484375,
+       "openmc_flux": 9.0
+      },
+      "openmc_censored": false,
+      "openmc_flux_h1_s": [
+       99.49465059593786,
+       99.57622967800125,
+       102.04676122998353
+      ],
+      "openmc_spread": 1.0256507321625778,
+      "peak_rss_gib": {
+       "actinv": 1.0317039489746094,
+       "openmc_flux": 6.375633239746094
+      },
+      "quotable_multiplier": 9.2,
+      "worst_case_ratio": 9.203312884904191
+     },
+     "64": {
+      "actinv_h1_s": [
+       16.783282624091953,
+       16.44263264001347,
+       16.57559697306715
+      ],
+      "actinv_spread": 1.0207174843309157,
+      "activation_only_median_ratio": 15.892448442454942,
+      "activation_only_worst_case_ratio": 15.728983355665688,
+      "class": "faster",
+      "median_ratio": 8.373628110682745,
+      "memory_peak_gib": {
+       "actinv": 1.8152084350585938,
+       "openmc_flux": 8.810455322265625
+      },
+      "openmc_censored": false,
+      "openmc_flux_h1_s": [
+       139.22294342704117,
+       138.37282610300463
+      ],
+      "openmc_spread": 1.0061436724823682,
+      "peak_rss_gib": {
+       "actinv": 1.036224365234375,
+       "openmc_flux": 6.39019775390625
+      },
+      "quotable_multiplier": 8.2,
+      "worst_case_ratio": 8.244681877928585
+     },
+     "512": {
+      "actinv_h1_s": [
+       64.50593727501109,
+       66.41211740800645,
+       64.51742806495167
+      ],
+      "actinv_spread": 1.0295504602137422,
+      "activation_only_median_ratio": 7.658387558682968,
+      "activation_only_worst_case_ratio": 7.460958470973898,
+      "class": "faster",
+      "median_ratio": 6.744624959923855,
+      "memory_peak_gib": {
+       "actinv": 2.1704330444335938,
+       "openmc_flux": 8.859169006347656
+      },
+      "openmc_censored": false,
+      "openmc_flux_h1_s": [
+       435.14585567696486
+      ],
+      "openmc_spread": 1.0,
+      "peak_rss_gib": {
+       "actinv": 1.057098388671875,
+       "openmc_flux": 6.505561828613281
+      },
+      "quotable_multiplier": 6.5,
+      "worst_case_ratio": 6.552205721790537
+     }
+    }
+   },
+   "notes_checked": false,
+   "pass": true,
+   "problems": []
+  }
+ },
+ "gates": {
+  "G0": "PASS",
+  "G1": "PASS",
+  "G2": "PASS",
+  "G3": "PASS",
+  "G4": "PASS",
+  "G5": "PASS",
+  "G6": "PASS",
+  "G7": "external"
+ },
+ "pass": true,
+ "protocol": "protocols/ACTINV-P163_PROTOCOL.md",
+ "protocol_sha256": "961db9aa251193b14a52cae0f66546c64e9d94b8fc8d3acad35b075ae260d93f",
+ "record": "/home/connoravila/Documents/actinv/target/p163-wt/results/p163_speed.json",
+ "record_sha256": "db192a685cce648e30ce392fdc29546e1d147631a4a38f9cc42c4184dd235d42",
+ "schema": "actinv-p163-verdict-1"
+}

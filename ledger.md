@@ -4750,3 +4750,20 @@ Disclosed, not evidence: three development runs at 8 cells (`results/failures/p1
 The first lost its OpenMC run and the harness to the shared 6 GiB scope; the second found that the harness recorded
 the `micro_kwargs` keys after OpenMC had added its own; the third passed G3 to G6, with G1 and G2 failing as a smoke
 record must. Their timings are not quoted.
+
+## Entry 275 — P163 evidence: G0 to G6 pass on d6f516b (2026-10-29)
+
+- **Run:** `results/p163_speed.json`, harness on the registration commit `d6f516b`, 02:22 to 02:54 UTC; ACTINV 1.7.0
+  binary `186cc258…` built from that commit; OpenMC 0.15.3; 1-minute load average 1.8 at the start. All 16 registered
+  runs completed: no censoring, no rule skips (the 64-cell median projected under 3600 s at 512 cells).
+- **Steps 1+2 (model to photon source), seconds, ACTINV vs OpenMC flux mode:** 8 cells 10.7–10.8 vs 99.5–102.0;
+  64 cells 16.4–16.8 vs 138.4–139.2; 512 cells 64.5–66.4 vs 435.1. Worst-case ratios 9.2, 8.2 and 6.5. OpenMC
+  default at 8 cells 458.3 s, 42x. ACTINV's activation step costs about 0.11 s per cell, against OpenMC's depletion at
+  about 0.45 s per cell plus the collapse in step 1, so the ratio falls toward roughly 6 as the mesh grows.
+- **G4:** dose ratio ACTINV / OpenMC flux 1.009 to 1.021 at every pair; both within 2% of the default arm at 8 cells;
+  photon strength ratio 1.37 (inside [0.5, 2], the different libraries); neutron track length equal.
+- **Memory:** working set (`ru_maxrss`) ACTINV 1.0–1.1 GiB, OpenMC flux 6.4–6.5 GiB; `memory.peak` reached the 9 GiB
+  cap through page cache.
+- **G6:** allowed claims in `results/p163_verdict.json`: at least 6.5x faster than OpenMC 0.15.3 flux mode at every
+  measured size (8, 64, 512 mesh cells), and the per-size and default-mode sentences. Before pushing,
+  `check_public_examples` passed on that binary. G7 is CI on this commit.
