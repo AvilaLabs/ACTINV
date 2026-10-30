@@ -4851,3 +4851,13 @@ Disclosed, not evidence: one ACTINV value was seen while learning the output for
   ¹⁹F(n,2n) at 14.4 MeV 1.119.
 - **Diagnostics:** the normalization reactions ⁵⁸Ni(n,p) and ²⁷Al(n,α) are 0.993–1.007 in both fields; the secondary
   ⁵⁸Ni(n,2n), set by the spectrum's poorly known tail, is 1.156. G4 is CI on this commit.
+
+## Entry 282 — P167 G4: CI green on 5654565; P167-PASS (2026-10-30)
+
+Every workflow triggered on `5654565` (the evidence on registration `d2814a2`) passed: controls 41069652006, fns-iron
+41069651877 and fusion-isotope 41069651844 (`results/p167/ci_runs.json`). **P167-PASS** (`results/p167_verdict.json`):
+against 29 measured reaction rates in the two NPI Řež 7Li(p,n) quasi-monoenergetic fields, ACTINV with its TENDL-2025
+library has a median |ln C/E| of 0.038 and a geometric-mean C/E of 1.023, 25 of 29 within 2σ; the authors' folds on
+the same points give 0.047 (ENDF/B-VIII.0), 0.051 (JEFF-3.3), 0.057 (JENDL-4) and 0.030 (IRDFF-II, 27 points). ACTINV's
+measured activation evidence now spans two independent facilities. Sentences about this comparison are limited to the
+verdict's allowed sentences.
