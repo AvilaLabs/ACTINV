@@ -2,7 +2,7 @@
 
 The competitive benchmark compares ACTINV with other inventory and depletion codes on **accuracy, speed, and capability**. It helps you judge which measured differences matter for an activation workflow. The [full benchmark report](https://github.com/AvilaLabs/ACTINV/blob/master/COMPETITIVE_BENCHMARK.md) retains the dated results and links to their evidence.
 
-The comparisons below are recorded experiments from September 2026, including ACTINV 1.1.2-era runs. They are not fresh measurements of every 1.7.0 feature or a ranking for every material, spectrum, and operating regime.
+The comparisons below are recorded experiments from September and October 2026, including ACTINV 1.1.2-era runs and the ACTINV 1.7.0 shutdown-dose timing. They are not fresh measurements of every 1.7.0 feature or a ranking for every material, spectrum, and operating regime.
 
 ## Three different comparison questions
 
@@ -64,6 +64,24 @@ ACTINV has smaller median and tail errors and bias closer to 1 in this subset. T
 See the [ENDF-8 comparison](https://github.com/AvilaLabs/ACTINV/blob/master/results/FNS_ENDF8_HEADTOHEAD.md) for per-experiment results and shared data-driven misses.
 
 ## Speed: numerical kernel versus a full calculation
+
+### A full shutdown-dose calculation with OpenMC
+
+Protocol P163 timed OpenMC's shutdown-dose (R2S) workflow on the steel-cube problem from model to photon source, with ACTINV doing the activation step against OpenMC 0.15.3 doing it in flux mode, its fastest documented setting. Both codes used 2 threads, the same seeds, and the same transport settings; OpenMC used ENDF/B-VIII.1, ACTINV TENDL-2025.
+
+| Mesh cells | ACTINV | OpenMC flux mode | Worst-case ratio |
+| ---: | ---: | ---: | ---: |
+| 8 | 10.7–10.8 s | 99.5–102.0 s | 9.2 |
+| 64 | 16.4–16.8 s | 138.4–139.2 s | 8.2 |
+| 512 | 64.5–66.4 s | 435.1 s | 6.5 |
+
+ACTINV is at least 6.5x faster than OpenMC 0.15.3 flux mode at every measured size (8, 64, 512 mesh cells).
+
+Against OpenMC 0.15.3 in its default tally mode (per-nuclide reaction-rate tallies, one energy group), one run at 8 mesh cells, ACTINV's steps 1 and 2 are at least 42x faster; this is not OpenMC's fastest mode.
+
+The shutdown dose rates agreed within 2.1% at every size. The ratio falls as the mesh grows because ACTINV's per-cell activation cost comes to outweigh OpenMC's fixed start-up cost. Evidence: [timing record](https://github.com/AvilaLabs/ACTINV/blob/master/results/p163_speed.json) and [verdict](https://github.com/AvilaLabs/ACTINV/blob/master/results/p163_verdict.json). See [Use ACTINV with OpenMC](openmc.md) to run it.
+
+### The numerical kernel
 
 The recorded CRAM-48 benchmark uses identical operators at the same Python-call boundary with both implementations limited to one thread. Its ratio is **OpenMC median time / ACTINV median time**: above 1 favors ACTINV and below 1 favors OpenMC.
 

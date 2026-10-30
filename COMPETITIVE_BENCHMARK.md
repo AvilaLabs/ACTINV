@@ -1,9 +1,33 @@
 # ACTINV competitive benchmark
 
-*Latest first: the FISPACT-II parity tracker (2026-10-15, live), the decay-aware TENDL-2023 FNS corpus (2026-09-26 — the
+*Latest first: OpenMC shutdown-dose speed (P163, 2026-10-29), the FISPACT-II parity tracker (2026-10-15, live), the decay-aware TENDL-2023 FNS corpus (2026-09-26 — the
 isomer-routing fix arm), then CB3 identical-data FISPACT comparison
 (2026-09-20), then the CB2 refresh (2026-09-18). Frozen/superseded
 records live in `docs/history/COMPETITIVE_BENCHMARK_ARCHIVE.md`.*
+
+## OpenMC shutdown-dose speed — P163 · 2026-10-29 · ACTINV 1.7.0 · latest
+
+`results/p163_speed.json`, verdict `results/p163_verdict.json` (P163-PASS). The steel-cube R2S problem of
+`contrib/openmc_r2s` on a 2, 4 and 8 per side mesh, timed from model to photon source (OpenMC's neutron transport
+plus the activation step). ACTINV runs through the adapter; OpenMC 0.15.3 runs its own `R2SManager` in flux mode
+(`reaction_rate_mode="flux"` on the same 709 groups, its fastest documented setting) and, once at 8 cells, in its
+default mode. Both 2 threads, same seeds, particles and schedule; each run in its own memory-limited scope on one
+laptop (Intel i3-N305). OpenMC uses ENDF/B-VIII.1 and its depletion chain, ACTINV TENDL-2025.
+
+| mesh cells | ACTINV (3 runs) | OpenMC flux mode | worst-case ratio | dose ratio ACTINV / OpenMC |
+|---:|---:|---:|---:|---:|
+| 8 | 10.7–10.8 s | 99.5–102.0 s (3 runs) | **9.2** | 1.009–1.019 |
+| 64 | 16.4–16.8 s | 138.4–139.2 s (2 runs) | **8.2** | 1.018–1.021 |
+| 512 | 64.5–66.4 s | 435.1 s (1 run) | **6.5** | 1.015 |
+
+ACTINV is at least 6.5x faster than OpenMC 0.15.3 flux mode at every measured size (8, 64, 512 mesh cells).
+
+Against OpenMC 0.15.3 in its default tally mode (per-nuclide reaction-rate tallies, one energy group), one run at 8 mesh cells, ACTINV's steps 1 and 2 are at least 42x faster; this is not OpenMC's fastest mode.
+
+Working set: ACTINV about 1 GiB, OpenMC flux mode about 6.4 GiB. The ratio falls with mesh size because ACTINV's
+activation step costs about 0.11 s per cell against about 0.45 s for OpenMC's depletion, after OpenMC's fixed cost
+of loading every chain nuclide's cross sections. Speed sentences elsewhere are limited to the verdict's allowed
+sentences, which `controls/check_p163.py --release-notes FILE` checks.
 
 ## FISPACT-II feature parity tracker — opened 2026-10-15 · live
 

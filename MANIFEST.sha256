@@ -11,7 +11,7 @@ e8cd62b9364edfdfcf9fd29d49e69de655e2819f338477e872815c8160a98b62  ./.github/work
 79e13422a5e89cdf3e37984d7faa609cdd0bd1eaf8972c12dbff9fe175bf720e  ./.gitignore
 16dd72b64fb3e0742540afc653c764b76f788c6c2540002f004b45a56653c325  ./AGENTS.md
 d920ac833a28a72b09b418595fb5788f80d9a938434ae16ad679530cd3a00ac3  ./CHANGELOG.md
-9fa4ac1939083cf154751d27b790640cf8e53949d4bde498915e594e45059c5a  ./COMPETITIVE_BENCHMARK.md
+86c4fc79dbf1a799f4fa1aa3a9431c9b2fe8fc3c97aa71636d3ab4025935d460  ./COMPETITIVE_BENCHMARK.md
 06debfb88cbe4179817b24708768586cc46b4ef0a9c94a4d6de3007a2f1fe8a1  ./CONTRIBUTING.md
 4a8532c04eb7b6eaf410eb3cbd612194192fa907a86c05b447b3c55e30e6ed41  ./Cargo.lock
 5d675ad4c936af8597a1220c877af3c0aebcf586dddc6f2f2cc58cbc2b217fcd  ./Cargo.toml
@@ -1258,7 +1258,7 @@ dfb8c8f7c7ffbd5aaac73e21a5198af7b662b862fb416c90f6418086da05ae45  ./docs/defects
 8e502b8b5b1c79654008fbfec98882f6ab4f437f5a3490a4d103a299993dbeb1  ./docs/defects/unitarity-violating-partial-cross-sections.md
 0ca16ed2f29d3a0329c4dac78cf29181055cfd472d6ce1ad7940873da352e647  ./docs/guide/SUMMARY.md
 29b9a4871b61c1e5af86963b6f73f4319b50a1fe0c1e5a7e0461c3afe3ac1fd9  ./docs/guide/account.md
-446f4da7ecaec31bd2cf168be1c0e24130de123f6c32a3372161257ccd0948b7  ./docs/guide/benchmarks.md
+0e8cf1cb68343e06630c5f90f5b93a5cda51c296826e0be7130247e5a8679bbb  ./docs/guide/benchmarks.md
 60bff8f41b5d855161397fa948970c2fe52fc9cc6b69cace1a1f355744678802  ./docs/guide/browser.md
 d46de91860b224b263d08f432d1378447e06e6a0780f4ca11eac3538bc63e805  ./docs/guide/cli.md
 07928f227e9685aae31bf6abb134ac9e33addb3196a8e28ba932f100547a74c7  ./docs/guide/data-limits.md
