@@ -5439,3 +5439,24 @@ fusion-isotope 41215324140 (`results/p176/ci_runs.json`). **P176-PASS.**
   `self_shielding.geometry.profile`, follows this verdict, and scoring the option needs a new protocol.
 - **Registration lesson.** A digest pinned from a rehearsal must not depend on the run's directory. A rehearsal's arm
   records are read for their recorded errors, not only for the mode's exit code.
+
+## Entry 313 — P177 registered: geometry self-shielding with the ENDF/B-VIII.1 profile; owner ruling on P175's aborted launch (2026-10-31)
+
+`protocols/ACTINV-P177_PROTOCOL.md` (SHA-256 `49b82a6b…`), with harness `controls/p177_geometry.py` (`da5a1d06…`) and
+checker `controls/check_p177.py` (`8a5aa9b7…`). Both import P176's code.
+- **Question.** With `"profile": "endfb8"`, do P176's geometry arms remove P173's 11 material capture differences
+  without harm? The arms are:
+  - A2, a foil of the region's thickness;
+  - A3, a foil of the body's thickness.
+
+  P176 could not score them: ACTINV refused Cu-63's RML photon pair until `4af8e68`.
+- **Pins.** The binary is the release build of `4af8e68` (`372dd99f…`), and P176's inputs are reused. There are 30
+  runs and no table build.
+- **Disclosed in the protocol:**
+  - While testing the fix, one run of this protocol's A2 C:10-12 problem was made, with a development build whose
+    actinv-core equals `4af8e68`. Only its exit status, its step summary and its shielding block's keys and nuclide
+    list were read. Its output was deleted unread.
+  - The rehearsal (flat flux): all 30 runs succeeded, and every geometry run applied shielding.
+
+**Owner ruling on entry 307 (2026-10-31).** P175's aborted first launch, which stopped on a missing data link before
+any sample was drawn, does not count as an attempt. P175-PASS (entry 308) stands.
