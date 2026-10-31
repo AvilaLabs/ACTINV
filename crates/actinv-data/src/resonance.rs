@@ -2083,8 +2083,14 @@ pub fn reconstruct_rmatrix_limited(
         // matrix A = (D - ΓᵀLΓ)⁻¹ by Woodbury from the channel solve:
         //   K = (L⁻¹ - R)⁻¹ = L(I - LR)⁻¹ = L + L·reduced·L,
         //   Aγ_c = D⁻¹γ_c + D⁻¹Γᵀ K (ΓD⁻¹γ_c),
-        //   |U_γc|² = 4 P_c |Σ_λ γ^γ_λ (Aγ_c)_λ|²
-        // — a direct, non-canceling expression for the eliminated channel.
+        //   1 - Σ|U_c·|² = 4 P_c Σ_λ (γ^γ_λ)² |(Aγ_c)_λ|²
+        // — a direct, non-canceling expression for the eliminated capture.
+        // The sum over levels is incoherent: Reich-Moore eliminates many
+        // photon channels whose amplitudes have random signs, so it is the
+        // anti-Hermitian part of A⁻¹ (diagonal, Γγ_λ/2), not one coherent
+        // photon amplitude Σ_λ γ^γ_λ (Aγ_c)_λ. The coherent form agreed for a
+        // single level but put level-level interference into capture (Cu-63
+        // thermal 2.44 b against NJOY's 4.48 b).
         // Only valid when R = ΓαΓᵀ exactly; diagonal channel backgrounds
         // (LBK/KBK) break the factorization, so fall back to the residual.
         let direct_capture = spin_group.backgrounds.is_empty();
@@ -2098,15 +2104,6 @@ pub fn reconstruct_rmatrix_limited(
                 kappa[row][column] = channel_l[row] * reduced[row][column] * channel_l[column];
             }
             kappa[row][row] += channel_l[row];
-        }
-        // h[o] = Σ_λ γ^γ_λ α_λ γ_λo couples each open channel to the
-        // eliminated gamma channel through the level denominators.
-        let mut h = vec![Complex64::new(0.0, 0.0); size];
-        for (level, alpha) in level_alphas.iter().enumerate() {
-            let coupling = gamma_amplitudes[level] * alpha;
-            for column in 0..size {
-                h[column] += coupling * level_gammas[level][column];
-            }
         }
         let mut collision = vec![vec![Complex64::new(0.0, 0.0); size]; size];
         for row in 0..size {
@@ -2157,7 +2154,8 @@ pub fn reconstruct_rmatrix_limited(
                 ));
             }
             if direct_capture {
-                // t[o] = (Γ D⁻¹ γ_c)_o; s = K t; G_γc = h_c + hᵀ s.
+                // t[o] = (Γ D⁻¹ γ_c)_o; s = K t;
+                // (Aγ_c)_λ = α_λ (γ_λc + Σ_o γ_λo s_o).
                 let mut t = vec![Complex64::new(0.0, 0.0); size];
                 for (level, alpha) in level_alphas.iter().enumerate() {
                     let source = level_gammas[level][incoming] * alpha;
@@ -2165,18 +2163,23 @@ pub fn reconstruct_rmatrix_limited(
                         *item += level_gammas[level][o] * source;
                     }
                 }
-                let mut amplitude = h[incoming];
-                for row in 0..size {
-                    let mut accumulated = Complex64::new(0.0, 0.0);
-                    for column in 0..size {
-                        accumulated += kappa[row][column] * t[column];
+                let s: Vec<Complex64> = kappa
+                    .iter()
+                    .map(|row| row.iter().zip(&t).map(|(k, t)| k * t).sum())
+                    .collect();
+                let mut eliminated = 0.0;
+                for (level, alpha) in level_alphas.iter().enumerate() {
+                    let mut coupling = Complex64::new(level_gammas[level][incoming], 0.0);
+                    for (o, item) in s.iter().enumerate() {
+                        coupling += level_gammas[level][o] * item;
                     }
-                    amplitude += h[row] * accumulated;
+                    eliminated += gamma_amplitudes[level].powi(2) * (alpha * coupling).norm_sqr();
                 }
-                let u_gamma =
-                    Complex64::new(0.0, 2.0) * open[incoming].penetrability.sqrt() * amplitude;
-                result.capture +=
-                    scale * u_gamma.norm_sqr() * (2.0 * open[incoming].absorption).exp();
+                result.capture += scale
+                    * 4.0
+                    * open[incoming].penetrability
+                    * eliminated
+                    * (2.0 * open[incoming].absorption).exp();
             } else {
                 result.capture += scale * (1.0 - explicit_probability).max(0.0);
             }
@@ -3146,6 +3149,75 @@ mod tests {
         assert_eq!(actual.fission, 0.0);
         assert_eq!(actual.competitive, 0.0);
         assert!(actual.elastic.is_finite() && actual.elastic >= 0.0);
+    }
+
+    #[test]
+    fn rml_eliminated_capture_sums_levels_incoherently() {
+        // One s-wave neutron channel, three levels (one bound). Reich-Moore
+        // capture is (pi/k^2) g 4P sum_l (Gg_l/2) |alpha_l gamma_l / (1 - L R)|^2
+        // with alpha_l = 1/(E_l - E - i Gg_l/2), R = sum_l alpha_l gamma_l^2 and
+        // L = iP: no cross terms between levels. A coherent photon amplitude
+        // sum_l sqrt(Gg_l/2) alpha_l gamma_l agreed for one level but gave
+        // ENDF/B-VIII.1 Cu-63 2.44 b at thermal against NJOY's 4.48 b.
+        let mut range = scalar_rml_range();
+        let levels = [(-300.0, 0.3, 0.6), (1e3, 0.2, 0.4), (2.5e3, 0.25, 1.5)];
+        let RangeData::RMatrixLimited(rml) = &mut range.data else {
+            unreachable!()
+        };
+        rml.spin_groups[0].resonances = levels
+            .iter()
+            .map(|&(energy, capture, neutron)| RmlResonance {
+                energy,
+                widths: vec![capture, neutron],
+            })
+            .collect();
+        let awri = 55.0;
+        let wave = |energy: f64| K_WAVE * awri / (awri + 1.0) * energy.abs().sqrt();
+        let radius = 0.5;
+        let mut discriminated = false;
+        for energy in [0.0253, 100.0, 600.0, 1e3, 1.7e3, 2.5e3, 5e3] {
+            let p = wave(energy) * radius;
+            let terms: Vec<(f64, Complex64)> = levels
+                .iter()
+                .map(|&(level, capture, neutron)| {
+                    let gamma = (neutron / (2.0 * wave(level) * radius)).sqrt();
+                    let alpha = Complex64::new(level - energy, -0.5 * capture).inv();
+                    (0.5 * capture, alpha * gamma)
+                })
+                .collect();
+            let r: Complex64 = levels
+                .iter()
+                .zip(&terms)
+                .map(|(&(level, _, neutron), (_, amplitude))| {
+                    amplitude * (neutron / (2.0 * wave(level) * radius)).sqrt()
+                })
+                .sum();
+            let denominator = Complex64::new(1.0, 0.0) - Complex64::new(0.0, p) * r;
+            let scale = std::f64::consts::PI / (wave(energy) * wave(energy));
+            let incoherent = scale
+                * 4.0
+                * p
+                * terms
+                    .iter()
+                    .map(|(half, amplitude)| half * (amplitude / denominator).norm_sqr())
+                    .sum::<f64>();
+            let coherent = scale
+                * 4.0
+                * p
+                * (terms
+                    .iter()
+                    .map(|(half, amplitude)| half.sqrt() * amplitude)
+                    .sum::<Complex64>()
+                    / denominator)
+                    .norm_sqr();
+            let actual = reconstruct_rmatrix_limited(&range, energy).unwrap().capture;
+            assert!(
+                (actual - incoherent).abs() <= 1e-9 * incoherent,
+                "E={energy}: capture {actual} against Reich-Moore {incoherent}"
+            );
+            discriminated |= (coherent - incoherent).abs() > 0.1 * incoherent;
+        }
+        assert!(discriminated, "fixture must separate the coherent form");
     }
 
     fn width_pair(
