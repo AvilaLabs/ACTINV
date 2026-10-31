@@ -5250,3 +5250,31 @@ same reactions; the sensitivities themselves reproduced individual samples in th
 
 The rehearsal disclosure in the protocol, which read the 8-sample step-3 gap as a rare draw, was wrong. It was the
 first sign of this defect. Which side is wrong is under investigation; a repair goes through one registered amendment.
+
+## Entry 305 — P175 verdict: P175-FAIL on G2; the reference sampler is at fault (2026-10-31)
+
+G4 holds: CI is green on the evidence commit `cf4620f`, with controls 41194009517, fns-iron 41194009511 and
+fusion-isotope 41194009474 (`results/p175/ci_runs.json`). G2 failed on two scored rows (entry 304). **P175-FAIL.**
+
+The diagnosis was made after the verdict. It used the recorded artifacts, a re-implementation of the collapse
+from the library, the covariance sidecar and the flux, and an exact emulation of the sampler's draws.
+- **Steel: the sampler's eigendecomposition had not converged.** `jacobi_eigh` stopped when
+  `off_norm <= 1e-12 * max|a_ii|`. Threshold rows collapse to about 1e-20 b, so their relative variance is
+  1e19–1e20, and that tolerance sat far above every physical entry. The sweeps stopped after about one pass, and the
+  applied factor carried less variance than the covariance: Cr-52 MT16 (88 % of Cr-51) 0.0118 against 0.0310,
+  Fe-54 MT103 0.151 against 0.176. With the run's own draws, the emulation reproduces the sampled Cr-51, Mn-56 and
+  Mn-54 spreads (0.144, 0.346 and 0.281 against 0.148, 0.342 and 0.291 observed). The recorded `xs_clipped` was
+  mostly this artifact.
+- **Tungsten: a genuine indefinite block, repaired by adding variance.** The W-182 MT16/102/103/107 block passes
+  every pairwise check but is jointly indefinite (negative mass 0.0015). Eigen-clipping the covariance raised the
+  least uncertain row, W-182 MT16, from 3.88 % to 4.75 % standard deviation, a variance factor of 1.49. Almost all
+  of W-181 comes from that row, so the Ta X-ray groups were sampled 1.5 to 1.6 times wider.
+- **The exports are faithful to the evaluated covariance.** The raw collapsed relative covariance reproduces the
+  exported response spreads (Cr-51 0.175 against 0.174, Mn-56 0.364 against 0.364, Mn-54 0.350 against 0.350).
+  G3 already showed the factors agree with `export-r2s-joint`.
+
+The sampler is what `study.robustness` and `waste uncertainty` use, so the defect reaches users. The fix is
+registered as P175 Amendment A, the protocol's one repair round:
+- a per-pair Jacobi convergence test;
+- a repair in correlation space that keeps every evaluated variance;
+- a moment-matched lognormal log covariance `ln(1 + Σ_rel)`.
