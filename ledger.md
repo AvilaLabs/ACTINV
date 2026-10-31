@@ -5349,3 +5349,28 @@ Still open:
 - the owner's ruling on the aborted first launch (entry 307), which drew no sample;
 - the photon-tally term `sigma_R`;
 - the SINBAD FNG coverage test (plan item 1).
+
+## Entry 309 — P176 registered: ACTINV's optional self-shielding against P173's continuous-energy tallies (2026-10-31)
+
+`protocols/ACTINV-P176_PROTOCOL.md` (SHA-256 `11f5f422…`), with harness `controls/p176_selfshield.py` (`e4136a85…`)
+and checker `controls/check_p176.py` (`e29c4544…`, which imports P173's checker). It follows P173 and decides the form
+of item 2 of `docs/maintainers/WORKFLOW_ACCURACY_PLAN.md`.
+- **Question.** With ACTINV's existing self-shielding on, as a user would set it, do the 11 material P173 capture
+  rows come within tolerance of OpenMC's continuous-energy tally? And are the other rows unharmed? The arms:
+  - A0, the control;
+  - A1, the Bondarenko table with composition dilution;
+  - A2 and A3, the two other documented options.
+
+  They run over P173's four models, with P173's OpenMC rates and fluxes pinned. No OpenMC calculation is repeated.
+- **Pins.** The binary is the release build of `a38d1fa`, the `build-shielding --profile` fix (`36af7922…`). The
+  Bondarenko table is built from 67 ENDF/B-VIII.1 evaluations with `--profile endfb8` (`b8ccd5a4…`, from the
+  rehearsal; the build has no random draws).
+- **Rehearsal** (flat flux, outputs under `target/`), disclosed in the protocol:
+  - the table built in 12,268 s;
+  - arms A0–A3 ran for models C and S;
+  - the harness's `min_factor` summary was corrected so a zero fission factor on a non-fissile nuclide no longer
+    hides the real minimum.
+
+  No rate was compared with OpenMC.
+- The scored run reuses the rehearsal's per-evaluation checkpoints (`target/p176-shield-cache`). The protocol says so,
+  and G1 requires the scored table to equal the pin.
