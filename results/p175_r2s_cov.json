@@ -2,16 +2,16 @@
  "schema": "actinv-p175-r2s-cov-1",
  "protocol": "ACTINV-P175",
  "environment": {
-  "binary_sha256": "9e52e19a76034fa038ac837e926077100d1df81dd99e3c441b19535c9bab8ee9",
-  "git_head": "ec05cf17d98cd0164ca40da734e2f79e94ec9e6e",
-  "crates_tree": "eb18e0c84448328e3164257bc620ce1f1bb94888",
+  "binary_sha256": "1460accb937f6457ff03207d417ae104a4226d6be795a7f82ac60dd47e52d660",
+  "git_head": "5fbd3f43c1a368e3c85d867a67ae2c4a0d12df45",
+  "crates_tree": "46571824449a139cecc7dd5a48396bc61bcfe282",
   "clean_tree": true,
   "cgroup": {
-   "path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p3714406-i7900590.scope",
+   "path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p204862-i8599748.scope",
    "memory.max": "6442450944",
    "memory.swap.max": "0",
    "pids.max": "128",
-   "cpu.max": "200000 100000"
+   "cpu.max": "400000 100000"
   },
   "python": "3.14.4",
   "platform": "Linux-7.0.0-38-generic-x86_64-with-glibc2.43",
@@ -157,89 +157,89 @@
    "joint": {
     "2": {
      "cell_sigma_correlated": [
-      166.3408637409785,
-      58.21930230940579,
-      16.634086374122898,
+      166.34086374097853,
+      58.21930230940578,
+      16.6340863741229,
       3.3268172748250247
      ],
      "rho": [
       [
        1.0,
+       0.9999999999999998,
        0.9999999999999997,
-       0.9999999999999996,
-       1.0000000000000004
+       1.0000000000000002
       ],
       [
        0.9999999999999998,
        1.0,
-       1.0,
+       0.9999999999999999,
        1.0000000000000002
       ],
       [
-       0.9999999999999989,
-       0.9999999999999999,
+       0.9999999999999992,
+       0.9999999999999996,
        1.0,
-       0.9999999999999997
+       0.9999999999999992
       ],
       [
+       0.9999999999999993,
        1.0000000000000002,
-       1.0,
-       1.0,
+       0.9999999999999994,
        1.0
       ]
      ],
-     "sigma_total_correlated": 244.52106969933217
+     "sigma_total_correlated": 244.52106969933223
     },
     "3": {
      "cell_sigma_correlated": [
       9.685658059617145,
       3.3899803208674406,
-      0.9685658059622844,
-      0.19371316119246682
+      0.9685658059622841,
+      0.19371316119246684
      ],
      "rho": [
       [
        1.0,
-       0.9999999999999998,
-       0.9999999999999998,
-       0.9999999999999997
+       1.0000000000000002,
+       1.0,
+       0.9999999999999998
       ],
       [
        0.9999999999999998,
        1.0,
-       1.0,
-       0.9999999999999994
+       1.0000000000000002,
+       1.0
       ],
       [
-       0.9999999999999997,
+       0.9999999999999998,
+       1.0000000000000002,
+       1.0,
+       1.0000000000000002
+      ],
+      [
        0.9999999999999994,
-       1.0,
-       0.9999999999999999
-      ],
-      [
-       0.9999999999999998,
-       1.0,
-       0.9999999999999999,
+       0.9999999999999991,
+       0.9999999999999996,
        1.0
       ]
      ],
-     "sigma_total_correlated": 14.237917347639334
+     "sigma_total_correlated": 14.237917347639335
     }
    },
    "artifacts": {
     "cov": {
      "2": {
       "path": "results/p175/A_steel_shared_step2_cov.ndjson.gz",
-      "sha256": "4f0c5bf087a5d42ec4c6fd411756651cb62661e0e0ca4796ff381dc88efee40d"
+      "sha256": "d0ec0d17ea228d526996ee71ee06d1cb991937bd20d0c04e2475c18bf681c2a8"
      },
      "3": {
       "path": "results/p175/A_steel_shared_step3_cov.ndjson.gz",
-      "sha256": "5001869f0da38c740ef1c165f96c96114de97be7a525fa222268efff6198139b"
+      "sha256": "717bc86070b4181128a45ba5849a395a0644a113216e0a8fe6adf042668060b1"
      }
     },
     "samples": {
      "path": "results/p175/A_steel_shared_samples.json.gz",
-     "sha256": "45c96ebd6c026ef371aa395870149bb30a0ebfed96db6beaf0f9cdaacb8af8db"
+     "sha256": "e60824f01d6cd30926e8ee8d824e1ae7be82e41084c1f9c38b7ab1687604cbee"
     }
    },
    "flux_nominal_sha256": "b3c199ef4e14c766be49f92dc6e40749016ab0684958a6b4acb53de00461f283",
@@ -271,13 +271,13 @@
      "cross_section_mf33",
      "decay_constants"
     ],
-    "xs_clipped": 0.027800764906868714,
-    "rate_rows": 351,
+    "xs_clipped": 0.010761714387609703,
+    "rate_rows": 460,
     "decay_nuclides": 3293,
     "yield_pairs": 0
    },
-   "pruned_states_changed_samples": 176,
-   "wall_s": 2491.4
+   "pruned_states_changed_samples": 180,
+   "wall_s": 2806.7
   },
   {
    "name": "B_steel_flux",
@@ -292,11 +292,11 @@
     "cov": {
      "2": {
       "path": "results/p175/B_steel_flux_step2_cov.ndjson.gz",
-      "sha256": "953f71d449ff7e0fcd7db5a8f240980608b8ae985d2915a134dc148e25a709f0"
+      "sha256": "b74b22f0509dd931640a22e49d9b7b1ce10d2861a8e3f274e5ffe41626501988"
      },
      "3": {
       "path": "results/p175/B_steel_flux_step3_cov.ndjson.gz",
-      "sha256": "3b0c697647bb5b09a294e490f4777596d09bde4d364fa8041db7ad9494ff14af"
+      "sha256": "0c3daec8555b59c92807b0eadcc1b27f34989c4e72daad017b6d7d34c7d99798"
      }
     },
     "samples": {
@@ -328,7 +328,7 @@
    ],
    "band_cap_hit": false,
    "pruned_states_changed_samples": 157,
-   "wall_s": 1266.1
+   "wall_s": 1321.8
   },
   {
    "name": "C_steel_all",
@@ -345,16 +345,16 @@
     "cov": {
      "2": {
       "path": "results/p175/C_steel_all_step2_cov.ndjson.gz",
-      "sha256": "41d80c573dd482cac614d9b5af1514e161ca5de0162d745b523e6ba28f23d1dd"
+      "sha256": "6c8e26843344549c1bdbdd4fcd43869021d21db095561fff9774d58763accd19"
      },
      "3": {
       "path": "results/p175/C_steel_all_step3_cov.ndjson.gz",
-      "sha256": "0b957e60eb1f39471ff42ac90074e5f30d19f7a6dcd60a802e691c065ac0b1a4"
+      "sha256": "4d8e37a8a620447965791802999fdda862a6f3ff6978aaee2b1eda039902b979"
      }
     },
     "samples": {
      "path": "results/p175/C_steel_all_samples.json.gz",
-     "sha256": "fd03ed1cc068a54ad9de37575dd011a9753ad78565bfccbde441ef60469e5524"
+     "sha256": "80643ec441c9a97641c41a2a0881ba1566eddc0cfd096f6f27a63f5ba25e6d6f"
     }
    },
    "flux_nominal_sha256": "b3c199ef4e14c766be49f92dc6e40749016ab0684958a6b4acb53de00461f283",
@@ -386,13 +386,13 @@
      "cross_section_mf33",
      "decay_constants"
     ],
-    "xs_clipped": 0.027800764906868714,
-    "rate_rows": 351,
+    "xs_clipped": 0.010761714387609703,
+    "rate_rows": 460,
     "decay_nuclides": 3293,
     "yield_pairs": 0
    },
-   "pruned_states_changed_samples": 189,
-   "wall_s": 1682.0
+   "pruned_states_changed_samples": 193,
+   "wall_s": 1743.6
   },
   {
    "name": "D_tungsten_all",
@@ -408,33 +408,33 @@
     "2": {
      "cell_sigma_correlated": [
       45.14920410241361,
-      15.802221435873545,
-      4.514920410252749,
+      15.802221435873546,
+      4.51492041025275,
       0.902984082050752
      ],
      "rho": [
       [
        1.0,
-       1.0,
-       1.0,
-       0.9999999999999998
+       1.0000000000000002,
+       0.9999999999999997,
+       1.0
       ],
       [
+       0.9999999999999999,
        1.0,
        1.0,
-       1.0000000000000007,
-       1.0000000000000002
+       0.9999999999999999
       ],
       [
+       0.9999999999999999,
        1.0,
-       1.0000000000000007,
        1.0,
        1.0000000000000002
       ],
       [
        0.9999999999999998,
        1.0,
-       1.0000000000000002,
+       0.9999999999999998,
        1.0
       ]
      ],
@@ -444,32 +444,32 @@
      "cell_sigma_correlated": [
       11.271811121951579,
       3.9451338926874673,
-      1.1271811121969033,
-      0.22543622243941197
+      1.127181112196903,
+      0.22543622243941194
      ],
      "rho": [
       [
        1.0,
-       0.9999999999999996,
-       1.0,
-       0.9999999999999997
+       0.9999999999999997,
+       1.0000000000000004,
+       1.0
       ],
       [
        0.9999999999999999,
        1.0,
+       1.0,
+       0.9999999999999997
+      ],
+      [
+       1.0000000000000004,
+       1.0000000000000002,
+       1.0,
+       0.9999999999999993
+      ],
+      [
+       1.0,
        0.9999999999999998,
-       0.9999999999999996
-      ],
-      [
-       1.0,
-       1.0,
-       1.0,
-       0.9999999999999998
-      ],
-      [
-       1.0,
-       0.9999999999999997,
-       0.9999999999999996,
+       0.9999999999999998,
        1.0
       ]
      ],
@@ -480,16 +480,16 @@
     "cov": {
      "2": {
       "path": "results/p175/D_tungsten_all_step2_cov.ndjson.gz",
-      "sha256": "1573f7bda9120c64d03f59450d1c0d64110ca671b54b9785600d0b29763a55e6"
+      "sha256": "788488a33e97d8153cd8e7e70b9cd5934bb06e01c47bbf10aea225aff3c5d2ec"
      },
      "3": {
       "path": "results/p175/D_tungsten_all_step3_cov.ndjson.gz",
-      "sha256": "1e7fe3013a6ebdce4a7476184f711ac1c72d313e87c2ae7c9f14a5e61a49e9f6"
+      "sha256": "0a46a77a6b62c41b4ad1ff9334638b175be6c30b8bdbc49d33ddefc3f6263328"
      }
     },
     "samples": {
      "path": "results/p175/D_tungsten_all_samples.json.gz",
-     "sha256": "6f803fb24299c0f0d532f3804e75e47cac248c4ab8c7728e5d34ad8f23710b42"
+     "sha256": "a4300300e0cf603e992c79e59afd1a2b3612a241034ccddb65adaae91e77e00a"
     }
    },
    "flux_nominal_sha256": "b3c199ef4e14c766be49f92dc6e40749016ab0684958a6b4acb53de00461f283",
@@ -515,13 +515,13 @@
      "cross_section_mf33",
      "decay_constants"
     ],
-    "xs_clipped": 0.020724965682038753,
-    "rate_rows": 89,
+    "xs_clipped": 0.007832341165834398,
+    "rate_rows": 155,
     "decay_nuclides": 3293,
     "yield_pairs": 0
    },
    "pruned_states_changed_samples": 108,
-   "wall_s": 1153.1
+   "wall_s": 1212.0
   }
  ]
 }

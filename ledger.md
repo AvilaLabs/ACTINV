@@ -5297,3 +5297,40 @@ else changes, and the first run's evidence stays at `cf4620f`.
 
 The amendment discloses that the moment-matched draws were chosen after the failing rows were seen, and that they move
 the sampled variance toward the first-order value by design, by about 1–13 %.
+
+## Entry 307 — P175 Amendment A evidence: G0–G3 pass on the repaired sampler (2026-10-31)
+
+The rerun ran from the registration commit `5fbd3f4` with a clean tree, the pinned binary `1460accb…`, and the bounded
+scope (6 GiB, no swap, 128 tasks, `cpu.max` 400000/100000). The harness took 7,086 s. `controls/check_p175.py`
+reports G0, G1, G2 and G3 PASS, with all 16 rows scored. **P175-PASS, pending G4 (CI on this commit).**
+
+| case | step | response | `V1/V_s` | limit on the deviation |
+|---|---|---|---|---|
+| A steel, MF=33 + half-lives | 2 | uniform / hard cell b | 1.140 / 1.156 | 0.487 / 0.544 |
+| A | 3 | uniform / hard cell b | 0.884 / 1.285 | 0.426 / 0.515 |
+| B steel, flux only | 2 | uniform / hard cell b | 1.091 / 0.879 | 0.327 / 0.342 |
+| B | 3 | uniform / hard cell b | 1.100 / 0.882 | 0.329 / 0.341 |
+| C steel, all channels | 2 | uniform / hard cell b | 1.123 / 1.159 | 0.492 / 0.530 |
+| C | 3 | uniform / hard cell b | 0.871 / 1.293 | 0.435 / 0.541 |
+| D tungsten, all channels | 2 | uniform / hard cell b | 0.873 / 0.943 | 0.337 / 0.331 |
+| D | 3 | uniform / hard cell b | 1.137 / 1.027 | 0.330 / 0.345 |
+
+The two rows that failed the first run (steel, 30 days, uniform) are now 0.884 (A) and 0.871 (C), down from 1.741 and
+1.673. The worst deviation is C step 3, hard cell b, at 0.293. The sampled variances' relative standard errors are
+0.100 to 0.143. All 48 pair correlations pass. Case A's pairs are fully correlated, as expected for a single shared
+material.
+
+Three things about the run, which differ from what the amendment says:
+- **An aborted launch came first.** The first launch from `5fbd3f4` stopped in milliseconds. The worktree had no
+  `actinv-data` link, and every case's nominal mesh exited with code 2 (`catalog artifact 'endfb-viii-0-decay' is not
+  installed`). No sample was drawn and no case artifact was written. The harness's record overwrote
+  `results/p175_r2s_cov.json`; it was moved to `results/p175_aborted_launch.json`. The tree was restored, the data link
+  was added (untracked), and the run was launched again. It is disclosed here because the amendment describes one run.
+- **Outputs were overwritten, not deleted first.** The amendment says the first run's outputs are deleted before the
+  rerun. Deleting the tracked files would have left the tree dirty and failed G1 (`clean_tree`). So they were left in
+  place for the harness to overwrite. The harness deletes `target/p175-run/` itself. All twelve case artifacts were
+  rewritten after the 08:36 start. `B_steel_flux_samples.json.gz` came out byte-identical to the first run. Case B
+  draws only the flux channel, which the repair does not touch, from the same seed. Its two covariance exports differ
+  from the first run only in two provenance hashes (`mesh_result_sha256`, `spec_fingerprint_sha256`). Their numbers
+  are unchanged. `results/p175_r2s_cov.json` and `results/p175_verdict.json` were rewritten.
+- **The thread count was 4** (`RAYON_NUM_THREADS=4`), as the amendment allows.

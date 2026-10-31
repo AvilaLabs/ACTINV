@@ -1,0 +1,266 @@
+{
+ "schema": "actinv-p175-r2s-cov-1",
+ "protocol": "ACTINV-P175",
+ "environment": {
+  "binary_sha256": "1460accb937f6457ff03207d417ae104a4226d6be795a7f82ac60dd47e52d660",
+  "git_head": "5fbd3f43c1a368e3c85d867a67ae2c4a0d12df45",
+  "crates_tree": "46571824449a139cecc7dd5a48396bc61bcfe282",
+  "clean_tree": true,
+  "cgroup": {
+   "path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p204557-i8594405.scope",
+   "memory.max": "6442450944",
+   "memory.swap.max": "0",
+   "pids.max": "128",
+   "cpu.max": "400000 100000"
+  },
+  "python": "3.14.4",
+  "platform": "Linux-7.0.0-38-generic-x86_64-with-glibc2.43",
+  "pins": {
+   "base_flux_sha256": "b9b1e8d1a713292507611b17be5afaaa671d734383cf7a0b1d1a68b31311b7e7",
+   "fns_spec_sha256": "ed55ed00f6c00fc4a2351e18332e98e7feb33d9b7ca65e7ba861e0e5e8feef39",
+   "library_sha256": "ec4c72bf598dc8ad3d533d9cfafdcf493e2d1f949a3e4db6251495659b68cc44",
+   "covariance_sha256": "c19dec86b44ad5d90b66c9ab94d53e18641a1d354a89402a4da7986b6c530cde"
+  },
+  "options": {
+   "mode": "auto",
+   "prune": "rate",
+   "bmin_atoms_per_g": 1e-08,
+   "temperature_K": 293.6
+  },
+  "schedule": [
+   {
+    "dt": "300 s",
+    "flux": 1.0
+   },
+   {
+    "dt": "86400 s",
+    "flux": 0.0
+   },
+   {
+    "dt": "2592000 s",
+    "flux": 0.0
+   },
+   {
+    "dt": "31536000 s",
+    "flux": 0.0
+   }
+  ]
+ },
+ "constants": {
+  "n_samples": 200,
+  "k_sigma": 3.0,
+  "delta_floor": 0.02,
+  "rho_max": 0.5,
+  "pair_floor": 0.01,
+  "delta_pair": 0.05,
+  "unbanded_max": 0.001,
+  "band_remainder": 1e-05,
+  "band_cap": 60,
+  "g3_rtol": 1e-10,
+  "steps": [
+   2,
+   3
+  ],
+  "hard_cell": 1,
+  "flux_amplitude": [
+   1.0,
+   0.35,
+   0.1,
+   0.02
+  ],
+  "flux_error": [
+   0.03,
+   0.06,
+   0.12,
+   0.25
+  ],
+  "study_seed": {
+   "steel": 175001,
+   "tungsten": 175002
+  },
+  "flux_seed": {
+   "steel": 175101,
+   "tungsten": 175102
+  },
+  "composition": {
+   "steel": {
+    "FE": 89.07,
+    "CR": 9.0,
+    "W": 1.1,
+    "MN": 0.4,
+    "V": 0.2,
+    "TA": 0.12,
+    "C": 0.11
+   },
+   "tungsten": {
+    "W": 100.0
+   }
+  },
+  "cases": [
+   {
+    "name": "A_steel_shared",
+    "material": "steel",
+    "channels": [
+     "cross_section_mf33",
+     "decay_constants"
+    ],
+    "flux": false,
+    "joint": true
+   },
+   {
+    "name": "B_steel_flux",
+    "material": "steel",
+    "channels": [
+     "flux"
+    ],
+    "flux": true,
+    "joint": false
+   },
+   {
+    "name": "C_steel_all",
+    "material": "steel",
+    "channels": [
+     "cross_section_mf33",
+     "decay_constants",
+     "flux"
+    ],
+    "flux": true,
+    "joint": false
+   },
+   {
+    "name": "D_tungsten_all",
+    "material": "tungsten",
+    "channels": [
+     "cross_section_mf33",
+     "decay_constants",
+     "flux"
+    ],
+    "flux": true,
+    "joint": true
+   }
+  ],
+  "d_fallback_channels": [
+   "decay_constants",
+   "flux"
+  ]
+ },
+ "cases": [
+  {
+   "name": "A_steel_shared",
+   "material": "steel",
+   "channels": [
+    "cross_section_mf33",
+    "decay_constants"
+   ],
+   "substituted": false,
+   "failures": [
+    {
+     "stage": "nominal mesh",
+     "argv": [
+      "/home/connoravila/Documents/actinv/target/p175a-bin/actinv",
+      "mesh",
+      "/home/connoravila/Documents/actinv/target/sampler-wt/target/p175-run/nominal_steel/spec.json",
+      "/home/connoravila/Documents/actinv/target/sampler-wt/target/p175-run/nominal_steel/out.ndjson"
+     ],
+     "rc": 2,
+     "timed_out": false,
+     "wall_s": 0.004,
+     "stderr_tail": "catalog artifact 'endfb-viii-0-decay' is not installed at /home/connoravila/Documents/actinv/target/sampler-wt/actinv-data/v1.2.0/decay/endf-b-viii-0_decay.dat \u2014 run `actinv data fetch` or set ACTINV_DATA_DIR\n"
+    }
+   ],
+   "joint": {},
+   "artifacts": {
+    "cov": {}
+   },
+   "flux_nominal_sha256": "b3c199ef4e14c766be49f92dc6e40749016ab0684958a6b4acb53de00461f283"
+  },
+  {
+   "name": "B_steel_flux",
+   "material": "steel",
+   "channels": [
+    "flux"
+   ],
+   "substituted": false,
+   "failures": [
+    {
+     "stage": "nominal mesh",
+     "argv": [
+      "/home/connoravila/Documents/actinv/target/p175a-bin/actinv",
+      "mesh",
+      "/home/connoravila/Documents/actinv/target/sampler-wt/target/p175-run/nominal_steel/spec.json",
+      "/home/connoravila/Documents/actinv/target/sampler-wt/target/p175-run/nominal_steel/out.ndjson"
+     ],
+     "rc": 2,
+     "timed_out": false,
+     "wall_s": 0.005,
+     "stderr_tail": "catalog artifact 'endfb-viii-0-decay' is not installed at /home/connoravila/Documents/actinv/target/sampler-wt/actinv-data/v1.2.0/decay/endf-b-viii-0_decay.dat \u2014 run `actinv data fetch` or set ACTINV_DATA_DIR\n"
+    }
+   ],
+   "joint": {},
+   "artifacts": {
+    "cov": {}
+   },
+   "flux_nominal_sha256": "b3c199ef4e14c766be49f92dc6e40749016ab0684958a6b4acb53de00461f283"
+  },
+  {
+   "name": "C_steel_all",
+   "material": "steel",
+   "channels": [
+    "cross_section_mf33",
+    "decay_constants",
+    "flux"
+   ],
+   "substituted": false,
+   "failures": [
+    {
+     "stage": "nominal mesh",
+     "argv": [
+      "/home/connoravila/Documents/actinv/target/p175a-bin/actinv",
+      "mesh",
+      "/home/connoravila/Documents/actinv/target/sampler-wt/target/p175-run/nominal_steel/spec.json",
+      "/home/connoravila/Documents/actinv/target/sampler-wt/target/p175-run/nominal_steel/out.ndjson"
+     ],
+     "rc": 2,
+     "timed_out": false,
+     "wall_s": 0.004,
+     "stderr_tail": "catalog artifact 'endfb-viii-0-decay' is not installed at /home/connoravila/Documents/actinv/target/sampler-wt/actinv-data/v1.2.0/decay/endf-b-viii-0_decay.dat \u2014 run `actinv data fetch` or set ACTINV_DATA_DIR\n"
+    }
+   ],
+   "joint": {},
+   "artifacts": {
+    "cov": {}
+   },
+   "flux_nominal_sha256": "b3c199ef4e14c766be49f92dc6e40749016ab0684958a6b4acb53de00461f283"
+  },
+  {
+   "name": "D_tungsten_all",
+   "material": "tungsten",
+   "channels": [
+    "cross_section_mf33",
+    "decay_constants",
+    "flux"
+   ],
+   "substituted": false,
+   "failures": [
+    {
+     "stage": "nominal mesh",
+     "argv": [
+      "/home/connoravila/Documents/actinv/target/p175a-bin/actinv",
+      "mesh",
+      "/home/connoravila/Documents/actinv/target/sampler-wt/target/p175-run/nominal_tungsten/spec.json",
+      "/home/connoravila/Documents/actinv/target/sampler-wt/target/p175-run/nominal_tungsten/out.ndjson"
+     ],
+     "rc": 2,
+     "timed_out": false,
+     "wall_s": 0.004,
+     "stderr_tail": "catalog artifact 'endfb-viii-0-decay' is not installed at /home/connoravila/Documents/actinv/target/sampler-wt/actinv-data/v1.2.0/decay/endf-b-viii-0_decay.dat \u2014 run `actinv data fetch` or set ACTINV_DATA_DIR\n"
+    }
+   ],
+   "joint": {},
+   "artifacts": {
+    "cov": {}
+   },
+   "flux_nominal_sha256": "b3c199ef4e14c766be49f92dc6e40749016ab0684958a6b4acb53de00461f283"
+  }
+ ]
+}
