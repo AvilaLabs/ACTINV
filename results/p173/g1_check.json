@@ -1,0 +1,264 @@
+{
+ "actinv_bin": "/home/connoravila/Documents/actinv/target/p173-bin/actinv",
+ "actinv_bin_sha256": "ebeeb25c8f27a6689a2ab8667b699e5abb64d34f3349e4c9b203ee1d1709a725",
+ "actinv_version": "actinv 1.7.0",
+ "checks": [
+  {
+   "max_rel_diff": 1.8681815789974836e-15,
+   "model": "S",
+   "reactions": [
+    {
+     "actinv_rate_per_atom": 4.366251932056882e-24,
+     "harness_rate_per_atom": 4.366251932056884e-24,
+     "mt": 102,
+     "rel_diff": 3.3652843706516483e-16,
+     "target": "Co59"
+    },
+    {
+     "actinv_rate_per_atom": 3.0856758612430182e-25,
+     "harness_rate_per_atom": 3.085675861243018e-25,
+     "mt": 102,
+     "rel_diff": 1.4880936995274135e-16,
+     "target": "Cr50"
+    },
+    {
+     "actinv_rate_per_atom": 7.960875824624946e-25,
+     "harness_rate_per_atom": 7.960875824624945e-25,
+     "mt": 103,
+     "rel_diff": 1.1535853363510764e-16,
+     "target": "Fe54"
+    },
+    {
+     "actinv_rate_per_atom": 2.2071455289580786e-25,
+     "harness_rate_per_atom": 2.2071455289580786e-25,
+     "mt": 103,
+     "rel_diff": 0.0,
+     "target": "Fe56"
+    },
+    {
+     "actinv_rate_per_atom": 9.314295677181325e-26,
+     "harness_rate_per_atom": 9.314295677181329e-26,
+     "mt": 102,
+     "rel_diff": 4.929814305926257e-16,
+     "target": "Fe58"
+    },
+    {
+     "actinv_rate_per_atom": 1.3826021659918407e-24,
+     "harness_rate_per_atom": 1.3826021659918407e-24,
+     "mt": 16,
+     "rel_diff": 0.0,
+     "target": "Mn55"
+    },
+    {
+     "actinv_rate_per_atom": 5.898923136193587e-25,
+     "harness_rate_per_atom": 5.898923136193598e-25,
+     "mt": 102,
+     "rel_diff": 1.8681815789974836e-15,
+     "target": "Mn55"
+    },
+    {
+     "actinv_rate_per_atom": 9.044653088558003e-25,
+     "harness_rate_per_atom": 9.044653088558001e-25,
+     "mt": 102,
+     "rel_diff": 2.030713511260444e-16,
+     "target": "Mo98"
+    },
+    {
+     "actinv_rate_per_atom": 8.78712481584031e-25,
+     "harness_rate_per_atom": 8.787124815840308e-25,
+     "mt": 103,
+     "rel_diff": 2.0902285578655232e-16,
+     "target": "Ni58"
+    },
+    {
+     "actinv_rate_per_atom": 4.2644937106741166e-26,
+     "harness_rate_per_atom": 4.264493710674116e-26,
+     "mt": 16,
+     "rel_diff": 1.345931990826441e-16,
+     "target": "Ni58"
+    },
+    {
+     "actinv_rate_per_atom": 2.909832275822497e-25,
+     "harness_rate_per_atom": 2.9098322758224974e-25,
+     "mt": 103,
+     "rel_diff": 1.5780204398900082e-16,
+     "target": "Ni60"
+    }
+   ],
+   "region": "S:10-12"
+  },
+  {
+   "max_rel_diff": 8.353092636270301e-16,
+   "model": "W",
+   "reactions": [
+    {
+     "actinv_rate_per_atom": 1.5745485789574548e-27,
+     "harness_rate_per_atom": 1.5745485789574548e-27,
+     "mt": 103,
+     "rel_diff": 0.0,
+     "target": "W182"
+    },
+    {
+     "actinv_rate_per_atom": 2.7485477582048055e-25,
+     "harness_rate_per_atom": 2.748547758204803e-25,
+     "mt": 102,
+     "rel_diff": 8.353092636270301e-16,
+     "target": "W182"
+    },
+    {
+     "actinv_rate_per_atom": 2.1011006309824816e-27,
+     "harness_rate_per_atom": 2.1011006309824816e-27,
+     "mt": 103,
+     "rel_diff": 0.0,
+     "target": "W183"
+    },
+    {
+     "actinv_rate_per_atom": 2.2714299801963886e-25,
+     "harness_rate_per_atom": 2.2714299801963886e-25,
+     "mt": 102,
+     "rel_diff": 0.0,
+     "target": "W184"
+    },
+    {
+     "actinv_rate_per_atom": 1.6394985398012512e-25,
+     "harness_rate_per_atom": 1.6394985398012519e-25,
+     "mt": 102,
+     "rel_diff": 4.2010785887520813e-16,
+     "target": "W186"
+    },
+    {
+     "actinv_rate_per_atom": 1.0196741284044216e-24,
+     "harness_rate_per_atom": 1.0196741284044216e-24,
+     "mt": 16,
+     "rel_diff": 0.0,
+     "target": "W186"
+    },
+    {
+     "actinv_rate_per_atom": 6.039877173257923e-28,
+     "harness_rate_per_atom": 6.039877173257923e-28,
+     "mt": 103,
+     "rel_diff": 0.0,
+     "target": "W186"
+    }
+   ],
+   "region": "W:10-10.5"
+  },
+  {
+   "max_rel_diff": 8.468676576387716e-16,
+   "model": "C",
+   "reactions": [
+    {
+     "actinv_rate_per_atom": 1.084413784487248e-25,
+     "harness_rate_per_atom": 1.084413784487249e-25,
+     "mt": 102,
+     "rel_diff": 8.468676576387716e-16,
+     "target": "Cr50"
+    },
+    {
+     "actinv_rate_per_atom": 2.337276457492243e-25,
+     "harness_rate_per_atom": 2.3372764574922436e-25,
+     "mt": 102,
+     "rel_diff": 1.9645835190699937e-16,
+     "target": "Cu63"
+    },
+    {
+     "actinv_rate_per_atom": 8.924663314155716e-26,
+     "harness_rate_per_atom": 8.924663314155716e-26,
+     "mt": 107,
+     "rel_diff": 0.0,
+     "target": "Cu63"
+    },
+    {
+     "actinv_rate_per_atom": 1.669213154774756e-24,
+     "harness_rate_per_atom": 1.669213154774756e-24,
+     "mt": 16,
+     "rel_diff": 0.0,
+     "target": "Cu65"
+    },
+    {
+     "actinv_rate_per_atom": 1.130156053790758e-24,
+     "harness_rate_per_atom": 1.1301560537907578e-24,
+     "mt": 16,
+     "rel_diff": 1.6251825727952794e-16,
+     "target": "Zr90"
+    }
+   ],
+   "region": "C:10-12"
+  },
+  {
+   "max_rel_diff": 1.4423038435120788e-15,
+   "model": "K",
+   "reactions": [
+    {
+     "actinv_rate_per_atom": 1.027610000246794e-24,
+     "harness_rate_per_atom": 1.0276100002467939e-24,
+     "mt": 107,
+     "rel_diff": 1.7873608885848855e-16,
+     "target": "Al27"
+    },
+    {
+     "actinv_rate_per_atom": 1.1962047289950378e-23,
+     "harness_rate_per_atom": 1.1962047289950367e-23,
+     "mt": 102,
+     "rel_diff": 8.598507697203464e-16,
+     "target": "Ca44"
+    },
+    {
+     "actinv_rate_per_atom": 5.2160741851338175e-22,
+     "harness_rate_per_atom": 5.21607418513381e-22,
+     "mt": 102,
+     "rel_diff": 1.4423038435120788e-15,
+     "target": "Co59"
+    },
+    {
+     "actinv_rate_per_atom": 1.1746986187635658e-19,
+     "harness_rate_per_atom": 1.1746986187635675e-19,
+     "mt": 102,
+     "rel_diff": 1.434571109918033e-15,
+     "target": "Eu151"
+    },
+    {
+     "actinv_rate_per_atom": 4.17687958805335e-24,
+     "harness_rate_per_atom": 4.176879588053349e-24,
+     "mt": 103,
+     "rel_diff": 1.7589302104021914e-16,
+     "target": "Fe54"
+    },
+    {
+     "actinv_rate_per_atom": 1.812373051633419e-22,
+     "harness_rate_per_atom": 1.8123730516334205e-22,
+     "mt": 102,
+     "rel_diff": 9.080316492611744e-16,
+     "target": "Mn55"
+    },
+    {
+     "actinv_rate_per_atom": 7.127924445665388e-24,
+     "harness_rate_per_atom": 7.127924445665388e-24,
+     "mt": 102,
+     "rel_diff": 0.0,
+     "target": "Na23"
+    }
+   ],
+   "region": "K:50-60"
+  }
+ ],
+ "environment": {
+  "cgroup": {
+   "cpu.max": "200000 100000",
+   "memory.max": "6442450944",
+   "memory.swap.max": "0",
+   "path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p2691367-i6863759.scope",
+   "pids.max": "128"
+  },
+  "clean_tree": true,
+  "constants_sha256": "577eefa8a7ae7934f1b6155efaadc78916158e4567c8f22a6bd410c366da3180",
+  "crates_tree": "fd259e18ecdeaff326672fce811996610a599bc1",
+  "git_head": "71180154111cec72b8bdda024cb5d97860ec88ca",
+  "groups_sha256": "ce4bf523498ffbb38d42aa9415fc014882b8bc7a7ecfb89f859ba3259d8fb34f",
+  "harness_sha256": "42df1b5469b73dd742ec2ce36bc89a7264400fe4710077f634ba3de502f9210e",
+  "platform": "Linux-7.0.0-38-generic-x86_64-with-glibc2.43",
+  "python": "3.14.4"
+ },
+ "schema": "actinv-p173-ce-rates-1-g1",
+ "tolerance": 1e-09
+}

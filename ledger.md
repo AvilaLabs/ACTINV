@@ -5136,3 +5136,25 @@ checker `controls/check_p174.py` (`5040a8f4…`). Held-out references `results/p
   real short-lived daughters below it (Po-214 sits about 1e-21 below U-238), so C and the actinide guard were added,
   then the memory guard and the rate-separation condition, each from reading the formula against the cases before any
   run.
+
+## Entry 299 — P173 evidence: G0–G3 pass; collapse correction warranted, processing review warranted (2026-10-31)
+
+Scored run on the registration tree (`7118015`), with the pinned binary (`ebeeb25c…`) and OpenMC 0.15.3, inside the
+bounded scope; every mode exited 0. The records are committed on master `0b349d3`, whose `crates/` tree differs from the
+pinned binary's by the 2026-10-30 audit fixes; the protocol pins the binary, not the commit, and no record changes.
+- **Coverage.** 78 listed rows; 76 used, 2 not scored (`target_absent`: Mn-55 capture in concrete, which has no
+  manganese), 0 scored and not converged. OpenMC stopped at 128 batches of 10^5 for steel, 4 for tungsten, 32 for
+  CuCrZr and 64 for concrete (wall 3,835 s, 9 s, 113 s and 737 s for the last iteration).
+- **Collapse and self-shielding (`r_coll`).** Material in 11 rows, all capture:
+  - Mn-55, Co-59 and Mo-98 (n,γ) in all three steel regions, `r_coll` +0.064 to +0.111 (ACTINV's flat-lethargy
+    collapse above OpenMC's continuous-energy tally);
+  - Cu-63 (n,γ) in both CuCrZr regions, +0.133 and +0.162.
+  
+  Three steel regions each have three material reactions, so **item 2 of the workflow plan (a continuous-energy rate
+  correction) is warranted.** Concrete and tungsten have no material collapse row; concrete's largest |r| is 0.0004.
+- **Processing (`r_proc`).** Material in 3 rows: W-182(n,p)Ta-182 in all three tungsten regions, −0.062 (standard error
+  about 1e-5). **A processing review of ACTINV's builder against NJOY for this reaction is warranted.** Every other
+  used row has |r_proc| ≤ 0.010.
+- **No public sentence.** The agreement sentence requires no material row in `r`; there are 14. None is allowed until
+  a correction is qualified by its own protocol.
+- G4 (CI on this evidence commit) decides the verdict.

@@ -1,0 +1,287 @@
+{
+ "allowed_sentences": [],
+ "gates": {
+  "G0": {
+   "pass": true,
+   "problems": []
+  },
+  "G1": {
+   "pass": true,
+   "problems": []
+  },
+  "G2": {
+   "pass": true,
+   "problems": []
+  },
+  "G3": {
+   "pass": true,
+   "problems": []
+  }
+ },
+ "protocol": "ACTINV-P173",
+ "summary": {
+  "by_model": {
+   "C": {
+    "max_abs_r": 0.17216913258189487,
+    "max_abs_r_coll": 0.16245577448787227,
+    "max_abs_r_proc": 0.009975205093583368,
+    "mean_energy_eV": {
+     "C:10-12": 3418768.5759789483,
+     "C:20-25": 1395624.226843233
+    },
+    "rows_used": 10
+   },
+   "K": {
+    "max_abs_r": 0.00038222269507223223,
+    "max_abs_r_coll": 0.00033620201256433446,
+    "max_abs_r_proc": 0.00011217068271352508,
+    "mean_energy_eV": {
+     "K:100-120": 1169826.6851889614,
+     "K:50-60": 3696104.1566101983
+    },
+    "rows_used": 12
+   },
+   "S": {
+    "max_abs_r": 0.11055484083371332,
+    "max_abs_r_coll": 0.11058827513082348,
+    "max_abs_r_proc": 0.00038691713730351266,
+    "mean_energy_eV": {
+     "S:10-12": 3520351.0340835326,
+     "S:20-25": 850222.3620202986,
+     "S:40-50": 268821.1770972222
+    },
+    "rows_used": 33
+   },
+   "W": {
+    "max_abs_r": 0.062190442343930445,
+    "max_abs_r_coll": 0.04247260532230739,
+    "max_abs_r_proc": 0.06224276711530187,
+    "mean_energy_eV": {
+     "W:10-10.5": 3018886.487877823,
+     "W:10.5-12": 2507169.4560846193,
+     "W:15-20": 1498342.016996993
+    },
+    "rows_used": 21
+   }
+  },
+  "correction_warranted": true,
+  "material_collapse_rows": [
+   {
+    "r_coll": 0.07181198267887615,
+    "reaction": "Mn55(n,gamma)Mn56",
+    "reason_code": null,
+    "region": "S:10-12",
+    "se_r_coll": 0.008177029054516343
+   },
+   {
+    "r_coll": 0.0637468341080194,
+    "reaction": "Co59(n,gamma)Co60",
+    "reason_code": null,
+    "region": "S:10-12",
+    "se_r_coll": 0.00922506538847615
+   },
+   {
+    "r_coll": 0.09149687735125672,
+    "reaction": "Mo98(n,gamma)Mo99",
+    "reason_code": null,
+    "region": "S:10-12",
+    "se_r_coll": 0.006296739809054679
+   },
+   {
+    "r_coll": 0.07240448635345494,
+    "reaction": "Mn55(n,gamma)Mn56",
+    "reason_code": null,
+    "region": "S:20-25",
+    "se_r_coll": 0.003135789957750327
+   },
+   {
+    "r_coll": 0.0675508795046643,
+    "reaction": "Co59(n,gamma)Co60",
+    "reason_code": null,
+    "region": "S:20-25",
+    "se_r_coll": 0.0034301037365463355
+   },
+   {
+    "r_coll": 0.10306993565307895,
+    "reaction": "Mo98(n,gamma)Mo99",
+    "reason_code": null,
+    "region": "S:20-25",
+    "se_r_coll": 0.002568281655730347
+   },
+   {
+    "r_coll": 0.07250314357871156,
+    "reaction": "Mn55(n,gamma)Mn56",
+    "reason_code": null,
+    "region": "S:40-50",
+    "se_r_coll": 0.0029151443293121727
+   },
+   {
+    "r_coll": 0.06734709372303697,
+    "reaction": "Co59(n,gamma)Co60",
+    "reason_code": null,
+    "region": "S:40-50",
+    "se_r_coll": 0.0029159684858797888
+   },
+   {
+    "r_coll": 0.11058827513082348,
+    "reaction": "Mo98(n,gamma)Mo99",
+    "reason_code": null,
+    "region": "S:40-50",
+    "se_r_coll": 0.0026209960848206757
+   },
+   {
+    "r_coll": 0.1332977317908998,
+    "reaction": "Cu63(n,gamma)Cu64",
+    "reason_code": null,
+    "region": "C:10-12",
+    "se_r_coll": 0.007206485282861527
+   },
+   {
+    "r_coll": 0.16245577448787227,
+    "reaction": "Cu63(n,gamma)Cu64",
+    "reason_code": null,
+    "region": "C:20-25",
+    "se_r_coll": 0.004831117559191346
+   }
+  ],
+  "material_processing_rows": [
+   {
+    "r_proc": -0.06224276711530187,
+    "reaction": "W182(n,p)Ta182",
+    "reason_code": null,
+    "region": "W:10-10.5",
+    "se_r_proc": 1.139922319138295e-05
+   },
+   {
+    "r_proc": -0.06215325889077927,
+    "reaction": "W182(n,p)Ta182",
+    "reason_code": null,
+    "region": "W:10.5-12",
+    "se_r_proc": 1.1515352787465613e-05
+   },
+   {
+    "r_proc": -0.06180634124574737,
+    "reaction": "W182(n,p)Ta182",
+    "reason_code": null,
+    "region": "W:15-20",
+    "se_r_proc": 1.525971146816252e-05
+   }
+  ],
+  "material_total_rows": [
+   {
+    "r": 0.07153019893674768,
+    "reaction": "Mn55(n,gamma)Mn56",
+    "reason_code": null,
+    "region": "S:10-12",
+    "se_r": 0.008176916903035836
+   },
+   {
+    "r": 0.06358989830894902,
+    "reaction": "Co59(n,gamma)Co60",
+    "reason_code": null,
+    "region": "S:10-12",
+    "se_r": 0.009224984091664995
+   },
+   {
+    "r": 0.09146722063939462,
+    "reaction": "Mo98(n,gamma)Mo99",
+    "reason_code": null,
+    "region": "S:10-12",
+    "se_r": 0.006296754702565501
+   },
+   {
+    "r": 0.07211851419467889,
+    "reaction": "Mn55(n,gamma)Mn56",
+    "reason_code": null,
+    "region": "S:20-25",
+    "se_r": 0.003135760955907245
+   },
+   {
+    "r": 0.06739386531487926,
+    "reaction": "Co59(n,gamma)Co60",
+    "reason_code": null,
+    "region": "S:20-25",
+    "se_r": 0.0034300539398362194
+   },
+   {
+    "r": 0.10303927445180165,
+    "reaction": "Mo98(n,gamma)Mo99",
+    "reason_code": null,
+    "region": "S:20-25",
+    "se_r": 0.0025682919590050246
+   },
+   {
+    "r": 0.0722139793629043,
+    "reaction": "Mn55(n,gamma)Mn56",
+    "reason_code": null,
+    "region": "S:40-50",
+    "se_r": 0.0029151066254981583
+   },
+   {
+    "r": 0.06718915467503467,
+    "reaction": "Co59(n,gamma)Co60",
+    "reason_code": null,
+    "region": "S:40-50",
+    "se_r": 0.0029158927597464053
+   },
+   {
+    "r": 0.11055484083371332,
+    "reaction": "Mo98(n,gamma)Mo99",
+    "reason_code": null,
+    "region": "S:40-50",
+    "se_r": 0.0026210073356957627
+   },
+   {
+    "r": -0.062190442343930445,
+    "reaction": "W182(n,p)Ta182",
+    "reason_code": null,
+    "region": "W:10-10.5",
+    "se_r": 0.0014041698872727575
+   },
+   {
+    "r": -0.06151224139750212,
+    "reaction": "W182(n,p)Ta182",
+    "reason_code": null,
+    "region": "W:10.5-12",
+    "se_r": 0.0014884242797627316
+   },
+   {
+    "r": -0.05824908732091897,
+    "reaction": "W182(n,p)Ta182",
+    "reason_code": null,
+    "region": "W:15-20",
+    "se_r": 0.0025059093570809527
+   },
+   {
+    "r": 0.1410489931195627,
+    "reaction": "Cu63(n,gamma)Cu64",
+    "reason_code": null,
+    "region": "C:10-12",
+    "se_r": 0.007304723075862148
+   },
+   {
+    "r": 0.17216913258189487,
+    "reaction": "Cu63(n,gamma)Cu64",
+    "reason_code": null,
+    "region": "C:20-25",
+    "se_r": 0.004899619483520908
+   }
+  ],
+  "max_abs_r_used": 0.17216913258189487,
+  "max_percent_used": 18.787872522050964,
+  "not_scored_by_reason": {
+   "target_absent": 2
+  },
+  "processing_review_warranted": true,
+  "regions_with_two_or_more_material_collapse_reactions": [
+   "S:10-12",
+   "S:20-25",
+   "S:40-50"
+  ],
+  "rows": 78,
+  "rows_not_scored": 2,
+  "rows_scored_not_converged": 0,
+  "rows_used": 76
+ },
+ "verdict": "P173-PASS (pending G4, CI on the evidence commit)"
+}
