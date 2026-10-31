@@ -312,3 +312,22 @@ created.
   `/`, `/download/` and `/docs/` live; update AvilaLabs.org `/actinv` and `/actinv/docs`
   (deployed as worker version b0e7db10; AvilaLabs.org PR #34 merged with the stacked #32 and #33).
 - [x] Remind the owner to rerun FARIS restart/cooling runs affected by P133 (reminded 2026-10-29; FARIS on hold).
+
+## v1.7.1 (revision release, R-matrix-limited capture) with desktop-v0.6.0-preview.1
+
+- [x] Bump the workspace, `python`, `pyproject.toml`, inter-crate versions and `release-artifacts.yml` to 1.7.1; the
+  desktop stays 0.6.0-preview.1 on solver 1.7.1. Update README release links (owner approved, version links only),
+  the DATA_LIMITATIONS header, `DESKTOP.md`, `DESKTOP_INSTALL.md` and the handbook's version references; refresh
+  `MANIFEST.sha256`.
+- [x] Write `docs/RELEASE_NOTES_v1.7.1.md`, the changelog section and the handbook's "New in 1.7.1".
+- [x] Recompute the browser's example results with the 1.7.1 release binary and commit `web/examples/`; only the
+  solver version and timing fields differ from 1.7.0.
+- [ ] Pre-tag gates: `cargo publish --workspace --dry-run`, `cargo check --workspace --tests`, fmt, clippy and the
+  controls that read the edited files, with the tag present locally.
+- [ ] Push the release commit and the `v1.7.1` tag in one atomic push; confirm every workflow green.
+- [ ] Approve the `crates.io` and `pypi` environment gates; confirm all three crates and the wheel/sdist set land at
+  1.7.1.
+- [ ] Attach packaged platform archives and `SHA256SUMS` to the `v1.7.1` GitHub release; paste the release notes.
+- [ ] Production smoke from PyPI and crates.io; record the release in `results/release_v1.7.1.json`.
+- [ ] Handbook and website: deploy the `actinv-web` bundle CI built from the release commit and check `/`,
+  `/download/` and `/docs/` live; update AvilaLabs.org `/actinv` and `/actinv/docs`.

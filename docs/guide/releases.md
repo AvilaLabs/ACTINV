@@ -4,11 +4,26 @@ Software, nuclear data, and desktop packages have separate release histories. Re
 
 | Component | Version covered here | Release |
 | --- | --- | --- |
-| CLI, Python, and Rust workspace | 1.7.0 | [v1.7.0](https://github.com/AvilaLabs/ACTINV/releases/tag/v1.7.0) |
+| CLI, Python, and Rust workspace | 1.7.1 | [v1.7.1](https://github.com/AvilaLabs/ACTINV/releases/tag/v1.7.1) |
 | Embedded nuclear-data catalog | 1.2.0 | [data-v1.2.0](https://github.com/AvilaLabs/ACTINV/releases/tag/data-v1.2.0) |
-| Desktop preview | 0.6.0-preview.1, using solver 1.7.0 | [desktop preview](https://github.com/AvilaLabs/ACTINV/releases/tag/desktop-v0.6.0-preview.1) |
+| Desktop preview | 0.6.0-preview.1, using solver 1.7.1 | [desktop preview](https://github.com/AvilaLabs/ACTINV/releases/tag/desktop-v0.6.0-preview.1) |
 
 Use `actinv --version` for the executable. `actinv data manifest` prints its embedded catalog. Source-built desktop candidates may use a newer solver than the published preview; inspect their package/build record.
+
+## New in 1.7.1
+
+Release 1.7.1 fixes resonance capture in libraries and self-shielding tables you build from R-matrix-limited
+evaluations. These include ENDF/B-VIII.1 and FENDL-3.2c tungsten, copper, Fe-54 and Fe-57; from 1.5.0 to 1.7.0
+their thermal capture was off by factors up to 9. If you built such a library or table, rebuild it. The TENDL-2025
+data that ACTINV downloads is unaffected.
+
+It also fixes the `study.robustness` cross-section sampler and adds:
+- national clearance tables (`actinv clearance --jurisdiction de|uk|ca`);
+- a shutdown-dose source covariance export (`actinv export-r2s-cov`);
+- `build-shielding --profile` and `--workers`, and a `profile` for geometry self-shielding.
+
+The [1.7.1 release notes](https://github.com/AvilaLabs/ACTINV/blob/master/docs/RELEASE_NOTES_v1.7.1.md) list what to
+re-check.
 
 ## New in 1.7.0
 
@@ -57,12 +72,14 @@ python -m pip install --upgrade actinv
 For an exact Rust CLI version:
 
 ```bash
-cargo install --locked --force actinv-cli --version 1.7.0
+cargo install --locked --force actinv-cli --version 1.7.1
 ```
 
 A software upgrade does not silently replace installed data. Revisit optional settings and coverage when a release changes their behavior, and retain the executable or source version for older results.
 
 ## Changes that may affect earlier results
+
+The [1.7.1 release notes](https://github.com/AvilaLabs/ACTINV/blob/master/docs/RELEASE_NOTES_v1.7.1.md) change no default result. Rebuild any library or self-shielding table you built from R-matrix-limited evaluations (ENDF/B-VIII.1 and FENDL-3.2c tungsten, copper, Fe-54, Fe-57 and others) with 1.5.0 to 1.7.0, and rerun what used it. `study.robustness` bands from `cross_section_mf33` can also differ from 1.7.0.
 
 The [1.7.0 release notes](https://github.com/AvilaLabs/ACTINV/blob/master/docs/RELEASE_NOTES_v1.7.0.md) list the two default-result changes: `pathway_closure` counts only populations above 1e-12 of the step's largest, so the quick start reports 3.9e-15 instead of 4.117, and `actinv decide` computes the `design.top_reactions` blocks it reported as `ill_conditioned`. [Results that may change](whats-new-1.7.md#results-that-may-change) has the detail.
 

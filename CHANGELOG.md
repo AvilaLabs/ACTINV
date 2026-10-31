@@ -1,5 +1,60 @@
 # Changelog
 
+## v1.7.1 — 2026-10-31
+
+ACTINV 1.7.1 fixes resonance capture in libraries and shielding tables you build from R-matrix-limited evaluations,
+fixes the cross-section sampler of `study.robustness`, and adds national clearance tables, a shutdown-dose source
+covariance export, and options for building and applying self-shielding. The bundled TENDL-2025 data and default
+results are unchanged.
+
+**Fixed (libraries and shielding tables you build)**
+
+- Capture from R-matrix-limited (LRF=7) resonance parameters summed the eliminated photon channels coherently across
+  levels. Reich-Moore needs an incoherent sum. One level was right; with several, capture between resonances and in
+  the thermal range was wrong.
+  - **Affected releases:** 1.5.0–1.7.0.
+  - **Affected commands:** `build-library` and `build-shielding`, for evaluations in this format.
+  - **ENDF/B-VIII.1:** Ca-40, Cl-35, Cu-63, Cu-65, Fe-54, Fe-57, Pu-239, Rh-103, Si-28/29/30, Sr-88, V-51 and
+    W-182/183/184/186. Thermal capture was off by factors from 0.09 (Ca-40) to 9.1 (W-183).
+  - **FENDL-3.2c:** Fe-54, Fe-57 and W-182/183/184/186.
+  - **Not affected:** TENDL-2025 has no such evaluations, so the shipped data is unaffected.
+  - **Rebuild:** a library or shielding table built from these evaluations with 1.5.0–1.7.0.
+  - **Check:** capture now matches NJOY/OpenMC at 0.0253, 1 and 10 eV for 13 of the affected ENDF/B-VIII.1 tapes.
+- `study.robustness` cross-section sampling (MF=33):
+  - Jacobi diagonalization now converges per pair. A 1e20 variance on a threshold row had stopped the sweeps early.
+  - The log-normal covariance is moment-matched as ln(1 + relative covariance).
+  - An indefinite block is repaired in correlation space, so every evaluated variance is kept.
+- `actinv clearance --confidence` accepts only values in (0.5, 1). At or below 0.5 a cell could both clear and fail.
+- Every command that writes a result refuses an output path that resolves to one of its own inputs. Before,
+  `actinv run problem.json problem.json` replaced the problem with its result.
+- `surrogate` keeps responses in the order given.
+- `optimize --resume` checks that the run it resumes is the same problem and steps.
+- Library index keys are read strictly.
+- ENDF record allocations are bounded.
+- NaN repair applies only to literal NaN fields.
+- The library builder's fingerprint covers the tape normalization.
+- The desktop app exports the problem as it was run, and does not open another problem while a run is in progress.
+
+**Added**
+
+- `actinv clearance --jurisdiction de|uk|ca` evaluates against Germany's StrlSchV 2018 Anlage 4, the United Kingdom's
+  EPR 2016 Schedule 23 Part 3 Table 2, or Canada's NSRDR Schedule 2. `--route` chooses among a table's routes.
+  `--negligible` sets the level below which unlisted nuclides are not reported. `iaea` (RS-G-1.7) stays the default.
+  The tables are converted from the official XML, and an independent reader checks every shipped value.
+- `actinv export-r2s-cov` writes the shutdown-dose photon source and its covariance in factored form
+  (`actinv-r2s-cov-1`): MF=33, half-life and yield columns shared by every region, and flux-tally columns per region.
+- `build-shielding --profile none|endfb8|tendl` applies the same tape normalization as `build-library`.
+  `build-shielding --workers N` processes evaluation files in parallel; the table is identical for any N.
+- `self_shielding.geometry.profile` (`none`, `endfb8` or `tendl`) normalizes each resonance file before it is read, so
+  ENDF/B-VIII.1 files such as Cu-63 are accepted. The app's geometry card has a Profile choice.
+- Browser: one toolbar for file actions and appearance, a sidebar listing the setup steps in order, studies opened
+  from a page of cards, and a Menu button in place of the sidebar on narrow windows.
+
+**Changed (tables you build)**
+
+- `build-shielding` integrates the resolved range to quadrature depth 16, so a table built with 1.7.1 can differ from
+  one built with 1.7.0 for the same files.
+
 ## v1.7.0 — 2026-10-29
 
 ACTINV 1.7.0 adds impurity screening for fusion materials (`actinv impurities`): which impurities of an alloy matter, at
