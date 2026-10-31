@@ -1597,8 +1597,7 @@ fn evaluate_rule(rule: &DecisionRule, cmp: &Comparison, per_case: &[Value]) -> V
             if rule.kind == "rank_equal" {
                 if let Some(eo) = &rule.expected_order {
                     let mut order = vals.clone();
-                    order
-                        .sort_by(|a, b| b.1.partial_cmp(&a.1).unwrap_or(std::cmp::Ordering::Equal));
+                    order.sort_by(|a, b| b.1.total_cmp(&a.1));
                     let got: Vec<String> = order.into_iter().map(|(id, _)| id).collect();
                     // expected_order lists the compared-axis values in
                     // descending-response order, or full case ids
@@ -1798,7 +1797,7 @@ fn rule_predicate(rule: &DecisionRule, vals: &[(String, f64)], axis_i: Option<us
         "rank_equal" => match &rule.expected_order {
             Some(eo) => {
                 let mut order = vals.to_vec();
-                order.sort_by(|a, b| b.1.partial_cmp(&a.1).unwrap_or(std::cmp::Ordering::Equal));
+                order.sort_by(|a, b| b.1.total_cmp(&a.1));
                 let got: Vec<String> = order.into_iter().map(|(id, _)| id).collect();
                 let got_axis: Vec<String> = got
                     .iter()
@@ -2204,11 +2203,7 @@ fn jacobi_eigh(a: &[f64], n: usize) -> Option<(Vec<f64>, Vec<f64>)> {
         }
     }
     let mut order: Vec<usize> = (0..n).collect();
-    order.sort_by(|&i, &j| {
-        m[j * n + j]
-            .partial_cmp(&m[i * n + i])
-            .unwrap_or(std::cmp::Ordering::Equal)
-    });
+    order.sort_by(|&i, &j| m[j * n + j].total_cmp(&m[i * n + i]));
     let eigenvalues: Vec<f64> = order.iter().map(|&i| m[i * n + i]).collect();
     let mut vectors = vec![0.0f64; n * n];
     for (new_j, &old_j) in order.iter().enumerate() {
@@ -2437,17 +2432,8 @@ fn build_sampling_plan(
                 .map_err(|e| format!("cannot read {index_path:?}: {e}"))?,
         )
         .map_err(|e| format!("cannot parse {index_path:?}: {e}"))?;
-        let lib_targets: Vec<(i32, i32)> = index["targets"]
-            .as_array()
-            .ok_or("library index has no targets")?
-            .iter()
-            .map(|t| {
-                (
-                    t["za"].as_i64().unwrap_or(0) as i32,
-                    t["liso"].as_i64().unwrap_or(0) as i32,
-                )
-            })
-            .collect();
+        let lib_targets: Vec<(i32, i32)> =
+            crate::run::library_index_target_keys(&index, &index_path.display().to_string())?;
         let mut nuclides = decay::parse_file(&spec.decay.primary).map_err(|e| e.to_string())?;
         if let Some(fallback) = &spec.decay.fallback {
             if !fallback.is_empty() {

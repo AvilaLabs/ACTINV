@@ -14,8 +14,8 @@
 //! [`crate::activation::parse_evaluations`] returns.
 
 use crate::endf::{
-    parse_sections, read_cont_checked, read_list_checked, read_tab1_checked, read_tab2_checked,
-    Section,
+    bounded_capacity, parse_sections, read_cont_checked, read_list_checked, read_tab1_checked,
+    read_tab2_checked, Section,
 };
 use crate::groups::Tabulated;
 use std::collections::BTreeMap;
@@ -206,7 +206,19 @@ impl AngularDistribution {
 }
 
 /// Expand TAB2 `(NBT, INT)` pairs into the interpolation law of each of the `count - 1` intervals.
-fn expand_laws(count: usize, interpolation: &[(usize, i32)]) -> Result<Vec<i32>, String> {
+///
+/// Every one of the `count` records that follow needs at least one line, so a count above the
+/// `lines_remaining` is refused before any interval is expanded.
+fn expand_laws(
+    count: usize,
+    interpolation: &[(usize, i32)],
+    lines_remaining: usize,
+) -> Result<Vec<i32>, String> {
+    if count > lines_remaining {
+        return Err(format!(
+            "TAB2 declares {count} records, at most {lines_remaining} lines remain"
+        ));
+    }
     (0..count.saturating_sub(1))
         .map(|segment| {
             let law = interpolation
@@ -276,7 +288,7 @@ pub fn parse_mf4(section: &Section<'_>) -> Result<Mf4Data, String> {
         let (tab2, after) = read_tab2_checked(lines, next)?;
         next = after;
         let count = tab2.head.n2;
-        let block = expand_laws(count, &tab2.interpolation)?;
+        let block = expand_laws(count, &tab2.interpolation, lines.len().saturating_sub(next))?;
         for _ in 0..count {
             let (list, after) = read_list_checked(lines, next)?;
             next = after;
@@ -289,7 +301,7 @@ pub fn parse_mf4(section: &Section<'_>) -> Result<Mf4Data, String> {
         let (tab2, after) = read_tab2_checked(lines, next)?;
         next = after;
         let count = tab2.head.n2;
-        let block = expand_laws(count, &tab2.interpolation)?;
+        let block = expand_laws(count, &tab2.interpolation, lines.len().saturating_sub(next))?;
         if !energies.is_empty() && count > 0 {
             laws.push(2);
         }
@@ -370,11 +382,11 @@ fn parse_law1(lines: &[&str], index: usize) -> Result<(Mf6Body, usize), String> 
     let lang = tab2.head.l1;
     let lep = tab2.head.l2;
     let count = tab2.head.n2;
-    let laws = expand_laws(count, &tab2.interpolation)?;
+    let laws = expand_laws(count, &tab2.interpolation, lines.len().saturating_sub(next))?;
     if !matches!(lep, 1 | 2) {
         return Err(format!("unsupported MF=6 LEP={lep}"));
     }
-    let mut energies = Vec::with_capacity(count);
+    let mut energies = Vec::with_capacity(bounded_capacity(count));
     for _ in 0..count {
         let (list, after) = read_list_checked(lines, next)?;
         next = after;
@@ -382,14 +394,14 @@ fn parse_law1(lines: &[&str], index: usize) -> Result<(Mf6Body, usize), String> 
         let nd = usize::try_from(nd).map_err(|_| format!("negative MF=6 ND={nd}"))?;
         let na = usize::try_from(na).map_err(|_| format!("negative MF=6 NA={na}"))?;
         let stride = na + 2;
-        if nw != nep * stride || nd > nep {
+        if Some(nw) != nep.checked_mul(stride) || nd > nep {
             return Err(format!(
                 "MF=6 LAW=1 list has NW={nw}, NEP={nep}, NA={na}, ND={nd}"
             ));
         }
-        let mut eprime = Vec::with_capacity(nep);
-        let mut f0 = Vec::with_capacity(nep);
-        let mut angular = Vec::with_capacity(nep * na);
+        let mut eprime = Vec::with_capacity(bounded_capacity(nep));
+        let mut f0 = Vec::with_capacity(bounded_capacity(nep));
+        let mut angular = Vec::with_capacity(bounded_capacity(nep.saturating_mul(na)));
         for tuple in list.values.chunks_exact(stride) {
             eprime.push(tuple[0]);
             f0.push(tuple[1]);
@@ -420,9 +432,9 @@ fn parse_law1(lines: &[&str], index: usize) -> Result<(Mf6Body, usize), String> 
 fn parse_law2(lines: &[&str], index: usize) -> Result<(Mf6Body, usize), String> {
     let (tab2, mut next) = read_tab2_checked(lines, index)?;
     let count = tab2.head.n2;
-    let laws = expand_laws(count, &tab2.interpolation)?;
-    let mut energies = Vec::with_capacity(count);
-    let mut records = Vec::with_capacity(count);
+    let laws = expand_laws(count, &tab2.interpolation, lines.len().saturating_sub(next))?;
+    let mut energies = Vec::with_capacity(bounded_capacity(count));
+    let mut records = Vec::with_capacity(bounded_capacity(count));
     for _ in 0..count {
         let (list, after) = read_list_checked(lines, next)?;
         next = after;
@@ -467,7 +479,7 @@ pub fn parse_mf6_data(section: &Section<'_>) -> Result<Mf6Data, String> {
     let lines = &section.lines;
     let (head, mut next) = read_cont_checked(lines, 0)?;
     let lct = head.l2;
-    let mut products = Vec::with_capacity(head.n1);
+    let mut products = Vec::with_capacity(bounded_capacity(head.n1));
     for _ in 0..head.n1 {
         let (record, after_yield) = read_tab1_checked(lines, next)?;
         let zap = record.head.c1.round() as i32;
@@ -563,6 +575,14 @@ pub(crate) mod test_support {
 mod tests {
     use super::test_support::*;
     use super::*;
+
+    #[test]
+    fn expand_laws_refuses_a_count_beyond_the_remaining_lines() {
+        let huge = usize::MAX / 2;
+        let error = expand_laws(huge, &[(huge, 2)], 10).unwrap_err();
+        assert!(error.contains("lines remain"), "{error}");
+        assert_eq!(expand_laws(3, &[(3, 2)], 10).unwrap(), vec![2, 2]);
+    }
 
     fn section<'a>(mf: i32, mt: i32, lines: &'a [String]) -> Section<'a> {
         Section {

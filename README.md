@@ -272,7 +272,7 @@ Depending on the requested outputs, each time step can contain:
 - ranked production pathways;
 - user-selected clearance, waste, ingestion, or inhalation responses;
 - NRT damage observables (damage-energy rate, per-element and aggregate dpa) from a hash-pinned
-  `actinv-damage-table-1` produced by `actinv build-damage`;
+  `actinv-damage-table-1` or `-2` produced by `actinv build-damage` (the shipped catalog table is table-2);
 - an MF=33 cross-section uncertainty band and numerical-method comparison; and
 - a ledger for missing decay/yield/response/damage data, pruned populations, balance terms, and method resolution.
 

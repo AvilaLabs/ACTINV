@@ -14,7 +14,7 @@ actinv validate problem.json --hashes
 | --- | --- |
 | `actinv` command not found | Confirm pip installed into the active Python environment and its scripts directory is on PATH; reopen the terminal after installing |
 | Catalog artifact is not installed | Run `actinv data fetch` in the working folder, or set `ACTINV_DATA_DIR` to the installation root |
-| Cannot open a literal data path | Check the current directory for CLI use, **Input base** in the desktop, or the problem's directory for `Problem.from_file` |
+| Cannot open a literal data path | Check the current directory for CLI use, **Input folder** in the desktop, or the problem's directory for `Problem.from_file` |
 | Cannot open `<stem>_index.json` | Install the activation library and its matching adjacent index together; covariance needs its own index too |
 | SHA-256 mismatch | Verify the selected bundle, data path, and library/index pairing; recover the exact declared input rather than removing its hash constraint |
 | Covariance does not match activation data | Use the full/full or patched/patched pairing in [Data setup](data.md#choose-a-bundle) |

@@ -185,6 +185,10 @@ class BuildScheduleTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             m.build_schedule([1.0, 1.0], [-1.0, 0.0])
 
+    def test_negative_rate_with_positive_rate_raises(self):
+        with self.assertRaises(ValueError):
+            m.build_schedule([1.0, 1.0], [2.0, -1.0])
+
     def test_unsupported_unit_raises(self):
         with self.assertRaises(ValueError):
             m.build_schedule([1.0], [1.0], timestep_units="fortnight")

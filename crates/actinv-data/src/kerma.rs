@@ -271,11 +271,26 @@ impl KermaTable {
 
     /// Heating of one atom of (za, liso) in eV/s: `sum_g K_g * rate_per_barn_s[g]`, where
     /// `rate_per_barn_s[g]` is the group flux converted to the reaction rate of a one-barn cross
-    /// section (s^-1). `None` when no row covers the state.
+    /// section (s^-1). `None` when no row covers the state, and also when the rate vector's
+    /// length differs from the row's (use `try_heating_eV_per_s` to get that as an error).
     pub fn heating_eV_per_s(&self, za: i32, liso: i32, rate_per_barn_s: &[f64]) -> Option<f64> {
+        self.try_heating_eV_per_s(za, liso, rate_per_barn_s)
+            .ok()
+            .flatten()
+    }
+
+    /// As `heating_eV_per_s`, but a rate vector whose length differs from the table's group
+    /// count is an error rather than a silently truncated sum.
+    pub fn try_heating_eV_per_s(
+        &self,
+        za: i32,
+        liso: i32,
+        rate_per_barn_s: &[f64],
+    ) -> Result<Option<f64>, String> {
         self.heating
             .lookup(za, liso)
             .map(|row| fold(row, rate_per_barn_s))
+            .transpose()
     }
 
     /// Damage-energy production of one atom of (za, liso) in eV/s, as `heating_eV_per_s`.
@@ -285,9 +300,22 @@ impl KermaTable {
         liso: i32,
         rate_per_barn_s: &[f64],
     ) -> Option<f64> {
+        self.try_damage_energy_eV_per_s(za, liso, rate_per_barn_s)
+            .ok()
+            .flatten()
+    }
+
+    /// As `damage_energy_eV_per_s`, with a length mismatch reported as an error.
+    pub fn try_damage_energy_eV_per_s(
+        &self,
+        za: i32,
+        liso: i32,
+        rate_per_barn_s: &[f64],
+    ) -> Result<Option<f64>, String> {
         self.damage_energy
             .lookup(za, liso)
             .map(|row| fold(row, rate_per_barn_s))
+            .transpose()
     }
 
     pub fn certificate_metadata(&self) -> serde_json::Value {
@@ -309,16 +337,31 @@ impl KermaTable {
     }
 }
 
-fn fold(row: &[f64], rate_per_barn_s: &[f64]) -> f64 {
-    row.iter()
+fn fold(row: &[f64], rate_per_barn_s: &[f64]) -> Result<f64, String> {
+    if row.len() != rate_per_barn_s.len() {
+        return Err(format!(
+            "kerma row has {} groups but the rate vector has {}",
+            row.len(),
+            rate_per_barn_s.len()
+        ));
+    }
+    Ok(row
+        .iter()
         .zip(rate_per_barn_s.iter())
         .map(|(factor, rate)| factor * rate)
-        .sum()
+        .sum())
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn fold_refuses_a_length_mismatch() {
+        assert_eq!(fold(&[1.0, 2.0], &[3.0, 4.0]), Ok(11.0));
+        assert!(fold(&[1.0, 2.0], &[3.0]).unwrap_err().contains("2 groups"));
+        assert!(fold(&[1.0], &[3.0, 4.0]).is_err());
+    }
 
     fn table_json(targets: serde_json::Value) -> String {
         serde_json::json!({

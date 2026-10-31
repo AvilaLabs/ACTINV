@@ -199,17 +199,7 @@ enum Action {
 
 /// Which result a classification belongs to: its label, title and step times.
 fn fingerprint(result: &crate::model::ResultDocument) -> String {
-    let times: Vec<String> = result
-        .steps()
-        .iter()
-        .map(|s| s["t_s"].to_string())
-        .collect();
-    format!(
-        "{}|{}|{}",
-        result.label,
-        result.value["spec_title"],
-        times.join(",")
-    )
+    result.id.to_string()
 }
 
 impl WasteState {
@@ -1555,6 +1545,7 @@ mod tests {
         let result = ResultDocument {
             value: json!({"steps": [{"step": 4, "t_s": 1.0}, {"t_s": 2.0}]}),
             label: String::new(),
+            id: crate::model::next_result_id(),
         };
         let steps = step_list(&result);
         assert_eq!(steps, [(4, 1.0), (2, 2.0)]);
@@ -1694,6 +1685,7 @@ mod tests {
         let result = ResultDocument {
             value: json!({"steps": series()}),
             label: String::new(),
+            id: crate::model::next_result_id(),
         };
         let document = json!({
             "decay": {"primary": "d.dat"},

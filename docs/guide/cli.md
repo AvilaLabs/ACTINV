@@ -162,6 +162,7 @@ actinv export-openmc RESULT.json STEP OUT.py
 actinv export-mcnp RESULT.json STEP OUT.sdef
 actinv export-openmc-mesh MESH_RESULT.ndjson STEP OUT.py
 actinv export-r2s MESH_RESULT.ndjson STEP OUT.ndjson
+actinv export-r2s-joint MESH_RESULT.ndjson MESH_SPEC.json STEP OUT.ndjson
 actinv export-source openmc R2S_SOURCE.ndjson OUT
 actinv export-source mcnp R2S_SOURCE.ndjson OUT
 actinv export-source serpent R2S_SOURCE.ndjson OUT
@@ -169,6 +170,9 @@ actinv export-source alara R2S_SOURCE.ndjson OUT_DIR --shutdown-t-s T
 ```
 
 `STEP` is one-based. The selected step must contain the requested photon source. Ordinary result exports place a point source at the origin; mesh sources need recorded geometry and independent spatial review.
+
+`export-r2s-joint` is `export-r2s` with the cell-to-cell correlation of the nuclear-data (MF=33) uncertainty carried
+jointly (`actinv-r2s-joint-1`); `MESH_SPEC.json` is the `actinv-mesh-spec-1` document the mesh was run from.
 
 `export-source alara` writes one ALARA `.photonSrc` file per cell under `OUT_DIR` (which must not exist, or exist and be empty) plus a provenance index `OUT_DIR/actinv-alara-index.json`. `--shutdown-t-s T` is required; cooling time is `step_t_s - T`, and every cell must share the same `step_t_s`. See [Advanced workflows](workflows.md#transport-flux-and-mesh-calculations) and `docs/INTERCHANGE_TRANSPORT.md` for the full contract.
 
@@ -208,7 +212,21 @@ actinv waste composition COMPOSITION.json [OUT.json]
 actinv waste composition solve NATIVE_COMPOSITION.json [OUT.json]
 actinv waste intrusion-screen INTRUSION.json [OUT.json]
 actinv waste package PACKAGE.json [OUT.json]
+actinv clearance INPUT STEP [--limits PATH] [--confidence T] OUT.ndjson
+actinv assimilate --result RUN.json --assay ASSAY.json [--out OUT.json] [--emit-result UPDATED.json]
+actinv eval-spread PROBLEM.json [OUT.json]
+actinv surrogate fit SURSPEC.json [OUTDIR]
+actinv surrogate eval ARTIFACT.json X.json [OUT.json]
 ```
+
+`actinv clearance` certifies that the clearance index is below 1 at one step (one-based), per cell of an `actinv mesh`
+result or for one run result, against the IAEA limits or an `actinv-clearance-limits-1` file. `--confidence` is the
+one-sided confidence, between 0.5 and 1 exclusive (default 0.95). `actinv assimilate` folds an assay
+(`actinv-assay-1`) into a result's certified bands and reports the gain and a consistency verdict; `--emit-result`
+writes the result with the updated bands for `decide`, `clearance` or another `assimilate`. `actinv eval-spread` solves
+a problem once with each decay evaluation as primary (it needs `decay.fallback`) and reports how far every quantity
+moves. `actinv surrogate` fits a fast model of a response over a design grid, which `optimize` can use; responses are
+named once each, and the surrogate spec's `base_spec` is read relative to the spec's own folder.
 
 `actinv impurities` screens a material's impurities over declared composition ranges from one solve per element; see
 [Screen a material's impurities](impurities.md). It exits 3, after writing its output, when a verification re-solve

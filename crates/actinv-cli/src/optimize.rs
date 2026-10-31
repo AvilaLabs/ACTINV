@@ -569,6 +569,22 @@ impl OptimizeSpec {
     }
 }
 
+/// A mistyped nuclide must not read as "never produced" (0 Bq/g): that
+/// would certify any `le` constraint on it. A valid name absent from the
+/// step's activity map is a real zero, so only the spelling is checked.
+fn check_activity_response(response: &str) -> Result<(), String> {
+    let Some(k) = response.strip_prefix("activity:") else {
+        return Ok(());
+    };
+    match actinv_core::waste::normalize_nuclide_key(k) {
+        Ok(canon) if canon == k => Ok(()),
+        Ok(canon) => Err(format!(
+            "response '{response}': nuclide '{k}' is not in ACTINV's canonical form; use '{canon}'"
+        )),
+        Err(e) => Err(format!("response '{response}': {e}")),
+    }
+}
+
 /// Extract a response value or band edge from a step — typed access, no
 /// full-result serialization (a serialized step is ~100 MB and would blow
 /// the bounded-memory envelope across candidates).
@@ -577,6 +593,7 @@ pub(crate) fn response_edge(
     response: &str,
     edge: Edge,
 ) -> Result<Option<f64>, String> {
+    check_activity_response(response)?;
     let nominal = |st: &actinv_core::run::StepOut| -> Option<f64> {
         if let Some(k) = response.strip_prefix("heat.") {
             match k {
@@ -622,19 +639,24 @@ pub(crate) fn select_step(
     steps: &[actinv_core::run::StepOut],
     time_s: f64,
 ) -> Result<&actinv_core::run::StepOut, String> {
+    // OPTIMIZE.md defines time_s only as a positive cumulative time; 0 has no
+    // documented meaning, and a relative tolerance cannot be formed around it.
+    if !time_s.is_finite() || time_s <= 0.0 {
+        return Err(format!("time_s must be positive and finite (got {time_s})"));
+    }
     let mut best: Option<(&actinv_core::run::StepOut, f64)> = None;
     for s in steps {
         let t = s.t_s;
         if !t.is_finite() {
             continue;
         }
-        let rel = ((t - time_s) / time_s.max(1e-30)).abs();
+        let rel = ((t - time_s) / time_s).abs();
         if best.map(|(_, b)| rel < b).unwrap_or(true) {
             best = Some((s, rel));
         }
     }
     let (step, rel) = best.ok_or("spec produced no steps with a finite t_s")?;
-    if rel > TIME_REL_TOL && time_s > 0.0 {
+    if rel > TIME_REL_TOL {
         return Err(format!(
             "no step within {TIME_REL_TOL} of time_s={time_s} (nearest rel dev {rel:.3e})"
         ));
@@ -1175,6 +1197,93 @@ pub struct OptimizeSummary {
     pub out_dir: PathBuf,
 }
 
+/// Resume cache: param digest -> ledger id, reconstructed outcome, spec sha.
+type ResumeCache = std::collections::HashMap<String, (usize, EvalOutcome, Option<String>)>;
+
+/// A fresh (non-resume) search must not append to an earlier search's
+/// ledger or overwrite its `candidates/eval_NNNN.json`.
+fn refuse_nonempty_outdir(out_dir: &Path) -> Result<(), String> {
+    let has_candidates = std::fs::read_dir(out_dir.join("candidates"))
+        .map(|mut d| d.next().is_some())
+        .unwrap_or(false);
+    if out_dir.join("optimize_ledger.jsonl").exists() || has_candidates {
+        return Err(format!(
+            "{} already holds an optimize ledger or candidates; pass --resume to continue that search or choose an empty folder",
+            out_dir.display()
+        ));
+    }
+    Ok(())
+}
+
+/// SHA-256 over the canonical (key-sorted) optspec and base spec documents.
+fn run_identity_sha(opt_doc: &Value, base_doc: &Value) -> String {
+    let mut s = serde_json::to_string(opt_doc).unwrap_or_default();
+    s.push('\n');
+    s.push_str(&serde_json::to_string(base_doc).unwrap_or_default());
+    sha256_hex(s.as_bytes())
+}
+
+/// Rebuild the resume cache from ledger text. Refuses a ledger written
+/// under a different optspec/base spec (or without that identity). Only
+/// rows that actually executed are cached: failure rows are re-evaluated.
+/// Returns the cache and the next free eval id (failure rows included).
+fn parse_resume_ledger(
+    text: &str,
+    opt: &OptimizeSpec,
+    run_hash: &str,
+) -> Result<(ResumeCache, usize), String> {
+    let mut resumed = ResumeCache::default();
+    let mut next_id = 0usize;
+    for line in text.lines() {
+        let Ok(row) = serde_json::from_str::<Value>(line) else {
+            continue;
+        };
+        let Some(d) = row["param_digest"].as_str() else {
+            continue;
+        };
+        if row["run_sha256"].as_str() != Some(run_hash) {
+            return Err(
+                "ledger was written under a different optspec or base spec (or predates run identity); refusing --resume — choose an empty OUTDIR"
+                    .into(),
+            );
+        }
+        let eval_id = row["eval_id"].as_u64().unwrap_or(0) as usize;
+        next_id = next_id.max(eval_id + 1);
+        let executed = row["status"]
+            .as_str()
+            .is_some_and(|s| s.starts_with("executed"));
+        if !executed || row["objective"].as_f64().is_none() {
+            continue;
+        }
+        let out = EvalOutcome {
+            objective: row["objective"].as_f64(),
+            violations: row["violations"]
+                .as_array()
+                .map(|a| a.iter().map(|v| v.as_f64()).collect())
+                .unwrap_or_default(),
+            objective_values: row["objectives"]
+                .as_object()
+                .map(|m| {
+                    opt.objectives
+                        .iter()
+                        .map(|o| m.get(&objective_name(o)).and_then(Value::as_f64))
+                        .collect::<Vec<_>>()
+                })
+                .unwrap_or_default(),
+            status: "resumed".into(),
+        };
+        resumed.insert(
+            d.to_string(),
+            (
+                eval_id,
+                out,
+                row["spec_sha256"].as_str().map(str::to_string),
+            ),
+        );
+    }
+    Ok((resumed, next_id))
+}
+
 pub fn run_optimize(
     optspec_path: &str,
     out_arg: Option<&str>,
@@ -1196,6 +1305,18 @@ pub fn run_optimize(
     let out_dir = out_arg
         .map(PathBuf::from)
         .unwrap_or_else(|| opt_dir.join("optimize_out"));
+    if !resume {
+        refuse_nonempty_outdir(&out_dir)?;
+    }
+    // Identity of this search: the canonical optspec and base spec. A resumed
+    // ledger written under a different pair would replay foreign results.
+    let run_hash = {
+        let opt_text = std::fs::read_to_string(opt_path)
+            .map_err(|e| format!("cannot read {}: {e}", opt_path.display()))?;
+        let opt_doc: Value =
+            serde_json::from_str(&opt_text).map_err(|e| format!("cannot parse optspec: {e}"))?;
+        run_identity_sha(&opt_doc, &base_doc)
+    };
     std::fs::create_dir_all(&out_dir)
         .map_err(|e| format!("cannot create {}: {e}", out_dir.display()))?;
     let cand_dir = out_dir.join("candidates");
@@ -1231,42 +1352,12 @@ pub fn run_optimize(
     };
 
     // Resume cache: param digest -> reconstructed outcome + its ledger id.
-    let mut resumed: std::collections::HashMap<String, (usize, EvalOutcome, Option<String>)> =
-        Default::default();
+    let mut resumed: ResumeCache = Default::default();
+    let mut ledger_next_id = 0usize;
     if resume && ledger_path.exists() {
         let text = std::fs::read_to_string(&ledger_path)
             .map_err(|e| format!("cannot read ledger: {e}"))?;
-        for line in text.lines() {
-            if let Ok(row) = serde_json::from_str::<Value>(line) {
-                if let Some(d) = row["param_digest"].as_str() {
-                    let out = EvalOutcome {
-                        objective: row["objective"].as_f64(),
-                        violations: row["violations"]
-                            .as_array()
-                            .map(|a| a.iter().map(|v| v.as_f64()).collect())
-                            .unwrap_or_default(),
-                        objective_values: row["objectives"]
-                            .as_object()
-                            .map(|m| {
-                                opt.objectives
-                                    .iter()
-                                    .map(|o| m.get(&objective_name(o)).and_then(Value::as_f64))
-                                    .collect::<Vec<_>>()
-                            })
-                            .unwrap_or_default(),
-                        status: "resumed".into(),
-                    };
-                    resumed.insert(
-                        d.to_string(),
-                        (
-                            row["eval_id"].as_u64().unwrap_or(0) as usize,
-                            out,
-                            row["spec_sha256"].as_str().map(str::to_string),
-                        ),
-                    );
-                }
-            }
-        }
+        (resumed, ledger_next_id) = parse_resume_ledger(&text, &opt, &run_hash)?;
     }
 
     struct Row {
@@ -1277,7 +1368,7 @@ pub fn run_optimize(
         constraint_detail: BTreeMap<String, Value>,
     }
     let mut rows: Vec<Row> = Vec::new();
-    let mut next_id = resumed.values().map(|(id, _, _)| id + 1).max().unwrap_or(0);
+    let mut next_id = ledger_next_id;
     let mut eval_err: Option<String> = None;
 
     // The engine drives point selection; each point is evaluated through the
@@ -1287,8 +1378,9 @@ pub fn run_optimize(
         .append(true)
         .open(&ledger_path)
         .map_err(|e| format!("cannot open ledger: {e}"))?;
-    let evaluated_count = {
+    {
         let ledger = &mut ledger_file;
+        let run_hash_ref = &run_hash;
         let resumed = &resumed;
         let cand_dir = &cand_dir;
         let opt_ref = &opt;
@@ -1302,6 +1394,14 @@ pub fn run_optimize(
         // owned for winner re-verification below.
         let sur_ref = surrogate.as_ref();
         run_search(&bounds, &opt.optimizer, minimize, move |x| {
+            // A failed write already doomed the run: stop paying for solves
+            // (the search is bounded, so the remaining calls are cheap).
+            if err_ref.is_some() {
+                return EvalOutcome {
+                    status: "aborted: write failure".into(),
+                    ..Default::default()
+                };
+            }
             let digest = param_digest(x);
             if let Some((id, out, sha)) = resumed.get(&digest) {
                 rows_ref.push(Row {
@@ -1325,6 +1425,7 @@ pub fn run_optimize(
                 "eval_id": eval_id,
                 "x": x,
                 "param_digest": digest,
+                "run_sha256": run_hash_ref,
                 "spec_sha256": spec_sha,
                 "status": outcome.status,
                 "objective": outcome.objective,
@@ -1344,10 +1445,14 @@ pub fn run_optimize(
                 .and_then(|_| ledger.flush())
             {
                 *err_ref = Some(format!("ledger write: {e}"));
+                return outcome;
             }
             if let Some(c) = &canon {
                 let p = cand_dir.join(format!("eval_{eval_id:04}.json"));
-                let _ = std::fs::write(&p, c);
+                if let Err(e) = std::fs::write(&p, c) {
+                    *err_ref = Some(format!("cannot write {}: {e}", p.display()));
+                    return outcome;
+                }
             }
             rows_ref.push(Row {
                 eval_id,
@@ -1357,13 +1462,11 @@ pub fn run_optimize(
                 constraint_detail: row_detail,
             });
             outcome
-        })
-        .len()
-    };
+        });
+    }
     if let Some(e) = eval_err {
         return Err(e);
     }
-    let _ = evaluated_count;
 
     // rank
     let mut order: Vec<usize> = (0..rows.len()).collect();
@@ -2024,5 +2127,115 @@ mod tests {
         // response constraint without response rejected
         opt.constraints[0].kind = "response".into();
         assert!(opt.validate().is_err());
+    }
+
+    #[test]
+    fn activity_response_names_are_checked() {
+        assert!(check_activity_response("activity:Co60").is_ok());
+        assert!(check_activity_response("activity:Ag110m1").is_ok());
+        assert!(check_activity_response("heat.total").is_ok());
+        assert!(check_activity_response("activity.total").is_ok());
+        let dashed = check_activity_response("activity:Co-60").unwrap_err();
+        assert!(dashed.contains("Co60"), "{dashed}");
+        assert!(check_activity_response("activity:Cobalt60").is_err());
+        assert!(check_activity_response("activity:Co").is_err());
+        assert!(check_activity_response("activity:*").is_err());
+    }
+
+    #[test]
+    fn select_step_refuses_non_positive_time() {
+        for t in [0.0, -1.0, f64::NAN, f64::INFINITY] {
+            let e = select_step(&[], t).err().expect("must refuse");
+            assert!(e.contains("time_s"), "{e}");
+        }
+        assert!(select_step(&[], 1.0).is_err());
+    }
+
+    fn resume_opt() -> OptimizeSpec {
+        serde_json::from_value(serde_json::json!({
+            "schema": "actinv-optimize-1",
+            "base_spec": "b.json",
+            "design_axes": [{"kind": "flux_scale", "bounds": [0.5, 2.0]}],
+            "objective": {"response": "heat.total", "time_s": 1.0,
+                          "edge": "nominal", "direction": "min"},
+            "optimizer": {"algorithm": "lhs_coordinate", "seed": 1,
+                          "init_points": 4, "refine_points": 0}
+        }))
+        .unwrap()
+    }
+
+    fn ledger_row(
+        id: usize,
+        digest: &str,
+        status: &str,
+        objective: Option<f64>,
+        run: &str,
+    ) -> String {
+        serde_json::json!({
+            "eval_id": id, "param_digest": digest, "run_sha256": run,
+            "status": status, "objective": objective, "violations": [],
+            "spec_sha256": null,
+        })
+        .to_string()
+    }
+
+    #[test]
+    fn resume_caches_only_executed_rows() {
+        let opt = resume_opt();
+        let text = [
+            ledger_row(0, "a", "executed", Some(1.0), "h"),
+            ledger_row(1, "b", "run_error: boom", None, "h"),
+            ledger_row(2, "c", "catalog_resolve_error: x", None, "h"),
+            ledger_row(3, "d", "executed·prescreened", Some(2.0), "h"),
+        ]
+        .join("\n");
+        let (cache, next) = parse_resume_ledger(&text, &opt, "h").unwrap();
+        assert!(cache.contains_key("a") && cache.contains_key("d"));
+        assert!(!cache.contains_key("b") && !cache.contains_key("c"));
+        assert_eq!(cache["a"].1.status, "resumed");
+        // failed rows still reserve their ids so candidates are not overwritten
+        assert_eq!(next, 4);
+    }
+
+    #[test]
+    fn resume_refuses_different_or_missing_run_identity() {
+        let opt = resume_opt();
+        let other = ledger_row(0, "a", "executed", Some(1.0), "old");
+        assert!(parse_resume_ledger(&other, &opt, "new").is_err());
+        let legacy = serde_json::json!({
+            "eval_id": 0, "param_digest": "a", "status": "executed", "objective": 1.0
+        })
+        .to_string();
+        assert!(parse_resume_ledger(&legacy, &opt, "new").is_err());
+        assert!(parse_resume_ledger("", &opt, "new").is_ok());
+    }
+
+    #[test]
+    fn run_identity_tracks_both_documents() {
+        let a = serde_json::json!({"x": 1});
+        let b = serde_json::json!({"y": 2});
+        let base = run_identity_sha(&a, &b);
+        assert_eq!(base, run_identity_sha(&a, &b));
+        assert_ne!(base, run_identity_sha(&serde_json::json!({"x": 2}), &b));
+        assert_ne!(base, run_identity_sha(&a, &serde_json::json!({"y": 3})));
+    }
+
+    #[test]
+    fn fresh_search_refuses_populated_outdir() {
+        let dir = std::env::temp_dir().join(format!("actinv-opt-outdir-{}", std::process::id()));
+        let _ = std::fs::remove_dir_all(&dir);
+        assert!(refuse_nonempty_outdir(&dir).is_ok(), "missing dir is fine");
+        std::fs::create_dir_all(dir.join("candidates")).unwrap();
+        assert!(
+            refuse_nonempty_outdir(&dir).is_ok(),
+            "empty candidates/ is fine"
+        );
+        std::fs::write(dir.join("candidates/eval_0000.json"), "{}").unwrap();
+        let e = refuse_nonempty_outdir(&dir).unwrap_err();
+        assert!(e.contains("--resume"), "{e}");
+        std::fs::remove_file(dir.join("candidates/eval_0000.json")).unwrap();
+        std::fs::write(dir.join("optimize_ledger.jsonl"), "").unwrap();
+        assert!(refuse_nonempty_outdir(&dir).is_err());
+        let _ = std::fs::remove_dir_all(&dir);
     }
 }

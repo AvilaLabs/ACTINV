@@ -50,7 +50,7 @@ pub struct ExportState {
     /// Every step with decay photons, not only the selected one.
     transport_all: bool,
     /// Which tables this result can build, and why not, for the result it was worked out for.
-    available: Option<(String, Availability)>,
+    available: Option<(u64, Availability)>,
     pub message: Option<Result<String, String>>,
 }
 
@@ -97,8 +97,12 @@ pub enum ExportAction {
 }
 
 /// What else the shell knows that belongs in the export.
+/// Why the problem cannot be exported beside a result opened from a file.
+const NO_PROBLEM: &str =
+    "Not known for a result opened from a file; export its problem from where it was run.";
+
 pub struct Context<'a> {
-    /// The problem as it is set up now; offered in the report and as problem.json.
+    /// The problem that produced the result, if known; offered in the report and as problem.json.
     pub problem: Option<&'a Value>,
     /// A waste classification of this result, already put into rows.
     pub waste: Option<Section>,
@@ -356,9 +360,9 @@ pub fn show(
     if state
         .available
         .as_ref()
-        .is_none_or(|(label, _)| *label != result.label)
+        .is_none_or(|(id, _)| *id != result.id)
     {
-        state.available = Some((result.label.clone(), availability(result)));
+        state.available = Some((result.id, availability(result)));
         state.skipped.clear();
     }
     let mut action = ExportAction::None;
@@ -418,11 +422,10 @@ pub fn show(
                 ui.add_enabled_ui(context.problem.is_some(), |ui| {
                     ui.checkbox(
                         &mut state.include_problem,
-                        "Describe the problem as it is set up now",
+                        "Describe the problem that produced this result",
                     )
-                    .on_hover_text(
-                        "Untick this if you changed the setup after computing this result.",
-                    );
+                    .on_hover_text("As it was when you pressed Run; later edits are not included.")
+                    .on_disabled_hover_text(NO_PROBLEM);
                 });
                 if context.waste.is_some() {
                     ui.label(
@@ -651,11 +654,17 @@ pub fn show(
                 ui.horizontal(|ui| {
                     ui.checkbox(&mut state.problem_json, "The problem");
                     ui.label(RichText::new("problem.json").weak().monospace());
-                });
+                })
+                .response
+                .on_disabled_hover_text(NO_PROBLEM);
             });
             ui.label(
-                RichText::new("As it is set up now; run it again with `actinv run problem.json`.")
-                    .weak(),
+                RichText::new(if context.problem.is_some() {
+                    "The problem that produced this result; run it again with `actinv run problem.json`."
+                } else {
+                    NO_PROBLEM
+                })
+                .weak(),
             );
         });
     });
@@ -772,7 +781,7 @@ mod tests {
     fn everything_chosen_writes_the_report_charts_tables_and_both_files() {
         let result = result();
         let state = ExportState {
-            available: Some((result.label.clone(), availability(&result))),
+            available: Some((result.id, availability(&result))),
             ..Default::default()
         };
         let problem = crate::model::example();
@@ -808,7 +817,7 @@ mod tests {
             format: Format::Markdown,
             ..Default::default()
         };
-        state.available = Some((result.label.clone(), availability(&result)));
+        state.available = Some((result.id, availability(&result)));
         let files = files(&result, &state, &context(None), None).unwrap();
         assert!(!files.is_empty());
         assert!(files.iter().all(|f| f.0.ends_with(".md")));

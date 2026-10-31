@@ -5,8 +5,8 @@
 
 use crate::endf::{parse_sections, read_cont_checked, read_list_checked, ContRecord};
 use crate::library::{
-    ensure_eof, read_f64_values, read_i64, read_npy_header, temporary_sibling, write_npy_header,
-    Library, NpyDtype, ReactionLibrary,
+    ensure_eof, read_f64_values, read_i64, read_npy_header, require_payload_size,
+    temporary_sibling, write_npy_header, Library, NpyDtype, ReactionLibrary, MAX_ARRAY_BYTES,
 };
 use rayon::prelude::*;
 use serde::{Deserialize, Serialize};
@@ -17,7 +17,6 @@ use std::io::{BufReader, Read, Seek, Write};
 use std::path::{Path, PathBuf};
 
 const COMPONENT_COLUMNS: usize = 9;
-const MAX_ARRAY_BYTES: u64 = 1_000_000_000;
 // Bump when parsing, target mapping or per-source sidecar storage changes. Aggregation,
 // reporting and CLI-only edits deliberately do not invalidate every target checkpoint.
 const COVARIANCE_CHECKPOINT_FINGERPRINT: &str =
@@ -2266,6 +2265,7 @@ fn read_i64_array<R: Read + Seek>(
     dimensions: usize,
 ) -> Result<(Vec<i64>, Vec<usize>), String> {
     let member = archive.by_name(name).map_err(|error| error.to_string())?;
+    let member_size = member.size();
     let mut reader = BufReader::with_capacity(64 * 1024, member);
     let header = read_npy_header(&mut reader)?;
     if header.dtype != NpyDtype::I64 || header.shape.len() != dimensions {
@@ -2273,7 +2273,11 @@ fn read_i64_array<R: Read + Seek>(
             "{name} must have dtype <i8 and {dimensions} dimension(s), got {header:?}"
         ));
     }
-    let mut values = Vec::with_capacity(header.elements);
+    require_payload_size(&header, member_size, name)?;
+    let mut values = Vec::new();
+    values
+        .try_reserve_exact(header.elements)
+        .map_err(|error| format!("cannot allocate {} i64 values: {error}", header.elements))?;
     for _ in 0..header.elements {
         values.push(read_i64(&mut reader)?);
     }

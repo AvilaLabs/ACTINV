@@ -304,8 +304,10 @@ pub fn emit_clearance(
     limits_path: Option<&str>,
     confidence: f64,
 ) -> Result<String, String> {
-    if !confidence.is_finite() || !(0.0..1.0).contains(&confidence) {
-        return Err("confidence must be in the open interval (0, 1)".into());
+    // At or below 1/2 the clears and fails tests (lo >= c, hi <= 1 - c) can both
+    // hold, and at 0 every cell would certify, so the lower bound is exclusive 1/2.
+    if !confidence.is_finite() || confidence <= 0.5 || confidence >= 1.0 {
+        return Err("confidence must be in the open interval (0.5, 1)".into());
     }
     let started = std::time::Instant::now();
     let input_sha = sha256_hex(input_bytes);
@@ -434,4 +436,24 @@ pub fn emit_clearance(
         out.push('\n');
     }
     Ok(out)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn confidence_outside_open_half_to_one_is_refused() {
+        for c in [0.0, 0.3, 0.5, 1.0, 1.5, -0.1, f64::NAN, f64::INFINITY] {
+            let err = emit_clearance(b"{}", 1, None, c).unwrap_err();
+            assert!(err.contains("(0.5, 1)"), "{c}: {err}");
+        }
+    }
+
+    #[test]
+    fn valid_confidence_passes_the_range_check() {
+        // The range check precedes parsing, so a valid level fails later on the input.
+        let err = emit_clearance(b"not json", 1, None, 0.95).unwrap_err();
+        assert!(!err.contains("confidence"), "{err}");
+    }
 }

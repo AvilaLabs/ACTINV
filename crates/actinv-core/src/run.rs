@@ -348,6 +348,43 @@ fn index_path(library_path: &str) -> String {
     }
 }
 
+/// One `(za, liso)` target key of a library index; a missing, non-integer or out-of-range
+/// field is an error naming the index file and entry, never a silent (0, 0).
+pub(crate) fn library_index_target_key(
+    target: &serde_json::Value,
+    index_file: &str,
+    position: usize,
+) -> Result<(i32, i32), String> {
+    let field = |name: &str| -> Result<i32, String> {
+        let value = target
+            .get(name)
+            .and_then(serde_json::Value::as_i64)
+            .ok_or_else(|| {
+                format!("library index {index_file}: targets[{position}] has no integer \"{name}\"")
+            })?;
+        i32::try_from(value).map_err(|_| {
+            format!(
+                "library index {index_file}: targets[{position}] \"{name}\" = {value} is out of range"
+            )
+        })
+    };
+    Ok((field("za")?, field("liso")?))
+}
+
+/// The `(za, liso)` key of every entry in a library index's `targets` array.
+pub(crate) fn library_index_target_keys(
+    index: &serde_json::Value,
+    index_file: &str,
+) -> Result<Vec<(i32, i32)>, String> {
+    index["targets"]
+        .as_array()
+        .ok_or("library index has no targets")?
+        .iter()
+        .enumerate()
+        .map(|(position, target)| library_index_target_key(target, index_file, position))
+        .collect()
+}
+
 type ShaCacheKey = (String, u64, u128);
 
 /// Fission-yield sampling input: (parent nuclide key, yield, rel_sigma).
@@ -3035,17 +3072,7 @@ impl PreparedRun {
         let library_targets: Vec<(i32, i32)> = if decay_only {
             Vec::new()
         } else {
-            index["targets"]
-                .as_array()
-                .ok_or("library index has no targets")?
-                .iter()
-                .map(|target| {
-                    (
-                        target["za"].as_i64().unwrap_or(0) as i32,
-                        target["liso"].as_i64().unwrap_or(0) as i32,
-                    )
-                })
-                .collect()
+            library_index_target_keys(&index, &idx_path)?
         };
         // P153: a named parent must have a yield file and fission in the library; refused here, before any output.
         if let Some((_, named)) = &fission_parent_selection {
@@ -3342,17 +3369,7 @@ impl PreparedRun {
             }
             None => {}
         }
-        let library_targets: Vec<(i32, i32)> = index["targets"]
-            .as_array()
-            .ok_or("library index has no targets")?
-            .iter()
-            .map(|target| {
-                (
-                    target["za"].as_i64().unwrap_or(0) as i32,
-                    target["liso"].as_i64().unwrap_or(0) as i32,
-                )
-            })
-            .collect();
+        let library_targets: Vec<(i32, i32)> = library_index_target_keys(&index, &idx_path)?;
         Ok(PreparedStepLibrary {
             reference: reference.clone(),
             projectile,
@@ -6751,16 +6768,11 @@ impl PreparedRun {
                 inventory: inv,
                 activity_Bq_per_g: act,
                 heat_W_per_g: heat,
-                leakage_atoms_per_g: pos[ch.leak]
-                    .checked_sub(0)
-                    .and_then(|p| {
-                        if p != usize::MAX {
-                            y.get(p).copied()
-                        } else {
-                            None
-                        }
-                    })
-                    .unwrap_or(0.0),
+                leakage_atoms_per_g: if pos[ch.leak] != usize::MAX {
+                    y.get(pos[ch.leak]).copied().unwrap_or(0.0)
+                } else {
+                    0.0
+                },
                 removed_atoms_per_g: removed.map(|sink| {
                     if pos[sink] != usize::MAX {
                         y.get(pos[sink]).copied().unwrap_or(0.0)
@@ -6917,12 +6929,18 @@ impl PreparedRun {
                 }
                 // closure is measured on the complete decomposition, before any chain is dropped for reporting
                 closure = closure.max(closure_gap(&steps[pathways.len()].inventory, &per));
-                for v in per.values_mut() {
+                for (nuclide, v) in per.iter_mut() {
+                    if let Some(bad) = v.iter().find(|p| !p.atoms_per_g.is_finite()) {
+                        return Err(format!(
+                            "pathway decomposition of {nuclide} has a non-finite chain amount ({}) via {}",
+                            bad.atoms_per_g, bad.first_product
+                        ));
+                    }
                     let tot: f64 = v.iter().map(|p| p.atoms_per_g).sum();
                     for p in v.iter_mut() {
                         p.fraction = if tot > 0.0 { p.atoms_per_g / tot } else { 0.0 };
                     }
-                    v.sort_by(|a, b| b.atoms_per_g.partial_cmp(&a.atoms_per_g).unwrap());
+                    v.sort_by(|a, b| b.atoms_per_g.total_cmp(&a.atoms_per_g));
                     v.retain(|p| p.fraction >= 1e-6); // reporting threshold only; the closure above used every chain
                 }
                 pathways.push(per);
@@ -7054,7 +7072,7 @@ impl PreparedRun {
                             }
                         }
                         let mut top: Vec<(String, f64)> = by_product.into_iter().collect();
-                        top.sort_by(|a, b| b.1.partial_cmp(&a.1).unwrap());
+                        top.sort_by(|a, b| b.1.total_cmp(&a.1));
                         top.truncate(10);
                         IsomerPathwayShare {
                             status: "emitted",
@@ -7216,11 +7234,8 @@ impl PreparedRun {
         let mut library_convergence_flags = Vec::new();
         let mut library_target_limitations = Vec::new();
         if let Some(targets) = idxj["targets"].as_array() {
-            for target in targets {
-                let key = (
-                    target["za"].as_i64().unwrap_or(0) as i32,
-                    target["liso"].as_i64().unwrap_or(0) as i32,
-                );
+            for (position, target) in targets.iter().enumerate() {
+                let key = library_index_target_key(target, idx_path, position)?;
                 if !bulk_inv.contains_key(&key) {
                     continue;
                 }
@@ -11878,5 +11893,47 @@ mod p164_design_order_tests {
         // A zero vector is a computed zero, not a failure — also on a zero block.
         assert_eq!(psd_block_reduction(&a, 2, &[0.0, 0.0]), Some(0.0));
         assert_eq!(psd_block_reduction(&[0.0; 4], 2, &[0.0, 0.0]), Some(0.0));
+    }
+}
+
+#[cfg(test)]
+mod library_index_target_tests {
+    use super::{library_index_target_key, library_index_target_keys};
+    use serde_json::json;
+
+    #[test]
+    fn valid_targets_parse_in_order() {
+        let index = json!({"targets": [{"za": 260560, "liso": 0}, {"za": 270580, "liso": 1}]});
+        assert_eq!(
+            library_index_target_keys(&index, "lib_index.json").unwrap(),
+            vec![(260560, 0), (270580, 1)]
+        );
+    }
+
+    #[test]
+    fn missing_renamed_or_string_fields_name_file_and_entry() {
+        for bad in [
+            json!({"Z": 260560, "liso": 0}),
+            json!({"za": "260560", "liso": 0}),
+            json!({"za": 260560}),
+        ] {
+            let err = library_index_target_key(&bad, "lib_index.json", 3).unwrap_err();
+            assert!(
+                err.contains("lib_index.json") && err.contains("targets[3]"),
+                "{err}"
+            );
+        }
+    }
+
+    #[test]
+    fn out_of_range_integer_is_refused() {
+        let bad = json!({"za": 5_000_000_000i64, "liso": 0});
+        let err = library_index_target_key(&bad, "lib_index.json", 0).unwrap_err();
+        assert!(err.contains("out of range"), "{err}");
+    }
+
+    #[test]
+    fn missing_targets_array_is_refused() {
+        assert!(library_index_target_keys(&json!({}), "x").is_err());
     }
 }

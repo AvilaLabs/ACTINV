@@ -130,7 +130,7 @@ def build_schedule(timesteps, source_rates, timestep_units="s"):
     sequence; every schedule entry's "flux" multiplier is its own rate divided by that reference,
     so this assumes a single, constant neutron spectral shape that only scales up and down with
     source strength (irradiation steps share one reference rate; cooling steps use 0.0). Returns
-    ``(schedule, reference)``. Raises ``ValueError`` if no timestep has a positive source rate,
+    ``(schedule, reference)``. Raises ``ValueError`` if any source rate is negative or no timestep has a positive source rate,
     since there would then be no irradiation to activate anything (a pure-decay-only schedule is
     not a useful R2S run and silently defaulting the reference to 1.0 would hide that).
     """
@@ -141,9 +141,11 @@ def build_schedule(timesteps, source_rates, timestep_units="s"):
         if unit not in _UNITS_S:
             raise ValueError(f"unsupported timestep unit {unit!r}")
         durations.append(float(value) * _UNITS_S[unit])
+    if any(r < 0.0 for r in rates):
+        raise ValueError("build_schedule: source rates must not be negative")
     if not any(r > 0.0 for r in rates):
         raise ValueError("build_schedule: at least one timestep must have a positive source rate "
-                         "(every entry in source_rates was zero or negative)")
+                         "(every entry in source_rates was zero)")
     reference = next(r for r in rates if r > 0.0)
     schedule = [{"dt": f"{d!r} s", "flux": r / reference} for d, r in zip(durations, rates)]
     return schedule, reference
@@ -214,13 +216,21 @@ def require_activation_regions(mats):
 
 
 class ActinvR2SManager(openmc.deplete.R2SManager):
+    """R2SManager whose activation step runs ``actinv mesh``.
+
+    ``mesh_timeout_s`` bounds the ``actinv mesh`` subprocess in wall-clock seconds (default one
+    day, ``None`` for no limit); on timeout or a non-zero exit the error carries the stderr tail.
+    """
     def __init__(self, neutron_model, domains, photon_model=None, *, library, decay_primary,
-                 decay_fallback=None, actinv_bin="actinv", options=None, photon=None, threads=1):
+                 decay_fallback=None, actinv_bin="actinv", options=None, photon=None, threads=1,
+                 mesh_timeout_s=86400.0):
         super().__init__(neutron_model, domains, photon_model)
         self.library = str(Path(library).resolve())
         self.decay_primary = str(Path(decay_primary).resolve())
         self.decay_fallback = str(Path(decay_fallback).resolve()) if decay_fallback else None
         self.actinv_bin = actinv_bin
+        # Wall-clock limit (seconds) for the `actinv mesh` subprocess; None waits indefinitely.
+        self.mesh_timeout_s = mesh_timeout_s
         self.options = {"mode": "auto", "prune": "rate", **(options or {})}
         self.options["outputs"] = sorted(set(self.options.get("outputs", [])) | {"photons", "ledger"})
         self.photon = photon or {}
@@ -291,8 +301,12 @@ class ActinvR2SManager(openmc.deplete.R2SManager):
         spec_path = output_dir / "mesh.json"
         spec_path.write_text(json.dumps(spec, indent=1))
         result_path = output_dir / "mesh_result.ndjson"
-        proc = subprocess.run([self.actinv_bin, "mesh", str(spec_path), str(result_path)],
-                              capture_output=True, text=True)
+        try:
+            proc = subprocess.run([self.actinv_bin, "mesh", str(spec_path), str(result_path)],
+                                  capture_output=True, text=True, timeout=self.mesh_timeout_s)
+        except subprocess.TimeoutExpired as exc:
+            tail = exc.stderr if isinstance(exc.stderr, str) else (exc.stderr or b"").decode("utf-8", "replace")
+            raise RuntimeError(f"actinv mesh timed out after {self.mesh_timeout_s} s:\n{tail[-4000:]}") from exc
         if proc.returncode != 0:
             raise RuntimeError(f"actinv mesh failed:\n{proc.stderr[-4000:]}")
 

@@ -4,7 +4,9 @@
 //! processed MF=3 file. Every declared record is consumed. Optional R-matrix backgrounds and tabulated phase shifts
 //! are retained explicitly; reconstruction rejects an unsupported extension instead of silently omitting it.
 
-use crate::endf::{read_cont_checked, read_list_checked, read_tab1_checked, ContRecord, Section};
+use crate::endf::{
+    bounded_capacity, read_cont_checked, read_list_checked, read_tab1_checked, ContRecord, Section,
+};
 use crate::groups::Tabulated;
 use num_complex::Complex64;
 use std::collections::{BTreeMap, BTreeSet};
@@ -345,7 +347,7 @@ fn parse_legacy_resolved(
 ) -> Result<(RangeData, usize), String> {
     let (control, next) = read_cont_checked(lines, index)?;
     index = next;
-    let mut groups = Vec::with_capacity(control.n1);
+    let mut groups = Vec::with_capacity(bounded_capacity(control.n1));
     for _ in 0..control.n1 {
         let (record, next) = read_list_checked(lines, index)?;
         index = next;
@@ -356,7 +358,7 @@ fn parse_legacy_resolved(
                 6 * record.head.n2
             ));
         }
-        let mut resonances = Vec::with_capacity(record.head.n2);
+        let mut resonances = Vec::with_capacity(bounded_capacity(record.head.n2));
         for values in record.values.as_chunks::<6>().0 {
             if lrf <= 2 {
                 nonnegative(&values[2..], "Breit-Wigner width")?;
@@ -506,7 +508,7 @@ fn parse_rmatrix_limited(lines: &[&str], mut index: usize) -> Result<(RangeData,
             pair_record.head.n1, pair_record.head.n2
         ));
     }
-    let mut particle_pairs = Vec::with_capacity(pair_count);
+    let mut particle_pairs = Vec::with_capacity(bounded_capacity(pair_count));
     for values in pair_record.values.as_chunks::<12>().0 {
         let pair = ParticlePair {
             mass_a: values[0],
@@ -537,7 +539,7 @@ fn parse_rmatrix_limited(lines: &[&str], mut index: usize) -> Result<(RangeData,
         particle_pairs.push(pair);
     }
 
-    let mut spin_groups = Vec::with_capacity(control.n1);
+    let mut spin_groups = Vec::with_capacity(bounded_capacity(control.n1));
     for _ in 0..control.n1 {
         let (channel_record, next) = read_list_checked(lines, index)?;
         index = next;
@@ -548,7 +550,7 @@ fn parse_rmatrix_limited(lines: &[&str], mut index: usize) -> Result<(RangeData,
                 6 * channel_record.head.n2
             ));
         }
-        let mut channels = Vec::with_capacity(channel_record.head.n2);
+        let mut channels = Vec::with_capacity(bounded_capacity(channel_record.head.n2));
         for values in channel_record.values.as_chunks::<6>().0 {
             let pair = integer(values[0], "RML particle-pair index")?;
             let pair = usize::try_from(pair - 1)
@@ -599,7 +601,7 @@ fn parse_rmatrix_limited(lines: &[&str], mut index: usize) -> Result<(RangeData,
                 resonance_record.head.n1, expected_values
             ));
         }
-        let mut resonances = Vec::with_capacity(resonance_count);
+        let mut resonances = Vec::with_capacity(bounded_capacity(resonance_count));
         for values in resonance_record
             .values
             .chunks_exact(values_per_resonance)
@@ -610,19 +612,19 @@ fn parse_rmatrix_limited(lines: &[&str], mut index: usize) -> Result<(RangeData,
                 widths: values[1..=channels.len()].to_vec(),
             });
         }
-        let mut backgrounds = Vec::with_capacity(
+        let mut backgrounds = Vec::with_capacity(bounded_capacity(
             usize::try_from(channel_record.head.l1)
                 .map_err(|_| format!("negative RML KBK {}", channel_record.head.l1))?,
-        );
+        ));
         for _ in 0..channel_record.head.l1 {
             let (extension, next) = parse_rml_extension(lines, index)?;
             backgrounds.push(extension);
             index = next;
         }
-        let mut phase_shifts = Vec::with_capacity(
+        let mut phase_shifts = Vec::with_capacity(bounded_capacity(
             usize::try_from(channel_record.head.l2)
                 .map_err(|_| format!("negative RML KPS {}", channel_record.head.l2))?,
-        );
+        ));
         // ENDF-6 2.2.1.6: KPS>0 writes one LIST record per channel in order;
         // the channel index is positional, not a record field.
         for ordinal in 0..channel_record.head.l2 {
@@ -836,7 +838,7 @@ fn parse_unresolved(
                         ));
                     }
                     let dof = &record.values[..6];
-                    let mut points = Vec::with_capacity(record.head.n2);
+                    let mut points = Vec::with_capacity(bounded_capacity(record.head.n2));
                     for values in record.values[6..].as_chunks::<6>().0 {
                         let point = UnresolvedPoint {
                             energy: Some(values[0]),
@@ -903,7 +905,7 @@ pub fn parse_mf2(section: &Section<'_>) -> Result<ResonanceEvaluation, String> {
     if head.awr_invalid() {
         return Err(format!("invalid MF=2 AWR {}", head.c2));
     }
-    let mut isotopes = Vec::with_capacity(head.n1);
+    let mut isotopes = Vec::with_capacity(bounded_capacity(head.n1));
     for _ in 0..head.n1 {
         let (isotope, next) = read_cont_checked(lines, index)?;
         index = next;
@@ -911,7 +913,7 @@ pub fn parse_mf2(section: &Section<'_>) -> Result<ResonanceEvaluation, String> {
         if isotope.c2 < 0.0 || !matches!(isotope.l2, 0 | 1) {
             return Err("invalid MF=2 isotope abundance or LFW".into());
         }
-        let mut ranges = Vec::with_capacity(isotope.n1);
+        let mut ranges = Vec::with_capacity(bounded_capacity(isotope.n1));
         for _ in 0..isotope.n1 {
             let (range, next) = read_cont_checked(lines, index)?;
             index = next;

@@ -6,7 +6,10 @@ An unfiltered recursive launch of a Rust test executable exhausted this laptop's
 memory on 2026-09-10. These rules apply to all agents working in this checkout:
 
 - Subagents may inspect and edit code; only the coordinating agent runs builds,
-  executable tests, benchmarks, or solver jobs. Run one such job at a time.
+  executable tests, benchmarks, or solver jobs. Run at most two such jobs at
+  a time, each in its own scope below (owner direction, 2026-10-30; the
+  laptop has 30 GB and 8 cores). Before starting a second, check that free
+  memory leaves room for it.
 - On this Linux workstation, run those jobs inside an enforced systemd cgroup:
   `systemd-run --user --scope -p MemoryMax=6G -p MemorySwapMax=0 -p TasksMax=128 -p CPUQuota=200% -- env CARGO_BUILD_JOBS=1 RUST_TEST_THREADS=1 RAYON_NUM_THREADS=2 COMMAND ...`
 - If cgroup limits cannot be enforced, stop. Do not fall back to an unlimited

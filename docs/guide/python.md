@@ -67,7 +67,7 @@ problem["schedule"] = (
 )
 ```
 
-Feed units are atoms s⁻¹ g⁻¹ and removal units are s⁻¹. Other helpers include `reverse`, `decide`, and `optimize`; 1.4.0 adds `actinv.budget(budget, base_dir=None, verify=True)`. A failed budget verification is returned in the document rather than raised as an exception. See the [Python package reference](https://github.com/AvilaLabs/ACTINV/blob/master/python/README.md), [Advanced workflows](workflows.md).
+Feed units are atoms s⁻¹ g⁻¹ and removal units are s⁻¹. Other helpers include `reverse`, `decide`, and `optimize`; 1.4.0 adds `actinv.budget(budget, *, base_dir=None, verify=True)`. Their options after the first arguments are keyword-only, for example `actinv.decide(decision, base_dir="case")` and `actinv.optimize(path, outdir="out", resume=True)`. A failed budget verification is returned in the document rather than raised as an exception. See the [Python package reference](https://github.com/AvilaLabs/ACTINV/blob/master/python/README.md), [Advanced workflows](workflows.md).
 
 ## Waste classification from Python
 

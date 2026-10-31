@@ -1686,7 +1686,8 @@ impl Workbench {
             return;
         };
         let context = crate::views::export::Context {
-            problem: Some(&self.problem),
+            // results reach the browser as files, so the problem that produced one is not known
+            problem: None,
             waste: None,
             step: self.step,
             save_label: "Download .zip",

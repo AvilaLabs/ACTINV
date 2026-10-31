@@ -1,12 +1,9 @@
 //! ENDF-6 primitives: checked fixed-width records and the exponent-without-`e` number form.
 //!
-//! The tuple-returning helpers are retained for compatibility. Production parsers use the checked records below:
-//! malformed numeric fields and truncated payloads are errors rather than values silently changed to zero.
+//! Parsers use the checked records below: malformed numeric fields and truncated payloads are errors rather than
+//! values silently changed to zero.
 
 use std::collections::HashSet;
-
-pub type ListRecord = (f64, f64, i32, i32, usize, usize, Vec<f64>);
-pub type Tab1Record = (f64, f64, i32, i32, Vec<(usize, i32)>, Vec<(f64, f64)>);
 
 /// Parse one ENDF floating-point field. A blank data field is the ENDF zero value.
 pub fn parse_endf_float(s: &str) -> Result<f64, String> {
@@ -56,12 +53,6 @@ pub fn parse_endf_i32(s: &str) -> Result<i32, String> {
 pub fn parse_endf_usize(s: &str) -> Result<usize, String> {
     let value = parse_endf_i32(s)?;
     usize::try_from(value).map_err(|_| format!("negative ENDF count {value}"))
-}
-
-/// Parse an ENDF numeric field: standard floats plus the exponent-without-`e` form used throughout ENDF.
-#[deprecated(note = "panics on a malformed field; use parse_endf_float")]
-pub fn endf_float(s: &str) -> f64 {
-    parse_endf_float(s).expect("invalid ENDF float in legacy parser")
 }
 
 /// The six 11-character data fields of an ENDF record.
@@ -200,7 +191,14 @@ fn line_at<'a>(lines: &'a [&'a str], index: usize, kind: &str) -> Result<&'a str
         .ok_or_else(|| format!("truncated ENDF {kind} at record {}", index + 1))
 }
 
-fn require_payload_fields(
+/// Initial `Vec` reservation for a count read from a header: bounded so a crafted count fails on the
+/// records that are missing rather than aborting on allocation, and unchanged in effect for honest counts
+/// (the vector grows past the bound as elements are pushed).
+pub(crate) fn bounded_capacity(count: usize) -> usize {
+    count.min(1 << 16)
+}
+
+pub(crate) fn require_payload_fields(
     lines: &[&str],
     next: usize,
     fields: usize,
@@ -456,82 +454,18 @@ pub fn parse_sections(text: &str) -> Result<Vec<Section<'_>>, String> {
     Ok(sections)
 }
 
-/// Read a LIST record starting at `i`: returns ((C1, C2, L1, L2, N1, N2, values), next index).
-#[deprecated(note = "zero-fills truncated records; use read_list_checked")]
-#[allow(deprecated)]
-pub fn read_list(lines: &[&str], mut i: usize) -> (ListRecord, usize) {
-    let f = fields(lines[i]);
-    let (c1, c2) = (endf_float(f[0]), endf_float(f[1]));
-    let l1 = f[2].trim().parse::<i32>().unwrap_or(0);
-    let l2 = f[3].trim().parse::<i32>().unwrap_or(0);
-    let n1 = f[4].trim().parse::<usize>().unwrap_or(0);
-    let n2 = f[5].trim().parse::<usize>().unwrap_or(0);
-    i += 1;
-    let mut vals = Vec::with_capacity(n1);
-    while vals.len() < n1 {
-        let g = fields(lines[i]);
-        for field in g {
-            if vals.len() < n1 {
-                vals.push(endf_float(field));
-            }
-        }
-        i += 1;
-    }
-    ((c1, c2, l1, l2, n1, n2, vals), i)
-}
-
-/// Read a TAB1 record starting at `i`.
-///
-/// Returns the CONT fields, `(NBT, INT)` interpolation ranges, `(x, y)` points, and the next
-/// record index. ENDF uses one-based `NBT` point numbers; they are preserved here rather than
-/// translated so a reader can compare the values directly with the evaluation.
-#[deprecated(note = "zero-fills truncated records; use read_tab1_checked")]
-#[allow(deprecated)]
-pub fn read_tab1(lines: &[&str], mut i: usize) -> (Tab1Record, usize) {
-    let f = fields(lines[i]);
-    let (c1, c2) = (endf_float(f[0]), endf_float(f[1]));
-    let l1 = f[2].trim().parse::<i32>().unwrap_or(0);
-    let l2 = f[3].trim().parse::<i32>().unwrap_or(0);
-    let nr = f[4].trim().parse::<usize>().unwrap_or(0);
-    let np = f[5].trim().parse::<usize>().unwrap_or(0);
-    i += 1;
-
-    let mut raw_ranges = Vec::with_capacity(2 * nr);
-    while raw_ranges.len() < 2 * nr {
-        let g = fields(lines[i]);
-        for field in g {
-            if raw_ranges.len() == 2 * nr {
-                break;
-            }
-            raw_ranges.push(field.trim().parse::<i32>().unwrap_or(0));
-        }
-        i += 1;
-    }
-    let ranges = raw_ranges
-        .chunks(2)
-        .map(|v| (v[0].max(0) as usize, v[1]))
-        .collect();
-
-    let mut raw_xy = Vec::with_capacity(2 * np);
-    while raw_xy.len() < 2 * np {
-        let g = fields(lines[i]);
-        for field in g {
-            if raw_xy.len() == 2 * np {
-                break;
-            }
-            raw_xy.push(endf_float(field));
-        }
-        i += 1;
-    }
-    let xy = raw_xy.chunks(2).map(|v| (v[0], v[1])).collect();
-    ((c1, c2, l1, l2, ranges, xy), i)
-}
-
 #[cfg(test)]
 mod tests {
+    use super::bounded_capacity;
     use super::{
         fields, parse_endf_float, read_list_checked, read_tab1_checked, read_tab2_checked, tail,
     };
+
+    #[test]
+    fn bounded_capacity_caps_only_large_counts() {
+        assert_eq!(bounded_capacity(7), 7);
+        assert_eq!(bounded_capacity(usize::MAX), 1 << 16);
+    }
 
     fn record(fields: [&str; 6]) -> String {
         let data: String = fields

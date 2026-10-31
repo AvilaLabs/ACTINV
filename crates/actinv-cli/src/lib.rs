@@ -11,6 +11,7 @@ pub mod help;
 pub mod impurities;
 pub mod inspect;
 pub mod optimize;
+pub mod output_guard;
 pub mod report;
 pub mod surrogate;
 pub mod twin;

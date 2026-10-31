@@ -20,7 +20,7 @@ use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
 use std::collections::{BTreeMap, BTreeSet, HashMap, HashSet};
 use std::ffi::OsStr;
-use std::io::Read;
+use std::io::{Read, Write};
 use std::path::{Path, PathBuf};
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
@@ -291,6 +291,7 @@ pub fn builder_fingerprint() -> String {
             hash.update(include_bytes!("resonance.rs"));
             hash.update(include_bytes!("processing.rs"));
             hash.update(include_bytes!("library.rs"));
+            hash.update(include_bytes!("normalize.rs"));
             hash.update(include_bytes!("spallation.rs"));
             hash.update(include_bytes!("../data/mt_products.json"));
             format!("{:x}", hash.finalize())
@@ -3312,10 +3313,24 @@ pub(crate) fn write_json_atomic(path: &Path, value: &impl Serialize) -> Result<(
         path.file_name().and_then(OsStr::to_str).unwrap_or("index"),
         std::process::id()
     ));
-    std::fs::write(&temporary, format!("{text}\n"))
-        .map_err(|error| format!("cannot write {}: {error}", temporary.display()))?;
-    std::fs::rename(&temporary, path)
-        .map_err(|error| format!("cannot publish {}: {error}", path.display()))
+    let result = (|| {
+        {
+            // Scoped so the file is closed before the rename.
+            let mut file = std::fs::File::create(&temporary)
+                .map_err(|error| format!("cannot write {}: {error}", temporary.display()))?;
+            file.write_all(format!("{text}\n").as_bytes())
+                .and_then(|()| file.sync_all())
+                .map_err(|error| format!("cannot write {}: {error}", temporary.display()))?;
+        }
+        std::fs::rename(&temporary, path)
+            .map_err(|error| format!("cannot publish {}: {error}", path.display()))?;
+        // Persist the rename itself, as write_npz does.
+        crate::library::sync_parent_directory(path)
+    })();
+    if result.is_err() {
+        let _ = std::fs::remove_file(&temporary);
+    }
+    result
 }
 
 /// Build and atomically publish a deterministic activation-library NPZ and canonical index.
@@ -4230,6 +4245,26 @@ pub fn build_shielding(
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn write_json_atomic_publishes_and_leaves_no_temporary() {
+        let directory = std::env::temp_dir().join(format!(
+            "actinv-json-atomic-{}-{}",
+            std::process::id(),
+            std::time::SystemTime::now()
+                .duration_since(std::time::UNIX_EPOCH)
+                .unwrap()
+                .as_nanos()
+        ));
+        std::fs::create_dir(&directory).unwrap();
+        let path = directory.join("index.json");
+        write_json_atomic(&path, &serde_json::json!({"a": 1})).unwrap();
+        let value: serde_json::Value =
+            serde_json::from_str(&std::fs::read_to_string(&path).unwrap()).unwrap();
+        assert_eq!(value["a"], 1);
+        assert_eq!(std::fs::read_dir(&directory).unwrap().count(), 1);
+        std::fs::remove_dir_all(&directory).unwrap();
+    }
 
     fn table(y: [f64; 2]) -> Tabulated {
         Tabulated {

@@ -170,6 +170,15 @@ pub fn parse_group_values(text: &str, count: usize) -> Result<Vec<f64>, String> 
 pub struct ResultDocument {
     pub value: Value,
     pub label: String,
+    /// Distinct for every result made in this process, so a cache keyed on it never mistakes one
+    /// result for another with the same label (every run is "Completed calculation").
+    pub id: u64,
+}
+
+/// A fresh `ResultDocument::id`.
+pub fn next_result_id() -> u64 {
+    static NEXT: std::sync::atomic::AtomicU64 = std::sync::atomic::AtomicU64::new(1);
+    NEXT.fetch_add(1, std::sync::atomic::Ordering::Relaxed)
 }
 impl ResultDocument {
     pub fn parse(value: Value, label: String) -> Result<Self, String> {
@@ -213,7 +222,11 @@ impl ResultDocument {
                 return Err("Heat and activity must be nonnegative finite numbers".into());
             }
         }
-        Ok(Self { value, label })
+        Ok(Self {
+            value,
+            label,
+            id: next_result_id(),
+        })
     }
     pub fn steps(&self) -> &[Value] {
         self.value["steps"]

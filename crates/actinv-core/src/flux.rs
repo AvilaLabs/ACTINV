@@ -1354,7 +1354,7 @@ fn openmc_mesh_geometry(file: &Hdf5File, mesh_id: i64) -> Result<(FluxGeometry, 
         grids
     };
 
-    let mut volumes = Vec::with_capacity(cell_count);
+    let mut volumes = Vec::with_capacity(cell_count.min(1 << 20));
     for k in 0..dimension[2] {
         for j in 0..dimension[1] {
             for i in 0..dimension[0] {

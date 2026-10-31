@@ -73,6 +73,46 @@ class Objects(unittest.TestCase):
             actual.save(root / "result.json")
             self.assertEqual(json.loads((root / "result.json").read_text()), actual)
 
+    def test_catalog_reference_survives_round_trip(self):
+        problem = actinv.Problem.example()
+        self.assertTrue(problem["library"]["path"].startswith("catalog:"))
+        with tempfile.TemporaryDirectory(prefix="actinv-python-objects-") as directory:
+            path = Path(directory) / "problem.json"
+            problem.save(path)
+            loaded = actinv.Problem.from_file(path)
+        self.assertEqual(loaded["library"]["path"], problem["library"]["path"])
+        self.assertEqual(loaded["decay"], problem["decay"])
+
+    def test_nested_relative_references_resolve_against_file_folder(self):
+        with tempfile.TemporaryDirectory(prefix="actinv-python-objects-") as directory:
+            root = Path(directory)
+            path = root / "problem.json"
+            path.write_text(json.dumps({
+                "library": {"path": "catalog:x"},
+                "decay": {"primary": "d.json", "overrides": "o.json"},
+                "schedule": [{"dt": "1 s", "flux": 1, "library": {"path": "lib.npz"}},
+                             {"dt": "1 s", "flux": 0}],
+                "self_shielding": {"table": {"path": "ss.json"},
+                                   "geometry": {"resonance_files": [{"path": "r.endf"}]}},
+                "kerma": {"table": {"path": "bundled:k"}},
+                "fission_yields": {"spontaneous": {"files": [{"path": "sf.endf"}]}},
+            }), encoding="utf-8")
+            loaded = actinv.Problem.from_file(path)
+            base = root.resolve()
+            self.assertEqual(loaded["library"]["path"], "catalog:x")
+            self.assertEqual(loaded["decay"]["overrides"], str(base / "o.json"))
+            self.assertEqual(loaded["schedule"][0]["library"]["path"], str(base / "lib.npz"))
+            self.assertEqual(loaded["self_shielding"]["table"]["path"], str(base / "ss.json"))
+            self.assertEqual(
+                loaded["self_shielding"]["geometry"]["resonance_files"][0]["path"], str(base / "r.endf"))
+            self.assertEqual(loaded["kerma"]["table"]["path"], "bundled:k")
+            self.assertEqual(
+                loaded["fission_yields"]["spontaneous"]["files"][0]["path"], str(base / "sf.endf"))
+
+    def test_solve_rejects_json_text(self):
+        with self.assertRaisesRegex(ValueError, "JSON text"):
+            actinv.solve('  {"spec": "actinv-spec-1"}')
+
     def test_budget_schema_error_raises(self):
         bad = {"schema": "nope", "base_spec": {}, "balance": "Fe",
                "impurities": {"Co": 0.01}, "targets": [1]}

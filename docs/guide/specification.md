@@ -37,7 +37,7 @@ actinv validate problem.json
 | `fission_yields` | Optional hash-pinned ENDF-6 neutron-induced fission-yield evaluations, and optional spontaneous-fission yields and neutron multiplicities; see below. Empty/omitted preserves the explicit no-yields leakage path. |
 | `uncertainty` | Optional neutron-only MF=33 sidecar and response selection; omission reads no covariance file and preserves the ordinary path. |
 | `radiological` | Optional hash-pinned clearance, waste, ingestion, or inhalation response table; omission reads no table. |
-| `damage` | Optional hash-pinned `actinv-damage-table-1` damage-energy table plus per-element displacement energies; required when `outputs` contains `damage`. |
+| `damage` | Optional hash-pinned `actinv-damage-table-1` or `actinv-damage-table-2` (kinematic) damage-energy table plus per-element displacement energies; required when `outputs` contains `damage`. |
 | `kerma` | Optional hash-pinned `actinv-kerma-table-1` heating table; adds per-step kerma heating and enables power-driven schedule steps (`power_W_cm3` / `power_W_per_g`, with `material.density_g_cm3` for the former). |
 
 The certificate records computed SHA-256 values for the activation library, its index, primary/fallback decay data,

@@ -82,6 +82,11 @@ pub struct Desktop {
     error: bool,
     logo: egui::TextureHandle,
     result: Option<ResultDocument>,
+    /// The problem that produced `result` when this session ran it; `None` for a result opened
+    /// from a file. Export describes this problem, never the one being edited.
+    result_problem: Option<Value>,
+    /// The problem the running calculation was started from.
+    run_problem: Option<Value>,
     comparison: Option<ResultDocument>,
     job: Option<Job>,
     step: usize,
@@ -395,6 +400,8 @@ impl Desktop {
             error: false,
             logo,
             result: None,
+            result_problem: None,
+            run_problem: None,
             comparison: None,
             job: None,
             step: 0,
@@ -530,6 +537,13 @@ impl Desktop {
         }
     }
     fn perform(&mut self, p: Pending) {
+        if !matches!(p, Pending::Close) && self.job.is_some() {
+            self.report(Err(
+                "A calculation is running. Wait for it or cancel it before opening another problem."
+                    .into(),
+            ));
+            return;
+        }
         match p {
             Pending::Open => {
                 if let Some(path) = self
@@ -542,6 +556,7 @@ impl Desktop {
                     match result {
                         Ok(doc) => {
                             self.document = doc;
+                            self.forget_problem_outputs();
                             self.saved = self.document.clone();
                             self.saved_base = self.base.clone();
                             self.base = path.parent().unwrap_or(std::path::Path::new(".")).into();
@@ -564,6 +579,7 @@ impl Desktop {
                 match model::decode_problem(&spec.to_string()) {
                     Ok(doc) => {
                         self.document = doc;
+                        self.forget_problem_outputs();
                         // A converted deck is a new, unsaved problem: no file, no clean copy.
                         self.saved = Value::Null;
                         self.path = None;
@@ -586,6 +602,7 @@ impl Desktop {
             }
             Pending::New => {
                 self.document = model::blank();
+                self.forget_problem_outputs();
                 // a new problem has no file and no clean copy until it is saved
                 self.saved = Value::Null;
                 self.path = None;
@@ -599,6 +616,7 @@ impl Desktop {
             }
             Pending::Example => {
                 self.document = model::example();
+                self.forget_problem_outputs();
                 self.saved = self.document.clone();
                 self.saved_base = self.base.clone();
                 self.path = None;
@@ -612,6 +630,24 @@ impl Desktop {
             }
             Pending::Close => {}
         }
+    }
+    /// Another problem replaces the open one: drop what was computed from the old one (sweeps,
+    /// screens, searches, decisions, command results). The result stays, with the problem that
+    /// produced it, so Export still pairs them.
+    fn forget_problem_outputs(&mut self) {
+        // Dropping a sweep handle waits for its point in progress; let that happen off the UI thread.
+        let handles = (self.sweep.handle.take(), self.sweep.live_handle.take());
+        if handles.0.is_some() || handles.1.is_some() {
+            std::thread::spawn(move || drop(handles));
+        }
+        self.sweep = SweepUi {
+            generation: self.sweep.generation + 1,
+            ..SweepUi::default()
+        };
+        self.impurities = Default::default();
+        self.certify = Default::default();
+        self.optimize = Default::default();
+        self.command_results.clear();
     }
     fn save_problem(&mut self) -> bool {
         if self.raw_dirty {
@@ -696,6 +732,7 @@ impl Desktop {
                     kind: JobKind::Calculation,
                     cancelled: false,
                 });
+                self.run_problem = Some(self.document.clone());
                 self.report(Ok(
                     "Preparing isolated calculation workspace, then solving… Every run prepares a private cache and may take longer.".into(),
                 ));
@@ -743,6 +780,7 @@ impl Desktop {
                 } else {
                     self.step = crate::views::summary::shutdown_step(&r).unwrap_or(0);
                     self.result = Some(r);
+                    self.result_problem = None;
                     self.result_unsaved = false;
                     self.selected.clear();
                 }
@@ -1222,6 +1260,7 @@ impl eframe::App for Desktop {
                 self.flash_outcome(&outcome, &done, "Failed");
             }
             self.job = None;
+            let run_problem = self.run_problem.take();
             if cancelled {
                 self.flash = Some((Instant::now(), true, "Cancelled".into(), String::new()));
                 self.report(Ok(
@@ -1255,6 +1294,7 @@ impl eframe::App for Desktop {
                             Ok(r) => {
                                 self.step = crate::views::summary::shutdown_step(&r).unwrap_or(0);
                                 self.result = Some(r);
+                                self.result_problem = run_problem;
                                 self.result_unsaved = true;
                                 self.selected.clear();
                                 self.reset_plot = true;
@@ -1466,7 +1506,7 @@ impl Desktop {
                         match action {
                             ResultAction::Run => self.run(&ctx),
                             ResultAction::Open => self.open_result(&ctx, false),
-                            ResultAction::Tutorial => { self.result = Some(model::tutorial_result()); self.step=0; self.selected.clear(); self.comparison=None; self.page=Page::Summary; self.reset_plot=true; self.tour.start(true); },
+                            ResultAction::Tutorial => { self.result = Some(model::tutorial_result()); self.result_problem = None; self.step=0; self.selected.clear(); self.comparison=None; self.page=Page::Summary; self.reset_plot=true; self.tour.start(true); },
                             ResultAction::Close => { if self.dirty() || self.job.is_some() { self.pending = Some(Pending::Close); } else { self.allow_close=true; ctx.send_viewport_cmd(egui::ViewportCommand::Close); } },
                         }
                     }

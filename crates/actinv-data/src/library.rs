@@ -4,7 +4,7 @@ use std::collections::{HashMap, HashSet};
 use std::io::{BufReader, Read, Seek, Write};
 use std::path::Path;
 
-const MAX_ARRAY_BYTES: u64 = 1_000_000_000;
+pub(crate) const MAX_ARRAY_BYTES: u64 = 1_000_000_000;
 
 /// One library row: which target, which reaction, which product, from which ENDF file section.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -892,11 +892,35 @@ pub(crate) fn temporary_sibling(path: &Path) -> Result<std::path::PathBuf, Strin
 }
 
 /// Write the stable ACTINV `rows`, `sig` and `bounds` NPZ wire format with fixed ZIP metadata.
+/// Error when an 8-byte-element array's `.npy` member (header included, as the reader
+/// measures it) would reach `MAX_ARRAY_BYTES`.
+fn check_npz_array_size(name: &str, dtype: &str, shape: &[usize]) -> Result<(), String> {
+    let mut header = Vec::new();
+    write_npy_header(&mut header, dtype, shape)?;
+    let bytes = shape
+        .iter()
+        .try_fold(8_u64, |total, &dim| {
+            total.checked_mul(u64::try_from(dim).ok()?)
+        })
+        .and_then(|data| data.checked_add(header.len() as u64))
+        .unwrap_or(u64::MAX);
+    if bytes >= MAX_ARRAY_BYTES {
+        return Err(format!(
+            "{name} would be {bytes} bytes; a single activation-library array must be below {MAX_ARRAY_BYTES} bytes to be readable"
+        ));
+    }
+    Ok(())
+}
+
 pub fn write_npz(path: impl AsRef<Path>, library: &Library) -> Result<(), String> {
     use zip::write::SimpleFileOptions;
     use zip::{CompressionMethod, DateTime, ZipWriter};
 
     library.validate()?;
+    // The reader refuses any array member of MAX_ARRAY_BYTES or more, so never write one.
+    check_npz_array_size("rows.npy", "<i8", &[library.rows.len(), 5])?;
+    check_npz_array_size("sig.npy", "<f8", &[library.rows.len(), library.ngroups])?;
+    check_npz_array_size("bounds.npy", "<f8", &[library.bounds.len()])?;
     let path = path.as_ref();
     let temporary = temporary_sibling(path)?;
     let result = (|| {
@@ -969,7 +993,7 @@ pub fn write_npz(path: impl AsRef<Path>, library: &Library) -> Result<(), String
 }
 
 #[cfg(unix)]
-fn sync_parent_directory(path: &Path) -> Result<(), String> {
+pub(crate) fn sync_parent_directory(path: &Path) -> Result<(), String> {
     let parent = path
         .parent()
         .filter(|parent| !parent.as_os_str().is_empty())
@@ -980,13 +1004,26 @@ fn sync_parent_directory(path: &Path) -> Result<(), String> {
 }
 
 #[cfg(not(unix))]
-fn sync_parent_directory(_path: &Path) -> Result<(), String> {
+pub(crate) fn sync_parent_directory(_path: &Path) -> Result<(), String> {
     Ok(())
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn writer_refuses_arrays_the_reader_would_refuse() {
+        let err = check_npz_array_size("rows.npy", "<i8", &[2_000_000_000, 5]).unwrap_err();
+        assert!(
+            err.contains("rows.npy") && err.contains("1000000000"),
+            "{err}"
+        );
+        // 125_000_000 doubles are exactly the cap before the header is added.
+        assert!(check_npz_array_size("sig.npy", "<f8", &[125_000_000]).is_err());
+        assert!(check_npz_array_size("sig.npy", "<f8", &[1_000, 709]).is_ok());
+        assert!(check_npz_array_size("sig.npy", "<f8", &[usize::MAX, 8]).is_err());
+    }
 
     fn oversized_rows_npz() -> Vec<u8> {
         use zip::write::SimpleFileOptions;

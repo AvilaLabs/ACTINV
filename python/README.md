@@ -57,17 +57,18 @@ Schedule steps may carry continuous feed and first-order removal:
 problem["schedule"] = Schedule().irradiate("5 min", feed={"Co60": 1e12}, removal={"Mn56": 1e-3}).cool("1 h")
 ```
 
-`actinv.reverse(problem, measurements, segments=False)` — or `actinv-reverse` on the command line — recovers a flux
+`actinv.reverse(problem, measurements, *, segments=False)` — or `actinv reverse` on the command line — recovers a flux
 multiplier (or per-segment multipliers) from measured activities in the linear regime. Damage observables are
 requested with `options.outputs` containing `"damage"` plus a `damage` section pinning an
-`actinv-damage-table-1` file and per-element displacement energies.
+`actinv-damage-table-1` or `actinv-damage-table-2` file (the catalog's `tendl-2025-neutron-damage` is table-2, from
+`build-damage --method kinematic`) and per-element displacement energies.
 
-`actinv.decide(decision, base_dir=None)` runs the decision loop: an `actinv-decide-1` mapping (or file path)
+`actinv.decide(decision, *, base_dir=None)` runs the decision loop: an `actinv-decide-1` mapping (or file path)
 naming a banded run spec plus response constraints at declared band edges returns the certified
 `actinv-decision-1` document — verdict, binding constraints, completeness, and ranked measurement targets.
-`actinv.optimize(optspec_path, outdir=None, resume=False)` runs an `actinv-optimize-1` design search and
+`actinv.optimize(optspec_path, *, outdir=None, resume=False)` runs an `actinv-optimize-1` design search and
 returns the `optimize_result` document (the ledger lands in `outdir`). Certified screening is a spec option:
 `problem["options"]["screen"] = {"bmin_atoms_per_g": 1e-4}` adds the `screen` certificate to any `solve`.
-`actinv.budget(budget, base_dir=None, verify=True)` runs an `actinv-budget-1` mapping (or file path) — an
+`actinv.budget(budget, *, base_dir=None, verify=True)` runs an `actinv-budget-1` mapping (or file path) — an
 impurity budget for the IAEA clearance index — and returns the `actinv-budget-result-1` document; a failed
 verification is returned, not raised (the CLI's exit code 3 has no Python equivalent).

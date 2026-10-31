@@ -338,7 +338,7 @@ impl Desktop {
                     p.label,
                     p.elapsed_ms,
                     tier,
-                    &p.spec_sha256[..16]
+                    p.spec_sha256.get(..16).unwrap_or("none")
                 ));
             }
         }

@@ -20,7 +20,6 @@
 
 use serde::Deserialize;
 use serde_json::Value;
-use std::collections::BTreeMap;
 use std::path::{Path, PathBuf};
 
 use crate::optimize::{apply_axes, response_edge, select_step, sha256_hex, Axis, Edge};
@@ -180,6 +179,25 @@ fn eval_solve(
         .collect()
 }
 
+/// Artifact name of a response: `response@time:Edge` (time to 3 decimals).
+fn response_label(r: &SurrogateResponse) -> String {
+    format!("{}@{:.3}:{:?}", r.response, r.time_s, r.edge)
+}
+
+/// Two responses with one label would be indistinguishable in the artifact.
+fn check_unique_responses(responses: &[SurrogateResponse]) -> Result<(), String> {
+    let mut seen = std::collections::BTreeSet::new();
+    for r in responses {
+        let label = response_label(r);
+        if !seen.insert(label.clone()) {
+            return Err(format!(
+                "surrogate spec defines response '{label}' more than once"
+            ));
+        }
+    }
+    Ok(())
+}
+
 pub fn run_fit(spec_path: &str, out_dir: Option<&str>) -> Result<Value, String> {
     let text =
         std::fs::read_to_string(spec_path).map_err(|e| format!("cannot read {spec_path}: {e}"))?;
@@ -197,10 +215,18 @@ pub fn run_fit(spec_path: &str, out_dir: Option<&str>) -> Result<Value, String> 
     if spec.responses.is_empty() {
         return Err("surrogate spec needs ≥1 responses".into());
     }
-    let base_text = std::fs::read_to_string(&spec.base_spec)
-        .map_err(|e| format!("cannot read base spec {}: {e}", spec.base_spec))?;
+    check_unique_responses(&spec.responses)?;
+    // base_spec is relative to the surrogate spec's directory, as in
+    // optimize and decide.
+    let base_path = Path::new(spec_path)
+        .parent()
+        .map(Path::to_path_buf)
+        .unwrap_or_else(|| PathBuf::from("."))
+        .join(&spec.base_spec);
+    let base_text = std::fs::read_to_string(&base_path)
+        .map_err(|e| format!("cannot read base spec {}: {e}", base_path.display()))?;
     let base_doc: Value = serde_json::from_str(&base_text)
-        .map_err(|e| format!("base spec {}: {e}", spec.base_spec))?;
+        .map_err(|e| format!("base spec {}: {e}", base_path.display()))?;
     let base_sha = sha256_hex(base_text.as_bytes());
     let axes: Vec<Axis> = spec.axes.iter().map(|a| a.axis.clone()).collect();
 
@@ -229,24 +255,19 @@ pub fn run_fit(spec_path: &str, out_dir: Option<&str>) -> Result<Value, String> 
 
     let mut cache = actinv_core::run::PreparedCache::new();
     // ---- training solves --------------------------------------------------
-    let mut values: Vec<BTreeMap<String, f64>> = Vec::with_capacity(n_nodes);
+    // per node: one value per response, in spec.responses order
+    let mut values: Vec<Vec<f64>> = Vec::with_capacity(n_nodes);
     for flat in 0..n_nodes {
         let x = node_x(flat);
-        let v = eval_solve(&base_doc, &axes, &x, &spec.responses, &mut cache)?;
-        values.push(
-            spec.responses
-                .iter()
-                .map(|r| format!("{}@{:.3}:{:?}", r.response, r.time_s, r.edge))
-                .zip(v)
-                .collect(),
-        );
+        values.push(eval_solve(
+            &base_doc,
+            &axes,
+            &x,
+            &spec.responses,
+            &mut cache,
+        )?);
     }
-    let flat_values = |ri: usize| -> Vec<f64> {
-        values
-            .iter()
-            .map(|m| *m.iter().nth(ri).map(|(_, v)| v).unwrap())
-            .collect()
-    };
+    let flat_values = |ri: usize| -> Vec<f64> { values.iter().map(|v| v[ri]).collect() };
 
     // ---- holdout solves (seeded interior points) ---------------------------
     let mut rng = XorShift(spec.seed.max(1));
@@ -296,8 +317,7 @@ pub fn run_fit(spec_path: &str, out_dir: Option<&str>) -> Result<Value, String> 
         .enumerate()
         .map(|(ri, r)| {
             serde_json::json!({
-                "name": format!("{}@{:.3}:{}", r.response, r.time_s,
-                                format!("{:?}", r.edge)),
+                "name": response_label(r),
                 "response": r.response,
                 "time_s": r.time_s,
                 "edge": format!("{:?}", r.edge),
@@ -371,6 +391,20 @@ pub struct SurrogateResponseEval {
     pub lipschitz_term: f64,
 }
 
+/// A JSON array whose every entry is a finite number; anything else is an
+/// error rather than a silently shortened vector.
+fn f64_array(v: &Value, what: &str) -> Result<Vec<f64>, String> {
+    v.as_array()
+        .ok_or_else(|| format!("{what} missing"))?
+        .iter()
+        .map(|e| {
+            e.as_f64()
+                .filter(|f| f.is_finite())
+                .ok_or_else(|| format!("{what} has a non-numeric or non-finite entry"))
+        })
+        .collect()
+}
+
 pub struct Surrogate {
     /// Positional axis identifiers (`axis_name` strings) — the optimizer
     /// asserts they match its design_axes order before trusting evals.
@@ -392,41 +426,61 @@ impl Surrogate {
             return Err("not an actinv-surrogate-1 artifact".into());
         }
         let axes = artifact["axes"].as_array().ok_or("artifact axes missing")?;
-        let grids: Vec<Vec<f64>> = axes
-            .iter()
-            .map(|a| {
-                a["grid"]
-                    .as_array()
-                    .unwrap_or(&vec![])
-                    .iter()
-                    .filter_map(|v| v.as_f64())
-                    .collect()
-            })
-            .collect();
-        let axis_names: Vec<String> = axes
-            .iter()
-            .filter_map(|a| a["axis"].as_str().map(String::from))
-            .collect();
-        let responses = artifact["responses"]
+        let mut grids: Vec<Vec<f64>> = Vec::with_capacity(axes.len());
+        let mut axis_names: Vec<String> = Vec::with_capacity(axes.len());
+        for (i, a) in axes.iter().enumerate() {
+            let grid = f64_array(&a["grid"], &format!("artifact axes[{i}].grid"))?;
+            if grid.len() < 2 {
+                return Err(format!("artifact axes[{i}].grid needs at least 2 nodes"));
+            }
+            grids.push(grid);
+            axis_names.push(
+                a["axis"]
+                    .as_str()
+                    .ok_or_else(|| format!("artifact axes[{i}].axis missing"))?
+                    .to_string(),
+            );
+        }
+        if grids.is_empty() {
+            return Err("artifact has no axes".into());
+        }
+        let n_nodes: usize = grids.iter().map(|g| g.len()).product();
+        let mut responses = Vec::new();
+        for (i, r) in artifact["responses"]
             .as_array()
-            .unwrap_or(&vec![])
+            .ok_or("artifact responses missing")?
             .iter()
-            .map(|r| {
-                (
-                    r["name"].as_str().unwrap_or_default().to_string(),
-                    r["response"].as_str().unwrap_or_default().to_string(),
-                    r["time_s"].as_f64().unwrap_or(0.0),
-                    r["values"]
-                        .as_array()
-                        .unwrap_or(&vec![])
-                        .iter()
-                        .filter_map(|v| v.as_f64())
-                        .collect(),
-                    r["holdout_max_residual"].as_f64().unwrap_or(0.0),
-                    r["lipschitz_estimate"].as_f64().unwrap_or(0.0),
-                )
-            })
-            .collect();
+            .enumerate()
+        {
+            let text = |k: &str| -> Result<String, String> {
+                r[k].as_str()
+                    .map(String::from)
+                    .ok_or_else(|| format!("artifact responses[{i}].{k} missing"))
+            };
+            let num = |k: &str| -> Result<f64, String> {
+                r[k].as_f64()
+                    .filter(|v| v.is_finite())
+                    .ok_or_else(|| format!("artifact responses[{i}].{k} missing or not finite"))
+            };
+            let values = f64_array(&r["values"], &format!("artifact responses[{i}].values"))?;
+            if values.len() != n_nodes {
+                return Err(format!(
+                    "artifact responses[{i}].values has {} entries, grid needs {n_nodes}",
+                    values.len()
+                ));
+            }
+            responses.push((
+                text("name")?,
+                text("response")?,
+                num("time_s")?,
+                values,
+                num("holdout_max_residual")?,
+                num("lipschitz_estimate")?,
+            ));
+        }
+        if responses.is_empty() {
+            return Err("artifact has no responses".into());
+        }
         Ok(Surrogate {
             axis_names,
             grids,
@@ -498,7 +552,10 @@ pub fn run_eval(
         let bounds: Vec<String> = sur
             .grids
             .iter()
-            .map(|g| format!("[{}, {}]", g[0], g.last().unwrap()))
+            .map(|g| match (g.first(), g.last()) {
+                (Some(lo), Some(hi)) => format!("[{lo}, {hi}]"),
+                _ => "[]".to_string(),
+            })
             .collect();
         format!("x outside surrogate domain {bounds:?} — refuse to extrapolate")
     })?;
@@ -529,4 +586,77 @@ pub fn run_eval(
             .map_err(|e| format!("cannot write {p}: {e}"))?;
     }
     Ok(out)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn resp(name: &str, t: f64) -> SurrogateResponse {
+        SurrogateResponse {
+            response: name.into(),
+            time_s: t,
+            edge: Edge::Nominal,
+        }
+    }
+
+    fn artifact() -> Value {
+        serde_json::json!({
+            "schema": "actinv-surrogate-1",
+            "axes": [{"axis": "flux_scale", "grid": [0.0, 1.0, 2.0]}],
+            "responses": [{
+                "name": "heat.total@1.000:Nominal", "response": "heat.total",
+                "time_s": 1.0, "values": [0.0, 10.0, 20.0],
+                "holdout_max_residual": 0.5, "lipschitz_estimate": 10.0,
+            }],
+        })
+    }
+
+    #[test]
+    fn duplicate_responses_are_refused() {
+        assert!(
+            check_unique_responses(&[resp("heat.total", 1.0), resp("heat.alpha", 1.0)]).is_ok()
+        );
+        // same label, and times equal at three decimals
+        assert!(
+            check_unique_responses(&[resp("heat.total", 1.0), resp("heat.total", 1.0)]).is_err()
+        );
+        assert!(
+            check_unique_responses(&[resp("heat.total", 1.0), resp("heat.total", 1.0001)]).is_err()
+        );
+    }
+
+    #[test]
+    fn response_label_format_is_stable() {
+        assert_eq!(
+            response_label(&resp("heat.total", 3.0)),
+            "heat.total@3.000:Nominal"
+        );
+    }
+
+    #[test]
+    fn well_formed_artifact_loads_and_predicts() {
+        let sur = Surrogate::from_artifact(&artifact(), "sha".into()).unwrap();
+        let ev = sur.eval(&[0.5]).unwrap();
+        assert_eq!(ev[0].y, Some(5.0));
+    }
+
+    #[test]
+    fn malformed_artifacts_are_errors() {
+        let mut a = artifact();
+        a["responses"][0]["values"] = serde_json::json!([0.0, "x", 20.0]);
+        assert!(Surrogate::from_artifact(&a, "s".into()).is_err());
+        let mut a = artifact();
+        a["responses"][0]["values"] = serde_json::json!([0.0, 10.0]);
+        assert!(Surrogate::from_artifact(&a, "s".into()).is_err());
+        let mut a = artifact();
+        a["axes"][0]["grid"] = serde_json::json!([]);
+        assert!(Surrogate::from_artifact(&a, "s".into()).is_err());
+        let mut a = artifact();
+        a["responses"][0].as_object_mut().unwrap().remove("time_s");
+        assert!(Surrogate::from_artifact(&a, "s".into()).is_err());
+        let mut a = artifact();
+        a.as_object_mut().unwrap().remove("responses");
+        assert!(Surrogate::from_artifact(&a, "s".into()).is_err());
+    }
 }

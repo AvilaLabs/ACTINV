@@ -32,6 +32,14 @@ fn die(message: impl std::fmt::Display, code: i32) -> ! {
     std::process::exit(code);
 }
 
+/// Exit when `out` is one of the command's input files: the result would
+/// replace the input.
+fn guard_out(out: Option<&str>, inputs: &[&str]) {
+    if let Err(e) = crate::output_guard::refuse_optional(out, inputs) {
+        die(e, 1);
+    }
+}
+
 /// The text of an input file, or of stdin when the path is `-`.
 fn read(path: &str) -> String {
     if path == "-" {
@@ -1023,6 +1031,7 @@ pub fn main_from(a: Vec<String>) {
                             2,
                         );
                     }
+                    guard_out(a.get(5).map(String::as_str), &[a[4].as_str()]);
                     crate::waste_composition_solve::run(&a[4], a.get(5).map(String::as_str))
                         .unwrap_or_else(|e| die(e, 1));
                 } else {
@@ -1032,6 +1041,7 @@ pub fn main_from(a: Vec<String>) {
                             2,
                         );
                     }
+                    guard_out(a.get(4).map(String::as_str), &[a[3].as_str()]);
                     crate::waste_composition::run(&a[3], a.get(4).map(String::as_str))
                         .unwrap_or_else(|e| die(e, 1));
                 }
@@ -1042,24 +1052,28 @@ pub fn main_from(a: Vec<String>) {
                         2,
                     );
                 }
+                guard_out(a.get(4).map(String::as_str), &[a[3].as_str()]);
                 crate::waste_intrusion::run(&a[3], a.get(4).map(String::as_str))
                     .unwrap_or_else(|e| die(e, 1));
             } else if a.get(2).is_some_and(|arg| arg == "uncertainty") {
                 if a.len() < 4 || a.len() > 5 {
                     die("usage: actinv waste uncertainty SPEC.json [OUT.json]", 2);
                 }
+                guard_out(a.get(4).map(String::as_str), &[a[3].as_str()]);
                 crate::waste_uncertainty::run(&a[3], a.get(4).map(String::as_str))
                     .unwrap_or_else(|e| die(e, 1));
             } else if a.get(2).is_some_and(|arg| arg == "package") {
                 if a.len() < 4 || a.len() > 5 {
                     die("usage: actinv waste package SPEC.json [OUT.json]", 2);
                 }
+                guard_out(a.get(4).map(String::as_str), &[a[3].as_str()]);
                 crate::waste_package::run(&a[3], a.get(4).map(String::as_str))
                     .unwrap_or_else(|e| die(e, 1));
             } else if a.get(2).is_some_and(|arg| arg == "bounds") {
                 if a.len() < 4 || a.len() > 5 {
                     die("usage: actinv waste bounds BOUNDS.json [OUT.json]", 2);
                 }
+                guard_out(a.get(4).map(String::as_str), &[a[3].as_str()]);
                 crate::waste_bounds::run(&a[3], a.get(4).map(String::as_str))
                     .unwrap_or_else(|e| die(e, 1));
             } else if a.get(2).is_some_and(|arg| arg == "budget")
@@ -1071,6 +1085,7 @@ pub fn main_from(a: Vec<String>) {
                         2,
                     );
                 }
+                guard_out(a.get(5).map(String::as_str), &[a[4].as_str()]);
                 let doc = crate::waste_budget_uncertainty::run(&a[4], a.get(5).map(String::as_str))
                     .unwrap_or_else(|e| die(e, 1));
                 let code = crate::waste_budget_uncertainty::exit_code(&doc);
@@ -1082,6 +1097,7 @@ pub fn main_from(a: Vec<String>) {
                 if a.len() < 4 || a.len() > 5 {
                     die("usage: actinv waste budget BUDGET.json [OUT.json]", 2);
                 }
+                guard_out(a.get(4).map(String::as_str), &[a[3].as_str()]);
                 let doc = crate::waste_budget::run(&a[3], a.get(4).map(String::as_str))
                     .unwrap_or_else(|e| die(e, 1));
                 let code = crate::waste_budget::exit_code(&doc);
@@ -1093,15 +1109,30 @@ pub fn main_from(a: Vec<String>) {
                 if a.len() < 3 || a.len() > 4 {
                     die("usage: actinv waste WASTE.json [OUT.json]", 2);
                 }
+                guard_out(a.get(3).map(String::as_str), &[a[2].as_str()]);
                 crate::waste::run(&a[2], a.get(3).map(String::as_str))
                     .unwrap_or_else(|e| die(e, 1));
             }
         }
-        "inspect" => match crate::inspect::run(&a[2..]) {
-            Ok(()) => {}
-            Err(crate::inspect::InspectError::Usage(message)) => die(message, 2),
-            Err(crate::inspect::InspectError::Failure(message)) => die(message, 1),
-        },
+        "inspect" => {
+            // every other argument is a candidate input; the one after --out is the output
+            if let Some(at) = a.iter().position(|arg| arg == "--out") {
+                if let Some(out) = a.get(at + 1) {
+                    let inputs: Vec<&str> = a[2..]
+                        .iter()
+                        .enumerate()
+                        .filter(|(i, arg)| i + 2 != at + 1 && !arg.starts_with("--"))
+                        .map(|(_, arg)| arg.as_str())
+                        .collect();
+                    guard_out(Some(out.as_str()), &inputs);
+                }
+            }
+            match crate::inspect::run(&a[2..]) {
+                Ok(()) => {}
+                Err(crate::inspect::InspectError::Usage(message)) => die(message, 2),
+                Err(crate::inspect::InspectError::Failure(message)) => die(message, 1),
+            }
+        }
         "report" => match crate::report::run(&a[2..]) {
             Ok(()) => {}
             Err(crate::report::ReportError::Usage(message)) => die(message, 2),
@@ -1231,6 +1262,10 @@ pub fn main_from(a: Vec<String>) {
                 );
             }
             let segments = a[2..].iter().any(|arg| arg == "--segments");
+            guard_out(
+                out.map(String::as_str),
+                &[problem.as_str(), measurements.as_str()],
+            );
             let problem_text =
                 crate::resolve_catalog_json(&read(problem)).unwrap_or_else(|e| die(e, 2));
             let spec = Spec::from_json(&problem_text).unwrap_or_else(|e| die(e, 2));
@@ -1255,6 +1290,10 @@ pub fn main_from(a: Vec<String>) {
             if positional.len() != 3 || a.len() - 2 != positional.len() {
                 die(RQ_USAGE, 2);
             }
+            guard_out(
+                Some(positional[2].as_str()),
+                &[positional[0].as_str(), positional[1].as_str()],
+            );
             let problem_text =
                 crate::resolve_catalog_json(&read(positional[0])).unwrap_or_else(|e| die(e, 2));
             let spec = Spec::from_json(&problem_text).unwrap_or_else(|e| die(e, 2));
@@ -1315,6 +1354,11 @@ pub fn main_from(a: Vec<String>) {
             let assay = required_option(&options, "--assay");
             let out = options.get("--out").copied();
             let emit = options.get("--emit-result").copied();
+            guard_out(out, &[result, assay]);
+            guard_out(emit, &[result, assay]);
+            if let (Some(o), Some(e)) = (out, emit) {
+                guard_out(Some(e), &[o]);
+            }
             let summary = crate::assimilate::run(result, assay, out, emit)
                 .unwrap_or_else(|error| die(error, 1));
             if out.is_none() {
@@ -1346,6 +1390,11 @@ pub fn main_from(a: Vec<String>) {
             }
             match positional[0].as_str() {
                 "fit" if positional.len() == 2 || positional.len() == 3 => {
+                    // fit writes OUTDIR/surrogate.json (OUTDIR defaults to the cwd)
+                    let artifact =
+                        std::path::Path::new(positional.get(2).map_or(".", |s| s.as_str()))
+                            .join("surrogate.json");
+                    guard_out(artifact.to_str(), &[positional[1].as_str()]);
                     let summary = crate::surrogate::run_fit(
                         positional[1],
                         positional.get(2).map(|s| s.as_str()),
@@ -1366,6 +1415,10 @@ pub fn main_from(a: Vec<String>) {
                     );
                 }
                 "eval" if positional.len() == 3 || positional.len() == 4 => {
+                    guard_out(
+                        positional.get(3).map(|s| s.as_str()),
+                        &[positional[1].as_str(), positional[2].as_str()],
+                    );
                     let out = crate::surrogate::run_eval(
                         positional[1],
                         positional[2],
@@ -1395,6 +1448,7 @@ pub fn main_from(a: Vec<String>) {
             if positional.is_empty() || positional.len() > 2 {
                 die(BUDGET_USAGE, 2);
             }
+            guard_out(positional.get(1).copied(), &[positional[0]]);
             let doc = crate::budget::run_budget(positional[0], positional.get(1).copied(), verify)
                 .unwrap_or_else(|e| die(e, 1));
             if let Some(out) = positional.get(1) {
@@ -1432,6 +1486,7 @@ pub fn main_from(a: Vec<String>) {
             if positional.is_empty() || positional.len() > 2 {
                 die(IMPURITIES_USAGE, 2);
             }
+            guard_out(positional.get(1).copied(), &[positional[0]]);
             let doc = crate::impurities::run_impurities(
                 positional[0],
                 positional.get(1).copied(),
@@ -1451,6 +1506,10 @@ pub fn main_from(a: Vec<String>) {
             if positional.is_empty() || positional.len() > 2 || positional.len() != a.len() - 2 {
                 die(DECIDE_USAGE, 2);
             }
+            guard_out(
+                positional.get(1).map(|s| s.as_str()),
+                &[positional[0].as_str()],
+            );
             let doc =
                 crate::decide::run_decide(positional[0], positional.get(1).map(|s| s.as_str()))
                     .unwrap_or_else(|e| die(e, 1));
@@ -1556,6 +1615,7 @@ pub fn main_from(a: Vec<String>) {
             if a.len() > 4 {
                 die(crate::help::usage("run"), 2);
             }
+            guard_out(a.get(3).map(String::as_str), &[a[2].as_str()]);
             // a person at a terminal is told what the silence is; scripts and pipes are not
             let attended = {
                 use std::io::IsTerminal;
@@ -1794,10 +1854,11 @@ pub fn main_from(a: Vec<String>) {
                         i += 2;
                     }
                     "--confidence" => {
+                        let usage = "--confidence requires a number in the open interval (0.5, 1)";
                         confidence = a
                             .get(i + 1)
                             .and_then(|s| s.parse().ok())
-                            .unwrap_or_else(|| die("--confidence requires a number in (0,1)", 2));
+                            .unwrap_or_else(|| die(usage, 2));
                         i += 2;
                     }
                     flag if flag.starts_with("--") => {

@@ -62,22 +62,49 @@ class Schedule(list):
         return self
 
 
+# Data references the solver resolves, mirroring `resolve_inputs_under` in
+# crates/actinv-cli/src/workflow.rs. Each entry is a key path; "[]" iterates a list; the last key names the string field holding the reference.
+_REFS = (
+    ("library", "path"), ("decay", "primary"), ("decay", "fallback"), ("decay", "overrides"),
+    ("schedule[]", "library", "path"),
+    ("self_shielding", "table", "path"),
+    ("self_shielding", "geometry", "resonance_files[]", "path"),
+    ("photon", "response", "path"), ("uncertainty", "covariance", "path"),
+    ("radiological", "table", "path"), ("damage", "table", "path"), ("kerma", "table", "path"),
+    ("fission_yields", "files[]", "path"),
+    ("fission_yields", "spontaneous", "files[]", "path"),
+    ("fission_yields", "spontaneous", "nubar_endf", "path"),
+    ("fission_yields", "spontaneous", "nubar_table", "path"),
+)
+
+
+def _ref_slots(node, keys):
+    """Yield (container, key) for every reference slot reached by `keys` under `node`."""
+    key, rest = keys[0], keys[1:]
+    many = key.endswith("[]")
+    key = key[:-2] if many else key
+    if not isinstance(node, dict):
+        return
+    child = node.get(key)
+    if not rest:
+        yield node, key
+        return
+    for item in (child if many and isinstance(child, list) else [child]):
+        yield from _ref_slots(item, rest)
+
+
 def _paths(value, base=None):
     value = _copy.deepcopy(value)
-    refs = [(value.get("library", {}), "path"), (value.get("decay", {}), "primary"),
-            (value.get("decay", {}), "fallback")]
-    for section, field in (("photon", "response"), ("uncertainty", "covariance"),
-                           ("radiological", "table"), ("damage", "table")):
-        refs.append(((value.get(section) or {}).get(field) or {}, "path"))
-    refs.extend((ref, "path") for ref in (value.get("fission_yields") or {}).get("files", []))
-    for ref, key in refs:
-        path = ref.get(key)
-        # "bundled:NAME" names a table inside the binary, not a file under base.
-        if path and not str(path).startswith("bundled:"):
-            path = _Path(path)
-            if base is not None and not path.is_absolute():
-                path = _Path(base) / path
-            ref[key] = str(path)
+    for keys in _REFS:
+        for container, key in _ref_slots(value, keys):
+            path = container.get(key)
+            # "bundled:NAME" names a table inside the binary and "catalog:ID" an installed
+            # data artifact; neither is a file under base.
+            if path and not str(path).startswith(("bundled:", "catalog:")):
+                path = _Path(path)
+                if base is not None and not path.is_absolute():
+                    path = _Path(base) / path
+                container[key] = str(path)
     return value
 
 
@@ -138,6 +165,9 @@ class Result(dict):
 
 def solve(problem):
     """Solve a mapping or problem Path; return Result. Legacy run(str)->str remains available."""
+    if isinstance(problem, str) and problem.lstrip().startswith("{"):
+        raise ValueError("solve() takes a mapping, Problem or file path, not JSON text; "
+                         "use run(text) for JSON text or Problem(json.loads(text))")
     if isinstance(problem, (_os.PathLike, str)):
         problem = Problem.from_file(problem)
     elif not isinstance(problem, Problem):

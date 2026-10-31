@@ -254,6 +254,14 @@ pub fn parse_text(text: &str) -> Result<HashMap<(i32, i32), Nuclide>, String> {
         };
         if t.1 == 8 && t.2 == 457 {
             if cur != Some(t) {
+                // endf::parse_sections semantics: a new section without the previous
+                // one's SEND is an error, never a silently dropped nuclide.
+                if let (Some(previous), false) = (cur, buf.is_empty()) {
+                    return Err(format!(
+                        "decay section MAT={} changed to MAT={} without SEND",
+                        previous.0, t.0
+                    ));
+                }
                 cur = Some(t);
                 buf.clear();
             }
@@ -560,6 +568,15 @@ mod tests {
         assert_eq!(nuclide.half_life, 1.0);
         assert!(nuclide.modes.is_empty());
         assert!(nuclide.spectra.is_empty());
+    }
+
+    #[test]
+    fn new_material_without_send_is_an_error() {
+        let first = minimal_decay(["26056", "55.45", "0", "0", "0", "0"]);
+        let second = minimal_decay(["27060", "59.0", "0", "0", "0", "0"]).replace("125", "126");
+        let without_send: Vec<&str> = first.lines().take(3).collect();
+        let error = parse_text(&format!("{}\n{second}", without_send.join("\n"))).unwrap_err();
+        assert!(error.contains("without SEND"), "{error}");
     }
 
     #[test]

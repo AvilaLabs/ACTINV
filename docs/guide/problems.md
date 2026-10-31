@@ -53,6 +53,6 @@ Single-problem schedules can supply a per-step spectrum with the same group stru
 
 Catalog references such as `catalog:tendl-2025-neutron-709g` resolve against `ACTINV_DATA_DIR`, or `./actinv-data` by default. `actinv new` uses these references unless you supply `--data-dir`.
 
-Literal relative paths in CLI problems use the **current working directory**. Desktop problems use **Input base**. Python `Problem.from_file` uses the problem's directory; plain Python mappings use the current directory. JSON does not expand `~` to your home directory.
+Literal relative paths in CLI problems use the **current working directory**. Desktop problems use **Input folder**. Python `Problem.from_file` uses the problem's directory; plain Python mappings use the current directory. JSON does not expand `~` to your home directory.
 
 Use `actinv doctor problem.json` to inspect setup, then validate and run as shown in [Your first calculation](quick-start.md).

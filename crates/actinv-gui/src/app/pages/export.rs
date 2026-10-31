@@ -54,7 +54,7 @@ impl Desktop {
             self.export.choose_transport();
         }
         let context = Context {
-            problem: Some(&self.document),
+            problem: self.result_problem.as_ref(),
             waste: self.waste.view_for(result).map(waste::report_section),
             step: self.step,
             save_label: "Save to folder…",

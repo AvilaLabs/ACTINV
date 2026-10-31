@@ -159,6 +159,11 @@ pub fn run_decide_doc(dtext: &str, base_dir: &Path, spec_path: &str) -> Result<V
     let effective_sha = sha256_hex(eff_text.as_bytes());
     let spec = Spec::from_json(&eff_text).map_err(|e| format!("run spec invalid: {e}"))?;
     spec.validate()?;
+    // Refuse before the solve: a spec without a covariance cannot be certified.
+    let unc = spec.uncertainty.as_ref().unwrap();
+    let covariance = unc.covariance.as_ref().ok_or(
+        "decide requires uncertainty.covariance (P93 flux-only mode is not supported by decide)",
+    )?;
 
     let result = actinv_core::run::run(&spec, "decide")?;
     // Provenance binds the deterministic content — `ms` is wall time.
@@ -211,10 +216,8 @@ pub fn run_decide_doc(dtext: &str, base_dir: &Path, spec_path: &str) -> Result<V
         if !satisfied {
             all_sat = false;
         }
-        if satisfied && c.edge != Edge::Nominal && !nominal_sat {
-            // band-edge passes but nominal fails — cannot happen for upper
-            // edges (band >= nominal), but guard the direction honestly
-        }
+        // A band edge that passes while nominal fails cannot happen for upper
+        // edges (band >= nominal), so only the reverse is counted.
         if !satisfied && nominal_sat && c.edge != Edge::Nominal {
             n_overcertify += 1;
         }
@@ -238,10 +241,6 @@ pub fn run_decide_doc(dtext: &str, base_dir: &Path, spec_path: &str) -> Result<V
         }));
     }
 
-    let unc = spec.uncertainty.as_ref().unwrap();
-    let covariance = unc.covariance.as_ref().ok_or(
-        "decide requires uncertainty.covariance (P93 flux-only mode is not supported by decide)",
-    )?;
     let u_cov = json!({
         "covariance_path": covariance.path,
         "covariance_sha256": covariance.sha256,

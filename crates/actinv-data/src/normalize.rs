@@ -28,9 +28,11 @@
 //!   log-law (INT 3–5) case-C unresolved table become 1e-30; a constant
 //!   field interpolates identically but the strict log path accepts it.
 //! - `bw_total_width`: resolved-resonance row with GT below
-//!   GN+GG+GF by a last-place amount (≤ 5e-4 relative) is normalized to
-//!   the component sum — the same value the reconstruction's
-//!   `max(total, components)` semantics already compute. Larger deficits
+//!   GN+GG+GF is normalized to the component sum — the same value the
+//!   reconstruction's `max(total, components)` semantics already compute.
+//!   Under LRX=0 (no competitive widths declared) every deficit above
+//!   1e-6 relative is normalized (`bw_total_width_lrx0`); under LRX=1/2
+//!   only a last-place deficit (≤ 5e-4 relative) is, and larger deficits
 //!   are flagged in the ledger and left untouched.
 //! - `tab1_order`: adjacent (x,y) pairs violating strict abscissa
 //!   monotonicity in MF=2/MT=151 TAB1 records are swapped as pairs
@@ -39,8 +41,8 @@
 //! `NormalizeProfile::EndfB8` enables every class; `None` preserves the
 //! historical fail-closed behaviour byte-for-byte. Emitted-state sums
 //! that disagree with the MF=3 totals are a separate, semantic defect
-//! class handled at collapse time by `BuildOptions::state_sum_policy`,
-//! not by this text pass.
+//! class handled at collapse time (enabled by any `BuildOptions::normalize_profile`
+//! other than `None`), not by this text pass.
 
 /// Per-tape normalization result: rewritten text plus a human- and
 /// machine-readable ledger of every intervention.
@@ -600,11 +602,20 @@ fn fix_tab1_order(lines: &mut [String], entries: &mut Vec<String>) {
     }
 }
 
+/// A literal NaN spelling (case-insensitive, optionally signed).
+fn is_nan_token(token: &str) -> bool {
+    token
+        .strip_prefix(['+', '-'])
+        .unwrap_or(token)
+        .eq_ignore_ascii_case("nan")
+}
+
 /// Literal NaN junction sentinels inside TAB1 bodies (TENDL Pb-208 writes
 /// `NaN` for the ordinate at exactly the resolved-range edge, MF=3/MT=1 and
 /// MT=3). The next same-parity slot carries the post-junction value;
 /// substituting it produces the duplicate-point step the writer intended.
-/// Restricted to contiguous same-(MF,MT) runs so a stray NaN cannot borrow
+/// Only fields whose token is literally a NaN spelling are repaired; any other
+/// unparsable token is left for the strict parser to report. Restricted to contiguous same-(MF,MT) runs so a stray NaN cannot borrow
 /// a value across sections.
 fn fix_nan_fields(lines: &mut [String], entries: &mut Vec<String>) {
     let mut i = 0;
@@ -622,28 +633,33 @@ fn fix_nan_fields(lines: &mut [String], entries: &mut Vec<String>) {
         while end < lines.len() && tail_mf_mt(&lines[end]) == Some((mf, mt)) {
             end += 1;
         }
-        // flatten the run's fields, tracking which carry nonfinite tokens
-        let mut flat: Vec<(usize, usize, f64)> = Vec::new();
+        // flatten the run's fields, tracking which carry a literal NaN token; any
+        // other unparsable token is kept (as infinity, never a usable source) for
+        // the strict parser to report
+        let mut flat: Vec<(usize, usize, f64, bool)> = Vec::new();
         for (li, line) in lines.iter().enumerate().take(end).skip(i) {
             let raw = crate::endf::fields(line);
             for (pos, field) in raw.iter().enumerate() {
                 let t = field.trim();
                 if t.is_empty() {
-                    flat.push((li, pos, 0.0));
+                    flat.push((li, pos, 0.0, false));
+                } else if is_nan_token(t) {
+                    flat.push((li, pos, f64::NAN, true));
                 } else {
                     flat.push((
                         li,
                         pos,
-                        crate::endf::parse_endf_float(t).unwrap_or(f64::NAN),
+                        crate::endf::parse_endf_float(t).unwrap_or(f64::INFINITY),
+                        false,
                     ));
                 }
             }
         }
         for j in 0..flat.len() {
-            if flat[j].2.is_finite() {
+            if !flat[j].3 {
                 continue;
             }
-            let (li, pos, _) = flat[j];
+            let (li, pos, _, _) = flat[j];
             let source = if j + 2 < flat.len() {
                 flat[j + 2].2
             } else if j >= 2 {
@@ -661,6 +677,7 @@ fn fix_nan_fields(lines: &mut [String], entries: &mut Vec<String>) {
                 source
             ));
             flat[j].2 = source;
+            flat[j].3 = false;
         }
         i = end;
     }
@@ -809,5 +826,50 @@ mod tests {
         let rows: Vec<&str> = out.text.lines().collect();
         assert_eq!(rows[3][11..22].trim(), "0.000000+0", "{}", rows[3]);
         assert!(out.entries.iter().any(|e| e.starts_with("rml_photon_pair")));
+    }
+
+    /// An MF=3/MT=1 body line whose fourth field is `token`.
+    fn body_with(token: &str) -> String {
+        format!(
+            "{}{}{}{:>11}{}{}2840 3  1    1\n",
+            ef_str(1.0),
+            ef_str(2.0),
+            ef_str(3.0),
+            token,
+            ef_str(5.0),
+            ef_str(6.0),
+        )
+    }
+
+    #[test]
+    fn nan_token_is_repaired_from_same_parity_neighbor() {
+        let mut lines = vec![body_with("NaN")];
+        let mut entries = Vec::new();
+        fix_nan_fields(&mut lines, &mut entries);
+        assert_eq!(entries.len(), 1, "{entries:?}");
+        assert!(entries[0].starts_with("nan_field: MF=3/MT=1"));
+        assert!(!lines[0].to_ascii_lowercase().contains("nan"));
+    }
+
+    #[test]
+    fn corrupt_non_nan_tokens_are_not_rewritten() {
+        for token in ["1.234-", "abc", "inf"] {
+            let body = body_with(token);
+            let mut lines = vec![body.clone()];
+            let mut entries = Vec::new();
+            fix_nan_fields(&mut lines, &mut entries);
+            assert!(entries.is_empty(), "{token}: {entries:?}");
+            assert_eq!(lines[0], body, "{token}");
+        }
+    }
+
+    #[test]
+    fn nan_spellings_are_case_insensitive_and_signed() {
+        for t in ["nan", "NaN", "NAN", "-nan", "+NaN"] {
+            assert!(is_nan_token(t), "{t}");
+        }
+        for t in ["1.234-", "abc", "inf", "nano", ""] {
+            assert!(!is_nan_token(t), "{t}");
+        }
     }
 }

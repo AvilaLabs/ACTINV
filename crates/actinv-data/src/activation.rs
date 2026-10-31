@@ -5,8 +5,8 @@
 //! would make an activation library look complete when it is not.
 
 use crate::endf::{
-    parse_sections, read_cont_checked, read_list_checked, read_tab1_checked, read_tab2_checked,
-    ContRecord, Section,
+    bounded_capacity, parse_sections, read_cont_checked, read_list_checked, read_tab1_checked,
+    read_tab2_checked, ContRecord, Section,
 };
 use crate::groups::Tabulated;
 use crate::resonance::{parse_mf2, ResonanceEvaluation};
@@ -276,7 +276,7 @@ fn parse_mf8(section: &Section<'_>) -> Result<Vec<ProductRef>, String> {
     if !matches!(head.n2, 0 | 1) {
         return Err(format!("unsupported MF=8 NO={}", head.n2));
     }
-    let mut products = Vec::with_capacity(head.n1);
+    let mut products = Vec::with_capacity(bounded_capacity(head.n1));
     for _ in 0..head.n1 {
         let product_head;
         if head.n2 == 0 {
@@ -325,7 +325,7 @@ fn parse_mf8(section: &Section<'_>) -> Result<Vec<ProductRef>, String> {
 
 fn parse_mf9_or_10(section: &Section<'_>) -> Result<Vec<ProductTable>, String> {
     let (head, mut next) = read_cont_checked(&section.lines, 0)?;
-    let mut products = Vec::with_capacity(head.n1);
+    let mut products = Vec::with_capacity(bounded_capacity(head.n1));
     for _ in 0..head.n1 {
         let (record, after) = read_tab1_checked(&section.lines, next)?;
         next = after;
@@ -396,7 +396,7 @@ pub(crate) fn consume_mf6_law(lines: &[&str], index: usize, law: i32) -> Result<
 
 fn parse_mf6(section: &Section<'_>) -> Result<Vec<Mf6Product>, String> {
     let (head, mut next) = read_cont_checked(&section.lines, 0)?;
-    let mut products = Vec::with_capacity(head.n1);
+    let mut products = Vec::with_capacity(bounded_capacity(head.n1));
     for _ in 0..head.n1 {
         let (record, after_yield) = read_tab1_checked(&section.lines, next)?;
         let zap = exact_nonnegative_i32(record.head.c1, "MF=6 ZAP")?;

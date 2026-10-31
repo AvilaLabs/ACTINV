@@ -2,7 +2,7 @@
 
 Library coverage and evaluation defects can dominate an inventory calculation. A successful solve does not establish that every reaction or product is represented.
 
-This page summarizes the shipped catalog **1.1.0**. The [detailed data disclosure](https://github.com/AvilaLabs/ACTINV/blob/master/docs/DATA_LIMITATIONS.md) preserves target lists, defect reports, and the underlying evidence.
+This page summarizes the shipped catalog **1.2.0**. The [detailed data disclosure](https://github.com/AvilaLabs/ACTINV/blob/master/docs/DATA_LIMITATIONS.md) preserves target lists, defect reports, and the underlying evidence.
 
 ## Full and patched neutron corpora
 
