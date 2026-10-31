@@ -63,6 +63,18 @@ self-shielding exist but have no recorded comparison. `options.rate_scale` scale
   the dose-dominant reactions with OpenMC continuous-energy reaction-rate tallies of the same reactions on the same
   data. This measures the error directly.
 
+**B1 result: P173 PASS** (CI green on 5e66166). On the same ENDF/B-VIII.1 data, 76 of 78 rows used:
+- Collapse and self-shielding are material for capture only: Mn-55, Co-59 and Mo-98 (n,γ) in every steel region
+  (ACTINV's flat-lethargy rate 6.6–11.7% above the continuous-energy tally), Cu-63 (n,γ) in CuCrZr (14.3–17.6%). No
+  threshold reaction is material, and nothing in tungsten or concrete. Item 2's fix is warranted.
+- Processing is material for one reaction: W-182(n,p) is 6% below NJOY. Cause, found after the run: the evaluation
+  has no MF3 MT103, only the MT600–649 partials, and its MF10 MT103 state cross sections sum 3–8% below those
+  partials at 11–18 MeV. NJOY (and so OpenMC) builds MT103 from the MF3 partials; ACTINV's builder takes MF10
+  (`builder.rs`, lumped-channel synthesis skipped when MF10 holds the summary MT). An evaluation inconsistency, not
+  an arithmetic error in either code; which to follow is a builder policy decision.
+- Before the per-region correction: score ACTINV's existing Bondarenko self-shielding on the same P173 rows. If it
+  removes the capture differences, the fix is a default, not a new tally.
+
 **Fix, if B1 shows it matters.**
 
 - Step 1 also tallies continuous-energy rates for the top-N dominant reactions.

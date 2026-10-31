@@ -128,5 +128,8 @@ Stages 1–3 do not need SINBAD.
     The 95% bootstrap interval for OpenMC minus ACTINV excludes zero against both ACTINV arms (0.069–0.273 and
     0.026–0.131). Public wording is the four registered sentences only, with no ranking. Unregistered observation:
     OpenMC's depletion took 20–64 s per case against about 1 s for ACTINV; a speed claim needs its own protocol.
-- Next (2026-10-30): the workflow items in `WORKFLOW_ACCURACY_PLAN.md` (B1 as P173), and the P168 5d successor
-  (P174).
+  - **P173 PASS** (CI green on 5e66166): ACTINV's 709-group rates against OpenMC continuous-energy tallies on the
+    same data. Capture in steel and CuCrZr is 6.6–17.6% high from the collapse (no self-shielding by default); one
+    processing difference, W-182(n,p), traced to an MF3/MF10 inconsistency in the evaluation. No public sentence.
+- Next (2026-10-31): score the existing Bondarenko self-shielding on the P173 rows, then the item 2 correction if
+  still needed; P174 (candidate built); A1 validation (P175, drafted).
