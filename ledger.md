@@ -5058,3 +5058,32 @@ sections, module (`f33ea3ed…`), scoring and sentences are P171's.
   under `target/`. All modes exited 0 and G1 passed. G2's problems all came from the experiments it did not run or
   from its size, and the summary completed. Only exit codes, gate lines and problem kinds were read, and the outputs
   were deleted.
+
+## Entry 295 — P172 evidence: G0–G3 pass on 5ed4791 (2026-10-30)
+
+All five arms ran in the bounded scope on the registration commit, with the pinned module (`f33ea3ed…`) and OpenMC
+0.15.3. `controls/check_p172.py` passes G0–G3: 132 experiments in every arm, 2,360 common points, none dropped, the
+P32 reproduction control holds. Record: `results/p172_openmc_fns.json` and `results/p172/`; verdict
+`results/p172_verdict.json`.
+- **Registered sentences (G3):**
+  - "Against 2360 measured decay-heat points from 132 JAEA FNS experiments, ACTINV with its shipped TENDL-2025 data
+    has a median |ln C/E| of 0.139; OpenMC 0.15.3 depletion with its published ENDF/B-VIII.1 fast-spectrum depletion
+    chain (chain_endfb81_fast.xml) and ENDF/B-VIII.1 has 0.316."
+  - "Given the same ENDF/B-VIII.1 cross sections as OpenMC, ACTINV has a median |ln C/E| of 0.234 on the same points."
+  - "With isomer branching ratios from the ENDF/B-VIII.1 library added to that chain, OpenMC has a median |ln C/E| of
+    0.252 on the 2360 of those points it covers."
+  - "With a chain built from ENDF/B-VIII.0 decay data and TENDL-2025 reaction channels instead (Chain.from_endf,
+    ground-state targets), OpenMC has a median |ln C/E| of 0.311 on the 2358 of those points it covers."
+- **Also recorded:** 95% bootstrap intervals (2,000 resamples of experiments, seed 172) for OpenMC's median minus
+  ACTINV's: 0.069 to 0.273 against the TENDL-2025 arm, 0.026 to 0.131 against the ENDF/B-VIII.1 arm.
+- **Disclosed: memory-pressure stop.** The host's memory-pressure monitor stopped the first evidence run during the
+  OpenMC published-chain arm, before that arm wrote output. Its partial work directory was deleted, and the three
+  OpenMC arms and assembly were rerun on 5ed4791. The two ACTINV arms are from the first run. OpenMC wall times: 7,425 s
+  (published chain), 7,197 s (P32), 6,742 s (isomer).
+- **Disclosed: NaN repair in the library build.** The 2026-10-30 code audit found that `normalize.rs`
+  `fix_nan_fields` treated every unparsable field as NaN and replaced it from a same-parity neighbour. The P172
+  library index records 164,147 such edits in MF=1/MT=451 (descriptive text) and 115,178 in MF=32/MT=151 (resonance
+  covariances), and none in any other section. ACTINV's activation build reads neither MF=1 text records nor MF=32, so
+  no cross section, product, yield or decay datum changed. The repair, restricted to literal NaN tokens, is on a
+  separate branch; the P172 library is not rebuilt.
+- G4 (CI on this evidence commit) decides the verdict.
