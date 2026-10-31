@@ -1,0 +1,310 @@
+{
+ "allowed_sentences": [
+  "On P168's 38 case-orders, 5 had an activity or heat total outside 1e-06 of the reference at some step under the status quo.",
+  "Candidate A brought 3 of those 5 within 1e-06 of the reference or inside its reported bound.",
+  "Candidate B brought 3 of those 5 within 1e-06 of the reference or inside its reported bound.",
+  "Candidate C brought 3 of those 5 within 1e-06 of the reference or inside its reported bound.",
+  "On the 16 held-out case-orders (140 scored steps, 17 with a below-floor state under the status quo) the bound problems were 20 for A, 26 for B and 26 for C; B re-solved 12 steps at CRAM-48 and C reconstructed 7 states, at a largest wall-time ratio of 1.01 against the status quo.",
+  "No candidate met the decision rule (A G2, A G3, B G3, C G3); below-floor states stay in the totals, flagged by n_states_below_floor, and the finding is documented in data-limits."
+ ],
+ "candidates": {
+  "A": {
+   "G2": {
+    "pass": false,
+    "problems": [
+     "1a_u238_chain_pure_parent cram16 A step 1: act total went from 5.39e-16 to 3.82e-06 of the reference",
+     "1a_u238_chain_pure_parent cram16 A step 1: heat total went from 5.66e-16 to 3.82e-06 of the reference",
+     "1a_u238_chain_pure_parent cram16 A step 2: act total went from 1.18e-16 to 6.99e-02 of the reference",
+     "1a_u238_chain_pure_parent cram16 A step 2: heat total went from 2.14e-16 to 6.99e-02 of the reference",
+     "1a_u238_chain_pure_parent cram16 A step 3: act total went from 1.19e-16 to 7.14e-02 of the reference",
+     "1a_u238_chain_pure_parent cram16 A step 3: heat total went from 1.33e-16 to 7.14e-02 of the reference",
+     "1b_u238_chain_equilibrated cram16 A step 1: act total went from 8.40e-17 to 7.14e-02 of the reference",
+     "1b_u238_chain_equilibrated cram16 A step 1: heat total went from 2.03e-17 to 7.14e-02 of the reference",
+     "1b_u238_chain_equilibrated cram16 A step 2: act total went from 1.19e-16 to 7.14e-02 of the reference",
+     "1b_u238_chain_equilibrated cram16 A step 2: heat total went from 1.95e-16 to 7.14e-02 of the reference",
+     "1b_u238_chain_equilibrated cram16 A step 3: act total went from 1.19e-16 to 7.14e-02 of the reference",
+     "1b_u238_chain_equilibrated cram16 A step 3: heat total went from 1.33e-16 to 7.14e-02 of the reference",
+     "6a_dynamic_range_coupled cram16 A step 1: act total went from 2.73e-16 to 1.00e+00 of the reference",
+     "6a_dynamic_range_coupled cram16 A step 1: heat total went from 2.50e-16 to 1.00e+00 of the reference",
+     "6a_dynamic_range_coupled cram16 A step 2: act total went from 3.18e-17 to 1.00e+00 of the reference",
+     "6a_dynamic_range_coupled cram16 A step 2: heat total went from 3.73e-17 to 1.00e+00 of the reference",
+     "6a_dynamic_range_coupled cram16 A step 3: act total went from 3.44e-15 to 1.00e+00 of the reference",
+     "6a_dynamic_range_coupled cram16 A step 3: heat total went from 3.42e-15 to 1.00e+00 of the reference",
+     "6a_dynamic_range_coupled cram16 A step 5: act total went from 2.92e-14 to 1.00e+00 of the reference",
+     "6a_dynamic_range_coupled cram16 A step 5: heat total went from 2.93e-14 to 1.00e+00 of the reference"
+    ]
+   },
+   "G3": {
+    "actinide_guard": {
+     "pass": false,
+     "problems": [
+      "h7_u238_chain_real cram16 step 2: A act total is 1.06e-03 of the reference (limit 1e-06)",
+      "h7_u238_chain_real cram16 step 2: A heat total is 1.06e-03 of the reference (limit 1e-06)",
+      "h7_u238_chain_real cram16 step 3: A act total is 4.16e-02 of the reference (limit 1e-06)",
+      "h7_u238_chain_real cram16 step 3: A heat total is 4.16e-02 of the reference (limit 1e-06)",
+      "h7_u238_chain_real cram16 step 4: A act total is 6.99e-02 of the reference (limit 1e-06)",
+      "h7_u238_chain_real cram16 step 4: A heat total is 6.99e-02 of the reference (limit 1e-06)",
+      "h8_th232_chain_real cram16 step 1: A act total is 2.66e-01 of the reference (limit 1e-06)",
+      "h8_th232_chain_real cram16 step 1: A heat total is 2.66e-01 of the reference (limit 1e-06)",
+      "h8_th232_chain_real cram16 step 2: A act total is 3.00e-01 of the reference (limit 1e-06)",
+      "h8_th232_chain_real cram16 step 2: A heat total is 3.00e-01 of the reference (limit 1e-06)",
+      "h8_th232_chain_real cram16 step 3: A act total is 3.00e-01 of the reference (limit 1e-06)",
+      "h8_th232_chain_real cram16 step 3: A heat total is 3.00e-01 of the reference (limit 1e-06)",
+      "h8_th232_chain_real cram16 step 4: A act total is 3.00e-01 of the reference (limit 1e-06)",
+      "h8_th232_chain_real cram16 step 4: A heat total is 3.00e-01 of the reference (limit 1e-06)"
+     ]
+    },
+    "bound_valid": {
+     "pass": false,
+     "problems": [
+      "h1_triple_T10s cram16 A screen step 4: activity.total [2.035238e+08, 2.035238e+08] excludes the reference 2.035238e+08",
+      "h1_triple_T10s cram16 A screen step 4: heat.total [1.956486e-05, 1.956486e-05] excludes the reference 1.956486e-05",
+      "h1_triple_T10s cram16 A screen step 5: activity.total [-0.000000e+00, 0.000000e+00] excludes the reference 1.355717e-21",
+      "h1_triple_T10s cram16 A screen step 5: heat.total [0.000000e+00, 0.000000e+00] excludes the reference 1.303259e-34",
+      "h1_triple_T10s cram48 A screen step 5: activity.total [-0.000000e+00, 0.000000e+00] excludes the reference 1.355717e-21",
+      "h1_triple_T10s cram48 A screen step 5: heat.total [0.000000e+00, 0.000000e+00] excludes the reference 1.303259e-34",
+      "h2_triple_T3600s cram16 A screen step 3: activity.total [4.389353e+01, 4.389353e+01] excludes the reference 2.083623e+00",
+      "h2_triple_T3600s cram16 A screen step 3: heat.total [4.219511e-12, 4.219511e-12] excludes the reference 2.002999e-13",
+      "h2_triple_T3600s cram16 A screen step 5: activity.total [-0.000000e+00, 0.000000e+00] excludes the reference 1.283525e-35",
+      "h2_triple_T3600s cram16 A screen step 5: heat.total [0.000000e+00, 0.000000e+00] excludes the reference 1.233860e-48",
+      "h2_triple_T3600s cram48 A screen step 5: activity.total [-0.000000e+00, 0.000000e+00] excludes the reference 1.283525e-35",
+      "h2_triple_T3600s cram48 A screen step 5: heat.total [0.000000e+00, 0.000000e+00] excludes the reference 1.233860e-48",
+      "h3_triple_T1e6s cram16 A screen step 2: activity.total [2.441754e+08, 2.441754e+08] excludes the reference 2.441498e+08",
+      "h3_triple_T1e6s cram16 A screen step 2: heat.total [2.347272e-05, 2.347272e-05] excludes the reference 2.347027e-05",
+      "h3_triple_T1e6s cram48 A screen step 4: activity.total [1.863695e-20, 1.863695e-20] excludes the reference 3.632453e-36",
+      "h3_triple_T1e6s cram48 A screen step 4: heat.total [1.791581e-33, 1.791581e-33] excludes the reference 3.491899e-49",
+      "h5_pulsed_1s_cool cram16 A screen step 41: activity.total [-0.000000e+00, 0.000000e+00] excludes the reference 5.534621e-17",
+      "h5_pulsed_1s_cool cram16 A screen step 41: heat.total [0.000000e+00, 0.000000e+00] excludes the reference 5.320464e-30",
+      "h5_pulsed_1s_cool cram48 A screen step 41: activity.total [5.534546e-17, 5.534546e-17] excludes the reference 5.534621e-17",
+      "h5_pulsed_1s_cool cram48 A screen step 41: heat.total [5.320392e-30, 5.320392e-30] excludes the reference 5.320464e-30"
+     ]
+    },
+    "contract": {
+     "pass": true,
+     "problems": []
+    },
+    "cost_idle": {
+     "pass": true,
+     "problems": []
+    },
+    "cost_triggered": {
+     "pass": true,
+     "problems": []
+    },
+    "m_tot_vs_A": {
+     "pass": true,
+     "problems": []
+    },
+    "no_regression": {
+     "pass": false,
+     "problems": [
+      "h7_u238_chain_real cram16 A step 2: act total went from 1.52e-15 to 1.06e-03 of the reference",
+      "h7_u238_chain_real cram16 A step 2: heat total went from 1.74e-15 to 1.06e-03 of the reference",
+      "h7_u238_chain_real cram16 A step 3: act total went from 1.40e-15 to 4.16e-02 of the reference",
+      "h7_u238_chain_real cram16 A step 3: heat total went from 1.56e-15 to 4.16e-02 of the reference",
+      "h7_u238_chain_real cram16 A step 4: act total went from 3.26e-16 to 6.99e-02 of the reference",
+      "h7_u238_chain_real cram16 A step 4: heat total went from 2.98e-16 to 6.99e-02 of the reference",
+      "h8_th232_chain_real cram16 A step 1: act total went from 2.76e-17 to 2.66e-01 of the reference",
+      "h8_th232_chain_real cram16 A step 1: heat total went from 6.68e-17 to 2.66e-01 of the reference",
+      "h8_th232_chain_real cram16 A step 2: act total went from 9.76e-17 to 3.00e-01 of the reference",
+      "h8_th232_chain_real cram16 A step 2: heat total went from 6.16e-17 to 3.00e-01 of the reference",
+      "h8_th232_chain_real cram16 A step 3: act total went from 3.35e-16 to 3.00e-01 of the reference",
+      "h8_th232_chain_real cram16 A step 3: heat total went from 1.71e-16 to 3.00e-01 of the reference",
+      "h8_th232_chain_real cram16 A step 4: act total went from 5.93e-16 to 3.00e-01 of the reference",
+      "h8_th232_chain_real cram16 A step 4: heat total went from 3.35e-16 to 3.00e-01 of the reference",
+      "h6_trace_near_floor cram16 A step 4: act total went from 8.78e-10 to 5.08e-01 of the reference",
+      "h6_trace_near_floor cram16 A step 4: heat total went from 8.78e-10 to 5.08e-01 of the reference"
+     ]
+    }
+   },
+   "G4": {
+    "fixtures_not_runnable": [
+     "controls/p145_inputs/c2_steel_problem.json",
+     "controls/p146_inputs/d1_problem.json",
+     "controls/p146_inputs/d2_problem.json",
+     "controls/p147_inputs/a_hi_problem.json",
+     "controls/p147_inputs/a_lo_problem.json",
+     "controls/p147_inputs/a_nbco_problem.json",
+     "examples/impurities_ra_steel/base_spec.json"
+    ],
+    "pass": true,
+    "problems": []
+   }
+  },
+  "B": {
+   "G2": {
+    "pass": true,
+    "problems": []
+   },
+   "G3": {
+    "actinide_guard": {
+     "pass": true,
+     "problems": []
+    },
+    "bound_valid": {
+     "pass": false,
+     "problems": [
+      "h1_triple_T10s cram16 B screen step 4: activity.total [2.035238e+08, 2.035238e+08] excludes the reference 2.035238e+08",
+      "h1_triple_T10s cram16 B screen step 4: heat.total [1.956486e-05, 1.956486e-05] excludes the reference 1.956486e-05",
+      "h1_triple_T10s cram16 B screen step 5: activity.total [-0.000000e+00, 0.000000e+00] excludes the reference 1.355717e-21",
+      "h1_triple_T10s cram16 B screen step 5: heat.total [0.000000e+00, 0.000000e+00] excludes the reference 1.303259e-34",
+      "h1_triple_T10s cram48 B screen step 5: activity.total [-0.000000e+00, 0.000000e+00] excludes the reference 1.355717e-21",
+      "h1_triple_T10s cram48 B screen step 5: heat.total [0.000000e+00, 0.000000e+00] excludes the reference 1.303259e-34",
+      "h2_triple_T3600s cram16 B screen step 3: activity.total [4.389353e+01, 4.389353e+01] excludes the reference 2.083623e+00",
+      "h2_triple_T3600s cram16 B screen step 3: heat.total [4.219511e-12, 4.219511e-12] excludes the reference 2.002999e-13",
+      "h2_triple_T3600s cram16 B screen step 4: activity.total [4.186013e-05, 4.186013e-05] excludes the reference 3.411184e-06",
+      "h2_triple_T3600s cram16 B screen step 4: heat.total [4.024039e-18, 4.024039e-18] excludes the reference 3.279192e-19",
+      "h2_triple_T3600s cram16 B screen step 5: activity.total [-0.000000e+00, 0.000000e+00] excludes the reference 1.283525e-35",
+      "h2_triple_T3600s cram16 B screen step 5: heat.total [0.000000e+00, 0.000000e+00] excludes the reference 1.233860e-48",
+      "h2_triple_T3600s cram48 B screen step 5: activity.total [-0.000000e+00, 0.000000e+00] excludes the reference 1.283525e-35",
+      "h2_triple_T3600s cram48 B screen step 5: heat.total [0.000000e+00, 0.000000e+00] excludes the reference 1.233860e-48",
+      "h3_triple_T1e6s cram16 B screen step 2: activity.total [2.441754e+08, 2.441754e+08] excludes the reference 2.441498e+08",
+      "h3_triple_T1e6s cram16 B screen step 2: heat.total [2.347272e-05, 2.347272e-05] excludes the reference 2.347027e-05",
+      "h3_triple_T1e6s cram16 B screen step 3: activity.total [1.051934e-06, 1.051934e-06] excludes the reference 1.051959e-06",
+      "h3_triple_T1e6s cram16 B screen step 3: heat.total [1.011230e-19, 1.011230e-19] excludes the reference 1.011255e-19",
+      "h3_triple_T1e6s cram16 B screen step 4: activity.total [1.863695e-20, 1.863695e-20] excludes the reference 3.632453e-36",
+      "h3_triple_T1e6s cram16 B screen step 4: heat.total [1.791581e-33, 1.791581e-33] excludes the reference 3.491899e-49",
+      "h3_triple_T1e6s cram48 B screen step 4: activity.total [1.863695e-20, 1.863695e-20] excludes the reference 3.632453e-36",
+      "h3_triple_T1e6s cram48 B screen step 4: heat.total [1.791581e-33, 1.791581e-33] excludes the reference 3.491899e-49",
+      "h5_pulsed_1s_cool cram16 B screen step 41: activity.total [-0.000000e+00, 0.000000e+00] excludes the reference 5.534621e-17",
+      "h5_pulsed_1s_cool cram16 B screen step 41: heat.total [0.000000e+00, 0.000000e+00] excludes the reference 5.320464e-30",
+      "h5_pulsed_1s_cool cram48 B screen step 41: activity.total [5.534546e-17, 5.534546e-17] excludes the reference 5.534621e-17",
+      "h5_pulsed_1s_cool cram48 B screen step 41: heat.total [5.320392e-30, 5.320392e-30] excludes the reference 5.320464e-30"
+     ]
+    },
+    "contract": {
+     "pass": true,
+     "problems": []
+    },
+    "cost_idle": {
+     "pass": true,
+     "problems": []
+    },
+    "cost_triggered": {
+     "pass": true,
+     "problems": []
+    },
+    "m_tot_vs_A": {
+     "pass": false,
+     "problems": [
+      "h2_triple_T3600s cram16 step 4: B act error 1.13e+01 exceeds A's 1.00e+00",
+      "h2_triple_T3600s cram16 step 4: B heat error 1.13e+01 exceeds A's 1.00e+00",
+      "h3_triple_T1e6s cram16 step 4: B act error 5.13e+15 exceeds A's 1.00e+00",
+      "h3_triple_T1e6s cram16 step 4: B heat error 5.13e+15 exceeds A's 1.00e+00"
+     ]
+    },
+    "no_regression": {
+     "pass": true,
+     "problems": []
+    }
+   },
+   "G4": {
+    "fixtures_not_runnable": [
+     "controls/p145_inputs/c2_steel_problem.json",
+     "controls/p146_inputs/d1_problem.json",
+     "controls/p146_inputs/d2_problem.json",
+     "controls/p147_inputs/a_hi_problem.json",
+     "controls/p147_inputs/a_lo_problem.json",
+     "controls/p147_inputs/a_nbco_problem.json",
+     "examples/impurities_ra_steel/base_spec.json"
+    ],
+    "pass": true,
+    "problems": []
+   }
+  },
+  "C": {
+   "G2": {
+    "pass": true,
+    "problems": []
+   },
+   "G3": {
+    "actinide_guard": {
+     "pass": true,
+     "problems": []
+    },
+    "bound_valid": {
+     "pass": false,
+     "problems": [
+      "h1_triple_T10s cram16 C screen step 4: activity.total [2.035238e+08, 2.035238e+08] excludes the reference 2.035238e+08",
+      "h1_triple_T10s cram16 C screen step 4: heat.total [1.956486e-05, 1.956486e-05] excludes the reference 1.956486e-05",
+      "h1_triple_T10s cram16 C screen step 5: activity.total [-0.000000e+00, 0.000000e+00] excludes the reference 1.355717e-21",
+      "h1_triple_T10s cram16 C screen step 5: heat.total [0.000000e+00, 0.000000e+00] excludes the reference 1.303259e-34",
+      "h1_triple_T10s cram48 C screen step 5: activity.total [-0.000000e+00, 0.000000e+00] excludes the reference 1.355717e-21",
+      "h1_triple_T10s cram48 C screen step 5: heat.total [0.000000e+00, 0.000000e+00] excludes the reference 1.303259e-34",
+      "h2_triple_T3600s cram16 C screen step 3: activity.total [4.389353e+01, 4.389353e+01] excludes the reference 2.083623e+00",
+      "h2_triple_T3600s cram16 C screen step 3: heat.total [4.219511e-12, 4.219511e-12] excludes the reference 2.002999e-13",
+      "h2_triple_T3600s cram16 C screen step 4: activity.total [4.186013e-05, 4.186013e-05] excludes the reference 3.411184e-06",
+      "h2_triple_T3600s cram16 C screen step 4: heat.total [4.024039e-18, 4.024039e-18] excludes the reference 3.279192e-19",
+      "h2_triple_T3600s cram16 C screen step 5: activity.total [-0.000000e+00, 0.000000e+00] excludes the reference 1.283525e-35",
+      "h2_triple_T3600s cram16 C screen step 5: heat.total [0.000000e+00, 0.000000e+00] excludes the reference 1.233860e-48",
+      "h2_triple_T3600s cram48 C screen step 5: activity.total [-0.000000e+00, 0.000000e+00] excludes the reference 1.283525e-35",
+      "h2_triple_T3600s cram48 C screen step 5: heat.total [0.000000e+00, 0.000000e+00] excludes the reference 1.233860e-48",
+      "h3_triple_T1e6s cram16 C screen step 2: activity.total [2.441754e+08, 2.441754e+08] excludes the reference 2.441498e+08",
+      "h3_triple_T1e6s cram16 C screen step 2: heat.total [2.347272e-05, 2.347272e-05] excludes the reference 2.347027e-05",
+      "h3_triple_T1e6s cram16 C screen step 3: activity.total [1.051934e-06, 1.051934e-06] excludes the reference 1.051959e-06",
+      "h3_triple_T1e6s cram16 C screen step 3: heat.total [1.011230e-19, 1.011230e-19] excludes the reference 1.011255e-19",
+      "h3_triple_T1e6s cram16 C screen step 4: activity.total [1.863695e-20, 1.863695e-20] excludes the reference 3.632453e-36",
+      "h3_triple_T1e6s cram16 C screen step 4: heat.total [1.791581e-33, 1.791581e-33] excludes the reference 3.491899e-49",
+      "h3_triple_T1e6s cram48 C screen step 4: activity.total [1.863695e-20, 1.863695e-20] excludes the reference 3.632453e-36",
+      "h3_triple_T1e6s cram48 C screen step 4: heat.total [1.791581e-33, 1.791581e-33] excludes the reference 3.491899e-49",
+      "h5_pulsed_1s_cool cram16 C screen step 41: activity.total [-0.000000e+00, 0.000000e+00] excludes the reference 5.534621e-17",
+      "h5_pulsed_1s_cool cram16 C screen step 41: heat.total [0.000000e+00, 0.000000e+00] excludes the reference 5.320464e-30",
+      "h5_pulsed_1s_cool cram48 C screen step 41: activity.total [5.534546e-17, 5.534546e-17] excludes the reference 5.534621e-17",
+      "h5_pulsed_1s_cool cram48 C screen step 41: heat.total [5.320392e-30, 5.320392e-30] excludes the reference 5.320464e-30"
+     ]
+    },
+    "contract": {
+     "pass": true,
+     "problems": []
+    },
+    "cost_idle": {
+     "pass": true,
+     "problems": []
+    },
+    "cost_triggered": {
+     "pass": true,
+     "problems": []
+    },
+    "m_tot_vs_A": {
+     "pass": true,
+     "problems": []
+    },
+    "no_regression": {
+     "pass": true,
+     "problems": []
+    }
+   },
+   "G4": {
+    "fixtures_not_runnable": [
+     "controls/p145_inputs/c2_steel_problem.json",
+     "controls/p146_inputs/d1_problem.json",
+     "controls/p146_inputs/d2_problem.json",
+     "controls/p147_inputs/a_hi_problem.json",
+     "controls/p147_inputs/a_lo_problem.json",
+     "controls/p147_inputs/a_nbco_problem.json",
+     "examples/impurities_ra_steel/base_spec.json"
+    ],
+    "pass": true,
+    "problems": []
+   }
+  }
+ },
+ "decision": "status_quo",
+ "decision_order": [
+  "C",
+  "B",
+  "A"
+ ],
+ "gates": {
+  "G0": {
+   "pass": true,
+   "problems": []
+  },
+  "G1": {
+   "pass": true,
+   "problems": []
+  }
+ },
+ "protocol": "ACTINV-P174",
+ "verdict": "P174-PASS (decision: status_quo; pending G5, CI on the evidence commit)"
+}

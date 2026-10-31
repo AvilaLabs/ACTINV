@@ -5172,3 +5172,30 @@ fusion-isotope 41171399141 (`results/p173/ci_runs.json`). **P173-PASS.**
   the lumped-channel synthesis when MF10 holds the summary MT. The −0.062 is therefore the evaluation's own
   inconsistency, resolved differently by the two codes. Which to follow is a builder decision for a later protocol.
 - Next: score ACTINV's existing Bondarenko self-shielding on the P173 rows before building a per-region correction.
+
+## Entry 301 — P174 evidence: G0–G1 pass; no candidate meets the decision rule, the status quo stays (2026-10-31)
+
+Scored run with the candidate binary (`68aa0822…`) built from `be5a33d` (crates tree `956c3ee5…`) and the pinned
+P163 master binary (`186cc258…`), inside the bounded scope (1,958 s). `be5a33d` is kept reachable by a merge of
+master (`f9312ac`); the evidence commit's crates tree is the same. G0 and G1 pass. The checker's decision is
+**status quo**: A fails G2 and G3, B and C fail G3. G5 (CI on this evidence commit) decides the verdict.
+- **A (`bound`)** drops real daughters: on the U-238 chain cases (P168 1a/1b and held-out h7) the activity and heat
+  totals' error grows from about 1e-16 of the reference to between 4e-6 and 7e-2, so the actinide guard and
+  nonregression fail.
+- **B (`refine`)** passes G2. Its CRAM-48 re-solve can be worse than dropping the states: on h2 and h3 step 4 its total
+  relative error is 11 and 5e15 where A's is 1 (the CRAM-48 floor sits below that solve's own round-off on these
+  stiff chains).
+- **C (`equilibrium`)** passes G2, the actinide guard, nonregression, cost and the output contract; it fails only bound
+  validity.
+- **Bound validity fails for all three, 20–26 problems each, on h1, h2, h3 and h5:**
+  - the `screen` certificate of an unbanded run has zero width, so any solver error excludes the reference;
+  - at deep-decay steps the error sits in states above the floor (h2 step 3: 43.9 Bq/g reported against a reference of
+    2.08; h3 step 4: 1.9e-20 against 3.6e-36) or in states zeroed as negative, where no candidate places a bound.
+  
+  The defect is therefore wider than the below-floor states P174 targeted: CRAM-16 round-off in states above the
+  floor is reported as activity at deep decay. A successor needs a certificate width from the solver's own error, not
+  only from the below-floor states.
+- **Registered sentences** (from the checker): on P168's 38 case-orders, 5 had a total outside 1e-6 of the reference
+  under the status quo; each candidate brought 3 of those 5 within 1e-6 or inside its bound. On the 16 held-out
+  case-orders (140 scored steps, 17 with a below-floor state), B re-solved 12 steps and C reconstructed 7 states, at a
+  largest wall-time ratio of 1.01.
