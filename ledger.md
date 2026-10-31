@@ -5211,3 +5211,18 @@ fusion-isotope 41180119413, browser workbench 41180119402 and desktop builds 411
 - Public wording is the checker's registered sentences only (entry 301).
 - Successor, not registered: a certificate width from the solve's own round-off, covering states above the floor and
   states zeroed as negative, scored on the same held-out references.
+
+## Entry 303 — P175 registered: the exported shutdown-dose source covariance against brute-force sampling (2026-10-31)
+
+`protocols/ACTINV-P175_PROTOCOL.md` (SHA-256 `d8b8de12…`), item A1 of `docs/maintainers/WORKFLOW_ACCURACY_PLAN.md`,
+with `controls/p175_stats.py` (`fb0b5984…`), harness `controls/p175_r2s_cov.py` (`d1fe52ab…`) and checker
+`controls/check_p175.py` (`b5467248…`). The code under test, `actinv export-r2s-cov`, lands with this registration
+(`327af82`); the binary is pinned (`9e52e19a…`).
+- **Question.** For fixed dose responses, does the first-order variance `R^T C_S R` from the exported factors match the
+  variance of `D = sum R S` over 200 brute-force sampled mesh solves (cross sections by their MF=33 covariance,
+  half-lives, and per-cell flux by tally error), within `3 SE_rel + delta_lin`?
+- **Cases.** A four-cell mesh in steel with MF=33 and decay (A), flux only (B), all three (C), and tungsten with all
+  three (D); a uniform and a hard-photon single-cell response; steps of 1 d and 30 d cooling.
+- **Rehearsal (8 samples).** Disclosed in the protocol: a wrong input pin fixed; one step-3 row pair outside its
+  8-sample limit, traced to the draws (a 0.3% event) by checking that the exported sensitivities reproduce every sampled
+  result to 0.2 in 4.9. No constant or threshold changed.
