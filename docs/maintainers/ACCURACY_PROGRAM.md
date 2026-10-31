@@ -138,5 +138,15 @@ Stages 1–3 do not need SINBAD.
     Jacobi eigensolver stopped early beside threshold rows with relative variance near 1e20, and its PSD clip added
     variance to the least uncertain W-182 row. The sampler was fixed (6e39ea9, which reaches `study.robustness` and
     `waste uncertainty`), and the rerun puts every row's first-order/sampled variance ratio between 0.87 and 1.29.
-- Next (2026-10-31): score the existing Bondarenko self-shielding on the P173 rows (P176; the `build-shielding
-  --profile` fix landed in a38d1fa and the rehearsal table builds), then the item 2 correction if still needed.
+  - **P176 PASS after Amendment A, no candidate** (CI green on 3025d89): ACTINV's optional self-shielding on the P173
+    rows.
+    - The Bondarenko table with composition dilution brings the steel capture rows from +0.064–0.111 to within ±0.026.
+      It harms no row, but leaves Cu-63 (n,γ) in CuCrZr at 0.055 and 0.069, so it is not a candidate.
+    - The geometry option failed every run: it refused ENDF/B-VIII.1 Cu-63's RML photon pair (PNT/SHF = −1). A fix
+      (`self_shielding.geometry.profile`) follows this verdict.
+    - Amendment A re-pinned the table at the scored path, because the table records its input directory.
+- Next (2026-10-31): item 2 proceeds as P173 warranted. Two options remain:
+  - a per-region correction for the remaining capture rows;
+  - a Bondarenko default plus a Cu-63 correction.
+
+  The geometry option is to be scored once its profile fix is on master.

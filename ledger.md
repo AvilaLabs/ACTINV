@@ -5425,3 +5425,17 @@ decision:
   of this form.
 
 No public sentence is allowed.
+
+## Entry 312 — P176 G4: CI green on 3025d89; P176-PASS after Amendment A (2026-10-31)
+
+Every workflow triggered on `3025d89`, the evidence commit, passed: controls 41215324090, fns-iron 41215324052 and
+fusion-isotope 41215324140 (`results/p176/ci_runs.json`). **P176-PASS.**
+- The decision stands as in entry 311: no arm is a candidate, and item 2 proceeds as P173 warranted. No public sentence
+  is allowed.
+- **The Bondarenko table is safe, and closes the steel capture gap,** but leaves Cu-63 (n,γ) in CuCrZr material. A
+  default-on table plus a correction for what it leaves is now a cheaper form of item 2 than a correction for every
+  capture row. That needs its own protocol.
+- **The geometry option is unmeasured.** It failed on ENDF/B-VIII.1 Cu-63's RML photon pair. The fix,
+  `self_shielding.geometry.profile`, follows this verdict, and scoring the option needs a new protocol.
+- **Registration lesson.** A digest pinned from a rehearsal must not depend on the run's directory. A rehearsal's arm
+  records are read for their recorded errors, not only for the mode's exit code.

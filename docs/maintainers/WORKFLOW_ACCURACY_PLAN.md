@@ -82,6 +82,15 @@ self-shielding exist but have no recorded comparison. `options.rate_scale` scale
 - Before the per-region correction: score ACTINV's existing Bondarenko self-shielding on the same P173 rows. If it
   removes the capture differences, the fix is a default, not a new tally.
 
+**P176 result: PASS, no candidate** (CI green on 3025d89).
+- ACTINV's Bondarenko table with composition dilution removes the steel capture differences. Mn-55 drops to 0.005,
+  Co-59 to 0.022–0.026 and Mo-98 to −0.022 to −0.025.
+- It makes no other row material, but leaves Cu-63 (n,γ) in CuCrZr at 0.055 and 0.069, above the 0.05 materiality line.
+- The geometry option was not measured: ACTINV refused the ENDF/B-VIII.1 Cu-63 file, a defect whose fix
+  (`self_shielding.geometry.profile endfb8`) follows this verdict.
+- So item 2 proceeds. The cheapest form may now be the Bondarenko table on by default, plus a correction for the rows
+  it leaves, rather than a correction for every capture row.
+
 **Fix, if B1 shows it matters.**
 
 - Step 1 also tallies continuous-energy rates for the top-N dominant reactions.
