@@ -131,5 +131,7 @@ Stages 1–3 do not need SINBAD.
   - **P173 PASS** (CI green on 5e66166): ACTINV's 709-group rates against OpenMC continuous-energy tallies on the
     same data. Capture in steel and CuCrZr is 6.6–17.6% high from the collapse (no self-shielding by default); one
     processing difference, W-182(n,p), traced to an MF3/MF10 inconsistency in the evaluation. No public sentence.
-- Next (2026-10-31): score the existing Bondarenko self-shielding on the P173 rows, then the item 2 correction if
-  still needed; P174 (candidate built); A1 validation (P175, drafted).
+  - **P174 PASS, status quo** (CI green on ba859e7): none of the three below-floor treatments met the decision rule;
+    the round-off at deep decay also sits in states above the floor. Documented in data-limits.
+- Next (2026-10-31): score the existing Bondarenko self-shielding on the P173 rows (P176, drafted; needs the
+  `build-shielding --profile` fix), then the item 2 correction if still needed; A1 validation (P175, rehearsed).

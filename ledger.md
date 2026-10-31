@@ -5199,3 +5199,15 @@ master (`f9312ac`); the evidence commit's crates tree is the same. G0 and G1 pas
   under the status quo; each candidate brought 3 of those 5 within 1e-6 or inside its bound. On the 16 held-out
   case-orders (140 scored steps, 17 with a below-floor state), B re-solved 12 steps and C reconstructed 7 states, at a
   largest wall-time ratio of 1.01.
+
+## Entry 302 — P174 G5: CI green on ba859e7; P174-PASS, decision status quo (2026-10-31)
+
+Every workflow triggered on `ba859e7`, the evidence commit, passed: controls 41180119404, fns-iron 41180119515,
+fusion-isotope 41180119413, browser workbench 41180119402 and desktop builds 41180119432 (`results/p174/ci_runs.json`).
+**P174-PASS; the status quo stays.**
+- The candidate code (`be5a33d`) is reverted here, so no unadopted option ships; it stays in history for a successor.
+  The crates tree returns to `9b8dce96…`, master's before the candidate.
+- The finding is documented in `docs/guide/data-limits.md` ("Deep-decay totals"), as the decision rule requires.
+- Public wording is the checker's registered sentences only (entry 301).
+- Successor, not registered: a certificate width from the solve's own round-off, covering states above the floor and
+  states zeroed as negative, scored on the same held-out references.

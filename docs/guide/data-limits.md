@@ -23,6 +23,15 @@ The data disclosure identifies 17 affected IRDFF-II benchmark targets, including
 
 ACTINV's current library builder validates product identities and emitted-state conservation. A new build can reject an evaluation that an older released artifact accepted. A parser fix or stricter builder does not retroactively repair an installed library.
 
+## Deep-decay totals
+
+When a step's populations have decayed by many orders of magnitude, the CRAM solve's round-off can be as large as the
+activity and heat it reports. Independent high-precision references have shown reported totals far above the true
+value at such steps, for example 1.9e-20 Bq/g against 3.6e-36. States below `numerical_floor_atoms_per_g` are counted
+in `n_states_below_floor` and stay in the totals. Removing or bounding them was tested and not adopted, because the
+round-off also sits in states above the floor. Read deep-decay totals near the round-off scale of the largest
+population as numerical, not physical.
+
 ## Other coverage boundaries
 
 Products absent from the selected decay data remain leakage. Missing fission yields, photon spectra, covariance, response coefficients, and damage tables are reported separately. Complete-coverage switches apply to the feature that supplies them; they do not certify every input in the problem.

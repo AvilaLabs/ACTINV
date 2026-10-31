@@ -1,7 +1,6 @@
 #![allow(non_snake_case)] // JSON wire names carry their physical units.
 //! Deterministic, bounded-memory independent-cell activation runner.
 
-use crate::below_floor::{BelowFloorBound, Reconstruction};
 use crate::damage::DamageStepOut;
 use crate::fission_count::{FissionCountOut, FissionStepOut, SfNeutronSourceOut};
 use crate::flux::{
@@ -126,7 +125,6 @@ const STEP_FIELDS: &[&str] = &[
     "n_states_below_floor",
     "atoms_below_floor",
     "heat_bound_from_below_floor_W_per_g",
-    "below_floor_bound",
     "photon_source",
     "uncertainty",
     "radiological",
@@ -146,7 +144,6 @@ const STEP_OPTIONAL_FIELDS: &[&str] = &[
     "fluence_n_cm2",
     "fluence_particles_cm2",
     "removed_atoms_per_g",
-    "below_floor_bound",
     "photon_source",
     "uncertainty",
     "radiological",
@@ -800,26 +797,6 @@ fn maximal_step_out() -> StepOut {
         n_states_below_floor: 0,
         atoms_below_floor: 0.0,
         heat_bound_from_below_floor_W_per_g: 0.0,
-        below_floor_bound: Some(BelowFloorBound {
-            policy: "equilibrium",
-            order: 16,
-            refined: false,
-            n_states_excluded: 0,
-            numerical_floor_atoms_per_g: 0.0,
-            activity_Bq_per_g: 0.0,
-            heat_W_per_g: 0.0,
-            dose: Some(BTreeMap::new()),
-            reconstruction: Some(Reconstruction {
-                n_reconstructed: 0,
-                reconstructed_states: Vec::new(),
-                reconstruct_threshold: 0.0,
-                n_cycle_fallback: 0,
-                n_parent_fallback: 0,
-                n_memory_fallback: 0,
-                n_separation_fallback: 0,
-            }),
-            activity_by_nuclide: BTreeMap::new(),
-        }),
         photon_source: Some(PhotonSourceOut {
             group_structure: String::new(),
             boundaries_eV: Vec::new(),
@@ -1003,10 +980,6 @@ fn step_field(step: &StepOut, name: &str) -> Option<Result<serde_json::Value, St
         "heat_bound_from_below_floor_W_per_g" => {
             serde_json::to_value(step.heat_bound_from_below_floor_W_per_g)
         }
-        "below_floor_bound" => match &step.below_floor_bound {
-            Some(bound) => serde_json::to_value(bound),
-            None => Ok(serde_json::Value::Null),
-        },
         "photon_source" => match &step.photon_source {
             Some(photon_source) => serde_json::to_value(photon_source),
             None => Ok(serde_json::Value::Null),
@@ -2196,7 +2169,6 @@ mod tests {
             n_states_below_floor: 0,
             atoms_below_floor: 0.0,
             heat_bound_from_below_floor_W_per_g: 0.0,
-            below_floor_bound: None,
             photon_source: None,
             uncertainty: None,
             radiological: None,
@@ -2303,15 +2275,6 @@ mod tests {
             .collect();
         let names: BTreeSet<&str> = STEP_FIELDS.iter().copied().collect();
         assert_eq!(names, keys);
-    }
-
-    #[test]
-    fn below_floor_bound_is_absent_from_a_step_without_a_policy() {
-        // P174: the status quo leaves the step's keys exactly as they were
-        let whole = serde_json::to_value(minimal_step()).unwrap();
-        assert!(whole.get("below_floor_bound").is_none());
-        let whole = serde_json::to_value(maximal_step_out()).unwrap();
-        assert!(whole["below_floor_bound"]["policy"].is_string());
     }
 
     #[test]
