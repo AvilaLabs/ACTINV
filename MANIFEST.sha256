@@ -1121,7 +1121,7 @@ a69ee5083a48b6512c77cdffbb1eb0fa6d7e0a65ea00930ed4a808aaf33c2888  ./crates/actin
 570eaa5c84956e3aa0c96d0c7fb684ba3fa8174c18b7a1ec392497fa1927bf56  ./crates/actinv-data/src/bin/p20_collapse_probe.rs
 fa5a5d5a1cd0f73f79aa83fa7f2907ce431b0e1c425075cd86bfe6f8a1361e1b  ./crates/actinv-data/src/bin/p20_corpus_probe.rs
 446faa941069cc65c28a35d331197fc6865b5f0e6e8163c9d7fcf55e57685366  ./crates/actinv-data/src/bin/prepared_data_probe.rs
-6edf50d84005426139a6e37e747182d31340bad49a0936fa07a7291eae9514df  ./crates/actinv-data/src/builder.rs
+7dc5b9e74c8a4d6ece4f4f55a1fee9420492a558240eb4f9007c43354af31b88  ./crates/actinv-data/src/builder.rs
 122eaaf3d23727aa006097d37f8a0b7bad1bfc003c89c7fb2f10653438a809ed  ./crates/actinv-data/src/catalog.rs
 584399c14c25b24db09311622696bd2e5691dd3045cbaec0ce406ba1fefbf024  ./crates/actinv-data/src/composition.rs
 21576ac9c43debe73adec4070f7cb150841a97d96c13d72fc75007fdece944fa  ./crates/actinv-data/src/covariance.rs
@@ -1304,7 +1304,7 @@ dfb8c8f7c7ffbd5aaac73e21a5198af7b662b862fb416c90f6418086da05ae45  ./docs/defects
 29b9a4871b61c1e5af86963b6f73f4319b50a1fe0c1e5a7e0461c3afe3ac1fd9  ./docs/guide/account.md
 81227fd1b975da80b24c237f50e93eafc39059ada149feed0faa9474051e7c22  ./docs/guide/benchmarks.md
 60bff8f41b5d855161397fa948970c2fe52fc9cc6b69cace1a1f355744678802  ./docs/guide/browser.md
-e0b884fa519d2ededebe8c965755183c0313d1d399ee1dcc3eb6f028a02d09a4  ./docs/guide/cli.md
+6ab517f0f4b16643cc2b7f9dfd5fb5b3ceaf7042bf1e547d9e8cd9147552eb1a  ./docs/guide/cli.md
 da78a08922cd7bddf0b15532ac3107d34c4e8f03edbfc12a62ad838ea39f74b4  ./docs/guide/data-limits.md
 ad272dc87c112bfb5295c3feb7bc00aacb2aa964ca2fb1fe1a7e63dc241ac192  ./docs/guide/data.md
 4a0742249776107d3961a63ff56e00294495f317fc59e4949a71ff2f1f35acc7  ./docs/guide/desktop.md

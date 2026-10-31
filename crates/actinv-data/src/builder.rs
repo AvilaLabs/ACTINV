@@ -4261,18 +4261,15 @@ pub fn build_shielding(
         nuclides.extend(file.entry.nuclides);
         uncovered.extend(file.entry.uncovered);
     }
-    let input_label = input
-        .file_name()
-        .and_then(|name| name.to_str())
-        .unwrap_or("evaluations")
-        .to_owned();
     let mut table = serde_json::json!({
         "format": "actinv-shield-table-1",
         "generator": "actinv build-shielding (deterministic PURR-equivalent)",
         "source": {
             "citation": "ENDF-6 MF=2 LRU=2 unresolved-resonance statistics processed by actinv build-shielding",
-            "edition": input_label,
-            "url": input.display().to_string(),
+            // fixed text: the table is independent of where the input directory lives; the
+            // inputs are identified by `files` (name and SHA-256)
+            "edition": "local evaluation files",
+            "url": "local evaluation files (see files[])",
         },
         "method": {
             "pipeline": "ENDF-6 MF=2 LRU=2 -> unresx ladder parameters -> deterministic stratified-quantile ladders -> zoned Voigt accumulation -> probability-table Bondarenko moments -> infinite-dilution renorm (PURR MT=152 convention)",
@@ -6116,6 +6113,50 @@ mod tests {
             shielding_cache_key("s", &shielding, Projectile::Neutron),
             shielding_cache_key("s", &normalized, Projectile::Neutron)
         );
+    }
+
+    #[test]
+    fn shielding_table_does_not_depend_on_the_input_directory() {
+        let root = std::env::temp_dir().join(format!(
+            "actinv-shield-path-{}-{}",
+            std::process::id(),
+            std::time::SystemTime::now()
+                .duration_since(std::time::UNIX_EPOCH)
+                .unwrap()
+                .as_nanos()
+        ));
+        let mut tables = Vec::new();
+        for name in ["first-dir", "nested/second-evaluation-dir"] {
+            let input = root.join(name);
+            std::fs::create_dir_all(&input).unwrap();
+            let ground = fixture_header(26056, 2631, "0", 0, 0);
+            std::fs::write(
+                input.join("a-ground.endf"),
+                format!("{}\n", ground.join("\n")),
+            )
+            .unwrap();
+            let output = root.join(format!("{}.json", name.replace('/', "-")));
+            build_shielding(
+                &input,
+                &output,
+                &ShieldingBuildOptions {
+                    projectile: Some(Projectile::Neutron),
+                    groups: GroupStructure {
+                        name: "path-fixture".into(),
+                        boundaries_ev: vec![1.0, 4.0],
+                    },
+                    cache: None,
+                    normalize_profile: NormalizeProfile::None,
+                    workers: 1,
+                },
+            )
+            .unwrap();
+            tables.push(std::fs::read(&output).unwrap());
+        }
+        assert_eq!(tables[0], tables[1]);
+        let text = String::from_utf8(tables[0].clone()).unwrap();
+        assert!(!text.contains("first-dir") && !text.contains(&root.display().to_string()));
+        std::fs::remove_dir_all(&root).unwrap();
     }
 
     #[test]
