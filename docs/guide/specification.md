@@ -882,16 +882,17 @@ nuclide is covered, an analytic channel-radius estimate elsewhere, named as esti
 `ln(sigma0) x sqrt(T)` and clamp at the grid ends.
 
 Each covered group applies a full-group Bondarenko fold, not a flat lethargy blend: the unresolved-range segment
-carries its probability-table weight mean `w = sigma0/(sigma0+sigma_t)` and weighted moment `sigma_x*w`, and the
-uncovered part is suppressed by `sigma0/(sigma0+sigma_t,background)` over the smooth MF=3 background. The emitted
+carries its probability-table weight mean `w = sigma0/(sigma0+sigma_t)` and weighted moment `sigma_x*w`, a
+resolved-range segment carries the same moments from a pointwise quadrature of the reconstructed resonance cross
+sections, Doppler-broadened (SIGMA1) to each temperature column, and the uncovered part is suppressed by `sigma0/(sigma0+sigma_t,background)` over the smooth MF=3 background. The emitted
 `group_factors` are the applied scale; `factors` remains the covered-segment factor for reporting, and tables
 without `group_factors` fall back to the flat `(1-c)+c*f` blend.
 
 Material nuclides absent from the table are named `shielding_uncovered` and their rates are untouched;
 `require_shielding_complete: true` fails the run instead. The section rejects any sha256 or boundary mismatch.
 The ledger and certificate record the table hash, dilution mode, effective sigma0 per nuclide, applied factors,
-and method limits — including that resolved-region pointwise shielding is not applied and damage observables
-are not shielded.
+and method limits — including that damage observables are not shielded and composition dilution uses the
+declared material, not evolved inventories.
 
 When `uncertainty` is also present, the MF=33 collapse weights each row's spectrum integral by that row's
 shield factors (the `collapse_weighted` convention: `sigma_i = sum_g phi_g * f_i,g * sigma_i,g / sum_g phi_g`),

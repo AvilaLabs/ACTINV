@@ -3872,6 +3872,8 @@ pub struct ShieldingBuildOptions {
     pub projectile: Option<Projectile>,
     pub groups: GroupStructure,
     pub cache: Option<PathBuf>,
+    /// The tape normalization `build-library --profile` applies; `None` reads the text as written.
+    pub normalize_profile: NormalizeProfile,
 }
 
 #[derive(Debug)]
@@ -3911,6 +3913,11 @@ fn shielding_cache_key(
     hasher.update(options.groups.hash().as_bytes());
     hasher.update(projectile.name().as_bytes());
     hasher.update([0]);
+    // only a non-default profile enters the key, so checkpoints of profile-less builds stay valid
+    if options.normalize_profile != NormalizeProfile::None {
+        hasher.update(options.normalize_profile.name().as_bytes());
+        hasher.update([0]);
+    }
     hasher.update(code.as_bytes());
     format!("{:x}", hasher.finalize())
 }
@@ -4150,7 +4157,8 @@ pub fn build_shielding(
         }
         let text = std::fs::read_to_string(path)
             .map_err(|error| format!("cannot read {} as ENDF text: {error}", path.display()))?;
-        let evaluations = parse_evaluations(&text, Some(projectile))
+        let normalized = normalize_tape(&text, options.normalize_profile);
+        let evaluations = parse_evaluations(&normalized.text, Some(projectile))
             .map_err(|error| format!("{}: {error}", path.display()))?;
         let mut entry = ShieldingCacheEntry {
             nuclides: BTreeMap::new(),
@@ -4166,7 +4174,9 @@ pub fn build_shielding(
                 ));
             }
             let name = damage_nuclide_name(evaluation.metadata.za, evaluation.metadata.liso);
-            match shielding_nuclide_entry(evaluation, &options.groups)? {
+            match shielding_nuclide_entry(evaluation, &options.groups)
+                .map_err(|error| format!("{} ({name}): {error}", path.display()))?
+            {
                 Some(row) => {
                     if nuclides.contains_key(&name) || entry.nuclides.contains_key(&name) {
                         return Err(format!(
@@ -4197,7 +4207,7 @@ pub fn build_shielding(
         .and_then(|name| name.to_str())
         .unwrap_or("evaluations")
         .to_owned();
-    let table = serde_json::json!({
+    let mut table = serde_json::json!({
         "format": "actinv-shield-table-1",
         "generator": "actinv build-shielding (deterministic PURR-equivalent)",
         "source": {
@@ -4230,6 +4240,10 @@ pub fn build_shielding(
         "uncovered": uncovered,
         "nuclides": nuclides,
     });
+    // recorded only when used, so a profile-less build keeps its bytes
+    if options.normalize_profile != NormalizeProfile::None {
+        table["source"]["normalize_profile"] = options.normalize_profile.name().into();
+    }
     write_json_atomic(output, &table)?;
     let sha256 = sha256_file(output)?;
     Ok(ShieldingBuildSummary {
@@ -6028,10 +6042,19 @@ mod tests {
             projectile: None,
             groups,
             cache: None,
+            normalize_profile: NormalizeProfile::None,
         };
         assert_ne!(
             shielding_cache_key("s", &shielding, Projectile::Neutron),
             shielding_cache_key("s", &shielding, Projectile::Proton)
+        );
+        let normalized = ShieldingBuildOptions {
+            normalize_profile: NormalizeProfile::EndfB8,
+            ..shielding.clone()
+        };
+        assert_ne!(
+            shielding_cache_key("s", &shielding, Projectile::Neutron),
+            shielding_cache_key("s", &normalized, Projectile::Neutron)
         );
     }
 

@@ -24,7 +24,7 @@ First-order sensitivities propagate retained MF=33 covariance into selected resp
 
 ## Self-shielding and damage
 
-A separate neutron table supplies finite-dilution unresolved-range Bondarenko factors. Fixed or composition-derived dilution selects factors on the declared grid, and compatibility is checked against the library. This bounded method does not provide resolved-region pointwise shielding or a geometry-dependent transport solution.
+A separate neutron table supplies finite-dilution Bondarenko factors for the resolved range (a Doppler-broadened pointwise quadrature) and the unresolved range (probability tables). Fixed or composition-derived dilution selects factors on the declared grid, and compatibility is checked against the library. This bounded method does not provide a geometry-dependent transport solution.
 
 NRT damage uses separate damage-energy production data and declared displacement energies. It reports coverage of the material targets; it does not model damage covariance, recombination, or general material evolution.
 

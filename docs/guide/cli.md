@@ -194,6 +194,10 @@ computes damage energy from MF=3/4/6 and writes an `actinv-damage-table-2` file;
 (default `evaluated`), `--continuum-recoil kinematic|evaluated` (default `kinematic`) `--grid-density X` and `--continue-on-error true|false` (default `false`; an evaluation whose processing fails is then listed in the table's `failed` array instead of aborting the build), and defaults `--temperature-K` to 0 because it reconstructs resonances at 0 K.
 It is implemented for neutron evaluations. See [damage observables](specification.md#damage-observables-dpa).
 
+`build-shielding` takes `--profile none|endfb8|tendl` (default `none`), the same tape normalization as
+`build-library --profile`. Use `endfb8` for ENDF/B-VIII.1 evaluations and `tendl` for TENDL; without it an evaluation
+the profile would repair (for example an ENDF/B-VIII.1 Breit-Wigner total width below its component sum) is refused.
+
 The [specification reference](specification.md#build-an-activation-library) describes builder parameters. Activation libraries, covariance, shielding, and damage tables are distinct inputs.
 
 ## Study and design workflows

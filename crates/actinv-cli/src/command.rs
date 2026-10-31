@@ -781,7 +781,12 @@ fn build_shielding(args: &[String]) {
     let input = &args[0];
     let output = &args[1];
     let options = valued_options(&args[2..]);
-    reject_unknown(&options, &["--projectile", "--groups", "--cache"]);
+    reject_unknown(
+        &options,
+        &["--projectile", "--groups", "--cache", "--profile"],
+    );
+    let profile = NormalizeProfile::parse(options.get("--profile").copied().unwrap_or("none"))
+        .unwrap_or_else(|error| die(error, 2));
     let projectile_value = options.get("--projectile").copied().unwrap_or("auto");
     let requested_projectile = if projectile_value == "auto" {
         None
@@ -801,11 +806,12 @@ fn build_shielding(args: &[String]) {
         projectile: requested_projectile,
         groups,
         cache: options.get("--cache").map(std::path::PathBuf::from),
+        normalize_profile: profile,
     };
     let summary = builder::build_shielding(input, output, &build_options)
         .unwrap_or_else(|error| die(error, 1));
     println!(
-        "{} shielding targets, {} evaluations without unresolved data, {} cache hits, {} {}, sha256 {}",
+        "{} shielding targets, {} evaluations without resonance ranges, {} cache hits, {} {}, sha256 {}",
         summary.targets,
         summary.uncovered_evaluations,
         summary.cache_hits,

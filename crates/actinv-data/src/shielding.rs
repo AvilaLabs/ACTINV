@@ -2175,6 +2175,14 @@ where
     Ok(acc)
 }
 
+/// Bisection cap for [`adaptive_integrate`]. The cap only decides when to
+/// give up: an interval that converged at the old cap of 8 follows the same
+/// path under any larger cap, so raising it changes no previously
+/// successful result. Depth 8 resolves a knot interval to 1/256 of its
+/// width, too coarse for a sub-eV resonance inside the wide pad window of an
+/// R-matrix-limited knot (Si-28 at 31751.42 eV).
+const RESOLVED_QUAD_MAX_DEPTH: usize = 16;
+
 /// Adaptive GL8: bisect until the three dominant components converge
 /// relatively, or the depth cap trips (honest failure, not a silent
 /// coarse answer).
@@ -2266,7 +2274,7 @@ fn resolved_segment_moments(
         if w[1] <= w[0] {
             continue;
         }
-        let part = adaptive_integrate(&f, w[0], w[1], n, &watch, 8)?;
+        let part = adaptive_integrate(&f, w[0], w[1], n, &watch, RESOLVED_QUAD_MAX_DEPTH)?;
         for (a_, v) in acc.iter_mut().zip(part.iter()) {
             *a_ += *v;
         }
@@ -2646,6 +2654,20 @@ pub(crate) fn collapse_to_groups(
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    /// A Lorentzian of half-width 3e-6 inside a 9e-3 interval (the shape of
+    /// a sub-eV resonance in a wide R-matrix pad window) is out of reach at
+    /// the old depth of 8 and converges under the current cap.
+    #[test]
+    fn adaptive_quadrature_resolves_narrow_peak_beyond_old_depth() {
+        let (c, g) = (0.0031_f64, 3.0e-6_f64);
+        let f = |x: f64| -> Result<Vec<f64>, String> { Ok(vec![g / ((x - c) * (x - c) + g * g)]) };
+        let (lo, hi) = (0.0, 0.009);
+        assert!(adaptive_integrate(&f, lo, hi, 1, &[0], 8).is_err());
+        let got = adaptive_integrate(&f, lo, hi, 1, &[0], RESOLVED_QUAD_MAX_DEPTH).unwrap()[0];
+        let exact = ((hi - c) / g).atan() - ((lo - c) / g).atan();
+        assert!((got - exact).abs() <= 1e-3 * exact, "{got} vs {exact}");
+    }
 
     #[test]
     fn stratified_draws_are_a_fixed_permutation_of_the_quantile_grid() {
