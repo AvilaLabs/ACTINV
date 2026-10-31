@@ -323,11 +323,13 @@ and only it takes the options after --method.\n\n\
   actinv build-damage tendl/ damage.json --method kinematic\n\n\
 Exit: 0 built, 1 the build failed, 2 bad usage.",
         "build-shielding" => "actinv build-shielding: build a self-shielding table\n\n\
-usage: actinv build-shielding EVALUATION_DIR OUT.json [--projectile auto|neutron] [--groups fispact-709|PATH] [--cache DIR] [--profile none|endfb8|tendl]\n\n\
+usage: actinv build-shielding EVALUATION_DIR OUT.json [--projectile auto|neutron] [--groups fispact-709|PATH] [--cache DIR] [--profile none|endfb8|tendl] [--workers N]\n\n\
 Resolved- and unresolved-resonance self-shielding factors for the\n\
 problem's `self_shielding` section.\n\n\
 --profile normalizes the evaluations as build-library --profile does; use\n\
 endfb8 for ENDF/B-VIII.1 evaluations and tendl for TENDL.\n\n\
+--workers N processes N evaluation files in parallel (default 1); the table is\n\
+identical for any N.\n\n\
   actinv build-shielding tendl/ shielding.json\n\n\
 Exit: 0 built, 1 the build failed, 2 bad usage.",
         "build-covariance" => "actinv build-covariance: build a covariance sidecar\n\n\

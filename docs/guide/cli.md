@@ -197,6 +197,7 @@ It is implemented for neutron evaluations. See [damage observables](specificatio
 `build-shielding` takes `--profile none|endfb8|tendl` (default `none`), the same tape normalization as
 `build-library --profile`. Use `endfb8` for ENDF/B-VIII.1 evaluations and `tendl` for TENDL; without it an evaluation
 the profile would repair (for example an ENDF/B-VIII.1 Breit-Wigner total width below its component sum) is refused.
+`--workers N` (default 1) processes N evaluation files in parallel; the table is byte-identical for any N.
 
 The [specification reference](specification.md#build-an-activation-library) describes builder parameters. Activation libraries, covariance, shielding, and damage tables are distinct inputs.
 

@@ -3874,6 +3874,8 @@ pub struct ShieldingBuildOptions {
     pub cache: Option<PathBuf>,
     /// The tape normalization `build-library --profile` applies; `None` reads the text as written.
     pub normalize_profile: NormalizeProfile,
+    /// Evaluation files processed in parallel; the table does not depend on it.
+    pub workers: usize,
 }
 
 #[derive(Debug)]
@@ -3892,6 +3894,19 @@ struct ShieldingCacheEntry {
     uncovered: Vec<String>,
 }
 
+/// The source bytes before a trailing `#[cfg(test)] mod tests` block, so editing a unit test
+/// does not invalidate the checkpoints; the whole input when there is no such block.
+fn source_without_tests(src: &[u8]) -> &[u8] {
+    const MARKER: &[u8] = b"\n#[cfg(test)]\nmod tests";
+    match src
+        .windows(MARKER.len())
+        .position(|window| window == MARKER)
+    {
+        Some(index) => &src[..index],
+        None => src,
+    }
+}
+
 /// Like the damage key: source bytes, options, validated projectile and code identity
 /// (the builder plus the PURR port in `shielding.rs`), so an upgrade never reuses stale
 /// factors without a manual version bump.
@@ -3904,7 +3919,7 @@ fn shielding_cache_key(
     let code = SHIELDING_CODE.get_or_init(|| {
         let mut hash = Sha256::new();
         hash.update(builder_fingerprint().as_bytes());
-        hash.update(include_bytes!("shielding.rs"));
+        hash.update(source_without_tests(include_bytes!("shielding.rs")));
         format!("{:x}", hash.finalize())
     });
     let mut hasher = Sha256::new();
@@ -4077,8 +4092,107 @@ fn shielding_nuclide_entry(
     })))
 }
 
+/// One input file's shielding result, ready to merge in file order.
+struct ShieldingFileResult {
+    filename: String,
+    sha256: String,
+    entry: ShieldingCacheEntry,
+    cache_hit: bool,
+}
+
+/// Cache lookup, or parse and process, then checkpoint write, for one evaluation file.
+/// Duplicates across files are detected by the caller's ordered merge.
+fn shielding_file_entry(
+    path: &Path,
+    options: &ShieldingBuildOptions,
+    projectile: Projectile,
+) -> Result<ShieldingFileResult, String> {
+    let before = sha256_file(path)?;
+    let filename = path
+        .file_name()
+        .and_then(|name| name.to_str())
+        .ok_or_else(|| format!("input filename '{}' is not UTF-8", path.display()))?
+        .to_owned();
+    if let Some(cache) = &options.cache {
+        let key = shielding_cache_key(&before, options, projectile);
+        let checkpoint = cache.join(format!("{key}.json"));
+        if checkpoint.exists() {
+            let entry: ShieldingCacheEntry =
+                serde_json::from_str(&std::fs::read_to_string(&checkpoint).map_err(|error| {
+                    format!(
+                        "cannot read shielding checkpoint {}: {error}",
+                        checkpoint.display()
+                    )
+                })?)
+                .map_err(|error| {
+                    format!(
+                        "cannot parse shielding checkpoint {}: {error}",
+                        checkpoint.display()
+                    )
+                })?;
+            if sha256_file(path)? != before {
+                return Err(format!(
+                    "source {} changed while its shielding checkpoint was validated",
+                    path.display()
+                ));
+            }
+            return Ok(ShieldingFileResult {
+                filename,
+                sha256: before,
+                entry,
+                cache_hit: true,
+            });
+        }
+    }
+    let text = std::fs::read_to_string(path)
+        .map_err(|error| format!("cannot read {} as ENDF text: {error}", path.display()))?;
+    let normalized = normalize_tape(&text, options.normalize_profile);
+    let evaluations = parse_evaluations(&normalized.text, Some(projectile))
+        .map_err(|error| format!("{}: {error}", path.display()))?;
+    let mut entry = ShieldingCacheEntry {
+        nuclides: BTreeMap::new(),
+        uncovered: Vec::new(),
+    };
+    for evaluation in &evaluations {
+        if evaluation.metadata.projectile != projectile {
+            return Err(format!(
+                "{} contains a {} evaluation inside a {} directory",
+                path.display(),
+                evaluation.metadata.projectile.name(),
+                projectile.name()
+            ));
+        }
+        let name = damage_nuclide_name(evaluation.metadata.za, evaluation.metadata.liso);
+        match shielding_nuclide_entry(evaluation, &options.groups)
+            .map_err(|error| format!("{} ({name}): {error}", path.display()))?
+        {
+            Some(row) => {
+                if entry.nuclides.contains_key(&name) {
+                    return Err(format!(
+                        "duplicate shielding target {name} in '{}'",
+                        path.display()
+                    ));
+                }
+                entry.nuclides.insert(name.clone(), row);
+            }
+            None => entry.uncovered.push(name),
+        }
+    }
+    if let Some(cache) = &options.cache {
+        let key = shielding_cache_key(&before, options, projectile);
+        let checkpoint = cache.join(format!("{key}.json"));
+        write_json_atomic(&checkpoint, &entry)?;
+    }
+    Ok(ShieldingFileResult {
+        filename,
+        sha256: before,
+        entry,
+        cache_hit: false,
+    })
+}
+
 /// Build and atomically publish an `actinv-shield-table-1` from an evaluation
-/// directory. Evaluations without MF=2 LRU=2 unresolved blocks are named in
+/// directory. Evaluations without resolved or unresolved resonance ranges are named in
 /// `uncovered` — never fabricated.
 pub fn build_shielding(
     input: impl AsRef<Path>,
@@ -4109,99 +4223,44 @@ pub fn build_shielding(
             projectile.name()
         ));
     }
+    if !(1..=256).contains(&options.workers) {
+        return Err("workers must be between 1 and 256".into());
+    }
+    let pool = rayon::ThreadPoolBuilder::new()
+        .num_threads(options.workers)
+        .build()
+        .map_err(|error| format!("cannot create builder worker pool: {error}"))?;
+    // Each file is independent (its checkpoint is per-file and atomic), so the entries are
+    // computed in parallel and merged below in file order: the table is byte-identical to the
+    // serial build and the first failing file in file order is the one reported.
+    let results: Vec<Result<ShieldingFileResult, String>> = pool.install(|| {
+        files
+            .par_iter()
+            .map(|path| shielding_file_entry(path, options, projectile))
+            .collect()
+    });
     let mut nuclides: BTreeMap<String, serde_json::Value> = BTreeMap::new();
-    let mut nuclide_files: BTreeMap<String, String> = BTreeMap::new();
     let mut provenance = Vec::new();
     let mut uncovered = Vec::new();
     let mut cache_hits = 0usize;
-    for path in &files {
-        let before = sha256_file(path)?;
-        let filename = path
-            .file_name()
-            .and_then(|name| name.to_str())
-            .ok_or_else(|| format!("input filename '{}' is not UTF-8", path.display()))?
-            .to_owned();
-        if let Some(cache) = &options.cache {
-            let key = shielding_cache_key(&before, options, projectile);
-            let checkpoint = cache.join(format!("{key}.json"));
-            if checkpoint.exists() {
-                let entry: ShieldingCacheEntry = serde_json::from_str(
-                    &std::fs::read_to_string(&checkpoint).map_err(|error| {
-                        format!(
-                            "cannot read shielding checkpoint {}: {error}",
-                            checkpoint.display()
-                        )
-                    })?,
-                )
-                .map_err(|error| {
-                    format!(
-                        "cannot parse shielding checkpoint {}: {error}",
-                        checkpoint.display()
-                    )
-                })?;
-                if sha256_file(path)? != before {
+    for (path, result) in files.iter().zip(results) {
+        let file = result?;
+        if file.cache_hit {
+            cache_hits += 1;
+        } else {
+            for name in file.entry.nuclides.keys() {
+                if nuclides.contains_key(name) {
                     return Err(format!(
-                        "source {} changed while its shielding checkpoint was validated",
+                        "duplicate shielding target {name} in '{}'",
                         path.display()
                     ));
                 }
-                cache_hits += 1;
-                provenance.push((filename.clone(), before));
-                for (name, row) in entry.nuclides {
-                    nuclide_files.insert(name.clone(), filename.clone());
-                    nuclides.insert(name, row);
-                }
-                uncovered.extend(entry.uncovered);
-                continue;
             }
         }
-        let text = std::fs::read_to_string(path)
-            .map_err(|error| format!("cannot read {} as ENDF text: {error}", path.display()))?;
-        let normalized = normalize_tape(&text, options.normalize_profile);
-        let evaluations = parse_evaluations(&normalized.text, Some(projectile))
-            .map_err(|error| format!("{}: {error}", path.display()))?;
-        let mut entry = ShieldingCacheEntry {
-            nuclides: BTreeMap::new(),
-            uncovered: Vec::new(),
-        };
-        for evaluation in &evaluations {
-            if evaluation.metadata.projectile != projectile {
-                return Err(format!(
-                    "{} contains a {} evaluation inside a {} directory",
-                    path.display(),
-                    evaluation.metadata.projectile.name(),
-                    projectile.name()
-                ));
-            }
-            let name = damage_nuclide_name(evaluation.metadata.za, evaluation.metadata.liso);
-            match shielding_nuclide_entry(evaluation, &options.groups)
-                .map_err(|error| format!("{} ({name}): {error}", path.display()))?
-            {
-                Some(row) => {
-                    if nuclides.contains_key(&name) || entry.nuclides.contains_key(&name) {
-                        return Err(format!(
-                            "duplicate shielding target {name} in '{}'",
-                            path.display()
-                        ));
-                    }
-                    entry.nuclides.insert(name.clone(), row);
-                }
-                None => entry.uncovered.push(name),
-            }
-        }
-        if let Some(cache) = &options.cache {
-            let key = shielding_cache_key(&before, options, projectile);
-            let checkpoint = cache.join(format!("{key}.json"));
-            write_json_atomic(&checkpoint, &entry)?;
-        }
-        provenance.push((filename, before));
-        for (name, row) in entry.nuclides {
-            nuclide_files.insert(name.clone(), path.display().to_string());
-            nuclides.insert(name, row);
-        }
-        uncovered.extend(entry.uncovered);
+        provenance.push((file.filename, file.sha256));
+        nuclides.extend(file.entry.nuclides);
+        uncovered.extend(file.entry.uncovered);
     }
-    let _ = &nuclide_files;
     let input_label = input
         .file_name()
         .and_then(|name| name.to_str())
@@ -6043,6 +6102,7 @@ mod tests {
             groups,
             cache: None,
             normalize_profile: NormalizeProfile::None,
+            workers: 1,
         };
         assert_ne!(
             shielding_cache_key("s", &shielding, Projectile::Neutron),
@@ -6056,6 +6116,15 @@ mod tests {
             shielding_cache_key("s", &shielding, Projectile::Neutron),
             shielding_cache_key("s", &normalized, Projectile::Neutron)
         );
+    }
+
+    #[test]
+    fn source_without_tests_cuts_at_the_test_module() {
+        let src = b"fn a() {}\n\n#[cfg(test)]\nmod tests {\n    fn t() {}\n}\n";
+        assert_eq!(source_without_tests(src), b"fn a() {}\n");
+        let plain = b"fn a() {}\n#[cfg(test)]\nmod other {}\n";
+        assert_eq!(source_without_tests(plain), plain);
+        assert_eq!(source_without_tests(b""), b"");
     }
 
     #[test]

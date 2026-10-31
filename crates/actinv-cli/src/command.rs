@@ -783,7 +783,13 @@ fn build_shielding(args: &[String]) {
     let options = valued_options(&args[2..]);
     reject_unknown(
         &options,
-        &["--projectile", "--groups", "--cache", "--profile"],
+        &[
+            "--projectile",
+            "--groups",
+            "--cache",
+            "--profile",
+            "--workers",
+        ],
     );
     let profile = NormalizeProfile::parse(options.get("--profile").copied().unwrap_or("none"))
         .unwrap_or_else(|error| die(error, 2));
@@ -807,6 +813,7 @@ fn build_shielding(args: &[String]) {
         groups,
         cache: options.get("--cache").map(std::path::PathBuf::from),
         normalize_profile: profile,
+        workers: parsed_option(&options, "--workers").unwrap_or(1),
     };
     let summary = builder::build_shielding(input, output, &build_options)
         .unwrap_or_else(|error| die(error, 1));
