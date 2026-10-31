@@ -1018,6 +1018,9 @@ A fragment that takes the density from the material (the geometry omits `density
   poles above the resolved range (W-186 lists three near 10.1-10.4 keV with `EH` = 10 keV) that feed the in-range
   cross section but are not peaks, so they are dropped and counted per nuclide in the ledger's
   `shielding.geometry.resonances_outside_range` (omitted when none).
+- `profile` (optional, `"none"`, `"endfb8"` or `"tendl"`, default `"none"`) applies the same tape normalization as
+  `build-library --profile` to each resonance file before it is read. Use `"endfb8"` for ENDF/B-VIII.1 evaluations
+  (Cu-63, for example, lists a photon exit channel the strict reader refuses without it).
 - `choose` restricts the correction to listed nuclides or elements (`SSFCHOOSE`); every entry must be in the
   material. A nuclide entry must be supplied by a resonance file (otherwise the run is refused). An element entry
   shields the isotopes that a file supplies and names the others in `shielding_uncovered`, as when `choose` is

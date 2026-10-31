@@ -10,6 +10,7 @@
 
 use actinv_data::activation::{parse_evaluations, Projectile};
 use actinv_data::composition::{self, MaterialKey};
+use actinv_data::normalize::{normalize_tape, NormalizeProfile};
 use actinv_data::resonance::{
     legacy_effective_total_width, rml_resonance_widths, RangeData, ResonanceEvaluation, K_WAVE,
 };
@@ -882,13 +883,21 @@ impl PreparedGeometry {
             };
             choose.push((raw.clone(), entry));
         }
+        let profile = geometry.normalize_profile()?;
         let mut lines: BTreeMap<(i32, i32), Vec<ResonanceLine>> = BTreeMap::new();
         let mut outside_range = BTreeMap::new();
         let mut isotopes_without_lines = Vec::new();
         for (label, text) in files {
-            let evaluations =
-                parse_evaluations(text, Some(Projectile::Neutron)).map_err(|error| {
-                    format!("self_shielding.geometry resonance file {label}: {error}")
+            // The same tape normalization as `build-library --profile`; `none` returns the text unchanged.
+            let normalized = normalize_tape(text, profile);
+            let evaluations = parse_evaluations(&normalized.text, Some(Projectile::Neutron))
+                .map_err(|error| {
+                    let hint = if profile == NormalizeProfile::None {
+                        "; ENDF/B-VIII.1 evaluations may need \"profile\": \"endfb8\""
+                    } else {
+                        ""
+                    };
+                    format!("self_shielding.geometry resonance file {label}: {error}{hint}")
                 })?;
             for evaluation in &evaluations {
                 let mat_name = name_of(evaluation.metadata.za, evaluation.metadata.liso);
@@ -1615,6 +1624,7 @@ mod tests {
             resonance_files: Vec::new(),
             choose: None,
             reactions: "all".into(),
+            profile: None,
         };
         let error = PreparedGeometry::from_evaluations(
             &geometry,
@@ -1622,6 +1632,17 @@ mod tests {
         )
         .unwrap_err();
         assert!(error.contains("w184.endf"), "{error}");
+        // With no profile the error points at the ENDF/B-VIII.1 profile; with one it does not repeat it.
+        assert!(error.contains("\"profile\": \"endfb8\""), "{error}");
+        let mut with_profile = geometry.clone();
+        with_profile.profile = Some("endfb8".into());
+        let error = PreparedGeometry::from_evaluations(
+            &with_profile,
+            &[("w184.endf".to_string(), "not an ENDF tape".to_string())],
+        )
+        .unwrap_err();
+        assert!(error.contains("w184.endf"), "{error}");
+        assert!(!error.contains("may need"), "{error}");
         let mut bad = geometry.clone();
         bad.length_cm = f64::NAN;
         assert!(PreparedGeometry::from_evaluations(&bad, &[]).is_err());
@@ -1973,6 +1994,38 @@ mod tests {
             &[("w186.endf".to_string(), tape)],
         )
         .expect("the synthetic tape parses")
+    }
+
+    #[test]
+    fn geometry_profile_normalizes_the_tape_before_parsing() {
+        let tape = p140_tape(
+            7437,
+            74186,
+            183.0,
+            &[(74186, vec![(1e-5, 1e4, vec![[10.0, 0.5, 1e-3, 5e-2]])])],
+        );
+        let none = PreparedGeometry::from_evaluations(
+            &p140_geometry_spec(),
+            &[("w186.endf".to_string(), tape.clone())],
+        )
+        .unwrap();
+        // A tape with nothing to repair reads identically under every profile.
+        for profile in ["endfb8", "tendl"] {
+            let mut spec = p140_geometry_spec();
+            spec.profile = Some(profile.into());
+            let prepared = PreparedGeometry::from_evaluations(
+                &spec,
+                &[("w186.endf".to_string(), tape.clone())],
+            )
+            .unwrap();
+            assert_eq!(prepared.lines.len(), none.lines.len(), "{profile}");
+            assert_eq!(prepared.lines[&(74186, 0)].len(), 1, "{profile}");
+        }
+        // An unknown profile is refused before any file is read.
+        let mut spec = p140_geometry_spec();
+        spec.profile = Some("bogus".into());
+        let error = PreparedGeometry::from_evaluations(&spec, &[]).unwrap_err();
+        assert!(error.contains("bogus"), "{error}");
     }
 
     #[test]

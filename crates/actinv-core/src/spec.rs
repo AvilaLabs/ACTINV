@@ -373,6 +373,11 @@ pub struct SelfShieldingGeometry {
     /// shielded nuclide) or "capture" (radiative capture, MT 102, only).
     #[serde(default = "geometry_reactions_all")]
     pub reactions: String,
+    /// Tape normalization applied to each resonance file before parsing: "none" (default), "endfb8" or
+    /// "tendl", the same profiles as `build-library --profile`. ENDF/B-VIII.1 R-matrix evaluations such as
+    /// Cu-63 need "endfb8". Absent means "none", and the spec echo is unchanged.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub profile: Option<String>,
 }
 
 fn geometry_reactions_all() -> String {
@@ -413,8 +418,15 @@ impl SelfShieldingGeometry {
         resolve_geometry_density(self.density_g_cm3, material_density_g_cm3)
     }
 
+    /// The tape normalization profile of the resonance files; absent is `none`.
+    pub fn normalize_profile(&self) -> Result<actinv_data::normalize::NormalizeProfile, String> {
+        actinv_data::normalize::NormalizeProfile::parse(self.profile.as_deref().unwrap_or("none"))
+            .map_err(|error| format!("self_shielding.geometry.profile: {error}"))
+    }
+
     fn validate(&self, material_density_g_cm3: Option<f64>) -> Result<(), String> {
         let shape = crate::shielding::GeometryShape::parse(&self.shape)?;
+        self.normalize_profile()?;
         // Dimensions: finite and positive, height only for a cylinder.
         shape.effective_length_cm(self.length_cm, self.height_cm)?;
         self.effective_density(material_density_g_cm3)?;
@@ -3682,6 +3694,28 @@ mod duration_tests {
         }))
         .unwrap_err();
         assert!(error.contains("does not use dilution"), "{error}");
+        // The tape normalization profile is optional, validated, and omitted from the echo when absent.
+        let section = serde_json::to_value(
+            &spec_with(serde_json::json!({"geometry": geometry()}))
+                .unwrap()
+                .self_shielding,
+        )
+        .unwrap();
+        assert!(section["geometry"].get("profile").is_none());
+        let spec =
+            with_geometry(&|geometry| geometry["profile"] = serde_json::json!("endfb8")).unwrap();
+        let geometry_spec = spec.self_shielding.unwrap().geometry.unwrap();
+        assert_eq!(geometry_spec.profile.as_deref(), Some("endfb8"));
+        assert_eq!(
+            geometry_spec.normalize_profile().unwrap(),
+            actinv_data::normalize::NormalizeProfile::EndfB8
+        );
+        let error = with_geometry(&|geometry| geometry["profile"] = serde_json::json!("bogus"))
+            .unwrap_err();
+        assert!(
+            error.contains("self_shielding.geometry.profile") && error.contains("bogus"),
+            "{error}"
+        );
         // Unknown geometry keys are errors.
         let error =
             with_geometry(&|geometry| geometry["thickness"] = serde_json::json!(1.0)).unwrap_err();

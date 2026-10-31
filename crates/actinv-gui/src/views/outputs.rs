@@ -1579,6 +1579,18 @@ fn geometry_card(
                 }
                 set(doc, "self_shielding.geometry.resonance_files", json!(list));
             }
+            ui.horizontal(|ui| {
+                choice_field(
+                    ui,
+                    "Profile",
+                    "geometry-profile",
+                    doc,
+                    "self_shielding.geometry.profile",
+                    "none",
+                    &["none", "endfb8", "tendl"],
+                );
+                ui.weak("endfb8 for ENDF/B-VIII.1 files, tendl for TENDL");
+            });
             ui.label("Restrict to nuclides or elements, empty for every nuclide a file supplies:");
             string_list(
                 ui,
