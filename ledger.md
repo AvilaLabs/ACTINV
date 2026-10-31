@@ -5390,3 +5390,38 @@ unread. The amendment pins `8e0d2a34…`, the table at the scored path in the `p
 else. The rerun starts from this registration.
 
 Registration error: a pin taken from the rehearsal must be path-independent, or be taken at the scored path.
+
+## Entry 311 — P176 evidence under Amendment A: G0–G3 pass; no arm is a candidate (2026-10-31)
+
+The rerun ran from the amendment's registration commit `a42b7d2`, with a clean tree and the pinned binary (`36af7922…`),
+inside the 200 % scope. The table step reused all 67 checkpoints in 14 s, and its table is the pin (`8e0d2a34…`). All
+16 arm modes and the assembly exited 0. `controls/check_p176.py` reports G0–G3 PASS. **P176-PASS, pending G4.**
+
+**A1, the Bondarenko table with composition dilution: safe, but not a candidate.**
+- It removes the steel capture differences. Mn-55 (n,γ) goes from 0.072–0.073 to 0.005 in every region, Co-59 (n,γ)
+  from 0.064–0.068 to 0.022–0.026, and Mo-98 (n,γ) from 0.091–0.111 to −0.022 to −0.025.
+- It leaves Cu-63 (n,γ) in CuCrZr material: 0.133 → 0.055 (10–12 cm) and 0.162 → 0.069 (20–25 cm).
+- No row is made material. 67 rows are used; 11 are not scored (9 with no loss row, 2 that P173 did not score).
+- The largest tungsten value, −0.062, is P173's W-182(n,p) processing difference. Self-shielding leaves it unchanged
+  (q = 1.000).
+
+**A2 and A3, the geometry option: failed on every run, scored `arm_failed` (76 rows each).** ACTINV refuses the
+ENDF/B-VIII.1 Cu-63 resonance file:
+
+    MAT=2925/MF=2/MT=151: invalid RML particle pair for MT=102
+
+The file uses the R-Matrix Limited format (LRF=7), and ACTINV's RML reader rejects its capture particle pair. Cu-63 is
+in both the steel and the CuCrZr compositions, so no geometry run completed.
+
+The rehearsal showed the same error in its A2 and A3 records. The coordinator read only the arm-mode exit codes, which
+are 0 because the harness records a failed run rather than exiting. So the error was not seen before registration.
+That is a rehearsal-reading error; Amendment A was not spent on it. The geometry option is therefore unmeasured here.
+It is not shown to be worse.
+
+**Decision (protocol rule).** No arm is a candidate, so item 2 proceeds as P173 warranted. Two notes, not part of the
+decision:
+- The composition-dilution table closes the steel capture gap.
+- The RML particle-pair refusal is an ACTINV defect. It blocks the geometry option for any ENDF/B-VIII.1 evaluation
+  of this form.
+
+No public sentence is allowed.

@@ -1,0 +1,87 @@
+{
+ "actinv_bin_sha256": "36af79228fc56c1116bdfca375b6050e906bd6901475bcbfd2c1fa60b712619c",
+ "actinv_version": "actinv 1.7.0",
+ "arm": "A3",
+ "environment": {
+  "cgroup": {
+   "cpu.max": "200000 100000",
+   "memory.max": "6442450944",
+   "memory.swap.max": "0",
+   "path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p364662-i8732237.scope",
+   "pids.max": "128"
+  },
+  "clean_tree": true,
+  "constants_sha256": "4dd1a7ce40093d49eb0b66f167137efab2a42ab6a39ec4278615a833f85b4902",
+  "crates_tree": "46571824449a139cecc7dd5a48396bc61bcfe282",
+  "git_head": "a42b7d27f85e81e1449b94c510b29bb5ac28fa3c",
+  "groups_sha256": "ce4bf523498ffbb38d42aa9415fc014882b8bc7a7ecfb89f859ba3259d8fb34f",
+  "harness_sha256": "f1d5cb277ebfa28f9f293ccfdff378359de79a1f34a3c1b64f9099a494e63358",
+  "platform": "Linux-7.0.0-38-generic-x86_64-with-glibc2.43",
+  "python": "3.14.4",
+  "rehearsal": false
+ },
+ "model": "W",
+ "runs": [
+  {
+   "arm": "A3",
+   "flux_total_cm_per_source": 2.7460974733332555,
+   "foil_thickness_cm": 10.0,
+   "model": "W",
+   "ok": false,
+   "region": "W:10-10.5",
+   "resonance_files": [
+    "n-074_W_180.endf",
+    "n-074_W_182.endf",
+    "n-074_W_183.endf",
+    "n-074_W_184.endf",
+    "n-074_W_186.endf"
+   ],
+   "run_returncode": 1,
+   "spec_sha256": "d53891937186ec5dc18c07b260071be4c204c23ca0b79d04f53f74daa098fc80",
+   "stderr_tail": "self_shielding.geometry resonance file /home/connoravila/nuclear-data/endfb-viii.1-endf6/neutrons-version.VIII.1/n-074_W_182.endf: MAT=7431/MF=2/MT=151: MF=2 ZA/AWR 74182/180.3852 disagree with MF=1 74182/180.385\n",
+   "validate_returncode": 0,
+   "wall_s": 0.21731901168823242
+  },
+  {
+   "arm": "A3",
+   "flux_total_cm_per_source": 9.122418865976575,
+   "foil_thickness_cm": 10.0,
+   "model": "W",
+   "ok": false,
+   "region": "W:10.5-12",
+   "resonance_files": [
+    "n-074_W_180.endf",
+    "n-074_W_182.endf",
+    "n-074_W_183.endf",
+    "n-074_W_184.endf",
+    "n-074_W_186.endf"
+   ],
+   "run_returncode": 1,
+   "spec_sha256": "e15242372538efd532648e3c5a3b27d1be870b092514375055d7c77c183f87c0",
+   "stderr_tail": "self_shielding.geometry resonance file /home/connoravila/nuclear-data/endfb-viii.1-endf6/neutrons-version.VIII.1/n-074_W_182.endf: MAT=7431/MF=2/MT=151: MF=2 ZA/AWR 74182/180.3852 disagree with MF=1 74182/180.385\n",
+   "validate_returncode": 0,
+   "wall_s": 0.20478177070617676
+  },
+  {
+   "arm": "A3",
+   "flux_total_cm_per_source": 23.950750017693952,
+   "foil_thickness_cm": 10.0,
+   "model": "W",
+   "ok": false,
+   "region": "W:15-20",
+   "resonance_files": [
+    "n-074_W_180.endf",
+    "n-074_W_182.endf",
+    "n-074_W_183.endf",
+    "n-074_W_184.endf",
+    "n-074_W_186.endf"
+   ],
+   "run_returncode": 1,
+   "spec_sha256": "f4cf42d42fa9689c6d13b5f1505ce328ad27600cae495222c4e9362728201522",
+   "stderr_tail": "self_shielding.geometry resonance file /home/connoravila/nuclear-data/endfb-viii.1-endf6/neutrons-version.VIII.1/n-074_W_182.endf: MAT=7431/MF=2/MT=151: MF=2 ZA/AWR 74182/180.3852 disagree with MF=1 74182/180.385\n",
+   "validate_returncode": 0,
+   "wall_s": 0.2132422924041748
+  }
+ ],
+ "schema": "actinv-p176-selfshield-1-arm"
+}

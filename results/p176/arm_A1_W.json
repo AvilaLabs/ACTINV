@@ -1,0 +1,225 @@
+{
+ "actinv_bin_sha256": "36af79228fc56c1116bdfca375b6050e906bd6901475bcbfd2c1fa60b712619c",
+ "actinv_version": "actinv 1.7.0",
+ "arm": "A1",
+ "environment": {
+  "cgroup": {
+   "cpu.max": "200000 100000",
+   "memory.max": "6442450944",
+   "memory.swap.max": "0",
+   "path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p364662-i8732237.scope",
+   "pids.max": "128"
+  },
+  "clean_tree": true,
+  "constants_sha256": "4dd1a7ce40093d49eb0b66f167137efab2a42ab6a39ec4278615a833f85b4902",
+  "crates_tree": "46571824449a139cecc7dd5a48396bc61bcfe282",
+  "git_head": "a42b7d27f85e81e1449b94c510b29bb5ac28fa3c",
+  "groups_sha256": "ce4bf523498ffbb38d42aa9415fc014882b8bc7a7ecfb89f859ba3259d8fb34f",
+  "harness_sha256": "f1d5cb277ebfa28f9f293ccfdff378359de79a1f34a3c1b64f9099a494e63358",
+  "platform": "Linux-7.0.0-38-generic-x86_64-with-glibc2.43",
+  "python": "3.14.4",
+  "rehearsal": false
+ },
+ "model": "W",
+ "runs": [
+  {
+   "arm": "A1",
+   "flux_total_cm_per_source": 2.7460974733332555,
+   "model": "W",
+   "ok": true,
+   "rates": {
+    "W182|102": 2.741280981040691e-25,
+    "W182|103": 1.574548578957455e-27,
+    "W183|103": null,
+    "W184|102": 2.263359848809547e-25,
+    "W186|102": 1.6256067204319976e-25,
+    "W186|103": null,
+    "W186|16": 1.0213702071391144e-24
+   },
+   "region": "W:10-10.5",
+   "run_returncode": 0,
+   "shielding": {
+    "applied_factors_summary": {
+     "W180": {
+      "groups": 350,
+      "min_factor": 0.0
+     },
+     "W182": {
+      "groups": 464,
+      "min_factor": 0.0
+     },
+     "W183": {
+      "groups": 449,
+      "min_factor": 0.0
+     },
+     "W184": {
+      "groups": 464,
+      "min_factor": 0.0
+     },
+     "W186": {
+      "groups": 471,
+      "min_factor": 0.0
+     }
+    },
+    "channel_map": "mt 2 -> elastic; mt 18/19 -> fission; mt 102 -> capture; all other reactions take the total factor",
+    "channels": [
+     "total",
+     "elastic",
+     "fission",
+     "capture"
+    ],
+    "dilution": "composition",
+    "model": "Bondarenko: sigma_eff_g = sigma_g * ((1 - c_g) + c_g * f(sigma0_eff, T)); factors interpolate in ln(sigma0) and sqrt(T); outside unresolved ranges f = 1",
+    "require_complete": false,
+    "shielding_uncovered": [],
+    "sigma0_eff_b": {
+     "W180": 48763.00552513915,
+     "W182": 196.82917965370754,
+     "W183": 387.1220802969786,
+     "W184": 174.00724394095383,
+     "W186": 51.81852947345748
+    },
+    "sigma0_fixed_b": null,
+    "sigma_p_estimated": [],
+    "table_sha256": "8e0d2a3472b8b1ddcd2c4c9b993349803aaaafe1fef080540f93a2f34d159ba6"
+   },
+   "spec_sha256": "e014be60efba3f9bcae95a7eb544bddba32c9140d2bde25086a9f8e1763e599c",
+   "stderr_tail": "",
+   "validate_returncode": 0,
+   "wall_s": 3.681882381439209
+  },
+  {
+   "arm": "A1",
+   "flux_total_cm_per_source": 9.122418865976575,
+   "model": "W",
+   "ok": true,
+   "rates": {
+    "W182|102": 9.568698763209266e-25,
+    "W182|103": 4.123120025596458e-27,
+    "W183|103": null,
+    "W184|102": 7.910782358097999e-25,
+    "W186|102": 5.685979705968093e-25,
+    "W186|103": null,
+    "W186|16": 2.7028844519491876e-24
+   },
+   "region": "W:10.5-12",
+   "run_returncode": 0,
+   "shielding": {
+    "applied_factors_summary": {
+     "W180": {
+      "groups": 350,
+      "min_factor": 0.0
+     },
+     "W182": {
+      "groups": 464,
+      "min_factor": 0.0
+     },
+     "W183": {
+      "groups": 449,
+      "min_factor": 0.0
+     },
+     "W184": {
+      "groups": 464,
+      "min_factor": 0.0
+     },
+     "W186": {
+      "groups": 471,
+      "min_factor": 0.0
+     }
+    },
+    "channel_map": "mt 2 -> elastic; mt 18/19 -> fission; mt 102 -> capture; all other reactions take the total factor",
+    "channels": [
+     "total",
+     "elastic",
+     "fission",
+     "capture"
+    ],
+    "dilution": "composition",
+    "model": "Bondarenko: sigma_eff_g = sigma_g * ((1 - c_g) + c_g * f(sigma0_eff, T)); factors interpolate in ln(sigma0) and sqrt(T); outside unresolved ranges f = 1",
+    "require_complete": false,
+    "shielding_uncovered": [],
+    "sigma0_eff_b": {
+     "W180": 48763.00552513915,
+     "W182": 196.82917965370754,
+     "W183": 387.1220802969786,
+     "W184": 174.00724394095383,
+     "W186": 51.81852947345748
+    },
+    "sigma0_fixed_b": null,
+    "sigma_p_estimated": [],
+    "table_sha256": "8e0d2a3472b8b1ddcd2c4c9b993349803aaaafe1fef080540f93a2f34d159ba6"
+   },
+   "spec_sha256": "05489f18f8810dce21633a2242de1e46ea3d6b3d525e69a6797efad2d400b882",
+   "stderr_tail": "",
+   "validate_returncode": 0,
+   "wall_s": 3.685235023498535
+  },
+  {
+   "arm": "A1",
+   "flux_total_cm_per_source": 23.950750017693952,
+   "model": "W",
+   "ok": true,
+   "rates": {
+    "W182|102": 2.7681168779410794e-24,
+    "W182|103": 5.3730788466148745e-27,
+    "W183|103": null,
+    "W184|102": 2.3096850161339498e-24,
+    "W186|102": 1.6632170421406367e-24,
+    "W186|103": null,
+    "W186|16": 3.6672177708602085e-24
+   },
+   "region": "W:15-20",
+   "run_returncode": 0,
+   "shielding": {
+    "applied_factors_summary": {
+     "W180": {
+      "groups": 350,
+      "min_factor": 0.0
+     },
+     "W182": {
+      "groups": 464,
+      "min_factor": 0.0
+     },
+     "W183": {
+      "groups": 449,
+      "min_factor": 0.0
+     },
+     "W184": {
+      "groups": 464,
+      "min_factor": 0.0
+     },
+     "W186": {
+      "groups": 471,
+      "min_factor": 0.0
+     }
+    },
+    "channel_map": "mt 2 -> elastic; mt 18/19 -> fission; mt 102 -> capture; all other reactions take the total factor",
+    "channels": [
+     "total",
+     "elastic",
+     "fission",
+     "capture"
+    ],
+    "dilution": "composition",
+    "model": "Bondarenko: sigma_eff_g = sigma_g * ((1 - c_g) + c_g * f(sigma0_eff, T)); factors interpolate in ln(sigma0) and sqrt(T); outside unresolved ranges f = 1",
+    "require_complete": false,
+    "shielding_uncovered": [],
+    "sigma0_eff_b": {
+     "W180": 48763.00552513915,
+     "W182": 196.82917965370754,
+     "W183": 387.1220802969786,
+     "W184": 174.00724394095383,
+     "W186": 51.81852947345748
+    },
+    "sigma0_fixed_b": null,
+    "sigma_p_estimated": [],
+    "table_sha256": "8e0d2a3472b8b1ddcd2c4c9b993349803aaaafe1fef080540f93a2f34d159ba6"
+   },
+   "spec_sha256": "c8da1d235cfec3d49b153e7772664d8ca948486368a8cf93c4989202681d3309",
+   "stderr_tail": "",
+   "validate_returncode": 0,
+   "wall_s": 3.6560122966766357
+  }
+ ],
+ "schema": "actinv-p176-selfshield-1-arm"
+}

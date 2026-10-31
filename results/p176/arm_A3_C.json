@@ -1,0 +1,79 @@
+{
+ "actinv_bin_sha256": "36af79228fc56c1116bdfca375b6050e906bd6901475bcbfd2c1fa60b712619c",
+ "actinv_version": "actinv 1.7.0",
+ "arm": "A3",
+ "environment": {
+  "cgroup": {
+   "cpu.max": "200000 100000",
+   "memory.max": "6442450944",
+   "memory.swap.max": "0",
+   "path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p364662-i8732237.scope",
+   "pids.max": "128"
+  },
+  "clean_tree": true,
+  "constants_sha256": "4dd1a7ce40093d49eb0b66f167137efab2a42ab6a39ec4278615a833f85b4902",
+  "crates_tree": "46571824449a139cecc7dd5a48396bc61bcfe282",
+  "git_head": "a42b7d27f85e81e1449b94c510b29bb5ac28fa3c",
+  "groups_sha256": "ce4bf523498ffbb38d42aa9415fc014882b8bc7a7ecfb89f859ba3259d8fb34f",
+  "harness_sha256": "f1d5cb277ebfa28f9f293ccfdff378359de79a1f34a3c1b64f9099a494e63358",
+  "platform": "Linux-7.0.0-38-generic-x86_64-with-glibc2.43",
+  "python": "3.14.4",
+  "rehearsal": false
+ },
+ "model": "C",
+ "runs": [
+  {
+   "arm": "A3",
+   "flux_total_cm_per_source": 9.519397902545174,
+   "foil_thickness_cm": 15.0,
+   "model": "C",
+   "ok": false,
+   "region": "C:10-12",
+   "resonance_files": [
+    "n-024_Cr_050.endf",
+    "n-024_Cr_052.endf",
+    "n-024_Cr_053.endf",
+    "n-024_Cr_054.endf",
+    "n-029_Cu_063.endf",
+    "n-029_Cu_065.endf",
+    "n-040_Zr_090.endf",
+    "n-040_Zr_091.endf",
+    "n-040_Zr_092.endf",
+    "n-040_Zr_094.endf",
+    "n-040_Zr_096.endf"
+   ],
+   "run_returncode": 1,
+   "spec_sha256": "0ea4814d9caae34f2c41c9cb3c18b153c2c671e78d71a2afeb02eb0b39048716",
+   "stderr_tail": "self_shielding.geometry resonance file /home/connoravila/nuclear-data/endfb-viii.1-endf6/neutrons-version.VIII.1/n-029_Cu_063.endf: MAT=2925/MF=2/MT=151: invalid RML particle pair for MT=102\n",
+   "validate_returncode": 0,
+   "wall_s": 0.4238748550415039
+  },
+  {
+   "arm": "A3",
+   "flux_total_cm_per_source": 18.8625530197204,
+   "foil_thickness_cm": 15.0,
+   "model": "C",
+   "ok": false,
+   "region": "C:20-25",
+   "resonance_files": [
+    "n-024_Cr_050.endf",
+    "n-024_Cr_052.endf",
+    "n-024_Cr_053.endf",
+    "n-024_Cr_054.endf",
+    "n-029_Cu_063.endf",
+    "n-029_Cu_065.endf",
+    "n-040_Zr_090.endf",
+    "n-040_Zr_091.endf",
+    "n-040_Zr_092.endf",
+    "n-040_Zr_094.endf",
+    "n-040_Zr_096.endf"
+   ],
+   "run_returncode": 1,
+   "spec_sha256": "2621e641058273a00cddd69ebbd08edf5ec067f81b4f98f1a743474e5fb6183c",
+   "stderr_tail": "self_shielding.geometry resonance file /home/connoravila/nuclear-data/endfb-viii.1-endf6/neutrons-version.VIII.1/n-029_Cu_063.endf: MAT=2925/MF=2/MT=151: invalid RML particle pair for MT=102\n",
+   "validate_returncode": 0,
+   "wall_s": 0.41930627822875977
+  }
+ ],
+ "schema": "actinv-p176-selfshield-1-arm"
+}

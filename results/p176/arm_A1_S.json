@@ -1,0 +1,654 @@
+{
+ "actinv_bin_sha256": "36af79228fc56c1116bdfca375b6050e906bd6901475bcbfd2c1fa60b712619c",
+ "actinv_version": "actinv 1.7.0",
+ "arm": "A1",
+ "environment": {
+  "cgroup": {
+   "cpu.max": "200000 100000",
+   "memory.max": "6442450944",
+   "memory.swap.max": "0",
+   "path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p364662-i8732237.scope",
+   "pids.max": "128"
+  },
+  "clean_tree": true,
+  "constants_sha256": "4dd1a7ce40093d49eb0b66f167137efab2a42ab6a39ec4278615a833f85b4902",
+  "crates_tree": "46571824449a139cecc7dd5a48396bc61bcfe282",
+  "git_head": "a42b7d27f85e81e1449b94c510b29bb5ac28fa3c",
+  "groups_sha256": "ce4bf523498ffbb38d42aa9415fc014882b8bc7a7ecfb89f859ba3259d8fb34f",
+  "harness_sha256": "f1d5cb277ebfa28f9f293ccfdff378359de79a1f34a3c1b64f9099a494e63358",
+  "platform": "Linux-7.0.0-38-generic-x86_64-with-glibc2.43",
+  "python": "3.14.4",
+  "rehearsal": false
+ },
+ "model": "S",
+ "runs": [
+  {
+   "arm": "A1",
+   "flux_total_cm_per_source": 9.128437376388765,
+   "model": "S",
+   "ok": true,
+   "rates": {
+    "Co59|102": 4.18989348053152e-24,
+    "Cr50|102": 3.0774994131637556e-25,
+    "Fe54|103": 7.9608746362969655e-25,
+    "Fe56|103": null,
+    "Fe58|102": 9.265018181387278e-26,
+    "Mn55|102": 5.519027915308337e-25,
+    "Mn55|16": 1.3826021659918409e-24,
+    "Mo98|102": 8.075662809396537e-25,
+    "Ni58|103": 8.78712026855e-25,
+    "Ni58|16": 4.264493710674116e-26,
+    "Ni60|103": 2.909832275822497e-25
+   },
+   "region": "S:10-12",
+   "run_returncode": 0,
+   "shielding": {
+    "applied_factors_summary": {
+     "Co59": {
+      "groups": 500,
+      "min_factor": 0.0
+     },
+     "Cr50": {
+      "groups": 545,
+      "min_factor": 0.0
+     },
+     "Cr52": {
+      "groups": 558,
+      "min_factor": 0.0
+     },
+     "Cr53": {
+      "groups": 538,
+      "min_factor": 0.0
+     },
+     "Cr54": {
+      "groups": 547,
+      "min_factor": 0.0
+     },
+     "Cu63": {
+      "groups": 500,
+      "min_factor": 0.0
+     },
+     "Cu65": {
+      "groups": 500,
+      "min_factor": 0.0
+     },
+     "Fe54": {
+      "groups": 551,
+      "min_factor": 0.0
+     },
+     "Fe56": {
+      "groups": 547,
+      "min_factor": 0.0
+     },
+     "Fe57": {
+      "groups": 514,
+      "min_factor": 0.0
+     },
+     "Fe58": {
+      "groups": 541,
+      "min_factor": 0.0
+     },
+     "Mn55": {
+      "groups": 518,
+      "min_factor": 0.0
+     },
+     "Mo100": {
+      "groups": 479,
+      "min_factor": 0.0
+     },
+     "Mo92": {
+      "groups": 487,
+      "min_factor": 0.0
+     },
+     "Mo94": {
+      "groups": 475,
+      "min_factor": 0.0
+     },
+     "Mo95": {
+      "groups": 447,
+      "min_factor": 0.0
+     },
+     "Mo96": {
+      "groups": 474,
+      "min_factor": 0.0
+     },
+     "Mo97": {
+      "groups": 441,
+      "min_factor": 0.0
+     },
+     "Mo98": {
+      "groups": 482,
+      "min_factor": 0.0
+     },
+     "Ni58": {
+      "groups": 546,
+      "min_factor": 0.0
+     },
+     "Ni60": {
+      "groups": 546,
+      "min_factor": 0.0
+     },
+     "Ni61": {
+      "groups": 488,
+      "min_factor": 0.0
+     },
+     "Ni62": {
+      "groups": 543,
+      "min_factor": 0.0
+     },
+     "Ni64": {
+      "groups": 538,
+      "min_factor": 0.0
+     },
+     "S32": {
+      "groups": 560,
+      "min_factor": 0.0
+     },
+     "S33": {
+      "groups": 521,
+      "min_factor": 0.0
+     },
+     "S34": {
+      "groups": 535,
+      "min_factor": 0.0
+     },
+     "Si28": {
+      "groups": 563,
+      "min_factor": 0.0
+     },
+     "Si29": {
+      "groups": 556,
+      "min_factor": 0.0
+     },
+     "Si30": {
+      "groups": 559,
+      "min_factor": 0.0
+     }
+    },
+    "channel_map": "mt 2 -> elastic; mt 18/19 -> fission; mt 102 -> capture; all other reactions take the total factor",
+    "channels": [
+     "total",
+     "elastic",
+     "fission",
+     "capture"
+    ],
+    "dilution": "composition",
+    "model": "Bondarenko: sigma_eff_g = sigma_g * ((1 - c_g) + c_g * f(sigma0_eff, T)); factors interpolate in ln(sigma0) and sqrt(T); outside unresolved ranges f = 1",
+    "require_complete": false,
+    "shielding_uncovered": [
+     "C12",
+     "C13",
+     "N14",
+     "N15",
+     "P31",
+     "S36"
+    ],
+    "sigma0_eff_b": {
+     "Co59": 20802.553634990796,
+     "Cr50": 1197.6332147036521,
+     "Cr52": 59.58212058703213,
+     "Cr53": 537.2852724463356,
+     "Cr54": 2218.555539191515,
+     "Cu63": 5409.217345856004,
+     "Cu65": 12126.656396851575,
+     "Fe54": 253.57504385745952,
+     "Fe56": 6.216827815830231,
+     "Fe57": 711.0972184606551,
+     "Fe58": 5360.46106640933,
+     "Mn55": 513.0634430823503,
+     "Mo100": 6957.330011018057,
+     "Mo92": 4625.8286124403685,
+     "Mo94": 7380.009264154974,
+     "Mo95": 4261.5777289116795,
+     "Mo96": 4061.401787207995,
+     "Mo97": 7074.812962800087,
+     "Mo98": 2786.6868017296433,
+     "Ni58": 105.33670561549516,
+     "Ni60": 325.78605837100395,
+     "Ni61": 7577.39756153136,
+     "Ni62": 2356.731634925015,
+     "Ni64": 9338.554282529994,
+     "S32": 119295.04275984842,
+     "S33": 15143799.402901838,
+     "S34": 2702104.818018632,
+     "Si28": 1074.677178792497,
+     "Si29": 21203.382366589318,
+     "Si30": 32166.865367000235
+    },
+    "sigma0_fixed_b": null,
+    "sigma_p_estimated": [
+     "C12",
+     "C13",
+     "N14",
+     "N15",
+     "P31",
+     "S36"
+    ],
+    "table_sha256": "8e0d2a3472b8b1ddcd2c4c9b993349803aaaafe1fef080540f93a2f34d159ba6"
+   },
+   "spec_sha256": "6c328301f1696f3a135e5ebbf3dd8a7b3c5da044eae68d6ac76417fe5cf8e355",
+   "stderr_tail": "",
+   "validate_returncode": 0,
+   "wall_s": 3.8248825073242188
+  },
+  {
+   "arm": "A1",
+   "flux_total_cm_per_source": 37.961298340054626,
+   "model": "S",
+   "ok": true,
+   "rates": {
+    "Co59|102": 3.343241945334003e-23,
+    "Cr50|102": 2.2572322754859356e-24,
+    "Fe54|103": 6.729352293735506e-25,
+    "Fe56|103": null,
+    "Fe58|102": 6.199739198240161e-25,
+    "Mn55|102": 4.247392968487252e-24,
+    "Mn55|16": 8.396703860885672e-25,
+    "Mo98|102": 5.603670123274865e-24,
+    "Ni58|103": 7.944736989539117e-25,
+    "Ni58|16": 2.439812530067618e-26,
+    "Ni60|103": 1.9329710242428737e-25
+   },
+   "region": "S:20-25",
+   "run_returncode": 0,
+   "shielding": {
+    "applied_factors_summary": {
+     "Co59": {
+      "groups": 500,
+      "min_factor": 0.0
+     },
+     "Cr50": {
+      "groups": 545,
+      "min_factor": 0.0
+     },
+     "Cr52": {
+      "groups": 558,
+      "min_factor": 0.0
+     },
+     "Cr53": {
+      "groups": 538,
+      "min_factor": 0.0
+     },
+     "Cr54": {
+      "groups": 547,
+      "min_factor": 0.0
+     },
+     "Cu63": {
+      "groups": 500,
+      "min_factor": 0.0
+     },
+     "Cu65": {
+      "groups": 500,
+      "min_factor": 0.0
+     },
+     "Fe54": {
+      "groups": 551,
+      "min_factor": 0.0
+     },
+     "Fe56": {
+      "groups": 547,
+      "min_factor": 0.0
+     },
+     "Fe57": {
+      "groups": 514,
+      "min_factor": 0.0
+     },
+     "Fe58": {
+      "groups": 541,
+      "min_factor": 0.0
+     },
+     "Mn55": {
+      "groups": 518,
+      "min_factor": 0.0
+     },
+     "Mo100": {
+      "groups": 479,
+      "min_factor": 0.0
+     },
+     "Mo92": {
+      "groups": 487,
+      "min_factor": 0.0
+     },
+     "Mo94": {
+      "groups": 475,
+      "min_factor": 0.0
+     },
+     "Mo95": {
+      "groups": 447,
+      "min_factor": 0.0
+     },
+     "Mo96": {
+      "groups": 474,
+      "min_factor": 0.0
+     },
+     "Mo97": {
+      "groups": 441,
+      "min_factor": 0.0
+     },
+     "Mo98": {
+      "groups": 482,
+      "min_factor": 0.0
+     },
+     "Ni58": {
+      "groups": 546,
+      "min_factor": 0.0
+     },
+     "Ni60": {
+      "groups": 546,
+      "min_factor": 0.0
+     },
+     "Ni61": {
+      "groups": 488,
+      "min_factor": 0.0
+     },
+     "Ni62": {
+      "groups": 543,
+      "min_factor": 0.0
+     },
+     "Ni64": {
+      "groups": 538,
+      "min_factor": 0.0
+     },
+     "S32": {
+      "groups": 560,
+      "min_factor": 0.0
+     },
+     "S33": {
+      "groups": 521,
+      "min_factor": 0.0
+     },
+     "S34": {
+      "groups": 535,
+      "min_factor": 0.0
+     },
+     "Si28": {
+      "groups": 563,
+      "min_factor": 0.0
+     },
+     "Si29": {
+      "groups": 556,
+      "min_factor": 0.0
+     },
+     "Si30": {
+      "groups": 559,
+      "min_factor": 0.0
+     }
+    },
+    "channel_map": "mt 2 -> elastic; mt 18/19 -> fission; mt 102 -> capture; all other reactions take the total factor",
+    "channels": [
+     "total",
+     "elastic",
+     "fission",
+     "capture"
+    ],
+    "dilution": "composition",
+    "model": "Bondarenko: sigma_eff_g = sigma_g * ((1 - c_g) + c_g * f(sigma0_eff, T)); factors interpolate in ln(sigma0) and sqrt(T); outside unresolved ranges f = 1",
+    "require_complete": false,
+    "shielding_uncovered": [
+     "C12",
+     "C13",
+     "N14",
+     "N15",
+     "P31",
+     "S36"
+    ],
+    "sigma0_eff_b": {
+     "Co59": 20802.553634990796,
+     "Cr50": 1197.6332147036521,
+     "Cr52": 59.58212058703213,
+     "Cr53": 537.2852724463356,
+     "Cr54": 2218.555539191515,
+     "Cu63": 5409.217345856004,
+     "Cu65": 12126.656396851575,
+     "Fe54": 253.57504385745952,
+     "Fe56": 6.216827815830231,
+     "Fe57": 711.0972184606551,
+     "Fe58": 5360.46106640933,
+     "Mn55": 513.0634430823503,
+     "Mo100": 6957.330011018057,
+     "Mo92": 4625.8286124403685,
+     "Mo94": 7380.009264154974,
+     "Mo95": 4261.5777289116795,
+     "Mo96": 4061.401787207995,
+     "Mo97": 7074.812962800087,
+     "Mo98": 2786.6868017296433,
+     "Ni58": 105.33670561549516,
+     "Ni60": 325.78605837100395,
+     "Ni61": 7577.39756153136,
+     "Ni62": 2356.731634925015,
+     "Ni64": 9338.554282529994,
+     "S32": 119295.04275984842,
+     "S33": 15143799.402901838,
+     "S34": 2702104.818018632,
+     "Si28": 1074.677178792497,
+     "Si29": 21203.382366589318,
+     "Si30": 32166.865367000235
+    },
+    "sigma0_fixed_b": null,
+    "sigma_p_estimated": [
+     "C12",
+     "C13",
+     "N14",
+     "N15",
+     "P31",
+     "S36"
+    ],
+    "table_sha256": "8e0d2a3472b8b1ddcd2c4c9b993349803aaaafe1fef080540f93a2f34d159ba6"
+   },
+   "spec_sha256": "d476eff1824b2b3a7f232f667af2dfca2b451b74c099eea9592a94ae4d6a80d2",
+   "stderr_tail": "",
+   "validate_returncode": 0,
+   "wall_s": 3.8526360988616943
+  },
+  {
+   "arm": "A1",
+   "flux_total_cm_per_source": 36.4180390187779,
+   "model": "S",
+   "ok": true,
+   "rates": {
+    "Co59|102": 4.264558619668248e-23,
+    "Cr50|102": 2.8285075891277703e-24,
+    "Fe54|103": 8.843330515041692e-26,
+    "Fe56|103": null,
+    "Fe58|102": 7.392428184607845e-25,
+    "Mn55|102": 5.362355077428812e-24,
+    "Mn55|16": 8.569527014565197e-26,
+    "Mo98|102": 6.728748924622494e-24,
+    "Ni58|103": 1.09751016034963e-25,
+    "Ni58|16": 2.2906356665866627e-27,
+    "Ni60|103": 2.161350589357346e-26
+   },
+   "region": "S:40-50",
+   "run_returncode": 0,
+   "shielding": {
+    "applied_factors_summary": {
+     "Co59": {
+      "groups": 500,
+      "min_factor": 0.0
+     },
+     "Cr50": {
+      "groups": 545,
+      "min_factor": 0.0
+     },
+     "Cr52": {
+      "groups": 558,
+      "min_factor": 0.0
+     },
+     "Cr53": {
+      "groups": 538,
+      "min_factor": 0.0
+     },
+     "Cr54": {
+      "groups": 547,
+      "min_factor": 0.0
+     },
+     "Cu63": {
+      "groups": 500,
+      "min_factor": 0.0
+     },
+     "Cu65": {
+      "groups": 500,
+      "min_factor": 0.0
+     },
+     "Fe54": {
+      "groups": 551,
+      "min_factor": 0.0
+     },
+     "Fe56": {
+      "groups": 547,
+      "min_factor": 0.0
+     },
+     "Fe57": {
+      "groups": 514,
+      "min_factor": 0.0
+     },
+     "Fe58": {
+      "groups": 541,
+      "min_factor": 0.0
+     },
+     "Mn55": {
+      "groups": 518,
+      "min_factor": 0.0
+     },
+     "Mo100": {
+      "groups": 479,
+      "min_factor": 0.0
+     },
+     "Mo92": {
+      "groups": 487,
+      "min_factor": 0.0
+     },
+     "Mo94": {
+      "groups": 475,
+      "min_factor": 0.0
+     },
+     "Mo95": {
+      "groups": 447,
+      "min_factor": 0.0
+     },
+     "Mo96": {
+      "groups": 474,
+      "min_factor": 0.0
+     },
+     "Mo97": {
+      "groups": 441,
+      "min_factor": 0.0
+     },
+     "Mo98": {
+      "groups": 482,
+      "min_factor": 0.0
+     },
+     "Ni58": {
+      "groups": 546,
+      "min_factor": 0.0
+     },
+     "Ni60": {
+      "groups": 546,
+      "min_factor": 0.0
+     },
+     "Ni61": {
+      "groups": 488,
+      "min_factor": 0.0
+     },
+     "Ni62": {
+      "groups": 543,
+      "min_factor": 0.0
+     },
+     "Ni64": {
+      "groups": 538,
+      "min_factor": 0.0
+     },
+     "S32": {
+      "groups": 560,
+      "min_factor": 0.0
+     },
+     "S33": {
+      "groups": 521,
+      "min_factor": 0.0
+     },
+     "S34": {
+      "groups": 535,
+      "min_factor": 0.0
+     },
+     "Si28": {
+      "groups": 563,
+      "min_factor": 0.0
+     },
+     "Si29": {
+      "groups": 556,
+      "min_factor": 0.0
+     },
+     "Si30": {
+      "groups": 559,
+      "min_factor": 0.0
+     }
+    },
+    "channel_map": "mt 2 -> elastic; mt 18/19 -> fission; mt 102 -> capture; all other reactions take the total factor",
+    "channels": [
+     "total",
+     "elastic",
+     "fission",
+     "capture"
+    ],
+    "dilution": "composition",
+    "model": "Bondarenko: sigma_eff_g = sigma_g * ((1 - c_g) + c_g * f(sigma0_eff, T)); factors interpolate in ln(sigma0) and sqrt(T); outside unresolved ranges f = 1",
+    "require_complete": false,
+    "shielding_uncovered": [
+     "C12",
+     "C13",
+     "N14",
+     "N15",
+     "P31",
+     "S36"
+    ],
+    "sigma0_eff_b": {
+     "Co59": 20802.553634990796,
+     "Cr50": 1197.6332147036521,
+     "Cr52": 59.58212058703213,
+     "Cr53": 537.2852724463356,
+     "Cr54": 2218.555539191515,
+     "Cu63": 5409.217345856004,
+     "Cu65": 12126.656396851575,
+     "Fe54": 253.57504385745952,
+     "Fe56": 6.216827815830231,
+     "Fe57": 711.0972184606551,
+     "Fe58": 5360.46106640933,
+     "Mn55": 513.0634430823503,
+     "Mo100": 6957.330011018057,
+     "Mo92": 4625.8286124403685,
+     "Mo94": 7380.009264154974,
+     "Mo95": 4261.5777289116795,
+     "Mo96": 4061.401787207995,
+     "Mo97": 7074.812962800087,
+     "Mo98": 2786.6868017296433,
+     "Ni58": 105.33670561549516,
+     "Ni60": 325.78605837100395,
+     "Ni61": 7577.39756153136,
+     "Ni62": 2356.731634925015,
+     "Ni64": 9338.554282529994,
+     "S32": 119295.04275984842,
+     "S33": 15143799.402901838,
+     "S34": 2702104.818018632,
+     "Si28": 1074.677178792497,
+     "Si29": 21203.382366589318,
+     "Si30": 32166.865367000235
+    },
+    "sigma0_fixed_b": null,
+    "sigma_p_estimated": [
+     "C12",
+     "C13",
+     "N14",
+     "N15",
+     "P31",
+     "S36"
+    ],
+    "table_sha256": "8e0d2a3472b8b1ddcd2c4c9b993349803aaaafe1fef080540f93a2f34d159ba6"
+   },
+   "spec_sha256": "c4c83201a2d7fbad60e5127f2de8be8b52733f43b5a104e900a9c791d53d0f8c",
+   "stderr_tail": "",
+   "validate_returncode": 0,
+   "wall_s": 3.822140693664551
+  }
+ ],
+ "schema": "actinv-p176-selfshield-1-arm"
+}

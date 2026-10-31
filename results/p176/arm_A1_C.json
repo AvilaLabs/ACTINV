@@ -1,0 +1,215 @@
+{
+ "actinv_bin_sha256": "36af79228fc56c1116bdfca375b6050e906bd6901475bcbfd2c1fa60b712619c",
+ "actinv_version": "actinv 1.7.0",
+ "arm": "A1",
+ "environment": {
+  "cgroup": {
+   "cpu.max": "200000 100000",
+   "memory.max": "6442450944",
+   "memory.swap.max": "0",
+   "path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p364662-i8732237.scope",
+   "pids.max": "128"
+  },
+  "clean_tree": true,
+  "constants_sha256": "4dd1a7ce40093d49eb0b66f167137efab2a42ab6a39ec4278615a833f85b4902",
+  "crates_tree": "46571824449a139cecc7dd5a48396bc61bcfe282",
+  "git_head": "a42b7d27f85e81e1449b94c510b29bb5ac28fa3c",
+  "groups_sha256": "ce4bf523498ffbb38d42aa9415fc014882b8bc7a7ecfb89f859ba3259d8fb34f",
+  "harness_sha256": "f1d5cb277ebfa28f9f293ccfdff378359de79a1f34a3c1b64f9099a494e63358",
+  "platform": "Linux-7.0.0-38-generic-x86_64-with-glibc2.43",
+  "python": "3.14.4",
+  "rehearsal": false
+ },
+ "model": "C",
+ "runs": [
+  {
+   "arm": "A1",
+   "flux_total_cm_per_source": 9.519397902545174,
+   "model": "C",
+   "ok": true,
+   "rates": {
+    "Cr50|102": 1.0838538715974493e-25,
+    "Cu63|102": 2.144491948904317e-25,
+    "Cu63|107": 8.924663314155716e-26,
+    "Cu65|16": 1.669213154774756e-24,
+    "Zr90|16": 1.141310308767053e-24
+   },
+   "region": "C:10-12",
+   "run_returncode": 0,
+   "shielding": {
+    "applied_factors_summary": {
+     "Cr50": {
+      "groups": 545,
+      "min_factor": 0.0
+     },
+     "Cr52": {
+      "groups": 558,
+      "min_factor": 0.0
+     },
+     "Cr53": {
+      "groups": 538,
+      "min_factor": 0.0
+     },
+     "Cr54": {
+      "groups": 547,
+      "min_factor": 0.0
+     },
+     "Cu63": {
+      "groups": 500,
+      "min_factor": 0.0
+     },
+     "Cu65": {
+      "groups": 500,
+      "min_factor": 0.0
+     },
+     "Zr90": {
+      "groups": 535,
+      "min_factor": 0.0
+     },
+     "Zr91": {
+      "groups": 515,
+      "min_factor": 0.0
+     },
+     "Zr92": {
+      "groups": 518,
+      "min_factor": 0.0
+     },
+     "Zr94": {
+      "groups": 520,
+      "min_factor": 0.0
+     },
+     "Zr96": {
+      "groups": 522,
+      "min_factor": 0.0
+     }
+    },
+    "channel_map": "mt 2 -> elastic; mt 18/19 -> fission; mt 102 -> capture; all other reactions take the total factor",
+    "channels": [
+     "total",
+     "elastic",
+     "fission",
+     "capture"
+    ],
+    "dilution": "composition",
+    "model": "Bondarenko: sigma_eff_g = sigma_g * ((1 - c_g) + c_g * f(sigma0_eff, T)); factors interpolate in ln(sigma0) and sqrt(T); outside unresolved ranges f = 1",
+    "require_complete": false,
+    "shielding_uncovered": [],
+    "sigma0_eff_b": {
+     "Cr50": 21422.879905403668,
+     "Cr52": 1108.3915928458198,
+     "Cr53": 9786.70079408527,
+     "Cr54": 39376.56690117525,
+     "Cu63": 5.826502390588907,
+     "Cu65": 15.00398759279342,
+     "Zr90": 23812.38723119969,
+     "Zr91": 109209.97873216977,
+     "Zr92": 71446.67514253134,
+     "Zr94": 70500.45150908231,
+     "Zr96": 437655.51729083055
+    },
+    "sigma0_fixed_b": null,
+    "sigma_p_estimated": [],
+    "table_sha256": "8e0d2a3472b8b1ddcd2c4c9b993349803aaaafe1fef080540f93a2f34d159ba6"
+   },
+   "spec_sha256": "eb2424116bc1d47e25d3f6fefc09679abd6f9b7135f3149c3a97515b3f99fe27",
+   "stderr_tail": "",
+   "validate_returncode": 0,
+   "wall_s": 3.6421213150024414
+  },
+  {
+   "arm": "A1",
+   "flux_total_cm_per_source": 18.8625530197204,
+   "model": "C",
+   "ok": true,
+   "rates": {
+    "Cr50|102": 2.951359952924616e-25,
+    "Cu63|102": 5.43869309824281e-25,
+    "Cu63|107": 5.523032520133389e-26,
+    "Cu65|16": 9.66554727561273e-25,
+    "Zr90|16": 6.377471324735531e-25
+   },
+   "region": "C:20-25",
+   "run_returncode": 0,
+   "shielding": {
+    "applied_factors_summary": {
+     "Cr50": {
+      "groups": 545,
+      "min_factor": 0.0
+     },
+     "Cr52": {
+      "groups": 558,
+      "min_factor": 0.0
+     },
+     "Cr53": {
+      "groups": 538,
+      "min_factor": 0.0
+     },
+     "Cr54": {
+      "groups": 547,
+      "min_factor": 0.0
+     },
+     "Cu63": {
+      "groups": 500,
+      "min_factor": 0.0
+     },
+     "Cu65": {
+      "groups": 500,
+      "min_factor": 0.0
+     },
+     "Zr90": {
+      "groups": 535,
+      "min_factor": 0.0
+     },
+     "Zr91": {
+      "groups": 515,
+      "min_factor": 0.0
+     },
+     "Zr92": {
+      "groups": 518,
+      "min_factor": 0.0
+     },
+     "Zr94": {
+      "groups": 520,
+      "min_factor": 0.0
+     },
+     "Zr96": {
+      "groups": 522,
+      "min_factor": 0.0
+     }
+    },
+    "channel_map": "mt 2 -> elastic; mt 18/19 -> fission; mt 102 -> capture; all other reactions take the total factor",
+    "channels": [
+     "total",
+     "elastic",
+     "fission",
+     "capture"
+    ],
+    "dilution": "composition",
+    "model": "Bondarenko: sigma_eff_g = sigma_g * ((1 - c_g) + c_g * f(sigma0_eff, T)); factors interpolate in ln(sigma0) and sqrt(T); outside unresolved ranges f = 1",
+    "require_complete": false,
+    "shielding_uncovered": [],
+    "sigma0_eff_b": {
+     "Cr50": 21422.879905403668,
+     "Cr52": 1108.3915928458198,
+     "Cr53": 9786.70079408527,
+     "Cr54": 39376.56690117525,
+     "Cu63": 5.826502390588907,
+     "Cu65": 15.00398759279342,
+     "Zr90": 23812.38723119969,
+     "Zr91": 109209.97873216977,
+     "Zr92": 71446.67514253134,
+     "Zr94": 70500.45150908231,
+     "Zr96": 437655.51729083055
+    },
+    "sigma0_fixed_b": null,
+    "sigma_p_estimated": [],
+    "table_sha256": "8e0d2a3472b8b1ddcd2c4c9b993349803aaaafe1fef080540f93a2f34d159ba6"
+   },
+   "spec_sha256": "8e3340a9975e42b863bc5c6b3bee4e23619d5b6d061edf2d347c600867f48f89",
+   "stderr_tail": "",
+   "validate_returncode": 0,
+   "wall_s": 3.6611154079437256
+  }
+ ],
+ "schema": "actinv-p176-selfshield-1-arm"
+}
