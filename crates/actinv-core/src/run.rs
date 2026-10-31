@@ -1,5 +1,6 @@
 #![allow(non_snake_case)] // field names are the JSON wire format (Z, A, LISO, heat_W_per_g)
 //! spec -> result. This is the single path the CLI, the Python API and the harness all take (P5 G3).
+use crate::below_floor::{self, BelowFloorBound, Policy};
 use crate::chain::{self, RateLedger};
 use crate::cram::{step as cram_step, step_with_tangents, Cram};
 use crate::damage::{DamageStepOut, PreparedDamageTable, RecoilCumulative};
@@ -168,6 +169,10 @@ pub struct StepOut {
     pub n_states_below_floor: usize,
     pub atoms_below_floor: f64,
     pub heat_bound_from_below_floor_W_per_g: f64,
+    /// P174: what the below-floor policy did to this step and the bound on the states it took out of
+    /// the totals; present only when `options.below_floor` is not `report`.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub below_floor_bound: Option<BelowFloorBound>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub photon_source: Option<PhotonSourceOut>,
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -6062,6 +6067,35 @@ impl PreparedRun {
         let mut achieved_multiplier: Vec<f64> =
             sched.iter().map(|step| step.multiplier().get()).collect();
         let mut partition_records: Vec<serde_json::Value> = Vec::new();
+        // ---- P174 below-floor policy: per-position decay data, and the steps whose bound stays material
+        let below_floor_policy = Policy::parse(&spec.options.below_floor)?;
+        let mut below_floor_unresolved: Vec<serde_json::Value> = Vec::new();
+        let (below_floor_member, below_floor_lambda, below_floor_joules): (
+            Vec<bool>,
+            Vec<f64>,
+            Vec<f64>,
+        ) = if below_floor_policy == Policy::Report {
+            (Vec::new(), Vec::new(), Vec::new())
+        } else {
+            let member: Vec<bool> = keep
+                .iter()
+                .map(|&g| g != ch.leak && g != ch.unit && Some(g) != removed)
+                .collect();
+            let datum = |k: usize| {
+                if member[k] {
+                    ch.keys.get(keep[k]).and_then(|key| nuclides.get(key))
+                } else {
+                    None
+                }
+            };
+            let lambda = (0..keep.len())
+                .map(|k| datum(k).map_or(0.0, |nu| nu.lambda()))
+                .collect();
+            let joules = (0..keep.len())
+                .map(|k| datum(k).map_or(0.0, |nu| (nu.e_light() + nu.e_em() + nu.e_heavy()) * EV))
+                .collect();
+            (member, lambda, joules)
+        };
         // Composition isotopes with no decay record are not chain states: they sit unchanged in
         // the bulk inventory, but a partition still takes its fraction of them.
         let mut absent_atoms: BTreeMap<(i32, i32), f64> = bulk_inv
@@ -6206,6 +6240,13 @@ impl PreparedRun {
             };
             let trip = assemble_triplets(si, rs, fl.get());
             let a = Csc::from_triplets(m, &trip);
+            // P174: the state the step starts from (for a power-driven step, already its end state;
+            // such a step is neither re-solved nor reconstructed)
+            let y_start: Vec<f64> = if below_floor_policy == Policy::Report {
+                Vec::new()
+            } else {
+                y.clone()
+            };
             if want_routes {
                 // reservoir supply split by origin: (row position, reservoir, atoms g^-1 s^-1)
                 let mut supply: Vec<(usize, usize, f64)> = Vec::new();
@@ -6339,18 +6380,162 @@ impl PreparedRun {
             // Legacy CRAM asymptotic scale only, not a bound on matrix/solve roundoff.
             // Below-scale populations and their heat subtotal are reported, not removed.
             let nmax = y.iter().cloned().fold(0.0f64, f64::max);
-            let floor = c.alpha0 * nmax;
-            let (mut n_below, mut atoms_below, mut heat_below) = (0usize, 0.0, 0.0);
-            for (k, v) in y.iter().enumerate() {
-                let g = keep[k];
-                if g == ch.leak || g == ch.unit || Some(g) == removed || *v <= 0.0 || *v >= floor {
-                    continue;
+            let mut floor = c.alpha0 * nmax;
+            let below_scan = |state: &[f64], floor: f64| -> (usize, f64, f64) {
+                let (mut n_below, mut atoms_below, mut heat_below) = (0usize, 0.0, 0.0);
+                for (k, v) in state.iter().enumerate() {
+                    let g = keep[k];
+                    if g == ch.leak
+                        || g == ch.unit
+                        || Some(g) == removed
+                        || *v <= 0.0
+                        || *v >= floor
+                    {
+                        continue;
+                    }
+                    n_below += 1;
+                    atoms_below += *v;
+                    if let Some(nu) = nuclides.get(&ch.keys[g]) {
+                        heat_below +=
+                            nu.lambda() * *v * (nu.e_light() + nu.e_em() + nu.e_heavy()) * EV;
+                    }
                 }
-                n_below += 1;
-                atoms_below += *v;
-                if let Some(nu) = nuclides.get(&ch.keys[g]) {
-                    heat_below += nu.lambda() * *v * (nu.e_light() + nu.e_em() + nu.e_heavy()) * EV;
+                (n_below, atoms_below, heat_below)
+            };
+            let (mut n_below, mut atoms_below, mut heat_below) = below_scan(&y, floor);
+            // ---- P174 below-floor policy. The status quo skips this block, so its output is unchanged.
+            // A takes the below-floor states out of the activity, heat and dose responses (their
+            // populations stay in the inventory); B re-solves the step at CRAM-48 when the bound on them
+            // is material; C first reconstructs the short-lived ones from their production.
+            let mut below_floor_block: Option<BelowFloorBound> = None;
+            let mut below_floor_excluded: Vec<bool> = Vec::new();
+            if below_floor_policy != Policy::Report {
+                let can_refine = below_floor_policy != Policy::Bound
+                    && power_out.is_none()
+                    && spec.options.cram_order == 16;
+                let problem = below_floor::StepProblem {
+                    matrix: &a,
+                    start: &y_start,
+                    dt: dt.get(),
+                    member: &below_floor_member,
+                    lambda: &below_floor_lambda,
+                    joules_per_decay: &below_floor_joules,
+                    bulk_activity: bulk_activity.values().sum(),
+                    equilibrium: below_floor_policy == Policy::Equilibrium,
+                    can_reconstruct: power_out.is_none(),
+                };
+                let first = below_floor::Solve {
+                    state: y.clone(),
+                    floor,
+                    zeroed,
+                    order: spec.options.cram_order,
+                };
+                let refine = || -> Result<below_floor::Solve, String> {
+                    let c48 = cram(48);
+                    let mut state = cram_step(&a, &y_start, dt.get(), &c48)?.0;
+                    let mut zeroed48 = 0.0f64;
+                    for (k, v) in state.iter_mut().enumerate() {
+                        if *v < 0.0
+                            && keep[k] != ch.leak
+                            && keep[k] != ch.unit
+                            && Some(keep[k]) != removed
+                        {
+                            zeroed48 += -*v;
+                            *v = 0.0;
+                        }
+                    }
+                    let floor48 = c48.alpha0 * state.iter().cloned().fold(0.0f64, f64::max);
+                    Ok(below_floor::Solve {
+                        state,
+                        floor: floor48,
+                        zeroed: zeroed48,
+                        order: 48,
+                    })
+                };
+                let refine_ref: Option<&dyn Fn() -> Result<below_floor::Solve, String>> =
+                    if can_refine { Some(&refine) } else { None };
+                let outcome = below_floor::resolve_step(&problem, first, refine_ref)
+                    .map_err(|error| format!("schedule step {}: {error}", si + 1))?;
+                floor = outcome.solve.floor;
+                zeroed = outcome.solve.zeroed;
+                if outcome.refined {
+                    (n_below, atoms_below, heat_below) = below_scan(&outcome.solve.state, floor);
                 }
+                // the activity bound by nuclide, for the screen certificate and the dose bound
+                let mut by_nuclide: BTreeMap<String, f64> = BTreeMap::new();
+                let mut n_excluded = 0usize;
+                for (k, flag) in outcome.treatment.excluded.iter().enumerate() {
+                    if !*flag {
+                        continue;
+                    }
+                    n_excluded += 1;
+                    if below_floor_lambda[k] > 0.0 {
+                        let key = ch.keys[keep[k]];
+                        *by_nuclide.entry(name_of(key.0, key.1)).or_insert(0.0) +=
+                            below_floor_lambda[k] * floor;
+                    }
+                }
+                let dose = self
+                    .radiological
+                    .as_ref()
+                    .map(|prepared| {
+                        prepared
+                            .table
+                            .evaluate(&by_nuclide, false)
+                            .map(|out| {
+                                out.responses
+                                    .iter()
+                                    .map(|response| (response.id.clone(), response.value))
+                                    .collect::<BTreeMap<String, f64>>()
+                            })
+                            .map_err(|error| {
+                                format!("radiological step {}: below-floor bound: {error}", si + 1)
+                            })
+                    })
+                    .transpose()?;
+                let reconstruction = (below_floor_policy == Policy::Equilibrium).then(|| {
+                    below_floor::Reconstruction {
+                        n_reconstructed: outcome.treatment.reconstructed.len(),
+                        reconstructed_states: outcome
+                            .treatment
+                            .reconstructed
+                            .iter()
+                            .map(|&(k, _)| {
+                                let key = ch.keys[keep[k]];
+                                name_of(key.0, key.1)
+                            })
+                            .collect(),
+                        reconstruct_threshold: below_floor::RECONSTRUCT_THRESHOLD,
+                        n_cycle_fallback: outcome.treatment.fallbacks.cycle,
+                        n_parent_fallback: outcome.treatment.fallbacks.parent,
+                        n_memory_fallback: outcome.treatment.fallbacks.memory,
+                        n_separation_fallback: outcome.treatment.fallbacks.separation,
+                    }
+                });
+                if outcome.material() {
+                    below_floor_unresolved.push(serde_json::json!({
+                        "step": si + 1,
+                        "order": outcome.solve.order,
+                        "activity_bound_Bq_per_g": outcome.activity_bound,
+                        "reported_activity_Bq_per_g": outcome.reported_activity,
+                        "n_states_excluded": n_excluded,
+                    }));
+                }
+                below_floor_block = Some(BelowFloorBound {
+                    policy: below_floor_policy.name(),
+                    order: outcome.solve.order,
+                    refined: outcome.refined,
+                    n_states_excluded: n_excluded,
+                    numerical_floor_atoms_per_g: floor,
+                    activity_Bq_per_g: outcome.activity_bound,
+                    heat_W_per_g: outcome.heat_bound,
+                    dose,
+                    reconstruction,
+                    activity_by_nuclide: by_nuclide,
+                });
+                below_floor_excluded = outcome.treatment.excluded;
+                // the state carried on: the solve (CRAM-48 where refined), reconstructed values in place
+                y = outcome.treatment.state;
             }
             // ---- outputs
             let mut inv = Vec::new();
@@ -6376,7 +6561,7 @@ impl PreparedRun {
                     atoms_per_g: *v,
                 });
                 let l = nu.lambda();
-                if l > 0.0 {
+                if l > 0.0 && !below_floor_excluded.get(k).copied().unwrap_or(false) {
                     // a hybrid reservoir nuclide (trace mode) already carries its constant bulk
                     // activity here; its tracked population adds to it rather than replacing it
                     *act.entry(nm.clone()).or_insert(0.0) += l * v;
@@ -6787,6 +6972,7 @@ impl PreparedRun {
                 n_states_below_floor: n_below,
                 atoms_below_floor: atoms_below,
                 heat_bound_from_below_floor_W_per_g: heat_below,
+                below_floor_bound: below_floor_block,
                 photon_source,
                 uncertainty,
                 radiological,
@@ -7188,7 +7374,20 @@ impl PreparedRun {
                         continue;
                     };
                     if response.starts_with("heat.") {
-                        bhi += step.heat_bound_from_below_floor_W_per_g;
+                        // under a below-floor policy the excluded states leave the heat total and the
+                        // policy's bound (floor x lambda x energy) stands in for their noise subtotal
+                        bhi += step
+                            .below_floor_bound
+                            .as_ref()
+                            .map_or(step.heat_bound_from_below_floor_W_per_g, |bound| {
+                                bound.heat_W_per_g
+                            });
+                    } else if let Some(bound) = &step.below_floor_bound {
+                        if response == "activity.total" {
+                            bhi += bound.activity_Bq_per_g;
+                        } else if let Some(name) = response.strip_prefix("activity:") {
+                            bhi += bound.activity_by_nuclide.get(name).copied().unwrap_or(0.0);
+                        }
                     }
                     // Prefer the band's conservative edge; an unbanded run
                     // certifies the nominal — labelled honestly.
@@ -7425,6 +7624,32 @@ impl PreparedRun {
                 "unmodelled_decay_branches_to_leakage".into(),
                 serde_json::json!(ch.ledger.unknown_modes),
             );
+        }
+        // P174: present only under a below-floor policy, so default ledgers keep their bytes
+        if below_floor_policy != Policy::Report {
+            let refined_steps: Vec<usize> = steps
+                .iter()
+                .filter(|step| {
+                    step.below_floor_bound
+                        .as_ref()
+                        .is_some_and(|bound| bound.refined)
+                })
+                .map(|step| step.step)
+                .collect();
+            let mut block = serde_json::json!({
+                "policy": below_floor_policy.name(),
+                "rel_tol": below_floor::REL_TOL,
+                "refined_steps": refined_steps,
+                "unresolved_steps": below_floor_unresolved,
+            });
+            if below_floor_policy == Policy::Equilibrium {
+                block["reconstruct_threshold"] =
+                    serde_json::json!(below_floor::RECONSTRUCT_THRESHOLD);
+            }
+            ledger
+                .as_object_mut()
+                .expect("ledger is an object")
+                .insert("below_floor".into(), block);
         }
         // P153: present only when the options are used, so default ledgers keep their bytes
         if spec.fission_yields.parents.is_some() {
@@ -8895,6 +9120,7 @@ mod projectile_output_tests {
             n_states_below_floor: 0,
             atoms_below_floor: 0.0,
             heat_bound_from_below_floor_W_per_g: 0.0,
+            below_floor_bound: None,
             photon_source: None,
             uncertainty: None,
             radiological: None,

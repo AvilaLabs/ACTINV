@@ -1448,9 +1448,21 @@ pub struct Options {
     /// fingerprint when unset, so default output is byte-identical to pre-P125 output.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub fission: Option<FissionCountOptions>,
+    /// P174: what a step does with states below its numerical floor: `"report"` (default, today's
+    /// behaviour), `"bound"`, `"refine"` or `"equilibrium"`. Absent from any spec echo or
+    /// fingerprint when `"report"`, so default output is byte-identical to pre-P174 output.
+    #[serde(default = "report_policy", skip_serializing_if = "is_report_policy")]
+    pub below_floor: String,
 }
 fn is_false(b: &bool) -> bool {
     !*b
+}
+fn report_policy() -> String {
+    "report".into()
+}
+#[allow(clippy::ptr_arg)] // the signature serde's skip_serializing_if requires
+fn is_report_policy(policy: &String) -> bool {
+    policy == "report"
 }
 fn auto() -> String {
     "auto".into()
@@ -1483,6 +1495,7 @@ impl Default for Options {
             yield_scale: None,
             gas: false,
             fission: None,
+            below_floor: report_policy(),
         }
     }
 }
@@ -2116,6 +2129,7 @@ impl Spec {
         if !self.options.bmin_atoms_per_g.is_finite() || self.options.bmin_atoms_per_g < 0.0 {
             return Err("options.bmin_atoms_per_g must be finite and nonnegative".into());
         }
+        crate::below_floor::Policy::parse(&self.options.below_floor)?;
         if self.options.gas {
             if self.uncertainty.is_some() {
                 return Err("options.gas cannot be combined with uncertainty".into());
@@ -3225,6 +3239,35 @@ mod duration_tests {
         assert!(spec.options.gas);
         let echoed = serde_json::to_value(&spec.options).unwrap();
         assert_eq!(echoed["gas"], serde_json::json!(true));
+    }
+
+    #[test]
+    fn below_floor_report_is_absent_from_the_echo_and_other_values_validate() {
+        // P174: the status quo vanishes from the echo and fingerprint, exactly like gas-off.
+        let spec = Spec::from_json(&minimal_spec().to_string()).unwrap();
+        assert_eq!(spec.options.below_floor, "report");
+        let echoed = serde_json::to_value(&spec.options).unwrap();
+        assert!(echoed.get("below_floor").is_none(), "{echoed}");
+
+        let mut value = minimal_spec();
+        value["options"] = serde_json::json!({"below_floor": "report"});
+        let spec = Spec::from_json(&value.to_string()).unwrap();
+        let echoed = serde_json::to_value(&spec.options).unwrap();
+        assert!(echoed.get("below_floor").is_none(), "{echoed}");
+
+        for policy in ["bound", "refine", "equilibrium"] {
+            let mut value = minimal_spec();
+            value["options"] = serde_json::json!({"below_floor": policy});
+            let spec = Spec::from_json(&value.to_string()).unwrap();
+            let echoed = serde_json::to_value(&spec.options).unwrap();
+            assert_eq!(echoed["below_floor"], serde_json::json!(policy));
+        }
+
+        let mut value = minimal_spec();
+        value["options"] = serde_json::json!({"below_floor": "clip"});
+        assert!(Spec::from_json(&value.to_string())
+            .unwrap_err()
+            .contains("options.below_floor"));
     }
 
     #[test]
