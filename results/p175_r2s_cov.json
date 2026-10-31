@@ -1,0 +1,527 @@
+{
+ "schema": "actinv-p175-r2s-cov-1",
+ "protocol": "ACTINV-P175",
+ "environment": {
+  "binary_sha256": "9e52e19a76034fa038ac837e926077100d1df81dd99e3c441b19535c9bab8ee9",
+  "git_head": "ec05cf17d98cd0164ca40da734e2f79e94ec9e6e",
+  "crates_tree": "eb18e0c84448328e3164257bc620ce1f1bb94888",
+  "clean_tree": true,
+  "cgroup": {
+   "path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p3714406-i7900590.scope",
+   "memory.max": "6442450944",
+   "memory.swap.max": "0",
+   "pids.max": "128",
+   "cpu.max": "200000 100000"
+  },
+  "python": "3.14.4",
+  "platform": "Linux-7.0.0-38-generic-x86_64-with-glibc2.43",
+  "pins": {
+   "base_flux_sha256": "b9b1e8d1a713292507611b17be5afaaa671d734383cf7a0b1d1a68b31311b7e7",
+   "fns_spec_sha256": "ed55ed00f6c00fc4a2351e18332e98e7feb33d9b7ca65e7ba861e0e5e8feef39",
+   "library_sha256": "ec4c72bf598dc8ad3d533d9cfafdcf493e2d1f949a3e4db6251495659b68cc44",
+   "covariance_sha256": "c19dec86b44ad5d90b66c9ab94d53e18641a1d354a89402a4da7986b6c530cde"
+  },
+  "options": {
+   "mode": "auto",
+   "prune": "rate",
+   "bmin_atoms_per_g": 1e-08,
+   "temperature_K": 293.6
+  },
+  "schedule": [
+   {
+    "dt": "300 s",
+    "flux": 1.0
+   },
+   {
+    "dt": "86400 s",
+    "flux": 0.0
+   },
+   {
+    "dt": "2592000 s",
+    "flux": 0.0
+   },
+   {
+    "dt": "31536000 s",
+    "flux": 0.0
+   }
+  ]
+ },
+ "constants": {
+  "n_samples": 200,
+  "k_sigma": 3.0,
+  "delta_floor": 0.02,
+  "rho_max": 0.5,
+  "pair_floor": 0.01,
+  "delta_pair": 0.05,
+  "unbanded_max": 0.001,
+  "band_remainder": 1e-05,
+  "band_cap": 60,
+  "g3_rtol": 1e-10,
+  "steps": [
+   2,
+   3
+  ],
+  "hard_cell": 1,
+  "flux_amplitude": [
+   1.0,
+   0.35,
+   0.1,
+   0.02
+  ],
+  "flux_error": [
+   0.03,
+   0.06,
+   0.12,
+   0.25
+  ],
+  "study_seed": {
+   "steel": 175001,
+   "tungsten": 175002
+  },
+  "flux_seed": {
+   "steel": 175101,
+   "tungsten": 175102
+  },
+  "composition": {
+   "steel": {
+    "FE": 89.07,
+    "CR": 9.0,
+    "W": 1.1,
+    "MN": 0.4,
+    "V": 0.2,
+    "TA": 0.12,
+    "C": 0.11
+   },
+   "tungsten": {
+    "W": 100.0
+   }
+  },
+  "cases": [
+   {
+    "name": "A_steel_shared",
+    "material": "steel",
+    "channels": [
+     "cross_section_mf33",
+     "decay_constants"
+    ],
+    "flux": false,
+    "joint": true
+   },
+   {
+    "name": "B_steel_flux",
+    "material": "steel",
+    "channels": [
+     "flux"
+    ],
+    "flux": true,
+    "joint": false
+   },
+   {
+    "name": "C_steel_all",
+    "material": "steel",
+    "channels": [
+     "cross_section_mf33",
+     "decay_constants",
+     "flux"
+    ],
+    "flux": true,
+    "joint": false
+   },
+   {
+    "name": "D_tungsten_all",
+    "material": "tungsten",
+    "channels": [
+     "cross_section_mf33",
+     "decay_constants",
+     "flux"
+    ],
+    "flux": true,
+    "joint": true
+   }
+  ],
+  "d_fallback_channels": [
+   "decay_constants",
+   "flux"
+  ]
+ },
+ "cases": [
+  {
+   "name": "A_steel_shared",
+   "material": "steel",
+   "channels": [
+    "cross_section_mf33",
+    "decay_constants"
+   ],
+   "substituted": false,
+   "failures": [],
+   "joint": {
+    "2": {
+     "cell_sigma_correlated": [
+      166.3408637409785,
+      58.21930230940579,
+      16.634086374122898,
+      3.3268172748250247
+     ],
+     "rho": [
+      [
+       1.0,
+       0.9999999999999997,
+       0.9999999999999996,
+       1.0000000000000004
+      ],
+      [
+       0.9999999999999998,
+       1.0,
+       1.0,
+       1.0000000000000002
+      ],
+      [
+       0.9999999999999989,
+       0.9999999999999999,
+       1.0,
+       0.9999999999999997
+      ],
+      [
+       1.0000000000000002,
+       1.0,
+       1.0,
+       1.0
+      ]
+     ],
+     "sigma_total_correlated": 244.52106969933217
+    },
+    "3": {
+     "cell_sigma_correlated": [
+      9.685658059617145,
+      3.3899803208674406,
+      0.9685658059622844,
+      0.19371316119246682
+     ],
+     "rho": [
+      [
+       1.0,
+       0.9999999999999998,
+       0.9999999999999998,
+       0.9999999999999997
+      ],
+      [
+       0.9999999999999998,
+       1.0,
+       1.0,
+       0.9999999999999994
+      ],
+      [
+       0.9999999999999997,
+       0.9999999999999994,
+       1.0,
+       0.9999999999999999
+      ],
+      [
+       0.9999999999999998,
+       1.0,
+       0.9999999999999999,
+       1.0
+      ]
+     ],
+     "sigma_total_correlated": 14.237917347639334
+    }
+   },
+   "artifacts": {
+    "cov": {
+     "2": {
+      "path": "results/p175/A_steel_shared_step2_cov.ndjson.gz",
+      "sha256": "4f0c5bf087a5d42ec4c6fd411756651cb62661e0e0ca4796ff381dc88efee40d"
+     },
+     "3": {
+      "path": "results/p175/A_steel_shared_step3_cov.ndjson.gz",
+      "sha256": "5001869f0da38c740ef1c165f96c96114de97be7a525fa222268efff6198139b"
+     }
+    },
+    "samples": {
+     "path": "results/p175/A_steel_shared_samples.json.gz",
+     "sha256": "45c96ebd6c026ef371aa395870149bb30a0ebfed96db6beaf0f9cdaacb8af8db"
+    }
+   },
+   "flux_nominal_sha256": "b3c199ef4e14c766be49f92dc6e40749016ab0684958a6b4acb53de00461f283",
+   "responses": [
+    "Mn56",
+    "Cr51",
+    "Fe55",
+    "Mn54",
+    "Ta180",
+    "W181",
+    "W187",
+    "Sc48",
+    "V49",
+    "Ta184",
+    "Ta182",
+    "Ta183",
+    "Hf181",
+    "Fe59",
+    "Ta179",
+    "Hf180m1",
+    "W185",
+    "W183m1",
+    "Sc47"
+   ],
+   "band_cap_hit": false,
+   "sampler": {
+    "seed": 175001,
+    "channels": [
+     "cross_section_mf33",
+     "decay_constants"
+    ],
+    "xs_clipped": 0.027800764906868714,
+    "rate_rows": 351,
+    "decay_nuclides": 3293,
+    "yield_pairs": 0
+   },
+   "pruned_states_changed_samples": 176,
+   "wall_s": 2491.4
+  },
+  {
+   "name": "B_steel_flux",
+   "material": "steel",
+   "channels": [
+    "flux"
+   ],
+   "substituted": false,
+   "failures": [],
+   "joint": {},
+   "artifacts": {
+    "cov": {
+     "2": {
+      "path": "results/p175/B_steel_flux_step2_cov.ndjson.gz",
+      "sha256": "953f71d449ff7e0fcd7db5a8f240980608b8ae985d2915a134dc148e25a709f0"
+     },
+     "3": {
+      "path": "results/p175/B_steel_flux_step3_cov.ndjson.gz",
+      "sha256": "3b0c697647bb5b09a294e490f4777596d09bde4d364fa8041db7ad9494ff14af"
+     }
+    },
+    "samples": {
+     "path": "results/p175/B_steel_flux_samples.json.gz",
+     "sha256": "9920a60a5074882c3a3444a3e2b59831aa7c5ede1e384c883d409e44c0a4d466"
+    }
+   },
+   "flux_nominal_sha256": "b3c199ef4e14c766be49f92dc6e40749016ab0684958a6b4acb53de00461f283",
+   "responses": [
+    "Mn56",
+    "Cr51",
+    "Fe55",
+    "Mn54",
+    "Ta180",
+    "W181",
+    "W187",
+    "Sc48",
+    "V49",
+    "Ta184",
+    "Ta182",
+    "Ta183",
+    "Hf181",
+    "Fe59",
+    "Ta179",
+    "Hf180m1",
+    "W185",
+    "W183m1",
+    "Sc47"
+   ],
+   "band_cap_hit": false,
+   "pruned_states_changed_samples": 157,
+   "wall_s": 1266.1
+  },
+  {
+   "name": "C_steel_all",
+   "material": "steel",
+   "channels": [
+    "cross_section_mf33",
+    "decay_constants",
+    "flux"
+   ],
+   "substituted": false,
+   "failures": [],
+   "joint": {},
+   "artifacts": {
+    "cov": {
+     "2": {
+      "path": "results/p175/C_steel_all_step2_cov.ndjson.gz",
+      "sha256": "41d80c573dd482cac614d9b5af1514e161ca5de0162d745b523e6ba28f23d1dd"
+     },
+     "3": {
+      "path": "results/p175/C_steel_all_step3_cov.ndjson.gz",
+      "sha256": "0b957e60eb1f39471ff42ac90074e5f30d19f7a6dcd60a802e691c065ac0b1a4"
+     }
+    },
+    "samples": {
+     "path": "results/p175/C_steel_all_samples.json.gz",
+     "sha256": "fd03ed1cc068a54ad9de37575dd011a9753ad78565bfccbde441ef60469e5524"
+    }
+   },
+   "flux_nominal_sha256": "b3c199ef4e14c766be49f92dc6e40749016ab0684958a6b4acb53de00461f283",
+   "responses": [
+    "Mn56",
+    "Cr51",
+    "Fe55",
+    "Mn54",
+    "Ta180",
+    "W181",
+    "W187",
+    "Sc48",
+    "V49",
+    "Ta184",
+    "Ta182",
+    "Ta183",
+    "Hf181",
+    "Fe59",
+    "Ta179",
+    "Hf180m1",
+    "W185",
+    "W183m1",
+    "Sc47"
+   ],
+   "band_cap_hit": false,
+   "sampler": {
+    "seed": 175001,
+    "channels": [
+     "cross_section_mf33",
+     "decay_constants"
+    ],
+    "xs_clipped": 0.027800764906868714,
+    "rate_rows": 351,
+    "decay_nuclides": 3293,
+    "yield_pairs": 0
+   },
+   "pruned_states_changed_samples": 189,
+   "wall_s": 1682.0
+  },
+  {
+   "name": "D_tungsten_all",
+   "material": "tungsten",
+   "channels": [
+    "cross_section_mf33",
+    "decay_constants",
+    "flux"
+   ],
+   "substituted": false,
+   "failures": [],
+   "joint": {
+    "2": {
+     "cell_sigma_correlated": [
+      45.14920410241361,
+      15.802221435873545,
+      4.514920410252749,
+      0.902984082050752
+     ],
+     "rho": [
+      [
+       1.0,
+       1.0,
+       1.0,
+       0.9999999999999998
+      ],
+      [
+       1.0,
+       1.0,
+       1.0000000000000007,
+       1.0000000000000002
+      ],
+      [
+       1.0,
+       1.0000000000000007,
+       1.0,
+       1.0000000000000002
+      ],
+      [
+       0.9999999999999998,
+       1.0,
+       1.0000000000000002,
+       1.0
+      ]
+     ],
+     "sigma_total_correlated": 66.36933003059065
+    },
+    "3": {
+     "cell_sigma_correlated": [
+      11.271811121951579,
+      3.9451338926874673,
+      1.1271811121969033,
+      0.22543622243941197
+     ],
+     "rho": [
+      [
+       1.0,
+       0.9999999999999996,
+       1.0,
+       0.9999999999999997
+      ],
+      [
+       0.9999999999999999,
+       1.0,
+       0.9999999999999998,
+       0.9999999999999996
+      ],
+      [
+       1.0,
+       1.0,
+       1.0,
+       0.9999999999999998
+      ],
+      [
+       1.0,
+       0.9999999999999997,
+       0.9999999999999996,
+       1.0
+      ]
+     ],
+     "sigma_total_correlated": 16.569562349275362
+    }
+   },
+   "artifacts": {
+    "cov": {
+     "2": {
+      "path": "results/p175/D_tungsten_all_step2_cov.ndjson.gz",
+      "sha256": "1573f7bda9120c64d03f59450d1c0d64110ca671b54b9785600d0b29763a55e6"
+     },
+     "3": {
+      "path": "results/p175/D_tungsten_all_step3_cov.ndjson.gz",
+      "sha256": "1e7fe3013a6ebdce4a7476184f711ac1c72d313e87c2ae7c9f14a5e61a49e9f6"
+     }
+    },
+    "samples": {
+     "path": "results/p175/D_tungsten_all_samples.json.gz",
+     "sha256": "6f803fb24299c0f0d532f3804e75e47cac248c4ab8c7728e5d34ad8f23710b42"
+    }
+   },
+   "flux_nominal_sha256": "b3c199ef4e14c766be49f92dc6e40749016ab0684958a6b4acb53de00461f283",
+   "responses": [
+    "W181",
+    "W187",
+    "Ta184",
+    "Ta183",
+    "Ta182",
+    "Hf181",
+    "W183m1",
+    "W185",
+    "Ta179",
+    "Hf180m1",
+    "Ta180",
+    "Hf179m2"
+   ],
+   "band_cap_hit": false,
+   "mf33_rank": 6,
+   "sampler": {
+    "seed": 175002,
+    "channels": [
+     "cross_section_mf33",
+     "decay_constants"
+    ],
+    "xs_clipped": 0.020724965682038753,
+    "rate_rows": 89,
+    "decay_nuclides": 3293,
+    "yield_pairs": 0
+   },
+   "pruned_states_changed_samples": 108,
+   "wall_s": 1153.1
+  }
+ ]
+}

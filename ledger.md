@@ -5226,3 +5226,27 @@ with `controls/p175_stats.py` (`fb0b5984…`), harness `controls/p175_r2s_cov.py
 - **Rehearsal (8 samples).** Disclosed in the protocol: a wrong input pin fixed; one step-3 row pair outside its
   8-sample limit, traced to the draws (a 0.3% event) by checking that the exported sensitivities reproduce every sampled
   result to 0.2 in 4.9. No constant or threshold changed.
+
+## Entry 304 — P175 evidence: G0, G1 and G3 pass; G2 fails on the steel 30-day uniform rows (2026-10-31)
+
+Scored run with the pinned binary (`9e52e19a…`, built from `327af82`) inside the bounded scope (6,595 s; 200 samples
+per case, none dropped). G0, G1 and G3 pass; the MF=33 factor columns reproduce `export-r2s-joint`'s dense covariance.
+**G2 fails on two of the scored rows**, so the verdict is P175-FAIL whatever G4 shows:
+- A (steel, MF=33 and decay), step 3, uniform response: `V1/V_s` = 1.741, deviation 0.741 against a limit of 0.397.
+- C (steel, all channels), step 3, uniform response: `V1/V_s` = 1.673, deviation 0.673 against a limit of 0.406.
+
+Every other row passes. Three rows pass only narrowly: the steel step-3 hard-cell rows at 1.494 and 1.523 (limits 0.517
+and 0.527), and tungsten step-3 uniform at 0.687 (limit 0.343). The MF=33 channel carries 99 % or more of the
+first-order variance in the steel rows and 92 % in the tungsten row.
+
+**Read after the verdict was computed (not a gate).** Per photon group the sampled-to-first-order variance ratio is
+systematic, not noise:
+- steel: about 0.70 in the group under 10 keV (Fe-55 X-rays), 0.72 at 300–400 keV (Cr-51), and 0.69–0.88 at 0.8–1 MeV
+  (Mn-54, Mn-56), the same at both steps;
+- tungsten: 1.15–1.62.
+
+The reaction-dependent, two-sided pattern means the sampler and the exports apply different MF=33 covariance to the
+same reactions; the sensitivities themselves reproduced individual samples in the rehearsal.
+
+The rehearsal disclosure in the protocol, which read the 8-sample step-3 gap as a rare draw, was wrong. It was the
+first sign of this defect. Which side is wrong is under investigation; a repair goes through one registered amendment.
