@@ -979,11 +979,11 @@ ed55ed00f6c00fc4a2351e18332e98e7feb33d9b7ca65e7ba861e0e5e8feef39  ./crates/actin
 b0f78a7666b9752c35948029d02cd52cd03a8b9596566a425b5512f30bd72237  ./crates/actinv-cli/src/assimilate.rs
 1b47334f832ba5a39dfb16cd01f108c1ddc7926c89506cdadd13c9d75b16b78e  ./crates/actinv-cli/src/bin/actinv.rs
 b8f0bd217bcabfa5774f96dae89880f3148dab77befdf368b80a24dfa8909802  ./crates/actinv-cli/src/budget.rs
-2f55c58533372b9dd2f3139beaf97f1fe55681000b051ffa298647b67f3d8e5a  ./crates/actinv-cli/src/command.rs
+1e71747ff85e4fcdb0f31f9ddf37c3743987635497a830871afbd1291bdfb111  ./crates/actinv-cli/src/command.rs
 dbf392019a03d8816597bcf8ec3bbd04ab167e559c7ddd2bc030f58cc0ea1637  ./crates/actinv-cli/src/decide.rs
 dd9d19b9f71194417bc089ecb995d73cc631970c02305340999beb5fec8db59c  ./crates/actinv-cli/src/evalspread.rs
 785188378697b1e52c005cb238e751815f65a05d396febf9e2034e0b9886d6d5  ./crates/actinv-cli/src/fispact_import.rs
-2abf59055dcad5db9ef7835e0305122bc453958836553b21d5a364cbcc2b9661  ./crates/actinv-cli/src/help.rs
+ce8de711e91a691e275171cf6ef6baf06d59169ee345a607b48acf875b212110  ./crates/actinv-cli/src/help.rs
 c8350699b79eb6c4049bbd5c3ccacea2777ceee205a04164f090c7a231a2352a  ./crates/actinv-cli/src/impurities.rs
 0b165f4ed67d247d1ea6093a3365397836a2b9c0085c0bee23f4b42726a3ac91  ./crates/actinv-cli/src/impurities/uncertainty.rs
 14666ebeea2b004865f134dbbdacb997d0017699990e6498ab86b716277fb22b  ./crates/actinv-cli/src/inspect.rs
@@ -1060,7 +1060,7 @@ ecd485ed1494b1c903819dbd01411ee2ec4d3edc1fbaf7ea40dc47a958882fe9  ./crates/actin
 e417c48a6a6b694a3c6ead7770f0f8926db489f73ed07065ce81755c135278da  ./crates/actinv-core/src/presets.rs
 8f350faa991dbd2121c468bafcff9d3e9fc64b352b9b4c62ebf44f56819753e3  ./crates/actinv-core/src/prune.rs
 ff87d2bcbd3efef668bc9563240e1bcc27072e466d39659dab1a2525950e46d9  ./crates/actinv-core/src/quantity.rs
-f511d47d3fd36c6df5ab8b0aad85b31b010d2add9113611022a0b78baf9b5db4  ./crates/actinv-core/src/r2s.rs
+18f1054952186e461d2dbab5bfb2ee363ef8bb3af2ae8b9efb34b4a161058bb7  ./crates/actinv-core/src/r2s.rs
 2a583254b022a91a7a8cafdca0c2183cc99d80147af4b1ace79f7d2c1918c05e  ./crates/actinv-core/src/radiological.rs
 a4142ec9565a7ced2478eda446fa5468b0f04275805d37bb83ac3afa59b34a4e  ./crates/actinv-core/src/report.rs
 a33b321098406b4a4ee3e63345ac5e7acd21ed8e4f9f97f8f03293582884bf39  ./crates/actinv-core/src/report_page.rs
@@ -1286,7 +1286,7 @@ dfb8c8f7c7ffbd5aaac73e21a5198af7b662b862fb416c90f6418086da05ae45  ./docs/defects
 29b9a4871b61c1e5af86963b6f73f4319b50a1fe0c1e5a7e0461c3afe3ac1fd9  ./docs/guide/account.md
 500599cf1b561ec4059de4a8b03877fbcda2f0f3411f4101216f6e750b17864e  ./docs/guide/benchmarks.md
 60bff8f41b5d855161397fa948970c2fe52fc9cc6b69cace1a1f355744678802  ./docs/guide/browser.md
-242489580c37aac738939f39f14509c71c7680b9cca88caa45f7d92212568d79  ./docs/guide/cli.md
+95bfdc4f2f40d277f600346fd2bf53cac1db82be53cfe1fcd34bdd939c63ca53  ./docs/guide/cli.md
 da78a08922cd7bddf0b15532ac3107d34c4e8f03edbfc12a62ad838ea39f74b4  ./docs/guide/data-limits.md
 ad272dc87c112bfb5295c3feb7bc00aacb2aa964ca2fb1fe1a7e63dc241ac192  ./docs/guide/data.md
 4a0742249776107d3961a63ff56e00294495f317fc59e4949a71ff2f1f35acc7  ./docs/guide/desktop.md

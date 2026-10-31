@@ -1767,6 +1767,30 @@ pub fn main_from(a: Vec<String>) {
                 step, summary["cells"], summary["sigma_total_correlated"], a[5]
             );
         }
+        "export-r2s-cov" => {
+            if a.len() != 6 {
+                die(crate::help::usage(&a[1]), 2);
+            }
+            let step: usize = a[4]
+                .parse()
+                .unwrap_or_else(|_| die("export-r2s-cov STEP must be a positive integer", 2));
+            if step == 0 {
+                die("STEP is one-based and must be positive", 2);
+            }
+            let mesh_bytes = std::fs::read(&a[2])
+                .unwrap_or_else(|e| die(format!("cannot read {}: {e}", a[2]), 2));
+            let spec_bytes =
+                crate::resolve_catalog_json(&read(&a[3])).unwrap_or_else(|e| die(e, 2));
+            let (doc, summary) =
+                actinv_core::r2s::emit_r2s_cov(&mesh_bytes, spec_bytes.as_bytes(), step)
+                    .unwrap_or_else(|e| die(e, 1));
+            std::fs::write(&a[5], doc)
+                .unwrap_or_else(|e| die(format!("cannot write {}: {e}", a[5]), 1));
+            eprintln!(
+                "step {} source covariance: {} regions x {} groups, {} shared columns -> {}",
+                step, summary["regions"], summary["groups"], summary["shared_columns"], a[5]
+            );
+        }
         "export-source" if a.len() >= 3 && a[2] == "alara" => {
             // actinv export-source alara R2S_SOURCE.ndjson OUT_DIR --shutdown-t-s T
             if a.len() < 5 {

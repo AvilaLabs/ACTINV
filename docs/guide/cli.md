@@ -163,6 +163,7 @@ actinv export-mcnp RESULT.json STEP OUT.sdef
 actinv export-openmc-mesh MESH_RESULT.ndjson STEP OUT.py
 actinv export-r2s MESH_RESULT.ndjson STEP OUT.ndjson
 actinv export-r2s-joint MESH_RESULT.ndjson MESH_SPEC.json STEP OUT.ndjson
+actinv export-r2s-cov MESH_RESULT.ndjson MESH_SPEC.json STEP OUT.ndjson
 actinv export-source openmc R2S_SOURCE.ndjson OUT
 actinv export-source mcnp R2S_SOURCE.ndjson OUT
 actinv export-source serpent R2S_SOURCE.ndjson OUT
@@ -175,6 +176,8 @@ actinv export-source alara R2S_SOURCE.ndjson OUT_DIR --shutdown-t-s T
 jointly (`actinv-r2s-joint-1`); `MESH_SPEC.json` is the `actinv-mesh-spec-1` document the mesh was run from.
 
 `export-source alara` writes one ALARA `.photonSrc` file per cell under `OUT_DIR` (which must not exist, or exist and be empty) plus a provenance index `OUT_DIR/actinv-alara-index.json`. `--shutdown-t-s T` is required; cooling time is `step_t_s - T`, and every cell must share the same `step_t_s`. See [Advanced workflows](workflows.md#transport-flux-and-mesh-calculations) and `docs/INTERCHANGE_TRANSPORT.md` for the full contract.
+
+`export-r2s-cov` writes the covariance of the decay photon source over (region, photon group) at one step as `actinv-r2s-cov-1`, in factored form so it stays small. `MESH_SPEC.json` is the spec the mesh was run from. The `mean` record is the source `S[c][g]` in photons/s per region and group. Each `shared` record is one column `L_k[c][g]` of the nuclear-data uncertainty that every region sees: the MF=33 cross sections (a pivoted-Cholesky factor of their covariance, so the columns are uncorrelated), the half-lives and the fission yields (one column per parameter). Each `independent` record holds the columns of one region's flux-tally noise, which is independent between regions and neutron groups; they factor the region's photon-group block `sum_j M_j M_j^T` over the neutron groups `j`. Then `C_S = sum_k L_k L_k^T + blockdiag_c(independent block)`, and for any dose response `R[c][g]`, `Var(D) = R^T C_S R + sum_c S_c^2 sigma_Rc^2`. Only the channels the spec lists in `uncertainty.channels` are propagated; the header's `channels_missing` names the rest, and always names photon emission data, which carries no published covariance. The MF=33 factor forms a dense block over the (region, group) pairs with nonzero sensitivity and refuses more than 5000.
 
 ## Build data
 

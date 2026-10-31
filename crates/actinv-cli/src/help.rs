@@ -24,7 +24,7 @@ Waste
 
 Move between codes
   import-fispact  import-flux  export-openmc  export-mcnp  export-source
-  export-openmc-mesh  export-r2s  export-r2s-joint
+  export-openmc-mesh  export-r2s  export-r2s-joint  export-r2s-cov
 
 Check and inspect
   validate  doctor  inspect  data list|verify|manifest  clearance
@@ -70,6 +70,7 @@ pub const COMMANDS: &[&str] = &[
     "export-mcnp",
     "export-r2s",
     "export-r2s-joint",
+    "export-r2s-cov",
     "export-source",
     "clearance",
     "build-library",
@@ -282,6 +283,16 @@ As export-r2s, with the cell-to-cell correlation of the nuclear-data\n\
 uncertainty carried jointly (actinv-r2s-joint-1). MESH_SPEC.json is the\n\
 actinv-mesh-spec-1 document the mesh was run from.\n\n\
   actinv export-r2s-joint mesh.ndjson mesh-spec.json 3 r2s.ndjson\n\n\
+Exit: 0 written, 1 the export failed, 2 bad usage or no such step.",
+        "export-r2s-cov" => "actinv export-r2s-cov: the photon-source covariance, in factored form\n\n\
+usage: actinv export-r2s-cov MESH_RESULT.ndjson MESH_SPEC.json STEP OUT.ndjson\n\n\
+Writes the covariance of the decay photon source over (region, photon group)\n\
+at one step as actinv-r2s-cov-1: the mean source, shared columns L_k (MF=33,\n\
+half-life and yield uncertainty, common to every region) and per-region\n\
+independent columns (flux-tally noise). C_S = sum L_k L_k^T + the independent\n\
+blocks, so Var(D) = R^T C_S R + sum_c S_c^2 sigma_Rc^2 for any dose response\n\
+R. Channels the mesh spec did not request are listed in channels_missing.\n\n\
+  actinv export-r2s-cov mesh.ndjson mesh-spec.json 3 cov.ndjson\n\n\
 Exit: 0 written, 1 the export failed, 2 bad usage or no such step.",
         "export-source" => "actinv export-source: a shutdown-dose source for a transport code\n\n\
 usage: actinv export-source {openmc|mcnp|serpent} R2S_SOURCE.ndjson OUT\n       actinv export-source alara R2S_SOURCE.ndjson OUT_DIR --shutdown-t-s T\n\n\
