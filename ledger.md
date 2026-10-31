@@ -5095,3 +5095,23 @@ fusion-isotope 41149924631 (`results/p172/ci_runs.json`). **P172-PASS.**
 - The record stands as in entry 295. Public statements are limited to the four registered sentences, which may not
   rank the codes; sentences 1 and 2 appear together.
 - Not registered and not claimed: wall time. P172 timed each arm only as a record of the run.
+
+## Entry 297 — P173 registered: ACTINV's 709-group reaction rates against OpenMC continuous energy on the same ENDF/B-VIII.1 data (2026-10-30)
+
+`protocols/ACTINV-P173_PROTOCOL.md` (SHA-256 `14b21e9d…`), item B1 of `docs/maintainers/WORKFLOW_ACCURACY_PLAN.md`.
+- **Question.** In steel, tungsten, CuCrZr and concrete shells around a 14.1 MeV source, how far ACTINV's 709-group
+  collapsed rates for 30 dose-relevant reactions differ from OpenMC 0.15.3 continuous-energy tallies on the same
+  evaluation, and whether the difference warrants a rate correction.
+- **Decomposition.** Each row splits exactly into processing (ACTINV's group cross section against one collapsed with
+  the same flat-lethargy weight from OpenMC's own HDF5 data) and collapse plus self-shielding (that against the
+  continuous-energy tally). A correction is warranted if two or more reactions are material in collapse in one region;
+  any material processing row goes to a data-processing review.
+- **Pins.** The P172 ENDF/B-VIII.1 library (`ecaca7c0…`), OpenMC's HDF5 library (`b7ad59cb…`), and the release binary
+  built from crates tree `fd259e18…` (`ebeeb25c…`). Harness `controls/p173_ce_rates.py` (`42df1b54…`), checker
+  `controls/check_p173.py` (`a04f201f…`).
+- **Rehearsal.** The whole pipeline ran at 1,000 particles per batch. Every mode exited 0; the checker was made
+  rehearsal-aware (paths, batch constants), after which G2 and G3 passed and G0 and G1 failed only on registration
+  items. No rate or ratio was read, and the outputs were deleted.
+- **Design change before registration.** The draft's thin-sample control (shells at 1e-6 density) saw only the
+  uncollided 14.1 MeV line and could not separate processing from resonance shielding; it was replaced by the
+  decomposition above.
