@@ -133,12 +133,15 @@ fixed `seed` (repeatability only — not convergence evidence):
 
 Channels: `cross_section_mf33` draws correlated perturbations of the spectrum-collapsed
 cross-section covariance over the active library rows. The collapsed absolute covariance is
-converted to the *relative* covariance `Σ[i,j]/(σ_i σ_j)`, symmetrized, and spectral-factored on
-its nearest positive-semidefinite projection (cyclic-Jacobi eigendecomposition, negative
-eigenvalues clipped — the clipped mass is reported as
-`negative_eigenvalue_mass_clipped_relative`, never a diagonal ridge and never an independence
-fallback). Each parameter's perturbation is a mean-preserving lognormal factor
-`exp(F·z − ½·diag(FFᵀ))`, positive by construction.
+converted to the *relative* covariance `Σ_rel[i,j] = Σ[i,j]/(σ_i σ_j)`, symmetrized, and mapped to
+the log covariance `L[i,j] = ln(1 + Σ_rel[i,j])`, so the lognormal factors' covariance is `Σ_rel`
+itself. `L` is factored in correlation space: its correlation matrix is eigendecomposed (cyclic Jacobi
+with a per-pair convergence test), negative eigenvalues are clipped, and each row is rescaled to unit
+norm, so every evaluated variance is kept and only an indefinite correlation structure changes. The
+clipped mass, relative to the correlation matrix's trace, is reported as
+`negative_eigenvalue_mass_clipped_relative`; there is no diagonal ridge and no independence
+fallback. Each parameter's perturbation is a mean-preserving lognormal factor
+`exp(F·z − ½·diag(L))`, positive by construction.
 `flux_rel_std` perturbs the total flux normalization with the same mean-preserving lognormal
 convention; `composition_rel_std` perturbs named
 element weight percents the same way, then renormalizes to the declared total. Composition sums are

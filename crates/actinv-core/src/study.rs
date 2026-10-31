@@ -2139,10 +2139,20 @@ impl Rng {
     }
 }
 
+/// Off-diagonal entries at or below this fraction of `sqrt(|a_pp·a_qq|)` count as converged.
+const JACOBI_PAIR_TOL: f64 = 1e-14;
+/// Sweep cap; a converging input needs far fewer.
+const JACOBI_MAX_SWEEPS: usize = 200;
+
 /// Symmetric eigendecomposition by cyclic Jacobi sweeps. Returns
 /// (eigenvalues in descending order, row-major eigenvector matrix V with
 /// column j the eigenvector of eigenvalue j), or None when the input is
 /// nonfinite. Deterministic: same input, same rotations, same result.
+///
+/// A pair is rotated only while `|a_pq| > JACOBI_PAIR_TOL·sqrt(|a_pp·a_qq|)`,
+/// and the sweeps stop when one rotates nothing. The test is per pair, so a
+/// row with a huge diagonal cannot stop the sweeps before the small rows
+/// converge (a global `off_norm ≤ tol·max|a_ii|` test did exactly that).
 fn jacobi_eigh(a: &[f64], n: usize) -> Option<(Vec<f64>, Vec<f64>)> {
     if a.iter().any(|v| !v.is_finite()) {
         return None;
@@ -2152,31 +2162,17 @@ fn jacobi_eigh(a: &[f64], n: usize) -> Option<(Vec<f64>, Vec<f64>)> {
     for i in 0..n {
         v[i * n + i] = 1.0;
     }
-    let off_norm = |m: &[f64]| -> f64 {
-        let mut s = 0.0;
-        for i in 0..n {
-            for j in (i + 1)..n {
-                s += m[i * n + j] * m[i * n + j];
-            }
-        }
-        s.sqrt()
-    };
-    let scale = (0..n)
-        .map(|i| m[i * n + i].abs())
-        .fold(0.0f64, f64::max)
-        .max(1e-300);
-    for _ in 0..200 {
-        if off_norm(&m) <= 1e-12 * scale {
-            break;
-        }
+    for _ in 0..JACOBI_MAX_SWEEPS {
+        let mut rotated = false;
         for p in 0..n {
             for q in (p + 1)..n {
                 let apq = m[p * n + q];
-                if apq == 0.0 {
-                    continue;
-                }
                 let app = m[p * n + p];
                 let aqq = m[q * n + q];
+                if apq.abs() <= JACOBI_PAIR_TOL * (app * aqq).abs().sqrt() {
+                    continue;
+                }
+                rotated = true;
                 let theta = 0.5 * (aqq - app) / apq;
                 let t = theta.signum() / (theta.abs() + (theta * theta + 1.0).sqrt());
                 let c = 1.0 / (t * t + 1.0).sqrt();
@@ -2201,6 +2197,9 @@ fn jacobi_eigh(a: &[f64], n: usize) -> Option<(Vec<f64>, Vec<f64>)> {
                 }
             }
         }
+        if !rotated {
+            break;
+        }
     }
     let mut order: Vec<usize> = (0..n).collect();
     order.sort_by(|&i, &j| m[j * n + j].total_cmp(&m[i * n + i]));
@@ -2214,30 +2213,49 @@ fn jacobi_eigh(a: &[f64], n: usize) -> Option<(Vec<f64>, Vec<f64>)> {
     Some((eigenvalues, vectors))
 }
 
-/// Sampling factor of the nearest positive-semidefinite covariance:
-/// F = V·diag(√max(λ,0)) so draws are `σ0 + F·z` with z standard normal.
-/// Eigen-clipping removes only the non-PSD mass — unlike a diagonal ridge
-/// it does not inflate every variance. Returns (factor, clipped negative
-/// eigenvalue mass) for the channel ledger.
+/// Sampling factor of a covariance, repaired in correlation space:
+/// `F = D·G` with `D = diag(√c_ii)` and `G` the eigen-clipped factor of the
+/// correlation matrix `D⁻¹·C·D⁻¹`, each row of `G` rescaled to unit norm.
+/// Draws `F·z` (z standard normal) then keep every variance `c_ii` exactly;
+/// only an indefinite correlation structure is changed. Clipping the
+/// covariance itself would instead add variance to its least uncertain
+/// rows. Rows with a nonpositive or nonfinite variance get a zero row.
+/// Returns (factor, clipped negative eigenvalue mass relative to the trace
+/// of the correlation matrix) for the channel ledger.
 fn psd_factor(cov: &[f64], n: usize) -> Option<(Vec<f64>, f64)> {
     // Jacobi assumes symmetric input; collapsed covariances can carry a
     // ledgered asymmetry, so take the symmetric part first
-    let mut sym = vec![0.0f64; n * n];
-    for i in 0..n {
-        for j in 0..n {
-            sym[i * n + j] = 0.5 * (cov[i * n + j] + cov[j * n + i]);
+    let active: Vec<usize> = (0..n)
+        .filter(|&i| cov[i * n + i].is_finite() && cov[i * n + i] > 0.0)
+        .collect();
+    let k = active.len();
+    let sd: Vec<f64> = active.iter().map(|&i| cov[i * n + i].sqrt()).collect();
+    let mut corr = vec![0.0f64; k * k];
+    for (a, &i) in active.iter().enumerate() {
+        for (b, &j) in active.iter().enumerate() {
+            corr[a * k + b] = if a == b {
+                1.0
+            } else {
+                0.5 * (cov[i * n + j] + cov[j * n + i]) / (sd[a] * sd[b])
+            };
         }
     }
-    let (eigenvalues, vectors) = jacobi_eigh(&sym, n)?;
-    let clipped: f64 = eigenvalues.iter().map(|l| (-l).max(0.0)).sum();
     let mut factor = vec![0.0f64; n * n];
-    for j in 0..n {
-        let root = eigenvalues[j].max(0.0).sqrt();
-        if root == 0.0 {
+    if k == 0 {
+        return Some((factor, 0.0));
+    }
+    let (eigenvalues, vectors) = jacobi_eigh(&corr, k)?;
+    let clipped: f64 = eigenvalues.iter().map(|l| (-l).max(0.0)).sum::<f64>() / k as f64;
+    for (a, &i) in active.iter().enumerate() {
+        let row: Vec<f64> = (0..k)
+            .map(|j| vectors[a * k + j] * eigenvalues[j].max(0.0).sqrt())
+            .collect();
+        let norm = row.iter().map(|g| g * g).sum::<f64>().sqrt();
+        if norm == 0.0 {
             continue;
         }
-        for i in 0..n {
-            factor[i * n + j] = vectors[i * n + j] * root;
+        for (j, g) in row.iter().enumerate() {
+            factor[i * n + j] = sd[a] * g / norm;
         }
     }
     Some((factor, clipped))
@@ -2630,11 +2648,14 @@ fn build_sampling_plan(
         .collect();
 
     // precompute the xs sampling factor once per case: draws are
-    // multiplicative lognormal factors exp(F_rel·z − ½·diag(Σ_rel)) on the
-    // relative covariance Σ_rel[i,j] = Σ[i,j]/(σ_i σ_j), spectral-factored
-    // on the nearest-PSD projection. Multiplicative draws preserve the
-    // mean, keep the full correlation structure, and never go nonpositive
-    // — no ridge, no independence fallback, no clamps.
+    // multiplicative lognormal factors exp(F·z − ½·diag(L)) whose log
+    // covariance is moment-matched to the relative covariance
+    // Σ_rel[i,j] = Σ[i,j]/(σ_i σ_j): L[i,j] = ln(1 + Σ_rel[i,j]), so the
+    // factors' covariance is Σ_rel exactly, not exp(Σ_rel) − 1. L is
+    // factored with its correlation structure repaired (`psd_factor`), so
+    // every evaluated variance is kept. Multiplicative draws preserve the
+    // mean and never go nonpositive — no ridge, no independence fallback,
+    // no clamps.
     let (xs_factor, xs_clipped, xs_rel_diag) = cov_ctx
         .as_ref()
         .and_then(|c| {
@@ -2648,14 +2669,28 @@ fn build_sampling_plan(
                     }
                 }
             }
-            let (factor, clipped) = psd_factor(&rel, m)?;
-            // projected diagonal diag(F F^T)_i: the −½·diag shift that
-            // keeps E[factor]=1 under the actually-sampled (clipped)
-            // distribution, not the unclipped Σ_rel diagonal
-            let diag: Vec<f64> = (0..m)
-                .map(|i| (0..m).map(|j| factor[i * m + j].powi(2)).sum())
+            let log_var: Vec<f64> = (0..m)
+                .map(|i| (1.0 + rel[i * m + i].max(0.0)).ln())
                 .collect();
-            Some((factor, clipped, diag))
+            let mut log_cov = vec![0.0f64; m * m];
+            for i in 0..m {
+                for j in 0..m {
+                    let shifted = 1.0 + 0.5 * (rel[i * m + j] + rel[j * m + i]);
+                    log_cov[i * m + j] = if i == j {
+                        log_var[i]
+                    } else if shifted > 0.0 {
+                        shifted.ln()
+                    } else {
+                        // no lognormal pair reaches this covariance; take the
+                        // most negative log covariance the two variances allow
+                        -(log_var[i] * log_var[j]).sqrt()
+                    };
+                }
+            }
+            let (factor, clipped) = psd_factor(&log_cov, m)?;
+            // diag(F F^T) = diag(L) by construction: the −½·diag shift
+            // that keeps E[factor] = 1
+            Some((factor, clipped, log_var))
         })
         .map(|(factor, clipped, diag)| (Some(factor), clipped, diag))
         .unwrap_or((None, f64::NAN, Vec::new()));
@@ -3711,7 +3746,7 @@ fn evaluate_robustness_inner(
             "cross_section_mf33": {
                 "enabled": rb.channels.cross_section_mf33,
                 "correlated": xs_correlated,
-                "sampling": "correlated lognormal multiplicative factors on the nearest-PSD relative covariance",
+                "sampling": "correlated lognormal multiplicative factors with log covariance ln(1 + relative covariance), its correlation structure repaired in correlation space so every evaluated variance is kept",
                 "negative_eigenvalue_mass_clipped_relative": if plan.xs_clipped.is_nan() {
                     Value::Null
                 } else {
@@ -4361,22 +4396,61 @@ mod robustness_tests {
                 assert!((rec - a[i * 2 + j]).abs() < 1e-12);
             }
         }
-        // indefinite input: clipped mass equals the negative eigenvalue and
-        // the reconstructed matrix is the eigen-clipped projection
+        // indefinite input: the correlation matrix [[1,2],[2,1]] has
+        // eigenvalues 3 and -1; the clipped mass is 1 over a trace of 2, and
+        // the repaired factor keeps both unit variances at correlation 1
         let b = [1.0, 2.0, 2.0, 1.0];
         let (f, clipped) = psd_factor(&b, 2).unwrap();
-        // eigenvalues of [[1,2],[2,1]] are 3 and -1
-        assert!((clipped - 1.0).abs() < 1e-12);
+        assert!((clipped - 0.5).abs() < 1e-12);
         for i in 0..2 {
             for j in 0..2 {
                 let mut rec = 0.0;
                 for k in 0..2 {
                     rec += f[i * 2 + k] * f[j * 2 + k];
                 }
-                // projection of [[1,2],[2,1]] keeps the λ=3 eigenpair:
-                // 3·(1,1)/√2 outer product = [[1.5,1.5],[1.5,1.5]]
-                let want = [[1.5, 1.5], [1.5, 1.5]][i][j];
-                assert!((rec - want).abs() < 1e-12);
+                assert!((rec - 1.0).abs() < 1e-12);
+            }
+        }
+    }
+
+    /// A threshold row's relative variance can be 1e20 beside physical rows near 1e-2. The
+    /// factor must still reproduce the small block: a convergence test scaled by the largest
+    /// diagonal stopped the sweeps before it did.
+    #[test]
+    fn psd_factor_converges_beside_a_huge_variance_row() {
+        let v = [1e20_f64, 0.03, 0.02, 0.01];
+        let corr = [
+            [1.0, 0.1, 0.0, 0.05],
+            [0.1, 1.0, 0.5, 0.2],
+            [0.0, 0.5, 1.0, -0.3],
+            [0.05, 0.2, -0.3, 1.0],
+        ];
+        let mut a = [0.0f64; 16];
+        for i in 0..4 {
+            for j in 0..4 {
+                a[i * 4 + j] = corr[i][j] * (v[i] * v[j]).sqrt();
+            }
+        }
+        let (f, clipped) = psd_factor(&a, 4).unwrap();
+        assert_eq!(clipped, 0.0);
+        for i in 0..4 {
+            for j in 0..4 {
+                let rec: f64 = (0..4).map(|k| f[i * 4 + k] * f[j * 4 + k]).sum();
+                let scale = (v[i] * v[j]).sqrt();
+                assert!(
+                    (rec - a[i * 4 + j]).abs() <= 1e-10 * scale,
+                    "({i},{j}): {rec} vs {}",
+                    a[i * 4 + j]
+                );
+            }
+        }
+        let (w, vecs) = jacobi_eigh(&a, 4).unwrap();
+        for i in 1..4 {
+            for j in 1..4 {
+                let rec: f64 = (0..4)
+                    .map(|k| vecs[i * 4 + k] * w[k] * vecs[j * 4 + k])
+                    .sum();
+                assert!((rec - a[i * 4 + j]).abs() <= 1e-10 * (v[i] * v[j]).sqrt());
             }
         }
     }

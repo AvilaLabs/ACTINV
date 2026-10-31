@@ -403,9 +403,9 @@ valid; it does not establish that every physical uncertainty is covered.
 
 `actinv waste uncertainty SPEC.json [OUT.json]` asks how likely each class is when the nuclear data are uncertain. It
 solves your problem once at its nominal inputs and then once for each correlated draw of the sampled channels, the
-sampler that `study.robustness` uses (correlated MF=33 cross-section draws through the nearest positive-semidefinite
-factor of the collapsed covariance, decay constants and fission yields at their declared uncertainties, and optionally
-flux and composition). Every solve carries a consistent inventory, so each sample is classified with the nominal
+sampler that `study.robustness` uses (correlated MF=33 cross-section draws with the collapsed relative covariance, any
+indefinite correlation structure repaired; decay constants and fission yields at their declared uncertainties; and
+optionally flux and composition). Every solve carries a consistent inventory, so each sample is classified with the nominal
 evaluator and the table sums keep their correlations. The first-order `uncertainty` block cannot give a band on a
 table sum, because it reports no covariance between nuclides.
 
