@@ -5278,3 +5278,22 @@ registered as P175 Amendment A, the protocol's one repair round:
 - a per-pair Jacobi convergence test;
 - a repair in correlation space that keeps every evaluated variance;
 - a moment-matched lognormal log covariance `ln(1 + Σ_rel)`.
+
+## Entry 306 — P175 Amendment A registered: the reference sampler repaired, the run repeated (2026-10-31)
+
+`protocols/ACTINV-P175_AMENDMENT_A.md` (SHA-256 `96bc6028…`), the protocol's one repair round, and the checker
+`controls/check_p175.py` (`513fa9db…`) with new pins.
+
+The fix lands with this registration (`6e39ea9`) and has three parts:
+- Jacobi converges per pair;
+- the log covariance is `ln(1 + Σ_rel)`;
+- an indefinite block is repaired in correlation space, keeping every evaluated variance.
+
+The fix reaches users, through `study.robustness` and `waste uncertainty`. The full local CI sweep passed, apart
+from the four known environment steps (P18 gzip, FNS 403).
+
+The binary is pinned (`1460accb…`). The checker accepts four CPUs, which the owner allowed on 2026-10-31. Nothing
+else changes, and the first run's evidence stays at `cf4620f`.
+
+The amendment discloses that the moment-matched draws were chosen after the failing rows were seen, and that they move
+the sampled variance toward the first-order value by design, by about 1–13 %.

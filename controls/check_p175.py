@@ -45,8 +45,8 @@ if st.REHEARSAL:
     VERDICT = ROOT / "target" / "p175-rehearsal" / "p175_verdict.json"
 
 PINS = {
-    "binary_sha256": "9e52e19a76034fa038ac837e926077100d1df81dd99e3c441b19535c9bab8ee9",  # the release build that runs the evidence
-    "source_commit": "327af82f23646ee93f3c64a78d336411dfc43042",  # commit whose crates tree built that binary
+    "binary_sha256": "1460accb937f6457ff03207d417ae104a4226d6be795a7f82ac60dd47e52d660",  # the release build that runs the evidence
+    "source_commit": "6e39ea91fc9e49355e927afa9f38027601ca45ff",  # commit whose crates tree built that binary
     "inputs": {
         "base_flux_sha256": "b9b1e8d1a713292507611b17be5afaaa671d734383cf7a0b1d1a68b31311b7e7",
         "fns_spec_sha256": "ed55ed00f6c00fc4a2351e18332e98e7feb33d9b7ca65e7ba861e0e5e8feef39",
@@ -90,7 +90,7 @@ def cgroup_ok(cg):
     try:
         quota, period = cg["cpu.max"].split()
         return (int(cg["memory.max"]) <= 6 * GIB and cg["memory.swap.max"] == "0" and int(cg["pids.max"]) <= 128
-                and quota != "max" and int(quota) <= 2 * int(period))
+                and quota != "max" and int(quota) <= 4 * int(period))  # four CPUs from Amendment A
     except (KeyError, TypeError, ValueError, AttributeError):
         return False
 
