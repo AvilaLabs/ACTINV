@@ -8,11 +8,14 @@
 //! this module only consumes it. Factors interpolate linearly in ln(sigma0)
 //! and in sqrt(T), clamped at the grid ends.
 
-use actinv_data::activation::{parse_evaluations, Projectile};
+use actinv_data::activation::{parse_evaluations, Evaluation, Projectile};
 use actinv_data::composition::{self, MaterialKey};
+use actinv_data::groups::{GroupStructure, Tabulated};
 use actinv_data::normalize::{normalize_tape, NormalizeProfile};
+use actinv_data::processing::{has_resonance_contribution, process_reaction};
 use actinv_data::resonance::{
-    legacy_effective_total_width, rml_resonance_widths, RangeData, ResonanceEvaluation, K_WAVE,
+    legacy_effective_total_width, rml_resonance_widths, validate_rmatrix_limited, RangeData,
+    ResonanceEvaluation, K_WAVE,
 };
 use serde::{Deserialize, Serialize};
 use std::collections::{BTreeMap, BTreeSet};
@@ -124,6 +127,8 @@ pub struct ShieldPlan {
     pub dilution_overrides: BTreeMap<String, BTreeMap<usize, f64>>,
     /// Sigmoid-curve geometry report; `None` on the Bondarenko path.
     pub geometry: Option<GeometryReport>,
+    /// Pointwise mixture report; `None` outside mixture mode.
+    pub mixture: Option<MixtureReport>,
 }
 
 #[derive(Debug)]
@@ -150,6 +155,16 @@ fn channel_of_mt(mt: i32) -> usize {
         102 => 3,
         _ => 0,
     }
+}
+
+/// Analytic potential-scattering estimate `4*pi*a^2 * ((A+1)/A)^2` in barns for a nuclide of atomic number `za`
+/// (A from the ZA's last three digits), with `a = 0.123*A^(1/3) + 0.08` the ENDF channel radius PURR uses when
+/// NAPS=0. That radius is in units of 1e-12 cm, so `a^2` is already in barns (about 4 b for Fe-56).
+fn analytic_sigma_p_b(za: i32) -> f64 {
+    let a_mass = (za % 1000).max(1) as f64;
+    let radius = 0.123 * a_mass.cbrt() + 0.08;
+    let lab = (a_mass + 1.0) / a_mass;
+    4.0 * std::f64::consts::PI * radius * radius * lab * lab
 }
 
 impl PreparedShieldTable {
@@ -291,13 +306,7 @@ impl PreparedShieldTable {
         if let Some(&sp) = self.sigma_p_mean.get(&(za, liso)) {
             return (sp, false);
         }
-        let a_mass = (za % 1000).max(1) as f64;
-        let radius_fm = 0.123 * a_mass.cbrt() + 0.08;
-        let lab = (a_mass + 1.0) / a_mass;
-        (
-            4.0 * std::f64::consts::PI * radius_fm * radius_fm * lab * lab * 0.01,
-            true,
-        )
+        (analytic_sigma_p_b(za), true)
     }
 
     /// Bilinear interpolation in (ln sigma0, sqrt T), clamped at the grid
@@ -493,6 +502,7 @@ impl PreparedShieldTable {
             applied,
             dilution_overrides: dilution_overrides.clone(),
             geometry: None,
+            mixture: None,
         })
     }
 }
@@ -1114,6 +1124,7 @@ impl PreparedGeometry {
             sigma0_eff_b: BTreeMap::new(),
             applied,
             dilution_overrides: BTreeMap::new(),
+            mixture: None,
             geometry: Some(GeometryReport {
                 shape: self.shape.name().into(),
                 length_cm: self.length_cm,
@@ -1130,14 +1141,530 @@ impl PreparedGeometry {
     }
 }
 
+// ---- Mixture self-shielding: narrow-resonance weighting with the real mixture total -------------------
+//
+// The group flux is taken as phi(E) = 1/Sigma_t(E) per unit lethargy, Sigma_t being the macroscopic total of the
+// declared mixture built from the pointwise cross sections of every supplied evaluation (the analytic
+// potential-scattering estimate for a composition nuclide without one). In each group that overlaps a nuclide's
+// resolved range, its factor in a channel is the flux-weighted mean of its cross section over the whole group
+// divided by the infinite-dilution (plain lethargy) mean; other groups keep scale 1.
+
+/// Count and smallest applied scale of one channel of one nuclide, for the ledger.
+#[derive(Debug, Clone, Serialize)]
+pub struct MixtureChannelSummary {
+    pub groups: usize,
+    pub min_scale: f64,
+}
+
+/// What mixture mode applied, for the ledger and certificate.
+#[derive(Debug, Clone, Serialize)]
+pub struct MixtureReport {
+    pub mode: String,
+    pub profile: String,
+    pub temperature_K: f64,
+    /// Composition nuclides reconstructed from an evaluation file.
+    pub covered: Vec<String>,
+    /// Composition nuclides without a file, whose potential-scattering estimate enters the mixture total.
+    pub background_estimated: Vec<String>,
+    /// Nuclides with an evaluation file that are not in the material.
+    pub evaluations_unused: Vec<String>,
+    /// nuclide -> channel -> summary of the applied scales.
+    pub scales: BTreeMap<String, BTreeMap<String, MixtureChannelSummary>>,
+}
+
+/// One nuclide's pointwise cross sections at the run temperature, linear in E between points.
+#[derive(Debug, Clone)]
+struct PointwiseXs {
+    energy: Vec<f64>,
+    /// Barns on `energy`, in `CHANNELS` order: total, elastic, fission, capture.
+    sigma: [Vec<f64>; 4],
+    /// Resolved resonance ranges (eV), ascending and non-overlapping.
+    ranges: Vec<(f64, f64)>,
+}
+
+/// The resolved (LRU=1) ranges of an evaluation, sorted and merged.
+fn resolved_ranges(resonance: &ResonanceEvaluation) -> Vec<(f64, f64)> {
+    let mut ranges: Vec<(f64, f64)> = resonance
+        .isotopes
+        .iter()
+        .flat_map(|isotope| &isotope.ranges)
+        .filter(|range| {
+            matches!(
+                range.data,
+                RangeData::BreitWigner(_) | RangeData::ReichMoore(_) | RangeData::RMatrixLimited(_)
+            )
+        })
+        .map(|range| (range.energy_min, range.energy_max))
+        .filter(|(low, high)| low.is_finite() && high.is_finite() && high > low)
+        .collect();
+    ranges.sort_by(|a, b| a.0.total_cmp(&b.0));
+    let mut merged: Vec<(f64, f64)> = Vec::new();
+    for (low, high) in ranges {
+        match merged.last_mut() {
+            Some(last) if low <= last.1 => last.1 = last.1.max(high),
+            _ => merged.push((low, high)),
+        }
+    }
+    merged
+}
+
+impl PointwiseXs {
+    /// Reconstruct MT 2, 18 and 102 (resonance + MF=3 background, Doppler broadened to `temperature_K`) with
+    /// the `build-library` processor on the run's group structure, and the total as the MF=3 MT 1 background
+    /// plus the resonance contribution of those three channels. Without an MT 1 section the total is the sum
+    /// of the three channels.
+    fn from_evaluation(
+        evaluation: &Evaluation,
+        resonance: &ResonanceEvaluation,
+        groups: &GroupStructure,
+        temperature_K: f64,
+    ) -> Result<Self, String> {
+        let low = groups.boundaries_ev[0];
+        let high = groups.boundaries_ev[groups.boundaries_ev.len() - 1];
+        let zero = Tabulated {
+            interpolation: vec![(2, 2)],
+            x: vec![low, high],
+            y: vec![0.0, 0.0],
+        };
+        let background = |mt: i32| evaluation.mf3.get(&mt).unwrap_or(&zero);
+        let mut channels: Vec<Tabulated> = Vec::with_capacity(3);
+        for mt in [2, 18, 102] {
+            let table = background(mt);
+            channels.push(if has_resonance_contribution(resonance, mt) {
+                process_reaction(resonance, table, groups, mt, temperature_K, 1.0)
+                    .map_err(|error| format!("MT{mt} resonance processing: {error}"))?
+                    .table
+            } else {
+                table.clone()
+            });
+        }
+        let total_background = evaluation.mf3.get(&1);
+        let mut energy: Vec<f64> = groups.boundaries_ev.clone();
+        for table in channels.iter().chain(total_background) {
+            energy.extend(table.x.iter().copied());
+        }
+        for &(range_low, range_high) in &resolved_ranges(resonance) {
+            energy.push(range_low);
+            energy.push(range_high);
+        }
+        energy.retain(|e| e.is_finite() && *e >= low && *e <= high);
+        energy.sort_by(f64::total_cmp);
+        energy.dedup();
+        let mut sigma: [Vec<f64>; 4] = Default::default();
+        for &e in &energy {
+            let elastic = channels[0].evaluate(e)?;
+            let fission = channels[1].evaluate(e)?;
+            let capture = channels[2].evaluate(e)?;
+            let total = match total_background {
+                // Resonance contribution of each channel = processed value minus its own MF=3 background.
+                Some(table) => {
+                    table.evaluate(e)?
+                        + (elastic - background(2).evaluate(e)?)
+                        + (fission - background(18).evaluate(e)?)
+                        + (capture - background(102).evaluate(e)?)
+                }
+                None => elastic + fission + capture,
+            };
+            for (column, value) in sigma.iter_mut().zip([total, elastic, fission, capture]) {
+                column.push(value.max(0.0));
+            }
+        }
+        Ok(Self {
+            energy,
+            sigma,
+            ranges: resolved_ranges(resonance),
+        })
+    }
+}
+
+/// Linear interpolation of `y(x)` at `e`, clamped to the end values outside the grid.
+fn interpolate_clamped(x: &[f64], y: &[f64], e: f64) -> f64 {
+    let upper = x.partition_point(|&point| point <= e);
+    if upper == 0 {
+        return y[0];
+    }
+    if upper >= x.len() {
+        return y[x.len() - 1];
+    }
+    let (x0, x1) = (x[upper - 1], x[upper]);
+    y[upper - 1] + (y[upper] - y[upper - 1]) * (e - x0) / (x1 - x0)
+}
+
+/// The integration nodes of `[low, high]`: both ends and every union-grid point strictly between.
+fn segment_nodes(union: &[f64], low: f64, high: f64) -> Vec<f64> {
+    let start = union.partition_point(|&e| e <= low);
+    let end = union.partition_point(|&e| e < high);
+    let mut nodes = Vec::with_capacity(end.saturating_sub(start) + 2);
+    nodes.push(low);
+    if start < end {
+        nodes.extend_from_slice(&union[start..end]);
+    }
+    nodes.push(high);
+    nodes
+}
+
+/// Lethargy integrals of one nuclide over one group.
+#[derive(Default)]
+struct MixtureGroupSums {
+    lethargy: f64,
+    flux: f64,
+    sigma: [f64; 4],
+    sigma_flux: [f64; 4],
+}
+
+/// Per-nuclide, per-channel, per-group scales of every nuclide in `nuclides` with a positive entry in `atoms`.
+/// `background_b` is the summed `N_j * sigma_p,j` of the composition nuclides without pointwise data. For each
+/// group that overlaps one of the nuclide's resolved ranges the scale is
+/// `f_g = [int sigma phi du / int phi du] / [int sigma du / int du]` over the whole group, `phi = 1/Sigma_t`,
+/// `u = ln E`, on the union of the nuclides' grids (trapezoid in `u`); a resonance near a range edge is weighted
+/// by its own cross section, not by the share of the group's lethargy inside the range. Groups with no resolved
+/// overlap, and channels whose infinite-dilution integral is zero, are absent (scale 1).
+#[allow(clippy::needless_range_loop)] // the channel and node indices address several parallel arrays
+fn mixture_scales(
+    nuclides: &BTreeMap<(i32, i32), PointwiseXs>,
+    atoms: &BTreeMap<(i32, i32), f64>,
+    background_b: f64,
+    boundaries_ev: &[f64],
+) -> Result<BTreeMap<(i32, i32), [GroupScales; 4]>, String> {
+    let members: Vec<(&(i32, i32), &PointwiseXs, f64)> = nuclides
+        .iter()
+        .filter_map(|(key, xs)| {
+            let n = atoms.get(key).copied().unwrap_or(0.0);
+            (n > 0.0).then_some((key, xs, n))
+        })
+        .collect();
+    let mut union: Vec<f64> = members
+        .iter()
+        .flat_map(|(_, xs, _)| xs.energy.iter().copied())
+        .collect();
+    union.sort_by(f64::total_cmp);
+    union.dedup();
+    let mixture_total = |e: f64| -> Result<f64, String> {
+        let total = background_b
+            + members
+                .iter()
+                .map(|(_, xs, n)| n * interpolate_clamped(&xs.energy, &xs.sigma[0], e))
+                .sum::<f64>();
+        if total.is_finite() && total > 0.0 {
+            Ok(total)
+        } else {
+            Err(format!(
+                "self_shielding.mixture: the mixture total cross section is not positive at {e} eV"
+            ))
+        }
+    };
+    let snap = |value: f64| {
+        if (value - 1.0).abs() < 1e-12 {
+            1.0
+        } else {
+            value
+        }
+    };
+    let mut result = BTreeMap::new();
+    for &(key, xs, _) in &members {
+        // Every group that overlaps a resolved range, each once even when two ranges share it.
+        let mut groups = BTreeSet::new();
+        for &(range_low, range_high) in &xs.ranges {
+            let first = boundaries_ev
+                .partition_point(|&b| b <= range_low)
+                .saturating_sub(1);
+            for group in first..boundaries_ev.len() - 1 {
+                if boundaries_ev[group] >= range_high {
+                    break;
+                }
+                if boundaries_ev[group + 1] > range_low {
+                    groups.insert(group);
+                }
+            }
+        }
+        let mut scales: [GroupScales; 4] = Default::default();
+        for group in groups {
+            let nodes = segment_nodes(&union, boundaries_ev[group], boundaries_ev[group + 1]);
+            let mut flux = Vec::with_capacity(nodes.len());
+            for &e in &nodes {
+                flux.push(1.0 / mixture_total(e)?);
+            }
+            let mut sums = MixtureGroupSums::default();
+            for k in 0..nodes.len() - 1 {
+                let du = (nodes[k + 1] / nodes[k]).ln();
+                sums.lethargy += du;
+                sums.flux += 0.5 * (flux[k] + flux[k + 1]) * du;
+                for c in 0..4 {
+                    let s0 = interpolate_clamped(&xs.energy, &xs.sigma[c], nodes[k]);
+                    let s1 = interpolate_clamped(&xs.energy, &xs.sigma[c], nodes[k + 1]);
+                    sums.sigma[c] += 0.5 * (s0 + s1) * du;
+                    sums.sigma_flux[c] += 0.5 * (s0 * flux[k] + s1 * flux[k + 1]) * du;
+                }
+            }
+            if sums.flux <= 0.0 || sums.lethargy <= 0.0 {
+                continue;
+            }
+            for c in 0..4 {
+                if sums.sigma[c] <= 0.0 {
+                    continue;
+                }
+                let weighted = sums.sigma_flux[c] / sums.flux;
+                let infinite_dilution = sums.sigma[c] / sums.lethargy;
+                scales[c].insert(group, snap(weighted / infinite_dilution));
+            }
+        }
+        result.insert(*key, scales);
+    }
+    Ok(result)
+}
+
+/// Parsed mixture-mode inputs: the declared raw evaluations, keyed by nuclide. The pointwise reconstruction
+/// needs the run's temperature and group structure, so it happens when the plan is built.
+#[derive(Debug)]
+pub struct PreparedMixture {
+    profile: NormalizeProfile,
+    require_complete: bool,
+    evaluations: BTreeMap<(i32, i32), Evaluation>,
+}
+
+impl PreparedMixture {
+    /// `files` holds (label, ENDF-6 text) per declared evaluation file; the caller has already verified each
+    /// file's hash. Every evaluation must be a raw 0 K single-nuclide neutron evaluation (the input of
+    /// `build-library`) with resolved resonance parameters.
+    pub fn from_evaluations(
+        mixture: &crate::spec::SelfShieldingMixture,
+        files: &[(String, String)],
+    ) -> Result<Self, String> {
+        let profile = mixture.normalize_profile()?;
+        let mut evaluations = BTreeMap::new();
+        for (label, text) in files {
+            // The same tape normalization as `build-library --profile`; `none` returns the text unchanged.
+            let normalized = normalize_tape(text, profile);
+            let parsed = parse_evaluations(&normalized.text, Some(Projectile::Neutron)).map_err(
+                |error| {
+                    let hint = if profile == NormalizeProfile::None {
+                        "; ENDF/B-VIII.1 evaluations may need \"profile\": \"endfb8\""
+                    } else {
+                        ""
+                    };
+                    format!("self_shielding.mixture evaluation file {label}: {error}{hint}")
+                },
+            )?;
+            for evaluation in parsed {
+                let key = (evaluation.metadata.za, evaluation.metadata.liso);
+                let name = name_of(key.0, key.1);
+                let context = format!("self_shielding.mixture evaluation file {label}: {name}");
+                let Some(resonance) = &evaluation.resonance else {
+                    return Err(format!(
+                        "{context} has no MF=2/MT=151 resonance parameters; mixture self-shielding needs resolved resonance data"
+                    ));
+                };
+                if evaluation.metadata.evaluation_temperature_k != 0.0 {
+                    return Err(format!(
+                        "{context} is evaluated at {} K; mixture self-shielding reconstructs raw 0 K evaluations",
+                        evaluation.metadata.evaluation_temperature_k
+                    ));
+                }
+                if evaluation.mf2_sections != BTreeSet::from([151]) {
+                    return Err(format!(
+                        "{context} has unsupported MF=2 sections {:?}; expected only MT=151",
+                        evaluation.mf2_sections
+                    ));
+                }
+                if resonance.isotopes.len() != 1 || resonance.isotopes[0].zai != key.0 {
+                    return Err(format!(
+                        "{context} is not a single-nuclide evaluation (MF=2 lists {} isotope(s)); supply one file per nuclide",
+                        resonance.isotopes.len()
+                    ));
+                }
+                for range in &resonance.isotopes[0].ranges {
+                    if matches!(range.data, RangeData::RMatrixLimited(_)) {
+                        validate_rmatrix_limited(range)
+                            .map_err(|error| format!("{context}: RML validation: {error}"))?;
+                    }
+                }
+                if resolved_ranges(resonance).is_empty() {
+                    return Err(format!("{context} has no usable resolved (LRU=1) range"));
+                }
+                if evaluations.insert(key, evaluation).is_some() {
+                    return Err(format!(
+                        "self_shielding.mixture evaluation files supply {name} more than once"
+                    ));
+                }
+            }
+        }
+        Ok(Self {
+            profile,
+            require_complete: mixture.require_complete,
+            evaluations,
+        })
+    }
+
+    /// Build the per-run plan. `composition_atoms` is atoms per gram of the declared material (only ratios
+    /// matter); `boundaries_ev` the activation library's ascending group boundaries; `temperature_K` the run
+    /// temperature, which the pointwise cross sections are Doppler broadened to (it must be positive).
+    pub fn plan(
+        &self,
+        composition_atoms: &BTreeMap<(i32, i32), f64>,
+        boundaries_ev: &[f64],
+        temperature_K: f64,
+        require_complete: bool,
+    ) -> Result<ShieldPlan, String> {
+        if boundaries_ev.len() < 2
+            || boundaries_ev
+                .iter()
+                .any(|boundary| !boundary.is_finite() || *boundary <= 0.0)
+            || boundaries_ev.windows(2).any(|w| w[1] <= w[0])
+        {
+            return Err(
+                "self_shielding mixture needs positive, strictly ascending activation-library group boundaries"
+                    .into(),
+            );
+        }
+        if !temperature_K.is_finite() || temperature_K <= 0.0 {
+            return Err(
+                "self_shielding.mixture needs a positive temperature_K (the zero-kelvin reconstruction keeps ultra-narrow lines apart from the pointwise table)"
+                    .into(),
+            );
+        }
+        let total_atoms: f64 = composition_atoms.values().filter(|n| **n > 0.0).sum();
+        let mut covered_keys = Vec::new();
+        let mut uncovered = Vec::new();
+        let mut missing_significant = Vec::new();
+        let mut background_b = 0.0;
+        for (&key, &atoms) in composition_atoms {
+            if atoms.is_nan() || atoms <= 0.0 {
+                continue;
+            }
+            if self.evaluations.contains_key(&key) {
+                covered_keys.push(key);
+                continue;
+            }
+            let name = name_of(key.0, key.1);
+            background_b += atoms * analytic_sigma_p_b(key.0);
+            if atoms / total_atoms > 1e-6 {
+                missing_significant.push(name.clone());
+            }
+            uncovered.push(name);
+        }
+        if covered_keys.is_empty() {
+            return Err(
+                "self_shielding.mixture: no nuclide of the material is supplied by an evaluation file"
+                    .into(),
+            );
+        }
+        if self.require_complete && !missing_significant.is_empty() {
+            return Err(format!(
+                "self_shielding.mixture.require_complete: material nuclides above 1e-6 atom fraction lack an evaluation file: {}",
+                missing_significant.join(", ")
+            ));
+        }
+        if require_complete && !uncovered.is_empty() {
+            return Err(format!(
+                "self_shielding: material nuclides lack evaluation data: {}",
+                uncovered.join(", ")
+            ));
+        }
+        let groups = GroupStructure {
+            name: "self-shielding run groups".into(),
+            boundaries_ev: boundaries_ev.to_vec(),
+        };
+        let mut pointwise = BTreeMap::new();
+        for &key in &covered_keys {
+            let evaluation = &self.evaluations[&key];
+            let resonance = evaluation
+                .resonance
+                .as_ref()
+                .expect("a prepared evaluation carries resonance parameters");
+            let xs = PointwiseXs::from_evaluation(evaluation, resonance, &groups, temperature_K)
+                .map_err(|error| {
+                    format!("self_shielding.mixture {}: {error}", name_of(key.0, key.1))
+                })?;
+            pointwise.insert(key, xs);
+        }
+        let all_scales =
+            mixture_scales(&pointwise, composition_atoms, background_b, boundaries_ev)?;
+        let mut covered = BTreeMap::new();
+        let mut applied: BTreeMap<String, BTreeMap<usize, [f64; 4]>> = BTreeMap::new();
+        let mut summaries: BTreeMap<String, BTreeMap<String, MixtureChannelSummary>> =
+            BTreeMap::new();
+        for (key, scales) in all_scales {
+            let name = name_of(key.0, key.1);
+            let groups_hit: BTreeSet<usize> = scales
+                .iter()
+                .flat_map(|channel| channel.keys().copied())
+                .collect();
+            let rows = groups_hit
+                .into_iter()
+                .map(|group| {
+                    let mut row = [1.0; 4];
+                    for (c, channel) in scales.iter().enumerate() {
+                        row[c] = channel.get(&group).copied().unwrap_or(1.0);
+                    }
+                    (group, row)
+                })
+                .collect();
+            let summary = CHANNELS
+                .iter()
+                .zip(&scales)
+                .map(|(channel, map)| {
+                    (
+                        (*channel).to_string(),
+                        MixtureChannelSummary {
+                            groups: map.len(),
+                            min_scale: map.values().copied().fold(1.0, f64::min),
+                        },
+                    )
+                })
+                .collect();
+            applied.insert(name.clone(), rows);
+            summaries.insert(name, summary);
+            covered.insert(
+                key,
+                PreparedNuclide {
+                    sigma_p_b: 0.0,
+                    sigma0_eff_b: 0.0,
+                    scales,
+                },
+            );
+        }
+        let unused = self
+            .evaluations
+            .keys()
+            .filter(|key| !covered_keys.contains(key))
+            .map(|&(za, liso)| name_of(za, liso))
+            .collect();
+        Ok(ShieldPlan {
+            covered,
+            uncovered_targets: uncovered.clone(),
+            sigma_p_estimated: Vec::new(),
+            dilution: "mixture".into(),
+            sigma0_fixed_b: None,
+            sigma0_eff_b: BTreeMap::new(),
+            applied,
+            dilution_overrides: BTreeMap::new(),
+            geometry: None,
+            mixture: Some(MixtureReport {
+                mode: "mixture".into(),
+                profile: self.profile.name().into(),
+                temperature_K,
+                covered: covered_keys
+                    .iter()
+                    .map(|&(za, liso)| name_of(za, liso))
+                    .collect(),
+                background_estimated: uncovered,
+                evaluations_unused: unused,
+                scales: summaries,
+            }),
+        })
+    }
+}
+
 impl ShieldPlan {
     /// The plan for a `self_shielding` section: the Bondarenko table (with
-    /// any dilution overrides) or the sigmoid-curve geometry, never both.
-    /// `boundaries_ev` are the activation library's group boundaries.
+    /// any dilution overrides), the sigmoid-curve geometry or the pointwise
+    /// mixture, never more than one. `boundaries_ev` are the activation
+    /// library's group boundaries.
     #[allow(clippy::too_many_arguments)]
     pub fn build(
         table: Option<&PreparedShieldTable>,
         geometry: Option<&PreparedGeometry>,
+        mixture: Option<&PreparedMixture>,
         options: &crate::spec::SelfShieldingOptions,
         composition_atoms: &BTreeMap<(i32, i32), f64>,
         boundaries_ev: &[f64],
@@ -1145,8 +1672,8 @@ impl ShieldPlan {
         temperature_K: f64,
         require_complete: bool,
     ) -> Result<ShieldPlan, String> {
-        match (table, geometry) {
-            (Some(table), None) => table.plan_with_overrides(
+        match (table, geometry, mixture) {
+            (Some(table), None, None) => table.plan_with_overrides(
                 composition_atoms,
                 &options.dilution,
                 options.sigma0_b,
@@ -1154,13 +1681,19 @@ impl ShieldPlan {
                 temperature_K,
                 require_complete,
             ),
-            (None, Some(geometry)) => geometry.plan_for_material(
+            (None, Some(geometry), None) => geometry.plan_for_material(
                 composition_atoms,
                 boundaries_ev,
                 material_density_g_cm3,
                 require_complete,
             ),
-            _ => Err("self_shielding needs exactly one of table or geometry".into()),
+            (None, None, Some(mixture)) => mixture.plan(
+                composition_atoms,
+                boundaries_ev,
+                temperature_K,
+                require_complete,
+            ),
+            _ => Err("self_shielding needs exactly one of table, geometry or mixture".into()),
         }
     }
 
@@ -2269,6 +2802,256 @@ mod tests {
                 !geometry.lines.contains_key(&(74186, 0)),
                 "W184 levels were silently registered as W186"
             ),
+        }
+    }
+
+    // ---- Mixture self-shielding ----
+
+    /// Pointwise data on a log-uniform grid of `points` over `[low, high]` from an analytic channel function
+    /// returning (total, elastic, fission, capture).
+    fn analytic_xs(
+        low: f64,
+        high: f64,
+        points: usize,
+        ranges: Vec<(f64, f64)>,
+        channels: &dyn Fn(f64) -> [f64; 4],
+    ) -> PointwiseXs {
+        let mut energy: Vec<f64> = (0..points)
+            .map(|i| low * (high / low).powf(i as f64 / (points - 1) as f64))
+            .collect();
+        energy[0] = low;
+        energy[points - 1] = high;
+        let mut sigma: [Vec<f64>; 4] = Default::default();
+        for &e in &energy {
+            for (column, value) in sigma.iter_mut().zip(channels(e)) {
+                column.push(value);
+            }
+        }
+        PointwiseXs {
+            energy,
+            sigma,
+            ranges,
+        }
+    }
+
+    fn lorentzian(e: f64, peak_b: f64, e0: f64, width: f64) -> f64 {
+        let half = width / 2.0;
+        peak_b * half * half / ((e - e0) * (e - e0) + half * half)
+    }
+
+    /// A constant 5 b elastic channel plus a Lorentzian capture channel (peak 1000 b at 10 eV, width 2 eV).
+    fn lorentzian_channels(e: f64) -> [f64; 4] {
+        let capture = lorentzian(e, 1000.0, 10.0, 2.0);
+        [5.0 + capture, 5.0, 0.0, capture]
+    }
+
+    /// Composite Simpson integral of `f` on `[a, b]` with `n` (even) intervals.
+    fn simpson(f: &dyn Fn(f64) -> f64, a: f64, b: f64, n: usize) -> f64 {
+        let h = (b - a) / n as f64;
+        let mut sum = f(a) + f(b);
+        for i in 1..n {
+            sum += f(a + h * i as f64) * if i % 2 == 1 { 4.0 } else { 2.0 };
+        }
+        sum * h / 3.0
+    }
+
+    #[test]
+    fn mixture_constant_cross_sections_are_unshielded() {
+        let flat = analytic_xs(1.0, 100.0, 50, vec![(1.0, 100.0)], &|_| {
+            [12.0, 10.0, 1.0, 1.0]
+        });
+        let other = analytic_xs(1.0, 100.0, 7, vec![(1.0, 100.0)], &|_| {
+            [30.0, 30.0, 0.0, 0.0]
+        });
+        let nuclides = BTreeMap::from([((26056, 0), flat), ((74186, 0), other)]);
+        let atoms = BTreeMap::from([((26056, 0), 1.0), ((74186, 0), 2.0)]);
+        let scales = mixture_scales(&nuclides, &atoms, 3.0, &[1.0, 10.0, 100.0]).unwrap();
+        assert!(!scales[&(26056, 0)][0].is_empty());
+        for channels in scales.values() {
+            for map in channels {
+                for (group, scale) in map {
+                    assert_eq!(*scale, 1.0, "group {group}");
+                }
+            }
+        }
+    }
+
+    #[test]
+    fn mixture_flux_depression_matches_a_direct_numerical_integration() {
+        let resonant = analytic_xs(
+            1.0,
+            100.0,
+            200_001,
+            vec![(1.0, 100.0)],
+            &lorentzian_channels,
+        );
+        let diluent = analytic_xs(1.0, 100.0, 2, Vec::new(), &|_| [8.0, 8.0, 0.0, 0.0]);
+        let nuclides = BTreeMap::from([((74186, 0), resonant), ((26056, 0), diluent)]);
+        let atoms = BTreeMap::from([((74186, 0), 1.0), ((26056, 0), 3.0)]);
+        let scales = mixture_scales(&nuclides, &atoms, 0.0, &[1.0, 100.0]).unwrap();
+        // The diluent has no resolved range: no scales.
+        assert!(scales[&(26056, 0)].iter().all(|map| map.is_empty()));
+        // Direct integration in u = ln E with the analytic functions.
+        let u_max = 100.0f64.ln();
+        let mixture_total = |e: f64| lorentzian_channels(e)[0] + 3.0 * 8.0;
+        let flux = |u: f64| 1.0 / mixture_total(u.exp());
+        let n = 2_000_000;
+        let flux_integral = simpson(&flux, 0.0, u_max, n);
+        for (channel, name) in [(0, "total"), (3, "capture")] {
+            let sigma = |u: f64| lorentzian_channels(u.exp())[channel];
+            let weighted = simpson(&|u| sigma(u) * flux(u), 0.0, u_max, n) / flux_integral;
+            let infinite = simpson(&sigma, 0.0, u_max, n) / u_max;
+            let want = weighted / infinite;
+            let got = scales[&(74186, 0)][channel][&0];
+            assert!(
+                want < 0.95,
+                "{name}: the test resonance must shield, got {want}"
+            );
+            assert!(
+                ((got - want) / want).abs() < 1e-6,
+                "{name}: got {got}, want {want}"
+            );
+        }
+        // A channel without resonance structure and constant weight inside the mixture is unshielded.
+        assert_eq!(scales[&(74186, 0)][1][&0], 1.0);
+        // A zero channel has no infinite-dilution integral and keeps scale 1 (absent).
+        assert!(scales[&(74186, 0)][2].is_empty());
+    }
+
+    #[test]
+    fn mixture_range_edge_group_is_integrated_whole() {
+        let resonant = |ranges: Vec<(f64, f64)>| {
+            analytic_xs(1.0, 100.0, 20_001, ranges, &|e| {
+                let capture = lorentzian(e, 500.0, 3.0, 1.0);
+                [5.0 + capture, 5.0, 0.0, capture]
+            })
+        };
+        let atoms = BTreeMap::from([((74186, 0), 1.0)]);
+        // Resolved range [1, 10]: group [1, 10] lies inside it, group [10, 100] outside.
+        let nuclides = BTreeMap::from([((74186, 0), resonant(vec![(1.0, 10.0)]))]);
+        let split = mixture_scales(&nuclides, &atoms, 0.0, &[1.0, 10.0, 100.0]).unwrap();
+        let split_capture = &split[&(74186, 0)][3];
+        let f = split_capture[&0];
+        assert!(f < 0.95, "the resonance must shield, got {f}");
+        assert!(!split_capture.contains_key(&1));
+        // Against the single group [1, 100], which the range only half covers, the whole group is integrated:
+        // the factor is the one a range spanning the group gives, not a lethargy blend of f with 1.
+        let edge = mixture_scales(&nuclides, &atoms, 0.0, &[1.0, 100.0]).unwrap();
+        let spanning = BTreeMap::from([((74186, 0), resonant(vec![(1.0, 100.0)]))]);
+        let whole = mixture_scales(&spanning, &atoms, 0.0, &[1.0, 100.0]).unwrap();
+        let got = edge[&(74186, 0)][3][&0];
+        let want = whole[&(74186, 0)][3][&0];
+        assert_eq!(got, want);
+        // The resonance holds nearly all of the group's capture, so the whole group shields at least as much as
+        // its resonant half: the old blend 1 - c (1 - f) (here 1 - (1 - f)/2) understated it.
+        assert!(got <= f, "got {got}, resonant half {f}");
+        assert!(got < 1.0 - 0.5 * (1.0 - f));
+    }
+
+    fn p140_mixture_spec() -> crate::spec::SelfShieldingMixture {
+        serde_json::from_value(serde_json::json!({
+            "evaluation_files": [{"path": "w186.endf", "sha256": "0".repeat(64)}],
+        }))
+        .unwrap()
+    }
+
+    fn p140_w186_mixture(
+        spec: &crate::spec::SelfShieldingMixture,
+    ) -> Result<PreparedMixture, String> {
+        let tape = p140_tape(
+            7437,
+            74186,
+            183.0,
+            &[(74186, vec![(1e-5, 1e4, vec![[10.0, 0.5, 1e-3, 5e-2]])])],
+        );
+        PreparedMixture::from_evaluations(spec, &[("w186.endf".to_string(), tape)])
+    }
+
+    #[test]
+    fn mixture_capture_scale_rises_toward_one_with_dilution() {
+        let mixture = p140_w186_mixture(&p140_mixture_spec()).expect("the synthetic tape parses");
+        let boundaries = [1.0, 5.0, 20.0, 100.0];
+        let mut previous = 0.0;
+        let mut last = None;
+        for diluent in [0.0, 10.0, 1e3, 1e5] {
+            let mut composition = BTreeMap::from([((74186, 0), 1.0)]);
+            if diluent > 0.0 {
+                composition.insert((26056, 0), diluent);
+            }
+            let plan = mixture
+                .plan(&composition, &boundaries, 300.0, false)
+                .expect("the mixture plan builds");
+            let scale = plan
+                .row_scales(74186, 0, 102)
+                .expect("W186 capture is shielded")[&1];
+            assert!(
+                scale > previous && scale <= 1.0,
+                "diluent {diluent}: {scale} after {previous}"
+            );
+            previous = scale;
+            last = Some(plan);
+        }
+        assert!(previous > 0.95, "{previous}");
+        let plan = last.unwrap();
+        let report = plan.mixture.as_ref().expect("mixture report");
+        assert_eq!(report.mode, "mixture");
+        assert_eq!(report.covered, vec!["W186".to_string()]);
+        assert_eq!(report.background_estimated, vec!["Fe56".to_string()]);
+        assert_eq!(plan.uncovered_targets, vec!["Fe56".to_string()]);
+        let summary = &report.scales["W186"]["capture"];
+        assert!(summary.groups >= 1 && summary.min_scale <= previous);
+        assert!(plan.applied["W186"].contains_key(&1));
+        assert!(plan.geometry.is_none());
+    }
+
+    #[test]
+    fn mixture_completeness_and_unusable_inputs_are_refused() {
+        let mut spec = p140_mixture_spec();
+        spec.require_complete = true;
+        let mixture = p140_w186_mixture(&spec).unwrap();
+        let boundaries = [1.0, 5.0, 20.0, 100.0];
+        let composition = BTreeMap::from([((74186, 0), 1.0), ((26056, 0), 1.0)]);
+        let error = mixture
+            .plan(&composition, &boundaries, 300.0, false)
+            .unwrap_err();
+        assert!(error.contains("Fe56"), "{error}");
+        // A trace nuclide below 1e-6 atom fraction does not trip require_complete.
+        let trace = BTreeMap::from([((74186, 0), 1.0), ((26056, 0), 1e-9)]);
+        assert!(mixture.plan(&trace, &boundaries, 300.0, false).is_ok());
+        // The spec's own require_shielding_complete refuses any uncovered nuclide.
+        let error = mixture.plan(&trace, &boundaries, 300.0, true).unwrap_err();
+        assert!(error.contains("Fe56"), "{error}");
+        // No supplied nuclide in the material, a bad temperature and bad boundaries.
+        let iron = BTreeMap::from([((26056, 0), 1.0)]);
+        let error = mixture.plan(&iron, &boundaries, 300.0, false).unwrap_err();
+        assert!(error.contains("no nuclide"), "{error}");
+        assert!(mixture.plan(&trace, &boundaries, 0.0, false).is_err());
+        assert!(mixture.plan(&trace, &[5.0, 1.0], 300.0, false).is_err());
+        // An unknown profile is refused before any file is read.
+        let mut spec = p140_mixture_spec();
+        spec.profile = Some("bogus".into());
+        let error = PreparedMixture::from_evaluations(&spec, &[]).unwrap_err();
+        assert!(error.contains("bogus"), "{error}");
+        // A tape that is not ENDF names the file.
+        let error = PreparedMixture::from_evaluations(
+            &p140_mixture_spec(),
+            &[("w186.endf".to_string(), "not an ENDF tape".to_string())],
+        )
+        .unwrap_err();
+        assert!(error.contains("w186.endf"), "{error}");
+    }
+
+    #[test]
+    fn analytic_sigma_p_is_the_channel_radius_estimate() {
+        // A = 56: a = 0.123*56^(1/3)+0.08 = 0.551 (1e-12 cm), 4*pi*a^2*(57/56)^2 = 3.95 b.
+        let radius = 0.123 * 56.0f64.cbrt() + 0.08;
+        let want = 4.0 * std::f64::consts::PI * radius * radius * (57.0f64 / 56.0).powi(2);
+        assert!((analytic_sigma_p_b(26056) - want).abs() < 1e-12);
+        // Potential scattering of medium and heavy nuclei is a few barns (Fe-56 R' = 5.4 fm gives 3.7 b,
+        // O-16 about 3.8 b); an estimate a hundred times smaller understated the dilution.
+        for za in [8016, 26056, 74184] {
+            let sigma_p = analytic_sigma_p_b(za);
+            assert!((1.0..20.0).contains(&sigma_p), "{za}: {sigma_p} b");
         }
     }
 }

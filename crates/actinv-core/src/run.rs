@@ -951,13 +951,17 @@ struct PreparedDamage {
 
 struct PreparedShielding {
     options: crate::spec::SelfShieldingOptions,
-    /// Bondarenko-table hash; `None` in geometry mode.
+    /// Bondarenko-table hash; `None` in geometry and mixture mode.
     sha256: Option<String>,
     table: Option<crate::shielding::PreparedShieldTable>,
     /// Sigmoid-curve geometry (P129); exclusive with `table`.
     geometry: Option<crate::shielding::PreparedGeometry>,
     /// Computed hash of each `geometry.resonance_files` entry, in order.
     resonance_sha256: Vec<String>,
+    /// Pointwise mixture model; exclusive with `table` and `geometry`.
+    mixture: Option<crate::shielding::PreparedMixture>,
+    /// Computed hash of each `mixture.evaluation_files` entry, in order.
+    evaluation_sha256: Vec<String>,
 }
 
 /// P126: the verified kerma table of one run. It is read per run rather than prepared with the
@@ -2889,12 +2893,33 @@ impl PreparedRun {
                     }
                     None => None,
                 };
+                let mut evaluation_sha256 = Vec::new();
+                let mixture = match &options.mixture {
+                    Some(mixture) => {
+                        let mut files = Vec::with_capacity(mixture.evaluation_files.len());
+                        for reference in &mixture.evaluation_files {
+                            let (text, sha) =
+                                read_verified_text(&reference.path, Some(&reference.sha256))
+                                    .map_err(|error| {
+                                        format!("self-shielding evaluation file: {error}")
+                                    })?;
+                            evaluation_sha256.push(sha);
+                            files.push((reference.path.clone(), text));
+                        }
+                        Some(crate::shielding::PreparedMixture::from_evaluations(
+                            mixture, &files,
+                        )?)
+                    }
+                    None => None,
+                };
                 Some(PreparedShielding {
                     options: options.clone(),
                     sha256,
                     table,
                     geometry,
                     resonance_sha256,
+                    mixture,
+                    evaluation_sha256,
                 })
             }
             None => None,
@@ -4142,6 +4167,7 @@ impl PreparedRun {
                 Some(crate::shielding::ShieldPlan::build(
                     prepared.table.as_ref(),
                     prepared.geometry.as_ref(),
+                    prepared.mixture.as_ref(),
                     &prepared.options,
                     &bulk_inv,
                     lib.boundaries_ev(),
@@ -8033,7 +8059,12 @@ impl PreparedRun {
             }
         }
         if let (Some(prepared), Some(plan)) = (&self.shielding, &shield_plan) {
-            let (model, channel_map) = if plan.geometry.is_some() {
+            let (model, channel_map) = if plan.mixture.is_some() {
+                (
+                    "narrow-resonance flux weighting with the actual mixture: in every group that overlaps a supplied nuclide's resolved range, phi(E) = 1/Sigma_t(E) per unit lethargy with Sigma_t the sum of N_i * sigma_t,i from the Doppler-broadened pointwise cross sections (analytic potential scattering for nuclides without a file), and the applied factor is the phi-weighted mean of the cross section over the whole group divided by its infinite-dilution mean",
+                    "mt 2 -> elastic; mt 18/19 -> fission; mt 102 -> capture; all other reactions take the total factor",
+                )
+            } else if plan.geometry.is_some() {
                 (
                     "universal sigmoid curve (Martinho, Goncalves and Salgado): per resolved resonance z = N * sigma_peak * y * sqrt(Gamma_gamma / Gamma), G(z) = (A1 - A2) / (1 + (z/z0)^p) + A2; the per-group applied factor is the Gamma_gamma/E^2 * g*Gamma_n/Gamma weighted mean of G over resonances peaking in the group",
                     "reactions = all: every reaction of a shielded nuclide takes the group factor; reactions = capture: only mt 102 does",
@@ -8072,6 +8103,19 @@ impl PreparedRun {
                     "resonance_files_sha256".into(),
                     serde_json::json!(&prepared.resonance_sha256),
                 );
+            }
+            if let (Some(report), Some(mixture)) = (&plan.mixture, &prepared.options.mixture) {
+                let files: Vec<serde_json::Value> = mixture
+                    .evaluation_files
+                    .iter()
+                    .zip(&prepared.evaluation_sha256)
+                    .map(|(reference, sha256)| {
+                        serde_json::json!({"path": &reference.path, "sha256": sha256})
+                    })
+                    .collect();
+                let mut block = serde_json::json!(report);
+                block["files"] = serde_json::Value::Array(files);
+                shielding_object.insert("mixture".into(), block);
             }
             ledger
                 .as_object_mut()
@@ -8509,7 +8553,20 @@ impl PreparedRun {
             let certificate_object = certificate
                 .as_object_mut()
                 .expect("certificate is an object");
-            let (format_name, channel_map, method_limits) = if plan.geometry.is_some() {
+            let (format_name, channel_map, method_limits) = if plan.mixture.is_some() {
+                (
+                    "pointwise-mixture",
+                    "mt 2 -> elastic; mt 18/19 -> fission; mt 102 -> capture; all other reactions take the total factor",
+                    serde_json::json!([
+                        "factors cover the groups that overlap the resolved resonance ranges of the supplied evaluations, each integrated over the whole group; other groups, including the unresolved range, are unshielded (scale 1)",
+                        "the weighting spectrum is 1/Sigma_t(E) with the declared mixture's own total: narrow-resonance flux weighting with no resonance-interference or spatial (geometry) effect and no energy-dependent slowing-down source",
+                        "pointwise cross sections are the build-library reconstruction (resonance + MF=3 background) Doppler broadened to the run temperature; the total adds each channel's resonance contribution to the MF=3 MT 1 background",
+                        "composition nuclides without an evaluation file contribute only the analytic potential-scattering estimate to the mixture total",
+                        "damage-energy observables are not shielded",
+                        "composition uses the declared material, not evolved inventories",
+                    ]),
+                )
+            } else if plan.geometry.is_some() {
                 (
                     "sigmoid-curve-geometry",
                     "reactions = all: every reaction of a shielded nuclide takes the group factor; reactions = capture: only mt 102 does",
@@ -8559,6 +8616,9 @@ impl PreparedRun {
             if let Some(geometry) = &plan.geometry {
                 shielding_object.insert("geometry".into(), serde_json::json!(geometry));
             }
+            if let Some(report) = &plan.mixture {
+                shielding_object.insert("mixture".into(), serde_json::json!(report));
+            }
             certificate_object.insert("shielding".into(), shielding_certificate);
             let inputs = certificate_object
                 .get_mut("inputs")
@@ -8589,6 +8649,24 @@ impl PreparedRun {
                     .collect();
                 inputs.insert(
                     "shielding_resonance_files".into(),
+                    serde_json::Value::Array(files),
+                );
+            }
+            if let Some(mixture) = &prepared.options.mixture {
+                let files: Vec<serde_json::Value> = mixture
+                    .evaluation_files
+                    .iter()
+                    .zip(&prepared.evaluation_sha256)
+                    .map(|(reference, sha256)| {
+                        serde_json::json!({
+                            "path": &reference.path,
+                            "sha256_declared": &reference.sha256,
+                            "sha256": sha256,
+                        })
+                    })
+                    .collect();
+                inputs.insert(
+                    "shielding_evaluation_files".into(),
                     serde_json::Value::Array(files),
                 );
             }
@@ -8761,6 +8839,11 @@ fn prepared_fingerprint(
         }
         if let Some(geometry) = &options.geometry {
             for reference in &geometry.resonance_files {
+                files.push(fingerprint_file(&reference.path)?);
+            }
+        }
+        if let Some(mixture) = &options.mixture {
+            for reference in &mixture.evaluation_files {
                 files.push(fingerprint_file(&reference.path)?);
             }
         }
@@ -10981,6 +11064,8 @@ mod step_library_tests {
             table: None,
             geometry: Some(geometry),
             resonance_sha256: vec!["0".repeat(64)],
+            mixture: None,
+            evaluation_sha256: Vec::new(),
         });
         let mut spec = spec_json(false);
         spec.self_shielding = Some(options);

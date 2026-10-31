@@ -288,6 +288,10 @@ pub struct SelfShieldingOptions {
     /// foil, wire, sphere or cylinder target (FISPACT-II SSFGEOMETRY).
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub geometry: Option<SelfShieldingGeometry>,
+    /// Run-time narrow-resonance self-shielding from the material's own pointwise cross sections. Exclusive
+    /// with `table` and `geometry`.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub mixture: Option<SelfShieldingMixture>,
 }
 
 fn dilution_composition() -> String {
@@ -454,6 +458,43 @@ impl SelfShieldingGeometry {
                 actinv_data::composition::material_key(raw)
                     .map_err(|error| format!("self_shielding.geometry.choose: {error}"))?;
             }
+        }
+        Ok(())
+    }
+}
+
+/// Mixture self-shielding: per-group resonance self-shielding factors computed at run time from the
+/// pointwise cross sections of the declared material's nuclides (narrow-resonance flux weighting with the
+/// mixture's own total), from the resolved ranges of the supplied ENDF-6 evaluations.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct SelfShieldingMixture {
+    /// Hash-pinned raw (0 K) ENDF-6 neutron evaluations, one material per nuclide, carrying MF=2/MT=151
+    /// resolved resonance parameters and the MF=3 background.
+    pub evaluation_files: Vec<HashedFileRef>,
+    /// Tape normalization applied to each evaluation before parsing: "none" (default), "endfb8" or "tendl",
+    /// the same profiles as `build-library --profile`. Absent means "none", and the spec echo is unchanged.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub profile: Option<String>,
+    /// Refuse the run when a composition nuclide above 1e-6 atom fraction has no evaluation file; otherwise
+    /// such nuclides contribute their potential-scattering estimate to the mixture total and are listed.
+    #[serde(default, skip_serializing_if = "std::ops::Not::not")]
+    pub require_complete: bool,
+}
+
+impl SelfShieldingMixture {
+    /// The tape normalization profile of the evaluation files; absent is `none`.
+    pub fn normalize_profile(&self) -> Result<actinv_data::normalize::NormalizeProfile, String> {
+        actinv_data::normalize::NormalizeProfile::parse(self.profile.as_deref().unwrap_or("none"))
+            .map_err(|error| format!("self_shielding.mixture.profile: {error}"))
+    }
+
+    fn validate(&self) -> Result<(), String> {
+        self.normalize_profile()?;
+        if self.evaluation_files.is_empty() {
+            return Err(
+                "self_shielding.mixture needs cross-section data: evaluation_files is empty".into(),
+            );
         }
         Ok(())
     }
@@ -2250,15 +2291,30 @@ impl Spec {
                     self.projectile.name()
                 ));
             }
-            match (&shielding.table, &shielding.geometry) {
-                (Some(_), Some(_)) => {
+            match (&shielding.table, &shielding.geometry, &shielding.mixture) {
+                (Some(_), Some(_), _) => {
                     return Err(
                         "self_shielding takes either a table (Bondarenko) or a geometry (sigmoid curve), not both"
                             .into(),
                     );
                 }
-                (None, None) => {
-                    return Err("self_shielding requires a table or a geometry section".into());
+                (Some(_), None, Some(_)) => {
+                    return Err(
+                        "self_shielding takes either a table (Bondarenko) or a mixture (pointwise), not both"
+                            .into(),
+                    );
+                }
+                (None, Some(_), Some(_)) => {
+                    return Err(
+                        "self_shielding takes either a geometry (sigmoid curve) or a mixture (pointwise), not both"
+                            .into(),
+                    );
+                }
+                (None, None, None) => {
+                    return Err(
+                        "self_shielding requires a table or a geometry section, or a mixture section"
+                            .into(),
+                    );
                 }
                 _ => {}
             }
@@ -2291,6 +2347,15 @@ impl Spec {
                     );
                 }
                 geometry.validate(self.material.density_g_cm3)?;
+            }
+            if let Some(mixture) = &shielding.mixture {
+                if shielding.dilution != "composition" || !shielding.dilution_overrides.is_empty() {
+                    return Err(
+                        "self_shielding mixture does not use dilution, sigma0_b or dilution_overrides"
+                            .into(),
+                    );
+                }
+                mixture.validate()?;
             }
             for (name, groups) in &shielding.dilution_overrides {
                 match actinv_data::composition::material_key(name)
@@ -3720,6 +3785,87 @@ mod duration_tests {
         let error =
             with_geometry(&|geometry| geometry["thickness"] = serde_json::json!(1.0)).unwrap_err();
         assert!(error.contains("thickness"), "{error}");
+    }
+
+    #[test]
+    fn self_shielding_mixture_is_validated() {
+        let mixture = || {
+            serde_json::json!({
+                "evaluation_files": [{"path": "n_Cu063.endf", "sha256": "0".repeat(64)}],
+            })
+        };
+        let spec_with = |section: serde_json::Value| {
+            let mut value = minimal_spec();
+            value["self_shielding"] = section;
+            Spec::from_json(&value.to_string())
+        };
+        let with_mixture = |edit: &dyn Fn(&mut serde_json::Value)| {
+            let mut mixture = mixture();
+            edit(&mut mixture);
+            spec_with(serde_json::json!({ "mixture": mixture }))
+        };
+        // The defaults serialize away: no table, no geometry, no profile, no require_complete.
+        let spec = with_mixture(&|_| {}).unwrap();
+        let section = serde_json::to_value(&spec.self_shielding).unwrap();
+        assert!(section.get("table").is_none());
+        assert!(section.get("geometry").is_none());
+        assert!(section["mixture"].get("profile").is_none());
+        assert!(section["mixture"].get("require_complete").is_none());
+        // Exclusive with the table and with the geometry; the message names both.
+        let table = serde_json::json!({"path": "t.json", "sha256": "0".repeat(64)});
+        let geometry = serde_json::json!({
+            "shape": "foil",
+            "length_cm": 0.01,
+            "density_g_cm3": 19.3,
+            "resonance_files": [{"path": "w184.endf", "sha256": "0".repeat(64)}],
+        });
+        let error =
+            spec_with(serde_json::json!({"table": table, "mixture": mixture()})).unwrap_err();
+        assert!(
+            error.contains("table") && error.contains("mixture") && error.contains("not both"),
+            "{error}"
+        );
+        let error =
+            spec_with(serde_json::json!({"geometry": geometry, "mixture": mixture()})).unwrap_err();
+        assert!(
+            error.contains("geometry") && error.contains("mixture") && error.contains("not both"),
+            "{error}"
+        );
+        // The dilution fields belong to the table mode.
+        let error = spec_with(serde_json::json!({
+            "mixture": mixture(), "dilution": "fixed", "sigma0_b": 1.0
+        }))
+        .unwrap_err();
+        assert!(error.contains("does not use dilution"), "{error}");
+        // An empty file list, an unknown key and an unknown profile are refused.
+        let error = with_mixture(&|mixture| mixture["evaluation_files"] = serde_json::json!([]))
+            .unwrap_err();
+        assert!(error.contains("evaluation_files is empty"), "{error}");
+        let error =
+            with_mixture(&|mixture| mixture["thickness"] = serde_json::json!(1.0)).unwrap_err();
+        assert!(error.contains("thickness"), "{error}");
+        let error =
+            with_mixture(&|mixture| mixture["profile"] = serde_json::json!("bogus")).unwrap_err();
+        assert!(
+            error.contains("self_shielding.mixture.profile") && error.contains("bogus"),
+            "{error}"
+        );
+        // The profile and require_complete round-trip.
+        let spec = with_mixture(&|mixture| {
+            mixture["profile"] = serde_json::json!("endfb8");
+            mixture["require_complete"] = serde_json::json!(true);
+        })
+        .unwrap();
+        let mixture_spec = spec.self_shielding.clone().unwrap().mixture.unwrap();
+        assert_eq!(mixture_spec.profile.as_deref(), Some("endfb8"));
+        assert!(mixture_spec.require_complete);
+        assert_eq!(
+            mixture_spec.normalize_profile().unwrap(),
+            actinv_data::normalize::NormalizeProfile::EndfB8
+        );
+        let echoed = serde_json::to_value(&spec.self_shielding).unwrap();
+        assert_eq!(echoed["mixture"]["profile"], "endfb8");
+        assert_eq!(echoed["mixture"]["require_complete"], true);
     }
 
     #[test]

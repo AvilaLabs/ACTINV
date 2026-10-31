@@ -1062,6 +1062,44 @@ neglected (the model assumes non-overlapping resonances); the unresolved range, 
 are not treated; and the sigmoid fit is an approximation to Monte Carlo results for simple shapes, not a
 transport calculation.
 
+### Mixture self-shielding (pointwise cross sections)
+
+`self_shielding.mixture` computes per-group resonance self-shielding factors at run time from the material's own
+pointwise cross sections, in place of a precomputed Bondarenko table or the sigmoid curve. It is exclusive with
+`table` and `geometry` (and with `dilution`, `sigma0_b` and `dilution_overrides`).
+
+```json
+"self_shielding": {
+  "mixture": {
+    "evaluation_files": [{"path": "n_Cu063.endf", "sha256": "..."}, {"path": "n_Cu065.endf", "sha256": "..."}],
+    "profile": "endfb8",
+    "require_complete": false
+  }
+}
+```
+
+- `evaluation_files` (required, non-empty) are hash-pinned raw 0 K ENDF-6 neutron evaluations, one nuclide per file
+  (the inputs `build-library` reads), each with MF=2/MT=151 resolved resonance parameters and its MF=3 background.
+  The files are verified against their SHA-256 like the geometry's `resonance_files`.
+- `profile` (optional, `"none"`, `"endfb8"` or `"tendl"`, default `"none"`) applies the `build-library --profile`
+  tape normalization to each file before it is read.
+- `require_complete` (optional, default `false`) refuses the run when a material nuclide above 1e-6 atom fraction has
+  no evaluation file. Without it, such nuclides enter the mixture total through the analytic potential-scattering
+  estimate and are listed in the ledger as `background_estimated`.
+
+For each material nuclide with a file, ACTINV reconstructs the total, elastic, fission and capture cross sections
+at the run temperature (resonance contribution plus MF=3 background, Doppler broadened, as `build-library` does).
+The flux is weighted as `1 / Sigma_t(E)` per unit lethargy, where `Sigma_t` is the macroscopic total of the whole
+declared mixture. In each library group that overlaps the nuclide's resolved range, the nuclide's factor for a channel
+is the flux-weighted mean of its cross section over the whole group divided by its plain lethargy mean. The factors
+scale the nuclide's group cross sections as the other modes do (mt 2 elastic, mt 18/19 fission, mt 102 capture, every
+other reaction the total factor). Groups that do not overlap a resolved range are unshielded, including the unresolved
+range. The method needs a positive run `temperature_K`.
+
+The ledger `shielding.mixture` block records the profile, temperature, evaluation files with their hashes, the
+covered and `background_estimated` nuclides, and per covered nuclide the number of groups and the smallest applied
+scale for each channel.
+
 ## Gas production (H and He isotopes)
 
 This option was added in 1.4.0.

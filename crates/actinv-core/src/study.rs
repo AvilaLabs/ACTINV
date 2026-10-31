@@ -2540,9 +2540,36 @@ fn build_sampling_plan(
                     }
                     None => None,
                 };
+                let mixture = match &options.mixture {
+                    Some(mixture) => {
+                        let mut files = Vec::with_capacity(mixture.evaluation_files.len());
+                        for reference in &mixture.evaluation_files {
+                            let path = resolve_path(base, &reference.path);
+                            let got = file_sha256(&path)?;
+                            if got != reference.sha256 {
+                                return Err(format!(
+                                    "self-shielding evaluation file sha256 mismatch: declared {}, got {got}",
+                                    reference.sha256
+                                ));
+                            }
+                            let text = fs::read_to_string(&path).map_err(|error| {
+                                format!(
+                                    "cannot read self-shielding evaluation file {}: {error}",
+                                    path.display()
+                                )
+                            })?;
+                            files.push((reference.path.clone(), text));
+                        }
+                        Some(crate::shielding::PreparedMixture::from_evaluations(
+                            mixture, &files,
+                        )?)
+                    }
+                    None => None,
+                };
                 Some(crate::shielding::ShieldPlan::build(
                     table.as_ref(),
                     geometry.as_ref(),
+                    mixture.as_ref(),
                     options,
                     &isotopes,
                     &lib.bounds,

@@ -84,6 +84,11 @@ fn resolve_inputs_under(spec: &mut Spec, base: &Path, data_root: &Path) {
                 resolve(&mut file.path);
             }
         }
+        if let Some(mixture) = &mut shielding.mixture {
+            for file in &mut mixture.evaluation_files {
+                resolve(&mut file.path);
+            }
+        }
     }
     if let Some(damage) = &mut spec.damage {
         resolve(&mut damage.table.path);
@@ -152,6 +157,11 @@ pub fn check_files(spec: &Spec, hashes: bool) -> Result<(), String> {
         if let Some(geometry) = &shielding.geometry {
             for file in &geometry.resonance_files {
                 inputs.push(("Resonance file", &file.path, Some(&file.sha256)));
+            }
+        }
+        if let Some(mixture) = &shielding.mixture {
+            for file in &mixture.evaluation_files {
+                inputs.push(("Evaluation file", &file.path, Some(&file.sha256)));
             }
         }
     }
