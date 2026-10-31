@@ -1,0 +1,131 @@
+{
+ "case": "h4_isomer_cooled_1d",
+ "description": "Co-58m1 (synthetic half-life 60 s) at 1e20 atoms/g, decaying by isomeric transition to Co-58 g (70.86 d) -> Fe-58; no irradiation, cooled 600 s, 3000 s and 82800 s (1 d in all)",
+ "mass_g": 1.0,
+ "conventions": {
+  "year_s": "31557600",
+  "ln2": "6.931471805599453094172321214581765680755e-1",
+  "barn_cm2": "1e-24",
+  "rate_per_s": "sigma_b * 1e-24 * flux_n_cm2_s * flux_multiplier",
+  "inventory_unit": "atoms per gram of material (linear in the initial atoms)",
+  "precision": "mpmath scaling-and-squaring Taylor expm; per-case working precision of 120 to 500 digits, cross-checked at twice that (precision_cross_check_max_rel_diff); output 30 significant digits"
+ },
+ "nuclides": [
+  {
+   "name": "Co58m1",
+   "za": 27058,
+   "liso": 1,
+   "awr": "57.5012",
+   "half_life_s": "60",
+   "lambda_per_s": "1.15524530093324218236205353576e-2"
+  },
+  {
+   "name": "Co58",
+   "za": 27058,
+   "liso": 0,
+   "awr": "57.5012",
+   "half_life_s": "6122304",
+   "lambda_per_s": "1.13216720463398307143394402084e-7"
+  },
+  {
+   "name": "Fe58",
+   "za": 26058,
+   "liso": 0,
+   "awr": "57.5012",
+   "half_life_s": null,
+   "lambda_per_s": "0"
+  }
+ ],
+ "decays": {
+  "Co58m1": [
+   {
+    "to": "Co58",
+    "rtyp": 3,
+    "rfs": 0,
+    "branching": "1"
+   }
+  ],
+  "Co58": [
+   {
+    "to": "Fe58",
+    "rtyp": 2,
+    "rfs": 0,
+    "branching": "1"
+   }
+  ]
+ },
+ "reactions": [],
+ "flux_n_cm2_s": "0",
+ "initial_atoms_per_g": {
+  "Co58m1": "1e20"
+ },
+ "schedule": [
+  {
+   "dt_s": "600",
+   "dt_spec": "600.0 s",
+   "flux_multiplier": "0",
+   "label": "cool 10 min"
+  },
+  {
+   "dt_s": "3000",
+   "dt_spec": "3000.0 s",
+   "flux_multiplier": "0",
+   "label": "cool 1 h"
+  },
+  {
+   "dt_s": "82800",
+   "dt_spec": "82800.0 s",
+   "flux_multiplier": "0",
+   "label": "cool 1 d"
+  }
+ ],
+ "reference_steps": [
+  {
+   "step": 1,
+   "t_end_s": "6.00000000000000000000000000000e+2",
+   "label": "cool 10 min",
+   "inventory_atoms_per_g": {
+    "Co58m1": "9.76562500000000000000000000000e+16",
+    "Co58": "9.98965299866682427371895505694e+19",
+    "Fe58": "5.81376333175726281044943063144e+15"
+   },
+   "activity_Bq_per_g": {
+    "Co58m1": "1.12816923919261931871294290602e+15",
+    "Co58": "1.13099575107641050561898223765e+13"
+   },
+   "total_activity_Bq_per_g": "1.13947919670338342376913272840e+15"
+  },
+  {
+   "step": 2,
+   "t_end_s": "3.60000000000000000000000000000e+3",
+   "label": "cool 1 h",
+   "inventory_atoms_per_g": {
+    "Co58m1": "8.67361737988403547205962240696e+1",
+    "Co58": "9.99602299190364670434062657983e+19",
+    "Fe58": "3.97700809635328698575604028807e+16"
+   },
+   "activity_Bq_per_g": {
+    "Co58m1": "1.00201557202039321367065741166",
+    "Co58": "1.13171694082005756851885383418e+13"
+   },
+   "total_activity_Bq_per_g": "1.13171694082015777007605587350e+13"
+  },
+  {
+   "step": 3,
+   "t_end_s": "8.64000000000000000000000000000e+4",
+   "label": "cool 1 d",
+   "inventory_atoms_per_g": {
+    "Co58m1": "3.28704949737455904896726185201e-414",
+    "Co58": "9.90275467688060906825324702508e+19",
+    "Fe58": "9.72453231193909317467529749192e+17"
+   },
+   "activity_Bq_per_g": {
+    "Co58m1": "3.79734848577693492735382375931e-416",
+    "Co58": "1.12115740807000214363269462677e+13"
+   },
+   "total_activity_Bq_per_g": "1.12115740807000214363269462677e+13"
+  }
+ ],
+ "actinv_mode": "coupled",
+ "precision_cross_check_max_rel_diff": "2.36e-297"
+}

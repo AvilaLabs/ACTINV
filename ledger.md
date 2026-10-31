@@ -5115,3 +5115,24 @@ fusion-isotope 41149924631 (`results/p172/ci_runs.json`). **P172-PASS.**
 - **Design change before registration.** The draft's thin-sample control (shells at 1e-6 density) saw only the
   uncollided 14.1 MeV line and could not separate processing from resonance shielding; it was replaced by the
   decomposition above.
+
+## Entry 298 — P174 registered: below-floor states in activity, heat and dose totals, the P168 5d successor (2026-10-30)
+
+`protocols/ACTINV-P174_PROTOCOL.md` (SHA-256 `0c9e26bb…`), with harness `controls/p174_floor.py` (`6ecdf564…`) and
+checker `controls/check_p174.py` (`5040a8f4…`). Held-out references `results/p174/refs/` (mpmath, manifest
+`748a344c…`), computed before registration; no ACTINV result exists.
+- **Candidates**, selected by `options.below_floor`:
+  - **A** (`"bound"`): below-floor states leave the totals and are reported as a bound;
+  - **B** (`"refine"`): the step is re-solved at CRAM-48 when the bound exceeds 1e-6 of the total, then A applies;
+  - **C** (`"equilibrium"`): short-lived below-floor states are rebuilt from their production rate when five
+    registered conditions hold (relaxed, parents known, no cycle, no memory of the start state, rate separation
+    from the nearest resolved ancestor); the rest fall back to B.
+  - The status quo is the baseline.
+- **Cases.** P168's 19 cases plus eight held-out cases, including the U-238 and Th-232 chains with real decay data.
+  On those two, a candidate's activity and heat totals must match the reference within 1e-6 at every step: a guard
+  against dropping real short-lived daughters, which candidate A as first drafted would have done.
+- **Decision order, fixed now:** C, then B, then A, otherwise the status quo.
+- **Design history.** The draft had only A and B. Review found that a floor relative to the largest population puts
+  real short-lived daughters below it (Po-214 sits about 1e-21 below U-238), so C and the actinide guard were added,
+  then the memory guard and the rate-separation condition, each from reading the formula against the cases before any
+  run.
