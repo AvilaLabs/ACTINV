@@ -5498,3 +5498,78 @@ candidate, and item 2 proceeds. No public sentence is allowed.
 Next, before any correction is built, find out from the code and the data why each option fails:
 - why the region foil over-shields steel's dilute constituents;
 - why the Bondarenko table under-shields Cu-63.
+
+## Entry 316 — ACTINV defect: R-matrix-limited capture summed levels coherently (2026-10-31)
+
+**Found while diagnosing item 2.** Entry 315 asked why the Bondarenko table under-shields Cu-63. The table's Cu-63
+group capture disagreed with OpenMC's own collapse of the same evaluation even at infinite dilution:
+- 0.546 × in the 1/v range;
+- 2–13 × in the valleys between resonances;
+- close at the resonance peaks.
+
+ENDF/B-VIII.1 Cu-63 has no MF=3 capture background below 28 keV, so the cause is in ACTINV's reconstruction.
+
+**The defect.** `reconstruct_rmatrix_limited` computes eliminated capture in two ways:
+- with channel backgrounds, as the unitarity residual 1 − Σ|U|², which is correct;
+- without them (the direct path added in `5835187`, 2026-09-27, against cancellation noise), as the square of one
+  coherent photon amplitude Σ_λ γ^γ_λ (Aγ_c)_λ.
+
+Reich-Moore eliminates many photon channels whose amplitudes have random signs. Capture is therefore the incoherent sum
+Σ_λ (Γγ_λ/2) |(Aγ_c)_λ|², which is the anti-Hermitian part of A⁻¹. The two forms agree for a single level, and the
+only test fixture had one level.
+
+An independent single-channel calculation on Cu-63's two s-wave spin groups confirms it:
+- the coherent form reproduces ACTINV's values to every printed digit (thermal 2.4448 b);
+- the incoherent form reproduces OpenMC's 294 K values (4.4805 b; 0.020981 against 0.020982 b at 200 eV).
+
+**Scope.**
+- **Where the routine is used:** `build-library` (resolved-range reconstruction, `processing.rs`) and `build-shielding`.
+- **Releases:** v1.5.0, v1.6.0, v1.6.1 and v1.7.0.
+- **Evaluations:** only R-matrix-limited (LRF=7) ones without channel backgrounds.
+  - ENDF/B-VIII.1 has 17 of 557: Ca-40, Cl-35, Cu-63, Cu-65, Fe-54, Fe-57, Pu-239, Rh-103, Si-28/29/30, Sr-88, V-51,
+    W-182/183/184/186.
+  - FENDL-3.2c has six: Fe-54, Fe-57, W-182/183/184/186.
+  - TENDL-2025 has none, by a scan of the 2,850 neutron files and confirmed on O-16, which is LRF=2.
+- **Shipped data:** unaffected. data-v1.0.0/1.1.0 predate the defect, and TENDL has no such files.
+- **Size, in the P172 ENDF/B-VIII.1 709-group library:** thermal capture against OpenMC's collapse of the same
+  evaluation was:
+  - Ca-40 0.09;
+  - Cu-65 0.37;
+  - Cu-63 0.55;
+  - Si-28 0.64;
+  - Fe-57 0.69;
+  - Fe-54 0.80;
+  - Cl-35 0.95;
+  - V-51 1.23;
+  - Rh-103 1.33;
+  - W-186 1.40;
+  - W-182 1.86;
+  - W-184 3.87;
+  - W-183 9.14;
+  - Sr-88 1.00.
+
+**Consequences for recorded results.** No verdict is changed; each records what was run.
+- **P172:** the TENDL-2025 primary arm is unaffected. The identical-data `actinv_endf8` arm used the affected library,
+  so its attribution for samples whose decay heat depends on resolved-range capture (W, Cu, V, Fe) is not reliable
+  until that arm is rerun on a corrected library.
+- **P173:** the Cu-63 (n,γ) processing difference R_actinv/R_omg − 1 is +0.008 and +0.010. The W capture rows are
+  −0.0003, since their fast-spectrum weight lies above the resolved range.
+- **P176:** A1's Cu-63 table factors were built on the defective shapes.
+
+**Repair (`82c6b75`).** The direct path now sums levels incoherently. A new three-level fixture with a bound level tests it
+against an independent Reich-Moore formula and asserts that the fixture separates the coherent form. With the
+repair, zero-K resonance capture plus the MF=3 background matches OpenMC's 294 K capture at 0.0253, 1 and 10 eV for
+all 13 checked tapes:
+- 11 within 0.04 %;
+- Cl-35 and Si-28 once their MF=3 background is added;
+- Rh-103 at 1 eV and W-183 at 10 eV sit on resonances (Doppler).
+
+**Item 2 diagnosis (exploratory; P173's data had already been seen).**
+- **Bondarenko table:** its Cu-63 shortfall follows from the defect above. With the same σ0, a narrow-resonance
+  weight on OpenMC's pointwise data gives q = 0.883/0.862 against the table's 0.918/0.903.
+- **Region foil:** it over-shields dilute constituents because the sigmoid's z = N σ_peak L uses the nuclide's own
+  density and ignores the matrix's scattering.
+- **A candidate correction:** per-group narrow-resonance factors from the mixture's own pointwise total cross section,
+  folded with P173's flux. Over P173's 36 capture rows this takes material rows from 11 to 0 (max |r| 0.188 → 0.031).
+  Every material-collapse row is within 0.008, and no other row moves to material. This is a lead for a registered
+  protocol on held-out cases. It is not a result.
