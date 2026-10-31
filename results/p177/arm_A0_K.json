@@ -1,0 +1,71 @@
+{
+ "actinv_bin_sha256": "372dd99f271cdd2b2b6881d46499c5ec7cc11f74033dba5da42d3a69ce2f8fcd",
+ "actinv_version": "actinv 1.7.0",
+ "arm": "A0",
+ "environment": {
+  "cgroup": {
+   "cpu.max": "200000 100000",
+   "memory.max": "6442450944",
+   "memory.swap.max": "0",
+   "path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p769848-i9149828.scope",
+   "pids.max": "128"
+  },
+  "clean_tree": true,
+  "constants_sha256": "aaeb264cdfebe8a9801084596c82c5305fc0e2d55e5bf06829753dd3772c9196",
+  "crates_tree": "bcf10791d23b409e7ec3e1eba2136987bfc2c3e2",
+  "git_head": "ce884f0bfba78ddbad6d6151fa736befb723d2da",
+  "groups_sha256": "ce4bf523498ffbb38d42aa9415fc014882b8bc7a7ecfb89f859ba3259d8fb34f",
+  "harness_sha256": "da5a1d06d060c4db89be9f5a317e5a7f58a18a1bd9aa35684cbe28cf7725cb53",
+  "platform": "Linux-7.0.0-38-generic-x86_64-with-glibc2.43",
+  "python": "3.14.4",
+  "rehearsal": false
+ },
+ "model": "K",
+ "runs": [
+  {
+   "arm": "A0",
+   "flux_total_cm_per_source": 36.61195352688211,
+   "model": "K",
+   "ok": true,
+   "rates": {
+    "Al27|107": 1.0276397500244333e-24,
+    "Ca44|102": 1.1962047289950379e-23,
+    "Co59|102": 5.2160741851338175e-22,
+    "Eu151|102": 1.1746986187635658e-19,
+    "Fe54|103": 4.17687958805335e-24,
+    "Mn55|102": null,
+    "Na23|102": 7.127924445665388e-24
+   },
+   "region": "K:50-60",
+   "run_returncode": 0,
+   "shielding": null,
+   "spec_sha256": "ce75fa76ca26a5e5130ad17e2d4ab4d0638e67d041591d2ee18d3e55431e1f14",
+   "stderr_tail": "",
+   "validate_returncode": 0,
+   "wall_s": 1.3583216667175293
+  },
+  {
+   "arm": "A0",
+   "flux_total_cm_per_source": 3.3284967681719086,
+   "model": "K",
+   "ok": true,
+   "rates": {
+    "Al27|107": 2.2697890507762286e-26,
+    "Ca44|102": 1.6322474433685776e-24,
+    "Co59|102": 7.022407383032656e-23,
+    "Eu151|102": 1.5998135854791744e-20,
+    "Fe54|103": 1.6131457747381795e-25,
+    "Mn55|102": null,
+    "Na23|102": 9.722054526256673e-25
+   },
+   "region": "K:100-120",
+   "run_returncode": 0,
+   "shielding": null,
+   "spec_sha256": "60944834c5bb130a3b1d36ad3f5f57e0816f5b13de5004b050f4c1476b4a8b0c",
+   "stderr_tail": "",
+   "validate_returncode": 0,
+   "wall_s": 1.3339223861694336
+  }
+ ],
+ "schema": "actinv-p177-geometry-1-arm"
+}

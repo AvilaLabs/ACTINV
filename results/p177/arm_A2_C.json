@@ -1,0 +1,253 @@
+{
+ "actinv_bin_sha256": "372dd99f271cdd2b2b6881d46499c5ec7cc11f74033dba5da42d3a69ce2f8fcd",
+ "actinv_version": "actinv 1.7.0",
+ "arm": "A2",
+ "environment": {
+  "cgroup": {
+   "cpu.max": "200000 100000",
+   "memory.max": "6442450944",
+   "memory.swap.max": "0",
+   "path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p769848-i9149828.scope",
+   "pids.max": "128"
+  },
+  "clean_tree": true,
+  "constants_sha256": "aaeb264cdfebe8a9801084596c82c5305fc0e2d55e5bf06829753dd3772c9196",
+  "crates_tree": "bcf10791d23b409e7ec3e1eba2136987bfc2c3e2",
+  "git_head": "ce884f0bfba78ddbad6d6151fa736befb723d2da",
+  "groups_sha256": "ce4bf523498ffbb38d42aa9415fc014882b8bc7a7ecfb89f859ba3259d8fb34f",
+  "harness_sha256": "da5a1d06d060c4db89be9f5a317e5a7f58a18a1bd9aa35684cbe28cf7725cb53",
+  "platform": "Linux-7.0.0-38-generic-x86_64-with-glibc2.43",
+  "python": "3.14.4",
+  "rehearsal": false
+ },
+ "model": "C",
+ "runs": [
+  {
+   "arm": "A2",
+   "flux_total_cm_per_source": 9.519397902545174,
+   "foil_thickness_cm": 2.0,
+   "geometry_profile": "endfb8",
+   "model": "C",
+   "ok": true,
+   "rates": {
+    "Cr50|102": 1.0829878875784893e-25,
+    "Cu63|102": 2.0529549060506452e-25,
+    "Cu63|107": 8.924663314155716e-26,
+    "Cu65|16": 1.669213154774756e-24,
+    "Zr90|16": 1.141310308767053e-24
+   },
+   "region": "C:10-12",
+   "resonance_files": [
+    "n-024_Cr_050.endf",
+    "n-024_Cr_052.endf",
+    "n-024_Cr_053.endf",
+    "n-024_Cr_054.endf",
+    "n-029_Cu_063.endf",
+    "n-029_Cu_065.endf",
+    "n-040_Zr_090.endf",
+    "n-040_Zr_091.endf",
+    "n-040_Zr_092.endf",
+    "n-040_Zr_094.endf",
+    "n-040_Zr_096.endf"
+   ],
+   "run_returncode": 0,
+   "shielding": {
+    "applied_factors_summary": {
+     "Cr50": {
+      "groups": 69,
+      "min_factor": 0.9852287347018619
+     },
+     "Cr52": {
+      "groups": 68,
+      "min_factor": 0.8727565710123328
+     },
+     "Cr53": {
+      "groups": 75,
+      "min_factor": 0.989831559555489
+     },
+     "Cr54": {
+      "groups": 49,
+      "min_factor": 0.9966179352874824
+     },
+     "Cu63": {
+      "groups": 74,
+      "min_factor": 0.08811185783644702
+     },
+     "Cu65": {
+      "groups": 68,
+      "min_factor": 0.17404808328602706
+     },
+     "Zr90": {
+      "groups": 46,
+      "min_factor": 0.9787309352271186
+     },
+     "Zr91": {
+      "groups": 55,
+      "min_factor": 0.9740330934914434
+     },
+     "Zr92": {
+      "groups": 49,
+      "min_factor": 0.9905623141799621
+     },
+     "Zr94": {
+      "groups": 43,
+      "min_factor": 0.9886429117049922
+     },
+     "Zr96": {
+      "groups": 25,
+      "min_factor": 0.9867066673701352
+     }
+    },
+    "channel_map": "reactions = all: every reaction of a shielded nuclide takes the group factor; reactions = capture: only mt 102 does",
+    "channels": [
+     "total",
+     "elastic",
+     "fission",
+     "capture"
+    ],
+    "dilution": "geometry",
+    "geometry": {
+     "omitted_bytes": 73336
+    },
+    "model": "universal sigmoid curve (Martinho, Goncalves and Salgado): per resolved resonance z = N * sigma_peak * y * sqrt(Gamma_gamma / Gamma), G(z) = (A1 - A2) / (1 + (z/z0)^p) + A2; the per-group applied factor is the Gamma_gamma/E^2 * g*Gamma_n/Gamma weighted mean of G over resonances peaking in the group",
+    "require_complete": false,
+    "resonance_files_sha256": [
+     "54ab4a4d4d662c649a99fc64c4956281808ed621cfc47a1f5522e11147511afd",
+     "06141f64278b359a38ae0fedf03e6540dc7a600bbe4585ee472e060b042804dd",
+     "1bb2fa048d98072ac2dcbd6bb044f00bf77a93d81522ecdd1b24a2acb71c7da9",
+     "809a4cf8a7cc5a9a7b2b653659eb304a6ced447b7c92d22adaae55afe3af0ca3",
+     "097fad045cb38459d080db1ade7996516392cbefc97a7098fac6127ada16c179",
+     "69877b3471ff98836e5507c7cb59f6c05c505d56a196e6f01bf4d3681d87c51c",
+     "a439a6820446be374740e067c6113e9163769b93c1650e5cf4930b834d4a5291",
+     "9dcd2bcb42d9820c4c6682c14e2de7f794ad6836ad1c03c22ed389e066b82e4c",
+     "3b175e8d52345751f69e94742b093a91bc180aaae4dbc1467df9ab12855589ad",
+     "46f6d1f5a1e5651e04d459e05dd752a12f9172f08383966fd21a86044cb80e7e",
+     "402954e4d44f3ab7a16900cb4be8e558de3d3745a95d8d32a1338bfee8564f28"
+    ],
+    "shielding_uncovered": [],
+    "sigma0_eff_b": {},
+    "sigma0_fixed_b": null,
+    "sigma_p_estimated": [],
+    "table_sha256": null
+   },
+   "spec_sha256": "f64651a94ca786ddf7526e3c785d2171ab61759149dcd20ea722abd50a920ceb",
+   "stderr_tail": "",
+   "validate_returncode": 0,
+   "wall_s": 2.9171628952026367
+  },
+  {
+   "arm": "A2",
+   "flux_total_cm_per_source": 18.8625530197204,
+   "foil_thickness_cm": 5.0,
+   "geometry_profile": "endfb8",
+   "model": "C",
+   "ok": true,
+   "rates": {
+    "Cr50|102": 2.9444633341216876e-25,
+    "Cu63|102": 4.83987430965736e-25,
+    "Cu63|107": 5.523032520133389e-26,
+    "Cu65|16": 9.66554727561273e-25,
+    "Zr90|16": 6.377471324735531e-25
+   },
+   "region": "C:20-25",
+   "resonance_files": [
+    "n-024_Cr_050.endf",
+    "n-024_Cr_052.endf",
+    "n-024_Cr_053.endf",
+    "n-024_Cr_054.endf",
+    "n-029_Cu_063.endf",
+    "n-029_Cu_065.endf",
+    "n-040_Zr_090.endf",
+    "n-040_Zr_091.endf",
+    "n-040_Zr_092.endf",
+    "n-040_Zr_094.endf",
+    "n-040_Zr_096.endf"
+   ],
+   "run_returncode": 0,
+   "shielding": {
+    "applied_factors_summary": {
+     "Cr50": {
+      "groups": 69,
+      "min_factor": 0.9692282418580311
+     },
+     "Cr52": {
+      "groups": 68,
+      "min_factor": 0.7657674256279512
+     },
+     "Cr53": {
+      "groups": 75,
+      "min_factor": 0.9787021575410773
+     },
+     "Cr54": {
+      "groups": 49,
+      "min_factor": 0.9928592084866603
+     },
+     "Cu63": {
+      "groups": 74,
+      "min_factor": 0.07347394618913425
+     },
+     "Cu65": {
+      "groups": 68,
+      "min_factor": 0.11748375464109208
+     },
+     "Zr90": {
+      "groups": 46,
+      "min_factor": 0.9560264342659253
+     },
+     "Zr91": {
+      "groups": 55,
+      "min_factor": 0.9466051522991934
+     },
+     "Zr92": {
+      "groups": 49,
+      "min_factor": 0.9802157083874625
+     },
+     "Zr94": {
+      "groups": 43,
+      "min_factor": 0.9762457653813235
+     },
+     "Zr96": {
+      "groups": 25,
+      "min_factor": 0.9722590969726003
+     }
+    },
+    "channel_map": "reactions = all: every reaction of a shielded nuclide takes the group factor; reactions = capture: only mt 102 does",
+    "channels": [
+     "total",
+     "elastic",
+     "fission",
+     "capture"
+    ],
+    "dilution": "geometry",
+    "geometry": {
+     "omitted_bytes": 73356
+    },
+    "model": "universal sigmoid curve (Martinho, Goncalves and Salgado): per resolved resonance z = N * sigma_peak * y * sqrt(Gamma_gamma / Gamma), G(z) = (A1 - A2) / (1 + (z/z0)^p) + A2; the per-group applied factor is the Gamma_gamma/E^2 * g*Gamma_n/Gamma weighted mean of G over resonances peaking in the group",
+    "require_complete": false,
+    "resonance_files_sha256": [
+     "54ab4a4d4d662c649a99fc64c4956281808ed621cfc47a1f5522e11147511afd",
+     "06141f64278b359a38ae0fedf03e6540dc7a600bbe4585ee472e060b042804dd",
+     "1bb2fa048d98072ac2dcbd6bb044f00bf77a93d81522ecdd1b24a2acb71c7da9",
+     "809a4cf8a7cc5a9a7b2b653659eb304a6ced447b7c92d22adaae55afe3af0ca3",
+     "097fad045cb38459d080db1ade7996516392cbefc97a7098fac6127ada16c179",
+     "69877b3471ff98836e5507c7cb59f6c05c505d56a196e6f01bf4d3681d87c51c",
+     "a439a6820446be374740e067c6113e9163769b93c1650e5cf4930b834d4a5291",
+     "9dcd2bcb42d9820c4c6682c14e2de7f794ad6836ad1c03c22ed389e066b82e4c",
+     "3b175e8d52345751f69e94742b093a91bc180aaae4dbc1467df9ab12855589ad",
+     "46f6d1f5a1e5651e04d459e05dd752a12f9172f08383966fd21a86044cb80e7e",
+     "402954e4d44f3ab7a16900cb4be8e558de3d3745a95d8d32a1338bfee8564f28"
+    ],
+    "shielding_uncovered": [],
+    "sigma0_eff_b": {},
+    "sigma0_fixed_b": null,
+    "sigma_p_estimated": [],
+    "table_sha256": null
+   },
+   "spec_sha256": "4e4f4e9b7640e1e0738bcf1576e040e075fd2d8ce20fa8756e1531a5ffe2164d",
+   "stderr_tail": "",
+   "validate_returncode": 0,
+   "wall_s": 2.9227664470672607
+  }
+ ],
+ "schema": "actinv-p177-geometry-1-arm"
+}

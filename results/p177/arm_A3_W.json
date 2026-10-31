@@ -1,0 +1,264 @@
+{
+ "actinv_bin_sha256": "372dd99f271cdd2b2b6881d46499c5ec7cc11f74033dba5da42d3a69ce2f8fcd",
+ "actinv_version": "actinv 1.7.0",
+ "arm": "A3",
+ "environment": {
+  "cgroup": {
+   "cpu.max": "200000 100000",
+   "memory.max": "6442450944",
+   "memory.swap.max": "0",
+   "path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p769848-i9149828.scope",
+   "pids.max": "128"
+  },
+  "clean_tree": true,
+  "constants_sha256": "aaeb264cdfebe8a9801084596c82c5305fc0e2d55e5bf06829753dd3772c9196",
+  "crates_tree": "bcf10791d23b409e7ec3e1eba2136987bfc2c3e2",
+  "git_head": "ce884f0bfba78ddbad6d6151fa736befb723d2da",
+  "groups_sha256": "ce4bf523498ffbb38d42aa9415fc014882b8bc7a7ecfb89f859ba3259d8fb34f",
+  "harness_sha256": "da5a1d06d060c4db89be9f5a317e5a7f58a18a1bd9aa35684cbe28cf7725cb53",
+  "platform": "Linux-7.0.0-38-generic-x86_64-with-glibc2.43",
+  "python": "3.14.4",
+  "rehearsal": false
+ },
+ "model": "W",
+ "runs": [
+  {
+   "arm": "A3",
+   "flux_total_cm_per_source": 2.7460974733332555,
+   "foil_thickness_cm": 10.0,
+   "geometry_profile": "endfb8",
+   "model": "W",
+   "ok": true,
+   "rates": {
+    "W182|102": 2.6975499774575552e-25,
+    "W182|103": 1.574548578957455e-27,
+    "W183|103": null,
+    "W184|102": 2.2263523413178905e-25,
+    "W186|102": 1.604016346466869e-25,
+    "W186|103": null,
+    "W186|16": 1.0213702071391144e-24
+   },
+   "region": "W:10-10.5",
+   "resonance_files": [
+    "n-074_W_180.endf",
+    "n-074_W_182.endf",
+    "n-074_W_183.endf",
+    "n-074_W_184.endf",
+    "n-074_W_186.endf"
+   ],
+   "run_returncode": 0,
+   "shielding": {
+    "applied_factors_summary": {
+     "W180": {
+      "groups": 5,
+      "min_factor": 0.18588988493272218
+     },
+     "W182": {
+      "groups": 65,
+      "min_factor": 0.06115402079071279
+     },
+     "W183": {
+      "groups": 76,
+      "min_factor": 0.06288354125558834
+     },
+     "W184": {
+      "groups": 60,
+      "min_factor": 0.06766064650683301
+     },
+     "W186": {
+      "groups": 57,
+      "min_factor": 0.060987699258814046
+     }
+    },
+    "channel_map": "reactions = all: every reaction of a shielded nuclide takes the group factor; reactions = capture: only mt 102 does",
+    "channels": [
+     "total",
+     "elastic",
+     "fission",
+     "capture"
+    ],
+    "dilution": "geometry",
+    "geometry": {
+     "omitted_bytes": 31406
+    },
+    "model": "universal sigmoid curve (Martinho, Goncalves and Salgado): per resolved resonance z = N * sigma_peak * y * sqrt(Gamma_gamma / Gamma), G(z) = (A1 - A2) / (1 + (z/z0)^p) + A2; the per-group applied factor is the Gamma_gamma/E^2 * g*Gamma_n/Gamma weighted mean of G over resonances peaking in the group",
+    "require_complete": false,
+    "resonance_files_sha256": [
+     "36b4ced7ade215b3da8d199db022a3641b808ded20e7d123b08fbf01e792bbc5",
+     "a268105de7993d5e49de2867f640178c80beaa695da750d8be8cc532ab11af2f",
+     "b857d50f3d83f5d69301dcb4fd06736c268b25be9c65ac1fad65d872bd79883f",
+     "fbd83b4ce24904466de0b7b937420250e9c2f2e1210d841dfbd032234f26d408",
+     "ca96629399e4c1f50c8feffe64daf93d131e171ed00597b41f3cc927adda9102"
+    ],
+    "shielding_uncovered": [],
+    "sigma0_eff_b": {},
+    "sigma0_fixed_b": null,
+    "sigma_p_estimated": [],
+    "table_sha256": null
+   },
+   "spec_sha256": "0047f57b9ece598e16772ceb45be2a3862fd11e53cad2dd612d740a344a4b9fb",
+   "stderr_tail": "",
+   "validate_returncode": 0,
+   "wall_s": 2.4097461700439453
+  },
+  {
+   "arm": "A3",
+   "flux_total_cm_per_source": 9.122418865976575,
+   "foil_thickness_cm": 10.0,
+   "geometry_profile": "endfb8",
+   "model": "W",
+   "ok": true,
+   "rates": {
+    "W182|102": 9.413177620219876e-25,
+    "W182|103": 4.123120025596458e-27,
+    "W183|103": null,
+    "W184|102": 7.7804623042989315e-25,
+    "W186|102": 5.608809234253427e-25,
+    "W186|103": null,
+    "W186|16": 2.7028844519491876e-24
+   },
+   "region": "W:10.5-12",
+   "resonance_files": [
+    "n-074_W_180.endf",
+    "n-074_W_182.endf",
+    "n-074_W_183.endf",
+    "n-074_W_184.endf",
+    "n-074_W_186.endf"
+   ],
+   "run_returncode": 0,
+   "shielding": {
+    "applied_factors_summary": {
+     "W180": {
+      "groups": 5,
+      "min_factor": 0.18588988493272218
+     },
+     "W182": {
+      "groups": 65,
+      "min_factor": 0.06115402079071279
+     },
+     "W183": {
+      "groups": 76,
+      "min_factor": 0.06288354125558834
+     },
+     "W184": {
+      "groups": 60,
+      "min_factor": 0.06766064650683301
+     },
+     "W186": {
+      "groups": 57,
+      "min_factor": 0.060987699258814046
+     }
+    },
+    "channel_map": "reactions = all: every reaction of a shielded nuclide takes the group factor; reactions = capture: only mt 102 does",
+    "channels": [
+     "total",
+     "elastic",
+     "fission",
+     "capture"
+    ],
+    "dilution": "geometry",
+    "geometry": {
+     "omitted_bytes": 31406
+    },
+    "model": "universal sigmoid curve (Martinho, Goncalves and Salgado): per resolved resonance z = N * sigma_peak * y * sqrt(Gamma_gamma / Gamma), G(z) = (A1 - A2) / (1 + (z/z0)^p) + A2; the per-group applied factor is the Gamma_gamma/E^2 * g*Gamma_n/Gamma weighted mean of G over resonances peaking in the group",
+    "require_complete": false,
+    "resonance_files_sha256": [
+     "36b4ced7ade215b3da8d199db022a3641b808ded20e7d123b08fbf01e792bbc5",
+     "a268105de7993d5e49de2867f640178c80beaa695da750d8be8cc532ab11af2f",
+     "b857d50f3d83f5d69301dcb4fd06736c268b25be9c65ac1fad65d872bd79883f",
+     "fbd83b4ce24904466de0b7b937420250e9c2f2e1210d841dfbd032234f26d408",
+     "ca96629399e4c1f50c8feffe64daf93d131e171ed00597b41f3cc927adda9102"
+    ],
+    "shielding_uncovered": [],
+    "sigma0_eff_b": {},
+    "sigma0_fixed_b": null,
+    "sigma_p_estimated": [],
+    "table_sha256": null
+   },
+   "spec_sha256": "4314d261f5e3fb7a96e63412dfc126770d2596b226df0a9322c96a47fa2f9ecf",
+   "stderr_tail": "",
+   "validate_returncode": 0,
+   "wall_s": 2.3401448726654053
+  },
+  {
+   "arm": "A3",
+   "flux_total_cm_per_source": 23.950750017693952,
+   "foil_thickness_cm": 10.0,
+   "geometry_profile": "endfb8",
+   "model": "W",
+   "ok": true,
+   "rates": {
+    "W182|102": 2.7252378454084138e-24,
+    "W182|103": 5.3730788466148745e-27,
+    "W183|103": null,
+    "W184|102": 2.273278585369542e-24,
+    "W186|102": 1.6450121612030515e-24,
+    "W186|103": null,
+    "W186|16": 3.6672177708602085e-24
+   },
+   "region": "W:15-20",
+   "resonance_files": [
+    "n-074_W_180.endf",
+    "n-074_W_182.endf",
+    "n-074_W_183.endf",
+    "n-074_W_184.endf",
+    "n-074_W_186.endf"
+   ],
+   "run_returncode": 0,
+   "shielding": {
+    "applied_factors_summary": {
+     "W180": {
+      "groups": 5,
+      "min_factor": 0.18588988493272218
+     },
+     "W182": {
+      "groups": 65,
+      "min_factor": 0.06115402079071279
+     },
+     "W183": {
+      "groups": 76,
+      "min_factor": 0.06288354125558834
+     },
+     "W184": {
+      "groups": 60,
+      "min_factor": 0.06766064650683301
+     },
+     "W186": {
+      "groups": 57,
+      "min_factor": 0.060987699258814046
+     }
+    },
+    "channel_map": "reactions = all: every reaction of a shielded nuclide takes the group factor; reactions = capture: only mt 102 does",
+    "channels": [
+     "total",
+     "elastic",
+     "fission",
+     "capture"
+    ],
+    "dilution": "geometry",
+    "geometry": {
+     "omitted_bytes": 31406
+    },
+    "model": "universal sigmoid curve (Martinho, Goncalves and Salgado): per resolved resonance z = N * sigma_peak * y * sqrt(Gamma_gamma / Gamma), G(z) = (A1 - A2) / (1 + (z/z0)^p) + A2; the per-group applied factor is the Gamma_gamma/E^2 * g*Gamma_n/Gamma weighted mean of G over resonances peaking in the group",
+    "require_complete": false,
+    "resonance_files_sha256": [
+     "36b4ced7ade215b3da8d199db022a3641b808ded20e7d123b08fbf01e792bbc5",
+     "a268105de7993d5e49de2867f640178c80beaa695da750d8be8cc532ab11af2f",
+     "b857d50f3d83f5d69301dcb4fd06736c268b25be9c65ac1fad65d872bd79883f",
+     "fbd83b4ce24904466de0b7b937420250e9c2f2e1210d841dfbd032234f26d408",
+     "ca96629399e4c1f50c8feffe64daf93d131e171ed00597b41f3cc927adda9102"
+    ],
+    "shielding_uncovered": [],
+    "sigma0_eff_b": {},
+    "sigma0_fixed_b": null,
+    "sigma_p_estimated": [],
+    "table_sha256": null
+   },
+   "spec_sha256": "d91e597518b2ddc8057d093f8d7c91b450ceed365aceefa2414c1f3d7401fe07",
+   "stderr_tail": "",
+   "validate_returncode": 0,
+   "wall_s": 2.375945568084717
+  }
+ ],
+ "schema": "actinv-p177-geometry-1-arm"
+}

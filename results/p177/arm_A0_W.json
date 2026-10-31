@@ -1,0 +1,93 @@
+{
+ "actinv_bin_sha256": "372dd99f271cdd2b2b6881d46499c5ec7cc11f74033dba5da42d3a69ce2f8fcd",
+ "actinv_version": "actinv 1.7.0",
+ "arm": "A0",
+ "environment": {
+  "cgroup": {
+   "cpu.max": "200000 100000",
+   "memory.max": "6442450944",
+   "memory.swap.max": "0",
+   "path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p769848-i9149828.scope",
+   "pids.max": "128"
+  },
+  "clean_tree": true,
+  "constants_sha256": "aaeb264cdfebe8a9801084596c82c5305fc0e2d55e5bf06829753dd3772c9196",
+  "crates_tree": "bcf10791d23b409e7ec3e1eba2136987bfc2c3e2",
+  "git_head": "ce884f0bfba78ddbad6d6151fa736befb723d2da",
+  "groups_sha256": "ce4bf523498ffbb38d42aa9415fc014882b8bc7a7ecfb89f859ba3259d8fb34f",
+  "harness_sha256": "da5a1d06d060c4db89be9f5a317e5a7f58a18a1bd9aa35684cbe28cf7725cb53",
+  "platform": "Linux-7.0.0-38-generic-x86_64-with-glibc2.43",
+  "python": "3.14.4",
+  "rehearsal": false
+ },
+ "model": "W",
+ "runs": [
+  {
+   "arm": "A0",
+   "flux_total_cm_per_source": 2.7460974733332555,
+   "model": "W",
+   "ok": true,
+   "rates": {
+    "W182|102": 2.7485485565002663e-25,
+    "W182|103": 1.574548578957455e-27,
+    "W183|103": null,
+    "W184|102": 2.271430639654087e-25,
+    "W186|102": 1.6394985398012512e-25,
+    "W186|103": null,
+    "W186|16": 1.0213702071391144e-24
+   },
+   "region": "W:10-10.5",
+   "run_returncode": 0,
+   "shielding": null,
+   "spec_sha256": "e6847eacf09ac300d33625a3507e46ccd5614625214387a66eee0e957602af39",
+   "stderr_tail": "",
+   "validate_returncode": 0,
+   "wall_s": 1.5083727836608887
+  },
+  {
+   "arm": "A0",
+   "flux_total_cm_per_source": 9.122418865976575,
+   "model": "W",
+   "ok": true,
+   "rates": {
+    "W182|102": 9.594143430790761e-25,
+    "W182|103": 4.123120025596458e-27,
+    "W183|103": null,
+    "W184|102": 7.938310771551091e-25,
+    "W186|102": 5.736732079778245e-25,
+    "W186|103": null,
+    "W186|16": 2.7028844519491876e-24
+   },
+   "region": "W:10.5-12",
+   "run_returncode": 0,
+   "shielding": null,
+   "spec_sha256": "fc84017e29ff2bbd700c86750e8177eaf621c6f00bf2e86accc9f3fff82be214",
+   "stderr_tail": "",
+   "validate_returncode": 0,
+   "wall_s": 1.4874160289764404
+  },
+  {
+   "arm": "A0",
+   "flux_total_cm_per_source": 23.950750017693952,
+   "model": "W",
+   "ok": true,
+   "rates": {
+    "W182|102": 2.775455390210784e-24,
+    "W182|103": 5.3730788466148745e-27,
+    "W183|103": null,
+    "W184|102": 2.3178453251511984e-24,
+    "W186|102": 1.6781985494367758e-24,
+    "W186|103": null,
+    "W186|16": 3.6672177708602085e-24
+   },
+   "region": "W:15-20",
+   "run_returncode": 0,
+   "shielding": null,
+   "spec_sha256": "f5fdf255e5aa76441d0e138472e6fab93a24a3a6cffa842636b4576db60ebcb6",
+   "stderr_tail": "",
+   "validate_returncode": 0,
+   "wall_s": 1.6055183410644531
+  }
+ ],
+ "schema": "actinv-p177-geometry-1-arm"
+}

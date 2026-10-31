@@ -5460,3 +5460,31 @@ checker `controls/check_p177.py` (`8a5aa9b7…`). Both import P176's code.
 
 **Owner ruling on entry 307 (2026-10-31).** P175's aborted first launch, which stopped on a missing data link before
 any sample was drawn, does not count as an attempt. P175-PASS (entry 308) stands.
+
+## Entry 314 — P177 evidence: G0–G3 pass; neither geometry arm is a candidate (2026-10-31)
+
+The run started from the registration commit `ce884f0` at 14:25, with a clean tree, the pinned binary (`372dd99f…`) and
+the 200 % scope. All 12 arm modes, the assembly and the checker exited 0, and G0–G3 pass. **P177-PASS, pending G4.**
+
+**A2, a foil of the region's thickness: not a candidate.**
+- Cu-63 (n,γ) in CuCrZr falls from 0.133 → 0.011 (10–12 cm) and 0.162 → −0.048 (20–25 cm), both within tolerance.
+  That is closer than A1's 0.055 and 0.069 in P176. No CuCrZr row exceeds 0.048.
+- In steel it over-shields as depth grows:
+  - Mo-98 (n,γ) goes to −0.121, −0.289 and −0.453, and Co-59 (n,γ) at 40–50 cm to −0.071;
+  - Fe-58 (n,γ) becomes material at 20–25 cm (−0.067) and 40–50 cm (−0.109).
+
+**A3, a foil of the body's thickness: not a candidate.** It over-shields steel further: Mo-98 reaches −0.599 to −0.763,
+and Fe-58 (n,γ) and Cr-50 (n,γ) become material in every steel region. Cu-63 goes to −0.120 and −0.132.
+
+The tungsten maximum is again the W-182(n,p) processing difference (0.062). Concrete is unaffected. 9 rows have no
+loss row and 2 were not scored by P173, as in P176.
+
+**Decision (protocol rule).** No candidate, so item 2 proceeds.
+
+Read across P176 and P177, not part of either decision:
+- The Bondarenko table with composition dilution is right for steel but leaves Cu-63.
+- The region foil is right for CuCrZr but over-shields the dilute steel constituents (Mo-98, Fe-58, Co-59). Why
+  has not been examined.
+- No single existing option closes all 11 rows.
+
+No public sentence is allowed.

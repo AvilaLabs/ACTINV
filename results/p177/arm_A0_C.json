@@ -1,0 +1,67 @@
+{
+ "actinv_bin_sha256": "372dd99f271cdd2b2b6881d46499c5ec7cc11f74033dba5da42d3a69ce2f8fcd",
+ "actinv_version": "actinv 1.7.0",
+ "arm": "A0",
+ "environment": {
+  "cgroup": {
+   "cpu.max": "200000 100000",
+   "memory.max": "6442450944",
+   "memory.swap.max": "0",
+   "path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p769848-i9149828.scope",
+   "pids.max": "128"
+  },
+  "clean_tree": true,
+  "constants_sha256": "aaeb264cdfebe8a9801084596c82c5305fc0e2d55e5bf06829753dd3772c9196",
+  "crates_tree": "bcf10791d23b409e7ec3e1eba2136987bfc2c3e2",
+  "git_head": "ce884f0bfba78ddbad6d6151fa736befb723d2da",
+  "groups_sha256": "ce4bf523498ffbb38d42aa9415fc014882b8bc7a7ecfb89f859ba3259d8fb34f",
+  "harness_sha256": "da5a1d06d060c4db89be9f5a317e5a7f58a18a1bd9aa35684cbe28cf7725cb53",
+  "platform": "Linux-7.0.0-38-generic-x86_64-with-glibc2.43",
+  "python": "3.14.4",
+  "rehearsal": false
+ },
+ "model": "C",
+ "runs": [
+  {
+   "arm": "A0",
+   "flux_total_cm_per_source": 9.519397902545174,
+   "model": "C",
+   "ok": true,
+   "rates": {
+    "Cr50|102": 1.084413784487248e-25,
+    "Cu63|102": 2.3372764574922427e-25,
+    "Cu63|107": 8.924663314155716e-26,
+    "Cu65|16": 1.669213154774756e-24,
+    "Zr90|16": 1.141310308767053e-24
+   },
+   "region": "C:10-12",
+   "run_returncode": 0,
+   "shielding": null,
+   "spec_sha256": "8b45efade3a8407ad53fc7d1656bdbf890e6d0cce7a48b2f60269ba0967f8c17",
+   "stderr_tail": "",
+   "validate_returncode": 0,
+   "wall_s": 1.2396595478057861
+  },
+  {
+   "arm": "A0",
+   "flux_total_cm_per_source": 18.8625530197204,
+   "model": "C",
+   "ok": true,
+   "rates": {
+    "Cr50|102": 2.9528826986288155e-25,
+    "Cu63|102": 6.0316149167875465e-25,
+    "Cu63|107": 5.523032520133389e-26,
+    "Cu65|16": 9.66554727561273e-25,
+    "Zr90|16": 6.377471324735531e-25
+   },
+   "region": "C:20-25",
+   "run_returncode": 0,
+   "shielding": null,
+   "spec_sha256": "88085ffd07bdf79bcd72479d7af666dec6455f79c09eaf4406644b3e919b97ff",
+   "stderr_tail": "",
+   "validate_returncode": 0,
+   "wall_s": 1.2540068626403809
+  }
+ ],
+ "schema": "actinv-p177-geometry-1-arm"
+}

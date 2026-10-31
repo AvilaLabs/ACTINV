@@ -1,0 +1,105 @@
+{
+ "actinv_bin_sha256": "372dd99f271cdd2b2b6881d46499c5ec7cc11f74033dba5da42d3a69ce2f8fcd",
+ "actinv_version": "actinv 1.7.0",
+ "arm": "A0",
+ "environment": {
+  "cgroup": {
+   "cpu.max": "200000 100000",
+   "memory.max": "6442450944",
+   "memory.swap.max": "0",
+   "path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p769848-i9149828.scope",
+   "pids.max": "128"
+  },
+  "clean_tree": true,
+  "constants_sha256": "aaeb264cdfebe8a9801084596c82c5305fc0e2d55e5bf06829753dd3772c9196",
+  "crates_tree": "bcf10791d23b409e7ec3e1eba2136987bfc2c3e2",
+  "git_head": "ce884f0bfba78ddbad6d6151fa736befb723d2da",
+  "groups_sha256": "ce4bf523498ffbb38d42aa9415fc014882b8bc7a7ecfb89f859ba3259d8fb34f",
+  "harness_sha256": "da5a1d06d060c4db89be9f5a317e5a7f58a18a1bd9aa35684cbe28cf7725cb53",
+  "platform": "Linux-7.0.0-38-generic-x86_64-with-glibc2.43",
+  "python": "3.14.4",
+  "rehearsal": false
+ },
+ "model": "S",
+ "runs": [
+  {
+   "arm": "A0",
+   "flux_total_cm_per_source": 9.128437376388765,
+   "model": "S",
+   "ok": true,
+   "rates": {
+    "Co59|102": 4.366251932056882e-24,
+    "Cr50|102": 3.0856758612430182e-25,
+    "Fe54|103": 7.960875824624946e-25,
+    "Fe56|103": null,
+    "Fe58|102": 9.314295677181325e-26,
+    "Mn55|102": 5.898923136193587e-25,
+    "Mn55|16": 1.3826021659918409e-24,
+    "Mo98|102": 9.044653088558003e-25,
+    "Ni58|103": 8.78712481584031e-25,
+    "Ni58|16": 4.264493710674116e-26,
+    "Ni60|103": 2.909832275822497e-25
+   },
+   "region": "S:10-12",
+   "run_returncode": 0,
+   "shielding": null,
+   "spec_sha256": "99da84f647de6ddba335343b9784c863ee0e80c82b150270c49474ee62ec2f72",
+   "stderr_tail": "",
+   "validate_returncode": 0,
+   "wall_s": 1.7024695873260498
+  },
+  {
+   "arm": "A0",
+   "flux_total_cm_per_source": 37.961298340054626,
+   "model": "S",
+   "ok": true,
+   "rates": {
+    "Co59|102": 3.484732750289241e-23,
+    "Cr50|102": 2.262901016711486e-24,
+    "Fe54|103": 6.72935630774495e-25,
+    "Fe56|103": null,
+    "Fe58|102": 6.237420896571326e-25,
+    "Mn55|102": 4.5429561863044606e-24,
+    "Mn55|16": 8.396703860885672e-25,
+    "Mo98|102": 6.369018884434753e-24,
+    "Ni58|103": 7.9447544013148795e-25,
+    "Ni58|16": 2.439812530067618e-26,
+    "Ni60|103": 1.9329710242428737e-25
+   },
+   "region": "S:20-25",
+   "run_returncode": 0,
+   "shielding": null,
+   "spec_sha256": "04a37bf1b252e1933183e629bd7e960c8bb832bbae2d2e05e8f89b9b3b2640dc",
+   "stderr_tail": "",
+   "validate_returncode": 0,
+   "wall_s": 1.447239875793457
+  },
+  {
+   "arm": "A0",
+   "flux_total_cm_per_source": 36.4180390187779,
+   "model": "S",
+   "ok": true,
+   "rates": {
+    "Co59|102": 4.444909172909336e-23,
+    "Cr50|102": 2.8356315053004165e-24,
+    "Fe54|103": 8.843348188575879e-26,
+    "Fe56|103": null,
+    "Fe58|102": 7.4400536546841035e-25,
+    "Mn55|102": 5.735182483122729e-24,
+    "Mn55|16": 8.569527014565197e-26,
+    "Mo98|102": 7.699998414541229e-24,
+    "Ni58|103": 1.0975196462983994e-25,
+    "Ni58|16": 2.2906356665866627e-27,
+    "Ni60|103": 2.161350589357346e-26
+   },
+   "region": "S:40-50",
+   "run_returncode": 0,
+   "shielding": null,
+   "spec_sha256": "16fe03a6272cc62dec3740ae28ccac3da3ed54da9100337f2ada86a62c71e04d",
+   "stderr_tail": "",
+   "validate_returncode": 0,
+   "wall_s": 1.4291589260101318
+  }
+ ],
+ "schema": "actinv-p177-geometry-1-arm"
+}
