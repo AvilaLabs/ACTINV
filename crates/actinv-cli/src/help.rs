@@ -302,11 +302,23 @@ into an empty OUT_DIR.\n\n\
   actinv export-source openmc r2s.ndjson source.xml\n\n\
 Exit: 0 written, 1 the export failed, 2 bad usage.",
         "clearance" => "actinv clearance: clearance against declared limits\n\n\
-usage: actinv clearance INPUT STEP [--limits PATH] [--confidence T] OUT.ndjson\n\n\
+usage: actinv clearance INPUT STEP [--limits PATH | --jurisdiction J [--route R]] [--negligible Q] [--confidence T] OUT.ndjson\n\n\
 Certifies P(clearance index < 1) at one step (one-based), per cell of an\n\
 `actinv mesh` result or for one run result, at confidence T (default 0.95),\n\
 against the IAEA limits or an actinv-clearance-limits-1 file.\n\n\
-  actinv clearance result.json 5 clearance.ndjson\n\n\
+--jurisdiction J selects a national table instead: de (StrlSchV 2018 Anlage 4\n\
+Tabelle 1), uk (Environmental Permitting Regulations 2016, Schedule 23 Part 3\n\
+Table 2, concentration of radionuclides) or ca (Nuclear Substances and\n\
+Radiation Devices Regulations, Schedule 2); iaea is the default. --route R picks\n\
+a column of the table: for de unrestricted-clearance (the default),\n\
+rubble-gt-1000-mg-a, soil, landfill-le-100-mg-a, incineration-le-100-mg-a,\n\
+landfill-le-1000-mg-a, incineration-le-1000-mg-a or scrap-metal-recycling;\n\
+uk and ca have one route. Nuclides present above Q Bq/g (default 1e-9) that the\n\
+table lacks are listed in not_listed, never counted as zero. Progeny covered\n\
+by a parent present are listed in covered_by_parent and left out of the sum.\n\
+The tables are copies of the legal texts, not official versions.\n\n\
+  actinv clearance result.json 5 clearance.ndjson\n\
+  actinv clearance result.json 5 --jurisdiction de --route soil clearance.ndjson\n\n\
 Exit: 0 written, 1 the evaluation failed, 2 bad usage.",
         "build-library" => "actinv build-library: build an activation library from evaluations\n\n\
 usage: actinv build-library INPUT OUTPUT.npz [--format auto|tendl|eaf] [--projectile P] [--groups NAME|PATH] [--temperature-K K] [--workers N] [--cache DIR] [--grid-density D] [--strict-states true|false] [--profile none|endfb8|tendl] [--decay PATH] [--decay-fallback PATH] [--continue-on-error true|false] [--spallation TABLE.json] [--splice-energy-MeV MEV]\n\n\

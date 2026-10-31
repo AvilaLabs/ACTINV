@@ -1,0 +1,4726 @@
+{
+ "format": "actinv-regulatory-rows-1",
+ "about": "Per-row source text for the table built from EPR 2016 Schedule 23 Part 3 Table 2. ACTINV does not read this file. Superscripts in row_text are written ^(...).",
+ "source": {
+  "citation": "The Environmental Permitting (England and Wales) Regulations 2016 (SI 2016/1154), Schedule 23 Part 3, Table 2 (Concentration of radionuclides) with Table 3 (secular-equilibrium daughters)",
+  "edition": "legislation.gov.uk data.xml, in force from 2026-07-30, modified 2026-09-07; Tables 1 and 2 substituted 2018-05-02 by SI 2018/428",
+  "url": "https://www.legislation.gov.uk/uksi/2016/1154/schedule/23/part/3",
+  "jurisdiction": "United Kingdom, England and Wales (Environmental Permitting Regulations)",
+  "scope": "Activity concentration in Bq/g of radionuclides in a solid or relevant liquid, below which the substance is outside the radioactive-substances regime as referred to in paragraphs 5 and 6 of Schedule 23 Part 2; solid-material concentration only (Table 1, the NORM table, and the catch-all row for other radionuclides are not converted). Choosing this table is a regulatory decision for the analyst.",
+  "retrieved": "2026-10-30",
+  "source_file": "controls/fixtures/clearance_sources/uk/data.xml",
+  "source_sha256": "3a2fb528b1f80e45438adb2ab6a3d5dafdd5be011bf4fcf599f54eb85902508d",
+  "converter": "scripts/regulatory/convert_national_clearance.py",
+  "licence": "Contains public sector information licensed under the Open Government Licence v3.0 (https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/). Source: legislation.gov.uk, SI 2016/1154, Crown copyright. Not an official version of the law.",
+  "row_provenance": "uk-epr-2016-sch23-pt3-table-2.rows.json",
+  "dct_valid": "2026-07-30",
+  "dc_modified": "2026-09-07",
+  "root_restrict_start_date": "2026-07-30"
+ },
+ "paragraph_texts": [
+  "The Table 1 referred to in paragraph 4 of Part 2 (NORM industrial activities) is—",
+  "The Table 1 summation rule in respect of column 2, 3 or 4 means the sum of the quotients A/B where—",
+  "“A” means the concentration of each radionuclide listed in column 1 of Table 1 that is present in the substance or article, and",
+  "“B” means the concentration of that radionuclide specified in column 2, 3 or 4 (as appropriate) of Table 1.",
+  "The Table 2 referred to in paragraph 5 of Part 2 (processed radionuclides of natural terrestrial or cosmic origin) and paragraph 6 of that Part (radionuclides not of natural terrestrial or cosmic origin) is—",
+  "The Table 2 column 2 summation rule means the sum of the quotients A/B where—",
+  "“A” means the concentration of each radionuclide listed in column 1 of Table 2 that is present in the substance or article, and",
+  "“B” means the concentration of that radionuclide specified in column 2 of Table 2.",
+  "Where any radionuclide carries the suffix “+” or “sec” in Table 1 or Table 2—",
+  "that radionuclide represents the parent radionuclide in secular equilibrium with the corresponding daughter radionuclides which are identified in column 2 of Table 3 in respect of that parent radionuclide, and",
+  "a concentration value given in a table in this Part in respect of such a parent radionuclide is the value for the parent radionuclide alone, but already takes into account the daughter radionuclides present.",
+  "The Table 3 referred to in paragraph 3 is—",
+  "Figures in Sch. 23 Pt. 3 para. 1(1) Table 1 substituted (2.5.2018) by The Environmental Permitting (England and Wales) (Amendment) (No. 2) Regulations 2018 (S.I. 2018/428), reg. 1, Sch. para. 8",
+  "Sch. 23 Pt. 3 para. 2(1) Table 2 substituted (2.5.2018) by The Environmental Permitting (England and Wales) (Amendment) (No. 2) Regulations 2018 (S.I. 2018/428), reg. 1, Sch. para. 9"
+ ],
+ "commentaries": {
+  "c23193741": "For the meaning of ‘sec’ and ‘+’ in this Part, see paragraph 3.",
+  "ref-1266b7aa4f0d476c881510dd0b20dbfa": "Figures in Sch. 23 Pt. 3 para. 1(1) Table 1 substituted (2.5.2018) by The Environmental Permitting (England and Wales) (Amendment) (No. 2) Regulations 2018 (S.I. 2018/428), reg. 1, Sch. para. 8",
+  "ref-b23f68abbc3e97f583e94e7f2eb1581f": "Sch. 23 Pt. 3 para. 2(1) Table 2 substituted (2.5.2018) by The Environmental Permitting (England and Wales) (Amendment) (No. 2) Regulations 2018 (S.I. 2018/428), reg. 1, Sch. para. 9"
+ },
+ "catch_all_row": {
+  "printed": "Any other solid or relevant liquid radionuclide that is not of natural terrestrial or cosmic origin",
+  "value": "0.01",
+  "number": 0.01,
+  "alternative": "or that concentration which gives rise to a dose to a member of the public of 10 microsieverts per year calculated by reference to the International Atomic Energy Agency publication “Application of the Concepts of Exclusion, Exemption and Clearance”,IAEASafety Standards SeriesNo.RS-G-1.7.",
+  "reason_not_in_table": "not a nuclide; the regulation gives 0.01 Bq/g or the concentration that gives 10 microsieverts a year by IAEA RS-G-1.7 for any other artificial radionuclide. ACTINV does not apply it: such nuclides are reported in not_listed."
+ },
+ "progeny_lists": {
+  "Ac227": {
+   "progeny": [
+    "Th227",
+    "Fr223",
+    "Ra223",
+    "Rn219",
+    "Po215",
+    "Pb211",
+    "Bi211",
+    "Tl207",
+    "Po211"
+   ]
+  },
+  "Ag108m1": {
+   "progeny": [
+    "Ag108"
+   ]
+  },
+  "Ag110m1": {
+   "progeny": [
+    "Ag110"
+   ]
+  },
+  "Am242m1": {
+   "progeny": [
+    "Np238"
+   ]
+  },
+  "Am243": {
+   "progeny": [
+    "Np239"
+   ]
+  },
+  "Bi212": {
+   "progeny": [
+    "Tl208"
+   ]
+  },
+  "Cd109": {
+   "progeny": [
+    "Ag109m1"
+   ]
+  },
+  "Cd115": {
+   "progeny": [
+    "In115m1"
+   ]
+  },
+  "Cd115m1": {
+   "progeny": [
+    "In115m1"
+   ]
+  },
+  "Ce144": {
+   "progeny": [
+    "Pr144",
+    "Pr144m1"
+   ]
+  },
+  "Cf253": {
+   "progeny": [
+    "Cm249"
+   ]
+  },
+  "Cm247": {
+   "progeny": [
+    "Pu243"
+   ]
+  },
+  "Cs137": {
+   "progeny": [
+    "Ba137m1"
+   ]
+  },
+  "Es254": {
+   "progeny": [
+    "Bk250"
+   ]
+  },
+  "Es254m1": {
+   "progeny": [
+    "Fm254"
+   ]
+  },
+  "Fe52": {
+   "progeny": [
+    "Mn52m1"
+   ]
+  },
+  "I131": {
+   "progeny": [
+    "Xe131m1"
+   ]
+  },
+  "In114m1": {
+   "progeny": [
+    "In114"
+   ]
+  },
+  "Mo101": {
+   "progeny": [
+    "Tc101"
+   ]
+  },
+  "Mo99": {
+   "progeny": [
+    "Tc99m1"
+   ]
+  },
+  "Nb97": {
+   "progeny": [
+    "Nb97m1"
+   ]
+  },
+  "Np237": {
+   "progeny": [
+    "Pa233"
+   ]
+  },
+  "Pb210": {
+   "progeny": [
+    "Bi210",
+    "Po210"
+   ]
+  },
+  "Pb212": {
+   "progeny": [
+    "Bi212",
+    "Tl208"
+   ]
+  },
+  "Pd103": {
+   "progeny": [
+    "Rh103m1"
+   ]
+  },
+  "Pd109": {
+   "progeny": [
+    "Ag109m1"
+   ]
+  },
+  "Pu244": {
+   "progeny": [
+    "U240",
+    "Np240m1",
+    "Np240"
+   ]
+  },
+  "Ra223": {
+   "progeny": [
+    "Rn219",
+    "Po215",
+    "Pb211",
+    "Bi211",
+    "Tl207"
+   ]
+  },
+  "Ra224": {
+   "progeny": [
+    "Rn220",
+    "Po216",
+    "Pb212",
+    "Bi212",
+    "Tl208"
+   ]
+  },
+  "Ra226": {
+   "progeny": [
+    "Rn222",
+    "Po218",
+    "Pb214",
+    "Bi214",
+    "Po214"
+   ]
+  },
+  "Ra228": {
+   "progeny": [
+    "Ac228"
+   ]
+  },
+  "Ru103": {
+   "progeny": [
+    "Rh103m1"
+   ]
+  },
+  "Ru105": {
+   "progeny": [
+    "Rh105m1"
+   ]
+  },
+  "Ru106": {
+   "progeny": [
+    "Rh106"
+   ]
+  },
+  "Sb125": {
+   "progeny": [
+    "Te125m1"
+   ]
+  },
+  "Sn113": {
+   "progeny": [
+    "In113m1"
+   ]
+  },
+  "Sr90": {
+   "progeny": [
+    "Y90"
+   ]
+  },
+  "Sr91": {
+   "progeny": [
+    "Y91m1"
+   ]
+  },
+  "Te127m1": {
+   "progeny": [
+    "Te127"
+   ]
+  },
+  "Te129m1": {
+   "progeny": [
+    "Te129"
+   ]
+  },
+  "Te131m1": {
+   "progeny": [
+    "Te131"
+   ]
+  },
+  "Te132": {
+   "progeny": [
+    "I132"
+   ]
+  },
+  "Te133": {
+   "progeny": [
+    "I133",
+    "Xe133m1",
+    "Xe133"
+   ]
+  },
+  "Te133m1": {
+   "progeny": [
+    "Te133",
+    "I133",
+    "Xe133m1",
+    "Xe133"
+   ]
+  },
+  "Th226": {
+   "progeny": [
+    "Ra222",
+    "Rn218",
+    "Po214"
+   ]
+  },
+  "Th228": {
+   "progeny": [
+    "Ra224",
+    "Rn220",
+    "Po216",
+    "Pb212",
+    "Bi212",
+    "Tl208"
+   ]
+  },
+  "Th229": {
+   "progeny": [
+    "Ra225",
+    "Ac225",
+    "Fr221",
+    "At217",
+    "Bi213",
+    "Tl209",
+    "Pb209"
+   ]
+  },
+  "Th234": {
+   "progeny": [
+    "Pa234m1",
+    "Pa234"
+   ]
+  },
+  "U230": {
+   "progeny": [
+    "Th226",
+    "Ra222",
+    "Rn218",
+    "Po214"
+   ]
+  },
+  "U232": {
+   "progeny": [
+    "Th228",
+    "Ra224",
+    "Rn220",
+    "Po216",
+    "Pb212",
+    "Bi212",
+    "Tl208"
+   ]
+  },
+  "U235": {
+   "progeny": [
+    "Th231",
+    "Pa231",
+    "Ac227",
+    "Th227",
+    "Fr223",
+    "Ra223",
+    "Rn219",
+    "Po215",
+    "Pb211",
+    "Bi211",
+    "Tl207",
+    "Po211"
+   ]
+  },
+  "U238": {
+   "progeny": [
+    "Th234",
+    "Pa234m1",
+    "Pa234",
+    "U234",
+    "Th230",
+    "Ra226",
+    "Rn222",
+    "Po218",
+    "Pb214",
+    "Bi214",
+    "Po214",
+    "Pb210",
+    "Bi210",
+    "Po210"
+   ]
+  },
+  "U240": {
+   "progeny": [
+    "Np240m1",
+    "Np240"
+   ]
+  },
+  "Zn69m1": {
+   "progeny": [
+    "Zn69"
+   ]
+  },
+  "Zr95": {
+   "progeny": [
+    "Nb95m1"
+   ]
+  },
+  "Zr97": {
+   "progeny": [
+    "Nb97m1",
+    "Nb97"
+   ]
+  }
+ },
+ "skipped_progeny": [],
+ "form_choice": {
+  "Th232": {
+   "rule": "strictest limit; progeny coverage follows the chosen row",
+   "chosen": "Th-232",
+   "limits_Bq_per_g": {
+    "Th-232": "0.01",
+    "Th-232+": "0.01",
+    "Th-232sec": "0.01"
+   }
+  },
+  "U235": {
+   "rule": "strictest limit; progeny coverage follows the chosen row",
+   "chosen": "U-235sec",
+   "limits_Bq_per_g": {
+    "U-235+": "1",
+    "U-235sec": "0.01"
+   }
+  },
+  "U238": {
+   "rule": "strictest limit; progeny coverage follows the chosen row",
+   "chosen": "U-238sec",
+   "limits_Bq_per_g": {
+    "U-238+": "1",
+    "U-238sec": "0.01"
+   }
+  },
+  "Cf253": {
+   "rule": "strictest limit; progeny coverage follows the chosen row",
+   "chosen": "Cf-253+",
+   "limits_Bq_per_g": {
+    "Cf-253": "10^(2)",
+    "Cf-253+": "1"
+   }
+  }
+ },
+ "source_anomalies": [
+  "Th232 is printed as Th-232, Th-232+, Th-232sec; the table keeps Th-232 (0.01 Bq/g), the smallest limit",
+  "U235 is printed as U-235+, U-235sec; the table keeps U-235sec (0.01 Bq/g), the smallest limit",
+  "U238 is printed as U-238+, U-238sec; the table keeps U-238sec (0.01 Bq/g), the smallest limit",
+  "Cf253 is printed as Cf-253, Cf-253+; the table keeps Cf-253+ (1 Bq/g), the smallest limit"
+ ],
+ "rows": [
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 1,
+   "row_text": "H-3 | 10^(2)",
+   "printed": "H-3",
+   "nuclide": "H3",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10^(2)",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 2,
+   "row_text": "Be-7 | 10",
+   "printed": "Be-7",
+   "nuclide": "Be7",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 3,
+   "row_text": "C-14 | 10",
+   "printed": "C-14",
+   "nuclide": "C14",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 4,
+   "row_text": "F-18 | 10",
+   "printed": "F-18",
+   "nuclide": "F18",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 5,
+   "row_text": "Na-22 | 0.1",
+   "printed": "Na-22",
+   "nuclide": "Na22",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "0.1",
+     "number": 0.1
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 6,
+   "row_text": "Na-24 | 1",
+   "printed": "Na-24",
+   "nuclide": "Na24",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "1",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 7,
+   "row_text": "Si-31 | 10^(3)",
+   "printed": "Si-31",
+   "nuclide": "Si31",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10^(3)",
+     "number": 1000.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 8,
+   "row_text": "P-32 | 10^(3)",
+   "printed": "P-32",
+   "nuclide": "P32",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10^(3)",
+     "number": 1000.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 9,
+   "row_text": "P-33 | 10^(3)",
+   "printed": "P-33",
+   "nuclide": "P33",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10^(3)",
+     "number": 1000.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 10,
+   "row_text": "S-35 | 10^(2)",
+   "printed": "S-35",
+   "nuclide": "S35",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10^(2)",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 11,
+   "row_text": "Cl-36 | 1",
+   "printed": "Cl-36",
+   "nuclide": "Cl36",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "1",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 12,
+   "row_text": "Cl-38 | 10",
+   "printed": "Cl-38",
+   "nuclide": "Cl38",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 13,
+   "row_text": "K-42 | 10^(2)",
+   "printed": "K-42",
+   "nuclide": "K42",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10^(2)",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 14,
+   "row_text": "K-43 | 10",
+   "printed": "K-43",
+   "nuclide": "K43",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 15,
+   "row_text": "Ca-45 | 10^(2)",
+   "printed": "Ca-45",
+   "nuclide": "Ca45",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10^(2)",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 16,
+   "row_text": "Ca-47 | 10",
+   "printed": "Ca-47",
+   "nuclide": "Ca47",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 17,
+   "row_text": "Sc-46 | 0.1",
+   "printed": "Sc-46",
+   "nuclide": "Sc46",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "0.1",
+     "number": 0.1
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 18,
+   "row_text": "Sc-47 | 10^(2)",
+   "printed": "Sc-47",
+   "nuclide": "Sc47",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10^(2)",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 19,
+   "row_text": "Sc-48 | 1",
+   "printed": "Sc-48",
+   "nuclide": "Sc48",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "1",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 20,
+   "row_text": "V-48 | 1",
+   "printed": "V-48",
+   "nuclide": "V48",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "1",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 21,
+   "row_text": "Cr-51 | 10^(2)",
+   "printed": "Cr-51",
+   "nuclide": "Cr51",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10^(2)",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 22,
+   "row_text": "Mn-51 | 10",
+   "printed": "Mn-51",
+   "nuclide": "Mn51",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 23,
+   "row_text": "Mn-52 | 1",
+   "printed": "Mn-52",
+   "nuclide": "Mn52",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "1",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 24,
+   "row_text": "Mn-52m | 10",
+   "printed": "Mn-52m",
+   "nuclide": "Mn52m1",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 25,
+   "row_text": "Mn-53 | 10^(2)",
+   "printed": "Mn-53",
+   "nuclide": "Mn53",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10^(2)",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 26,
+   "row_text": "Mn-54 | 0.1",
+   "printed": "Mn-54",
+   "nuclide": "Mn54",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "0.1",
+     "number": 0.1
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 27,
+   "row_text": "Mn-56 | 10",
+   "printed": "Mn-56",
+   "nuclide": "Mn56",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 28,
+   "row_text": "Fe-52+ | 10",
+   "printed": "Fe-52+",
+   "nuclide": "Fe52",
+   "suffix": "plus",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 29,
+   "row_text": "Fe-55 | 10^(3)",
+   "printed": "Fe-55",
+   "nuclide": "Fe55",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10^(3)",
+     "number": 1000.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 30,
+   "row_text": "Fe-59 | 1",
+   "printed": "Fe-59",
+   "nuclide": "Fe59",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "1",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 31,
+   "row_text": "Co-55 | 10",
+   "printed": "Co-55",
+   "nuclide": "Co55",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 32,
+   "row_text": "Co-56 | 0.1",
+   "printed": "Co-56",
+   "nuclide": "Co56",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "0.1",
+     "number": 0.1
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 33,
+   "row_text": "Co-57 | 1",
+   "printed": "Co-57",
+   "nuclide": "Co57",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "1",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 34,
+   "row_text": "Co-58 | 1",
+   "printed": "Co-58",
+   "nuclide": "Co58",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "1",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 35,
+   "row_text": "Co-58m | 10^(4)",
+   "printed": "Co-58m",
+   "nuclide": "Co58m1",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10^(4)",
+     "number": 10000.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 36,
+   "row_text": "Co-60 | 0.1",
+   "printed": "Co-60",
+   "nuclide": "Co60",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "0.1",
+     "number": 0.1
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 37,
+   "row_text": "Co-60m | 10^(3)",
+   "printed": "Co-60m",
+   "nuclide": "Co60m1",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10^(3)",
+     "number": 1000.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 38,
+   "row_text": "Co-61 | 10^(2)",
+   "printed": "Co-61",
+   "nuclide": "Co61",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10^(2)",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 39,
+   "row_text": "Co-62m | 10",
+   "printed": "Co-62m",
+   "nuclide": "Co62m1",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 40,
+   "row_text": "Ni-59 | 10^(2)",
+   "printed": "Ni-59",
+   "nuclide": "Ni59",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10^(2)",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 41,
+   "row_text": "Ni-63 | 10^(2)",
+   "printed": "Ni-63",
+   "nuclide": "Ni63",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10^(2)",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 42,
+   "row_text": "Ni-65 | 10",
+   "printed": "Ni-65",
+   "nuclide": "Ni65",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 43,
+   "row_text": "Cu-64 | 10^(2)",
+   "printed": "Cu-64",
+   "nuclide": "Cu64",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10^(2)",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 44,
+   "row_text": "Zn-65 | 0.1",
+   "printed": "Zn-65",
+   "nuclide": "Zn65",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "0.1",
+     "number": 0.1
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 45,
+   "row_text": "Zn-69 | 10^(3)",
+   "printed": "Zn-69",
+   "nuclide": "Zn69",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10^(3)",
+     "number": 1000.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 46,
+   "row_text": "Zn-69m+ | 10",
+   "printed": "Zn-69m+",
+   "nuclide": "Zn69m1",
+   "suffix": "plus",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 47,
+   "row_text": "Ga-72 | 10",
+   "printed": "Ga-72",
+   "nuclide": "Ga72",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 48,
+   "row_text": "Ge-71 | 10^(4)",
+   "printed": "Ge-71",
+   "nuclide": "Ge71",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10^(4)",
+     "number": 10000.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 49,
+   "row_text": "As-73 | 10^(3)",
+   "printed": "As-73",
+   "nuclide": "As73",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10^(3)",
+     "number": 1000.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 50,
+   "row_text": "As-74 | 10",
+   "printed": "As-74",
+   "nuclide": "As74",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 51,
+   "row_text": "As-76 | 10",
+   "printed": "As-76",
+   "nuclide": "As76",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 52,
+   "row_text": "As-77 | 10^(3)",
+   "printed": "As-77",
+   "nuclide": "As77",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10^(3)",
+     "number": 1000.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 53,
+   "row_text": "Se-75 | 1",
+   "printed": "Se-75",
+   "nuclide": "Se75",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "1",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 54,
+   "row_text": "Br-82 | 1",
+   "printed": "Br-82",
+   "nuclide": "Br82",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "1",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 55,
+   "row_text": "Rb-86 | 10^(2)",
+   "printed": "Rb-86",
+   "nuclide": "Rb86",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10^(2)",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 56,
+   "row_text": "Sr-85 | 1",
+   "printed": "Sr-85",
+   "nuclide": "Sr85",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "1",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 57,
+   "row_text": "Sr-85m | 10^(2)",
+   "printed": "Sr-85m",
+   "nuclide": "Sr85m1",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10^(2)",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 58,
+   "row_text": "Sr-87m | 10^(2)",
+   "printed": "Sr-87m",
+   "nuclide": "Sr87m1",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10^(2)",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 59,
+   "row_text": "Sr-89 | 10^(3)",
+   "printed": "Sr-89",
+   "nuclide": "Sr89",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10^(3)",
+     "number": 1000.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 60,
+   "row_text": "Sr-90+ | 1",
+   "printed": "Sr-90+",
+   "nuclide": "Sr90",
+   "suffix": "plus",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "1",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 61,
+   "row_text": "Sr-91+ | 10",
+   "printed": "Sr-91+",
+   "nuclide": "Sr91",
+   "suffix": "plus",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 62,
+   "row_text": "Sr-92 | 10",
+   "printed": "Sr-92",
+   "nuclide": "Sr92",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 63,
+   "row_text": "Y-90 | 10^(3)",
+   "printed": "Y-90",
+   "nuclide": "Y90",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10^(3)",
+     "number": 1000.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 64,
+   "row_text": "Y-91 | 10^(2)",
+   "printed": "Y-91",
+   "nuclide": "Y91",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10^(2)",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 65,
+   "row_text": "Y-91m | 10^(2)",
+   "printed": "Y-91m",
+   "nuclide": "Y91m1",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10^(2)",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 66,
+   "row_text": "Y-92 | 10^(2)",
+   "printed": "Y-92",
+   "nuclide": "Y92",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10^(2)",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 67,
+   "row_text": "Y-93 | 10^(2)",
+   "printed": "Y-93",
+   "nuclide": "Y93",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10^(2)",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 68,
+   "row_text": "Zr-93 | 10",
+   "printed": "Zr-93",
+   "nuclide": "Zr93",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 69,
+   "row_text": "Zr-95+ | 1",
+   "printed": "Zr-95+",
+   "nuclide": "Zr95",
+   "suffix": "plus",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "1",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 70,
+   "row_text": "Zr-97+ | 10",
+   "printed": "Zr-97+",
+   "nuclide": "Zr97",
+   "suffix": "plus",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 71,
+   "row_text": "Nb-93m | 10",
+   "printed": "Nb-93m",
+   "nuclide": "Nb93m1",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 72,
+   "row_text": "Nb-94 | 0.1",
+   "printed": "Nb-94",
+   "nuclide": "Nb94",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "0.1",
+     "number": 0.1
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 73,
+   "row_text": "Nb-95 | 1",
+   "printed": "Nb-95",
+   "nuclide": "Nb95",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "1",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 74,
+   "row_text": "Nb-97+ | 10",
+   "printed": "Nb-97+",
+   "nuclide": "Nb97",
+   "suffix": "plus",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 75,
+   "row_text": "Nb-98 | 10",
+   "printed": "Nb-98",
+   "nuclide": "Nb98",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 76,
+   "row_text": "Mo-90 | 10",
+   "printed": "Mo-90",
+   "nuclide": "Mo90",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 77,
+   "row_text": "Mo-93 | 10",
+   "printed": "Mo-93",
+   "nuclide": "Mo93",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 78,
+   "row_text": "Mo-99+ | 10",
+   "printed": "Mo-99+",
+   "nuclide": "Mo99",
+   "suffix": "plus",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 79,
+   "row_text": "Mo-101+ | 10",
+   "printed": "Mo-101+",
+   "nuclide": "Mo101",
+   "suffix": "plus",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 80,
+   "row_text": "Tc-96 | 1",
+   "printed": "Tc-96",
+   "nuclide": "Tc96",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "1",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 81,
+   "row_text": "Tc-96m | 10^(3)",
+   "printed": "Tc-96m",
+   "nuclide": "Tc96m1",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10^(3)",
+     "number": 1000.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 82,
+   "row_text": "Tc-97 | 10",
+   "printed": "Tc-97",
+   "nuclide": "Tc97",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 83,
+   "row_text": "Tc-97m | 10^(2)",
+   "printed": "Tc-97m",
+   "nuclide": "Tc97m1",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10^(2)",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 84,
+   "row_text": "Tc-99 | 1",
+   "printed": "Tc-99",
+   "nuclide": "Tc99",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "1",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 85,
+   "row_text": "Tc-99m | 10^(2)",
+   "printed": "Tc-99m",
+   "nuclide": "Tc99m1",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10^(2)",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 86,
+   "row_text": "Ru-97 | 10",
+   "printed": "Ru-97",
+   "nuclide": "Ru97",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 87,
+   "row_text": "Ru-103+ | 1",
+   "printed": "Ru-103+",
+   "nuclide": "Ru103",
+   "suffix": "plus",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "1",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 88,
+   "row_text": "Ru-105+ | 10",
+   "printed": "Ru-105+",
+   "nuclide": "Ru105",
+   "suffix": "plus",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 89,
+   "row_text": "Ru-106+ | 0.1",
+   "printed": "Ru-106+",
+   "nuclide": "Ru106",
+   "suffix": "plus",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "0.1",
+     "number": 0.1
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 90,
+   "row_text": "Rh-103m | 10^(4)",
+   "printed": "Rh-103m",
+   "nuclide": "Rh103m1",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10^(4)",
+     "number": 10000.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 91,
+   "row_text": "Rh-105 | 10^(2)",
+   "printed": "Rh-105",
+   "nuclide": "Rh105",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10^(2)",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 92,
+   "row_text": "Pd-103+ | 10^(3)",
+   "printed": "Pd-103+",
+   "nuclide": "Pd103",
+   "suffix": "plus",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10^(3)",
+     "number": 1000.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 93,
+   "row_text": "Pd-109+ | 10^(2)",
+   "printed": "Pd-109+",
+   "nuclide": "Pd109",
+   "suffix": "plus",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10^(2)",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 94,
+   "row_text": "Ag-105 | 1",
+   "printed": "Ag-105",
+   "nuclide": "Ag105",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "1",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 95,
+   "row_text": "Ag-108m+ | 0.1",
+   "printed": "Ag-108m+",
+   "nuclide": "Ag108m1",
+   "suffix": "plus",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "0.1",
+     "number": 0.1
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 96,
+   "row_text": "Ag-110m+ | 0.1",
+   "printed": "Ag-110m+",
+   "nuclide": "Ag110m1",
+   "suffix": "plus",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "0.1",
+     "number": 0.1
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 97,
+   "row_text": "Ag-111 | 10^(2)",
+   "printed": "Ag-111",
+   "nuclide": "Ag111",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10^(2)",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 98,
+   "row_text": "Cd-109+ | 1",
+   "printed": "Cd-109+",
+   "nuclide": "Cd109",
+   "suffix": "plus",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "1",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 99,
+   "row_text": "Cd-115+ | 10",
+   "printed": "Cd-115+",
+   "nuclide": "Cd115",
+   "suffix": "plus",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 100,
+   "row_text": "Cd-115m+ | 10^(2)",
+   "printed": "Cd-115m+",
+   "nuclide": "Cd115m1",
+   "suffix": "plus",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10^(2)",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 101,
+   "row_text": "In-111 | 10",
+   "printed": "In-111",
+   "nuclide": "In111",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 102,
+   "row_text": "In-113m | 10^(2)",
+   "printed": "In-113m",
+   "nuclide": "In113m1",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10^(2)",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 103,
+   "row_text": "In-114m+ | 10",
+   "printed": "In-114m+",
+   "nuclide": "In114m1",
+   "suffix": "plus",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 104,
+   "row_text": "In-115m | 10^(2)",
+   "printed": "In-115m",
+   "nuclide": "In115m1",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10^(2)",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 105,
+   "row_text": "Sn-113+ | 1",
+   "printed": "Sn-113+",
+   "nuclide": "Sn113",
+   "suffix": "plus",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "1",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 106,
+   "row_text": "Sn-125 | 10",
+   "printed": "Sn-125",
+   "nuclide": "Sn125",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 107,
+   "row_text": "Sb-122 | 10",
+   "printed": "Sb-122",
+   "nuclide": "Sb122",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 108,
+   "row_text": "Sb-124 | 1",
+   "printed": "Sb-124",
+   "nuclide": "Sb124",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "1",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 109,
+   "row_text": "Sb-125+ | 0.1",
+   "printed": "Sb-125+",
+   "nuclide": "Sb125",
+   "suffix": "plus",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "0.1",
+     "number": 0.1
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 110,
+   "row_text": "Te-123m | 1",
+   "printed": "Te-123m",
+   "nuclide": "Te123m1",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "1",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 111,
+   "row_text": "Te-125m | 10^(3)",
+   "printed": "Te-125m",
+   "nuclide": "Te125m1",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10^(3)",
+     "number": 1000.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 112,
+   "row_text": "Te-127 | 10^(3)",
+   "printed": "Te-127",
+   "nuclide": "Te127",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10^(3)",
+     "number": 1000.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 113,
+   "row_text": "Te-127m+ | 10",
+   "printed": "Te-127m+",
+   "nuclide": "Te127m1",
+   "suffix": "plus",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 114,
+   "row_text": "Te-129 | 10^(2)",
+   "printed": "Te-129",
+   "nuclide": "Te129",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10^(2)",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 115,
+   "row_text": "Te-129m+ | 10",
+   "printed": "Te-129m+",
+   "nuclide": "Te129m1",
+   "suffix": "plus",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 116,
+   "row_text": "Te-131 | 10^(2)",
+   "printed": "Te-131",
+   "nuclide": "Te131",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10^(2)",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 117,
+   "row_text": "Te-131m+ | 10",
+   "printed": "Te-131m+",
+   "nuclide": "Te131m1",
+   "suffix": "plus",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 118,
+   "row_text": "Te-132+ | 1",
+   "printed": "Te-132+",
+   "nuclide": "Te132",
+   "suffix": "plus",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "1",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 119,
+   "row_text": "Te-133+ | 1",
+   "printed": "Te-133+",
+   "nuclide": "Te133",
+   "suffix": "plus",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "1",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 120,
+   "row_text": "Te-133m+ | 1",
+   "printed": "Te-133m+",
+   "nuclide": "Te133m1",
+   "suffix": "plus",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "1",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 121,
+   "row_text": "Te-134 | 10",
+   "printed": "Te-134",
+   "nuclide": "Te134",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 122,
+   "row_text": "I-123 | 10^(2)",
+   "printed": "I-123",
+   "nuclide": "I123",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10^(2)",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 123,
+   "row_text": "I-125 | 10^(2)",
+   "printed": "I-125",
+   "nuclide": "I125",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10^(2)",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 124,
+   "row_text": "I-126 | 10",
+   "printed": "I-126",
+   "nuclide": "I126",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 125,
+   "row_text": "I-129 | 0.01",
+   "printed": "I-129",
+   "nuclide": "I129",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "0.01",
+     "number": 0.01
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 126,
+   "row_text": "I-130 | 10",
+   "printed": "I-130",
+   "nuclide": "I130",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 127,
+   "row_text": "I-131+ | 1",
+   "printed": "I-131+",
+   "nuclide": "I131",
+   "suffix": "plus",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "1",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 128,
+   "row_text": "I-132 | 10",
+   "printed": "I-132",
+   "nuclide": "I132",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 129,
+   "row_text": "I-133 | 10",
+   "printed": "I-133",
+   "nuclide": "I133",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 130,
+   "row_text": "I-134 | 10",
+   "printed": "I-134",
+   "nuclide": "I134",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 131,
+   "row_text": "I-135 | 10",
+   "printed": "I-135",
+   "nuclide": "I135",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 132,
+   "row_text": "Cs-129 | 10",
+   "printed": "Cs-129",
+   "nuclide": "Cs129",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 133,
+   "row_text": "Cs-131 | 10^(3)",
+   "printed": "Cs-131",
+   "nuclide": "Cs131",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10^(3)",
+     "number": 1000.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 134,
+   "row_text": "Cs-132 | 10",
+   "printed": "Cs-132",
+   "nuclide": "Cs132",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 135,
+   "row_text": "Cs-134 | 0.1",
+   "printed": "Cs-134",
+   "nuclide": "Cs134",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "0.1",
+     "number": 0.1
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 136,
+   "row_text": "Cs-134m | 10^(3)",
+   "printed": "Cs-134m",
+   "nuclide": "Cs134m1",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10^(3)",
+     "number": 1000.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 137,
+   "row_text": "Cs-135 | 10^(2)",
+   "printed": "Cs-135",
+   "nuclide": "Cs135",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10^(2)",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 138,
+   "row_text": "Cs-136 | 1",
+   "printed": "Cs-136",
+   "nuclide": "Cs136",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "1",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 139,
+   "row_text": "Cs-137+ | 1",
+   "printed": "Cs-137+",
+   "nuclide": "Cs137",
+   "suffix": "plus",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "1",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 140,
+   "row_text": "Cs-138 | 10",
+   "printed": "Cs-138",
+   "nuclide": "Cs138",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 141,
+   "row_text": "Ba-131 | 10",
+   "printed": "Ba-131",
+   "nuclide": "Ba131",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 142,
+   "row_text": "Ba-140 | 1",
+   "printed": "Ba-140",
+   "nuclide": "Ba140",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "1",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 143,
+   "row_text": "La-140 | 1",
+   "printed": "La-140",
+   "nuclide": "La140",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "1",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 144,
+   "row_text": "Ce-139 | 1",
+   "printed": "Ce-139",
+   "nuclide": "Ce139",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "1",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 145,
+   "row_text": "Ce-141 | 10^(2)",
+   "printed": "Ce-141",
+   "nuclide": "Ce141",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10^(2)",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 146,
+   "row_text": "Ce-143 | 10",
+   "printed": "Ce-143",
+   "nuclide": "Ce143",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 147,
+   "row_text": "Ce-144+ | 10",
+   "printed": "Ce-144+",
+   "nuclide": "Ce144",
+   "suffix": "plus",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 148,
+   "row_text": "Pr-142 | 10^(2)",
+   "printed": "Pr-142",
+   "nuclide": "Pr142",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10^(2)",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 149,
+   "row_text": "Pr-143 | 10^(3)",
+   "printed": "Pr-143",
+   "nuclide": "Pr143",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10^(3)",
+     "number": 1000.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 150,
+   "row_text": "Nd-147 | 10^(2)",
+   "printed": "Nd-147",
+   "nuclide": "Nd147",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10^(2)",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 151,
+   "row_text": "Nd-149 | 10^(2)",
+   "printed": "Nd-149",
+   "nuclide": "Nd149",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10^(2)",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 152,
+   "row_text": "Pm-147 | 10^(3)",
+   "printed": "Pm-147",
+   "nuclide": "Pm147",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10^(3)",
+     "number": 1000.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 153,
+   "row_text": "Pm-149 | 10^(3)",
+   "printed": "Pm-149",
+   "nuclide": "Pm149",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10^(3)",
+     "number": 1000.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 154,
+   "row_text": "Sm-151 | 10^(3)",
+   "printed": "Sm-151",
+   "nuclide": "Sm151",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10^(3)",
+     "number": 1000.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 155,
+   "row_text": "Sm-153 | 10^(2)",
+   "printed": "Sm-153",
+   "nuclide": "Sm153",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10^(2)",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 156,
+   "row_text": "Eu-152 | 0.1",
+   "printed": "Eu-152",
+   "nuclide": "Eu152",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "0.1",
+     "number": 0.1
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 157,
+   "row_text": "Eu-152m | 10^(2)",
+   "printed": "Eu-152m",
+   "nuclide": "Eu152m1",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10^(2)",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 158,
+   "row_text": "Eu-154 | 0.1",
+   "printed": "Eu-154",
+   "nuclide": "Eu154",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "0.1",
+     "number": 0.1
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 159,
+   "row_text": "Eu-155 | 1",
+   "printed": "Eu-155",
+   "nuclide": "Eu155",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "1",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 160,
+   "row_text": "Gd-153 | 10",
+   "printed": "Gd-153",
+   "nuclide": "Gd153",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 161,
+   "row_text": "Gd-159 | 10^(2)",
+   "printed": "Gd-159",
+   "nuclide": "Gd159",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10^(2)",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 162,
+   "row_text": "Tb-160 | 1",
+   "printed": "Tb-160",
+   "nuclide": "Tb160",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "1",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 163,
+   "row_text": "Dy-165 | 10^(3)",
+   "printed": "Dy-165",
+   "nuclide": "Dy165",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10^(3)",
+     "number": 1000.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 164,
+   "row_text": "Dy-166 | 10^(2)",
+   "printed": "Dy-166",
+   "nuclide": "Dy166",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10^(2)",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 165,
+   "row_text": "Ho-166 | 10^(2)",
+   "printed": "Ho-166",
+   "nuclide": "Ho166",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10^(2)",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 166,
+   "row_text": "Er-169 | 10^(3)",
+   "printed": "Er-169",
+   "nuclide": "Er169",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10^(3)",
+     "number": 1000.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 167,
+   "row_text": "Er-171 | 10^(2)",
+   "printed": "Er-171",
+   "nuclide": "Er171",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10^(2)",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 168,
+   "row_text": "Tm-170 | 10^(2)",
+   "printed": "Tm-170",
+   "nuclide": "Tm170",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10^(2)",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 169,
+   "row_text": "Tm-171 | 10^(3)",
+   "printed": "Tm-171",
+   "nuclide": "Tm171",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10^(3)",
+     "number": 1000.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 170,
+   "row_text": "Yb-175 | 10^(2)",
+   "printed": "Yb-175",
+   "nuclide": "Yb175",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10^(2)",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 171,
+   "row_text": "Lu-177 | 10^(2)",
+   "printed": "Lu-177",
+   "nuclide": "Lu177",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10^(2)",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 172,
+   "row_text": "Hf-181 | 1",
+   "printed": "Hf-181",
+   "nuclide": "Hf181",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "1",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 173,
+   "row_text": "Ta-182 | 0.1",
+   "printed": "Ta-182",
+   "nuclide": "Ta182",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "0.1",
+     "number": 0.1
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 174,
+   "row_text": "W-181 | 10",
+   "printed": "W-181",
+   "nuclide": "W181",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 175,
+   "row_text": "W-185 | 10^(3)",
+   "printed": "W-185",
+   "nuclide": "W185",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10^(3)",
+     "number": 1000.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 176,
+   "row_text": "W-187 | 10",
+   "printed": "W-187",
+   "nuclide": "W187",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 177,
+   "row_text": "Re-186 | 10^(3)",
+   "printed": "Re-186",
+   "nuclide": "Re186",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10^(3)",
+     "number": 1000.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 178,
+   "row_text": "Re-188 | 10^(2)",
+   "printed": "Re-188",
+   "nuclide": "Re188",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10^(2)",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 179,
+   "row_text": "Os-185 | 1",
+   "printed": "Os-185",
+   "nuclide": "Os185",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "1",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 180,
+   "row_text": "Os-191 | 10^(2)",
+   "printed": "Os-191",
+   "nuclide": "Os191",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10^(2)",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 181,
+   "row_text": "Os-191m | 10^(3)",
+   "printed": "Os-191m",
+   "nuclide": "Os191m1",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10^(3)",
+     "number": 1000.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 182,
+   "row_text": "Os-193 | 10^(2)",
+   "printed": "Os-193",
+   "nuclide": "Os193",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10^(2)",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 183,
+   "row_text": "Ir-190 | 1",
+   "printed": "Ir-190",
+   "nuclide": "Ir190",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "1",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 184,
+   "row_text": "Ir-192 | 1",
+   "printed": "Ir-192",
+   "nuclide": "Ir192",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "1",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 185,
+   "row_text": "Ir-194 | 10^(2)",
+   "printed": "Ir-194",
+   "nuclide": "Ir194",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10^(2)",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 186,
+   "row_text": "Pt-191 | 10",
+   "printed": "Pt-191",
+   "nuclide": "Pt191",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 187,
+   "row_text": "Pt-193m | 10^(3)",
+   "printed": "Pt-193m",
+   "nuclide": "Pt193m1",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10^(3)",
+     "number": 1000.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 188,
+   "row_text": "Pt-197 | 10^(3)",
+   "printed": "Pt-197",
+   "nuclide": "Pt197",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10^(3)",
+     "number": 1000.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 189,
+   "row_text": "Pt-197m | 10^(2)",
+   "printed": "Pt-197m",
+   "nuclide": "Pt197m1",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10^(2)",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 190,
+   "row_text": "Au-198 | 10",
+   "printed": "Au-198",
+   "nuclide": "Au198",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 191,
+   "row_text": "Au-199 | 10^(2)",
+   "printed": "Au-199",
+   "nuclide": "Au199",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10^(2)",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 192,
+   "row_text": "Hg-197 | 10^(2)",
+   "printed": "Hg-197",
+   "nuclide": "Hg197",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10^(2)",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 193,
+   "row_text": "Hg-197m | 10^(2)",
+   "printed": "Hg-197m",
+   "nuclide": "Hg197m1",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10^(2)",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 194,
+   "row_text": "Hg-203 | 10",
+   "printed": "Hg-203",
+   "nuclide": "Hg203",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 195,
+   "row_text": "Tl-200 | 10",
+   "printed": "Tl-200",
+   "nuclide": "Tl200",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 196,
+   "row_text": "Tl-201 | 10^(2)",
+   "printed": "Tl-201",
+   "nuclide": "Tl201",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10^(2)",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 197,
+   "row_text": "Tl-202 | 10",
+   "printed": "Tl-202",
+   "nuclide": "Tl202",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 198,
+   "row_text": "Tl-204 | 1",
+   "printed": "Tl-204",
+   "nuclide": "Tl204",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "1",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 199,
+   "row_text": "Pb-203 | 10",
+   "printed": "Pb-203",
+   "nuclide": "Pb203",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 200,
+   "row_text": "Pb-210+ | 0.01",
+   "printed": "Pb-210+",
+   "nuclide": "Pb210",
+   "suffix": "plus",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "0.01",
+     "number": 0.01
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 201,
+   "row_text": "Pb-212+ | 1",
+   "printed": "Pb-212+",
+   "nuclide": "Pb212",
+   "suffix": "plus",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "1",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 202,
+   "row_text": "Bi-206 | 1",
+   "printed": "Bi-206",
+   "nuclide": "Bi206",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "1",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 203,
+   "row_text": "Bi-207 | 0.1",
+   "printed": "Bi-207",
+   "nuclide": "Bi207",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "0.1",
+     "number": 0.1
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 204,
+   "row_text": "Bi-210 | 10",
+   "printed": "Bi-210",
+   "nuclide": "Bi210",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 205,
+   "row_text": "Bi-212+ | 1",
+   "printed": "Bi-212+",
+   "nuclide": "Bi212",
+   "suffix": "plus",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "1",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 206,
+   "row_text": "Po-203 | 10",
+   "printed": "Po-203",
+   "nuclide": "Po203",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 207,
+   "row_text": "Po-205 | 10",
+   "printed": "Po-205",
+   "nuclide": "Po205",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 208,
+   "row_text": "Po-207 | 10",
+   "printed": "Po-207",
+   "nuclide": "Po207",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 209,
+   "row_text": "Po-210 | 0.01",
+   "printed": "Po-210",
+   "nuclide": "Po210",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "0.01",
+     "number": 0.01
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 210,
+   "row_text": "At-211 | 10^(3)",
+   "printed": "At-211",
+   "nuclide": "At211",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10^(3)",
+     "number": 1000.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 211,
+   "row_text": "Ra-223+ | 1",
+   "printed": "Ra-223+",
+   "nuclide": "Ra223",
+   "suffix": "plus",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "1",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 212,
+   "row_text": "Ra-224+ | 1",
+   "printed": "Ra-224+",
+   "nuclide": "Ra224",
+   "suffix": "plus",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "1",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 213,
+   "row_text": "Ra-225 | 10",
+   "printed": "Ra-225",
+   "nuclide": "Ra225",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 214,
+   "row_text": "Ra-226+ | 0.01",
+   "printed": "Ra-226+",
+   "nuclide": "Ra226",
+   "suffix": "plus",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "0.01",
+     "number": 0.01
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 215,
+   "row_text": "Ra-227 | 10^(2)",
+   "printed": "Ra-227",
+   "nuclide": "Ra227",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10^(2)",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 216,
+   "row_text": "Ra-228+ | 0.01",
+   "printed": "Ra-228+",
+   "nuclide": "Ra228",
+   "suffix": "plus",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "0.01",
+     "number": 0.01
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 217,
+   "row_text": "Ac-227+ | 0.01",
+   "printed": "Ac-227+",
+   "nuclide": "Ac227",
+   "suffix": "plus",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "0.01",
+     "number": 0.01
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 218,
+   "row_text": "Ac-228 | 1",
+   "printed": "Ac-228",
+   "nuclide": "Ac228",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "1",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 219,
+   "row_text": "Th-226+ | 10^(2)",
+   "printed": "Th-226+",
+   "nuclide": "Th226",
+   "suffix": "plus",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10^(2)",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 220,
+   "row_text": "Th-227 | 1",
+   "printed": "Th-227",
+   "nuclide": "Th227",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "1",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 221,
+   "row_text": "Th-228+ | 0.1",
+   "printed": "Th-228+",
+   "nuclide": "Th228",
+   "suffix": "plus",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "0.1",
+     "number": 0.1
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 222,
+   "row_text": "Th-229+ | 0.1",
+   "printed": "Th-229+",
+   "nuclide": "Th229",
+   "suffix": "plus",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "0.1",
+     "number": 0.1
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 223,
+   "row_text": "Th-230 | 0.1",
+   "printed": "Th-230",
+   "nuclide": "Th230",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "0.1",
+     "number": 0.1
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 224,
+   "row_text": "Th-231 | 10^(2)",
+   "printed": "Th-231",
+   "nuclide": "Th231",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10^(2)",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 225,
+   "row_text": "Th-232 | 0.01",
+   "printed": "Th-232",
+   "nuclide": "Th232",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "0.01",
+     "number": 0.01
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 226,
+   "row_text": "Th-232+ | 0.01",
+   "printed": "Th-232+",
+   "nuclide": "Th232",
+   "suffix": "plus",
+   "flags": [
+    "printed in several forms; see form_choice for the form kept"
+   ],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "0.01",
+     "number": 0.01
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 227,
+   "row_text": "Th-232sec | 0.01",
+   "printed": "Th-232sec",
+   "nuclide": "Th232",
+   "suffix": "sec",
+   "flags": [
+    "printed in several forms; see form_choice for the form kept"
+   ],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "0.01",
+     "number": 0.01
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 228,
+   "row_text": "Th-234+ | 10",
+   "printed": "Th-234+",
+   "nuclide": "Th234",
+   "suffix": "plus",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 229,
+   "row_text": "Pa-230 | 10",
+   "printed": "Pa-230",
+   "nuclide": "Pa230",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 230,
+   "row_text": "Pa-231 | 0.01",
+   "printed": "Pa-231",
+   "nuclide": "Pa231",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "0.01",
+     "number": 0.01
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 231,
+   "row_text": "Pa-233 | 10",
+   "printed": "Pa-233",
+   "nuclide": "Pa233",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 232,
+   "row_text": "U-230+ | 1",
+   "printed": "U-230+",
+   "nuclide": "U230",
+   "suffix": "plus",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "1",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 233,
+   "row_text": "U-231 | 10^(2)",
+   "printed": "U-231",
+   "nuclide": "U231",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10^(2)",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 234,
+   "row_text": "U-232+ | 0.1",
+   "printed": "U-232+",
+   "nuclide": "U232",
+   "suffix": "plus",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "0.1",
+     "number": 0.1
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 235,
+   "row_text": "U-233 | 1",
+   "printed": "U-233",
+   "nuclide": "U233",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "1",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 236,
+   "row_text": "U-234 | 1",
+   "printed": "U-234",
+   "nuclide": "U234",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "1",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 237,
+   "row_text": "U-235+ | 1",
+   "printed": "U-235+",
+   "nuclide": "U235",
+   "suffix": "plus",
+   "flags": [
+    "printed in several forms; see form_choice for the form kept"
+   ],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "1",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 238,
+   "row_text": "U-235sec | 0.01",
+   "printed": "U-235sec",
+   "nuclide": "U235",
+   "suffix": "sec",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "0.01",
+     "number": 0.01
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 239,
+   "row_text": "U-236 | 10",
+   "printed": "U-236",
+   "nuclide": "U236",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 240,
+   "row_text": "U-237 | 10^(2)",
+   "printed": "U-237",
+   "nuclide": "U237",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10^(2)",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 241,
+   "row_text": "U-238+ | 1",
+   "printed": "U-238+",
+   "nuclide": "U238",
+   "suffix": "plus",
+   "flags": [
+    "printed in several forms; see form_choice for the form kept"
+   ],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "1",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 242,
+   "row_text": "U-238sec | 0.01",
+   "printed": "U-238sec",
+   "nuclide": "U238",
+   "suffix": "sec",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "0.01",
+     "number": 0.01
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 243,
+   "row_text": "U-239 | 10^(2)",
+   "printed": "U-239",
+   "nuclide": "U239",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10^(2)",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 244,
+   "row_text": "U-240+ | 10^(2)",
+   "printed": "U-240+",
+   "nuclide": "U240",
+   "suffix": "plus",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10^(2)",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 245,
+   "row_text": "Np-237+ | 1",
+   "printed": "Np-237+",
+   "nuclide": "Np237",
+   "suffix": "plus",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "1",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 246,
+   "row_text": "Np-239 | 10^(2)",
+   "printed": "Np-239",
+   "nuclide": "Np239",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10^(2)",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 247,
+   "row_text": "Np-240 | 10",
+   "printed": "Np-240",
+   "nuclide": "Np240",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 248,
+   "row_text": "Pu-234 | 10^(2)",
+   "printed": "Pu-234",
+   "nuclide": "Pu234",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10^(2)",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 249,
+   "row_text": "Pu-235 | 10^(2)",
+   "printed": "Pu-235",
+   "nuclide": "Pu235",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10^(2)",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 250,
+   "row_text": "Pu-236 | 1",
+   "printed": "Pu-236",
+   "nuclide": "Pu236",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "1",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 251,
+   "row_text": "Pu-237 | 10^(2)",
+   "printed": "Pu-237",
+   "nuclide": "Pu237",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10^(2)",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 252,
+   "row_text": "Pu-238 | 0.1",
+   "printed": "Pu-238",
+   "nuclide": "Pu238",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "0.1",
+     "number": 0.1
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 253,
+   "row_text": "Pu-239 | 0.1",
+   "printed": "Pu-239",
+   "nuclide": "Pu239",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "0.1",
+     "number": 0.1
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 254,
+   "row_text": "Pu-240 | 0.1",
+   "printed": "Pu-240",
+   "nuclide": "Pu240",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "0.1",
+     "number": 0.1
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 255,
+   "row_text": "Pu-241 | 10",
+   "printed": "Pu-241",
+   "nuclide": "Pu241",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 256,
+   "row_text": "Pu-242 | 0.1",
+   "printed": "Pu-242",
+   "nuclide": "Pu242",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "0.1",
+     "number": 0.1
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 257,
+   "row_text": "Pu-243 | 10^(3)",
+   "printed": "Pu-243",
+   "nuclide": "Pu243",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10^(3)",
+     "number": 1000.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 258,
+   "row_text": "Pu-244+ | 0.1",
+   "printed": "Pu-244+",
+   "nuclide": "Pu244",
+   "suffix": "plus",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "0.1",
+     "number": 0.1
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 259,
+   "row_text": "Am-241 | 0.1",
+   "printed": "Am-241",
+   "nuclide": "Am241",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "0.1",
+     "number": 0.1
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 260,
+   "row_text": "Am-242 | 10^(3)",
+   "printed": "Am-242",
+   "nuclide": "Am242",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10^(3)",
+     "number": 1000.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 261,
+   "row_text": "Am-242m+ | 0.1",
+   "printed": "Am-242m+",
+   "nuclide": "Am242m1",
+   "suffix": "plus",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "0.1",
+     "number": 0.1
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 262,
+   "row_text": "Am-243+ | 0.1",
+   "printed": "Am-243+",
+   "nuclide": "Am243",
+   "suffix": "plus",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "0.1",
+     "number": 0.1
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 263,
+   "row_text": "Cm-242 | 10",
+   "printed": "Cm-242",
+   "nuclide": "Cm242",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 264,
+   "row_text": "Cm-243 | 1",
+   "printed": "Cm-243",
+   "nuclide": "Cm243",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "1",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 265,
+   "row_text": "Cm-244 | 1",
+   "printed": "Cm-244",
+   "nuclide": "Cm244",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "1",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 266,
+   "row_text": "Cm-245 | 0.1",
+   "printed": "Cm-245",
+   "nuclide": "Cm245",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "0.1",
+     "number": 0.1
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 267,
+   "row_text": "Cm-246 | 0.1",
+   "printed": "Cm-246",
+   "nuclide": "Cm246",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "0.1",
+     "number": 0.1
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 268,
+   "row_text": "Cm-247+ | 0.1",
+   "printed": "Cm-247+",
+   "nuclide": "Cm247",
+   "suffix": "plus",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "0.1",
+     "number": 0.1
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 269,
+   "row_text": "Cm-248 | 0.1",
+   "printed": "Cm-248",
+   "nuclide": "Cm248",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "0.1",
+     "number": 0.1
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 270,
+   "row_text": "Bk-249 | 10^(2)",
+   "printed": "Bk-249",
+   "nuclide": "Bk249",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10^(2)",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 271,
+   "row_text": "Cf-246 | 10^(3)",
+   "printed": "Cf-246",
+   "nuclide": "Cf246",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10^(3)",
+     "number": 1000.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 272,
+   "row_text": "Cf-248 | 1",
+   "printed": "Cf-248",
+   "nuclide": "Cf248",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "1",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 273,
+   "row_text": "Cf-249 | 0.1",
+   "printed": "Cf-249",
+   "nuclide": "Cf249",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "0.1",
+     "number": 0.1
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 274,
+   "row_text": "Cf-250 | 1",
+   "printed": "Cf-250",
+   "nuclide": "Cf250",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "1",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 275,
+   "row_text": "Cf-251 | 0.1",
+   "printed": "Cf-251",
+   "nuclide": "Cf251",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "0.1",
+     "number": 0.1
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 276,
+   "row_text": "Cf-252 | 1",
+   "printed": "Cf-252",
+   "nuclide": "Cf252",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "1",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 277,
+   "row_text": "Cf-253 | 10^(2)",
+   "printed": "Cf-253",
+   "nuclide": "Cf253",
+   "suffix": "plain",
+   "flags": [
+    "printed in several forms; see form_choice for the form kept"
+   ],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10^(2)",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 278,
+   "row_text": "Cf-253+ | 1",
+   "printed": "Cf-253+",
+   "nuclide": "Cf253",
+   "suffix": "plus",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "1",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 279,
+   "row_text": "Cf-254 | 1",
+   "printed": "Cf-254",
+   "nuclide": "Cf254",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "1",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 280,
+   "row_text": "Es-253 | 10^(2)",
+   "printed": "Es-253",
+   "nuclide": "Es253",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10^(2)",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 281,
+   "row_text": "Es-254+ | 0.1",
+   "printed": "Es-254+",
+   "nuclide": "Es254",
+   "suffix": "plus",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "0.1",
+     "number": 0.1
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 282,
+   "row_text": "Es-254m+ | 10",
+   "printed": "Es-254m+",
+   "nuclide": "Es254m1",
+   "suffix": "plus",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 283,
+   "row_text": "Fm-254 | 10^(4)",
+   "printed": "Fm-254",
+   "nuclide": "Fm254",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10^(4)",
+     "number": 10000.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 23 Part 3 Table 2",
+   "row": 284,
+   "row_text": "Fm-255 | 10^(2)",
+   "printed": "Fm-255",
+   "nuclide": "Fm255",
+   "suffix": "plain",
+   "flags": [],
+   "values": {
+    "concentration_Bq_per_g": {
+     "text": "10^(2)",
+     "number": 100.0
+    }
+   }
+  }
+ ],
+ "tables": {
+  "uk-epr-2016-sch23-pt3-table-2.json": "2bde41dacaf93f7d1091176bbb4ab8a8c79344f84ef7dcc31d5b855dc3ab7b9f"
+ }
+}

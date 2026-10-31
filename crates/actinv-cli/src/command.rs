@@ -1866,7 +1866,8 @@ pub fn main_from(a: Vec<String>) {
             );
         }
         "clearance" => {
-            // actinv clearance INPUT STEP [--limits PATH] [--confidence T] OUT.ndjson
+            // actinv clearance INPUT STEP [--limits PATH | --jurisdiction J [--route R]] [--negligible Q]
+            //                  [--confidence T] OUT.ndjson
             if a.len() < 4 {
                 die(crate::help::usage(&a[1]), 2);
             }
@@ -1877,11 +1878,35 @@ pub fn main_from(a: Vec<String>) {
                 die("STEP is one-based and must be positive", 2);
             }
             let mut limits_path: Option<String> = None;
+            let mut jurisdiction: Option<String> = None;
+            let mut route: Option<String> = None;
+            let mut negligible = actinv_core::clearance::DEFAULT_NEGLIGIBLE_BQ_G;
             let mut confidence = 0.95f64;
             let mut out_path: Option<String> = None;
             let mut i = 4;
             while i < a.len() {
                 match a[i].as_str() {
+                    "--jurisdiction" => {
+                        jurisdiction = Some(a.get(i + 1).cloned().unwrap_or_else(|| {
+                            die("--jurisdiction requires iaea, de, uk or ca", 2)
+                        }));
+                        i += 2;
+                    }
+                    "--route" => {
+                        route = Some(
+                            a.get(i + 1)
+                                .cloned()
+                                .unwrap_or_else(|| die("--route requires a route name", 2)),
+                        );
+                        i += 2;
+                    }
+                    "--negligible" => {
+                        negligible = a
+                            .get(i + 1)
+                            .and_then(|s| s.parse().ok())
+                            .unwrap_or_else(|| die("--negligible requires a number of Bq/g", 2));
+                        i += 2;
+                    }
                     "--limits" => {
                         limits_path = Some(
                             a.get(i + 1)
@@ -1913,11 +1938,26 @@ pub fn main_from(a: Vec<String>) {
             let out = out_path.unwrap_or_else(|| die(crate::help::usage(&a[1]), 2));
             let bytes = std::fs::read(&a[2])
                 .unwrap_or_else(|e| die(format!("cannot read {}: {e}", a[2]), 2));
-            let doc = actinv_core::clearance::emit_clearance(
+            // "iaea" is the default table, as without the flag.
+            let national = match jurisdiction.as_deref() {
+                None | Some("iaea") => {
+                    if route.is_some() {
+                        die("--route needs --jurisdiction de, uk or ca", 2);
+                    }
+                    None
+                }
+                Some(code) => Some(actinv_core::clearance::NationalSelect {
+                    jurisdiction: code.to_string(),
+                    route: route.clone(),
+                    negligible_bq_g: negligible,
+                }),
+            };
+            let doc = actinv_core::clearance::emit_clearance_for(
                 &bytes,
                 step,
                 limits_path.as_deref(),
                 confidence,
+                national.as_ref(),
             )
             .unwrap_or_else(|e| die(e, 1));
             std::fs::write(&out, doc)

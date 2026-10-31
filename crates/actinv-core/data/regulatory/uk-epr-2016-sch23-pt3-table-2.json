@@ -1,0 +1,612 @@
+{
+ "format": "actinv-radiological-table-1",
+ "title": "EPR 2016 Schedule 23 Part 3 Table 2: concentration of radionuclides, Bq/g",
+ "source": {
+  "citation": "The Environmental Permitting (England and Wales) Regulations 2016 (SI 2016/1154), Schedule 23 Part 3, Table 2 (Concentration of radionuclides) with Table 3 (secular-equilibrium daughters)",
+  "edition": "legislation.gov.uk data.xml, in force from 2026-07-30, modified 2026-09-07; Tables 1 and 2 substituted 2018-05-02 by SI 2018/428",
+  "url": "https://www.legislation.gov.uk/uksi/2016/1154/schedule/23/part/3",
+  "jurisdiction": "United Kingdom, England and Wales (Environmental Permitting Regulations)",
+  "scope": "Activity concentration in Bq/g of radionuclides in a solid or relevant liquid, below which the substance is outside the radioactive-substances regime as referred to in paragraphs 5 and 6 of Schedule 23 Part 2; solid-material concentration only (Table 1, the NORM table, and the catch-all row for other radionuclides are not converted). Choosing this table is a regulatory decision for the analyst.",
+  "retrieved": "2026-10-30",
+  "source_file": "controls/fixtures/clearance_sources/uk/data.xml",
+  "source_sha256": "3a2fb528b1f80e45438adb2ab6a3d5dafdd5be011bf4fcf599f54eb85902508d",
+  "converter": "scripts/regulatory/convert_national_clearance.py",
+  "licence": "Contains public sector information licensed under the Open Government Licence v3.0 (https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/). Source: legislation.gov.uk, SI 2016/1154, Crown copyright. Not an official version of the law.",
+  "row_provenance": "uk-epr-2016-sch23-pt3-table-2.rows.json"
+ },
+ "responses": [
+  {
+   "id": "table-2-solid-or-relevant-liquid",
+   "kind": "clearance_index",
+   "basis": "The Environmental Permitting (England and Wales) Regulations 2016, Schedule 23 Part 3, Table 2 'Concentration of radionuclides', concentration in becquerels per gram (Bq/g), for a solid or relevant liquid. Part 3 states that this Table 2 is the one referred to in paragraph 5 of Part 2 (processed radionuclides of natural terrestrial or cosmic origin) and paragraph 6 of that Part (radionuclides not of natural terrestrial or cosmic origin); the regulation does not call it a clearance table. Its summation rule: the sum of A/B, A the concentration of each listed radionuclide and B its column 2 value. Bq/g converted to Bq/kg (x1000). The suffix '+' (or 'sec') means the parent is in secular equilibrium with the daughters in Table 3 and its value is for the parent alone but already takes the daughters into account; covered_by_parent lists the Table 3 daughters. Where a parent is printed in several forms the form with the smallest limit is kept and progeny coverage follows that form (see the sidecar).",
+   "coefficients": {
+    "H3": 100000.0,
+    "Be7": 10000.0,
+    "C14": 10000.0,
+    "F18": 10000.0,
+    "Na22": 100.0,
+    "Na24": 1000.0,
+    "Si31": 1000000.0,
+    "P32": 1000000.0,
+    "P33": 1000000.0,
+    "S35": 100000.0,
+    "Cl36": 1000.0,
+    "Cl38": 10000.0,
+    "K42": 100000.0,
+    "K43": 10000.0,
+    "Ca45": 100000.0,
+    "Ca47": 10000.0,
+    "Sc46": 100.0,
+    "Sc47": 100000.0,
+    "Sc48": 1000.0,
+    "V48": 1000.0,
+    "Cr51": 100000.0,
+    "Mn51": 10000.0,
+    "Mn52": 1000.0,
+    "Mn52m1": 10000.0,
+    "Mn53": 100000.0,
+    "Mn54": 100.0,
+    "Mn56": 10000.0,
+    "Fe52": 10000.0,
+    "Fe55": 1000000.0,
+    "Fe59": 1000.0,
+    "Co55": 10000.0,
+    "Co56": 100.0,
+    "Co57": 1000.0,
+    "Co58": 1000.0,
+    "Co58m1": 10000000.0,
+    "Co60": 100.0,
+    "Co60m1": 1000000.0,
+    "Co61": 100000.0,
+    "Co62m1": 10000.0,
+    "Ni59": 100000.0,
+    "Ni63": 100000.0,
+    "Ni65": 10000.0,
+    "Cu64": 100000.0,
+    "Zn65": 100.0,
+    "Zn69": 1000000.0,
+    "Zn69m1": 10000.0,
+    "Ga72": 10000.0,
+    "Ge71": 10000000.0,
+    "As73": 1000000.0,
+    "As74": 10000.0,
+    "As76": 10000.0,
+    "As77": 1000000.0,
+    "Se75": 1000.0,
+    "Br82": 1000.0,
+    "Rb86": 100000.0,
+    "Sr85": 1000.0,
+    "Sr85m1": 100000.0,
+    "Sr87m1": 100000.0,
+    "Sr89": 1000000.0,
+    "Sr90": 1000.0,
+    "Sr91": 10000.0,
+    "Sr92": 10000.0,
+    "Y90": 1000000.0,
+    "Y91": 100000.0,
+    "Y91m1": 100000.0,
+    "Y92": 100000.0,
+    "Y93": 100000.0,
+    "Zr93": 10000.0,
+    "Zr95": 1000.0,
+    "Zr97": 10000.0,
+    "Nb93m1": 10000.0,
+    "Nb94": 100.0,
+    "Nb95": 1000.0,
+    "Nb97": 10000.0,
+    "Nb98": 10000.0,
+    "Mo90": 10000.0,
+    "Mo93": 10000.0,
+    "Mo99": 10000.0,
+    "Mo101": 10000.0,
+    "Tc96": 1000.0,
+    "Tc96m1": 1000000.0,
+    "Tc97": 10000.0,
+    "Tc97m1": 100000.0,
+    "Tc99": 1000.0,
+    "Tc99m1": 100000.0,
+    "Ru97": 10000.0,
+    "Ru103": 1000.0,
+    "Ru105": 10000.0,
+    "Ru106": 100.0,
+    "Rh103m1": 10000000.0,
+    "Rh105": 100000.0,
+    "Pd103": 1000000.0,
+    "Pd109": 100000.0,
+    "Ag105": 1000.0,
+    "Ag108m1": 100.0,
+    "Ag110m1": 100.0,
+    "Ag111": 100000.0,
+    "Cd109": 1000.0,
+    "Cd115": 10000.0,
+    "Cd115m1": 100000.0,
+    "In111": 10000.0,
+    "In113m1": 100000.0,
+    "In114m1": 10000.0,
+    "In115m1": 100000.0,
+    "Sn113": 1000.0,
+    "Sn125": 10000.0,
+    "Sb122": 10000.0,
+    "Sb124": 1000.0,
+    "Sb125": 100.0,
+    "Te123m1": 1000.0,
+    "Te125m1": 1000000.0,
+    "Te127": 1000000.0,
+    "Te127m1": 10000.0,
+    "Te129": 100000.0,
+    "Te129m1": 10000.0,
+    "Te131": 100000.0,
+    "Te131m1": 10000.0,
+    "Te132": 1000.0,
+    "Te133": 1000.0,
+    "Te133m1": 1000.0,
+    "Te134": 10000.0,
+    "I123": 100000.0,
+    "I125": 100000.0,
+    "I126": 10000.0,
+    "I129": 10.0,
+    "I130": 10000.0,
+    "I131": 1000.0,
+    "I132": 10000.0,
+    "I133": 10000.0,
+    "I134": 10000.0,
+    "I135": 10000.0,
+    "Cs129": 10000.0,
+    "Cs131": 1000000.0,
+    "Cs132": 10000.0,
+    "Cs134": 100.0,
+    "Cs134m1": 1000000.0,
+    "Cs135": 100000.0,
+    "Cs136": 1000.0,
+    "Cs137": 1000.0,
+    "Cs138": 10000.0,
+    "Ba131": 10000.0,
+    "Ba140": 1000.0,
+    "La140": 1000.0,
+    "Ce139": 1000.0,
+    "Ce141": 100000.0,
+    "Ce143": 10000.0,
+    "Ce144": 10000.0,
+    "Pr142": 100000.0,
+    "Pr143": 1000000.0,
+    "Nd147": 100000.0,
+    "Nd149": 100000.0,
+    "Pm147": 1000000.0,
+    "Pm149": 1000000.0,
+    "Sm151": 1000000.0,
+    "Sm153": 100000.0,
+    "Eu152": 100.0,
+    "Eu152m1": 100000.0,
+    "Eu154": 100.0,
+    "Eu155": 1000.0,
+    "Gd153": 10000.0,
+    "Gd159": 100000.0,
+    "Tb160": 1000.0,
+    "Dy165": 1000000.0,
+    "Dy166": 100000.0,
+    "Ho166": 100000.0,
+    "Er169": 1000000.0,
+    "Er171": 100000.0,
+    "Tm170": 100000.0,
+    "Tm171": 1000000.0,
+    "Yb175": 100000.0,
+    "Lu177": 100000.0,
+    "Hf181": 1000.0,
+    "Ta182": 100.0,
+    "W181": 10000.0,
+    "W185": 1000000.0,
+    "W187": 10000.0,
+    "Re186": 1000000.0,
+    "Re188": 100000.0,
+    "Os185": 1000.0,
+    "Os191": 100000.0,
+    "Os191m1": 1000000.0,
+    "Os193": 100000.0,
+    "Ir190": 1000.0,
+    "Ir192": 1000.0,
+    "Ir194": 100000.0,
+    "Pt191": 10000.0,
+    "Pt193m1": 1000000.0,
+    "Pt197": 1000000.0,
+    "Pt197m1": 100000.0,
+    "Au198": 10000.0,
+    "Au199": 100000.0,
+    "Hg197": 100000.0,
+    "Hg197m1": 100000.0,
+    "Hg203": 10000.0,
+    "Tl200": 10000.0,
+    "Tl201": 100000.0,
+    "Tl202": 10000.0,
+    "Tl204": 1000.0,
+    "Pb203": 10000.0,
+    "Pb210": 10.0,
+    "Pb212": 1000.0,
+    "Bi206": 1000.0,
+    "Bi207": 100.0,
+    "Bi210": 10000.0,
+    "Bi212": 1000.0,
+    "Po203": 10000.0,
+    "Po205": 10000.0,
+    "Po207": 10000.0,
+    "Po210": 10.0,
+    "At211": 1000000.0,
+    "Ra223": 1000.0,
+    "Ra224": 1000.0,
+    "Ra225": 10000.0,
+    "Ra226": 10.0,
+    "Ra227": 100000.0,
+    "Ra228": 10.0,
+    "Ac227": 10.0,
+    "Ac228": 1000.0,
+    "Th226": 100000.0,
+    "Th227": 1000.0,
+    "Th228": 100.0,
+    "Th229": 100.0,
+    "Th230": 100.0,
+    "Th231": 100000.0,
+    "Th232": 10.0,
+    "Th234": 10000.0,
+    "Pa230": 10000.0,
+    "Pa231": 10.0,
+    "Pa233": 10000.0,
+    "U230": 1000.0,
+    "U231": 100000.0,
+    "U232": 100.0,
+    "U233": 1000.0,
+    "U234": 1000.0,
+    "U235": 10.0,
+    "U236": 10000.0,
+    "U237": 100000.0,
+    "U238": 10.0,
+    "U239": 100000.0,
+    "U240": 100000.0,
+    "Np237": 1000.0,
+    "Np239": 100000.0,
+    "Np240": 10000.0,
+    "Pu234": 100000.0,
+    "Pu235": 100000.0,
+    "Pu236": 1000.0,
+    "Pu237": 100000.0,
+    "Pu238": 100.0,
+    "Pu239": 100.0,
+    "Pu240": 100.0,
+    "Pu241": 10000.0,
+    "Pu242": 100.0,
+    "Pu243": 1000000.0,
+    "Pu244": 100.0,
+    "Am241": 100.0,
+    "Am242": 1000000.0,
+    "Am242m1": 100.0,
+    "Am243": 100.0,
+    "Cm242": 10000.0,
+    "Cm243": 1000.0,
+    "Cm244": 1000.0,
+    "Cm245": 100.0,
+    "Cm246": 100.0,
+    "Cm247": 100.0,
+    "Cm248": 100.0,
+    "Bk249": 100000.0,
+    "Cf246": 1000000.0,
+    "Cf248": 1000.0,
+    "Cf249": 100.0,
+    "Cf250": 1000.0,
+    "Cf251": 100.0,
+    "Cf252": 1000.0,
+    "Cf253": 1000.0,
+    "Cf254": 1000.0,
+    "Es253": 100000.0,
+    "Es254": 100.0,
+    "Es254m1": 10000.0,
+    "Fm254": 10000000.0,
+    "Fm255": 100000.0
+   },
+   "covered_by_parent": {
+    "Ac225": [
+     "Th229"
+    ],
+    "Ac227": [
+     "U235"
+    ],
+    "Ac228": [
+     "Ra228"
+    ],
+    "Ag108": [
+     "Ag108m1"
+    ],
+    "Ag109m1": [
+     "Cd109",
+     "Pd109"
+    ],
+    "Ag110": [
+     "Ag110m1"
+    ],
+    "At217": [
+     "Th229"
+    ],
+    "Ba137m1": [
+     "Cs137"
+    ],
+    "Bi210": [
+     "Pb210",
+     "U238"
+    ],
+    "Bi211": [
+     "Ac227",
+     "Ra223",
+     "U235"
+    ],
+    "Bi212": [
+     "Pb212",
+     "Ra224",
+     "Th228",
+     "U232"
+    ],
+    "Bi213": [
+     "Th229"
+    ],
+    "Bi214": [
+     "Ra226",
+     "U238"
+    ],
+    "Bk250": [
+     "Es254"
+    ],
+    "Cm249": [
+     "Cf253"
+    ],
+    "Fm254": [
+     "Es254m1"
+    ],
+    "Fr221": [
+     "Th229"
+    ],
+    "Fr223": [
+     "Ac227",
+     "U235"
+    ],
+    "I132": [
+     "Te132"
+    ],
+    "I133": [
+     "Te133",
+     "Te133m1"
+    ],
+    "In113m1": [
+     "Sn113"
+    ],
+    "In114": [
+     "In114m1"
+    ],
+    "In115m1": [
+     "Cd115",
+     "Cd115m1"
+    ],
+    "Mn52m1": [
+     "Fe52"
+    ],
+    "Nb95m1": [
+     "Zr95"
+    ],
+    "Nb97": [
+     "Zr97"
+    ],
+    "Nb97m1": [
+     "Nb97",
+     "Zr97"
+    ],
+    "Np238": [
+     "Am242m1"
+    ],
+    "Np239": [
+     "Am243"
+    ],
+    "Np240": [
+     "Pu244",
+     "U240"
+    ],
+    "Np240m1": [
+     "Pu244",
+     "U240"
+    ],
+    "Pa231": [
+     "U235"
+    ],
+    "Pa233": [
+     "Np237"
+    ],
+    "Pa234": [
+     "Th234",
+     "U238"
+    ],
+    "Pa234m1": [
+     "Th234",
+     "U238"
+    ],
+    "Pb209": [
+     "Th229"
+    ],
+    "Pb210": [
+     "U238"
+    ],
+    "Pb211": [
+     "Ac227",
+     "Ra223",
+     "U235"
+    ],
+    "Pb212": [
+     "Ra224",
+     "Th228",
+     "U232"
+    ],
+    "Pb214": [
+     "Ra226",
+     "U238"
+    ],
+    "Po210": [
+     "Pb210",
+     "U238"
+    ],
+    "Po211": [
+     "Ac227",
+     "U235"
+    ],
+    "Po214": [
+     "Ra226",
+     "Th226",
+     "U230",
+     "U238"
+    ],
+    "Po215": [
+     "Ac227",
+     "Ra223",
+     "U235"
+    ],
+    "Po216": [
+     "Ra224",
+     "Th228",
+     "U232"
+    ],
+    "Po218": [
+     "Ra226",
+     "U238"
+    ],
+    "Pr144": [
+     "Ce144"
+    ],
+    "Pr144m1": [
+     "Ce144"
+    ],
+    "Pu243": [
+     "Cm247"
+    ],
+    "Ra222": [
+     "Th226",
+     "U230"
+    ],
+    "Ra223": [
+     "Ac227",
+     "U235"
+    ],
+    "Ra224": [
+     "Th228",
+     "U232"
+    ],
+    "Ra225": [
+     "Th229"
+    ],
+    "Ra226": [
+     "U238"
+    ],
+    "Rh103m1": [
+     "Pd103",
+     "Ru103"
+    ],
+    "Rh105m1": [
+     "Ru105"
+    ],
+    "Rh106": [
+     "Ru106"
+    ],
+    "Rn218": [
+     "Th226",
+     "U230"
+    ],
+    "Rn219": [
+     "Ac227",
+     "Ra223",
+     "U235"
+    ],
+    "Rn220": [
+     "Ra224",
+     "Th228",
+     "U232"
+    ],
+    "Rn222": [
+     "Ra226",
+     "U238"
+    ],
+    "Tc101": [
+     "Mo101"
+    ],
+    "Tc99m1": [
+     "Mo99"
+    ],
+    "Te125m1": [
+     "Sb125"
+    ],
+    "Te127": [
+     "Te127m1"
+    ],
+    "Te129": [
+     "Te129m1"
+    ],
+    "Te131": [
+     "Te131m1"
+    ],
+    "Te133": [
+     "Te133m1"
+    ],
+    "Th226": [
+     "U230"
+    ],
+    "Th227": [
+     "Ac227",
+     "U235"
+    ],
+    "Th228": [
+     "U232"
+    ],
+    "Th230": [
+     "U238"
+    ],
+    "Th231": [
+     "U235"
+    ],
+    "Th234": [
+     "U238"
+    ],
+    "Tl207": [
+     "Ac227",
+     "Ra223",
+     "U235"
+    ],
+    "Tl208": [
+     "Bi212",
+     "Pb212",
+     "Ra224",
+     "Th228",
+     "U232"
+    ],
+    "Tl209": [
+     "Th229"
+    ],
+    "U234": [
+     "U238"
+    ],
+    "U240": [
+     "Pu244"
+    ],
+    "Xe131m1": [
+     "I131"
+    ],
+    "Xe133": [
+     "Te133",
+     "Te133m1"
+    ],
+    "Xe133m1": [
+     "Te133",
+     "Te133m1"
+    ],
+    "Y90": [
+     "Sr90"
+    ],
+    "Y91m1": [
+     "Sr91"
+    ],
+    "Zn69": [
+     "Zn69m1"
+    ]
+   }
+  }
+ ]
+}

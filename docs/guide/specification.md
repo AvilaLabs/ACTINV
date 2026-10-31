@@ -568,6 +568,9 @@ the 64-hex-digit SHA-256 of the table, which is recorded in the result like any 
 | `euratom-2013-59-annex-vii-a` | Council Directive 2013/59/Euratom, Annex VII Table A Part 1: exemption and clearance of solid material, artificial radionuclides. European Union (national law may differ). | Bq/kg (from kBq/kg) | EU reuse with attribution |
 | `euratom-2013-59-annex-vii-b-concentration` | Annex VII Table B column 2, exemption of moderate amounts. | Bq/kg (from kBq/kg) | EU reuse with attribution |
 | `euratom-2013-59-annex-vii-b-activity` | Annex VII Table B column 3, total activity for exemption. | activity in Bq | EU reuse with attribution |
+| `de-strlschv-2018-anlage-4` | Strahlenschutzverordnung 2018, Anlage 4 Tabelle 1: unrestricted clearance (column 3) and the specific clearance routes (columns 6 to 11 and 14), one `clearance_index` response per route. Germany. Not an official version. | Bq/kg (from Bq/g) | official work, section 5(1) UrhG |
+| `uk-epr-2016-sch23-pt3-table-2` | Environmental Permitting (England and Wales) Regulations 2016, Schedule 23 Part 3 Table 2, concentration of radionuclides in a solid or relevant liquid. United Kingdom (England and Wales). | Bq/kg (from Bq/g) | Open Government Licence v3.0 |
+| `ca-nsrdr-2000-207-schedule-2` | Nuclear Substances and Radiation Devices Regulations (SOR/2000-207), Schedule 2, unconditional clearance levels. Canada. Not an official version. | Bq/kg (from Bq/g) | Reproduction of Federal Law Order (SI/97-5) |
 
 Each table's `source` block names the title, edition, URL, retrieval date, SHA-256 of the source file, converter script
 (`scripts/regulatory/`), and licence. The converters read the downloaded file and type no numbers. Tables and the

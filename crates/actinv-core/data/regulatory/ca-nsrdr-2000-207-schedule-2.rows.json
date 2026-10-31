@@ -1,0 +1,4962 @@
+{
+ "format": "actinv-regulatory-rows-1",
+ "about": "Per-row source text for the table built from NSRDR Schedule 2. ACTINV does not read this file. Superscripts in row_text are written ^(...).",
+ "source": {
+  "citation": "Nuclear Substances and Radiation Devices Regulations (SOR/2000-207), Schedule 2 (Section 1), Unconditional Clearance Levels",
+  "edition": "Justice Laws Website XML, consolidation 2025-11-21, point in time 2025-10-30, last amended 2025-10-30; Schedule 2 enacted by SOR/2008-119, s. 38",
+  "url": "https://laws-lois.justice.gc.ca/eng/regulations/SOR-2000-207/",
+  "jurisdiction": "Canada (federal; Nuclear Safety and Control Act)",
+  "scope": "Unconditional clearance levels as activity concentration in Bq/g for a bulk quantity of material, except surface-contaminated material, in which the nuclide is uniformly distributed. Choosing this table is a regulatory decision for the analyst.",
+  "retrieved": "2026-10-30",
+  "source_file": "controls/fixtures/clearance_sources/ca/SOR-2000-207.xml",
+  "source_sha256": "55d498a0daf3b4ab736fd416510c898519b4d002cea648301916e69ba5e211ef",
+  "converter": "scripts/regulatory/convert_national_clearance.py",
+  "licence": "Reproduced from the Nuclear Substances and Radiation Devices Regulations (SOR/2000-207), Justice Laws Website, Government of Canada, under the Reproduction of Federal Law Order (SI/97-5). This is not an official version: the Canada Gazette and the official consolidation govern.",
+  "row_provenance": "ca-nsrdr-2000-207-schedule-2.rows.json",
+  "xml_current_date": "2025-11-20",
+  "recent_amendments": [
+   [
+    "SOR/2025-219",
+    "2025-10-30"
+   ]
+  ]
+ },
+ "notes": {
+  "footnote_a": "Parent nuclides and their progeny included in secular equilibrium are listed in the following:",
+  "unconditional_clearance_level_definition": "unconditional clearance level, in respect of a bulk quantity of material, except for surface contaminated material, in which the radioactive nuclear substance is uniformly distributed, means an activity concentration that(a)in respect of a radioactive nuclear substance set out in column 1 of Schedule 2, is the corresponding activity concentration set out in column 2;(b)in respect of a radioactive nuclear substance that is not set out in column 1,(i)is 1 Bq/g, if the atomic number of the substance is equal to or less than 81,(ii)is 1 Bq/g, if the atomic number of the substance is greater than 81 and the substance, or its short-lived radioactive progeny, does not emit alpha radiation, and(iii)is 0.1 Bq/g, if the atomic number of the substance is greater than 81 and the substance, or its short-lived radioactive progeny, emits alpha radiation; or(c)in respect of more than one radioactive nuclear substance — except for Thorium 232, Uranium 235, Uranium 238 and their radioactive progeny mentioned in paragraph 4.3 of the IAEA Safety Standard RS-G-1.7 — is the quotient obtained by dividing the total activity concentration by the sum of quotients obtained by dividing the activity concentration of each radioactive nuclear substance by its corresponding activity concentration as referred to in paragraph (a) or (b). (niveau de lib",
+  "default_rule": "Definition paragraph (b): a nuclide not in column 1 has 1 Bq/g if its atomic number is 81 or less, 1 Bq/g above 81 without alpha emission, 0.1 Bq/g above 81 with alpha emission (itself or short-lived progeny). Paragraph (c): for several nuclides the criterion is the sum of concentration over limit."
+ },
+ "progeny_lists": {
+  "Am242m1": {
+   "progeny": [
+    "Am242"
+   ]
+  },
+  "Am243": {
+   "progeny": [
+    "Np239"
+   ]
+  },
+  "Ba140": {
+   "progeny": [
+    "La140"
+   ]
+  },
+  "Ce144": {
+   "progeny": [
+    "Pr144"
+   ]
+  },
+  "Cs137": {
+   "progeny": [
+    "Ba137m1"
+   ]
+  },
+  "Np237": {
+   "progeny": [
+    "Pa233"
+   ]
+  },
+  "Pb210": {
+   "progeny": [
+    "Bi210"
+   ]
+  },
+  "Ra223": {
+   "progeny": [
+    "Rn219",
+    "Po215",
+    "Pb211",
+    "Bi211",
+    "Tl207"
+   ]
+  },
+  "Ra224": {
+   "progeny": [
+    "Rn220",
+    "Po216",
+    "Pb212",
+    "Bi212",
+    "Tl208",
+    "Po212"
+   ]
+  },
+  "Ra226": {
+   "progeny": [
+    "Rn222",
+    "Po218",
+    "Pb214",
+    "Bi214",
+    "Po214",
+    "Pb210",
+    "Bi210",
+    "Po210"
+   ]
+  },
+  "Ra228": {
+   "progeny": [
+    "Ac228"
+   ]
+  },
+  "Ru106": {
+   "progeny": [
+    "Rh106"
+   ]
+  },
+  "Sr90": {
+   "progeny": [
+    "Y90"
+   ]
+  },
+  "Th226": {
+   "progeny": [
+    "Ra222",
+    "Rn218",
+    "Po214"
+   ]
+  },
+  "Th228": {
+   "progeny": [
+    "Ra224",
+    "Rn220",
+    "Po216",
+    "Pb212",
+    "Bi212",
+    "Tl208",
+    "Po212"
+   ]
+  },
+  "Th229": {
+   "progeny": [
+    "Ra225",
+    "Ac225",
+    "Fr221",
+    "At217",
+    "Bi213",
+    "Po213",
+    "Pb209"
+   ]
+  },
+  "Th234": {
+   "progeny": [
+    "Pa234m1"
+   ]
+  },
+  "U230": {
+   "progeny": [
+    "Th226",
+    "Ra222",
+    "Rn218",
+    "Po214"
+   ]
+  },
+  "U232": {
+   "progeny": [
+    "Th228",
+    "Ra224",
+    "Rn220",
+    "Po216",
+    "Pb212",
+    "Bi212",
+    "Tl208",
+    "Po212"
+   ]
+  },
+  "U235": {
+   "progeny": [
+    "Th231"
+   ]
+  },
+  "U238": {
+   "progeny": [
+    "Th234",
+    "Pa234m1"
+   ]
+  },
+  "U240": {
+   "progeny": [
+    "Np240m1"
+   ]
+  },
+  "Zr93": {
+   "progeny": [
+    "Nb93m1"
+   ]
+  },
+  "Zr97": {
+   "progeny": [
+    "Nb97"
+   ]
+  }
+ },
+ "skipped_progeny": [
+  "Th-nat",
+  "U-nat"
+ ],
+ "unmapped_rows": [
+  {
+   "name": "Thorium natural",
+   "value": "1 × 10^(0)",
+   "reason": "not a single nuclide (natural mixture)"
+  },
+  {
+   "name": "Uranium natural",
+   "value": "1 × 10^(0)",
+   "reason": "not a single nuclide (natural mixture)"
+  }
+ ],
+ "source_anomalies": [],
+ "rows": [
+  {
+   "table": "Schedule 2",
+   "row": 1,
+   "row_text": "Actinium 227 | 1 × 10^(0)",
+   "printed": "Actinium 227",
+   "symbol_form": "Ac-227",
+   "nuclide": "Ac227",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(0)",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 2,
+   "row_text": "Americium 241 | 1 × 10^(-1)",
+   "printed": "Americium 241",
+   "symbol_form": "Am-241",
+   "nuclide": "Am241",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(-1)",
+     "number": 0.1
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 3,
+   "row_text": "Americium 242 | 1 × 10^(3)",
+   "printed": "Americium 242",
+   "symbol_form": "Am-242",
+   "nuclide": "Am242",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(3)",
+     "number": 1000.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 4,
+   "row_text": "Americium 242m | 1 × 10^(-1)",
+   "printed": "Americium 242m",
+   "symbol_form": "Am-242m",
+   "nuclide": "Am242m1",
+   "with_progeny": true,
+   "footnotes": [
+    "a"
+   ],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(-1)",
+     "number": 0.1
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 5,
+   "row_text": "Americium 243 | 1 × 10^(-1)",
+   "printed": "Americium 243",
+   "symbol_form": "Am-243",
+   "nuclide": "Am243",
+   "with_progeny": true,
+   "footnotes": [
+    "a"
+   ],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(-1)",
+     "number": 0.1
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 6,
+   "row_text": "Antimony 122 | 1 × 10^(1)",
+   "printed": "Antimony 122",
+   "symbol_form": "Sb-122",
+   "nuclide": "Sb122",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(1)",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 7,
+   "row_text": "Antimony 124 | 1 × 10^(0)",
+   "printed": "Antimony 124",
+   "symbol_form": "Sb-124",
+   "nuclide": "Sb124",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(0)",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 8,
+   "row_text": "Antimony 125 | 1 × 10^(-1)",
+   "printed": "Antimony 125",
+   "symbol_form": "Sb-125",
+   "nuclide": "Sb125",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(-1)",
+     "number": 0.1
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 9,
+   "row_text": "Arsenic 73 | 1 × 10^(3)",
+   "printed": "Arsenic 73",
+   "symbol_form": "As-73",
+   "nuclide": "As73",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(3)",
+     "number": 1000.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 10,
+   "row_text": "Arsenic 74 | 1 × 10^(1)",
+   "printed": "Arsenic 74",
+   "symbol_form": "As-74",
+   "nuclide": "As74",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(1)",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 11,
+   "row_text": "Arsenic 76 | 1 × 10^(1)",
+   "printed": "Arsenic 76",
+   "symbol_form": "As-76",
+   "nuclide": "As76",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(1)",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 12,
+   "row_text": "Arsenic 77 | 1 × 10^(3)",
+   "printed": "Arsenic 77",
+   "symbol_form": "As-77",
+   "nuclide": "As77",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(3)",
+     "number": 1000.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 13,
+   "row_text": "Astatine 211 | 1 × 10^(3)",
+   "printed": "Astatine 211",
+   "symbol_form": "At-211",
+   "nuclide": "At211",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(3)",
+     "number": 1000.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 14,
+   "row_text": "Barium 131 | 1 × 10^(1)",
+   "printed": "Barium 131",
+   "symbol_form": "Ba-131",
+   "nuclide": "Ba131",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(1)",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 15,
+   "row_text": "Barium 140 | 1 × 10^(0)",
+   "printed": "Barium 140",
+   "symbol_form": "Ba-140",
+   "nuclide": "Ba140",
+   "with_progeny": true,
+   "footnotes": [
+    "a"
+   ],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(0)",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 16,
+   "row_text": "Berkelium 249 | 1 × 10^(2)",
+   "printed": "Berkelium 249",
+   "symbol_form": "Bk-249",
+   "nuclide": "Bk249",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(2)",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 17,
+   "row_text": "Beryllium 7 | 1 × 10^(1)",
+   "printed": "Beryllium 7",
+   "symbol_form": "Be-7",
+   "nuclide": "Be7",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(1)",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 18,
+   "row_text": "Bismuth 206 | 1 × 10^(0)",
+   "printed": "Bismuth 206",
+   "symbol_form": "Bi-206",
+   "nuclide": "Bi206",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(0)",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 19,
+   "row_text": "Bismuth 207 | 1 × 10^(-1)",
+   "printed": "Bismuth 207",
+   "symbol_form": "Bi-207",
+   "nuclide": "Bi207",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(-1)",
+     "number": 0.1
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 20,
+   "row_text": "Bromine 82 | 1 × 10^(0)",
+   "printed": "Bromine 82",
+   "symbol_form": "Br-82",
+   "nuclide": "Br82",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(0)",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 21,
+   "row_text": "Cadmium 109 | 1 × 10^(0)",
+   "printed": "Cadmium 109",
+   "symbol_form": "Cd-109",
+   "nuclide": "Cd109",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(0)",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 22,
+   "row_text": "Cadmium 115 | 1 × 10^(1)",
+   "printed": "Cadmium 115",
+   "symbol_form": "Cd-115",
+   "nuclide": "Cd115",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(1)",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 23,
+   "row_text": "Cadmium 115m | 1 × 10^(2)",
+   "printed": "Cadmium 115m",
+   "symbol_form": "Cd-115m",
+   "nuclide": "Cd115m1",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(2)",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 24,
+   "row_text": "Calcium 45 | 1 × 10^(2)",
+   "printed": "Calcium 45",
+   "symbol_form": "Ca-45",
+   "nuclide": "Ca45",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(2)",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 25,
+   "row_text": "Calcium 47 | 1 × 10^(1)",
+   "printed": "Calcium 47",
+   "symbol_form": "Ca-47",
+   "nuclide": "Ca47",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(1)",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 26,
+   "row_text": "Californium 246 | 1 × 10^(3)",
+   "printed": "Californium 246",
+   "symbol_form": "Cf-246",
+   "nuclide": "Cf246",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(3)",
+     "number": 1000.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 27,
+   "row_text": "Californium 248 | 1 × 10^(0)",
+   "printed": "Californium 248",
+   "symbol_form": "Cf-248",
+   "nuclide": "Cf248",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(0)",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 28,
+   "row_text": "Californium 249 | 1 × 10^(-1)",
+   "printed": "Californium 249",
+   "symbol_form": "Cf-249",
+   "nuclide": "Cf249",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(-1)",
+     "number": 0.1
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 29,
+   "row_text": "Californium 250 | 1 × 10^(0)",
+   "printed": "Californium 250",
+   "symbol_form": "Cf-250",
+   "nuclide": "Cf250",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(0)",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 30,
+   "row_text": "Californium 251 | 1 × 10^(-1)",
+   "printed": "Californium 251",
+   "symbol_form": "Cf-251",
+   "nuclide": "Cf251",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(-1)",
+     "number": 0.1
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 31,
+   "row_text": "Californium 252 | 1 × 10^(0)",
+   "printed": "Californium 252",
+   "symbol_form": "Cf-252",
+   "nuclide": "Cf252",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(0)",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 32,
+   "row_text": "Californium 253 | 1 × 10^(2)",
+   "printed": "Californium 253",
+   "symbol_form": "Cf-253",
+   "nuclide": "Cf253",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(2)",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 33,
+   "row_text": "Californium 254 | 1 × 10^(0)",
+   "printed": "Californium 254",
+   "symbol_form": "Cf-254",
+   "nuclide": "Cf254",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(0)",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 34,
+   "row_text": "Carbon 14 | 1 × 10^(0)",
+   "printed": "Carbon 14",
+   "symbol_form": "C-14",
+   "nuclide": "C14",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(0)",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 35,
+   "row_text": "Cerium 139 | 1 × 10^(0)",
+   "printed": "Cerium 139",
+   "symbol_form": "Ce-139",
+   "nuclide": "Ce139",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(0)",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 36,
+   "row_text": "Cerium 141 | 1 × 10^(2)",
+   "printed": "Cerium 141",
+   "symbol_form": "Ce-141",
+   "nuclide": "Ce141",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(2)",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 37,
+   "row_text": "Cerium 143 | 1 × 10^(1)",
+   "printed": "Cerium 143",
+   "symbol_form": "Ce-143",
+   "nuclide": "Ce143",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(1)",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 38,
+   "row_text": "Cerium 144 | 1 × 10^(1)",
+   "printed": "Cerium 144",
+   "symbol_form": "Ce-144",
+   "nuclide": "Ce144",
+   "with_progeny": true,
+   "footnotes": [
+    "a"
+   ],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(1)",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 39,
+   "row_text": "Cesium 129 | 1 × 10^(1)",
+   "printed": "Cesium 129",
+   "symbol_form": "Cs-129",
+   "nuclide": "Cs129",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(1)",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 40,
+   "row_text": "Cesium 131 | 1 × 10^(3)",
+   "printed": "Cesium 131",
+   "symbol_form": "Cs-131",
+   "nuclide": "Cs131",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(3)",
+     "number": 1000.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 41,
+   "row_text": "Cesium 132 | 1 × 10^(1)",
+   "printed": "Cesium 132",
+   "symbol_form": "Cs-132",
+   "nuclide": "Cs132",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(1)",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 42,
+   "row_text": "Cesium 134 | 1 × 10^(-1)",
+   "printed": "Cesium 134",
+   "symbol_form": "Cs-134",
+   "nuclide": "Cs134",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(-1)",
+     "number": 0.1
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 43,
+   "row_text": "Cesium 134m | 1 × 10^(3)",
+   "printed": "Cesium 134m",
+   "symbol_form": "Cs-134m",
+   "nuclide": "Cs134m1",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(3)",
+     "number": 1000.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 44,
+   "row_text": "Cesium 135 | 1 × 10^(2)",
+   "printed": "Cesium 135",
+   "symbol_form": "Cs-135",
+   "nuclide": "Cs135",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(2)",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 45,
+   "row_text": "Cesium 136 | 1 × 10^(0)",
+   "printed": "Cesium 136",
+   "symbol_form": "Cs-136",
+   "nuclide": "Cs136",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(0)",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 46,
+   "row_text": "Cesium 137 | 1 × 10^(-1)",
+   "printed": "Cesium 137",
+   "symbol_form": "Cs-137",
+   "nuclide": "Cs137",
+   "with_progeny": true,
+   "footnotes": [
+    "a"
+   ],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(-1)",
+     "number": 0.1
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 47,
+   "row_text": "Cesium 138 | 1 × 10^(1)",
+   "printed": "Cesium 138",
+   "symbol_form": "Cs-138",
+   "nuclide": "Cs138",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(1)",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 48,
+   "row_text": "Chlorine 36 | 1 × 10^(0)",
+   "printed": "Chlorine 36",
+   "symbol_form": "Cl-36",
+   "nuclide": "Cl36",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(0)",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 49,
+   "row_text": "Chlorine 38 | 1 × 10^(1)",
+   "printed": "Chlorine 38",
+   "symbol_form": "Cl-38",
+   "nuclide": "Cl38",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(1)",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 50,
+   "row_text": "Chromium 51 | 1 × 10^(2)",
+   "printed": "Chromium 51",
+   "symbol_form": "Cr-51",
+   "nuclide": "Cr51",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(2)",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 51,
+   "row_text": "Cobalt 55 | 1 × 10^(1)",
+   "printed": "Cobalt 55",
+   "symbol_form": "Co-55",
+   "nuclide": "Co55",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(1)",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 52,
+   "row_text": "Cobalt 56 | 1 × 10^(-1)",
+   "printed": "Cobalt 56",
+   "symbol_form": "Co-56",
+   "nuclide": "Co56",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(-1)",
+     "number": 0.1
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 53,
+   "row_text": "Cobalt 57 | 1 × 10^(0)",
+   "printed": "Cobalt 57",
+   "symbol_form": "Co-57",
+   "nuclide": "Co57",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(0)",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 54,
+   "row_text": "Cobalt 58 | 1 × 10^(0)",
+   "printed": "Cobalt 58",
+   "symbol_form": "Co-58",
+   "nuclide": "Co58",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(0)",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 55,
+   "row_text": "Cobalt 58m | 1 × 10^(4)",
+   "printed": "Cobalt 58m",
+   "symbol_form": "Co-58m",
+   "nuclide": "Co58m1",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(4)",
+     "number": 10000.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 56,
+   "row_text": "Cobalt 60 | 1 × 10^(-1)",
+   "printed": "Cobalt 60",
+   "symbol_form": "Co-60",
+   "nuclide": "Co60",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(-1)",
+     "number": 0.1
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 57,
+   "row_text": "Cobalt 60m | 1 × 10^(3)",
+   "printed": "Cobalt 60m",
+   "symbol_form": "Co-60m",
+   "nuclide": "Co60m1",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(3)",
+     "number": 1000.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 58,
+   "row_text": "Cobalt 61 | 1 × 10^(2)",
+   "printed": "Cobalt 61",
+   "symbol_form": "Co-61",
+   "nuclide": "Co61",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(2)",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 59,
+   "row_text": "Cobalt 62m | 1 × 10^(1)",
+   "printed": "Cobalt 62m",
+   "symbol_form": "Co-62m",
+   "nuclide": "Co62m1",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(1)",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 60,
+   "row_text": "Copper 64 | 1 × 10^(2)",
+   "printed": "Copper 64",
+   "symbol_form": "Cu-64",
+   "nuclide": "Cu64",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(2)",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 61,
+   "row_text": "Curium 242 | 1 × 10^(1)",
+   "printed": "Curium 242",
+   "symbol_form": "Cm-242",
+   "nuclide": "Cm242",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(1)",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 62,
+   "row_text": "Curium 243 | 1 × 10^(0)",
+   "printed": "Curium 243",
+   "symbol_form": "Cm-243",
+   "nuclide": "Cm243",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(0)",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 63,
+   "row_text": "Curium 244 | 1 × 10^(0)",
+   "printed": "Curium 244",
+   "symbol_form": "Cm-244",
+   "nuclide": "Cm244",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(0)",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 64,
+   "row_text": "Curium 245 | 1 × 10^(-1)",
+   "printed": "Curium 245",
+   "symbol_form": "Cm-245",
+   "nuclide": "Cm245",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(-1)",
+     "number": 0.1
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 65,
+   "row_text": "Curium 246 | 1 × 10^(-1)",
+   "printed": "Curium 246",
+   "symbol_form": "Cm-246",
+   "nuclide": "Cm246",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(-1)",
+     "number": 0.1
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 66,
+   "row_text": "Curium 247 | 1 × 10^(-1)",
+   "printed": "Curium 247",
+   "symbol_form": "Cm-247",
+   "nuclide": "Cm247",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(-1)",
+     "number": 0.1
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 67,
+   "row_text": "Curium 248 | 1 × 10^(-1)",
+   "printed": "Curium 248",
+   "symbol_form": "Cm-248",
+   "nuclide": "Cm248",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(-1)",
+     "number": 0.1
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 68,
+   "row_text": "Dysprosium 165 | 1 × 10^(3)",
+   "printed": "Dysprosium 165",
+   "symbol_form": "Dy-165",
+   "nuclide": "Dy165",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(3)",
+     "number": 1000.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 69,
+   "row_text": "Dysprosium 166 | 1 × 10^(2)",
+   "printed": "Dysprosium 166",
+   "symbol_form": "Dy-166",
+   "nuclide": "Dy166",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(2)",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 70,
+   "row_text": "Einsteinium 253 | 1 × 10^(2)",
+   "printed": "Einsteinium 253",
+   "symbol_form": "Es-253",
+   "nuclide": "Es253",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(2)",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 71,
+   "row_text": "Einsteinium 254 | 1 × 10^(-1)",
+   "printed": "Einsteinium 254",
+   "symbol_form": "Es-254",
+   "nuclide": "Es254",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(-1)",
+     "number": 0.1
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 72,
+   "row_text": "Einsteinium 254m | 1 × 10^(1)",
+   "printed": "Einsteinium 254m",
+   "symbol_form": "Es-254m",
+   "nuclide": "Es254m1",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(1)",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 73,
+   "row_text": "Erbium 169 | 1 × 10^(3)",
+   "printed": "Erbium 169",
+   "symbol_form": "Er-169",
+   "nuclide": "Er169",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(3)",
+     "number": 1000.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 74,
+   "row_text": "Erbium 171 | 1 × 10^(2)",
+   "printed": "Erbium 171",
+   "symbol_form": "Er-171",
+   "nuclide": "Er171",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(2)",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 75,
+   "row_text": "Europium 152 | 1 × 10^(-1)",
+   "printed": "Europium 152",
+   "symbol_form": "Eu-152",
+   "nuclide": "Eu152",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(-1)",
+     "number": 0.1
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 76,
+   "row_text": "Europium 152m | 1 × 10^(2)",
+   "printed": "Europium 152m",
+   "symbol_form": "Eu-152m",
+   "nuclide": "Eu152m1",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(2)",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 77,
+   "row_text": "Europium 154 | 1 × 10^(-1)",
+   "printed": "Europium 154",
+   "symbol_form": "Eu-154",
+   "nuclide": "Eu154",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(-1)",
+     "number": 0.1
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 78,
+   "row_text": "Europium 155 | 1 × 10^(0)",
+   "printed": "Europium 155",
+   "symbol_form": "Eu-155",
+   "nuclide": "Eu155",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(0)",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 79,
+   "row_text": "Fermium 254 | 1 × 10^(4)",
+   "printed": "Fermium 254",
+   "symbol_form": "Fm-254",
+   "nuclide": "Fm254",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(4)",
+     "number": 10000.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 80,
+   "row_text": "Fermium 255 | 1 × 10^(2)",
+   "printed": "Fermium 255",
+   "symbol_form": "Fm-255",
+   "nuclide": "Fm255",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(2)",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 81,
+   "row_text": "Fluorine 18 | 1 × 10^(1)",
+   "printed": "Fluorine 18",
+   "symbol_form": "F-18",
+   "nuclide": "F18",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(1)",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 82,
+   "row_text": "Gadolinium 153 | 1 × 10^(1)",
+   "printed": "Gadolinium 153",
+   "symbol_form": "Gd-153",
+   "nuclide": "Gd153",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(1)",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 83,
+   "row_text": "Gadolinium 159 | 1 × 10^(2)",
+   "printed": "Gadolinium 159",
+   "symbol_form": "Gd-159",
+   "nuclide": "Gd159",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(2)",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 84,
+   "row_text": "Gallium 72 | 1 × 10^(1)",
+   "printed": "Gallium 72",
+   "symbol_form": "Ga-72",
+   "nuclide": "Ga72",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(1)",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 85,
+   "row_text": "Germanium 71 | 1 × 10^(4)",
+   "printed": "Germanium 71",
+   "symbol_form": "Ge-71",
+   "nuclide": "Ge71",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(4)",
+     "number": 10000.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 86,
+   "row_text": "Gold 198 | 1 × 10^(1)",
+   "printed": "Gold 198",
+   "symbol_form": "Au-198",
+   "nuclide": "Au198",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(1)",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 87,
+   "row_text": "Gold 199 | 1 × 10^(2)",
+   "printed": "Gold 199",
+   "symbol_form": "Au-199",
+   "nuclide": "Au199",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(2)",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 88,
+   "row_text": "Hafnium 181 | 1 × 10^(0)",
+   "printed": "Hafnium 181",
+   "symbol_form": "Hf-181",
+   "nuclide": "Hf181",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(0)",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 89,
+   "row_text": "Holmium 166 | 1 × 10^(2)",
+   "printed": "Holmium 166",
+   "symbol_form": "Ho-166",
+   "nuclide": "Ho166",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(2)",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 90,
+   "row_text": "Hydrogen 3 | 1 × 10^(2)",
+   "printed": "Hydrogen 3",
+   "symbol_form": "H-3",
+   "nuclide": "H3",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(2)",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 91,
+   "row_text": "Indium 111 | 1 × 10^(1)",
+   "printed": "Indium 111",
+   "symbol_form": "In-111",
+   "nuclide": "In111",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(1)",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 92,
+   "row_text": "Indium 113m | 1 × 10^(2)",
+   "printed": "Indium 113m",
+   "symbol_form": "In-113m",
+   "nuclide": "In113m1",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(2)",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 93,
+   "row_text": "Indium 114m | 1 × 10^(1)",
+   "printed": "Indium 114m",
+   "symbol_form": "In-114m",
+   "nuclide": "In114m1",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(1)",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 94,
+   "row_text": "Indium 115m | 1 × 10^(2)",
+   "printed": "Indium 115m",
+   "symbol_form": "In-115m",
+   "nuclide": "In115m1",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(2)",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 95,
+   "row_text": "Iodine 123 | 1 × 10^(2)",
+   "printed": "Iodine 123",
+   "symbol_form": "I-123",
+   "nuclide": "I123",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(2)",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 96,
+   "row_text": "Iodine 125 | 1 × 10^(2)",
+   "printed": "Iodine 125",
+   "symbol_form": "I-125",
+   "nuclide": "I125",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(2)",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 97,
+   "row_text": "Iodine 126 | 1 × 10^(1)",
+   "printed": "Iodine 126",
+   "symbol_form": "I-126",
+   "nuclide": "I126",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(1)",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 98,
+   "row_text": "Iodine 129 | 1 × 10^(-2)",
+   "printed": "Iodine 129",
+   "symbol_form": "I-129",
+   "nuclide": "I129",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(-2)",
+     "number": 0.01
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 99,
+   "row_text": "Iodine 130 | 1 × 10^(1)",
+   "printed": "Iodine 130",
+   "symbol_form": "I-130",
+   "nuclide": "I130",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(1)",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 100,
+   "row_text": "Iodine 131 | 1 × 10^(1)",
+   "printed": "Iodine 131",
+   "symbol_form": "I-131",
+   "nuclide": "I131",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(1)",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 101,
+   "row_text": "Iodine 132 | 1 × 10^(1)",
+   "printed": "Iodine 132",
+   "symbol_form": "I-132",
+   "nuclide": "I132",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(1)",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 102,
+   "row_text": "Iodine 133 | 1 × 10^(1)",
+   "printed": "Iodine 133",
+   "symbol_form": "I-133",
+   "nuclide": "I133",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(1)",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 103,
+   "row_text": "Iodine 134 | 1 × 10^(1)",
+   "printed": "Iodine 134",
+   "symbol_form": "I-134",
+   "nuclide": "I134",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(1)",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 104,
+   "row_text": "Iodine 135 | 1 × 10^(1)",
+   "printed": "Iodine 135",
+   "symbol_form": "I-135",
+   "nuclide": "I135",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(1)",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 105,
+   "row_text": "Iridium 190 | 1 × 10^(0)",
+   "printed": "Iridium 190",
+   "symbol_form": "Ir-190",
+   "nuclide": "Ir190",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(0)",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 106,
+   "row_text": "Iridium 192 | 1 × 10^(0)",
+   "printed": "Iridium 192",
+   "symbol_form": "Ir-192",
+   "nuclide": "Ir192",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(0)",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 107,
+   "row_text": "Iridium 194 | 1 × 10^(2)",
+   "printed": "Iridium 194",
+   "symbol_form": "Ir-194",
+   "nuclide": "Ir194",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(2)",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 108,
+   "row_text": "Iron 52 | 1 × 10^(1)",
+   "printed": "Iron 52",
+   "symbol_form": "Fe-52",
+   "nuclide": "Fe52",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(1)",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 109,
+   "row_text": "Iron 55 | 1 × 10^(3)",
+   "printed": "Iron 55",
+   "symbol_form": "Fe-55",
+   "nuclide": "Fe55",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(3)",
+     "number": 1000.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 110,
+   "row_text": "Iron 59 | 1 × 10^(0)",
+   "printed": "Iron 59",
+   "symbol_form": "Fe-59",
+   "nuclide": "Fe59",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(0)",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 111,
+   "row_text": "Lanthanum 140 | 1 × 10^(0)",
+   "printed": "Lanthanum 140",
+   "symbol_form": "La-140",
+   "nuclide": "La140",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(0)",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 112,
+   "row_text": "Lead 203 | 1 × 10^(1)",
+   "printed": "Lead 203",
+   "symbol_form": "Pb-203",
+   "nuclide": "Pb203",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(1)",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 113,
+   "row_text": "Lead 210 | 1 × 10^(0)",
+   "printed": "Lead 210",
+   "symbol_form": "Pb-210",
+   "nuclide": "Pb210",
+   "with_progeny": true,
+   "footnotes": [
+    "a"
+   ],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(0)",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 114,
+   "row_text": "Lutetium 177 | 1 × 10^(2)",
+   "printed": "Lutetium 177",
+   "symbol_form": "Lu-177",
+   "nuclide": "Lu177",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(2)",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 115,
+   "row_text": "Manganese 51 | 1 × 10^(1)",
+   "printed": "Manganese 51",
+   "symbol_form": "Mn-51",
+   "nuclide": "Mn51",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(1)",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 116,
+   "row_text": "Manganese 52 | 1 × 10^(0)",
+   "printed": "Manganese 52",
+   "symbol_form": "Mn-52",
+   "nuclide": "Mn52",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(0)",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 117,
+   "row_text": "Manganese 52m | 1 × 10^(1)",
+   "printed": "Manganese 52m",
+   "symbol_form": "Mn-52m",
+   "nuclide": "Mn52m1",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(1)",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 118,
+   "row_text": "Manganese 53 | 1 × 10^(2)",
+   "printed": "Manganese 53",
+   "symbol_form": "Mn-53",
+   "nuclide": "Mn53",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(2)",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 119,
+   "row_text": "Manganese 54 | 1 × 10^(-1)",
+   "printed": "Manganese 54",
+   "symbol_form": "Mn-54",
+   "nuclide": "Mn54",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(-1)",
+     "number": 0.1
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 120,
+   "row_text": "Manganese 56 | 1 × 10^(1)",
+   "printed": "Manganese 56",
+   "symbol_form": "Mn-56",
+   "nuclide": "Mn56",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(1)",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 121,
+   "row_text": "Mercury 197 | 1 × 10^(2)",
+   "printed": "Mercury 197",
+   "symbol_form": "Hg-197",
+   "nuclide": "Hg197",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(2)",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 122,
+   "row_text": "Mercury 197m | 1 × 10^(2)",
+   "printed": "Mercury 197m",
+   "symbol_form": "Hg-197m",
+   "nuclide": "Hg197m1",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(2)",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 123,
+   "row_text": "Mercury 203 | 1 × 10^(1)",
+   "printed": "Mercury 203",
+   "symbol_form": "Hg-203",
+   "nuclide": "Hg203",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(1)",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 124,
+   "row_text": "Molybdenum 90 | 1 × 10^(1)",
+   "printed": "Molybdenum 90",
+   "symbol_form": "Mo-90",
+   "nuclide": "Mo90",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(1)",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 125,
+   "row_text": "Molybdenum 93 | 1 × 10^(1)",
+   "printed": "Molybdenum 93",
+   "symbol_form": "Mo-93",
+   "nuclide": "Mo93",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(1)",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 126,
+   "row_text": "Molybdenum 99 | 1 × 10^(1)",
+   "printed": "Molybdenum 99",
+   "symbol_form": "Mo-99",
+   "nuclide": "Mo99",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(1)",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 127,
+   "row_text": "Molybdenum 101 | 1 × 10^(1)",
+   "printed": "Molybdenum 101",
+   "symbol_form": "Mo-101",
+   "nuclide": "Mo101",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(1)",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 128,
+   "row_text": "Neodymium 147 | 1 × 10^(2)",
+   "printed": "Neodymium 147",
+   "symbol_form": "Nd-147",
+   "nuclide": "Nd147",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(2)",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 129,
+   "row_text": "Neodymium 149 | 1 × 10^(2)",
+   "printed": "Neodymium 149",
+   "symbol_form": "Nd-149",
+   "nuclide": "Nd149",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(2)",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 130,
+   "row_text": "Neptunium 237 | 1 × 10^(0)",
+   "printed": "Neptunium 237",
+   "symbol_form": "Np-237",
+   "nuclide": "Np237",
+   "with_progeny": true,
+   "footnotes": [
+    "a"
+   ],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(0)",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 131,
+   "row_text": "Neptunium 239 | 1 × 10^(2)",
+   "printed": "Neptunium 239",
+   "symbol_form": "Np-239",
+   "nuclide": "Np239",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(2)",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 132,
+   "row_text": "Neptunium 240 | 1 × 10^(1)",
+   "printed": "Neptunium 240",
+   "symbol_form": "Np-240",
+   "nuclide": "Np240",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(1)",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 133,
+   "row_text": "Nickel 59 | 1 × 10^(2)",
+   "printed": "Nickel 59",
+   "symbol_form": "Ni-59",
+   "nuclide": "Ni59",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(2)",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 134,
+   "row_text": "Nickel 63 | 1 × 10^(2)",
+   "printed": "Nickel 63",
+   "symbol_form": "Ni-63",
+   "nuclide": "Ni63",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(2)",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 135,
+   "row_text": "Nickel 65 | 1 × 10^(1)",
+   "printed": "Nickel 65",
+   "symbol_form": "Ni-65",
+   "nuclide": "Ni65",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(1)",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 136,
+   "row_text": "Niobium 93m | 1 × 10^(1)",
+   "printed": "Niobium 93m",
+   "symbol_form": "Nb-93m",
+   "nuclide": "Nb93m1",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(1)",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 137,
+   "row_text": "Niobium 94 | 1 × 10^(-1)",
+   "printed": "Niobium 94",
+   "symbol_form": "Nb-94",
+   "nuclide": "Nb94",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(-1)",
+     "number": 0.1
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 138,
+   "row_text": "Niobium 95 | 1 × 10^(0)",
+   "printed": "Niobium 95",
+   "symbol_form": "Nb-95",
+   "nuclide": "Nb95",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(0)",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 139,
+   "row_text": "Niobium 97 | 1 × 10^(1)",
+   "printed": "Niobium 97",
+   "symbol_form": "Nb-97",
+   "nuclide": "Nb97",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(1)",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 140,
+   "row_text": "Niobium 98 | 1 × 10^(1)",
+   "printed": "Niobium 98",
+   "symbol_form": "Nb-98",
+   "nuclide": "Nb98",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(1)",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 141,
+   "row_text": "Osmium 185 | 1 × 10^(0)",
+   "printed": "Osmium 185",
+   "symbol_form": "Os-185",
+   "nuclide": "Os185",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(0)",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 142,
+   "row_text": "Osmium 191 | 1 × 10^(2)",
+   "printed": "Osmium 191",
+   "symbol_form": "Os-191",
+   "nuclide": "Os191",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(2)",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 143,
+   "row_text": "Osmium 191m | 1 × 10^(3)",
+   "printed": "Osmium 191m",
+   "symbol_form": "Os-191m",
+   "nuclide": "Os191m1",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(3)",
+     "number": 1000.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 144,
+   "row_text": "Osmium 193 | 1 × 10^(2)",
+   "printed": "Osmium 193",
+   "symbol_form": "Os-193",
+   "nuclide": "Os193",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(2)",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 145,
+   "row_text": "Palladium 103 | 1 × 10^(3)",
+   "printed": "Palladium 103",
+   "symbol_form": "Pd-103",
+   "nuclide": "Pd103",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(3)",
+     "number": 1000.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 146,
+   "row_text": "Palladium 109 | 1 × 10^(2)",
+   "printed": "Palladium 109",
+   "symbol_form": "Pd-109",
+   "nuclide": "Pd109",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(2)",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 147,
+   "row_text": "Phosphorous 32 | 1 × 10^(3)",
+   "printed": "Phosphorous 32",
+   "symbol_form": "P-32",
+   "nuclide": "P32",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(3)",
+     "number": 1000.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 148,
+   "row_text": "Phosphorous 33 | 1 × 10^(3)",
+   "printed": "Phosphorous 33",
+   "symbol_form": "P-33",
+   "nuclide": "P33",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(3)",
+     "number": 1000.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 149,
+   "row_text": "Platinum 191 | 1 × 10^(1)",
+   "printed": "Platinum 191",
+   "symbol_form": "Pt-191",
+   "nuclide": "Pt191",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(1)",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 150,
+   "row_text": "Platinum 193m | 1 × 10^(3)",
+   "printed": "Platinum 193m",
+   "symbol_form": "Pt-193m",
+   "nuclide": "Pt193m1",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(3)",
+     "number": 1000.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 151,
+   "row_text": "Platinum 197 | 1 × 10^(3)",
+   "printed": "Platinum 197",
+   "symbol_form": "Pt-197",
+   "nuclide": "Pt197",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(3)",
+     "number": 1000.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 152,
+   "row_text": "Platinum 197m | 1 × 10^(2)",
+   "printed": "Platinum 197m",
+   "symbol_form": "Pt-197m",
+   "nuclide": "Pt197m1",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(2)",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 153,
+   "row_text": "Plutonium 234 | 1 × 10^(2)",
+   "printed": "Plutonium 234",
+   "symbol_form": "Pu-234",
+   "nuclide": "Pu234",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(2)",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 154,
+   "row_text": "Plutonium 235 | 1 × 10^(2)",
+   "printed": "Plutonium 235",
+   "symbol_form": "Pu-235",
+   "nuclide": "Pu235",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(2)",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 155,
+   "row_text": "Plutonium 236 | 1 × 10^(0)",
+   "printed": "Plutonium 236",
+   "symbol_form": "Pu-236",
+   "nuclide": "Pu236",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(0)",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 156,
+   "row_text": "Plutonium 237 | 1 × 10^(2)",
+   "printed": "Plutonium 237",
+   "symbol_form": "Pu-237",
+   "nuclide": "Pu237",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(2)",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 157,
+   "row_text": "Plutonium 238 | 1 × 10^(-1)",
+   "printed": "Plutonium 238",
+   "symbol_form": "Pu-238",
+   "nuclide": "Pu238",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(-1)",
+     "number": 0.1
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 158,
+   "row_text": "Plutonium 239 | 1 × 10^(-1)",
+   "printed": "Plutonium 239",
+   "symbol_form": "Pu-239",
+   "nuclide": "Pu239",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(-1)",
+     "number": 0.1
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 159,
+   "row_text": "Plutonium 240 | 1 × 10^(-1)",
+   "printed": "Plutonium 240",
+   "symbol_form": "Pu-240",
+   "nuclide": "Pu240",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(-1)",
+     "number": 0.1
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 160,
+   "row_text": "Plutonium 241 | 1 × 10^(1)",
+   "printed": "Plutonium 241",
+   "symbol_form": "Pu-241",
+   "nuclide": "Pu241",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(1)",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 161,
+   "row_text": "Plutonium 242 | 1 × 10^(-1)",
+   "printed": "Plutonium 242",
+   "symbol_form": "Pu-242",
+   "nuclide": "Pu242",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(-1)",
+     "number": 0.1
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 162,
+   "row_text": "Plutonium 243 | 1 × 10^(3)",
+   "printed": "Plutonium 243",
+   "symbol_form": "Pu-243",
+   "nuclide": "Pu243",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(3)",
+     "number": 1000.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 163,
+   "row_text": "Plutonium 244 | 1 × 10^(-1)",
+   "printed": "Plutonium 244",
+   "symbol_form": "Pu-244",
+   "nuclide": "Pu244",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(-1)",
+     "number": 0.1
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 164,
+   "row_text": "Polonium 203 | 1 × 10^(1)",
+   "printed": "Polonium 203",
+   "symbol_form": "Po-203",
+   "nuclide": "Po203",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(1)",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 165,
+   "row_text": "Polonium 205 | 1 × 10^(1)",
+   "printed": "Polonium 205",
+   "symbol_form": "Po-205",
+   "nuclide": "Po205",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(1)",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 166,
+   "row_text": "Polonium 207 | 1 × 10^(1)",
+   "printed": "Polonium 207",
+   "symbol_form": "Po-207",
+   "nuclide": "Po207",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(1)",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 167,
+   "row_text": "Polonium 210 | 1 × 10^(0)",
+   "printed": "Polonium 210",
+   "symbol_form": "Po-210",
+   "nuclide": "Po210",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(0)",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 168,
+   "row_text": "Potassium 40 | 1 × 10^(1)",
+   "printed": "Potassium 40",
+   "symbol_form": "K-40",
+   "nuclide": "K40",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(1)",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 169,
+   "row_text": "Potassium 42 | 1 × 10^(2)",
+   "printed": "Potassium 42",
+   "symbol_form": "K-42",
+   "nuclide": "K42",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(2)",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 170,
+   "row_text": "Potassium 43 | 1 × 10^(1)",
+   "printed": "Potassium 43",
+   "symbol_form": "K-43",
+   "nuclide": "K43",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(1)",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 171,
+   "row_text": "Praseodymium 142 | 1 × 10^(2)",
+   "printed": "Praseodymium 142",
+   "symbol_form": "Pr-142",
+   "nuclide": "Pr142",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(2)",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 172,
+   "row_text": "Praseodymium 143 | 1 × 10^(3)",
+   "printed": "Praseodymium 143",
+   "symbol_form": "Pr-143",
+   "nuclide": "Pr143",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(3)",
+     "number": 1000.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 173,
+   "row_text": "Promethium 147 | 1 × 10^(3)",
+   "printed": "Promethium 147",
+   "symbol_form": "Pm-147",
+   "nuclide": "Pm147",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(3)",
+     "number": 1000.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 174,
+   "row_text": "Promethium 149 | 1 × 10^(3)",
+   "printed": "Promethium 149",
+   "symbol_form": "Pm-149",
+   "nuclide": "Pm149",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(3)",
+     "number": 1000.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 175,
+   "row_text": "Protactinium 230 | 1 × 10^(1)",
+   "printed": "Protactinium 230",
+   "symbol_form": "Pa-230",
+   "nuclide": "Pa230",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(1)",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 176,
+   "row_text": "Protactinium 231 | 1 × 10^(0)",
+   "printed": "Protactinium 231",
+   "symbol_form": "Pa-231",
+   "nuclide": "Pa231",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(0)",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 177,
+   "row_text": "Protactinium 233 | 1 × 10^(1)",
+   "printed": "Protactinium 233",
+   "symbol_form": "Pa-233",
+   "nuclide": "Pa233",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(1)",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 178,
+   "row_text": "Radium 223 | 1 × 10^(0)",
+   "printed": "Radium 223",
+   "symbol_form": "Ra-223",
+   "nuclide": "Ra223",
+   "with_progeny": true,
+   "footnotes": [
+    "a"
+   ],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(0)",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 179,
+   "row_text": "Radium 224 | 1 × 10^(0)",
+   "printed": "Radium 224",
+   "symbol_form": "Ra-224",
+   "nuclide": "Ra224",
+   "with_progeny": true,
+   "footnotes": [
+    "a"
+   ],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(0)",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 180,
+   "row_text": "Radium 225 | 1 × 10^(1)",
+   "printed": "Radium 225",
+   "symbol_form": "Ra-225",
+   "nuclide": "Ra225",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(1)",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 181,
+   "row_text": "Radium 226 | 1 × 10^(0)",
+   "printed": "Radium 226",
+   "symbol_form": "Ra-226",
+   "nuclide": "Ra226",
+   "with_progeny": true,
+   "footnotes": [
+    "a"
+   ],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(0)",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 182,
+   "row_text": "Radium 227 | 1 × 10^(2)",
+   "printed": "Radium 227",
+   "symbol_form": "Ra-227",
+   "nuclide": "Ra227",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(2)",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 183,
+   "row_text": "Radium 228 | 1 × 10^(0)",
+   "printed": "Radium 228",
+   "symbol_form": "Ra-228",
+   "nuclide": "Ra228",
+   "with_progeny": true,
+   "footnotes": [
+    "a"
+   ],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(0)",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 184,
+   "row_text": "Rhenium 186 | 1 × 10^(3)",
+   "printed": "Rhenium 186",
+   "symbol_form": "Re-186",
+   "nuclide": "Re186",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(3)",
+     "number": 1000.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 185,
+   "row_text": "Rhenium 188 | 1 × 10^(2)",
+   "printed": "Rhenium 188",
+   "symbol_form": "Re-188",
+   "nuclide": "Re188",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(2)",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 186,
+   "row_text": "Rhodium 103m | 1 × 10^(4)",
+   "printed": "Rhodium 103m",
+   "symbol_form": "Rh-103m",
+   "nuclide": "Rh103m1",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(4)",
+     "number": 10000.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 187,
+   "row_text": "Rhodium 105 | 1 × 10^(2)",
+   "printed": "Rhodium 105",
+   "symbol_form": "Rh-105",
+   "nuclide": "Rh105",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(2)",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 188,
+   "row_text": "Rubidium 86 | 1 × 10^(2)",
+   "printed": "Rubidium 86",
+   "symbol_form": "Rb-86",
+   "nuclide": "Rb86",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(2)",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 189,
+   "row_text": "Ruthenium 97 | 1 × 10^(1)",
+   "printed": "Ruthenium 97",
+   "symbol_form": "Ru-97",
+   "nuclide": "Ru97",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(1)",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 190,
+   "row_text": "Ruthenium 103 | 1 × 10^(0)",
+   "printed": "Ruthenium 103",
+   "symbol_form": "Ru-103",
+   "nuclide": "Ru103",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(0)",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 191,
+   "row_text": "Ruthenium 105 | 1 × 10^(1)",
+   "printed": "Ruthenium 105",
+   "symbol_form": "Ru-105",
+   "nuclide": "Ru105",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(1)",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 192,
+   "row_text": "Ruthenium 106 | 1 × 10^(-1)",
+   "printed": "Ruthenium 106",
+   "symbol_form": "Ru-106",
+   "nuclide": "Ru106",
+   "with_progeny": true,
+   "footnotes": [
+    "a"
+   ],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(-1)",
+     "number": 0.1
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 193,
+   "row_text": "Samarium 151 | 1 × 10^(3)",
+   "printed": "Samarium 151",
+   "symbol_form": "Sm-151",
+   "nuclide": "Sm151",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(3)",
+     "number": 1000.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 194,
+   "row_text": "Samarium 153 | 1 × 10^(2)",
+   "printed": "Samarium 153",
+   "symbol_form": "Sm-153",
+   "nuclide": "Sm153",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(2)",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 195,
+   "row_text": "Scandium 46 | 1 × 10^(-1)",
+   "printed": "Scandium 46",
+   "symbol_form": "Sc-46",
+   "nuclide": "Sc46",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(-1)",
+     "number": 0.1
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 196,
+   "row_text": "Scandium 47 | 1 × 10^(2)",
+   "printed": "Scandium 47",
+   "symbol_form": "Sc-47",
+   "nuclide": "Sc47",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(2)",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 197,
+   "row_text": "Scandium 48 | 1 × 10^(0)",
+   "printed": "Scandium 48",
+   "symbol_form": "Sc-48",
+   "nuclide": "Sc48",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(0)",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 198,
+   "row_text": "Selenium 75 | 1 × 10^(0)",
+   "printed": "Selenium 75",
+   "symbol_form": "Se-75",
+   "nuclide": "Se75",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(0)",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 199,
+   "row_text": "Silicon 31 | 1 × 10^(3)",
+   "printed": "Silicon 31",
+   "symbol_form": "Si-31",
+   "nuclide": "Si31",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(3)",
+     "number": 1000.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 200,
+   "row_text": "Silver 105 | 1 × 10^(0)",
+   "printed": "Silver 105",
+   "symbol_form": "Ag-105",
+   "nuclide": "Ag105",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(0)",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 201,
+   "row_text": "Silver 110m | 1 × 10^(-1)",
+   "printed": "Silver 110m",
+   "symbol_form": "Ag-110m",
+   "nuclide": "Ag110m1",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(-1)",
+     "number": 0.1
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 202,
+   "row_text": "Silver 111 | 1 × 10^(2)",
+   "printed": "Silver 111",
+   "symbol_form": "Ag-111",
+   "nuclide": "Ag111",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(2)",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 203,
+   "row_text": "Sodium 22 | 1 × 10^(-1)",
+   "printed": "Sodium 22",
+   "symbol_form": "Na-22",
+   "nuclide": "Na22",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(-1)",
+     "number": 0.1
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 204,
+   "row_text": "Sodium 24 | 1 × 10^(0)",
+   "printed": "Sodium 24",
+   "symbol_form": "Na-24",
+   "nuclide": "Na24",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(0)",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 205,
+   "row_text": "Strontium 85 | 1 × 10^(0)",
+   "printed": "Strontium 85",
+   "symbol_form": "Sr-85",
+   "nuclide": "Sr85",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(0)",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 206,
+   "row_text": "Strontium 85m | 1 × 10^(2)",
+   "printed": "Strontium 85m",
+   "symbol_form": "Sr-85m",
+   "nuclide": "Sr85m1",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(2)",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 207,
+   "row_text": "Strontium 87m | 1 × 10^(2)",
+   "printed": "Strontium 87m",
+   "symbol_form": "Sr-87m",
+   "nuclide": "Sr87m1",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(2)",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 208,
+   "row_text": "Strontium 89 | 1 × 10^(3)",
+   "printed": "Strontium 89",
+   "symbol_form": "Sr-89",
+   "nuclide": "Sr89",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(3)",
+     "number": 1000.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 209,
+   "row_text": "Strontium 90 | 1 × 10^(0)",
+   "printed": "Strontium 90",
+   "symbol_form": "Sr-90",
+   "nuclide": "Sr90",
+   "with_progeny": true,
+   "footnotes": [
+    "a"
+   ],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(0)",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 210,
+   "row_text": "Strontium 91 | 1 × 10^(1)",
+   "printed": "Strontium 91",
+   "symbol_form": "Sr-91",
+   "nuclide": "Sr91",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(1)",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 211,
+   "row_text": "Strontium 92 | 1 × 10^(1)",
+   "printed": "Strontium 92",
+   "symbol_form": "Sr-92",
+   "nuclide": "Sr92",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(1)",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 212,
+   "row_text": "Sulphur 35 | 1 × 10^(2)",
+   "printed": "Sulphur 35",
+   "symbol_form": "S-35",
+   "nuclide": "S35",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(2)",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 213,
+   "row_text": "Tantalum 182 | 1 × 10^(-1)",
+   "printed": "Tantalum 182",
+   "symbol_form": "Ta-182",
+   "nuclide": "Ta182",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(-1)",
+     "number": 0.1
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 214,
+   "row_text": "Technetium 96 | 1 × 10^(0)",
+   "printed": "Technetium 96",
+   "symbol_form": "Tc-96",
+   "nuclide": "Tc96",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(0)",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 215,
+   "row_text": "Technetium 96m | 1 × 10^(3)",
+   "printed": "Technetium 96m",
+   "symbol_form": "Tc-96m",
+   "nuclide": "Tc96m1",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(3)",
+     "number": 1000.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 216,
+   "row_text": "Technetium 97 | 1 × 10^(1)",
+   "printed": "Technetium 97",
+   "symbol_form": "Tc-97",
+   "nuclide": "Tc97",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(1)",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 217,
+   "row_text": "Technetium 97m | 1 × 10^(2)",
+   "printed": "Technetium 97m",
+   "symbol_form": "Tc-97m",
+   "nuclide": "Tc97m1",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(2)",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 218,
+   "row_text": "Technetium 99 | 1 × 10^(0)",
+   "printed": "Technetium 99",
+   "symbol_form": "Tc-99",
+   "nuclide": "Tc99",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(0)",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 219,
+   "row_text": "Technetium 99m | 1 × 10^(2)",
+   "printed": "Technetium 99m",
+   "symbol_form": "Tc-99m",
+   "nuclide": "Tc99m1",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(2)",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 220,
+   "row_text": "Tellurium 123m | 1 × 10^(0)",
+   "printed": "Tellurium 123m",
+   "symbol_form": "Te-123m",
+   "nuclide": "Te123m1",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(0)",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 221,
+   "row_text": "Tellurium 125m | 1 × 10^(3)",
+   "printed": "Tellurium 125m",
+   "symbol_form": "Te-125m",
+   "nuclide": "Te125m1",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(3)",
+     "number": 1000.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 222,
+   "row_text": "Tellurium 127 | 1 × 10^(3)",
+   "printed": "Tellurium 127",
+   "symbol_form": "Te-127",
+   "nuclide": "Te127",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(3)",
+     "number": 1000.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 223,
+   "row_text": "Tellurium 127m | 1 × 10^(1)",
+   "printed": "Tellurium 127m",
+   "symbol_form": "Te-127m",
+   "nuclide": "Te127m1",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(1)",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 224,
+   "row_text": "Tellurium 129 | 1 × 10^(2)",
+   "printed": "Tellurium 129",
+   "symbol_form": "Te-129",
+   "nuclide": "Te129",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(2)",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 225,
+   "row_text": "Tellurium 129m | 1 × 10^(1)",
+   "printed": "Tellurium 129m",
+   "symbol_form": "Te-129m",
+   "nuclide": "Te129m1",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(1)",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 226,
+   "row_text": "Tellurium 131 | 1 × 10^(2)",
+   "printed": "Tellurium 131",
+   "symbol_form": "Te-131",
+   "nuclide": "Te131",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(2)",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 227,
+   "row_text": "Tellurium 131m | 1 × 10^(1)",
+   "printed": "Tellurium 131m",
+   "symbol_form": "Te-131m",
+   "nuclide": "Te131m1",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(1)",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 228,
+   "row_text": "Tellurium 132 | 1 × 10^(0)",
+   "printed": "Tellurium 132",
+   "symbol_form": "Te-132",
+   "nuclide": "Te132",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(0)",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 229,
+   "row_text": "Tellurium 133 | 1 × 10^(1)",
+   "printed": "Tellurium 133",
+   "symbol_form": "Te-133",
+   "nuclide": "Te133",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(1)",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 230,
+   "row_text": "Tellurium 133m | 1 × 10^(1)",
+   "printed": "Tellurium 133m",
+   "symbol_form": "Te-133m",
+   "nuclide": "Te133m1",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(1)",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 231,
+   "row_text": "Tellurium 134 | 1 × 10^(1)",
+   "printed": "Tellurium 134",
+   "symbol_form": "Te-134",
+   "nuclide": "Te134",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(1)",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 232,
+   "row_text": "Terbium 160 | 1 × 10^(0)",
+   "printed": "Terbium 160",
+   "symbol_form": "Tb-160",
+   "nuclide": "Tb160",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(0)",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 233,
+   "row_text": "Thallium 200 | 1 × 10^(1)",
+   "printed": "Thallium 200",
+   "symbol_form": "Tl-200",
+   "nuclide": "Tl200",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(1)",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 234,
+   "row_text": "Thallium 201 | 1 × 10^(2)",
+   "printed": "Thallium 201",
+   "symbol_form": "Tl-201",
+   "nuclide": "Tl201",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(2)",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 235,
+   "row_text": "Thallium 202 | 1 × 10^(1)",
+   "printed": "Thallium 202",
+   "symbol_form": "Tl-202",
+   "nuclide": "Tl202",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(1)",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 236,
+   "row_text": "Thallium 204 | 1 × 10^(0)",
+   "printed": "Thallium 204",
+   "symbol_form": "Tl-204",
+   "nuclide": "Tl204",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(0)",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 237,
+   "row_text": "Thorium 226 | 1 × 10^(3)",
+   "printed": "Thorium 226",
+   "symbol_form": "Th-226",
+   "nuclide": "Th226",
+   "with_progeny": true,
+   "footnotes": [
+    "a"
+   ],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(3)",
+     "number": 1000.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 238,
+   "row_text": "Thorium 227 | 1 × 10^(0)",
+   "printed": "Thorium 227",
+   "symbol_form": "Th-227",
+   "nuclide": "Th227",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(0)",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 239,
+   "row_text": "Thorium 228 | 1 × 10^(0)",
+   "printed": "Thorium 228",
+   "symbol_form": "Th-228",
+   "nuclide": "Th228",
+   "with_progeny": true,
+   "footnotes": [
+    "a"
+   ],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(0)",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 240,
+   "row_text": "Thorium 229 | 1 × 10^(-1)",
+   "printed": "Thorium 229",
+   "symbol_form": "Th-229",
+   "nuclide": "Th229",
+   "with_progeny": true,
+   "footnotes": [
+    "a"
+   ],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(-1)",
+     "number": 0.1
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 241,
+   "row_text": "Thorium 230 | 1 × 10^(0)",
+   "printed": "Thorium 230",
+   "symbol_form": "Th-230",
+   "nuclide": "Th230",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(0)",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 242,
+   "row_text": "Thorium 232 | 1 × 10^(0)",
+   "printed": "Thorium 232",
+   "symbol_form": "Th-232",
+   "nuclide": "Th232",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(0)",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 243,
+   "row_text": "Thorium 234 | 1 × 10^(0)",
+   "printed": "Thorium 234",
+   "symbol_form": "Th-234",
+   "nuclide": "Th234",
+   "with_progeny": true,
+   "footnotes": [
+    "a"
+   ],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(0)",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 244,
+   "row_text": "Thorium natural | 1 × 10^(0)",
+   "printed": "Thorium natural",
+   "symbol_form": null,
+   "nuclide": null,
+   "with_progeny": true,
+   "footnotes": [
+    "a"
+   ],
+   "flags": [
+    "not a single nuclide: not in the table"
+   ],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(0)",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 245,
+   "row_text": "Thulium 170 | 1 × 10^(2)",
+   "printed": "Thulium 170",
+   "symbol_form": "Tm-170",
+   "nuclide": "Tm170",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(2)",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 246,
+   "row_text": "Thulium 171 | 1 × 10^(3)",
+   "printed": "Thulium 171",
+   "symbol_form": "Tm-171",
+   "nuclide": "Tm171",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(3)",
+     "number": 1000.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 247,
+   "row_text": "Tin 113 | 1 × 10^(0)",
+   "printed": "Tin 113",
+   "symbol_form": "Sn-113",
+   "nuclide": "Sn113",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(0)",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 248,
+   "row_text": "Tin 125 | 1 × 10^(1)",
+   "printed": "Tin 125",
+   "symbol_form": "Sn-125",
+   "nuclide": "Sn125",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(1)",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 249,
+   "row_text": "Tungsten 181 | 1 × 10^(1)",
+   "printed": "Tungsten 181",
+   "symbol_form": "W-181",
+   "nuclide": "W181",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(1)",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 250,
+   "row_text": "Tungsten 185 | 1 × 10^(3)",
+   "printed": "Tungsten 185",
+   "symbol_form": "W-185",
+   "nuclide": "W185",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(3)",
+     "number": 1000.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 251,
+   "row_text": "Tungsten 187 | 1 × 10^(1)",
+   "printed": "Tungsten 187",
+   "symbol_form": "W-187",
+   "nuclide": "W187",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(1)",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 252,
+   "row_text": "Uranium 230 | 1 × 10^(1)",
+   "printed": "Uranium 230",
+   "symbol_form": "U-230",
+   "nuclide": "U230",
+   "with_progeny": true,
+   "footnotes": [
+    "a"
+   ],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(1)",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 253,
+   "row_text": "Uranium 231 | 1 × 10^(2)",
+   "printed": "Uranium 231",
+   "symbol_form": "U-231",
+   "nuclide": "U231",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(2)",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 254,
+   "row_text": "Uranium 232 | 1 × 10^(-1)",
+   "printed": "Uranium 232",
+   "symbol_form": "U-232",
+   "nuclide": "U232",
+   "with_progeny": true,
+   "footnotes": [
+    "a"
+   ],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(-1)",
+     "number": 0.1
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 255,
+   "row_text": "Uranium 233 | 1 × 10^(0)",
+   "printed": "Uranium 233",
+   "symbol_form": "U-233",
+   "nuclide": "U233",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(0)",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 256,
+   "row_text": "Uranium 234 | 1 × 10^(0)",
+   "printed": "Uranium 234",
+   "symbol_form": "U-234",
+   "nuclide": "U234",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(0)",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 257,
+   "row_text": "Uranium 235 | 1 × 10^(0)",
+   "printed": "Uranium 235",
+   "symbol_form": "U-235",
+   "nuclide": "U235",
+   "with_progeny": true,
+   "footnotes": [
+    "a"
+   ],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(0)",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 258,
+   "row_text": "Uranium 236 | 1 × 10^(1)",
+   "printed": "Uranium 236",
+   "symbol_form": "U-236",
+   "nuclide": "U236",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(1)",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 259,
+   "row_text": "Uranium 237 | 1 × 10^(2)",
+   "printed": "Uranium 237",
+   "symbol_form": "U-237",
+   "nuclide": "U237",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(2)",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 260,
+   "row_text": "Uranium 238 | 1 × 10^(0)",
+   "printed": "Uranium 238",
+   "symbol_form": "U-238",
+   "nuclide": "U238",
+   "with_progeny": true,
+   "footnotes": [
+    "a"
+   ],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(0)",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 261,
+   "row_text": "Uranium 239 | 1 × 10^(2)",
+   "printed": "Uranium 239",
+   "symbol_form": "U-239",
+   "nuclide": "U239",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(2)",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 262,
+   "row_text": "Uranium 240 | 1 × 10^(2)",
+   "printed": "Uranium 240",
+   "symbol_form": "U-240",
+   "nuclide": "U240",
+   "with_progeny": true,
+   "footnotes": [
+    "a"
+   ],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(2)",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 263,
+   "row_text": "Uranium natural | 1 × 10^(0)",
+   "printed": "Uranium natural",
+   "symbol_form": null,
+   "nuclide": null,
+   "with_progeny": true,
+   "footnotes": [
+    "a"
+   ],
+   "flags": [
+    "not a single nuclide: not in the table"
+   ],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(0)",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 264,
+   "row_text": "Vanadium 48 | 1 × 10^(0)",
+   "printed": "Vanadium 48",
+   "symbol_form": "V-48",
+   "nuclide": "V48",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(0)",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 265,
+   "row_text": "Ytterbium 175 | 1 × 10^(2)",
+   "printed": "Ytterbium 175",
+   "symbol_form": "Yb-175",
+   "nuclide": "Yb175",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(2)",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 266,
+   "row_text": "Yttrium 90 | 1 × 10^(3)",
+   "printed": "Yttrium 90",
+   "symbol_form": "Y-90",
+   "nuclide": "Y90",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(3)",
+     "number": 1000.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 267,
+   "row_text": "Yttrium 91 | 1 × 10^(2)",
+   "printed": "Yttrium 91",
+   "symbol_form": "Y-91",
+   "nuclide": "Y91",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(2)",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 268,
+   "row_text": "Yttrium 91m | 1 × 10^(2)",
+   "printed": "Yttrium 91m",
+   "symbol_form": "Y-91m",
+   "nuclide": "Y91m1",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(2)",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 269,
+   "row_text": "Yttrium 92 | 1 × 10^(2)",
+   "printed": "Yttrium 92",
+   "symbol_form": "Y-92",
+   "nuclide": "Y92",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(2)",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 270,
+   "row_text": "Yttrium 93 | 1 × 10^(2)",
+   "printed": "Yttrium 93",
+   "symbol_form": "Y-93",
+   "nuclide": "Y93",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(2)",
+     "number": 100.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 271,
+   "row_text": "Zinc 65 | 1 × 10^(-1)",
+   "printed": "Zinc 65",
+   "symbol_form": "Zn-65",
+   "nuclide": "Zn65",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(-1)",
+     "number": 0.1
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 272,
+   "row_text": "Zinc 69 | 1 × 10^(3)",
+   "printed": "Zinc 69",
+   "symbol_form": "Zn-69",
+   "nuclide": "Zn69",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(3)",
+     "number": 1000.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 273,
+   "row_text": "Zinc 69m | 1 × 10^(1)",
+   "printed": "Zinc 69m",
+   "symbol_form": "Zn-69m",
+   "nuclide": "Zn69m1",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(1)",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 274,
+   "row_text": "Zirconium 93 | 1 × 10^(1)",
+   "printed": "Zirconium 93",
+   "symbol_form": "Zr-93",
+   "nuclide": "Zr93",
+   "with_progeny": true,
+   "footnotes": [
+    "a"
+   ],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(1)",
+     "number": 10.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 275,
+   "row_text": "Zirconium 95 | 1 × 10^(0)",
+   "printed": "Zirconium 95",
+   "symbol_form": "Zr-95",
+   "nuclide": "Zr95",
+   "with_progeny": false,
+   "footnotes": [],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(0)",
+     "number": 1.0
+    }
+   }
+  },
+  {
+   "table": "Schedule 2",
+   "row": 276,
+   "row_text": "Zirconium 97 | 1 × 10^(1)",
+   "printed": "Zirconium 97",
+   "symbol_form": "Zr-97",
+   "nuclide": "Zr97",
+   "with_progeny": true,
+   "footnotes": [
+    "a"
+   ],
+   "flags": [],
+   "values": {
+    "activity_concentration_Bq_per_g": {
+     "text": "1 × 10^(1)",
+     "number": 10.0
+    }
+   }
+  }
+ ],
+ "tables": {
+  "ca-nsrdr-2000-207-schedule-2.json": "555366db3bc2aa6536aefb43123e752434e83e83bed776d7772e6c115048c968"
+ }
+}

@@ -787,3 +787,63 @@ the BTP; the site's licence conditions override it. It is not a classification f
 and it does not cover blending of homogeneous wastes (BTP 3.2), alternative approaches (BTP 3.8), 10 CFR 61.58
 authorizations or exemptions, structural stability under 10 CFR 61.56, centring procedures, compatibility documentation
 or the encapsulation topical reports.
+
+## Clearance against national tables
+
+`actinv clearance` certifies the clearance index at one step, per cell or for one run result, against the IAEA 2004
+table (RS-G-1.7) unless you choose another. `--jurisdiction de`, `uk` or `ca` evaluates the same statistic, the sum of
+activity over limit with its certified probability, against the legal text of Germany, the United Kingdom or Canada.
+`--jurisdiction iaea` is the default. A jurisdiction cannot be combined with `--limits`. The tables are copies of the
+laws, not official versions, and choosing a table, a route and the conditions attached to a clearance decision is yours.
+
+| `--jurisdiction` | Table | Limit used | Routes (`--route`) |
+| --- | --- | --- | --- |
+| `de` | Strahlenschutzverordnung (StrlSchV 2018), Anlage 4 Tabelle 1, as last amended by Art. 10 G v. 23.10.2024 | Bq/g, with Tabelle 2 for the daughters | `unrestricted-clearance` (default), `rubble-gt-1000-mg-a`, `soil`, `landfill-le-100-mg-a`, `incineration-le-100-mg-a`, `landfill-le-1000-mg-a`, `incineration-le-1000-mg-a`, `scrap-metal-recycling` |
+| `uk` | Environmental Permitting (England and Wales) Regulations 2016, Schedule 23 Part 3, Table 2 "Concentration of radionuclides" | Bq/g, solid or relevant liquid | `table-2-solid-or-relevant-liquid` |
+| `ca` | Nuclear Substances and Radiation Devices Regulations (SOR/2000-207), Schedule 2 "Unconditional Clearance Levels" | Bq/g | `unconditional-clearance` |
+
+Germany: column 3 of Tabelle 1 is both the Freigrenze as specific activity and the level for unrestricted clearance of
+solid and liquid material. The route columns are the specific clearance of building rubble over 1000 Mg/a (column 6),
+soil areas (7), landfill and incineration up to 100 Mg/a (8, 9) and up to 1000 Mg/a (10, 11), and scrap metal for
+recycling (14). A blank cell means the table has no value for that nuclide in that column, so the nuclide is reported
+in `not_listed` for that route. The surface columns in Bq/cm2, the total-activity Freigrenze and the HRQ and half-life
+columns are not evaluated. The regulation lets nuclides be left out of the sum when they are at most 10 percent of it;
+ACTINV does not apply that allowance. A parent marked `+` includes the daughters of Tabelle 2. Where a nuclide has a plain and a `+` row, each column uses the smaller value.
+
+United Kingdom: the regulation calls Table 2 the concentration table referred to in paragraphs 5 and 6 of Part 2, not a
+clearance table, and its catch-all row (0.01 Bq/g, or a dose-based concentration, for any other artificial radionuclide)
+is not applied. A suffix `+` or `sec` marks a parent in secular equilibrium with the daughters in Table 3. Where a
+nuclide is printed in several forms (Th-232, U-235, U-238, Cf-253; in Germany Zr-97, Pb-212 and Th-232) the form with the
+smallest limit is used, so U-235 and U-238 take the `sec` value of 0.01 Bq/g with their whole Table 3 chain covered. A
+progeny is left out of the sum only if the chosen form covers it, and a plain row covers none. The forms and the choice
+are recorded per nuclide as `form_choice` in the sidecar.
+
+Canada: Schedule 2 is the clearance schedule; Schedule 1 holds exemption quantities and is not used. A nuclide that
+Schedule 2 does not list has the regulation's own level of 1 Bq/g up to atomic number 81, which ACTINV applies and marks
+`"basis": "default_rule"`. Above 81 the level is 1 Bq/g without alpha emission and 0.1 Bq/g with it; ACTINV does not
+decide alpha emission and reports those nuclides in `not_listed`. A footnote marks parents whose progeny in secular
+equilibrium are included.
+
+Each record keeps the fields of the default evaluation: `activity_Bq_g`, `limit_Bq_g` and `ratio` per nuclide, the sum of
+fractions as `sum_ratio`, and the driving nuclide as `dominant_ratio`. With a jurisdiction it adds:
+
+- `not_listed`: nuclides present above the negligible threshold (`--negligible`, default 1e-9 Bq/g) that the table
+  does not list for the route, with the activity and the reason. They are not part of the sum and are never treated as
+  zero or dropped.
+- `below_negligible_unlisted`: the count and total activity of unlisted nuclides below that threshold.
+- `covered_by_parent`: progeny whose parent is present, which the parent's value already includes, left out of the sum
+  as in the response tables of `actinv run`.
+- `basis` on each nuclide (`table` or `default_rule`), and in the header a `jurisdiction` block with the route, the
+  citation, the table's SHA-256, the licence and a note on what the regulation allows that ACTINV does not apply.
+
+The same tables are bundled for `actinv run` as `bundled:de-strlschv-2018-anlage-4`,
+`bundled:uk-epr-2016-sch23-pt3-table-2` and `bundled:ca-nsrdr-2000-207-schedule-2`, with one `clearance_index` response
+per route and the coefficients in Bq/kg.
+
+Sources and licences. Germany: the text of the ordinance is an official work (amtliches Werk) without copyright under
+section 5(1) UrhG; it is published by the Bundesministerium der Justiz and is not an official version, which is the
+Bundesgesetzblatt. United Kingdom: contains public sector information licensed under the Open Government Licence v3.0
+(legislation.gov.uk). Canada: reproduced from the Justice Laws Website under the Reproduction of Federal Law Order
+(SI/97-5); not an official version. The converter is `scripts/regulatory/convert_national_clearance.py`, the archived
+source files with their SHA-256 are under `controls/fixtures/clearance_sources/`, and
+`controls/check_jurisdiction_tables.py` re-reads them with an independent reader and checks every shipped value.

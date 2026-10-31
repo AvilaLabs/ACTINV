@@ -18,6 +18,14 @@ pub const BUNDLED_PREFIX: &str = "bundled:";
 /// to the tables, which are not read at run time.
 const BUNDLED_TABLES: &[(&str, &str)] = &[
     (
+        "ca-nsrdr-2000-207-schedule-2",
+        include_str!("../data/regulatory/ca-nsrdr-2000-207-schedule-2.json"),
+    ),
+    (
+        "de-strlschv-2018-anlage-4",
+        include_str!("../data/regulatory/de-strlschv-2018-anlage-4.json"),
+    ),
+    (
         "euratom-2013-59-annex-vii-a",
         include_str!("../data/regulatory/euratom-2013-59-annex-vii-a.json"),
     ),
@@ -28,6 +36,10 @@ const BUNDLED_TABLES: &[(&str, &str)] = &[
     (
         "euratom-2013-59-annex-vii-b-concentration",
         include_str!("../data/regulatory/euratom-2013-59-annex-vii-b-concentration.json"),
+    ),
+    (
+        "uk-epr-2016-sch23-pt3-table-2",
+        include_str!("../data/regulatory/uk-epr-2016-sch23-pt3-table-2.json"),
     ),
     (
         "us-49cfr173-a1",
@@ -808,7 +820,7 @@ mod tests {
     #[test]
     fn every_bundled_table_parses_and_carries_provenance() {
         let names = bundled_table_names();
-        assert_eq!(names.len(), 7);
+        assert_eq!(names.len(), 10);
         let mut sorted = names.clone();
         sorted.sort_unstable();
         sorted.dedup();

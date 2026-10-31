@@ -23,6 +23,7 @@ COMMON = load("regulatory_common")
 CFR = load("convert_cfr_173435")
 EURATOM = load("convert_euratom_annex_vii")
 ICRP = load("fetch_icrp119")
+NATIONAL = load("convert_national_clearance")
 
 
 class Common(unittest.TestCase):
@@ -134,6 +135,29 @@ class Icrp(unittest.TestCase):
         rows = ICRP.parse_inhalation(block)["Hg-193"]
         self.assertEqual([row["type"] for row in rows], ["F", "F"])
         self.assertEqual(rows[1]["adult"], 2.4e-11)
+
+
+class NationalClearance(unittest.TestCase):
+    def test_printed_values_are_exact_decimals(self):
+        from decimal import Decimal
+
+        self.assertEqual(NATIONAL.decimal_of("1 E-1"), Decimal("0.1"))
+        self.assertEqual(NATIONAL.decimal_of("1,6 E+6"), Decimal("1600000"))
+        self.assertEqual(NATIONAL.decimal_of("10^(2)"), Decimal("100"))
+        self.assertEqual(NATIONAL.decimal_of("1 \u00d7 10^(\u20131)"), Decimal("0.1"))
+        self.assertEqual(NATIONAL.bq_per_kg(NATIONAL.decimal_of("3 E-2")), 30.0)
+        with self.assertRaises(ValueError):
+            NATIONAL.decimal_of("UL")
+
+    def test_nuclide_spellings(self):
+        self.assertEqual(NATIONAL.key_of("Ag-108m+"), "Ag108m1")
+        self.assertEqual(NATIONAL.key_of("Hf-178n+", german=True), "Hf178m2")
+        self.assertEqual(NATIONAL.key_of("U-238sec"), "U238")
+        self.assertEqual(NATIONAL.ca_printed("Americium 242m"), "Am-242m")
+        self.assertIsNone(NATIONAL.ca_printed("Uranium natural"))
+        keys, skipped = NATIONAL.progeny_of("Tl-208 (0.36), Po-212 (0.64), Th-nat")
+        self.assertEqual(keys, ["Tl208", "Po212"])
+        self.assertEqual(skipped, ["Th-nat"])
 
 
 if __name__ == "__main__":

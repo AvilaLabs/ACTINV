@@ -113,7 +113,7 @@ fixed. This extends P163. Report the mesh resolution each code reaches inside th
 ## Out of scope here, noted from the same research
 
 - Waste classification across several national schemes at once, including fusion nuclides missing from the
-  standards. ACTINV covers US 10 CFR 61, plus EU clearance and US transport tables.
+  standards. ACTINV covers US 10 CFR 61, EU, German, UK and Canadian clearance, and US transport tables.
 - pypact-compatible output (planned for 1.8).
 - Too few measured shutdown-dose experiments: SINBAD FNG via RSICC DLC-237 (US route; the NEA request was cancelled).
 
