@@ -66,8 +66,9 @@ ACTINV_BIN = Path(os.environ.get("ACTINV_BIN", ROOT / "target/release/actinv"))
 # The release build of a38d1fa (crates tree f7b5e60e...), the build-shielding --profile fix; A0 tests it against P173's R_actinv.
 ACTINV_BIN_SHA256 = "36af79228fc56c1116bdfca375b6050e906bd6901475bcbfd2c1fa60b712619c"
 # SHA-256 of the Bondarenko table `actinv build-shielding` writes from the pinned evaluations with the pinned binary
-# (deterministic: no RNG). The coordinator fills it in from the rehearsal's table before registration.
-SHIELD_TABLE_SHA256 = "b8ccd5a45b0f6a4189b86d91aa43e1bca280bb3459ae3e4ae9192b56b7ad9f83"
+# (deterministic: no RNG). The table records its input directory, so the pin is the table built at the scored path,
+# <worktree>/target/p176-work/eval (Amendment A); the rehearsal's table differs from it only in that string.
+SHIELD_TABLE_SHA256 = "8e0d2a3472b8b1ddcd2c4c9b993349803aaaafe1fef080540f93a2f34d159ba6"
 
 ENDF_DIR = DATA / "endfb-viii.1-endf6/neutrons-version.VIII.1"
 DECAY_PRIMARY = DATA / "endfb-viii.0-decay/bulk/endf-b-viii-0_decay.dat"

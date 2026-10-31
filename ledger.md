@@ -5374,3 +5374,19 @@ of item 2 of `docs/maintainers/WORKFLOW_ACCURACY_PLAN.md`.
   No rate was compared with OpenMC.
 - The scored run reuses the rehearsal's per-evaluation checkpoints (`target/p176-shield-cache`). The protocol says so,
   and G1 requires the scored table to equal the pin.
+
+## Entry 310 — P176 Amendment A registered: the table pin made reachable (2026-10-31)
+
+`protocols/ACTINV-P176_AMENDMENT_A.md` (SHA-256 `4da71add…`), the protocol's one repair round. The harness is
+`controls/p176_selfshield.py` (`f1d5cb27…`).
+
+The first scored run from `dfc4575` built its table in 8 s from the rehearsal's checkpoints, but with SHA-256
+`8e0d2a34…`, not the pinned `b8ccd5a4…`. `build-shielding` writes its input directory into `source.url`. The rehearsal
+staged under `p176-rehearsal-work`, the scored run under `p176-work`. With that path substituted, the rehearsal table is
+byte-identical to the scored one. Every A1 refused the table, as it should.
+
+The coordinator stopped the run before assembly and the checker. The arm outputs were not opened; they are deleted
+unread. The amendment pins `8e0d2a34…`, the table at the scored path in the `p173-wt` worktree, and changes nothing
+else. The rerun starts from this registration.
+
+Registration error: a pin taken from the rehearsal must be path-independent, or be taken at the scored path.
