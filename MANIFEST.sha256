@@ -1354,7 +1354,7 @@ a5a219af4f739d730691c147fac5bdba66f150e1639b4d2c8c6837dde6b66b48  ./docs/images/
 d0a980eaa3928f2d3c65f1410ae0a0781c59aafce9adf3695d212f27bc475b6b  ./docs/images/desktop/results.png
 08780ea5784b5b0451cbf86ba83246a876bf3bd904787176fc8aa20b96392bf1  ./docs/images/desktop/schedule.png
 5430360e7b2f9f74f1192094ccf5fce1bb1f58c42ae28756c6214fd5c115dd61  ./docs/images/desktop/walkthrough.png
-da0ad8169663738c1bb49faebff081ccb6b62d45c05e1b200ba558516927a3b5  ./docs/maintainers/ACCURACY_PROGRAM.md
+b7b22f712f2b5bcce5cda2b1c16621939385b6c3316ad3ee98e6b3c6f2c12553  ./docs/maintainers/ACCURACY_PROGRAM.md
 32672bb79351e60b4951b064628b5d085839b0feb07a3774513d0c2d39ed1089  ./docs/maintainers/AGENTS.md
 8521498862326e55426f442d7805f58c76630eb05f2b96c8a318590ac1db5557  ./docs/maintainers/CI_DATA_CACHE_NOTICE.md
 ee09626af6c747dccb4630c53851469ba9fead0aea5414b3409e995bd0221eda  ./docs/maintainers/CI_DATA_RECOVERY.md
@@ -1367,7 +1367,7 @@ c6478bb6ee8983660b76737d77de339ea26ea40e9bd891193ac883229f6bd8e7  ./docs/maintai
 60e9d796db46bd390f461da5007a62cee256502f5383a5d79272b57e877c80c3  ./docs/maintainers/ROADMAP_OPEN_ITEMS-2026-10-03.md
 40a78716c9fe9579c9a952e030339116ad8f28909a60e8c3158176642beb06e1  ./docs/maintainers/WASTE_BTP_SOURCE_REVIEW.md
 4d316aacee158dbcc36daf4bd191d84ee7c511d471555ec3084115dabaeefd64  ./docs/maintainers/WASTE_RULE_SOURCE_REVIEW.md
-e6624500dba0c6ede2f0d26b491346ab586dac0557fc2877fd727b84d1282b42  ./docs/maintainers/WORKFLOW_ACCURACY_PLAN.md
+af18a5ac2a350360af63c391444b646cff760de3f5bf6f4cf8a64aa9b51cdb79  ./docs/maintainers/WORKFLOW_ACCURACY_PLAN.md
 b5af5ac838f97ad029e6b102322b2af593399e06e9730ffcd78a4df9b5fe769f  ./docs/releases/desktop-v0.1.0-preview.1.md
 d49b0040214a08c1be18825fe12bef4df9bdf2d009d1112d43955ee182fae5fd  ./docs/releases/desktop-v0.2.0-preview.1.md
 e69634b0202dad6d7451986843b22b959bbccef749c7b3ddbc0e56dbe1e984a5  ./docs/releases/desktop-v0.3.0-preview.1.md
@@ -1433,7 +1433,7 @@ f6723eefeb6f5cacef2e87a83cd53b078dd5ca2777b7400f48f6b49ddc7a07b4  ./examples/was
 cfd86c2c5ac15d76ec2358c6bd196a6362b46bcc889160c06439975dc5ae8f3a  ./interchange/INTERCHANGE.md
 057dd636e1814f93c0869d4839887ff28a361f5c845f24153c4e93cbee1918d1  ./interchange/actinv_core_adapter.py
 4c42c2d68d375681621d6d3828b6daab4e2fdfc37f23cacbfc3b5a1c3fd3beec  ./interchange/run_case.py
-fe9e3a04e45c621f41bc99627bad55f7237f2cd4d679f454218a84b90913a1e7  ./ledger.md
+a4501ce1cda93dc9f4b9381695458a735764db60c0211d63302f64fc303e59bc  ./ledger.md
 588e9f4f4ff74df627a1a15306214db678531d7334f2f6e95a1603eabd1f1c55  ./packaging/actinv.ico
 9897482011f194d9495fc80965177f0632ae4166917a7f240d80c0fc3c8fb83e  ./packaging/actinv.png
 3abcd339e6ef22af6f5b7f65573174e7acc265b05d0ede9c4a949fa54490fe04  ./packaging/desktop.json
@@ -5861,6 +5861,7 @@ bcb7b84b5822671e6a51d1c0826643b675e3152cfac36ec568c5eb82a043e1e2  ./results/p173
 0e3b0e21265722ebefa18e1f06794fd2d4145fce84e1c8d4657308ab0dc2c794  ./results/p173/actinv_K.json
 7ec4a0bc7bcc48b507bb7782545ea25d7056042db83a35939efb600b827c828d  ./results/p173/actinv_S.json
 5807569c6ab8144557a7132041775e3b79d70ce52a04dc33bf30b75e08514ed8  ./results/p173/actinv_W.json
+0e6ac378a057ac0a49bbd2aa94e7e948104c0d1a46c93ef4b4d3227ae17a8c58  ./results/p173/ci_runs.json
 a2fb665c2d2e89402d927f571da08c2cc1e0c088eaa5eedd46a4428670aa6dae  ./results/p173/g1_check.json
 e2242072775f5158da32ceaf72435dfeb222f32204565bb0c5919038ba97b4d6  ./results/p173/openmc_C.json
 d655d544041a0bbc3255279e067340a072e19e4baa996ea72812066e4d625681  ./results/p173/openmc_K.json

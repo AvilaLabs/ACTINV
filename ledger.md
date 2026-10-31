@@ -5158,3 +5158,17 @@ pinned binary's by the 2026-10-30 audit fixes; the protocol pins the binary, not
 - **No public sentence.** The agreement sentence requires no material row in `r`; there are 14. None is allowed until
   a correction is qualified by its own protocol.
 - G4 (CI on this evidence commit) decides the verdict.
+
+## Entry 300 — P173 G4: CI green on 5e66166; P173-PASS (2026-10-31)
+
+Every workflow triggered on `5e66166`, the evidence commit, passed: controls 41171399116, fns-iron 41171399140 and
+fusion-isotope 41171399141 (`results/p173/ci_runs.json`). **P173-PASS.**
+- The decisions stand as in entry 299: the item 2 correction is warranted, and so is a processing review of
+  W-182(n,p). No public sentence is allowed.
+- **Processing review, done after the verdict and not part of it.** ENDF/B-VIII.1 W-182 has no MF3 MT103, only the
+  MT600–649 partials, and an MF10 MT103 with two Ta-182 states. The MF10 sum is 3–8% below the MF3 partial sum at
+  11–18 MeV (4.6–6.3% at 13–14.2 MeV). OpenMC's `reaction_103` in the P173 HDF5 library equals the MF3 partial sum to
+  every printed digit; ACTINV's library equals the MF10 sum to better than 1e-5 per group, because the builder skips
+  the lumped-channel synthesis when MF10 holds the summary MT. The −0.062 is therefore the evaluation's own
+  inconsistency, resolved differently by the two codes. Which to follow is a builder decision for a later protocol.
+- Next: score ACTINV's existing Bondarenko self-shielding on the P173 rows before building a per-region correction.
