@@ -5087,3 +5087,11 @@ P32 reproduction control holds. Record: `results/p172_openmc_fns.json` and `resu
   no cross section, product, yield or decay datum changed. The repair, restricted to literal NaN tokens, is on a
   separate branch; the P172 library is not rebuilt.
 - G4 (CI on this evidence commit) decides the verdict.
+
+## Entry 296 — P172 G4: CI green on 2b2f529; P172-PASS (2026-10-30)
+
+Every workflow triggered on `2b2f529`, the evidence commit, passed: controls 41149924589, fns-iron 41149924576 and
+fusion-isotope 41149924631 (`results/p172/ci_runs.json`). **P172-PASS.**
+- The record stands as in entry 295. Public statements are limited to the four registered sentences, which may not
+  rank the codes; sentences 1 and 2 appear together.
+- Not registered and not claimed: wall time. P172 timed each arm only as a record of the run.

@@ -117,3 +117,16 @@ Stages 1–3 do not need SINBAD.
       or switch to CRAM-48 automatically when the floor is hit.
   - **P170 dropped.** The held-out gain was not significant (selection 0.0705 vs TENDL-2017 0.0676 on the test set);
     TENDL-2017 remains the strongest library on FNS.
+  - **P171 FAIL** before any result was read: its identical-data library lacked 15 FNS elements and its harness lost
+    the ACTINV record block. P172 repeated it with both repaired.
+  - **P172 PASS** (CI green on 2b2f529). On 2,360 points from all 132 FNS experiments, median |ln C/E|:
+    - ACTINV with shipped TENDL-2025: 0.139;
+    - OpenMC 0.15.3 with its published ENDF/B-VIII.1 fast chain: 0.316;
+    - ACTINV with the same ENDF/B-VIII.1 cross sections: 0.234;
+    - OpenMC sensitivities: isomer branching added 0.252, the P32 chain 0.311.
+
+    The 95% bootstrap interval for OpenMC minus ACTINV excludes zero against both ACTINV arms (0.069–0.273 and
+    0.026–0.131). Public wording is the four registered sentences only, with no ranking. Unregistered observation:
+    OpenMC's depletion took 20–64 s per case against about 1 s for ACTINV; a speed claim needs its own protocol.
+- Next (2026-10-30): the workflow items in `WORKFLOW_ACCURACY_PLAN.md` (B1 as P173), and the P168 5d successor
+  (P174).
