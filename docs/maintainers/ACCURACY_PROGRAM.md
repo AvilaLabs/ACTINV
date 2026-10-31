@@ -145,8 +145,13 @@ Stages 1–3 do not need SINBAD.
     - The geometry option failed every run: it refused ENDF/B-VIII.1 Cu-63's RML photon pair (PNT/SHF = −1). A fix
       (`self_shielding.geometry.profile`) follows this verdict.
     - Amendment A re-pinned the table at the scored path, because the table records its input directory.
-- Next (2026-10-31): item 2 proceeds as P173 warranted. Two options remain:
-  - a per-region correction for the remaining capture rows;
-  - a Bondarenko default plus a Cu-63 correction.
+  - **P177 PASS, no candidate** (CI green on ca98c73): the geometry option with `"profile": "endfb8"`.
+    - A foil of the region's thickness brings Cu-63 (n,γ) in CuCrZr within tolerance (0.011, −0.048).
+    - In steel it over-shields: Mo-98 reaches −0.12 to −0.45, and Fe-58 becomes material.
+    - A foil of the body's thickness is worse everywhere.
+- Next (2026-10-31): item 2 proceeds. No single existing option closes all 11 rows: the Bondarenko table is right for
+  steel, and the region foil is right for CuCrZr. Before a correction is built, find out why:
+  - why the foil over-shields steel's dilute constituents;
+  - why the table under-shields Cu-63.
 
-  The geometry option is to be scored once its profile fix is on master.
+  That is code and data reading, without new transport.

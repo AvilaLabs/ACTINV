@@ -91,6 +91,15 @@ self-shielding exist but have no recorded comparison. `options.rate_scale` scale
 - So item 2 proceeds. The cheapest form may now be the Bondarenko table on by default, plus a correction for the rows
   it leaves, rather than a correction for every capture row.
 
+**P177 result: PASS, no candidate** (CI green on ca98c73).
+- The geometry option with the ENDF/B-VIII.1 profile, as a foil of the region's thickness, brings Cu-63 (n,γ) within
+  tolerance (0.011, −0.048).
+- It over-shields steel: Mo-98 reaches −0.12 to −0.45, and Fe-58 becomes material.
+- A foil of the body's thickness is worse.
+
+Together with P176: the Bondarenko table fits steel, the region foil fits CuCrZr, and neither fits both. The next step
+is to diagnose why, before any correction.
+
 **Fix, if B1 shows it matters.**
 
 - Step 1 also tallies continuous-energy rates for the top-N dominant reactions.

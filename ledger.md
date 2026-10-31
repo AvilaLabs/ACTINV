@@ -5488,3 +5488,13 @@ Read across P176 and P177, not part of either decision:
 - No single existing option closes all 11 rows.
 
 No public sentence is allowed.
+
+## Entry 315 — P177 G4: CI green on ca98c73; P177-PASS (2026-10-31)
+
+Every workflow triggered on `ca98c73`, the evidence commit, passed: controls 41230363918, fns-iron 41230363940 and
+fusion-isotope 41230363931 (`results/p177/ci_runs.json`). **P177-PASS.** The decision stands as in entry 314: no
+candidate, and item 2 proceeds. No public sentence is allowed.
+
+Next, before any correction is built, find out from the code and the data why each option fails:
+- why the region foil over-shields steel's dilute constituents;
+- why the Bondarenko table under-shields Cu-63.
