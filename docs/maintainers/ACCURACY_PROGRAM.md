@@ -133,11 +133,10 @@ Stages 1–3 do not need SINBAD.
     processing difference, W-182(n,p), traced to an MF3/MF10 inconsistency in the evaluation. No public sentence.
   - **P174 PASS, status quo** (CI green on ba859e7): none of the three below-floor treatments met the decision rule;
     the round-off at deep decay also sits in states above the floor. Documented in data-limits.
-  - **P175 FAIL** (G2; CI green on cf4620f): the exported first-order source covariance against 200 sampled mesh
-    solves. Two steel 30-day rows miss (first-order variance 1.74 and 1.67 times the sampled). Diagnosed after the
-    verdict: the reference sampler is at fault. Its Jacobi eigensolver stopped early beside threshold rows with
-    relative variance near 1e20, shrinking steel's applied variance by about 30%. Its PSD clip added variance to the
-    least uncertain W-182 row of an indefinite evaluated block. The exports agree with the evaluated covariance.
-- Next (2026-10-31): the sampler fix and P175 Amendment A (its one repair round); score the existing Bondarenko
-  self-shielding on the P173 rows (P176, drafted; needs the `build-shielding --profile` fix), then the item 2
-  correction if still needed.
+  - **P175 PASS after Amendment A** (CI green on 331b3cc): the exported first-order source covariance against 200
+    sampled mesh solves, 16 rows over steel and tungsten. The first run failed G2 (cf4620f): the reference sampler's
+    Jacobi eigensolver stopped early beside threshold rows with relative variance near 1e20, and its PSD clip added
+    variance to the least uncertain W-182 row. The sampler was fixed (6e39ea9, which reaches `study.robustness` and
+    `waste uncertainty`), and the rerun puts every row's first-order/sampled variance ratio between 0.87 and 1.29.
+- Next (2026-10-31): score the existing Bondarenko self-shielding on the P173 rows (P176; the `build-shielding
+  --profile` fix landed in a38d1fa and the rehearsal table builds), then the item 2 correction if still needed.

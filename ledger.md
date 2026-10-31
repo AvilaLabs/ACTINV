@@ -5334,3 +5334,18 @@ Three things about the run, which differ from what the amendment says:
   from the first run only in two provenance hashes (`mesh_result_sha256`, `spec_fingerprint_sha256`). Their numbers
   are unchanged. `results/p175_r2s_cov.json` and `results/p175_verdict.json` were rewritten.
 - **The thread count was 4** (`RAYON_NUM_THREADS=4`), as the amendment allows.
+
+## Entry 308 — P175 G4: CI green on 331b3cc; P175-PASS after Amendment A (2026-10-31)
+
+Every workflow triggered on `331b3cc`, the Amendment A evidence commit, passed: controls 41211050256, fns-iron
+41211050374 and fusion-isotope 41211050203 (`results/p175/ci_runs.json`, which replaces the first run's record as the
+amendment says). G0–G3 hold as in entry 307. **P175-PASS.**
+
+The public wording is the four allowed sentences in `results/p175_verdict.json` and nothing more. They say that the
+exported source covariance reproduces the sampled dose variance within 30 % on the tested cases, and they state the
+sampling error, the channels and the limits (first order, no photon-tally term, no fission yields, synthetic cases).
+
+Still open:
+- the owner's ruling on the aborted first launch (entry 307), which drew no sample;
+- the photon-tally term `sigma_R`;
+- the SINBAD FNG coverage test (plan item 1).

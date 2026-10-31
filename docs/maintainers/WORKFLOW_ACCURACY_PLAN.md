@@ -45,6 +45,13 @@ banded photon source.
   cross sections and fluxes, rerun steps 1–3 N times. Pass: band widths agree within a stated tolerance.
 - A2: report the dose band against OpenMC's own R2S, which has no band.
 
+**A1 result: P175 PASS after Amendment A** (CI green on 331b3cc). `export-r2s-cov` writes `C_S` with the shared
+MF=33 columns and independent flux columns. On four cases (steel with MF=33 and half-lives, steel with flux noise
+only, steel with all channels, tungsten with all channels), at 1 and 30 days after shutdown, and for a uniform and a
+cell-weighted response, `R^T C_S R` matches the variance of 200 sampled mesh reruns within each row's registered
+limit (ratios 0.87–1.29). The photon-tally term `sigma_R` is not tested, and the cases are synthetic. The first run
+exposed two defects in the reference sampler, now fixed.
+
 **Test, with SINBAD FNG.** Does the band cover the measured dose at the stated coverage? This is the claim no other
 code can make today.
 
