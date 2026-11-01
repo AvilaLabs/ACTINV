@@ -5770,3 +5770,18 @@ size where both arms completed, and the checker gives no reach for either arm.
   energy the photons are born), and it narrows as the mesh is refined. P163 (one material, steel) agreed within 2%.
   Not yet explained: the data differ (TENDL-2025 against ENDF/B-VIII.1, now on tungsten, CuCrZr and water too), and
   this is the adapter's first mixed-material mesh. A diagnostic follows before anything is said about this model.
+
+## Entry 329 — P181 G4: CI green on e87a4ab; P181-PASS with no sentence; the dose gap is the data (2026-11-01)
+
+The controls, fns-iron and fusion-isotope workflows passed on the evidence commit `e87a4ab`. **P181-PASS** as a
+measurement. No allowed sentence may be used: the dose sanity bound failed at every size (ledger 328).
+
+**Diagnostic (not gated, not registered).** ACTINV's arm was rerun at 8 elements from the same harness (`--child`,
+same binary, seeds and transport), once with the registered TENDL-2025 library and once with the ENDF/B-VIII.1 709-group
+library P178 built (`endfb81_all_709g.npz`, the same evaluation as OpenMC's arm), decay data unchanged. TENDL-2025
+reproduced the scored dose exactly (295.87 Sv/h). With ENDF/B-VIII.1 the dose is 389.36 Sv/h, ratio 1.035 to
+OpenMC's 376.20, with dose per photon 1.035 of OpenMC's. The gap is therefore the activation data, not the adapter's
+handling of mixed-material elements. Per material, ENDF/B-VIII.1 gives about 35% more photons above 0.5 MeV in the
+steel (1.08e15 against 7.96e14 photons/s) and 26% more in the tungsten; CuCrZr agrees within 1.2%. The steel here sits
+behind water and tungsten and sees a softer spectrum than P163's bare steel cube. Which evaluation is closer to
+measurement is not tested. The diagnostic's outputs are under `target/p181-diag` (not tracked).
