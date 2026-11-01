@@ -69,6 +69,9 @@ def validate_wheel(path: Path) -> str:
         }
         if not required.issubset(names):
             raise ValueError(f"wheel is missing licence files: {path.name}")
+        package = {"actinv/__init__.py", "actinv/_defaults.py", "actinv/openmc.py"}
+        if not package.issubset(names):
+            raise ValueError(f"wheel is missing package modules {sorted(package - set(names))}: {path.name}")
         if not any(name.startswith(f"{prefix}/sboms/") and name.endswith(".cyclonedx.json") for name in names):
             raise ValueError(f"wheel is missing its CycloneDX SBOM: {path.name}")
         if any(PurePosixPath(name).suffix in {".npz", ".endf", ".h5"} for name in names):
@@ -83,6 +86,9 @@ def validate_sdist(path: Path) -> None:
         f"{prefix}/python/Cargo.toml",
         f"{prefix}/python/Cargo.lock",
         f"{prefix}/python/src/lib.rs",
+        f"{prefix}/pysrc/actinv/__init__.py",
+        f"{prefix}/pysrc/actinv/_defaults.py",
+        f"{prefix}/pysrc/actinv/openmc.py",
         f"{prefix}/crates/actinv-cli/Cargo.toml",
         f"{prefix}/crates/actinv-cli/src/lib.rs",
         f"{prefix}/crates/actinv-cli/src/command.rs",

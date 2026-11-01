@@ -40,6 +40,8 @@ class WheelTagTests(unittest.TestCase):
             archive.writestr(f"{prefix}/licenses/LICENSE-MIT", "MIT\n")
             archive.writestr(f"{prefix}/licenses/LICENSE-APACHE", "Apache-2.0\n")
             archive.writestr(f"{prefix}/sboms/actinv.cyclonedx.json", "{}\n")
+            for module in ("__init__.py", "_defaults.py", "openmc.py"):
+                archive.writestr(f"actinv/{module}", "")
         return path
 
     def test_dot_compressed_manylinux_filename_matches_separate_internal_tags(self) -> None:

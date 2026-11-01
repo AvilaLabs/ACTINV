@@ -1064,6 +1064,8 @@ transport calculation.
 
 ### Mixture self-shielding (pointwise cross sections)
 
+This option is new after 1.7.1 and has not yet been qualified against measurements.
+
 `self_shielding.mixture` computes per-group resonance self-shielding factors at run time from the material's own
 pointwise cross sections, in place of a precomputed Bondarenko table or the sigmoid curve. It is exclusive with
 `table` and `geometry` (and with `dilution`, `sigma0_b` and `dilution_overrides`).

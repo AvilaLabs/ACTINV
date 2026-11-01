@@ -11,11 +11,24 @@
     command of the installed package; `library=`, `decay_primary=`, `decay_fallback=` and `actinv_bin=` override.
   - Step 1 tallies only the flux and needs no depletion chain. `micro_kwargs={"chain_file": ...}` runs OpenMC's own
     cross-section step as before.
+- `self_shielding.mixture`: resonance self-shielding factors computed at run time from the material's own pointwise
+  cross sections (narrow-resonance flux `1 / Sigma_t` of the whole mixture, integrated over each library group), from
+  hash-pinned raw ENDF-6 evaluations. Overlapping resonances of different nuclides shield each other, which the table
+  and the sigmoid model do not treat. Not yet qualified against measurements; see the specification.
 
 **Changed**
 
 - The `actinv` Python extension module is now `actinv._actinv`, re-exported by the `actinv` package. `import actinv`
   and the `actinv` command are unchanged.
+- `build-shielding` no longer records the input directory in the table, so identical inputs give a byte-identical
+  table wherever they are read from.
+
+**Fixed**
+
+- Self-shielding with `dilution: "composition"`: the analytic potential-scattering estimate for nuclides the table
+  does not cover was 100 times too small (the ENDF channel radius was taken as femtometres), so materials whose main
+  scatterers are light nuclides absent from the table (concrete, water) were over-shielded. Present since 1.1.0;
+  default runs, which do not self-shield, are unaffected. Ledger entry 317.
 
 ## v1.7.1 — 2026-10-31
 
