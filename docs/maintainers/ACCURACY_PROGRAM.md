@@ -163,6 +163,14 @@ Stages 1–3 do not need SINBAD.
     0.88 s), OpenMC 0.15.3 depletion 18.1 s; median per-problem ratio 29.8, and 9.0 against OpenMC's depletion step
     alone. Public wording is the protocol's three sentences, with the machine and the two-core limit. This replaces the
     unregistered observation under P172.
+  - **P181 PASS, no sentence; Amendment A PASS** (CI green on e87a4ab and 8c9ce30): test C1. A tungsten sphere in
+    CuCrZr, water and steel, meshed into 8 to 32,768 elements, each run limited to 10 GiB and 4 hours, two CPUs. With
+    TENDL-2025, ACTINV's dose was 0.79-0.89 of OpenMC's (an evaluation difference, ledger 329), outside the sanity
+    bound. On ENDF/B-VIII.1 (Amendment A, written after that result) it is within 4.4% at every size. Model to photon
+    source 10-22x faster than OpenMC 0.15.3's flux mode, about a fifth of the memory; ACTINV completed 32,768
+    elements, OpenMC 4,096 (killed by its memory limit at 13,824). Public wording is the amendment's five sentences,
+    with the machine, the two threads, the ENDF/B-VIII.1 library and the after-the-result disclosure. Follow-up:
+    ACTINV's step 2 on TENDL-2025 is about 6x slower than on ENDF/B-VIII.1 at large region counts.
 - Next (2026-10-31): item 2 proceeds. No single existing option closes all 11 rows: the Bondarenko table is right for
   steel, and the region foil is right for CuCrZr. Before a correction is built, find out why:
   - why the foil over-shields steel's dilute constituents;

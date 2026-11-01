@@ -5821,3 +5821,11 @@ and the checker exited 0 and G0–G3 pass. **P181A-PASS, pending G4.**
   32,768 on TENDL-2025, against 155 s and 1,060 s here. TENDL-2025's larger library costs ACTINV a factor of about 6 in
   step 2 at the large sizes, against about 1.4 per FNS problem in P180; the quoted times hold only for the
   ENDF/B-VIII.1 library. Why the TENDL-2025 step 2 grows faster with the region count is a follow-up.
+
+## Entry 332 — P181 Amendment A G4: CI green on 8c9ce30; P181A-PASS (2026-11-01)
+
+The controls, fns-iron and fusion-isotope workflows passed on the evidence commit `8c9ce30`. **P181A-PASS.** The five
+sentences in `results/p181a_verdict.json` may be used, quoted with the machine (Intel Core i3-N305), the two-thread
+setting, ACTINV's ENDF/B-VIII.1 library, and the disclosure that the amendment and its ACTINV runs came after P181's
+result was known, a few hours after OpenMC's runs. P181's own record stays without a sentence. The TENDL-2025 step-2
+cost at large region counts (ledger 331) is open.
