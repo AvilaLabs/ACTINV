@@ -1,0 +1,374 @@
+{
+ "allowed_sentences": [
+  "With its R-matrix-limited capture repaired and otherwise the same ENDF/B-VIII.1 cross sections as OpenMC, ACTINV has a median |ln C/E| of 0.234 on 2360 measured decay-heat points from 132 JAEA FNS experiments.",
+  "The repair changes 11 of those points by more than 1%, all in the 30 experiments whose samples contain Ca, Cl, Cu, Fe, Rh, Si, V or W."
+ ],
+ "gates": {
+  "G0": {
+   "pass": true,
+   "problems": []
+  },
+  "G1": {
+   "pass": true,
+   "problems": []
+  },
+  "G2": {
+   "pass": true,
+   "problems": []
+  },
+  "G3": {
+   "pass": true,
+   "problems": []
+  }
+ },
+ "protocol": "ACTINV-P179",
+ "summary": {
+  "arms": {
+   "actinv_endf8": {
+    "geometric_mean_C_over_E": 0.6882842328217038,
+    "max_abs_log_C_over_E": 10.320570738495316,
+    "median_abs_log_C_over_E": 0.23361685683512134,
+    "p90_abs_log_C_over_E": 1.7914967699575601,
+    "points": 2360,
+    "within_30_percent_points": 1223
+   },
+   "actinv_endf8_p172": {
+    "geometric_mean_C_over_E": 0.6884995383709964,
+    "max_abs_log_C_over_E": 10.320570738495316,
+    "median_abs_log_C_over_E": 0.23361685683512134,
+    "p90_abs_log_C_over_E": 1.7914967699575601,
+    "points": 2360,
+    "within_30_percent_points": 1223
+   },
+   "actinv_tendl2025": {
+    "geometric_mean_C_over_E": 1.0313371997982272,
+    "max_abs_log_C_over_E": 10.139270958504433,
+    "median_abs_log_C_over_E": 0.13919895085563835,
+    "p90_abs_log_C_over_E": 0.6636466359880832,
+    "points": 2360,
+    "within_30_percent_points": 1710
+   },
+   "openmc": {
+    "geometric_mean_C_over_E": 0.6415478536741582,
+    "max_abs_log_C_over_E": 12.194271108764212,
+    "median_abs_log_C_over_E": 0.3163311363171071,
+    "p90_abs_log_C_over_E": 1.8877017136274377,
+    "points": 2360,
+    "within_30_percent_points": 1104
+   }
+  },
+  "bootstrap_openmc_minus_actinv_endf8": {
+   "high": 0.13157381041012253,
+   "low": 0.026249336409352952,
+   "resamples": 2000,
+   "seed": 172
+  },
+  "common_points": 2360,
+  "control_experiments": 102,
+  "direct_arms": {
+   "actinv_endf8": {
+    "geometric_mean_C_over_E": 0.9700956693053081,
+    "max_abs_log_C_over_E": 4.0908362062506605,
+    "median_abs_log_C_over_E": 0.09977579864690128,
+    "p90_abs_log_C_over_E": 0.5067204149600341,
+    "points": 512,
+    "within_30_percent_points": 393
+   },
+   "actinv_endf8_p172": {
+    "geometric_mean_C_over_E": 0.9714952217639904,
+    "max_abs_log_C_over_E": 4.090836206252407,
+    "median_abs_log_C_over_E": 0.09977579971514847,
+    "p90_abs_log_C_over_E": 0.5108532757009484,
+    "points": 512,
+    "within_30_percent_points": 393
+   },
+   "openmc": {
+    "geometric_mean_C_over_E": 0.8204941036913573,
+    "max_abs_log_C_over_E": 4.121789941396962,
+    "median_abs_log_C_over_E": 0.1057564588155428,
+    "p90_abs_log_C_over_E": 0.6552656113067328,
+    "points": 512,
+    "within_30_percent_points": 380
+   }
+  },
+  "direct_experiments": 30,
+  "direct_points": 512,
+  "dropped_points": [],
+  "experiments": 132,
+  "library_differing_rows": 32,
+  "per_direct_experiment": [
+   {
+    "actinv_endf8_median_abs_log_C_over_E": 0.36908171491122155,
+    "actinv_endf8_p172_median_abs_log_C_over_E": 0.369081714911241,
+    "experiment": "1996exp_5min",
+    "material": "Ca",
+    "median_log_rerun_over_p172": 1.9317880628477538e-14,
+    "openmc_median_abs_log_C_over_E": 0.46435976943173385,
+    "points": 20
+   },
+   {
+    "actinv_endf8_median_abs_log_C_over_E": 0.07292322472910527,
+    "actinv_endf8_p172_median_abs_log_C_over_E": 0.07292322472937753,
+    "experiment": "1996exp_7hour",
+    "material": "Ca",
+    "median_log_rerun_over_p172": 2.722266856380496e-13,
+    "openmc_median_abs_log_C_over_E": 0.25069691067884137,
+    "points": 6
+   },
+   {
+    "actinv_endf8_median_abs_log_C_over_E": 0.04286905666034286,
+    "actinv_endf8_p172_median_abs_log_C_over_E": 0.04286905666031351,
+    "experiment": "2000exp_5min",
+    "material": "Ca",
+    "median_log_rerun_over_p172": 1.7763568394002347e-14,
+    "openmc_median_abs_log_C_over_E": 0.06812061747283214,
+    "points": 21
+   },
+   {
+    "actinv_endf8_median_abs_log_C_over_E": 0.3651511473730899,
+    "actinv_endf8_p172_median_abs_log_C_over_E": 0.36515114737333654,
+    "experiment": "2000exp_5min",
+    "material": "Cl",
+    "median_log_rerun_over_p172": 2.4669155607167934e-13,
+    "openmc_median_abs_log_C_over_E": 0.43803776325742616,
+    "points": 21
+   },
+   {
+    "actinv_endf8_median_abs_log_C_over_E": 0.08729105580588803,
+    "actinv_endf8_p172_median_abs_log_C_over_E": 0.08733787110213415,
+    "experiment": "1996exp_5min",
+    "material": "Cu",
+    "median_log_rerun_over_p172": 4.922003340336778e-05,
+    "openmc_median_abs_log_C_over_E": 0.07728741140456248,
+    "points": 20
+   },
+   {
+    "actinv_endf8_median_abs_log_C_over_E": 0.06356033811410547,
+    "actinv_endf8_p172_median_abs_log_C_over_E": 0.06356033801921303,
+    "experiment": "1996exp_7hour",
+    "material": "Cu",
+    "median_log_rerun_over_p172": -9.489281583631237e-11,
+    "openmc_median_abs_log_C_over_E": 0.05298453580796543,
+    "points": 10
+   },
+   {
+    "actinv_endf8_median_abs_log_C_over_E": 0.05046725919593158,
+    "actinv_endf8_p172_median_abs_log_C_over_E": 0.05040476476768142,
+    "experiment": "2000exp_5min",
+    "material": "Cu",
+    "median_log_rerun_over_p172": 6.249442825012835e-05,
+    "openmc_median_abs_log_C_over_E": 0.06065889211846984,
+    "points": 21
+   },
+   {
+    "actinv_endf8_median_abs_log_C_over_E": 0.08097643108064306,
+    "actinv_endf8_p172_median_abs_log_C_over_E": 0.08097643108785645,
+    "experiment": "1996exp_5min",
+    "material": "Fe",
+    "median_log_rerun_over_p172": 7.213341035568548e-12,
+    "openmc_median_abs_log_C_over_E": 0.0803847399917291,
+    "points": 20
+   },
+   {
+    "actinv_endf8_median_abs_log_C_over_E": 0.14842410273556383,
+    "actinv_endf8_p172_median_abs_log_C_over_E": 0.14842412243250383,
+    "experiment": "1996exp_7hour",
+    "material": "Fe",
+    "median_log_rerun_over_p172": 1.9151437807625465e-08,
+    "openmc_median_abs_log_C_over_E": 0.1149322522313521,
+    "points": 10
+   },
+   {
+    "actinv_endf8_median_abs_log_C_over_E": 0.055431965787266654,
+    "actinv_endf8_p172_median_abs_log_C_over_E": 0.055431965779452,
+    "experiment": "2000exp_5min",
+    "material": "Fe",
+    "median_log_rerun_over_p172": 7.814637825701017e-12,
+    "openmc_median_abs_log_C_over_E": 0.056176015621460657,
+    "points": 21
+   },
+   {
+    "actinv_endf8_median_abs_log_C_over_E": 0.23611592649222832,
+    "actinv_endf8_p172_median_abs_log_C_over_E": 0.23611592649595337,
+    "experiment": "1996exp_5min",
+    "material": "Inc600",
+    "median_log_rerun_over_p172": 7.517320099734025e-13,
+    "openmc_median_abs_log_C_over_E": 0.24622720839798268,
+    "points": 20
+   },
+   {
+    "actinv_endf8_median_abs_log_C_over_E": 0.03649777851215043,
+    "actinv_endf8_p172_median_abs_log_C_over_E": 0.03649777858840288,
+    "experiment": "1996exp_7hour",
+    "material": "Inc600",
+    "median_log_rerun_over_p172": 3.482292232287683e-11,
+    "openmc_median_abs_log_C_over_E": 0.07272760755474855,
+    "points": 10
+   },
+   {
+    "actinv_endf8_median_abs_log_C_over_E": 0.12158926721548013,
+    "actinv_endf8_p172_median_abs_log_C_over_E": 0.12158926721589612,
+    "experiment": "2000exp_5min",
+    "material": "Inc600",
+    "median_log_rerun_over_p172": 5.093703236978921e-13,
+    "openmc_median_abs_log_C_over_E": 0.1351172924948557,
+    "points": 21
+   },
+   {
+    "actinv_endf8_median_abs_log_C_over_E": 0.1246744590122369,
+    "actinv_endf8_p172_median_abs_log_C_over_E": 0.12467445901224257,
+    "experiment": "1996exp_5min",
+    "material": "NiCr",
+    "median_log_rerun_over_p172": 5.662137425588282e-15,
+    "openmc_median_abs_log_C_over_E": 0.1406988753005209,
+    "points": 20
+   },
+   {
+    "actinv_endf8_median_abs_log_C_over_E": 0.016393910071872173,
+    "actinv_endf8_p172_median_abs_log_C_over_E": 0.016393910071704355,
+    "experiment": "1996exp_7hour",
+    "material": "NiCr",
+    "median_log_rerun_over_p172": 2.527977827071161e-13,
+    "openmc_median_abs_log_C_over_E": 0.07424057898330688,
+    "points": 10
+   },
+   {
+    "actinv_endf8_median_abs_log_C_over_E": 0.012250766197114652,
+    "actinv_endf8_p172_median_abs_log_C_over_E": 0.012250766197117463,
+    "experiment": "2000exp_5min",
+    "material": "NiCr",
+    "median_log_rerun_over_p172": 3.5527136788004946e-15,
+    "openmc_median_abs_log_C_over_E": 0.026435290763748266,
+    "points": 21
+   },
+   {
+    "actinv_endf8_median_abs_log_C_over_E": 0.9469319930813775,
+    "actinv_endf8_p172_median_abs_log_C_over_E": 0.9867131318343318,
+    "experiment": "2000exp_5min",
+    "material": "Rh",
+    "median_log_rerun_over_p172": -0.01768950217613808,
+    "openmc_median_abs_log_C_over_E": 0.9468685690959755,
+    "points": 19
+   },
+   {
+    "actinv_endf8_median_abs_log_C_over_E": 0.09358268824593735,
+    "actinv_endf8_p172_median_abs_log_C_over_E": 0.09358268864629507,
+    "experiment": "1996exp_5min",
+    "material": "SS304",
+    "median_log_rerun_over_p172": 7.677892763027363e-10,
+    "openmc_median_abs_log_C_over_E": 0.10110087972240521,
+    "points": 20
+   },
+   {
+    "actinv_endf8_median_abs_log_C_over_E": 0.06722584062078964,
+    "actinv_endf8_p172_median_abs_log_C_over_E": 0.06722584168708509,
+    "experiment": "1996exp_7hour",
+    "material": "SS304",
+    "median_log_rerun_over_p172": 1.8869337185986128e-09,
+    "openmc_median_abs_log_C_over_E": 0.102994457532449,
+    "points": 10
+   },
+   {
+    "actinv_endf8_median_abs_log_C_over_E": 0.0036977727594801947,
+    "actinv_endf8_p172_median_abs_log_C_over_E": 0.0036977729974746122,
+    "experiment": "2000exp_5min",
+    "material": "SS304",
+    "median_log_rerun_over_p172": 6.1631721929182e-10,
+    "openmc_median_abs_log_C_over_E": 0.008132621698355505,
+    "points": 21
+   },
+   {
+    "actinv_endf8_median_abs_log_C_over_E": 0.08367310488454643,
+    "actinv_endf8_p172_median_abs_log_C_over_E": 0.08367310576583126,
+    "experiment": "1996exp_5min",
+    "material": "SS316",
+    "median_log_rerun_over_p172": 1.3514296339396691e-09,
+    "openmc_median_abs_log_C_over_E": 0.08896414027905414,
+    "points": 20
+   },
+   {
+    "actinv_endf8_median_abs_log_C_over_E": 0.07202012465541899,
+    "actinv_endf8_p172_median_abs_log_C_over_E": 0.07202012604455615,
+    "experiment": "1996exp_7hour",
+    "material": "SS316",
+    "median_log_rerun_over_p172": 1.2193266389086488e-09,
+    "openmc_median_abs_log_C_over_E": 0.11902357913483667,
+    "points": 10
+   },
+   {
+    "actinv_endf8_median_abs_log_C_over_E": 0.039555429686892234,
+    "actinv_endf8_p172_median_abs_log_C_over_E": 0.03955542599777196,
+    "experiment": "2000exp_5min",
+    "material": "SS316",
+    "median_log_rerun_over_p172": 1.0212537477131055e-09,
+    "openmc_median_abs_log_C_over_E": 0.03515929040529598,
+    "points": 21
+   },
+   {
+    "actinv_endf8_median_abs_log_C_over_E": 0.11165241392147286,
+    "actinv_endf8_p172_median_abs_log_C_over_E": 0.11165141382755588,
+    "experiment": "2000exp_5min",
+    "material": "Si",
+    "median_log_rerun_over_p172": 7.935176484388431e-09,
+    "openmc_median_abs_log_C_over_E": 0.10651851446613611,
+    "points": 21
+   },
+   {
+    "actinv_endf8_median_abs_log_C_over_E": 0.022676008398055815,
+    "actinv_endf8_p172_median_abs_log_C_over_E": 0.017425915934962496,
+    "experiment": "1996exp_5min",
+    "material": "V",
+    "median_log_rerun_over_p172": -0.00525009246309334,
+    "openmc_median_abs_log_C_over_E": 0.022217954742665726,
+    "points": 20
+   },
+   {
+    "actinv_endf8_median_abs_log_C_over_E": 0.10787732913066285,
+    "actinv_endf8_p172_median_abs_log_C_over_E": 0.1078773291306631,
+    "experiment": "1996exp_7hour",
+    "material": "V",
+    "median_log_rerun_over_p172": 2.2204460492503128e-16,
+    "openmc_median_abs_log_C_over_E": 0.10707300834741833,
+    "points": 7
+   },
+   {
+    "actinv_endf8_median_abs_log_C_over_E": 0.14828115761647026,
+    "actinv_endf8_p172_median_abs_log_C_over_E": 0.15507690376877267,
+    "experiment": "2000exp_5min",
+    "material": "V",
+    "median_log_rerun_over_p172": -0.006365158907758229,
+    "openmc_median_abs_log_C_over_E": 0.14892225031475978,
+    "points": 21
+   },
+   {
+    "actinv_endf8_median_abs_log_C_over_E": 0.29482634393257223,
+    "actinv_endf8_p172_median_abs_log_C_over_E": 0.295264040377501,
+    "experiment": "1996exp_5min",
+    "material": "W",
+    "median_log_rerun_over_p172": -0.0009071278977305814,
+    "openmc_median_abs_log_C_over_E": 1.0462072814218177,
+    "points": 20
+   },
+   {
+    "actinv_endf8_median_abs_log_C_over_E": 0.24327281344782847,
+    "actinv_endf8_p172_median_abs_log_C_over_E": 0.24327348673105756,
+    "experiment": "1996exp_7hour",
+    "material": "W",
+    "median_log_rerun_over_p172": -8.157716119639949e-07,
+    "openmc_median_abs_log_C_over_E": 0.24508931264578387,
+    "points": 10
+   },
+   {
+    "actinv_endf8_median_abs_log_C_over_E": 0.5817561665222535,
+    "actinv_endf8_p172_median_abs_log_C_over_E": 0.5849005661437622,
+    "experiment": "2000exp_5min",
+    "material": "W",
+    "median_log_rerun_over_p172": -0.0007354827694599569,
+    "openmc_median_abs_log_C_over_E": 1.3326546809655544,
+    "points": 20
+   }
+  ],
+  "points_changed_over_1_percent": 11
+ },
+ "verdict": "P179-PASS (pending G4, CI on the evidence commit)"
+}

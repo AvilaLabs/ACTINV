@@ -5638,3 +5638,20 @@ and checker `controls/check_p179.py` (`64a78796…`). Both import P172's code.
   reproduce P172's arm on them within 1e-4 in ln.
 - **Rehearsal.** All modes exited 0. G1–G3 pass; G0 failed only because the protocol was not yet hashed. Only exit codes
   and gate lines were read, and the outputs were deleted.
+
+## Entry 320 — P179 evidence: G0–G3 pass; the identical-data arm is unchanged at 0.234 (2026-11-01)
+
+The run started from the registration commit `2a06fbb` at 01:58, with a clean tree, P172's module (`f33ea3ed…`), the
+repaired library and the 200 % scope. All modes and the checker exited 0, and G0–G3 pass. **P179-PASS, pending G4.**
+
+- **Control.** All 102 experiments without a repaired element reproduce P172's arm within 1e-4 in ln.
+- **Whole corpus.** Median |ln C/E| on the same 2,360 points: 0.234 (P172's arm 0.234; TENDL-2025 0.139 and OpenMC
+  0.316, both P172's). The bootstrap interval of OpenMC minus the rerun is 0.026–0.131.
+- **Where it moves.** 11 points change by more than 1%:
+  - ten in Rh 2000exp_5min, the first 36–316 s of cooling, where Rh-104 (42 s) from Rh-103 capture dominates: C/E
+    falls by 1.8–4.8%, from 2.53–3.26 to 2.42–3.10 at the peak, toward OpenMC's 2.37–3.22;
+  - one in W 2000exp_5min at 3,291 s, −1.0%.
+  V moves by about −0.6% in its two 5-minute experiments; the other repaired elements by less.
+- **Reading.** At 14 MeV the repaired resonance capture carries little of the decay heat, so ledger 316's caveat on
+  P172's arm is closed: its sentence holds with the repaired library. P179's first allowed sentence may now be used in
+  its place.

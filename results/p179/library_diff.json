@@ -1,0 +1,198 @@
+{
+ "differing_rows": [
+  {
+   "mt": 102,
+   "product_za": -1,
+   "row": 898,
+   "state": -1
+  },
+  {
+   "mt": 102,
+   "product_za": 20041,
+   "row": 899,
+   "state": 0
+  },
+  {
+   "mt": 102,
+   "product_za": -1,
+   "row": 1705,
+   "state": -1
+  },
+  {
+   "mt": 102,
+   "product_za": 17036,
+   "row": 1706,
+   "state": 0
+  },
+  {
+   "mt": 102,
+   "product_za": -1,
+   "row": 2342,
+   "state": -1
+  },
+  {
+   "mt": 102,
+   "product_za": 29064,
+   "row": 2343,
+   "state": 0
+  },
+  {
+   "mt": 102,
+   "product_za": -1,
+   "row": 2368,
+   "state": -1
+  },
+  {
+   "mt": 102,
+   "product_za": 29066,
+   "row": 2369,
+   "state": 0
+  },
+  {
+   "mt": 102,
+   "product_za": -1,
+   "row": 2950,
+   "state": -1
+  },
+  {
+   "mt": 102,
+   "product_za": 26055,
+   "row": 2951,
+   "state": 0
+  },
+  {
+   "mt": 102,
+   "product_za": -1,
+   "row": 3021,
+   "state": -1
+  },
+  {
+   "mt": 102,
+   "product_za": 26058,
+   "row": 3022,
+   "state": 0
+  },
+  {
+   "mt": 102,
+   "product_za": -1,
+   "row": 7382,
+   "state": -1
+  },
+  {
+   "mt": 102,
+   "product_za": 45104,
+   "row": 7383,
+   "state": 0
+  },
+  {
+   "mt": 102,
+   "product_za": -1,
+   "row": 8122,
+   "state": -1
+  },
+  {
+   "mt": 102,
+   "product_za": 14029,
+   "row": 8123,
+   "state": 0
+  },
+  {
+   "mt": 102,
+   "product_za": -1,
+   "row": 8136,
+   "state": -1
+  },
+  {
+   "mt": 102,
+   "product_za": 14030,
+   "row": 8137,
+   "state": 0
+  },
+  {
+   "mt": 102,
+   "product_za": -1,
+   "row": 8148,
+   "state": -1
+  },
+  {
+   "mt": 102,
+   "product_za": 14031,
+   "row": 8149,
+   "state": 0
+  },
+  {
+   "mt": 102,
+   "product_za": -1,
+   "row": 9791,
+   "state": -1
+  },
+  {
+   "mt": 102,
+   "product_za": 23052,
+   "row": 9792,
+   "state": 0
+  },
+  {
+   "mt": 102,
+   "product_za": -1,
+   "row": 9860,
+   "state": -1
+  },
+  {
+   "mt": 102,
+   "product_za": 74183,
+   "row": 9861,
+   "state": 0
+  },
+  {
+   "mt": 102,
+   "product_za": 74183,
+   "row": 9862,
+   "state": 1
+  },
+  {
+   "mt": 102,
+   "product_za": -1,
+   "row": 9897,
+   "state": -1
+  },
+  {
+   "mt": 102,
+   "product_za": 74184,
+   "row": 9898,
+   "state": 0
+  },
+  {
+   "mt": 102,
+   "product_za": -1,
+   "row": 9938,
+   "state": -1
+  },
+  {
+   "mt": 102,
+   "product_za": 74185,
+   "row": 9939,
+   "state": 0
+  },
+  {
+   "mt": 102,
+   "product_za": 74185,
+   "row": 9940,
+   "state": 1
+  },
+  {
+   "mt": 102,
+   "product_za": -1,
+   "row": 9979,
+   "state": -1
+  },
+  {
+   "mt": 102,
+   "product_za": 74187,
+   "row": 9980,
+   "state": 0
+  }
+ ],
+ "same_layout": true,
+ "sig_rows": 10804
+}
