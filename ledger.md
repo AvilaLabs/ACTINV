@@ -5672,3 +5672,10 @@ checker `controls/check_p180.py` (`5f5bfeb6…`).
   most 3.0, so the run waits for P178 to finish.
 - **Rehearsal (three problems, during P178).** All modes exited 0; G1 and G2 pass. G0 failed because the protocol was
   not yet hashed, and G3 because P178 was running. No time was printed, and the outputs were deleted.
+
+## Entry 322 — P179 G4: CI green on 7743f16; P179-PASS (2026-11-01)
+
+The controls, fns-iron and fusion-isotope workflows passed on `7743f16`, which contains the evidence commit `afdd3aa`;
+the controls run on `afdd3aa` itself was cancelled by that newer push. **P179-PASS.** P172's verdict is unchanged; its
+second allowed sentence is superseded in public use by P179's first, which gives the same 0.234, and ledger 316's caveat
+on P172's identical-data arm is closed.
