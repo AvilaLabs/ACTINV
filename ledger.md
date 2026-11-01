@@ -5655,3 +5655,20 @@ repaired library and the 200 % scope. All modes and the checker exited 0, and G0
 - **Reading.** At 14 MeV the repaired resonance capture carries little of the decay heat, so ledger 316's caveat on
   P172's arm is closed: its sentence holds with the repaired library. P179's first allowed sentence may now be used in
   its place.
+
+## Entry 321 — P180 registered: wall time of ACTINV 1.7.1 and OpenMC 0.15.3 depletion on P172's 132 FNS problems (2026-11-01)
+
+`protocols/ACTINV-P180_PROTOCOL.md` (SHA-256 `9abd3bdd…`), with harness `controls/p180_speed.py` (`2e3ec298…`) and
+checker `controls/check_p180.py` (`5f5bfeb6…`).
+- **Question.** Solving one FNS problem in a fresh process, with the same two CPU cores and the same ENDF/B-VIII.1 cross
+  sections, how long do the released ACTINV 1.7.1 and OpenMC 0.15.3 depletion take from start to finish, and how long
+  does OpenMC's depletion step alone take? P172's 20–64 s against about 1 s was an unregistered observation from runs not
+  built to measure speed.
+- **Design.** Per problem, in a fixed order: ACTINV on the repaired ENDF/B-VIII.1 library, ACTINV on the shipped
+  TENDL-2025 library, then P172's unmodified OpenMC driver with a one-case job. Each process is timed from start to
+  exit, with its CPU time. One untimed warm-up per arm.
+- **Pins.** The binary is the v1.7.1 release asset (`bd0c21c9…`, matching the release's `SHA256SUMS`).
+- **Quiet machine (G3).** No other transient scope of the user may run, and the median 1-minute load average must be at
+  most 3.0, so the run waits for P178 to finish.
+- **Rehearsal (three problems, during P178).** All modes exited 0; G1 and G2 pass. G0 failed because the protocol was
+  not yet hashed, and G3 because P178 was running. No time was printed, and the outputs were deleted.
