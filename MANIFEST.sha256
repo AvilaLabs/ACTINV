@@ -10,7 +10,7 @@ ea36b74db132862e65b3adba54dfd4aa0b8dd237f7d7d0e89ba95926e5216139  ./.github/work
 97e9bc323f546040e0f2d2bc3a227ae0ef41b845c576e5f71429317a3d3940b3  ./.github/workflows/web.yml
 79e13422a5e89cdf3e37984d7faa609cdd0bd1eaf8972c12dbff9fe175bf720e  ./.gitignore
 8ccd7b7b17eaeef02fa8ebc3bfd8d2e910657af0ebe39fcbf742e1f2bc7ded37  ./AGENTS.md
-9a81ce2b28d72f18c322ccfe6d9264f0d27aadaed98f6a904362274751201002  ./CHANGELOG.md
+0a11faa500786f231b407f772c14420f9cc9f63e1eea41f075fee2cb7615f16c  ./CHANGELOG.md
 fcf4c9f02aef7a3e784a2927d571f78b52e98ddc644748d4b57235e424e8ac89  ./COMPETITIVE_BENCHMARK.md
 06debfb88cbe4179817b24708768586cc46b4ef0a9c94a4d6de3007a2f1fe8a1  ./CONTRIBUTING.md
 583043d62f9a8be1d0e4f791b8f593bb3801c75aeb05e910881c28d82e7c1762  ./Cargo.lock
@@ -1085,7 +1085,7 @@ ecd485ed1494b1c903819dbd01411ee2ec4d3edc1fbaf7ea40dc47a958882fe9  ./crates/actin
 2edf88dc595f247a8fa844025a2f3c32154fd60a370a95e396472177102d551e  ./crates/actinv-core/src/photon.rs
 7457c7d29ec7cb786ff6c28b037f2b0127e03cbbf02ff6a8ec89e4bcd8bbfafb  ./crates/actinv-core/src/power.rs
 e417c48a6a6b694a3c6ead7770f0f8926db489f73ed07065ce81755c135278da  ./crates/actinv-core/src/presets.rs
-8f350faa991dbd2121c468bafcff9d3e9fc64b352b9b4c62ebf44f56819753e3  ./crates/actinv-core/src/prune.rs
+4ed862e89d20cdd641c6d013d4569a69fad8633f1d550ba0d85410debb138ce9  ./crates/actinv-core/src/prune.rs
 ff87d2bcbd3efef668bc9563240e1bcc27072e466d39659dab1a2525950e46d9  ./crates/actinv-core/src/quantity.rs
 18f1054952186e461d2dbab5bfb2ee363ef8bb3af2ae8b9efb34b4a161058bb7  ./crates/actinv-core/src/r2s.rs
 225fe06bbd764eb6039e5fa0ea6a00413477375e93f195a23d4c0beb9ced9a0c  ./crates/actinv-core/src/radiological.rs

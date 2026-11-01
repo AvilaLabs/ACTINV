@@ -14,8 +14,13 @@ use std::collections::{HashMap, VecDeque};
 
 /// Largest number of sweeps that tighten one cyclic component.
 const MAX_SWEEPS: usize = 1000;
-/// A sweep that lowers no bound by more than this relative amount ends the tightening.
+/// A sweep that lowers no significant bound by more than this relative amount ends the tightening.
 const SWEEP_TOLERANCE: f64 = 1e-12;
+/// A bound below this fraction of the keep threshold is not significant: bounds only fall, so its state
+/// is dropped whatever later sweeps give, and it passes on at most its own value along each edge. Such
+/// bounds stay valid, only looser, and no longer hold the tightening open (in a large cyclic component they
+/// shrink by a fixed ratio per sweep and would otherwise run every component to `MAX_SWEEPS`).
+const SIGNIFICANCE_FRACTION: f64 = 1e-6;
 /// Largest number of Neumann steps searched for a cyclic component's contraction certificate.
 const CERTIFICATE_ITERATIONS: usize = 1000;
 
@@ -236,7 +241,18 @@ fn prune_values<S: ScheduleValue>(
         let n0: Vec<f64> = (0..n)
             .map(|i| problem.n0.get(i).copied().unwrap_or(0.0).max(0.0))
             .collect();
-        let bounds = propagate(n, &edges, &all, &n0, &zero, &zero, &decay_loss, t_total);
+        let floor = bmin * SIGNIFICANCE_FRACTION;
+        let bounds = propagate(
+            n,
+            &edges,
+            &all,
+            &n0,
+            &zero,
+            &zero,
+            &decay_loss,
+            t_total,
+            floor,
+        );
         let mut keep = Vec::new();
         let mut dropped = Vec::new();
         let mut kept_mask = vec![false; n];
@@ -255,7 +271,7 @@ fn prune_values<S: ScheduleValue>(
         let kept_shortfall = if dropped.is_empty() {
             Vec::new()
         } else {
-            shortfall(n, &edges, &kept_mask, &bounds, &decay_loss, t_total)
+            shortfall(n, &edges, &kept_mask, &bounds, &decay_loss, t_total, floor)
         };
         let unbounded = bounds
             .unbounded
@@ -464,6 +480,7 @@ fn propagate(
     extra_rate: &[f64],
     lam: &[f64],
     t_total: f64,
+    floor: f64,
 ) -> StateBounds {
     let mut pred: Vec<Vec<usize>> = vec![Vec::new(); n];
     let mut succ: Vec<Vec<usize>> = vec![Vec::new(); n];
@@ -554,7 +571,7 @@ fn propagate(
                         let t = t.min(th[m]);
                         let p = population_cap(t, n0[i], f, lam[i]).min(po[m]);
                         for (old, new) in [(th[m], t), (po[m], p)] {
-                            if old > 0.0 {
+                            if old > floor {
                                 largest_drop = largest_drop.max((old - new) / old);
                             }
                         }
@@ -736,6 +753,7 @@ fn shortfall(
     bounds: &StateBounds,
     lam: &[f64],
     t_total: f64,
+    floor: f64,
 ) -> Vec<(usize, f64)> {
     let mut extra_atoms = vec![0.0f64; n];
     let mut extra_rate = vec![0.0f64; n];
@@ -760,6 +778,7 @@ fn shortfall(
         &extra_rate,
         lam,
         t_total,
+        floor,
     );
     (0..n)
         .filter(|i| kept[*i] && error.population[*i] > 0.0)
@@ -898,6 +917,58 @@ mod tests {
             .dropped
             .iter()
             .all(|d| d.atoms_bound.is_finite() && d.atoms_bound > 0.0));
+    }
+
+    /// Insignificant bounds stop holding the tightening open: every bound stays at or above the fully
+    /// tightened one (a valid bound, at most looser), and significant bounds stay as tight.
+    #[test]
+    fn insignificant_bounds_end_the_tightening_and_stay_valid() {
+        // A three-state cycle fed from source 0: 1 -> 2 -> 3 -> 1, each passing a small share onward.
+        let react = [
+            (1, 0, 1e-12),
+            (0, 0, -1e-12),
+            (2, 1, 1e-9),
+            (3, 2, 1e-9),
+            (1, 3, 1e-9),
+        ];
+        let decay = [(1, 1, -1e-3), (2, 2, -1e-3), (3, 3, -1e-3)];
+        let n = 4;
+        let spectra = [react.to_vec()];
+        let problem = PruneProblem {
+            n,
+            decay: &decay,
+            feed: &[],
+            removal: &[],
+            spectra: &spectra,
+            n0: &[1e20, 0.0, 0.0, 0.0],
+        };
+        let lam = decay_loss(n, &decay);
+        let edges = bound_edges(&problem, &lam, 1.0);
+        let all = vec![true; n];
+        let zero = vec![0.0; n];
+        let run = |floor| propagate(n, &edges, &all, problem.n0, &zero, &zero, &lam, 1e6, floor);
+        let tight = run(0.0);
+        let members = &tight.population[1..];
+        assert!(members.iter().all(|p| *p > 0.0), "{tight:?}");
+        let largest = members.iter().copied().fold(0.0, f64::max);
+        let smallest = members.iter().copied().fold(f64::INFINITY, f64::min);
+        assert!(smallest < largest * 1e-6, "{tight:?}");
+        let floored = run((largest * smallest).sqrt());
+        for i in 0..n {
+            assert!(
+                floored.population[i] >= tight.population[i],
+                "{i}: {floored:?} {tight:?}"
+            );
+            assert!(
+                floored.throughput[i] >= tight.throughput[i],
+                "{i}: {floored:?} {tight:?}"
+            );
+        }
+        let i = 1 + members.iter().position(|p| *p == largest).unwrap();
+        assert!(
+            floored.population[i] <= tight.population[i] * (1.0 + 1e-9),
+            "{floored:?} {tight:?}"
+        );
     }
 
     #[test]

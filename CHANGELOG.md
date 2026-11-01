@@ -26,6 +26,10 @@
   and the `actinv` command are unchanged.
 - `build-shielding` no longer records the input directory in the table, so identical inputs give a byte-identical
   table wherever they are read from.
+- Rate pruning is faster on large reaction networks: bounds already below a millionth of the keep threshold no
+  longer hold the tightening of a cyclic group open, and the sweeps recompute only what changed. Results are
+  unchanged; `ledger.rate_pruning` may list more dropped nuclides, with looser (still valid) bounds on nuclides that
+  are dropped anyway.
 
 **Fixed**
 
