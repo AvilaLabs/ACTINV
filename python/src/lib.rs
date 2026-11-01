@@ -274,6 +274,17 @@ fn _catalog_json() -> String {
 /// Native half of the `actinv` package: `actinv/__init__.py` re-exports everything defined here.
 #[pymodule]
 fn _actinv(m: &Bound<'_, PyModule>) -> PyResult<()> {
+    init_module(m)
+}
+
+/// The same module under its pre-package name, for the controls that load `python/target/release/libactinv.so`
+/// directly as `actinv`.
+#[pymodule]
+fn actinv(m: &Bound<'_, PyModule>) -> PyResult<()> {
+    init_module(m)
+}
+
+fn init_module(m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add("__version__", env!("CARGO_PKG_VERSION"))?;
     m.add_function(wrap_pyfunction!(_cli, m)?)?;
     m.add_function(wrap_pyfunction!(cram_step, m)?)?;
