@@ -12,7 +12,9 @@ use actinv_data::activation::{parse_evaluations, Evaluation, Projectile};
 use actinv_data::composition::{self, MaterialKey};
 use actinv_data::groups::{GroupStructure, Tabulated};
 use actinv_data::normalize::{normalize_tape, NormalizeProfile};
-use actinv_data::processing::{has_resonance_contribution, process_reaction};
+use actinv_data::processing::{
+    has_resonance_contribution, process_reaction_clipped, ZeroKClipRecord,
+};
 use actinv_data::resonance::{
     legacy_effective_total_width, rml_resonance_widths, validate_rmatrix_limited, RangeData,
     ResonanceEvaluation, K_WAVE,
@@ -1156,6 +1158,31 @@ pub struct MixtureChannelSummary {
     pub min_scale: f64,
 }
 
+/// Negative 0 K values of one reaction that mixture mode set to zero, as NJOY RECONR does (a negative MF=3
+/// background under a resonance-interference minimum, e.g. Fe-54 elastic in ENDF/B-VIII.1).
+#[derive(Debug, Clone, Serialize)]
+pub struct MixtureClip {
+    pub mt: i32,
+    pub points: usize,
+    pub min_barn: f64,
+    pub min_energy_ev: f64,
+    pub low_ev: f64,
+    pub high_ev: f64,
+}
+
+impl From<ZeroKClipRecord> for MixtureClip {
+    fn from(record: ZeroKClipRecord) -> Self {
+        Self {
+            mt: record.mt,
+            points: record.points,
+            min_barn: record.min_barn,
+            min_energy_ev: record.min_energy_ev,
+            low_ev: record.low_ev,
+            high_ev: record.high_ev,
+        }
+    }
+}
+
 /// What mixture mode applied, for the ledger and certificate.
 #[derive(Debug, Clone, Serialize)]
 pub struct MixtureReport {
@@ -1170,6 +1197,8 @@ pub struct MixtureReport {
     pub evaluations_unused: Vec<String>,
     /// nuclide -> channel -> summary of the applied scales.
     pub scales: BTreeMap<String, BTreeMap<String, MixtureChannelSummary>>,
+    /// nuclide -> reactions whose negative 0 K values were set to zero (empty when none were).
+    pub zero_k_clips: BTreeMap<String, Vec<MixtureClip>>,
 }
 
 /// One nuclide's pointwise cross sections at the run temperature, linear in E between points.
@@ -1180,6 +1209,8 @@ struct PointwiseXs {
     sigma: [Vec<f64>; 4],
     /// Resolved resonance ranges (eV), ascending and non-overlapping.
     ranges: Vec<(f64, f64)>,
+    /// Reactions whose negative 0 K values were set to zero.
+    clips: Vec<ZeroKClipRecord>,
 }
 
 /// The resolved (LRU=1) ranges of an evaluation, sorted and merged.
@@ -1228,12 +1259,16 @@ impl PointwiseXs {
         };
         let background = |mt: i32| evaluation.mf3.get(&mt).unwrap_or(&zero);
         let mut channels: Vec<Tabulated> = Vec::with_capacity(3);
+        let mut clips = Vec::new();
         for mt in [2, 18, 102] {
             let table = background(mt);
             channels.push(if has_resonance_contribution(resonance, mt) {
-                process_reaction(resonance, table, groups, mt, temperature_K, 1.0)
-                    .map_err(|error| format!("MT{mt} resonance processing: {error}"))?
-                    .table
+                // NJOY RECONR sets a negative resonance-range cross section to zero.
+                let (reaction, clipped) =
+                    process_reaction_clipped(resonance, table, groups, mt, temperature_K, 1.0)
+                        .map_err(|error| format!("MT{mt} resonance processing: {error}"))?;
+                clips.extend(clipped);
+                reaction.table
             } else {
                 table.clone()
             });
@@ -1273,6 +1308,7 @@ impl PointwiseXs {
             energy,
             sigma,
             ranges: resolved_ranges(resonance),
+            clips,
         })
     }
 }
@@ -1565,6 +1601,7 @@ impl PreparedMixture {
             boundaries_ev: boundaries_ev.to_vec(),
         };
         let mut pointwise = BTreeMap::new();
+        let mut zero_k_clips: BTreeMap<String, Vec<MixtureClip>> = BTreeMap::new();
         for &key in &covered_keys {
             let evaluation = &self.evaluations[&key];
             let resonance = evaluation
@@ -1575,6 +1612,12 @@ impl PreparedMixture {
                 .map_err(|error| {
                     format!("self_shielding.mixture {}: {error}", name_of(key.0, key.1))
                 })?;
+            if !xs.clips.is_empty() {
+                zero_k_clips.insert(
+                    name_of(key.0, key.1),
+                    xs.clips.iter().cloned().map(MixtureClip::from).collect(),
+                );
+            }
             pointwise.insert(key, xs);
         }
         let all_scales =
@@ -1650,6 +1693,7 @@ impl PreparedMixture {
                 background_estimated: uncovered,
                 evaluations_unused: unused,
                 scales: summaries,
+                zero_k_clips,
             }),
         })
     }
@@ -2831,6 +2875,7 @@ mod tests {
             energy,
             sigma,
             ranges,
+            clips: Vec::new(),
         }
     }
 
@@ -3002,6 +3047,40 @@ mod tests {
         assert!(summary.groups >= 1 && summary.min_scale <= previous);
         assert!(plan.applied["W186"].contains_key(&1));
         assert!(plan.geometry.is_none());
+    }
+
+    #[test]
+    fn mixture_clips_a_negative_zero_k_elastic_and_reports_it() {
+        // A negative MF=3 elastic background under the resonance (ENDF/B-VIII.1 Fe-54 has one above 1 keV) makes the
+        // 0 K elastic negative away from the peak; mixture mode sets it to zero as NJOY RECONR does, and says so.
+        let mut mixture =
+            p140_w186_mixture(&p140_mixture_spec()).expect("the synthetic tape parses");
+        mixture
+            .evaluations
+            .get_mut(&(74186, 0))
+            .expect("W186 evaluation")
+            .mf3
+            .insert(
+                2,
+                Tabulated {
+                    interpolation: vec![(2, 2)],
+                    x: vec![1e-5, 2e7],
+                    y: vec![-50.0, -50.0],
+                },
+            );
+        let composition = BTreeMap::from([((74186, 0), 1.0)]);
+        let plan = mixture
+            .plan(&composition, &[1.0, 5.0, 20.0, 100.0], 300.0, false)
+            .expect("a negative 0 K elastic is clipped, not refused");
+        let clips = &plan.mixture.as_ref().expect("mixture report").zero_k_clips["W186"];
+        assert_eq!(clips.len(), 1);
+        assert_eq!(clips[0].mt, 2);
+        assert!(clips[0].points > 0 && clips[0].min_barn < 0.0, "{clips:?}");
+        let unclipped = p140_w186_mixture(&p140_mixture_spec())
+            .unwrap()
+            .plan(&composition, &[1.0, 5.0, 20.0, 100.0], 300.0, false)
+            .unwrap();
+        assert!(unclipped.mixture.unwrap().zero_k_clips.is_empty());
     }
 
     #[test]

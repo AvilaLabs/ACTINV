@@ -1096,11 +1096,13 @@ declared mixture. In each library group that overlaps the nuclide's resolved ran
 is the flux-weighted mean of its cross section over the whole group divided by its plain lethargy mean. The factors
 scale the nuclide's group cross sections as the other modes do (mt 2 elastic, mt 18/19 fission, mt 102 capture, every
 other reaction the total factor). Groups that do not overlap a resolved range are unshielded, including the unresolved
-range. The method needs a positive run `temperature_K`.
+range. The method needs a positive run `temperature_K`. A negative 0 K value (a negative MF=3 background under a
+resonance-interference minimum, as in ENDF/B-VIII.1 Fe-54 elastic) is set to zero, as NJOY RECONR does.
 
 The ledger `shielding.mixture` block records the profile, temperature, evaluation files with their hashes, the
-covered and `background_estimated` nuclides, and per covered nuclide the number of groups and the smallest applied
-scale for each channel.
+covered and `background_estimated` nuclides, per covered nuclide the number of groups and the smallest applied
+scale for each channel, and in `zero_k_clips` every reaction whose negative 0 K values were set to zero (points,
+energy range and the most negative value).
 
 ## Gas production (H and He isotopes)
 
