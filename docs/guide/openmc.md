@@ -45,6 +45,17 @@ median of 0.61 s per problem from start to finish and OpenMC 0.15.3 depletion 18
 was 29.8. Counting only OpenMC's depletion step, without its start-up and cross-section collapse, the median
 per-problem ratio was 9. See [Per-problem time](benchmarks.md#per-problem-time-on-the-fns-problems).
 
+On a mixed-material mesh (a tungsten sphere in CuCrZr, water and steel, protocol P181 Amendment A, one run per size
+on an Intel Core i3-N305). Inside the same 10
+GiB memory limit and 4-hour limit per run, ACTINV (with an ENDF/B-VIII.1 activation library) completed meshes up to
+32,768 elements (36,208 regions) and OpenMC 0.15.3 in flux mode up to 4,096 elements (5,120 regions); at 13,824
+elements OpenMC was stopped by its memory limit. On a mixed-material model (a tungsten sphere in CuCrZr, water and
+steel, 14.1 MeV source) meshed into 4,096 elements (5,120 activation regions), with the same transport and two CPU
+threads, ACTINV 1.7.1 with an ENDF/B-VIII.1 activation library took 155 s from model to photon source and OpenMC
+0.15.3 in flux mode 3,432 s, with peak working memory of 1.4 GiB and 7.2 GiB (one run each). See
+[Larger meshes with several materials](benchmarks.md#larger-meshes-with-several-materials) for every size and the
+conditions, including that ACTINV's runs were redone on ENDF/B-VIII.1 after a first run on TENDL-2025 was seen.
+
 ## Inside OpenMC's R2S workflow
 
 You need OpenMC 0.15.3 (the version that has `openmc.deplete.R2SManager`), the `actinv` Python package

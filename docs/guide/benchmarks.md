@@ -132,6 +132,21 @@ Against OpenMC 0.15.3 in its default tally mode (per-nuclide reaction-rate talli
 
 The shutdown dose rates agreed within 2.1% at every size. The ratio falls as the mesh grows because ACTINV's per-cell activation cost comes to outweigh OpenMC's fixed start-up cost. Evidence: [timing record](https://github.com/AvilaLabs/ACTINV/blob/master/results/p163_speed.json) and [verdict](https://github.com/AvilaLabs/ACTINV/blob/master/results/p163_verdict.json). See [Use ACTINV with OpenMC](openmc.md) to run it.
 
+### Larger meshes with several materials
+
+Protocol P181 and its Amendment A timed the same workflow on a model where mesh elements cross material boundaries: a tungsten sphere in CuCrZr, water and steel around a 14.1 MeV source, meshed into 8 to 32,768 elements. OpenMC splits each element by material, so the activation regions outnumber the elements. Each run had its own 10 GiB memory limit and 4-hour limit, two CPU threads, and the same transport; one run per size, on an Intel Core i3-N305.
+
+| Elements (activation regions) | ACTINV, model to photon source | OpenMC 0.15.3 flux mode | Peak working memory, ACTINV / OpenMC |
+| ---: | ---: | ---: | ---: |
+| 8 (32) | 11.0 s | 112 s | 1.2 / 6.4 GiB |
+| 64 (136) | 13.4 s | 180 s | 1.2 / 6.4 GiB |
+| 512 (776) | 31.8 s | 604 s | 1.3 / 6.5 GiB |
+| 4,096 (5,120) | 155 s | 3,432 s | 1.4 / 7.2 GiB |
+
+Inside the same 10 GiB memory limit and 4-hour limit per run, ACTINV (with an ENDF/B-VIII.1 activation library) completed meshes up to 32,768 elements (36,208 regions) and OpenMC 0.15.3 in flux mode up to 4,096 elements (5,120 regions); at 13,824 elements OpenMC was stopped by its memory limit.
+
+ACTINV used an ENDF/B-VIII.1 activation library, the evaluation OpenMC used, and its shutdown dose rate agreed with OpenMC's within 4.4% at every size. The first run used ACTINV's shipped TENDL-2025 data: its doses were 11–21% below OpenMC's, a difference between the two evaluations for this steel and tungsten that the protocol's 10% sanity bound does not allow, and that run is not quoted. The amendment that reran ACTINV on ENDF/B-VIII.1 was written after that result was known, and its ACTINV runs came a few hours after OpenMC's. With TENDL-2025, ACTINV also completed every size but was slower at large meshes (949 s at 4,096 elements). Evidence: [amendment record](https://github.com/AvilaLabs/ACTINV/blob/master/results/p181a_scale.json), [verdict](https://github.com/AvilaLabs/ACTINV/blob/master/results/p181a_verdict.json) and [P181's record](https://github.com/AvilaLabs/ACTINV/blob/master/results/p181_scale.json).
+
 ### Per-problem time on the FNS problems
 
 Protocol P180 timed the activation calculation alone, with no transport, on the 132 FNS problems of P172. Each problem ran in its own process, so every time includes start-up and data loading, on a quiet machine (Intel Core i3-N305) limited to two cores.

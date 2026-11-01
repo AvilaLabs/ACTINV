@@ -1312,7 +1312,7 @@ dfb8c8f7c7ffbd5aaac73e21a5198af7b662b862fb416c90f6418086da05ae45  ./docs/defects
 8e502b8b5b1c79654008fbfec98882f6ab4f437f5a3490a4d103a299993dbeb1  ./docs/defects/unitarity-violating-partial-cross-sections.md
 0ca16ed2f29d3a0329c4dac78cf29181055cfd472d6ce1ad7940873da352e647  ./docs/guide/SUMMARY.md
 29b9a4871b61c1e5af86963b6f73f4319b50a1fe0c1e5a7e0461c3afe3ac1fd9  ./docs/guide/account.md
-c5a01af08f5391f2d05dd8efa8c1bc857c85db9b8c2c2cf9a803446ecf187f67  ./docs/guide/benchmarks.md
+592326a371fba801c9f221d524d4e335f970cae48476df60a5d0d08315e2d9c9  ./docs/guide/benchmarks.md
 60bff8f41b5d855161397fa948970c2fe52fc9cc6b69cace1a1f355744678802  ./docs/guide/browser.md
 6ab517f0f4b16643cc2b7f9dfd5fb5b3ceaf7042bf1e547d9e8cd9147552eb1a  ./docs/guide/cli.md
 da78a08922cd7bddf0b15532ac3107d34c4e8f03edbfc12a62ad838ea39f74b4  ./docs/guide/data-limits.md
@@ -1323,7 +1323,7 @@ feb943c57e5e4d6cf37ece3668b4fc4eda055ad224265c75edfdb38f180d0d56  ./docs/guide/f
 cb1b167f9ddccdc6f1261bdd0a34836b8b0c78e2dbeaf05baba2905df44e0d30  ./docs/guide/index.md
 544cb916f7dc9759cf5fdccfac3693a227bbc0c038d273ee6f277636b0cbd9c7  ./docs/guide/install.md
 6ad7984666b7ac9f3c6cba775a34b21604656fced8d9bef60a92160814efd40a  ./docs/guide/method.md
-a4d69d849736ff475233e7df8c2e1e23ba9f4f2e99371c4c0d28ac005c57a282  ./docs/guide/openmc.md
+a6c4adafe3c844689f0445cdd7e67eaaa12ce40f4e4111c0149753d9a5813faa  ./docs/guide/openmc.md
 9a1e669909cff94a1fbc0893b683f3416b0d35b461db34eaff046c140bed7297  ./docs/guide/problems.md
 291bc585391068e3e341f9e3078d0ec691dbdb57ced5695d4d61361171a84fed  ./docs/guide/python.md
 3c902be1872bb3fbe555f1f2d26e68eefee68fdb9d5fb8e74f1d27f27e92258f  ./docs/guide/qualification.md
