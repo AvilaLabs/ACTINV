@@ -1,0 +1,92 @@
+{
+ "release": "v1.7.1",
+ "tag": {
+  "name": "v1.7.1",
+  "object": "fb4ee7d5a1ff308349feee05756b6674c696c269",
+  "commit": "d577ee3b746b8e51d6bf2b827481788d13f25712",
+  "message": "ACTINV 1.7.1",
+  "signed": false
+ },
+ "workflows": {
+  "release_artifacts": 41250872313,
+  "publish_crates": 41250872332,
+  "publish_pypi": 41250872350,
+  "controls": 41250872397,
+  "desktop_builds": 41250872391,
+  "browser_workbench": 41250872405,
+  "handbook": 41250872389,
+  "fns_iron": 41250872396,
+  "fusion_isotope": 41250872430,
+  "all_conclusion": "success"
+ },
+ "github_release": {
+  "url": "https://github.com/AvilaLabs/ACTINV/releases/tag/v1.7.1",
+  "id": "RE_kwDOUDaWv84ZpYdh",
+  "published_at": "2026-11-01T00:44:17Z",
+  "notes": "docs/RELEASE_NOTES_v1.7.1.md",
+  "assets_sha256": {
+   "actinv-1.7.1-linux-x86_64.tar.gz": "814da46597182b224be7140532f910e0e66ffdb0473cd710af33fbb900ad1f4e",
+   "actinv-1.7.1-macos-aarch64.tar.gz": "c0f87c8e763097942a7195aa0f2ebd7d98b281d0ed2c921b344c0f9172e02789",
+   "actinv-1.7.1-macos-x86_64.tar.gz": "899e4a2713c064086dc72f9a8341eac69b9c9e641417c49ddbcc737d803e345a",
+   "actinv-1.7.1-windows-x86_64.zip": "324a202f6c0a4d4421af911bff0d470ea96e83e96d9b0189029994ac327e0f40"
+  },
+  "sha256sums_asset": "SHA256SUMS",
+  "verified_via": "GitHub asset digests equal the local SHA256SUMS",
+  "packaging": "standalone binaries of release-artifacts run 41250872313, packaged with the v1.7.0 archive layout"
+ },
+ "desktop_release": {
+  "url": "https://github.com/AvilaLabs/ACTINV/releases/tag/desktop-v0.6.0-preview.1",
+  "note": "not re-published for 1.7.1; its installers are the v1.7.0 release builds of 2026-10-30 (solver 1.7.0)"
+ },
+ "zenodo": {
+  "version_doi": "10.5281/zenodo.23850315",
+  "concept_doi": "10.5281/zenodo.22665067",
+  "note": "archived by the GitHub release"
+ },
+ "published": {
+  "pypi": {
+   "package": "actinv",
+   "version": "1.7.1",
+   "files": {
+    "actinv-1.7.1-cp39-abi3-macosx_10_12_x86_64.whl": "d39d133fc6875c0e79579013339abca8efef8a6dd75b422ee258c9b409d71702",
+    "actinv-1.7.1-cp39-abi3-macosx_11_0_arm64.whl": "d2493374d778f94ace4d48e6fb71a165f15654b72af6e933ed810983a902f329",
+    "actinv-1.7.1-cp39-abi3-manylinux_2_17_aarch64.manylinux2014_aarch64.whl": "29d46b85697c78555a260ef625ef3966435c9aa33ec3786b94a21e162dc2803b",
+    "actinv-1.7.1-cp39-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl": "b7ac7e14b208d0ee486440111d065087b914e5babde65edff3d665b83500ea4f",
+    "actinv-1.7.1-cp39-abi3-win_amd64.whl": "31d89e75cb60ac744ef6cd8f13c7974ecec8606692059a3d98999a87305ec207",
+    "actinv-1.7.1.tar.gz": "c00454d16406b695359ac6a80bac8d4c88478b3f591d9ccde59f4d69e07c8997"
+   },
+   "verified_via": "pypi.org/pypi/actinv/1.7.1/json; fresh venv pip install actinv==1.7.1 (bounded scope): actinv --version -> actinv 1.7.1, import actinv -> 1.7.1, actinv new --list prints the material library"
+  },
+  "crates_io": {
+   "actinv-data": {
+    "version": "1.7.1",
+    "created_at": "2026-11-01T00:40:19.230480Z",
+    "checksum": "b1099ce4b7de9fde652ac3fd7825778f1ee62beadc83b41ff7a6e356dde1dbe9",
+    "yanked": false
+   },
+   "actinv-core": {
+    "version": "1.7.1",
+    "created_at": "2026-11-01T00:42:02.597443Z",
+    "checksum": "fa104c2aa6f8042426d0c5d21032274a90cfbd8b4d7bd78328b9070604906aef",
+    "yanked": false
+   },
+   "actinv-cli": {
+    "version": "1.7.1",
+    "created_at": "2026-11-01T00:43:10.315647Z",
+    "checksum": "a98deb9f78589b17a3ad3275f2181415632173f198bb6c73bee8243c68552978",
+    "yanked": false
+   }
+  },
+  "crates_io_smoke": "cargo install --locked actinv-cli --version 1.7.1 (bounded scope, fresh root): installed; actinv --version -> actinv 1.7.1"
+ },
+ "website": {
+  "url": "https://actinv.avilalabs.org/",
+  "bundle": "actinv-web artifact of Build browser workbench run 41250872405 at d577ee3 (examples manifest actinv_version 1.7.1)",
+  "worker_version_id": "60515948-4a6a-48d8-9b84-22a85b4cba54",
+  "checked": "/, /download/, /download/releases.json, /docs/ and /examples/manifest.json return 200; handbook reads ACTINV 1.7.1 and its releases page has New in 1.7.1; examples manifest reads 1.7.1; the desktop installer link resolves"
+ },
+ "avilalabs_org": {
+  "pull_request": "https://github.com/AvilaLabs/AvilaLabs.org/pull/35",
+  "status": "open, awaiting owner merge"
+ }
+}
