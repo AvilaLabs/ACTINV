@@ -5800,3 +5800,24 @@ measurement is not tested. The diagnostic's outputs are under `target/p181-diag`
 - **Rehearsal** (the wrapper's arm list through P181's harness in smoke mode, 8 and 64 elements, ENDF/B-VIII.1
   library). Both runs completed all three steps; 32 and 136 regions. Only exit codes, statuses, phases and region
   counts were read; the outputs were deleted. The checker's selftest (and P181's within it) passes.
+
+## Entry 331 — P181 Amendment A evidence: G0–G3 pass on 73fe74f; the doses agree on the same data (2026-11-01)
+
+The run started from the registration commit `73fe74f` at 15:43 with a clean tree, alone on the machine (Intel Core
+i3-N305, two CPUs per run), and finished at 16:13. Six ACTINV runs on the ENDF/B-VIII.1 library, none skipped; every
+run started with the headroom met and no other transient scope; median 1-minute load before the runs 1.27. The harness
+and the checker exited 0 and G0–G3 pass. **P181A-PASS, pending G4.**
+
+- **Accuracy.** Dose ratio ACTINV / OpenMC 1.035, 0.987, 1.010 and 1.031 at 8 to 4,096 elements; at 13,824 and
+  32,768 elements ACTINV's dose is 1.044 and 0.999 of OpenMC's at 4,096. Every check passes, so every size has its
+  sentence and both arms have a reach.
+- **Model to photon source (H1)**, ACTINV on ENDF/B-VIII.1 / OpenMC flux mode (P181's runs): 11.0 / 112 s,
+  13.4 / 180 s, 31.8 / 604 s, 155 / 3,432 s; ACTINV alone 461 s at 13,824 and 1,060 s at 32,768 elements. Ratio 10.2,
+  13.4, 19.0 and 22.1.
+- **Working set**: ACTINV 1.2–2.8 GiB, OpenMC 6.4–7.2 GiB; ratio about 5.1.
+- **Reach**: ACTINV 32,768 elements (36,208 regions); OpenMC 4,096 elements (5,120 regions), stopped at 13,824 by its
+  memory limit.
+- **Against P181's TENDL-2025 runs** (not quoted): the same ACTINV binary took 949 s at 4,096 elements and 5,935 s at
+  32,768 on TENDL-2025, against 155 s and 1,060 s here. TENDL-2025's larger library costs ACTINV a factor of about 6 in
+  step 2 at the large sizes, against about 1.4 per FNS problem in P180; the quoted times hold only for the
+  ENDF/B-VIII.1 library. Why the TENDL-2025 step 2 grows faster with the region count is a follow-up.

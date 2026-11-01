@@ -1,0 +1,646 @@
+{
+ "amendment": "A",
+ "attempts": [
+  {
+   "arm": "actinv",
+   "before": {
+    "headroom": {
+     "mem_available_kib": 12459140,
+     "needed_kib": 11534336,
+     "ok": true,
+     "waited_s": 0.00012384704314172268
+    },
+    "load_average": [
+     0.923828125,
+     0.60595703125,
+     0.3125
+    ],
+    "other_scopes": []
+   },
+   "cgroup": {
+    "cpu_max": "200000 100000",
+    "memory_max": "10737418240",
+    "memory_swap_max": "0",
+    "path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p2367413-i10632502.scope",
+    "pids_max": "128"
+   },
+   "complete": true,
+   "config": {
+    "arm": "actinv",
+    "batches": 5,
+    "bounds_max_rel_diff_vs_groups_json": 0.0,
+    "bounds_sha256_ascending": "443ba82e4144df6be3da4fc5acd2543587a3f21609c6af5fe1cf0d060a9dead1",
+    "energy_groups_in_flux": 709,
+    "flux_sum_n_cm_per_src": 35.78838913113702,
+    "mesh_dimension": [
+     2,
+     2,
+     2
+    ],
+    "micro_kwargs_keys": [],
+    "n_regions": 32,
+    "openmc_version": "0.15.3",
+    "particles": 20000,
+    "photon_seed": 1500,
+    "photon_time_index": 2,
+    "pool_processes": 2,
+    "seed": 1000,
+    "source_rates": [
+     1e+17,
+     0.0
+    ],
+    "step1_mode": "actinv.openmc flux-only step 1 on the library groups",
+    "threads": 2,
+    "timesteps_s": [
+     31557600.0,
+     1000000.0
+    ]
+   },
+   "dim": 2,
+   "dose_per_photon_pSv_cm2": 1264429524891672.8,
+   "dose_rate_Sv_h": 389.3576241563493,
+   "dose_sd": 6742066095440.236,
+   "elements": 8,
+   "exit_code": 0,
+   "last_heartbeat": {
+    "memory_current_bytes": 1479069696,
+    "memory_peak_bytes": 1601814528,
+    "phase": "done",
+    "rss_self_mib": 1263.79296875
+   },
+   "limit_s": 14400,
+   "memory_max_gib": 10,
+   "memory_peak_bytes": 1601814528,
+   "peak_rss_mib": {
+    "children": 1235.54296875,
+    "self": 1263.79296875
+   },
+   "phase_done": "step3",
+   "photons_per_s": 1.1831055248665434e+16,
+   "status": "ok",
+   "stderr_tail": "",
+   "step1_s": 9.69293320295401,
+   "step2_s": 1.291086524957791,
+   "step3_s": 5.144826082978398,
+   "steps12_complete": true,
+   "wall_s": 17.768101111985743
+  },
+  {
+   "arm": "actinv",
+   "before": {
+    "headroom": {
+     "mem_available_kib": 12377940,
+     "needed_kib": 11534336,
+     "ok": true,
+     "waited_s": 9.834812954068184e-05
+    },
+    "load_average": [
+     1.08251953125,
+     0.658203125,
+     0.3349609375
+    ],
+    "other_scopes": []
+   },
+   "cgroup": {
+    "cpu_max": "200000 100000",
+    "memory_max": "10737418240",
+    "memory_swap_max": "0",
+    "path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p2367669-i10738446.scope",
+    "pids_max": "128"
+   },
+   "complete": true,
+   "config": {
+    "arm": "actinv",
+    "batches": 5,
+    "bounds_max_rel_diff_vs_groups_json": 0.0,
+    "bounds_sha256_ascending": "443ba82e4144df6be3da4fc5acd2543587a3f21609c6af5fe1cf0d060a9dead1",
+    "energy_groups_in_flux": 709,
+    "flux_sum_n_cm_per_src": 35.78838913113702,
+    "mesh_dimension": [
+     4,
+     4,
+     4
+    ],
+    "micro_kwargs_keys": [],
+    "n_regions": 136,
+    "openmc_version": "0.15.3",
+    "particles": 20000,
+    "photon_seed": 1500,
+    "photon_time_index": 2,
+    "pool_processes": 2,
+    "seed": 1000,
+    "source_rates": [
+     1e+17,
+     0.0
+    ],
+    "step1_mode": "actinv.openmc flux-only step 1 on the library groups",
+    "threads": 2,
+    "timesteps_s": [
+     31557600.0,
+     1000000.0
+    ]
+   },
+   "dim": 4,
+   "dose_per_photon_pSv_cm2": 1034786866029817.2,
+   "dose_rate_Sv_h": 318.64342593556717,
+   "dose_sd": 16493333541556.6,
+   "elements": 64,
+   "exit_code": 0,
+   "last_heartbeat": {
+    "memory_current_bytes": 1323507712,
+    "memory_peak_bytes": 1493676032,
+    "phase": "done",
+    "rss_self_mib": 1270.4296875
+   },
+   "limit_s": 14400,
+   "memory_max_gib": 10,
+   "memory_peak_bytes": 1493676032,
+   "peak_rss_mib": {
+    "children": 1241.1796875,
+    "self": 1270.4296875
+   },
+   "phase_done": "step3",
+   "photons_per_s": 1.176245759335679e+16,
+   "status": "ok",
+   "stderr_tail": "",
+   "step1_s": 9.321576723828912,
+   "step2_s": 4.068276480073109,
+   "step3_s": 4.930854544043541,
+   "steps12_complete": true,
+   "wall_s": 19.87681308411993
+  },
+  {
+   "arm": "actinv",
+   "before": {
+    "headroom": {
+     "mem_available_kib": 12394528,
+     "needed_kib": 11534336,
+     "ok": true,
+     "waited_s": 0.00011832383461296558
+    },
+    "load_average": [
+     1.20068359375,
+     0.71337890625,
+     0.361328125
+    ],
+    "other_scopes": []
+   },
+   "cgroup": {
+    "cpu_max": "200000 100000",
+    "memory_max": "10737418240",
+    "memory_swap_max": "0",
+    "path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p2367911-i10747411.scope",
+    "pids_max": "128"
+   },
+   "complete": true,
+   "config": {
+    "arm": "actinv",
+    "batches": 5,
+    "bounds_max_rel_diff_vs_groups_json": 0.0,
+    "bounds_sha256_ascending": "443ba82e4144df6be3da4fc5acd2543587a3f21609c6af5fe1cf0d060a9dead1",
+    "energy_groups_in_flux": 709,
+    "flux_sum_n_cm_per_src": 35.78838913113703,
+    "mesh_dimension": [
+     8,
+     8,
+     8
+    ],
+    "micro_kwargs_keys": [],
+    "n_regions": 776,
+    "openmc_version": "0.15.3",
+    "particles": 20000,
+    "photon_seed": 1500,
+    "photon_time_index": 2,
+    "pool_processes": 2,
+    "seed": 1000,
+    "source_rates": [
+     1e+17,
+     0.0
+    ],
+    "step1_mode": "actinv.openmc flux-only step 1 on the library groups",
+    "threads": 2,
+    "timesteps_s": [
+     31557600.0,
+     1000000.0
+    ]
+   },
+   "dim": 8,
+   "dose_per_photon_pSv_cm2": 912820525656750.4,
+   "dose_rate_Sv_h": 281.08615320518675,
+   "dose_sd": 16727175254399.807,
+   "elements": 512,
+   "exit_code": 0,
+   "last_heartbeat": {
+    "memory_current_bytes": 1833836544,
+    "memory_peak_bytes": 1843924992,
+    "phase": "done",
+    "rss_self_mib": 1303.8515625
+   },
+   "limit_s": 14400,
+   "memory_max_gib": 10,
+   "memory_peak_bytes": 1843924992,
+   "peak_rss_mib": {
+    "children": 1272.6015625,
+    "self": 1303.8515625
+   },
+   "phase_done": "step3",
+   "photons_per_s": 1.1944797386207938e+16,
+   "status": "ok",
+   "stderr_tail": "",
+   "step1_s": 10.22699975501746,
+   "step2_s": 21.52567500504665,
+   "step3_s": 5.736654348205775,
+   "steps12_complete": true,
+   "wall_s": 39.122208477929235
+  },
+  {
+   "arm": "actinv",
+   "before": {
+    "headroom": {
+     "mem_available_kib": 12504880,
+     "needed_kib": 11534336,
+     "ok": true,
+     "waited_s": 7.767300121486187e-05
+    },
+    "load_average": [
+     1.33935546875,
+     0.81298828125,
+     0.41064453125
+    ],
+    "other_scopes": []
+   },
+   "cgroup": {
+    "cpu_max": "200000 100000",
+    "memory_max": "10737418240",
+    "memory_swap_max": "0",
+    "path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p2368299-i10747752.scope",
+    "pids_max": "128"
+   },
+   "complete": true,
+   "config": {
+    "arm": "actinv",
+    "batches": 5,
+    "bounds_max_rel_diff_vs_groups_json": 0.0,
+    "bounds_sha256_ascending": "443ba82e4144df6be3da4fc5acd2543587a3f21609c6af5fe1cf0d060a9dead1",
+    "energy_groups_in_flux": 709,
+    "flux_sum_n_cm_per_src": 35.787409565252084,
+    "mesh_dimension": [
+     16,
+     16,
+     16
+    ],
+    "micro_kwargs_keys": [],
+    "n_regions": 5120,
+    "openmc_version": "0.15.3",
+    "particles": 20000,
+    "photon_seed": 1500,
+    "photon_time_index": 2,
+    "pool_processes": 2,
+    "seed": 1000,
+    "source_rates": [
+     1e+17,
+     0.0
+    ],
+    "step1_mode": "actinv.openmc flux-only step 1 on the library groups",
+    "threads": 2,
+    "timesteps_s": [
+     31557600.0,
+     1000000.0
+    ]
+   },
+   "dim": 16,
+   "dose_per_photon_pSv_cm2": 876762607614696.2,
+   "dose_rate_Sv_h": 269.9827860150846,
+   "dose_sd": 20618898039331.207,
+   "elements": 4096,
+   "exit_code": 0,
+   "last_heartbeat": {
+    "memory_current_bytes": 4154060800,
+    "memory_peak_bytes": 4154060800,
+    "phase": "done",
+    "rss_self_mib": 1460.7265625
+   },
+   "limit_s": 14400,
+   "memory_max_gib": 10,
+   "memory_peak_bytes": 4154060800,
+   "peak_rss_mib": {
+    "children": 1460.7265625,
+    "self": 1460.7265625
+   },
+   "phase_done": "step3",
+   "photons_per_s": 1.2293621023463798e+16,
+   "status": "ok",
+   "stderr_tail": "",
+   "step1_s": 15.850292003946379,
+   "step2_s": 139.62641776003875,
+   "step3_s": 6.69454626692459,
+   "steps12_complete": true,
+   "wall_s": 164.07091606012546
+  },
+  {
+   "arm": "actinv",
+   "before": {
+    "headroom": {
+     "mem_available_kib": 12543612,
+     "needed_kib": 11534336,
+     "ok": true,
+     "waited_s": 8.48378986120224e-05
+    },
+    "load_average": [
+     1.69677734375,
+     1.21923828125,
+     0.638671875
+    ],
+    "other_scopes": []
+   },
+   "cgroup": {
+    "cpu_max": "200000 100000",
+    "memory_max": "10737418240",
+    "memory_swap_max": "0",
+    "path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p2369608-i10632559.scope",
+    "pids_max": "128"
+   },
+   "complete": true,
+   "config": {
+    "arm": "actinv",
+    "batches": 5,
+    "bounds_max_rel_diff_vs_groups_json": 0.0,
+    "bounds_sha256_ascending": "443ba82e4144df6be3da4fc5acd2543587a3f21609c6af5fe1cf0d060a9dead1",
+    "energy_groups_in_flux": 709,
+    "flux_sum_n_cm_per_src": 35.783993132511114,
+    "mesh_dimension": [
+     24,
+     24,
+     24
+    ],
+    "micro_kwargs_keys": [],
+    "n_regions": 15840,
+    "openmc_version": "0.15.3",
+    "particles": 20000,
+    "photon_seed": 1500,
+    "photon_time_index": 2,
+    "pool_processes": 2,
+    "seed": 1000,
+    "source_rates": [
+     1e+17,
+     0.0
+    ],
+    "step1_mode": "actinv.openmc flux-only step 1 on the library groups",
+    "threads": 2,
+    "timesteps_s": [
+     31557600.0,
+     1000000.0
+    ]
+   },
+   "dim": 24,
+   "dose_per_photon_pSv_cm2": 887441999472451.1,
+   "dose_rate_Sv_h": 273.2713066952122,
+   "dose_sd": 20340930505695.965,
+   "elements": 13824,
+   "exit_code": 0,
+   "last_heartbeat": {
+    "memory_current_bytes": 8995348480,
+    "memory_peak_bytes": 9002688512,
+    "phase": "done",
+    "rss_self_mib": 1935.96875
+   },
+   "limit_s": 14400,
+   "memory_max_gib": 10,
+   "memory_peak_bytes": 9002688512,
+   "peak_rss_mib": {
+    "children": 1935.96875,
+    "self": 1935.96875
+   },
+   "phase_done": "step3",
+   "photons_per_s": 1.196587979371916e+16,
+   "status": "ok",
+   "stderr_tail": "",
+   "step1_s": 29.1695859557949,
+   "step2_s": 431.3877851748839,
+   "step3_s": 8.24980634287931,
+   "steps12_complete": true,
+   "wall_s": 471.7500470201485
+  },
+  {
+   "arm": "actinv",
+   "before": {
+    "headroom": {
+     "mem_available_kib": 12504112,
+     "needed_kib": 11534336,
+     "ok": true,
+     "waited_s": 8.441600948572159e-05
+    },
+    "load_average": [
+     1.4287109375,
+     1.64404296875,
+     1.10546875
+    ],
+    "other_scopes": []
+   },
+   "cgroup": {
+    "cpu_max": "200000 100000",
+    "memory_max": "10737418240",
+    "memory_swap_max": "0",
+    "path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p2371433-i10764939.scope",
+    "pids_max": "128"
+   },
+   "complete": true,
+   "config": {
+    "arm": "actinv",
+    "batches": 5,
+    "bounds_max_rel_diff_vs_groups_json": 0.0,
+    "bounds_sha256_ascending": "443ba82e4144df6be3da4fc5acd2543587a3f21609c6af5fe1cf0d060a9dead1",
+    "energy_groups_in_flux": 709,
+    "flux_sum_n_cm_per_src": 35.77668228790396,
+    "mesh_dimension": [
+     32,
+     32,
+     32
+    ],
+    "micro_kwargs_keys": [],
+    "n_regions": 36208,
+    "openmc_version": "0.15.3",
+    "particles": 20000,
+    "photon_seed": 1500,
+    "photon_time_index": 2,
+    "pool_processes": 2,
+    "seed": 1000,
+    "source_rates": [
+     1e+17,
+     0.0
+    ],
+    "step1_mode": "actinv.openmc flux-only step 1 on the library groups",
+    "threads": 2,
+    "timesteps_s": [
+     31557600.0,
+     1000000.0
+    ]
+   },
+   "dim": 32,
+   "dose_per_photon_pSv_cm2": 849125126372894.4,
+   "dose_rate_Sv_h": 261.47233618602394,
+   "dose_sd": 22751630549083.52,
+   "elements": 32768,
+   "exit_code": 0,
+   "last_heartbeat": {
+    "memory_current_bytes": 6022328320,
+    "memory_peak_bytes": 8708173824,
+    "phase": "done",
+    "rss_self_mib": 2839.640625
+   },
+   "limit_s": 14400,
+   "memory_max_gib": 10,
+   "memory_peak_bytes": 8708173824,
+   "peak_rss_mib": {
+    "children": 2839.640625,
+    "self": 2839.640625
+   },
+   "phase_done": "step3",
+   "photons_per_s": 1.1440125768566718e+16,
+   "status": "ok",
+   "stderr_tail": "",
+   "step1_s": 51.76385839097202,
+   "step2_s": 1008.1228253359441,
+   "step3_s": 11.164281244156882,
+   "steps12_complete": true,
+   "wall_s": 1074.8742119809613
+  }
+ ],
+ "environment": {
+  "actinv_version": "actinv 1.7.1",
+  "cgroup": {
+   "cpu_max": "200000 100000",
+   "memory_max": "6442450944",
+   "memory_swap_max": "0",
+   "path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p2367360-i10632493.scope",
+   "pids_max": "128"
+  },
+  "child_threads": 2,
+  "cpu_model": "Intel(R) Core(TM) i3-N305",
+  "env": {
+   "OMP_NUM_THREADS": null,
+   "RAYON_NUM_THREADS": "2",
+   "TMPDIR": "/home/connoravila/Documents/actinv/target/preflight-tmp"
+  },
+  "git_dirty_paths": "",
+  "git_head": "73fe74f2064d3dad945ff97747efac2cd47587dd",
+  "kernel": "7.0.0-38-generic",
+  "load_average_end": [
+   1.1298828125,
+   1.58447265625,
+   1.5400390625
+  ],
+  "load_average_start": [
+   0.923828125,
+   0.60595703125,
+   0.3125
+  ],
+  "logical_cpus": 8,
+  "mem_total_kib": 32175152,
+  "numpy_version": "2.5.3",
+  "openmc_version": "0.15.3",
+  "other_scopes_end": [],
+  "other_scopes_start": [],
+  "platform": "Linux-7.0.0-38-generic-x86_64-with-glibc2.43",
+  "python": "3.13.16",
+  "python_executable": "/home/connoravila/micromamba/envs/openmc0153dd/bin/python",
+  "xs_archive_sha256": "b7ad59cb4a3d76d8a291326093a98507f8d24b6e6af629116d3f7dc85f83c4cb"
+ },
+ "finished_utc": "2026-11-01T21:12:59Z",
+ "inputs": {
+  "actinv_binary": {
+   "path": "/home/connoravila/Documents/actinv/target/p180-bin/actinv",
+   "sha256": "bd0c21c96a17918d6a21b29553be33877ff3c5b7fa4b92882598d7a37f6458bc"
+  },
+  "actinv_library": {
+   "path": "/home/connoravila/nuclear-data/endfb-viii.1-p178/endfb81_all_709g.npz",
+   "sha256": "a964a44ef106b692d170ba6085859ca2827ff967b3e9a6ddc60ca8fa9ac92051"
+  },
+  "adapter": {
+   "path": "/home/connoravila/Documents/actinv/target/next-wt/python/pysrc/actinv/openmc.py",
+   "sha256": "20276c74d83cff6bea424bffaa0d0ef3d07e940327fcdc005d37fa1e4392949e"
+  },
+  "adapter_defaults": {
+   "path": "/home/connoravila/Documents/actinv/target/next-wt/python/pysrc/actinv/_defaults.py",
+   "sha256": "3195294bf821d37375849babc56f218b0f270562477cbb598da9a64aded0fee6"
+  },
+  "amendment": {
+   "path": "/home/connoravila/Documents/actinv/target/next-wt/protocols/ACTINV-P181_AMENDMENT_A.md",
+   "sha256": "5fc8c6bfede09c94c83258ece10a8fef6218464af8c5d96ed91207b666fb774b"
+  },
+  "amendment_harness": {
+   "path": "/home/connoravila/Documents/actinv/target/next-wt/controls/p181a_harness.py",
+   "sha256": "396ba44d2b270865b40b34edf38b0f3cb1a61a18d9f0b47f475b97c65f7fccf4"
+  },
+  "chain_xml": {
+   "path": "/home/connoravila/nuclear-data/p32-work/chain/depletion/chain.xml",
+   "sha256": "d3b829467cfdda9c624aaeb5709825df378b908ecc63c3f984ade51f8d0444a0"
+  },
+  "cross_sections_xml": {
+   "path": "/home/connoravila/nuclear-data/endfb-viii.1-hdf5/cross_sections.xml",
+   "sha256": "b8ffb6104a946bf951dc0f3b9a1f57a60f7f57c4b308cd66df4fd3dd4bc557ce"
+  },
+  "decay_fallback": {
+   "path": "/home/connoravila/Documents/actinv/actinv-data/v1.2.0/decay/jeff-3-3_decay.dat",
+   "sha256": "850b8b7f85f8d88b6ad826c4cd341aaaffabd525c8ecf3c588a0ad437bf5d123"
+  },
+  "decay_primary": {
+   "path": "/home/connoravila/Documents/actinv/actinv-data/v1.2.0/decay/endf-b-viii-0_decay.dat",
+   "sha256": "6f04cf009086c179021f243a58dadc2d5bb078de5ba39c4fe46ccad77d228ddb"
+  },
+  "demo_steel_cube": {
+   "path": "/home/connoravila/Documents/actinv/target/next-wt/contrib/openmc_r2s/demo_steel_cube.py",
+   "sha256": "558e5ce9b0fee6a48a11020455b03302c7ddc042997282bd0f8f48967ef8e848"
+  },
+  "groups_json": {
+   "path": "/home/connoravila/Documents/actinv/target/next-wt/crates/actinv-data/data/fispact_709_groups.json",
+   "sha256": "ce4bf523498ffbb38d42aa9415fc014882b8bc7a7ecfb89f859ba3259d8fb34f"
+  },
+  "harness": {
+   "path": "/home/connoravila/Documents/actinv/target/next-wt/controls/p181_harness.py",
+   "sha256": "d0d9f6b2464b92a80a47fc92169042174b9e3102d62cb7e365cb84591e0746e2"
+  },
+  "protocol": {
+   "path": "/home/connoravila/Documents/actinv/target/next-wt/protocols/ACTINV-P181_PROTOCOL.md",
+   "sha256": "59f8a0b74a053e77d68a97969c30c686f848972aaea7e1e547a9ddc17279262e"
+  }
+ },
+ "plan": {
+  "arms": [
+   "actinv"
+  ],
+  "batches": 5,
+  "dims": [
+   2,
+   4,
+   8,
+   16,
+   24,
+   32
+  ],
+  "headroom_gib": 1.0,
+  "limit_s": 14400,
+  "memory_max_gib": 10,
+  "model_cm": {
+   "cube_half": 10.0,
+   "cucrzr": 5.5,
+   "tungsten": 4.0,
+   "water": 6.5
+  },
+  "particles": 20000,
+  "photon_time_index": 2,
+  "seed": 1000,
+  "source_rates": [
+   1e+17,
+   0.0
+  ],
+  "timesteps_s": [
+   31557600.0,
+   1000000.0
+  ]
+ },
+ "schema": "actinv-p181-scale-1",
+ "skips": [],
+ "smoke": false,
+ "started_utc": "2026-11-01T20:43:11Z"
+}
