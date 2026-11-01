@@ -1064,7 +1064,18 @@ transport calculation.
 
 ### Mixture self-shielding (pointwise cross sections)
 
-This option is new after 1.7.1 and has not yet been qualified against measurements.
+This option is new after 1.7.1. Protocol P178 compared it with OpenMC's continuous-energy reaction rates; it has
+not been compared with measurements.
+
+On four fusion materials held out from its development (Eurofer-97, Inconel 718, a W-Ni-Fe heavy alloy and copper),
+ACTINV's mixture self-shielding brought every listed resonance-capture rate within 3.4% of OpenMC's continuous-energy
+rate on the same ENDF/B-VIII.1 data, where the unshielded rates differed by up to 32.3%. 7 of 73 listed capture rows
+were not scored or did not reach a 0.5% standard error and are not covered by that sentence. Evidence:
+[rates](https://github.com/AvilaLabs/ACTINV/blob/master/results/p178_ce_rates.json) and
+[verdict](https://github.com/AvilaLabs/ACTINV/blob/master/results/p178_verdict.json).
+
+Reconstructing every nuclide's pointwise cross sections makes a run with a multi-nuclide alloy take minutes rather
+than seconds.
 
 `self_shielding.mixture` computes per-group resonance self-shielding factors at run time from the material's own
 pointwise cross sections, in place of a precomputed Bondarenko table or the sigmoid curve. It is exclusive with

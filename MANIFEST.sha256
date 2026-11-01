@@ -1310,7 +1310,7 @@ dfb8c8f7c7ffbd5aaac73e21a5198af7b662b862fb416c90f6418086da05ae45  ./docs/defects
 8e502b8b5b1c79654008fbfec98882f6ab4f437f5a3490a4d103a299993dbeb1  ./docs/defects/unitarity-violating-partial-cross-sections.md
 0ca16ed2f29d3a0329c4dac78cf29181055cfd472d6ce1ad7940873da352e647  ./docs/guide/SUMMARY.md
 29b9a4871b61c1e5af86963b6f73f4319b50a1fe0c1e5a7e0461c3afe3ac1fd9  ./docs/guide/account.md
-81227fd1b975da80b24c237f50e93eafc39059ada149feed0faa9474051e7c22  ./docs/guide/benchmarks.md
+c5a01af08f5391f2d05dd8efa8c1bc857c85db9b8c2c2cf9a803446ecf187f67  ./docs/guide/benchmarks.md
 60bff8f41b5d855161397fa948970c2fe52fc9cc6b69cace1a1f355744678802  ./docs/guide/browser.md
 6ab517f0f4b16643cc2b7f9dfd5fb5b3ceaf7042bf1e547d9e8cd9147552eb1a  ./docs/guide/cli.md
 da78a08922cd7bddf0b15532ac3107d34c4e8f03edbfc12a62ad838ea39f74b4  ./docs/guide/data-limits.md
@@ -1320,15 +1320,15 @@ feb943c57e5e4d6cf37ece3668b4fc4eda055ad224265c75edfdb38f180d0d56  ./docs/guide/f
 18f20e637d3103ec4bbdbeca8e09ac892bb9e7ad8f0b7b69b12ec0667a92924f  ./docs/guide/impurities.md
 cb1b167f9ddccdc6f1261bdd0a34836b8b0c78e2dbeaf05baba2905df44e0d30  ./docs/guide/index.md
 544cb916f7dc9759cf5fdccfac3693a227bbc0c038d273ee6f277636b0cbd9c7  ./docs/guide/install.md
-dea18f3cc0c87cdc20a3205f1df47ea0b87c10bdfe641959383f2a73a86b8cf6  ./docs/guide/method.md
-43c9677c8b848a6d6a1507e2c01bf3f13668eb0921004ada5577afde1728a88e  ./docs/guide/openmc.md
+6ad7984666b7ac9f3c6cba775a34b21604656fced8d9bef60a92160814efd40a  ./docs/guide/method.md
+d3961c865ba9529bcede789e36e2cd8659a63d0d8252beea01d97bc46fa40a22  ./docs/guide/openmc.md
 9a1e669909cff94a1fbc0893b683f3416b0d35b461db34eaff046c140bed7297  ./docs/guide/problems.md
 291bc585391068e3e341f9e3078d0ec691dbdb57ced5695d4d61361171a84fed  ./docs/guide/python.md
-71c596eeffdd05046b8baab77275f9b9fca8ef6d71f489610a1f416b9929e39c  ./docs/guide/qualification.md
+3c902be1872bb3fbe555f1f2d26e68eefee68fdb9d5fb8e74f1d27f27e92258f  ./docs/guide/qualification.md
 6b827c7dfc13e20fc0f2e663472859ce2b9779179b56b4ef49b2df29f2629ae6  ./docs/guide/quick-start.md
 cbf284d9da4f25bff974b6abf0a5a2d2a58dd339f6274fcd2894a02ebfbd1c7f  ./docs/guide/releases.md
 df538569c15135d41ea9af2374e80c37103f28fa0f8b3df1f65dc4b29ef66cf7  ./docs/guide/results.md
-33fc40e3000edb2a83c28cc33c795a029433cfcc1176109565e987439fea5f7a  ./docs/guide/specification.md
+7fb20d30ec3631eb71dddb7bce0338be61016254a241fdd975b59e2532c94bb5  ./docs/guide/specification.md
 4c9d53ead637d2bdc27586ca7cd18e737cee9212ac3c58cc56707679d2daa5da  ./docs/guide/studies.md
 625a8639f544eab76de3a1557b7a7d53c1e7a4255335ba763f26681d4acd7d3a  ./docs/guide/troubleshooting.md
 bf2aedf8ecf698a1f56bf75927411a336f1add2770f48bd398cd1fc23abd46d9  ./docs/guide/validation.md
@@ -1389,6 +1389,7 @@ ea83f46c2f23d8ad2550ccfbf2ab7ab5d5e3160afd3874b7830bea512f9213ff  ./docs/maintai
 259f947f14affacc3cf08e083c54c54beb9fe0de8fc96663ae26c88e1ab4525d  ./docs/maintainers/FISPACT_MANUAL_KEYWORD_AUDIT.md
 db0aa250f51b4afa185f16e48b69113f5b04d3ceaee607d2cbce7ac876ffd4fa  ./docs/maintainers/HANDOFF-1.7-app-parity.md
 4d2265352063405c42aeae75a9b705d7c305fb2b391429a8946faaebc0808af8  ./docs/maintainers/HANDOFF-lane2-tangent-restriction.md
+3cc7c291d3aa8b53c875353827da4312d2b4cdbc94a72f7cc422513f7612b96b  ./docs/maintainers/OPENMC_DOSE_UNCERTAINTY.md
 c6478bb6ee8983660b76737d77de339ea26ea40e9bd891193ac883229f6bd8e7  ./docs/maintainers/PREPARED_DATA.md
 60e9d796db46bd390f461da5007a62cee256502f5383a5d79272b57e877c80c3  ./docs/maintainers/ROADMAP_OPEN_ITEMS-2026-10-03.md
 40a78716c9fe9579c9a952e030339116ad8f28909a60e8c3158176642beb06e1  ./docs/maintainers/WASTE_BTP_SOURCE_REVIEW.md
@@ -1462,6 +1463,8 @@ cfd86c2c5ac15d76ec2358c6bd196a6362b46bcc889160c06439975dc5ae8f3a  ./interchange/
 50f3aab90aafa79adffba8593d812969204cedd8e3d6f3fc45cf018ae1506f30  ./ledger.md
 588e9f4f4ff74df627a1a15306214db678531d7334f2f6e95a1603eabd1f1c55  ./packaging/actinv.ico
 9897482011f194d9495fc80965177f0632ae4166917a7f240d80c0fc3c8fb83e  ./packaging/actinv.png
+2c050241218bf08eab6747a2a6158097a90a333fcb99832f67ee1d81f4bd5a72  ./packaging/conda-forge/SUBMIT.md
+4ae990059d715ecc6d393dea5034b663375a061d51aa9311f74d149542ec6970  ./packaging/conda-forge/recipe.yaml
 3abcd339e6ef22af6f5b7f65573174e7acc265b05d0ede9c4a949fa54490fe04  ./packaging/desktop.json
 371becebd005e36a596da0a9c2b9ceae85acdb870a659b55ca3fc1350c783e7e  ./packaging/install-linux.sh
 b53f5c5d7462778b595af8bfb8147d4185c5fcf966cbbed2d90c0ee82b0e8e9d  ./packaging/windows.rc

@@ -32,6 +32,19 @@ On accuracy, the competitive benchmark compares the two activation paths on the 
 FNS decay-heat experiments (424 measured points): median |ln C/E| 0.131 for ACTINV and 0.181 for OpenMC's depletion.
 See [Understand the competitive benchmark](benchmarks.md#openmc-a-common-endfb-viii1-comparison).
 
+On all 132 FNS experiments (protocol P172): against 2360 measured decay-heat points from 132 JAEA FNS experiments,
+ACTINV with its shipped TENDL-2025 data has a median |ln C/E| of 0.139; OpenMC 0.15.3 depletion with its published
+ENDF/B-VIII.1 fast-spectrum depletion chain (chain_endfb81_fast.xml) and ENDF/B-VIII.1 has 0.316. With its
+R-matrix-limited capture repaired and otherwise the same ENDF/B-VIII.1 cross sections as OpenMC, ACTINV has a median
+|ln C/E| of 0.234 on 2360 measured decay-heat points from 132 JAEA FNS experiments (P179). See
+[All 132 FNS experiments](benchmarks.md#all-132-fns-experiments) for OpenMC's other chains.
+
+Without transport, on the same 132 problems (protocol P180): on the 132 JAEA FNS decay-heat problems of P172, each
+solved in its own process on the same two CPU cores with the same ENDF/B-VIII.1 cross sections, ACTINV 1.7.1 took a
+median of 0.61 s per problem from start to finish and OpenMC 0.15.3 depletion 18.1 s; the median per-problem ratio
+was 29.8. Counting only OpenMC's depletion step, without its start-up and cross-section collapse, the median
+per-problem ratio was 9. See [Per-problem time](benchmarks.md#per-problem-time-on-the-fns-problems).
+
 ## Inside OpenMC's R2S workflow
 
 You need OpenMC 0.15.3 (the version that has `openmc.deplete.R2SManager`), the `actinv` Python package

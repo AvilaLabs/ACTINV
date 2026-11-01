@@ -26,6 +26,8 @@ First-order sensitivities propagate retained MF=33 covariance into selected resp
 
 A separate neutron table supplies finite-dilution Bondarenko factors for the resolved range (a Doppler-broadened pointwise quadrature) and the unresolved range (probability tables). Fixed or composition-derived dilution selects factors on the declared grid, and compatibility is checked against the library. This bounded method does not provide a geometry-dependent transport solution.
 
+The mixture option (after 1.7.1) computes the resolved-range factors at run time instead, from the pointwise cross sections of every nuclide in the material with a narrow-resonance `1/Σt` flux weight, so overlapping resonances of different nuclides shield each other. It is also infinite-medium: no geometry or escape term. See [Mixture self-shielding](specification.md#mixture-self-shielding-pointwise-cross-sections).
+
 NRT damage uses separate damage-energy production data and declared displacement energies. It reports coverage of the material targets; it does not model damage covariance, recombination, or general material evolution.
 
 For equations, data-processing details, and historical controls, consult the [technical method record](https://github.com/AvilaLabs/ACTINV/blob/master/docs/METHOD.md). [Validation evidence](validation.md) explains what the recorded checks establish.

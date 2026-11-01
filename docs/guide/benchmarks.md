@@ -2,7 +2,7 @@
 
 The competitive benchmark compares ACTINV with other inventory and depletion codes on **accuracy, speed, and capability**. It helps you judge which measured differences matter for an activation workflow. The [full benchmark report](https://github.com/AvilaLabs/ACTINV/blob/master/COMPETITIVE_BENCHMARK.md) retains the dated results and links to their evidence.
 
-The comparisons below are recorded experiments from September and October 2026, including ACTINV 1.1.2-era runs and the ACTINV 1.7.0 shutdown-dose timing. They are not fresh measurements of every 1.7.1 feature or a ranking for every material, spectrum, and operating regime.
+The comparisons below are recorded experiments from September to November 2026, including ACTINV 1.1.2-era runs, the ACTINV 1.7.0 shutdown-dose timing and the ACTINV 1.7.1 per-problem timing. They are not fresh measurements of every 1.7.1 feature or a ranking for every material, spectrum, and operating regime.
 
 ## Three different comparison questions
 
@@ -63,6 +63,20 @@ ACTINV has smaller median and tail errors and bias closer to 1 in this subset. T
 
 See the [ENDF-8 comparison](https://github.com/AvilaLabs/ACTINV/blob/master/results/FNS_ENDF8_HEADTOHEAD.md) for per-experiment results and shared data-driven misses.
 
+### All 132 FNS experiments
+
+Protocol P172 repeated the comparison on every FNS experiment, with OpenMC 0.15.3 in its published configuration and ACTINV both with its shipped data and with OpenMC's cross sections. P179 reran ACTINV's identical-data arm after the 1.7.1 capture repair.
+
+Against 2360 measured decay-heat points from 132 JAEA FNS experiments, ACTINV with its shipped TENDL-2025 data has a median |ln C/E| of 0.139; OpenMC 0.15.3 depletion with its published ENDF/B-VIII.1 fast-spectrum depletion chain (chain_endfb81_fast.xml) and ENDF/B-VIII.1 has 0.316.
+
+With its R-matrix-limited capture repaired and otherwise the same ENDF/B-VIII.1 cross sections as OpenMC, ACTINV has a median |ln C/E| of 0.234 on 2360 measured decay-heat points from 132 JAEA FNS experiments.
+
+With isomer branching ratios from the ENDF/B-VIII.1 library added to that chain, OpenMC has a median |ln C/E| of 0.252 on the 2360 of those points it covers.
+
+With a chain built from ENDF/B-VIII.0 decay data and TENDL-2025 reaction channels instead (Chain.from_endf, ground-state targets), OpenMC has a median |ln C/E| of 0.311 on the 2358 of those points it covers.
+
+Evidence: [P172 scored points and verdict](https://github.com/AvilaLabs/ACTINV/blob/master/results/p172_verdict.json) and [P179 verdict](https://github.com/AvilaLabs/ACTINV/blob/master/results/p179_verdict.json).
+
 ## Activation reaction rates: a second facility
 
 The FNS experiments above all come from one facility. Protocol P167 adds an independent one with open data: the 7Li(p,n) quasi-monoenergetic neutron source of the Nuclear Physics Institute of the Czech Academy of Sciences at Řež, where foils were irradiated in fields from 12.4 MeV and 14.4 MeV protons and the spectrum at the foils was measured (Matěj, Košťál, Majerle et al., arXiv:2306.09353). ACTINV computed each reaction rate with its shipped TENDL-2025 library and its own spectrum rebin and collapse (`actinv inspect xs`).
@@ -117,6 +131,18 @@ ACTINV is at least 6.5x faster than OpenMC 0.15.3 flux mode at every measured si
 Against OpenMC 0.15.3 in its default tally mode (per-nuclide reaction-rate tallies, one energy group), one run at 8 mesh cells, ACTINV's steps 1 and 2 are at least 42x faster; this is not OpenMC's fastest mode.
 
 The shutdown dose rates agreed within 2.1% at every size. The ratio falls as the mesh grows because ACTINV's per-cell activation cost comes to outweigh OpenMC's fixed start-up cost. Evidence: [timing record](https://github.com/AvilaLabs/ACTINV/blob/master/results/p163_speed.json) and [verdict](https://github.com/AvilaLabs/ACTINV/blob/master/results/p163_verdict.json). See [Use ACTINV with OpenMC](openmc.md) to run it.
+
+### Per-problem time on the FNS problems
+
+Protocol P180 timed the activation calculation alone, with no transport, on the 132 FNS problems of P172. Each problem ran in its own process, so every time includes start-up and data loading, on a quiet machine (Intel Core i3-N305) limited to two cores.
+
+On the 132 JAEA FNS decay-heat problems of P172, each solved in its own process on the same two CPU cores with the same ENDF/B-VIII.1 cross sections, ACTINV 1.7.1 took a median of 0.61 s per problem from start to finish and OpenMC 0.15.3 depletion 18.1 s; the median per-problem ratio was 29.8.
+
+Counting only OpenMC's depletion step, without its start-up and cross-section collapse, the median per-problem ratio was 9.
+
+With its shipped TENDL-2025 data, ACTINV took a median of 0.88 s per problem.
+
+Evidence: [timings](https://github.com/AvilaLabs/ACTINV/blob/master/results/p180_speed.json) and [verdict](https://github.com/AvilaLabs/ACTINV/blob/master/results/p180_verdict.json).
 
 ### The numerical kernel
 
