@@ -11,6 +11,10 @@
     command of the installed package; `library=`, `decay_primary=`, `decay_fallback=` and `actinv_bin=` override.
   - Step 1 tallies only the flux and needs no depletion chain. `micro_kwargs={"chain_file": ...}` runs OpenMC's own
     cross-section step as before.
+  - `load_results(path)` reopens a finished ACTINV-backed R2S run without re-solving; step 2 now also writes
+    `activation/materials.xml`.
+  - Under MPI, step 2 runs `actinv mesh` once, on rank 0, which alone writes the activation files; the other ranks
+    read its result (a shared filesystem is assumed), and a failure on rank 0 is raised on every rank.
 - `self_shielding.mixture`: resonance self-shielding factors computed at run time from the material's own pointwise
   cross sections (narrow-resonance flux `1 / Sigma_t` of the whole mixture, integrated over each library group), from
   hash-pinned raw ENDF-6 evaluations. Overlapping resonances of different nuclides shield each other, which the table

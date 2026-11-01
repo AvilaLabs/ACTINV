@@ -382,6 +382,28 @@ class ActinvR2SManager(openmc.deplete.R2SManager):
         # schedule: durations in seconds; ACTINV multipliers relative to a reference source rate
         schedule, reference = build_schedule(timesteps, source_rates, timestep_units)
 
+        # Under MPI one `actinv mesh` (itself multithreaded) runs on rank 0, which alone writes the
+        # files; its error, if any, is broadcast so no rank waits on a barrier that never comes.
+        result_path = output_dir / "mesh_result.ndjson"
+        error = None
+        if comm.rank == 0:
+            try:
+                self._run_mesh(output_dir, mats, fluxes, schedule, reference, result_path)
+            except Exception as exc:  # re-raised on every rank below
+                error = exc
+        failure = comm.bcast(None if error is None else f"{type(error).__name__}: {error}")
+        if error is not None:
+            raise error
+        if failure is not None:
+            raise RuntimeError(f"step 2 failed on rank 0: {failure}")
+
+        # photon groups per region and step -> results shim keyed by activation-material id
+        self._set_mesh_results(result_path, mats, len(schedule))
+
+    def _run_mesh(self, output_dir, mats, fluxes, schedule, reference, result_path):
+        """Write the materials, flux records and mesh spec, then run ``actinv mesh``."""
+        # Saved as OpenMC's own step 2 does, so load_results can reopen the run without re-solving.
+        mats.export_to_xml(output_dir / "materials.xml")
         # flux records: OpenMC reports n-cm per source particle for each region
         bounds = library_bounds(self.library)
         lines = flux_record_lines(bounds, [mat.name for mat in mats], [mat.volume for mat in mats],
@@ -406,7 +428,6 @@ class ActinvR2SManager(openmc.deplete.R2SManager):
         }
         spec_path = output_dir / "mesh.json"
         spec_path.write_text(json.dumps(spec, indent=1))
-        result_path = output_dir / "mesh_result.ndjson"
         try:
             proc = subprocess.run([*self.actinv_command, "mesh", str(spec_path), str(result_path)],
                                   capture_output=True, text=True, timeout=self.mesh_timeout_s)
@@ -416,7 +437,30 @@ class ActinvR2SManager(openmc.deplete.R2SManager):
         if proc.returncode != 0:
             raise RuntimeError(f"actinv mesh failed:\n{proc.stderr[-4000:]}")
 
-        # photon groups per region and step -> results shim keyed by activation-material id
-        per_step = parse_photon_groups(result_path, mats, len(schedule))
+    def _set_mesh_results(self, result_path, mats, n_steps):
+        per_step = parse_photon_groups(result_path, mats, n_steps)
         self.results["depletion_results"] = build_results_shim(per_step)
         self.results["actinv_mesh_result"] = result_path
+
+    def load_results(self, path):
+        """Reload a finished run from ``path`` (the directory holding ``neutron_transport``,
+        ``activation`` and ``photon_transport``) without re-solving.
+
+        OpenMC's loader reads what steps 1 and 3 wrote and the activation materials; ACTINV writes
+        no ``depletion_results.h5``, so the photon sources are rebuilt from
+        ``activation/mesh_result.ndjson`` and the schedule length in ``activation/mesh.json``. A run
+        whose activation directory has no ``materials.xml`` (made before it was written) cannot be
+        reloaded this way. Without ``mesh_result.ndjson`` the result is OpenMC's loader alone.
+        """
+        super().load_results(path)
+        activation_dir = Path(path) / "activation"
+        result_path = activation_dir / "mesh_result.ndjson"
+        if not result_path.exists():
+            return
+        mats = self.results.get("activation_materials")
+        if mats is None:
+            raise RuntimeError(f"{activation_dir} has mesh_result.ndjson but no materials.xml; "
+                               "the activation materials are needed to map regions to photon sources, "
+                               "so re-run step 2")
+        n_steps = len(json.loads((activation_dir / "mesh.json").read_text())["schedule"])
+        self._set_mesh_results(result_path, mats, n_steps)

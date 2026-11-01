@@ -504,5 +504,129 @@ class ManagerDefaultsTests(unittest.TestCase):
         self.assertFalse({"energies", "path_statepoint"} & m._OPENMC_MICRO_KEYS)
 
 
+@unittest.skipUnless(HAVE_OPENMC, f"openmc not importable: {_IMPORT_ERROR}")
+class LoadResultsTests(unittest.TestCase):
+    def _run_dir(self, root, with_materials=True):
+        act = Path(root) / "activation"
+        act.mkdir(parents=True)
+        mats = openmc.Materials()
+        for i in range(2):
+            mat = openmc.Material(name=f"region {i}")
+            mat.set_density("g/cm3", 7.8)
+            mat.add_nuclide("Fe56", 1.0)
+            mat.volume = 1.0
+            mats.append(mat)
+        if with_materials:
+            mats.export_to_xml(act / "materials.xml")
+        (act / "mesh.json").write_text(json.dumps({"schedule": [{}, {}]}))
+        records = [
+            {"record": "cell", "id": "0", "result": {"steps": [
+                {"photon_source": {"groups": [{"centroid_eV": 1.0e6, "photons_s": 5.0}]}}, {"step": 1}]}},
+            {"record": "cell", "id": "1", "result": {"steps": [
+                {"photon_source": {"groups": [{"centroid_eV": 2.0e6, "photons_s": 7.0}]}}, {"step": 1}]}},
+            {"record": "footer", "cell_count": 2},
+        ]
+        (act / "mesh_result.ndjson").write_text("\n".join(json.dumps(r) for r in records) + "\n")
+        return mats
+
+    def _manager(self, tmp):
+        lib, dec = Path(tmp) / "l.npz", Path(tmp) / "d.dat"
+        lib.write_bytes(b"x")
+        dec.write_bytes(b"x")
+        return m.ActinvR2SManager(openmc.Model(), openmc.RegularMesh(), library=lib, decay_primary=dec,
+                                  actinv_bin="/opt/actinv")
+
+    def test_round_trip_rebuilds_the_photon_sources(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            run = Path(tmp) / "run"
+            self._run_dir(run)
+            r2s = self._manager(tmp)
+            r2s.load_results(run)
+            mats = r2s.results["activation_materials"]
+            shim = r2s.results["depletion_results"]
+            self.assertEqual(len(shim), 3)
+            for k, (energy, rate) in enumerate([(1.0e6, 5.0), (2.0e6, 7.0)]):
+                src = shim[1].get_material(str(mats[k].id)).get_decay_photon_energy()
+                self.assertEqual(list(src.x), [energy])
+                self.assertEqual(list(src.p), [rate])
+                self.assertIsNone(shim[2].get_material(str(mats[k].id)).get_decay_photon_energy())
+            self.assertEqual(r2s.results["actinv_mesh_result"], run / "activation" / "mesh_result.ndjson")
+
+    def test_missing_materials_xml_is_a_clear_error(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            run = Path(tmp) / "run"
+            self._run_dir(run, with_materials=False)
+            with self.assertRaises(RuntimeError) as ctx:
+                self._manager(tmp).load_results(run)
+            self.assertIn("materials.xml", str(ctx.exception))
+
+    def test_without_mesh_result_nothing_is_added(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            run = Path(tmp) / "run"
+            run.mkdir()
+            r2s = self._manager(tmp)
+            r2s.load_results(run)
+            self.assertNotIn("depletion_results", r2s.results)
+
+
+@unittest.skipUnless(HAVE_OPENMC, f"openmc not importable: {_IMPORT_ERROR}")
+class Step2MpiTests(unittest.TestCase):
+    """Only rank 0 runs ``actinv mesh``; a failure there reaches every rank instead of a hang."""
+
+    class _Comm:
+        def __init__(self, rank, from_root=None):
+            self.rank, self.from_root, self.sent = rank, from_root, []
+
+        def bcast(self, value):
+            self.sent.append(value)
+            return value if self.rank == 0 else self.from_root
+
+    def _manager(self, tmp):
+        lib, dec = Path(tmp) / "l.npz", Path(tmp) / "d.dat"
+        lib.write_bytes(b"x")
+        dec.write_bytes(b"x")
+        mat = openmc.Material()
+        mat.set_density("g/cm3", 7.8)
+        mat.add_nuclide("Fe56", 1.0)
+        cell = openmc.Cell(fill=mat)
+        cell.volume = 1.0
+        r2s = m.ActinvR2SManager(openmc.Model(), [cell], library=lib, decay_primary=dec, actinv_bin="/opt/actinv")
+        r2s.results["fluxes"] = [np.ones(2)]
+        return r2s
+
+    def _step2(self, r2s, comm, tmp, run_mesh):
+        original = m.comm
+        m.comm = comm
+        r2s._run_mesh = run_mesh
+        r2s._set_mesh_results = lambda *args: None
+        try:
+            r2s.step2_activation([1.0], [1.0e10], output_dir=Path(tmp) / "activation")
+        finally:
+            m.comm = original
+
+    def test_other_ranks_do_not_run_the_solver(self):
+        def run_mesh(*args):
+            raise AssertionError("actinv mesh ran on rank 1")
+        with tempfile.TemporaryDirectory() as tmp:
+            self._step2(self._manager(tmp), self._Comm(1), tmp, run_mesh)
+
+    def test_a_rank_0_failure_is_raised_on_the_other_ranks(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            with self.assertRaises(RuntimeError) as ctx:
+                self._step2(self._manager(tmp), self._Comm(1, "RuntimeError: actinv mesh failed"), tmp,
+                            lambda *args: None)
+            self.assertIn("rank 0", str(ctx.exception))
+
+    def test_rank_0_broadcasts_its_failure_and_raises_it(self):
+        def run_mesh(*args):
+            raise RuntimeError("actinv mesh failed")
+        comm = self._Comm(0)
+        with tempfile.TemporaryDirectory() as tmp:
+            with self.assertRaises(RuntimeError) as ctx:
+                self._step2(self._manager(tmp), comm, tmp, run_mesh)
+        self.assertEqual(str(ctx.exception), "actinv mesh failed")
+        self.assertEqual(comm.sent, ["RuntimeError: actinv mesh failed"])
+
+
 if __name__ == "__main__":
     unittest.main()

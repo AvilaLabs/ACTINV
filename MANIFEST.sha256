@@ -10,7 +10,7 @@ ea36b74db132862e65b3adba54dfd4aa0b8dd237f7d7d0e89ba95926e5216139  ./.github/work
 97e9bc323f546040e0f2d2bc3a227ae0ef41b845c576e5f71429317a3d3940b3  ./.github/workflows/web.yml
 79e13422a5e89cdf3e37984d7faa609cdd0bd1eaf8972c12dbff9fe175bf720e  ./.gitignore
 8ccd7b7b17eaeef02fa8ebc3bfd8d2e910657af0ebe39fcbf742e1f2bc7ded37  ./AGENTS.md
-7f41d8bcceb4aaf86883c720e12df810566bdf21ce14aaa12814bb0f4a0ad37e  ./CHANGELOG.md
+9a81ce2b28d72f18c322ccfe6d9264f0d27aadaed98f6a904362274751201002  ./CHANGELOG.md
 fcf4c9f02aef7a3e784a2927d571f78b52e98ddc644748d4b57235e424e8ac89  ./COMPETITIVE_BENCHMARK.md
 06debfb88cbe4179817b24708768586cc46b4ef0a9c94a4d6de3007a2f1fe8a1  ./CONTRIBUTING.md
 583043d62f9a8be1d0e4f791b8f593bb3801c75aeb05e910881c28d82e7c1762  ./Cargo.lock
@@ -1321,7 +1321,7 @@ feb943c57e5e4d6cf37ece3668b4fc4eda055ad224265c75edfdb38f180d0d56  ./docs/guide/f
 cb1b167f9ddccdc6f1261bdd0a34836b8b0c78e2dbeaf05baba2905df44e0d30  ./docs/guide/index.md
 544cb916f7dc9759cf5fdccfac3693a227bbc0c038d273ee6f277636b0cbd9c7  ./docs/guide/install.md
 6ad7984666b7ac9f3c6cba775a34b21604656fced8d9bef60a92160814efd40a  ./docs/guide/method.md
-d3961c865ba9529bcede789e36e2cd8659a63d0d8252beea01d97bc46fa40a22  ./docs/guide/openmc.md
+a4d69d849736ff475233e7df8c2e1e23ba9f4f2e99371c4c0d28ac005c57a282  ./docs/guide/openmc.md
 9a1e669909cff94a1fbc0893b683f3416b0d35b461db34eaff046c140bed7297  ./docs/guide/problems.md
 291bc585391068e3e341f9e3078d0ec691dbdb57ced5695d4d61361171a84fed  ./docs/guide/python.md
 3c902be1872bb3fbe555f1f2d26e68eefee68fdb9d5fb8e74f1d27f27e92258f  ./docs/guide/qualification.md
@@ -1821,7 +1821,7 @@ cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30  ./python/LICEN
 57add620d07a7098e15aa86b55eecafbfd8de05da05764954cfc6c501f2aeb54  ./python/pyproject.toml
 31ee02ea8262fe73eaf532bb3db599155f15954741e7ffea7dbfc840efac8252  ./python/pysrc/actinv/__init__.py
 3195294bf821d37375849babc56f218b0f270562477cbb598da9a64aded0fee6  ./python/pysrc/actinv/_defaults.py
-8a1710ef15cea5242e3fbad666af08f3388104b8e7d7b929d9067a4e224a2585  ./python/pysrc/actinv/openmc.py
+20276c74d83cff6bea424bffaa0d0ef3d07e940327fcdc005d37fa1e4392949e  ./python/pysrc/actinv/openmc.py
 58309c5a8f6b604eb97ed9df84d0019c3c33e4ae414c08dc65aa611f7c3fc353  ./python/src/lib.rs
 b02b6bb59e2a771f4acc039f44e1b00571e459895db280cb4e50ab1b9d1b8482  ./python/src/objects.py
 afa42192b4756d6ac1d4bad8e73534cfd173f32cfcb328bcd1233d61830b3bdf  ./requirements-ci.txt
@@ -6569,7 +6569,7 @@ ae1e8cbfa837a10266af00474c4f963daf685bf942322ff868fe6c0b9300be78  ./scripts/run_
 aa1a0874c2d26e257102a0112111577a0811ae11292364cd54b219cdfaa9bf7b  ./scripts/run_p118_gate.py
 e78a811fa44629c1fcdf2adcc7c8f80c74216dcc4dbfec58506396b6bc75421d  ./scripts/run_roadmap_gate.py
 4455d12bc4eec9573fd12509d0b8872b70557909c8e2b68c0feb9af3d47f999a  ./scripts/smoke_python_wheel.py
-c16684696be578a65b0b0618a0f8a4002a22731b989ab7915d3b655ab3b93fa6  ./scripts/test_actinv_openmc.py
+943024bdf196b73900159f3a09f071798e669f4686f44bff7e5f048305a9579b  ./scripts/test_actinv_openmc.py
 59f3f779d2bbd4da4d03d91106ae5ac44e91edfbf5a45bc3b58b76565b6e0274  ./scripts/test_build_kerma_table.py
 78d937755f0a0910ba0c528276d143857b0ff9f03803d25a2a968c5e08dcff4c  ./scripts/test_check_python_release_set.py
 30ae894d33d552ed16a9470a31a755f9c2578b50abd5bd2946bda5a6020bf52f  ./scripts/test_fetch_ci_seed.py

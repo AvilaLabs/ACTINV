@@ -75,6 +75,8 @@ What changes compared with OpenMC's own manager:
   instead.
 - **Step 2** writes every region's flux and material, runs one `actinv mesh` for all of them, and hands OpenMC a
   results object that answers `get_decay_photon_energy()` for each region.
+  It also saves the region materials as `materials.xml`, so `r2s.load_results(path)` reopens a finished run
+  without solving again.
 - **Step 3** and everything after it are OpenMC's own code.
 
 `contrib/openmc_r2s/demo_steel_cube.py` runs the steel-cube problem with both managers and compares the dose. The
