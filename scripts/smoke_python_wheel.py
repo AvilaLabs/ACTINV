@@ -84,7 +84,9 @@ def main() -> int:
                 "-c",
                 f"import actinv; assert actinv.__version__ == {SOFTWARE_VERSION!r}; "
                 "assert all(hasattr(actinv, name) for name in "
-                "('run', 'validate', 'broaden', 'cram_step', 'Problem', 'Material', 'Spectrum', 'Schedule', 'Result', 'solve', 'run_json'))",
+                "('run', 'validate', 'broaden', 'cram_step', 'Problem', 'Material', 'Spectrum', 'Schedule', 'Result', 'solve', 'run_json')); "
+                "import sys; assert 'openmc' not in sys.modules; from actinv import _defaults; "
+                "assert _defaults.default_command(); assert _defaults.embedded_catalog()['catalog_version']",
             ]
         )
         version = command([executable, "--version"])

@@ -193,6 +193,7 @@ def main(argv: list[str] | None = None) -> int:
                 run_step("installed wheel smoke", [str(python), str(checkout / "scripts/smoke_python_wheel.py"), str(wheels[0])], checkout, clean_env)
                 run_step("verify wheel import", [str(python), "-c", "import actinv; assert str(actinv.__file__).startswith(str(__import__('sys').prefix))"], checkout, clean_env)
                 run_step("Python object regression", [str(python), str(checkout / "scripts/test_python_objects.py")], checkout, clean_env)
+                run_step("OpenMC adapter tests", [str(python), str(checkout / "scripts/test_actinv_openmc.py")], checkout, clean_env)
                 binary = target / "release" / desktop_executable_name(os.name)
                 run_step("build desktop", ["cargo", "build", "--release", "--locked", "-p", "actinv-gui"], checkout, env)
                 desktop_output = Path(directory) / "desktop-smoke"

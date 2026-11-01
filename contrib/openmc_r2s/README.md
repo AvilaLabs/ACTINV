@@ -1,6 +1,12 @@
 # ACTINV as the activation engine of OpenMC's R2S workflow
 
-`actinv_openmc_r2s.py` defines `ActinvR2SManager`, a subclass of `openmc.deplete.R2SManager`
+The adapter is now part of the `actinv` Python package: after `pip install actinv`, write
+`from actinv.openmc import ActinvR2SManager` (source: `python/pysrc/actinv/openmc.py`). Use that module.
+The file `actinv_openmc_r2s.py` in this folder is the single-file adapter P163 measured, kept unchanged
+because `controls/check_p163.py` pins it; it needs explicit data paths and a chain file, and the
+defaults described below apply only to `actinv.openmc`.
+
+`ActinvR2SManager` is a subclass of `openmc.deplete.R2SManager`
 (OpenMC >= 0.15.3) that keeps OpenMC's neutron transport (step 1) and photon transport (step 3),
 and replaces the activation solve (step 2) with an `actinv mesh` call. It exists so that OpenMC's
 rigorous two-step (R2S) shutdown-dose workflow can use ACTINV's activation/decay solver instead of
@@ -12,29 +18,22 @@ of `self.results['depletion_results']` is OpenMC's own, unmodified code.
 
 - OpenMC 0.15.3 (the `openmc.deplete.r2s` module `ActinvR2SManager` subclasses; earlier versions
   do not have `R2SManager`).
-- An `actinv` binary on `PATH` (or pass `actinv_bin=` with an explicit path) that supports the
-  `actinv mesh` subcommand.
-- A 709-group ACTINV activation library (`.npz`, e.g.
-  `actinv-data/v1.1.0/activation/tendl-2025-neutron-709g.npz`) and matching decay data
-  (`decay_primary`, optionally `decay_fallback`).
-- A depletion chain XML for OpenMC's own `get_microxs_and_flux` call in step 1 (OpenMC still
-  needs one even though ACTINV ignores the reaction-rate output — see "What differs" below).
+- The `actinv` package (`pip install actinv`). Its `actinv` command is the default solver;
+  pass `actinv_bin=` with an explicit path to use another build that supports `actinv mesh`.
+- The standard ACTINV data (`actinv data fetch`, which installs under `./actinv-data` or
+  `$ACTINV_DATA_DIR`). The default bundle's 709-group activation library and decay data are used
+  unless you pass `library=`, `decay_primary=` or `decay_fallback=`. The default fallback goes
+  with the default primary; with an explicit `decay_primary` there is no fallback unless given.
+- No depletion chain. Step 1 tallies only the flux. Pass `micro_kwargs={"chain_file": ...}` (or
+  `nuclides`/`reactions`) to run OpenMC's own `get_microxs_and_flux` instead.
 
 ## Minimal usage
 
 ```python
 import openmc
-from actinv_openmc_r2s import ActinvR2SManager
+from actinv.openmc import ActinvR2SManager
 
-openmc.config["chain_file"] = "chain.xml"
-
-r2s = ActinvR2SManager(
-    model, mesh,
-    library="actinv-data/v1.1.0/activation/tendl-2025-neutron-709g.npz",
-    decay_primary="actinv-data/v1.1.0/decay/endf-b-viii-0_decay.dat",
-    decay_fallback="actinv-data/v1.1.0/decay/jeff-3-3_decay.dat",
-    actinv_bin="actinv",
-)
+r2s = ActinvR2SManager(model, mesh)
 r2s.step1_neutron_transport()
 r2s.step2_activation(timesteps=[3.15e7, 1.0e6], source_rates=[1.0e17, 0.0])
 r2s.step3_photon_transport(time_indices=[2])
@@ -65,12 +64,19 @@ the chain file). `ActinvR2SManager.step2_activation` instead:
    `openmc.deplete.Results` object, and get back an `openmc.stats.Discrete` distribution built
    from ACTINV's photon-source groups.
 
-**Step 1 (neutron transport) is OpenMC's, but with slimmed tallies.** Two changes, both made
-because `get_microxs_and_flux`'s defaults are sized for OpenMC's own depletion solver, not for
-ACTINV:
+**Step 1 (neutron transport) is OpenMC's, but flux-only.** `get_microxs_and_flux` always loads a
+depletion chain and tallies reaction rates, which ACTINV never reads. By default the subclass runs
+OpenMC's own `step1_neutron_transport` unchanged (mesh material volumes, the mesh-material or cell
+filter, `mesh_material_volumes.npz`, `fluxes.npy`, `micros.h5`, the same `self.results` keys) with
+its `get_microxs_and_flux` call replaced by `flux_only_microxs_and_flux`: the same transport with
+only a flux tally, and all-zero placeholder `micros` that OpenMC stores but ACTINV does not use.
+No chain file is needed. Whichever way step 1 runs, `energies` defaults to the ACTINV library's
+exact group boundaries (`library_bounds`), so the flux ACTINV receives needs no rebinning.
 
-- `energies` defaults to the ACTINV library's exact group boundaries (`library_bounds`), instead
-  of OpenMC's own energy grouping, so the flux ACTINV receives needs no rebinning.
+If the caller passes `chain_file`, `nuclides`, `reactions` or `reaction_rate_mode` in
+`micro_kwargs`, OpenMC's own `get_microxs_and_flux` runs as before, with this difference from its
+defaults:
+
 - Unless the caller passes `nuclides=`/`reactions=` explicitly, only a single throwaway nuclide is
   tallied, with `reactions=["(n,gamma)"]`. The nuclide is the first one found in an activation-
   region material (a cell domain's fill material, for cell-based R2S), falling back to the first
@@ -81,9 +87,7 @@ ACTINV:
   [...]}` as the explicit alternative, rather than failing with a bare `StopIteration`. OpenMC's
   default tally is every chain nuclide times every reaction, which with a 709-group structure
   produces gigabyte-scale tallies that ACTINV never reads — it only uses the flux array, not
-  OpenMC's microscopic cross sections. `micro_kwargs` still needs a `chain_file` (or
-  `openmc.config['chain_file']` set globally); OpenMC's `get_microxs_and_flux` requires one to run
-  at all, even though ACTINV discards its reaction-rate output.
+  OpenMC's microscopic cross sections.
 
 **Step 3 is untouched.** Both cell-based and mesh-based R2S work because they both go through
 `R2SManager.step3_photon_transport`/`get_decay_photon_source_mesh`, which only calls
@@ -114,8 +118,7 @@ histories a production R2S workflow would see.
 
 ## Known limits
 
-Read from the adapter's own code (`contrib/openmc_r2s/actinv_openmc_r2s.py`); line numbers are
-approximate and will drift as the file changes.
+Read from the adapter's own code (`python/pysrc/actinv/openmc.py`).
 
 - **Neutron activation only.** `step2_activation` hardcodes `"projectile": "neutron"` in the
   ACTINV mesh spec. Photon-induced or other-projectile activation is not supported.
@@ -158,10 +161,12 @@ approximate and will drift as the file changes.
 
 ## Testing
 
-`test_actinv_openmc_r2s.py` covers the adapter's pure logic — material conversion, the flux
-NDJSON writer, schedule construction, and the results shim's indexing — with no transport and no
-`actinv` binary. It needs OpenMC importable but skips cleanly (not failing) if it is not:
+`scripts/test_actinv_openmc.py` covers the adapter's pure logic — material conversion, the flux
+NDJSON writer, schedule construction, and the results shim's indexing — with no transport. Those
+tests need OpenMC importable and skip cleanly (not failing) if it is not. It also checks that
+`import actinv` never imports OpenMC and how the default data and solver command are resolved
+(no OpenMC needed). Run it against an installed `actinv`:
 
 ```
-python -m unittest contrib/openmc_r2s/test_actinv_openmc_r2s -v
+python scripts/test_actinv_openmc.py -v
 ```

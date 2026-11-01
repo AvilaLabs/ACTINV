@@ -265,8 +265,15 @@ fn validate(spec_json: &str) -> PyResult<String> {
     ))
 }
 
+/// The embedded data catalog as JSON, for `actinv.openmc`'s default data paths.
+#[pyfunction]
+fn _catalog_json() -> String {
+    actinv_cli::embedded_catalog_json().to_string()
+}
+
+/// Native half of the `actinv` package: `actinv/__init__.py` re-exports everything defined here.
 #[pymodule]
-fn actinv(m: &Bound<'_, PyModule>) -> PyResult<()> {
+fn _actinv(m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add("__version__", env!("CARGO_PKG_VERSION"))?;
     m.add_function(wrap_pyfunction!(_cli, m)?)?;
     m.add_function(wrap_pyfunction!(cram_step, m)?)?;
@@ -279,6 +286,7 @@ fn actinv(m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(reverse, m)?)?;
     m.add_function(wrap_pyfunction!(validate, m)?)?;
     m.add_function(wrap_pyfunction!(_example_json, m)?)?;
+    m.add_function(wrap_pyfunction!(_catalog_json, m)?)?;
     let code =
         std::ffi::CString::new(include_str!("objects.py")).expect("Python source has no NUL");
     m.py().run(&code, Some(&m.dict()), None)?;

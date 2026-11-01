@@ -7,7 +7,7 @@ description = "Python interface for the ACTINV nuclide-inventory solver"
 repository = "https://github.com/AvilaLabs/ACTINV"
 
 [lib]
-name = "actinv"
+name = "_actinv"
 crate-type = ["cdylib"]
 
 [dependencies]

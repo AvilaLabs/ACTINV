@@ -1,6 +1,6 @@
-"""Fast tests for the ACTINV R2S adapter's pure logic.
+"""Fast tests for ``actinv.openmc``, the OpenMC R2S adapter.
 
-No neutron/photon transport and no ``actinv`` binary is invoked. These tests exercise:
+No neutron/photon transport and no ``actinv`` binary is invoked. Tests that need OpenMC exercise:
 
 - ``material_to_actinv``: OpenMC material -> ACTINV explicit-nuclide composition.
 - ``flux_record_lines``: the ``actinv-flux-1`` NDJSON writer.
@@ -9,30 +9,156 @@ No neutron/photon transport and no ``actinv`` binary is invoked. These tests exe
   including that index 0 is pre-irradiation (no photon source).
 - ``library_bounds``: reading group boundaries out of an ACTINV library archive.
 
-If OpenMC is not importable, every test in this module is skipped (not failed, not errored).
+If OpenMC is not importable, those tests are skipped (not failed, not errored). The import-hygiene
+and default data/binary resolution tests need only the installed ``actinv`` package.
 """
 from __future__ import annotations
 
 import io
 import json
+import os
+import subprocess
 import sys
+import tempfile
 import unittest
 import zipfile
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
+import actinv
+from actinv import _defaults
 
 try:
     import numpy as np
     import openmc
+    from actinv import openmc as m
     HAVE_OPENMC = True
     _IMPORT_ERROR = None
 except Exception as exc:  # pragma: no cover - environment-dependent
     HAVE_OPENMC = False
     _IMPORT_ERROR = exc
 
-if HAVE_OPENMC:
-    import actinv_openmc_r2s as m
+
+class ImportHygieneTests(unittest.TestCase):
+    def test_importing_actinv_does_not_import_openmc(self):
+        code = "import sys, actinv; sys.exit(int('openmc' in sys.modules))"
+        proc = subprocess.run([sys.executable, "-c", code], capture_output=True, text=True)
+        self.assertEqual(proc.returncode, 0, proc.stderr)
+
+    def test_missing_openmc_gives_a_clear_import_error(self):
+        if HAVE_OPENMC:
+            self.skipTest("openmc is importable here")
+        with self.assertRaises(ImportError) as ctx:
+            from actinv import openmc as _  # noqa: F401
+        self.assertIn("actinv.openmc needs OpenMC 0.15.3 or newer", str(ctx.exception))
+
+
+def _fake_catalog():
+    return {
+        "catalog_version": "9.8.7", "default_bundle": "b",
+        "artifacts": [
+            {"id": "lib", "role": "activation-library", "path": "activation/lib.npz"},
+            {"id": "other-lib", "role": "activation-library", "path": "activation/other.npz"},
+            {"id": "dec1", "role": "decay-primary", "path": "decay/a.dat"},
+            {"id": "dec2", "role": "decay-fallback", "path": "decay/b.dat"},
+        ],
+        "bundles": [{"id": "b", "artifacts": ["lib", "dec1", "dec2"]},
+                    {"id": "c", "artifacts": ["other-lib"]}],
+    }
+
+
+def _with_data_dir(value, action):
+    """Run ``action()`` with ACTINV_DATA_DIR set to ``value``, restoring the environment after."""
+    old = os.environ.get("ACTINV_DATA_DIR")
+    os.environ["ACTINV_DATA_DIR"] = value
+    try:
+        return action()
+    finally:
+        if old is None:
+            del os.environ["ACTINV_DATA_DIR"]
+        else:
+            os.environ["ACTINV_DATA_DIR"] = old
+
+
+class DefaultDataTests(unittest.TestCase):
+    def _install(self, root):
+        for rel in ("activation/lib.npz", "decay/a.dat", "decay/b.dat"):
+            path = Path(root) / "v9.8.7" / rel
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_bytes(b"x")
+
+    def test_data_root_env_and_default(self):
+        self.assertEqual(_defaults.data_root({"ACTINV_DATA_DIR": "/srv/data"}, "/w"), Path("/srv/data"))
+        self.assertEqual(_defaults.data_root({}, "/w"), Path("/w/actinv-data"))
+        self.assertEqual(_defaults.data_root({"ACTINV_DATA_DIR": ""}, "/w"), Path("/w/actinv-data"))
+        self.assertEqual(_defaults.data_root({"ACTINV_DATA_DIR": "rel"}, "/w"), Path("/w/rel"))
+
+    def test_default_bundle_paths_resolve_under_the_versioned_root(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            self._install(tmp)
+            found = _defaults.default_data(catalog=_fake_catalog(), root=tmp)
+            base = Path(tmp) / "v9.8.7"
+            self.assertEqual(found["activation-library"], str(base / "activation/lib.npz"))
+            self.assertEqual(found["decay-primary"], str(base / "decay/a.dat"))
+            self.assertEqual(found["decay-fallback"], str(base / "decay/b.dat"))
+
+    def test_only_requested_roles_must_be_installed(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            self._install(tmp)
+            (Path(tmp) / "v9.8.7" / "decay/b.dat").unlink()
+            found = _defaults.default_data(("activation-library",), catalog=_fake_catalog(), root=tmp)
+            self.assertEqual(list(found), ["activation-library"])
+
+    def test_missing_data_names_the_fetch_command(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            with self.assertRaises(FileNotFoundError) as ctx:
+                _defaults.default_data(catalog=_fake_catalog(), root=tmp)
+        message = str(ctx.exception)
+        self.assertIn("actinv data fetch", message)
+        self.assertIn("v9.8.7", message)
+        self.assertIn("lib.npz", message)
+
+    def test_data_root_follows_the_environment(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            self._install(tmp)
+            found = _with_data_dir(tmp, lambda: _defaults.default_data(catalog=_fake_catalog()))
+            self.assertTrue(found["decay-primary"].startswith(tmp))
+
+    def test_embedded_catalog_default_bundle_has_the_three_roles(self):
+        catalog = _defaults.embedded_catalog()
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp) / f"v{catalog['catalog_version']}"
+            for role in ("activation-library", "decay-primary", "decay-fallback"):
+                path = root / _defaults._default_artifact(catalog, role)["path"]
+                path.parent.mkdir(parents=True, exist_ok=True)
+                path.write_bytes(b"x")
+            found = _defaults.default_data(root=tmp)
+            self.assertTrue(found["activation-library"].endswith("tendl-2025-neutron-709g.npz"))
+
+
+class DefaultCommandTests(unittest.TestCase):
+    def test_prefers_the_console_script_in_the_scripts_dir(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            script = Path(tmp) / "actinv"
+            script.write_text("#!/bin/sh\n")
+            self.assertEqual(_defaults.default_command(scripts_dir=tmp, executable="/x/python"), [str(script)])
+
+    def test_finds_the_console_script_beside_the_interpreter(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            script = Path(tmp) / "actinv"
+            script.write_text("#!/bin/sh\n")
+            command = _defaults.default_command(scripts_dir=Path(tmp) / "none", executable=Path(tmp) / "python")
+            self.assertEqual(command, [str(script)])
+
+    def test_falls_back_to_the_packages_own_entry_point(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            command = _defaults.default_command(scripts_dir=tmp, executable="/x/python")
+        self.assertEqual(command, ["/x/python", "-c", "import actinv; actinv._cli()"])
+
+    def test_fallback_command_runs_the_cli(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            command = _defaults.default_command(scripts_dir=tmp)
+        proc = subprocess.run([*command, "--version"], capture_output=True, text=True)
+        self.assertEqual(proc.stdout.strip(), f"actinv {actinv.__version__}")
 
 
 @unittest.skipUnless(HAVE_OPENMC, f"openmc not importable: {_IMPORT_ERROR}")
@@ -349,6 +475,33 @@ class LibraryBoundsTests(unittest.TestCase):
             result = m.library_bounds(lib_path)
 
             np.testing.assert_array_equal(result, bounds)
+
+
+@unittest.skipUnless(HAVE_OPENMC, f"openmc not importable: {_IMPORT_ERROR}")
+class ManagerDefaultsTests(unittest.TestCase):
+    def _manager(self, **kwargs):
+        return m.ActinvR2SManager(openmc.Model(), openmc.RegularMesh(), **kwargs)
+
+    def test_explicit_arguments_override_defaults_without_touching_the_catalog(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            lib, dec = Path(tmp) / "l.npz", Path(tmp) / "d.dat"
+            lib.write_bytes(b"x")
+            dec.write_bytes(b"x")
+            r2s = self._manager(library=lib, decay_primary=dec, actinv_bin="/opt/actinv")
+        self.assertEqual(r2s.library, str(lib.resolve()))
+        self.assertEqual(r2s.decay_primary, str(dec.resolve()))
+        self.assertIsNone(r2s.decay_fallback)
+        self.assertEqual(r2s.actinv_command, ["/opt/actinv"])
+
+    def test_missing_default_data_names_the_fetch_command(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            with self.assertRaises(FileNotFoundError) as ctx:
+                _with_data_dir(tmp, self._manager)
+        self.assertIn("actinv data fetch", str(ctx.exception))
+
+    def test_micro_keys_select_openmc_step_one(self):
+        self.assertTrue({"chain_file"} & m._OPENMC_MICRO_KEYS)
+        self.assertFalse({"energies", "path_statepoint"} & m._OPENMC_MICRO_KEYS)
 
 
 if __name__ == "__main__":

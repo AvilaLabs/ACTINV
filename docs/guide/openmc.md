@@ -34,32 +34,32 @@ See [Understand the competitive benchmark](benchmarks.md#openmc-a-common-endfb-v
 
 ## Inside OpenMC's R2S workflow
 
-You need OpenMC 0.15.3 (the version that has `openmc.deplete.R2SManager`), an `actinv` binary, and the standard data
-(`actinv data fetch`). The adapter is one file,
-[`contrib/openmc_r2s/actinv_openmc_r2s.py`](https://github.com/AvilaLabs/ACTINV/blob/master/contrib/openmc_r2s/actinv_openmc_r2s.py);
-put it next to your script.
+You need OpenMC 0.15.3 (the version that has `openmc.deplete.R2SManager`), the `actinv` Python package
+(`pip install actinv`), and the standard data (`actinv data fetch`). The adapter is the module `actinv.openmc`;
+importing `actinv` alone never imports OpenMC, and `actinv.openmc` stops with a clear message if OpenMC is missing
+or older than 0.15.3.
 
 ```python
 import openmc
-from actinv_openmc_r2s import ActinvR2SManager
+from actinv.openmc import ActinvR2SManager
 
-openmc.config["chain_file"] = "chain.xml"   # OpenMC's step 1 still asks for one
-
-r2s = ActinvR2SManager(
-    model, mesh,
-    library="actinv-data/v1.2.0/activation/tendl-2025-neutron-709g.npz",
-    decay_primary="actinv-data/v1.2.0/decay/endf-b-viii-0_decay.dat",
-    decay_fallback="actinv-data/v1.2.0/decay/jeff-3-3_decay.dat",
-)
+r2s = ActinvR2SManager(model, mesh)
 r2s.step1_neutron_transport()
 r2s.step2_activation(timesteps=[3.15e7, 1.0e6], source_rates=[1.0e17, 0.0])
 r2s.step3_photon_transport(time_indices=[2])
 ```
 
+With no further arguments the manager uses the default data bundle you installed (under `./actinv-data` or
+`$ACTINV_DATA_DIR`; it tells you to run `actinv data fetch` if the files are missing) and the `actinv` command that
+came with the package. To use other files or another build, pass `library=`, `decay_primary=`, `decay_fallback=` or
+`actinv_bin=`.
+
 What changes compared with OpenMC's own manager:
 
-- **Step 1** tallies the flux on the library's 709 groups, so ACTINV never rebins it, and tallies one throwaway
-  reaction instead of every chain nuclide's. Pass `micro_kwargs` to override either.
+- **Step 1** tallies the flux on the library's 709 groups, so ACTINV never rebins it, and needs no depletion chain:
+  it is OpenMC's step 1 with only the flux tallied, and it writes the same results and files. Pass
+  `micro_kwargs={"chain_file": "chain.xml"}` (or `nuclides`/`reactions`) to run OpenMC's own cross-section step
+  instead.
 - **Step 2** writes every region's flux and material, runs one `actinv mesh` for all of them, and hands OpenMC a
   results object that answers `get_decay_photon_energy()` for each region.
 - **Step 3** and everything after it are OpenMC's own code.

@@ -1,5 +1,22 @@
 # Changelog
 
+## Unreleased
+
+**Added**
+
+- `actinv.openmc`: the OpenMC R2S adapter is now part of the `actinv` Python package. After `pip install actinv`,
+  `from actinv.openmc import ActinvR2SManager` replaces copying `contrib/openmc_r2s/actinv_openmc_r2s.py` (kept as a
+  shim). It needs OpenMC 0.15.3 or newer, and `import actinv` still never imports OpenMC.
+  - The library, decay data and solver default to the installed data catalog (`actinv data fetch`) and the `actinv`
+    command of the installed package; `library=`, `decay_primary=`, `decay_fallback=` and `actinv_bin=` override.
+  - Step 1 tallies only the flux and needs no depletion chain. `micro_kwargs={"chain_file": ...}` runs OpenMC's own
+    cross-section step as before.
+
+**Changed**
+
+- The `actinv` Python extension module is now `actinv._actinv`, re-exported by the `actinv` package. `import actinv`
+  and the `actinv` command are unchanged.
+
 ## v1.7.1 — 2026-10-31
 
 ACTINV 1.7.1 fixes resonance capture in libraries and shielding tables you build from R-matrix-limited evaluations,

@@ -32,4 +32,9 @@ actinv = "actinv:_cli"
 
 [tool.maturin]
 bindings = "pyo3"
+# Mixed layout: pysrc/actinv/ holds the pure-Python modules; the extension is actinv._actinv.
+# The source tree is not named actinv/ at python/ so a checkout run from python/ never shadows
+# the installed package.
+python-source = "pysrc"
+module-name = "actinv._actinv"
 strip = true
