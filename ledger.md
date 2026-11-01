@@ -5732,3 +5732,20 @@ allowed sentences may be used, quoted with the machine (Intel Core i3-N305) and 
 unregistered speed observation recorded under P172. Ledger 325's OpenMC diagnostic (Cl, I and Br differ between
 one-case and chunked runs) stays open: against the measurements it moves both ways (Cl closer, I early further and late
 closer) and does not change P172's medians in a way that matters, but its cause is not yet known.
+
+## Entry 327 — P181 registered: ACTINV and OpenMC's flux mode on a mixed-material mesh as the element count rises (2026-11-01)
+
+`protocols/ACTINV-P181_PROTOCOL.md` (SHA-256 `59f8a0b7…`), with harness `controls/p181_harness.py` (`d0d9f6b2…`) and
+checker `controls/check_p181.py` (`0cc6d18a…`). This is test C1 of `docs/maintainers/WORKFLOW_ACCURACY_PLAN.md`.
+- **Question.** On a tungsten sphere in CuCrZr, water and steel (14.1 MeV source, P163's irradiation, transport and
+  dose tally), meshed into 8 to 32,768 elements, how do ACTINV's and OpenMC 0.15.3 flux mode's model-to-photon-source
+  time and memory grow, and what is the finest mesh each completes inside the same limits?
+- **Arms.** `actinv.openmc.ActinvR2SManager` from this checkout with the released 1.7.1 binary (`bd0c21c9…`) and the
+  shipped TENDL-2025 data; P163's OpenMC flux-mode arm unchanged.
+- **Limits.** Each run in its own scope with 10 GiB, no swap and two CPUs, and a 4-hour limit, the same for both arms.
+  The owner allowed more than 6 GiB for this protocol (2026-11-01). Runs stop for an arm after a size that did not
+  complete steps 1 and 2, or where the previous size's time projects beyond the limit. One run per arm and size, on a
+  quiet machine.
+- **Rehearsal** (8 and 64 elements, both arms). All four runs completed all three steps; 32 and 136 activation regions.
+  The checker ran on the record and failed only where a smoke record must (G0 unhashed, G1 smoke and plan, G2 the
+  missing sizes). Only exit codes, statuses, phases and region counts were read; the outputs were deleted.
