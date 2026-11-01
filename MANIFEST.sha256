@@ -295,6 +295,7 @@ a04f201f6fb747ddb6fcba910c58a7bd3750fd9ee60a0e4c3799cbca94894b30  ./controls/che
 513fa9dbe6d66d2e4f8aa8034437b69f1d17999de19bd67bede350fb0db330a1  ./controls/check_p175.py
 e29c45444a0806abe970e1f92da1c7cd75bcc1e99af00a3c1383767c1cebc96a  ./controls/check_p176.py
 8a5aa9b740327e04ea873bd1b296b26394c9de8d36dfaf774571f736b07f3d1a  ./controls/check_p177.py
+4ff4e77f0d1e8147703347c59a7cd43eb11ae4816d3b1fbda4fff0bff6e26318  ./controls/check_p178.py
 d7736ed6fe554d3cda4b9465204ce5d44efa6217292213da7139077100a46660  ./controls/check_p17_unseal.py
 e5b849b23807ca83c537ea702ebda79fe86b0d2bf903b6da8c66c0c14cbc9c22  ./controls/check_p18.py
 ffe8b69a6d2d0f2884670bcdada1582d9959eba4123cd2cf64ca69062a52d43a  ./controls/check_p18b.py
@@ -819,6 +820,7 @@ d1fe52abc27ef2c913a9a3455bdff5ce8d4e6d09d7d14aa177bef29c16e3fd65  ./controls/p17
 fb0b59847fb8dae8fd408bd6769abecf347f91420a160319c6b80d234b693a6f  ./controls/p175_stats.py
 f1d5cb277ebfa28f9f293ccfdff378359de79a1f34a3c1b64f9099a494e63358  ./controls/p176_selfshield.py
 da5a1d06d060c4db89be9f5a317e5a7f58a18a1bd9aa35684cbe28cf7725cb53  ./controls/p177_geometry.py
+be9129862ae9fccabb63a1a9b71d86cb1140f7415f5e4f66146dc2eb941dced0  ./controls/p178_ce_rates.py
 e8a793c886abf9ece4681a775474b4146908045f693100c42c72558ac586c757  ./controls/p17_heldout.py
 3560feaab45ebd73cd51b599a01f68a47ccd00e6f2e30fd972bcaea95320f11f  ./controls/p17_irdff.py
 ba31fbcb583894d8328b3bc7cf9a8bb531ad3b13675e5c91f2146a0ea54800a4  ./controls/p17_scoring.py
@@ -978,6 +980,7 @@ c5b404a543e73a4c07c7165f135ba44ecb811118565b4005f80a4af5c27942c5  ./controls/tes
 284a3ae0ddb655704323b1fc89b2d706f49c1b83ab5af2585aee477e0abe7af1  ./controls/test_p120_amendment_d.py
 120f4400b11ec32ae6a950cebc08954ea27446aeff55204bbd18c0cfb88eb0c0  ./controls/test_p121.py
 b1566cb59da3d7e7dbf646c23e0ac6106d89518a66e2b8c23223b44a7d736527  ./controls/test_p16_dependency_history.py
+dc45ea84f2fc0f6ab9d34909f2b0f02e2bfd0c27d795424b8a6e716305081556  ./controls/test_p178_ce_rates.py
 38cecf719b44dfd94bf325053645013895ff5718a86f05350ff6db24f64d652f  ./crates/actinv-cli/Cargo.toml
 191117ff8aaff8d9981a93c9bb59b418cfe54505dc7363128d2bc5e728a6a62c  ./crates/actinv-cli/data/ACTINV-DATA-NOTICE-v1.0.0.md
 132bacccc3fe16703455cc69efc68feaf811eea4415dc653336638c70f903136  ./crates/actinv-cli/data/ACTINV-DATA-NOTICE-v1.1.0.md
@@ -1450,7 +1453,7 @@ f6723eefeb6f5cacef2e87a83cd53b078dd5ca2777b7400f48f6b49ddc7a07b4  ./examples/was
 cfd86c2c5ac15d76ec2358c6bd196a6362b46bcc889160c06439975dc5ae8f3a  ./interchange/INTERCHANGE.md
 057dd636e1814f93c0869d4839887ff28a361f5c845f24153c4e93cbee1918d1  ./interchange/actinv_core_adapter.py
 4c42c2d68d375681621d6d3828b6daab4e2fdfc37f23cacbfc3b5a1c3fd3beec  ./interchange/run_case.py
-678436b07dd2737a2072875d0bd6cbf03ddb643cf720d836b0543ad2c4c58712  ./ledger.md
+2a6dfddb8e26dc2de71f35d110101ef2750a52ae97602e080ef3c7d18613f70d  ./ledger.md
 588e9f4f4ff74df627a1a15306214db678531d7334f2f6e95a1603eabd1f1c55  ./packaging/actinv.ico
 9897482011f194d9495fc80965177f0632ae4166917a7f240d80c0fc3c8fb83e  ./packaging/actinv.png
 3abcd339e6ef22af6f5b7f65573174e7acc265b05d0ede9c4a949fa54490fe04  ./packaging/desktop.json
@@ -1663,6 +1666,7 @@ d8b8de1285813d2f59bf6a578dbeb3ed242f2308b7ab7100bd83a8a003bd1f60  ./protocols/AC
 4da71addfb8bb42d1b86522e1509f04f846580b775435eaa6ac3742d785b88d9  ./protocols/ACTINV-P176_AMENDMENT_A.md
 11f5f4220909283b32f5ecf754de7f6b075174a89f6aef36acf8db7d54c1977d  ./protocols/ACTINV-P176_PROTOCOL.md
 49b82a6b340665bfdf556e73109305645af97f3634bb60196a1b4fd16a2d35a8  ./protocols/ACTINV-P177_PROTOCOL.md
+c509d1125dae58d2403c94f39142c55cd65e60afdfc5353ac77b6ddfeebe2bff  ./protocols/ACTINV-P178_PROTOCOL.md
 e78c84d9f80c9bc6b7f0e79050206991515d283f43deeabd32f42c325f53581e  ./protocols/ACTINV-P17_AMENDMENT_1.md
 c1e2d2ef80ee91b63f7806ca2b93c1b49d8396f4dfacf8623fd1c2a623e17e2f  ./protocols/ACTINV-P17_PROTOCOL.md
 8eb3f3bc657a49ebeff7cc5d7ca124cb4e4debbf094fee9d6417c01f740aa9e0  ./protocols/ACTINV-P18_AMENDMENT_1.md
@@ -1794,7 +1798,7 @@ f16e43ed6d79f0ab1da8505d0b62aa0ee167b5fde29efda5f759fca4e7948936  ./protocols/de
 08d360c85b47152e78b4fa20b79d6f807778d2c630854bd09b2c047ca0e99c9f  ./protocols/desktop-interface-v1.md
 0f52d7bf346d077afb6cd52a4999101b92050a20dbc9e2d713bf1ff5f3efda6b  ./protocols/desktop-packaging-v1.md
 308e889c622fe811b63ae66e97bb37d9f5ec6a96ae850f2c201b86af5c994aab  ./protocols/desktop-packaging-v2.md
-ec07104c5dcb04e85eb5be156cc7041e88bfd86d04526a4f7000c10f5c891dfc  ./protocols/protocol_hash.txt
+ca39aa31b1d1f85e0eeb8f806485c16275e965d1bfc5b25dc39bbc6c64eeeb0f  ./protocols/protocol_hash.txt
 4a8925d08996b759120238021ff7af4c8ac9f814082ec1aa1183372c81ca0545  ./protocols/w-matcmp.p36.study.json
 7837466957fcd65be7bbe633fa7b07a2ddccab74b034c5ddf195814e0100632d  ./prototypes/p26_campaign.py
 4534a2d5d5b34e20863b281a881fdd850cca752669eac87f0095128f4d28a757  ./python/Cargo.lock

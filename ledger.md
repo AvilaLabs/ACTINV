@@ -5609,3 +5609,17 @@ restated the same expression, factor included, so it could not catch it.
 The test now checks the formula without the factor and that O-16, Fe-56 and W-184 fall between 1 and 20 b. The
 estimate stays crude for the lightest nuclides (H-1 gives 2.1 b against about 20 b measured), so mixture mode should
 be given evaluation files for every major constituent; it lists the estimated ones in `background_estimated`.
+
+## Entry 318 — P178 registered: mixture self-shielding on four held-out models, against OpenMC continuous energy (2026-11-01)
+
+`protocols/ACTINV-P178_PROTOCOL.md` (SHA-256 `c509d112…`), with harness `controls/p178_ce_rates.py` (`be912986…`) and
+checker `controls/check_p178.py` (`4ff4e77f…`). Both import P173's code.
+- **Question.** On four models that P173 and ledger 316's lead never used (E Eurofer-97, I Inconel 718, H W-7Ni-3Fe,
+  B Cu), does `self_shielding.mixture` bring ACTINV's 709-group resonance-capture rates within materiality of OpenMC's
+  continuous-energy rates, without moving the 70 control rows? There are 143 rows: 73 capture and 70 controls.
+- **Pins.** The binary is the release build of `f77a7e9` (`f4800d0c…`, crates tree `b18274fc…`). The library is the
+  ENDF/B-VIII.1 709-group rebuild after ledger 316's repair (index `b5a4b668…`, stage manifest `d16b9233…`).
+- **Rehearsal.** The first, with a binary from `d9551ba`, stopped in mixture mode for E, I and H on a negative 0 K
+  elastic in Fe-54; the solver now clips it as NJOY RECONR does (`f77a7e9`). The second, with the pinned binary: all
+  12 arm modes, the G1 check, the assembly and the checker exited 0, and G0–G3 pass. Only exit codes, wall times and
+  gate lines were read; the outputs were deleted. The mixture mode took 4–44 min per model.
