@@ -1,0 +1,404 @@
+{
+ "actinv_bin": "/home/connoravila/Documents/actinv/target/p178-bin/actinv",
+ "actinv_bin_sha256": "f4800d0c25196721a0ababfe039fc9eb24b0d12b65af5af5ccc756280a4b8827",
+ "actinv_version": "actinv 1.7.1",
+ "checks": [
+  {
+   "max_rel_diff": 7.975383131273667e-16,
+   "model": "E",
+   "reactions": [
+    {
+     "actinv_rate_per_atom": 6.318708117666809e-26,
+     "harness_rate_per_atom": 6.318708117666805e-26,
+     "mt": 102,
+     "rel_diff": 5.45021393897889e-16,
+     "target": "Cr50"
+    },
+    {
+     "actinv_rate_per_atom": 5.489223298200361e-25,
+     "harness_rate_per_atom": 5.489223298200361e-25,
+     "mt": 16,
+     "rel_diff": 0.0,
+     "target": "Cr52"
+    },
+    {
+     "actinv_rate_per_atom": 7.587976982723682e-25,
+     "harness_rate_per_atom": 7.587976982723682e-25,
+     "mt": 103,
+     "rel_diff": 0.0,
+     "target": "Fe54"
+    },
+    {
+     "actinv_rate_per_atom": 1.0035324287629185e-26,
+     "harness_rate_per_atom": 1.0035324287629183e-26,
+     "mt": 107,
+     "rel_diff": 1.4298786828817173e-16,
+     "target": "Fe54"
+    },
+    {
+     "actinv_rate_per_atom": 2.1729190618652586e-25,
+     "harness_rate_per_atom": 2.1729190618652586e-25,
+     "mt": 103,
+     "rel_diff": 0.0,
+     "target": "Fe56"
+    },
+    {
+     "actinv_rate_per_atom": 2.878717380920517e-26,
+     "harness_rate_per_atom": 2.8787173809205146e-26,
+     "mt": 102,
+     "rel_diff": 7.975383131273667e-16,
+     "target": "Fe58"
+    },
+    {
+     "actinv_rate_per_atom": 1.2296696732508518e-25,
+     "harness_rate_per_atom": 1.2296696732508516e-25,
+     "mt": 102,
+     "rel_diff": 1.8670765441260262e-16,
+     "target": "Mn55"
+    },
+    {
+     "actinv_rate_per_atom": 1.3715406071416567e-24,
+     "harness_rate_per_atom": 1.3715406071416565e-24,
+     "mt": 16,
+     "rel_diff": 1.3391582528406492e-16,
+     "target": "Mn55"
+    },
+    {
+     "actinv_rate_per_atom": 1.8678557687402787e-25,
+     "harness_rate_per_atom": 1.8678557687402785e-25,
+     "mt": 103,
+     "rel_diff": 1.2291566845646626e-16,
+     "target": "N14"
+    },
+    {
+     "actinv_rate_per_atom": 2.931052660198182e-24,
+     "harness_rate_per_atom": 2.931052660198181e-24,
+     "mt": 102,
+     "rel_diff": 2.5065532913839026e-16,
+     "target": "Ta181"
+    },
+    {
+     "actinv_rate_per_atom": 2.965937140726311e-26,
+     "harness_rate_per_atom": 2.965937140726309e-26,
+     "mt": 102,
+     "rel_diff": 7.740849839412152e-16,
+     "target": "V51"
+    },
+    {
+     "actinv_rate_per_atom": 1.5961902394152354e-24,
+     "harness_rate_per_atom": 1.5961902394152356e-24,
+     "mt": 102,
+     "rel_diff": 1.150683595103741e-16,
+     "target": "W182"
+    },
+    {
+     "actinv_rate_per_atom": 4.948952342663613e-25,
+     "harness_rate_per_atom": 4.948952342663611e-25,
+     "mt": 102,
+     "rel_diff": 3.711310588558375e-16,
+     "target": "W184"
+    },
+    {
+     "actinv_rate_per_atom": 1.1595327765203918e-24,
+     "harness_rate_per_atom": 1.1595327765203916e-24,
+     "mt": 102,
+     "rel_diff": 1.584008628606044e-16,
+     "target": "W186"
+    }
+   ],
+   "region": "E:5-7"
+  },
+  {
+   "max_rel_diff": 7.835476293451755e-16,
+   "model": "I",
+   "reactions": [
+    {
+     "actinv_rate_per_atom": 2.2864159629341127e-25,
+     "harness_rate_per_atom": 2.2864159629341127e-25,
+     "mt": 107,
+     "rel_diff": 0.0,
+     "target": "Al27"
+    },
+    {
+     "actinv_rate_per_atom": 4.205474893435837e-25,
+     "harness_rate_per_atom": 4.205474893435838e-25,
+     "mt": 102,
+     "rel_diff": 2.1837128620440384e-16,
+     "target": "Co59"
+    },
+    {
+     "actinv_rate_per_atom": 6.384254423708383e-26,
+     "harness_rate_per_atom": 6.384254423708381e-26,
+     "mt": 102,
+     "rel_diff": 3.596171536372108e-16,
+     "target": "Cr50"
+    },
+    {
+     "actinv_rate_per_atom": 1.2929265790860732e-25,
+     "harness_rate_per_atom": 1.2929265790860723e-25,
+     "mt": 102,
+     "rel_diff": 7.102916564907086e-16,
+     "target": "Cu63"
+    },
+    {
+     "actinv_rate_per_atom": 7.354138387362791e-25,
+     "harness_rate_per_atom": 7.354138387362791e-25,
+     "mt": 103,
+     "rel_diff": 0.0,
+     "target": "Fe54"
+    },
+    {
+     "actinv_rate_per_atom": 2.9301184994567513e-26,
+     "harness_rate_per_atom": 2.930118499456749e-26,
+     "mt": 102,
+     "rel_diff": 7.835476293451755e-16,
+     "target": "Fe58"
+    },
+    {
+     "actinv_rate_per_atom": 1.701141016972898e-25,
+     "harness_rate_per_atom": 1.7011410169728982e-25,
+     "mt": 102,
+     "rel_diff": 1.3496161582390187e-16,
+     "target": "Mn55"
+    },
+    {
+     "actinv_rate_per_atom": 1.4514877793421932e-25,
+     "harness_rate_per_atom": 1.451487779342193e-25,
+     "mt": 103,
+     "rel_diff": 1.5817476637593631e-16,
+     "target": "Mo92"
+    },
+    {
+     "actinv_rate_per_atom": 2.187037789006626e-25,
+     "harness_rate_per_atom": 2.187037789006627e-25,
+     "mt": 102,
+     "rel_diff": 4.199081361081728e-16,
+     "target": "Mo98"
+    },
+    {
+     "actinv_rate_per_atom": 3.428475696463224e-25,
+     "harness_rate_per_atom": 3.4284756964632238e-25,
+     "mt": 102,
+     "rel_diff": 1.3393050481986447e-16,
+     "target": "Nb93"
+    },
+    {
+     "actinv_rate_per_atom": 2.5250793191339776e-24,
+     "harness_rate_per_atom": 2.5250793191339772e-24,
+     "mt": 16,
+     "rel_diff": 1.4547740415455605e-16,
+     "target": "Nb93"
+    },
+    {
+     "actinv_rate_per_atom": 7.981755369325216e-25,
+     "harness_rate_per_atom": 7.981755369325216e-25,
+     "mt": 103,
+     "rel_diff": 0.0,
+     "target": "Ni58"
+    },
+    {
+     "actinv_rate_per_atom": 4.2250099600955196e-26,
+     "harness_rate_per_atom": 4.2250099600955196e-26,
+     "mt": 16,
+     "rel_diff": 0.0,
+     "target": "Ni58"
+    },
+    {
+     "actinv_rate_per_atom": 3.314064270342631e-26,
+     "harness_rate_per_atom": 3.314064270342632e-26,
+     "mt": 102,
+     "rel_diff": 3.4638546761080387e-16,
+     "target": "Ni58"
+    },
+    {
+     "actinv_rate_per_atom": 2.8212620798042543e-25,
+     "harness_rate_per_atom": 2.821262079804255e-25,
+     "mt": 103,
+     "rel_diff": 1.6275605307175672e-16,
+     "target": "Ni60"
+    },
+    {
+     "actinv_rate_per_atom": 5.078922215087046e-26,
+     "harness_rate_per_atom": 5.0789222150870424e-26,
+     "mt": 102,
+     "rel_diff": 6.78063368581369e-16,
+     "target": "Ni62"
+    },
+    {
+     "actinv_rate_per_atom": 1.1699173262816762e-25,
+     "harness_rate_per_atom": 1.1699173262816762e-25,
+     "mt": 103,
+     "rel_diff": 0.0,
+     "target": "Ti48"
+    }
+   ],
+   "region": "I:3-5"
+  },
+  {
+   "max_rel_diff": 6.482902638371302e-16,
+   "model": "H",
+   "reactions": [
+    {
+     "actinv_rate_per_atom": 3.4459246233384353e-25,
+     "harness_rate_per_atom": 3.4459246233384353e-25,
+     "mt": 103,
+     "rel_diff": 0.0,
+     "target": "Fe54"
+    },
+    {
+     "actinv_rate_per_atom": 5.887283553437778e-27,
+     "harness_rate_per_atom": 5.8872835534377805e-27,
+     "mt": 102,
+     "rel_diff": 3.6560060708237236e-16,
+     "target": "Fe58"
+    },
+    {
+     "actinv_rate_per_atom": 3.670363583866876e-25,
+     "harness_rate_per_atom": 3.670363583866876e-25,
+     "mt": 103,
+     "rel_diff": 0.0,
+     "target": "Ni58"
+    },
+    {
+     "actinv_rate_per_atom": 2.2111348166138094e-26,
+     "harness_rate_per_atom": 2.2111348166138094e-26,
+     "mt": 16,
+     "rel_diff": 0.0,
+     "target": "Ni58"
+    },
+    {
+     "actinv_rate_per_atom": 5.031024853381633e-27,
+     "harness_rate_per_atom": 5.03102485338163e-27,
+     "mt": 102,
+     "rel_diff": 5.704323350754732e-16,
+     "target": "Ni62"
+    },
+    {
+     "actinv_rate_per_atom": 8.85362441802217e-26,
+     "harness_rate_per_atom": 8.853624418022164e-26,
+     "mt": 102,
+     "rel_diff": 6.482902638371302e-16,
+     "target": "W182"
+    },
+    {
+     "actinv_rate_per_atom": 3.0099763322481104e-27,
+     "harness_rate_per_atom": 3.0099763322481108e-27,
+     "mt": 103,
+     "rel_diff": 1.1918113874311456e-16,
+     "target": "W182"
+    },
+    {
+     "actinv_rate_per_atom": 1.0781836218614337e-25,
+     "harness_rate_per_atom": 1.0781836218614342e-25,
+     "mt": 102,
+     "rel_diff": 4.258805935089307e-16,
+     "target": "W183"
+    },
+    {
+     "actinv_rate_per_atom": 4.015223324716211e-27,
+     "harness_rate_per_atom": 4.01522332471621e-27,
+     "mt": 103,
+     "rel_diff": 1.7868615409704903e-16,
+     "target": "W183"
+    },
+    {
+     "actinv_rate_per_atom": 6.822152722473869e-26,
+     "harness_rate_per_atom": 6.822152722473873e-26,
+     "mt": 102,
+     "rel_diff": 5.048012329861558e-16,
+     "target": "W184"
+    },
+    {
+     "actinv_rate_per_atom": 4.817393320741192e-26,
+     "harness_rate_per_atom": 4.8173933207411947e-26,
+     "mt": 102,
+     "rel_diff": 5.957286573593859e-16,
+     "target": "W186"
+    },
+    {
+     "actinv_rate_per_atom": 1.9353851802897732e-24,
+     "harness_rate_per_atom": 1.935385180289773e-24,
+     "mt": 16,
+     "rel_diff": 1.8980303681821362e-16,
+     "target": "W186"
+    }
+   ],
+   "region": "H:1-2"
+  },
+  {
+   "max_rel_diff": 2.8135943713659363e-16,
+   "model": "B",
+   "reactions": [
+    {
+     "actinv_rate_per_atom": 8.159980085669487e-26,
+     "harness_rate_per_atom": 8.159980085669489e-26,
+     "mt": 102,
+     "rel_diff": 2.8135943713659363e-16,
+     "target": "Cu63"
+    },
+    {
+     "actinv_rate_per_atom": 8.291436063482193e-25,
+     "harness_rate_per_atom": 8.291436063482193e-25,
+     "mt": 16,
+     "rel_diff": 0.0,
+     "target": "Cu63"
+    },
+    {
+     "actinv_rate_per_atom": 8.67436671053001e-26,
+     "harness_rate_per_atom": 8.674366710530012e-26,
+     "mt": 107,
+     "rel_diff": 2.6467493023585804e-16,
+     "target": "Cu63"
+    },
+    {
+     "actinv_rate_per_atom": 1.3844516725587752e-25,
+     "harness_rate_per_atom": 1.384451672558775e-25,
+     "mt": 103,
+     "rel_diff": 1.658336978788482e-16,
+     "target": "Cu63"
+    },
+    {
+     "actinv_rate_per_atom": 3.690020167479569e-26,
+     "harness_rate_per_atom": 3.690020167479569e-26,
+     "mt": 102,
+     "rel_diff": 0.0,
+     "target": "Cu65"
+    },
+    {
+     "actinv_rate_per_atom": 1.6409155993578614e-24,
+     "harness_rate_per_atom": 1.6409155993578616e-24,
+     "mt": 16,
+     "rel_diff": 1.1193201672764784e-16,
+     "target": "Cu65"
+    },
+    {
+     "actinv_rate_per_atom": 3.812449699284179e-26,
+     "harness_rate_per_atom": 3.812449699284179e-26,
+     "mt": 103,
+     "rel_diff": 0.0,
+     "target": "Cu65"
+    }
+   ],
+   "region": "B:3-5"
+  }
+ ],
+ "environment": {
+  "cgroup": {
+   "cpu.max": "200000 100000",
+   "memory.max": "6442450944",
+   "memory.swap.max": "0",
+   "path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p2010174-i10408067.scope",
+   "pids.max": "128"
+  },
+  "clean_tree": true,
+  "constants_sha256": "25953549d7d5a6335503752a98796f524a35996dc23b163ea8428b94b9e81b02",
+  "crates_tree": "b18274fcaa0e1e51ef9399e2d9c67543ee52e2b2",
+  "git_head": "ef2d2a8079b551dce22acc437449b5b12ceb12c2",
+  "groups_sha256": "ce4bf523498ffbb38d42aa9415fc014882b8bc7a7ecfb89f859ba3259d8fb34f",
+  "harness_sha256": "be9129862ae9fccabb63a1a9b71d86cb1140f7415f5e4f66146dc2eb941dced0",
+  "platform": "Linux-7.0.0-38-generic-x86_64-with-glibc2.43",
+  "python": "3.14.4"
+ },
+ "schema": "actinv-p178-ce-rates-1-g1",
+ "tolerance": 1e-09
+}

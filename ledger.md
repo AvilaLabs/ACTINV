@@ -5679,3 +5679,23 @@ The controls, fns-iron and fusion-isotope workflows passed on `7743f16`, which c
 the controls run on `afdd3aa` itself was cancelled by that newer push. **P179-PASS.** P172's verdict is unchanged; its
 second allowed sentence is superseded in public use by P179's first, which gives the same 0.234, and ledger 316's caveat
 on P172's identical-data arm is closed.
+
+## Entry 323 — P178 evidence: G0–G3 pass; mixture self-shielding QUALIFIED on four held-out models (2026-11-01)
+
+The run started from the registration commit `ef2d2a8` at 01:49, with a clean tree, the pinned binary (`f4800d0c…`),
+the repaired ENDF/B-VIII.1 library and one 200 % scope per mode. All 12 arm modes, the G1 check, the assembly and the
+checker exited 0, and G0–G3 pass. **P178-PASS, pending G4.** Capture outcome **QUALIFIED**; the controls hold.
+
+- **Capture.** 66 of 73 listed capture rows are used. Unshielded, 22 are material in `r` and the largest `|r|` is
+  32.3 % (W-182 and W-186 capture in the Eurofer region, where OpenMC's tungsten resonances are self-shielded). With the
+  mixture method none is material in `r_mix`; the largest is 3.4 % (W-186 in Eurofer). Per model, the largest
+  `|r|` / `|r_mix|`: Eurofer 0.279 / 0.033, Inconel 0.176 / 0.017, W-Ni-Fe 0.054 / 0.020, Cu 0.102 / 0.006.
+- **Not used.** Seven capture rows did not reach OpenMC's 0.5 % standard error (0.51–1.21 %): Fe-58, W-186, W-182 and
+  Ta-181 in Eurofer 5–7, and Co-59, Fe-58 and Cu-63 in Inconel 3–5. The checker adds the second allowed sentence.
+- **Controls.** All 70 control rows used; the largest `|r_mix − r|` is 7e-5. No row is `processing_limited`.
+- **Zero-K clips.** The mixture runs recorded the expected clips only: the Fe-54 elastic window at 3.49–3.52 keV
+  (minimum −7.3e-5 b) in E, H and I, and a Ni-60 window at 5.05–5.06 keV (minimum −8.9e-6 b) in H and I. C and N in
+  Eurofer entered through the analytic estimate (no resolved range).
+- **Cost.** The mixture mode took 20 min (Eurofer), 44 min (Inconel), 16 min (W-Ni-Fe) and 4 min (Cu), against about
+  1 s for the unshielded runs; OpenMC took 83 min, 160 min, 6 min and 19 s. The mixture's run time is a performance
+  item, not part of the verdict.
