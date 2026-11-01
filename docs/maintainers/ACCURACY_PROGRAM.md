@@ -158,6 +158,11 @@ Stages 1–3 do not need SINBAD.
     ENDF/B-VIII.1 data. All 66 used capture rows come within 3.4% (unshielded up to 32.3%, tungsten in Eurofer); the 70
     controls move by at most 7e-5; seven capture rows lacked OpenMC precision and are not covered. The handbook's mixture
     section and the adapter default may now change, each as its own change. The mixture mode took 4–44 min per model.
+  - **P180 PASS** (CI green on 9e4e4a4): wall time on P172's 132 FNS problems, one problem per process, two cores,
+    same ENDF/B-VIII.1 data, quiet machine (Intel Core i3-N305). Median per problem: ACTINV 1.7.1 0.61 s (TENDL-2025
+    0.88 s), OpenMC 0.15.3 depletion 18.1 s; median per-problem ratio 29.8, and 9.0 against OpenMC's depletion step
+    alone. Public wording is the protocol's three sentences, with the machine and the two-core limit. This replaces the
+    unregistered observation under P172.
 - Next (2026-10-31): item 2 proceeds. No single existing option closes all 11 rows: the Bondarenko table is right for
   steel, and the region foil is right for CuCrZr. Before a correction is built, find out why:
   - why the foil over-shields steel's dilute constituents;

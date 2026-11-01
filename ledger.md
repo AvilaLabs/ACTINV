@@ -5724,3 +5724,11 @@ G4.**
   I 2000exp_5min (0.078) and Br 2000exp_5min (0.029). P172 collapsed each chunk over the union of its samples'
   nuclides, so these three depend on which other samples shared the chunk. This does not touch the times; whether it
   moves P172's OpenMC score is a follow-up.
+
+## Entry 326 — P180 G4: CI green on 9e4e4a4; P180-PASS (2026-11-01)
+
+The controls, fns-iron and fusion-isotope workflows passed on the evidence commit `9e4e4a4`. **P180-PASS.** Its three
+allowed sentences may be used, quoted with the machine (Intel Core i3-N305) and the two-core limit; they replace the
+unregistered speed observation recorded under P172. Ledger 325's OpenMC diagnostic (Cl, I and Br differ between
+one-case and chunked runs) stays open: against the measurements it moves both ways (Cl closer, I early further and late
+closer) and does not change P172's medians in a way that matters, but its cause is not yet known.
