@@ -5573,3 +5573,39 @@ all 13 checked tapes:
   folded with P173's flux. Over P173's 36 capture rows this takes material rows from 11 to 0 (max |r| 0.188 → 0.031).
   Every material-collapse row is within 0.008, and no other row moves to material. This is a lead for a registered
   protocol on held-out cases. It is not a result.
+
+
+## Entry 317 — ACTINV defect: the analytic potential-scattering estimate was 100 times too small (2026-10-31)
+
+**Found while reviewing the mixture self-shielding mode.** A unit test that dilutes W-186 with Fe-56 never reached
+the unshielded limit: at 10^5 Fe-56 atoms per W-186 atom its capture factor was 0.76. Fe-56 had no evaluation file in
+the test, so it entered the background through the analytic estimate, and that estimate was 0.040 b.
+
+**The defect.** `PreparedShieldTable::sigma_p` (added in `8fe9763`, 2026-09-11, P19 G2) estimates the potential
+scattering of a nuclide the table does not cover as `4*pi*a^2*((A+1)/A)^2` with `a = 0.123*A^(1/3) + 0.08`, the
+ENDF channel radius. That radius is in units of 1e-12 cm, so `a^2` is already in barns. The code treated it as fm and
+multiplied by 0.01. Fe-56 came out at 0.040 b instead of 3.95 b, and O-16 at 0.022 b instead of 2.16 b. The unit test
+restated the same expression, factor included, so it could not catch it.
+
+**Scope.**
+- **Where:** Bondarenko-table self-shielding with `dilution: "composition"`, for composition nuclides the table does
+  not cover. Their contribution to every other nuclide's sigma0 was 100 times too small, so sigma0 was too low and
+  resonance capture was over-shielded. Geometry mode does not use the estimate.
+- **Releases:** v1.1.0 (P19) through v1.7.1.
+- **Shipped data and default results:** unaffected. Self-shielding is off by default.
+- **Materials that matter:** those whose main scatterers are absent from the table, chiefly light nuclides (H, C, N,
+  O). Concrete and water-bearing materials are the clear cases. In steels the estimated nuclides (C, N, P, S) are
+  minor constituents.
+
+**Consequences for recorded results.** No verdict changes; each records what was run.
+- **P176:** arm A1 on concrete (K) estimated H-1, H-2, C-12, C-13, O-16, O-17, O-18, K-40 and Ca-46, which carry most
+  of concrete's scattering. Its recorded sigma0 were 52.6 b for Al-27 and 36.4 b for Ca-40, far below the true
+  dilution, so its concrete capture rows were biased toward over-shielding. The dilute impurities (Co-59 at 2.4e6 b,
+  Eu-151 at 1.3e7 b) were effectively unshielded either way. P176 adopted no arm, so its verdict stands. Arm A1 on
+  steel (S) estimated only C, N, P and S; its bias is small.
+- **G3/P28:** the conformance fixture records Co-59 as estimated; it checks the uncovered list, not values.
+
+**Repair (`b7cadb2`).** The estimate drops the factor; the function is shared by the table and the new mixture mode.
+The test now checks the formula without the factor and that O-16, Fe-56 and W-184 fall between 1 and 20 b. The
+estimate stays crude for the lightest nuclides (H-1 gives 2.1 b against about 20 b measured), so mixture mode should
+be given evaluation files for every major constituent; it lists the estimated ones in `background_estimated`.
