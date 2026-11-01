@@ -5623,3 +5623,18 @@ checker `controls/check_p178.py` (`4ff4e77f…`). Both import P173's code.
   elastic in Fe-54; the solver now clips it as NJOY RECONR does (`f77a7e9`). The second, with the pinned binary: all
   12 arm modes, the G1 check, the assembly and the checker exited 0, and G0–G3 pass. Only exit codes, wall times and
   gate lines were read; the outputs were deleted. The mixture mode took 4–44 min per model.
+
+## Entry 319 — P179 registered: P172's identical-data arm on the repaired ENDF/B-VIII.1 library (2026-11-01)
+
+`protocols/ACTINV-P179_PROTOCOL.md` (SHA-256 `e73c4e9c…`), with harness `controls/p179_endf8_repaired.py` (`a508a86c…`)
+and checker `controls/check_p179.py` (`64a78796…`). Both import P172's code.
+- **Question.** Ledger 316 left P172's `actinv_endf8` arm (median |ln C/E| 0.234) unreliable for samples whose decay
+  heat depends on resolved-range capture. With only the library replaced by the repaired rebuild (`a964a44e…`, the one
+  P178 pins), what is that arm's median |ln C/E| on P172's points, and where does it change?
+- **Isolation.** The module is P172's (`f33ea3ed…`), and P172's harness, `cb2_fns.py` and group structure are unchanged.
+  The two libraries were compared array by array: identical row layout and bounds, 32 differing rows, all MT 102 of
+  the 15 targets ledger 316 lists (magnitudes not read).
+- **Control.** 102 of the 132 experiments contain none of Ca, Cl, Cu, Fe, Rh, Si, V or W; G2 requires the rerun to
+  reproduce P172's arm on them within 1e-4 in ln.
+- **Rehearsal.** All modes exited 0. G1–G3 pass; G0 failed only because the protocol was not yet hashed. Only exit codes
+  and gate lines were read, and the outputs were deleted.
