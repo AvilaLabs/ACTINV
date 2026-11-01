@@ -5785,3 +5785,18 @@ handling of mixed-material elements. Per material, ENDF/B-VIII.1 gives about 35%
 steel (1.08e15 against 7.96e14 photons/s) and 26% more in the tungsten; CuCrZr agrees within 1.2%. The steel here sits
 behind water and tungsten and sees a softer spectrum than P163's bare steel cube. Which evaluation is closer to
 measurement is not tested. The diagnostic's outputs are under `target/p181-diag` (not tracked).
+
+## Entry 330 — P181 Amendment A registered: ACTINV's arm again on the ENDF/B-VIII.1 library (2026-11-01)
+
+`protocols/ACTINV-P181_AMENDMENT_A.md` (SHA-256 `5fc8c6bf…`), with wrapper harness `controls/p181a_harness.py`
+(`396ba44d…`) and checker `controls/check_p181a.py` (`849b2c50…`). P181's one repair round, approved by the owner.
+- **Change.** ACTINV's arm is rerun at P181's six sizes, under P181's limits, rules and quiet-machine test, on the
+  ENDF/B-VIII.1 709-group library P178 built (`a964a44e…`), the evaluation OpenMC's arm uses, so that P181's
+  [0.90, 1.10] dose bound tests the pipeline rather than the difference between two evaluations. OpenMC is not rerun;
+  its runs come from P181's committed record (`8c79bb8b…`). The adapter is master's (496acee: `load_results`, MPI
+  guard; the single-process solve is unchanged, and the new materials.xml write counts against ACTINV's step 2).
+- **Disclosure.** Written after P181's whole record and ledger 329's 8-element ENDF/B-VIII.1 diagnostic (ratio
+  1.035) were seen. Sentences, when quoted, carry that and name ACTINV's data.
+- **Rehearsal** (the wrapper's arm list through P181's harness in smoke mode, 8 and 64 elements, ENDF/B-VIII.1
+  library). Both runs completed all three steps; 32 and 136 regions. Only exit codes, statuses, phases and region
+  counts were read; the outputs were deleted. The checker's selftest (and P181's within it) passes.
