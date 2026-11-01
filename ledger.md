@@ -5706,3 +5706,21 @@ The controls, fns-iron and fusion-isotope workflows passed on the evidence commi
 outcome QUALIFIED, controls hold. Both allowed sentences of the checker may be used, together. As the protocol says,
 the handbook's mixture section and a mixture default in the OpenMC adapter are each a separate later change; the
 mixture mode's run time (up to 44 min on Inconel 718) is a performance item to address first.
+
+## Entry 325 — P180 evidence: G0–G3 pass; ACTINV 0.61 s and OpenMC 18.1 s median per FNS problem (2026-11-01)
+
+The run started from the registration commit `7743f16` at 06:26, after P178 had finished, with a clean tree, the
+v1.7.1 release binary and P172's driver, alone on the machine (Intel Core i3-N305, two cores per process). All modes
+and the checker exited 0, and G0–G3 pass; the median 1-minute load before the processes was 1.1. **P180-PASS, pending
+G4.**
+
+- **Wall time per problem** (median, 10th–90th percentile): ACTINV on ENDF/B-VIII.1 0.61 s (0.60–0.64), ACTINV on
+  TENDL-2025 0.88 s (0.83–0.97), OpenMC 18.1 s (12.9–23.8). OpenMC's phases: cross-section collapse 4.5 s, depletion
+  5.6 s, the rest of the process (Python, imports, chain load) 8.4 s.
+- **Ratios** (median, range): OpenMC / ACTINV wall 29.8 (12.0–52.1); OpenMC depletion step alone / ACTINV wall 9.0
+  (2.8–14.7); OpenMC / ACTINV CPU 34.3; OpenMC / ACTINV with TENDL-2025 20.8.
+- **Diagnostics (not gated).** ACTINV's ENDF/B-VIII.1 decay heats equal P179's exactly. OpenMC's one-case runs equal
+  P172's chunked runs to 1e-12 in 116 problems; 16 differ, three materially: Cl 2000exp_5min (largest |ln| 0.21),
+  I 2000exp_5min (0.078) and Br 2000exp_5min (0.029). P172 collapsed each chunk over the union of its samples'
+  nuclides, so these three depend on which other samples shared the chunk. This does not touch the times; whether it
+  moves P172's OpenMC score is a follow-up.
