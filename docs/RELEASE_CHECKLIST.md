@@ -332,4 +332,6 @@ created.
 - [x] Production smoke from PyPI and crates.io; record the release in `results/release_v1.7.1.json`.
 - [x] Handbook and website: deploy the `actinv-web` bundle CI built from the release commit and check `/`,
   `/download/` and `/docs/` live (worker version 60515948).
-- [ ] Update AvilaLabs.org `/actinv` and `/actinv/docs` (AvilaLabs.org PR #35, awaiting merge).
+- [x] Update AvilaLabs.org `/actinv` and `/actinv/docs` (AvilaLabs.org PR #35, merged as c132126).
+- [x] Correct the desktop's solver version to 1.7.0 in the README, handbook, desktop docs and release notes (owner
+  approved): the 0.6.0-preview.1 installers are the 1.7.0 builds, so the 1.7.1 desktop fixes wait for the next preview.

@@ -66,7 +66,7 @@ cargo install --locked --force actinv-cli --version 1.7.1
 
 ## Desktop
 
-Desktop `0.6.0-preview.1` uses solver 1.7.1; see the
+Desktop `0.6.0-preview.1` stays on solver 1.7.0; the 1.7.1 desktop fixes reach it in the next desktop preview. See the
 [desktop 0.6.0-preview.1 release](releases/desktop-v0.6.0-preview.1.md).
 
 The [changelog](../CHANGELOG.md) has the full list of changes.

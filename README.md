@@ -20,7 +20,7 @@ If it cannot, choose from the downloads shown. No Rust or Python is needed.
 ACTINV from Start. **macOS:** open the disk image and drag ACTINV to Applications. **Linux:** allow the AppImage
 to run in its file properties, then double-click it. Windows and Linux downloads are for x86_64 computers.
 
-Desktop **0.6.0-preview.1** (solver 1.7.1) is unsigned. See [first-launch help and installation details](docs/DESKTOP_INSTALL.md)
+Desktop **0.6.0-preview.1** (solver 1.7.0) is unsigned. See [first-launch help and installation details](docs/DESKTOP_INSTALL.md)
 if your system shows a security notice, or for an optional Linux application-menu shortcut.
 
 **Open in browser** lets you try the results tutorial, inspect and compare result files, and edit and download

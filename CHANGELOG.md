@@ -33,7 +33,8 @@ results are unchanged.
 - ENDF record allocations are bounded.
 - NaN repair applies only to literal NaN fields.
 - The library builder's fingerprint covers the tape normalization.
-- The desktop app exports the problem as it was run, and does not open another problem while a run is in progress.
+- The desktop app exports the problem as it was run, and does not open another problem while a run is in progress
+  (in the next desktop preview; 0.6.0-preview.1 is built from 1.7.0).
 
 **Added**
 
