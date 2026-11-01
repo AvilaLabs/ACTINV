@@ -5699,3 +5699,10 @@ checker exited 0, and G0–G3 pass. **P178-PASS, pending G4.** Capture outcome *
 - **Cost.** The mixture mode took 20 min (Eurofer), 44 min (Inconel), 16 min (W-Ni-Fe) and 4 min (Cu), against about
   1 s for the unshielded runs; OpenMC took 83 min, 160 min, 6 min and 19 s. The mixture's run time is a performance
   item, not part of the verdict.
+
+## Entry 324 — P178 G4: CI green on 59c69ff; P178-PASS, QUALIFIED (2026-11-01)
+
+The controls, fns-iron and fusion-isotope workflows passed on the evidence commit `59c69ff`. **P178-PASS**, capture
+outcome QUALIFIED, controls hold. Both allowed sentences of the checker may be used, together. As the protocol says,
+the handbook's mixture section and a mixture default in the OpenMC adapter are each a separate later change; the
+mixture mode's run time (up to 44 min on Inconel 718) is a performance item to address first.

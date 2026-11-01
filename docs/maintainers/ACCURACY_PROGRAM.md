@@ -153,6 +153,11 @@ Stages 1–3 do not need SINBAD.
     capture repair, with P172's module and harness. The median |ln C/E| stays 0.234 on the same 2,360 points; 11 points
     move by more than 1%, ten of them early Rh-104 cooling in one Rh experiment (toward OpenMC). The 102 experiments
     without a repaired element reproduce P172 within 1e-4. P179's first sentence replaces P172's second in public use.
+  - **P178 PASS, QUALIFIED** (CI green on 59c69ff): `self_shielding.mixture` on four models held out from its
+    development (Eurofer-97, Inconel 718, W-Ni-Fe, Cu), against OpenMC continuous-energy rates on the same
+    ENDF/B-VIII.1 data. All 66 used capture rows come within 3.4% (unshielded up to 32.3%, tungsten in Eurofer); the 70
+    controls move by at most 7e-5; seven capture rows lacked OpenMC precision and are not covered. The handbook's mixture
+    section and the adapter default may now change, each as its own change. The mixture mode took 4–44 min per model.
 - Next (2026-10-31): item 2 proceeds. No single existing option closes all 11 rows: the Bondarenko table is right for
   steel, and the region foil is right for CuCrZr. Before a correction is built, find out why:
   - why the foil over-shields steel's dilute constituents;
