@@ -5749,3 +5749,24 @@ checker `controls/check_p181.py` (`0cc6d18a…`). This is test C1 of `docs/maint
 - **Rehearsal** (8 and 64 elements, both arms). All four runs completed all three steps; 32 and 136 activation regions.
   The checker ran on the record and failed only where a smoke record must (G0 unhashed, G1 smoke and plan, G2 the
   missing sizes). Only exit codes, statuses, phases and region counts were read; the outputs were deleted.
+
+## Entry 328 — P181 evidence: G0–G3 pass on 0efe3c1; the dose sanity bound fails at every size, so no sentence (2026-11-01)
+
+The campaign ran from the registration commit `0efe3c1` with a clean tree, alone on the machine (Intel Core i3-N305,
+two CPUs per run), from 08:55 to 14:06. Eleven runs; OpenMC's flux mode at 32,768 elements was not run, by the stop
+rule. Every run started with more than 11 GiB available and no other transient scope; the median 1-minute load before
+the runs was 1.4. The harness and the checker exited 0 and G0–G3 pass. **P181-PASS, pending G4**, as a measurement,
+but neither allowed sentence may be used: the dose ratio is outside the protocol's [0.90, 1.10] sanity bound at every
+size where both arms completed, and the checker gives no reach for either arm.
+
+- **Regions** at 8, 64, 512, 4,096, 13,824 and 32,768 elements: 32, 136, 776, 5,120, 15,840 and 36,208.
+- **Model to photon source (H1)**, ACTINV / OpenMC flux mode: 18.5 / 112 s, 42 / 180 s, 176 / 604 s, 949 / 3,432 s;
+  at 13,824 elements ACTINV 2,683 s and OpenMC killed in step 2 (step 1 took 3,410 s) with `memory.peak` 9.98 GiB at
+  its 10 GiB limit; at 32,768 elements ACTINV 5,935 s. H1 ratio OpenMC / ACTINV 6.0, 4.2, 3.4 and 3.6.
+- **Working set** (largest `ru_maxrss`): ACTINV 1.2–2.8 GiB at every size, OpenMC 6.4–7.7 GiB; ratio about 5.
+- **Accuracy.** Dose ratio ACTINV / OpenMC 0.786, 0.801, 0.853 and 0.889 at 8 to 4,096 elements; ACTINV alone at
+  13,824 and 32,768 elements is 0.895 and 0.854 of OpenMC's dose at 4,096. The photon strengths agree within 1.2% and
+  the summed neutron flux is identical, so the gap is in the dose per photon (where in each element and at what
+  energy the photons are born), and it narrows as the mesh is refined. P163 (one material, steel) agreed within 2%.
+  Not yet explained: the data differ (TENDL-2025 against ENDF/B-VIII.1, now on tungsten, CuCrZr and water too), and
+  this is the adapter's first mixed-material mesh. A diagnostic follows before anything is said about this model.

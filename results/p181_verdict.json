@@ -1,0 +1,354 @@
+{
+ "allowed_sentences": [],
+ "gates": {
+  "G0": {
+   "pass": true,
+   "problems": []
+  },
+  "G1": {
+   "pass": true,
+   "problems": []
+  },
+  "G2": {
+   "pass": true,
+   "problems": []
+  },
+  "G3": {
+   "pass": true,
+   "problems": []
+  }
+ },
+ "protocol": "ACTINV-P181",
+ "summary": {
+  "cpu_model": "Intel(R) Core(TM) i3-N305",
+  "reach": {
+   "actinv": {
+    "elements": null,
+    "next": {
+     "elements": 8,
+     "why": "accuracy"
+    },
+    "regions": null,
+    "step3_complete": false
+   },
+   "openmc_flux": {
+    "elements": null,
+    "next": {
+     "elements": 8,
+     "why": "accuracy"
+    },
+    "regions": null,
+    "step3_complete": false
+   }
+  },
+  "runs": [
+   {
+    "arm": "actinv",
+    "complete": true,
+    "dose_rate_Sv_h": 295.86664405941826,
+    "elements": 8,
+    "flux_sum": 35.78838913113702,
+    "h1_s": 18.53217062400654,
+    "headroom_ok": true,
+    "last_heartbeat": {
+     "memory_peak_gib": 1.8868560791015625,
+     "phase": "done"
+    },
+    "memory_peak_gib": 1.8868560791015625,
+    "photons_per_s": 1.1064122024540296e+16,
+    "regions": 32,
+    "status": "ok",
+    "step1_s": 9.805373293114826,
+    "step2_s": 8.726797330891714,
+    "step3_s": 5.413557410938665,
+    "steps12_complete": true,
+    "wall_s": 25.639145329827443,
+    "working_set_gib": 1.2339401245117188
+   },
+   {
+    "arm": "openmc_flux",
+    "complete": true,
+    "dose_rate_Sv_h": 376.2025531362186,
+    "elements": 8,
+    "flux_sum": 35.78838913113702,
+    "h1_s": 111.5584032300394,
+    "headroom_ok": true,
+    "last_heartbeat": {
+     "memory_peak_gib": 7.079067230224609,
+     "phase": "done"
+    },
+    "memory_peak_gib": 7.079067230224609,
+    "photons_per_s": 1.1153127501363452e+16,
+    "regions": 32,
+    "status": "ok",
+    "step1_s": 94.6682540839538,
+    "step2_s": 16.890149146085605,
+    "step3_s": 8.14921013917774,
+    "steps12_complete": true,
+    "wall_s": 122.83606702904217,
+    "working_set_gib": 6.371891021728516
+   },
+   {
+    "arm": "actinv",
+    "complete": true,
+    "dose_rate_Sv_h": 258.5981584324073,
+    "elements": 64,
+    "flux_sum": 35.78838913113702,
+    "h1_s": 42.3522952538915,
+    "headroom_ok": true,
+    "last_heartbeat": {
+     "memory_peak_gib": 2.0925331115722656,
+     "phase": "done"
+    },
+    "memory_peak_gib": 2.0925331115722656,
+    "photons_per_s": 1.1039625837400756e+16,
+    "regions": 136,
+    "status": "ok",
+    "step1_s": 9.41784219793044,
+    "step2_s": 32.93445305596106,
+    "step3_s": 4.908200470963493,
+    "steps12_complete": true,
+    "wall_s": 48.89758151420392,
+    "working_set_gib": 1.2402076721191406
+   },
+   {
+    "arm": "openmc_flux",
+    "complete": true,
+    "dose_rate_Sv_h": 322.7431318014557,
+    "elements": 64,
+    "flux_sum": 35.78838913113702,
+    "h1_s": 179.95624550012872,
+    "headroom_ok": true,
+    "last_heartbeat": {
+     "memory_peak_gib": 7.090595245361328,
+     "phase": "done"
+    },
+    "memory_peak_gib": 7.090595245361328,
+    "photons_per_s": 1.1084635388104382e+16,
+    "regions": 136,
+    "status": "ok",
+    "step1_s": 115.18953762203455,
+    "step2_s": 64.76670787809417,
+    "step3_s": 11.968539322027937,
+    "steps12_complete": true,
+    "wall_s": 199.12056533107534,
+    "working_set_gib": 6.397319793701172
+   },
+   {
+    "arm": "actinv",
+    "complete": true,
+    "dose_rate_Sv_h": 237.40538632955722,
+    "elements": 512,
+    "flux_sum": 35.78838913113703,
+    "h1_s": 176.14770539896563,
+    "headroom_ok": true,
+    "last_heartbeat": {
+     "memory_peak_gib": 2.4626083374023438,
+     "phase": "done"
+    },
+    "memory_peak_gib": 2.4626083374023438,
+    "photons_per_s": 1.1212687060545132e+16,
+    "regions": 776,
+    "status": "ok",
+    "step1_s": 10.262689684983343,
+    "step2_s": 165.88501571398228,
+    "step3_s": 5.262955717975274,
+    "steps12_complete": true,
+    "wall_s": 183.07340734498575,
+    "working_set_gib": 1.2737960815429688
+   },
+   {
+    "arm": "openmc_flux",
+    "complete": true,
+    "dose_rate_Sv_h": 278.23955766746855,
+    "elements": 512,
+    "flux_sum": 35.78838913113703,
+    "h1_s": 604.2304349679034,
+    "headroom_ok": true,
+    "last_heartbeat": {
+     "memory_peak_gib": 7.479557037353516,
+     "phase": "done"
+    },
+    "memory_peak_gib": 7.479557037353516,
+    "photons_per_s": 1.1267403566802596e+16,
+    "regions": 776,
+    "status": "ok",
+    "step1_s": 247.81988061987795,
+    "step2_s": 356.41055434802547,
+    "step3_s": 37.678841083077714,
+    "steps12_complete": true,
+    "wall_s": 674.4379533361644,
+    "working_set_gib": 6.540668487548828
+   },
+   {
+    "arm": "actinv",
+    "complete": true,
+    "dose_rate_Sv_h": 232.7635968987472,
+    "elements": 4096,
+    "flux_sum": 35.78740956525208,
+    "h1_s": 948.8802238071803,
+    "headroom_ok": true,
+    "last_heartbeat": {
+     "memory_peak_gib": 4.570362091064453,
+     "phase": "done"
+    },
+    "memory_peak_gib": 4.570362091064453,
+    "photons_per_s": 1.1500881998107492e+16,
+    "regions": 5120,
+    "status": "ok",
+    "step1_s": 15.753835275070742,
+    "step2_s": 933.1263885321096,
+    "step3_s": 5.9585186541080475,
+    "steps12_complete": true,
+    "wall_s": 957.0440778699704,
+    "working_set_gib": 1.4256935119628906
+   },
+   {
+    "arm": "openmc_flux",
+    "complete": true,
+    "dose_rate_Sv_h": 261.7557966398669,
+    "elements": 4096,
+    "flux_sum": 35.78740956525208,
+    "h1_s": 3431.932905689813,
+    "headroom_ok": true,
+    "last_heartbeat": {
+     "memory_peak_gib": 10.0,
+     "phase": "done"
+    },
+    "memory_peak_gib": 10.0,
+    "photons_per_s": 1.161357305308532e+16,
+    "regions": 5120,
+    "status": "ok",
+    "step1_s": 1139.6105948488694,
+    "step2_s": 2292.322310840944,
+    "step3_s": 217.95255687995814,
+    "steps12_complete": true,
+    "wall_s": 3859.00440864102,
+    "working_set_gib": 7.211662292480469
+   },
+   {
+    "arm": "actinv",
+    "complete": true,
+    "dose_rate_Sv_h": 234.34948630880518,
+    "elements": 13824,
+    "flux_sum": 35.783993132511114,
+    "h1_s": 2683.4595865821466,
+    "headroom_ok": true,
+    "last_heartbeat": {
+     "memory_peak_gib": 8.362979888916016,
+     "phase": "done"
+    },
+    "memory_peak_gib": 8.362979888916016,
+    "photons_per_s": 1.122898241004938e+16,
+    "regions": 15840,
+    "status": "ok",
+    "step1_s": 29.345750739099458,
+    "step2_s": 2654.113835843047,
+    "step3_s": 8.076341439969838,
+    "steps12_complete": true,
+    "wall_s": 2694.4163296311162,
+    "working_set_gib": 1.8891754150390625
+   },
+   {
+    "arm": "openmc_flux",
+    "complete": false,
+    "dose_rate_Sv_h": null,
+    "elements": 13824,
+    "flux_sum": 35.783993132511114,
+    "h1_s": null,
+    "headroom_ok": true,
+    "last_heartbeat": {
+     "memory_peak_gib": 9.98147964477539,
+     "phase": "step2"
+    },
+    "memory_peak_gib": 9.877864837646484,
+    "photons_per_s": null,
+    "regions": 15840,
+    "status": "killed",
+    "step1_s": 3410.031544545898,
+    "step2_s": null,
+    "step3_s": null,
+    "steps12_complete": false,
+    "wall_s": 3828.5291003398597,
+    "working_set_gib": 7.712177276611328
+   },
+   {
+    "arm": "actinv",
+    "complete": true,
+    "dose_rate_Sv_h": 223.63597447707127,
+    "elements": 32768,
+    "flux_sum": 35.77668228790396,
+    "h1_s": 5934.802988146199,
+    "headroom_ok": true,
+    "last_heartbeat": {
+     "memory_peak_gib": 7.9917449951171875,
+     "phase": "done"
+    },
+    "memory_peak_gib": 7.9917449951171875,
+    "photons_per_s": 1.0771980068969512e+16,
+    "regions": 36208,
+    "status": "ok",
+    "step1_s": 53.97503661108203,
+    "step2_s": 5880.827951535117,
+    "step3_s": 10.81544579192996,
+    "steps12_complete": true,
+    "wall_s": 5949.73857837799,
+    "working_set_gib": 2.7721786499023438
+   }
+  ],
+  "sizes": [
+   {
+    "accuracy_problems": [
+     "dose ratio 0.7865 outside (0.9, 1.1)"
+    ],
+    "dose_ratio": 0.7864557047604309,
+    "elements": 8,
+    "h1_ratio_openmc_over_actinv": 6.019715957370199,
+    "working_set_ratio_openmc_over_actinv": 5.163857544749127
+   },
+   {
+    "accuracy_problems": [
+     "dose ratio 0.8013 outside (0.9, 1.1)"
+    ],
+    "dose_ratio": 0.8012506942874033,
+    "elements": 64,
+    "h1_ratio_openmc_over_actinv": 4.24903170941116,
+    "working_set_ratio_openmc_over_actinv": 5.1582649724864895
+   },
+   {
+    "accuracy_problems": [
+     "dose ratio 0.8532 outside (0.9, 1.1)"
+    ],
+    "dose_ratio": 0.8532409565331709,
+    "elements": 512,
+    "h1_ratio_openmc_over_actinv": 3.4302486858931944,
+    "working_set_ratio_openmc_over_actinv": 5.134784587832941
+   },
+   {
+    "accuracy_problems": [
+     "dose ratio 0.8892 outside (0.9, 1.1)"
+    ],
+    "dose_ratio": 0.8892395121204968,
+    "elements": 4096,
+    "h1_ratio_openmc_over_actinv": 3.616824146592403,
+    "working_set_ratio_openmc_over_actinv": 5.05835386916468
+   },
+   {
+    "elements": 13824
+   },
+   {
+    "elements": 32768
+   }
+  ],
+  "skips": [
+   {
+    "arm": "openmc_flux",
+    "dim": 32,
+    "elements": 32768,
+    "reason": "steps 1 and 2 did not complete at 13824 elements (killed)",
+    "rule": "stop"
+   }
+  ]
+ },
+ "verdict": "P181-PASS (pending G4, CI on the evidence commit)"
+}
