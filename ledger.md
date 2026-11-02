@@ -5924,3 +5924,22 @@ same-named file, while the input still binds the target to the activation librar
   no sidecar was built from that stage. No band was computed with a changed covariance.
 - **Sources.** The 2,850 TENDL-2025 sources are those of the v1.2.0 sidecar index. 29 come from `TENDL-n.tgz`;
   Pb-208 gets P10 Amendment D's NaN repair. The new sidecar is not shipped by P184.
+
+## Entry 339 — P184 evidence: G0–G5 pass on 3b64c68; P184-PASS pending G6 (2026-11-02)
+
+`controls/p184_harness.py stage | build | observe | assemble` on the registration commit `3b64c68`, inside the
+bounded scope (6 GiB, no swap, 4 CPUs), then `controls/check_p184.py` (`results/p184_record.json`,
+`results/p184_verdict.json`).
+- **Selection and build.** All 2,850 inputs carry their v1.2.0 index hashes; 29 came from `TENDL-n.tgz`, with
+  Pb-208 repaired. 62 reactions on 42 nuclides are replaced and 18 IRDFF-II reactions left out, and the checker's own
+  selection agrees (G2). The sidecar (SHA-256 `61180b27…`, 284,506 components, built in 92 s) holds every
+  replaced matrix as recomputed (G3; smallest eigenvalue ratio −1.6e-8). Its other 284,439 components are v1.2.0's,
+  bit for bit, and nothing else changed (G4).
+- **Observation (G5, not gated).** FNS iron, 5 min irradiation, cross-section part of the activity's relative
+  standard deviation at 66 s: Mn-56 36.4% → 1.1%, Mn-54 42% → 2%, Cr-51 67.9% → 1.82%, Mn-57 38.7% unchanged
+  (Fe-57(n,p) is not in IRDFF-II).
+- **Open item, outside P184's gates.** Fe-53's band is about 1e-13 with both sidecars, although Fe-54(n,2n) is
+  replaced. Its coverage is reported `partial`, so the (n,2n) covariance does not reach the Fe-53 activity. This is
+  to be diagnosed separately.
+- **Shipping.** The sidecar stays local; shipping it is a data release that needs the owner's approval. The other
+  run outputs are kept until the verdict's G6, then deleted.
