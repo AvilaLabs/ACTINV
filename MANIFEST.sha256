@@ -11,7 +11,7 @@ a5fdde37c08ded4e5cb97be9c642ae0d170af19f6b1b826792a31f4d5acbcefb  ./.github/work
 97e9bc323f546040e0f2d2bc3a227ae0ef41b845c576e5f71429317a3d3940b3  ./.github/workflows/web.yml
 79e13422a5e89cdf3e37984d7faa609cdd0bd1eaf8972c12dbff9fe175bf720e  ./.gitignore
 8ccd7b7b17eaeef02fa8ebc3bfd8d2e910657af0ebe39fcbf742e1f2bc7ded37  ./AGENTS.md
-3b3418f3aaa0776050c083601205e0f5a6f34d6b2786915346fa821c630089b2  ./CHANGELOG.md
+8ea6f5f26abf5f260990ede0b1712635462e9ec8118d74f6ca6bc6186fd7e5d2  ./CHANGELOG.md
 fcf4c9f02aef7a3e784a2927d571f78b52e98ddc644748d4b57235e424e8ac89  ./COMPETITIVE_BENCHMARK.md
 06debfb88cbe4179817b24708768586cc46b4ef0a9c94a4d6de3007a2f1fe8a1  ./CONTRIBUTING.md
 f61be1f177bbb8c861ef448b87446721800189ad690ce03e029a9be3ec8b81bd  ./Cargo.lock
@@ -306,6 +306,7 @@ e5b849b23807ca83c537ea702ebda79fe86b0d2bf903b6da8c66c0c14cbc9c22  ./controls/che
 f417110c55021076208f9962d528ef1c9a7c7d066564fba98ad1863f20376bc9  ./controls/check_p182.py
 bb92aa437dc6103b3bee574812397e8ee167ed27014f02a94c4c619c42c8764c  ./controls/check_p182a.py
 1e16928c8b66c66f300d989d4127f23f4b8906f7d1f407fa1bb14a72fdfde68c  ./controls/check_p183.py
+0f90ef37ad86cfd89234e5cb370aa9ca158deaeee66ccd0a14dbff9dbc0f9ca0  ./controls/check_p184.py
 ffe8b69a6d2d0f2884670bcdada1582d9959eba4123cd2cf64ca69062a52d43a  ./controls/check_p18b.py
 c96232e9ab1e0928f047fe681a7c375fe67862d5e817ed54b3ec29b869c69a1e  ./controls/check_p2.py
 bb1319add2bd11f2221679075024e44093a91b3525b0162389b6852480db2d1d  ./controls/check_p20.py
@@ -838,6 +839,8 @@ d0d9f6b2464b92a80a47fc92169042174b9e3102d62cb7e365cb84591e0746e2  ./controls/p18
 396ba44d2b270865b40b34edf38b0f3cb1a61a18d9f0b47f475b97c65f7fccf4  ./controls/p181a_harness.py
 b970a022b523846adf22605b84626279c79c3e353386c0de5cc828d168db0f27  ./controls/p182_harness.py
 feb6ee3feebf11419df8ab8ccdedd18b685ea2c1d2d645f9e94c12c01805793b  ./controls/p183_harness.py
+c2270f558761ad7af18d15e9060dc305f3c4d9c7d71efe9858c769474f2009a3  ./controls/p184_covariance.py
+f8e464cce44c28e9848c4bfc9cc394843d26c5e6da97cc6269b2dfadf4764ff5  ./controls/p184_harness.py
 77c20062e872b047fa692e5df4ad39cb44befb4756ddee6fbb2508e5cb7a1ec6  ./controls/p18b_decimal_corpus_oracle.py
 ff2ba5308356519d81a9a620f6da590484c407d2adde032071637f532f66d2e6  ./controls/p19_core/adapter_compare.json
 33dfaca7227a99e330e293e8471a98e8275fa3c058d4cc28ddb704f29ee710c1  ./controls/p19_core/adapter_groupr.json
@@ -1006,11 +1009,11 @@ ed55ed00f6c00fc4a2351e18332e98e7feb33d9b7ca65e7ba861e0e5e8feef39  ./crates/actin
 b0f78a7666b9752c35948029d02cd52cd03a8b9596566a425b5512f30bd72237  ./crates/actinv-cli/src/assimilate.rs
 1b47334f832ba5a39dfb16cd01f108c1ddc7926c89506cdadd13c9d75b16b78e  ./crates/actinv-cli/src/bin/actinv.rs
 b8f0bd217bcabfa5774f96dae89880f3148dab77befdf368b80a24dfa8909802  ./crates/actinv-cli/src/budget.rs
-b463881f95845fa20319d0c5e2e5be8be410d4e4faf1eb41ad9db6459bd296cf  ./crates/actinv-cli/src/command.rs
+5f9b9913a6ae8d6025dc82ea163a8159c5cd0c3621df7e3a1d19b07fb08b7325  ./crates/actinv-cli/src/command.rs
 dbf392019a03d8816597bcf8ec3bbd04ab167e559c7ddd2bc030f58cc0ea1637  ./crates/actinv-cli/src/decide.rs
 dd9d19b9f71194417bc089ecb995d73cc631970c02305340999beb5fec8db59c  ./crates/actinv-cli/src/evalspread.rs
 785188378697b1e52c005cb238e751815f65a05d396febf9e2034e0b9886d6d5  ./crates/actinv-cli/src/fispact_import.rs
-05d593fc30d4e2e31589b96bb92e02fa065f882f498f9a44dc9237d22d0ffe78  ./crates/actinv-cli/src/help.rs
+01262740c7f8317a123bfdbe87f6700a2501dcfd7271d8928db212fd8530c521  ./crates/actinv-cli/src/help.rs
 c8350699b79eb6c4049bbd5c3ccacea2777ceee205a04164f090c7a231a2352a  ./crates/actinv-cli/src/impurities.rs
 0b165f4ed67d247d1ea6093a3365397836a2b9c0085c0bee23f4b42726a3ac91  ./crates/actinv-cli/src/impurities/uncertainty.rs
 14666ebeea2b004865f134dbbdacb997d0017699990e6498ab86b716277fb22b  ./crates/actinv-cli/src/inspect.rs
@@ -1137,10 +1140,10 @@ a69ee5083a48b6512c77cdffbb1eb0fa6d7e0a65ea00930ed4a808aaf33c2888  ./crates/actin
 570eaa5c84956e3aa0c96d0c7fb684ba3fa8174c18b7a1ec392497fa1927bf56  ./crates/actinv-data/src/bin/p20_collapse_probe.rs
 fa5a5d5a1cd0f73f79aa83fa7f2907ce431b0e1c425075cd86bfe6f8a1361e1b  ./crates/actinv-data/src/bin/p20_corpus_probe.rs
 446faa941069cc65c28a35d331197fc6865b5f0e6e8163c9d7fcf55e57685366  ./crates/actinv-data/src/bin/prepared_data_probe.rs
-7dc5b9e74c8a4d6ece4f4f55a1fee9420492a558240eb4f9007c43354af31b88  ./crates/actinv-data/src/builder.rs
+be5fa45a0ec8ef82e30b725a45cd2a01b606cee853def45ba4a739d6f2a6c357  ./crates/actinv-data/src/builder.rs
 122eaaf3d23727aa006097d37f8a0b7bad1bfc003c89c7fb2f10653438a809ed  ./crates/actinv-data/src/catalog.rs
 584399c14c25b24db09311622696bd2e5691dd3045cbaec0ce406ba1fefbf024  ./crates/actinv-data/src/composition.rs
-21576ac9c43debe73adec4070f7cb150841a97d96c13d72fc75007fdece944fa  ./crates/actinv-data/src/covariance.rs
+7d47b6047166bf8ebf5f14c0286007dd48c26b0ca0023ee7b0f744c113b595ba  ./crates/actinv-data/src/covariance.rs
 25b9ed12998022b3a3f377a0646600da95142963497f5ca2e3942de4215f5b68  ./crates/actinv-data/src/damage_kinematic.rs
 7014c51b72344c4812821d51f80013165b82a2a33abfacaaa400015aa16a3783  ./crates/actinv-data/src/decay.rs
 cc1a2fb17c104ff8f7ddd740ce90a0f606cdd4bace605531d6e64c22a1b5a53f  ./crates/actinv-data/src/displacement.rs
@@ -1337,7 +1340,7 @@ baa91d187e1bce94dba06b69e25d216f8eec9c60c4bbc5627c0b2d5adaefad91  ./docs/guide/i
 6b827c7dfc13e20fc0f2e663472859ce2b9779179b56b4ef49b2df29f2629ae6  ./docs/guide/quick-start.md
 cd0fd937f03609682e4e9b68759ddca7c0585b462561dfc062ea9496dcc767f1  ./docs/guide/releases.md
 df538569c15135d41ea9af2374e80c37103f28fa0f8b3df1f65dc4b29ef66cf7  ./docs/guide/results.md
-172cadbad060a43f3f06caa5d2db3c0abbf1744098d31fa46a430b907a40936a  ./docs/guide/specification.md
+fb26f4e28064dadfb8a37b7f11928649dbaeaceed766933b55a59dfba5acdc6a  ./docs/guide/specification.md
 4c9d53ead637d2bdc27586ca7cd18e737cee9212ac3c58cc56707679d2daa5da  ./docs/guide/studies.md
 2469eb0f22bf437121f5edcb75a448c3b5553361f8e4cf881e22bdf6f53a4fd5  ./docs/guide/troubleshooting.md
 bf2aedf8ecf698a1f56bf75927411a336f1add2770f48bd398cd1fc23abd46d9  ./docs/guide/validation.md
@@ -1469,7 +1472,7 @@ f6723eefeb6f5cacef2e87a83cd53b078dd5ca2777b7400f48f6b49ddc7a07b4  ./examples/was
 cfd86c2c5ac15d76ec2358c6bd196a6362b46bcc889160c06439975dc5ae8f3a  ./interchange/INTERCHANGE.md
 057dd636e1814f93c0869d4839887ff28a361f5c845f24153c4e93cbee1918d1  ./interchange/actinv_core_adapter.py
 4c42c2d68d375681621d6d3828b6daab4e2fdfc37f23cacbfc3b5a1c3fd3beec  ./interchange/run_case.py
-16ad15b03624c70c024a2812726ebf726fe8e3a2913f72a5609795e77bb79065  ./ledger.md
+2b64f2250f40d227d3f0f936b24160a7dd173dcedfd381176e49ea9ae69dac76  ./ledger.md
 588e9f4f4ff74df627a1a15306214db678531d7334f2f6e95a1603eabd1f1c55  ./packaging/actinv.ico
 9897482011f194d9495fc80965177f0632ae4166917a7f240d80c0fc3c8fb83e  ./packaging/actinv.png
 be93fd3e3bf295ec7e2bf23765492499f4e45f7aa45766a5143d565c16712adc  ./packaging/conda-forge/SUBMIT.md
@@ -1694,6 +1697,7 @@ c1e2d2ef80ee91b63f7806ca2b93c1b49d8396f4dfacf8623fd1c2a623e17e2f  ./protocols/AC
 ecb93fa9f5b3c141fe18ea45c5b91b00527c93fffc3b0d5884380f8fb50b67e1  ./protocols/ACTINV-P182_AMENDMENT_A.md
 2a870867107ab963ac82cb12067590d03782e0fd805e3ead5b30ebfe25e6d9d1  ./protocols/ACTINV-P182_PROTOCOL.md
 8efd42d9f65a0882b3e2522ce31a9d0c96e22e5f267acae5cc782520be6d97e4  ./protocols/ACTINV-P183_PROTOCOL.md
+803925c705cfb3f5e246b2f77c26a1da2bc24d918127c9750c4f60704d1be0bc  ./protocols/ACTINV-P184_PROTOCOL.md
 8eb3f3bc657a49ebeff7cc5d7ca124cb4e4debbf094fee9d6417c01f740aa9e0  ./protocols/ACTINV-P18_AMENDMENT_1.md
 002afb038bbbf1ad0bdb34149971f8d3f33a3e2590c6d04ced87bb5ada046e09  ./protocols/ACTINV-P18_PROTOCOL.md
 2c311876f8b55689eb1d060b74acb30663e7b60f917edffdbc88723c7a04bcf9  ./protocols/ACTINV-P18b_AMENDMENT_P38_RUNTIME.md
@@ -1823,7 +1827,7 @@ f16e43ed6d79f0ab1da8505d0b62aa0ee167b5fde29efda5f759fca4e7948936  ./protocols/de
 08d360c85b47152e78b4fa20b79d6f807778d2c630854bd09b2c047ca0e99c9f  ./protocols/desktop-interface-v1.md
 0f52d7bf346d077afb6cd52a4999101b92050a20dbc9e2d713bf1ff5f3efda6b  ./protocols/desktop-packaging-v1.md
 308e889c622fe811b63ae66e97bb37d9f5ec6a96ae850f2c201b86af5c994aab  ./protocols/desktop-packaging-v2.md
-f62a02789838d105117ece4f914309bec961bbda5c4d6f38a52efa5bd6b433bb  ./protocols/protocol_hash.txt
+706d0698e1a2ee86ad3b304d657f28f92c564c6f6e033a93d4eadf50a456fa10  ./protocols/protocol_hash.txt
 4a8925d08996b759120238021ff7af4c8ac9f814082ec1aa1183372c81ca0545  ./protocols/w-matcmp.p36.study.json
 7837466957fcd65be7bbe633fa7b07a2ddccab74b034c5ddf195814e0100632d  ./prototypes/p26_campaign.py
 189b44b935e32e8dbc38eab9aa890468ac8f313efbc56f637c1dea6494db3686  ./python/Cargo.lock

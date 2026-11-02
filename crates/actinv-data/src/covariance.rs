@@ -110,6 +110,9 @@ pub struct CollapsedCovariance {
 pub struct CovarianceBuildOptions {
     pub workers: usize,
     pub cache: Option<PathBuf>,
+    /// A directory of evaluations named like inputs: for each, MF=33 is read from it instead of the input, whose
+    /// SHA-256 still binds the target to the activation library. The index records the file's SHA-256.
+    pub mf33_from: Option<PathBuf>,
 }
 
 #[derive(Clone, Debug)]
@@ -155,6 +158,8 @@ struct CovarianceTargetIndex {
     mf33_sections: usize,
     components: usize,
     lb_counts: BTreeMap<i32, usize>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    mf33_source_sha256: Option<String>,
 }
 
 #[derive(Clone, Debug, Serialize)]
@@ -1811,6 +1816,7 @@ fn build_source(
     path: &Path,
     activation_targets: &BTreeMap<String, Vec<(usize, ActivationTarget)>>,
     cache: Option<&Path>,
+    mf33_from: Option<&Path>,
 ) -> Result<BuiltCovarianceSource, String> {
     let filename = path
         .file_name()
@@ -1830,7 +1836,17 @@ fn build_source(
         ));
     }
     let target_identity_sha256 = activation_target_identity(expected);
-    let key = cache_key(&before, &target_identity_sha256);
+    let mf33_path = mf33_from
+        .map(|directory| directory.join(filename))
+        .filter(|candidate| candidate.is_file());
+    let mf33_before = mf33_path
+        .as_deref()
+        .map(crate::builder::sha256_file)
+        .transpose()?;
+    let key = match &mf33_before {
+        None => cache_key(&before, &target_identity_sha256),
+        Some(mf33) => cache_key(&format!("{before}\0MF33\0{mf33}"), &target_identity_sha256),
+    };
     if let Some(directory) = cache {
         if let Some(source) = load_checkpoint(directory, &key, &before, &target_identity_sha256) {
             if crate::builder::sha256_file(path)? != before {
@@ -1877,7 +1893,20 @@ fn build_source(
         .iter()
         .map(|(index, target)| (target.mat, *index))
         .collect();
-    let parsed = parse_mf33(&text).map_err(|error| format!("{}: {error}", path.display()))?;
+    let parsed = match &mf33_path {
+        None => parse_mf33(&text).map_err(|error| format!("{}: {error}", path.display()))?,
+        Some(mf33_path) => {
+            let mf33_text = std::fs::read_to_string(mf33_path).map_err(|error| {
+                format!("cannot read {} as ENDF text: {error}", mf33_path.display())
+            })?;
+            let parsed = parse_mf33(&mf33_text)
+                .map_err(|error| format!("{}: {error}", mf33_path.display()))?;
+            if parsed.is_empty() {
+                return Err(format!("{} has no MF=33 covariance", mf33_path.display()));
+            }
+            parsed
+        }
+    };
     let sections = parsed
         .iter()
         .map(|component| (component.mat, component.mt))
@@ -1891,7 +1920,7 @@ fn build_source(
         let target = *target_by_mat.get(&component.mat).ok_or_else(|| {
             format!(
                 "{} MF=33 MAT={} has no matching activation target",
-                path.display(),
+                mf33_path.as_deref().unwrap_or(path).display(),
                 component.mat
             )
         })?;
@@ -1923,6 +1952,7 @@ fn build_source(
             mf33_sections: sections_by_target.get(target).map_or(0, BTreeSet::len),
             components: components_by_target.get(target).copied().unwrap_or(0),
             lb_counts: lb_by_target.remove(target).unwrap_or_default(),
+            mf33_source_sha256: mf33_before.clone(),
         });
     }
     if crate::builder::sha256_file(path)? != before {
@@ -1930,6 +1960,14 @@ fn build_source(
             "source {} changed during the covariance build",
             path.display()
         ));
+    }
+    if let Some(mf33_path) = &mf33_path {
+        if mf33_before.as_deref() != Some(crate::builder::sha256_file(mf33_path)?.as_str()) {
+            return Err(format!(
+                "MF=33 source {} changed during the covariance build",
+                mf33_path.display()
+            ));
+        }
     }
     let source = BuiltCovarianceSource {
         library,
@@ -2027,6 +2065,17 @@ pub fn build_covariance(
     }
     ensure_cache(input, options.cache.as_deref())?;
     let files = crate::builder::discover_inputs(input, Some(output))?;
+    if let Some(mf33_from) = options.mf33_from.as_deref() {
+        let names: BTreeSet<&OsStr> = files.iter().filter_map(|file| file.file_name()).collect();
+        for file in crate::builder::discover_inputs(mf33_from, Some(output))? {
+            if !file.file_name().is_some_and(|name| names.contains(name)) {
+                return Err(format!(
+                    "MF=33 source {} has no input of the same name",
+                    file.display()
+                ));
+            }
+        }
+    }
     if files.len() != activation_targets.len() {
         return Err(format!(
             "covariance input has {} files but activation index has {} distinct sources",
@@ -2041,7 +2090,14 @@ pub fn build_covariance(
     let sources: Vec<BuiltCovarianceSource> = pool.install(|| {
         files
             .par_iter()
-            .map(|path| build_source(path, &activation_targets, options.cache.as_deref()))
+            .map(|path| {
+                build_source(
+                    path,
+                    &activation_targets,
+                    options.cache.as_deref(),
+                    options.mf33_from.as_deref(),
+                )
+            })
             .collect::<Result<_, _>>()
     })?;
     let files_with_mf33 = sources
@@ -2075,13 +2131,24 @@ pub fn build_covariance(
     let mut source_manifest = Sha256::new();
     let mut unique_sources = BTreeMap::new();
     for target in &targets {
-        unique_sources.insert(target.file.as_str(), target.source_sha256.as_str());
+        unique_sources.insert(
+            target.file.as_str(),
+            (
+                target.source_sha256.as_str(),
+                target.mf33_source_sha256.as_deref(),
+            ),
+        );
     }
-    for (file, hash) in unique_sources {
+    for (file, (hash, mf33)) in unique_sources {
         source_manifest.update(file.as_bytes());
         source_manifest.update([0]);
         source_manifest.update(hash.as_bytes());
         source_manifest.update([0]);
+        if let Some(mf33) = mf33 {
+            source_manifest.update(b"MF33\0");
+            source_manifest.update(mf33.as_bytes());
+            source_manifest.update([0]);
+        }
     }
     let fingerprint = covariance_fingerprint();
     let index = CovarianceIndex {

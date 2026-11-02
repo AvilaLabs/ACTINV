@@ -1777,6 +1777,12 @@ manifest, representation inventory, builder fingerprint and final sidecar hash. 
 content-addressed and revalidated; worker count and cache reuse do not change canonical bytes. Raw evaluations,
 checkpoints and generated sidecars remain external data and must not be committed.
 
+`--mf33-from DIR` takes the covariances of an input from the file of the same name in `DIR`, when there is one; the
+input itself still binds the target to the activation library by its SHA-256, and nothing but MF=33 is read from the
+other file. The index records that file's SHA-256 as the target's `mf33_source_sha256` and includes it in the source
+manifest. A file in `DIR` without an input of the same name, without MF=33, or with an MF=33 material that is not
+the input's target is refused.
+
 When photons are requested (or `outputs` is omitted), `steps[].photon_source` contains:
 
 - evaluated discrete line rates and per-nuclide evaluated/source yields;

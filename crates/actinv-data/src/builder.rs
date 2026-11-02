@@ -4644,6 +4644,129 @@ mod tests {
     }
 
     #[test]
+    fn covariance_mf33_can_come_from_a_same_named_file() {
+        use crate::covariance::{build_covariance, CovarianceBuildOptions};
+        let fixture = std::env::temp_dir().join(format!(
+            "actinv-mf33-from-{}-{}",
+            std::process::id(),
+            std::time::SystemTime::now()
+                .duration_since(std::time::UNIX_EPOCH)
+                .unwrap()
+                .as_nanos()
+        ));
+        let input = fixture.join("input");
+        std::fs::create_dir_all(&input).unwrap();
+        let ground = fixture_header(26056, 2631, "0", 0, 0);
+        let isomer = fixture_header(26056, 2632, "250000", 2, 1);
+        std::fs::write(
+            input.join("a-ground.endf"),
+            format!("{}\n", ground.join("\n")),
+        )
+        .unwrap();
+        std::fs::write(
+            input.join("b-isomer.endf"),
+            format!("{}\n", isomer.join("\n")),
+        )
+        .unwrap();
+        std::fs::write(input.join("c-source.endf"), fixture_product_tape()).unwrap();
+        let activation = fixture.join("activation.npz");
+        build_library(
+            &input,
+            &activation,
+            &BuildOptions {
+                format: LibraryFormat::Tendl,
+                projectile: Some(Projectile::Neutron),
+                groups: GroupStructure {
+                    name: "p18-fixture".into(),
+                    boundaries_ev: vec![1.0, 4.0],
+                },
+                temperature_K: 0.0,
+                workers: 1,
+                cache: None,
+                grid_density: 1.0,
+                strict_states: false,
+                decay_path: None,
+                decay_fallback_path: None,
+                normalize_profile: NormalizeProfile::None,
+                continue_on_error: false,
+                spallation: None,
+            },
+        )
+        .unwrap();
+        let mf33 = |mat: i32| {
+            let lines = [
+                fixture_record(["27059", "58.9", "0", "0", "0", "1"], mat, 33, 102, 1),
+                fixture_record(["0", "0", "0", "102", "0", "1"], mat, 33, 102, 2),
+                fixture_record(["0", "0", "1", "5", "6", "3"], mat, 33, 102, 3),
+                fixture_record(["1", "2", "4", "0.01", "0.002", "0.04"], mat, 33, 102, 4),
+                fixture_send(mat, 33),
+            ];
+            format!("{}{}\n", fixture_product_tape(), lines.join("\n"))
+        };
+        let build = |name: &str, mf33_from: Option<PathBuf>| {
+            let output = fixture.join(name);
+            build_covariance(
+                &input,
+                &activation,
+                &output,
+                &CovarianceBuildOptions {
+                    workers: 1,
+                    cache: None,
+                    mf33_from,
+                },
+            )
+            .map(|summary| {
+                let index: serde_json::Value =
+                    serde_json::from_str(&std::fs::read_to_string(summary.index).unwrap()).unwrap();
+                (summary.components, index)
+            })
+        };
+
+        let (components, plain) = build("plain.cov.npz", None).unwrap();
+        assert_eq!(components, 0);
+        assert!(plain["targets"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .all(|target| target.get("mf33_source_sha256").is_none()));
+
+        let overlay = fixture.join("mf33");
+        std::fs::create_dir(&overlay).unwrap();
+        std::fs::write(overlay.join("c-source.endf"), mf33(2759)).unwrap();
+        let overlay_sha256 = sha256_file(overlay.join("c-source.endf")).unwrap();
+        let (components, patched) = build("patched.cov.npz", Some(overlay.clone())).unwrap();
+        assert_eq!(components, 1);
+        for target in patched["targets"].as_array().unwrap() {
+            let expected = (target["file"] == "c-source.endf").then_some(overlay_sha256.as_str());
+            assert_eq!(target["mf33_source_sha256"].as_str(), expected);
+            // the evaluation still binds by its own SHA-256
+            let plain_target = &plain["targets"][target["target"].as_u64().unwrap() as usize];
+            assert_eq!(target["source_sha256"], plain_target["source_sha256"]);
+        }
+        assert_ne!(
+            patched["source_manifest_sha256"],
+            plain["source_manifest_sha256"]
+        );
+
+        std::fs::write(overlay.join("c-source.endf"), mf33(9999)).unwrap();
+        let error = build("foreign.cov.npz", Some(overlay.clone())).unwrap_err();
+        assert!(
+            error.contains("MAT=9999 has no matching activation target"),
+            "{error}"
+        );
+
+        std::fs::write(overlay.join("c-source.endf"), fixture_product_tape()).unwrap();
+        let error = build("empty.cov.npz", Some(overlay.clone())).unwrap_err();
+        assert!(error.contains("has no MF=33 covariance"), "{error}");
+
+        std::fs::write(overlay.join("c-source.endf"), mf33(2759)).unwrap();
+        std::fs::write(overlay.join("d-unknown.endf"), mf33(2759)).unwrap();
+        let error = build("unknown.cov.npz", Some(overlay)).unwrap_err();
+        assert!(error.contains("has no input of the same name"), "{error}");
+        std::fs::remove_dir_all(fixture).unwrap();
+    }
+
+    #[test]
     fn aggregate_mt1_and_mt3_values_cannot_change_emitted_rows() {
         let groups = GroupStructure {
             name: "custom".into(),

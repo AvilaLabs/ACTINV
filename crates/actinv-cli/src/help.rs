@@ -345,9 +345,10 @@ identical for any N.\n\n\
   actinv build-shielding tendl/ shielding.json\n\n\
 Exit: 0 built, 1 the build failed, 2 bad usage.",
         "build-covariance" => "actinv build-covariance: build a covariance sidecar\n\n\
-usage: actinv build-covariance INPUT ACTIVATION.npz OUTPUT.cov.npz [--workers N] [--cache DIR]\n\n\
+usage: actinv build-covariance INPUT ACTIVATION.npz OUTPUT.cov.npz [--workers N] [--cache DIR] [--mf33-from DIR]\n\n\
 Processes MF=33 covariances into a sidecar for an activation library, used\n\
-by the problem's `uncertainty` section.\n\n\
+by the problem's `uncertainty` section. --mf33-from DIR reads MF=33 from a\n\
+same-named evaluation in DIR instead of the input.\n\n\
   actinv build-covariance tendl/ library.npz library.cov.npz\n\n\
 Exit: 0 built, 1 the build failed, 2 bad usage.",
         "mesh" => "actinv mesh: solve every cell of a flux mesh\n\n\

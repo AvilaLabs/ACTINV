@@ -5899,3 +5899,28 @@ A new protocol after P182 and its amendment failed (ledgers 334, 336); the owner
   (run, assemble, checker) gave G1–G3 passing; G0 failed only for the missing registration and G4 for two other
   users' `systemd-run` jobs then running; only gate statuses were read and the rehearsal outputs were deleted. The
   scored run waits for a quiet machine.
+
+## Entry 338 — P184 registered: IRDFF-II covariances for TENDL-2025's dosimetry reactions in the covariance sidecar (2026-11-02)
+
+`protocols/ACTINV-P184_PROTOCOL.md` (SHA-256 `803925c7…`), patcher `controls/p184_covariance.py`
+(`c2270f55…`), harness `controls/p184_harness.py` (`f8e464cc…`) and checker `controls/check_p184.py`
+(`0f90ef37…`). With them, `actinv build-covariance --mf33-from DIR`: it reads an input's MF=33 from a
+same-named file, while the input still binds the target to the activation library by SHA-256. The index records
+`mf33_source_sha256`, and builds without the option write the same sidecar.
+- **Why.** The 51% iron dose band comes from TENDL-2025's TALYS covariance for Fe-56(n,p): 50% at 14 MeV, against
+  IRDFF-II's 1.1% for the same cross section. Over the reactions compared, TENDL-2025's value is at least 3 times
+  IRDFF-II's in 36 of 59.
+- **Method.** Each of the 62 IRDFF-II reactions that pass the selection rule (42 nuclides) takes
+  `r r^T C_IRDFF + b b^T` on IRDFF-II's grid. TENDL's side is the activation library's reaction-total row, because
+  TENDL-2025's MF=3 in the resonance range is only a background. The comparison range ends at TENDL-2025's MF=3 end
+  (the MT=5 changeover at 30 MeV).
+- **Gates.** Inputs and build provenance; selection recomputed; every replaced matrix recomputed to the 7-digit
+  text tolerance and positive semidefinite; every other v1.2.0 component bit-identical. A before/after FNS iron
+  activity-uncertainty observation is recorded but not gated. One repair round is allowed.
+- **Checks before registration.** Checker selftest passes. Full 2,850-input development builds with five, then
+  seven, patched files pass G2–G4 with the checker's own code (284,922 components copied bit for bit; smallest
+  eigenvalue ratio −1.6e-8). The `--mf33-from` unit test passes. Four defects found in development were fixed
+  first (the protocol's disclosure lists them). All 62 reactions were staged once (selection and largest |b| seen);
+  no sidecar was built from that stage. No band was computed with a changed covariance.
+- **Sources.** The 2,850 TENDL-2025 sources are those of the v1.2.0 sidecar index. 29 come from `TENDL-n.tgz`;
+  Pb-208 gets P10 Amendment D's NaN repair. The new sidecar is not shipped by P184.

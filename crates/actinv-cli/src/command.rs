@@ -839,10 +839,11 @@ fn build_covariance(args: &[String]) {
     let activation = &args[1];
     let output = &args[2];
     let options = valued_options(&args[3..]);
-    reject_unknown(&options, &["--workers", "--cache"]);
+    reject_unknown(&options, &["--workers", "--cache", "--mf33-from"]);
     let build_options = CovarianceBuildOptions {
         workers: parsed_option(&options, "--workers").unwrap_or(1),
         cache: options.get("--cache").map(std::path::PathBuf::from),
+        mf33_from: options.get("--mf33-from").map(std::path::PathBuf::from),
     };
     let summary = build_covariance_sidecar(input, activation, output, &build_options)
         .unwrap_or_else(|error| die(error, 1));

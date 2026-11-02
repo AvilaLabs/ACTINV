@@ -1,5 +1,14 @@
 # Changelog
 
+## Unreleased
+
+**Added**
+
+- `actinv build-covariance --mf33-from DIR` reads an input's MF=33 covariances from the file of the same name in
+  `DIR`, so a sidecar can carry another evaluation's covariances for some reactions while the input still binds each
+  target to the activation library by its SHA-256. The index records the file's SHA-256 as `mf33_source_sha256`; a
+  build without the option writes the same sidecar as before.
+
 ## v1.7.2 — 2026-11-02
 
 **Added**
