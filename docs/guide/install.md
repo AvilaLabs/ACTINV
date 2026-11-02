@@ -53,4 +53,24 @@ actinv data verify
 
 The default neutron bundle downloads about 186 MiB and installs about 276 MiB in `actinv-data/v1.2.0/` inside that folder. The first calculation creates a separate prepared-data cache. [Data setup](data.md) explains custom locations, other particles, covariance bundles, and offline installation.
 
+### If `fetch` stops with `http status: 403`
+
+The two decay files (`endfb-viii-0-decay` and `jeff-3-3-decay`) come from the IAEA Nuclear Data Section, whose site
+now refuses automated downloads. ACTINV keeps byte-identical copies in the
+[decay-sources-v1 release](https://github.com/AvilaLabs/ACTINV/releases/tag/decay-sources-v1). Install them once, in
+the same working folder, then run `fetch` again; it checks them against the catalog and downloads the rest:
+
+```bash
+mkdir -p actinv-data/v1.2.0/decay && cd actinv-data/v1.2.0/decay
+for f in endf-b-viii-0_decay jeff-3-3_decay; do
+  curl -fLO "https://github.com/AvilaLabs/ACTINV/releases/download/decay-sources-v1/$f.sublib.zip"
+  unzip -o "$f.sublib.zip" "$f.dat" && rm "$f.sublib.zip"
+done
+cd ../../.. && actinv data fetch
+```
+
+On Windows, download the two `.sublib.zip` files from the release page and extract the `.dat` file inside each into
+`actinv-data\v1.2.0\decay\`. An existing `actinv-data` folder from an earlier version already has these files, and
+`fetch` reuses them.
+
 Continue with [Your first calculation](quick-start.md).

@@ -1327,7 +1327,7 @@ ad272dc87c112bfb5295c3feb7bc00aacb2aa964ca2fb1fe1a7e63dc241ac192  ./docs/guide/d
 feb943c57e5e4d6cf37ece3668b4fc4eda055ad224265c75edfdb38f180d0d56  ./docs/guide/fispact-migration.md
 18f20e637d3103ec4bbdbeca8e09ac892bb9e7ad8f0b7b69b12ec0667a92924f  ./docs/guide/impurities.md
 cb1b167f9ddccdc6f1261bdd0a34836b8b0c78e2dbeaf05baba2905df44e0d30  ./docs/guide/index.md
-544cb916f7dc9759cf5fdccfac3693a227bbc0c038d273ee6f277636b0cbd9c7  ./docs/guide/install.md
+b623b5038b8d238720e06995f68100d7d11e59cdf8ed9765eee7436d04f6e19f  ./docs/guide/install.md
 6ad7984666b7ac9f3c6cba775a34b21604656fced8d9bef60a92160814efd40a  ./docs/guide/method.md
 f6060655a36deb401f77654064459db9518f72da32775a4f5e94da7d7b06785c  ./docs/guide/openmc.md
 9a1e669909cff94a1fbc0893b683f3416b0d35b461db34eaff046c140bed7297  ./docs/guide/problems.md
@@ -1338,7 +1338,7 @@ cbf284d9da4f25bff974b6abf0a5a2d2a58dd339f6274fcd2894a02ebfbd1c7f  ./docs/guide/r
 df538569c15135d41ea9af2374e80c37103f28fa0f8b3df1f65dc4b29ef66cf7  ./docs/guide/results.md
 7fb20d30ec3631eb71dddb7bce0338be61016254a241fdd975b59e2532c94bb5  ./docs/guide/specification.md
 4c9d53ead637d2bdc27586ca7cd18e737cee9212ac3c58cc56707679d2daa5da  ./docs/guide/studies.md
-625a8639f544eab76de3a1557b7a7d53c1e7a4255335ba763f26681d4acd7d3a  ./docs/guide/troubleshooting.md
+685be09880cf0b745b43b782bacd91406837d77a3206b0b4641606164e622ea0  ./docs/guide/troubleshooting.md
 bf2aedf8ecf698a1f56bf75927411a336f1add2770f48bd398cd1fc23abd46d9  ./docs/guide/validation.md
 c596c555a17bd42034a158fd0311d3544494138552981d7d932fb101f12d9a86  ./docs/guide/waste.md
 e12d1136a0c49aaf3ca56c76fe0e2cb510b0b6fa06793f796e1e491b59de7549  ./docs/guide/whats-new-1.6.md
