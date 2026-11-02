@@ -5860,3 +5860,15 @@ Scored run on `e3467e6` (`results/p182_record.json`, SHA-256 `767e4632…`; verd
   mesh (2.5e-11) and did not anticipate this. **G3 fails; P182-FAIL** whatever G5 gives. No sentence is allowed.
 - The run outputs are kept under `target/p182-work/out` (not tracked) pending the repair decision; P182 allows one
   repair round, registered as an amendment first.
+
+## Entry 335 — P182 Amendment A registered: the pruning totals tested against the reported bound (2026-11-01)
+
+`protocols/ACTINV-P182_AMENDMENT_A.md` (SHA-256 `ecb93fa9…`), checker `controls/check_p182a.py` (`bb92aa43…`). P182's one
+repair round; the owner left the choice of repair to me.
+- **Change.** The two overall totals (`activity_Bq_per_g_bound`, `heat_W_per_g_bound`) keep P182's `[1 - 1e-12,
+  1 + 1e-6]`. Each of the four parts (dropped and kept, activity and heat) must be at least the baseline's and may
+  exceed it by at most `1e-6` times the baseline's overall total for that quantity. Everything else is P182's.
+- **No rerun.** The checker verifies every output of P182's record (`767e4632…`) by SHA-256 and recompares the pairs.
+- **Disclosure.** Written after P182's whole record was seen, including the four failures and the recorded times,
+  knowing the change passes those four. P182's sentences, if quoted, carry that disclosure.
+- The checker's selftest (and P182's within it) passes.
