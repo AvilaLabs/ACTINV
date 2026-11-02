@@ -263,6 +263,15 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements-ci.txt
 
+      - name: Source distribution resolves on its own
+        run: |
+          maturin sdist -m python/Cargo.toml -o "$RUNNER_TEMP/sdist"
+          mkdir "$RUNNER_TEMP/sdist-x"
+          tar xzf "$RUNNER_TEMP"/sdist/actinv-*.tar.gz -C "$RUNNER_TEMP/sdist-x"
+          for manifest in "$RUNNER_TEMP"/sdist-x/actinv-*/Cargo.toml "$RUNNER_TEMP"/sdist-x/actinv-*/python/Cargo.toml; do
+            cargo metadata --format-version 1 --no-deps --manifest-path "$manifest" > /dev/null
+          done
+
       - name: P16 typed-boundary control and independent verdict
         run: |
           python controls/test_p16_dependency_history.py

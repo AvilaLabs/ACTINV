@@ -10,6 +10,9 @@ package:
 source:
   url: https://pypi.org/packages/source/a/actinv/actinv-${{ version }}.tar.gz
   sha256: c00454d16406b695359ac6a80bac8d4c88478b3f591d9ccde59f4d69e07c8997
+  patches:
+    # the 1.7.1 sdist lists crates/actinv-gui as a workspace member without shipping it; fixed upstream
+    - 0001-workspace-members-glob.patch
 
 build:
   number: 0
@@ -51,9 +54,7 @@ about:
   summary: Open, standalone nuclide-inventory and activation solver
   description: |
     ACTINV computes nuclide inventories, activation and decay heat. This
-    package ships the Python bindings (Rust extension actinv._actinv), the
-    `actinv` command-line tool, and the optional actinv.openmc adapter.
-    OpenMC is an optional runtime integration and is not a dependency.
+    package ships the Python bindings and the `actinv` command-line tool.
   license: MIT OR Apache-2.0
   license_file:
     - LICENSE-MIT
@@ -62,4 +63,4 @@ about:
 
 extra:
   recipe-maintainers:
-    - OWNER_GITHUB_HANDLE
+    - Connoravila1

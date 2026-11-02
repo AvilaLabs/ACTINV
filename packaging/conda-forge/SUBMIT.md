@@ -3,20 +3,34 @@
 Recipe: `recipe.yaml` (rattler-build, schema v1; staged-recipes accepts it).
 Source: PyPI sdist `actinv-1.7.1.tar.gz`, sha256 c00454d16406b695359ac6a80bac8d4c88478b3f591d9ccde59f4d69e07c8997
 (taken from https://pypi.org/pypi/actinv/1.7.1/json). Re-verify: `curl -L <url> | sha256sum`.
-Not build-tested (no builds allowed when written).
+Built and tested locally on 2026-11-02 with rattler-build 0.80.0 (linux-64, Python 3.12, `variants.yaml` below standing in for
+conda-forge's pinning): the Rust build, `import actinv`, `pip check` and `actinv --help` pass.
+
+The 1.7.1 sdist's top-level Cargo.toml lists `crates/actinv-gui` as a workspace member but the sdist does not ship it, so
+`cargo-bundle-licenses` (which reads that file) fails. `0001-workspace-members-glob.patch` changes the member list to
+`crates/*`; the same change is on master, with a CI step that checks the sdist's manifests, so the patch goes when the
+recipe moves past 1.7.1.
 
 ## Before submitting
-1. Replace `OWNER_GITHUB_HANDLE` in recipe.yaml (maintainer must have a GitHub account; they get write access to the feedstock).
+1. Maintainer: `Connoravila1` (gets write access to the feedstock).
 2. Check the sdist actually contains LICENSE-MIT, LICENSE-APACHE (python/pyproject.toml lists them), the `crates/` path dependencies, and a Cargo.lock; cargo-bundle-licenses needs the manifest. Download and `tar tzf` it into an empty dir.
 3. Compare against the current ruff-feedstock / polars-feedstock recipes in case conventions changed.
-4. Optional local test: `rattler-build build --recipe recipe.yaml -c conda-forge` (or the staged-recipes `build-locally.py`).
+4. Local test: `rattler-build build --recipe recipe.yaml -c conda-forge -m variants.yaml`, with
+
+       c_stdlib: [sysroot]
+       c_stdlib_version: ["2.17"]
+       c_compiler: [gcc]
+       c_compiler_version: ["14"]
+       python: ["3.12"]
+
+   (staged-recipes' `build-locally.py` uses conda-forge's real pinning instead).
 
 ## Commands
     gh repo fork conda-forge/staged-recipes --clone --remote
     cd staged-recipes
     git checkout -b actinv
     mkdir recipes/actinv
-    cp /home/connoravila/Documents/actinv/target/next-wt/packaging/conda-forge/recipe.yaml recipes/actinv/recipe.yaml
+    cp <actinv checkout>/packaging/conda-forge/recipe.yaml <actinv checkout>/packaging/conda-forge/0001-workspace-members-glob.patch recipes/actinv/
     git add recipes/actinv && git commit -m "Add actinv recipe"
     git push -u origin actinv
     gh pr create --repo conda-forge/staged-recipes --title "Add actinv" --body-file pr_body.md
@@ -32,7 +46,6 @@ The PR template is a checklist; paste it into pr_body.md and tick: recipe in its
 - Large/long build: Rust workspace compile time on CI.
 
 ## Open questions
-- Is the sdist complete enough to build offline-from-crates.io (it needs network for crates; conda-forge allows cargo fetch)? Verify it builds.
-- Does `actinv --help` exit 0 with the entry point? Check before submission.
+- Answered 2026-11-02: the sdist builds (crates fetched from crates.io during the build), and `actinv --help` exits 0.
 - Does the CLI binary exist standalone? No: it is the `actinv:_cli` entry point inside the Python package (CLI crate is linked into the extension). A separate `actinv-cli` conda package is not needed.
 - Data files: does the package depend on separately downloaded nuclear data (actinv-data)? Confirm nothing at runtime is missing.
