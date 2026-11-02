@@ -41,6 +41,20 @@ use std::sync::atomic::{AtomicU64, Ordering};
 const COPY_BUFFER_BYTES: usize = 64 * 1024;
 const PROGRESS_INTERVAL_BYTES: u64 = 16 * 1024 * 1024;
 static TEMPORARY_NONCE: AtomicU64 = AtomicU64::new(0);
+/// Byte-identical copies of catalog sources whose own site refuses automated downloads (the IAEA
+/// decay archives answer with a browser check, HTTP 403), keyed by the source SHA-256. A source is
+/// fetched from its catalog URL first and from here only if that fails; the copy is held to the
+/// same bytes and SHA-256, so it installs exactly what the catalog names.
+const SOURCE_MIRRORS: &[(&str, &str)] = &[
+    (
+        "9f0254ea1314a233d957e507779eb53e6c7fafd17100fd5da23ce80ee80dd8ae",
+        "https://github.com/AvilaLabs/ACTINV/releases/download/decay-sources-v1/endf-b-viii-0_decay.sublib.zip",
+    ),
+    (
+        "73d52f142a284e2f463a8afcac5a9422c00de7bbbdee7e33196d825bea5edd6d",
+        "https://github.com/AvilaLabs/ACTINV/releases/download/decay-sources-v1/jeff-3-3_decay.sublib.zip",
+    ),
+];
 
 pub use actinv_data::catalog::{
     embedded_catalog, embedded_catalog_json, ArtifactRole, DataArtifact, DataBundle, DataCatalog,
@@ -463,6 +477,51 @@ fn copy_verified<R: Read>(
 }
 
 fn download_source(
+    downloader: &dyn Downloader,
+    source: &DownloadSource,
+    parent: &Path,
+    hint: &str,
+    show_progress: bool,
+) -> Result<TemporaryFile, String> {
+    download_source_mirrored(
+        downloader,
+        source,
+        SOURCE_MIRRORS,
+        parent,
+        hint,
+        show_progress,
+    )
+}
+
+/// `download_one` from the source URL, then, if that fails and `mirrors` holds a copy of the
+/// source, from the copy.
+fn download_source_mirrored(
+    downloader: &dyn Downloader,
+    source: &DownloadSource,
+    mirrors: &[(&str, &str)],
+    parent: &Path,
+    hint: &str,
+    show_progress: bool,
+) -> Result<TemporaryFile, String> {
+    let error = match download_one(downloader, source, parent, hint, show_progress) {
+        Ok(file) => return Ok(file),
+        Err(error) => error,
+    };
+    let Some((_, url)) = mirrors.iter().find(|(sha256, _)| *sha256 == source.sha256) else {
+        return Err(error);
+    };
+    if show_progress {
+        eprintln!("  {hint}: {error}; trying ACTINV's copy {url}");
+    }
+    let copy = DownloadSource {
+        url: (*url).to_string(),
+        ..source.clone()
+    };
+    download_one(downloader, &copy, parent, hint, show_progress)
+        .map_err(|second| format!("{error}; ACTINV's copy {url}: {second}"))
+}
+
+fn download_one(
     downloader: &dyn Downloader,
     source: &DownloadSource,
     parent: &Path,
@@ -1221,6 +1280,69 @@ mod tests {
                 .is_err()
         );
         assert!(!second_output.0.join("v1.0.0/decay/primary.dat").exists());
+    }
+
+    #[test]
+    fn a_failed_source_is_fetched_from_its_copy_with_the_same_identity() {
+        let (catalog, mut downloader) = fixture_catalog();
+        let source = catalog.artifact("primary").unwrap().source.clone();
+        let copy_url = "https://copy.invalid/primary";
+        let mirrors = [(source.sha256.as_str(), copy_url)];
+        let payload = downloader.payloads.remove(&source.url).unwrap();
+        let output = TestDirectory::new("mirror");
+
+        // the source URL fails and nothing is mirrored: the source's error
+        let error =
+            download_source_mirrored(&downloader, &source, &[], &output.0, "primary", false)
+                .err()
+                .unwrap();
+        assert_eq!(error, "planted download failure");
+
+        // the copy has the same bytes: it is used
+        downloader.payloads.insert(copy_url.into(), payload.clone());
+        let file =
+            download_source_mirrored(&downloader, &source, &mirrors, &output.0, "primary", false)
+                .unwrap();
+        assert_eq!(std::fs::read(&file.path).unwrap(), payload);
+
+        // a copy with other bytes is refused, and both failures are named
+        downloader
+            .payloads
+            .insert(copy_url.into(), b"PRIMARY".to_vec());
+        let error =
+            download_source_mirrored(&downloader, &source, &mirrors, &output.0, "primary", false)
+                .err()
+                .unwrap();
+        assert!(
+            error.starts_with("planted download failure; ACTINV's copy"),
+            "{error}"
+        );
+        assert!(error.contains("SHA-256"), "{error}");
+
+        // the source URL is tried first
+        downloader
+            .payloads
+            .insert(source.url.clone(), payload.clone());
+        let file =
+            download_source_mirrored(&downloader, &source, &mirrors, &output.0, "primary", false)
+                .unwrap();
+        assert_eq!(std::fs::read(&file.path).unwrap(), payload);
+    }
+
+    #[test]
+    fn every_source_copy_is_of_a_catalog_source() {
+        let catalog = embedded_catalog().unwrap();
+        for (sha256, url) in SOURCE_MIRRORS {
+            let source = catalog
+                .artifacts
+                .iter()
+                .map(|artifact| &artifact.source)
+                .find(|source| source.sha256 == *sha256)
+                .unwrap_or_else(|| panic!("{url} copies no source of the catalog"));
+            let name = |u: &str| u.rsplit('/').next().unwrap().to_string();
+            assert_eq!(name(url), name(&source.url));
+            assert!(url.starts_with("https://github.com/AvilaLabs/ACTINV/releases/download/"));
+        }
     }
 
     #[test]

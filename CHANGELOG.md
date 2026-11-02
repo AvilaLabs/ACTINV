@@ -15,6 +15,10 @@
     `activation/materials.xml`.
   - Under MPI, step 2 runs `actinv mesh` once, on rank 0, which alone writes the activation files; the other ranks
     read its result (a shared filesystem is assumed), and a failure on rank 0 is raised on every rank.
+  - `uncertainty={}` adds a first-order band to every photon tally, in `results["dose_uncertainty"]`. It covers
+    activation cross sections (MF=33), decay constants and flux-tally noise, plus the photon tally's own statistics.
+    The run splits each photon tally by birth region and removes the copies afterwards. Tested on OpenMC 0.15.3 and
+    0.16.0; not yet qualified against sampling.
 - `self_shielding.mixture`: resonance self-shielding factors computed at run time from the material's own pointwise
   cross sections (narrow-resonance flux `1 / Sigma_t` of the whole mixture, integrated over each library group), from
   hash-pinned raw ENDF-6 evaluations. Overlapping resonances of different nuclides shield each other, which the table
@@ -33,6 +37,10 @@
 
 **Fixed**
 
+- `actinv data fetch` installs the two IAEA decay archives (ENDF/B-VIII.0 and JEFF-3.3) again for first-time users.
+  The IAEA site now answers automated downloads with HTTP 403. When the IAEA URL fails, fetch takes ACTINV's
+  byte-identical copy from the `decay-sources-v1` release, held to the same size and SHA-256. The catalog is
+  unchanged.
 - Self-shielding with `dilution: "composition"`: the analytic potential-scattering estimate for nuclides the table
   does not cover was 100 times too small (the ENDF channel radius was taken as femtometres), so materials whose main
   scatterers are light nuclides absent from the table (concrete, water) were over-shielded. Present since 1.1.0;
