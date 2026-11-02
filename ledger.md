@@ -5884,3 +5884,18 @@ loosened by 2.2e-9 relative, which P182's own test accepted. The amendment was r
 records with no overall total occur. **P182A-FAIL.** P182's one repair round is spent: the prune change
 (`793ad03`, `ead00ec`) stays on master, CI-green and result-preserving on these 268 problems, but unqualified; no
 speed sentence is allowed. Any qualification needs a new protocol with a fresh run. The run outputs are deleted.
+
+## Entry 337 — P183 registered: the faster rate prune rerun with a corrected pruning-bound test (2026-11-01)
+
+`protocols/ACTINV-P183_PROTOCOL.md` (SHA-256 `8efd42d9…`), harness `controls/p183_harness.py` (`feb6ee3f…`, P182's
+harness with `target/p183-work` and `results/p183_record.json`) and checker `controls/check_p183.py` (`1e16928c…`).
+A new protocol after P182 and its amendment failed (ledgers 334, 336); the owner approved a fresh run.
+- **Test.** As P182, except each pruning-bound part passes if it meets P182's own test or loosens by at most 1e-6 of
+  the overall total; the overall totals keep `[1 - 1e-12, 1 + 1e-6]`. Every pair P182's test accepted is accepted.
+- **Disclosure.** Written after both failures and all of P182's record were seen; results are expected identical.
+- **Checks before registration.** Selftest (P182's within it) passes, including a fixture with a real null-total
+  water region's values and P182's F 1996 values. Dry runs on the already-seen pairs (CI's iron problem, the
+  32-region TENDL-2025 mesh) pass. `prepare` wrote inputs byte-identical to P182's. A two-problem end-to-end rehearsal
+  (run, assemble, checker) gave G1–G3 passing; G0 failed only for the missing registration and G4 for two other
+  users' `systemd-run` jobs then running; only gate statuses were read and the rehearsal outputs were deleted. The
+  scored run waits for a quiet machine.
