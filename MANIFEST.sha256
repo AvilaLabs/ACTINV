@@ -3,7 +3,7 @@ aff9e28bab599cc95b9a9cc9b03d896ca09d0593d8e1213175c3da372951456d  ./.github/work
 8ba8e292fd0afb868e23358bf6a2405c0e396bd0d78fbe4b7bee36ca582f8725  ./.github/workflows/docs.yml
 f05f89bed6f52d32a271c939a34d3711781324fe788f4663f538b5b16191bf60  ./.github/workflows/fns-iron.yml
 4371ef11aaaaaa05e78f67ac065b6ada016dc74b129debec9374af2f6bc62015  ./.github/workflows/fusion-isotope.yml
-5d8f0320af0e59302566015a8b3858e62c5fe2aa94e3114aef05b3cfdfefc197  ./.github/workflows/openmc.yml
+084c434ce40d0ef83b690d50c876ea3c10868082457149940e4ea13debb9a3c8  ./.github/workflows/openmc.yml
 35f32079ded01135a8956b457daaaf1de373be5c652e4d5701db47af21127df5  ./.github/workflows/publish-crates.yml
 a5fdde37c08ded4e5cb97be9c642ae0d170af19f6b1b826792a31f4d5acbcefb  ./.github/workflows/publish-pypi.yml
 ea36b74db132862e65b3adba54dfd4aa0b8dd237f7d7d0e89ba95926e5216139  ./.github/workflows/release-artifacts.yml
@@ -6568,6 +6568,7 @@ e5c957e91b944346386d67205bacb500aa8dc7f82417f35f6b7f755d634cfed3  ./scripts/diag
 e3b59683775fe379d73b0b307a145c499ecf21ba8d98e0fdf6bad2b082be7bd9  ./scripts/fetch_ci_data.sh
 be23680249616710739ba26ad3286aa2b68123f3c54e8669ae2ec60c0e016ec7  ./scripts/fetch_ci_seed.py
 c329368582a3289af9201ebe5b764fc7d3e5a847944badb1abadb94162daae0b  ./scripts/git-hooks/pre-commit
+8897af2e435668c1f74c2d0144ffd991e7a93910b74cef6853b7e1e18360170b  ./scripts/openmc_ci_decay.py
 3ba8793b56e1153c5b26846a22962b883ffa9fb3d0fec2d57e0f069452b050a3  ./scripts/openmc_r2s_smoke.py
 f9237f139e6fb7cd18fabe0c6e3e08f8108c16dd9c7aa4f29be3cb04068c7d91  ./scripts/package_desktop.py
 3918ad6145cfd5bc13520182c8664f9d076bff6584b2642bed3708d0c725dfa6  ./scripts/preflight.py

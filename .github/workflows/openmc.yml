@@ -1,9 +1,11 @@
 name: openmc
 
-# actinv.openmc against OpenMC's official images: the supported releases and the nightly build of
-# OpenMC's develop branch. Each runs the adapter's unit tests with OpenMC importable (none may be
-# skipped for want of it) and an end-to-end R2S smoke run, cell-based and mesh-based, on the
-# image's own cross sections. Weekly, by hand, and when the adapter or these scripts change.
+# actinv.openmc against the supported OpenMC releases (conda-forge) and the nightly build of OpenMC's
+# develop branch (its official image). Each runs the adapter's unit tests with OpenMC importable (none
+# may be skipped for want of it) and an end-to-end R2S smoke run, cell-based and mesh-based. Weekly,
+# by hand, and when the adapter or these scripts change.
+# Release images are not used: openmc/openmc:v0.16.0 was built from OpenMC's master branch and
+# contains 0.15.3. The smoke run's iron cross sections come from the develop image's library.
 # Not part of the release gate (require-green-ci.yml reads the controls workflow only): a failure
 # on develop is an early warning about an upcoming OpenMC release.
 
@@ -16,11 +18,17 @@ on:
     paths:
       - python/pysrc/actinv/**
       - scripts/openmc_r2s_smoke.py
+      - scripts/openmc_ci_decay.py
       - scripts/test_actinv_openmc.py
       - .github/workflows/openmc.yml
 
 permissions:
   contents: read
+
+env:
+  ACTINV_DATA_DIR: /tmp/actinv-data
+  ACTINV_REQUIRE_OPENMC: "1"
+  OMP_NUM_THREADS: "2"
 
 jobs:
   wheel:
@@ -41,20 +49,12 @@ jobs:
           path: dist/*.whl
           if-no-files-found: error
 
-  adapter:
-    name: actinv.openmc / OpenMC ${{ matrix.openmc }}
+  develop:
+    name: actinv.openmc / OpenMC develop
     needs: wheel
     runs-on: ubuntu-latest
     timeout-minutes: 45
-    strategy:
-      fail-fast: false
-      matrix:
-        openmc: ["v0.15.3", "v0.16.0", "develop"]
-    container: openmc/openmc:${{ matrix.openmc }}
-    env:
-      ACTINV_DATA_DIR: /tmp/actinv-data
-      ACTINV_REQUIRE_OPENMC: "1"
-      OMP_NUM_THREADS: "2"
+    container: openmc/openmc:develop
     steps:
       - uses: actions/checkout@v7
         with: { persist-credentials: false }
@@ -65,9 +65,69 @@ jobs:
           python -m pip install dist/*.whl
           python -c "import actinv, openmc; print('actinv', actinv.__version__, 'openmc', openmc.__version__)"
           git -c safe.directory='*' -C /root/OpenMC/openmc log -1 --format='OpenMC source %H %cs' || true
-          test -f "$OPENMC_CROSS_SECTIONS"
-      - name: Fetch the ACTINV data bundle
-        run: actinv data fetch --output "$ACTINV_DATA_DIR"
+      - name: Iron cross sections for the release jobs
+        run: |
+          python - <<'EOF'
+          import os, shutil
+          from pathlib import Path
+          import openmc.data
+          source = openmc.data.DataLibrary.from_xml(os.environ["OPENMC_CROSS_SECTIONS"])
+          base, out, subset = Path(os.environ["OPENMC_CROSS_SECTIONS"]).parent, Path("xs"), openmc.data.DataLibrary()
+          for lib in source.libraries:
+              if set(lib["materials"]) & {"Fe54", "Fe56", "Fe57", "Fe58", "Fe"} and lib["type"] in ("neutron", "photon"):
+                  target = out / lib["type"] / Path(lib["path"]).name
+                  target.parent.mkdir(parents=True, exist_ok=True)
+                  shutil.copy(base / lib["path"], target)
+                  subset.register_file(target)
+          subset.export_to_xml(out / "cross_sections.xml")
+          print(sorted(m for lib in subset.libraries for m in lib["materials"]))
+          EOF
+      - uses: actions/upload-artifact@v4
+        with: { name: iron-cross-sections, path: xs, if-no-files-found: error }
+      - name: ACTINV data bundle
+        run: |
+          python scripts/openmc_ci_decay.py "$ACTINV_DATA_DIR"
+          actinv data fetch --output "$ACTINV_DATA_DIR"
+      - name: Adapter unit tests
+        run: python scripts/test_actinv_openmc.py
+      - name: End-to-end R2S smoke run
+        run: python -W ignore::UserWarning scripts/openmc_r2s_smoke.py
+
+  release:
+    name: actinv.openmc / OpenMC ${{ matrix.openmc }}
+    needs: [wheel, develop]
+    if: ${{ !cancelled() && needs.wheel.result == 'success' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        openmc: ["0.15.3", "0.16.0"]
+    defaults:
+      run:
+        shell: bash -el {0}
+    steps:
+      - uses: actions/checkout@v7
+        with: { persist-credentials: false }
+      - uses: mamba-org/setup-micromamba@f457c30a868e4760d3a6fcea5f25dc655b8edf39 # v3.2.1
+        with:
+          environment-name: openmc
+          create-args: python=3.12 openmc=${{ matrix.openmc }}
+          condarc: |
+            channels: [conda-forge]
+      - uses: actions/download-artifact@v4
+        with: { name: actinv-wheel, path: dist }
+      - uses: actions/download-artifact@v4
+        with: { name: iron-cross-sections, path: xs }
+      - name: Install actinv beside conda-forge's OpenMC
+        run: |
+          python -m pip install dist/*.whl
+          python -c "import actinv, openmc; print('actinv', actinv.__version__, 'openmc', openmc.__version__); assert openmc.__version__ == '${{ matrix.openmc }}'"
+          echo "OPENMC_CROSS_SECTIONS=$PWD/xs/cross_sections.xml" >> "$GITHUB_ENV"
+      - name: ACTINV data bundle
+        run: |
+          python scripts/openmc_ci_decay.py "$ACTINV_DATA_DIR"
+          actinv data fetch --output "$ACTINV_DATA_DIR"
       - name: Adapter unit tests
         run: python scripts/test_actinv_openmc.py
       - name: End-to-end R2S smoke run
