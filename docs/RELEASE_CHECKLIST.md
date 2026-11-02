@@ -347,10 +347,12 @@ created.
   solver version, timings and `ledger.rate_pruning.dropped` (the faster pruning) differ from 1.7.1.
 - [x] Pre-tag gates: `cargo publish --workspace --dry-run`, `cargo check --workspace --tests`, fmt, clippy and the
   controls that read the edited files, with the tag present locally.
-- [ ] Push the release commit and the `v1.7.2` tag in one atomic push; confirm every workflow green.
-- [ ] Approve the `crates.io` and `pypi` environment gates; confirm all three crates and the wheel/sdist set land at
+- [x] Push the release commit and the `v1.7.2` tag in one atomic push; confirm every workflow green (the macOS arm64
+  release-artifact jobs waited out GitHub's runner queue and were rerun).
+- [x] Approve the `crates.io` and `pypi` environment gates; confirm all three crates and the wheel/sdist set land at
   1.7.2.
-- [ ] Attach packaged platform archives and `SHA256SUMS` to the `v1.7.2` GitHub release; paste the release notes.
-- [ ] Production smoke from PyPI and crates.io, including `actinv data fetch` into an empty folder (the IAEA
+- [x] Attach packaged platform archives and `SHA256SUMS` to the `v1.7.2` GitHub release; paste the release notes
+  (archived by Zenodo as 10.5281/zenodo.23898254).
+- [x] Production smoke from PyPI and crates.io, including `actinv data fetch` into an empty folder (the IAEA
   fallback) and `from actinv.openmc import ActinvR2SManager`; record the release in `results/release_v1.7.2.json`.
 - [ ] Handbook and website: deploy the `actinv-web` bundle CI built from the release commit; update AvilaLabs.org.

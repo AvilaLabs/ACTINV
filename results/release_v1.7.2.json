@@ -1,0 +1,90 @@
+{
+ "release": "v1.7.2",
+ "tag": {
+  "name": "v1.7.2",
+  "object": "c0634be52a99cf76ee40413216d9c861f940b932",
+  "commit": "d3dc4e463346c1a6d3dc426432048022932e14c5",
+  "message": "ACTINV 1.7.2",
+  "signed": false
+ },
+ "workflows": {
+  "release_artifacts": 41524958580,
+  "publish_crates": 41524958634,
+  "publish_pypi": 41524958542,
+  "controls": 41524957690,
+  "desktop_builds": 41524957863,
+  "browser_workbench": 41524957900,
+  "handbook": 41524957939,
+  "fns_iron": 41524957933,
+  "fusion_isotope": 41524957877,
+  "all_conclusion": "success",
+  "note": "release artifacts: the macOS arm64 standalone binary and wheel jobs were cancelled when no hosted runner picked them up within 15 minutes (GitHub capacity); rerun with --failed, both passed"
+ },
+ "github_release": {
+  "url": "https://github.com/AvilaLabs/ACTINV/releases/tag/v1.7.2",
+  "id": "RE_kwDOUDaWv84Zv8ji",
+  "published_at": "2026-11-02T21:41:21Z",
+  "notes": "docs/RELEASE_NOTES_v1.7.2.md (links made absolute for the release page)",
+  "assets_sha256": {
+   "actinv-1.7.2-linux-x86_64.tar.gz": "ad39446999ef79575b77ac6daafa2d720304073b0e0700d1a962b7b1de393a1d",
+   "actinv-1.7.2-macos-aarch64.tar.gz": "15d36d7062c00f60cf176226c7dd1ac02904c18290329544d72622577fb32c68",
+   "actinv-1.7.2-macos-x86_64.tar.gz": "ac645867336eb7237e4af92e9f09e5e4fbe3c137bec1d468ef368a467aacb474",
+   "actinv-1.7.2-windows-x86_64.zip": "74d7ddde35a9cea6a0549e36de9b533935e61cd3255586e1752833aa80b39df6"
+  },
+  "sha256sums_asset": "SHA256SUMS",
+  "verified_via": "GitHub asset digests equal the local SHA256SUMS",
+  "packaging": "standalone binaries of release-artifacts run 41524958580, packaged with the v1.7.1 archive layout"
+ },
+ "desktop_release": {
+  "url": "https://github.com/AvilaLabs/ACTINV/releases/tag/desktop-v0.6.0-preview.1",
+  "note": "not re-published for 1.7.2; its installers are the v1.7.0 release builds (solver 1.7.0)"
+ },
+ "zenodo": {
+  "version_doi": "10.5281/zenodo.23898254",
+  "concept_doi": "10.5281/zenodo.22665067",
+  "note": "archived by the GitHub release"
+ },
+ "published": {
+  "pypi": {
+   "package": "actinv",
+   "version": "1.7.2",
+   "files": {
+    "actinv-1.7.2-cp39-abi3-macosx_10_12_x86_64.whl": "16c540d8a994ba702c3e6034a3280ca6d6e929c9c4a6ad094d4c3219f1571ce0",
+    "actinv-1.7.2-cp39-abi3-macosx_11_0_arm64.whl": "a5fff4dd1208b3aa4467f67fdc3f828a1b3a33f36a712d974d09ddf4492b14e1",
+    "actinv-1.7.2-cp39-abi3-manylinux_2_17_aarch64.manylinux2014_aarch64.whl": "1e6dfb0e2244aabab097e99082fd14f73c4b7ded2853ee2188c92430eab8ab33",
+    "actinv-1.7.2-cp39-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl": "304a08c32827fedc69479b271bbf42e6841593bc593be7bf4bfc250060215ef3",
+    "actinv-1.7.2-cp39-abi3-win_amd64.whl": "2390a187d33b60b2539e7ba8a8fe9c6a1fde22d1418dbafc07304bd751ca41f9",
+    "actinv-1.7.2.tar.gz": "12846693b72f01619d88822cd8f47f020c61ab2161b5f64d1461059baaaae927"
+   }
+  },
+  "crates_io": {
+   "actinv-data": {
+    "version": "1.7.2",
+    "checksum": "3c99baad9b172fa108da9ff7b7c24caafd6fde3fd777b28e19ae2555f282be8b"
+   },
+   "actinv-core": {
+    "version": "1.7.2",
+    "checksum": "0bc20ef261fecfd903cc1a067929c05afffea52f8a756aefa63bcf705ad02532"
+   },
+   "actinv-cli": {
+    "version": "1.7.2",
+    "checksum": "78489fca8c2cb604f739878f27eb22e51dec9104b7ee73c4f99a2ee9f2e0d846"
+   }
+  }
+ },
+ "smoke": {
+  "pypi": {
+   "environment": "fresh venv over the conda-forge OpenMC 0.16.0 environment; pip install actinv==1.7.2 from pypi.org",
+   "actinv_version": "actinv 1.7.2",
+   "import_actinv_openmc": true,
+   "uncertainty_option": true,
+   "scripts/test_actinv_openmc.py": "59 tests OK (1 skipped)",
+   "data_fetch": "published binary, data folder holding every v1.2.0 file except the two decay files: endfb-viii-0-decay got HTTP 403 from the IAEA and was installed from decay-sources-v1; jeff-3-3-decay was served by the IAEA directly this time; all 6 files installed and verified"
+  },
+  "crates_io": {
+   "command": "cargo install --locked actinv-cli --version 1.7.2 (bounded scope, fresh root and target directory)",
+   "actinv_version": "actinv 1.7.2",
+   "data_verify": "all 6 v1.2.0 files verified"
+  }
+ }
+}
