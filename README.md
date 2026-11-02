@@ -40,7 +40,7 @@ standalone command.
 
 [PyPI](https://pypi.org/project/actinv/) · [crates.io](https://crates.io/crates/actinv-cli) ·
 [Desktop preview downloads — Windows, macOS, Linux](https://github.com/AvilaLabs/ACTINV/releases/tag/desktop-v0.6.0-preview.1) ·
-[v1.7.1 software release](https://github.com/AvilaLabs/ACTINV/releases/tag/v1.7.1) ·
+[v1.7.2 software release](https://github.com/AvilaLabs/ACTINV/releases/tag/v1.7.2) ·
 [v1.2.0 nuclear-data release](https://github.com/AvilaLabs/ACTINV/releases/tag/data-v1.2.0) ·
 [Documentation](#documentation)
 
@@ -88,7 +88,7 @@ cargo install --locked actinv-cli
 ```
 
 Prebuilt standalone executables are also attached to the
-[v1.7.1 GitHub Release](https://github.com/AvilaLabs/ACTINV/releases/tag/v1.7.1).
+[v1.7.2 GitHub Release](https://github.com/AvilaLabs/ACTINV/releases/tag/v1.7.2).
 
 Confirm the installation at any time with `actinv --version` or explore every command with `actinv --help`.
 
@@ -177,7 +177,7 @@ cargo run --release -p actinv-gui
 
 This launches a native application window. After building, the executable is `target/release/actinv-gui`
 (`actinv-gui.exe` on Windows). Desktop builds are checked on Windows, macOS Apple Silicon, and Linux;
-desktop preview installers and application bundles are prepared separately from the published v1.7.1 release. PyPI and
+desktop preview installers and application bundles are prepared separately from the published v1.7.2 release. PyPI and
 `cargo install actinv-cli` install the command-line interface, not the desktop.
 
 Download the [unsigned desktop preview for Windows, macOS, and Linux](https://github.com/AvilaLabs/ACTINV/releases/tag/desktop-v0.6.0-preview.1).

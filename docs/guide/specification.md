@@ -1064,7 +1064,7 @@ transport calculation.
 
 ### Mixture self-shielding (pointwise cross sections)
 
-This option is new after 1.7.1. Protocol P178 compared it with OpenMC's continuous-energy reaction rates; it has
+This option is new in 1.7.2. Protocol P178 compared it with OpenMC's continuous-energy reaction rates; it has
 not been compared with measurements.
 
 On four fusion materials held out from its development (Eurofer-97, Inconel 718, a W-Ni-Fe heavy alloy and copper),

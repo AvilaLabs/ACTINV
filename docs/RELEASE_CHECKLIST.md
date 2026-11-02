@@ -335,3 +335,22 @@ created.
 - [x] Update AvilaLabs.org `/actinv` and `/actinv/docs` (AvilaLabs.org PR #35, merged as c132126).
 - [x] Correct the desktop's solver version to 1.7.0 in the README, handbook, desktop docs and release notes (owner
   approved): the 0.6.0-preview.1 installers are the 1.7.0 builds, so the 1.7.1 desktop fixes wait for the next preview.
+
+## v1.7.2 (revision release, data download fallback, actinv.openmc) with desktop-v0.6.0-preview.1
+
+- [x] Bump the workspace, `python`, `pyproject.toml`, inter-crate versions and `release-artifacts.yml` to 1.7.2; the
+  desktop stays 0.6.0-preview.1 on solver 1.7.0. Update the DATA_LIMITATIONS header and the handbook's version
+  references; refresh `MANIFEST.sha256`.
+- [x] Write `docs/RELEASE_NOTES_v1.7.2.md`, the changelog section and the handbook's "New in 1.7.2".
+- [x] README release links (owner approved, version links only).
+- [x] Recompute the browser's example results with the 1.7.2 release binary and commit `web/examples/`; only the
+  solver version, timings and `ledger.rate_pruning.dropped` (the faster pruning) differ from 1.7.1.
+- [x] Pre-tag gates: `cargo publish --workspace --dry-run`, `cargo check --workspace --tests`, fmt, clippy and the
+  controls that read the edited files, with the tag present locally.
+- [ ] Push the release commit and the `v1.7.2` tag in one atomic push; confirm every workflow green.
+- [ ] Approve the `crates.io` and `pypi` environment gates; confirm all three crates and the wheel/sdist set land at
+  1.7.2.
+- [ ] Attach packaged platform archives and `SHA256SUMS` to the `v1.7.2` GitHub release; paste the release notes.
+- [ ] Production smoke from PyPI and crates.io, including `actinv data fetch` into an empty folder (the IAEA
+  fallback) and `from actinv.openmc import ActinvR2SManager`; record the release in `results/release_v1.7.2.json`.
+- [ ] Handbook and website: deploy the `actinv-web` bundle CI built from the release commit; update AvilaLabs.org.

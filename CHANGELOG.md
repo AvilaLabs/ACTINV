@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## v1.7.2 — 2026-11-02
 
 **Added**
 
@@ -41,6 +41,8 @@
   The IAEA site now answers automated downloads with HTTP 403. When the IAEA URL fails, fetch takes ACTINV's
   byte-identical copy from the `decay-sources-v1` release, held to the same size and SHA-256. The catalog is
   unchanged.
+- The Python source distribution's top-level `Cargo.toml` listed `crates/actinv-gui`, which the sdist does not
+  ship, so tools that read the workspace from it failed. The workspace now lists `crates/*`.
 - Self-shielding with `dilution: "composition"`: the analytic potential-scattering estimate for nuclides the table
   does not cover was 100 times too small (the ENDF channel radius was taken as femtometres), so materials whose main
   scatterers are light nuclides absent from the table (concrete, water) were over-shielded. Present since 1.1.0;

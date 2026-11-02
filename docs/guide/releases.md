@@ -4,11 +4,23 @@ Software, nuclear data, and desktop packages have separate release histories. Re
 
 | Component | Version covered here | Release |
 | --- | --- | --- |
-| CLI, Python, and Rust workspace | 1.7.1 | [v1.7.1](https://github.com/AvilaLabs/ACTINV/releases/tag/v1.7.1) |
+| CLI, Python, and Rust workspace | 1.7.2 | [v1.7.2](https://github.com/AvilaLabs/ACTINV/releases/tag/v1.7.2) |
 | Embedded nuclear-data catalog | 1.2.0 | [data-v1.2.0](https://github.com/AvilaLabs/ACTINV/releases/tag/data-v1.2.0) |
 | Desktop preview | 0.6.0-preview.1, using solver 1.7.0 | [desktop preview](https://github.com/AvilaLabs/ACTINV/releases/tag/desktop-v0.6.0-preview.1) |
 
 Use `actinv --version` for the executable. `actinv data manifest` prints its embedded catalog. Source-built desktop candidates may use a newer solver than the published preview; inspect their package/build record.
+
+## New in 1.7.2
+
+Release 1.7.2 makes `actinv data fetch` work for first-time installs again. The IAEA site now refuses automated
+downloads of the two decay files, and fetch now takes ACTINV's byte-identical copy when that happens. The OpenMC R2S
+adapter also ships with the Python package (`from actinv.openmc import ActinvR2SManager`), with an opt-in uncertainty
+band on every photon tally; see [Use ACTINV with OpenMC](openmc.md#inside-openmcs-r2s-workflow).
+
+It also adds mixture self-shielding (`self_shielding.mixture`) and faster rate pruning, and fixes the
+potential-scattering estimate of `dilution: "composition"` self-shielding. The
+[1.7.2 release notes](https://github.com/AvilaLabs/ACTINV/blob/master/docs/RELEASE_NOTES_v1.7.2.md) have the
+detail.
 
 ## New in 1.7.1
 
@@ -72,12 +84,14 @@ python -m pip install --upgrade actinv
 For an exact Rust CLI version:
 
 ```bash
-cargo install --locked --force actinv-cli --version 1.7.1
+cargo install --locked --force actinv-cli --version 1.7.2
 ```
 
 A software upgrade does not silently replace installed data. Revisit optional settings and coverage when a release changes their behavior, and retain the executable or source version for older results.
 
 ## Changes that may affect earlier results
+
+The [1.7.2 release notes](https://github.com/AvilaLabs/ACTINV/blob/master/docs/RELEASE_NOTES_v1.7.2.md) change no default result. Rerun calculations that used `self_shielding` with `dilution: "composition"` on materials whose main scatterers are light nuclides missing from the table (concrete, water); from 1.1.0 to 1.7.1 they were over-shielded.
 
 The [1.7.1 release notes](https://github.com/AvilaLabs/ACTINV/blob/master/docs/RELEASE_NOTES_v1.7.1.md) change no default result. Rebuild any library or self-shielding table you built from R-matrix-limited evaluations (ENDF/B-VIII.1 and FENDL-3.2c tungsten, copper, Fe-54, Fe-57 and others) with 1.5.0 to 1.7.0, and rerun what used it. `study.robustness` bands from `cross_section_mf33` can also differ from 1.7.0.
 

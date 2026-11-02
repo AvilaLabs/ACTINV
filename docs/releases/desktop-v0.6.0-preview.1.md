@@ -2,7 +2,7 @@
 
 This preview reorganises the desktop so that it reaches most of the command line: new problems from a material library, an Export page, and pages for impurity screens, certification, optimization, comparison, waste questions, transport meshes and measurements. The desktop uses solver **1.7.0**,
 the CLI and Python software release it was built with; see the [1.7.0 release notes](../RELEASE_NOTES_v1.7.0.md) for the
-solver changes. Solver 1.7.1 reaches the desktop in its next preview. The theme, colours, fonts and widget style are unchanged, and results are unchanged.
+solver changes. Solvers 1.7.1 and 1.7.2 reach the desktop in its next preview. The theme, colours, fonts and widget style are unchanged, and results are unchanged.
 
 ## Downloads
 
