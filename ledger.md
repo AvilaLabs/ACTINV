@@ -5872,3 +5872,15 @@ repair round; the owner left the choice of repair to me.
 - **Disclosure.** Written after P182's whole record was seen, including the four failures and the recorded times,
   knowing the change passes those four. P182's sentences, if quoted, carry that disclosure.
 - The checker's selftest (and P182's within it) passes.
+
+## Entry 336 — P182 Amendment A evidence: G3 fails on its own no-overall-total rule; P182A-FAIL (2026-11-01)
+
+`controls/check_p182a.py` on `8fc3dc5`: every output of P182's record matched its SHA-256 and all 268 pairs were
+recompared (`results/p182a_record.json`, `results/p182a_verdict.json`). G0, G1, G2 and G4 pass; results are again
+identical on all 268 problems and the four FNS failures of ledger 334 pass the amended test. G3 fails on
+`mesh_d16_endf`: in 82 of its regions (water, with `unbounded_components` H1–He4) the overall totals and the kept parts
+are null, and the amendment's rule for an absent overall total (equal within 1e-12) refuses dropped parts that
+loosened by 2.2e-9 relative, which P182's own test accepted. The amendment was registered without checking whether
+records with no overall total occur. **P182A-FAIL.** P182's one repair round is spent: the prune change
+(`793ad03`, `ead00ec`) stays on master, CI-green and result-preserving on these 268 problems, but unqualified; no
+speed sentence is allowed. Any qualification needs a new protocol with a fresh run. The run outputs are deleted.

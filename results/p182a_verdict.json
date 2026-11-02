@@ -1,0 +1,32 @@
+{
+ "allowed_sentences": [],
+ "disclosure": "The pruning-total test was amended after P182's result was known; the results themselves were identical on all 268 problems under both tests.",
+ "gates": {
+  "G0": {
+   "pass": true,
+   "problems": []
+  },
+  "G1": {
+   "pass": true,
+   "problems": []
+  },
+  "G2": {
+   "pass": true,
+   "problems": []
+  },
+  "G3": {
+   "pass": false,
+   "problems": [
+    "mesh_d16_endf: pruning part_violations = 2",
+    "mesh_d16_endf: pruning record fails: ['dropped_activity_Bq_per_g_bound: candidate 2.627724649200515e-13 against baseline 2.627724643442729e-13 with no overall total', 'dropped_heat_W_per_g_bound: candidate 8.998463205042285e-26 against baseline 8.998463199561456e-26 with no overall total']"
+   ]
+  },
+  "G4": {
+   "pass": true,
+   "problems": []
+  }
+ },
+ "protocol": "ACTINV-P182 Amendment A",
+ "summary": {},
+ "verdict": "P182A-FAIL"
+}
