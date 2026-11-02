@@ -1,7 +1,9 @@
 # Dose uncertainty in the OpenMC manager: design note
 
-Status: design only. Nothing here has been run or qualified. Roadmap item: "dose uncertainty in the manager",
-`WORKFLOW_ACCURACY_PLAN.md` section 1.
+Status: option (b) implemented as `ActinvR2SManager(..., uncertainty={})` (python/pysrc/actinv/openmc.py; user
+docs in docs/guide/openmc.md). Unit-tested against an explicit R^T C_S R, and smoke-run on OpenMC 0.15.3 and 0.16.0
+(`scripts/openmc_r2s_smoke.py --uncertainty`, local only: CI has no covariance sidecar). Not qualified: A1 below
+has not been run. Roadmap item: "dose uncertainty in the manager", `WORKFLOW_ACCURACY_PLAN.md` section 1.
 
 ## Goal
 

@@ -97,6 +97,51 @@ What changes compared with OpenMC's own manager:
   (`by_parent_nuclide=True`) is not available, since the spectrum is per region.
 - **Photon transport** and everything after it are OpenMC's own code.
 
+### Dose uncertainty
+
+Pass `uncertainty={}` to get a first-order uncertainty band on every photon tally:
+
+```python
+r2s = ActinvR2SManager(model, mesh, uncertainty={})
+r2s.run(timesteps=[3.15e7, 1.0e6], source_rates=[1.0e17, 0.0], photon_time_indices=[2])
+band = r2s.results["dose_uncertainty"][2][0]  # time index 2, first photon tally
+band["dose"], band["total_std_dev"], band["std_dev"]["cross_section_mf33"]
+```
+
+The band covers three sources by default: the activation cross sections (the library's MF=33 covariances, from
+the `uncertainty/` file that `actinv data fetch` installs beside the library), decay constants, and the Monte
+Carlo noise of the step 1 flux tally. It also includes the photon tally's own statistics. Add `"fission_yields"`
+to `channels` for fissile materials, or leave channels out with `uncertainty={"channels": [...]}`.
+
+How it works:
+
+- Step 2 runs `actinv mesh` a second time with an uncertainty block. The block covers the activities of the
+  strongest photon emitters, enough to cover all but 10⁻⁵ of each region's source (at most 60 nuclides).
+- `actinv export-r2s-cov` then writes, for each step, how each region's photon source moves with each uncertain
+  input.
+- The photon run tallies each of your tallies a second time, split by the cell or mesh element where the photon
+  started. These copies are removed afterwards, so `results["photon_tallies"]` and `load_results` see only your
+  tallies.
+- The split gives the dose per photon born in each region. That, combined with the source covariance, gives the
+  variance.
+
+Each band is a dictionary in the tally's own shape:
+
+- `dose` is the tally mean times the total photon source.
+- `std_dev` holds one entry per channel.
+- `statistical_std_dev` is the photon tally's own noise.
+- `total_std_dev` and `relative` give the total.
+- `unbanded_fraction` and `channels_missing` say what the band leaves out.
+
+Treat the band as a lower bound on the data uncertainty. Nuclides outside the bands, and channels with no
+covariance data, contribute nothing to it. The flux channel needs the flux-only step 1, so it cannot be used
+together with `chain_file`.
+
+Current limits:
+
+- one mesh, or a list of cells that are filled with materials directly;
+- the photon run must use the same geometry as the neutron run (no separate `photon_model`).
+
 `contrib/openmc_r2s/demo_steel_cube.py` runs the steel-cube problem with both managers and compares the dose. The
 adapter's [README](https://github.com/AvilaLabs/ACTINV/blob/master/contrib/openmc_r2s/README.md) lists its limits:
 neutron activation only, and one flux spectrum per schedule, scaled by each step's source rate.

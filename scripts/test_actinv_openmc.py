@@ -14,6 +14,7 @@ and default data/binary resolution tests need only the installed ``actinv`` pack
 """
 from __future__ import annotations
 
+import hashlib
 import io
 import json
 import os
@@ -674,6 +675,156 @@ class Step2MpiTests(unittest.TestCase):
                 self._step2(self._manager(tmp), comm, tmp, run_mesh)
         self.assertEqual(str(ctx.exception), "actinv mesh failed")
         self.assertEqual(comm.sent, ["RuntimeError: actinv mesh failed"])
+
+
+@unittest.skipUnless(HAVE_OPENMC, f"openmc not importable: {_IMPORT_ERROR}")
+class DoseBandTests(unittest.TestCase):
+    """The dose band's pieces against hand-built inputs: band choice, the covariance document,
+    and the first-order variance against an explicit R^T C_S R."""
+
+    @staticmethod
+    def _write(path, records):
+        Path(path).write_text("".join(json.dumps(r) + "\n" for r in records))
+
+    def test_choose_bands_ranks_by_share_and_stops_at_the_remainder(self):
+        def cell(entries):
+            return {"record": "cell", "result": {"steps": [{"photon_source": {"by_nuclide": [
+                {"nuclide": n, "groups": [{"photons_s": s}]} for n, s in entries]}}]}}
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "r.ndjson"
+            self._write(path, [{"record": "header"},
+                               cell([("Mn56", 90.0), ("Co58", 10.0), ("Fe59", 1.0e-6)]),
+                               cell([("Co58", 60.0), ("Co60", 40.0)]),
+                               {"record": "footer"}])
+            bands, cap_hit = m.choose_bands(path, remainder=1.0e-5, cap=60)
+            self.assertEqual(bands, ["Mn56", "Co58", "Co60"])  # Fe59 is below the remainder
+            self.assertFalse(cap_hit)
+            self.assertEqual(m.choose_bands(path, cap=2), (["Mn56", "Co58"], True))
+
+    def _cov(self, tmp, with_flux=True):
+        # 2 regions x 2 photon groups; two shared columns (one per channel) and flux columns
+        records = [
+            {"record": "header", "schema": "actinv-r2s-cov-1", "channels_missing": ["fission_yields"]},
+            {"record": "mean", "regions": [{"ordinal": 0}, {"ordinal": 1}],
+             "S": [[3.0, 1.0], [2.0, 2.0]], "unbanded_photons_s": [0.4, 0.0]},
+            {"record": "shared", "channel": "cross_section_mf33", "column": [[0.2, 0.1], [0.0, 0.3]]},
+            {"record": "shared", "channel": "decay_constants", "column": [[0.05, 0.0], [0.1, 0.1]]},
+        ]
+        if with_flux:
+            records += [{"record": "independent", "ordinal": 0, "columns": [[0.1, 0.1], [0.0, 0.2]]},
+                        {"record": "independent", "ordinal": 1, "columns": [[0.3, 0.0]]}]
+        records.append({"record": "footer"})
+        path = Path(tmp) / "cov.ndjson"
+        self._write(path, records)
+        return path
+
+    def test_parse_r2s_cov_sums_over_photon_groups(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            cov = m.parse_r2s_cov(self._cov(tmp))
+            no_flux = m.parse_r2s_cov(self._cov(tmp, with_flux=False))
+        np.testing.assert_allclose(cov["S"], [4.0, 4.0])
+        np.testing.assert_allclose(cov["shared"]["cross_section_mf33"], [[0.3, 0.3]])
+        np.testing.assert_allclose(cov["shared"]["decay_constants"], [[0.05, 0.2]])
+        np.testing.assert_allclose(cov["independent"], [0.2 ** 2 + 0.2 ** 2, 0.3 ** 2])
+        self.assertEqual(cov["missing"], ["fission_yields"])
+        self.assertIsNone(no_flux["independent"])
+
+    def test_a_document_of_another_schema_is_refused(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "x.ndjson"
+            self._write(path, [{"record": "header", "schema": "actinv-flux-1"},
+                               {"record": "mean", "regions": [], "S": [], "unbanded_photons_s": []}])
+            with self.assertRaises(ValueError):
+                m.parse_r2s_cov(path)
+
+    def test_dose_band_matches_explicit_first_order_variance(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            cov = m.parse_r2s_cov(self._cov(tmp))
+        S = cov["S"]
+        born_mean = np.array([[2.0e-3, 5.0e-4]])  # per source particle, one tally bin, 2 birth bins
+        born_std = np.array([[1.0e-4, 2.0e-5]])
+        band = m.dose_band(cov, [0, 1], born_mean, born_std)
+        # D = sum_c r_c S_c with r_c the dose per photon born in region c
+        r = born_mean[0] * S.sum() / S
+        self.assertAlmostEqual(band["dose"][0], float(r @ S))
+        for channel in ("cross_section_mf33", "decay_constants"):
+            L = cov["shared"][channel]
+            self.assertAlmostEqual(band["variance"][channel][0], float(r @ (L.T @ L) @ r))
+        self.assertAlmostEqual(band["variance"]["flux"][0], float(r @ np.diag(cov["independent"]) @ r))
+        self.assertAlmostEqual(band["statistical_variance"][0], float(((S.sum() * born_std) ** 2).sum()))
+        self.assertAlmostEqual(band["unbanded_fraction"], 0.05)
+
+    def test_regions_sharing_a_birth_bin_share_its_dose_per_photon(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            cov = m.parse_r2s_cov(self._cov(tmp))
+        born_mean = np.array([[1.0e-3]])  # both regions in one mesh element
+        band = m.dose_band(cov, [0, 0], born_mean, np.zeros((1, 1)))
+        r = np.full(2, 1.0e-3 * 8.0 / 8.0)
+        L = cov["shared"]["cross_section_mf33"]
+        self.assertAlmostEqual(band["dose"][0], 8.0e-3)
+        self.assertAlmostEqual(band["variance"]["cross_section_mf33"][0], float(r @ (L.T @ L) @ r))
+
+    def test_without_the_flux_channel_no_flux_variance_is_reported(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            cov = m.parse_r2s_cov(self._cov(tmp, with_flux=False))
+        band = m.dose_band(cov, [0, 1], np.ones((1, 2)), np.zeros((1, 2)))
+        self.assertNotIn("flux", band["variance"])
+
+    def test_dose_bands_keep_the_tally_shape(self):
+        class _Born:
+            num_bins = 2
+
+        class _Tally:  # 3 energy bins x 2 birth bins, 1 nuclide, 1 score; birth bins fastest
+            filters = [object(), _Born()]
+            mean = np.arange(1.0, 7.0).reshape(6, 1, 1) * 1.0e-3
+            std_dev = np.zeros((6, 1, 1))
+        with tempfile.TemporaryDirectory() as tmp:
+            r2s = self._manager(tmp)
+            r2s.results["dose_uncertainty_inputs"] = {"cov": {1: str(self._cov(tmp))},
+                                                      "bands": ["Mn56"], "band_cap_hit": False}
+            (band,) = r2s._dose_bands(1, [_Tally()], [0, 1])
+        self.assertEqual(band["dose"].shape, (3, 1, 1))
+        np.testing.assert_allclose(band["dose"].ravel(), 8.0 * np.array([3.0, 7.0, 11.0]) * 1.0e-3)
+        self.assertEqual(set(band["std_dev"]), {"cross_section_mf33", "decay_constants", "flux"})
+        self.assertTrue(np.all(band["total_std_dev"] >= band["std_dev"]["cross_section_mf33"]))
+        self.assertEqual(band["channels_missing"], ["fission_yields"])
+
+    def _manager(self, tmp, **kwargs):
+        lib, dec = Path(tmp) / "l.npz", Path(tmp) / "d.dat"
+        lib.write_bytes(b"x")
+        dec.write_bytes(b"x")
+        return m.ActinvR2SManager(openmc.Model(), openmc.RegularMesh(), library=lib, decay_primary=dec,
+                                  actinv_bin="/opt/actinv", **kwargs)
+
+    def test_uncertainty_settings_are_checked(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            covariance = Path(tmp) / "c.npz"
+            covariance.write_bytes(b"cov")
+            r2s = self._manager(tmp, uncertainty={"covariance": covariance, "band_cap": 5})
+            self.assertEqual(r2s.uncertainty["channels"], ["cross_section_mf33", "decay_constants", "flux"])
+            self.assertEqual(r2s.uncertainty["covariance"]["path"], str(covariance.resolve()))
+            self.assertEqual(r2s.uncertainty["covariance"]["sha256"], hashlib.sha256(b"cov").hexdigest())
+            self.assertEqual(r2s.uncertainty["band_cap"], 5)
+            self.assertIsNone(self._manager(tmp, uncertainty={"channels": ["decay_constants"]})
+                              .uncertainty["covariance"])
+            with self.assertRaises(ValueError):
+                self._manager(tmp, uncertainty={"channel": ["flux"]})
+            with self.assertRaises(ValueError):
+                self._manager(tmp, uncertainty={"channels": ["dose"]})
+
+    def test_flux_channel_needs_the_flux_only_step_one(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            r2s = self._manager(tmp, uncertainty={"channels": ["decay_constants", "flux"]})
+            r2s.method = "cell-based"
+            mat = openmc.Material()
+            mat.add_nuclide("Fe56", 1.0)
+            cell = openmc.Cell(fill=mat)
+            cell.volume = 1.0
+            r2s.domains = [cell]
+            r2s.results["fluxes"] = [np.ones(2)]
+            with self.assertRaises(RuntimeError) as ctx:
+                r2s.step2_activation([1.0], [1.0e10], output_dir=Path(tmp) / "activation")
+        self.assertIn("flux-only", str(ctx.exception))
 
 
 if __name__ == "__main__":

@@ -35,6 +35,7 @@ to step 1 runs OpenMC's own ``get_microxs_and_flux`` instead, as the contrib ada
 from __future__ import annotations
 
 import hashlib
+import inspect
 import io
 import json
 import os
@@ -168,12 +169,13 @@ def build_schedule(timesteps, source_rates, timestep_units="s"):
     return schedule, reference
 
 
-def flux_record_lines(bounds, region_names, region_volumes, fluxes, reference):
+def flux_record_lines(bounds, region_names, region_volumes, fluxes, reference, relative_errors=None):
     """``actinv-flux-1`` NDJSON lines (header, one cell record per region, footer).
 
     ``fluxes[i]`` is OpenMC's per-group track length per source particle for region ``i``
     (n·cm / source particle); dividing by the region volume and scaling by ``reference`` (see
-    ``build_schedule``) converts it to a physical flux in n cm^-2 s^-1.
+    ``build_schedule``) converts it to a physical flux in n cm^-2 s^-1. ``relative_errors[i]``,
+    if given, is the tally's relative error per group, written as the record's ``relative_error``.
     """
     bounds = [float(b) for b in bounds]
     lines = [json.dumps({"record": "header", "schema": "actinv-flux-1",
@@ -188,8 +190,12 @@ def flux_record_lines(bounds, region_names, region_volumes, fluxes, reference):
         phi = np.asarray(flux, dtype=float).ravel() / vol * reference
         if phi.size != len(bounds) - 1:
             raise RuntimeError(f"region {i}: {phi.size} flux groups, library has {len(bounds) - 1}")
-        lines.append(json.dumps({"record": "cell", "ordinal": i, "id": str(i),
-                                 "flux_per_group": [float(x) for x in phi], "flux_total": float(phi.sum())}))
+        record = {"record": "cell", "ordinal": i, "id": str(i),
+                  "flux_per_group": [float(x) for x in phi], "flux_total": float(phi.sum())}
+        if relative_errors is not None:
+            rel = np.asarray(relative_errors[i], dtype=float).ravel()
+            record["relative_error"] = [float(x) if np.isfinite(x) else 0.0 for x in rel]
+        lines.append(json.dumps(record))
         total += float(phi.sum())
     lines.append(json.dumps({"record": "footer", "cell_count": len(region_volumes), "flux_sum_over_cells": total}))
     return lines
@@ -230,6 +236,98 @@ def require_activation_regions(mats):
     if len(mats) == 0:
         raise ValueError("step2_activation: no activation regions found (the mesh/cell domain "
                          "has no material to activate); nothing to solve")
+
+
+def choose_bands(result_path, remainder=1.0e-5, cap=60):
+    """Nuclides whose activity uncertainty the dose band carries, from a nominal ``actinv mesh``
+    result with ``steps.photon_source.by_nuclide``: for each region and step, the strongest photon
+    emitters until what is left is below ``remainder`` of that region's source; their union,
+    strongest first, at most ``cap``. Returns ``(nuclides, cap_hit)``. (P175's rule.)"""
+    share = {}
+    with open(result_path) as f:
+        for line in f:
+            rec = json.loads(line)
+            if rec.get("record") != "cell":
+                continue
+            for step in rec["result"]["steps"]:
+                entries = (step.get("photon_source") or {}).get("by_nuclide") or []
+                strength = sorted(((sum(g.get("photons_s", 0.0) for g in e["groups"]), e["nuclide"])
+                                   for e in entries), reverse=True)
+                total = sum(s for s, _ in strength)
+                if not total > 0.0:
+                    continue
+                left = total
+                for s, name in strength:
+                    if left <= remainder * total:
+                        break
+                    share[name] = max(share.get(name, 0.0), s / total)
+                    left -= s
+    ranked = sorted(share, key=lambda n: (-share[n], n))
+    return ranked[:cap], len(ranked) > cap
+
+
+def parse_r2s_cov(path):
+    """An ``actinv-r2s-cov-1`` document summed over photon groups, as the dose band uses it.
+
+    Returns ``{"S": [S_c], "unbanded": [u_c], "shared": {channel: array (K, C)},
+    "independent": array (C,), "missing": [...]}`` with regions in ordinal order: ``S_c`` the
+    region's photons/s, ``shared`` the columns ``sum_g L_k[c][g]`` grouped by channel and
+    ``independent[c]`` the region's ``sum_j (sum_g M_cj[g])^2`` (``None`` without the flux channel).
+    """
+    header = mean = None
+    shared, independent = {}, {}
+    with open(path) as f:
+        for line in f:
+            rec = json.loads(line)
+            kind = rec.get("record")
+            if kind == "header":
+                header = rec
+            elif kind == "mean":
+                mean = rec
+            elif kind == "shared":
+                shared.setdefault(rec["channel"], []).append([sum(row) for row in rec["column"]])
+            elif kind == "independent":
+                independent[rec["ordinal"]] = sum(sum(col) ** 2 for col in rec["columns"])
+    if header is None or mean is None or header.get("schema") != "actinv-r2s-cov-1":
+        raise ValueError(f"{path} is not an actinv-r2s-cov-1 document")
+    ordinals = [region["ordinal"] for region in mean["regions"]]
+    if ordinals != list(range(len(ordinals))):
+        raise ValueError(f"{path}: regions are not in ordinal order")
+    return {"S": np.array([sum(row) for row in mean["S"]]),
+            "unbanded": np.asarray(mean["unbanded_photons_s"], dtype=float),
+            "shared": {k: np.array(v) for k, v in shared.items()},
+            "independent": np.array([independent.get(c, 0.0) for c in ordinals]) if independent else None,
+            "missing": header.get("channels_missing", [])}
+
+
+def dose_band(cov, region_bins, born_mean, born_std):
+    """First-order band on a photon tally split by birth region (P175's ``Var(D)``, pooled over
+    photon groups).
+
+    ``region_bins[c]`` is the born-filter bin of region ``c``. ``born_mean``/``born_std`` have
+    shape ``(B, E)``: per source particle, for ``B`` tally bins and ``E`` birth bins. With
+    ``S_tot`` the total source, the dose is ``D = S_tot sum_e T_e``, region ``c`` contributes
+    ``r_c = T_e S_tot / S_e`` per photon (``S_e`` the source of its birth bin), and
+    ``Var(D) = sum_k (sum_c r_c L_kc)^2 + sum_c r_c^2 q_c + sum_e (S_tot sigma_Te)^2``.
+    Returns arrays over ``B``: the dose, its variance from each data channel, from flux-tally
+    noise, and from photon-tally statistics.
+    """
+    S = cov["S"]
+    s_tot = S.sum()
+    region_bins = np.asarray(region_bins)
+    n_bins = born_mean.shape[1]
+    s_bin = np.bincount(region_bins, weights=S, minlength=n_bins)
+    with np.errstate(divide="ignore", invalid="ignore"):
+        per_photon = np.where(s_bin > 0.0, born_mean * s_tot / s_bin, 0.0)  # (B, E)
+    r = per_photon[:, region_bins]  # (B, C)
+    out = {"dose": s_tot * born_mean.sum(axis=1), "variance": {}}
+    for channel, columns in cov["shared"].items():
+        out["variance"][channel] = ((r @ columns.T) ** 2).sum(axis=1)
+    if cov["independent"] is not None:
+        out["variance"]["flux"] = r ** 2 @ cov["independent"]
+    out["statistical_variance"] = ((s_tot * born_std) ** 2).sum(axis=1)
+    out["unbanded_fraction"] = float(cov["unbanded"].sum() / s_tot) if s_tot > 0.0 else 0.0
+    return out
 
 
 def flux_only_microxs_and_flux(model, domains, energies=None, path_statepoint=None, path_input=None,
@@ -292,10 +390,16 @@ def flux_only_microxs_and_flux(model, domains, energies=None, path_statepoint=No
                 flux_tallies = [sp.tallies[tally.id] for tally in flux_tallies]
                 for flux_tally in flux_tallies:
                     flux_tally._read_results()
-        fluxes = []  # concatenated over the domain filters in order, as OpenMC 0.16 does
+        fluxes, errors = [], []  # concatenated over the domain filters in order, as OpenMC 0.16 does
         for flux_tally in flux_tallies:
             flux = np.moveaxis(flux_tally.get_reshaped_data(), 1, -1)  # (domains, 1, 1, groups)
+            sd = np.moveaxis(flux_tally.get_reshaped_data(value="std_dev"), 1, -1)
             fluxes.extend(flux.squeeze((1, 2)))
+            with np.errstate(divide="ignore", invalid="ignore"):
+                rel = np.where(flux > 0.0, sd / flux, 0.0)
+            errors.extend(rel.squeeze((1, 2)))
+        # the tally's relative error per region and group, for the flux channel of the dose band
+        flux_only_microxs_and_flux.relative_errors = errors
     finally:
         model.tallies = original_tallies
     stub = np.zeros((1, 1, fluxes[0].size if fluxes else 1))
@@ -308,10 +412,19 @@ class ActinvR2SManager(openmc.deplete.R2SManager):
 
     ``mesh_timeout_s`` bounds the ``actinv mesh`` subprocess in wall-clock seconds (default one
     day, ``None`` for no limit); on timeout or a non-zero exit the error carries the stderr tail.
+
+    ``uncertainty`` turns on the dose band: a dict with ``channels`` (default
+    ``cross_section_mf33``, ``decay_constants`` and ``flux``; ``fission_yields`` may be added),
+    ``covariance`` (the MF=33 sidecar; default the one the installed catalog pairs with the
+    library), ``band_remainder`` and ``band_cap`` (which nuclides are banded; see
+    ``choose_bands``). Step 2 then also runs a banded ``actinv mesh`` and ``export-r2s-cov``, the
+    photon run splits each photon tally by birth region, and ``results["dose_uncertainty"][t]``
+    holds one band per photon tally (see ``_dose_bands``). It is a first-order band on the data
+    and Monte Carlo errors ACTINV and OpenMC report, not a total uncertainty.
     """
     def __init__(self, neutron_model, domains, photon_model=None, *, library=None, decay_primary=None,
                  decay_fallback=None, actinv_bin=None, options=None, photon=None, threads=1,
-                 mesh_timeout_s=86400.0):
+                 mesh_timeout_s=86400.0, uncertainty=None):
         super().__init__(neutron_model, domains, photon_model)
         # Data not given comes from the installed catalog's default bundle (see _defaults). The
         # default fallback goes with the default primary only: an explicit decay_primary has no
@@ -339,6 +452,30 @@ class ActinvR2SManager(openmc.deplete.R2SManager):
         self.options["outputs"] = sorted(set(self.options.get("outputs", [])) | {"photons", "ledger"})
         self.photon = photon or {}
         self.threads = threads
+        self.uncertainty = None if uncertainty is None else self._uncertainty_settings(uncertainty)
+
+    def _uncertainty_settings(self, uncertainty):
+        settings = dict(uncertainty)
+        unknown = set(settings) - {"channels", "covariance", "band_remainder", "band_cap"}
+        if unknown:
+            raise ValueError(f"unknown uncertainty keys: {sorted(unknown)}")
+        channels = list(settings.get("channels", ["cross_section_mf33", "decay_constants", "flux"]))
+        bad = set(channels) - {"cross_section_mf33", "decay_constants", "fission_yields", "flux"}
+        if bad or not channels:
+            raise ValueError(f"uncertainty channels must be among cross_section_mf33, decay_constants, "
+                             f"fission_yields and flux; got {channels}")
+        covariance = None
+        if "cross_section_mf33" in channels:
+            given = settings.get("covariance")
+            if given is None:
+                path, sha = _defaults.default_covariance(self.library)
+            else:
+                path = str(Path(given).resolve())
+                sha = hashlib.sha256(Path(path).read_bytes()).hexdigest()
+            covariance = {"path": path, "sha256": sha}
+        return {"channels": channels, "covariance": covariance,
+                "band_remainder": float(settings.get("band_remainder", 1.0e-5)),
+                "band_cap": int(settings.get("band_cap", 60))}
 
     # -- step 1: OpenMC's, with the tally on ACTINV's exact group boundaries --------------------
     def step1_neutron_transport(self, output_dir="neutron_transport", mat_vol_kwargs=None, micro_kwargs=None):
@@ -352,10 +489,13 @@ class ActinvR2SManager(openmc.deplete.R2SManager):
             # and on-disk file exactly as OpenMC writes them.
             original = _r2s.get_microxs_and_flux
             _r2s.get_microxs_and_flux = flux_only_microxs_and_flux
+            flux_only_microxs_and_flux.relative_errors = None
             try:
-                return super().step1_neutron_transport(output_dir, mat_vol_kwargs, micro_kwargs)
+                result = super().step1_neutron_transport(output_dir, mat_vol_kwargs, micro_kwargs)
             finally:
                 _r2s.get_microxs_and_flux = original
+            self.results["flux_relative_errors"] = flux_only_microxs_and_flux.relative_errors
+            return result
         # A chain (or nuclides/reactions) was passed: OpenMC's own get_microxs_and_flux, as before.
         # It also tallies per-nuclide reaction rates here for its own depletion solver; ACTINV
         # uses only the flux. With 709 groups the default (every chain nuclide x every reaction)
@@ -393,13 +533,24 @@ class ActinvR2SManager(openmc.deplete.R2SManager):
         # schedule: durations in seconds; ACTINV multipliers relative to a reference source rate
         schedule, reference = build_schedule(timesteps, source_rates, timestep_units)
 
+        errors = None
+        if self.uncertainty is not None and "flux" in self.uncertainty["channels"]:
+            errors = self.results.get("flux_relative_errors")
+            if errors is None or len(errors) != len(mats):
+                raise RuntimeError("the flux channel of the dose band needs step 1's flux-only tally (no "
+                                   "chain_file/nuclides/reactions in micro_kwargs); leave 'flux' out of "
+                                   "uncertainty['channels'] otherwise")
+
         # Under MPI one `actinv mesh` (itself multithreaded) runs on rank 0, which alone writes the
         # files; its error, if any, is broadcast so no rank waits on a barrier that never comes.
         result_path = output_dir / "mesh_result.ndjson"
         error = None
         if comm.rank == 0:
             try:
-                self._run_mesh(output_dir, mats, fluxes, schedule, reference, result_path)
+                spec = self._run_mesh(output_dir, mats, fluxes, schedule, reference, result_path, errors)
+                if self.uncertainty is not None:
+                    self.results["dose_uncertainty_inputs"] = self._run_banded(
+                        output_dir, spec, result_path, len(schedule))
             except Exception as exc:  # re-raised on every rank below
                 error = exc
         failure = comm.bcast(None if error is None else f"{type(error).__name__}: {error}")
@@ -408,17 +559,20 @@ class ActinvR2SManager(openmc.deplete.R2SManager):
         if failure is not None:
             raise RuntimeError(f"step 2 failed on rank 0: {failure}")
 
+        if self.uncertainty is not None:
+            self.results["dose_uncertainty_inputs"] = comm.bcast(self.results.get("dose_uncertainty_inputs"))
+
         # photon groups per region and step -> results shim keyed by activation-material id
         self._set_mesh_results(result_path, mats, len(schedule))
 
-    def _run_mesh(self, output_dir, mats, fluxes, schedule, reference, result_path):
-        """Write the materials, flux records and mesh spec, then run ``actinv mesh``."""
+    def _run_mesh(self, output_dir, mats, fluxes, schedule, reference, result_path, relative_errors=None):
+        """Write the materials, flux records and mesh spec, then run ``actinv mesh``; returns the spec."""
         # Saved as OpenMC's own step 2 does, so load_results can reopen the run without re-solving.
         mats.export_to_xml(output_dir / "materials.xml")
         # flux records: OpenMC reports n-cm per source particle for each region
         bounds = library_bounds(self.library)
         lines = flux_record_lines(bounds, [mat.name for mat in mats], [mat.volume for mat in mats],
-                                  fluxes, reference)
+                                  fluxes, reference, relative_errors)
         materials = {str(i): material_to_actinv(mat, mat.volume) for i, mat in enumerate(mats)}
         flux_path = output_dir / "flux.ndjson"
         flux_path.write_text("\n".join(lines) + "\n")
@@ -437,16 +591,46 @@ class ActinvR2SManager(openmc.deplete.R2SManager):
             # mesh output no longer carries the full inventory/activity/heat per step.
             "cell_result_fields": ["mode", "ledger", "steps.photon_source.groups"],
         }
+        if self.uncertainty is not None:  # choose_bands reads each nuclide's photon source
+            spec["cell_result_fields"].append("steps.photon_source.by_nuclide")
         spec_path = output_dir / "mesh.json"
         spec_path.write_text(json.dumps(spec, indent=1))
+        self._actinv("mesh", spec_path, result_path)
+        return spec
+
+    def _actinv(self, command, *args):
+        """Run ``actinv COMMAND ARGS`` within ``mesh_timeout_s``; a failure raises with the stderr tail."""
         try:
-            proc = subprocess.run([*self.actinv_command, "mesh", str(spec_path), str(result_path)],
+            proc = subprocess.run([*self.actinv_command, command, *map(str, args)],
                                   capture_output=True, text=True, timeout=self.mesh_timeout_s)
         except subprocess.TimeoutExpired as exc:
             tail = exc.stderr if isinstance(exc.stderr, str) else (exc.stderr or b"").decode("utf-8", "replace")
-            raise RuntimeError(f"actinv mesh timed out after {self.mesh_timeout_s} s:\n{tail[-4000:]}") from exc
+            raise RuntimeError(f"actinv {command} timed out after {self.mesh_timeout_s} s:\n{tail[-4000:]}") from exc
         if proc.returncode != 0:
-            raise RuntimeError(f"actinv mesh failed:\n{proc.stderr[-4000:]}")
+            raise RuntimeError(f"actinv {command} failed:\n{proc.stderr[-4000:]}")
+
+    def _run_banded(self, output_dir, spec, result_path, n_steps):
+        """The dose band's inputs: the banded ``actinv mesh`` (the nominal spec with an uncertainty
+        block on the strongest photon emitters' activities) and one ``export-r2s-cov`` per step."""
+        u = self.uncertainty
+        bands, cap_hit = choose_bands(result_path, u["band_remainder"], u["band_cap"])
+        if not bands:
+            raise RuntimeError("the dose band found no photon-emitting nuclide to band")
+        block = {"channels": u["channels"], "responses": [f"activity:{name}" for name in bands],
+                 "confidence_level": 0.95}
+        if u["covariance"] is not None:
+            block["covariance"] = u["covariance"]
+        banded = {k: v for k, v in spec.items() if k != "cell_result_fields"}  # export reads the full result
+        banded["uncertainty"] = block
+        banded_spec = output_dir / "banded_spec.json"
+        banded_spec.write_text(json.dumps(banded, indent=1))
+        banded_result = output_dir / "banded_result.ndjson"
+        self._actinv("mesh", banded_spec, banded_result)
+        cov = {}
+        for step in range(1, n_steps + 1):
+            cov[step] = str((output_dir / f"r2s_cov_step{step}.ndjson").resolve())
+            self._actinv("export-r2s-cov", banded_result, banded_spec, step, cov[step])
+        return {"bands": bands, "band_cap_hit": cap_hit, "cov": cov}
 
     # -- step 3 (OpenMC >= 0.16): photon sources from ACTINV's spectra ---------------------------
     def _create_photon_sources(self, time_index, work_items):
@@ -479,7 +663,98 @@ class ActinvR2SManager(openmc.deplete.R2SManager):
         if by_parent_nuclide:
             raise ValueError("by_parent_nuclide is not supported: ACTINV gives each region's photon "
                              "spectrum, not one per parent nuclide")
-        return super().step4_photon_transport(*args, **kwargs)
+        return self._photon_run(super().step4_photon_transport, args, kwargs)
+
+    def step3_photon_transport(self, *args, **kwargs):  # OpenMC 0.15.3's photon step
+        return self._photon_run(super().step3_photon_transport, args, kwargs)
+
+    # -- dose band -------------------------------------------------------------------------------
+    def _photon_run(self, run, args, kwargs):
+        """OpenMC's photon step; with ``uncertainty``, each photon tally also runs once more split
+        by birth region (a copy with a born filter, taken out again afterwards) for ``_dose_bands``."""
+        if self.uncertainty is None:
+            return run(*args, **kwargs)
+        if self.photon_model.geometry.root_universe != self.neutron_model.geometry.root_universe:
+            raise NotImplementedError("the dose band needs the photon run on the neutron model's geometry")
+        born_filter, region_bins = self._born_filter()
+        user = list(self.photon_model.tallies)
+        if not user:
+            raise RuntimeError("the dose band needs at least one tally on the photon model")
+        clones = []
+        for tally in user:
+            if any(isinstance(f, type(born_filter)) for f in tally.filters):
+                raise ValueError(f"photon tally {tally.id} already has a {type(born_filter).__name__}")
+            clone = openmc.Tally(name=f"ACTINV born split of tally {tally.id}")
+            clone.filters = [*tally.filters, born_filter]
+            clone.nuclides = list(tally.nuclides)
+            clone.scores = list(tally.scores)
+            clone.estimator = tally.estimator
+            clones.append(clone)
+        self.photon_model.tallies = openmc.Tallies(user + clones)
+        try:
+            result = run(*args, **kwargs)
+        finally:
+            self.photon_model.tallies = openmc.Tallies(user)
+        bound = inspect.signature(run).bind(*args, **kwargs)
+        bound.apply_defaults()
+        if comm.rank == 0:  # load_results reloads the caller's tallies only
+            (Path(bound.arguments["output_dir"]) / "tally_ids.json").write_text(
+                json.dumps([tally.id for tally in user]))
+        bands = {}
+        for t, tallies in self.results["photon_tallies"].items():
+            self.results["photon_tallies"][t] = tallies[:len(user)]
+            if t in self.results["dose_uncertainty_inputs"]["cov"]:
+                bands[t] = self._dose_bands(t, tallies[len(user):], region_bins)
+        self.results["dose_uncertainty"] = bands
+        return result
+
+    def _born_filter(self):
+        """The birth-region filter and, for each activation region in order, its bin."""
+        if self.method == "cell-based":
+            return openmc.CellBornFilter(list(self.domains)), list(range(len(self.domains)))
+        meshes = self.domains if isinstance(self.domains, (list, tuple)) else [self.domains]
+        mmv = self.results["mesh_material_volumes"]
+        mmv = mmv if isinstance(mmv, (list, tuple)) else [mmv]
+        if len(meshes) != 1 or len(mmv) != 1:
+            raise NotImplementedError("the dose band supports one mesh")
+        # get_activation_materials' order: each (element, material) pair, element-major
+        elements, _ = np.where(mmv[0]._materials > -1)
+        return openmc.MeshBornFilter(meshes[0]), list(elements)
+
+    def _dose_bands(self, time_index, born_tallies, region_bins):
+        """One band per photon tally at ``time_index``: the dose (the tally's mean times the total
+        decay-photon source, in the tally's own shape) with its standard deviation from each
+        uncertainty channel, from photon-tally statistics, and in total. A lower bound on the data
+        uncertainty: the nuclides not banded (``unbanded_fraction`` of the source) and the
+        channels the libraries do not cover (``channels_missing``) carry none."""
+        inputs = self.results["dose_uncertainty_inputs"]
+        cov = parse_r2s_cov(inputs["cov"][time_index])
+        bands = []
+        for tally in born_tallies:
+            mean, std = tally.mean, tally.std_dev  # (filter bins, nuclides, scores)
+            n_born = tally.filters[-1].num_bins
+            shape = (mean.shape[0] // n_born,) + mean.shape[1:]
+
+            def by_birth(a):  # (user bins, born, nuclides, scores) -> (B, born)
+                a = a.reshape(shape[0], n_born, *shape[1:])
+                return np.moveaxis(a, 1, -1).reshape(-1, n_born)
+            band = dose_band(cov, region_bins, by_birth(mean), by_birth(std))
+            data_var = sum(band["variance"].values())
+            total_var = data_var + band["statistical_variance"]
+            dose = band["dose"]
+            with np.errstate(divide="ignore", invalid="ignore"):
+                relative = np.where(dose != 0.0, np.sqrt(total_var) / np.abs(dose), 0.0)
+            bands.append({
+                "dose": dose.reshape(shape),
+                "std_dev": {k: np.sqrt(v).reshape(shape) for k, v in band["variance"].items()},
+                "statistical_std_dev": np.sqrt(band["statistical_variance"]).reshape(shape),
+                "total_std_dev": np.sqrt(total_var).reshape(shape),
+                "relative": relative.reshape(shape),
+                "unbanded_fraction": band["unbanded_fraction"],
+                "channels_missing": cov["missing"],
+                "bands": inputs["bands"], "band_cap_hit": inputs["band_cap_hit"],
+            })
+        return bands
 
     def _set_mesh_results(self, result_path, mats, n_steps):
         per_step = parse_photon_groups(result_path, mats, n_steps)

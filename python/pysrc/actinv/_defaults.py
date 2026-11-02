@@ -51,6 +51,32 @@ def default_data(roles=("activation-library", "decay-primary", "decay-fallback")
     return {role: str(p) for role, p in paths.items()}
 
 
+def default_covariance(library, catalog=None, root=None):
+    """``(path, sha256)`` of the installed covariance sidecar that the catalog pairs with ``library``
+    (a bundle holding both), for the dose band. Raises ``FileNotFoundError`` naming the bundle to
+    fetch when it is not installed, ``ValueError`` when the catalog pairs none with ``library``.
+    """
+    catalog = embedded_catalog() if catalog is None else catalog
+    base = (data_root() if root is None else Path(root)) / f"v{catalog['catalog_version']}"
+    by_id = {a["id"]: a for a in catalog["artifacts"]}
+    name = Path(library).name
+    for bundle in catalog["bundles"]:
+        artifacts = [by_id[i] for i in bundle["artifacts"]]
+        if not any(a["role"] == "activation-library" and Path(a["path"]).name == name for a in artifacts):
+            continue
+        sidecar = next((a for a in artifacts if a["role"] == "covariance-sidecar"), None)
+        if sidecar is None:
+            continue
+        path = base / sidecar["path"]
+        if not path.is_file():
+            raise FileNotFoundError(
+                f"the dose band needs the covariance for {name}: run `actinv data fetch {bundle['id']}` "
+                "(or ACTINV_DATA_DIR), or pass uncertainty={'covariance': PATH}.")
+        return str(path), sidecar["sha256"]
+    raise ValueError(f"the data catalog has no covariance for {name}; pass uncertainty={{'covariance': PATH}} "
+                     "or leave cross_section_mf33 out of uncertainty['channels'].")
+
+
 def default_command(scripts_dir=None, executable=None):
     """Command list that runs the ``actinv`` CLI shipped with this installed package.
 
