@@ -5829,3 +5829,21 @@ sentences in `results/p181a_verdict.json` may be used, quoted with the machine (
 setting, ACTINV's ENDF/B-VIII.1 library, and the disclosure that the amendment and its ACTINV runs came after P181's
 result was known, a few hours after OpenMC's runs. P181's own record stays without a sentence. The TENDL-2025 step-2
 cost at large region counts (ledger 331) is open.
+
+## Entry 333 — P182 registered: the faster rate prune on 268 problems, both builds (2026-11-01)
+
+`protocols/ACTINV-P182_PROTOCOL.md` (SHA-256 `2a870867…`), with harness `controls/p182_harness.py` (`b970a022…`) and
+checker `controls/check_p182.py` (`f417110c…`).
+- **Question.** Does the candidate build (`ead00ec`: the exact sweep speedup `793ad03` and the significance floor on
+  the stopping rule) give the same results as the baseline build (`d054c16`) on P172's 132 FNS problems on two
+  libraries and P181's mixed-material mesh at 512 and 4,096 elements on two libraries, apart from looser bounds on
+  nuclides that are dropped anyway, and how much faster is it? Times are reported, not gated.
+- **CI.** `ead00ec` is green on master (all five workflows).
+- **Disclosure.** Written after the TENDL-2025 profile, the floor and sweep-cap tests on P181's 32-region mesh, and
+  the field-identification runs (CI's iron problem and the 32-region mesh), listed in the protocol. The checker's
+  comparison was run on those two output pairs before registration.
+- **Inputs.** The FNS problems were prepared by the harness with the Python module built from `ead00ec` (it writes
+  the problem files only). The mesh inputs sit outside the repository under `target/p182-inputs`, pinned.
+- **Rehearsal.** The first FNS case on both libraries, both builds: four runs, all exit 0, outputs present; 268
+  problems planned. Only exit codes and the plan count were read; the outputs were deleted. The checker's selftest
+  passes.
