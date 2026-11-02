@@ -5847,3 +5847,16 @@ checker `controls/check_p182.py` (`f417110c…`).
 - **Rehearsal.** The first FNS case on both libraries, both builds: four runs, all exit 0, outputs present; 268
   problems planned. Only exit codes and the plan count were read; the outputs were deleted. The checker's selftest
   passes.
+
+## Entry 334 — P182 evidence: results unchanged on all 268 problems; G3 fails on four kept-bound totals; P182-FAIL (2026-11-01)
+
+Scored run on `e3467e6` (`results/p182_record.json`, SHA-256 `767e4632…`; verdict `results/p182_verdict.json`,
+`c147e220…`). 536 runs, all exit 0; median 1-minute load before the runs 1.0; no other scope. G0, G1, G2 and G4 pass.
+- **Unchanged:** all 268 problems identical outside `ledger.rate_pruning`; kept sets equal on all 268.
+- **Pruning record:** 264 of 268 pass. On four ENDF/B-VIII.1 FNS problems (F 1996 and 2000, Gd 2000, Mn 2000, 5-min
+  irradiations) the candidate's `kept_activity_Bq_per_g_bound` and `kept_heat_W_per_g_bound` exceed the baseline's
+  by more than the registered `1 + 1e-6`: ratios 1.0000069 to 1.0019, on totals of 1e-47 to 3e-24 (Bq/g, W/g). The
+  looser bounds on floored nuclides feed the kept-set shortfall bound. The `1e-6` tolerance was set from the 32-region
+  mesh (2.5e-11) and did not anticipate this. **G3 fails; P182-FAIL** whatever G5 gives. No sentence is allowed.
+- The run outputs are kept under `target/p182-work/out` (not tracked) pending the repair decision; P182 allows one
+  repair round, registered as an amendment first.

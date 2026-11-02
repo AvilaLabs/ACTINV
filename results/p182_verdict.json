@@ -1,0 +1,41 @@
+{
+ "allowed_sentences": [],
+ "gates": {
+  "G0": {
+   "pass": true,
+   "problems": []
+  },
+  "G1": {
+   "pass": true,
+   "problems": []
+  },
+  "G2": {
+   "pass": true,
+   "problems": []
+  },
+  "G3": {
+   "pass": false,
+   "problems": [
+    "F_1996exp_5min.endf: pruning total_violations = 2",
+    "F_1996exp_5min.endf: pruning record fails: ['kept_activity_Bq_per_g_bound: candidate 3.223875757242342e-35 against baseline 3.222920176868151e-35', 'kept_heat_W_per_g_bound: candidate 2.0248845186865274e-47 against baseline 2.0240332078977886e-47']",
+    "F_1996exp_5min.endf: a pruning total ratio is outside [1 - 1e-12, 1 + 1e-6]",
+    "F_2000exp_5min.endf: pruning total_violations = 2",
+    "F_2000exp_5min.endf: pruning record fails: ['kept_activity_Bq_per_g_bound: candidate 2.874154120261059e-35 against baseline 2.8733374460145076e-35', 'kept_heat_W_per_g_bound: candidate 1.8052431822894063e-47 against baseline 1.8045154605510915e-47']",
+    "F_2000exp_5min.endf: a pruning total ratio is outside [1 - 1e-12, 1 + 1e-6]",
+    "Gd_2000exp_5min.endf: pruning total_violations = 2",
+    "Gd_2000exp_5min.endf: pruning record fails: ['kept_activity_Bq_per_g_bound: candidate 2.1332906608889906e-23 against baseline 2.1293107550789776e-23', 'kept_heat_W_per_g_bound: candidate 3.881298125061028e-36 against baseline 3.8811473942878296e-36']",
+    "Gd_2000exp_5min.endf: a pruning total ratio is outside [1 - 1e-12, 1 + 1e-6]",
+    "Mn_2000exp_5min.endf: pruning total_violations = 2",
+    "Mn_2000exp_5min.endf: pruning record fails: ['kept_activity_Bq_per_g_bound: candidate 3.1926603918309056e-24 against baseline 3.1926350405807547e-24', 'kept_heat_W_per_g_bound: candidate 1.285789339009031e-36 against baseline 1.285780526033275e-36']",
+    "Mn_2000exp_5min.endf: a pruning total ratio is outside [1 - 1e-12, 1 + 1e-6]"
+   ]
+  },
+  "G4": {
+   "pass": true,
+   "problems": []
+  }
+ },
+ "protocol": "ACTINV-P182",
+ "summary": {},
+ "verdict": "P182-FAIL"
+}
