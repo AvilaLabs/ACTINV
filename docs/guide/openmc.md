@@ -58,20 +58,23 @@ conditions, including that ACTINV's runs were redone on ENDF/B-VIII.1 after a fi
 
 ## Inside OpenMC's R2S workflow
 
-You need OpenMC 0.15.3 (the version that has `openmc.deplete.R2SManager`), the `actinv` Python package
-(`pip install actinv`), and the standard data (`actinv data fetch`). The adapter is the module `actinv.openmc`;
-importing `actinv` alone never imports OpenMC, and `actinv.openmc` stops with a clear message if OpenMC is missing
-or older than 0.15.3.
+You need OpenMC 0.15.3 or newer (the versions that have `openmc.deplete.R2SManager`), the `actinv` Python
+package (`pip install actinv`), and the standard data (`actinv data fetch`). The adapter is the module
+`actinv.openmc`; importing `actinv` alone never imports OpenMC, and `actinv.openmc` stops with a clear message if
+OpenMC is missing or older than 0.15.3. It is tested on OpenMC 0.15.3 and 0.16.0, and weekly on OpenMC's
+development branch.
 
 ```python
 import openmc
 from actinv.openmc import ActinvR2SManager
 
 r2s = ActinvR2SManager(model, mesh)
-r2s.step1_neutron_transport()
-r2s.step2_activation(timesteps=[3.15e7, 1.0e6], source_rates=[1.0e17, 0.0])
-r2s.step3_photon_transport(time_indices=[2])
+r2s.run(timesteps=[3.15e7, 1.0e6], source_rates=[1.0e17, 0.0], photon_time_indices=[2])
 ```
+
+`run` calls the same steps as OpenMC's own manager: three in OpenMC 0.15.3 (the third is
+`step3_photon_transport`), four from 0.16 (`step3_photon_source` builds the sources, `step4_photon_transport` runs
+them). A cell-based run also needs `bounding_boxes={cell.id: box}`, as with OpenMC's manager.
 
 With no further arguments the manager uses the default data bundle you installed (under `./actinv-data` or
 `$ACTINV_DATA_DIR`; it tells you to run `actinv data fetch` if the files are missing) and the `actinv` command that
@@ -88,7 +91,11 @@ What changes compared with OpenMC's own manager:
   results object that answers `get_decay_photon_energy()` for each region.
   It also saves the region materials as `materials.xml`, so `r2s.load_results(path)` reopens a finished run
   without solving again.
-- **Step 3** and everything after it are OpenMC's own code.
+- **The photon sources** are ACTINV's decay-photon spectrum for each region, with strength in photons/s. From
+  OpenMC 0.16 the manager builds them in place of OpenMC's `DecaySpectrum` sources, which would need nuclide
+  densities and a depletion chain; the regions, boxes and domain constraints are OpenMC's. Scoring by parent nuclide
+  (`by_parent_nuclide=True`) is not available, since the spectrum is per region.
+- **Photon transport** and everything after it are OpenMC's own code.
 
 `contrib/openmc_r2s/demo_steel_cube.py` runs the steel-cube problem with both managers and compares the dose. The
 adapter's [README](https://github.com/AvilaLabs/ACTINV/blob/master/contrib/openmc_r2s/README.md) lists its limits:

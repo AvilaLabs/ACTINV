@@ -1,0 +1,74 @@
+name: openmc
+
+# actinv.openmc against OpenMC's official images: the supported releases and the nightly build of
+# OpenMC's develop branch. Each runs the adapter's unit tests with OpenMC importable (none may be
+# skipped for want of it) and an end-to-end R2S smoke run, cell-based and mesh-based, on the
+# image's own cross sections. Weekly, by hand, and when the adapter or these scripts change.
+# Not part of the release gate (require-green-ci.yml reads the controls workflow only): a failure
+# on develop is an early warning about an upcoming OpenMC release.
+
+on:
+  schedule:
+    - cron: "23 5 * * 1"
+  workflow_dispatch:
+  push:
+    branches: [master, main]
+    paths:
+      - python/pysrc/actinv/**
+      - scripts/openmc_r2s_smoke.py
+      - scripts/test_actinv_openmc.py
+      - .github/workflows/openmc.yml
+
+permissions:
+  contents: read
+
+jobs:
+  wheel:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with: { persist-credentials: false }
+      - name: Build the Python wheel
+        uses: PyO3/maturin-action@e83996d129638aa358a18fbd1dfb82f0b0fb5d3b # v1.51.0
+        with:
+          maturin-version: v1.15.0
+          manylinux: "2014"
+          working-directory: python
+          args: --release --locked --out ../dist
+      - uses: actions/upload-artifact@v4
+        with:
+          name: actinv-wheel
+          path: dist/*.whl
+          if-no-files-found: error
+
+  adapter:
+    name: actinv.openmc / OpenMC ${{ matrix.openmc }}
+    needs: wheel
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        openmc: ["v0.15.3", "v0.16.0", "develop"]
+    container: openmc/openmc:${{ matrix.openmc }}
+    env:
+      ACTINV_DATA_DIR: /tmp/actinv-data
+      ACTINV_REQUIRE_OPENMC: "1"
+      OMP_NUM_THREADS: "2"
+    steps:
+      - uses: actions/checkout@v7
+        with: { persist-credentials: false }
+      - uses: actions/download-artifact@v4
+        with: { name: actinv-wheel, path: dist }
+      - name: Install actinv beside the image's OpenMC
+        run: |
+          python -m pip install dist/*.whl
+          python -c "import actinv, openmc; print('actinv', actinv.__version__, 'openmc', openmc.__version__)"
+          git -c safe.directory='*' -C /root/OpenMC/openmc log -1 --format='OpenMC source %H %cs' || true
+          test -f "$OPENMC_CROSS_SECTIONS"
+      - name: Fetch the ACTINV data bundle
+        run: actinv data fetch --output "$ACTINV_DATA_DIR"
+      - name: Adapter unit tests
+        run: python scripts/test_actinv_openmc.py
+      - name: End-to-end R2S smoke run
+        run: python -W ignore::UserWarning scripts/openmc_r2s_smoke.py

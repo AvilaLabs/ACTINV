@@ -3,6 +3,7 @@ aff9e28bab599cc95b9a9cc9b03d896ca09d0593d8e1213175c3da372951456d  ./.github/work
 8ba8e292fd0afb868e23358bf6a2405c0e396bd0d78fbe4b7bee36ca582f8725  ./.github/workflows/docs.yml
 f05f89bed6f52d32a271c939a34d3711781324fe788f4663f538b5b16191bf60  ./.github/workflows/fns-iron.yml
 4371ef11aaaaaa05e78f67ac065b6ada016dc74b129debec9374af2f6bc62015  ./.github/workflows/fusion-isotope.yml
+5d8f0320af0e59302566015a8b3858e62c5fe2aa94e3114aef05b3cfdfefc197  ./.github/workflows/openmc.yml
 35f32079ded01135a8956b457daaaf1de373be5c652e4d5701db47af21127df5  ./.github/workflows/publish-crates.yml
 a5fdde37c08ded4e5cb97be9c642ae0d170af19f6b1b826792a31f4d5acbcefb  ./.github/workflows/publish-pypi.yml
 ea36b74db132862e65b3adba54dfd4aa0b8dd237f7d7d0e89ba95926e5216139  ./.github/workflows/release-artifacts.yml
@@ -1328,7 +1329,7 @@ feb943c57e5e4d6cf37ece3668b4fc4eda055ad224265c75edfdb38f180d0d56  ./docs/guide/f
 cb1b167f9ddccdc6f1261bdd0a34836b8b0c78e2dbeaf05baba2905df44e0d30  ./docs/guide/index.md
 544cb916f7dc9759cf5fdccfac3693a227bbc0c038d273ee6f277636b0cbd9c7  ./docs/guide/install.md
 6ad7984666b7ac9f3c6cba775a34b21604656fced8d9bef60a92160814efd40a  ./docs/guide/method.md
-a6c4adafe3c844689f0445cdd7e67eaaa12ce40f4e4111c0149753d9a5813faa  ./docs/guide/openmc.md
+f6060655a36deb401f77654064459db9518f72da32775a4f5e94da7d7b06785c  ./docs/guide/openmc.md
 9a1e669909cff94a1fbc0893b683f3416b0d35b461db34eaff046c140bed7297  ./docs/guide/problems.md
 291bc585391068e3e341f9e3078d0ec691dbdb57ced5695d4d61361171a84fed  ./docs/guide/python.md
 3c902be1872bb3fbe555f1f2d26e68eefee68fdb9d5fb8e74f1d27f27e92258f  ./docs/guide/qualification.md
@@ -1833,7 +1834,7 @@ cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30  ./python/LICEN
 57add620d07a7098e15aa86b55eecafbfd8de05da05764954cfc6c501f2aeb54  ./python/pyproject.toml
 31ee02ea8262fe73eaf532bb3db599155f15954741e7ffea7dbfc840efac8252  ./python/pysrc/actinv/__init__.py
 3195294bf821d37375849babc56f218b0f270562477cbb598da9a64aded0fee6  ./python/pysrc/actinv/_defaults.py
-20276c74d83cff6bea424bffaa0d0ef3d07e940327fcdc005d37fa1e4392949e  ./python/pysrc/actinv/openmc.py
+1f6b7a22691ccd5d86804c9a134d0070ee49ae51ff2f9c60dbc6118549395b6c  ./python/pysrc/actinv/openmc.py
 58309c5a8f6b604eb97ed9df84d0019c3c33e4ae414c08dc65aa611f7c3fc353  ./python/src/lib.rs
 b02b6bb59e2a771f4acc039f44e1b00571e459895db280cb4e50ab1b9d1b8482  ./python/src/objects.py
 afa42192b4756d6ac1d4bad8e73534cfd173f32cfcb328bcd1233d61830b3bdf  ./requirements-ci.txt
@@ -6567,6 +6568,7 @@ e5c957e91b944346386d67205bacb500aa8dc7f82417f35f6b7f755d634cfed3  ./scripts/diag
 e3b59683775fe379d73b0b307a145c499ecf21ba8d98e0fdf6bad2b082be7bd9  ./scripts/fetch_ci_data.sh
 be23680249616710739ba26ad3286aa2b68123f3c54e8669ae2ec60c0e016ec7  ./scripts/fetch_ci_seed.py
 c329368582a3289af9201ebe5b764fc7d3e5a847944badb1abadb94162daae0b  ./scripts/git-hooks/pre-commit
+3ba8793b56e1153c5b26846a22962b883ffa9fb3d0fec2d57e0f069452b050a3  ./scripts/openmc_r2s_smoke.py
 f9237f139e6fb7cd18fabe0c6e3e08f8108c16dd9c7aa4f29be3cb04068c7d91  ./scripts/package_desktop.py
 3918ad6145cfd5bc13520182c8664f9d076bff6584b2642bed3708d0c725dfa6  ./scripts/preflight.py
 5b7d1712ad214ca4b174c7c171ca9e3bbe408a78b541392ec222c0e022b07d3f  ./scripts/prepare_data_release.py
@@ -6587,7 +6589,7 @@ ae1e8cbfa837a10266af00474c4f963daf685bf942322ff868fe6c0b9300be78  ./scripts/run_
 aa1a0874c2d26e257102a0112111577a0811ae11292364cd54b219cdfaa9bf7b  ./scripts/run_p118_gate.py
 e78a811fa44629c1fcdf2adcc7c8f80c74216dcc4dbfec58506396b6bc75421d  ./scripts/run_roadmap_gate.py
 4455d12bc4eec9573fd12509d0b8872b70557909c8e2b68c0feb9af3d47f999a  ./scripts/smoke_python_wheel.py
-943024bdf196b73900159f3a09f071798e669f4686f44bff7e5f048305a9579b  ./scripts/test_actinv_openmc.py
+0fc1fa4cc3d157384de6524ab0263d575bddedae9ae3be66a1851e72693b2554  ./scripts/test_actinv_openmc.py
 59f3f779d2bbd4da4d03d91106ae5ac44e91edfbf5a45bc3b58b76565b6e0274  ./scripts/test_build_kerma_table.py
 78d937755f0a0910ba0c528276d143857b0ff9f03803d25a2a968c5e08dcff4c  ./scripts/test_check_python_release_set.py
 30ae894d33d552ed16a9470a31a755f9c2578b50abd5bd2946bda5a6020bf52f  ./scripts/test_fetch_ci_seed.py

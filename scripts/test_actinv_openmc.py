@@ -34,6 +34,8 @@ try:
     HAVE_OPENMC = True
     _IMPORT_ERROR = None
 except Exception as exc:  # pragma: no cover - environment-dependent
+    if os.environ.get("ACTINV_REQUIRE_OPENMC"):  # the openmc workflow: skipping would hide a break
+        raise
     HAVE_OPENMC = False
     _IMPORT_ERROR = exc
 
@@ -502,6 +504,52 @@ class ManagerDefaultsTests(unittest.TestCase):
     def test_micro_keys_select_openmc_step_one(self):
         self.assertTrue({"chain_file"} & m._OPENMC_MICRO_KEYS)
         self.assertFalse({"energies", "path_statepoint"} & m._OPENMC_MICRO_KEYS)
+
+
+@unittest.skipUnless(HAVE_OPENMC, f"openmc not importable: {_IMPORT_ERROR}")
+class PhotonSourceTests(unittest.TestCase):
+    """The OpenMC >= 0.16 source builder override, called directly (it is ours on every version)."""
+
+    def _cell_manager(self, tmp):
+        lib, dec = Path(tmp) / "l.npz", Path(tmp) / "d.dat"
+        lib.write_bytes(b"x")
+        dec.write_bytes(b"x")
+        mats, cells = [], []
+        for i in range(2):
+            mat = openmc.Material()
+            mat.add_nuclide("Fe56", 1.0)
+            mat.set_density("g/cm3", 7.8)
+            cell = openmc.Cell(fill=mat, region=-openmc.Sphere(x0=10.0 * i, r=1.0))
+            mats.append(mat)
+            cells.append(cell)
+        r2s = m.ActinvR2SManager(openmc.Model(), cells, library=lib, decay_primary=dec, actinv_bin="/opt/actinv")
+        r2s.results["activation_materials"] = mats
+        r2s.results["depletion_results"] = m.build_results_shim(
+            [{str(mats[0].id): [(1.0e6, 5.0), (2.0e6, 3.0)], str(mats[1].id): None}])
+        return r2s, [(cell, mat, cell.bounding_box) for cell, mat in zip(cells, mats)]
+
+    def test_sources_carry_actinv_spectra_strengths_and_domains(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            r2s, items = self._cell_manager(tmp)
+            sources = r2s._create_photon_sources(1, items)
+        self.assertEqual(len(sources), 1)  # the region with no photons is left out
+        src = sources[0]
+        self.assertEqual(src.particle, "photon")
+        self.assertAlmostEqual(src.strength, 8.0)
+        self.assertEqual(list(src.energy.x), [1.0e6, 2.0e6])
+        self.assertEqual(src.constraints["domain_type"], "cell")
+        self.assertEqual(src.constraints["domain_ids"], [items[0][0].id])
+
+    def test_pre_irradiation_has_no_sources(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            r2s, items = self._cell_manager(tmp)
+            self.assertEqual(r2s._create_photon_sources(0, items), [])
+
+    def test_by_parent_nuclide_is_refused(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            r2s, _ = self._cell_manager(tmp)
+            with self.assertRaises(ValueError):
+                r2s.step4_photon_transport(by_parent_nuclide=True)
 
 
 @unittest.skipUnless(HAVE_OPENMC, f"openmc not importable: {_IMPORT_ERROR}")

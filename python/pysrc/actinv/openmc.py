@@ -233,8 +233,11 @@ def require_activation_regions(mats):
 
 
 def flux_only_microxs_and_flux(model, domains, energies=None, path_statepoint=None, path_input=None,
-                               run_kwargs=None):
+                               run_kwargs=None, include_model_tallies=False):
     """Flux-only stand-in for ``openmc.deplete.get_microxs_and_flux`` (OpenMC 0.15.3, microxs.py).
+
+    OpenMC 0.16 adds ``include_model_tallies``: its step 1 passes True and then reads the model's
+    own tallies from the statepoint, so they are kept in the run beside the flux tally.
 
     ``get_microxs_and_flux`` always resolves a depletion chain (``_get_chain``, line 121) and then
     tallies per-nuclide reaction rates or builds cross sections from the chain; it cannot skip
@@ -248,18 +251,23 @@ def flux_only_microxs_and_flux(model, domains, energies=None, path_statepoint=No
     original_tallies = list(model.tallies)
     energy_filter = openmc.EnergyFilter(energies if energies is not None else [0.0, 100.0e6])
     if isinstance(domains, openmc.Filter):
-        domain_filter = domains
+        domain_filters = [domains]
+    elif isinstance(domains[0], openmc.Filter):  # OpenMC 0.16: one mesh-material filter per mesh
+        domain_filters = list(domains)
     elif isinstance(domains[0], openmc.Cell):
-        domain_filter = openmc.CellFilter(domains)
+        domain_filters = [openmc.CellFilter(domains)]
     elif isinstance(domains[0], openmc.Material):
-        domain_filter = openmc.MaterialFilter(domains)
+        domain_filters = [openmc.MaterialFilter(domains)]
     else:
         raise ValueError(f"Unsupported domain type: {type(domains[0])}")
 
-    flux_tally = openmc.Tally(name="ACTINV flux")
-    flux_tally.filters = [domain_filter, energy_filter]
-    flux_tally.scores = ["flux"]
-    model.tallies = [flux_tally]
+    flux_tallies = []
+    for i, domain_filter in enumerate(domain_filters):
+        flux_tally = openmc.Tally(name=f"ACTINV flux {i}")
+        flux_tally.filters = [domain_filter, energy_filter]
+        flux_tally.scores = ["flux"]
+        flux_tallies.append(flux_tally)
+    model.tallies = (original_tallies if include_model_tallies else []) + flux_tallies
     try:
         if openmc.lib.is_initialized:
             openmc.lib.finalize()
@@ -281,12 +289,15 @@ def flux_only_microxs_and_flux(model, domains, energies=None, path_statepoint=No
                     model.export_to_model_xml(path_input)
             statepoint_path = comm.bcast(statepoint_path)
             with openmc.StatePoint(statepoint_path) as sp:
-                flux_tally = sp.tallies[flux_tally.id]
-                flux_tally._read_results()
-        flux = np.moveaxis(flux_tally.get_reshaped_data(), 1, -1)  # (domains, 1, 1, groups)
+                flux_tallies = [sp.tallies[tally.id] for tally in flux_tallies]
+                for flux_tally in flux_tallies:
+                    flux_tally._read_results()
+        fluxes = []  # concatenated over the domain filters in order, as OpenMC 0.16 does
+        for flux_tally in flux_tallies:
+            flux = np.moveaxis(flux_tally.get_reshaped_data(), 1, -1)  # (domains, 1, 1, groups)
+            fluxes.extend(flux.squeeze((1, 2)))
     finally:
         model.tallies = original_tallies
-    fluxes = list(flux.squeeze((1, 2)))
     stub = np.zeros((1, 1, fluxes[0].size if fluxes else 1))
     micros = [MicroXS(stub.copy(), ["H1"], ["(n,gamma)"]) for _ in fluxes]
     return fluxes, micros
@@ -436,6 +447,39 @@ class ActinvR2SManager(openmc.deplete.R2SManager):
             raise RuntimeError(f"actinv mesh timed out after {self.mesh_timeout_s} s:\n{tail[-4000:]}") from exc
         if proc.returncode != 0:
             raise RuntimeError(f"actinv mesh failed:\n{proc.stderr[-4000:]}")
+
+    # -- step 3 (OpenMC >= 0.16): photon sources from ACTINV's spectra ---------------------------
+    def _create_photon_sources(self, time_index, work_items):
+        """OpenMC 0.16's source builder (``R2SManager._create_photon_sources``), with each
+        region's ACTINV photon spectrum in place of ``openmc.stats.DecaySpectrum``, which needs
+        nuclide densities and a depletion chain. Same regions, boxes and domain constraints as
+        OpenMC's; the strength is the region's photons/s, as OpenMC 0.15.3's step 3 set it.
+        """
+        step_result = self.results["depletion_results"][time_index]
+        materials = self.results["activation_materials"]
+        mesh_based = self.method == "mesh-based"
+        if mesh_based:
+            mat_dict = self.neutron_model._get_all_materials()
+        sources = []
+        for item in work_items:
+            if mesh_based:
+                index_mat, domain_id, bbox = item
+                original_mat, domain = materials[index_mat], mat_dict[domain_id]
+            else:
+                domain, original_mat, bbox = item
+            energy = step_result.get_material(str(original_mat.id)).get_decay_photon_energy()
+            if energy is None:
+                continue
+            sources.append(openmc.IndependentSource(
+                space=openmc.stats.Box(bbox.lower_left, bbox.upper_right), energy=energy,
+                particle="photon", strength=energy.integral(), constraints={"domains": [domain]}))
+        return sources
+
+    def step4_photon_transport(self, *args, by_parent_nuclide=False, **kwargs):
+        if by_parent_nuclide:
+            raise ValueError("by_parent_nuclide is not supported: ACTINV gives each region's photon "
+                             "spectrum, not one per parent nuclide")
+        return super().step4_photon_transport(*args, **kwargs)
 
     def _set_mesh_results(self, result_path, mats, n_steps):
         per_step = parse_photon_groups(result_path, mats, n_steps)
