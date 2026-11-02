@@ -1,15 +1,15 @@
-# Submitting ACTINV 1.7.1 to conda-forge
+# Submitting ACTINV to conda-forge
 
 Recipe: `recipe.yaml` (rattler-build, schema v1; staged-recipes accepts it).
-Source: PyPI sdist `actinv-1.7.1.tar.gz`, sha256 c00454d16406b695359ac6a80bac8d4c88478b3f591d9ccde59f4d69e07c8997
-(taken from https://pypi.org/pypi/actinv/1.7.1/json). Re-verify: `curl -L <url> | sha256sum`.
-Built and tested locally on 2026-11-02 with rattler-build 0.80.0 (linux-64, Python 3.12, `variants.yaml` below standing in for
+Submitted as conda-forge/staged-recipes#35456 (fork branch `Connoravila1:actinv`).
+Source: PyPI sdist `actinv-1.7.2.tar.gz`, sha256 12846693b72f01619d88822cd8f47f020c61ab2161b5f64d1461059baaaae927
+(taken from https://pypi.org/pypi/actinv/1.7.2/json). Re-verify: `curl -L <url> | sha256sum`.
+Built and tested locally with rattler-build 0.80.0 (linux-64, Python 3.12, `variants.yaml` below standing in for
 conda-forge's pinning): the Rust build, `import actinv`, `pip check` and `actinv --help` pass.
 
-The 1.7.1 sdist's top-level Cargo.toml lists `crates/actinv-gui` as a workspace member but the sdist does not ship it, so
-`cargo-bundle-licenses` (which reads that file) fails. `0001-workspace-members-glob.patch` changes the member list to
-`crates/*`; the same change is on master, with a CI step that checks the sdist's manifests, so the patch goes when the
-recipe moves past 1.7.1.
+The PR first carried 1.7.1 with `0001-workspace-members-glob.patch`: the 1.7.1 sdist's top-level Cargo.toml listed
+`crates/actinv-gui`, which the sdist does not ship, so `cargo-bundle-licenses` failed. 1.7.2 lists `crates/*` (and CI
+checks the sdist's manifests), so the recipe moved to 1.7.2 without the patch.
 
 ## Before submitting
 1. Maintainer: `Connoravila1` (gets write access to the feedstock).
@@ -30,7 +30,7 @@ recipe moves past 1.7.1.
     cd staged-recipes
     git checkout -b actinv
     mkdir recipes/actinv
-    cp <actinv checkout>/packaging/conda-forge/recipe.yaml <actinv checkout>/packaging/conda-forge/0001-workspace-members-glob.patch recipes/actinv/
+    cp <actinv checkout>/packaging/conda-forge/recipe.yaml recipes/actinv/
     git add recipes/actinv && git commit -m "Add actinv recipe"
     git push -u origin actinv
     gh pr create --repo conda-forge/staged-recipes --title "Add actinv" --body-file pr_body.md

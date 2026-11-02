@@ -1472,9 +1472,8 @@ cfd86c2c5ac15d76ec2358c6bd196a6362b46bcc889160c06439975dc5ae8f3a  ./interchange/
 16ad15b03624c70c024a2812726ebf726fe8e3a2913f72a5609795e77bb79065  ./ledger.md
 588e9f4f4ff74df627a1a15306214db678531d7334f2f6e95a1603eabd1f1c55  ./packaging/actinv.ico
 9897482011f194d9495fc80965177f0632ae4166917a7f240d80c0fc3c8fb83e  ./packaging/actinv.png
-576c7f5fb359e107c52e89cb2e864609293a97e5588a45a55ea64ccbe30c5124  ./packaging/conda-forge/0001-workspace-members-glob.patch
-fd198c884805f4c53246d65ed524384be3d0c3404bcb8f3abec764ae19dbbeba  ./packaging/conda-forge/SUBMIT.md
-11ee14eadea3655baab269396919b4c71315d6f16b29f3c4393c73f9c1053f23  ./packaging/conda-forge/recipe.yaml
+be93fd3e3bf295ec7e2bf23765492499f4e45f7aa45766a5143d565c16712adc  ./packaging/conda-forge/SUBMIT.md
+cfe16c4f91343ff1218af2a6ad61491e3b4430ec464ff06ba1a3a2dd910dc86a  ./packaging/conda-forge/recipe.yaml
 3abcd339e6ef22af6f5b7f65573174e7acc265b05d0ede9c4a949fa54490fe04  ./packaging/desktop.json
 371becebd005e36a596da0a9c2b9ceae85acdb870a659b55ca3fc1350c783e7e  ./packaging/install-linux.sh
 b53f5c5d7462778b595af8bfb8147d4185c5fcf966cbbed2d90c0ee82b0e8e9d  ./packaging/windows.rc
