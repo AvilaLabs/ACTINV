@@ -6120,3 +6120,19 @@ sampling, state-resolved products included.
 - **Precision.** The agreement is within registered limits of about ±30–70% in variance. It shows that the band is
   neither missing nor double-counting a term; it is not a precision measurement.
 - **Clean-up.** The raw outputs under `target/p187-work` are deleted; `results/p187_samples.json.gz` is kept.
+
+## Entry 352 — P188 registered: the IRDFF-II sidecar rebuilt with absolute LB=8 variances, checked and sampled (2026-11-03)
+
+`protocols/ACTINV-P188_PROTOCOL.md` and `controls/p188.py` are sealed in `protocols/protocol_hash.txt`. P188 is the
+repair ledger 341 called for. It rebuilds P184's sidecar with IRDFF-II's LB=8 blocks carried over unscaled, through
+P184's sealed patcher, harness and checker; the LB=5 part, selection, sources and build are P184's. Then P187's
+sampling check runs on the new sidecar, with new seeds. Gates:
+- G1–G4: P184's checks, with LB=8 expected unscaled;
+- G5: P184's iron observation, before and after;
+- G6: P187's G1–G3;
+- G7: CI.
+
+Two rehearsals were run before registration and read for exits and gate status only. The first stopped because
+`ACTINV_BIN` was unset, which the protocol's commands now say. In the second, every step exited 0, and P184's G2–G4
+and P187's G1 and G3 held. No band, spread or matrix value was read, and the outputs are deleted. A pass makes the
+sidecar a release candidate; shipping it needs the owner's approval.
