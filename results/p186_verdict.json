@@ -1,0 +1,459 @@
+{
+ "allowed_sentences": [
+  "In ACTINV's MF=33 band, a state-resolved (MF=10) product takes its reaction's covariance, fully correlated with the reaction total; its isomer-branching (MF=40) uncertainty is not propagated, and the band's coverage is reported partial.",
+  "For iron in the FNS spectrum after 5 minutes' irradiation, the cross-section part of the relative standard deviation of the Cr51 activity 66 s after shutdown is 67.9% without state-resolved coverage and 67.9% with it (TENDL-2025 covariances, isomer branching not included).",
+  "For iron in the FNS spectrum after 5 minutes' irradiation, the cross-section part of the relative standard deviation of the Fe53 activity 66 s after shutdown is 7.85e-12% without state-resolved coverage and 40.1% with it (TENDL-2025 covariances, isomer branching not included).",
+  "For iron in the FNS spectrum after 5 minutes' irradiation, the cross-section part of the relative standard deviation of the Mn54 activity 66 s after shutdown is 42% without state-resolved coverage and 42% with it (TENDL-2025 covariances, isomer branching not included).",
+  "For iron in the FNS spectrum after 5 minutes' irradiation, the cross-section part of the relative standard deviation of the Mn56 activity 66 s after shutdown is 36.4% without state-resolved coverage and 36.4% with it (TENDL-2025 covariances, isomer branching not included).",
+  "For iron in the FNS spectrum after 5 minutes' irradiation, the cross-section part of the relative standard deviation of the Mn57 activity 66 s after shutdown is 38.7% without state-resolved coverage and 38.7% with it (TENDL-2025 covariances, isomer branching not included).",
+  "For a nickel, cobalt, aluminium, tungsten and niobium mixture in the FNS spectrum after 5 minutes' irradiation, the cross-section part of the relative standard deviation of the Al26 activity 66 s after shutdown is 1.48e-11% without state-resolved coverage and 28.2% with it (TENDL-2025 covariances, isomer branching not included).",
+  "For a nickel, cobalt, aluminium, tungsten and niobium mixture in the FNS spectrum after 5 minutes' irradiation, the cross-section part of the relative standard deviation of the Co57 activity 66 s after shutdown is 4.22% without state-resolved coverage and 4.22% with it (TENDL-2025 covariances, isomer branching not included).",
+  "For a nickel, cobalt, aluminium, tungsten and niobium mixture in the FNS spectrum after 5 minutes' irradiation, the cross-section part of the relative standard deviation of the Co58 activity 66 s after shutdown is 1.17e-11% without state-resolved coverage and 5.04% with it (TENDL-2025 covariances, isomer branching not included).",
+  "For a nickel, cobalt, aluminium, tungsten and niobium mixture in the FNS spectrum after 5 minutes' irradiation, the cross-section part of the relative standard deviation of the Co60 activity 66 s after shutdown is 0.212% without state-resolved coverage and 17.3% with it (TENDL-2025 covariances, isomer branching not included).",
+  "For a nickel, cobalt, aluminium, tungsten and niobium mixture in the FNS spectrum after 5 minutes' irradiation, the cross-section part of the relative standard deviation of the Na24 activity 66 s after shutdown is 16.6% without state-resolved coverage and 16.6% with it (TENDL-2025 covariances, isomer branching not included).",
+  "For a nickel, cobalt, aluminium, tungsten and niobium mixture in the FNS spectrum after 5 minutes' irradiation, the cross-section part of the relative standard deviation of the Nb92m1 activity 66 s after shutdown is 3.58e-11% without state-resolved coverage and 24.9% with it (TENDL-2025 covariances, isomer branching not included).",
+  "For a nickel, cobalt, aluminium, tungsten and niobium mixture in the FNS spectrum after 5 minutes' irradiation, the cross-section part of the relative standard deviation of the Ni57 activity 66 s after shutdown is 44.8% without state-resolved coverage and 44.8% with it (TENDL-2025 covariances, isomer branching not included).",
+  "For a nickel, cobalt, aluminium, tungsten and niobium mixture in the FNS spectrum after 5 minutes' irradiation, the cross-section part of the relative standard deviation of the W185 activity 66 s after shutdown is 0.171% without state-resolved coverage and 5.86% with it (TENDL-2025 covariances, isomer branching not included).",
+  "For a nickel, cobalt, aluminium, tungsten and niobium mixture in the FNS spectrum after 5 minutes' irradiation, the cross-section part of the relative standard deviation of the W187 activity 66 s after shutdown is 2.47% without state-resolved coverage and 2.47% with it (TENDL-2025 covariances, isomer branching not included)."
+ ],
+ "gates": {
+  "G0": {
+   "controls/check_p185.py": true,
+   "controls/p185_harness.py": true,
+   "controls/p186.py": true,
+   "pass": true,
+   "protocols/ACTINV-P185_PROTOCOL.md": true,
+   "sha256": "61c4d8a3acbbf857b6bce733fee755bc092281c8955f6126c8e761ff16c29703"
+  },
+  "G1": {
+   "baseline_commit": true,
+   "bounded": true,
+   "build_exit": true,
+   "clean_trees": true,
+   "outputs": true,
+   "pass": true,
+   "pins": true,
+   "registration_commit": true,
+   "runs": true
+  },
+  "G2": {
+   "pass": true,
+   "problems": []
+  },
+  "G3": {
+   "pass": true,
+   "problems": [],
+   "worst_relative_difference": 1.1593430221511356e-15
+  },
+  "G4": {
+   "affected_responses": {
+    "A": [
+     "Cr51",
+     "Fe53",
+     "Mn54",
+     "Mn56",
+     "Mn57"
+    ],
+    "B": [
+     "Al26",
+     "Co57",
+     "Co58",
+     "Co60",
+     "Na24",
+     "Nb92m1",
+     "Ni57",
+     "W185",
+     "W187"
+    ]
+   },
+   "pass": true,
+   "problems": [],
+   "steps_with_activity": {
+    "A": {
+     "Cr51": [
+      4,
+      4
+     ],
+     "Fe53": [
+      3,
+      3
+     ],
+     "Mn54": [
+      4,
+      4
+     ],
+     "Mn56": [
+      4,
+      4
+     ],
+     "Mn57": [
+      4,
+      4
+     ]
+    },
+    "B": {
+     "Al26": [
+      4,
+      4
+     ],
+     "Co57": [
+      4,
+      4
+     ],
+     "Co58": [
+      4,
+      4
+     ],
+     "Co60": [
+      4,
+      4
+     ],
+     "Na24": [
+      4,
+      4
+     ],
+     "Nb92m1": [
+      4,
+      4
+     ],
+     "Ni57": [
+      4,
+      4
+     ],
+     "W185": [
+      4,
+      4
+     ],
+     "W187": [
+      4,
+      4
+     ]
+    }
+   }
+  },
+  "G5": {
+   "observations": {
+    "A": {
+     "Cr51": [
+      [
+       300.0,
+       0.6789336151605839,
+       0.6789336151605839
+      ],
+      [
+       366.0,
+       0.6789336151605837,
+       0.6789336151605837
+      ],
+      [
+       3966.0,
+       0.6789336151605834,
+       0.6789336151605834
+      ],
+      [
+       90366.0,
+       0.6789336151605835,
+       0.6789336151605835
+      ]
+     ],
+     "Fe53": [
+      [
+       300.0,
+       7.845635924041232e-14,
+       0.4010845438484517
+      ],
+      [
+       366.0,
+       7.845635924041227e-14,
+       0.4010845438484516
+      ],
+      [
+       3966.0,
+       7.845635924041216e-14,
+       0.40108454384845177
+      ],
+      [
+       90366.0,
+       null,
+       null
+      ]
+     ],
+     "Mn54": [
+      [
+       300.0,
+       0.419749500495747,
+       0.419749500495747
+      ],
+      [
+       366.0,
+       0.41974950049574683,
+       0.41974950049574683
+      ],
+      [
+       3966.0,
+       0.41974950049574694,
+       0.41974950049574694
+      ],
+      [
+       90366.0,
+       0.41974950049574705,
+       0.41974950049574705
+      ]
+     ],
+     "Mn56": [
+      [
+       300.0,
+       0.36392912100801167,
+       0.36392912100801167
+      ],
+      [
+       366.0,
+       0.3639291209976943,
+       0.3639291209976943
+      ],
+      [
+       3966.0,
+       0.36392912091925406,
+       0.36392912091925406
+      ],
+      [
+       90366.0,
+       0.36392912091916013,
+       0.36392912091916013
+      ]
+     ],
+     "Mn57": [
+      [
+       300.0,
+       0.38683564052354774,
+       0.38683564052354774
+      ],
+      [
+       366.0,
+       0.38683564052354763,
+       0.38683564052354763
+      ],
+      [
+       3966.0,
+       0.3868356405235482,
+       0.3868356405235482
+      ],
+      [
+       90366.0,
+       0.38684019072650055,
+       0.38684019072650055
+      ]
+     ]
+    },
+    "B": {
+     "Al26": [
+      [
+       300.0,
+       1.4808223338610239e-13,
+       0.2823699191922015
+      ],
+      [
+       366.0,
+       1.480822333861023e-13,
+       0.2823699191922015
+      ],
+      [
+       3966.0,
+       1.4808223338610239e-13,
+       0.28236991919220145
+      ],
+      [
+       90366.0,
+       1.480822333861023e-13,
+       0.2823699191922014
+      ]
+     ],
+     "Co57": [
+      [
+       300.0,
+       0.04215699274871227,
+       0.042156992748712256
+      ],
+      [
+       366.0,
+       0.04215608981814075,
+       0.04215608981814073
+      ],
+      [
+       3966.0,
+       0.04211067046336172,
+       0.04211067046336139
+      ],
+      [
+       90366.0,
+       0.04245045628892947,
+       0.04245045628892345
+      ]
+     ],
+     "Co58": [
+      [
+       300.0,
+       1.1726457667883112e-13,
+       0.05040756539329745
+      ],
+      [
+       366.0,
+       1.1706919998076973e-13,
+       0.05041524383263488
+      ],
+      [
+       3966.0,
+       1.0879743783706869e-13,
+       0.05079655359408999
+      ],
+      [
+       90366.0,
+       1.0668935773889406e-13,
+       0.05308589934590203
+      ]
+     ],
+     "Co60": [
+      [
+       300.0,
+       0.0020976435946299427,
+       0.17087164900872667
+      ],
+      [
+       366.0,
+       0.002116984764899736,
+       0.17284834232637528
+      ],
+      [
+       3966.0,
+       0.0022609849310107626,
+       0.1875689259233153
+      ],
+      [
+       90366.0,
+       0.002262639500115286,
+       0.1877380994996419
+      ]
+     ],
+     "Na24": [
+      [
+       300.0,
+       0.16553476488508004,
+       0.16553476488508004
+      ],
+      [
+       366.0,
+       0.16553476488507998,
+       0.16553476488507998
+      ],
+      [
+       3966.0,
+       0.1655347648850798,
+       0.1655347648850798
+      ],
+      [
+       90366.0,
+       0.1655347648850798,
+       0.1655347648850798
+      ]
+     ],
+     "Nb92m1": [
+      [
+       300.0,
+       3.57962588647699e-13,
+       0.24907182773359154
+      ],
+      [
+       366.0,
+       3.57962588647699e-13,
+       0.24907182773359157
+      ],
+      [
+       3966.0,
+       3.5796258864769937e-13,
+       0.24907182773359182
+      ],
+      [
+       90366.0,
+       3.579625886476995e-13,
+       0.24907182773359177
+      ]
+     ],
+     "Ni57": [
+      [
+       300.0,
+       0.4484177222554841,
+       0.4484177222554841
+      ],
+      [
+       366.0,
+       0.44841772225548415,
+       0.44841772225548415
+      ],
+      [
+       3966.0,
+       0.44841772225548393,
+       0.44841772225548393
+      ],
+      [
+       90366.0,
+       0.44841772225548426,
+       0.44841772225548426
+      ]
+     ],
+     "W185": [
+      [
+       300.0,
+       0.0018533537252167426,
+       0.0585371468854942
+      ],
+      [
+       366.0,
+       0.0017072552524758085,
+       0.05858269271920077
+      ],
+      [
+       3966.0,
+       0.001511537925399104,
+       0.05864236223573457
+      ],
+      [
+       90366.0,
+       0.0015116139682557809,
+       0.058640826197712194
+      ]
+     ],
+     "W187": [
+      [
+       300.0,
+       0.02470386503169446,
+       0.02470386503169446
+      ],
+      [
+       366.0,
+       0.024703865031694337,
+       0.024703865031694337
+      ],
+      [
+       3966.0,
+       0.02470386503169407,
+       0.02470386503169407
+      ],
+      [
+       90366.0,
+       0.024703865031694066,
+       0.024703865031694066
+      ]
+     ]
+    }
+   },
+   "pass": true
+  },
+  "G6": {
+   "note": "CI green on the evidence commit, checked after the push",
+   "pass": null
+  }
+ },
+ "record_sha256": "b446dbd6e27bda1709137977a50cb9aa18a42fc3af07ac537e500905e5ef4d25",
+ "schema": "actinv-p186-verdict-1",
+ "verdict": "P186-PASS (pending G6)"
+}

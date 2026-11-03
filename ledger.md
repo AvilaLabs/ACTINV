@@ -6053,3 +6053,18 @@ harness and checker with two fixes, written after P185 Amendment A's whole recor
 
 The fix to G4 was chosen knowing it passes on those outputs. Those outputs are deleted, and all four problems run
 again. P187 becomes the band's sampling check.
+
+## Entry 347 — P186 evidence: G0–G5 pass on ca7bc7f; P186-PASS pending G6 (2026-11-02)
+
+A fresh run of `controls/p186.py build | observe | assemble | check` on the registration commit `ca7bc7f`, inside
+the bounded scope (`results/p186_record.json`, `results/p186_verdict.json`).
+- **G1:** builds and four runs exit 0. The candidate is built at `ca7bc7f`, from `4ce2822`'s Rust sources; the
+  baseline at `b7629fb`.
+- **G2:** every activity is bit-identical. Every band without a state-resolved parameter is unchanged to 1e-12. No
+  block is newly excluded, and every row newly covered is state-resolved.
+- **G3:** every band of the four runs equals the checker's own s^T C s; the largest relative difference is 1.2e-15.
+- **G4:** descriptors, coverage flags, counts, coverage and notes are right. Fe-53 takes the rule at 3 of 3 steps
+  with activity; Co-58 at 4 of 4.
+- **G5, at 66 s after shutdown (not gated):** Fe-53 ~1e-13 → 40.1%; Al-26 → 28.2%; Nb-92m → 24.9%; Co-58 → 5.04%;
+  Co-60 0.212% → 17.3%; W-185 0.171% → 5.86%. Cr-51, Mn-54, Mn-56, Mn-57, Co-57, Ni-57, Na-24 and W-187 have
+  state-resolved parameters but unchanged bands.
