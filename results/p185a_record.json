@@ -1,0 +1,89 @@
+{
+ "base": "b7629fb05213c15b21b01ace1adf9627d4aa93cb",
+ "build": {
+  "baseline": {
+   "binary": "/home/connoravila/Documents/actinv/target/openmc-wt/target/p185-work/base-target/release/actinv",
+   "binary_sha256": "c5628366c2bc0b84d82a2cdbaaf7abefd9a47a9866808e05cbdb3b7660cc000f",
+   "exit": 0,
+   "git_dirty": "",
+   "git_head": "b7629fb05213c15b21b01ace1adf9627d4aa93cb",
+   "stderr": "    Finished `release` profile [optimized] target(s) in 0.13s\n"
+  },
+  "candidate": {
+   "binary": "/home/connoravila/Documents/actinv/target/wt-openmc-wt/release/actinv",
+   "binary_sha256": "cf4b230412a7b687c44d6439b7d28561b69b70fa3458461db5d3e6a156f5db64",
+   "exit": 0,
+   "git_dirty": "",
+   "git_head": "77a967e31899be2a7ea3d4c5d89505044049b115",
+   "stderr": "    Finished `release` profile [optimized] target(s) in 0.30s\n"
+  },
+  "cgroup": {
+   "cpu_max": "400000 100000",
+   "memory_max": "6442450944",
+   "memory_swap_max": "0",
+   "path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p3827938-i12223645.scope",
+   "pids_max": "128"
+  }
+ },
+ "observe": {
+  "cgroup": {
+   "cpu_max": "400000 100000",
+   "memory_max": "6442450944",
+   "memory_swap_max": "0",
+   "path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p3827938-i12223645.scope",
+   "pids_max": "128"
+  },
+  "git_head": "77a967e31899be2a7ea3d4c5d89505044049b115",
+  "runs": {
+   "baseline_A": {
+    "binary": "baseline",
+    "binary_sha256": "c5628366c2bc0b84d82a2cdbaaf7abefd9a47a9866808e05cbdb3b7660cc000f",
+    "exit": 0,
+    "output": "/home/connoravila/Documents/actinv/target/openmc-wt/target/p185-work/baseline_A.json",
+    "output_sha256": "3fd2fc36047eb7088218f639bf931ab20da89c41a5817eff6d44685f9056368b",
+    "problem": "A",
+    "spec": "/home/connoravila/Documents/actinv/target/openmc-wt/target/p185-work/problem_A.json",
+    "spec_sha256": "cca1ec762f3233ac165021b04e2de2560e1ae966032c6a4a4ccf63a8762dbe67",
+    "stderr": "4 steps, 55 of 3873 states, 6367.6 ms -> /home/connoravila/Documents/actinv/target/openmc-wt/target/p185-work/baseline_A.json\n"
+   },
+   "baseline_B": {
+    "binary": "baseline",
+    "binary_sha256": "c5628366c2bc0b84d82a2cdbaaf7abefd9a47a9866808e05cbdb3b7660cc000f",
+    "exit": 0,
+    "output": "/home/connoravila/Documents/actinv/target/openmc-wt/target/p185-work/baseline_B.json",
+    "output_sha256": "18e0e83019c9e67c791be83bc57824ebb6684514a1a981ae0ebd880b95586ce4",
+    "problem": "B",
+    "spec": "/home/connoravila/Documents/actinv/target/openmc-wt/target/p185-work/problem_B.json",
+    "spec_sha256": "8c908cbbcd395accbbe84218f585a323a78d600fd0a78d46f36e92a1b94129cd",
+    "stderr": "4 steps, 225 of 3873 states, 48092.9 ms -> /home/connoravila/Documents/actinv/target/openmc-wt/target/p185-work/baseline_B.json\n"
+   },
+   "candidate_A": {
+    "binary": "candidate",
+    "binary_sha256": "cf4b230412a7b687c44d6439b7d28561b69b70fa3458461db5d3e6a156f5db64",
+    "exit": 0,
+    "output": "/home/connoravila/Documents/actinv/target/openmc-wt/target/p185-work/candidate_A.json",
+    "output_sha256": "08176f713223f2ca0cdf471c10512a799aa2a599f7359698d2f68787a0e77562",
+    "problem": "A",
+    "spec": "/home/connoravila/Documents/actinv/target/openmc-wt/target/p185-work/problem_A.json",
+    "spec_sha256": "cca1ec762f3233ac165021b04e2de2560e1ae966032c6a4a4ccf63a8762dbe67",
+    "stderr": "4 steps, 55 of 3873 states, 6775.9 ms -> /home/connoravila/Documents/actinv/target/openmc-wt/target/p185-work/candidate_A.json\n"
+   },
+   "candidate_B": {
+    "binary": "candidate",
+    "binary_sha256": "cf4b230412a7b687c44d6439b7d28561b69b70fa3458461db5d3e6a156f5db64",
+    "exit": 0,
+    "output": "/home/connoravila/Documents/actinv/target/openmc-wt/target/p185-work/candidate_B.json",
+    "output_sha256": "7ca0f294307b58dfb89d0a07af3c9e4f0978e76fadacabfd8158e8f22f9ac543",
+    "problem": "B",
+    "spec": "/home/connoravila/Documents/actinv/target/openmc-wt/target/p185-work/problem_B.json",
+    "spec_sha256": "8c908cbbcd395accbbe84218f585a323a78d600fd0a78d46f36e92a1b94129cd",
+    "stderr": "4 steps, 225 of 3873 states, 47677.7 ms -> /home/connoravila/Documents/actinv/target/openmc-wt/target/p185-work/candidate_B.json\n"
+   }
+  }
+ },
+ "pins": {
+  "activation": "ec4c72bf598dc8ad3d533d9cfafdcf493e2d1f949a3e4db6251495659b68cc44",
+  "cov_v120": "c19dec86b44ad5d90b66c9ab94d53e18641a1d354a89402a4da7986b6c530cde"
+ },
+ "schema": "actinv-p185a-record-1"
+}

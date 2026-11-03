@@ -6015,3 +6015,30 @@ changes. `controls/p185a.py` runs P185's sealed harness and checker with that na
 paths, and this amendment as G1's registration commit. The amendment was written after P185's run. Only that run's
 exit statuses, error messages, builds and G0–G1 were read. Problem A's two outputs were not read and are deleted
 before the fresh run.
+
+## Entry 345 — P185 Amendment A evidence and verdict: P185A-FAIL on G4 (Fe-53 has no activity at 1 day) (2026-11-02)
+
+`controls/p185a.py build | observe | assemble | check` on `77a967e`, inside the bounded scope.
+- **Record and verdict:** `results/p185a_record.json` and `results/p185a_verdict.json`.
+- **G0–G3 pass.**
+  - Four runs exited 0. The candidate was built at `77a967e`, whose Rust sources are `4ce2822`'s; the baseline
+    at `b7629fb`.
+  - Baseline against candidate: every activity is bit-identical, and every band without a state-resolved parameter
+    is unchanged to 1e-12. No block is newly excluded, and every row newly covered is state-resolved.
+  - Every band of the four runs equals the checker's own s^T C s. The largest relative difference is 1.2e-15.
+- **G4 fails on one condition:** "Fe-53 in A has a state-resolved parameter at every step."
+  - Fe-53's half-life is 8.5 min. At the last step (1 day after shutdown) its activity is 0, with no nonzero
+    sensitivity, so no parameter can be state-resolved there. That condition was mis-specified.
+  - The rest of G4 holds: descriptors, coverage flags, counts, coverage and notes, and Co-58 in B at every step.
+- With no repair round left, **P185A-FAIL**. The change stays on master, unqualified. No sentence from P185 may be
+  quoted.
+- **Observation (G5, not gated):** relative standard deviation of the cross-section part, baseline → candidate, at
+  66 s after shutdown.
+  - Fe-53: 0 → 40.1%.
+  - Al-26: 0 → 28.2%.
+  - Nb-92m: 0 → 24.9%.
+  - Co-58: 0 → 5.04%.
+  - Co-60: 0.21% → 17.3%.
+  - W-185: 0.17% → 5.86%.
+  - Cr-51, Mn-54, Mn-56, Mn-57, Co-57, Ni-57, Na-24 and W-187 are unchanged to the digits recorded.
+- The outputs are kept until a successor protocol decides whether to reuse them.
