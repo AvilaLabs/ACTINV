@@ -5952,3 +5952,18 @@ sentence is not to be quoted as a result: its band is ~0 because Fe-53 comes fro
 band leaves out by design (MF=40 is outside the propagated channels, since P11). It does not mean the uncertainty
 is small. The sidecar (SHA-256 `61180b27…`) is kept outside Git at `target/p184-sidecar/` for the release
 decision, which needs the owner's approval. The other run outputs are deleted.
+
+## Entry 341 — P184 method defect found after the verdict: IRDFF-II LB=8 blocks scaled by r² (2026-11-02)
+
+Found while writing P185's checker. ENDF-102 defines each LB=8 F_k as a contribution to the **absolute** variance
+(b²), and ACTINV's runtime applies it as one (`short_component`: no cross-section factor). IRDFF-II's values agree
+(Fe-54(n,p): √F ≈ 5e-10 b where σ ≈ 9e-8 b). An absolute variance carries over to the library's cross section
+unchanged, so P184's method (protocol line 83, "each F scaled by r²") is wrong for LB=8. The LB=5 part is not
+affected. The P184 sidecar matches its registered method, so P184-PASS stands as a statement about that sidecar.
+The sidecar is not to be shipped as it is.
+- **Size.** The r² that was applied, by reaction: Fe-54(n,p) 0.13–0.31, but only below 0.89 MeV, where σ is about
+  1e-5 b, which is negligible for the ledger 339 Mn-54 observation; Fe-54(n,α) no effect, since its F are all zero;
+  Cu-63(n,γ) 0.31–17.6, a real error, up to 17× in the short-range variance of some bins; Am-241(n,f) 0.90–1.18.
+- **Repair.** The patcher keeps IRDFF-II's LB=8 F unchanged. This goes into the successor protocol that qualifies
+  the sidecar for release, which re-checks every LB=8 block against IRDFF-II bit for bit. P184's sealed files are
+  not edited.
