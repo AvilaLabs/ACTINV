@@ -6093,3 +6093,19 @@ G6: CI green on the evidence commit `a2582ac` (controls, fns-iron, fusion-isotop
   new MF=10 coverage is under test.
 - **Before registration.** A 2-sample development study and a 4-sample rehearsal were run, read for exits, times,
   layout, and G0, G1 and G3 only. No sampled spread has been seen. Their outputs are deleted.
+
+## Entry 350 — P187 evidence: G0–G3 pass on 3ff0308; P187-PASS pending G4 (2026-11-03)
+
+`controls/p187_harness.py build | first | sample | assemble` and `controls/check_p187.py` on the registration
+commit `3ff0308`, inside the bounded scope. Files: `results/p187_record.json`, `results/p187_samples.json.gz`
+(activities only) and `results/p187_verdict.json`.
+- **G1.** Builds, two first-order runs and two 200-sample studies all exit 0. Every sample is re-extracted from its
+  raw output and equals the samples file. Each study's nominal solve equals the first-order run bit for bit.
+- **G2.** All 51 gated (nuclide, time) rows pass; 5 rows are outside the first-order regime (Cr-51, rho 0.68, at
+  every step) or have no activity (Fe-53 at 1 day). V1/Vs ranges from 0.766 to 1.17. At 66 s: Fe-53 0.866,
+  Mn-54 0.932, Mn-56 1.175, Mn-57 1.054, Al-26 1.022, Co-57 0.876, Co-58 1.064, Co-60 1.062, Na-24 1.024,
+  Nb-92m 0.766, Ni-57 0.857, W-185 0.989 and W-187 0.939. The sampler's clipped eigenvalue mass is 1.2% (A) and
+  1.1% (B). Sample means are within 4.5% of nominal.
+- **G3.** The draws perturb 5 state-resolved rows in A and 126 in B. Fe-53 and Co-58 are gated at 66 s.
+- **Limits.** The registered limits are wide, 0.33–0.72 at 66 s. They come from `rho²` and the heavy tails of the
+  lognormal draws, so the evidence is agreement to roughly ±25% in variance, not better.
