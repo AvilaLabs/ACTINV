@@ -9,6 +9,14 @@
   target to the activation library by its SHA-256. The index records the file's SHA-256 as `mf33_source_sha256`; a
   build without the option writes the same sidecar as before.
 
+**Changed**
+
+- MF=33 uncertainty bands now cover state-resolved (MF=10) products. They take their reaction's covariance, fully
+  correlated with the reaction total, where before they were left out of the band. This covers 43% of the TENDL-2025
+  library's product rows, among them Co-58 from Ni-58(n,p), Al-26 from Al-27(n,2n), W-185, Ta-180 and Nb-92m. Bands
+  that include such products widen. Their isomer-branching (MF=40) uncertainty is still not propagated, so their
+  coverage reads `partial` and the response counts them in `parameters_from_reaction_total`.
+
 ## v1.7.2 — 2026-11-02
 
 **Added**

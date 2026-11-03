@@ -37,6 +37,8 @@ Missing decay modes, fission yields, spectra, response coefficients, or material
 
 MF=33 cross-section covariance is the default. Half-life and independent fission-yield uncertainties may be requested separately and are treated as diagonal channels. Since 1.4.0 a diagonal transport-tally statistical `flux` channel is also available; it can run alone without an MF=33 sidecar.
 
+State-resolved (MF=10) productions, such as Co-58 from Ni-58(n,p) or Al-26 from Al-27(n,2n), take their reaction's MF=33 covariance, fully correlated with the reaction total; their isomer-branching part is not propagated, and their responses report `partial` coverage.
+
 Decay-yield and cross-channel correlations, MF=32 resonance covariance, MF=40 production covariance, composition, response-coefficient, geometry, and model uncertainties are outside the propagated band. Flux uncertainty is excluded unless its channel is requested; even then, systematic errors in the transport model, geometry, and transport nuclear data remain excluded.
 
 An explicitly declared unmodeled relative contribution can supplement that band, including a term drawn from a calibration or evaluation-spread artifact. It does not recover a missing channel or establish coverage of all omitted sources.

@@ -440,9 +440,12 @@ When extra channels are requested the record adds per-channel sensitivity lists,
 and a `combined_standard_uncertainty` equal to the root-sum-of-squares across channels, plus a `channels` report
 naming each channel's coverage. Coverage is `complete` only when every nonzero-sensitivity parameter in every
 requested channel has evaluated uncertainty data. Missing evaluated cross-reaction terms contribute zero and are
-counted; they are not invented. These intervals are neither tolerance limits nor safety margins, and exclude
-MF=32 resonance-parameter and MF=40 production covariance, decay-yield and cross-channel correlation,
-material-composition, response-coefficient and model uncertainty — the `uncovered_remainder` channel names these.
+counted; they are not invented. A state-resolved (MF=10) product row takes its reaction's MF=33 covariance, fully
+correlated with the reaction total, so a product such as Co-58 from Ni-58(n,p) is in the band. Its isomer-branching
+uncertainty (MF=40) is not. Such a response counts these rows in `parameters_from_reaction_total`, its
+`cross_section_mf33` channel says so in `note`, and its coverage is `partial`. These intervals are neither tolerance
+limits nor safety margins, and exclude MF=32 resonance-parameter and MF=40 production covariance, decay-yield and
+cross-channel correlation, material-composition, response-coefficient and model uncertainty — the `uncovered_remainder` channel names these.
 Absent a requested `flux` channel, incident-flux uncertainty is excluded there too; with `flux` requested, that
 entry instead names the narrower remainder the channel does not cover (systematic flux uncertainty from the
 transport model, geometry and transport nuclear data — the channel covers only the tally's own statistical error).

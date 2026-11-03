@@ -5967,3 +5967,27 @@ The sidecar is not to be shipped as it is.
 - **Repair.** The patcher keeps IRDFF-II's LB=8 F unchanged. This goes into the successor protocol that qualifies
   the sidecar for release, which re-checks every LB=8 block against IRDFF-II bit for bit. P184's sealed files are
   not edited.
+
+## Entry 342 — P185 registered: state-resolved (MF=10) product rows in the MF=33 band (2026-11-02)
+
+`protocols/ACTINV-P185_PROTOCOL.md`, `controls/p185_harness.py` and `controls/check_p185.py` are sealed in
+`protocols/protocol_hash.txt`.
+- **Change.** A state-resolved (MF=10) product row takes its reaction's MF=33 covariance, fully correlated with
+  the reaction total. Since P11 these rows were left out, so products such as Fe-53 (ledger 339's open item), Co-58
+  from Ni-58(n,p) and Al-26 had no cross-section band. These rows are 43% of the library's product rows. Their
+  isomer-branching (MF=40) uncertainty is still not propagated. An affected band reports
+  `parameters_from_reaction_total`, coverage `partial` and a note naming MF=40. The change is in
+  `crates/actinv-data/src/covariance.rs` (both coverage loops) and `crates/actinv-core/src/uncertainty.rs`; the
+  specification, qualification page and changelog are updated.
+- **Gates.**
+  - G2: a baseline binary (`b7629fb`) against the candidate on two FNS-spectrum problems (iron; a Ni/Co/Al/W/Nb
+    mixture). Activities are bit-identical; unaffected bands are unchanged to 1e-12; no block is newly excluded.
+  - G3: every band equals the checker's own s^T C s from the v1.2.0 sidecar and the library, to 1e-6.
+  - G4: coverage flags, counts and notes are right, and Fe-53 and Co-58 take the new rule.
+  - G5: the bands before and after are recorded, not gated.
+- **Before registration.**
+  - Unit tests and the checker selftest pass. The selftest checks the checker's linear form against a
+    loop-by-loop copy of the runtime collapse.
+  - One development run of the candidate (mixture, Co-58 and Al-26) was read for its structure. The checker's G3
+    and G4 code passed on it, with a largest relative difference of 8.5e-16.
+  - The protocol discloses the values seen.

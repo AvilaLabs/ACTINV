@@ -1033,7 +1033,9 @@ impl CovarianceLibrary {
         let mut uncovered_rows = Vec::new();
         for row in selected {
             let descriptor = library.rows[row];
-            if descriptor.lmf != 10 && self_covered.contains(&(descriptor.target, descriptor.mt)) {
+            // A state-resolved (MF=10) row takes its reaction's covariance, fully correlated with the reaction
+            // total; its isomer-branching (MF=40) uncertainty is outside the band, which says so.
+            if self_covered.contains(&(descriptor.target, descriptor.mt)) {
                 covered_rows.push(row);
             } else {
                 uncovered_rows.push(row);
@@ -1390,7 +1392,9 @@ impl CovarianceLibrary {
         let mut uncovered_rows = Vec::new();
         for row in selected {
             let descriptor = library.rows[row];
-            if descriptor.lmf != 10 && self_covered.contains(&(descriptor.target, descriptor.mt)) {
+            // A state-resolved (MF=10) row takes its reaction's covariance, fully correlated with the reaction
+            // total; its isomer-branching (MF=40) uncertainty is outside the band, which says so.
+            if self_covered.contains(&(descriptor.target, descriptor.mt)) {
                 covered_rows.push(row);
             } else {
                 uncovered_rows.push(row);
@@ -2679,6 +2683,46 @@ mod tests {
         for (value, want) in collapsed.covariance_barn2.iter().zip(expected) {
             assert!((value - want).abs() < 1e-14, "{value} != {want}");
         }
+    }
+
+    #[test]
+    fn state_resolved_rows_take_their_reaction_covariance() {
+        let component = ParsedComponent {
+            mat: 1,
+            mt: 102,
+            mt1: 102,
+            lb: 5,
+            kind: ComponentKind::Relative,
+            row_grid: vec![1.0, 3.0, 5.0],
+            column_grid: vec![1.0, 3.0, 5.0],
+            values: vec![0.04, 0.01, 0.01, 0.09],
+        };
+        let covariance = CovarianceLibrary::from_parsed([(0, component)]).unwrap();
+        let row = |zap, lfs, lmf| crate::library::Row {
+            target: 0,
+            mt: 102,
+            zap,
+            lfs,
+            lmf,
+        };
+        // ground and isomer productions (MF=10) that sum to the reaction total
+        let activation = Library {
+            rows: vec![row(-1, -1, 0), row(26057, 0, 10), row(26057, 1, 10)],
+            sig: vec![2.0, 4.0, 1.5, 1.0, 0.5, 3.0],
+            ngroups: 2,
+            bounds: vec![1.0, 2.0, 5.0],
+        };
+        let collapsed = covariance
+            .collapse(&activation, &[1.0, 3.0], &[0, 1, 2])
+            .unwrap();
+        assert_eq!(collapsed.row_indices, vec![0, 1, 2]);
+        assert!(collapsed.uncovered_rows.is_empty());
+        let c = &collapsed.covariance_barn2;
+        // ground state: response vector (0.625, 0.5) on the covariance grid
+        assert!((c[4] - 0.044375).abs() < 1e-14, "{}", c[4]);
+        // the states' joint variance is the reaction total's
+        let states = c[4] + c[5] + c[7] + c[8];
+        assert!((states - c[0]).abs() < 1e-12, "{states} vs {}", c[0]);
     }
 
     fn two_row_activation() -> Library {

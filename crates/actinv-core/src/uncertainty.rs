@@ -164,6 +164,11 @@ pub struct ResponseUncertainty {
     pub coverage: String,
     pub covered_parameters: usize,
     pub total_parameters: usize,
+    /// Covered parameters that are state-resolved (MF=10) products: they take their reaction's MF=33 covariance,
+    /// fully correlated with the reaction total, and their isomer-branching (MF=40) uncertainty is not propagated,
+    /// so the band's coverage is `partial`. Absent when zero.
+    #[serde(skip_serializing_if = "is_zero")]
+    pub parameters_from_reaction_total: usize,
     /// Per-channel breakdown; every band names the channels it does not cover.
     pub channels: Vec<ChannelReport>,
     /// Standard uncertainty over every propagated channel, emitted only when a
@@ -571,6 +576,13 @@ pub fn normal_multiplier(confidence_level: f64) -> f64 {
     0.5 * (low + high)
 }
 
+fn is_zero(value: &usize) -> bool {
+    *value == 0
+}
+
+/// MF=10 product rows: the activation library's state-resolved productions.
+const STATE_RESOLVED_LMF: i32 = 10;
+
 fn channel_coverage(covered: usize, total: usize) -> &'static str {
     if covered == total {
         "complete"
@@ -649,7 +661,21 @@ pub fn response_band(input: BandInput) -> Result<ResponseUncertainty, String> {
         .iter()
         .filter(|record| record.value != 0.0)
         .count();
-    let mf33_coverage = channel_coverage(covered_parameters, total_parameters);
+    let parameters_from_reaction_total = input
+        .sensitivities
+        .iter()
+        .filter(|record| {
+            record.parameter.covariance_covered
+                && !record.parameter.covariance_excluded
+                && record.parameter.lmf == STATE_RESOLVED_LMF
+                && record.value != 0.0
+        })
+        .count();
+    let mf33_coverage = if parameters_from_reaction_total == 0 {
+        channel_coverage(covered_parameters, total_parameters)
+    } else {
+        "partial"
+    };
     let decay_coverage = input
         .decay_channel
         .as_ref()
@@ -675,7 +701,9 @@ pub fn response_band(input: BandInput) -> Result<ResponseUncertainty, String> {
             coverage: Some(mf33_coverage.into()),
             covered_parameters: Some(covered_parameters),
             total_parameters: Some(total_parameters),
-            note: None,
+            note: (parameters_from_reaction_total > 0).then_some(
+                "state-resolved (MF=10) products take their reaction's MF=33 covariance, fully correlated with the reaction total; their isomer-branching (MF=40) uncertainty is not propagated",
+            ),
         },
         match &input.decay_channel {
             Some(channel) => ChannelReport {
@@ -769,6 +797,7 @@ pub fn response_band(input: BandInput) -> Result<ResponseUncertainty, String> {
         coverage: channel_coverage.into(),
         covered_parameters,
         total_parameters,
+        parameters_from_reaction_total,
         channels,
         combined_standard_uncertainty: extra_channels.then_some(standard_uncertainty),
         unmodeled_relative: input.unmodeled_relative,
@@ -800,6 +829,62 @@ pub fn response_band(input: BandInput) -> Result<ResponseUncertainty, String> {
 
 #[cfg(test)]
 mod tests {
+
+    #[test]
+    fn state_resolved_parameters_leave_the_band_partial() {
+        use super::*;
+        let sensitivity = |row: usize, lmf: i32, covered: bool| SensitivityOut {
+            parameter: SensitivityParameter {
+                library_row: row,
+                target: 0,
+                target_nuclide: "Fe54".into(),
+                target_za: 26054,
+                target_liso: 0,
+                mt: 16,
+                zap: 26053,
+                lfs: 0,
+                lmf,
+                spectrum: 0,
+                collapsed_cross_section_b: 0.01,
+                covariance_covered: covered,
+                covariance_excluded: false,
+            },
+            value: 1.0,
+            unit: "Bq/g per b".into(),
+        };
+        let band = |sensitivities| {
+            response_band(BandInput {
+                nominal: 10.0,
+                alternate: 10.0,
+                unit: "Bq/g".into(),
+                confidence_level: 0.95,
+                normal_multiplier: 1.96,
+                variance: 1.0,
+                negative_variance_roundoff_removed: 0.0,
+                sensitivities,
+                decay_channel: None,
+                fission_yield_channel: None,
+                flux_channel: None,
+                flux_fully_correlated_bound: None,
+                unmodeled_relative: None,
+            })
+            .unwrap()
+        };
+        let plain = band(vec![sensitivity(0, -1, true)]);
+        assert_eq!(plain.coverage, "complete");
+        assert_eq!(plain.parameters_from_reaction_total, 0);
+        assert!(!serde_json::to_string(&plain)
+            .unwrap()
+            .contains("parameters_from_reaction_total"));
+        let states = band(vec![sensitivity(0, -1, true), sensitivity(1, 10, true)]);
+        assert_eq!(states.coverage, "partial");
+        assert_eq!((states.covered_parameters, states.total_parameters), (2, 2));
+        assert_eq!(states.parameters_from_reaction_total, 1);
+        assert!(states.channels[0]
+            .note
+            .unwrap()
+            .contains("isomer-branching"));
+    }
 
     #[test]
     fn pair_contraction_is_bitwise_dense_contraction() {
