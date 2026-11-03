@@ -6006,3 +6006,12 @@ scope (6 GiB, no swap, 4 CPUs). Then `controls/check_p185.py` wrote `results/p18
 - G1 fails (runs, outputs), so the checker stopped before G2–G5, and **P185-FAIL**. No band was compared or
   recorded.
 - P185 allows one repair round. Amendment A fixes the name, with a fresh run of all four problems.
+
+## Entry 344 — P185 Amendment A registered: Nb-92m named Nb92m1; fresh run of all four problems (2026-11-02)
+
+`protocols/ACTINV-P185_AMENDMENT_A.md` and `controls/p185a.py` are sealed in `protocols/protocol_hash.txt`. This
+is P185's one repair round. Problem B's response `Nb92m` becomes `Nb92m1`, ACTINV's name for Nb-92m. Nothing else
+changes. `controls/p185a.py` runs P185's sealed harness and checker with that name, its own record and verdict
+paths, and this amendment as G1's registration commit. The amendment was written after P185's run. Only that run's
+exit statuses, error messages, builds and G0–G1 were read. Problem A's two outputs were not read and are deleted
+before the fresh run.
