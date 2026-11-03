@@ -6079,3 +6079,17 @@ G6: CI green on the evidence commit `a2582ac` (controls, fns-iron, fusion-isotop
 - **Before release:** the change reaches users with the next release, and the changelog's Unreleased entry
   describes it.
 - **Clean-up:** the run outputs, the baseline worktree and its build are deleted.
+
+## Entry 349 — P187 registered: the MF=33 activity band against 200 sampled solves (2026-11-02)
+
+`protocols/ACTINV-P187_PROTOCOL.md`, `controls/p187_harness.py` and `controls/check_p187.py` are sealed in
+`protocols/protocol_hash.txt`.
+- **The test.** On P186's two problems (FNS iron; FNS Ni/Co/Al/W/Nb), the first-order band `V1 = s^T C s` of each
+  activity at each step is compared with the variance `Vs` of 200 solves. The cross sections are drawn by
+  `study.robustness` from the same v1.2.0 TENDL-2025 sidecar. A row is gated when `0 < rho ≤ 0.5`; it passes when
+  `|V1/Vs − 1| ≤ 3 SE_rel + 0.02 + rho² + c`, where `c` is the sampler's clipped eigenvalue mass, as in P175.
+- **Checks.** G1 re-extracts every sample from its raw output and requires the study's nominal solve to equal the
+  first-order run's. G3 requires the draws to perturb state-resolved rows and Fe-53 and Co-58 to be gated, so the
+  new MF=10 coverage is under test.
+- **Before registration.** A 2-sample development study and a 4-sample rehearsal were run, read for exits, times,
+  layout, and G0, G1 and G3 only. No sampled spread has been seen. Their outputs are deleted.
