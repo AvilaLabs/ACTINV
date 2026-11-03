@@ -6068,3 +6068,14 @@ the bounded scope (`results/p186_record.json`, `results/p186_verdict.json`).
 - **G5, at 66 s after shutdown (not gated):** Fe-53 ~1e-13 → 40.1%; Al-26 → 28.2%; Nb-92m → 24.9%; Co-58 → 5.04%;
   Co-60 0.212% → 17.3%; W-185 0.171% → 5.86%. Cr-51, Mn-54, Mn-56, Mn-57, Co-57, Ni-57, Na-24 and W-187 have
   state-resolved parameters but unchanged bands.
+
+## Entry 348 — P186 verdict: P186-PASS (2026-11-02)
+
+G6: CI green on the evidence commit `a2582ac` (controls, fns-iron, fusion-isotope). With G0–G5 (ledger 347),
+**P186-PASS**. The state-resolved (MF=10) coverage on master since `4ce2822` is qualified.
+- **Allowed sentences** are the verdict's (`results/p186_verdict.json`), quoted verbatim. They concern TENDL-2025's
+  covariances (the v1.2.0 sidecar), not P184's. They say nothing about whether the band is right: that is P187,
+  the sampling check.
+- **Before release:** the change reaches users with the next release, and the changelog's Unreleased entry
+  describes it.
+- **Clean-up:** the run outputs, the baseline worktree and its build are deleted.
