@@ -5943,3 +5943,12 @@ bounded scope (6 GiB, no swap, 4 CPUs), then `controls/check_p184.py` (`results/
   to be diagnosed separately.
 - **Shipping.** The sidecar stays local; shipping it is a data release that needs the owner's approval. The other
   run outputs are kept until the verdict's G6, then deleted.
+
+## Entry 340 — P184 verdict: P184-PASS (2026-11-02)
+
+G6: CI green on the evidence commit `f184dc3` (controls, fns-iron, fusion-isotope). With G0–G5 (ledger 339),
+**P184-PASS**. Allowed sentences are the verdict's (`results/p184_verdict.json`), quoted verbatim. The Fe-53
+sentence is not to be quoted as a result: its band is ~0 because Fe-53 comes from MF=10 product rows, which the
+band leaves out by design (MF=40 is outside the propagated channels, since P11). It does not mean the uncertainty
+is small. The sidecar (SHA-256 `61180b27…`) is kept outside Git at `target/p184-sidecar/` for the release
+decision, which needs the owner's approval. The other run outputs are deleted.
