@@ -6109,3 +6109,14 @@ commit `3ff0308`, inside the bounded scope. Files: `results/p187_record.json`, `
 - **G3.** The draws perturb 5 state-resolved rows in A and 126 in B. Fe-53 and Co-58 are gated at 66 s.
 - **Limits.** The registered limits are wide, 0.33–0.72 at 66 s. They come from `rho²` and the heavy tails of the
   lognormal draws, so the evidence is agreement to roughly ±25% in variance, not better.
+
+## Entry 351 — P187 verdict: P187-PASS (2026-11-03)
+
+G4: CI green on the evidence commit `638dc3f` (controls, fns-iron, fusion-isotope). With G0–G3 (ledger 350),
+**P187-PASS**. On two FNS point problems, ACTINV's first-order MF=33 activity band agrees with brute-force
+sampling, state-resolved products included.
+- **Allowed sentences** are the verdict's (`results/p187_verdict.json`), quoted verbatim. They concern propagation
+  of TENDL-2025's covariances, not whether those covariances are right.
+- **Precision.** The agreement is within registered limits of about ±30–70% in variance. It shows that the band is
+  neither missing nor double-counting a term; it is not a precision measurement.
+- **Clean-up.** The raw outputs under `target/p187-work` are deleted; `results/p187_samples.json.gz` is kept.
