@@ -6042,3 +6042,14 @@ before the fresh run.
   - W-185: 0.17% → 5.86%.
   - Cr-51, Mn-54, Mn-56, Mn-57, Co-57, Ni-57, Na-24 and W-187 are unchanged to the digits recorded.
 - The outputs are kept until a successor protocol decides whether to reuse them.
+
+## Entry 346 — P186 registered: state-resolved coverage qualified again, with a fresh run (2026-11-02)
+
+`protocols/ACTINV-P186_PROTOCOL.md` and `controls/p186.py` are sealed in `protocols/protocol_hash.txt`. P186
+qualifies again the change P185 registered, which has been on master since `4ce2822`. It runs P185's sealed
+harness and checker with two fixes, written after P185 Amendment A's whole record was seen:
+- the response name `Nb92m1`;
+- G4's Fe-53/Co-58 condition, which now holds at every step where the activity is nonzero.
+
+The fix to G4 was chosen knowing it passes on those outputs. Those outputs are deleted, and all four problems run
+again. P187 becomes the band's sampling check.
