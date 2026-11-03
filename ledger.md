@@ -6153,3 +6153,16 @@ the bounded scope. Files: `results/p188_record.json`, `results/p188_samples.json
   to 1.27; the clipped mass is 0.24% (A) and 0.87% (B). The draws perturb 5 state-resolved rows in A and 126 in B.
 - **Sidecar.** SHA-256 in the record. It is kept at `target/p188-work/p184.cov.npz` until the verdict, then moved
   outside Git for the release decision.
+
+## Entry 354 — P188 verdict: P188-PASS; the IRDFF-II sidecar is a release candidate (2026-11-03)
+
+G7: CI green on the evidence commit `46064ee` (controls, fns-iron, fusion-isotope). With G0–G6 (ledger 353),
+**P188-PASS**.
+- **The sidecar.** In it, TENDL-2025's dosimetry reactions take IRDFF-II's covariance, with IRDFF-II's short-range
+  variances as given. It matches its method, and its activity band agrees with brute-force sampling.
+- **Allowed sentences** are the verdict's (`results/p188_verdict.json`), quoted verbatim. P184's sentences are
+  superseded and its sidecar (ledger 341) is deleted.
+- **Release candidate.** The sidecar (SHA-256 `622a6205…`, with its index) is kept outside Git at
+  `target/p188-sidecar/`. Shipping it is a data release: a new catalog entry and the catalog CI sweep, with the
+  owner's approval.
+- **Clean-up.** The other run outputs are deleted.
