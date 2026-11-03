@@ -1078,7 +1078,8 @@ were not scored or did not reach a 0.5% standard error and are not covered by th
 [verdict](https://github.com/AvilaLabs/ACTINV/blob/master/results/p178_verdict.json).
 
 Reconstructing every nuclide's pointwise cross sections makes a run with a multi-nuclide alloy take minutes rather
-than seconds.
+than seconds. The reconstruction is done once per nuclide per run, and `actinv mesh` plans each distinct material
+once, so the cost does not grow with the number of cells.
 
 `self_shielding.mixture` computes per-group resonance self-shielding factors at run time from the material's own
 pointwise cross sections, in place of a precomputed Bondarenko table or the sigmoid curve. It is exclusive with

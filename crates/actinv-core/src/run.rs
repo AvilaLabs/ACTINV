@@ -3601,6 +3601,28 @@ impl PreparedRun {
         self.library.boundaries_ev()
     }
 
+    /// Builds and memoizes the mixture self-shielding plan of `material`, so regions of one material that then
+    /// solve in parallel share one reconstruction instead of each starting its own. Outside mixture mode, or if
+    /// the plan cannot be built, it does nothing: the solve builds the plan itself and reports any error.
+    pub fn warm_mixture_plan(&self, material: &crate::spec::Material, require_complete: bool) {
+        let Some(mixture) = self.shielding.as_ref().and_then(|s| s.mixture.as_ref()) else {
+            return;
+        };
+        let Ok((atoms, _)) = composition::material_atoms_per_gram(
+            &material.composition,
+            &material.basis,
+            &self.nuclides,
+        ) else {
+            return;
+        };
+        let _ = mixture.plan(
+            &atoms,
+            self.library.boundaries_ev(),
+            self.temperature_K.get(),
+            require_complete,
+        );
+    }
+
     pub fn library_groups(&self) -> usize {
         self.library.group_count()
     }

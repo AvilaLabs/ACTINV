@@ -16,6 +16,9 @@
   library's product rows, among them Co-58 from Ni-58(n,p), Al-26 from Al-27(n,2n), W-185, Ta-180 and Nb-92m. Bands
   that include such products widen. Their isomer-branching (MF=40) uncertainty is still not propagated, so their
   coverage reads `partial` and the response counts them in `parameters_from_reaction_total`.
+- Mixture self-shielding (`self_shielding.mixture`) reconstructs each nuclide's pointwise cross sections once per run,
+  not once per solve, and plans each material once. `actinv mesh` plans every distinct material before its cells
+  solve in parallel. A 6-cell copper mesh took 123 s instead of 630 s. Results are unchanged, byte for byte.
 
 ## v1.7.2 — 2026-11-02
 

@@ -23,7 +23,7 @@ use crate::uncertainty::StepUncertainty;
 use rayon::prelude::*;
 use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
-use std::collections::{BTreeMap, HashMap};
+use std::collections::{BTreeMap, BTreeSet, HashMap};
 use std::fs::File;
 use std::io::{BufRead, BufWriter, Seek, SeekFrom, Write};
 use std::path::{Path, PathBuf};
@@ -1474,6 +1474,18 @@ fn write_mesh_body(
             }
             pending.insert(signature, Pending::Solve(index));
             to_solve.push(index);
+        }
+        // Mixture self-shielding: plan each distinct material once before its cells solve in parallel.
+        let mut warmed = BTreeSet::new();
+        for &index in &to_solve {
+            if warmed.insert(cell_material_sha[index]) {
+                pool.install(|| {
+                    prepared.warm_mixture_plan(
+                        cell_materials[index],
+                        spec.options.require_shielding_complete,
+                    )
+                });
+            }
         }
         let solved = solve_cells(
             spec,

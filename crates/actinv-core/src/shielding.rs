@@ -20,7 +20,9 @@ use actinv_data::resonance::{
     ResonanceEvaluation, K_WAVE,
 };
 use serde::{Deserialize, Serialize};
+use std::borrow::Borrow;
 use std::collections::{BTreeMap, BTreeSet};
+use std::sync::{Arc, Mutex};
 
 const TABLE_FORMAT: &str = "actinv-shield-table-1";
 /// Reaction-channel order inside each group row's factor matrix.
@@ -98,7 +100,7 @@ struct TableWire {
 /// Per-group scale map for one nuclide and channel.
 type GroupScales = BTreeMap<usize, f64>;
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 #[allow(dead_code)]
 struct PreparedNuclide {
     sigma_p_b: f64,
@@ -111,7 +113,7 @@ struct PreparedNuclide {
 
 /// The per-run plan: which composition nuclides are covered, their effective
 /// dilutions, and the per-(nuclide, channel, group) scale factors.
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct ShieldPlan {
     covered: BTreeMap<(i32, i32), PreparedNuclide>,
     /// Composition nuclides named absent from the table.
@@ -1356,8 +1358,8 @@ struct MixtureGroupSums {
 /// by its own cross section, not by the share of the group's lethargy inside the range. Groups with no resolved
 /// overlap, and channels whose infinite-dilution integral is zero, are absent (scale 1).
 #[allow(clippy::needless_range_loop)] // the channel and node indices address several parallel arrays
-fn mixture_scales(
-    nuclides: &BTreeMap<(i32, i32), PointwiseXs>,
+fn mixture_scales<X: Borrow<PointwiseXs>>(
+    nuclides: &BTreeMap<(i32, i32), X>,
     atoms: &BTreeMap<(i32, i32), f64>,
     background_b: f64,
     boundaries_ev: &[f64],
@@ -1366,7 +1368,7 @@ fn mixture_scales(
         .iter()
         .filter_map(|(key, xs)| {
             let n = atoms.get(key).copied().unwrap_or(0.0);
-            (n > 0.0).then_some((key, xs, n))
+            (n > 0.0).then_some((key, xs.borrow(), n))
         })
         .collect();
     let mut union: Vec<f64> = members
@@ -1456,6 +1458,40 @@ pub struct PreparedMixture {
     profile: NormalizeProfile,
     require_complete: bool,
     evaluations: BTreeMap<(i32, i32), Evaluation>,
+    /// Run-local memos. A nuclide's pointwise table depends only on its evaluation, the group boundaries and the
+    /// temperature, and a plan only on the composition, boundaries, temperature and completeness flag; a mesh or
+    /// study solves many regions of few materials, and the reconstruction is most of a mixture run's time.
+    pointwise: Mutex<BTreeMap<PointwiseKey, Arc<PointwiseXs>>>,
+    plans: Mutex<BTreeMap<PlanKey, ShieldPlan>>,
+}
+
+/// (nuclide, boundary bits, temperature bits).
+type PointwiseKey = ((i32, i32), Vec<u64>, u64);
+/// (composition as (nuclide, atom-density bits), boundary bits, temperature bits, require_complete).
+type PlanKey = (Vec<((i32, i32), u64)>, Vec<u64>, u64, bool);
+/// Distinct compositions memoized per run; further compositions are planned without the memo.
+const PLAN_MEMO_CAP: usize = 4096;
+
+/// The memoized value of `key`, else `compute()`, stored while the memo holds fewer than `cap` entries. The lock is
+/// never held while computing: a rayon thread waiting inside the reconstruction may be handed another region's
+/// solve, which must not block on a value that thread is itself computing. Concurrent first callers may each
+/// compute; the computation is deterministic, so whichever value is kept is the same.
+fn memoized<K: Ord, T: Clone>(
+    memo: &Mutex<BTreeMap<K, T>>,
+    key: K,
+    cap: usize,
+    compute: impl FnOnce() -> Result<T, String>,
+) -> Result<T, String> {
+    let lock = || memo.lock().unwrap_or_else(|poisoned| poisoned.into_inner());
+    if let Some(value) = lock().get(&key) {
+        return Ok(value.clone());
+    }
+    let value = compute()?;
+    let mut map = lock();
+    if map.len() < cap {
+        map.entry(key).or_insert_with(|| value.clone());
+    }
+    Ok(value)
 }
 
 impl PreparedMixture {
@@ -1528,13 +1564,69 @@ impl PreparedMixture {
             profile,
             require_complete: mixture.require_complete,
             evaluations,
+            pointwise: Mutex::default(),
+            plans: Mutex::default(),
         })
     }
 
     /// Build the per-run plan. `composition_atoms` is atoms per gram of the declared material (only ratios
     /// matter); `boundaries_ev` the activation library's ascending group boundaries; `temperature_K` the run
     /// temperature, which the pointwise cross sections are Doppler broadened to (it must be positive).
+    /// Plans are memoized per run by their exact inputs, so a repeated composition returns the same plan.
     pub fn plan(
+        &self,
+        composition_atoms: &BTreeMap<(i32, i32), f64>,
+        boundaries_ev: &[f64],
+        temperature_K: f64,
+        require_complete: bool,
+    ) -> Result<ShieldPlan, String> {
+        let key = (
+            composition_atoms
+                .iter()
+                .map(|(&nuclide, atoms)| (nuclide, atoms.to_bits()))
+                .collect(),
+            boundaries_ev.iter().map(|b| b.to_bits()).collect(),
+            temperature_K.to_bits(),
+            require_complete,
+        );
+        memoized(&self.plans, key, PLAN_MEMO_CAP, || {
+            self.plan_uncached(
+                composition_atoms,
+                boundaries_ev,
+                temperature_K,
+                require_complete,
+            )
+        })
+    }
+
+    /// The pointwise table of one covered nuclide, reconstructed once per (boundaries, temperature) per run.
+    fn pointwise(
+        &self,
+        key: (i32, i32),
+        groups: &GroupStructure,
+        temperature_K: f64,
+    ) -> Result<Arc<PointwiseXs>, String> {
+        let memo_key = (
+            key,
+            groups.boundaries_ev.iter().map(|b| b.to_bits()).collect(),
+            temperature_K.to_bits(),
+        );
+        // Uncapped: at most one entry per evaluation and temperature.
+        memoized(&self.pointwise, memo_key, usize::MAX, || {
+            let evaluation = &self.evaluations[&key];
+            let resonance = evaluation
+                .resonance
+                .as_ref()
+                .expect("a prepared evaluation carries resonance parameters");
+            PointwiseXs::from_evaluation(evaluation, resonance, groups, temperature_K)
+                .map(Arc::new)
+                .map_err(|error| {
+                    format!("self_shielding.mixture {}: {error}", name_of(key.0, key.1))
+                })
+        })
+    }
+
+    fn plan_uncached(
         &self,
         composition_atoms: &BTreeMap<(i32, i32), f64>,
         boundaries_ev: &[f64],
@@ -1603,15 +1695,7 @@ impl PreparedMixture {
         let mut pointwise = BTreeMap::new();
         let mut zero_k_clips: BTreeMap<String, Vec<MixtureClip>> = BTreeMap::new();
         for &key in &covered_keys {
-            let evaluation = &self.evaluations[&key];
-            let resonance = evaluation
-                .resonance
-                .as_ref()
-                .expect("a prepared evaluation carries resonance parameters");
-            let xs = PointwiseXs::from_evaluation(evaluation, resonance, &groups, temperature_K)
-                .map_err(|error| {
-                    format!("self_shielding.mixture {}: {error}", name_of(key.0, key.1))
-                })?;
+            let xs = self.pointwise(key, &groups, temperature_K)?;
             if !xs.clips.is_empty() {
                 zero_k_clips.insert(
                     name_of(key.0, key.1),
@@ -3047,6 +3131,55 @@ mod tests {
         assert!(summary.groups >= 1 && summary.min_scale <= previous);
         assert!(plan.applied["W186"].contains_key(&1));
         assert!(plan.geometry.is_none());
+    }
+
+    #[test]
+    fn mixture_memo_reuses_tables_and_plans_without_changing_them() {
+        use rayon::prelude::*;
+        let boundaries = [1.0, 5.0, 20.0, 100.0];
+        let pure = BTreeMap::from([((74186, 0), 1.0)]);
+        let diluted = BTreeMap::from([((74186, 0), 1.0), ((26056, 0), 10.0)]);
+        let fresh = |composition: &BTreeMap<(i32, i32), f64>, temperature: f64| {
+            p140_w186_mixture(&p140_mixture_spec())
+                .unwrap()
+                .plan(composition, &boundaries, temperature, false)
+                .unwrap()
+                .applied
+        };
+        let mixture = p140_w186_mixture(&p140_mixture_spec()).unwrap();
+        // Many regions of two materials planned concurrently, as a mesh does: each plan equals one built from a
+        // fresh mixture, the W-186 table is kept once, and each composition's plan once.
+        let compositions: Vec<_> = (0..16)
+            .map(|i| if i % 2 == 0 { &pure } else { &diluted })
+            .collect();
+        let plans: Vec<_> = compositions
+            .par_iter()
+            .map(|composition| {
+                mixture
+                    .plan(composition, &boundaries, 300.0, false)
+                    .unwrap()
+                    .applied
+            })
+            .collect();
+        let (expected_pure, expected_diluted) = (fresh(&pure, 300.0), fresh(&diluted, 300.0));
+        assert_ne!(expected_pure, expected_diluted);
+        for (i, applied) in plans.iter().enumerate() {
+            let expected = if i % 2 == 0 {
+                &expected_pure
+            } else {
+                &expected_diluted
+            };
+            assert_eq!(applied, expected, "region {i}");
+        }
+        assert_eq!(mixture.pointwise.lock().unwrap().len(), 1);
+        assert_eq!(mixture.plans.lock().unwrap().len(), 2);
+        // Another temperature is another table.
+        let warm = mixture.plan(&pure, &boundaries, 600.0, false).unwrap();
+        assert_eq!(warm.applied, fresh(&pure, 600.0));
+        assert_eq!(mixture.pointwise.lock().unwrap().len(), 2);
+        // A refused plan is not kept.
+        assert!(mixture.plan(&pure, &boundaries, 0.0, false).is_err());
+        assert_eq!(mixture.plans.lock().unwrap().len(), 3);
     }
 
     #[test]
