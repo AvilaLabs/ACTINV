@@ -6136,3 +6136,20 @@ Two rehearsals were run before registration and read for exits and gate status o
 `ACTINV_BIN` was unset, which the protocol's commands now say. In the second, every step exited 0, and P184's G2–G4
 and P187's G1 and G3 held. No band, spread or matrix value was read, and the outputs are deleted. A pass makes the
 sidecar a release candidate; shipping it needs the owner's approval.
+
+## Entry 353 — P188 evidence: G0–G6 pass on b43cdca; P188-PASS pending G7 (2026-11-03)
+
+`controls/p188.py stage | build | observe | sample | assemble | check` on the registration commit `b43cdca`, inside
+the bounded scope. Files: `results/p188_record.json`, `results/p188_samples.json.gz` and
+`results/p188_verdict.json`.
+- **G1–G4 (P184's checks).**
+  - All 2,850 inputs carry their v1.2.0 hashes. 62 reactions on 42 nuclides are replaced and 18 left out.
+  - Every replaced LB=5 matrix and every LB=8 block, now IRDFF-II's own, equals the checker's recomputation. The
+    smallest eigenvalue ratio is −1.6e-8.
+  - 284,439 v1.2.0 components are copied bit for bit, of 284,506.
+- **G5 (FNS iron, 66 s, v1.2.0 → P188).** Mn-56 36.4% → 1.1%; Mn-54 42% → 2%; Cr-51 67.9% → 1.82%; Fe-53 40.1% →
+  8.76% (Fe-54(n,2n), state-resolved since P186); Mn-57 38.7%, unchanged.
+- **G6 (P187's checks on the new sidecar, seeds 188001/188002).** All 55 gated rows pass. V1/Vs ranges from 0.856
+  to 1.27; the clipped mass is 0.24% (A) and 0.87% (B). The draws perturb 5 state-resolved rows in A and 126 in B.
+- **Sidecar.** SHA-256 in the record. It is kept at `target/p188-work/p184.cov.npz` until the verdict, then moved
+  outside Git for the release decision.
