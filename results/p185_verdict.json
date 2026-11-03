@@ -1,0 +1,22 @@
+{
+ "gates": {
+  "G0": {
+   "pass": true,
+   "sha256": "779305038be392cf294ee02c34ceeb8adcf1c5bb3c7a864d7212017db8c4b8a1"
+  },
+  "G1": {
+   "baseline_commit": true,
+   "bounded": true,
+   "build_exit": true,
+   "clean_trees": true,
+   "outputs": false,
+   "pass": false,
+   "pins": true,
+   "registration_commit": true,
+   "runs": false
+  }
+ },
+ "record_sha256": "d27f5e5c064da10d469778731b4734ecc10f8d3337f6cdb8079b1ec187628471",
+ "schema": "actinv-p185-verdict-1",
+ "verdict": "P185-FAIL"
+}

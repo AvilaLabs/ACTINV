@@ -5991,3 +5991,18 @@ The sidecar is not to be shipped as it is.
   - One development run of the candidate (mixture, Co-58 and Al-26) was read for its structure. The checker's G3
     and G4 code passed on it, with a largest relative difference of 8.5e-16.
   - The protocol discloses the values seen.
+
+## Entry 343 — P185 evidence and verdict: P185-FAIL on G1 (problem B named Nb-92m wrongly) (2026-11-02)
+
+`controls/p185_harness.py build | observe | assemble` on the registration commit `4ce2822`, inside the bounded
+scope (6 GiB, no swap, 4 CPUs). Then `controls/check_p185.py` wrote `results/p185_record.json` and
+`results/p185_verdict.json`.
+- Both binaries built with exit status 0: the candidate at `4ce2822` and the baseline at `b7629fb`, from clean
+  trees.
+- Problem A ran with exit status 0 on both binaries. Its outputs were not read.
+- Problem B exited 1 on both binaries: "uncertainty response 'activity:Nb92m' names a nuclide absent from the decay
+  library". ACTINV names isomers with their level number, so the name should have been `Nb92m1`. The error is in
+  the protocol's problem, not the code.
+- G1 fails (runs, outputs), so the checker stopped before G2–G5, and **P185-FAIL**. No band was compared or
+  recorded.
+- P185 allows one repair round. Amendment A fixes the name, with a fresh run of all four problems.

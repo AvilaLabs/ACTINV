@@ -1,0 +1,89 @@
+{
+ "base": "b7629fb05213c15b21b01ace1adf9627d4aa93cb",
+ "build": {
+  "baseline": {
+   "binary": "/home/connoravila/Documents/actinv/target/openmc-wt/target/p185-work/base-target/release/actinv",
+   "binary_sha256": "c5628366c2bc0b84d82a2cdbaaf7abefd9a47a9866808e05cbdb3b7660cc000f",
+   "exit": 0,
+   "git_dirty": "",
+   "git_head": "b7629fb05213c15b21b01ace1adf9627d4aa93cb",
+   "stderr": "icode-ident v1.0.24\n   Compiling libc v0.2.189\n   Compiling simd-adler32 v0.3.10\n   Compiling miniz_oxide v0.8.9\n   Compiling ring v0.17.14\n   Compiling itoa v1.0.18\n   Compiling crossbeam-deque v0.8.7\n   Compiling autocfg v1.5.1\n   Compiling serde_core v1.0.229\n   Compiling num-traits v0.2.19\n   Compiling flate2 v1.1.9\n   Compiling zeroize v1.9.0\n   Compiling zmij v1.0.23\n   Compiling rayon-core v1.13.0\n   Compiling rustls-pki-types v1.15.1\n   Compiling syn v3.0.4\n   Compiling getrandom v0.2.17\n   Compiling crypto-common v0.1.7\n   Compiling block-buffer v0.10.4\n   Compiling httparse v1.10.1\n   Compiling libm v0.2.16\n   Compiling serde_json v1.0.151\n   Compiling memchr v2.8.3\n   Compiling hashbrown v0.17.1\n   Compiling serde v1.0.229\n   Compiling equivalent v1.0.2\n   Compiling untrusted v0.9.0\n   Compiling serde_derive v1.0.229\n   Compiling indexmap v2.14.0\n   Compiling digest v0.10.7\n   Compiling rustls v0.23.45\n   Compiling cpufeatures v0.2.17\n   Compiling either v1.18.0\n   Compiling typed-path v0.12.3\n   Compiling hdf5-pure v0.39.0\n   Compiling bytes v1.12.1\n   Compiling log v0.4.34\n   Compiling http v1.5.0\n   Compiling zip v9.0.4\n   Compiling rayon v1.12.0\n   Compiling rustls-webpki v0.103.15\n   Compiling sha2 v0.10.9\n   Compiling num-complex v0.4.6\n   Compiling subtle v2.6.1\n   Compiling once_cell v1.21.4\n   Compiling base64 v0.23.1\n   Compiling byteorder v1.5.0\n   Compiling ureq-proto v0.6.1\n   Compiling actinv-data v1.7.2 (/home/connoravila/Documents/actinv/target/openmc-wt/target/p185-work/base-src/crates/actinv-data)\n   Compiling webpki-roots v1.0.9\n   Compiling utf8-zero v0.8.1\n   Compiling percent-encoding v2.3.2\n   Compiling actinv-core v1.7.2 (/home/connoravila/Documents/actinv/target/openmc-wt/target/p185-work/base-src/crates/actinv-core)\n   Compiling ureq v3.4.0\n   Compiling actinv-cli v1.7.2 (/home/connoravila/Documents/actinv/target/openmc-wt/target/p185-work/base-src/crates/actinv-cli)\n    Finished `release` profile [optimized] target(s) in 2m 22s\n"
+  },
+  "candidate": {
+   "binary": "/home/connoravila/Documents/actinv/target/wt-openmc-wt/release/actinv",
+   "binary_sha256": "cf4b230412a7b687c44d6439b7d28561b69b70fa3458461db5d3e6a156f5db64",
+   "exit": 0,
+   "git_dirty": "",
+   "git_head": "4ce2822b3c0c3c22ee6ca8ab69d2ac403c5cee9e",
+   "stderr": "    Finished `release` profile [optimized] target(s) in 0.24s\n"
+  },
+  "cgroup": {
+   "cpu_max": "400000 100000",
+   "memory_max": "6442450944",
+   "memory_swap_max": "0",
+   "path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p3810010-i12188824.scope",
+   "pids_max": "128"
+  }
+ },
+ "observe": {
+  "cgroup": {
+   "cpu_max": "400000 100000",
+   "memory_max": "6442450944",
+   "memory_swap_max": "0",
+   "path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p3810010-i12188824.scope",
+   "pids_max": "128"
+  },
+  "git_head": "4ce2822b3c0c3c22ee6ca8ab69d2ac403c5cee9e",
+  "runs": {
+   "baseline_A": {
+    "binary": "baseline",
+    "binary_sha256": "c5628366c2bc0b84d82a2cdbaaf7abefd9a47a9866808e05cbdb3b7660cc000f",
+    "exit": 0,
+    "output": "/home/connoravila/Documents/actinv/target/openmc-wt/target/p185-work/baseline_A.json",
+    "output_sha256": "4e53734c996d1050e988312ae8a22a1de72cd779beca26e6922091faa3ba90dd",
+    "problem": "A",
+    "spec": "/home/connoravila/Documents/actinv/target/openmc-wt/target/p185-work/problem_A.json",
+    "spec_sha256": "cca1ec762f3233ac165021b04e2de2560e1ae966032c6a4a4ccf63a8762dbe67",
+    "stderr": "4 steps, 55 of 3873 states, 6421.2 ms -> /home/connoravila/Documents/actinv/target/openmc-wt/target/p185-work/baseline_A.json\n"
+   },
+   "baseline_B": {
+    "binary": "baseline",
+    "binary_sha256": "c5628366c2bc0b84d82a2cdbaaf7abefd9a47a9866808e05cbdb3b7660cc000f",
+    "exit": 1,
+    "output": "/home/connoravila/Documents/actinv/target/openmc-wt/target/p185-work/baseline_B.json",
+    "output_sha256": null,
+    "problem": "B",
+    "spec": "/home/connoravila/Documents/actinv/target/openmc-wt/target/p185-work/problem_B.json",
+    "spec_sha256": "eeeca3dc0af0752d2fd98881d3bb39854e4fb27e78be3bb2a982e850d7513b36",
+    "stderr": "uncertainty response 'activity:Nb92m' names a nuclide absent from the decay library\n"
+   },
+   "candidate_A": {
+    "binary": "candidate",
+    "binary_sha256": "cf4b230412a7b687c44d6439b7d28561b69b70fa3458461db5d3e6a156f5db64",
+    "exit": 0,
+    "output": "/home/connoravila/Documents/actinv/target/openmc-wt/target/p185-work/candidate_A.json",
+    "output_sha256": "a2dae503b3198000d4c32d2ccd0371d12eb6a1f35e0d56b53c5bbc457567c58f",
+    "problem": "A",
+    "spec": "/home/connoravila/Documents/actinv/target/openmc-wt/target/p185-work/problem_A.json",
+    "spec_sha256": "cca1ec762f3233ac165021b04e2de2560e1ae966032c6a4a4ccf63a8762dbe67",
+    "stderr": "4 steps, 55 of 3873 states, 6325.7 ms -> /home/connoravila/Documents/actinv/target/openmc-wt/target/p185-work/candidate_A.json\n"
+   },
+   "candidate_B": {
+    "binary": "candidate",
+    "binary_sha256": "cf4b230412a7b687c44d6439b7d28561b69b70fa3458461db5d3e6a156f5db64",
+    "exit": 1,
+    "output": "/home/connoravila/Documents/actinv/target/openmc-wt/target/p185-work/candidate_B.json",
+    "output_sha256": null,
+    "problem": "B",
+    "spec": "/home/connoravila/Documents/actinv/target/openmc-wt/target/p185-work/problem_B.json",
+    "spec_sha256": "eeeca3dc0af0752d2fd98881d3bb39854e4fb27e78be3bb2a982e850d7513b36",
+    "stderr": "uncertainty response 'activity:Nb92m' names a nuclide absent from the decay library\n"
+   }
+  }
+ },
+ "pins": {
+  "activation": "ec4c72bf598dc8ad3d533d9cfafdcf493e2d1f949a3e4db6251495659b68cc44",
+  "cov_v120": "c19dec86b44ad5d90b66c9ab94d53e18641a1d354a89402a4da7986b6c530cde"
+ },
+ "schema": "actinv-p185-record-1"
+}
