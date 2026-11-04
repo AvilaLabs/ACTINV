@@ -3,7 +3,7 @@ aff9e28bab599cc95b9a9cc9b03d896ca09d0593d8e1213175c3da372951456d  ./.github/work
 8ba8e292fd0afb868e23358bf6a2405c0e396bd0d78fbe4b7bee36ca582f8725  ./.github/workflows/docs.yml
 f05f89bed6f52d32a271c939a34d3711781324fe788f4663f538b5b16191bf60  ./.github/workflows/fns-iron.yml
 4371ef11aaaaaa05e78f67ac065b6ada016dc74b129debec9374af2f6bc62015  ./.github/workflows/fusion-isotope.yml
-084c434ce40d0ef83b690d50c876ea3c10868082457149940e4ea13debb9a3c8  ./.github/workflows/openmc.yml
+faa1fa28b34846674c968fd05ddf79634cf3dc0f16ce7a517c368db2b01e590b  ./.github/workflows/openmc.yml
 35f32079ded01135a8956b457daaaf1de373be5c652e4d5701db47af21127df5  ./.github/workflows/publish-crates.yml
 a5fdde37c08ded4e5cb97be9c642ae0d170af19f6b1b826792a31f4d5acbcefb  ./.github/workflows/publish-pypi.yml
 00eb86d1c7810b8525e1ceb7e10c2be90a384f23c11efe164c3ac3f2e07e6217  ./.github/workflows/release-artifacts.yml

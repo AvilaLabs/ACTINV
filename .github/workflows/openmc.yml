@@ -109,10 +109,11 @@ jobs:
     steps:
       - uses: actions/checkout@v7
         with: { persist-credentials: false }
+      # nompi: the MPICH build of 0.16.0 aborts in MPI_Init on the runners (UCX cannot open the mana interface)
       - uses: mamba-org/setup-micromamba@f457c30a868e4760d3a6fcea5f25dc655b8edf39 # v3.2.1
         with:
           environment-name: openmc
-          create-args: python=3.12 openmc=${{ matrix.openmc }}
+          create-args: python=3.12 openmc=${{ matrix.openmc }}=*nompi*
           condarc: |
             channels: [conda-forge]
       - uses: actions/download-artifact@v4
