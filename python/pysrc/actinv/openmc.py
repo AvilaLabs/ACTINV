@@ -491,13 +491,13 @@ class ActinvR2SManager(openmc.deplete.R2SManager):
     holds one band per photon tally (see ``_dose_bands``). It is a first-order band on the data
     and Monte Carlo errors ACTINV and OpenMC report, not a total uncertainty.
 
-    ``self_shielding="mixture"`` shields each material's resonance cross sections with its own pointwise
-    total (``self_shielding.mixture`` in ACTINV), from tables ``export_pointwise`` writes out of the OpenMC
-    library at the run temperature. Off by default.
+    ``self_shielding="mixture"`` (the default) shields each material's resonance cross sections with its
+    own pointwise total (``self_shielding.mixture`` in ACTINV), from tables ``export_pointwise`` writes out
+    of the OpenMC library at the run temperature. ``None`` turns it off.
     """
     def __init__(self, neutron_model, domains, photon_model=None, *, library=None, decay_primary=None,
                  decay_fallback=None, actinv_bin=None, options=None, photon=None, threads=1,
-                 mesh_timeout_s=86400.0, uncertainty=None, self_shielding=None):
+                 mesh_timeout_s=86400.0, uncertainty=None, self_shielding="mixture"):
         super().__init__(neutron_model, domains, photon_model)
         # Data not given comes from the installed catalog's default bundle (see _defaults). The
         # default fallback goes with the default primary only: an explicit decay_primary has no
@@ -529,7 +529,7 @@ class ActinvR2SManager(openmc.deplete.R2SManager):
         # "mixture": resonance self-shielding from the OpenMC library's own pointwise cross sections
         # (export_pointwise), so every material shields its nuclides with its own total.
         if self_shielding not in (None, "mixture"):
-            raise ValueError(f"self_shielding must be None or 'mixture', not {self_shielding!r}")
+            raise ValueError(f"self_shielding must be 'mixture' or None, not {self_shielding!r}")
         self.self_shielding = self_shielding
 
     def _uncertainty_settings(self, uncertainty):
@@ -673,7 +673,11 @@ class ActinvR2SManager(openmc.deplete.R2SManager):
             spec["cell_result_fields"].append("steps.photon_source.by_nuclide")
         if self.self_shielding == "mixture":
             nuclides = {nuclide for mat in mats for nuclide in mat.get_nuclides()}
-            files = export_pointwise(nuclides, output_dir / "pointwise", self.options.get("temperature_K", 293.6))
+            try:
+                files = export_pointwise(nuclides, output_dir / "pointwise", self.options.get("temperature_K", 293.6))
+            except ValueError as error:
+                raise ValueError(f"self_shielding='mixture': {error}; pass self_shielding=None to run "
+                                 "without resonance self-shielding") from error
             spec["self_shielding"] = {"mixture": {"pointwise_files": files}}
         spec_path = output_dir / "mesh.json"
         spec_path.write_text(json.dumps(spec, indent=1))

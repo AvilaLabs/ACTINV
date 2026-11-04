@@ -6209,3 +6209,17 @@ bounded scope (6 GiB, no swap, 200% CPU), with the binary built there (SHA-256 `
   capture rows are used.
 - **Wall time per region:** B 1.3 s, H 8–9 s, E 21 s, I 69–73 s. Each stand-alone run reads and plans every table
   again; `actinv mesh` plans each material once.
+
+## Entry 358 — P190 verdict: P190-PASS; mixture self-shielding becomes the OpenMC adapter's default (2026-11-04)
+
+G3: CI green on the evidence commit `93ce42b` (controls, fns-iron, fusion-isotope). With G0–G2 (ledger 357),
+**P190-PASS**.
+- **Allowed sentences** are the verdict's (`results/p190_verdict.json`), quoted verbatim.
+- **Default.** As the protocol allows, `ActinvR2SManager` now shields every material by default
+  (`self_shielding="mixture"`; `None` turns it off). The guide says that P190 measured the same-data case and that the
+  default TENDL-2025 library with factors from the user's OpenMC library was not part of it. The R2S smoke now
+  checks that step 2 ran with the pointwise tables.
+- **Speed.** The mixture planning now computes the mixture total once per energy point and walks each nuclide's grid.
+  P190's slowest region (model I, 34 tables) took 70.2 s with the scored binary and 4.9 s with the new one, with the
+  same result file but for its timing field. That comparison is unregistered.
+- **Clean-up.** The pointwise tables under `target/p190-work-*` are deleted.

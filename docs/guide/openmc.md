@@ -144,18 +144,42 @@ Current limits:
 
 ### Resonance self-shielding
 
-Pass `self_shielding="mixture"` to shield each material's resonance cross sections with its own total:
+By default the adapter shields each material's resonance cross sections with its own total
+(`self_shielding="mixture"`). Pass `self_shielding=None` to turn it off:
 
 ```python
-r2s = ActinvR2SManager(model, mesh, self_shielding="mixture")
+r2s = ActinvR2SManager(model, mesh, self_shielding=None)
 ```
 
 Step 2 writes each material nuclide's pointwise cross sections out of your OpenMC library
 (`openmc.config["cross_sections"]`), at the library temperature within 1 K of the run's (294 K for the default
 293.6 K). `actinv mesh` then applies them as
 [mixture self-shielding](specification.md#mixture-self-shielding-pointwise-cross-sections), once per material.
-Nuclides with no file in the library enter the mixture total through an analytic estimate. It is off by default and
-has not yet been compared with OpenMC's continuous-energy rates in this form.
+Nuclides with no file in the library enter the mixture total through an analytic estimate. A run temperature with
+no stored library temperature within 1 K stops step 2 with an error that names `self_shielding=None`.
+
+Unshielded 709-group capture rates in steel, copper and tungsten alloys miss OpenMC's continuous-energy rates. P178
+measured them with ACTINV's ENDF/B-VIII.1 709-group library, the data OpenMC transported with:
+
+> On four fusion materials held out from its development (Eurofer-97, Inconel 718, a W-Ni-Fe heavy alloy and copper),
+> ACTINV's mixture self-shielding brought every listed resonance-capture rate within 3.4% of OpenMC's
+> continuous-energy rate on the same ENDF/B-VIII.1 data, where the unshielded rates differed by up to 32.3%.
+> 7 of 73 listed capture rows were not scored or did not reach a 0.5% standard error and are not covered by that
+> sentence.
+
+P190 repeated it with the pointwise tables the adapter writes:
+
+> On P178's four models, ACTINV's mixture self-shielding with pointwise cross sections exported from OpenMC's
+> ENDF/B-VIII.1 HDF5 library at 294 K, instead of reconstructed ENDF-6 evaluations, brought every listed
+> resonance-capture rate within 3.4% of OpenMC's continuous-energy rate on the same data; each region's run took at
+> most 73.4 s. 7 of 73 listed capture rows were not scored or did not reach a 0.5% standard error and are not covered
+> by the sentence above.
+
+The planning has since become faster (P190's slowest region, 34 nuclides, now takes about 5 s), with
+the same results.
+
+With the default TENDL-2025 library the factors still come from your OpenMC library; that pairing was not part of
+P190.
 
 `contrib/openmc_r2s/demo_steel_cube.py` runs the steel-cube problem with both managers and compares the dose. The
 adapter's [README](https://github.com/AvilaLabs/ACTINV/blob/master/contrib/openmc_r2s/README.md) lists its limits:

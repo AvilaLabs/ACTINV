@@ -11,8 +11,9 @@
 - Mixture self-shielding takes pointwise tables instead of ENDF-6 evaluations: `self_shielding.mixture.pointwise_files`
   lists `actinv-pointwise-1` tables already at the run temperature, used as given over their whole energy range, so
   nothing is reconstructed. `actinv.openmc.export_pointwise` writes them from an OpenMC HDF5 library, and
-  `ActinvR2SManager(..., self_shielding="mixture")` shields every material with them (off by default). P178's copper
-  case runs in 1.2 s instead of 71 s.
+  `ActinvR2SManager` shields every material with them by default (`self_shielding=None` turns it off). P178's copper
+  case runs in 1.2 s instead of 71 s. P190 compared the mode with OpenMC's continuous-energy rates on P178's four
+  models (see the OpenMC guide).
 
 **Changed**
 

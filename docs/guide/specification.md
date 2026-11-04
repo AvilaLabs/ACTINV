@@ -1122,8 +1122,15 @@ energy range is shielded, since where the cross sections are smooth the factor i
 `elastic_b`, `capture_b` and optional `fission_b` (barns, linear in energy, energies ascending). Its temperature must
 be within 1 K of the run's `temperature_K`; ACTINV does not re-broaden it. `actinv.openmc.export_pointwise` writes
 these tables from an OpenMC HDF5 library at one of its stored temperatures (OpenMC's 294 K set serves ACTINV's
-293.6 K default), and `ActinvR2SManager(..., self_shielding="mixture")` uses it for every material. A run then takes
-seconds rather than minutes. This mode has not yet been compared with OpenMC's continuous-energy rates.
+293.6 K default), and `ActinvR2SManager` uses it for every material by default. A run then takes seconds rather
+than minutes. Protocol P190 compared this mode with OpenMC's continuous-energy rates:
+
+On P178's four models, ACTINV's mixture self-shielding with pointwise cross sections exported from OpenMC's
+ENDF/B-VIII.1 HDF5 library at 294 K, instead of reconstructed ENDF-6 evaluations, brought every listed
+resonance-capture rate within 3.4% of OpenMC's continuous-energy rate on the same data; each region's run took at most
+73.4 s. 7 of 73 listed capture rows were not scored or did not reach a 0.5% standard error and are not covered by the
+sentence above. Evidence: [record](https://github.com/AvilaLabs/ACTINV/blob/master/results/p190_record.json) and
+[verdict](https://github.com/AvilaLabs/ACTINV/blob/master/results/p190_verdict.json).
 
 The ledger `shielding.mixture` block records the profile, temperature, evaluation files with their hashes, the
 covered and `background_estimated` nuclides, per covered nuclide the number of groups and the smallest applied

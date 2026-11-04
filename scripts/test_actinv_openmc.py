@@ -874,12 +874,12 @@ class ExportPointwiseTests(unittest.TestCase):
                                                        cross_sections=xml)[0]["path"]).read_text())
             self.assertEqual(table["capture_b"], [2.0, 1.5, 1.0, 0.5, 0.25])
 
-    def test_manager_takes_mixture_or_nothing(self):
+    def test_manager_shields_by_default_and_takes_none(self):
         make = lambda **kw: m.ActinvR2SManager(openmc.Model(), openmc.RegularMesh(), library=__file__,
                                                decay_primary=__file__, actinv_bin="/opt/actinv", **kw)
-        self.assertIsNone(make().self_shielding)
-        self.assertEqual(make(self_shielding="mixture").self_shielding, "mixture")
-        with self.assertRaisesRegex(ValueError, "self_shielding must be None or 'mixture'"):
+        self.assertEqual(make().self_shielding, "mixture")
+        self.assertIsNone(make(self_shielding=None).self_shielding)
+        with self.assertRaisesRegex(ValueError, "self_shielding must be 'mixture' or None"):
             make(self_shielding="table")
 
 

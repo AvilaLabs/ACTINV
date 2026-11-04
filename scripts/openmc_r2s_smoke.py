@@ -18,6 +18,7 @@ bundle (``actinv data fetch``; ``ACTINV_DATA_DIR`` if it is not ``./actinv-data`
 """
 from __future__ import annotations
 
+import json
 import math
 import sys
 import tempfile
@@ -91,6 +92,9 @@ def run_case(name, workdir, domains_of, uncertainty=False):
         kwargs["bounding_boxes"] = {sphere.id: sphere.bounding_box}
     r2s = ActinvR2SManager(model, domains_of(sphere), uncertainty={} if uncertainty else None)
     r2s.run(TIMESTEPS, SOURCE_RATES, photon_time_indices=[COOLED], output_dir=out, **kwargs)
+    spec = json.loads(next(out.rglob("mesh.json")).read_text())
+    if not spec.get("self_shielding", {}).get("mixture", {}).get("pointwise_files"):
+        raise SystemExit(f"{name}: step 2 ran without mixture self-shielding, the adapter's default")
     flux = photon_flux(r2s)
     if not (math.isfinite(flux) and flux > 0.0):
         raise SystemExit(f"{name}: photon flux after cooling is {flux}, expected positive and finite")
