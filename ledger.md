@@ -6196,3 +6196,16 @@ P173 and P178 code it imports unchanged (`p173_ce_rates.py` and `check_p173.py` 
 - **Rehearsal.** `run --model B` once before registration: exit status, the exported nuclides, the ledger block's
   keys and its table temperatures were read; no rate. The outputs are deleted.
 - **Consequence.** A pass is the evidence for making `self_shielding="mixture"` the OpenMC adapter's default.
+
+## Entry 357 — P190 evidence: G0–G2 pass on 4f1818a; P190-PASS pending G3 (2026-11-04)
+
+`controls/p190.py run --model E | I | H | B`, `assemble` and `check` on the registration commit `4f1818a`, inside the
+bounded scope (6 GiB, no swap, 200% CPU), with the binary built there (SHA-256 `9737408e…`). Files: `results/p190/`,
+`results/p190_record.json` and `results/p190_verdict.json`.
+- **G1.** One binary and the pinned `cross_sections.xml` for all four models; 72 tables at 294 K (B 2, E 22, H 14,
+  I 34), none missing; P178's nine input files and every row's OpenMC and unshielded values equal its committed record.
+- **G2: QUALIFIED, controls hold.** Largest used capture |r_mix|, pointwise (P178's evaluation files): E 0.033
+  (0.033), I 0.017 (0.017), H 0.020 (0.020), B 0.006 (0.006). The unshielded |r| were up to 0.28. 66 of 73 listed
+  capture rows are used.
+- **Wall time per region:** B 1.3 s, H 8–9 s, E 21 s, I 69–73 s. Each stand-alone run reads and plans every table
+  again; `actinv mesh` plans each material once.
