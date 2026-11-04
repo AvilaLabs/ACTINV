@@ -6182,3 +6182,17 @@ G7: CI green on the evidence commit `46064ee` (controls, fns-iron, fusion-isotop
   cells). No time, memory or sample value was read, and the outputs are deleted.
 - **Scored run.** The binary is built in the bounded scope from a clean checkout of this commit. G6 is CI on the
   evidence commit. One repair round is allowed.
+
+## Entry 356 — P190 registered: mixture self-shielding from OpenMC's pointwise tables on P178's four models (2026-11-04)
+
+`protocols/ACTINV-P190_PROTOCOL.md` and `controls/p190.py` are sealed in `protocols/protocol_hash.txt`, with the
+P173 and P178 code it imports unchanged (`p173_ce_rates.py` and `check_p173.py` were not yet listed there).
+- **Question.** With `self_shielding.mixture.pointwise_files` tables exported by `actinv.openmc.export_pointwise` from
+  OpenMC's ENDF/B-VIII.1 HDF5 library at 294 K (`d616789`), every group shielded, do ACTINV's 709-group
+  resonance-capture rates on P178's models come within materiality of OpenMC's continuous-energy rates, with the
+  control rates unmoved? P178's decision rules apply to `r_mix`.
+- **Nothing is held out.** P178's committed OpenMC references and its evaluation-based results were read in full;
+  P190 reuses the references as they are.
+- **Rehearsal.** `run --model B` once before registration: exit status, the exported nuclides, the ledger block's
+  keys and its table temperatures were read; no rate. The outputs are deleted.
+- **Consequence.** A pass is the evidence for making `self_shielding="mixture"` the OpenMC adapter's default.
