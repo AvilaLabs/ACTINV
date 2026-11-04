@@ -1201,6 +1201,9 @@ pub struct MixtureReport {
     pub scales: BTreeMap<String, BTreeMap<String, MixtureChannelSummary>>,
     /// nuclide -> reactions whose negative 0 K values were set to zero (empty when none were).
     pub zero_k_clips: BTreeMap<String, Vec<MixtureClip>>,
+    /// Pointwise-file mode only: covered nuclide -> the temperature its table was prepared at.
+    #[serde(skip_serializing_if = "BTreeMap::is_empty")]
+    pub pointwise_temperatures_K: BTreeMap<String, f64>,
 }
 
 /// One nuclide's pointwise cross sections at the run temperature, linear in E between points.
@@ -1239,6 +1242,95 @@ fn resolved_ranges(resonance: &ResonanceEvaluation) -> Vec<(f64, f64)> {
         }
     }
     merged
+}
+
+/// Format tag of a pointwise table file.
+const POINTWISE_FORMAT: &str = "actinv-pointwise-1";
+/// Largest gap between a pointwise table's temperature and the run temperature: 1 K keeps OpenMC's 294 K
+/// tables for ACTINV's 293.6 K default and refuses any table broadened for another temperature.
+const POINTWISE_TEMPERATURE_TOLERANCE_K: f64 = 1.0;
+
+/// One `actinv-pointwise-1` table: a nuclide's cross sections (barns) at `temperature_K`, linear in E.
+#[derive(Deserialize)]
+#[serde(deny_unknown_fields)]
+#[allow(non_snake_case)]
+struct PointwiseWire {
+    format: String,
+    nuclide: String,
+    temperature_K: f64,
+    energy_eV: Vec<f64>,
+    total_b: Vec<f64>,
+    elastic_b: Vec<f64>,
+    /// Absent for a nuclide without fission.
+    #[serde(default)]
+    fission_b: Option<Vec<f64>>,
+    capture_b: Vec<f64>,
+    /// Free-form provenance (the library and file it came from); not read.
+    #[serde(default)]
+    #[allow(dead_code)]
+    source: Option<serde_json::Value>,
+}
+
+impl PointwiseWire {
+    fn into_table(self) -> Result<((i32, i32), PointwiseTable), String> {
+        if self.format != POINTWISE_FORMAT {
+            return Err(format!(
+                "format is {:?}, expected {POINTWISE_FORMAT:?}",
+                self.format
+            ));
+        }
+        let key = match composition::material_key(&self.nuclide)? {
+            MaterialKey::Nuclide { za, liso, .. } => (za, liso),
+            MaterialKey::Element(_) => {
+                return Err(format!(
+                    "nuclide {:?} names an element, not a nuclide",
+                    self.nuclide
+                ))
+            }
+        };
+        if !self.temperature_K.is_finite() || self.temperature_K <= 0.0 {
+            return Err("temperature_K must be positive".into());
+        }
+        let n = self.energy_eV.len();
+        if n < 2
+            || self
+                .energy_eV
+                .iter()
+                .any(|energy| !energy.is_finite() || *energy <= 0.0)
+            || self.energy_eV.windows(2).any(|w| w[1] < w[0])
+            || self.energy_eV[n - 1] <= self.energy_eV[0]
+        {
+            return Err(
+                "energy_eV must hold at least two positive, finite, ascending energies".into(),
+            );
+        }
+        let fission = self.fission_b.unwrap_or_else(|| vec![0.0; n]);
+        let sigma = [self.total_b, self.elastic_b, fission, self.capture_b];
+        for (channel, values) in CHANNELS.iter().zip(&sigma) {
+            if values.len() != n {
+                return Err(format!(
+                    "{channel} has {} values for {n} energies",
+                    values.len()
+                ));
+            }
+            if values
+                .iter()
+                .any(|value| !value.is_finite() || *value < 0.0)
+            {
+                return Err(format!(
+                    "{channel} cross sections must be finite and nonnegative"
+                ));
+            }
+        }
+        let range = (self.energy_eV[0], self.energy_eV[n - 1]);
+        let xs = PointwiseXs {
+            energy: self.energy_eV,
+            sigma,
+            ranges: vec![range],
+            clips: Vec::new(),
+        };
+        Ok((key, (self.temperature_K, Arc::new(xs))))
+    }
 }
 
 impl PointwiseXs {
@@ -1458,6 +1550,9 @@ pub struct PreparedMixture {
     profile: NormalizeProfile,
     require_complete: bool,
     evaluations: BTreeMap<(i32, i32), Evaluation>,
+    /// Pointwise-file mode: each nuclide's table and the temperature it was prepared at (exclusive with
+    /// `evaluations`).
+    pointwise_tables: BTreeMap<(i32, i32), PointwiseTable>,
     /// Run-local memos. A nuclide's pointwise table depends only on its evaluation, the group boundaries and the
     /// temperature, and a plan only on the composition, boundaries, temperature and completeness flag; a mesh or
     /// study solves many regions of few materials, and the reconstruction is most of a mixture run's time.
@@ -1465,6 +1560,8 @@ pub struct PreparedMixture {
     plans: Mutex<BTreeMap<PlanKey, ShieldPlan>>,
 }
 
+/// A supplied pointwise table: (its temperature in K, the table).
+type PointwiseTable = (f64, Arc<PointwiseXs>);
 /// (nuclide, boundary bits, temperature bits).
 type PointwiseKey = ((i32, i32), Vec<u64>, u64);
 /// (composition as (nuclide, atom-density bits), boundary bits, temperature bits, require_complete).
@@ -1564,9 +1661,59 @@ impl PreparedMixture {
             profile,
             require_complete: mixture.require_complete,
             evaluations,
+            pointwise_tables: BTreeMap::new(),
             pointwise: Mutex::default(),
             plans: Mutex::default(),
         })
+    }
+
+    /// The mixture's data, from (label, text) per declared file: the evaluations, else the pointwise tables.
+    pub fn from_files(
+        mixture: &crate::spec::SelfShieldingMixture,
+        files: &[(String, String)],
+    ) -> Result<Self, String> {
+        if mixture.pointwise_files.is_empty() {
+            Self::from_evaluations(mixture, files)
+        } else {
+            Self::from_pointwise(mixture, files)
+        }
+    }
+
+    /// `files` holds (label, `actinv-pointwise-1` JSON) per declared table; the caller has already verified
+    /// each file's hash. A table is used as given, over its whole energy range: it is already at its
+    /// temperature, and where its cross sections are smooth the narrow-resonance factor is 1.
+    pub fn from_pointwise(
+        mixture: &crate::spec::SelfShieldingMixture,
+        files: &[(String, String)],
+    ) -> Result<Self, String> {
+        let mut pointwise_tables = BTreeMap::new();
+        for (label, text) in files {
+            let context = format!("self_shielding.mixture pointwise file {label}");
+            let wire: PointwiseWire =
+                serde_json::from_str(text).map_err(|error| format!("{context}: {error}"))?;
+            let (key, table) = wire
+                .into_table()
+                .map_err(|error| format!("{context}: {error}"))?;
+            if pointwise_tables.insert(key, table).is_some() {
+                return Err(format!(
+                    "self_shielding.mixture pointwise files supply {} more than once",
+                    name_of(key.0, key.1)
+                ));
+            }
+        }
+        Ok(Self {
+            profile: mixture.normalize_profile()?,
+            require_complete: mixture.require_complete,
+            evaluations: BTreeMap::new(),
+            pointwise_tables,
+            pointwise: Mutex::default(),
+            plans: Mutex::default(),
+        })
+    }
+
+    /// Whether the mixture's data covers `key`.
+    fn supplies(&self, key: &(i32, i32)) -> bool {
+        self.evaluations.contains_key(key) || self.pointwise_tables.contains_key(key)
     }
 
     /// Build the per-run plan. `composition_atoms` is atoms per gram of the declared material (only ratios
@@ -1606,6 +1753,16 @@ impl PreparedMixture {
         groups: &GroupStructure,
         temperature_K: f64,
     ) -> Result<Arc<PointwiseXs>, String> {
+        if let Some((prepared_K, xs)) = self.pointwise_tables.get(&key) {
+            if (prepared_K - temperature_K).abs() > POINTWISE_TEMPERATURE_TOLERANCE_K {
+                return Err(format!(
+                    "self_shielding.mixture {}: the pointwise table is at {prepared_K} K and the run at {temperature_K} K; \
+                     supply a table prepared within {POINTWISE_TEMPERATURE_TOLERANCE_K} K of the run temperature",
+                    name_of(key.0, key.1)
+                ));
+            }
+            return Ok(Arc::clone(xs));
+        }
         let memo_key = (
             key,
             groups.boundaries_ev.iter().map(|b| b.to_bits()).collect(),
@@ -1659,7 +1816,7 @@ impl PreparedMixture {
             if atoms.is_nan() || atoms <= 0.0 {
                 continue;
             }
-            if self.evaluations.contains_key(&key) {
+            if self.supplies(&key) {
                 covered_keys.push(key);
                 continue;
             }
@@ -1753,6 +1910,7 @@ impl PreparedMixture {
         let unused = self
             .evaluations
             .keys()
+            .chain(self.pointwise_tables.keys())
             .filter(|key| !covered_keys.contains(key))
             .map(|&(za, liso)| name_of(za, liso))
             .collect();
@@ -1778,6 +1936,13 @@ impl PreparedMixture {
                 evaluations_unused: unused,
                 scales: summaries,
                 zero_k_clips,
+                pointwise_temperatures_K: covered_keys
+                    .iter()
+                    .filter_map(|key| {
+                        let (prepared_K, _) = self.pointwise_tables.get(key)?;
+                        Some((name_of(key.0, key.1), *prepared_K))
+                    })
+                    .collect(),
             }),
         })
     }
@@ -3180,6 +3345,78 @@ mod tests {
         // A refused plan is not kept.
         assert!(mixture.plan(&pure, &boundaries, 0.0, false).is_err());
         assert_eq!(mixture.plans.lock().unwrap().len(), 3);
+    }
+
+    #[test]
+    fn mixture_pointwise_tables_reproduce_the_reconstructed_plan() {
+        let boundaries = [1.0, 5.0, 20.0, 100.0];
+        let composition = BTreeMap::from([((74186, 0), 1.0), ((26056, 0), 10.0)]);
+        let evaluated = p140_w186_mixture(&p140_mixture_spec()).unwrap();
+        let groups = GroupStructure {
+            name: "test".into(),
+            boundaries_ev: boundaries.to_vec(),
+        };
+        let xs = evaluated.pointwise((74186, 0), &groups, 300.0).unwrap();
+        let table = |nuclide: &str, temperature: f64| {
+            serde_json::json!({
+                "format": "actinv-pointwise-1", "nuclide": nuclide, "temperature_K": temperature,
+                "energy_eV": xs.energy, "total_b": xs.sigma[0], "elastic_b": xs.sigma[1],
+                "capture_b": xs.sigma[3], "source": {"test": true},
+            })
+            .to_string()
+        };
+        let spec: crate::spec::SelfShieldingMixture = serde_json::from_value(serde_json::json!({
+            "pointwise_files": [{"path": "w186.json", "sha256": "0".repeat(64)}],
+        }))
+        .unwrap();
+        let pointwise =
+            PreparedMixture::from_files(&spec, &[("w186.json".into(), table("W186", 300.4))])
+                .unwrap();
+        let expected = evaluated
+            .plan(&composition, &boundaries, 300.0, false)
+            .unwrap();
+        let got = pointwise
+            .plan(&composition, &boundaries, 300.0, false)
+            .unwrap();
+        assert_eq!(got.applied, expected.applied);
+        let report = got.mixture.as_ref().unwrap();
+        assert_eq!(report.pointwise_temperatures_K["W186"], 300.4);
+        assert!(expected
+            .mixture
+            .as_ref()
+            .unwrap()
+            .pointwise_temperatures_K
+            .is_empty());
+        // A table broadened for another temperature is refused, not silently used.
+        let error = pointwise
+            .plan(&composition, &boundaries, 600.0, false)
+            .unwrap_err();
+        assert!(
+            error.contains("300.4 K") && error.contains("600 K"),
+            "{error}"
+        );
+        let refused = |text: String| {
+            PreparedMixture::from_files(&spec, &[("bad.json".into(), text)]).unwrap_err()
+        };
+        assert!(refused(table("Fe", 300.0)).contains("element"));
+        assert!(
+            refused(table("W186", 300.0).replace("pointwise-1", "pointwise-2")).contains("format")
+        );
+        let mut short: serde_json::Value = serde_json::from_str(&table("W186", 300.0)).unwrap();
+        short["capture_b"].as_array_mut().unwrap().pop();
+        assert!(refused(short.to_string()).contains("capture has"));
+        let mut negative: serde_json::Value = serde_json::from_str(&table("W186", 300.0)).unwrap();
+        negative["elastic_b"][0] = serde_json::json!(-1.0);
+        assert!(refused(negative.to_string()).contains("nonnegative"));
+        let doubled = PreparedMixture::from_files(
+            &spec,
+            &[
+                ("a.json".into(), table("W186", 300.0)),
+                ("b.json".into(), table("W186", 300.0)),
+            ],
+        )
+        .unwrap_err();
+        assert!(doubled.contains("more than once"), "{doubled}");
     }
 
     #[test]

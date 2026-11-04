@@ -827,5 +827,61 @@ class DoseBandTests(unittest.TestCase):
         self.assertIn("flux-only", str(ctx.exception))
 
 
+@unittest.skipUnless(HAVE_OPENMC, f"openmc not importable: {_IMPORT_ERROR}")
+class ExportPointwiseTests(unittest.TestCase):
+    """``export_pointwise`` on a synthetic two-temperature nuclide written to HDF5 (no nuclear data needed)."""
+
+    def library(self, tmp):
+        energy = np.array([1.0e-5, 1.0, 10.0, 100.0, 1.0e3])
+        nuc = openmc.data.IncidentNeutron("Cu63", 29, 63, 0, 62.4, [0.0253, 0.0517])
+        for t, scale in (("294K", 1.0), ("600K", 0.5)):
+            nuc.energy[t] = energy
+            for mt, y in ((2, [5.0, 6.0, 7.0, 8.0, 9.0]), (102, [4.0, 3.0, 2.0, 1.0, 0.5])):
+                nuc.reactions.setdefault(mt, openmc.data.Reaction(mt))
+                nuc.reactions[mt].xs[t] = openmc.data.Tabulated1D(energy, scale * np.array(y))
+            # a threshold reaction stored on the grid's tail, as OpenMC keeps it
+            nuc.reactions.setdefault(16, openmc.data.Reaction(16))
+            nuc.reactions[16].xs[t] = openmc.data.Tabulated1D(energy[3:], scale * np.array([0.25, 0.5]))
+            nuc.reactions[16].xs[t]._threshold_idx = 3
+        path = Path(tmp) / "Cu63.h5"
+        nuc.export_to_hdf5(path)
+        lib = openmc.data.DataLibrary()
+        lib.register_file(path)
+        xml = Path(tmp) / "cross_sections.xml"
+        lib.export_to_xml(xml)
+        return xml
+
+    def test_tables_at_the_run_temperature(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            xml = self.library(tmp)
+            files = m.export_pointwise(["Cu63", "Zz999"], Path(tmp) / "out", 293.6, cross_sections=xml)
+            self.assertEqual(len(files), 1)  # Zz999 has no file and is left to ACTINV's estimate
+            text = Path(files[0]["path"]).read_bytes()
+            self.assertEqual(files[0]["sha256"], hashlib.sha256(text).hexdigest())
+            table = json.loads(text)
+            self.assertEqual((table["format"], table["nuclide"], table["temperature_K"]),
+                             ("actinv-pointwise-1", "Cu63", 294.0))
+            self.assertEqual(table["capture_b"], [4.0, 3.0, 2.0, 1.0, 0.5])  # the last point too
+            self.assertEqual(table["total_b"], [9.0, 9.0, 9.0, 9.25, 10.0])
+            self.assertNotIn("fission_b", table)
+
+    def test_another_temperature_is_refused(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            xml = self.library(tmp)
+            with self.assertRaisesRegex(ValueError, "none within 1 K of 450"):
+                m.export_pointwise(["Cu63"], Path(tmp) / "out", 450.0, cross_sections=xml)
+            table = json.loads(Path(m.export_pointwise(["Cu63"], Path(tmp) / "hot", 600.0,
+                                                       cross_sections=xml)[0]["path"]).read_text())
+            self.assertEqual(table["capture_b"], [2.0, 1.5, 1.0, 0.5, 0.25])
+
+    def test_manager_takes_mixture_or_nothing(self):
+        make = lambda **kw: m.ActinvR2SManager(openmc.Model(), openmc.RegularMesh(), library=__file__,
+                                               decay_primary=__file__, actinv_bin="/opt/actinv", **kw)
+        self.assertIsNone(make().self_shielding)
+        self.assertEqual(make(self_shielding="mixture").self_shielding, "mixture")
+        with self.assertRaisesRegex(ValueError, "self_shielding must be None or 'mixture'"):
+            make(self_shielding="table")
+
+
 if __name__ == "__main__":
     unittest.main()

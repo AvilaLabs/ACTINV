@@ -51,6 +51,7 @@ from . import _defaults
 try:
     import numpy as np
     import openmc
+    import openmc.data
     import openmc.deplete
     import openmc.deplete.r2s as _r2s
     import openmc.lib
@@ -90,6 +91,74 @@ def material_to_actinv(material: "openmc.Material", volume_cm3: float) -> dict:
         key = f"{sym}{a}" + (f"m{iso}" if iso else "")
         composition[key] = composition.get(key, 0.0) + atoms_b_cm * 1.0e24 / density
     return {"mass_g": volume_cm3 * density, "basis": "atoms_per_g", "composition": composition}
+
+
+def _reaction_on_grid(reaction, temperature, energy):
+    """A reaction's stored cross section on the full grid: OpenMC keeps it from the threshold up, as the grid's
+    tail (``Tabulated1D.__call__`` would give 0 at the grid's last point, so the stored values are used)."""
+    xs = reaction.xs[temperature]
+    values = np.asarray(xs.y, dtype=float)
+    if values.size > energy.size or not np.array_equal(np.asarray(xs.x, dtype=float), energy[energy.size - values.size:]):
+        raise ValueError(f"MT {reaction.mt} at {temperature} is not tabulated on the tail of the energy grid")
+    out = np.zeros(energy.size)
+    out[energy.size - values.size:] = values
+    return out
+
+
+def export_pointwise(nuclides, directory, temperature_K=293.6, cross_sections=None):
+    """Write one ``actinv-pointwise-1`` table per nuclide from the OpenMC HDF5 library, for
+    ``self_shielding.mixture.pointwise_files``; returns ``[{"path", "sha256"}]``.
+
+    ``nuclides`` are OpenMC names ("Cu63", "Am242_m1"). The library is ``cross_sections`` or
+    ``openmc.config["cross_sections"]``. Each table is the library's stored temperature within 1 K of
+    ``temperature_K`` (OpenMC's 294 K set for ACTINV's 293.6 K default); other temperatures raise, since the
+    tables are already Doppler broadened. A nuclide without a neutron file is skipped: ACTINV then adds its
+    potential-scattering estimate to the mixture total and lists it in the ledger.
+    """
+    library = openmc.data.DataLibrary.from_xml(cross_sections or openmc.config["cross_sections"])
+    paths = {name: entry["path"] for entry in library.libraries if entry["type"] == "neutron"
+             for name in entry["materials"]}
+    directory = Path(directory)
+    directory.mkdir(parents=True, exist_ok=True)
+    files = []
+    for nuclide in sorted(set(nuclides)):
+        if nuclide not in paths:
+            continue
+        data = openmc.data.IncidentNeutron.from_hdf5(paths[nuclide])
+        stored = {t: float(t[:-1]) for t in data.temperatures}
+        near = [t for t, kelvin in stored.items() if abs(kelvin - temperature_K) <= 1.0]
+        if not near:
+            raise ValueError(f"{nuclide}: the library has {sorted(stored.values())} K, none within 1 K of "
+                             f"{temperature_K} K")
+        t = near[0]
+        energy = np.asarray(data.energy[t], dtype=float)
+        channels = {mt: _reaction_on_grid(data[mt], t, energy) if mt in data else None for mt in (2, 18, 102)}
+        total = sum(_reaction_on_grid(rx, t, energy) for rx in data.reactions.values() if not rx.redundant)
+        if 1 in data:  # OpenMC's own total, short of the grid's last point (see _reaction_on_grid)
+            check = np.asarray(data[1].xs[t](energy[:-1]), dtype=float)
+            if not np.allclose(total[:-1], check, rtol=1e-10, atol=0.0):
+                raise ValueError(f"{nuclide}: the summed reactions do not reproduce the library's total")
+        name = _openmc_to_actinv_name(nuclide)
+        table = {"format": "actinv-pointwise-1", "nuclide": name, "temperature_K": stored[t],
+                 "energy_eV": energy.tolist(), "total_b": total.tolist(),
+                 "elastic_b": channels[2].tolist() if channels[2] is not None else [0.0] * energy.size,
+                 "capture_b": channels[102].tolist() if channels[102] is not None else [0.0] * energy.size,
+                 "source": {"library": str(Path(paths[nuclide]).resolve()), "temperature": t}}
+        if channels[18] is not None:
+            table["fission_b"] = channels[18].tolist()
+        path = directory / f"{name}_{t}.json"
+        text = json.dumps(table)
+        path.write_text(text)
+        files.append({"path": str(path.resolve()), "sha256": hashlib.sha256(text.encode()).hexdigest()})
+    return files
+
+
+def _openmc_to_actinv_name(nuclide):
+    m = _OPENMC_NUCLIDE.match(nuclide)
+    if m is None:
+        raise ValueError(f"cannot map OpenMC nuclide name {nuclide!r} to ACTINV")
+    sym, a, iso = m.groups()
+    return f"{sym}{a}" + (f"m{iso}" if iso else "")
 
 
 class _PhotonMaterial:
@@ -421,10 +490,14 @@ class ActinvR2SManager(openmc.deplete.R2SManager):
     photon run splits each photon tally by birth region, and ``results["dose_uncertainty"][t]``
     holds one band per photon tally (see ``_dose_bands``). It is a first-order band on the data
     and Monte Carlo errors ACTINV and OpenMC report, not a total uncertainty.
+
+    ``self_shielding="mixture"`` shields each material's resonance cross sections with its own pointwise
+    total (``self_shielding.mixture`` in ACTINV), from tables ``export_pointwise`` writes out of the OpenMC
+    library at the run temperature. Off by default.
     """
     def __init__(self, neutron_model, domains, photon_model=None, *, library=None, decay_primary=None,
                  decay_fallback=None, actinv_bin=None, options=None, photon=None, threads=1,
-                 mesh_timeout_s=86400.0, uncertainty=None):
+                 mesh_timeout_s=86400.0, uncertainty=None, self_shielding=None):
         super().__init__(neutron_model, domains, photon_model)
         # Data not given comes from the installed catalog's default bundle (see _defaults). The
         # default fallback goes with the default primary only: an explicit decay_primary has no
@@ -453,6 +526,11 @@ class ActinvR2SManager(openmc.deplete.R2SManager):
         self.photon = photon or {}
         self.threads = threads
         self.uncertainty = None if uncertainty is None else self._uncertainty_settings(uncertainty)
+        # "mixture": resonance self-shielding from the OpenMC library's own pointwise cross sections
+        # (export_pointwise), so every material shields its nuclides with its own total.
+        if self_shielding not in (None, "mixture"):
+            raise ValueError(f"self_shielding must be None or 'mixture', not {self_shielding!r}")
+        self.self_shielding = self_shielding
 
     def _uncertainty_settings(self, uncertainty):
         settings = dict(uncertainty)
@@ -593,6 +671,10 @@ class ActinvR2SManager(openmc.deplete.R2SManager):
         }
         if self.uncertainty is not None:  # choose_bands reads each nuclide's photon source
             spec["cell_result_fields"].append("steps.photon_source.by_nuclide")
+        if self.self_shielding == "mixture":
+            nuclides = {nuclide for mat in mats for nuclide in mat.get_nuclides()}
+            files = export_pointwise(nuclides, output_dir / "pointwise", self.options.get("temperature_K", 293.6))
+            spec["self_shielding"] = {"mixture": {"pointwise_files": files}}
         spec_path = output_dir / "mesh.json"
         spec_path.write_text(json.dumps(spec, indent=1))
         self._actinv("mesh", spec_path, result_path)

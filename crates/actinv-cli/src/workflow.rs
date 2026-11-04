@@ -85,7 +85,11 @@ fn resolve_inputs_under(spec: &mut Spec, base: &Path, data_root: &Path) {
             }
         }
         if let Some(mixture) = &mut shielding.mixture {
-            for file in &mut mixture.evaluation_files {
+            for file in mixture
+                .evaluation_files
+                .iter_mut()
+                .chain(mixture.pointwise_files.iter_mut())
+            {
                 resolve(&mut file.path);
             }
         }
@@ -162,6 +166,9 @@ pub fn check_files(spec: &Spec, hashes: bool) -> Result<(), String> {
         if let Some(mixture) = &shielding.mixture {
             for file in &mixture.evaluation_files {
                 inputs.push(("Evaluation file", &file.path, Some(&file.sha256)));
+            }
+            for file in &mixture.pointwise_files {
+                inputs.push(("Pointwise file", &file.path, Some(&file.sha256)));
             }
         }
     }

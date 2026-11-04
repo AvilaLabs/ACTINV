@@ -142,6 +142,21 @@ Current limits:
 - one mesh, or a list of cells that are filled with materials directly;
 - the photon run must use the same geometry as the neutron run (no separate `photon_model`).
 
+### Resonance self-shielding
+
+Pass `self_shielding="mixture"` to shield each material's resonance cross sections with its own total:
+
+```python
+r2s = ActinvR2SManager(model, mesh, self_shielding="mixture")
+```
+
+Step 2 writes each material nuclide's pointwise cross sections out of your OpenMC library
+(`openmc.config["cross_sections"]`), at the library temperature within 1 K of the run's (294 K for the default
+293.6 K). `actinv mesh` then applies them as
+[mixture self-shielding](specification.md#mixture-self-shielding-pointwise-cross-sections), once per material.
+Nuclides with no file in the library enter the mixture total through an analytic estimate. It is off by default and
+has not yet been compared with OpenMC's continuous-energy rates in this form.
+
 `contrib/openmc_r2s/demo_steel_cube.py` runs the steel-cube problem with both managers and compares the dose. The
 adapter's [README](https://github.com/AvilaLabs/ACTINV/blob/master/contrib/openmc_r2s/README.md) lists its limits:
 neutron activation only, and one flux spectrum per schedule, scaled by each step's source rate.

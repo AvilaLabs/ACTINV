@@ -465,13 +465,19 @@ impl SelfShieldingGeometry {
 
 /// Mixture self-shielding: per-group resonance self-shielding factors computed at run time from the
 /// pointwise cross sections of the declared material's nuclides (narrow-resonance flux weighting with the
-/// mixture's own total), from the resolved ranges of the supplied ENDF-6 evaluations.
+/// mixture's own total), either reconstructed from ENDF-6 evaluations over their resolved ranges or given
+/// directly as pointwise tables at the run temperature.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct SelfShieldingMixture {
     /// Hash-pinned raw (0 K) ENDF-6 neutron evaluations, one material per nuclide, carrying MF=2/MT=151
     /// resolved resonance parameters and the MF=3 background.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub evaluation_files: Vec<HashedFileRef>,
+    /// Hash-pinned `actinv-pointwise-1` tables, one nuclide each, already at the run temperature (for example
+    /// exported from an OpenMC HDF5 library); exclusive with `evaluation_files`.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub pointwise_files: Vec<HashedFileRef>,
     /// Tape normalization applied to each evaluation before parsing: "none" (default), "endfb8" or "tendl",
     /// the same profiles as `build-library --profile`. Absent means "none", and the spec echo is unchanged.
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -489,14 +495,40 @@ impl SelfShieldingMixture {
             .map_err(|error| format!("self_shielding.mixture.profile: {error}"))
     }
 
+    /// "evaluation" or "pointwise": which kind of data file the mixture declares.
+    pub fn data_kind(&self) -> &'static str {
+        if self.pointwise_files.is_empty() {
+            "evaluation"
+        } else {
+            "pointwise"
+        }
+    }
+
+    /// The declared data files: the evaluations, else the pointwise tables.
+    pub fn data_files(&self) -> &[HashedFileRef] {
+        if self.pointwise_files.is_empty() {
+            &self.evaluation_files
+        } else {
+            &self.pointwise_files
+        }
+    }
+
     fn validate(&self) -> Result<(), String> {
         self.normalize_profile()?;
-        if self.evaluation_files.is_empty() {
-            return Err(
-                "self_shielding.mixture needs cross-section data: evaluation_files is empty".into(),
-            );
+        match (self.evaluation_files.is_empty(), self.pointwise_files.is_empty()) {
+            (true, true) => Err(
+                "self_shielding.mixture needs cross-section data: evaluation_files and pointwise_files are empty"
+                    .into(),
+            ),
+            (false, false) => Err(
+                "self_shielding.mixture takes evaluation_files or pointwise_files, not both".into(),
+            ),
+            (true, false) if self.profile.is_some() => Err(
+                "self_shielding.mixture.profile normalizes evaluation files; pointwise_files take none"
+                    .into(),
+            ),
+            _ => Ok(()),
         }
-        Ok(())
     }
 }
 
@@ -3840,7 +3872,36 @@ mod duration_tests {
         // An empty file list, an unknown key and an unknown profile are refused.
         let error = with_mixture(&|mixture| mixture["evaluation_files"] = serde_json::json!([]))
             .unwrap_err();
-        assert!(error.contains("evaluation_files is empty"), "{error}");
+        assert!(
+            error.contains("evaluation_files and pointwise_files are empty"),
+            "{error}"
+        );
+        let pointwise = serde_json::json!([{"path": "cu63.json", "sha256": "0".repeat(64)}]);
+        let error =
+            with_mixture(&|mixture| mixture["pointwise_files"] = pointwise.clone()).unwrap_err();
+        assert!(error.contains("not both"), "{error}");
+        let only_pointwise = |mixture: &mut serde_json::Value| {
+            mixture.as_object_mut().unwrap().remove("evaluation_files");
+            mixture["pointwise_files"] = pointwise.clone();
+        };
+        let spec = with_mixture(&only_pointwise).unwrap();
+        let mixture_spec = spec
+            .self_shielding
+            .as_ref()
+            .unwrap()
+            .mixture
+            .as_ref()
+            .unwrap();
+        assert_eq!(mixture_spec.data_kind(), "pointwise");
+        assert_eq!(mixture_spec.data_files()[0].path, "cu63.json");
+        let echoed = serde_json::to_value(spec.self_shielding.as_ref().unwrap()).unwrap();
+        assert!(echoed["mixture"].get("evaluation_files").is_none());
+        let error = with_mixture(&|mixture| {
+            only_pointwise(mixture);
+            mixture["profile"] = serde_json::json!("endfb8");
+        })
+        .unwrap_err();
+        assert!(error.contains("pointwise_files take none"), "{error}");
         let error =
             with_mixture(&|mixture| mixture["thickness"] = serde_json::json!(1.0)).unwrap_err();
         assert!(error.contains("thickness"), "{error}");

@@ -8,6 +8,11 @@
   `DIR`, so a sidecar can carry another evaluation's covariances for some reactions while the input still binds each
   target to the activation library by its SHA-256. The index records the file's SHA-256 as `mf33_source_sha256`; a
   build without the option writes the same sidecar as before.
+- Mixture self-shielding takes pointwise tables instead of ENDF-6 evaluations: `self_shielding.mixture.pointwise_files`
+  lists `actinv-pointwise-1` tables already at the run temperature, used as given over their whole energy range, so
+  nothing is reconstructed. `actinv.openmc.export_pointwise` writes them from an OpenMC HDF5 library, and
+  `ActinvR2SManager(..., self_shielding="mixture")` shields every material with them (off by default). P178's copper
+  case runs in 1.2 s instead of 71 s.
 
 **Changed**
 

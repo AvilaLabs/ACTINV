@@ -960,7 +960,7 @@ struct PreparedShielding {
     resonance_sha256: Vec<String>,
     /// Pointwise mixture model; exclusive with `table` and `geometry`.
     mixture: Option<crate::shielding::PreparedMixture>,
-    /// Computed hash of each `mixture.evaluation_files` entry, in order.
+    /// Computed hash of each `mixture.data_files()` entry, in order.
     evaluation_sha256: Vec<String>,
 }
 
@@ -2896,17 +2896,18 @@ impl PreparedRun {
                 let mut evaluation_sha256 = Vec::new();
                 let mixture = match &options.mixture {
                     Some(mixture) => {
-                        let mut files = Vec::with_capacity(mixture.evaluation_files.len());
-                        for reference in &mixture.evaluation_files {
+                        let kind = mixture.data_kind();
+                        let mut files = Vec::with_capacity(mixture.data_files().len());
+                        for reference in mixture.data_files() {
                             let (text, sha) =
                                 read_verified_text(&reference.path, Some(&reference.sha256))
                                     .map_err(|error| {
-                                        format!("self-shielding evaluation file: {error}")
+                                        format!("self-shielding {kind} file: {error}")
                                     })?;
                             evaluation_sha256.push(sha);
                             files.push((reference.path.clone(), text));
                         }
-                        Some(crate::shielding::PreparedMixture::from_evaluations(
+                        Some(crate::shielding::PreparedMixture::from_files(
                             mixture, &files,
                         )?)
                     }
@@ -8128,7 +8129,7 @@ impl PreparedRun {
             }
             if let (Some(report), Some(mixture)) = (&plan.mixture, &prepared.options.mixture) {
                 let files: Vec<serde_json::Value> = mixture
-                    .evaluation_files
+                    .data_files()
                     .iter()
                     .zip(&prepared.evaluation_sha256)
                     .map(|(reference, sha256)| {
@@ -8676,7 +8677,7 @@ impl PreparedRun {
             }
             if let Some(mixture) = &prepared.options.mixture {
                 let files: Vec<serde_json::Value> = mixture
-                    .evaluation_files
+                    .data_files()
                     .iter()
                     .zip(&prepared.evaluation_sha256)
                     .map(|(reference, sha256)| {
@@ -8688,7 +8689,7 @@ impl PreparedRun {
                     })
                     .collect();
                 inputs.insert(
-                    "shielding_evaluation_files".into(),
+                    format!("shielding_{}_files", mixture.data_kind()),
                     serde_json::Value::Array(files),
                 );
             }
@@ -8865,7 +8866,7 @@ fn prepared_fingerprint(
             }
         }
         if let Some(mixture) = &options.mixture {
-            for reference in &mixture.evaluation_files {
+            for reference in mixture.data_files() {
                 files.push(fingerprint_file(&reference.path)?);
             }
         }

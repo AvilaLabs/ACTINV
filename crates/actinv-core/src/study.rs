@@ -2542,25 +2542,26 @@ fn build_sampling_plan(
                 };
                 let mixture = match &options.mixture {
                     Some(mixture) => {
-                        let mut files = Vec::with_capacity(mixture.evaluation_files.len());
-                        for reference in &mixture.evaluation_files {
+                        let kind = mixture.data_kind();
+                        let mut files = Vec::with_capacity(mixture.data_files().len());
+                        for reference in mixture.data_files() {
                             let path = resolve_path(base, &reference.path);
                             let got = file_sha256(&path)?;
                             if got != reference.sha256 {
                                 return Err(format!(
-                                    "self-shielding evaluation file sha256 mismatch: declared {}, got {got}",
+                                    "self-shielding {kind} file sha256 mismatch: declared {}, got {got}",
                                     reference.sha256
                                 ));
                             }
                             let text = fs::read_to_string(&path).map_err(|error| {
                                 format!(
-                                    "cannot read self-shielding evaluation file {}: {error}",
+                                    "cannot read self-shielding {kind} file {}: {error}",
                                     path.display()
                                 )
                             })?;
                             files.push((reference.path.clone(), text));
                         }
-                        Some(crate::shielding::PreparedMixture::from_evaluations(
+                        Some(crate::shielding::PreparedMixture::from_files(
                             mixture, &files,
                         )?)
                     }

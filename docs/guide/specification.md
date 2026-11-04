@@ -1095,9 +1095,11 @@ pointwise cross sections, in place of a precomputed Bondarenko table or the sigm
 }
 ```
 
-- `evaluation_files` (required, non-empty) are hash-pinned raw 0 K ENDF-6 neutron evaluations, one nuclide per file
-  (the inputs `build-library` reads), each with MF=2/MT=151 resolved resonance parameters and its MF=3 background.
-  The files are verified against their SHA-256 like the geometry's `resonance_files`.
+- `evaluation_files` are hash-pinned raw 0 K ENDF-6 neutron evaluations, one nuclide per file (the inputs
+  `build-library` reads), each with MF=2/MT=151 resolved resonance parameters and its MF=3 background. The files are
+  verified against their SHA-256 like the geometry's `resonance_files`.
+- `pointwise_files` replace `evaluation_files` (give one or the other): hash-pinned `actinv-pointwise-1` tables,
+  one nuclide each, already at the run temperature (see below). `profile` does not apply to them.
 - `profile` (optional, `"none"`, `"endfb8"` or `"tendl"`, default `"none"`) applies the `build-library --profile`
   tape normalization to each file before it is read.
 - `require_complete` (optional, default `false`) refuses the run when a material nuclide above 1e-6 atom fraction has
@@ -1114,10 +1116,20 @@ other reaction the total factor). Groups that do not overlap a resolved range ar
 range. The method needs a positive run `temperature_K`. A negative 0 K value (a negative MF=3 background under a
 resonance-interference minimum, as in ENDF/B-VIII.1 Fe-54 elastic) is set to zero, as NJOY RECONR does.
 
+With `pointwise_files`, nothing is reconstructed: each table is used as given, and every library group within its
+energy range is shielded, since where the cross sections are smooth the factor is 1. A table is a JSON object with
+`format` `"actinv-pointwise-1"`, `nuclide` (for example `"Cu63"`), `temperature_K`, and `energy_eV`, `total_b`,
+`elastic_b`, `capture_b` and optional `fission_b` (barns, linear in energy, energies ascending). Its temperature must
+be within 1 K of the run's `temperature_K`; ACTINV does not re-broaden it. `actinv.openmc.export_pointwise` writes
+these tables from an OpenMC HDF5 library at one of its stored temperatures (OpenMC's 294 K set serves ACTINV's
+293.6 K default), and `ActinvR2SManager(..., self_shielding="mixture")` uses it for every material. A run then takes
+seconds rather than minutes. This mode has not yet been compared with OpenMC's continuous-energy rates.
+
 The ledger `shielding.mixture` block records the profile, temperature, evaluation files with their hashes, the
 covered and `background_estimated` nuclides, per covered nuclide the number of groups and the smallest applied
 scale for each channel, and in `zero_k_clips` every reaction whose negative 0 K values were set to zero (points,
-energy range and the most negative value).
+energy range and the most negative value). With pointwise tables, `pointwise_temperatures_K` gives each covered
+nuclide's table temperature and the certificate lists the tables as `shielding_pointwise_files`.
 
 ## Gas production (H and He isotopes)
 
