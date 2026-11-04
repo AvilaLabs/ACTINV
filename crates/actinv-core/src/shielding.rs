@@ -1420,8 +1420,36 @@ fn interpolate_clamped(x: &[f64], y: &[f64], e: f64) -> f64 {
     y[upper - 1] + (y[upper] - y[upper - 1]) * (e - x0) / (x1 - x0)
 }
 
-/// The integration nodes of `[low, high]`: both ends and every union-grid point strictly between.
-fn segment_nodes(union: &[f64], low: f64, high: f64) -> Vec<f64> {
+/// The four channels of `xs` at ascending `nodes`, as `interpolate_clamped` gives them, walking the grid once.
+fn interpolate_ascending(xs: &PointwiseXs, nodes: &[f64]) -> Vec<[f64; 4]> {
+    let x = &xs.energy;
+    let mut upper = nodes
+        .first()
+        .map_or(0, |&e| x.partition_point(|&point| point <= e));
+    nodes
+        .iter()
+        .map(|&e| {
+            while upper < x.len() && x[upper] <= e {
+                upper += 1;
+            }
+            std::array::from_fn(|c| {
+                let y = &xs.sigma[c];
+                if upper == 0 {
+                    y[0]
+                } else if upper >= x.len() {
+                    y[x.len() - 1]
+                } else {
+                    let (x0, x1) = (x[upper - 1], x[upper]);
+                    y[upper - 1] + (y[upper] - y[upper - 1]) * (e - x0) / (x1 - x0)
+                }
+            })
+        })
+        .collect()
+}
+
+/// The integration nodes of `[low, high]`: both ends and every union-grid point strictly between, with the union
+/// index of the first interior node.
+fn segment_nodes(union: &[f64], low: f64, high: f64) -> (usize, Vec<f64>) {
     let start = union.partition_point(|&e| e <= low);
     let end = union.partition_point(|&e| e < high);
     let mut nodes = Vec::with_capacity(end.saturating_sub(start) + 2);
@@ -1430,7 +1458,7 @@ fn segment_nodes(union: &[f64], low: f64, high: f64) -> Vec<f64> {
         nodes.extend_from_slice(&union[start..end]);
     }
     nodes.push(high);
-    nodes
+    (start, nodes)
 }
 
 /// Lethargy integrals of one nuclide over one group.
@@ -1490,6 +1518,8 @@ fn mixture_scales<X: Borrow<PointwiseXs>>(
             value
         }
     };
+    // 1/Sigma_t at each union point, computed when a group first needs it and shared by every member.
+    let mut union_flux = vec![f64::NAN; union.len()];
     let mut result = BTreeMap::new();
     for &(key, xs, _) in &members {
         // Every group that overlaps a resolved range, each once even when two ranges share it.
@@ -1509,19 +1539,25 @@ fn mixture_scales<X: Borrow<PointwiseXs>>(
         }
         let mut scales: [GroupScales; 4] = Default::default();
         for group in groups {
-            let nodes = segment_nodes(&union, boundaries_ev[group], boundaries_ev[group + 1]);
+            let (low, high) = (boundaries_ev[group], boundaries_ev[group + 1]);
+            let (start, nodes) = segment_nodes(&union, low, high);
             let mut flux = Vec::with_capacity(nodes.len());
-            for &e in &nodes {
-                flux.push(1.0 / mixture_total(e)?);
+            flux.push(1.0 / mixture_total(low)?);
+            for i in start..start + nodes.len() - 2 {
+                if union_flux[i].is_nan() {
+                    union_flux[i] = 1.0 / mixture_total(union[i])?;
+                }
+                flux.push(union_flux[i]);
             }
+            flux.push(1.0 / mixture_total(high)?);
+            let sigma = interpolate_ascending(xs, &nodes);
             let mut sums = MixtureGroupSums::default();
             for k in 0..nodes.len() - 1 {
                 let du = (nodes[k + 1] / nodes[k]).ln();
                 sums.lethargy += du;
                 sums.flux += 0.5 * (flux[k] + flux[k + 1]) * du;
                 for c in 0..4 {
-                    let s0 = interpolate_clamped(&xs.energy, &xs.sigma[c], nodes[k]);
-                    let s1 = interpolate_clamped(&xs.energy, &xs.sigma[c], nodes[k + 1]);
+                    let (s0, s1) = (sigma[k][c], sigma[k + 1][c]);
                     sums.sigma[c] += 0.5 * (s0 + s1) * du;
                     sums.sigma_flux[c] += 0.5 * (s0 * flux[k] + s1 * flux[k + 1]) * du;
                 }
@@ -3502,5 +3538,33 @@ mod tests {
             let sigma_p = analytic_sigma_p_b(za);
             assert!((1.0..20.0).contains(&sigma_p), "{za}: {sigma_p} b");
         }
+    }
+
+    #[test]
+    fn ascending_interpolation_matches_clamped_interpolation_bit_for_bit() {
+        let xs = analytic_xs(1.0, 1.0e4, 401, vec![(1.0, 1.0e4)], &|e| {
+            [
+                5.0 + lorentzian(e, 1000.0, 10.0, 2.0),
+                5.0,
+                0.1 * e.sqrt(),
+                lorentzian(e, 1000.0, 10.0, 2.0),
+            ]
+        });
+        // Below and above the grid, exact grid points (repeated), and points between them.
+        let mut nodes = vec![0.5, 1.0, 1.0];
+        nodes.extend(xs.energy.iter().step_by(7).copied());
+        nodes.extend((1..300).map(|i| 1.03f64.powi(i)));
+        nodes.extend([1.0e4, 2.0e4]);
+        nodes.sort_by(f64::total_cmp);
+        for start in [0, 1, 5, nodes.len() - 2] {
+            let walked = interpolate_ascending(&xs, &nodes[start..]);
+            for (&e, row) in nodes[start..].iter().zip(&walked) {
+                for (c, (value, y)) in row.iter().zip(&xs.sigma).enumerate() {
+                    let want = interpolate_clamped(&xs.energy, y, e);
+                    assert_eq!(value.to_bits(), want.to_bits(), "channel {c} at {e} eV");
+                }
+            }
+        }
+        assert!(interpolate_ascending(&xs, &[]).is_empty());
     }
 }

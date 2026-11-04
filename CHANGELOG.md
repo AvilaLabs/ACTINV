@@ -24,6 +24,9 @@
 - Mixture self-shielding (`self_shielding.mixture`) reconstructs each nuclide's pointwise cross sections once per run,
   not once per solve, and plans each material once. `actinv mesh` plans every distinct material before its cells
   solve in parallel. A 6-cell copper mesh took 123 s instead of 630 s. Results are unchanged, byte for byte.
+- Mixture self-shielding computes the mixture's total cross section once per energy point, not once per nuclide,
+  and walks each nuclide's grid instead of searching it. P178's Inconel 718 region (34 nuclides from pointwise tables)
+  plans in 5 s instead of 70 s. Results are unchanged, byte for byte.
 
 ## v1.7.2 — 2026-11-02
 
