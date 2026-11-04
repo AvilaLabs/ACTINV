@@ -6166,3 +6166,19 @@ G7: CI green on the evidence commit `46064ee` (controls, fns-iron, fusion-isotop
   `target/p188-sidecar/`. Shipping it is a data release: a new catalog entry and the catalog CI sweep, with the
   owner's approval.
 - **Clean-up.** The other run outputs are deleted.
+
+## Entry 355 — P189 registered: ACTINV's activation step on a 1,000,000-element mesh within 6 GiB (2026-11-04)
+
+`protocols/ACTINV-P189_PROTOCOL.md`, `controls/p189_harness.py` and `controls/check_p189.py` are sealed in
+`protocols/protocol_hash.txt`.
+- **Question.** P181 Amendment A stopped at 32,768 elements because OpenMC's 709-group step-1 tally ran out of
+  memory. P189 asks whether `actinv mesh` finishes 100³ elements, four materials and a distinct interpolated
+  709-group flux in each, inside 6 GiB, 4 cores and no swap, and whether 100 randomly drawn elements equal their
+  stand-alone `actinv run` results exactly.
+- **Input.** The coarse 16³ OpenMC flux (`target/p189-work/coarse.npz`, never tracked) was made before registration;
+  its SHA-256 is pinned in the protocol and the checker. Its exit status, wall time and zero-bin count were seen.
+- **Rehearsal.** One run of the whole pipeline at 20³ (`P189_REHEARSAL=1`) was read for exit statuses and gate
+  results only. Every step exited 0. G3–G5 held; G0–G2 failed as designed (not registered, a rehearsal, 8,000
+  cells). No time, memory or sample value was read, and the outputs are deleted.
+- **Scored run.** The binary is built in the bounded scope from a clean checkout of this commit. G6 is CI on the
+  evidence commit. One repair round is allowed.
