@@ -1,0 +1,207 @@
+{
+ "arm": "actinv_plain",
+ "before": {
+  "headroom": {
+   "mem_available_kib": 18500064,
+   "needed_kib": 11534336,
+   "ok": true,
+   "waited_s": 0.00018063210882246494
+  },
+  "load_average": [
+   1.26171875,
+   1.943359375,
+   3.74658203125
+  ],
+  "other_scopes": []
+ },
+ "censored": false,
+ "cgroup": {
+  "cpu_max": "200000 100000",
+  "memory_max": "10737418240",
+  "memory_swap_max": "0",
+  "path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p744763-i17516863.scope",
+  "pids_max": "128"
+ },
+ "complete": true,
+ "config": {
+  "arm": "actinv_plain",
+  "batches": 5,
+  "bounds_max_rel_diff_vs_groups_json": 0.0,
+  "bounds_sha256_ascending": "443ba82e4144df6be3da4fc5acd2543587a3f21609c6af5fe1cf0d060a9dead1",
+  "energy_groups_in_flux": 709,
+  "flux_sum_n_cm_per_src": 35.78838913113702,
+  "mesh_dimension": [
+   2,
+   2,
+   2
+  ],
+  "micro_kwargs_keys": [],
+  "n_regions": 32,
+  "openmc_version": "0.15.3",
+  "particles": 20000,
+  "photon_seed": 1500,
+  "photon_time_index": 2,
+  "pool_processes": 2,
+  "reaction_rate_mode": "direct",
+  "seed": 1000,
+  "source_rates": [
+   1e+17,
+   0.0
+  ],
+  "step1_mode": "actinv.openmc flux-only step 1 on the library groups, self_shielding=None",
+  "threads": 2,
+  "timesteps_s": [
+   31557600.0,
+   1000000.0
+  ]
+ },
+ "dose_per_photon_pSv_cm2": 1264429524891669.2,
+ "dose_rate_Sv_h": 389.35762415634815,
+ "dose_rate_sd_Sv_h": 2.076094226797248,
+ "dose_sd": 6742066095424.581,
+ "environment": {
+  "actinv_version": "actinv 1.7.2",
+  "cgroup": {
+   "cpu_max": "200000 100000",
+   "memory_max": "6442450944",
+   "memory_swap_max": "0",
+   "path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p719964-i17488592.scope",
+   "pids_max": "128"
+  },
+  "child_threads": 2,
+  "cpu_model": "Intel(R) Core(TM) i3-N305",
+  "env": {
+   "OMP_NUM_THREADS": null,
+   "RAYON_NUM_THREADS": "2",
+   "TMPDIR": "/home/connoravila/Documents/actinv/target/preflight-tmp"
+  },
+  "git_dirty_paths": "",
+  "git_head": "6584e5daba1fc21c7a63acf4510f83b9f7f0e7c5",
+  "kernel": "7.0.0-38-generic",
+  "load_average_end": [
+   1.275390625,
+   1.8701171875,
+   3.65380859375
+  ],
+  "load_average_start": [
+   1.26171875,
+   1.943359375,
+   3.74658203125
+  ],
+  "logical_cpus": 8,
+  "mem_total_kib": 32175152,
+  "numpy_version": "2.5.3",
+  "openmc_version": "0.15.3",
+  "other_scopes_end": [],
+  "python": "3.13.16",
+  "python_executable": "/home/connoravila/micromamba/envs/openmc0153dd/bin/python",
+  "xs_archive_sha256": "b7ad59cb4a3d76d8a291326093a98507f8d24b6e6af629116d3f7dc85f83c4cb"
+ },
+ "exit_code": 0,
+ "inputs": {
+  "actinv_binary": {
+   "path": "/home/connoravila/Documents/actinv/target/wt-openmc-wt/release/actinv",
+   "sha256": "fa21795bd0137d8870f435d2618ceadd1493bec54e05f6b526eb8978151c8662"
+  },
+  "actinv_library": {
+   "path": "/home/connoravila/nuclear-data/endfb-viii.1-p178/endfb81_all_709g.npz",
+   "sha256": "a964a44ef106b692d170ba6085859ca2827ff967b3e9a6ddc60ca8fa9ac92051"
+  },
+  "adapter": {
+   "path": "/home/connoravila/Documents/actinv/target/openmc-wt/python/pysrc/actinv/openmc.py",
+   "sha256": "665b27cf76cd48d0eed2b068546e1ceb3b3518c64864a04b69dd5f9a671db279"
+  },
+  "adapter_defaults": {
+   "path": "/home/connoravila/Documents/actinv/target/openmc-wt/python/pysrc/actinv/_defaults.py",
+   "sha256": "5d9999407d0ac605a2dd6187c71c73d5d6618d720c885491c1e84985ce961739"
+  },
+  "chain_xml": {
+   "path": "/home/connoravila/nuclear-data/p32-work/chain/depletion/chain.xml",
+   "sha256": "d3b829467cfdda9c624aaeb5709825df378b908ecc63c3f984ade51f8d0444a0"
+  },
+  "cross_sections_xml": {
+   "path": "/home/connoravila/nuclear-data/endfb-viii.1-hdf5/cross_sections.xml",
+   "sha256": "b8ffb6104a946bf951dc0f3b9a1f57a60f7f57c4b308cd66df4fd3dd4bc557ce"
+  },
+  "decay_fallback": {
+   "path": "/home/connoravila/Documents/actinv/actinv-data/v1.2.0/decay/jeff-3-3_decay.dat",
+   "sha256": "850b8b7f85f8d88b6ad826c4cd341aaaffabd525c8ecf3c588a0ad437bf5d123"
+  },
+  "decay_primary": {
+   "path": "/home/connoravila/Documents/actinv/actinv-data/v1.2.0/decay/endf-b-viii-0_decay.dat",
+   "sha256": "6f04cf009086c179021f243a58dadc2d5bb078de5ba39c4fe46ccad77d228ddb"
+  },
+  "demo_steel_cube": {
+   "path": "/home/connoravila/Documents/actinv/target/openmc-wt/contrib/openmc_r2s/demo_steel_cube.py",
+   "sha256": "558e5ce9b0fee6a48a11020455b03302c7ddc042997282bd0f8f48967ef8e848"
+  },
+  "groups_json": {
+   "path": "/home/connoravila/Documents/actinv/target/openmc-wt/crates/actinv-data/data/fispact_709_groups.json",
+   "sha256": "ce4bf523498ffbb38d42aa9415fc014882b8bc7a7ecfb89f859ba3259d8fb34f"
+  },
+  "harness": {
+   "path": "/home/connoravila/Documents/actinv/target/openmc-wt/controls/p191_harness.py",
+   "sha256": "886c5bca20d5b3f89c1e1208838bf7121b8b144199d8882816ce07393106a3bc"
+  },
+  "p181_harness": {
+   "path": "/home/connoravila/Documents/actinv/target/openmc-wt/controls/p181_harness.py",
+   "sha256": "d0d9f6b2464b92a80a47fc92169042174b9e3102d62cb7e365cb84591e0746e2"
+  },
+  "protocol": {
+   "path": "/home/connoravila/Documents/actinv/target/openmc-wt/protocols/ACTINV-P191_PROTOCOL.md",
+   "sha256": "c8c483c908f357183c74cbeb223b674882bf3a51a33695e45437802e52289a14"
+  }
+ },
+ "last_heartbeat": {
+  "memory_current_bytes": 1288093696,
+  "memory_peak_bytes": 1390444544,
+  "phase": "done",
+  "rss_self_mib": 1264.23046875
+ },
+ "ledger_mixture": null,
+ "limit_s": 14400,
+ "memory_max_gib": 10,
+ "memory_peak_bytes": 1390444544,
+ "mesh_spec": {
+  "library": {
+   "path": "/home/connoravila/nuclear-data/endfb-viii.1-p178/endfb81_all_709g.npz"
+  },
+  "self_shielding": null,
+  "self_shielding_present": false,
+  "threads": 2
+ },
+ "peak_rss_mib": {
+  "children": 1235.73046875,
+  "self": 1264.23046875
+ },
+ "phase_done": "step3",
+ "photons_per_s": 1.1831055248665434e+16,
+ "plan": {
+  "batches": 5,
+  "dim": 2,
+  "headroom_gib": 1.0,
+  "headroom_wait_s": 120,
+  "limit_s": 14400,
+  "memory_max_gib": 10,
+  "particles": 20000,
+  "photon_time_index": 2,
+  "seed": 1000,
+  "source_rates": [
+   1e+17,
+   0.0
+  ],
+  "timesteps_s": [
+   31557600.0,
+   1000000.0
+  ]
+ },
+ "rehearsal": false,
+ "schema": "actinv-p191-arm-1",
+ "started_utc": "2026-11-05T21:43:49Z",
+ "status": "ok",
+ "stderr_tail": "",
+ "step1_s": 20.337366888066754,
+ "step2_s": 1.8110575459431857,
+ "step3_s": 10.544449764071032,
+ "wall_s": 36.05089354282245
+}

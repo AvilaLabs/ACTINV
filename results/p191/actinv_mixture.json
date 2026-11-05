@@ -1,0 +1,721 @@
+{
+ "arm": "actinv_mixture",
+ "before": {
+  "headroom": {
+   "mem_available_kib": 18527448,
+   "needed_kib": 11534336,
+   "ok": true,
+   "waited_s": 0.00021284306421875954
+  },
+  "load_average": [
+   1.36474609375,
+   2.23046875,
+   4.046875
+  ],
+  "other_scopes": []
+ },
+ "censored": false,
+ "cgroup": {
+  "cpu_max": "200000 100000",
+  "memory_max": "10737418240",
+  "memory_swap_max": "0",
+  "path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p743324-i17508721.scope",
+  "pids_max": "128"
+ },
+ "complete": true,
+ "config": {
+  "arm": "actinv_mixture",
+  "batches": 5,
+  "bounds_max_rel_diff_vs_groups_json": 0.0,
+  "bounds_sha256_ascending": "443ba82e4144df6be3da4fc5acd2543587a3f21609c6af5fe1cf0d060a9dead1",
+  "energy_groups_in_flux": 709,
+  "flux_sum_n_cm_per_src": 35.78838913113702,
+  "mesh_dimension": [
+   2,
+   2,
+   2
+  ],
+  "micro_kwargs_keys": [],
+  "n_regions": 32,
+  "openmc_version": "0.15.3",
+  "particles": 20000,
+  "photon_seed": 1500,
+  "photon_time_index": 2,
+  "pool_processes": 2,
+  "reaction_rate_mode": "direct",
+  "seed": 1000,
+  "source_rates": [
+   1e+17,
+   0.0
+  ],
+  "step1_mode": "actinv.openmc flux-only step 1 on the library groups, self_shielding='mixture'",
+  "threads": 2,
+  "timesteps_s": [
+   31557600.0,
+   1000000.0
+  ]
+ },
+ "dose_per_photon_pSv_cm2": 1262365667440094.5,
+ "dose_rate_Sv_h": 388.7220975270476,
+ "dose_rate_sd_Sv_h": 2.3284684612016693,
+ "dose_sd": 7561645354966.038,
+ "environment": {
+  "actinv_version": "actinv 1.7.2",
+  "cgroup": {
+   "cpu_max": "200000 100000",
+   "memory_max": "6442450944",
+   "memory_swap_max": "0",
+   "path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p719964-i17488592.scope",
+   "pids_max": "128"
+  },
+  "child_threads": 2,
+  "cpu_model": "Intel(R) Core(TM) i3-N305",
+  "env": {
+   "OMP_NUM_THREADS": null,
+   "RAYON_NUM_THREADS": "2",
+   "TMPDIR": "/home/connoravila/Documents/actinv/target/preflight-tmp"
+  },
+  "git_dirty_paths": "",
+  "git_head": "6584e5daba1fc21c7a63acf4510f83b9f7f0e7c5",
+  "kernel": "7.0.0-38-generic",
+  "load_average_end": [
+   1.26171875,
+   1.943359375,
+   3.74658203125
+  ],
+  "load_average_start": [
+   1.36474609375,
+   2.23046875,
+   4.046875
+  ],
+  "logical_cpus": 8,
+  "mem_total_kib": 32175152,
+  "numpy_version": "2.5.3",
+  "openmc_version": "0.15.3",
+  "other_scopes_end": [],
+  "python": "3.13.16",
+  "python_executable": "/home/connoravila/micromamba/envs/openmc0153dd/bin/python",
+  "xs_archive_sha256": "b7ad59cb4a3d76d8a291326093a98507f8d24b6e6af629116d3f7dc85f83c4cb"
+ },
+ "exit_code": 0,
+ "inputs": {
+  "actinv_binary": {
+   "path": "/home/connoravila/Documents/actinv/target/wt-openmc-wt/release/actinv",
+   "sha256": "fa21795bd0137d8870f435d2618ceadd1493bec54e05f6b526eb8978151c8662"
+  },
+  "actinv_library": {
+   "path": "/home/connoravila/nuclear-data/endfb-viii.1-p178/endfb81_all_709g.npz",
+   "sha256": "a964a44ef106b692d170ba6085859ca2827ff967b3e9a6ddc60ca8fa9ac92051"
+  },
+  "adapter": {
+   "path": "/home/connoravila/Documents/actinv/target/openmc-wt/python/pysrc/actinv/openmc.py",
+   "sha256": "665b27cf76cd48d0eed2b068546e1ceb3b3518c64864a04b69dd5f9a671db279"
+  },
+  "adapter_defaults": {
+   "path": "/home/connoravila/Documents/actinv/target/openmc-wt/python/pysrc/actinv/_defaults.py",
+   "sha256": "5d9999407d0ac605a2dd6187c71c73d5d6618d720c885491c1e84985ce961739"
+  },
+  "chain_xml": {
+   "path": "/home/connoravila/nuclear-data/p32-work/chain/depletion/chain.xml",
+   "sha256": "d3b829467cfdda9c624aaeb5709825df378b908ecc63c3f984ade51f8d0444a0"
+  },
+  "cross_sections_xml": {
+   "path": "/home/connoravila/nuclear-data/endfb-viii.1-hdf5/cross_sections.xml",
+   "sha256": "b8ffb6104a946bf951dc0f3b9a1f57a60f7f57c4b308cd66df4fd3dd4bc557ce"
+  },
+  "decay_fallback": {
+   "path": "/home/connoravila/Documents/actinv/actinv-data/v1.2.0/decay/jeff-3-3_decay.dat",
+   "sha256": "850b8b7f85f8d88b6ad826c4cd341aaaffabd525c8ecf3c588a0ad437bf5d123"
+  },
+  "decay_primary": {
+   "path": "/home/connoravila/Documents/actinv/actinv-data/v1.2.0/decay/endf-b-viii-0_decay.dat",
+   "sha256": "6f04cf009086c179021f243a58dadc2d5bb078de5ba39c4fe46ccad77d228ddb"
+  },
+  "demo_steel_cube": {
+   "path": "/home/connoravila/Documents/actinv/target/openmc-wt/contrib/openmc_r2s/demo_steel_cube.py",
+   "sha256": "558e5ce9b0fee6a48a11020455b03302c7ddc042997282bd0f8f48967ef8e848"
+  },
+  "groups_json": {
+   "path": "/home/connoravila/Documents/actinv/target/openmc-wt/crates/actinv-data/data/fispact_709_groups.json",
+   "sha256": "ce4bf523498ffbb38d42aa9415fc014882b8bc7a7ecfb89f859ba3259d8fb34f"
+  },
+  "harness": {
+   "path": "/home/connoravila/Documents/actinv/target/openmc-wt/controls/p191_harness.py",
+   "sha256": "886c5bca20d5b3f89c1e1208838bf7121b8b144199d8882816ce07393106a3bc"
+  },
+  "p181_harness": {
+   "path": "/home/connoravila/Documents/actinv/target/openmc-wt/controls/p181_harness.py",
+   "sha256": "d0d9f6b2464b92a80a47fc92169042174b9e3102d62cb7e365cb84591e0746e2"
+  },
+  "protocol": {
+   "path": "/home/connoravila/Documents/actinv/target/openmc-wt/protocols/ACTINV-P191_PROTOCOL.md",
+   "sha256": "c8c483c908f357183c74cbeb223b674882bf3a51a33695e45437802e52289a14"
+  }
+ },
+ "last_heartbeat": {
+  "memory_current_bytes": 1801482240,
+  "memory_peak_bytes": 1868382208,
+  "phase": "done",
+  "rss_self_mib": 1415.16796875
+ },
+ "ledger_mixture": [
+  {
+   "background_estimated": [],
+   "channels_summarised": 5,
+   "covered_n": 5,
+   "evaluations_unused_n": 42,
+   "id": "0",
+   "profile": "none",
+   "temperature_K": 293.6,
+   "zero_k_clip_nuclides": []
+  },
+  {
+   "background_estimated": [],
+   "channels_summarised": 11,
+   "covered_n": 11,
+   "evaluations_unused_n": 36,
+   "id": "1",
+   "profile": "none",
+   "temperature_K": 293.6,
+   "zero_k_clip_nuclides": []
+  },
+  {
+   "background_estimated": [],
+   "channels_summarised": 5,
+   "covered_n": 5,
+   "evaluations_unused_n": 42,
+   "id": "2",
+   "profile": "none",
+   "temperature_K": 293.6,
+   "zero_k_clip_nuclides": []
+  },
+  {
+   "background_estimated": [],
+   "channels_summarised": 32,
+   "covered_n": 32,
+   "evaluations_unused_n": 15,
+   "id": "3",
+   "profile": "none",
+   "temperature_K": 293.6,
+   "zero_k_clip_nuclides": []
+  },
+  {
+   "background_estimated": [],
+   "channels_summarised": 5,
+   "covered_n": 5,
+   "evaluations_unused_n": 42,
+   "id": "4",
+   "profile": "none",
+   "temperature_K": 293.6,
+   "zero_k_clip_nuclides": []
+  },
+  {
+   "background_estimated": [],
+   "channels_summarised": 11,
+   "covered_n": 11,
+   "evaluations_unused_n": 36,
+   "id": "5",
+   "profile": "none",
+   "temperature_K": 293.6,
+   "zero_k_clip_nuclides": []
+  },
+  {
+   "background_estimated": [],
+   "channels_summarised": 5,
+   "covered_n": 5,
+   "evaluations_unused_n": 42,
+   "id": "6",
+   "profile": "none",
+   "temperature_K": 293.6,
+   "zero_k_clip_nuclides": []
+  },
+  {
+   "background_estimated": [],
+   "channels_summarised": 32,
+   "covered_n": 32,
+   "evaluations_unused_n": 15,
+   "id": "7",
+   "profile": "none",
+   "temperature_K": 293.6,
+   "zero_k_clip_nuclides": []
+  },
+  {
+   "background_estimated": [],
+   "channels_summarised": 5,
+   "covered_n": 5,
+   "evaluations_unused_n": 42,
+   "id": "8",
+   "profile": "none",
+   "temperature_K": 293.6,
+   "zero_k_clip_nuclides": []
+  },
+  {
+   "background_estimated": [],
+   "channels_summarised": 11,
+   "covered_n": 11,
+   "evaluations_unused_n": 36,
+   "id": "9",
+   "profile": "none",
+   "temperature_K": 293.6,
+   "zero_k_clip_nuclides": []
+  },
+  {
+   "background_estimated": [],
+   "channels_summarised": 5,
+   "covered_n": 5,
+   "evaluations_unused_n": 42,
+   "id": "10",
+   "profile": "none",
+   "temperature_K": 293.6,
+   "zero_k_clip_nuclides": []
+  },
+  {
+   "background_estimated": [],
+   "channels_summarised": 32,
+   "covered_n": 32,
+   "evaluations_unused_n": 15,
+   "id": "11",
+   "profile": "none",
+   "temperature_K": 293.6,
+   "zero_k_clip_nuclides": []
+  },
+  {
+   "background_estimated": [],
+   "channels_summarised": 5,
+   "covered_n": 5,
+   "evaluations_unused_n": 42,
+   "id": "12",
+   "profile": "none",
+   "temperature_K": 293.6,
+   "zero_k_clip_nuclides": []
+  },
+  {
+   "background_estimated": [],
+   "channels_summarised": 11,
+   "covered_n": 11,
+   "evaluations_unused_n": 36,
+   "id": "13",
+   "profile": "none",
+   "temperature_K": 293.6,
+   "zero_k_clip_nuclides": []
+  },
+  {
+   "background_estimated": [],
+   "channels_summarised": 5,
+   "covered_n": 5,
+   "evaluations_unused_n": 42,
+   "id": "14",
+   "profile": "none",
+   "temperature_K": 293.6,
+   "zero_k_clip_nuclides": []
+  },
+  {
+   "background_estimated": [],
+   "channels_summarised": 32,
+   "covered_n": 32,
+   "evaluations_unused_n": 15,
+   "id": "15",
+   "profile": "none",
+   "temperature_K": 293.6,
+   "zero_k_clip_nuclides": []
+  },
+  {
+   "background_estimated": [],
+   "channels_summarised": 5,
+   "covered_n": 5,
+   "evaluations_unused_n": 42,
+   "id": "16",
+   "profile": "none",
+   "temperature_K": 293.6,
+   "zero_k_clip_nuclides": []
+  },
+  {
+   "background_estimated": [],
+   "channels_summarised": 11,
+   "covered_n": 11,
+   "evaluations_unused_n": 36,
+   "id": "17",
+   "profile": "none",
+   "temperature_K": 293.6,
+   "zero_k_clip_nuclides": []
+  },
+  {
+   "background_estimated": [],
+   "channels_summarised": 5,
+   "covered_n": 5,
+   "evaluations_unused_n": 42,
+   "id": "18",
+   "profile": "none",
+   "temperature_K": 293.6,
+   "zero_k_clip_nuclides": []
+  },
+  {
+   "background_estimated": [],
+   "channels_summarised": 32,
+   "covered_n": 32,
+   "evaluations_unused_n": 15,
+   "id": "19",
+   "profile": "none",
+   "temperature_K": 293.6,
+   "zero_k_clip_nuclides": []
+  },
+  {
+   "background_estimated": [],
+   "channels_summarised": 5,
+   "covered_n": 5,
+   "evaluations_unused_n": 42,
+   "id": "20",
+   "profile": "none",
+   "temperature_K": 293.6,
+   "zero_k_clip_nuclides": []
+  },
+  {
+   "background_estimated": [],
+   "channels_summarised": 11,
+   "covered_n": 11,
+   "evaluations_unused_n": 36,
+   "id": "21",
+   "profile": "none",
+   "temperature_K": 293.6,
+   "zero_k_clip_nuclides": []
+  },
+  {
+   "background_estimated": [],
+   "channels_summarised": 5,
+   "covered_n": 5,
+   "evaluations_unused_n": 42,
+   "id": "22",
+   "profile": "none",
+   "temperature_K": 293.6,
+   "zero_k_clip_nuclides": []
+  },
+  {
+   "background_estimated": [],
+   "channels_summarised": 32,
+   "covered_n": 32,
+   "evaluations_unused_n": 15,
+   "id": "23",
+   "profile": "none",
+   "temperature_K": 293.6,
+   "zero_k_clip_nuclides": []
+  },
+  {
+   "background_estimated": [],
+   "channels_summarised": 5,
+   "covered_n": 5,
+   "evaluations_unused_n": 42,
+   "id": "24",
+   "profile": "none",
+   "temperature_K": 293.6,
+   "zero_k_clip_nuclides": []
+  },
+  {
+   "background_estimated": [],
+   "channels_summarised": 11,
+   "covered_n": 11,
+   "evaluations_unused_n": 36,
+   "id": "25",
+   "profile": "none",
+   "temperature_K": 293.6,
+   "zero_k_clip_nuclides": []
+  },
+  {
+   "background_estimated": [],
+   "channels_summarised": 5,
+   "covered_n": 5,
+   "evaluations_unused_n": 42,
+   "id": "26",
+   "profile": "none",
+   "temperature_K": 293.6,
+   "zero_k_clip_nuclides": []
+  },
+  {
+   "background_estimated": [],
+   "channels_summarised": 32,
+   "covered_n": 32,
+   "evaluations_unused_n": 15,
+   "id": "27",
+   "profile": "none",
+   "temperature_K": 293.6,
+   "zero_k_clip_nuclides": []
+  },
+  {
+   "background_estimated": [],
+   "channels_summarised": 5,
+   "covered_n": 5,
+   "evaluations_unused_n": 42,
+   "id": "28",
+   "profile": "none",
+   "temperature_K": 293.6,
+   "zero_k_clip_nuclides": []
+  },
+  {
+   "background_estimated": [],
+   "channels_summarised": 11,
+   "covered_n": 11,
+   "evaluations_unused_n": 36,
+   "id": "29",
+   "profile": "none",
+   "temperature_K": 293.6,
+   "zero_k_clip_nuclides": []
+  },
+  {
+   "background_estimated": [],
+   "channels_summarised": 5,
+   "covered_n": 5,
+   "evaluations_unused_n": 42,
+   "id": "30",
+   "profile": "none",
+   "temperature_K": 293.6,
+   "zero_k_clip_nuclides": []
+  },
+  {
+   "background_estimated": [],
+   "channels_summarised": 32,
+   "covered_n": 32,
+   "evaluations_unused_n": 15,
+   "id": "31",
+   "profile": "none",
+   "temperature_K": 293.6,
+   "zero_k_clip_nuclides": []
+  }
+ ],
+ "limit_s": 14400,
+ "memory_max_gib": 10,
+ "memory_peak_bytes": 1868382208,
+ "mesh_spec": {
+  "library": {
+   "path": "/home/connoravila/nuclear-data/endfb-viii.1-p178/endfb81_all_709g.npz"
+  },
+  "self_shielding": {
+   "mixture": {
+    "pointwise_files": [
+     {
+      "path": "/home/connoravila/Documents/actinv/target/openmc-wt/target/p191-work-actinv_mixture/actinv_mixture/activation/pointwise/C12_294K.json",
+      "sha256": "41b5b5385c6da0b1f95ca62516746a06801fe0298cbe54b60d20de39e1974e54"
+     },
+     {
+      "path": "/home/connoravila/Documents/actinv/target/openmc-wt/target/p191-work-actinv_mixture/actinv_mixture/activation/pointwise/C13_294K.json",
+      "sha256": "12ebf6b8ca665c85e921af6d4a40eb0c0b0257ab78f980bdb9ccfc47cf82356c"
+     },
+     {
+      "path": "/home/connoravila/Documents/actinv/target/openmc-wt/target/p191-work-actinv_mixture/actinv_mixture/activation/pointwise/Co59_294K.json",
+      "sha256": "759af2ccf4b104be07122d015da1af9289b381e8dba1e4ded8cd66de4bc65dea"
+     },
+     {
+      "path": "/home/connoravila/Documents/actinv/target/openmc-wt/target/p191-work-actinv_mixture/actinv_mixture/activation/pointwise/Cr50_294K.json",
+      "sha256": "e43bb6f8ada80a8ce50423036a12228d27617d235722940185a51b59f15665af"
+     },
+     {
+      "path": "/home/connoravila/Documents/actinv/target/openmc-wt/target/p191-work-actinv_mixture/actinv_mixture/activation/pointwise/Cr52_294K.json",
+      "sha256": "2734db37c7779802a3b62ecbb326e5130c93c525c9a660be642aeaf546a7217e"
+     },
+     {
+      "path": "/home/connoravila/Documents/actinv/target/openmc-wt/target/p191-work-actinv_mixture/actinv_mixture/activation/pointwise/Cr53_294K.json",
+      "sha256": "393d9cf6b32a37ebd04b7f251d9bf828870ad1b2e76bb0ce50f5d54e1f61e635"
+     },
+     {
+      "path": "/home/connoravila/Documents/actinv/target/openmc-wt/target/p191-work-actinv_mixture/actinv_mixture/activation/pointwise/Cr54_294K.json",
+      "sha256": "0ffb7ad6c1c4a69d400ec76308c1243e0e1fc5eff55d0e0ffd221bc355906006"
+     },
+     {
+      "path": "/home/connoravila/Documents/actinv/target/openmc-wt/target/p191-work-actinv_mixture/actinv_mixture/activation/pointwise/Cu63_294K.json",
+      "sha256": "1015a4118702a100d320782a00fb14517d5ec88504a4b3225e20ad0e096ed43d"
+     },
+     {
+      "path": "/home/connoravila/Documents/actinv/target/openmc-wt/target/p191-work-actinv_mixture/actinv_mixture/activation/pointwise/Cu65_294K.json",
+      "sha256": "c9aa38a70cc163f6df106e8486a0b2a0daaf9cd21c4e273aca0b7e4ecf117bc2"
+     },
+     {
+      "path": "/home/connoravila/Documents/actinv/target/openmc-wt/target/p191-work-actinv_mixture/actinv_mixture/activation/pointwise/Fe54_294K.json",
+      "sha256": "a90a845c4afd141c151f1ce01c0d337d8092405717d74934cc097d04a3a229fa"
+     },
+     {
+      "path": "/home/connoravila/Documents/actinv/target/openmc-wt/target/p191-work-actinv_mixture/actinv_mixture/activation/pointwise/Fe56_294K.json",
+      "sha256": "36cba34937112b479072163b55da422a0c307455ed05bd3042fd2453df587ea6"
+     },
+     {
+      "path": "/home/connoravila/Documents/actinv/target/openmc-wt/target/p191-work-actinv_mixture/actinv_mixture/activation/pointwise/Fe57_294K.json",
+      "sha256": "e50427bb7bed7aa197b2cdc4c76e26eaabac4eb6c939e0c65b54a2f76cad67d7"
+     },
+     {
+      "path": "/home/connoravila/Documents/actinv/target/openmc-wt/target/p191-work-actinv_mixture/actinv_mixture/activation/pointwise/Fe58_294K.json",
+      "sha256": "79725172c280d94a06cb4563cc0957923b46e4dce075067f9194ec05e5ef90f0"
+     },
+     {
+      "path": "/home/connoravila/Documents/actinv/target/openmc-wt/target/p191-work-actinv_mixture/actinv_mixture/activation/pointwise/H1_294K.json",
+      "sha256": "34672d18cb0aeed0cef2b0b7b8be2eafe567c072735d3f01800680051b4552d1"
+     },
+     {
+      "path": "/home/connoravila/Documents/actinv/target/openmc-wt/target/p191-work-actinv_mixture/actinv_mixture/activation/pointwise/H2_294K.json",
+      "sha256": "fb8eed848cf331ed8d5f3837a6f5e846dc1e5a4096dde50765a2fdffcef35754"
+     },
+     {
+      "path": "/home/connoravila/Documents/actinv/target/openmc-wt/target/p191-work-actinv_mixture/actinv_mixture/activation/pointwise/Mn55_294K.json",
+      "sha256": "595940618d3c9161e406ccaf730d8438211dafd62a72df2c85eede0de54a7832"
+     },
+     {
+      "path": "/home/connoravila/Documents/actinv/target/openmc-wt/target/p191-work-actinv_mixture/actinv_mixture/activation/pointwise/Mo100_294K.json",
+      "sha256": "418a30827f5d7234f2359b940791ea18b9b127652c3fbf61175957b7d27b19cd"
+     },
+     {
+      "path": "/home/connoravila/Documents/actinv/target/openmc-wt/target/p191-work-actinv_mixture/actinv_mixture/activation/pointwise/Mo92_294K.json",
+      "sha256": "174d42fc0d1c3f882aae54539bd01a39b5836abbe720fa842a5fec7def9573f1"
+     },
+     {
+      "path": "/home/connoravila/Documents/actinv/target/openmc-wt/target/p191-work-actinv_mixture/actinv_mixture/activation/pointwise/Mo94_294K.json",
+      "sha256": "2f30b427fa0890487a8114272f6918e929427c52c61cd43ec8e62a89397e0d92"
+     },
+     {
+      "path": "/home/connoravila/Documents/actinv/target/openmc-wt/target/p191-work-actinv_mixture/actinv_mixture/activation/pointwise/Mo95_294K.json",
+      "sha256": "ae26e90f7a953ca614e94542f8894fb9590533cf711c8b2f4c34d70626c32333"
+     },
+     {
+      "path": "/home/connoravila/Documents/actinv/target/openmc-wt/target/p191-work-actinv_mixture/actinv_mixture/activation/pointwise/Mo96_294K.json",
+      "sha256": "358063887856f2cce2fc834a46afdefcd61d680e0714b93a594ea0f420799df9"
+     },
+     {
+      "path": "/home/connoravila/Documents/actinv/target/openmc-wt/target/p191-work-actinv_mixture/actinv_mixture/activation/pointwise/Mo97_294K.json",
+      "sha256": "d31006868e5c66f58ca4c1d5ebb8af7a235cb4a1cc5ae7e6133377a227785df8"
+     },
+     {
+      "path": "/home/connoravila/Documents/actinv/target/openmc-wt/target/p191-work-actinv_mixture/actinv_mixture/activation/pointwise/Mo98_294K.json",
+      "sha256": "7379f8092eca9f7e0b58facc01eb714aa7dffd9bdf1ec3076ebe8f5fc11b322b"
+     },
+     {
+      "path": "/home/connoravila/Documents/actinv/target/openmc-wt/target/p191-work-actinv_mixture/actinv_mixture/activation/pointwise/Nb93_294K.json",
+      "sha256": "8040f3cc3483487019c89f69aff50f29f266c3f6b2adf0abcaef21b45cb3a488"
+     },
+     {
+      "path": "/home/connoravila/Documents/actinv/target/openmc-wt/target/p191-work-actinv_mixture/actinv_mixture/activation/pointwise/Ni58_294K.json",
+      "sha256": "d1836acbd281ee56b1969bc3050db1d3d17a2fa3cdce9a2ff004262584f1d7eb"
+     },
+     {
+      "path": "/home/connoravila/Documents/actinv/target/openmc-wt/target/p191-work-actinv_mixture/actinv_mixture/activation/pointwise/Ni60_294K.json",
+      "sha256": "9ca572a59e44eb81967c734a93bb6d0b5afa7980e86960dda14b9b7d236eb22c"
+     },
+     {
+      "path": "/home/connoravila/Documents/actinv/target/openmc-wt/target/p191-work-actinv_mixture/actinv_mixture/activation/pointwise/Ni61_294K.json",
+      "sha256": "0f5f9e2a97518d6ce3ea250251d1e7e4bfcabac2d8b10ec08a2e21fc4508ff2c"
+     },
+     {
+      "path": "/home/connoravila/Documents/actinv/target/openmc-wt/target/p191-work-actinv_mixture/actinv_mixture/activation/pointwise/Ni62_294K.json",
+      "sha256": "b7b2df12bba86a429d52cff94c13883bdae70d416e7140ca7a78c37a4f30c327"
+     },
+     {
+      "path": "/home/connoravila/Documents/actinv/target/openmc-wt/target/p191-work-actinv_mixture/actinv_mixture/activation/pointwise/Ni64_294K.json",
+      "sha256": "4346102cc0704b345eba2554ffc473c545ec7574aa05cf7532ad7e57fa1539be"
+     },
+     {
+      "path": "/home/connoravila/Documents/actinv/target/openmc-wt/target/p191-work-actinv_mixture/actinv_mixture/activation/pointwise/O16_294K.json",
+      "sha256": "77fd9c2fed881e4d3da82e35d792f1785836b406a4fc666e0422413b485905c9"
+     },
+     {
+      "path": "/home/connoravila/Documents/actinv/target/openmc-wt/target/p191-work-actinv_mixture/actinv_mixture/activation/pointwise/O17_294K.json",
+      "sha256": "9270711c5f80b9375b2a689c03b977d14a78adbb218125be75d661d651ea9c04"
+     },
+     {
+      "path": "/home/connoravila/Documents/actinv/target/openmc-wt/target/p191-work-actinv_mixture/actinv_mixture/activation/pointwise/O18_294K.json",
+      "sha256": "c491f80cc3c2a8294045ff4f4fcefea38df54d8d227130ccdac94000c9e69183"
+     },
+     {
+      "path": "/home/connoravila/Documents/actinv/target/openmc-wt/target/p191-work-actinv_mixture/actinv_mixture/activation/pointwise/Si28_294K.json",
+      "sha256": "5318136f6c41039a72f50e824f08289032727f51e43a29b6393d3d75e2cc785b"
+     },
+     {
+      "path": "/home/connoravila/Documents/actinv/target/openmc-wt/target/p191-work-actinv_mixture/actinv_mixture/activation/pointwise/Si29_294K.json",
+      "sha256": "fb1cba6812f284235714e21329e763483d2da93d7298b782655af858b012a132"
+     },
+     {
+      "path": "/home/connoravila/Documents/actinv/target/openmc-wt/target/p191-work-actinv_mixture/actinv_mixture/activation/pointwise/Si30_294K.json",
+      "sha256": "2889b9239532b52c91170e5a2bc08f05e92f6dfe8c20b89d540ac52a9342f751"
+     },
+     {
+      "path": "/home/connoravila/Documents/actinv/target/openmc-wt/target/p191-work-actinv_mixture/actinv_mixture/activation/pointwise/Ta180m1_294K.json",
+      "sha256": "201d5f8b8b30bbf29df62b09c77bc7db3bd130e0f54ae42fbdd42d7ad0cc8b9e"
+     },
+     {
+      "path": "/home/connoravila/Documents/actinv/target/openmc-wt/target/p191-work-actinv_mixture/actinv_mixture/activation/pointwise/Ta181_294K.json",
+      "sha256": "66c551455c1bbf30d3471879e8b08f6251b0551bf198ba7e44bb7846239c7af4"
+     },
+     {
+      "path": "/home/connoravila/Documents/actinv/target/openmc-wt/target/p191-work-actinv_mixture/actinv_mixture/activation/pointwise/W180_294K.json",
+      "sha256": "e8b56c4591c6d80e3c1416089bbcf3e2d3ee6270f8cf2c81cb1280570337a7c6"
+     },
+     {
+      "path": "/home/connoravila/Documents/actinv/target/openmc-wt/target/p191-work-actinv_mixture/actinv_mixture/activation/pointwise/W182_294K.json",
+      "sha256": "670ef875689e3ca571310f50b154e9170522b722647d1fea12c9b08039393ae6"
+     },
+     {
+      "path": "/home/connoravila/Documents/actinv/target/openmc-wt/target/p191-work-actinv_mixture/actinv_mixture/activation/pointwise/W183_294K.json",
+      "sha256": "d6dc0aa78292f36de190b1366bc9bdfd4c089b32af6b322ebfaf4e24c00b094f"
+     },
+     {
+      "path": "/home/connoravila/Documents/actinv/target/openmc-wt/target/p191-work-actinv_mixture/actinv_mixture/activation/pointwise/W184_294K.json",
+      "sha256": "37b1417c608aefcc04e91938c6fde25a2c693c2fe11ab4b52944694f52e5ed03"
+     },
+     {
+      "path": "/home/connoravila/Documents/actinv/target/openmc-wt/target/p191-work-actinv_mixture/actinv_mixture/activation/pointwise/W186_294K.json",
+      "sha256": "b6bb4e8fdb2315c69984293cfb36fd482e40ac8850a6a4205ed67304f21fab7d"
+     },
+     {
+      "path": "/home/connoravila/Documents/actinv/target/openmc-wt/target/p191-work-actinv_mixture/actinv_mixture/activation/pointwise/Zr90_294K.json",
+      "sha256": "777bc3fa6ed442ad3baba61cc2c47e8316d9a6b2b9b1af8d267b9c7762d6c217"
+     },
+     {
+      "path": "/home/connoravila/Documents/actinv/target/openmc-wt/target/p191-work-actinv_mixture/actinv_mixture/activation/pointwise/Zr91_294K.json",
+      "sha256": "327f1298e5e71ea4ec7192c04f2e6c871f3c1436b336e4adca27079d641bb45e"
+     },
+     {
+      "path": "/home/connoravila/Documents/actinv/target/openmc-wt/target/p191-work-actinv_mixture/actinv_mixture/activation/pointwise/Zr92_294K.json",
+      "sha256": "f7403e81b0eca54895fadce905e5906e80924b369edbd452f571f8a9b9f15518"
+     },
+     {
+      "path": "/home/connoravila/Documents/actinv/target/openmc-wt/target/p191-work-actinv_mixture/actinv_mixture/activation/pointwise/Zr94_294K.json",
+      "sha256": "81a1c4054a881548f277983fb6c743dcc59aa36831acc5f5bc9c76d348035173"
+     },
+     {
+      "path": "/home/connoravila/Documents/actinv/target/openmc-wt/target/p191-work-actinv_mixture/actinv_mixture/activation/pointwise/Zr96_294K.json",
+      "sha256": "ce781b531e737e8c5ac59276ed19d7904a450df86b2a150e6cf6f0cb38fed099"
+     }
+    ]
+   }
+  },
+  "self_shielding_present": true,
+  "threads": 2
+ },
+ "peak_rss_mib": {
+  "children": 1263.91015625,
+  "self": 1415.16796875
+ },
+ "phase_done": "step3",
+ "photons_per_s": 1.1837767690021382e+16,
+ "plan": {
+  "batches": 5,
+  "dim": 2,
+  "headroom_gib": 1.0,
+  "headroom_wait_s": 120,
+  "limit_s": 14400,
+  "memory_max_gib": 10,
+  "particles": 20000,
+  "photon_time_index": 2,
+  "seed": 1000,
+  "source_rates": [
+   1e+17,
+   0.0
+  ],
+  "timesteps_s": [
+   31557600.0,
+   1000000.0
+  ]
+ },
+ "rehearsal": false,
+ "schema": "actinv-p191-arm-1",
+ "started_utc": "2026-11-05T21:42:01Z",
+ "status": "ok",
+ "stderr_tail": "",
+ "step1_s": 20.834843093063682,
+ "step2_s": 69.84967837505974,
+ "step3_s": 10.497992540011182,
+ "wall_s": 104.87839321303181
+}

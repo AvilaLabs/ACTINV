@@ -6263,3 +6263,15 @@ G3: CI green on the evidence commit `93ce42b` (controls, fns-iron, fusion-isotop
   or photon source was read, and the outputs are deleted.
 - **Scored run.** The binary is built in the bounded scope from a clean checkout of this commit and must match the
   checker's pin. The arms run one at a time. G4 is CI on the evidence commit. One repair round is allowed.
+
+## Entry 361 — P191 evidence: G0–G2 pass on 6584e5d; P191-PASS pending G4 (2026-11-05)
+
+`controls/p191_harness.py run --arm openmc_direct | openmc_flux | actinv_mixture | actinv_plain` (one at a time),
+`assemble` and `controls/check_p191.py` on the registration commit `6584e5d`, inside the bounded scope (6 GiB, no
+swap, 200% CPU), each arm in its own 10 GiB scope, with the binary built there (SHA-256 `fa21795b…`, the pin). Files:
+`results/p191/`, `results/p191_record.json` and `results/p191_verdict.json`.
+- **G0–G2 pass.** Every arm exited 0, uncensored.
+- **G3, the measurement.** R_m = 1.038 ± 0.015 (AGREES), R_p = 1.040 ± 0.015, SHIELDING NEUTRAL.
+- **Time and memory per arm (steps 1, 2, 3; peak):** `openmc_direct` 4,169 s, 37 s, 18 s; 8.3 GiB.
+  `openmc_flux` 196 s, 38 s, 18 s; 10.0 GiB, at its cap but finished. `actinv_mixture` 21 s, 70 s, 10 s; 1.7 GiB.
+  `actinv_plain` 20 s, 2 s, 11 s; 1.3 GiB. Mixture self-shielding's 70 s step 2 is its pointwise planning.

@@ -1,0 +1,429 @@
+{
+ "allowed_sentences": [
+  "On P181's tungsten, copper-alloy, water and steel model with 8 mesh elements, ACTINV's R2S with mixture self-shielding gave a shutdown dose 1.038 ± 0.016 times that of OpenMC 0.15.3's own R2S with direct reaction-rate tallies, on the same ENDF/B-VIII.1 cross sections; ACTINV's steps 1 and 2 (model to photon source) took 91 s against 4206 s for OpenMC's.",
+  "Without self-shielding ACTINV's dose was 1.040 ± 0.016 times OpenMC's; mixture self-shielding changed ACTINV's distance from OpenMC's dose by no more than two combined standard deviations (SHIELDING NEUTRAL)."
+ ],
+ "decision": {
+  "R_f": {
+   "ratio": 1.005042257928496,
+   "sigma": 0.017898924154853144
+  },
+  "R_m": {
+   "ratio": 1.0384887910737375,
+   "sigma": 0.015279096584924705
+  },
+  "R_p": {
+   "ratio": 1.040186629414177,
+   "sigma": 0.015038433371371888
+  },
+  "agreement": "AGREES",
+  "dose_Sv_h": {
+   "actinv_mixture": {
+    "mean": 388.7220975270476,
+    "sd": 2.3284684612016693
+   },
+   "actinv_plain": {
+    "mean": 389.35762415634815,
+    "sd": 2.076094226797248
+   },
+   "openmc_direct": {
+    "mean": 374.315159555195,
+    "sd": 5.030135662415736
+   },
+   "openmc_flux": {
+    "mean": 376.2025531362185,
+    "sd": 4.3965632920754025
+   }
+  },
+  "flux_sum_ratio": {
+   "mixture": 0.9999072887598344,
+   "plain": 0.9999072887598344
+  },
+  "photon_strength_ratio": {
+   "mixture": 1.0614844750254306,
+   "openmc_flux": 1.0000932608819506,
+   "plain": 1.0608825750325068
+  },
+  "shielding": {
+   "abs_ln_Rm_minus_abs_ln_Rp": -0.0016335775189072269,
+   "label": "SHIELDING NEUTRAL",
+   "sigma": 0.008019483416257989,
+   "sigmas": 2.0
+  },
+  "timing_s": {
+   "memory_peak_gib": {
+    "actinv_mixture": 1.7400665283203125,
+    "actinv_plain": 1.294952392578125,
+    "openmc_direct": 8.28873062133789,
+    "openmc_flux": 10.0
+   },
+   "step1": {
+    "actinv_mixture": 20.834843093063682,
+    "actinv_plain": 20.337366888066754,
+    "openmc_direct": 4168.99801594601
+   },
+   "step2": {
+    "actinv_mixture": 69.84967837505974,
+    "actinv_plain": 1.8110575459431857,
+    "openmc_direct": 37.33860370493494
+   },
+   "step3": {
+    "actinv_mixture": 10.497992540011182,
+    "actinv_plain": 10.544449764071032,
+    "openmc_direct": 18.24084554705769
+   },
+   "steps_1_and_2": {
+    "actinv_mixture": 90.68452146812342,
+    "actinv_plain": 22.14842443400994,
+    "openmc_direct": 4206.336619650945
+   }
+  }
+ },
+ "gates": {
+  "G0": {
+   "pass": true,
+   "problems": []
+  },
+  "G1": {
+   "pass": true,
+   "problems": []
+  },
+  "G2": {
+   "pass": true,
+   "problems": []
+  },
+  "G4": {
+   "pass": null,
+   "problems": [
+    "CI on the evidence commit, checked after the push"
+   ]
+  }
+ },
+ "ledger_mixture": {
+  "actinv_mixture": [
+   {
+    "background_estimated": [],
+    "channels_summarised": 5,
+    "covered_n": 5,
+    "evaluations_unused_n": 42,
+    "id": "0",
+    "profile": "none",
+    "temperature_K": 293.6,
+    "zero_k_clip_nuclides": []
+   },
+   {
+    "background_estimated": [],
+    "channels_summarised": 11,
+    "covered_n": 11,
+    "evaluations_unused_n": 36,
+    "id": "1",
+    "profile": "none",
+    "temperature_K": 293.6,
+    "zero_k_clip_nuclides": []
+   },
+   {
+    "background_estimated": [],
+    "channels_summarised": 5,
+    "covered_n": 5,
+    "evaluations_unused_n": 42,
+    "id": "2",
+    "profile": "none",
+    "temperature_K": 293.6,
+    "zero_k_clip_nuclides": []
+   },
+   {
+    "background_estimated": [],
+    "channels_summarised": 32,
+    "covered_n": 32,
+    "evaluations_unused_n": 15,
+    "id": "3",
+    "profile": "none",
+    "temperature_K": 293.6,
+    "zero_k_clip_nuclides": []
+   },
+   {
+    "background_estimated": [],
+    "channels_summarised": 5,
+    "covered_n": 5,
+    "evaluations_unused_n": 42,
+    "id": "4",
+    "profile": "none",
+    "temperature_K": 293.6,
+    "zero_k_clip_nuclides": []
+   },
+   {
+    "background_estimated": [],
+    "channels_summarised": 11,
+    "covered_n": 11,
+    "evaluations_unused_n": 36,
+    "id": "5",
+    "profile": "none",
+    "temperature_K": 293.6,
+    "zero_k_clip_nuclides": []
+   },
+   {
+    "background_estimated": [],
+    "channels_summarised": 5,
+    "covered_n": 5,
+    "evaluations_unused_n": 42,
+    "id": "6",
+    "profile": "none",
+    "temperature_K": 293.6,
+    "zero_k_clip_nuclides": []
+   },
+   {
+    "background_estimated": [],
+    "channels_summarised": 32,
+    "covered_n": 32,
+    "evaluations_unused_n": 15,
+    "id": "7",
+    "profile": "none",
+    "temperature_K": 293.6,
+    "zero_k_clip_nuclides": []
+   },
+   {
+    "background_estimated": [],
+    "channels_summarised": 5,
+    "covered_n": 5,
+    "evaluations_unused_n": 42,
+    "id": "8",
+    "profile": "none",
+    "temperature_K": 293.6,
+    "zero_k_clip_nuclides": []
+   },
+   {
+    "background_estimated": [],
+    "channels_summarised": 11,
+    "covered_n": 11,
+    "evaluations_unused_n": 36,
+    "id": "9",
+    "profile": "none",
+    "temperature_K": 293.6,
+    "zero_k_clip_nuclides": []
+   },
+   {
+    "background_estimated": [],
+    "channels_summarised": 5,
+    "covered_n": 5,
+    "evaluations_unused_n": 42,
+    "id": "10",
+    "profile": "none",
+    "temperature_K": 293.6,
+    "zero_k_clip_nuclides": []
+   },
+   {
+    "background_estimated": [],
+    "channels_summarised": 32,
+    "covered_n": 32,
+    "evaluations_unused_n": 15,
+    "id": "11",
+    "profile": "none",
+    "temperature_K": 293.6,
+    "zero_k_clip_nuclides": []
+   },
+   {
+    "background_estimated": [],
+    "channels_summarised": 5,
+    "covered_n": 5,
+    "evaluations_unused_n": 42,
+    "id": "12",
+    "profile": "none",
+    "temperature_K": 293.6,
+    "zero_k_clip_nuclides": []
+   },
+   {
+    "background_estimated": [],
+    "channels_summarised": 11,
+    "covered_n": 11,
+    "evaluations_unused_n": 36,
+    "id": "13",
+    "profile": "none",
+    "temperature_K": 293.6,
+    "zero_k_clip_nuclides": []
+   },
+   {
+    "background_estimated": [],
+    "channels_summarised": 5,
+    "covered_n": 5,
+    "evaluations_unused_n": 42,
+    "id": "14",
+    "profile": "none",
+    "temperature_K": 293.6,
+    "zero_k_clip_nuclides": []
+   },
+   {
+    "background_estimated": [],
+    "channels_summarised": 32,
+    "covered_n": 32,
+    "evaluations_unused_n": 15,
+    "id": "15",
+    "profile": "none",
+    "temperature_K": 293.6,
+    "zero_k_clip_nuclides": []
+   },
+   {
+    "background_estimated": [],
+    "channels_summarised": 5,
+    "covered_n": 5,
+    "evaluations_unused_n": 42,
+    "id": "16",
+    "profile": "none",
+    "temperature_K": 293.6,
+    "zero_k_clip_nuclides": []
+   },
+   {
+    "background_estimated": [],
+    "channels_summarised": 11,
+    "covered_n": 11,
+    "evaluations_unused_n": 36,
+    "id": "17",
+    "profile": "none",
+    "temperature_K": 293.6,
+    "zero_k_clip_nuclides": []
+   },
+   {
+    "background_estimated": [],
+    "channels_summarised": 5,
+    "covered_n": 5,
+    "evaluations_unused_n": 42,
+    "id": "18",
+    "profile": "none",
+    "temperature_K": 293.6,
+    "zero_k_clip_nuclides": []
+   },
+   {
+    "background_estimated": [],
+    "channels_summarised": 32,
+    "covered_n": 32,
+    "evaluations_unused_n": 15,
+    "id": "19",
+    "profile": "none",
+    "temperature_K": 293.6,
+    "zero_k_clip_nuclides": []
+   },
+   {
+    "background_estimated": [],
+    "channels_summarised": 5,
+    "covered_n": 5,
+    "evaluations_unused_n": 42,
+    "id": "20",
+    "profile": "none",
+    "temperature_K": 293.6,
+    "zero_k_clip_nuclides": []
+   },
+   {
+    "background_estimated": [],
+    "channels_summarised": 11,
+    "covered_n": 11,
+    "evaluations_unused_n": 36,
+    "id": "21",
+    "profile": "none",
+    "temperature_K": 293.6,
+    "zero_k_clip_nuclides": []
+   },
+   {
+    "background_estimated": [],
+    "channels_summarised": 5,
+    "covered_n": 5,
+    "evaluations_unused_n": 42,
+    "id": "22",
+    "profile": "none",
+    "temperature_K": 293.6,
+    "zero_k_clip_nuclides": []
+   },
+   {
+    "background_estimated": [],
+    "channels_summarised": 32,
+    "covered_n": 32,
+    "evaluations_unused_n": 15,
+    "id": "23",
+    "profile": "none",
+    "temperature_K": 293.6,
+    "zero_k_clip_nuclides": []
+   },
+   {
+    "background_estimated": [],
+    "channels_summarised": 5,
+    "covered_n": 5,
+    "evaluations_unused_n": 42,
+    "id": "24",
+    "profile": "none",
+    "temperature_K": 293.6,
+    "zero_k_clip_nuclides": []
+   },
+   {
+    "background_estimated": [],
+    "channels_summarised": 11,
+    "covered_n": 11,
+    "evaluations_unused_n": 36,
+    "id": "25",
+    "profile": "none",
+    "temperature_K": 293.6,
+    "zero_k_clip_nuclides": []
+   },
+   {
+    "background_estimated": [],
+    "channels_summarised": 5,
+    "covered_n": 5,
+    "evaluations_unused_n": 42,
+    "id": "26",
+    "profile": "none",
+    "temperature_K": 293.6,
+    "zero_k_clip_nuclides": []
+   },
+   {
+    "background_estimated": [],
+    "channels_summarised": 32,
+    "covered_n": 32,
+    "evaluations_unused_n": 15,
+    "id": "27",
+    "profile": "none",
+    "temperature_K": 293.6,
+    "zero_k_clip_nuclides": []
+   },
+   {
+    "background_estimated": [],
+    "channels_summarised": 5,
+    "covered_n": 5,
+    "evaluations_unused_n": 42,
+    "id": "28",
+    "profile": "none",
+    "temperature_K": 293.6,
+    "zero_k_clip_nuclides": []
+   },
+   {
+    "background_estimated": [],
+    "channels_summarised": 11,
+    "covered_n": 11,
+    "evaluations_unused_n": 36,
+    "id": "29",
+    "profile": "none",
+    "temperature_K": 293.6,
+    "zero_k_clip_nuclides": []
+   },
+   {
+    "background_estimated": [],
+    "channels_summarised": 5,
+    "covered_n": 5,
+    "evaluations_unused_n": 42,
+    "id": "30",
+    "profile": "none",
+    "temperature_K": 293.6,
+    "zero_k_clip_nuclides": []
+   },
+   {
+    "background_estimated": [],
+    "channels_summarised": 32,
+    "covered_n": 32,
+    "evaluations_unused_n": 15,
+    "id": "31",
+    "profile": "none",
+    "temperature_K": 293.6,
+    "zero_k_clip_nuclides": []
+   }
+  ],
+  "actinv_plain": null
+ },
+ "protocol": "ACTINV-P191",
+ "verdict": "P191-PASS (pending G4, CI on the evidence commit)"
+}
