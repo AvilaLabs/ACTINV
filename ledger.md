@@ -6275,3 +6275,13 @@ swap, 200% CPU), each arm in its own 10 GiB scope, with the binary built there (
 - **Time and memory per arm (steps 1, 2, 3; peak):** `openmc_direct` 4,169 s, 37 s, 18 s; 8.3 GiB.
   `openmc_flux` 196 s, 38 s, 18 s; 10.0 GiB, at its cap but finished. `actinv_mixture` 21 s, 70 s, 10 s; 1.7 GiB.
   `actinv_plain` 20 s, 2 s, 11 s; 1.3 GiB. Mixture self-shielding's 70 s step 2 is its pointwise planning.
+
+## Entry 362 — P191 verdict: P191-PASS; ACTINV's R2S agrees with OpenMC's direct-tally R2S on P181's model (2026-11-05)
+
+G4: CI green on the evidence commit `e5c3201` (controls, fns-iron, fusion-isotope). With G0–G2 (ledger 361),
+**P191-PASS**.
+- **Allowed sentences** are the verdict's two (`results/p191_verdict.json`), quoted verbatim and together. They
+  describe one model, one mesh size and one run per arm, and make no claim against measurement.
+- **Shielding.** SHIELDING NEUTRAL: on this model, at P181's 709 groups, mixture self-shielding moved ACTINV's dose
+  by less than its uncertainty. The adapter's default (ledger 358) is unchanged.
+- **Clean-up.** The arms' work directories under `target/p191-work-*` are deleted.
