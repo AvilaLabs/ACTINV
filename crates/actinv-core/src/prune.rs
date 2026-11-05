@@ -10,7 +10,7 @@
 use crate::quantity::AtomsPerGram;
 use crate::spec::PhysicalStep;
 use std::cell::RefCell;
-use std::collections::{HashMap, VecDeque};
+use std::collections::VecDeque;
 
 /// Largest number of sweeps that tighten one cyclic component.
 const MAX_SWEEPS: usize = 1000;
@@ -333,16 +333,19 @@ fn decay_loss(n: usize, decay: &[(usize, usize, f64)]) -> Vec<f64> {
 
 /// Merges duplicate triplets per edge and attaches each edge's largest rate and loss share.
 fn bound_edges(problem: &PruneProblem<'_>, decay_loss: &[f64], phi_max: f64) -> Vec<BoundEdge> {
+    let n = problem.n;
     let mut edges = Vec::new();
     // A stable sort keeps each edge's triplets in their input order, so every sum adds the same values in
     // the same order as accumulating them one by one.
     let off_diagonal_sums = |triplets: &[(usize, usize, f64)]| -> Vec<((usize, usize), f64)> {
-        let mut keyed: Vec<((usize, usize), f64)> = triplets
+        let keyed: Vec<((usize, usize), f64)> = triplets
             .iter()
             .filter(|&&(i, j, v)| i != j && v > 0.0)
             .map(|&(i, j, v)| ((j, i), v))
             .collect();
-        keyed.sort_by_key(|(key, _)| *key);
+        // Sorted by the minor index, then stably by the major one: the order of a stable sort by (j, i).
+        let keyed = stable_counting_sort(&keyed, n, |((_, i), _)| *i);
+        let keyed = stable_counting_sort(&keyed, n, |((j, _), _)| *j);
         let mut sums: Vec<((usize, usize), f64)> = Vec::new();
         for (key, v) in keyed {
             match sums.last_mut() {
@@ -369,15 +372,12 @@ fn bound_edges(problem: &PruneProblem<'_>, decay_loss: &[f64], phi_max: f64) -> 
     // Feed and removal: largest per-step rate. A feed source has no loss term, so its share is unbounded;
     // an atom is removed at most once, so a removal edge takes at most all of its parent's losses.
     for (steps, share) in [(problem.feed, f64::INFINITY), (problem.removal, 1.0)] {
-        let mut largest: HashMap<(usize, usize), f64> = HashMap::new();
+        let mut largest: Vec<((usize, usize), f64)> = Vec::new();
         for step in steps {
-            for ((j, i), rate) in off_diagonal_sums(step) {
-                let entry = largest.entry((j, i)).or_default();
-                *entry = entry.max(rate);
-            }
+            largest = merge_largest(largest, off_diagonal_sums(step), 0.0, |old, rate| {
+                old.max(rate)
+            });
         }
-        let mut largest: Vec<_> = largest.into_iter().collect();
-        largest.sort_by_key(|(key, _)| *key);
         for ((j, i), rate) in largest {
             edges.push(BoundEdge {
                 from: j,
@@ -390,7 +390,7 @@ fn bound_edges(problem: &PruneProblem<'_>, decay_loss: &[f64], phi_max: f64) -> 
     // Reactions: per spectrum, rate at the largest multiplier and the share at that multiplier (the share
     // σφ/(λ + Σφ) rises with φ); then the largest over spectra.
     if phi_max > 0.0 {
-        let mut largest: HashMap<(usize, usize), (f64, f64)> = HashMap::new();
+        let mut largest: Vec<((usize, usize), (f64, f64))> = Vec::new();
         for spectrum in problem.spectra {
             let mut removal = vec![0.0f64; problem.n];
             for &(i, j, v) in spectrum {
@@ -398,21 +398,23 @@ fn bound_edges(problem: &PruneProblem<'_>, decay_loss: &[f64], phi_max: f64) -> 
                     removal[j] -= v;
                 }
             }
-            for ((j, i), sigma) in off_diagonal_sums(spectrum) {
-                let rate = sigma * phi_max;
-                let loss = decay_loss[j] + removal[j] * phi_max;
-                let share = if loss > 0.0 {
-                    rate / loss
-                } else {
-                    f64::INFINITY
-                };
-                let entry = largest.entry((j, i)).or_insert((0.0, 0.0));
-                entry.0 = entry.0.max(rate);
-                entry.1 = entry.1.max(share);
-            }
+            let bounds: Vec<((usize, usize), (f64, f64))> = off_diagonal_sums(spectrum)
+                .into_iter()
+                .map(|((j, i), sigma)| {
+                    let rate = sigma * phi_max;
+                    let loss = decay_loss[j] + removal[j] * phi_max;
+                    let share = if loss > 0.0 {
+                        rate / loss
+                    } else {
+                        f64::INFINITY
+                    };
+                    ((j, i), (rate, share))
+                })
+                .collect();
+            largest = merge_largest(largest, bounds, (0.0, 0.0), |old, (rate, share)| {
+                (old.0.max(rate), old.1.max(share))
+            });
         }
-        let mut largest: Vec<_> = largest.into_iter().collect();
-        largest.sort_by_key(|(key, _)| *key);
         for ((j, i), (rate, share)) in largest {
             edges.push(BoundEdge {
                 from: j,
@@ -424,6 +426,55 @@ fn bound_edges(problem: &PruneProblem<'_>, decay_loss: &[f64], phi_max: f64) -> 
     }
     edges.retain(|e| e.rate > 0.0);
     edges
+}
+
+/// `items` stably sorted by `key`, whose values lie below `buckets`.
+fn stable_counting_sort<T: Copy>(items: &[T], buckets: usize, key: impl Fn(&T) -> usize) -> Vec<T> {
+    let mut next = vec![0usize; buckets + 1];
+    for item in items {
+        next[key(item) + 1] += 1;
+    }
+    for bucket in 0..buckets {
+        next[bucket + 1] += next[bucket];
+    }
+    let mut sorted = items.to_vec();
+    for item in items {
+        let slot = &mut next[key(item)];
+        sorted[*slot] = *item;
+        *slot += 1;
+    }
+    sorted
+}
+
+/// Two key-sorted lists merged into one, `combine` folding each of `new`'s values into the existing one
+/// (`initial` for a key not yet present): a running per-edge maximum, in key order.
+fn merge_largest<V: Copy>(
+    old: Vec<((usize, usize), V)>,
+    new: Vec<((usize, usize), V)>,
+    initial: V,
+    combine: impl Fn(V, V) -> V,
+) -> Vec<((usize, usize), V)> {
+    let mut merged = Vec::with_capacity(old.len().max(new.len()));
+    let mut old = old.into_iter().peekable();
+    for (key, value) in new {
+        while let Some(&(old_key, old_value)) = old.peek() {
+            if old_key >= key {
+                break;
+            }
+            merged.push((old_key, old_value));
+            old.next();
+        }
+        let base = match old.peek() {
+            Some(&(old_key, old_value)) if old_key == key => {
+                old.next();
+                old_value
+            }
+            _ => initial,
+        };
+        merged.push((key, combine(base, value)));
+    }
+    merged.extend(old);
+    merged
 }
 
 /// States reachable from a source along edges of positive rate (the exact `reach` set).
@@ -495,9 +546,11 @@ fn propagate(
     let mut pop = vec![0.0f64; n];
     let mut rate = vec![0.0f64; n];
     let mut component_of = vec![usize::MAX; n];
+    let mut position_in_component = vec![usize::MAX; n];
     for (c, members) in components.iter().enumerate() {
-        for &i in members {
+        for (m, &i) in members.iter().enumerate() {
             component_of[i] = c;
+            position_in_component[i] = m;
         }
     }
     let mut unbounded = Vec::new();
@@ -527,8 +580,6 @@ fn propagate(
             }
             continue;
         }
-        let local: HashMap<usize, usize> =
-            members.iter().enumerate().map(|(m, &i)| (i, m)).collect();
         let internal: Vec<Vec<(usize, BoundEdge)>> = members
             .iter()
             .map(|&i| {
@@ -536,7 +587,7 @@ fn propagate(
                     .iter()
                     .map(|&k| edges[k])
                     .filter(|e| component_of[e.from] == c)
-                    .map(|e| (local[&e.from], e))
+                    .map(|e| (position_in_component[e.from], e))
                     .collect()
             })
             .collect();

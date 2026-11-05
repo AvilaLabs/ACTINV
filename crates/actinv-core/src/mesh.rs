@@ -1121,6 +1121,32 @@ fn lean_cell_text(
     serde_json::to_string(&map).map_err(|error| error.to_string())
 }
 
+/// Empty each step's photon `lines` and `by_nuclide` lists unless a path selects them, so the lean
+/// route does not serialize thousands of entries only to prune them away. `prune_object` keeps
+/// just the selected keys, so the cell text is unchanged.
+fn drop_unselected_photon_lists(result: &mut RunResult, step_paths: &[Vec<&str>]) {
+    let selected: Vec<&[&str]> = step_paths
+        .iter()
+        .filter(|path| path.first() == Some(&"photon_source"))
+        .map(|path| &path[1..])
+        .collect();
+    if selected.iter().any(|tail| tail.is_empty()) {
+        return;
+    }
+    let keeps = |key: &str| selected.iter().any(|tail| tail.first() == Some(&key));
+    let (lines, by_nuclide) = (keeps("lines"), keeps("by_nuclide"));
+    for step in &mut result.steps {
+        if let Some(source) = step.photon_source.as_mut() {
+            if !lines {
+                source.lines = Vec::new();
+            }
+            if !by_nuclide {
+                source.by_nuclide = Vec::new();
+            }
+        }
+    }
+}
+
 fn solve_result(
     mesh_spec: &MeshSpec,
     prepared: &PreparedRun,
@@ -1131,7 +1157,7 @@ fn solve_result(
 ) -> Result<(String, usize), String> {
     spec.validate()
         .map_err(|error| format!("cell '{cell_id}': {error}"))?;
-    let result = prepared
+    let mut result = prepared
         .run_with_collapse_and_flux_origin(spec, "mesh", cell, flux_origin)
         .map_err(|error| format!("cell '{cell_id}': {error}"))?;
     let step_paths = mesh_spec
@@ -1141,6 +1167,7 @@ fn solve_result(
         .unwrap_or_default();
     if !step_paths.is_empty() {
         // P90 lean route: no whole-`RunResult` `Value` is ever built.
+        drop_unselected_photon_lists(&mut result, &step_paths);
         let pruned = result.pruned_states;
         let top_fields: Vec<&str> = mesh_spec
             .cell_result_fields

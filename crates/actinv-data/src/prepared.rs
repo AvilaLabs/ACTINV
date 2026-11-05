@@ -111,10 +111,11 @@ impl PreparedLibrary {
                 }
             }
             numerators.fill(0.0);
-            let uniform = union_low < union_high
-                && (0..cells).all(|cell| lows[cell] == union_low && highs[cell] == union_high);
-            if lanes && uniform {
+            if lanes && union_low < union_high {
                 // Every cell adds every group of the union, in increasing order, into its own lane.
+                // Inside the union but outside a cell's own window the cell's flux is ±0 (the union
+                // lies within the span, so those groups are outside the cell's nonzero flux), and
+                // adding sigma * ±0 = ±0 to a sum that starts at +0.0 never changes its bits.
                 let mut accumulators = [0.0f64; LANES];
                 let stored = &self.values[span.value_offset + (union_low - span.first_group)
                     ..span.value_offset + (union_high - span.first_group)];
@@ -2371,7 +2372,7 @@ mod tests {
             &[0.0, 0.0, 0.0, 9.0, 1.0e-30],
             &[3.0e14, 0.0, 1.0e-9, 0.0, 0.0],
         ];
-        // Every flux positive: all cells share each row's window (the fixed-lane path).
+        // Every flux positive: all cells share each row's window.
         let uniform: [&[f64]; 3] = [
             &[0.1, 0.2, 0.3, 0.4, 0.5],
             &[1.0, 2.0, 3.0, 4.0, 5.0],

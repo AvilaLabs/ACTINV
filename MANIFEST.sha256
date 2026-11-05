@@ -11,7 +11,7 @@ a5fdde37c08ded4e5cb97be9c642ae0d170af19f6b1b826792a31f4d5acbcefb  ./.github/work
 97e9bc323f546040e0f2d2bc3a227ae0ef41b845c576e5f71429317a3d3940b3  ./.github/workflows/web.yml
 79e13422a5e89cdf3e37984d7faa609cdd0bd1eaf8972c12dbff9fe175bf720e  ./.gitignore
 8ccd7b7b17eaeef02fa8ebc3bfd8d2e910657af0ebe39fcbf742e1f2bc7ded37  ./AGENTS.md
-d36b2fdd94c92b429e0f7f0a4fbb1b73e2313f23b9d991ce20265bde006ff9b9  ./CHANGELOG.md
+8125acc3d5852f53448da81a6c182e89ff1c1903d85a8029c339d94a0b0c6003  ./CHANGELOG.md
 fcf4c9f02aef7a3e784a2927d571f78b52e98ddc644748d4b57235e424e8ac89  ./COMPETITIVE_BENCHMARK.md
 06debfb88cbe4179817b24708768586cc46b4ef0a9c94a4d6de3007a2f1fe8a1  ./CONTRIBUTING.md
 f61be1f177bbb8c861ef448b87446721800189ad690ce03e029a9be3ec8b81bd  ./Cargo.lock
@@ -1098,13 +1098,13 @@ a455711592085c79e35beb4100cde82b1838919f03532eb326cd1ed3a7582763  ./crates/actin
 ac4d52d54cca32abee4db1968e285a02e99441848a245fdb3d917af2fc63b88a  ./crates/actinv-core/src/flux.rs
 f358759dc25c7bb42d81006074a2f0b8ef679c0623725a3eef85cbe1bccbf6d4  ./crates/actinv-core/src/gas.rs
 9fd1eb671171f046462b1c76f428b6197d5057dd80203f3b4d92ae906c454cbe  ./crates/actinv-core/src/lib.rs
-edee2503df3afea6679d54871c6da8ffcf156f3439cfe518636e14ae182d0bc0  ./crates/actinv-core/src/mesh.rs
+ff1eb037cf82a523d76eaa8d918619909dd8e00184c3e9746dbbe6d344c28b1c  ./crates/actinv-core/src/mesh.rs
 8e2cc0d64d78207d86626f25fe560a6e8fd907bbe29b5ffeb262ad61383c1c1f  ./crates/actinv-core/src/overrides.rs
 2d195a4d3ce8800d437c4b971a97b01b01f29198085a5005007fc0b3d719e8ab  ./crates/actinv-core/src/pathways.rs
 2edf88dc595f247a8fa844025a2f3c32154fd60a370a95e396472177102d551e  ./crates/actinv-core/src/photon.rs
 7457c7d29ec7cb786ff6c28b037f2b0127e03cbbf02ff6a8ec89e4bcd8bbfafb  ./crates/actinv-core/src/power.rs
 e417c48a6a6b694a3c6ead7770f0f8926db489f73ed07065ce81755c135278da  ./crates/actinv-core/src/presets.rs
-4ed862e89d20cdd641c6d013d4569a69fad8633f1d550ba0d85410debb138ce9  ./crates/actinv-core/src/prune.rs
+92b2fdc3086f8e18792578364e49db93b525cb7204677652f31a9aa3f1a25439  ./crates/actinv-core/src/prune.rs
 ff87d2bcbd3efef668bc9563240e1bcc27072e466d39659dab1a2525950e46d9  ./crates/actinv-core/src/quantity.rs
 18f1054952186e461d2dbab5bfb2ee363ef8bb3af2ae8b9efb34b4a161058bb7  ./crates/actinv-core/src/r2s.rs
 225fe06bbd764eb6039e5fa0ea6a00413477375e93f195a23d4c0beb9ced9a0c  ./crates/actinv-core/src/radiological.rs
@@ -1166,7 +1166,7 @@ f3dabe8989913fc77f599a35d474c7c2a9a22ae06e829047721d22fc372f646e  ./crates/actin
 24029362a97e0ff6426f660e71902464cd22cf5f2490f78dad7c1368d22d18e5  ./crates/actinv-data/src/lib.rs
 86403611420fab67dec608fd6233e8fc128ed677d9bc7915c3a79e2c43f8070c  ./crates/actinv-data/src/library.rs
 7f0dd3b68ca5f18d8288a37bc201c5e53c8e17504eeb5878aafebb06b1018c58  ./crates/actinv-data/src/normalize.rs
-43bc4ea5590a4069fb5b503b798222a661a9c14718727bfddd77c55366414762  ./crates/actinv-data/src/prepared.rs
+1189359b30c0b44a0f2def76770435efdba4c8f5ff85f223ad8f1c1d539cebfb  ./crates/actinv-data/src/prepared.rs
 a5257757704e02fb1b7a657f4807ca4779d460a0dc486380ccfdbcfb2983ea36  ./crates/actinv-data/src/processing.rs
 e50ad46f3275a0f98baee2a9203fbccf46034f6c65618cad85e9ccda21d2aa2a  ./crates/actinv-data/src/resonance.rs
 84b5a2efa4156eca9e1774502ae0417f3c8f117f62401a269ca94785e9148955  ./crates/actinv-data/src/shielding.rs
@@ -1482,7 +1482,7 @@ f6723eefeb6f5cacef2e87a83cd53b078dd5ca2777b7400f48f6b49ddc7a07b4  ./examples/was
 cfd86c2c5ac15d76ec2358c6bd196a6362b46bcc889160c06439975dc5ae8f3a  ./interchange/INTERCHANGE.md
 057dd636e1814f93c0869d4839887ff28a361f5c845f24153c4e93cbee1918d1  ./interchange/actinv_core_adapter.py
 4c42c2d68d375681621d6d3828b6daab4e2fdfc37f23cacbfc3b5a1c3fd3beec  ./interchange/run_case.py
-3e41c2c838798574031b6e9bc837a1ddeb6c521caf3086c04c07c4080d2dabfa  ./ledger.md
+3ce858c8a735a767011901276bf8befad18c284a6f482fc00b3439d83aea2517  ./ledger.md
 588e9f4f4ff74df627a1a15306214db678531d7334f2f6e95a1603eabd1f1c55  ./packaging/actinv.ico
 9897482011f194d9495fc80965177f0632ae4166917a7f240d80c0fc3c8fb83e  ./packaging/actinv.png
 be93fd3e3bf295ec7e2bf23765492499f4e45f7aa45766a5143d565c16712adc  ./packaging/conda-forge/SUBMIT.md

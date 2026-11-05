@@ -6223,3 +6223,25 @@ G3: CI green on the evidence commit `93ce42b` (controls, fns-iron, fusion-isotop
   P190's slowest region (model I, 34 tables) took 70.2 s with the scored binary and 4.9 s with the new one, with the
   same result file but for its timing field. That comparison is unregistered.
 - **Clean-up.** The pointwise tables under `target/p190-work-*` are deleted.
+
+## Entry 359 — P189 withdrawn by the owner, no verdict; `actinv mesh` 1.7× faster, byte for byte (2026-11-05)
+
+- **The run.** The scored `run` step started 2026-11-04 19:26:56 UTC in the bounded scope (6 GiB, no swap, 400% CPU).
+  An earlier attempt was killed by the workstation's low-memory process reaper, not by the run's limits; its partial
+  output was discarded unread and the step restarted from the same inputs. After 18.7 h the output held 506,049 of the
+  1,000,000 cell records, about 7.5 cells/s against the 15 cells/s estimated at registration. At that rate the
+  harness's 24 h limit would have stopped the run near 650,000 cells, so G2 could not pass. The coordinator stopped
+  the solver at 2026-11-05 14:13:53 UTC; the harness recorded the attempt (signal 15, peak scope memory 2.81 GB).
+- **Withdrawn.** The owner declined a repair round that would take days. P189 is withdrawn without a verdict and
+  claims nothing; no cell result was read, only line counts and the heartbeat. The flux file, mesh spec and output
+  are deleted; the pinned coarse tally and the attempt record stay in the worktree.
+- **Where the time went** (one thread, a 501-cell slice of P189's mesh, ACTINV's stage timer and temporary
+  timers, unregistered): about 300 ms per cell. Rate pruning 98 ms (its edge sort 25 ms; its bound sweeps over
+  a 2,947-state cycle 56 ms), the batched flux collapse 59 ms, writing the two selected output fields 67 ms, the
+  decay solve 36 ms, reaction rates 16 ms. Four threads ran 2.6× faster than one.
+- **Speedups, byte for byte.** The lean cell output empties each step's photon `lines` and `by_nuclide` before
+  serializing when no selected path reads them; the batched collapse takes its fixed-lane path for every row, since
+  outside a cell's flux window its flux is ±0 and adding ±0 to a sum that starts at +0.0 changes no bit; rate pruning
+  sorts its edges with two stable counting passes and merges spectra in key order instead of through hash maps. On a
+  2,005-cell slice (every 499th cell, 291 of them not steel), four threads: 221 s before, 129 s after, with the same
+  cell records and footer but for its timing fields. Unregistered comparison.

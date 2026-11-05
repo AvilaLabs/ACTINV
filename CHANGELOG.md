@@ -17,6 +17,10 @@
 
 **Changed**
 
+- `actinv mesh` is about 1.7× faster on a P189-style mesh (TENDL-2025, rate pruning, photon groups as the cell
+  output): the lean cell output no longer serializes photon lines and per-nuclide tables it then drops, the batched
+  flux collapse uses its fixed-lane path for every library row, and rate pruning sorts its edges by counting. Results
+  are unchanged, byte for byte.
 - MF=33 uncertainty bands now cover state-resolved (MF=10) products. They take their reaction's covariance, fully
   correlated with the reaction total, where before they were left out of the band. This covers 43% of the TENDL-2025
   library's product rows, among them Co-58 from Ni-58(n,p), Al-26 from Al-27(n,2n), W-185, Ta-180 and Nb-92m. Bands
