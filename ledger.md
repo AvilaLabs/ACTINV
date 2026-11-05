@@ -6245,3 +6245,21 @@ G3: CI green on the evidence commit `93ce42b` (controls, fns-iron, fusion-isotop
   sorts its edges with two stable counting passes and merges spectra in key order instead of through hash maps. On a
   2,005-cell slice (every 499th cell, 291 of them not steel), four threads: 221 s before, 129 s after, with the same
   cell records and footer but for its timing fields. Unregistered comparison.
+
+## Entry 360 — P191 registered: ACTINV's R2S against OpenMC's own R2S with direct reaction-rate tallies on P181's model (2026-11-05)
+
+`protocols/ACTINV-P191_PROTOCOL.md`, `controls/p191_harness.py` and `controls/check_p191.py` are sealed in
+`protocols/protocol_hash.txt`.
+- **Question.** At P181's 8 mesh elements, how close is ACTINV's shutdown dose, with and without mixture
+  self-shielding, to OpenMC 0.15.3's R2S in its default direct-tally mode on the same ENDF/B-VIII.1 cross sections,
+  and what does each take? Four arms: `openmc_direct`, `actinv_mixture`, `actinv_plain`, and `openmc_flux` for context.
+- **Harness.** P181's harness is imported unchanged; P191's own harness caps its wait for free memory at 2 minutes
+  instead of 30. A first rehearsal spent 30 of `openmc_direct`'s 35 minutes in that wait before running anyway, and a
+  second was stopped when the workstation ran low on memory; it now has 16 GiB of swap, which the arms' scopes
+  may not use.
+- **Rehearsal.** All four arms at 200 particles with the binary built from df1d494's sources were read for exit
+  statuses, gate results, whole-arm wall times and memory peaks only. Every arm exited 0 within 8 minutes;
+  `openmc_direct` peaked at 7.2 GB. G2 held; G0 and G1 failed as designed (not sealed, a rehearsal). No dose, ratio
+  or photon source was read, and the outputs are deleted.
+- **Scored run.** The binary is built in the bounded scope from a clean checkout of this commit and must match the
+  checker's pin. The arms run one at a time. G4 is CI on the evidence commit. One repair round is allowed.
