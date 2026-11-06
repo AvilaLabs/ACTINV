@@ -1,0 +1,188 @@
+{
+ "allowed_sentences": [
+  "On 365 of the 365 measured effective cross sections in UKAEA's integro-differential validation table distributed by the IAEA's CoNDERC (FNG, TU Dresden and JAEA-FNS fusion spectra), ACTINV with its default TENDL-2025 library had a median |ln(C/E)| of 0.160 against 0.138 for FISPACT-II with TENDL-2017 as published in the same table; FISPACT-II's values were closer to the measurements (paired Wilcoxon signed-rank test, two-sided p = 1.8e-07).",
+  "Within twice the experimental uncertainty were 55% of ACTINV's values and 64% of FISPACT-II's; on the 181 FNG and TU Dresden values alone, FISPACT-II's values were closer to the measurements (p = 7.1e-05).",
+  "The calculated values are spectrum-averaged cross sections, so the comparison measures the nuclear data each code used (TENDL-2025 against TENDL-2017) more than the codes themselves."
+ ],
+ "decision": {
+  "all": {
+   "actinv": {
+    "geometric_mean_CE": 1.0022985748076296,
+    "median_abs_ln_CE": 0.1604861205300867,
+    "n": 365,
+    "rms_z": 9.57524436564566,
+    "within_2u_fraction": 0.547945205479452
+   },
+   "fispact": {
+    "geometric_mean_CE": 1.0185141527447188,
+    "median_abs_ln_CE": 0.13774192516086625,
+    "n": 365,
+    "rms_z": 8.70006506668435,
+    "within_2u_fraction": 0.6383561643835617
+   },
+   "label": "FISPACT-II CLOSER",
+   "median_paired_difference": 0.00820852226754995,
+   "wilcoxon": {
+    "W_plus": 43931.0,
+    "n": 365,
+    "p": 1.770493783433368e-07,
+    "z": 5.2219493734606
+   }
+  },
+  "by_facility": {
+   "FNG": {
+    "actinv": {
+     "geometric_mean_CE": 0.9052842874550645,
+     "median_abs_ln_CE": 0.17258981989602962,
+     "n": 154,
+     "rms_z": 12.083299691994304,
+     "within_2u_fraction": 0.551948051948052
+    },
+    "fispact": {
+     "geometric_mean_CE": 0.918267827863474,
+     "median_abs_ln_CE": 0.14429239237651947,
+     "n": 154,
+     "rms_z": 11.950118877233193,
+     "within_2u_fraction": 0.6298701298701299
+    },
+    "label": "FISPACT-II CLOSER",
+    "median_paired_difference": 0.011439487373879245,
+    "wilcoxon": {
+     "W_plus": 8090.0,
+     "n": 154,
+     "p": 0.00012883792157542616,
+     "z": 3.828669428936452
+    }
+   },
+   "JAEA-FNS": {
+    "actinv": {
+     "geometric_mean_CE": 1.0813132227424054,
+     "median_abs_ln_CE": 0.1602539730300681,
+     "n": 184,
+     "rms_z": 7.562285602041203,
+     "within_2u_fraction": 0.5271739130434783
+    },
+    "fispact": {
+     "geometric_mean_CE": 1.1112734337392691,
+     "median_abs_ln_CE": 0.1255027083645703,
+     "n": 184,
+     "rms_z": 5.4779980871852745,
+     "within_2u_fraction": 0.6304347826086957
+    },
+    "label": "FISPACT-II CLOSER",
+    "median_paired_difference": 0.007900994110698313,
+    "wilcoxon": {
+     "W_plus": 10957.0,
+     "n": 184,
+     "p": 0.0007184185362674135,
+     "z": 3.382451915364185
+    }
+   },
+   "TUD": {
+    "actinv": {
+     "geometric_mean_CE": 1.0680506876856581,
+     "median_abs_ln_CE": 0.13114247728635814,
+     "n": 27,
+     "rms_z": 4.116677327293504,
+     "within_2u_fraction": 0.6666666666666666
+    },
+    "fispact": {
+     "geometric_mean_CE": 1.0154382973799272,
+     "median_abs_ln_CE": 0.1389254722301929,
+     "n": 27,
+     "rms_z": 2.051950277238496,
+     "within_2u_fraction": 0.7407407407407407
+    },
+    "label": "NO SIGNIFICANT DIFFERENCE",
+    "median_paired_difference": 0.00286408243853703,
+    "wilcoxon": {
+     "W_plus": 246.0,
+     "n": 27,
+     "p": 0.17086648171401578,
+     "z": 1.3694249432972496
+    }
+   }
+  },
+  "equal_energy_sensitivity": {
+   "actinv": {
+    "geometric_mean_CE": 0.9970796628679705,
+    "median_abs_ln_CE": 0.17041465683427312,
+    "n": 365,
+    "rms_z": 9.544655762358554,
+    "within_2u_fraction": 0.5424657534246575
+   },
+   "fispact": {
+    "geometric_mean_CE": 1.0185141527447188,
+    "median_abs_ln_CE": 0.13774192516086625,
+    "n": 365,
+    "rms_z": 8.70006506668435,
+    "within_2u_fraction": 0.6383561643835617
+   },
+   "label": "FISPACT-II CLOSER",
+   "median_paired_difference": 0.013781987139781928,
+   "wilcoxon": {
+    "W_plus": 44487.0,
+    "n": 365,
+    "p": 3.850285713184885e-08,
+    "z": 5.497584618312177
+   }
+  },
+  "excluded": {
+   "label_inconsistent": 0,
+   "label_unparsed": 0,
+   "nonpositive_calculated_value": 0,
+   "nonpositive_experimental_value": 0,
+   "reaction_unavailable": 0,
+   "state_unavailable": 0,
+   "target_unavailable": 0
+  },
+  "fng_tud": {
+   "actinv": {
+    "geometric_mean_CE": 0.927890025763924,
+    "median_abs_ln_CE": 0.1604861205300867,
+    "n": 181,
+    "rms_z": 11.258517736217993,
+    "within_2u_fraction": 0.569060773480663
+   },
+   "fispact": {
+    "geometric_mean_CE": 0.932149974308561,
+    "median_abs_ln_CE": 0.1396903117028741,
+    "n": 181,
+    "rms_z": 11.051288277720412,
+    "within_2u_fraction": 0.6464088397790055
+   },
+   "label": "FISPACT-II CLOSER",
+   "median_paired_difference": 0.009656901887407171,
+   "wilcoxon": {
+    "W_plus": 11041.0,
+    "n": 181,
+    "p": 7.05134375399477e-05,
+    "z": 3.9745466610240627
+   }
+  },
+  "rows_scored": 365,
+  "rows_total": 365
+ },
+ "gates": {
+  "G0": {
+   "pass": true,
+   "problems": []
+  },
+  "G1": {
+   "pass": true,
+   "problems": []
+  },
+  "G2": {
+   "pass": true,
+   "problems": []
+  },
+  "G4": {
+   "pass": null,
+   "problems": [
+    "CI on the evidence commit, checked after the push"
+   ]
+  }
+ },
+ "protocol": "ACTINV-P192",
+ "verdict": "P192-PASS (pending G4, CI on the evidence commit)"
+}

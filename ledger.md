@@ -6299,3 +6299,16 @@ G4: CI green on the evidence commit `e5c3201` (controls, fns-iron, fusion-isotop
   ACTINV value. Rehearsals were read for exit status, gates and counts only; their output is deleted.
 - **Scored run.** The binary is built in the bounded scope from a clean checkout of this commit and must match the
   checker's pin. G4 is CI on the evidence commit. One repair round is allowed.
+
+## Entry 364 — P192 evidence: G0–G2 pass on 1f1ea1c; FISPACT-II CLOSER; P192-PASS pending G4 (2026-11-06)
+
+`controls/p192.py run` and `controls/check_p192.py` on the registration commit `1f1ea1c`, inside the bounded scope
+(6 GiB, no swap, 200% CPU), with the binary built there (SHA-256 `fa21795b…`, the pin). Files:
+`results/p192_record.json` and `results/p192_verdict.json`.
+- **G0–G2 pass.** All 365 rows scored (240 by a reaction's total row, 125 by a product-state row); the 24 rows
+  re-collapsed by `actinv inspect xs` agree within 1e-9.
+- **G3, the measurement.** Median |ln C/E|, ACTINV (TENDL-2025) against FISPACT-II (TENDL-2017, as published):
+  all 365 rows 0.160 against 0.138, **FISPACT-II CLOSER** (p = 1.8e-7); FNG 0.173 against 0.144 (p = 1.3e-4);
+  JAEA-FNS 0.160 against 0.126 (p = 7.2e-4); TU Dresden 0.131 against 0.139, no significant difference (p = 0.17).
+  Within 2u: 55% against 64%. Geometric-mean C/E 1.002 against 1.019. Flat-in-energy sensitivity: 0.170, FISPACT-II
+  CLOSER.
