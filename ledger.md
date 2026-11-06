@@ -6325,3 +6325,18 @@ G4: CI green on the evidence commit `835fced` (controls, fns-iron, fusion-isotop
   rows where ACTINV is furthest behind are mostly product-state branchings and minor channels.
 - **Next.** A per-reaction library choice (accuracy program stage 3) is fitted on data other than the set that
   scores it; P192's rows have been seen and can only serve as the fitting set.
+
+## Entry 366 — P193 registered: a per-reaction choice of evaluation, scored leave-one-facility-out on UKAEA's validation table (2026-11-06)
+
+`protocols/ACTINV-P193_PROTOCOL.md`, `controls/p193.py` and `controls/check_p193.py` are sealed in
+`protocols/protocol_hash.txt`.
+- **Question.** If each reaction's evaluation is chosen among TENDL-2025, TENDL-2023, TENDL-2017 and ENDF/B-VIII.1 by
+  a fixed rule fitted on two of the three facilities in P192's table, how close is ACTINV to the measurements at the
+  third, against TENDL-2025 alone and against FISPACT-II's published values?
+- **Why leave-one-facility-out.** No unseen measured cross-section set exists on the workstation (P17, P167 and P172
+  were all scored before). The choice never sees the facility it is scored on. EAF-2010 is not a candidate: it was
+  adjusted to UKAEA's integral data.
+- **Seen.** All of P192, and nine reactions' raw TENDL-2025 values at 14.1 MeV. No other library's value for any
+  row. One rehearsal was read for exit status, gates and counts only; its output is deleted.
+- **Scored run.** P192's binary pin (no Rust change), built from a clean checkout of this commit. G4 is CI on the
+  evidence commit. One repair round is allowed.
