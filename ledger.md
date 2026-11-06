@@ -6285,3 +6285,17 @@ G4: CI green on the evidence commit `e5c3201` (controls, fns-iron, fusion-isotop
 - **Shielding.** SHIELDING NEUTRAL: on this model, at P181's 709 groups, mixture self-shielding moved ACTINV's dose
   by less than its uncertainty. The adapter's default (ledger 358) is unchanged.
 - **Clean-up.** The arms' work directories under `target/p191-work-*` are deleted.
+
+## Entry 363 — P192 registered: ACTINV on FISPACT-II's integro-differential validation table (2026-11-06)
+
+`protocols/ACTINV-P192_PROTOCOL.md`, `controls/p192.py` and `controls/check_p192.py` are sealed in
+`protocols/protocol_hash.txt`.
+- **Question.** On the 365 measured effective cross sections of UKAEA's integro-differential validation table
+  (CoNDERC `RR_table_oct2020.txt`: 23 FNG, TU Dresden and JAEA-FNS spectra), how close is ACTINV with its default
+  TENDL-2025 library to the measurements, against FISPACT-II's published TENDL-2017 values on the same rows?
+- **Inputs.** UKAEA gave permission to use the extracts on 2026-11-06. The table and the 23 spectra were fetched
+  from the IAEA's CoNDERC with plain requests, are kept under `~/nuclear-data`, never tracked, and pinned by SHA-256.
+- **Seen.** The table's header, labels and spectrum names, its first four rows, and the format of one spectrum. No
+  ACTINV value. Rehearsals were read for exit status, gates and counts only; their output is deleted.
+- **Scored run.** The binary is built in the bounded scope from a clean checkout of this commit and must match the
+  checker's pin. G4 is CI on the evidence commit. One repair round is allowed.
