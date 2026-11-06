@@ -6312,3 +6312,16 @@ G4: CI green on the evidence commit `e5c3201` (controls, fns-iron, fusion-isotop
   JAEA-FNS 0.160 against 0.126 (p = 7.2e-4); TU Dresden 0.131 against 0.139, no significant difference (p = 0.17).
   Within 2u: 55% against 64%. Geometric-mean C/E 1.002 against 1.019. Flat-in-energy sensitivity: 0.170, FISPACT-II
   CLOSER.
+
+## Entry 365 — P192 verdict: P192-PASS; FISPACT-II with TENDL-2017 closer than ACTINV with TENDL-2025 on UKAEA's validation table (2026-11-06)
+
+G4: CI green on the evidence commit `835fced` (controls, fns-iron, fusion-isotope). With G0–G2 (ledger 364),
+**P192-PASS**.
+- **Allowed sentences** are the verdict's three (`results/p192_verdict.json`), quoted verbatim and together.
+- **Diagnostic, unregistered and after the result.** On the same rows, the median ln(C_ACTINV / C_FISPACT-II) is
+  0.001 (interquartile −0.075 to 0.073), so the collapse agrees with FISPACT-II's and the gap is in the data. In the
+  worst row, Au-197(n,2n)Au-196m2 (JAEA-FNS-pos3), ACTINV's library equals TENDL-2025's MF10 section for that state
+  at 14.1 MeV (0.0124 b), about 8 times below the measurement; FISPACT-II's TENDL-2017 value is 1.30 times it. The
+  rows where ACTINV is furthest behind are mostly product-state branchings and minor channels.
+- **Next.** A per-reaction library choice (accuracy program stage 3) is fitted on data other than the set that
+  scores it; P192's rows have been seen and can only serve as the fitting set.
