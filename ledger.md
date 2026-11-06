@@ -6340,3 +6340,22 @@ G4: CI green on the evidence commit `835fced` (controls, fns-iron, fusion-isotop
   row. One rehearsal was read for exit status, gates and counts only; its output is deleted.
 - **Scored run.** P192's binary pin (no Rust change), built from a clean checkout of this commit. G4 is CI on the
   evidence commit. One repair round is allowed.
+
+## Entry 367 — P193 evidence: G0–G2 pass on 4b5f511; the per-reaction choice closes the gap to FISPACT-II; P193-PASS pending G4 (2026-11-06)
+
+`controls/p193.py run` and `controls/check_p193.py` on the registration commit `4b5f511`, inside the bounded scope,
+with the binary built there (SHA-256 `fa21795b…`, the pin). Files: `results/p193_record.json` and
+`results/p193_verdict.json`.
+- **G0–G2 pass.** Values per library: TENDL-2025 365, TENDL-2023 362, TENDL-2017 365, ENDF/B-VIII.1 291. Every
+  TENDL-2025 value equals P192's, and the 24 cross-checks agree.
+- **G3, leave-one-facility-out (193 held-out rows: FNG 102, JAEA-FNS 72, TU Dresden 19).**
+  - Median |ln C/E|: selected 0.139, TENDL-2025 alone 0.160, FISPACT-II as published 0.132.
+  - Within 2u: 66% against 58% and 64%.
+  - Selected against TENDL-2025: FIRST CLOSER, so the choice helps (p = 3e-5).
+  - Selected against FISPACT-II: NO SIGNIFICANT DIFFERENCE (p = 0.95).
+  - TENDL-2025 against FISPACT-II on the same rows: FISPACT-II closer (p = 5e-4).
+  - In the folds the rule kept TENDL-2025 for 118 rows and chose TENDL-2017 for 34, ENDF/B-VIII.1 for 24 and
+    TENDL-2023 for 17.
+- **Reported, not scored.** Fitted on all three facilities, the rule keeps TENDL-2025 for 133 reaction labels and
+  chooses TENDL-2017 for 49, TENDL-2023 for 34 and ENDF/B-VIII.1 for 23. Each library alone on every row where it
+  has values: TENDL-2017 0.134 (365 rows), ENDF/B-VIII.1 0.150 (291), TENDL-2025 0.160 (365), TENDL-2023 0.171 (362).
