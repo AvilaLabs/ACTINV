@@ -6359,3 +6359,12 @@ with the binary built there (SHA-256 `fa21795b…`, the pin). Files: `results/p1
 - **Reported, not scored.** Fitted on all three facilities, the rule keeps TENDL-2025 for 133 reaction labels and
   chooses TENDL-2017 for 49, TENDL-2023 for 34 and ENDF/B-VIII.1 for 23. Each library alone on every row where it
   has values: TENDL-2017 0.134 (365 rows), ENDF/B-VIII.1 0.150 (291), TENDL-2025 0.160 (365), TENDL-2023 0.171 (362).
+
+## Entry 368 — P193 verdict: P193-PASS; a per-reaction choice of evaluation brings ACTINV level with FISPACT-II on UKAEA's validation table (2026-11-06)
+
+G4: CI green on the evidence commit `639b66e` (controls, fns-iron, fusion-isotope). With G0–G2 (ledger 367),
+**P193-PASS**.
+- **Allowed sentences** are the verdict's two (`results/p193_verdict.json`), quoted verbatim and together.
+- **Not shipped.** ACTINV's default library is unchanged. Shipping the choice would be a separate change: a new data
+  catalog carrying the selected rows from TENDL-2017, TENDL-2023 and ENDF/B-VIII.1, after each source's
+  redistribution terms are checked. It needs the owner's approval.
