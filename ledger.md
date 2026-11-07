@@ -6389,3 +6389,30 @@ G4: CI green on the evidence commit `639b66e` (controls, fns-iron, fusion-isotop
   IRDFF-II rows have no TENDL-2025 value, as in P17; the checker had required one and was corrected first.
 - **Scored run.** From this commit, inside the 6 GiB scope. G4 is CI on the evidence commit. One repair round is
   allowed.
+
+## Entry 370 — P194 evidence: G0–G2 pass on 36ed63c; the composite matches P193 on the table and moves JAEA-FNS decay heat from 0.139 to 0.099; P194-PASS pending G4 (2026-11-06)
+
+`controls/p194.py run` and `controls/check_p194.py` on the registration commit `36ed63c`, inside the bounded scope,
+in 527 s. The binaries are P192's (`fa21795b…`) and P167's (`186cc258…`); the module is P172's (`f33ea3ed…`). Files:
+`results/p194_record.json` and `results/p194_verdict.json`. The composite (`d44445c0…`, index `1a29496a…`, 167,725
+rows) is in `~/nuclear-data/p194-composite/` and is not tracked.
+- **G0–G2 pass.**
+  - The rule replaced 92 of 214 blocks: TENDL-2017 46, TENDL-2023 29, ENDF/B-VIII.1 17.
+  - Every group of the composite is bit-identical to its source, every table value equals its block library's, and
+    the 24 cross-checks agree.
+  - Each TENDL-2025 arm reproduced its committed values: IRDFF-II 124 rows, four of them without a value as in P17;
+    Řež 34; JAEA-FNS 2,360 points.
+- **G3, the table, leave-one-facility-out (P193's 193 held-out rows).**
+  - Median |ln C/E|: block choice 0.138, TENDL-2025 0.160, FISPACT-II 0.132.
+  - Within 2u: 66% against 58% and 64%.
+  - Block choice against TENDL-2025: FIRST CLOSER (p = 5e-5).
+  - Block choice against FISPACT-II: NO SIGNIFICANT DIFFERENCE (p = 0.99).
+  - The blocks lose nothing against P193's per-label choice (0.139).
+- **G3, non-regression.** Non-regression holds.
+  - IRDFF-II: 0.020 against 0.020; 11 values changed; NO SIGNIFICANT DIFFERENCE (p = 0.13).
+  - Řež: 0.038 against 0.038; 3 values changed; NO SIGNIFICANT DIFFERENCE (p = 0.59).
+  - JAEA-FNS decay heat: 0.099 against 0.139; 2,136 of 2,360 points changed; COMPOSITE CLOSER (p = 2e-49).
+  - On the same FNS points, FISPACT-II's TENDL-2017 decay heat scores 0.105: no significant difference from the
+    composite (p = 0.44).
+  - The FNS gain is not independent of the choice, since FNS is one of the table's facilities.
+- **Reported, not scored.** In sample on all 365 table rows: composite 0.104, TENDL-2025 0.160, FISPACT-II 0.138.
