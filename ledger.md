@@ -6416,3 +6416,12 @@ rows) is in `~/nuclear-data/p194-composite/` and is not tracked.
     composite (p = 0.44).
   - The FNS gain is not independent of the choice, since FNS is one of the table's facilities.
 - **Reported, not scored.** In sample on all 365 table rows: composite 0.104, TENDL-2025 0.160, FISPACT-II 0.138.
+
+## Entry 371 — P194 verdict: P194-PASS; a composite library, kept whole per target and reaction, is level with FISPACT-II on UKAEA's table and moves no earlier set further from its measurements (2026-11-06)
+
+G4: controls, fns-iron and fusion-isotope are green on the evidence commit `fe58b65`. With G0–G2 passing
+(ledger 370), the verdict is **P194-PASS**.
+- **Allowed sentences** are the verdict's three (`results/p194_verdict.json`), quoted verbatim and together.
+- **Not shipped.** ACTINV's default library is unchanged, and the composite stays on the workstation. Shipping it
+  needs two things: redistribution terms for TENDL-2017, TENDL-2023 and ENDF/B-VIII.1, none of which states one in
+  the copies used, and the owner's approval.
