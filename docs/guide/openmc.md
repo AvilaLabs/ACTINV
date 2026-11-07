@@ -56,6 +56,13 @@ threads, ACTINV 1.7.1 with an ENDF/B-VIII.1 activation library took 155 s from m
 [Larger meshes with several materials](benchmarks.md#larger-meshes-with-several-materials) for every size and the
 conditions, including that ACTINV's runs were redone on ENDF/B-VIII.1 after a first run on TENDL-2025 was seen.
 
+Against OpenMC's most faithful mode, its R2S with direct reaction-rate tallies (protocol P191): On P181's tungsten,
+copper-alloy, water and steel model with 8 mesh elements, ACTINV's R2S with mixture self-shielding gave a shutdown dose
+1.038 ± 0.016 times that of OpenMC 0.15.3's own R2S with direct reaction-rate tallies, on the same ENDF/B-VIII.1 cross
+sections; ACTINV's steps 1 and 2 (model to photon source) took 91 s against 4206 s for OpenMC's. Without
+self-shielding ACTINV's dose was 1.040 ± 0.016 times OpenMC's; mixture self-shielding changed ACTINV's distance from
+OpenMC's dose by no more than two combined standard deviations (SHIELDING NEUTRAL).
+
 ## Inside OpenMC's R2S workflow
 
 You need OpenMC 0.15.3 or newer (the versions that have `openmc.deplete.R2SManager`), the `actinv` Python
