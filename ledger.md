@@ -6368,3 +6368,24 @@ G4: CI green on the evidence commit `639b66e` (controls, fns-iron, fusion-isotop
 - **Not shipped.** ACTINV's default library is unchanged. Shipping the choice would be a separate change: a new data
   catalog carrying the selected rows from TENDL-2017, TENDL-2023 and ENDF/B-VIII.1, after each source's
   redistribution terms are checked. It needs the owner's approval.
+
+## Entry 369 — P194 registered: a composite library built from P193's choice, kept whole per target and reaction, and checked on earlier data (2026-11-06)
+
+`protocols/ACTINV-P194_PROTOCOL.md`, `controls/p194.py` and `controls/check_p194.py` are sealed in
+`protocols/protocol_hash.txt`.
+- **Why blocks.** ACTINV takes burn-up from a reaction's total row and products from its product rows, so a
+  shippable library takes each (target, MT) block whole from one evaluation. In 19 of P193's 214 blocks two labels
+  chose different evaluations. P194 applies P193's rule per block and rescores it leave-one-facility-out on P193's
+  held-out rows.
+- **Composite.** TENDL-2025 with each chosen block replaced whole. It is checked bit for bit against its sources, on
+  the table and against `actinv inspect xs`. Built on the workstation, never tracked, not distributed.
+- **Non-regression.** IRDFF-II (P17), Řež (P167) and JAEA-FNS decay heat (P172) are scored with TENDL-2025 and with
+  the composite, through their own unchanged harnesses and the binary or module that scored them before. Each
+  TENDL-2025 arm must reproduce its committed values. None of these sets is independent of the choice.
+- **Licences.** Only the TENDL-2025 evaluations state one (CC-BY-4.0). The TENDL-2017, TENDL-2023 and ENDF/B-VIII.1
+  copies used here and their web pages state none. Shipping needs that settled and the owner's approval.
+- **Seen.** All of P192 and P193; P193's per-label final choice; the libraries' block structure. No block-level score.
+  One rehearsal was read for exit status, gates and counts only; its output is deleted. It showed that four
+  IRDFF-II rows have no TENDL-2025 value, as in P17; the checker had required one and was corrected first.
+- **Scored run.** From this commit, inside the 6 GiB scope. G4 is CI on the evidence commit. One repair round is
+  allowed.
