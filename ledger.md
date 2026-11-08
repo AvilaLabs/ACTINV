@@ -6484,3 +6484,13 @@ inside the 6 GiB scope, in 63 min. Binary `037c85fc…`. Files: `results/p195_g1
     30% prior by orders of magnitude, so that band stays the prior's (posterior over reference 0.001 and below).
 - **G5, G6.** Both determinism pairs are byte-identical apart from wall time; all 18 refusals exit 2 with their cause
   (projectile and power are refused by the problem validator first, as the protocol allows).
+
+## Entry 374 — P195 verdict: P195-FAIL on G7 (CI's P16 typed-boundary control refused the evidence commit); G0–G6 held (2026-11-08)
+
+CI on the evidence commit `8e4e7e7` failed in `rust-quality`, at the P16 typed-boundary control: `unfold.rs`
+defined its own barn factor (1e-24) for reaction rates, and P16 allows that conversion only in `quantity.rs`. Every
+other CI job passed. The local gates before the code push (fmt, check, clippy, workspace tests, public examples) do
+not run P16's control, which is why it reached CI. G0–G6 held as ledger 373 reports; no allowed sentence may be
+quoted. The repair round is Amendment A (ledger 375), which also restores the three G3 measurements dropped by the
+naming error.
+
