@@ -6559,3 +6559,26 @@ replace P195's, which are never quoted:
 
 The handbook chapter `docs/guide/unfold.md` quotes them together, with the illustrative example
 `examples/unfold_foils/`.
+
+## Entry 378 — P196 registered: activation calculations in the browser, from library packs, against the whole library on 118 problems (2026-11-08)
+
+`protocols/ACTINV-P196_PROTOCOL.md`, `controls/p196.py`, `controls/p196_browser.mjs` and `controls/check_p196.py` are
+sealed in `protocols/protocol_hash.txt`.
+- **What.** The browser workbench solves a problem in a web worker (`crates/actinv-web-engine`, WebAssembly). It
+  fetches only the library targets the material can reach in two reactions, with decays between them free, and the
+  decay records they lead to, from a pack (`actinv_core::pack`: one NPZ per target, one record per decay state, and
+  a graph of products and daughters). Candidate `f6b0264`; the engine, packs and the Check & run panel came in
+  `31ba6f1`. The panel is shown only where the site serves the pack. Hosting the pack is the owner's decision and
+  outside P196.
+- **Gates.** G2 is the gate: on 118 problems (19 materials × four standard spectra at 1e14 n/cm²/s for 1 y, × two
+  at 1e15 for 10 y, and four examples), every step's total activity, heat and photon emission within 1e-4 of the
+  whole library's, and every nuclide with 0.1% of the activity within 1e-3. G3: on twelve of them the result from
+  the worker in headless Chromium is identical to the native pack run. G4: five cases a pack cannot reproduce are
+  refused. Size and browser time are reported, never gates.
+- **Seen.** Development compared four hard problems (Eurofer, CuCrZr, tungsten, SS316) at one to four reactions, and
+  Eurofer at 60. At two reactions the largest change was 8.9e-9 in a total and 1.2e-6 in a nuclide (Eurofer Be8).
+  SS316 at 1e14 for a year, fusion and thermal (both in the suite), changed by at most 9.3e-9. One rehearsal (three
+  problems, one browser run, the refusal cases) was read for exit status, G3 identity and refusal messages only; it
+  showed that the damage case needed a pinned table to reach the pack's refusal.
+- **Scored run.** From the candidate with a clean tracked tree, inside the AGENTS.md scope, with the bundle built by
+  Trunk at the candidate. G6 is CI on the evidence commit. One repair round is allowed.
