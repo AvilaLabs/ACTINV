@@ -6508,3 +6508,30 @@ naming error.
   G1 step and that record deleted unread.
 - **Scored run.** From the commit adding the change, with the P16 control passing locally first, inside the 6 GiB
   scope. G7 is CI on the evidence commit. No further amendment; on a fail P195's sentences are never quoted.
+
+## Entry 376 — P195A evidence: G0–G3, G5 and G6 pass on f856ad3 with all fifteen G3 measurements; 94% of true band fluxes inside the 95% intervals, every IRDFF-II leave-one-out arm closer than its prior; P195A-PASS pending G7 (2026-11-08)
+
+`controls/p195a.py g1` and `run`, then `controls/p195a.py check`, on the candidate `f856ad3` with a clean tracked
+tree, inside the 6 GiB scope, in 68 min. Before them the P16 control (dependency history, `g1_p16_quantities.py`,
+`check_p16.py`) and the public examples passed on the same commit. Binary `f42f4f6d…`. Files:
+`results/p195a_g1.json`, `results/p195a_record.json`, `results/p195a_verdict.json`; the unfold outputs are under
+`target/p195a-work`, untracked.
+- **G1.** fmt, check, clippy and the workspace tests pass on `f856ad3` with the same binary.
+- **G2.** Every recomputation, the cross-section covariance against P185's reading, the central differences and all
+  twelve mutations hold, as in P195.
+- **G3.** All fifteen declared measurements kept, none dropped (the added condition). Over 200 (truth, band) pairs:
+  94% inside the 95% interval (gate 90–99%), 74% inside one standard deviation (gate 58–78%), root-mean-square log
+  error 0.124 against the prior's 0.208. χ²/m median 0.95 (range 0.39–1.51).
+  - By band, prior → posterior: below 0.5 eV 0.215 → 0.122; 0.5 eV–100 keV 0.159 → 0.152; 0.1–1 MeV
+    0.194 → 0.176; 1–10 MeV 0.205 → 0.088; above 10 MeV 0.255 → 0.011.
+  - 95% coverage by band: below 0.5 eV 88%; 0.5 eV–100 keV 92%; 0.1–1 MeV 95%; 1–10 MeV 98%; above 10 MeV 98%.
+  - The truths after the first differ from P195's, as the amendment states, so the two runs' band numbers are not a
+    paired comparison.
+- **G4, reported.** Median |ln(C/E)| of the left-out reaction, prior → leave-one-out, unchanged from P195 to the
+  quoted digits: Cf-252 0.321 → 0.087 (U-235 prior) and 0.158 → 0.080 (Maxwellian); U-235 0.246 → 0.044 (Cf-252
+  prior) and 1.031 → 0.048 (Maxwellian); all UNFOLD CLOSER; full-data χ²/m 4.2–8.5. With the reference spectra:
+  Cf-252 0.015, U-235 0.024.
+- **G5, G6.** Both determinism pairs are byte-identical apart from wall time; all 18 refusals exit 2 with their cause.
+- **CI.** The candidate push's CI (`f856ad3`) passed `rust-quality`, including the P16 control, and six other control
+  jobs; `runtime-controls`, `fns-iron`, the browser and desktop builds failed fetching release assets during a
+  GitHub outage (HTTP 504), before running any ACTINV code. G7 is CI on this commit.
