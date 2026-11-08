@@ -6607,3 +6607,12 @@ the 236 runs finished, each pair with the same number of steps.
   Chromium from a local Python web server: median 14.9 s, at most 39.4 s. Native `pack_run`: median 2.6 s.
 - **Next.** The protocol allows one repair round, registered as an amendment before its run. P196's sentences are not
   quoted.
+
+## Entry 380 — P196 verdict: P196-FAIL on G2; the two-reaction pack misses multi-capture chains at high thermal fluence and trace photon emitters (2026-11-08)
+
+CI on the evidence commit `3df7fcd` passed every job (`controls`, `fns-iron`, `fusion-isotope`), so G6 holds. With
+G0, G1, G3 and G4 (ledger 379), P196 fails on G2 alone: a pack followed to two reactions departs from the whole
+library on 25 of the 118 problems. The engine in the browser reproduces the native pack run exactly, and every
+refusal case is refused, but a fixed depth of two reactions is not enough at 1e15 n/cm²/s thermal for ten years, for
+the uranium impurity in beryllium, or for photon emission carried by trace nuclides after the main emitters decay.
+P196's sentences are never quoted. The repair round is registered as an amendment before its run.
