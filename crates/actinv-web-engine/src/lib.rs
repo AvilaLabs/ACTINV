@@ -3,15 +3,14 @@
 //!
 //! Once started the worker posts `{id: 0, kind: "ready"}`; until then a message is lost. The page
 //! then posts `{id, spec, pack, reactions, inputs}`: the problem's JSON text, the pack's base
-//! URL, the reactions to follow (absent: the pack default) and an array of `[path, Uint8Array]`
-//! pairs for every other file the problem names. The worker fetches the pack's graph and the
-//! files the plan names, keeping both for later runs, and answers with messages carrying the same
-//! `id`: `{kind: "progress", done, total}` while fetching, `{kind: "solving"}`, then
-//! `{kind: "result", result}` (the result JSON text) or `{kind: "error", message}`. A run cannot
-//! be interrupted; the page cancels by terminating the worker.
-
-use actinv_core::pack::{self, PackGraph};
-use std::collections::HashMap;
+//! URL, a fixed number of reactions to follow (absent: deepen round by round until the result
+//! settles, `pack::Deepening`) and an array of `[path, Uint8Array]` pairs for every other file the
+//! problem names. The worker fetches the pack's graph and the files each round's plan names,
+//! keeping both for later runs, and answers with messages carrying the same `id`: `{kind:
+//! "progress", round, done, total}` while fetching, `{kind: "solving", round}`, then `{kind:
+//! "result", result}` (the result JSON text) or `{kind: "error", message}`. `round` counts from 0;
+//! a later round checks the earlier one with more reactions. A run cannot be interrupted; the page
+//! cancels by terminating the worker.
 
 /// Files fetched at once.
 pub const CONCURRENT_FETCHES: usize = 24;
@@ -21,29 +20,13 @@ pub fn file_url(base: &str, file: &str) -> String {
     format!("{}/{file}", base.trim_end_matches('/'))
 }
 
-/// Every pack file a run of `spec_text` needs, by pack path.
-pub fn wanted(spec_text: &str, graph: &PackGraph, reactions: usize) -> Result<Vec<String>, String> {
-    let spec = actinv_core::spec::Spec::from_json(spec_text)?;
-    let (_, files) = pack::plan(&spec, graph, reactions)?;
-    Ok(files)
-}
-
-/// Run `spec_text` from the fetched pack files (by pack path) and the page's own inputs.
-pub fn solve(
-    spec_text: &str,
-    graph: &PackGraph,
-    reactions: usize,
-    pack_files: &HashMap<String, Vec<u8>>,
-    inputs: HashMap<String, Vec<u8>>,
-) -> Result<String, String> {
-    let result = pack::run_from_pack(spec_text, "browser", graph, reactions, pack_files, inputs)?;
-    serde_json::to_string(&result).map_err(|e| e.to_string())
-}
-
 #[cfg(target_arch = "wasm32")]
 mod worker {
     use super::*;
+    use actinv_core::pack::{self, PackGraph};
+    use actinv_core::spec::Spec;
     use std::cell::RefCell;
+    use std::collections::HashMap;
     use std::rc::Rc;
     use wasm_bindgen::prelude::*;
     use wasm_bindgen::JsCast;
@@ -128,7 +111,7 @@ mod worker {
     }
 
     /// Fetch every file not yet held, `CONCURRENT_FETCHES` at a time, reporting progress.
-    async fn fetch_all(id: f64, base: &str, files: &[String]) -> Result<(), String> {
+    async fn fetch_all(id: f64, round: usize, base: &str, files: &[String]) -> Result<(), String> {
         let missing: Vec<&String> = files
             .iter()
             .filter(|file| !FILES.with(|held| held.borrow().contains_key(&file_url(base, file))))
@@ -138,6 +121,7 @@ mod worker {
             id,
             &[
                 ("kind", "progress".into()),
+                ("round", round.into()),
                 ("done", 0.into()),
                 ("total", total.into()),
             ],
@@ -168,6 +152,7 @@ mod worker {
                 id,
                 &[
                     ("kind", "progress".into()),
+                    ("round", round.into()),
                     ("done", done.into()),
                     ("total", total.into()),
                 ],
@@ -185,10 +170,9 @@ mod worker {
             let base = field(&data, "pack")
                 .as_string()
                 .ok_or("the message has no pack")?;
-            let reactions = field(&data, "reactions")
+            let fixed = field(&data, "reactions")
                 .as_f64()
-                .map(|value| value as usize)
-                .unwrap_or(pack::DEFAULT_REACTIONS);
+                .map(|value| value as usize);
             let mut inputs = HashMap::new();
             let given = field(&data, "inputs");
             if !given.is_undefined() && !given.is_null() {
@@ -199,20 +183,44 @@ mod worker {
                 }
             }
             let graph = graph(&base).await?;
-            let files = wanted(&spec, &graph, reactions)?;
-            fetch_all(id, &base, &files).await?;
-            post(id, &[("kind", "solving".into())]);
-            let pack_files: HashMap<String, Vec<u8>> = FILES.with(|held| {
-                let held = held.borrow();
-                files
-                    .iter()
-                    .filter_map(|file| {
-                        held.get(&file_url(&base, file))
-                            .map(|bytes| (file.clone(), bytes.clone()))
-                    })
-                    .collect()
-            });
-            solve(&spec, &graph, reactions, &pack_files, inputs)
+            let problem = Spec::from_json(&spec)?;
+            let mut deepening = pack::Deepening::new();
+            let mut reactions = fixed.unwrap_or(pack::ROUNDS[0]);
+            let mut round = 0;
+            let result = loop {
+                let (reach, files) = pack::plan(&problem, &graph, reactions)?;
+                fetch_all(id, round, &base, &files).await?;
+                post(id, &[("kind", "solving".into()), ("round", round.into())]);
+                let pack_files: HashMap<String, Vec<u8>> = FILES.with(|held| {
+                    let held = held.borrow();
+                    files
+                        .iter()
+                        .filter_map(|file| {
+                            held.get(&file_url(&base, file))
+                                .map(|bytes| (file.clone(), bytes.clone()))
+                        })
+                        .collect()
+                });
+                let result = pack::run_from_pack(
+                    &spec,
+                    "browser",
+                    &graph,
+                    reactions,
+                    &pack_files,
+                    inputs.clone(),
+                )?;
+                if fixed.is_some() {
+                    break result;
+                }
+                match deepening.solved(&reach, result) {
+                    pack::Next::Run(deeper) => {
+                        reactions = deeper;
+                        round += 1;
+                    }
+                    pack::Next::Done(result) => break *result,
+                }
+            };
+            serde_json::to_string(&result).map_err(|e| e.to_string())
         }
         .await;
         match result {

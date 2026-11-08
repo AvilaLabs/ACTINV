@@ -24,9 +24,26 @@ pub const SCHEMA: &str = "actinv-library-pack-1";
 /// A nuclide state: (ZA, isomeric state).
 pub type State = (i32, i32);
 
-/// Reactions followed by default. On high-fluence steel, copper alloy and tungsten problems two
-/// reactions reproduce whole-library results to about 1e-6; one misses second-step products.
-pub const DEFAULT_REACTIONS: usize = 2;
+/// The depths, in reactions followed, that a [`Deepening`] run tries in turn. Two reactions
+/// reproduce most problems, but high thermal fluence and actinide impurities carry activity a dozen
+/// or more captures from the material (P196: tungsten at 3e23 n/cm² still differs at twelve).
+pub const ROUNDS: [usize; 11] = [2, 3, 4, 6, 8, 12, 16, 24, 32, 48, 64];
+
+/// Two rounds agree when, at every step, total activity, heat and photon emission change by at
+/// most `SETTLED_TOTAL` (relative), every nuclide with 0.1% of the activity by at most
+/// `SETTLED_NUCLIDE`, and the atoms that moved between nuclides are at most `SETTLED_ATOMS` of the
+/// total. The atoms catch a depth that burns material into stable nuclides whose own reactions
+/// are still left out, where activity alone would not yet change. Totals are compared relatively
+/// at any size, so a trace that still moves keeps the run going deeper: with a floor under the
+/// totals, water at 1e15 n/cm²/s thermal for ten years stopped at four reactions with a late step's
+/// photon emission wrong (P196 Amendment A).
+pub const SETTLED_TOTAL: f64 = 1e-6;
+pub const SETTLED_NUCLIDE: f64 = 1e-5;
+pub const SETTLED_ATOMS: f64 = 1e-6;
+
+/// Agreements in a row a [`Deepening`] run needs: one can be a plateau (P196: water's trace photon
+/// emitters agreed at three and four reactions and needed six).
+pub const SETTLED_ROUNDS: usize = 2;
 
 /// Where a packed run's assembled library lives among its in-memory inputs.
 pub const PACKED_LIBRARY: &str = "pack.npz";
@@ -646,6 +663,182 @@ pub fn run_from_pack(
     run_packed(spec_text, entry_point, graph, &parts, inputs)
 }
 
+fn relative(a: f64, b: f64) -> f64 {
+    if a == b {
+        0.0
+    } else {
+        (a - b).abs() / a.abs().max(b.abs())
+    }
+}
+
+/// What two rounds are compared on, for one step: activity by nuclide, total heat and photon
+/// emission, and atoms by nuclide.
+#[derive(Clone, Debug, Default, PartialEq)]
+pub struct StepSummary {
+    pub activity: BTreeMap<String, f64>,
+    pub heat: f64,
+    pub photons: f64,
+    pub atoms: BTreeMap<String, f64>,
+    pub total_atoms: f64,
+}
+
+pub fn summary(result: &RunResult) -> Vec<StepSummary> {
+    result
+        .steps
+        .iter()
+        .map(|step| StepSummary {
+            activity: step.activity_Bq_per_g.clone(),
+            heat: step.heat_W_per_g.total,
+            photons: step
+                .photon_source
+                .as_ref()
+                .map_or(0.0, |source| source.total_photons_s_g),
+            atoms: step
+                .inventory
+                .iter()
+                .map(|entry| (entry.nuclide.clone(), entry.atoms_per_g))
+                .collect(),
+            total_atoms: step.total_atoms_per_g,
+        })
+        .collect()
+}
+
+/// How far one round's result moved from the previous one's: the largest relative change at any
+/// step of a total (activity, heat, photon emission), of a nuclide carrying 0.1% of the step's
+/// activity, and of the atoms that changed nuclide as a share of all atoms.
+#[derive(Clone, Copy, Debug, PartialEq, Serialize)]
+pub struct Change {
+    pub totals: f64,
+    pub nuclide: f64,
+    pub atoms: f64,
+}
+
+impl Change {
+    /// None when the two have different numbers of steps.
+    pub fn between(previous: &[StepSummary], next: &[StepSummary]) -> Option<Change> {
+        if previous.len() != next.len() {
+            return None;
+        }
+        let mut change = Change {
+            totals: 0.0,
+            nuclide: 0.0,
+            atoms: 0.0,
+        };
+        let totals =
+            |step: &StepSummary| [step.activity.values().sum::<f64>(), step.heat, step.photons];
+        for (a, b) in previous.iter().zip(next) {
+            for (x, y) in totals(a).into_iter().zip(totals(b)) {
+                change.totals = change.totals.max(relative(x, y));
+            }
+            let total = totals(b)[0];
+            for (name, &value) in &b.activity {
+                if total > 0.0 && value >= 1e-3 * total {
+                    let before = a.activity.get(name).copied().unwrap_or(0.0);
+                    change.nuclide = change.nuclide.max(relative(before, value));
+                }
+            }
+            let mut moved = 0.0;
+            for (name, &atoms) in &b.atoms {
+                moved += (atoms - a.atoms.get(name).copied().unwrap_or(0.0)).abs();
+            }
+            for (name, &atoms) in &a.atoms {
+                if !b.atoms.contains_key(name) {
+                    moved += atoms.abs();
+                }
+            }
+            if b.total_atoms > 0.0 {
+                change.atoms = change.atoms.max(moved / b.total_atoms);
+            }
+        }
+        Some(change)
+    }
+
+    pub fn settled(&self) -> bool {
+        self.totals <= SETTLED_TOTAL
+            && self.nuclide <= SETTLED_NUCLIDE
+            && self.atoms <= SETTLED_ATOMS
+    }
+}
+
+/// One round of a [`Deepening`] run, as it reports it.
+#[derive(Clone, Debug, PartialEq, Serialize)]
+pub struct Round {
+    pub reactions: usize,
+    pub targets: usize,
+    pub nuclides: usize,
+    /// Against the previous round; none on the first.
+    pub change: Option<Change>,
+}
+
+/// What a [`Deepening`] run does next.
+pub enum Next {
+    /// Fetch what [`plan`] names at this depth and solve again.
+    Run(usize),
+    /// The answer: the last round's result.
+    Done(Box<RunResult>),
+}
+
+/// A run that follows more reactions, round by round through [`ROUNDS`], until the result stops
+/// depending on the depth: [`SETTLED_ROUNDS`] agreements in a row, or a depth that reaches no
+/// target or nuclide the previous one did not (the result can then no longer change), or the last
+/// depth. The host plans, fetches and solves each round (the browser fetches between them) and
+/// hands the result to [`Deepening::solved`].
+#[derive(Default)]
+pub struct Deepening {
+    agreed: usize,
+    previous: Option<Vec<StepSummary>>,
+    pub rounds: Vec<Round>,
+}
+
+impl Deepening {
+    pub fn new() -> Self {
+        Self::default()
+    }
+
+    /// Take the result of the round just solved, on `reach` (from [`plan`] at that depth).
+    pub fn solved(&mut self, reach: &Reach, result: RunResult) -> Next {
+        match self.advance(reach.targets.len(), reach.nuclides.len(), summary(&result)) {
+            Some(deeper) => Next::Run(deeper),
+            None => Next::Done(Box::new(result)),
+        }
+    }
+
+    /// Record a round that reached `targets` targets and `nuclides` decay states; the next depth,
+    /// or none when this round's result is the answer.
+    fn advance(
+        &mut self,
+        targets: usize,
+        nuclides: usize,
+        steps: Vec<StepSummary>,
+    ) -> Option<usize> {
+        let round = self.rounds.len();
+        let closed = self
+            .rounds
+            .last()
+            .is_some_and(|last| last.targets == targets && last.nuclides == nuclides);
+        let change = self
+            .previous
+            .as_deref()
+            .and_then(|previous| Change::between(previous, &steps));
+        self.rounds.push(Round {
+            reactions: ROUNDS[round],
+            targets,
+            nuclides,
+            change,
+        });
+        self.agreed = match change {
+            Some(change) if change.settled() => self.agreed + 1,
+            _ => 0,
+        };
+        self.previous = Some(steps);
+        if closed || self.agreed >= SETTLED_ROUNDS || round + 1 == ROUNDS.len() {
+            None
+        } else {
+            Some(ROUNDS[round + 1])
+        }
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -683,6 +876,91 @@ mod tests {
                 file: "test_decay.dat".into(),
             }],
         }
+    }
+
+    fn step(activity: f64, atoms: [(&str, f64); 2]) -> StepSummary {
+        StepSummary {
+            activity: [("Co60".to_owned(), activity)].into_iter().collect(),
+            heat: activity * 1e-13,
+            photons: activity * 2.0,
+            atoms: atoms
+                .into_iter()
+                .map(|(name, value)| (name.to_owned(), value))
+                .collect(),
+            total_atoms: atoms.iter().map(|(_, value)| value).sum(),
+        }
+    }
+
+    #[test]
+    fn a_change_counts_totals_nuclides_and_moved_atoms() {
+        let before = [step(100.0, [("Fe56", 1e22), ("Co59", 1e18)])];
+        let same = Change::between(&before, &before).unwrap();
+        assert_eq!(
+            same,
+            Change {
+                totals: 0.0,
+                nuclide: 0.0,
+                atoms: 0.0
+            }
+        );
+        assert!(same.settled());
+        // Stable atoms moving deeper change nothing a detector sees, yet the round is not settled.
+        let burnt = [step(100.0, [("Fe56", 0.9e22), ("Co59", 1e18)])];
+        let change = Change::between(&before, &burnt).unwrap();
+        assert_eq!(change.totals, 0.0);
+        assert!((change.atoms - 1e21 / (0.9e22 + 1e18)).abs() < 1e-12);
+        assert!(!change.settled());
+        let hotter = [step(100.1, [("Fe56", 1e22), ("Co59", 1e18)])];
+        let change = Change::between(&before, &hotter).unwrap();
+        assert!((change.totals - 0.1 / 100.1).abs() < 1e-12);
+        assert!(!change.settled());
+        assert_eq!(Change::between(&before, &[]), None);
+        // A total far below its peak still counts relatively: a trace that moves is not settled.
+        let cooled = [
+            before[0].clone(),
+            step(1e-11, [("Fe56", 1e22), ("Co59", 1e18)]),
+        ];
+        let trace = [
+            before[0].clone(),
+            step(2e-11, [("Fe56", 1e22), ("Co59", 1e18)]),
+        ];
+        let change = Change::between(&cooled, &trace).unwrap();
+        assert!((change.totals - 0.5).abs() < 1e-12, "{change:?}");
+        assert!(!change.settled());
+    }
+
+    #[test]
+    fn deepening_needs_two_agreements_in_a_row_or_a_closed_reach() {
+        let a = vec![step(100.0, [("Fe56", 1e22), ("Co59", 1e18)])];
+        let b = vec![step(50.0, [("Fe56", 1e22), ("Co59", 1e18)])];
+        // A plateau: rounds 2 and 3 agree, 4 moves, then 6 and 8 agree with 4.
+        let mut run = Deepening::new();
+        assert_eq!(run.advance(10, 20, a.clone()), Some(3));
+        assert_eq!(run.advance(11, 21, a.clone()), Some(4));
+        assert_eq!(run.advance(12, 22, b.clone()), Some(6));
+        assert_eq!(run.advance(13, 23, b.clone()), Some(8));
+        assert_eq!(run.advance(14, 24, b.clone()), None);
+        let depths: Vec<usize> = run.rounds.iter().map(|round| round.reactions).collect();
+        assert_eq!(depths, [2, 3, 4, 6, 8]);
+        assert_eq!(run.rounds[0].change, None);
+        // A depth that reaches nothing new ends the run at once.
+        let mut run = Deepening::new();
+        assert_eq!(run.advance(10, 20, a.clone()), Some(3));
+        assert_eq!(run.advance(10, 20, a.clone()), None);
+        // Never past the last depth.
+        let mut run = Deepening::new();
+        let mut targets = 0;
+        let mut next = Some(ROUNDS[0]);
+        while next.is_some() {
+            targets += 1;
+            let steps = if targets % 2 == 0 {
+                a.clone()
+            } else {
+                b.clone()
+            };
+            next = run.advance(targets, targets, steps);
+        }
+        assert_eq!(run.rounds.len(), ROUNDS.len());
     }
 
     #[test]

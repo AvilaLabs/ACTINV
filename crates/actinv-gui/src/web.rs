@@ -156,12 +156,16 @@ pub fn reachable(
 /// What the engine reported for one run.
 #[derive(Clone, Debug, PartialEq)]
 pub enum EngineEvent {
-    /// Pack files fetched of those the run needs.
+    /// Pack files fetched of those the round needs. Round 0 is the first answer; a later round
+    /// checks it with more reactions.
     Fetching {
+        round: usize,
         done: usize,
         total: usize,
     },
-    Solving,
+    Solving {
+        round: usize,
+    },
     /// The result JSON text.
     Done(String),
     Failed(String),
@@ -177,8 +181,8 @@ pub struct EngineRun {
 }
 
 impl EngineRun {
-    /// Start `spec_text` on the pack at `pack_url`, following `reactions` reactions (None: the
-    /// pack default). `repaint` is called whenever an event arrives.
+    /// Start `spec_text` on the pack at `pack_url`, following `reactions` reactions (None: deeper
+    /// round by round until the result settles). `repaint` is called whenever an event arrives.
     pub fn start(
         spec_text: &str,
         pack_url: &str,
@@ -217,10 +221,13 @@ impl EngineRun {
                         Err(_) => EngineEvent::Failed(HAND_OVER.into()),
                     },
                     Some("progress") => EngineEvent::Fetching {
+                        round: count("round"),
                         done: count("done"),
                         total: count("total"),
                     },
-                    Some("solving") => EngineEvent::Solving,
+                    Some("solving") => EngineEvent::Solving {
+                        round: count("round"),
+                    },
                     Some("result") => {
                         EngineEvent::Done(field("result").as_string().unwrap_or_default())
                     }

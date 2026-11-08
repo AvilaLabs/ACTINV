@@ -1141,15 +1141,24 @@ impl Workbench {
             ui.horizontal_wrapped(|ui| {
                 ui.spinner();
                 match &event {
-                    Some(web::EngineEvent::Fetching { done, total }) if done < total => {
-                        ui.label(format!("Fetching nuclear data: {done} of {total} files"));
+                    Some(web::EngineEvent::Fetching { round, done, total }) if done < total => {
+                        ui.label(if *round == 0 {
+                            format!("Fetching nuclear data: {done} of {total} files")
+                        } else {
+                            format!("Checking with more reactions: {done} of {total} files")
+                        });
                         ui.add(
                             egui::ProgressBar::new(*done as f32 / (*total).max(1) as f32)
                                 .desired_width(180.),
                         );
                     }
-                    Some(web::EngineEvent::Solving) | Some(web::EngineEvent::Fetching { .. }) => {
-                        ui.label(format!("Solving… {elapsed:.0} s"));
+                    Some(web::EngineEvent::Solving { round })
+                    | Some(web::EngineEvent::Fetching { round, .. }) => {
+                        ui.label(if *round == 0 {
+                            format!("Solving… {elapsed:.0} s")
+                        } else {
+                            format!("Checking the result with more reactions… {elapsed:.0} s")
+                        });
                     }
                     _ => {
                         ui.label(format!("Starting… {elapsed:.0} s"));
