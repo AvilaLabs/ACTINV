@@ -1,0 +1,38 @@
+{
+ "git_head": "3c6138515dc2a0b00f63cbfd484f893a9e94ab00",
+ "git_dirty_paths": "",
+ "binary_sha256": "037c85fc624adc4f93ad6d52ff529296004551763588d9403f31fb0f505325c0",
+ "cgroup": {
+  "path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p2382614-i23354474.scope",
+  "memory.max": "6442450944",
+  "memory.swap.max": "0",
+  "pids.max": "128",
+  "cpu.max": "400000 100000"
+ },
+ "commands": {
+  "fmt": {
+   "command": "cargo fmt --all -- --check",
+   "exit": 0,
+   "wall_s": 6.4919822530355304,
+   "stderr_tail": ""
+  },
+  "check": {
+   "command": "cargo check --workspace --tests",
+   "exit": 0,
+   "wall_s": 0.6026922271121293,
+   "stderr_tail": "    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.53s\n"
+  },
+  "clippy": {
+   "command": "cargo clippy --workspace --all-targets -- -D warnings",
+   "exit": 0,
+   "wall_s": 0.6919879629276693,
+   "stderr_tail": "    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.56s\n"
+  },
+  "test": {
+   "command": "cargo test --workspace",
+   "exit": 0,
+   "wall_s": 487.5525425840169,
+   "stderr_tail": "rs (/home/connoravila/Documents/actinv/target/wt-p195-wt/debug/deps/actinv_data-b7fc5af6495699c4)\n     Running unittests src/bin/dump.rs (/home/connoravila/Documents/actinv/target/wt-p195-wt/debug/deps/dump-b0f17b0d8db509f8)\n     Running unittests src/bin/p18_corpus_probe.rs (/home/connoravila/Documents/actinv/target/wt-p195-wt/debug/deps/p18_corpus_probe-6fe20a4f7f55bb5b)\n     Running unittests src/bin/p18b_corpus_probe.rs (/home/connoravila/Documents/actinv/target/wt-p195-wt/debug/deps/p18b_corpus_probe-7b91998c773ba5ca)\n     Running unittests src/bin/p18b_oracle_probe.rs (/home/connoravila/Documents/actinv/target/wt-p195-wt/debug/deps/p18b_oracle_probe-d5f174c7183c1aa5)\n     Running unittests src/bin/p20_collapse_probe.rs (/home/connoravila/Documents/actinv/target/wt-p195-wt/debug/deps/p20_collapse_probe-25d4b374e3551cde)\n     Running unittests src/bin/p20_corpus_probe.rs (/home/connoravila/Documents/actinv/target/wt-p195-wt/debug/deps/p20_corpus_probe-97ae477ab06fdad2)\n     Running unittests src/bin/prepared_data_probe.rs (/home/connoravila/Documents/actinv/target/wt-p195-wt/debug/deps/prepared_data_probe-75cf8225cedf71ff)\n     Running unittests src/lib.rs (/home/connoravila/Documents/actinv/target/wt-p195-wt/debug/deps/actinv_web-42a2687251b4bfcb)\n     Running unittests src/main.rs (/home/connoravila/Documents/actinv/target/wt-p195-wt/debug/deps/actinv_gui-51e0b33abb64c83c)\n   Doc-tests actinv_cli\n   Doc-tests actinv_core\n   Doc-tests actinv_data\n   Doc-tests actinv_web\n"
+  }
+ }
+}

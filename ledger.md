@@ -6449,3 +6449,38 @@ G4: controls, fns-iron and fusion-isotope are green on the evidence commit `fe58
   and its console lines showed the U-235 full-data χ² values.
 - **Scored run.** From the candidate commit with a clean tracked tree, inside the 6 GiB scope. G7 is CI on the
   evidence commit. One repair round is allowed.
+
+## Entry 373 — P195 evidence: G0–G3, G5 and G6 pass on 3c61385; 97% of true band fluxes inside the 95% intervals on 40 synthetic truths, and every IRDFF-II leave-one-out arm closer than its prior; P195-PASS pending G7 (2026-11-08)
+
+`controls/p195.py g1` and `run`, then `controls/check_p195.py`, on the candidate `3c61385` with a clean tracked tree,
+inside the 6 GiB scope, in 63 min. Binary `037c85fc…`. Files: `results/p195_g1.json`,
+`results/p195_record.json`, `results/p195_verdict.json`; the unfold outputs are under `target/p195-work`, untracked.
+- **G1.** fmt, check, clippy and the workspace tests pass on `3c61385` with the same binary.
+- **G2.** Every reaction-rate prediction and Jacobian, stationarity, the posterior covariance, the bands, pulls, χ²
+  and windows recompute within tolerance on all 40 G3 cases and the four G4 full-data arms; the cross-section
+  covariance matches P185's reading of the collapse; 124 central differences match the solves' derivatives; all
+  twelve mutations are detected.
+- **G3.** Over 200 (truth, band) pairs: 97% inside the 95% interval (gate 90–99%),
+  69% inside one standard deviation (gate 58–78%), root-mean-square log error 0.138
+  against the prior's 0.208. χ²/m median 0.95 (range 0.11–2.17).
+  - By band, prior → posterior: below 0.5 eV 0.174 → 0.117; 0.5 eV–100 keV 0.163 → 0.147; 0.1–1 MeV 0.196 → 0.198;
+    1–10 MeV 0.197 → 0.143; above 10 MeV 0.286 → 0.011. The 0.1–1 MeV band is not improved.
+  - 95% coverage by band: below 0.5 eV 98%; 0.5 eV–100 keV 98%; 0.1–1 MeV 100%; 1–10 MeV 95%; above 10 MeV 95%.
+  - **Three declared measurements were dropped, by a naming error.** The protocol names In115m, In116m and Nb92m;
+    ACTINV's results name a first isomer `m1` (In115m1), and `actinv unfold` looked the given name up verbatim, so
+    the harness's pre-check read them as not produced and dropped them as registered. G3 therefore ran on 8 foils and
+    12 measurements, without the In and Nb foils; the In115(n,n′) threshold response is the one that would reach the
+    0.1–1 MeV band. A user writing `In115m` would get the same false refusal. The fix and an amendment rerunning G3 on
+    all 16 measurements follow.
+- **G4, reported.** Median |ln(C/E)| of the left-out reaction, prior → leave-one-out:
+  - Cf-252, prior the U-235 spectrum (69 rows): 0.321 → 0.087, UNFOLD CLOSER (p = 3e-08); full-data χ²/m 8.2.
+  - Cf-252, Maxwellian prior (69 rows): 0.158 → 0.080, UNFOLD CLOSER (p = 0.0007); full-data χ²/m 8.5.
+  - U-235, prior the Cf-252 spectrum (51 rows): 0.246 → 0.044, UNFOLD CLOSER (p = 1e-05); full-data χ²/m 4.2.
+  - U-235, Maxwellian prior (51 rows): 1.031 → 0.048, UNFOLD CLOSER (p = 2e-09); full-data χ²/m 5.8.
+  - With the IRDFF-II reference spectra themselves: Cf-252 0.015, U-235 0.024. The Cf-252 spectrum
+    was evaluated with similar measurements. χ²/m of 4–8 says the published uncertainties, with TENDL-2025's MF=33,
+    do not cover the spread.
+  - A Maxwellian prior has almost no flux below 0.5 eV, where the reference spectra have some; no measurement moves a
+    30% prior by orders of magnitude, so that band stays the prior's (posterior over reference 0.001 and below).
+- **G5, G6.** Both determinism pairs are byte-identical apart from wall time; all 18 refusals exit 2 with their cause
+  (projectile and power are refused by the problem validator first, as the protocol allows).
