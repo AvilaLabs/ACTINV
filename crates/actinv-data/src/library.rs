@@ -913,66 +913,12 @@ fn check_npz_array_size(name: &str, dtype: &str, shape: &[usize]) -> Result<(), 
 }
 
 pub fn write_npz(path: impl AsRef<Path>, library: &Library) -> Result<(), String> {
-    use zip::write::SimpleFileOptions;
-    use zip::{CompressionMethod, DateTime, ZipWriter};
-
-    library.validate()?;
-    // The reader refuses any array member of MAX_ARRAY_BYTES or more, so never write one.
-    check_npz_array_size("rows.npy", "<i8", &[library.rows.len(), 5])?;
-    check_npz_array_size("sig.npy", "<f8", &[library.rows.len(), library.ngroups])?;
-    check_npz_array_size("bounds.npy", "<f8", &[library.bounds.len()])?;
     let path = path.as_ref();
     let temporary = temporary_sibling(path)?;
     let result = (|| {
         let file = std::fs::File::create(&temporary)
             .map_err(|error| format!("cannot create {}: {error}", temporary.display()))?;
-        let mut archive = ZipWriter::new(file);
-        let timestamp =
-            DateTime::from_date_and_time(1980, 1, 1, 0, 0, 0).map_err(|error| error.to_string())?;
-        let options = SimpleFileOptions::default()
-            .compression_method(CompressionMethod::Deflated)
-            .compression_level(Some(6))
-            .last_modified_time(timestamp)
-            .unix_permissions(0o600);
-
-        archive
-            .start_file("rows.npy", options)
-            .map_err(|error| error.to_string())?;
-        write_npy_header(&mut archive, "<i8", &[library.rows.len(), 5])?;
-        for row in &library.rows {
-            for value in [
-                i64::try_from(row.target).map_err(|_| "target index exceeds i64")?,
-                i64::from(row.mt),
-                i64::from(row.zap),
-                i64::from(row.lfs),
-                i64::from(row.lmf),
-            ] {
-                archive
-                    .write_all(&value.to_le_bytes())
-                    .map_err(|error| error.to_string())?;
-            }
-        }
-
-        archive
-            .start_file("sig.npy", options)
-            .map_err(|error| error.to_string())?;
-        write_npy_header(&mut archive, "<f8", &[library.rows.len(), library.ngroups])?;
-        for value in &library.sig {
-            archive
-                .write_all(&value.to_le_bytes())
-                .map_err(|error| error.to_string())?;
-        }
-
-        archive
-            .start_file("bounds.npy", options)
-            .map_err(|error| error.to_string())?;
-        write_npy_header(&mut archive, "<f8", &[library.bounds.len()])?;
-        for value in &library.bounds {
-            archive
-                .write_all(&value.to_le_bytes())
-                .map_err(|error| error.to_string())?;
-        }
-        let file = archive.finish().map_err(|error| error.to_string())?;
+        let file = write_npz_archive(file, library, false)?;
         file.sync_all()
             .map_err(|error| format!("cannot sync {}: {error}", temporary.display()))?;
         std::fs::rename(&temporary, path).map_err(|error| {
@@ -990,6 +936,118 @@ pub fn write_npz(path: impl AsRef<Path>, library: &Library) -> Result<(), String
         let _ = std::fs::remove_file(&temporary);
     }
     result
+}
+
+/// The bytes [`write_npz`] would write for `library`.
+pub fn npz_bytes(library: &Library) -> Result<Vec<u8>, String> {
+    Ok(write_npz_archive(std::io::Cursor::new(Vec::new()), library, false)?.into_inner())
+}
+
+/// `library` as an uncompressed NPZ, for a library built in memory only to be read straight back:
+/// writing it is about a hundred times faster than [`npz_bytes`].
+pub fn npz_bytes_stored(library: &Library) -> Result<Vec<u8>, String> {
+    Ok(write_npz_archive(std::io::Cursor::new(Vec::new()), library, true)?.into_inner())
+}
+
+/// Array data on its way into an archive member. With a limit of one byte every value is its
+/// own write, as the compressed writer has always done; uncompressed members gather a megabyte.
+struct Staged<'a, W: Write> {
+    out: &'a mut W,
+    buffer: Vec<u8>,
+    limit: usize,
+}
+
+impl<W: Write> Staged<'_, W> {
+    fn put(&mut self, bytes: &[u8]) -> Result<(), String> {
+        self.buffer.extend_from_slice(bytes);
+        if self.buffer.len() >= self.limit {
+            self.flush()?;
+        }
+        Ok(())
+    }
+
+    fn flush(&mut self) -> Result<(), String> {
+        self.out
+            .write_all(&self.buffer)
+            .map_err(|error| error.to_string())?;
+        self.buffer.clear();
+        Ok(())
+    }
+}
+
+fn write_npz_archive<W: Write + Seek>(
+    writer: W,
+    library: &Library,
+    stored: bool,
+) -> Result<W, String> {
+    use zip::write::SimpleFileOptions;
+    use zip::{CompressionMethod, DateTime, ZipWriter};
+
+    library.validate()?;
+    // The reader refuses any array member of MAX_ARRAY_BYTES or more, so never write one.
+    check_npz_array_size("rows.npy", "<i8", &[library.rows.len(), 5])?;
+    check_npz_array_size("sig.npy", "<f8", &[library.rows.len(), library.ngroups])?;
+    check_npz_array_size("bounds.npy", "<f8", &[library.bounds.len()])?;
+    let mut archive = ZipWriter::new(writer);
+    let timestamp =
+        DateTime::from_date_and_time(1980, 1, 1, 0, 0, 0).map_err(|error| error.to_string())?;
+    let options = if stored {
+        SimpleFileOptions::default().compression_method(CompressionMethod::Stored)
+    } else {
+        SimpleFileOptions::default()
+            .compression_method(CompressionMethod::Deflated)
+            .compression_level(Some(6))
+    }
+    .last_modified_time(timestamp)
+    .unix_permissions(0o600);
+    let limit = if stored { 1 << 20 } else { 1 };
+
+    archive
+        .start_file("rows.npy", options)
+        .map_err(|error| error.to_string())?;
+    write_npy_header(&mut archive, "<i8", &[library.rows.len(), 5])?;
+    let mut staged = Staged {
+        out: &mut archive,
+        buffer: Vec::new(),
+        limit,
+    };
+    for row in &library.rows {
+        for value in [
+            i64::try_from(row.target).map_err(|_| "target index exceeds i64")?,
+            i64::from(row.mt),
+            i64::from(row.zap),
+            i64::from(row.lfs),
+            i64::from(row.lmf),
+        ] {
+            staged.put(&value.to_le_bytes())?;
+        }
+    }
+    staged.flush()?;
+
+    archive
+        .start_file("sig.npy", options)
+        .map_err(|error| error.to_string())?;
+    write_npy_header(&mut archive, "<f8", &[library.rows.len(), library.ngroups])?;
+    let mut staged = Staged {
+        out: &mut archive,
+        buffer: Vec::new(),
+        limit,
+    };
+    for value in &library.sig {
+        staged.put(&value.to_le_bytes())?;
+    }
+    staged.flush()?;
+
+    archive
+        .start_file("bounds.npy", options)
+        .map_err(|error| error.to_string())?;
+    write_npy_header(&mut archive, "<f8", &[library.bounds.len()])?;
+    for value in &library.bounds {
+        archive
+            .write_all(&value.to_le_bytes())
+            .map_err(|error| error.to_string())?;
+    }
+    archive.finish().map_err(|error| error.to_string())
 }
 
 #[cfg(unix)]
@@ -1168,6 +1226,13 @@ mod tests {
         assert_eq!(loaded_from_bytes.rows, library.rows);
         assert_eq!(loaded_from_bytes.sig, library.sig);
         assert_eq!(loaded_from_bytes.bounds, library.bounds);
+        assert_eq!(npz_bytes(&library).unwrap(), bytes);
+        let stored = npz_bytes_stored(&library).unwrap();
+        assert_ne!(stored, bytes);
+        let loaded_stored = read_npz_bytes(&stored).unwrap();
+        assert_eq!(loaded_stored.rows, library.rows);
+        assert_eq!(loaded_stored.sig, library.sig);
+        assert_eq!(loaded_stored.bounds, library.bounds);
         let archive = open_npz_reader(std::io::Cursor::new(&bytes)).unwrap();
         let loaded_after_sha = read_archive_after_sha256_verification(archive).unwrap();
         assert_eq!(loaded_after_sha.rows, library.rows);

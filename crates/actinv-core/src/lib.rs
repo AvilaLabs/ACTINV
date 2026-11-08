@@ -17,6 +17,7 @@ pub mod flux;
 pub mod gas;
 pub mod mesh;
 pub mod overrides;
+pub mod pack;
 pub mod pathways;
 pub mod photon;
 pub mod power;

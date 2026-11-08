@@ -81,6 +81,18 @@ dependencies = [
 ]
 
 [[package]]
+name = "actinv-web-engine"
+version = "1.7.2"
+dependencies = [
+ "actinv-core",
+ "js-sys",
+ "serde_json",
+ "wasm-bindgen",
+ "wasm-bindgen-futures",
+ "web-sys",
+]
+
+[[package]]
 name = "adler2"
 version = "2.0.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"

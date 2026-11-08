@@ -27,6 +27,16 @@ use sha2::{Digest, Sha256};
 use std::sync::mpsc::{self, Receiver};
 
 const MAX_FILE_BYTES: usize = 32 * 1024 * 1024;
+/// The library pack the browser runs from, beside the app: TENDL-2025 in 709 groups with the
+/// ENDF/B-VIII.0 and JEFF-3.3 decay data (`actinv_core::pack`).
+const BROWSER_PACK: &str = "./data/tendl-2025-neutron-709g";
+/// The data a problem must name to run here: its library, then its decay files, each by catalog
+/// id or file name.
+const BROWSER_LIBRARY: (&str, &str) = ("tendl-2025-neutron-709g", "tendl-2025-neutron-709g.npz");
+const BROWSER_DECAY: [(&str, &str); 2] = [
+    ("endfb-viii-0-decay", "endf-b-viii-0_decay.dat"),
+    ("jeff-3-3-decay", "jeff-3-3_decay.dat"),
+];
 /// Below this width the sidebar hides behind a Menu button so the page keeps its room.
 const NARROW: f32 = 760.;
 
@@ -345,6 +355,61 @@ fn apply_pin(doc: &mut Value, field: PinField, name: &str, sha256: &str) {
 }
 
 /// The setup page a view asked to open.
+/// Why the browser cannot run `problem`, or None when it can: the pack holds one library and its
+/// decay data, and no fission products. The engine checks again against the pack itself.
+fn browser_refusal(problem: &Value) -> Option<String> {
+    let named = |path: &str, (id, file): (&str, &str)| {
+        path.strip_prefix("catalog:") == Some(id)
+            || std::path::Path::new(path)
+                .file_name()
+                .is_some_and(|name| name == file)
+    };
+    let spec = match Spec::from_json(&problem.to_string()) {
+        Ok(spec) => spec,
+        Err(error) => return Some(format!("The problem is not valid yet: {error}")),
+    };
+    if !named(&spec.library.path, BROWSER_LIBRARY) {
+        return Some(format!(
+            "The browser holds the standard TENDL-2025 library only; this problem names {}.",
+            spec.library.path
+        ));
+    }
+    let mut decay = vec![spec.decay.primary.as_str()];
+    decay.extend(
+        spec.decay
+            .fallback
+            .as_deref()
+            .filter(|path| !path.is_empty()),
+    );
+    if decay.len() != BROWSER_DECAY.len()
+        || decay
+            .iter()
+            .zip(BROWSER_DECAY)
+            .any(|(path, name)| !named(path, name))
+    {
+        return Some(
+            "The browser holds the standard decay data only (ENDF/B-VIII.0, then JEFF-3.3).".into(),
+        );
+    }
+    if !spec.fission_yields.files.is_empty() || spec.fission_yields.spontaneous.is_some() {
+        return Some("Problems with fission yields run on your computer: the browser does not follow fission products.".into());
+    }
+    if spec.schedule.iter().any(|step| step.library.is_some()) {
+        return Some("Problems whose steps change library run on your computer.".into());
+    }
+    if spec.damage.is_some() {
+        return Some("Displacement damage (dpa) runs on your computer: the browser holds no damage table yet.".into());
+    }
+    if spec
+        .uncertainty
+        .as_ref()
+        .is_some_and(|options| options.covariance.is_some())
+    {
+        return Some("Uncertainty from the covariance file runs on your computer.".into());
+    }
+    None
+}
+
 fn page_for(target: Target) -> Page {
     match target {
         Target::Material => Page::Material,
@@ -430,6 +495,10 @@ pub struct Workbench {
     import: Option<ImportState>,
     dark: bool,
     suite: avila_account::ui_web::WebSuite,
+    /// A calculation running in the browser's engine, its latest event and when it started (ms).
+    browser_run: Option<(web::EngineRun, Option<web::EngineEvent>, f64)>,
+    /// Whether this site serves the library pack; browser runs are offered only where it does.
+    browser_pack: std::rc::Rc<std::cell::Cell<Option<bool>>>,
 }
 
 impl Workbench {
@@ -492,6 +561,11 @@ impl Workbench {
             import: None,
             dark: false,
             suite: avila_account::ui_web::WebSuite::new(&cc.egui_ctx, "actinv"),
+            browser_run: None,
+            browser_pack: {
+                let ctx = cc.egui_ctx.clone();
+                web::reachable(&format!("{BROWSER_PACK}/graph.json"), move || ctx.request_repaint())
+            },
         }
     }
 
@@ -850,8 +924,16 @@ impl Workbench {
         );
         ui.group(|ui| {
             ui.set_width(ui.available_width());
-            ui.strong("This browser workbench prepares problems and explores results");
-            ui.label("Calculations run in the desktop app or with `actinv run` on your computer. Set up a problem here, download it, run it there, then open the result here or in the app.");
+            ui.strong(if self.browser_pack.get() == Some(true) {
+                "This browser workbench prepares, runs and explores problems"
+            } else {
+                "This browser workbench prepares problems and explores results"
+            });
+            if self.browser_pack.get() == Some(true) {
+                ui.label("Set up a problem here and run it in this browser on Check & run, or download it and run it with the desktop app or `actinv run` on your computer.");
+            } else {
+                ui.label("Calculations run in the desktop app or with `actinv run` on your computer. Set up a problem here, download it, run it there, then open the result here or in the app.");
+            }
             ui.horizontal_wrapped(|ui| {
                 ui.hyperlink_to("Download ACTINV for your computer", "./download/");
                 ui.label("·");
@@ -970,13 +1052,17 @@ impl Workbench {
         });
     }
 
-    /// The last setup step. The browser cannot run the solver, so this is where the problem is
-    /// handed to the desktop app or the command line.
+    /// The last setup step: run the problem here from the library pack, or hand it to the desktop
+    /// app or the command line.
     fn check_run(&mut self, ui: &mut egui::Ui) {
         visuals::heading(
             ui,
             "Check & run",
-            "Read the problem back, fix anything marked, then download it and run it on your computer.",
+            if self.browser_pack.get() == Some(true) {
+                "Read the problem back, fix anything marked, then run it here or on your computer."
+            } else {
+                "Read the problem back, fix anything marked, then download it and run it on your computer."
+            },
         );
         ui.label("Calculation title");
         ui.add_enabled_ui(!self.raw_dirty, |ui| {
@@ -1002,6 +1088,14 @@ impl Workbench {
             self.page = page_for(target);
         }
         ui.add_space(16.);
+        if self.browser_pack.get() == Some(true) {
+            ui.group(|ui| {
+                ui.set_width(ui.available_width());
+                ui.strong("Run it here");
+                self.browser_panel(ui);
+            });
+            ui.add_space(12.);
+        }
         ui.group(|ui| {
             ui.set_width(ui.available_width());
             ui.strong("Run it on your computer");
@@ -1032,6 +1126,100 @@ impl Workbench {
                 }
             });
         });
+    }
+
+    /// Run in this browser: the button, or the running calculation's progress and Cancel.
+    fn browser_panel(&mut self, ui: &mut egui::Ui) {
+        if let Some((_, event, started)) = &self.browser_run {
+            let (event, elapsed) = (event.clone(), (now_ms() - started) / 1e3);
+            let mut cancel = false;
+            ui.horizontal_wrapped(|ui| {
+                ui.spinner();
+                match &event {
+                    Some(web::EngineEvent::Fetching { done, total }) if done < total => {
+                        ui.label(format!("Fetching nuclear data: {done} of {total} files"));
+                        ui.add(
+                            egui::ProgressBar::new(*done as f32 / (*total).max(1) as f32)
+                                .desired_width(180.),
+                        );
+                    }
+                    Some(web::EngineEvent::Solving) | Some(web::EngineEvent::Fetching { .. }) => {
+                        ui.label(format!("Solving… {elapsed:.0} s"));
+                    }
+                    _ => {
+                        ui.label(format!("Starting… {elapsed:.0} s"));
+                    }
+                }
+                cancel = ui.button("Cancel").clicked();
+            });
+            if cancel {
+                self.browser_run = None;
+                self.report(Ok("Calculation cancelled.".into()));
+            }
+            return;
+        }
+        let refusal = if self.raw_dirty {
+            Some("Apply or discard the JSON edits first.".to_owned())
+        } else {
+            browser_refusal(&self.problem)
+        };
+        ui.label("ACTINV solves the problem in this browser with the standard TENDL-2025 library, fetching only the data the material can reach. Nothing leaves your computer.");
+        ui.horizontal_wrapped(|ui| {
+            let run = ui.add_enabled(
+                refusal.is_none(),
+                egui::Button::new(RichText::new("Run in browser").color(Color32::WHITE)).fill(BLUE),
+            );
+            if run.clicked() {
+                let ctx = ui.ctx().clone();
+                let started = web::EngineRun::start(
+                    &self.problem.to_string(),
+                    BROWSER_PACK,
+                    None,
+                    move || ctx.request_repaint(),
+                );
+                match started {
+                    Ok(run) => {
+                        self.browser_run = Some((run, None, now_ms()));
+                        self.report(Ok("Running in this browser.".into()));
+                    }
+                    Err(error) => self.report(Err(error)),
+                }
+            }
+            if let Some(reason) = &refusal {
+                ui.label(RichText::new(reason).weak());
+            }
+        });
+    }
+
+    /// Take the browser calculation's events: progress, or its result opened like a result file.
+    fn poll_browser_run(&mut self) {
+        let Some((run, last, started)) = &mut self.browser_run else {
+            return;
+        };
+        let started = *started;
+        for event in run.take_events() {
+            match event {
+                web::EngineEvent::Done(text) => {
+                    self.browser_run = None;
+                    let seconds = (now_ms() - started) / 1e3;
+                    let opened = self
+                        .load(FileKind::Result, "result.json".into(), text.as_bytes())
+                        .map(|_| {
+                            format!(
+                                "Ran in this browser in {seconds:.0} s. Download result keeps it."
+                            )
+                        });
+                    self.report(opened);
+                    return;
+                }
+                web::EngineEvent::Failed(message) => {
+                    self.browser_run = None;
+                    self.report(Err(message));
+                    return;
+                }
+                event => *last = Some(event),
+            }
+        }
     }
 
     /// Data: the paths the problem records. The browser cannot read the files; the program that
@@ -2405,8 +2593,16 @@ impl Workbench {
     }
 }
 
+/// Milliseconds on the page's clock.
+fn now_ms() -> f64 {
+    web_sys::window()
+        .and_then(|window| window.performance())
+        .map_or(0.0, |performance| performance.now())
+}
+
 impl eframe::App for Workbench {
     fn logic(&mut self, ctx: &egui::Context, _: &mut eframe::Frame) {
+        self.poll_browser_run();
         if let Some(rx) = &self.pending_file {
             match rx.try_recv() {
                 Ok(read) => {
