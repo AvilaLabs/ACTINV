@@ -6616,3 +6616,26 @@ library on 25 of the 118 problems. The engine in the browser reproduces the nati
 refusal case is refused, but a fixed depth of two reactions is not enough at 1e15 n/cm²/s thermal for ten years, for
 the uranium impurity in beryllium, or for photon emission carried by trace nuclides after the main emitters decay.
 P196's sentences are never quoted. The repair round is registered as an amendment before its run.
+
+## Entry 381 — P196 Amendment A registered: the repair round, with packs that follow more reactions until the result settles, on P196's suite and 57 held-out problems (2026-11-08)
+
+`protocols/ACTINV-P196_AMENDMENT_A.md` and `controls/p196a.py` are sealed in `protocols/protocol_hash.txt`.
+- **Change.** Candidate `9d4cbca`: `actinv_core::pack::Deepening` runs a problem at 2, 3, 4, 6, 8, 12, 16, 24, 32,
+  48 and 64 reactions in turn. It stops after two agreements in a row: totals within 1e-6, every nuclide with 0.1%
+  of the activity within 1e-5, and atoms that changed nuclide within 1e-6 of all atoms. It also stops at a depth
+  that reaches nothing new, or at 64. `pack_run … auto` and the browser's worker use it.
+- **Gates.** P196's, with three changes. The reaction count is `auto`. The suite adds 57 held-out problems, never
+  run before: 19 materials under fission and 1/E at 1e15 n/cm²/s for ten years, and thermal at 3e14 for three years.
+  The browser set adds three problems, fifteen in all. G2 gains a floor: a total below 1e-10 of its largest value
+  over the problem's steps is compared against that floor. That relaxes a registered gate after seeing its
+  failures, so the checker reports, without gating on them, the comparisons under the floor and the problems that
+  fail P196's G2 unamended.
+- **Seen.** All of P196's results. On P196's own problems: fixed depths of 3–12 reactions on five problems; a
+  one-agreement prototype on nine (water stopped too early, hence two agreements); and the rule on all 118, twice.
+  The second time, on the candidate's build, all 118 passed the amended G2 and 117 P196's. The exception,
+  V-4Cr-4Ti thermal at 1e14, has photon emission 0.74 off at a step where it had fallen to 4e-18 of its largest.
+  Problems settled at a median of four reactions and 34 MB, at most 48 and 209 MB. A variant with a floor in the
+  rule itself stopped water at 1e15 thermal too early and was dropped. One rehearsal, and one Chromium run of
+  tungsten at 1e15 thermal (198 s, identical to native), were read for exit status and identity only.
+- **Scored run.** From a clean tracked tree at the registration, inside the AGENTS.md scope. G6 is CI on the
+  evidence commit. This is P196's one repair round: if P196A fails, nothing from P196 or P196A is quoted.
