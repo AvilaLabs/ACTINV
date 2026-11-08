@@ -6639,3 +6639,26 @@ P196's sentences are never quoted. The repair round is registered as an amendmen
   tungsten at 1e15 thermal (198 s, identical to native), were read for exit status and identity only.
 - **Scored run.** From a clean tracked tree at the registration, inside the AGENTS.md scope. G6 is CI on the
   evidence commit. This is P196's one repair round: if P196A fails, nothing from P196 or P196A is quoted.
+
+## Entry 382 — P196A evidence: G0–G4 pass on 5ca696a; 175 problems, the 57 held out included, within 9e-7 of the whole library, and fifteen browser runs identical to native; P196A-PASS pending G6 (2026-11-08)
+
+The registered run on `5ca696a` (code `9d4cbca`) with a clean tracked tree, inside the AGENTS.md scope, wrote
+`results/p196a_record.json`. `controls/p196a.py check` wrote `results/p196a_verdict.json`: G0–G4 pass. All 350
+runs finished.
+- **G2.** All 175 problems pass. The largest change at any step: total activity 2.4e-7, heat 9.3e-7, photon
+  emission 4.0e-7; every nuclide carrying 0.1% of the activity within 5.2e-15.
+  - On the 57 held-out problems, never run before (fission and 1/E at 1e15 n/cm²/s for ten years, thermal at 3e14
+    for three years), every total was within 9.3e-7.
+  - 81 comparisons on 22 problems fell under the floor. Only `v-4cr-4ti-thermal-1e14-1y` fails P196's G2 unamended:
+    its photon emission is 0.74 off at a step at 4e-18 of its largest.
+- **G3.** The fifteen browser runs were identical to `pack_run` apart from wall times and the entry point, with no
+  page errors. That includes `tungsten-thermal-1e15-10y` at 48 reactions (196 s) and `beryllium-s65-thermal-1e14-1y`
+  (141 s).
+- **G4.** All five refusal cases exited 1 without a result, each naming its cause. **G1** holds.
+- **G5, reported.**
+  - Problems settled at a median of four reactions after three rounds. 111 settled at four reactions, 21 at six,
+    7 at eight, 15 at twelve, 8 at sixteen, 6 at 24, 5 at 32 and 2 at 48. The held-out problems settled at a
+    median of six, at most 32.
+  - A problem fetched a median of 34 MB in 1436 files, at most 209 MB in 8891.
+  - Chromium, from a local Python web server: median 18 s, at most 196 s. Native `pack_run`: median 4.6 s.
+- **G6** is CI on this commit.

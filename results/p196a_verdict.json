@@ -1,0 +1,3584 @@
+{
+ "G0": {
+  "pass": true,
+  "missing": []
+ },
+ "G1": {
+  "pass": true,
+  "failures": []
+ },
+ "G2": {
+  "pass": true,
+  "failures": [],
+  "largest": {
+   "activity": 2.358494132935995e-07,
+   "heat": 9.326841607085449e-07,
+   "photons": 4.0136337555465507e-07,
+   "nuclide": 5.1946147208680635e-15
+  },
+  "problems": [
+   {
+    "name": "example-fns_fe_5min",
+    "pass": true,
+    "steps": [
+     21,
+     21
+    ],
+    "largest": {
+     "activity": 0.0,
+     "heat": 0.0,
+     "photons": 0.0,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "example-pulsed_demo",
+    "pass": true,
+    "steps": [
+     11,
+     11
+    ],
+    "largest": {
+     "activity": 0.0,
+     "heat": 0.0,
+     "photons": 0.0,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "example-feed_removal_demo",
+    "pass": true,
+    "steps": [
+     2,
+     2
+    ],
+    "largest": {
+     "activity": 0.0,
+     "heat": 0.0,
+     "photons": 0.0,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "example-shielding_demo",
+    "pass": true,
+    "steps": [
+     1,
+     1
+    ],
+    "largest": {
+     "activity": 0.0,
+     "heat": 0.0,
+     "photons": 0.0,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "eurofer97-fusion-14mev-1e14-1y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 0.0,
+     "heat": 0.0,
+     "photons": 0.0,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "eurofer97-fission-1e14-1y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 0.0,
+     "heat": 0.0,
+     "photons": 0.0,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "eurofer97-thermal-1e14-1y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 6.7286695975518506e-09,
+     "heat": 9.030578682839043e-08,
+     "photons": 5.213921012119755e-08,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "eurofer97-one-over-e-1e14-1y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 6.112414057239644e-09,
+     "heat": 2.6643504331987536e-09,
+     "photons": 2.5091836357660263e-09,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "eurofer97-fusion-14mev-1e15-10y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 0.0,
+     "heat": 0.0,
+     "photons": 0.0,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "eurofer97-thermal-1e15-10y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 0.0,
+     "heat": 0.0,
+     "photons": 0.0,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "eurofer97-3-measured-fusion-14mev-1e14-1y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 0.0,
+     "heat": 0.0,
+     "photons": 0.0,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "eurofer97-3-measured-fission-1e14-1y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 0.0,
+     "heat": 0.0,
+     "photons": 0.0,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "eurofer97-3-measured-thermal-1e14-1y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 6.490672802766743e-09,
+     "heat": 1.0955485967951342e-07,
+     "photons": 5.616676735264887e-08,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "eurofer97-3-measured-one-over-e-1e14-1y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 6.166065539912711e-09,
+     "heat": 2.700662180971123e-09,
+     "photons": 2.5343120607088026e-09,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "eurofer97-3-measured-fusion-14mev-1e15-10y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 0.0,
+     "heat": 0.0,
+     "photons": 0.0,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "eurofer97-3-measured-thermal-1e15-10y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 0.0,
+     "heat": 0.0,
+     "photons": 0.0,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "ss304-fusion-14mev-1e14-1y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 0.0,
+     "heat": 0.0,
+     "photons": 0.0,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "ss304-fission-1e14-1y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 0.0,
+     "heat": 0.0,
+     "photons": 0.0,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "ss304-thermal-1e14-1y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 2.1025726195478235e-16,
+     "heat": 0.0,
+     "photons": 0.0,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "ss304-one-over-e-1e14-1y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 0.0,
+     "heat": 0.0,
+     "photons": 0.0,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "ss304-fusion-14mev-1e15-10y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 0.0,
+     "heat": 0.0,
+     "photons": 0.0,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "ss304-thermal-1e15-10y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 4.912564957460858e-16,
+     "heat": 1.638855705000073e-16,
+     "photons": 3.327268370556166e-16,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "ss304l-fusion-14mev-1e14-1y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 0.0,
+     "heat": 0.0,
+     "photons": 0.0,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "ss304l-fission-1e14-1y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 0.0,
+     "heat": 0.0,
+     "photons": 0.0,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "ss304l-thermal-1e14-1y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 0.0,
+     "heat": 1.3066217776649266e-16,
+     "photons": 0.0,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "ss304l-one-over-e-1e14-1y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 0.0,
+     "heat": 0.0,
+     "photons": 0.0,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "ss304l-fusion-14mev-1e15-10y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 0.0,
+     "heat": 0.0,
+     "photons": 0.0,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "ss304l-thermal-1e15-10y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 6.578237502693316e-16,
+     "heat": 0.0,
+     "photons": 3.34774833723622e-16,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "ss316-fusion-14mev-1e14-1y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 0.0,
+     "heat": 0.0,
+     "photons": 0.0,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "ss316-fission-1e14-1y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 0.0,
+     "heat": 0.0,
+     "photons": 0.0,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "ss316-thermal-1e14-1y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 2.5673757353741132e-15,
+     "heat": 9.859148045091413e-15,
+     "photons": 2.3669999197918003e-15,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "ss316-one-over-e-1e14-1y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 4.5506664092524684e-15,
+     "heat": 6.518237571745033e-15,
+     "photons": 3.906044063960578e-15,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "ss316-fusion-14mev-1e15-10y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 0.0,
+     "heat": 0.0,
+     "photons": 0.0,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "ss316-thermal-1e15-10y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 3.008140316340166e-08,
+     "heat": 1.0644461275803414e-08,
+     "photons": 5.709010116592427e-09,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "inconel718-fusion-14mev-1e14-1y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 0.0,
+     "heat": 0.0,
+     "photons": 0.0,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "inconel718-fission-1e14-1y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 0.0,
+     "heat": 0.0,
+     "photons": 0.0,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "inconel718-thermal-1e14-1y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 2.523027202744933e-15,
+     "heat": 5.387777535114596e-15,
+     "photons": 3.3095214748706248e-15,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "inconel718-one-over-e-1e14-1y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 2.9924431289357896e-15,
+     "heat": 4.700802998074563e-15,
+     "photons": 2.948769445701375e-15,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "inconel718-fusion-14mev-1e15-10y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 0.0,
+     "heat": 0.0,
+     "photons": 0.0,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "inconel718-thermal-1e15-10y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 4.77241499759953e-08,
+     "heat": 1.6127013723130275e-08,
+     "photons": 1.039341555123773e-08,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "zircaloy4-fusion-14mev-1e14-1y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 0.0,
+     "heat": 0.0,
+     "photons": 0.0,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "zircaloy4-fission-1e14-1y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 0.0,
+     "heat": 0.0,
+     "photons": 0.0,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "zircaloy4-thermal-1e14-1y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 6.042515243079006e-14,
+     "heat": 1.5566752946838442e-13,
+     "photons": 1.8545459530269e-13,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "zircaloy4-one-over-e-1e14-1y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 1.4567762387002786e-15,
+     "heat": 2.2656759561534347e-15,
+     "photons": 3.4722599090341784e-15,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "zircaloy4-fusion-14mev-1e15-10y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 0.0,
+     "heat": 0.0,
+     "photons": 0.0,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "zircaloy4-thermal-1e15-10y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 1.008102163137929e-11,
+     "heat": 3.3108354236128184e-12,
+     "photons": 2.8802558412019326e-12,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "al6061-fusion-14mev-1e14-1y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 0.0,
+     "heat": 0.0,
+     "photons": 0.0,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "al6061-fission-1e14-1y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 0.0,
+     "heat": 0.0,
+     "photons": 0.0,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "al6061-thermal-1e14-1y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 0.0,
+     "heat": 1.970919561037723e-16,
+     "photons": 0.0,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "al6061-one-over-e-1e14-1y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 0.0,
+     "heat": 0.0,
+     "photons": 0.0,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "al6061-fusion-14mev-1e15-10y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 0.0,
+     "heat": 0.0,
+     "photons": 0.0,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "al6061-thermal-1e15-10y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 1.409456519069038e-11,
+     "heat": 1.608087553302264e-11,
+     "photons": 1.9615103697744172e-11,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "concrete-ordinary-fusion-14mev-1e14-1y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 0.0,
+     "heat": 0.0,
+     "photons": 0.0,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "concrete-ordinary-fission-1e14-1y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 0.0,
+     "heat": 0.0,
+     "photons": 0.0,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "concrete-ordinary-thermal-1e14-1y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 6.305228367953909e-14,
+     "heat": 1.0237180855879945e-13,
+     "photons": 1.0609685198180873e-15,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "concrete-ordinary-one-over-e-1e14-1y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 0.0,
+     "heat": 0.0,
+     "photons": 0.0,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "concrete-ordinary-fusion-14mev-1e15-10y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 0.0,
+     "heat": 0.0,
+     "photons": 0.0,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "concrete-ordinary-thermal-1e15-10y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 0.0,
+     "heat": 0.0,
+     "photons": 0.0,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "water-fusion-14mev-1e14-1y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 0.0,
+     "heat": 0.0,
+     "photons": 0.0,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 4,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "water-fission-1e14-1y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 0.0,
+     "heat": 0.0,
+     "photons": 0.0,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 4,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "water-thermal-1e14-1y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 0.0,
+     "heat": 0.0,
+     "photons": 0.0,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 5,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "water-one-over-e-1e14-1y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 0.0,
+     "heat": 0.0,
+     "photons": 0.0,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 5,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "water-fusion-14mev-1e15-10y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 0.0,
+     "heat": 0.0,
+     "photons": 0.0,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 4,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "water-thermal-1e15-10y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 0.0,
+     "heat": 0.0,
+     "photons": 0.0,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 4,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "graphite-reactor-fusion-14mev-1e14-1y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 0.0,
+     "heat": 0.0,
+     "photons": 0.0,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 5,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "graphite-reactor-fission-1e14-1y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 0.0,
+     "heat": 0.0,
+     "photons": 0.0,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 2,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "graphite-reactor-thermal-1e14-1y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 0.0,
+     "heat": 0.0,
+     "photons": 0.0,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 5,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "graphite-reactor-one-over-e-1e14-1y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 0.0,
+     "heat": 0.0,
+     "photons": 0.0,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 5,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "graphite-reactor-fusion-14mev-1e15-10y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 0.0,
+     "heat": 0.0,
+     "photons": 0.0,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 4,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "graphite-reactor-thermal-1e15-10y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 0.0,
+     "heat": 0.0,
+     "photons": 0.0,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 5,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "tungsten-fusion-14mev-1e14-1y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 0.0,
+     "heat": 0.0,
+     "photons": 0.0,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "tungsten-fission-1e14-1y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 0.0,
+     "heat": 0.0,
+     "photons": 0.0,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "tungsten-thermal-1e14-1y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 0.0,
+     "heat": 0.0,
+     "photons": 0.0,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "tungsten-one-over-e-1e14-1y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 0.0,
+     "heat": 0.0,
+     "photons": 0.0,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "tungsten-fusion-14mev-1e15-10y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 0.0,
+     "heat": 0.0,
+     "photons": 0.0,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "tungsten-thermal-1e15-10y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 0.0,
+     "heat": 0.0,
+     "photons": 0.0,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "tantalum-fusion-14mev-1e14-1y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 0.0,
+     "heat": 0.0,
+     "photons": 0.0,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "tantalum-fission-1e14-1y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 0.0,
+     "heat": 0.0,
+     "photons": 0.0,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "tantalum-thermal-1e14-1y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 3.39750873847965e-10,
+     "heat": 1.579088686135745e-10,
+     "photons": 5.390191528294789e-10,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "tantalum-one-over-e-1e14-1y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 2.707381847581563e-10,
+     "heat": 1.5815917541895198e-11,
+     "photons": 1.230681640156434e-10,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "tantalum-fusion-14mev-1e15-10y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 0.0,
+     "heat": 0.0,
+     "photons": 0.0,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "tantalum-thermal-1e15-10y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 0.0,
+     "heat": 0.0,
+     "photons": 0.0,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "niobium-fusion-14mev-1e14-1y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 0.0,
+     "heat": 0.0,
+     "photons": 0.0,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "niobium-fission-1e14-1y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 0.0,
+     "heat": 0.0,
+     "photons": 0.0,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "niobium-thermal-1e14-1y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 7.713644474951225e-09,
+     "heat": 5.873498495133654e-09,
+     "photons": 9.332035182010067e-09,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "niobium-one-over-e-1e14-1y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 2.3664764330637847e-10,
+     "heat": 6.473828806038379e-11,
+     "photons": 6.602269881005951e-11,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "niobium-fusion-14mev-1e15-10y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 0.0,
+     "heat": 0.0,
+     "photons": 0.0,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "niobium-thermal-1e15-10y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 0.0,
+     "heat": 0.0,
+     "photons": 0.0,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "titanium-grade2-fusion-14mev-1e14-1y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 0.0,
+     "heat": 0.0,
+     "photons": 0.0,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "titanium-grade2-fission-1e14-1y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 0.0,
+     "heat": 0.0,
+     "photons": 0.0,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "titanium-grade2-thermal-1e14-1y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 6.286720021008277e-14,
+     "heat": 8.816467511395325e-14,
+     "photons": 3.01569169376053e-15,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "titanium-grade2-one-over-e-1e14-1y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 0.0,
+     "heat": 0.0,
+     "photons": 0.0,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "titanium-grade2-fusion-14mev-1e15-10y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 0.0,
+     "heat": 0.0,
+     "photons": 0.0,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "titanium-grade2-thermal-1e15-10y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 6.341605759739869e-13,
+     "heat": 1.7076884715196855e-12,
+     "photons": 1.4833943565255496e-12,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "copper-fusion-14mev-1e14-1y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 0.0,
+     "heat": 0.0,
+     "photons": 0.0,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "copper-fission-1e14-1y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 0.0,
+     "heat": 0.0,
+     "photons": 0.0,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "copper-thermal-1e14-1y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 4.658781736988468e-12,
+     "heat": 7.26044564445438e-14,
+     "photons": 2.2915489648622877e-12,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "copper-one-over-e-1e14-1y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 7.956501689089204e-15,
+     "heat": 1.2564605126117634e-16,
+     "photons": 4.11535775579328e-15,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "copper-fusion-14mev-1e15-10y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 0.0,
+     "heat": 0.0,
+     "photons": 0.0,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "copper-thermal-1e15-10y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 9.115772166234223e-13,
+     "heat": 2.0931495831806344e-13,
+     "photons": 1.211289417644856e-12,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "beryllium-s65-fusion-14mev-1e14-1y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 0.0,
+     "heat": 0.0,
+     "photons": 0.0,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "beryllium-s65-fission-1e14-1y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 0.0,
+     "heat": 0.0,
+     "photons": 0.0,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "beryllium-s65-thermal-1e14-1y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 0.0,
+     "heat": 0.0,
+     "photons": 0.0,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "beryllium-s65-one-over-e-1e14-1y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 0.0,
+     "heat": 0.0,
+     "photons": 0.0,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "beryllium-s65-fusion-14mev-1e15-10y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 0.0,
+     "heat": 0.0,
+     "photons": 0.0,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "beryllium-s65-thermal-1e15-10y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 0.0,
+     "heat": 0.0,
+     "photons": 0.0,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "v-4cr-4ti-fusion-14mev-1e14-1y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 0.0,
+     "heat": 0.0,
+     "photons": 0.0,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "v-4cr-4ti-fission-1e14-1y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 0.0,
+     "heat": 0.0,
+     "photons": 0.0,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "v-4cr-4ti-thermal-1e14-1y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 8.351689561938247e-11,
+     "heat": 4.390401535634886e-09,
+     "photons": 2.728903690994585e-08,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 1,
+     "largest_relative": 0.7449249297328109
+    }
+   },
+   {
+    "name": "v-4cr-4ti-one-over-e-1e14-1y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 2.6630335621739416e-16,
+     "heat": 7.52012532592683e-15,
+     "photons": 5.029333565717781e-14,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 1,
+     "largest_relative": 1.985296851875268e-07
+    }
+   },
+   {
+    "name": "v-4cr-4ti-fusion-14mev-1e15-10y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 0.0,
+     "heat": 0.0,
+     "photons": 0.0,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "v-4cr-4ti-thermal-1e15-10y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 0.0,
+     "heat": 0.0,
+     "photons": 0.0,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "pb-15.7li-fusion-14mev-1e14-1y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 0.0,
+     "heat": 0.0,
+     "photons": 0.0,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "pb-15.7li-fission-1e14-1y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 0.0,
+     "heat": 0.0,
+     "photons": 0.0,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "pb-15.7li-thermal-1e14-1y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 0.0,
+     "heat": 0.0,
+     "photons": 0.0,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "pb-15.7li-one-over-e-1e14-1y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 0.0,
+     "heat": 0.0,
+     "photons": 0.0,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "pb-15.7li-fusion-14mev-1e15-10y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 0.0,
+     "heat": 0.0,
+     "photons": 0.0,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "pb-15.7li-thermal-1e15-10y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 5.265023572441772e-15,
+     "heat": 5.0357398490035315e-14,
+     "photons": 1.0664292225721495e-14,
+     "nuclide": 3.867319185983368e-15
+    },
+    "at": {
+     "step": 3,
+     "nuclide": "Pb209"
+    },
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "eurofer97-fission-1e15-10y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 3.851462335422556e-12,
+     "heat": 1.943147514293846e-12,
+     "photons": 4.662868353370672e-12,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "eurofer97-one-over-e-1e15-10y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 0.0,
+     "heat": 0.0,
+     "photons": 0.0,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "eurofer97-thermal-3e14-3y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 0.0,
+     "heat": 0.0,
+     "photons": 0.0,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "eurofer97-3-measured-fission-1e15-10y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 4.034669901888048e-12,
+     "heat": 2.0368534821615336e-12,
+     "photons": 4.879191375414081e-12,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "eurofer97-3-measured-one-over-e-1e15-10y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 0.0,
+     "heat": 0.0,
+     "photons": 0.0,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "eurofer97-3-measured-thermal-3e14-3y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 0.0,
+     "heat": 0.0,
+     "photons": 0.0,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "ss304-fission-1e15-10y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 0.0,
+     "heat": 0.0,
+     "photons": 0.0,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "ss304-one-over-e-1e15-10y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 2.0138515684628844e-13,
+     "heat": 4.192210683326091e-12,
+     "photons": 8.1280424906075e-13,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "ss304-thermal-3e14-3y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 1.119879646966055e-15,
+     "heat": 3.0242368189984826e-14,
+     "photons": 4.6242418812341374e-15,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "ss304l-fission-1e15-10y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 0.0,
+     "heat": 0.0,
+     "photons": 0.0,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "ss304l-one-over-e-1e15-10y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 2.1815586248765622e-13,
+     "heat": 4.540414945932854e-12,
+     "photons": 8.819035073872767e-13,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "ss304l-thermal-3e14-3y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 1.3086005486297635e-15,
+     "heat": 3.267393556858358e-14,
+     "photons": 5.143066738213004e-15,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "ss316-fission-1e15-10y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 1.8837091920131255e-16,
+     "heat": 1.6237769923120356e-16,
+     "photons": 1.5388873889824615e-16,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "ss316-one-over-e-1e15-10y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 2.358494132935995e-07,
+     "heat": 7.009000686787274e-07,
+     "photons": 2.5053919595368833e-07,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "ss316-thermal-3e14-3y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 1.3682396968463974e-15,
+     "heat": 1.537143444007072e-15,
+     "photons": 4.572631420827212e-16,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "inconel718-fission-1e15-10y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 0.0,
+     "heat": 0.0,
+     "photons": 0.0,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "inconel718-one-over-e-1e15-10y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 1.019909831591557e-07,
+     "heat": 1.2039009052897005e-07,
+     "photons": 1.4806952998256295e-08,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "inconel718-thermal-3e14-3y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 1.6152014041623167e-15,
+     "heat": 3.5212304126432067e-16,
+     "photons": 3.034388728263449e-16,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "zircaloy4-fission-1e15-10y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 9.254921185170938e-15,
+     "heat": 3.0363142522062707e-15,
+     "photons": 1.58355343778778e-14,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "zircaloy4-one-over-e-1e15-10y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 2.2830963211527197e-07,
+     "heat": 9.326841607085449e-07,
+     "photons": 4.0136337555465507e-07,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "zircaloy4-thermal-3e14-3y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 8.9998782480996e-14,
+     "heat": 1.9651628542172284e-14,
+     "photons": 6.072949383397185e-14,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "al6061-fission-1e15-10y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 0.0,
+     "heat": 0.0,
+     "photons": 0.0,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "al6061-one-over-e-1e15-10y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 5.530583000786384e-14,
+     "heat": 2.727060969853148e-15,
+     "photons": 3.976686284426778e-14,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "al6061-thermal-3e14-3y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 1.1260895850864335e-12,
+     "heat": 6.680187364001264e-12,
+     "photons": 1.4256600976732402e-12,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "concrete-ordinary-fission-1e15-10y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 0.0,
+     "heat": 0.0,
+     "photons": 0.0,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "concrete-ordinary-one-over-e-1e15-10y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 1.6018345307315143e-08,
+     "heat": 1.3152972354513006e-09,
+     "photons": 1.361860621991315e-10,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "concrete-ordinary-thermal-3e14-3y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 6.726217405613754e-09,
+     "heat": 1.5876689347742439e-09,
+     "photons": 5.97492984325009e-11,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "water-fission-1e15-10y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 0.0,
+     "heat": 0.0,
+     "photons": 0.0,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 4,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "water-one-over-e-1e15-10y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 0.0,
+     "heat": 0.0,
+     "photons": 0.0,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 5,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "water-thermal-3e14-3y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 0.0,
+     "heat": 0.0,
+     "photons": 0.0,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 5,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "graphite-reactor-fission-1e15-10y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 0.0,
+     "heat": 0.0,
+     "photons": 0.0,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 1,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "graphite-reactor-one-over-e-1e15-10y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 0.0,
+     "heat": 0.0,
+     "photons": 0.0,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 5,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "graphite-reactor-thermal-3e14-3y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 0.0,
+     "heat": 0.0,
+     "photons": 0.0,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 5,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "tungsten-fission-1e15-10y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 2.397950557524568e-12,
+     "heat": 6.682621917677696e-14,
+     "photons": 1.1597518209706251e-12,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "tungsten-one-over-e-1e15-10y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 0.0,
+     "heat": 0.0,
+     "photons": 0.0,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "tungsten-thermal-3e14-3y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 3.4819610690524645e-14,
+     "heat": 4.0424765000685135e-14,
+     "photons": 3.566038057998433e-15,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "tantalum-fission-1e15-10y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 2.5633658163307638e-14,
+     "heat": 1.037986658093827e-14,
+     "photons": 2.1109086983393403e-14,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "tantalum-one-over-e-1e15-10y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 0.0,
+     "heat": 0.0,
+     "photons": 0.0,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "tantalum-thermal-3e14-3y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 0.0,
+     "heat": 0.0,
+     "photons": 0.0,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "niobium-fission-1e15-10y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 1.4336442990228555e-14,
+     "heat": 1.389861077284921e-13,
+     "photons": 9.62210070746697e-14,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "niobium-one-over-e-1e15-10y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 8.567591289319105e-13,
+     "heat": 4.880071745932503e-13,
+     "photons": 3.5602434788369115e-14,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "niobium-thermal-3e14-3y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 0.0,
+     "heat": 0.0,
+     "photons": 0.0,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "titanium-grade2-fission-1e15-10y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 0.0,
+     "heat": 0.0,
+     "photons": 0.0,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "titanium-grade2-one-over-e-1e15-10y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 1.5840584214926334e-08,
+     "heat": 1.2914167563812045e-09,
+     "photons": 5.354051532611399e-10,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "titanium-grade2-thermal-3e14-3y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 6.7001043572531644e-09,
+     "heat": 1.7566275686862024e-09,
+     "photons": 6.595743202406454e-10,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "copper-fission-1e15-10y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 4.065060264499543e-15,
+     "heat": 2.0671984951017061e-16,
+     "photons": 3.7760497301814865e-15,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "copper-one-over-e-1e15-10y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 4.565899329431667e-15,
+     "heat": 5.513683876332415e-15,
+     "photons": 2.8530660469847176e-15,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "copper-thermal-3e14-3y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 1.3326736912602798e-14,
+     "heat": 2.7499999620208855e-14,
+     "photons": 1.5366276745661005e-14,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "beryllium-s65-fission-1e15-10y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 0.0,
+     "heat": 3.7500295190543444e-16,
+     "photons": 2.0513398156097335e-16,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "beryllium-s65-one-over-e-1e15-10y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 0.0,
+     "heat": 0.0,
+     "photons": 0.0,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "beryllium-s65-thermal-3e14-3y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 1.74156416545406e-11,
+     "heat": 4.4802158465269787e-11,
+     "photons": 1.2726529174302789e-12,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "v-4cr-4ti-fission-1e15-10y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 0.0,
+     "heat": 6.463669563613672e-16,
+     "photons": 8.978984984210154e-15,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "v-4cr-4ti-one-over-e-1e15-10y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 0.0,
+     "heat": 0.0,
+     "photons": 0.0,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 1,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "v-4cr-4ti-thermal-3e14-3y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 0.0,
+     "heat": 0.0,
+     "photons": 0.0,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 1,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "pb-15.7li-fission-1e15-10y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 0.0,
+     "heat": 0.0,
+     "photons": 0.0,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "pb-15.7li-one-over-e-1e15-10y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 2.861302046995477e-12,
+     "heat": 1.163732379463724e-10,
+     "photons": 1.3492859864510868e-15,
+     "nuclide": 5.1946147208680635e-15
+    },
+    "at": {
+     "step": 6,
+     "nuclide": "Bi210"
+    },
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   },
+   {
+    "name": "pb-15.7li-thermal-3e14-3y",
+    "pass": true,
+    "steps": [
+     6,
+     6
+    ],
+    "largest": {
+     "activity": 0.0,
+     "heat": 0.0,
+     "photons": 0.0,
+     "nuclide": 0.0
+    },
+    "at": null,
+    "below_floor": {
+     "comparisons": 0,
+     "largest_relative": 0.0
+    }
+   }
+  ]
+ },
+ "G3": {
+  "pass": true,
+  "failures": [],
+  "problems": [
+   {
+    "name": "example-fns_fe_5min",
+    "identical": true,
+    "report": {
+     "seconds": 10.973099999904633,
+     "fetched_files": 517,
+     "fetch_seconds": 2.1295999999046327,
+     "page_errors": []
+    }
+   },
+   {
+    "name": "example-pulsed_demo",
+    "identical": true,
+    "report": {
+     "seconds": 10.170700000047685,
+     "fetched_files": 517,
+     "fetch_seconds": 2.0917999999523165,
+     "page_errors": []
+    }
+   },
+   {
+    "name": "example-feed_removal_demo",
+    "identical": true,
+    "report": {
+     "seconds": 9.294400000095367,
+     "fetched_files": 567,
+     "fetch_seconds": 2.3262000000476837,
+     "page_errors": []
+    }
+   },
+   {
+    "name": "eurofer97-fusion-14mev-1e15-10y",
+    "identical": true,
+    "report": {
+     "seconds": 43.7795,
+     "fetched_files": 2647,
+     "fetch_seconds": 8.338599999904632,
+     "page_errors": []
+    }
+   },
+   {
+    "name": "ss316-thermal-1e15-10y",
+    "identical": true,
+    "report": {
+     "seconds": 35.34260000014305,
+     "fetched_files": 1846,
+     "fetch_seconds": 6.180100000143051,
+     "page_errors": []
+    }
+   },
+   {
+    "name": "tungsten-fusion-14mev-1e15-10y",
+    "identical": true,
+    "report": {
+     "seconds": 27.649299999952316,
+     "fetched_files": 1674,
+     "fetch_seconds": 5.624899999856948,
+     "page_errors": []
+    }
+   },
+   {
+    "name": "zircaloy4-thermal-1e15-10y",
+    "identical": true,
+    "report": {
+     "seconds": 74.0975,
+     "fetched_files": 2369,
+     "fetch_seconds": 7.407299999952317,
+     "page_errors": []
+    }
+   },
+   {
+    "name": "concrete-ordinary-thermal-1e14-1y",
+    "identical": true,
+    "report": {
+     "seconds": 10.373300000190735,
+     "fetched_files": 889,
+     "fetch_seconds": 3.090100000143051,
+     "page_errors": []
+    }
+   },
+   {
+    "name": "copper-fission-1e14-1y",
+    "identical": true,
+    "report": {
+     "seconds": 9.054400000095367,
+     "fetched_files": 464,
+     "fetch_seconds": 2.004299999952316,
+     "page_errors": []
+    }
+   },
+   {
+    "name": "inconel718-one-over-e-1e14-1y",
+    "identical": true,
+    "report": {
+     "seconds": 26.305400000095368,
+     "fetched_files": 1903,
+     "fetch_seconds": 6.208400000095367,
+     "page_errors": []
+    }
+   },
+   {
+    "name": "pb-15.7li-fusion-14mev-1e14-1y",
+    "identical": true,
+    "report": {
+     "seconds": 18.110299999952318,
+     "fetched_files": 751,
+     "fetch_seconds": 3.420799999952316,
+     "page_errors": []
+    }
+   },
+   {
+    "name": "v-4cr-4ti-fission-1e14-1y",
+    "identical": true,
+    "report": {
+     "seconds": 9.226799999952316,
+     "fetched_files": 724,
+     "fetch_seconds": 2.5962000000476837,
+     "page_errors": []
+    }
+   },
+   {
+    "name": "tungsten-thermal-1e15-10y",
+    "identical": true,
+    "report": {
+     "seconds": 196.3912999999523,
+     "fetched_files": 1674,
+     "fetch_seconds": 5.611599999904633,
+     "page_errors": []
+    }
+   },
+   {
+    "name": "beryllium-s65-thermal-1e14-1y",
+    "identical": true,
+    "report": {
+     "seconds": 140.8877000000477,
+     "fetched_files": 3666,
+     "fetch_seconds": 11.906600000143051,
+     "page_errors": []
+    }
+   },
+   {
+    "name": "water-thermal-1e14-1y",
+    "identical": true,
+    "report": {
+     "seconds": 4.339100000143051,
+     "fetched_files": 155,
+     "fetch_seconds": 0.9795,
+     "page_errors": []
+    }
+   }
+  ]
+ },
+ "G4": {
+  "pass": true,
+  "failures": [],
+  "cases": [
+   {
+    "name": "other-library",
+    "pass": true
+   },
+   {
+    "name": "other-library-pin",
+    "pass": true
+   },
+   {
+    "name": "decay-order",
+    "pass": true
+   },
+   {
+    "name": "fission-yields",
+    "pass": true
+   },
+   {
+    "name": "damage",
+    "pass": true
+   }
+  ]
+ },
+ "G5": {
+  "pack_megabytes": {
+   "median": 33.954201,
+   "max": 209.398181
+  },
+  "pack_files": {
+   "median": 1436,
+   "max": 8891
+  },
+  "browser_seconds": {
+   "median": 18.110299999952318,
+   "max": 196.3912999999523
+  },
+  "native_pack_seconds_median": 4.624395379098132,
+  "note": "browser time is from a local Python web server on the evidence machine; a hosted site differs",
+  "settled_reactions": {
+   "median": 4,
+   "max": 48,
+   "by_depth": {
+    "4": 111,
+    "6": 21,
+    "8": 7,
+    "12": 15,
+    "16": 8,
+    "24": 6,
+    "32": 5,
+    "48": 2
+   }
+  },
+  "rounds": {
+   "median": 3,
+   "max": 10
+  },
+  "below_floor": {
+   "comparisons": 81,
+   "problems": 22,
+   "largest_relative": 0.7449249297328109
+  },
+  "failing_p196_g2_unamended": [
+   "v-4cr-4ti-thermal-1e14-1y"
+  ]
+ },
+ "verdict": "P196A-PASS",
+ "G6": "CI on the evidence commit (external)",
+ "sentences": [
+  "In the browser, ACTINV solves a problem with the standard TENDL-2025 library, fetching only the reactions its material can reach and the decay data they lead to, and following more reactions, round by round, until the result no longer changes.",
+  "On 175 problems (19 materials under four standard spectra at 1e14 n/cm\u00b2/s for a year and at 1e15 for ten years, under a thermal spectrum at 3e14 for three years, and 4 of the examples), its total activity, decay heat and photon emission at every step were within 9e-07 of the whole library's (of 1e-10 of its largest value, where it had fallen below that), and every nuclide carrying 0.1% of the activity within 5e-15.",
+  "Run in Chromium, the browser's result was identical to the native one on all 15 problems tried; a problem fetched a median of 34 MB of data (at most 209 MB)."
+ ]
+}
