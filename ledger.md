@@ -6425,3 +6425,27 @@ G4: controls, fns-iron and fusion-isotope are green on the evidence commit `fe58
 - **Not shipped.** ACTINV's default library is unchanged, and the composite stays on the workstation. Shipping it
   needs two things: redistribution terms for TENDL-2017, TENDL-2023 and ENDF/B-VIII.1, none of which states one in
   the copies used, and the owner's approval.
+
+## Entry 372 — P195 registered: `actinv unfold`, the neutron spectrum from foil activities and reaction rates, calibrated on synthetic foils and reported on IRDFF-II (2026-11-08)
+
+`protocols/ACTINV-P195_PROTOCOL.md`, `controls/p195.py` and `controls/check_p195.py` are sealed in
+`protocols/protocol_hash.txt`.
+- **What.** A new command fits ln φ to measured foil activities and reaction rates by generalized least squares from
+  a prior spectrum. Each foil's activities come from a full ACTINV solve of its irradiation history, with the P93
+  flux channel giving their group derivatives; reaction rates fold library cross sections. With a covariance
+  sidecar, the library's MF=33 covariance enters the measurement covariance. Output: posterior group fluxes, band
+  fluxes with intervals, pulls, χ², and the energies each measurement responds to. Supersedes the P55 and
+  2026-09-24 out-of-scope lines for this command only.
+- **Gates.** G2 rebuilds every derivative, the posterior, the cross-section covariance (through P185's reading of
+  the collapse), the bands and the statistics outside the Rust path, and plants twelve mutations. G3 is the gate:
+  95% and one-sigma coverage of true band fluxes over 40 synthetic truths drawn from the prior, and a posterior
+  closer to the truth than the prior. G4 (IRDFF-II Cf-252 and U-235, leave one reaction out, two priors per field)
+  is reported and never decides the verdict.
+- **Seen.** IRDFF-II rows and their P17/P194 TENDL-2025 values. Development smoke runs on hand-set values only.
+  Development found that Gauss–Newton does not converge when data contradict the prior by many standard
+  deviations; the inner solve is damped Newton with the model's exact Hessian. Two rehearsals with another seed,
+  two truths and two leave-one-out rows per arm were read for exit status, gate status and counts only, and their
+  outputs deleted. The first showed that the Cf-252 arms need more than 8 outer iterations (the default is now 20),
+  and its console lines showed the U-235 full-data χ² values.
+- **Scored run.** From the candidate commit with a clean tracked tree, inside the 6 GiB scope. G7 is CI on the
+  evidence commit. One repair round is allowed.
