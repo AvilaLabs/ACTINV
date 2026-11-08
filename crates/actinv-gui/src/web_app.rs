@@ -400,6 +400,11 @@ fn browser_refusal(problem: &Value) -> Option<String> {
     if spec.damage.is_some() {
         return Some("Displacement damage (dpa) runs on your computer: the browser holds no damage table yet.".into());
     }
+    if spec.self_shielding.is_some() {
+        return Some(
+            "Self-shielding runs on your computer: the browser holds no shielding table.".into(),
+        );
+    }
     if spec
         .uncertainty
         .as_ref()

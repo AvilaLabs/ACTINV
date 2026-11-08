@@ -31,12 +31,19 @@ fn main() {
                 .map_err(|e| e.to_string())?;
         let planned = std::time::Instant::now();
         let (reach, files) = pack::plan(&Spec::from_json(&spec_text)?, &graph, reactions)?;
-        eprintln!("plan {:.2}s", planned.elapsed().as_secs_f64());
+        let plan_seconds = planned.elapsed().as_secs_f64();
         let mut pack_files = HashMap::new();
         for file in files {
             let bytes = read(&directory.join(&file).to_string_lossy())?;
             pack_files.insert(file, bytes);
         }
+        eprintln!(
+            "plan {plan_seconds:.2}s: {} targets, {} decay states, {} files, {} bytes",
+            reach.targets.len(),
+            reach.nuclides.len(),
+            pack_files.len(),
+            pack_files.values().map(Vec::len).sum::<usize>()
+        );
         let parts: Vec<(usize, Vec<u8>)> = reach
             .targets
             .iter()
