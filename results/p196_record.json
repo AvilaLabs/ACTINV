@@ -1,0 +1,2485 @@
+{
+ "schema": "actinv-p196-record-1",
+ "rehearsal": false,
+ "commit": "ba966e469e4bbc8d60ebb271a370e8cc02284fcf",
+ "tracked_tree_clean": true,
+ "binaries": {
+  "actinv_bin": {
+   "path": "/home/connoravila/Documents/actinv/target/wt-web-wt/release/actinv",
+   "sha256": "ebbe6a1edf3a40af2d93a0bfa368542dea41b69d0376b6420a7ce494988960bc"
+  },
+  "pack_run_bin": {
+   "path": "/home/connoravila/Documents/actinv/target/wt-web-wt/release/pack_run",
+   "sha256": "bdd603b170564219b1c23cee2cca01bddee410c0e1f6260db894a3a09dddaafc"
+  },
+  "pack_build_bin": {
+   "path": "/home/connoravila/Documents/actinv/target/wt-web-wt/release/pack_build",
+   "sha256": "e0042efdd7f3ff4b1c875a38056ef172aca874ada063959ea1a5b8257085816c"
+  }
+ },
+ "pack": {
+  "dir": "target/p196-work/pack",
+  "graph_sha256": "f72aafa692af3637337b28e160995eae200ae6b98ee81a960ff355432782750f",
+  "stderr": "2850 targets, 10523 files, 225836070 bytes, graph 4228142 bytes"
+ },
+ "reactions": 2,
+ "problems": [
+  {
+   "name": "example-fns_fe_5min",
+   "spec": "target/p196-work/problems/example-fns_fe_5min/spec.json",
+   "spec_sha256": "ed55ed00f6c00fc4a2351e18332e98e7feb33d9b7ca65e7ba861e0e5e8feef39",
+   "full_exit": 0,
+   "full_wall_s": 3.2217074180953205,
+   "pack_exit": 0,
+   "pack_wall_s": 1.6418049719650298,
+   "plan": {
+    "targets": 103,
+    "decay_states": 207,
+    "files": 517,
+    "bytes": 4266440
+   },
+   "full": "target/p196-work/problems/example-fns_fe_5min/full.json",
+   "full_sha256": "c2f15d6d4bbf15271cfde8a8df59993449929e02ce143cfd7d0a41488c210871",
+   "pack": "target/p196-work/problems/example-fns_fe_5min/pack.json",
+   "pack_sha256": "0c69ec890028583aaf5957eb70d61fec09b792e8dcfd0214eb0986aa42b6f368"
+  },
+  {
+   "name": "example-pulsed_demo",
+   "spec": "target/p196-work/problems/example-pulsed_demo/spec.json",
+   "spec_sha256": "2ccad76c282d623afff5c80a79891ee268bfcbd3126c5f70f55635ce9425ac57",
+   "full_exit": 0,
+   "full_wall_s": 3.1780451210215688,
+   "pack_exit": 0,
+   "pack_wall_s": 1.4232369549572468,
+   "plan": {
+    "targets": 103,
+    "decay_states": 207,
+    "files": 517,
+    "bytes": 4266440
+   },
+   "full": "target/p196-work/problems/example-pulsed_demo/full.json",
+   "full_sha256": "bcded68c51d973626434d421447e8964a352b949cc3292a52fd9abe41683bcf4",
+   "pack": "target/p196-work/problems/example-pulsed_demo/pack.json",
+   "pack_sha256": "287b06668fad41b3bce54e43c0d3b4bc93f03926e84de7a92556d84bd6a3cc55"
+  },
+  {
+   "name": "example-feed_removal_demo",
+   "spec": "target/p196-work/problems/example-feed_removal_demo/spec.json",
+   "spec_sha256": "3af06bacef65212da06577b216106b54392ab1bccf10dcc64f1ef31b7081de67",
+   "full_exit": 0,
+   "full_wall_s": 2.649882738944143,
+   "pack_exit": 0,
+   "pack_wall_s": 1.1541341440752149,
+   "plan": {
+    "targets": 117,
+    "decay_states": 225,
+    "files": 567,
+    "bytes": 4786057
+   },
+   "full": "target/p196-work/problems/example-feed_removal_demo/full.json",
+   "full_sha256": "ba6b1522e1126dd301fcea99a27891c9883bea2df3151e48be0a6d55f6c36a32",
+   "pack": "target/p196-work/problems/example-feed_removal_demo/pack.json",
+   "pack_sha256": "ddd5b1496d11c668433b7ab890e6f7fdb2fbefb49976668ec4982d356cb8f813"
+  },
+  {
+   "name": "example-shielding_demo",
+   "spec": "target/p196-work/problems/example-shielding_demo/spec.json",
+   "spec_sha256": "5da1f8e0d1028bba93a51c5b21125d6145aaf24d0f1a65c2c90acf735616afb1",
+   "full_exit": 0,
+   "full_wall_s": 6.106036250945181,
+   "pack_exit": 0,
+   "pack_wall_s": 3.8318452648818493,
+   "plan": {
+    "targets": 147,
+    "decay_states": 228,
+    "files": 603,
+    "bytes": 12815154
+   },
+   "full": "target/p196-work/problems/example-shielding_demo/full.json",
+   "full_sha256": "1ceb8a0eb93dcf49bc051a927d24df6336155b67f3f8ccf312fe094f251de0c8",
+   "pack": "target/p196-work/problems/example-shielding_demo/pack.json",
+   "pack_sha256": "7ad4576489a00baca9adb30ae30f45b317b61ab1adeaed5956a7d90b228b1955"
+  },
+  {
+   "name": "eurofer97-fusion-14mev-1e14-1y",
+   "spec": "target/p196-work/problems/eurofer97-fusion-14mev-1e14-1y/spec.json",
+   "spec_sha256": "4199f9fe5d14520b454ac75d244db0fd4e2739b77f38957d1065363c601935a9",
+   "full_exit": 0,
+   "full_wall_s": 3.2531776188407093,
+   "pack_exit": 0,
+   "pack_wall_s": 6.864163108868524,
+   "plan": {
+    "targets": 652,
+    "decay_states": 998,
+    "files": 2647,
+    "bytes": 43008519
+   },
+   "full": "target/p196-work/problems/eurofer97-fusion-14mev-1e14-1y/full.json",
+   "full_sha256": "79712a8c2af7b7d2be70b64ab14ce153517071a4fefd925edb7ee36b32eae1de",
+   "pack": "target/p196-work/problems/eurofer97-fusion-14mev-1e14-1y/pack.json",
+   "pack_sha256": "3d187fab3be5f170bf7e64ce8aa09b9c0ea8cf255e9fe824d8bb702b12b5d270"
+  },
+  {
+   "name": "eurofer97-fission-1e14-1y",
+   "spec": "target/p196-work/problems/eurofer97-fission-1e14-1y/spec.json",
+   "spec_sha256": "73fcbdeed14a04982ef922c4d7d7ae0c7a10aff9bc7b42c78bfb0aeace99428c",
+   "full_exit": 0,
+   "full_wall_s": 7.888883161824197,
+   "pack_exit": 0,
+   "pack_wall_s": 6.6956089220475405,
+   "plan": {
+    "targets": 652,
+    "decay_states": 998,
+    "files": 2647,
+    "bytes": 43008519
+   },
+   "full": "target/p196-work/problems/eurofer97-fission-1e14-1y/full.json",
+   "full_sha256": "a1b11137d2a6f4b85b34b184986283682b167d0efb109fe5cef6c7eae41c50ad",
+   "pack": "target/p196-work/problems/eurofer97-fission-1e14-1y/pack.json",
+   "pack_sha256": "38e75f25c2092c390d6038b0913685c18b1d6a7b571d64e1e235c92dfd8ca3b0"
+  },
+  {
+   "name": "eurofer97-thermal-1e14-1y",
+   "spec": "target/p196-work/problems/eurofer97-thermal-1e14-1y/spec.json",
+   "spec_sha256": "9d6f573c6ea9495c28639b1467e3156a8a2316cda35fea66b381ae9c608411db",
+   "full_exit": 0,
+   "full_wall_s": 2.920610013883561,
+   "pack_exit": 0,
+   "pack_wall_s": 6.562527398113161,
+   "plan": {
+    "targets": 652,
+    "decay_states": 998,
+    "files": 2647,
+    "bytes": 43008519
+   },
+   "full": "target/p196-work/problems/eurofer97-thermal-1e14-1y/full.json",
+   "full_sha256": "333dd3219a34079d1e1039f3fe554b5436127a96c056b8918cadb4b8358210c4",
+   "pack": "target/p196-work/problems/eurofer97-thermal-1e14-1y/pack.json",
+   "pack_sha256": "0c141f13bf1ea2f6a13e7a9d88ea93927b6c62a057c5690e8d5d178462c31c64"
+  },
+  {
+   "name": "eurofer97-one-over-e-1e14-1y",
+   "spec": "target/p196-work/problems/eurofer97-one-over-e-1e14-1y/spec.json",
+   "spec_sha256": "1b0d59bcb0eaddeec20c68add44f3a9d77a3545725f19eadff0be1b42e831829",
+   "full_exit": 0,
+   "full_wall_s": 7.17687234794721,
+   "pack_exit": 0,
+   "pack_wall_s": 7.013774401973933,
+   "plan": {
+    "targets": 652,
+    "decay_states": 998,
+    "files": 2647,
+    "bytes": 43008519
+   },
+   "full": "target/p196-work/problems/eurofer97-one-over-e-1e14-1y/full.json",
+   "full_sha256": "600f34832fc2aa2f217a36aedb7a92cb5294ef0f900557aea98fcb1cecfe371d",
+   "pack": "target/p196-work/problems/eurofer97-one-over-e-1e14-1y/pack.json",
+   "pack_sha256": "d27ba3fccb869009964459555b2559b117a35375b22cedb3e93885e3027aa691"
+  },
+  {
+   "name": "eurofer97-fusion-14mev-1e15-10y",
+   "spec": "target/p196-work/problems/eurofer97-fusion-14mev-1e15-10y/spec.json",
+   "spec_sha256": "febd882f7d234983bce75a1ce9425bdb3e6b70673541b38c7f6d0e320b68b01d",
+   "full_exit": 0,
+   "full_wall_s": 4.366232373984531,
+   "pack_exit": 0,
+   "pack_wall_s": 7.260315535822883,
+   "plan": {
+    "targets": 652,
+    "decay_states": 998,
+    "files": 2647,
+    "bytes": 43008519
+   },
+   "full": "target/p196-work/problems/eurofer97-fusion-14mev-1e15-10y/full.json",
+   "full_sha256": "855f8c2c20b8f00bdeb2bb050a18ac7673d2069c34d0bc5948874dd1a5b6613a",
+   "pack": "target/p196-work/problems/eurofer97-fusion-14mev-1e15-10y/pack.json",
+   "pack_sha256": "06bdf07ed7a7bf45cb57f1e313c0cbc548cea70d5e4ca733747055cd32a2992b"
+  },
+  {
+   "name": "eurofer97-thermal-1e15-10y",
+   "spec": "target/p196-work/problems/eurofer97-thermal-1e15-10y/spec.json",
+   "spec_sha256": "155ed0a7c55b9cf39ddad381eed770f31be3d7f879464134279e021d9f36effa",
+   "full_exit": 0,
+   "full_wall_s": 7.865123576018959,
+   "pack_exit": 0,
+   "pack_wall_s": 7.1005940469913185,
+   "plan": {
+    "targets": 652,
+    "decay_states": 998,
+    "files": 2647,
+    "bytes": 43008519
+   },
+   "full": "target/p196-work/problems/eurofer97-thermal-1e15-10y/full.json",
+   "full_sha256": "76b8adb766de1406fa3fa55c01fdeb2f14ea07b6370923222bcd9e0554d0f9c1",
+   "pack": "target/p196-work/problems/eurofer97-thermal-1e15-10y/pack.json",
+   "pack_sha256": "7454d3402fb17e1d38898ea5cf0abb3d1b67571bfc2406da210856285c5074d5"
+  },
+  {
+   "name": "eurofer97-3-measured-fusion-14mev-1e14-1y",
+   "spec": "target/p196-work/problems/eurofer97-3-measured-fusion-14mev-1e14-1y/spec.json",
+   "spec_sha256": "e3f66fa3c49fa816964d62dd1750fea8c5d8293c565b492fa6b6b69deecb31d9",
+   "full_exit": 0,
+   "full_wall_s": 3.159061432816088,
+   "pack_exit": 0,
+   "pack_wall_s": 6.704956016037613,
+   "plan": {
+    "targets": 652,
+    "decay_states": 998,
+    "files": 2647,
+    "bytes": 43008519
+   },
+   "full": "target/p196-work/problems/eurofer97-3-measured-fusion-14mev-1e14-1y/full.json",
+   "full_sha256": "085ca0f15eafaaa48e46513e117795ebe17ae577b496c850636d04a1f17721b7",
+   "pack": "target/p196-work/problems/eurofer97-3-measured-fusion-14mev-1e14-1y/pack.json",
+   "pack_sha256": "7cc6351912bc56a0a8a453cf6c887b03b60a3e7b1666aca43c0c3986c2637560"
+  },
+  {
+   "name": "eurofer97-3-measured-fission-1e14-1y",
+   "spec": "target/p196-work/problems/eurofer97-3-measured-fission-1e14-1y/spec.json",
+   "spec_sha256": "72578e156b08688207a42d11506a9a6b735d36620cb1f73cafed875b24ff48fa",
+   "full_exit": 0,
+   "full_wall_s": 3.032670183805749,
+   "pack_exit": 0,
+   "pack_wall_s": 6.677409499883652,
+   "plan": {
+    "targets": 652,
+    "decay_states": 998,
+    "files": 2647,
+    "bytes": 43008519
+   },
+   "full": "target/p196-work/problems/eurofer97-3-measured-fission-1e14-1y/full.json",
+   "full_sha256": "07c208e01fd5529b2f7aab2fe7bd39224555bec62b20598f23d2eaee6910de88",
+   "pack": "target/p196-work/problems/eurofer97-3-measured-fission-1e14-1y/pack.json",
+   "pack_sha256": "38e63c1b91d9e9944353967bbbfa38381b15416147d10e70e76a311ba86e89bb"
+  },
+  {
+   "name": "eurofer97-3-measured-thermal-1e14-1y",
+   "spec": "target/p196-work/problems/eurofer97-3-measured-thermal-1e14-1y/spec.json",
+   "spec_sha256": "6fe080cbcad7cd323d656e1af2d1ce8e1805d2c7514e31fb2ef314a33290d77e",
+   "full_exit": 0,
+   "full_wall_s": 2.911669641966,
+   "pack_exit": 0,
+   "pack_wall_s": 6.544364250963554,
+   "plan": {
+    "targets": 652,
+    "decay_states": 998,
+    "files": 2647,
+    "bytes": 43008519
+   },
+   "full": "target/p196-work/problems/eurofer97-3-measured-thermal-1e14-1y/full.json",
+   "full_sha256": "a72d8ca1de512fa3e85d590019361ae235d73b12be062a0d54a3ce3aae10ed50",
+   "pack": "target/p196-work/problems/eurofer97-3-measured-thermal-1e14-1y/pack.json",
+   "pack_sha256": "4aa53121c94f5bb38e350889e1e75367c96acdbbe5228fb1bd571b5e990c817a"
+  },
+  {
+   "name": "eurofer97-3-measured-one-over-e-1e14-1y",
+   "spec": "target/p196-work/problems/eurofer97-3-measured-one-over-e-1e14-1y/spec.json",
+   "spec_sha256": "0e97dc622113f3247f7dae8bcad01ac5a9446d5b22eea8b6f261e20f12ac9b56",
+   "full_exit": 0,
+   "full_wall_s": 2.7629360218998045,
+   "pack_exit": 0,
+   "pack_wall_s": 6.4240414230152965,
+   "plan": {
+    "targets": 652,
+    "decay_states": 998,
+    "files": 2647,
+    "bytes": 43008519
+   },
+   "full": "target/p196-work/problems/eurofer97-3-measured-one-over-e-1e14-1y/full.json",
+   "full_sha256": "e08a2d73d87f31703d24f2510549a213729f8130f04bc3c6cfedc263c944ae6c",
+   "pack": "target/p196-work/problems/eurofer97-3-measured-one-over-e-1e14-1y/pack.json",
+   "pack_sha256": "4dbbc5c05d817636fff4665afca165db533ab49c751ea1c43b0e149f7c3decfc"
+  },
+  {
+   "name": "eurofer97-3-measured-fusion-14mev-1e15-10y",
+   "spec": "target/p196-work/problems/eurofer97-3-measured-fusion-14mev-1e15-10y/spec.json",
+   "spec_sha256": "c560f549635249543a794ea08f335778368fdf41d907e573617cee7b14442c1c",
+   "full_exit": 0,
+   "full_wall_s": 4.146914614131674,
+   "pack_exit": 0,
+   "pack_wall_s": 7.13448041700758,
+   "plan": {
+    "targets": 652,
+    "decay_states": 998,
+    "files": 2647,
+    "bytes": 43008519
+   },
+   "full": "target/p196-work/problems/eurofer97-3-measured-fusion-14mev-1e15-10y/full.json",
+   "full_sha256": "c02672bb421ebdfbd204d9c9512d27b27191d8b9981bf51ebacc2c7f0ec64c17",
+   "pack": "target/p196-work/problems/eurofer97-3-measured-fusion-14mev-1e15-10y/pack.json",
+   "pack_sha256": "1fe66c5b6cc1dba84481250faa332b038e26abfeeff25255febc6642b3f13f40"
+  },
+  {
+   "name": "eurofer97-3-measured-thermal-1e15-10y",
+   "spec": "target/p196-work/problems/eurofer97-3-measured-thermal-1e15-10y/spec.json",
+   "spec_sha256": "93d6a6d8fb8f181317ee1cfdc428e39475bad53fb6d51b32f43c4f822ba6ef9f",
+   "full_exit": 0,
+   "full_wall_s": 3.5502694859169424,
+   "pack_exit": 0,
+   "pack_wall_s": 7.185726372990757,
+   "plan": {
+    "targets": 652,
+    "decay_states": 998,
+    "files": 2647,
+    "bytes": 43008519
+   },
+   "full": "target/p196-work/problems/eurofer97-3-measured-thermal-1e15-10y/full.json",
+   "full_sha256": "147ba88b8bdee8425ea9c3f948b6a7ce49d533d6be6a2c56edaa50d95e40643a",
+   "pack": "target/p196-work/problems/eurofer97-3-measured-thermal-1e15-10y/pack.json",
+   "pack_sha256": "3d499b4a01dd9d22facbca1ee9826ca475e873a8224fd37c1479ca7ef56d0b70"
+  },
+  {
+   "name": "ss304-fusion-14mev-1e14-1y",
+   "spec": "target/p196-work/problems/ss304-fusion-14mev-1e14-1y/spec.json",
+   "spec_sha256": "639057da63803e929627dfaa241c5f76bb75ee5683a5a10efa8f2d8715ce154e",
+   "full_exit": 0,
+   "full_wall_s": 3.084508717060089,
+   "pack_exit": 0,
+   "pack_wall_s": 2.4453520679380745,
+   "plan": {
+    "targets": 247,
+    "decay_states": 377,
+    "files": 1000,
+    "bytes": 8561570
+   },
+   "full": "target/p196-work/problems/ss304-fusion-14mev-1e14-1y/full.json",
+   "full_sha256": "bc28564e606f1afcbdf4240e2864eff5eff608ebd956bf13785e169fff3b0f27",
+   "pack": "target/p196-work/problems/ss304-fusion-14mev-1e14-1y/pack.json",
+   "pack_sha256": "50c61cf3d5554d1682251c2a95bb9943a4eb98922d1dd6afdf3919e88b89f3f7"
+  },
+  {
+   "name": "ss304-fission-1e14-1y",
+   "spec": "target/p196-work/problems/ss304-fission-1e14-1y/spec.json",
+   "spec_sha256": "78d46d3c7a8b5c7016ea2d88afb31176d19a635382151f2e65ea70c7214b1e24",
+   "full_exit": 0,
+   "full_wall_s": 2.8484081148635596,
+   "pack_exit": 0,
+   "pack_wall_s": 2.2259279501158744,
+   "plan": {
+    "targets": 247,
+    "decay_states": 377,
+    "files": 1000,
+    "bytes": 8561570
+   },
+   "full": "target/p196-work/problems/ss304-fission-1e14-1y/full.json",
+   "full_sha256": "31b8c22a76a5530d5f1a564521fadcdedf2df969478bc31f4988969e7363af90",
+   "pack": "target/p196-work/problems/ss304-fission-1e14-1y/pack.json",
+   "pack_sha256": "73a7482d27a934a443b01872fdde7aa816c7af9d2263aa08918dbfed09c0ac13"
+  },
+  {
+   "name": "ss304-thermal-1e14-1y",
+   "spec": "target/p196-work/problems/ss304-thermal-1e14-1y/spec.json",
+   "spec_sha256": "c5983afa0e88ab10c01af7b7faf596aad21f22b09422acce72ec300c80e8e761",
+   "full_exit": 0,
+   "full_wall_s": 2.709412327967584,
+   "pack_exit": 0,
+   "pack_wall_s": 2.3645624408964068,
+   "plan": {
+    "targets": 247,
+    "decay_states": 377,
+    "files": 1000,
+    "bytes": 8561570
+   },
+   "full": "target/p196-work/problems/ss304-thermal-1e14-1y/full.json",
+   "full_sha256": "0d5ab4e9e8b74db75d5ae2846cc26043657fb6393a645e4c4a1771b27c9b2b63",
+   "pack": "target/p196-work/problems/ss304-thermal-1e14-1y/pack.json",
+   "pack_sha256": "9c5999e8d73d8595d3fc8daed451d70cca5e53b3647a76955fc6c207c8198375"
+  },
+  {
+   "name": "ss304-one-over-e-1e14-1y",
+   "spec": "target/p196-work/problems/ss304-one-over-e-1e14-1y/spec.json",
+   "spec_sha256": "9f7e6f5829371261b14fb64478190b1c24f339cf25a2c6ac1ae9e22fbbdac995",
+   "full_exit": 0,
+   "full_wall_s": 2.653000023914501,
+   "pack_exit": 0,
+   "pack_wall_s": 2.1365890470333397,
+   "plan": {
+    "targets": 247,
+    "decay_states": 377,
+    "files": 1000,
+    "bytes": 8561570
+   },
+   "full": "target/p196-work/problems/ss304-one-over-e-1e14-1y/full.json",
+   "full_sha256": "384f145fb04c2054ebfb6c85182badb3618b85b575b03088c8d665010665648c",
+   "pack": "target/p196-work/problems/ss304-one-over-e-1e14-1y/pack.json",
+   "pack_sha256": "abd8bbd6786c89aefad7a8ba34ceb44a65be270c6b2094cf4ba10f924eec767b"
+  },
+  {
+   "name": "ss304-fusion-14mev-1e15-10y",
+   "spec": "target/p196-work/problems/ss304-fusion-14mev-1e15-10y/spec.json",
+   "spec_sha256": "26f0d45d84e359096f90912177c9d4e4fd7ec360824f2a0bd9939528488e0595",
+   "full_exit": 0,
+   "full_wall_s": 3.5416060250718147,
+   "pack_exit": 0,
+   "pack_wall_s": 2.639714675024152,
+   "plan": {
+    "targets": 247,
+    "decay_states": 377,
+    "files": 1000,
+    "bytes": 8561570
+   },
+   "full": "target/p196-work/problems/ss304-fusion-14mev-1e15-10y/full.json",
+   "full_sha256": "aed5dbccc3d7798677b97c9fb13499614c5ee644c8bf005e6ea878c6842a50a5",
+   "pack": "target/p196-work/problems/ss304-fusion-14mev-1e15-10y/pack.json",
+   "pack_sha256": "4174026c4b8abf23b954a1ea9f6b62a93c8ae3c65945be2e0e755bfb996c91c3"
+  },
+  {
+   "name": "ss304-thermal-1e15-10y",
+   "spec": "target/p196-work/problems/ss304-thermal-1e15-10y/spec.json",
+   "spec_sha256": "45c5d37e9d5328c0d9409b81be77501f09a9481a5520b9721f9fcd44ef80958a",
+   "full_exit": 0,
+   "full_wall_s": 3.477701093070209,
+   "pack_exit": 0,
+   "pack_wall_s": 2.534092692891136,
+   "plan": {
+    "targets": 247,
+    "decay_states": 377,
+    "files": 1000,
+    "bytes": 8561570
+   },
+   "full": "target/p196-work/problems/ss304-thermal-1e15-10y/full.json",
+   "full_sha256": "67e2227aa102fef266e7059c061456104fec5abd716e93f1b020046edfcc9a3f",
+   "pack": "target/p196-work/problems/ss304-thermal-1e15-10y/pack.json",
+   "pack_sha256": "082da23986645e28d1a9234ab40a903740ca6d133ee6332dfec87b377a804f41"
+  },
+  {
+   "name": "ss304l-fusion-14mev-1e14-1y",
+   "spec": "target/p196-work/problems/ss304l-fusion-14mev-1e14-1y/spec.json",
+   "spec_sha256": "e5506b5a99efa611ef1a8675b4093fb3f091c65108b03cce36b655123d78bb28",
+   "full_exit": 0,
+   "full_wall_s": 3.016960752895102,
+   "pack_exit": 0,
+   "pack_wall_s": 2.185066821053624,
+   "plan": {
+    "targets": 247,
+    "decay_states": 377,
+    "files": 1000,
+    "bytes": 8561570
+   },
+   "full": "target/p196-work/problems/ss304l-fusion-14mev-1e14-1y/full.json",
+   "full_sha256": "4f9427428ad83949858aabe977c61784c8058aa4845087205671f258257abdc3",
+   "pack": "target/p196-work/problems/ss304l-fusion-14mev-1e14-1y/pack.json",
+   "pack_sha256": "5b902abde7e74d05f484ebccef84551c907124cd981564304f67af0b0048e5a7"
+  },
+  {
+   "name": "ss304l-fission-1e14-1y",
+   "spec": "target/p196-work/problems/ss304l-fission-1e14-1y/spec.json",
+   "spec_sha256": "5b5d6debb79668e19901cf2ac073941ba23825a5ff128e52c38a3c9bef9293f9",
+   "full_exit": 0,
+   "full_wall_s": 2.8210907869506627,
+   "pack_exit": 0,
+   "pack_wall_s": 2.2483706758357584,
+   "plan": {
+    "targets": 247,
+    "decay_states": 377,
+    "files": 1000,
+    "bytes": 8561570
+   },
+   "full": "target/p196-work/problems/ss304l-fission-1e14-1y/full.json",
+   "full_sha256": "f8dab7faf31b2094bdbfc00331f37c6754e0a34502e1888519fed5129e0030e5",
+   "pack": "target/p196-work/problems/ss304l-fission-1e14-1y/pack.json",
+   "pack_sha256": "e4b8ebfa7951da31ec1cdcbc249c278014e5b6e0c8909669415e7499f4a5d2c2"
+  },
+  {
+   "name": "ss304l-thermal-1e14-1y",
+   "spec": "target/p196-work/problems/ss304l-thermal-1e14-1y/spec.json",
+   "spec_sha256": "38262183fdb6f2a7c2e0968f53a9663a16c81592d1f3a185c757b05e654b9024",
+   "full_exit": 0,
+   "full_wall_s": 2.7308658089023083,
+   "pack_exit": 0,
+   "pack_wall_s": 2.2580003740731627,
+   "plan": {
+    "targets": 247,
+    "decay_states": 377,
+    "files": 1000,
+    "bytes": 8561570
+   },
+   "full": "target/p196-work/problems/ss304l-thermal-1e14-1y/full.json",
+   "full_sha256": "368ddbcb4297452c3c0a3f29dad2ab4e6efe35e52c205667735286f35e4d5f0a",
+   "pack": "target/p196-work/problems/ss304l-thermal-1e14-1y/pack.json",
+   "pack_sha256": "5da411e1230db281a8843123694abba99ae19605d0078c137e74ac2befa2d4b8"
+  },
+  {
+   "name": "ss304l-one-over-e-1e14-1y",
+   "spec": "target/p196-work/problems/ss304l-one-over-e-1e14-1y/spec.json",
+   "spec_sha256": "e6755941dfd3d182f61eb12729c6d48517ad220d51447df7d936a42e3c70cd93",
+   "full_exit": 0,
+   "full_wall_s": 2.6316677120048553,
+   "pack_exit": 0,
+   "pack_wall_s": 2.1993301699403673,
+   "plan": {
+    "targets": 247,
+    "decay_states": 377,
+    "files": 1000,
+    "bytes": 8561570
+   },
+   "full": "target/p196-work/problems/ss304l-one-over-e-1e14-1y/full.json",
+   "full_sha256": "ec829e65bcf4099cb0a9a0b8671473df82604f2ff36644875997e285f91cd1b8",
+   "pack": "target/p196-work/problems/ss304l-one-over-e-1e14-1y/pack.json",
+   "pack_sha256": "b70d282225dee70129aee61e7bfa87776c153303bb78cb3887722f389843a4d1"
+  },
+  {
+   "name": "ss304l-fusion-14mev-1e15-10y",
+   "spec": "target/p196-work/problems/ss304l-fusion-14mev-1e15-10y/spec.json",
+   "spec_sha256": "490a434b8ab4c75ea66fad140fa3708d29d064acd3e24f6826dd121a830fa2f5",
+   "full_exit": 0,
+   "full_wall_s": 3.4965469860471785,
+   "pack_exit": 0,
+   "pack_wall_s": 2.3440222931094468,
+   "plan": {
+    "targets": 247,
+    "decay_states": 377,
+    "files": 1000,
+    "bytes": 8561570
+   },
+   "full": "target/p196-work/problems/ss304l-fusion-14mev-1e15-10y/full.json",
+   "full_sha256": "84916c2d30ccb9f12b94cd88f2ccd8cd146df39870cf0b3f064d3b067aa9062a",
+   "pack": "target/p196-work/problems/ss304l-fusion-14mev-1e15-10y/pack.json",
+   "pack_sha256": "f6e15f1bd3e618f96d60419e4eabde2291d2ac0115b532ccb716faccc4155ad6"
+  },
+  {
+   "name": "ss304l-thermal-1e15-10y",
+   "spec": "target/p196-work/problems/ss304l-thermal-1e15-10y/spec.json",
+   "spec_sha256": "139c486dfad7caee59a675eac9d3700e4b2a40b9ebcadf29f06487d7f0fad2be",
+   "full_exit": 0,
+   "full_wall_s": 3.356899705948308,
+   "pack_exit": 0,
+   "pack_wall_s": 2.187758876942098,
+   "plan": {
+    "targets": 247,
+    "decay_states": 377,
+    "files": 1000,
+    "bytes": 8561570
+   },
+   "full": "target/p196-work/problems/ss304l-thermal-1e15-10y/full.json",
+   "full_sha256": "559e99b48e5cf6480e0efd5d143b5090ce6ec254c762e833ca8d93c59907535f",
+   "pack": "target/p196-work/problems/ss304l-thermal-1e15-10y/pack.json",
+   "pack_sha256": "f8dd498a8772443a08224b6eb7e178f3091faa60720433e38c4529c1cf4ab80a"
+  },
+  {
+   "name": "ss316-fusion-14mev-1e14-1y",
+   "spec": "target/p196-work/problems/ss316-fusion-14mev-1e14-1y/spec.json",
+   "spec_sha256": "d5e5839624894ae1b4621e0d64448d8433557e6116580854e70aebee245f1b0b",
+   "full_exit": 0,
+   "full_wall_s": 2.7743098048958927,
+   "pack_exit": 0,
+   "pack_wall_s": 4.056331046158448,
+   "plan": {
+    "targets": 447,
+    "decay_states": 700,
+    "files": 1846,
+    "bytes": 25331155
+   },
+   "full": "target/p196-work/problems/ss316-fusion-14mev-1e14-1y/full.json",
+   "full_sha256": "59ca8b8cd6ea2278c0ac53f933dcafbcb5e7e843f20a1f0d1038e3de6186de0e",
+   "pack": "target/p196-work/problems/ss316-fusion-14mev-1e14-1y/pack.json",
+   "pack_sha256": "7ecbdb448e14f6a4de18723b444c1977326c346f70dce1bb573c05c48f31a584"
+  },
+  {
+   "name": "ss316-fission-1e14-1y",
+   "spec": "target/p196-work/problems/ss316-fission-1e14-1y/spec.json",
+   "spec_sha256": "a948e4983496858aa06ba067e80f14ac8e043d2eabc579834fdf8bca7d57479d",
+   "full_exit": 0,
+   "full_wall_s": 2.462749562924728,
+   "pack_exit": 0,
+   "pack_wall_s": 3.9627702010329813,
+   "plan": {
+    "targets": 447,
+    "decay_states": 700,
+    "files": 1846,
+    "bytes": 25331155
+   },
+   "full": "target/p196-work/problems/ss316-fission-1e14-1y/full.json",
+   "full_sha256": "a980f20f81b4c70458fb8c4d2ceab8918399c900be87df5f4bf3a2eef83e02fc",
+   "pack": "target/p196-work/problems/ss316-fission-1e14-1y/pack.json",
+   "pack_sha256": "9eca1a71e5588622c71fbfda70a2cfa1bc40d0e25999c8d73aecd492d74ce653"
+  },
+  {
+   "name": "ss316-thermal-1e14-1y",
+   "spec": "target/p196-work/problems/ss316-thermal-1e14-1y/spec.json",
+   "spec_sha256": "bcca6af899ad0673ce10efecb75a1d4ce645e16411def2ddc0eba284f4c32d0b",
+   "full_exit": 0,
+   "full_wall_s": 2.3403746029362082,
+   "pack_exit": 0,
+   "pack_wall_s": 3.9937262770254165,
+   "plan": {
+    "targets": 447,
+    "decay_states": 700,
+    "files": 1846,
+    "bytes": 25331155
+   },
+   "full": "target/p196-work/problems/ss316-thermal-1e14-1y/full.json",
+   "full_sha256": "028c479af707e088fec5c59e3e4108b168f866165e544be4dd1043e4f332f45e",
+   "pack": "target/p196-work/problems/ss316-thermal-1e14-1y/pack.json",
+   "pack_sha256": "b5de915756fb3d6fd1d11245732372d65b0143f73b24fc5bcd995f61a5a1c198"
+  },
+  {
+   "name": "ss316-one-over-e-1e14-1y",
+   "spec": "target/p196-work/problems/ss316-one-over-e-1e14-1y/spec.json",
+   "spec_sha256": "fb92dfaeab6d8a1aa39dd58686328ffde9db5038c8c15e51e8714e2b5bda433d",
+   "full_exit": 0,
+   "full_wall_s": 2.7137483779806644,
+   "pack_exit": 0,
+   "pack_wall_s": 4.462590846000239,
+   "plan": {
+    "targets": 447,
+    "decay_states": 700,
+    "files": 1846,
+    "bytes": 25331155
+   },
+   "full": "target/p196-work/problems/ss316-one-over-e-1e14-1y/full.json",
+   "full_sha256": "f6b931259c333ab0d97de7869b2c3a374293c2cae86e35d908c496a8af2af800",
+   "pack": "target/p196-work/problems/ss316-one-over-e-1e14-1y/pack.json",
+   "pack_sha256": "cec6888a4ae1397758d7eb0916c31853e67e6700c7e986ef7075baf999b04944"
+  },
+  {
+   "name": "ss316-fusion-14mev-1e15-10y",
+   "spec": "target/p196-work/problems/ss316-fusion-14mev-1e15-10y/spec.json",
+   "spec_sha256": "febf6a419165cd836d1c6ecbefb8136b51cc750d0083e9c1e51d69cbf928fcdc",
+   "full_exit": 0,
+   "full_wall_s": 3.78361442591995,
+   "pack_exit": 0,
+   "pack_wall_s": 4.718957697041333,
+   "plan": {
+    "targets": 447,
+    "decay_states": 700,
+    "files": 1846,
+    "bytes": 25331155
+   },
+   "full": "target/p196-work/problems/ss316-fusion-14mev-1e15-10y/full.json",
+   "full_sha256": "627028302bbe00a60884a70e141ff2c9595d4622d3d77bc7aed71e0f7acf5946",
+   "pack": "target/p196-work/problems/ss316-fusion-14mev-1e15-10y/pack.json",
+   "pack_sha256": "190de79aba769bef1e095b4d2d42d1edc247fdbfa8c9f3ef1bfffc12dbd70daa"
+  },
+  {
+   "name": "ss316-thermal-1e15-10y",
+   "spec": "target/p196-work/problems/ss316-thermal-1e15-10y/spec.json",
+   "spec_sha256": "53f74f8523377e96a5dcea0e16d3c83bc79756c7f4340b31af6d368da4dbe785",
+   "full_exit": 0,
+   "full_wall_s": 3.6070674820803106,
+   "pack_exit": 0,
+   "pack_wall_s": 4.565967401023954,
+   "plan": {
+    "targets": 447,
+    "decay_states": 700,
+    "files": 1846,
+    "bytes": 25331155
+   },
+   "full": "target/p196-work/problems/ss316-thermal-1e15-10y/full.json",
+   "full_sha256": "4788fbde9bf3bda6dfc634339d6c76c3f808e7185e652da9c488f525e30a25c9",
+   "pack": "target/p196-work/problems/ss316-thermal-1e15-10y/pack.json",
+   "pack_sha256": "b31dc0fc875d837883daf9313aff83a49cf8178db75384b10d98bccef6772e2b"
+  },
+  {
+   "name": "inconel718-fusion-14mev-1e14-1y",
+   "spec": "target/p196-work/problems/inconel718-fusion-14mev-1e14-1y/spec.json",
+   "spec_sha256": "5d35b4d1531db153a9b19c66783cb008e4d6ad2100cc5737a70c70540a713d38",
+   "full_exit": 0,
+   "full_wall_s": 3.246274338103831,
+   "pack_exit": 0,
+   "pack_wall_s": 4.712793274084106,
+   "plan": {
+    "targets": 464,
+    "decay_states": 720,
+    "files": 1903,
+    "bytes": 26196547
+   },
+   "full": "target/p196-work/problems/inconel718-fusion-14mev-1e14-1y/full.json",
+   "full_sha256": "bdb7d9aa36fae87c976b192935580c186c24e2617ee0bf0e1402930a40e1bf4f",
+   "pack": "target/p196-work/problems/inconel718-fusion-14mev-1e14-1y/pack.json",
+   "pack_sha256": "793912da876cbc57e48c758b7b5d11f625951873b12d908597b84aa2b9a542b8"
+  },
+  {
+   "name": "inconel718-fission-1e14-1y",
+   "spec": "target/p196-work/problems/inconel718-fission-1e14-1y/spec.json",
+   "spec_sha256": "06e1e4522fc18dd53e0f7fdec1d818e48a926ef602d0a6e695ddf6b69f2d22f3",
+   "full_exit": 0,
+   "full_wall_s": 3.1733208489604294,
+   "pack_exit": 0,
+   "pack_wall_s": 4.933200804982334,
+   "plan": {
+    "targets": 464,
+    "decay_states": 720,
+    "files": 1903,
+    "bytes": 26196547
+   },
+   "full": "target/p196-work/problems/inconel718-fission-1e14-1y/full.json",
+   "full_sha256": "fbe9c9277555d12e55b8316ced8617580aed7113f8998a1c571b6b57b37e24da",
+   "pack": "target/p196-work/problems/inconel718-fission-1e14-1y/pack.json",
+   "pack_sha256": "9c48859e5e1fa727c5949b5806e921236afd5585c562fbca2ff66bbb45ad9c37"
+  },
+  {
+   "name": "inconel718-thermal-1e14-1y",
+   "spec": "target/p196-work/problems/inconel718-thermal-1e14-1y/spec.json",
+   "spec_sha256": "7a9f0c7ba24a3cc61b146e0bc266a71567c05a7387e64ca025a91fe64fb4633c",
+   "full_exit": 0,
+   "full_wall_s": 2.926984758116305,
+   "pack_exit": 0,
+   "pack_wall_s": 4.949105642968789,
+   "plan": {
+    "targets": 464,
+    "decay_states": 720,
+    "files": 1903,
+    "bytes": 26196547
+   },
+   "full": "target/p196-work/problems/inconel718-thermal-1e14-1y/full.json",
+   "full_sha256": "5aa24b5bc48c2b09e57d9b3c9e31a28470241405f90f1517f1b391dd0b3af1fd",
+   "pack": "target/p196-work/problems/inconel718-thermal-1e14-1y/pack.json",
+   "pack_sha256": "6b83e78d1ae12f22d9d51bc0107641c98d2e1b41f05c141e3d43801095ca947d"
+  },
+  {
+   "name": "inconel718-one-over-e-1e14-1y",
+   "spec": "target/p196-work/problems/inconel718-one-over-e-1e14-1y/spec.json",
+   "spec_sha256": "84840c340182609f764623d0bbbb429cd2524f7ad0f1e7412e52fe368c6f9247",
+   "full_exit": 0,
+   "full_wall_s": 2.835662019904703,
+   "pack_exit": 0,
+   "pack_wall_s": 4.746178881963715,
+   "plan": {
+    "targets": 464,
+    "decay_states": 720,
+    "files": 1903,
+    "bytes": 26196547
+   },
+   "full": "target/p196-work/problems/inconel718-one-over-e-1e14-1y/full.json",
+   "full_sha256": "e6666ce7cc6d70dbe61da1e9a4ae1802acf8fbc2dd24c8d62e227f71591c5e69",
+   "pack": "target/p196-work/problems/inconel718-one-over-e-1e14-1y/pack.json",
+   "pack_sha256": "91257324d68f739474325a0e305be3a2beffcd08a6395028a038a2f901c67935"
+  },
+  {
+   "name": "inconel718-fusion-14mev-1e15-10y",
+   "spec": "target/p196-work/problems/inconel718-fusion-14mev-1e15-10y/spec.json",
+   "spec_sha256": "db1133016903f036a9325abd5c5d50012afa34f545d1a4815a14763e4dd61dfa",
+   "full_exit": 0,
+   "full_wall_s": 3.9429935510270298,
+   "pack_exit": 0,
+   "pack_wall_s": 5.009183724178001,
+   "plan": {
+    "targets": 464,
+    "decay_states": 720,
+    "files": 1903,
+    "bytes": 26196547
+   },
+   "full": "target/p196-work/problems/inconel718-fusion-14mev-1e15-10y/full.json",
+   "full_sha256": "34b5eff9728be405dffe672f45c7d94de9a381a98a20235399556e339c7df7dd",
+   "pack": "target/p196-work/problems/inconel718-fusion-14mev-1e15-10y/pack.json",
+   "pack_sha256": "81fa626aebf1ca11e11cc9b741af0f80d5422d39edb5625381b5e0f3dfaf0e10"
+  },
+  {
+   "name": "inconel718-thermal-1e15-10y",
+   "spec": "target/p196-work/problems/inconel718-thermal-1e15-10y/spec.json",
+   "spec_sha256": "9cf025f2e404ae28aa9529955d615a508f270fc5d3b19c358b821ebb9203b8d8",
+   "full_exit": 0,
+   "full_wall_s": 3.698522649006918,
+   "pack_exit": 0,
+   "pack_wall_s": 4.733813710976392,
+   "plan": {
+    "targets": 464,
+    "decay_states": 720,
+    "files": 1903,
+    "bytes": 26196547
+   },
+   "full": "target/p196-work/problems/inconel718-thermal-1e15-10y/full.json",
+   "full_sha256": "b8fb60b38a2c0b71993d0959284229fa24dfed6a31cbd4115c5fc4d5d636703f",
+   "pack": "target/p196-work/problems/inconel718-thermal-1e15-10y/pack.json",
+   "pack_sha256": "0f10781e58186a52256a3362d3db8c01fdba9a1ce7e802904db8c6209cc3bf3f"
+  },
+  {
+   "name": "zircaloy4-fusion-14mev-1e14-1y",
+   "spec": "target/p196-work/problems/zircaloy4-fusion-14mev-1e14-1y/spec.json",
+   "spec_sha256": "dcd8776e77248c9aa823f8ca8481d23480ae8ad1713346e2af1a687004a95387",
+   "full_exit": 0,
+   "full_wall_s": 3.527608036994934,
+   "pack_exit": 0,
+   "pack_wall_s": 6.573008527047932,
+   "plan": {
+    "targets": 561,
+    "decay_states": 905,
+    "files": 2369,
+    "bytes": 38118420
+   },
+   "full": "target/p196-work/problems/zircaloy4-fusion-14mev-1e14-1y/full.json",
+   "full_sha256": "0de0cb92cc3fe4eb6f40b04ba73c37d9718de54ad8461102f8bab6efa6175d2e",
+   "pack": "target/p196-work/problems/zircaloy4-fusion-14mev-1e14-1y/pack.json",
+   "pack_sha256": "bb68f11cf65bdbcd7d83be7c3d47eadaa386c9a64f08f491406af57fa0e3c1ee"
+  },
+  {
+   "name": "zircaloy4-fission-1e14-1y",
+   "spec": "target/p196-work/problems/zircaloy4-fission-1e14-1y/spec.json",
+   "spec_sha256": "ea630610973bed5add3933bc0b66ff08c2b72d213697fa1155365c3073968f06",
+   "full_exit": 0,
+   "full_wall_s": 3.3008688809350133,
+   "pack_exit": 0,
+   "pack_wall_s": 7.3177067779470235,
+   "plan": {
+    "targets": 561,
+    "decay_states": 905,
+    "files": 2369,
+    "bytes": 38118420
+   },
+   "full": "target/p196-work/problems/zircaloy4-fission-1e14-1y/full.json",
+   "full_sha256": "dcabe3e21491987497eb5ca72231a744b4713f7c89fb5440563ad52101ed9cc8",
+   "pack": "target/p196-work/problems/zircaloy4-fission-1e14-1y/pack.json",
+   "pack_sha256": "4a4f0f5b91f5b315a6450568e0d5f5ab295de41fa2102bdc02b635389cf6a6c8"
+  },
+  {
+   "name": "zircaloy4-thermal-1e14-1y",
+   "spec": "target/p196-work/problems/zircaloy4-thermal-1e14-1y/spec.json",
+   "spec_sha256": "aafe8ecbac96a05f431efa875f4e889a38f897ede4fc0e24b7934df135aa1d89",
+   "full_exit": 0,
+   "full_wall_s": 3.275744769955054,
+   "pack_exit": 0,
+   "pack_wall_s": 6.222476111957803,
+   "plan": {
+    "targets": 561,
+    "decay_states": 905,
+    "files": 2369,
+    "bytes": 38118420
+   },
+   "full": "target/p196-work/problems/zircaloy4-thermal-1e14-1y/full.json",
+   "full_sha256": "6914a8f74fdc5b610cecd1de3ab9d07fecce1fcfbdf754fcbee400c1750d7ac0",
+   "pack": "target/p196-work/problems/zircaloy4-thermal-1e14-1y/pack.json",
+   "pack_sha256": "2e4e0bafd25aca9460ca4835c5a40ad63a9988ef3c5cf1b24912d71a01c2fbad"
+  },
+  {
+   "name": "zircaloy4-one-over-e-1e14-1y",
+   "spec": "target/p196-work/problems/zircaloy4-one-over-e-1e14-1y/spec.json",
+   "spec_sha256": "f59da2a7f202c58887feea804685cd7dabcfc63bc070c34a969d2ceb00d07668",
+   "full_exit": 0,
+   "full_wall_s": 3.025923329871148,
+   "pack_exit": 0,
+   "pack_wall_s": 6.451457959134132,
+   "plan": {
+    "targets": 561,
+    "decay_states": 905,
+    "files": 2369,
+    "bytes": 38118420
+   },
+   "full": "target/p196-work/problems/zircaloy4-one-over-e-1e14-1y/full.json",
+   "full_sha256": "0c670588fef66bc5502a9c4795c9d10d0a3b6b6931b89ee268bae7fc93b81cda",
+   "pack": "target/p196-work/problems/zircaloy4-one-over-e-1e14-1y/pack.json",
+   "pack_sha256": "f638f085164e20635648393c2c1f535d143b6e728d069018bbeb6b571f863c0a"
+  },
+  {
+   "name": "zircaloy4-fusion-14mev-1e15-10y",
+   "spec": "target/p196-work/problems/zircaloy4-fusion-14mev-1e15-10y/spec.json",
+   "spec_sha256": "7234b95b65326a47d906d0c78fb52c624c412d24108d49c4650122bde12c4b20",
+   "full_exit": 0,
+   "full_wall_s": 4.136922507081181,
+   "pack_exit": 0,
+   "pack_wall_s": 6.495188828092068,
+   "plan": {
+    "targets": 561,
+    "decay_states": 905,
+    "files": 2369,
+    "bytes": 38118420
+   },
+   "full": "target/p196-work/problems/zircaloy4-fusion-14mev-1e15-10y/full.json",
+   "full_sha256": "7ec001daca7e184ec553b6644c332e8cb69dade46ca76a2d90b0a111b0cbbbeb",
+   "pack": "target/p196-work/problems/zircaloy4-fusion-14mev-1e15-10y/pack.json",
+   "pack_sha256": "49bea2b932960bd4269d0cfa235e2dd565f89b9eb33be94a08565e43be3fde3c"
+  },
+  {
+   "name": "zircaloy4-thermal-1e15-10y",
+   "spec": "target/p196-work/problems/zircaloy4-thermal-1e15-10y/spec.json",
+   "spec_sha256": "3aef960ac72aa6216ed733e508b2ff504b0ac2e9dd4ad4be16d66d7478949838",
+   "full_exit": 0,
+   "full_wall_s": 3.5201546060852706,
+   "pack_exit": 0,
+   "pack_wall_s": 6.353813520167023,
+   "plan": {
+    "targets": 561,
+    "decay_states": 905,
+    "files": 2369,
+    "bytes": 38118420
+   },
+   "full": "target/p196-work/problems/zircaloy4-thermal-1e15-10y/full.json",
+   "full_sha256": "3c925046d11e0f423befbab1aea6952bbe9572460f5e05d09d5eebb784006a18",
+   "pack": "target/p196-work/problems/zircaloy4-thermal-1e15-10y/pack.json",
+   "pack_sha256": "790a659ede1139015e9337952de6ed10257fc9848573d0b2f29c5834133ffda8"
+  },
+  {
+   "name": "al6061-fusion-14mev-1e14-1y",
+   "spec": "target/p196-work/problems/al6061-fusion-14mev-1e14-1y/spec.json",
+   "spec_sha256": "c638a70b3501a5f07cf5d75f1d2b57cd75b6d0cedb850dc87e51dc55f783c24f",
+   "full_exit": 0,
+   "full_wall_s": 3.0539003980811685,
+   "pack_exit": 0,
+   "pack_wall_s": 2.706847816007212,
+   "plan": {
+    "targets": 286,
+    "decay_states": 436,
+    "files": 1157,
+    "bytes": 10496450
+   },
+   "full": "target/p196-work/problems/al6061-fusion-14mev-1e14-1y/full.json",
+   "full_sha256": "22bd41de0e780b1e29d74871d7383472784f2bf9d2889c77f31381ca18648119",
+   "pack": "target/p196-work/problems/al6061-fusion-14mev-1e14-1y/pack.json",
+   "pack_sha256": "ebae57f0262e340e5812fcbfef94e04919061be3d89be0bb4e05307c87571cd5"
+  },
+  {
+   "name": "al6061-fission-1e14-1y",
+   "spec": "target/p196-work/problems/al6061-fission-1e14-1y/spec.json",
+   "spec_sha256": "e1c81d902669be12d5e3e672b1646d0a4a8189799ac4ac33522728004e73c90f",
+   "full_exit": 0,
+   "full_wall_s": 2.9965202489402145,
+   "pack_exit": 0,
+   "pack_wall_s": 2.749278384959325,
+   "plan": {
+    "targets": 286,
+    "decay_states": 436,
+    "files": 1157,
+    "bytes": 10496450
+   },
+   "full": "target/p196-work/problems/al6061-fission-1e14-1y/full.json",
+   "full_sha256": "aa2949ba7cf011d48528a1505cc159031562c574f6816c46a1786fbc073d5441",
+   "pack": "target/p196-work/problems/al6061-fission-1e14-1y/pack.json",
+   "pack_sha256": "88e8bf5d21164f0bc101e68e00450fdb4e9bf6211c6492dfe35c86485a447bb5"
+  },
+  {
+   "name": "al6061-thermal-1e14-1y",
+   "spec": "target/p196-work/problems/al6061-thermal-1e14-1y/spec.json",
+   "spec_sha256": "de109fb986a9b6581a29346c47b3139965606c32a8a0711b7f5306101cd87ce9",
+   "full_exit": 0,
+   "full_wall_s": 2.8117805218789726,
+   "pack_exit": 0,
+   "pack_wall_s": 2.741119996877387,
+   "plan": {
+    "targets": 286,
+    "decay_states": 436,
+    "files": 1157,
+    "bytes": 10496450
+   },
+   "full": "target/p196-work/problems/al6061-thermal-1e14-1y/full.json",
+   "full_sha256": "99922311e653f5f0024da17579cdbc11f8d068edc424bc8febc88d1e6567794a",
+   "pack": "target/p196-work/problems/al6061-thermal-1e14-1y/pack.json",
+   "pack_sha256": "7c29fa8dc4708f2c4fa46cfb4e2950a3463aa29e0f48deb42d0db9dbf8cdc429"
+  },
+  {
+   "name": "al6061-one-over-e-1e14-1y",
+   "spec": "target/p196-work/problems/al6061-one-over-e-1e14-1y/spec.json",
+   "spec_sha256": "9b0f2858f33698babf7c59ab994fac0b29eaf35771af74eda46256343147354a",
+   "full_exit": 0,
+   "full_wall_s": 2.7279592929407954,
+   "pack_exit": 0,
+   "pack_wall_s": 2.538619675906375,
+   "plan": {
+    "targets": 286,
+    "decay_states": 436,
+    "files": 1157,
+    "bytes": 10496450
+   },
+   "full": "target/p196-work/problems/al6061-one-over-e-1e14-1y/full.json",
+   "full_sha256": "9975584cfc4112284554e3abd884678d8123839840492ccc06ff05c3577b6125",
+   "pack": "target/p196-work/problems/al6061-one-over-e-1e14-1y/pack.json",
+   "pack_sha256": "af378b7b5f9191d34e41b869ac78ad256e7108e6f71caf7c7b5e4af516b0a0a1"
+  },
+  {
+   "name": "al6061-fusion-14mev-1e15-10y",
+   "spec": "target/p196-work/problems/al6061-fusion-14mev-1e15-10y/spec.json",
+   "spec_sha256": "5d9d20c20703f1c6004e2232286ecf24534bed60dc0008dcd09363fa15d94a79",
+   "full_exit": 0,
+   "full_wall_s": 3.698169322218746,
+   "pack_exit": 0,
+   "pack_wall_s": 2.6108789299614727,
+   "plan": {
+    "targets": 286,
+    "decay_states": 436,
+    "files": 1157,
+    "bytes": 10496450
+   },
+   "full": "target/p196-work/problems/al6061-fusion-14mev-1e15-10y/full.json",
+   "full_sha256": "022fb426d8a00b31d17ad891a1d9a1d3540cc3e2121a864722b638d74bd51e95",
+   "pack": "target/p196-work/problems/al6061-fusion-14mev-1e15-10y/pack.json",
+   "pack_sha256": "4843994ba9ae2112bba0b6ac86e0bca656280e093158f6f7a8b5d4fd2deb4a5a"
+  },
+  {
+   "name": "al6061-thermal-1e15-10y",
+   "spec": "target/p196-work/problems/al6061-thermal-1e15-10y/spec.json",
+   "spec_sha256": "5b4ba1401b314cbe4a0ac5a8e4f78ce58d111963df4211f6fd8595e834fe4ec4",
+   "full_exit": 0,
+   "full_wall_s": 3.08183462289162,
+   "pack_exit": 0,
+   "pack_wall_s": 2.573976492974907,
+   "plan": {
+    "targets": 286,
+    "decay_states": 436,
+    "files": 1157,
+    "bytes": 10496450
+   },
+   "full": "target/p196-work/problems/al6061-thermal-1e15-10y/full.json",
+   "full_sha256": "ad642b03cef41ddf17384cfcca419db0cb43f456a172e80bc62708d22c7009a5",
+   "pack": "target/p196-work/problems/al6061-thermal-1e15-10y/pack.json",
+   "pack_sha256": "650de70000eb6802b05fd50f56bf0dfed04340cc0e1ae000ec9bd1202b0d96f5"
+  },
+  {
+   "name": "concrete-ordinary-fusion-14mev-1e14-1y",
+   "spec": "target/p196-work/problems/concrete-ordinary-fusion-14mev-1e14-1y/spec.json",
+   "spec_sha256": "9f360cd0ddb26de5ec5e53c42aeb39a8f6be341c7be178814c57b239dbb19bee",
+   "full_exit": 0,
+   "full_wall_s": 2.893952301936224,
+   "pack_exit": 0,
+   "pack_wall_s": 2.0722640270832926,
+   "plan": {
+    "targets": 219,
+    "decay_states": 335,
+    "files": 889,
+    "bytes": 7322187
+   },
+   "full": "target/p196-work/problems/concrete-ordinary-fusion-14mev-1e14-1y/full.json",
+   "full_sha256": "b270df2d721b8c8ebec3bc60f580676117a8645f3c8beb29a4a54567314dbe6f",
+   "pack": "target/p196-work/problems/concrete-ordinary-fusion-14mev-1e14-1y/pack.json",
+   "pack_sha256": "6240ae0f87216a6512d8bdd1c7077d2290d8f8509a916b56768f8e9528d8c386"
+  },
+  {
+   "name": "concrete-ordinary-fission-1e14-1y",
+   "spec": "target/p196-work/problems/concrete-ordinary-fission-1e14-1y/spec.json",
+   "spec_sha256": "bd5dafee9e9a285069d8d5bf73cc618b18c54eb574a18c4d9f913b1db97404b2",
+   "full_exit": 0,
+   "full_wall_s": 2.9353659527841955,
+   "pack_exit": 0,
+   "pack_wall_s": 2.0061843250878155,
+   "plan": {
+    "targets": 219,
+    "decay_states": 335,
+    "files": 889,
+    "bytes": 7322187
+   },
+   "full": "target/p196-work/problems/concrete-ordinary-fission-1e14-1y/full.json",
+   "full_sha256": "5f769750aff5d8d12c46a7f33564de6ab87abdc5373d9776b0903d010b91e2dc",
+   "pack": "target/p196-work/problems/concrete-ordinary-fission-1e14-1y/pack.json",
+   "pack_sha256": "68c87a5850457795f39abe27f4ff241afbe131ee195ddeba6fe661164e70dc21"
+  },
+  {
+   "name": "concrete-ordinary-thermal-1e14-1y",
+   "spec": "target/p196-work/problems/concrete-ordinary-thermal-1e14-1y/spec.json",
+   "spec_sha256": "3ffbcd846175da49a8f5471af489b129b4282dde30433d13d9ce2b7a19c14a74",
+   "full_exit": 0,
+   "full_wall_s": 2.781864688033238,
+   "pack_exit": 0,
+   "pack_wall_s": 1.9713400991167873,
+   "plan": {
+    "targets": 219,
+    "decay_states": 335,
+    "files": 889,
+    "bytes": 7322187
+   },
+   "full": "target/p196-work/problems/concrete-ordinary-thermal-1e14-1y/full.json",
+   "full_sha256": "5cd886aebb90baaa8dfd13b0a0e10f6c7283d7236490f6e7b89398bde11914c6",
+   "pack": "target/p196-work/problems/concrete-ordinary-thermal-1e14-1y/pack.json",
+   "pack_sha256": "96e88dfd41b439f4a8bf35f5bef2ff81bdda72701f1080232b3f34a9cacf6e13"
+  },
+  {
+   "name": "concrete-ordinary-one-over-e-1e14-1y",
+   "spec": "target/p196-work/problems/concrete-ordinary-one-over-e-1e14-1y/spec.json",
+   "spec_sha256": "108e9e5ed88ec2ed7fcb5f6dbcb9ec87e62b50119a89ef7638d78e0f74645d44",
+   "full_exit": 0,
+   "full_wall_s": 2.6662263409234583,
+   "pack_exit": 0,
+   "pack_wall_s": 1.9881299249827862,
+   "plan": {
+    "targets": 219,
+    "decay_states": 335,
+    "files": 889,
+    "bytes": 7322187
+   },
+   "full": "target/p196-work/problems/concrete-ordinary-one-over-e-1e14-1y/full.json",
+   "full_sha256": "52febd9043537d178428a95328bb9d840a9c0e4b0c01a8faac33829ef1f0c293",
+   "pack": "target/p196-work/problems/concrete-ordinary-one-over-e-1e14-1y/pack.json",
+   "pack_sha256": "ac996306c9d7896d32b2f09975d1193dee56c6653b940abf80165ab9bb30e353"
+  },
+  {
+   "name": "concrete-ordinary-fusion-14mev-1e15-10y",
+   "spec": "target/p196-work/problems/concrete-ordinary-fusion-14mev-1e15-10y/spec.json",
+   "spec_sha256": "6687019793fd05db09d810ccc25523dd721ee55729bcde6dbffce7ed749553a9",
+   "full_exit": 0,
+   "full_wall_s": 3.7196970460936427,
+   "pack_exit": 0,
+   "pack_wall_s": 2.0914831880945712,
+   "plan": {
+    "targets": 219,
+    "decay_states": 335,
+    "files": 889,
+    "bytes": 7322187
+   },
+   "full": "target/p196-work/problems/concrete-ordinary-fusion-14mev-1e15-10y/full.json",
+   "full_sha256": "5b397f21df6b4e3544709fd67846b2c45b8edd20c7cc1caf82c4f609ca37e8e8",
+   "pack": "target/p196-work/problems/concrete-ordinary-fusion-14mev-1e15-10y/pack.json",
+   "pack_sha256": "77fa03275987ffb7a394c0851e91f327dc4249ba4195a400da30d7755b8dcdaf"
+  },
+  {
+   "name": "concrete-ordinary-thermal-1e15-10y",
+   "spec": "target/p196-work/problems/concrete-ordinary-thermal-1e15-10y/spec.json",
+   "spec_sha256": "81f70e6e1ca504e0ed9bb1d81eb98e7bc162acb58f6e77b26ef8829591085d9e",
+   "full_exit": 0,
+   "full_wall_s": 3.1852005678229034,
+   "pack_exit": 0,
+   "pack_wall_s": 1.9046960540581495,
+   "plan": {
+    "targets": 219,
+    "decay_states": 335,
+    "files": 889,
+    "bytes": 7322187
+   },
+   "full": "target/p196-work/problems/concrete-ordinary-thermal-1e15-10y/full.json",
+   "full_sha256": "21a8895bc5c26dd3e7dfa3414a7edd2d44cea2e245ba1a701eb262076b684d0d",
+   "pack": "target/p196-work/problems/concrete-ordinary-thermal-1e15-10y/pack.json",
+   "pack_sha256": "ea3e8ae7e52eeb4ac1c859270b314876e3f84f0210deec04bc0e8c67ba7194ac"
+  },
+  {
+   "name": "water-fusion-14mev-1e14-1y",
+   "spec": "target/p196-work/problems/water-fusion-14mev-1e14-1y/spec.json",
+   "spec_sha256": "bbf809f501f488df842a73911b034e062b95af32b4e707bc9c828a9a7780d127",
+   "full_exit": 0,
+   "full_wall_s": 2.626739874947816,
+   "pack_exit": 0,
+   "pack_wall_s": 0.29503341880626976,
+   "plan": {
+    "targets": 31,
+    "decay_states": 62,
+    "files": 155,
+    "bytes": 784158
+   },
+   "full": "target/p196-work/problems/water-fusion-14mev-1e14-1y/full.json",
+   "full_sha256": "cfc54970963694eaa4d0bf81a713af4173e4dd2d740cb709e76a6130b8112293",
+   "pack": "target/p196-work/problems/water-fusion-14mev-1e14-1y/pack.json",
+   "pack_sha256": "6785a1dded47068853e0fd79e38b6f19100479fca5c332c8e4b3db79902cf3a7"
+  },
+  {
+   "name": "water-fission-1e14-1y",
+   "spec": "target/p196-work/problems/water-fission-1e14-1y/spec.json",
+   "spec_sha256": "f1ffda2f8193f1b9fe05a848db2e153d48765b5257dee3be3c1496f46c8fc939",
+   "full_exit": 0,
+   "full_wall_s": 2.678023257991299,
+   "pack_exit": 0,
+   "pack_wall_s": 0.34258850384503603,
+   "plan": {
+    "targets": 31,
+    "decay_states": 62,
+    "files": 155,
+    "bytes": 784158
+   },
+   "full": "target/p196-work/problems/water-fission-1e14-1y/full.json",
+   "full_sha256": "cfe78ebf9050f03c55636788debdff3643d10299c8cc022121e354cd394cd787",
+   "pack": "target/p196-work/problems/water-fission-1e14-1y/pack.json",
+   "pack_sha256": "a0f3227f4c985ae6c1d33447f35cec224eaa62a692954cc08ee6de8dc63935b7"
+  },
+  {
+   "name": "water-thermal-1e14-1y",
+   "spec": "target/p196-work/problems/water-thermal-1e14-1y/spec.json",
+   "spec_sha256": "8eb834b6daf5656bf16cefc75a75433bfc92b29395e95f4fc3c70c8814b9631d",
+   "full_exit": 0,
+   "full_wall_s": 2.5885191259440035,
+   "pack_exit": 0,
+   "pack_wall_s": 0.3225402219686657,
+   "plan": {
+    "targets": 31,
+    "decay_states": 62,
+    "files": 155,
+    "bytes": 784158
+   },
+   "full": "target/p196-work/problems/water-thermal-1e14-1y/full.json",
+   "full_sha256": "99ed48b03502fc3c61342a0d531d9068974aba30551c09880659634fb57dbb18",
+   "pack": "target/p196-work/problems/water-thermal-1e14-1y/pack.json",
+   "pack_sha256": "00c84e86d8ed563916b6f0508f80e5865b87e3baf6c43e25a36770040445abbd"
+  },
+  {
+   "name": "water-one-over-e-1e14-1y",
+   "spec": "target/p196-work/problems/water-one-over-e-1e14-1y/spec.json",
+   "spec_sha256": "a3ca4b9e232b3093117b639e50849c12a0d21a040a282c58ec680a96610b608b",
+   "full_exit": 0,
+   "full_wall_s": 2.6991945870686322,
+   "pack_exit": 0,
+   "pack_wall_s": 0.4134851030539721,
+   "plan": {
+    "targets": 31,
+    "decay_states": 62,
+    "files": 155,
+    "bytes": 784158
+   },
+   "full": "target/p196-work/problems/water-one-over-e-1e14-1y/full.json",
+   "full_sha256": "1807b34b700342e68a45d300c7f0fad4a05218a102d9144033c81824324b46fa",
+   "pack": "target/p196-work/problems/water-one-over-e-1e14-1y/pack.json",
+   "pack_sha256": "5adc46eb693d55566fbea8249172963ea8d55fa9cbf1113a9348e2cd2de2a5f5"
+  },
+  {
+   "name": "water-fusion-14mev-1e15-10y",
+   "spec": "target/p196-work/problems/water-fusion-14mev-1e15-10y/spec.json",
+   "spec_sha256": "bda8f598cd317e73af5cc26e37b6a6a9de30368c13f82979a58714212c61d470",
+   "full_exit": 0,
+   "full_wall_s": 4.307475817156956,
+   "pack_exit": 0,
+   "pack_wall_s": 0.337879978120327,
+   "plan": {
+    "targets": 31,
+    "decay_states": 62,
+    "files": 155,
+    "bytes": 784158
+   },
+   "full": "target/p196-work/problems/water-fusion-14mev-1e15-10y/full.json",
+   "full_sha256": "aa5f76a1fc0ba5c5187b2e4ed144299217145ab6891c4b5a6cadea2cb1fedaa1",
+   "pack": "target/p196-work/problems/water-fusion-14mev-1e15-10y/pack.json",
+   "pack_sha256": "432b222113148539f7ad09241ab194df16f81d85204be07e6fac4a7e75d0031b"
+  },
+  {
+   "name": "water-thermal-1e15-10y",
+   "spec": "target/p196-work/problems/water-thermal-1e15-10y/spec.json",
+   "spec_sha256": "d510036decac5e6c3a39bb7b7911006bc13b8b54a1433ca56e58d3628cced65f",
+   "full_exit": 0,
+   "full_wall_s": 2.698568413965404,
+   "pack_exit": 0,
+   "pack_wall_s": 0.2998458829242736,
+   "plan": {
+    "targets": 31,
+    "decay_states": 62,
+    "files": 155,
+    "bytes": 784158
+   },
+   "full": "target/p196-work/problems/water-thermal-1e15-10y/full.json",
+   "full_sha256": "f546c37378c7546a8db018785a921182f97d40c8c6cf51bb2e19403e156041c7",
+   "pack": "target/p196-work/problems/water-thermal-1e15-10y/pack.json",
+   "pack_sha256": "bddd5fdff551485ed227f56884878751ea2bcd8bef43b8b566317c9536e28a9f"
+  },
+  {
+   "name": "graphite-reactor-fusion-14mev-1e14-1y",
+   "spec": "target/p196-work/problems/graphite-reactor-fusion-14mev-1e14-1y/spec.json",
+   "spec_sha256": "9cbe631c8fa19c4760892eb180c5c4750d8989fc47aea4fdc8b59dc1b2428989",
+   "full_exit": 0,
+   "full_wall_s": 2.7434652640949935,
+   "pack_exit": 0,
+   "pack_wall_s": 0.19709193496964872,
+   "plan": {
+    "targets": 17,
+    "decay_states": 40,
+    "files": 97,
+    "bytes": 401229
+   },
+   "full": "target/p196-work/problems/graphite-reactor-fusion-14mev-1e14-1y/full.json",
+   "full_sha256": "5907b60ba161c15e62dbb85b82c4e026ce2026ebbecce6010eca691aa5bc5d30",
+   "pack": "target/p196-work/problems/graphite-reactor-fusion-14mev-1e14-1y/pack.json",
+   "pack_sha256": "0afb726becfc091a8b30812886f4399a1766c902b8d9aa534c3f18760fcc39c5"
+  },
+  {
+   "name": "graphite-reactor-fission-1e14-1y",
+   "spec": "target/p196-work/problems/graphite-reactor-fission-1e14-1y/spec.json",
+   "spec_sha256": "e86583a904593ad9e077324faf13a0bb1cf609ecc7c45fb22e003084be0748ae",
+   "full_exit": 0,
+   "full_wall_s": 2.6738241508137435,
+   "pack_exit": 0,
+   "pack_wall_s": 0.20787595305591822,
+   "plan": {
+    "targets": 17,
+    "decay_states": 40,
+    "files": 97,
+    "bytes": 401229
+   },
+   "full": "target/p196-work/problems/graphite-reactor-fission-1e14-1y/full.json",
+   "full_sha256": "1c2a4212f431b45461a188bd82c7475d84921ce8ee8e5ccf8418455819cb84b5",
+   "pack": "target/p196-work/problems/graphite-reactor-fission-1e14-1y/pack.json",
+   "pack_sha256": "b8d1c6e080377a68333cca57d3899ea8e9284fdce1afc99a8c1d4dfb88e2afde"
+  },
+  {
+   "name": "graphite-reactor-thermal-1e14-1y",
+   "spec": "target/p196-work/problems/graphite-reactor-thermal-1e14-1y/spec.json",
+   "spec_sha256": "86ac8a31dcc96230a72c2a569c875ff8b8bb063127865052df47ca6a2fb59a39",
+   "full_exit": 0,
+   "full_wall_s": 2.580118784913793,
+   "pack_exit": 0,
+   "pack_wall_s": 0.2111198310740292,
+   "plan": {
+    "targets": 17,
+    "decay_states": 40,
+    "files": 97,
+    "bytes": 401229
+   },
+   "full": "target/p196-work/problems/graphite-reactor-thermal-1e14-1y/full.json",
+   "full_sha256": "0e98f456525019759f6fa8db3b396e7168d34976f7f051440a6ddbf6faa7431a",
+   "pack": "target/p196-work/problems/graphite-reactor-thermal-1e14-1y/pack.json",
+   "pack_sha256": "d665495ea1516b344753a8aa73e84eaef69a4b4cadfb130559312fa7de4e82f8"
+  },
+  {
+   "name": "graphite-reactor-one-over-e-1e14-1y",
+   "spec": "target/p196-work/problems/graphite-reactor-one-over-e-1e14-1y/spec.json",
+   "spec_sha256": "a8e2d9b98e9d4deb97a1105c508ee08b79ff17b312075e46dacd173a5cef117c",
+   "full_exit": 0,
+   "full_wall_s": 2.5664179811719805,
+   "pack_exit": 0,
+   "pack_wall_s": 0.20256773103028536,
+   "plan": {
+    "targets": 17,
+    "decay_states": 40,
+    "files": 97,
+    "bytes": 401229
+   },
+   "full": "target/p196-work/problems/graphite-reactor-one-over-e-1e14-1y/full.json",
+   "full_sha256": "2eb56bdcd963431dd65644e440c6a65b6d535097f21eb55907141825d0f0f237",
+   "pack": "target/p196-work/problems/graphite-reactor-one-over-e-1e14-1y/pack.json",
+   "pack_sha256": "9cb9b9ee88a86ba26eb9b744cafb636a0098e8c2aedabadce1201d3f08bb1d6e"
+  },
+  {
+   "name": "graphite-reactor-fusion-14mev-1e15-10y",
+   "spec": "target/p196-work/problems/graphite-reactor-fusion-14mev-1e15-10y/spec.json",
+   "spec_sha256": "fbd406f9541c668a04bfbef0f973a3a714494cafaea929485ecfbc47f6ce8ee5",
+   "full_exit": 0,
+   "full_wall_s": 3.577322216005996,
+   "pack_exit": 0,
+   "pack_wall_s": 0.20227971114218235,
+   "plan": {
+    "targets": 17,
+    "decay_states": 40,
+    "files": 97,
+    "bytes": 401229
+   },
+   "full": "target/p196-work/problems/graphite-reactor-fusion-14mev-1e15-10y/full.json",
+   "full_sha256": "377b1a47bb2a8e3437310fa9099b9cc6d1a4f7b8bf826754462309ee34232f96",
+   "pack": "target/p196-work/problems/graphite-reactor-fusion-14mev-1e15-10y/pack.json",
+   "pack_sha256": "8ebff34ef7a46c2b6bfe54e72e12d38a2aabbb2253b8398acda667249a2f8ccd"
+  },
+  {
+   "name": "graphite-reactor-thermal-1e15-10y",
+   "spec": "target/p196-work/problems/graphite-reactor-thermal-1e15-10y/spec.json",
+   "spec_sha256": "c7730ec9e17a96bc1f570ce356e0e91ed7a9a1695e860bbfd6e0b108689fb089",
+   "full_exit": 0,
+   "full_wall_s": 2.831246959976852,
+   "pack_exit": 0,
+   "pack_wall_s": 0.21779838600195944,
+   "plan": {
+    "targets": 17,
+    "decay_states": 40,
+    "files": 97,
+    "bytes": 401229
+   },
+   "full": "target/p196-work/problems/graphite-reactor-thermal-1e15-10y/full.json",
+   "full_sha256": "b366247c856092ce97a67591b1bddca23c68b5ec8dd7005084fdd1f5b677da87",
+   "pack": "target/p196-work/problems/graphite-reactor-thermal-1e15-10y/pack.json",
+   "pack_sha256": "49c6cabbb0f7168a58a95ce2963f61a53d0d635317fc9ae08630b88e93481419"
+  },
+  {
+   "name": "tungsten-fusion-14mev-1e14-1y",
+   "spec": "target/p196-work/problems/tungsten-fusion-14mev-1e14-1y/spec.json",
+   "spec_sha256": "24bb030728f3e6cefabee739ac938fd97f9c9379ff3be88bfc1dccd0bfbbacf8",
+   "full_exit": 0,
+   "full_wall_s": 3.029987160116434,
+   "pack_exit": 0,
+   "pack_wall_s": 4.205387477064505,
+   "plan": {
+    "targets": 397,
+    "decay_states": 639,
+    "files": 1674,
+    "bytes": 24468262
+   },
+   "full": "target/p196-work/problems/tungsten-fusion-14mev-1e14-1y/full.json",
+   "full_sha256": "dd9b989a6fa7d7bd2afec64e7a9d111f66026af952b7b717c5edb5cd0b9f381e",
+   "pack": "target/p196-work/problems/tungsten-fusion-14mev-1e14-1y/pack.json",
+   "pack_sha256": "a481241c235baeee47cfbf1d41b0479b93c785402e782bbdfea8afeacb9b0fcc"
+  },
+  {
+   "name": "tungsten-fission-1e14-1y",
+   "spec": "target/p196-work/problems/tungsten-fission-1e14-1y/spec.json",
+   "spec_sha256": "258b597fe17a4849e3174d7b31d4eb0b3d838c377c3b3876436b9a8144b98c3b",
+   "full_exit": 0,
+   "full_wall_s": 3.091615152079612,
+   "pack_exit": 0,
+   "pack_wall_s": 4.2002421140205115,
+   "plan": {
+    "targets": 397,
+    "decay_states": 639,
+    "files": 1674,
+    "bytes": 24468262
+   },
+   "full": "target/p196-work/problems/tungsten-fission-1e14-1y/full.json",
+   "full_sha256": "119f6de27ca9d3de160e7ccc62101a87e432262d2499bc907deebc5ec3a98566",
+   "pack": "target/p196-work/problems/tungsten-fission-1e14-1y/pack.json",
+   "pack_sha256": "eaf8e077ff2ba0af676c949fff55bd880ec380125f9dd020598fe33cb861506d"
+  },
+  {
+   "name": "tungsten-thermal-1e14-1y",
+   "spec": "target/p196-work/problems/tungsten-thermal-1e14-1y/spec.json",
+   "spec_sha256": "e31386d81442ff1e80a7bab0b7915042e62b1df4cc68d60532a289d10ff47d7d",
+   "full_exit": 0,
+   "full_wall_s": 2.8411970119923353,
+   "pack_exit": 0,
+   "pack_wall_s": 4.24761118600145,
+   "plan": {
+    "targets": 397,
+    "decay_states": 639,
+    "files": 1674,
+    "bytes": 24468262
+   },
+   "full": "target/p196-work/problems/tungsten-thermal-1e14-1y/full.json",
+   "full_sha256": "36301c7fe4190ef9641f9ee91f436a0831c48acd47476c8e0bca5508573c7996",
+   "pack": "target/p196-work/problems/tungsten-thermal-1e14-1y/pack.json",
+   "pack_sha256": "64210d631571c09867f8b9163e7480f99ae8d28f75e6a67a0f1ef7149e10189a"
+  },
+  {
+   "name": "tungsten-one-over-e-1e14-1y",
+   "spec": "target/p196-work/problems/tungsten-one-over-e-1e14-1y/spec.json",
+   "spec_sha256": "b2e1535647fb0a0ae64fec83ab5cc5ecc34c634956014fd75a937caa168f6187",
+   "full_exit": 0,
+   "full_wall_s": 2.8278821499552578,
+   "pack_exit": 0,
+   "pack_wall_s": 4.016796262003481,
+   "plan": {
+    "targets": 397,
+    "decay_states": 639,
+    "files": 1674,
+    "bytes": 24468262
+   },
+   "full": "target/p196-work/problems/tungsten-one-over-e-1e14-1y/full.json",
+   "full_sha256": "5a5948aa790027646074298ec77969398a29c3b7afa0642209362bcab4901380",
+   "pack": "target/p196-work/problems/tungsten-one-over-e-1e14-1y/pack.json",
+   "pack_sha256": "47b16d590cbe52631275dfff2eb92d839f451a164288b08bccaa9b2951acae5e"
+  },
+  {
+   "name": "tungsten-fusion-14mev-1e15-10y",
+   "spec": "target/p196-work/problems/tungsten-fusion-14mev-1e15-10y/spec.json",
+   "spec_sha256": "20d5783cbee7d8dd6181103e5978fad39f357df4bfb448f71caed2866fbf9150",
+   "full_exit": 0,
+   "full_wall_s": 4.209734753938392,
+   "pack_exit": 0,
+   "pack_wall_s": 4.237157320138067,
+   "plan": {
+    "targets": 397,
+    "decay_states": 639,
+    "files": 1674,
+    "bytes": 24468262
+   },
+   "full": "target/p196-work/problems/tungsten-fusion-14mev-1e15-10y/full.json",
+   "full_sha256": "6931863c8df1c958557d09dd2e9042e3aaacbdde1bc9cb7c999b270713a13629",
+   "pack": "target/p196-work/problems/tungsten-fusion-14mev-1e15-10y/pack.json",
+   "pack_sha256": "c34e10e93049760a877a8f79285415ba3bbbab4e68ecb1806d7eb9246d016759"
+  },
+  {
+   "name": "tungsten-thermal-1e15-10y",
+   "spec": "target/p196-work/problems/tungsten-thermal-1e15-10y/spec.json",
+   "spec_sha256": "30d5bb783bae19d3b81f0dfa27c9a1acddd5627af00ea08bb56ab30c6b253ab2",
+   "full_exit": 0,
+   "full_wall_s": 3.542518974049017,
+   "pack_exit": 0,
+   "pack_wall_s": 4.1108808380085975,
+   "plan": {
+    "targets": 397,
+    "decay_states": 639,
+    "files": 1674,
+    "bytes": 24468262
+   },
+   "full": "target/p196-work/problems/tungsten-thermal-1e15-10y/full.json",
+   "full_sha256": "a15027ddf7239a68b900029e7d731507eb2d774951ae71d4ce9ffd6b185b7987",
+   "pack": "target/p196-work/problems/tungsten-thermal-1e15-10y/pack.json",
+   "pack_sha256": "6db344d8c43729954779418e6009cab9474d3ed9213d352aea1bc5ae89524e6c"
+  },
+  {
+   "name": "tantalum-fusion-14mev-1e14-1y",
+   "spec": "target/p196-work/problems/tantalum-fusion-14mev-1e14-1y/spec.json",
+   "spec_sha256": "885a2c7fd8783c0c1037d890b7f15960c7a1a929efda44b5edd183da782ac69c",
+   "full_exit": 0,
+   "full_wall_s": 3.3187217488884926,
+   "pack_exit": 0,
+   "pack_wall_s": 6.72138892300427,
+   "plan": {
+    "targets": 641,
+    "decay_states": 990,
+    "files": 2620,
+    "bytes": 42545012
+   },
+   "full": "target/p196-work/problems/tantalum-fusion-14mev-1e14-1y/full.json",
+   "full_sha256": "993aa4f7dd895f395bfc3009d7d17b43863940cb7a1982a3e092024f2d77c4f3",
+   "pack": "target/p196-work/problems/tantalum-fusion-14mev-1e14-1y/pack.json",
+   "pack_sha256": "c5b8e619cf3ab39a4afbe9a4305947f6fda1647383fd4b17e8feb13e33a9006d"
+  },
+  {
+   "name": "tantalum-fission-1e14-1y",
+   "spec": "target/p196-work/problems/tantalum-fission-1e14-1y/spec.json",
+   "spec_sha256": "ce0920cb7a746315ffa77e9a47c2974d5c11ee6b27833d6bb924cd30c0f176da",
+   "full_exit": 0,
+   "full_wall_s": 3.1554649628233165,
+   "pack_exit": 0,
+   "pack_wall_s": 7.005503701046109,
+   "plan": {
+    "targets": 641,
+    "decay_states": 990,
+    "files": 2620,
+    "bytes": 42545012
+   },
+   "full": "target/p196-work/problems/tantalum-fission-1e14-1y/full.json",
+   "full_sha256": "332bdf91f560262de5f93f1150c5142437ceb7eac1605db298884227d75835da",
+   "pack": "target/p196-work/problems/tantalum-fission-1e14-1y/pack.json",
+   "pack_sha256": "0f8dcf6bdbac8a52f553cda88f75d6e21eb11846c6a818f3adabf7fd04a2f2c1"
+  },
+  {
+   "name": "tantalum-thermal-1e14-1y",
+   "spec": "target/p196-work/problems/tantalum-thermal-1e14-1y/spec.json",
+   "spec_sha256": "be477818adae3bd5d03acd90a9c61037bd170ca7a34ca009a81260544f4f6079",
+   "full_exit": 0,
+   "full_wall_s": 2.916507152840495,
+   "pack_exit": 0,
+   "pack_wall_s": 6.532088971929625,
+   "plan": {
+    "targets": 641,
+    "decay_states": 990,
+    "files": 2620,
+    "bytes": 42545012
+   },
+   "full": "target/p196-work/problems/tantalum-thermal-1e14-1y/full.json",
+   "full_sha256": "8f69efa03b2c6a7be0545b4b3fdf3a459eff49e8a91a259543a2ce9d015b7002",
+   "pack": "target/p196-work/problems/tantalum-thermal-1e14-1y/pack.json",
+   "pack_sha256": "ddf82bc4c569304b8003ee7bbd303cd299a596e5ed5ac228c4535cd4b95ef662"
+  },
+  {
+   "name": "tantalum-one-over-e-1e14-1y",
+   "spec": "target/p196-work/problems/tantalum-one-over-e-1e14-1y/spec.json",
+   "spec_sha256": "e529929322df6eb78e383620c4586ebaaab9b874c69a0f6296b90096f1efa23f",
+   "full_exit": 0,
+   "full_wall_s": 2.9461542861536145,
+   "pack_exit": 0,
+   "pack_wall_s": 7.033671782817692,
+   "plan": {
+    "targets": 641,
+    "decay_states": 990,
+    "files": 2620,
+    "bytes": 42545012
+   },
+   "full": "target/p196-work/problems/tantalum-one-over-e-1e14-1y/full.json",
+   "full_sha256": "1d3e91546e3c441d590e5406b19e1f75b7e76f5bf2c007352baf88b5a0c90bf4",
+   "pack": "target/p196-work/problems/tantalum-one-over-e-1e14-1y/pack.json",
+   "pack_sha256": "6c51c01cb3b060cbac93b47ddbd0dd959e2892ca5011760b77d31c5970bbb3be"
+  },
+  {
+   "name": "tantalum-fusion-14mev-1e15-10y",
+   "spec": "target/p196-work/problems/tantalum-fusion-14mev-1e15-10y/spec.json",
+   "spec_sha256": "835ab8c49cfc310063318a9f1ba8b34ec2ee5ca61a1e8890b093952ee1ec741b",
+   "full_exit": 0,
+   "full_wall_s": 4.365863009821624,
+   "pack_exit": 0,
+   "pack_wall_s": 7.519648754969239,
+   "plan": {
+    "targets": 641,
+    "decay_states": 990,
+    "files": 2620,
+    "bytes": 42545012
+   },
+   "full": "target/p196-work/problems/tantalum-fusion-14mev-1e15-10y/full.json",
+   "full_sha256": "79fcf23de781859eb6bc0f6151cf278781d1db551ea5eb7235111a8829f36fa9",
+   "pack": "target/p196-work/problems/tantalum-fusion-14mev-1e15-10y/pack.json",
+   "pack_sha256": "44215860188fdf8a28adf0f728954dcf17d6c14a51cb924c9735f94379508cad"
+  },
+  {
+   "name": "tantalum-thermal-1e15-10y",
+   "spec": "target/p196-work/problems/tantalum-thermal-1e15-10y/spec.json",
+   "spec_sha256": "3228d7a9ad38f6cee40a24a4c2b8b05ddd72a05d894dcfddb4d8a47552e8043c",
+   "full_exit": 0,
+   "full_wall_s": 4.026093028951436,
+   "pack_exit": 0,
+   "pack_wall_s": 6.890683652833104,
+   "plan": {
+    "targets": 641,
+    "decay_states": 990,
+    "files": 2620,
+    "bytes": 42545012
+   },
+   "full": "target/p196-work/problems/tantalum-thermal-1e15-10y/full.json",
+   "full_sha256": "1579fbf30d168b9085199521ad3e285846a036a077ff4eb12f5c79842f403f82",
+   "pack": "target/p196-work/problems/tantalum-thermal-1e15-10y/pack.json",
+   "pack_sha256": "55170fa3ca2a94361ca99b8f1e9727ca98ae86bba5c169ef98297287ff86132f"
+  },
+  {
+   "name": "niobium-fusion-14mev-1e14-1y",
+   "spec": "target/p196-work/problems/niobium-fusion-14mev-1e14-1y/spec.json",
+   "spec_sha256": "173fa63a75d4d23bd0a390b3c167af21cde1dc90bdb16bbdd55fe5785e299a9d",
+   "full_exit": 0,
+   "full_wall_s": 3.2269963200669736,
+   "pack_exit": 0,
+   "pack_wall_s": 7.414525327971205,
+   "plan": {
+    "targets": 702,
+    "decay_states": 1081,
+    "files": 2863,
+    "bytes": 48884605
+   },
+   "full": "target/p196-work/problems/niobium-fusion-14mev-1e14-1y/full.json",
+   "full_sha256": "a43e70cd8e3180363e96513ed8f99dba6c2f8f3ed823131f063c21201399089b",
+   "pack": "target/p196-work/problems/niobium-fusion-14mev-1e14-1y/pack.json",
+   "pack_sha256": "7523542f526c4ac4bd7b6a85558000712017c4ba74dbec80154ec07eec3f2422"
+  },
+  {
+   "name": "niobium-fission-1e14-1y",
+   "spec": "target/p196-work/problems/niobium-fission-1e14-1y/spec.json",
+   "spec_sha256": "0168663dd6026622edf268d52faaf63ec0fea517db871a2e7c26b2ad28273a2e",
+   "full_exit": 0,
+   "full_wall_s": 3.2197539259213954,
+   "pack_exit": 0,
+   "pack_wall_s": 7.702240988845006,
+   "plan": {
+    "targets": 702,
+    "decay_states": 1081,
+    "files": 2863,
+    "bytes": 48884605
+   },
+   "full": "target/p196-work/problems/niobium-fission-1e14-1y/full.json",
+   "full_sha256": "c8e32912ae15120f5dec02b63120f8ac387dd42c8d8d379be8ec038e28a2e46b",
+   "pack": "target/p196-work/problems/niobium-fission-1e14-1y/pack.json",
+   "pack_sha256": "efec6164a2021108d6a45340d59fccc9729c2cd28cf8109588960524a400806e"
+  },
+  {
+   "name": "niobium-thermal-1e14-1y",
+   "spec": "target/p196-work/problems/niobium-thermal-1e14-1y/spec.json",
+   "spec_sha256": "deb348c530836d5bc50adcf5cfa88f5344a429d4dba6495a91291113638d8b5b",
+   "full_exit": 0,
+   "full_wall_s": 3.0465904590673745,
+   "pack_exit": 0,
+   "pack_wall_s": 7.150860004127026,
+   "plan": {
+    "targets": 702,
+    "decay_states": 1081,
+    "files": 2863,
+    "bytes": 48884605
+   },
+   "full": "target/p196-work/problems/niobium-thermal-1e14-1y/full.json",
+   "full_sha256": "8a37ecf45d334100a55d00a7b79ec6f5e93e3010e0f06e55a8eab0b543acb603",
+   "pack": "target/p196-work/problems/niobium-thermal-1e14-1y/pack.json",
+   "pack_sha256": "e1924b01554bc24970f1acafaf37e1f3d19f79410af31442692ade8fd4cd02a7"
+  },
+  {
+   "name": "niobium-one-over-e-1e14-1y",
+   "spec": "target/p196-work/problems/niobium-one-over-e-1e14-1y/spec.json",
+   "spec_sha256": "12ff31083c03dce3a656caf797af1400c2cd59e29d8de739f78a659fa81f9f32",
+   "full_exit": 0,
+   "full_wall_s": 3.047540877945721,
+   "pack_exit": 0,
+   "pack_wall_s": 7.615701861912385,
+   "plan": {
+    "targets": 702,
+    "decay_states": 1081,
+    "files": 2863,
+    "bytes": 48884605
+   },
+   "full": "target/p196-work/problems/niobium-one-over-e-1e14-1y/full.json",
+   "full_sha256": "f91308e3832f82e44c1c1cd90c3ff17f9552609f9dc0f3f51fdb8fdd5db67455",
+   "pack": "target/p196-work/problems/niobium-one-over-e-1e14-1y/pack.json",
+   "pack_sha256": "3e732466c6306bfc247f3f6b59b53bc8e0729d92965d4e88736cc385d8c17770"
+  },
+  {
+   "name": "niobium-fusion-14mev-1e15-10y",
+   "spec": "target/p196-work/problems/niobium-fusion-14mev-1e15-10y/spec.json",
+   "spec_sha256": "216014366bf85d63c6067a45c9db666288cdf9481cb8a9b876a3ab401c1b1a2d",
+   "full_exit": 0,
+   "full_wall_s": 4.64926579897292,
+   "pack_exit": 0,
+   "pack_wall_s": 7.522858333075419,
+   "plan": {
+    "targets": 702,
+    "decay_states": 1081,
+    "files": 2863,
+    "bytes": 48884605
+   },
+   "full": "target/p196-work/problems/niobium-fusion-14mev-1e15-10y/full.json",
+   "full_sha256": "249687bebe59bd77a31c840542a050f18c35fc7ac171b6f0315d6179a58ba014",
+   "pack": "target/p196-work/problems/niobium-fusion-14mev-1e15-10y/pack.json",
+   "pack_sha256": "3ca95debe12c0adbf63d6b44bfe089e1e2431512a6ce063c53b3830682eebba5"
+  },
+  {
+   "name": "niobium-thermal-1e15-10y",
+   "spec": "target/p196-work/problems/niobium-thermal-1e15-10y/spec.json",
+   "spec_sha256": "c4490dbe2eb644b071a84b47008581ed368f2acae9a76da3c03200d274cc42fb",
+   "full_exit": 0,
+   "full_wall_s": 3.7279465950559825,
+   "pack_exit": 0,
+   "pack_wall_s": 7.259061491815373,
+   "plan": {
+    "targets": 702,
+    "decay_states": 1081,
+    "files": 2863,
+    "bytes": 48884605
+   },
+   "full": "target/p196-work/problems/niobium-thermal-1e15-10y/full.json",
+   "full_sha256": "749fed815813f7c4661229511e8a8486aefb832c24465182a91d2bb8e39b5781",
+   "pack": "target/p196-work/problems/niobium-thermal-1e15-10y/pack.json",
+   "pack_sha256": "bb81968a9f6ca0366db99d14f8cc1054696d0f954e4cce80eb5bbc452d036b2d"
+  },
+  {
+   "name": "titanium-grade2-fusion-14mev-1e14-1y",
+   "spec": "target/p196-work/problems/titanium-grade2-fusion-14mev-1e14-1y/spec.json",
+   "spec_sha256": "52342cc7a6d86ee1fe53d9879dbe665c8025485238c697dd4f2864472173b3fa",
+   "full_exit": 0,
+   "full_wall_s": 2.807681307196617,
+   "pack_exit": 0,
+   "pack_wall_s": 1.6413050319533795,
+   "plan": {
+    "targets": 188,
+    "decay_states": 317,
+    "files": 822,
+    "bytes": 6486155
+   },
+   "full": "target/p196-work/problems/titanium-grade2-fusion-14mev-1e14-1y/full.json",
+   "full_sha256": "0d74913911de86f8037912f9db6024865f6215ab14e686bccc75a3182fba59f8",
+   "pack": "target/p196-work/problems/titanium-grade2-fusion-14mev-1e14-1y/pack.json",
+   "pack_sha256": "50c638b01138a84d62cc87db2173f9d6245f028c299a9989608219a62d7c1b4d"
+  },
+  {
+   "name": "titanium-grade2-fission-1e14-1y",
+   "spec": "target/p196-work/problems/titanium-grade2-fission-1e14-1y/spec.json",
+   "spec_sha256": "e3bfc310457735ccbe1edc7676907b382ea819234664ad846257aca5e1663c3c",
+   "full_exit": 0,
+   "full_wall_s": 2.8433777010068297,
+   "pack_exit": 0,
+   "pack_wall_s": 1.7443188410252333,
+   "plan": {
+    "targets": 188,
+    "decay_states": 317,
+    "files": 822,
+    "bytes": 6486155
+   },
+   "full": "target/p196-work/problems/titanium-grade2-fission-1e14-1y/full.json",
+   "full_sha256": "c7e515a667b9f97698095c24b3e70478e222acf153f075914abdd8a8c90b9a45",
+   "pack": "target/p196-work/problems/titanium-grade2-fission-1e14-1y/pack.json",
+   "pack_sha256": "08c894414728812c603436a1d5a8ef122ca85d120d6b0bfcf2797edf4a2b7d7e"
+  },
+  {
+   "name": "titanium-grade2-thermal-1e14-1y",
+   "spec": "target/p196-work/problems/titanium-grade2-thermal-1e14-1y/spec.json",
+   "spec_sha256": "268c6d772d30c1c1b2c755b47fb1f6bc398f6d968372431289607b77abb3204a",
+   "full_exit": 0,
+   "full_wall_s": 2.9469969640485942,
+   "pack_exit": 0,
+   "pack_wall_s": 1.685696488013491,
+   "plan": {
+    "targets": 188,
+    "decay_states": 317,
+    "files": 822,
+    "bytes": 6486155
+   },
+   "full": "target/p196-work/problems/titanium-grade2-thermal-1e14-1y/full.json",
+   "full_sha256": "b3f260df17a6df1f7de3ac0ebba9adbb5f91a24986f5c46eaca62e71036bd608",
+   "pack": "target/p196-work/problems/titanium-grade2-thermal-1e14-1y/pack.json",
+   "pack_sha256": "32b8b83e75ce8c8a018641f1e52f7d4ca40c0fe853ceca55450819664ebe49dd"
+  },
+  {
+   "name": "titanium-grade2-one-over-e-1e14-1y",
+   "spec": "target/p196-work/problems/titanium-grade2-one-over-e-1e14-1y/spec.json",
+   "spec_sha256": "7b3ee716f93c2072796106a5a61e448a121e930acc6a13750d0d6b26f9c7a931",
+   "full_exit": 0,
+   "full_wall_s": 2.7247554340865463,
+   "pack_exit": 0,
+   "pack_wall_s": 1.7603200890589505,
+   "plan": {
+    "targets": 188,
+    "decay_states": 317,
+    "files": 822,
+    "bytes": 6486155
+   },
+   "full": "target/p196-work/problems/titanium-grade2-one-over-e-1e14-1y/full.json",
+   "full_sha256": "103254ff2db65ed464c2d21823919d12a1eeed77eb39e1af9903b657e2a41fc2",
+   "pack": "target/p196-work/problems/titanium-grade2-one-over-e-1e14-1y/pack.json",
+   "pack_sha256": "ecc507e5c9994c6019f71dbe3e007c13e0ba43dbb1ca215695efdccceba65030"
+  },
+  {
+   "name": "titanium-grade2-fusion-14mev-1e15-10y",
+   "spec": "target/p196-work/problems/titanium-grade2-fusion-14mev-1e15-10y/spec.json",
+   "spec_sha256": "591961dc20fa95884820b4962d350c89e7586f42b0c7ab1de26d6e011de044fc",
+   "full_exit": 0,
+   "full_wall_s": 3.828704034909606,
+   "pack_exit": 0,
+   "pack_wall_s": 1.837995545938611,
+   "plan": {
+    "targets": 188,
+    "decay_states": 317,
+    "files": 822,
+    "bytes": 6486155
+   },
+   "full": "target/p196-work/problems/titanium-grade2-fusion-14mev-1e15-10y/full.json",
+   "full_sha256": "dc56f3c861e7d07af304b116337c9875a034e00410c2bb25202f2437b5a768ad",
+   "pack": "target/p196-work/problems/titanium-grade2-fusion-14mev-1e15-10y/pack.json",
+   "pack_sha256": "6d31cf3cb2102b011b5c6c94eb7f19efc8af20fa100888931115c05433141017"
+  },
+  {
+   "name": "titanium-grade2-thermal-1e15-10y",
+   "spec": "target/p196-work/problems/titanium-grade2-thermal-1e15-10y/spec.json",
+   "spec_sha256": "968518baa67a0ea0ec535b04d3be8d9bf8bfdc166b607f2782e7e5fe45d0b933",
+   "full_exit": 0,
+   "full_wall_s": 3.287506577791646,
+   "pack_exit": 0,
+   "pack_wall_s": 1.7084217129740864,
+   "plan": {
+    "targets": 188,
+    "decay_states": 317,
+    "files": 822,
+    "bytes": 6486155
+   },
+   "full": "target/p196-work/problems/titanium-grade2-thermal-1e15-10y/full.json",
+   "full_sha256": "cc1d1572c4a6bd6f0e949f725d6e76504843567156291d8a935cc6eefaa9e08b",
+   "pack": "target/p196-work/problems/titanium-grade2-thermal-1e15-10y/pack.json",
+   "pack_sha256": "3975ac645e2f5c2d1f9bbff771543e7180f5c76e1055611a0ef822edbcb6e538"
+  },
+  {
+   "name": "copper-fusion-14mev-1e14-1y",
+   "spec": "target/p196-work/problems/copper-fusion-14mev-1e14-1y/spec.json",
+   "spec_sha256": "55eeea695c82473369c8a61be96d8c4a86e27b912b5d8ac171bd9172af30309e",
+   "full_exit": 0,
+   "full_wall_s": 2.9305069409310818,
+   "pack_exit": 0,
+   "pack_wall_s": 1.2636637359391898,
+   "plan": {
+    "targets": 89,
+    "decay_states": 188,
+    "files": 464,
+    "bytes": 4176010
+   },
+   "full": "target/p196-work/problems/copper-fusion-14mev-1e14-1y/full.json",
+   "full_sha256": "9569593ca29a041d46cbaf1d95e21eeaaf871176e6174cd708596fe4b115b53c",
+   "pack": "target/p196-work/problems/copper-fusion-14mev-1e14-1y/pack.json",
+   "pack_sha256": "8f2fd4f3254340c10837708386e18e70ef79921df06edd89a97049efd3912b0e"
+  },
+  {
+   "name": "copper-fission-1e14-1y",
+   "spec": "target/p196-work/problems/copper-fission-1e14-1y/spec.json",
+   "spec_sha256": "fe7753c380251442193f4672c933ae07d6e81dfaf260495b32e5166b846aeeb7",
+   "full_exit": 0,
+   "full_wall_s": 2.8950993670150638,
+   "pack_exit": 0,
+   "pack_wall_s": 1.009594895876944,
+   "plan": {
+    "targets": 89,
+    "decay_states": 188,
+    "files": 464,
+    "bytes": 4176010
+   },
+   "full": "target/p196-work/problems/copper-fission-1e14-1y/full.json",
+   "full_sha256": "bdf640829eed5f92914119e6b8fa894cf6ce9f9fe544724239b5528b71a3c7e0",
+   "pack": "target/p196-work/problems/copper-fission-1e14-1y/pack.json",
+   "pack_sha256": "d3408e3f07f4506762da7b1bc0dba54e2830923449221c53b24409f55af738a3"
+  },
+  {
+   "name": "copper-thermal-1e14-1y",
+   "spec": "target/p196-work/problems/copper-thermal-1e14-1y/spec.json",
+   "spec_sha256": "c0796f984dce14e26ffdced8bf453ffd2a5f1fb7388412093f5f6990ebfca24d",
+   "full_exit": 0,
+   "full_wall_s": 2.865703484043479,
+   "pack_exit": 0,
+   "pack_wall_s": 1.0163969099521637,
+   "plan": {
+    "targets": 89,
+    "decay_states": 188,
+    "files": 464,
+    "bytes": 4176010
+   },
+   "full": "target/p196-work/problems/copper-thermal-1e14-1y/full.json",
+   "full_sha256": "8978275cf98a7a90df4774e2743a9d37b8794e3f36d81b6e3a02a216be027566",
+   "pack": "target/p196-work/problems/copper-thermal-1e14-1y/pack.json",
+   "pack_sha256": "8a2f7399210304a2ba3ae41806a0823e95964a45dd431b8ab42bafff23d3faf5"
+  },
+  {
+   "name": "copper-one-over-e-1e14-1y",
+   "spec": "target/p196-work/problems/copper-one-over-e-1e14-1y/spec.json",
+   "spec_sha256": "9c4bca327a54dd1cccf4e3c5deb6e229c61b04f4b03b9b2cf3b2b20054f44d9d",
+   "full_exit": 0,
+   "full_wall_s": 2.7339638269040734,
+   "pack_exit": 0,
+   "pack_wall_s": 0.9262859190348536,
+   "plan": {
+    "targets": 89,
+    "decay_states": 188,
+    "files": 464,
+    "bytes": 4176010
+   },
+   "full": "target/p196-work/problems/copper-one-over-e-1e14-1y/full.json",
+   "full_sha256": "b2a40e4a6e066327da54d8ea2c335e8d408cdcdd9acf5df3b57bbdf9a30d8fab",
+   "pack": "target/p196-work/problems/copper-one-over-e-1e14-1y/pack.json",
+   "pack_sha256": "5ff720be4e8a01c5a797c90e2264f3f0e7b52b2c8db5a6bfc9fc1ed02ec3e12f"
+  },
+  {
+   "name": "copper-fusion-14mev-1e15-10y",
+   "spec": "target/p196-work/problems/copper-fusion-14mev-1e15-10y/spec.json",
+   "spec_sha256": "b4c8d92d6446d5d3adf520aef4bc86ab5d2aeb07c2737b071c3054e94de907c5",
+   "full_exit": 0,
+   "full_wall_s": 3.57077635708265,
+   "pack_exit": 0,
+   "pack_wall_s": 0.9779976429417729,
+   "plan": {
+    "targets": 89,
+    "decay_states": 188,
+    "files": 464,
+    "bytes": 4176010
+   },
+   "full": "target/p196-work/problems/copper-fusion-14mev-1e15-10y/full.json",
+   "full_sha256": "3bdeb33475d58f5c359a7fe19720763edac751972c99cb039585ce1b4e0bc818",
+   "pack": "target/p196-work/problems/copper-fusion-14mev-1e15-10y/pack.json",
+   "pack_sha256": "40891dce1b369904c447dc29ded2fb64362a313108a5a592e2a2dec1c95683dc"
+  },
+  {
+   "name": "copper-thermal-1e15-10y",
+   "spec": "target/p196-work/problems/copper-thermal-1e15-10y/spec.json",
+   "spec_sha256": "e82f30c6e7bad43e18169c0ddae2324545960b433b42f5c80ce524d2985ae8c3",
+   "full_exit": 0,
+   "full_wall_s": 3.1052556931972504,
+   "pack_exit": 0,
+   "pack_wall_s": 0.9352830920834094,
+   "plan": {
+    "targets": 89,
+    "decay_states": 188,
+    "files": 464,
+    "bytes": 4176010
+   },
+   "full": "target/p196-work/problems/copper-thermal-1e15-10y/full.json",
+   "full_sha256": "5b9f0e6ae7b4292a3ffdcc31b0131ebca585030e8eb3bef71a79e58f791cb841",
+   "pack": "target/p196-work/problems/copper-thermal-1e15-10y/pack.json",
+   "pack_sha256": "9ebadfbc9b23a62204d2a5271607bb2a8a9f3eb9d5eef83386ec81caa749e8c8"
+  },
+  {
+   "name": "beryllium-s65-fusion-14mev-1e14-1y",
+   "spec": "target/p196-work/problems/beryllium-s65-fusion-14mev-1e14-1y/spec.json",
+   "spec_sha256": "4b1d32ff10dd4414e86728810be74f63ca76fb5def7969d85bfa4cde8382d5e6",
+   "full_exit": 0,
+   "full_wall_s": 3.749866747064516,
+   "pack_exit": 0,
+   "pack_wall_s": 10.622599432012066,
+   "plan": {
+    "targets": 967,
+    "decay_states": 1350,
+    "files": 3666,
+    "bytes": 67801514
+   },
+   "full": "target/p196-work/problems/beryllium-s65-fusion-14mev-1e14-1y/full.json",
+   "full_sha256": "50110e1f5230bc7247f77934d6c7ae8d06d990b44826dcacb98813783607dfd6",
+   "pack": "target/p196-work/problems/beryllium-s65-fusion-14mev-1e14-1y/pack.json",
+   "pack_sha256": "0bae234581f96446d8f64a84bbaf372296142a6bccbd0d7c42db28e2a0d94d92"
+  },
+  {
+   "name": "beryllium-s65-fission-1e14-1y",
+   "spec": "target/p196-work/problems/beryllium-s65-fission-1e14-1y/spec.json",
+   "spec_sha256": "2c2edc3d9a6379e57fce82ac5b49c9a7aa47f3a1aa2be28a0f4372424a2d677d",
+   "full_exit": 0,
+   "full_wall_s": 4.07011076901108,
+   "pack_exit": 0,
+   "pack_wall_s": 11.59331360901706,
+   "plan": {
+    "targets": 967,
+    "decay_states": 1350,
+    "files": 3666,
+    "bytes": 67801514
+   },
+   "full": "target/p196-work/problems/beryllium-s65-fission-1e14-1y/full.json",
+   "full_sha256": "1882618080ce344d6700c5841bc91f44993ef79587e29963a0db7e706e190c2b",
+   "pack": "target/p196-work/problems/beryllium-s65-fission-1e14-1y/pack.json",
+   "pack_sha256": "4bcdf9a7e4fe5fc585c2a08a20529a47597013e96357259b09442c40daadee4c"
+  },
+  {
+   "name": "beryllium-s65-thermal-1e14-1y",
+   "spec": "target/p196-work/problems/beryllium-s65-thermal-1e14-1y/spec.json",
+   "spec_sha256": "fccbc097e83fe80f4788579b1d2e51bbfe9d483082437f6faf6436072142b2f5",
+   "full_exit": 0,
+   "full_wall_s": 3.2587564450223,
+   "pack_exit": 0,
+   "pack_wall_s": 10.350662851007655,
+   "plan": {
+    "targets": 967,
+    "decay_states": 1350,
+    "files": 3666,
+    "bytes": 67801514
+   },
+   "full": "target/p196-work/problems/beryllium-s65-thermal-1e14-1y/full.json",
+   "full_sha256": "55e2a5af47f8387de791c7bfa6c0bb5a26f826c4d1b9ab53397d955bad20ccb1",
+   "pack": "target/p196-work/problems/beryllium-s65-thermal-1e14-1y/pack.json",
+   "pack_sha256": "59b4593e43f644e174383b2012afe9f6c6a572ca6833d10b1e5875f969f5cfca"
+  },
+  {
+   "name": "beryllium-s65-one-over-e-1e14-1y",
+   "spec": "target/p196-work/problems/beryllium-s65-one-over-e-1e14-1y/spec.json",
+   "spec_sha256": "80e7e1f0da7c3acad3d473c137fae17af1bf686e621f39e19723ad79c9a9ba67",
+   "full_exit": 0,
+   "full_wall_s": 3.3186952490359545,
+   "pack_exit": 0,
+   "pack_wall_s": 10.456532512092963,
+   "plan": {
+    "targets": 967,
+    "decay_states": 1350,
+    "files": 3666,
+    "bytes": 67801514
+   },
+   "full": "target/p196-work/problems/beryllium-s65-one-over-e-1e14-1y/full.json",
+   "full_sha256": "f842781942689381d89abfcb283fcc70f9c738085f6b90abea3ed92c6095197a",
+   "pack": "target/p196-work/problems/beryllium-s65-one-over-e-1e14-1y/pack.json",
+   "pack_sha256": "af58c4305fc642127e5fc9697f69e77c68afa84dc56c2f5016aedb348cf66189"
+  },
+  {
+   "name": "beryllium-s65-fusion-14mev-1e15-10y",
+   "spec": "target/p196-work/problems/beryllium-s65-fusion-14mev-1e15-10y/spec.json",
+   "spec_sha256": "846a9a3fd0c38499b01f07f07be9ac50311527922ea2d166654a82ed478ed277",
+   "full_exit": 0,
+   "full_wall_s": 5.066593837924302,
+   "pack_exit": 0,
+   "pack_wall_s": 10.837653676047921,
+   "plan": {
+    "targets": 967,
+    "decay_states": 1350,
+    "files": 3666,
+    "bytes": 67801514
+   },
+   "full": "target/p196-work/problems/beryllium-s65-fusion-14mev-1e15-10y/full.json",
+   "full_sha256": "19701eeb88445303b33d8cd8ccb9684a91aff3abbcc71616bf02d5c25251fb22",
+   "pack": "target/p196-work/problems/beryllium-s65-fusion-14mev-1e15-10y/pack.json",
+   "pack_sha256": "00e73a65b5a109bb93f9cafee29cf4b1cdcbe48690dec7c35d9e053cd9c98dbc"
+  },
+  {
+   "name": "beryllium-s65-thermal-1e15-10y",
+   "spec": "target/p196-work/problems/beryllium-s65-thermal-1e15-10y/spec.json",
+   "spec_sha256": "df9949a8fb2d7c7cd8d6c6ecc2069617b30b82303ee5ca90f938162fe0bef4ba",
+   "full_exit": 0,
+   "full_wall_s": 3.4493130629416555,
+   "pack_exit": 0,
+   "pack_wall_s": 10.279630328994244,
+   "plan": {
+    "targets": 967,
+    "decay_states": 1350,
+    "files": 3666,
+    "bytes": 67801514
+   },
+   "full": "target/p196-work/problems/beryllium-s65-thermal-1e15-10y/full.json",
+   "full_sha256": "8a75343409556a073cad14c357ba57b3dac98b22b79c4a164cfafa3efb3025ec",
+   "pack": "target/p196-work/problems/beryllium-s65-thermal-1e15-10y/pack.json",
+   "pack_sha256": "70e98fa77ed5914dd5e2a0be6e6bd5cd0315403cbc08216bc1c1e5dc2876f6a8"
+  },
+  {
+   "name": "v-4cr-4ti-fusion-14mev-1e14-1y",
+   "spec": "target/p196-work/problems/v-4cr-4ti-fusion-14mev-1e14-1y/spec.json",
+   "spec_sha256": "1066251b9e3ea4cbfa24399285d311bcec52adc84b6ff8d14004b526a9f36069",
+   "full_exit": 0,
+   "full_wall_s": 2.910839866148308,
+   "pack_exit": 0,
+   "pack_wall_s": 1.4377730349078774,
+   "plan": {
+    "targets": 162,
+    "decay_states": 281,
+    "files": 724,
+    "bytes": 5322002
+   },
+   "full": "target/p196-work/problems/v-4cr-4ti-fusion-14mev-1e14-1y/full.json",
+   "full_sha256": "55ef1516f4903e4df949182952bc673be16ef4a303b6ce46b68e063d6c6de745",
+   "pack": "target/p196-work/problems/v-4cr-4ti-fusion-14mev-1e14-1y/pack.json",
+   "pack_sha256": "0e8b40dac3e2bfb6d7b0fdbf81d1503c5fef9f62c474d3bb5bfb76016c82398e"
+  },
+  {
+   "name": "v-4cr-4ti-fission-1e14-1y",
+   "spec": "target/p196-work/problems/v-4cr-4ti-fission-1e14-1y/spec.json",
+   "spec_sha256": "315cc565f0d720fab094ce7ba1d17de4666ba8c8a43e5eab3a2d9780a893f0f4",
+   "full_exit": 0,
+   "full_wall_s": 2.8092151649761945,
+   "pack_exit": 0,
+   "pack_wall_s": 1.426622929982841,
+   "plan": {
+    "targets": 162,
+    "decay_states": 281,
+    "files": 724,
+    "bytes": 5322002
+   },
+   "full": "target/p196-work/problems/v-4cr-4ti-fission-1e14-1y/full.json",
+   "full_sha256": "95c1fbe11fb60e825f32afdb37878de0f78d1bac167b9758b3cb6707f6f2a5c2",
+   "pack": "target/p196-work/problems/v-4cr-4ti-fission-1e14-1y/pack.json",
+   "pack_sha256": "d241fd758523a3991d334acb67a900fecc1d52a2155f5507cdbf4ea0c8279754"
+  },
+  {
+   "name": "v-4cr-4ti-thermal-1e14-1y",
+   "spec": "target/p196-work/problems/v-4cr-4ti-thermal-1e14-1y/spec.json",
+   "spec_sha256": "10fd6250e73d2c5ac7f61c1a595b47fb4292046ecb3b3f19f621be22355bde3d",
+   "full_exit": 0,
+   "full_wall_s": 2.6505272150970995,
+   "pack_exit": 0,
+   "pack_wall_s": 1.3930134119000286,
+   "plan": {
+    "targets": 162,
+    "decay_states": 281,
+    "files": 724,
+    "bytes": 5322002
+   },
+   "full": "target/p196-work/problems/v-4cr-4ti-thermal-1e14-1y/full.json",
+   "full_sha256": "ac35f21ddad1f315b38f1deb4b65118275f928cb8c5409eb98a1e99b6b045de1",
+   "pack": "target/p196-work/problems/v-4cr-4ti-thermal-1e14-1y/pack.json",
+   "pack_sha256": "c343e059b8231360f7a9e16a45c0ad7cd41f09e431870f9a44babee07cf4bf92"
+  },
+  {
+   "name": "v-4cr-4ti-one-over-e-1e14-1y",
+   "spec": "target/p196-work/problems/v-4cr-4ti-one-over-e-1e14-1y/spec.json",
+   "spec_sha256": "c885267a05368a99e76271c3997526750b663861c9bf0c23642757b00a2cf7c2",
+   "full_exit": 0,
+   "full_wall_s": 2.610754470108077,
+   "pack_exit": 0,
+   "pack_wall_s": 1.3938818348105997,
+   "plan": {
+    "targets": 162,
+    "decay_states": 281,
+    "files": 724,
+    "bytes": 5322002
+   },
+   "full": "target/p196-work/problems/v-4cr-4ti-one-over-e-1e14-1y/full.json",
+   "full_sha256": "2010f517008f5964ec58b80299270e3402034206013ffec185089bc47b96e711",
+   "pack": "target/p196-work/problems/v-4cr-4ti-one-over-e-1e14-1y/pack.json",
+   "pack_sha256": "df8d8ae22fdff30541d54c7c4e352d94d30c36901749508ec9d5b36a87a68c7c"
+  },
+  {
+   "name": "v-4cr-4ti-fusion-14mev-1e15-10y",
+   "spec": "target/p196-work/problems/v-4cr-4ti-fusion-14mev-1e15-10y/spec.json",
+   "spec_sha256": "125f7f6fd3daf6aaa2bb42fd918b42f77497c043e00f02fa8682de0d04fcbab6",
+   "full_exit": 0,
+   "full_wall_s": 4.124186272034422,
+   "pack_exit": 0,
+   "pack_wall_s": 1.4587929612025619,
+   "plan": {
+    "targets": 162,
+    "decay_states": 281,
+    "files": 724,
+    "bytes": 5322002
+   },
+   "full": "target/p196-work/problems/v-4cr-4ti-fusion-14mev-1e15-10y/full.json",
+   "full_sha256": "6138187e82c21d62fa038c46e68a91e9f21a75086de71e02bfb655dd6de60cb5",
+   "pack": "target/p196-work/problems/v-4cr-4ti-fusion-14mev-1e15-10y/pack.json",
+   "pack_sha256": "70b9e32bddc67d0509779dad0b6dfbdc82b79ce772bda78945036541b113e68f"
+  },
+  {
+   "name": "v-4cr-4ti-thermal-1e15-10y",
+   "spec": "target/p196-work/problems/v-4cr-4ti-thermal-1e15-10y/spec.json",
+   "spec_sha256": "542960ede64d4e3469dcdb20e33e5d9ce58aad4a514cad14c815c88399e7bf17",
+   "full_exit": 0,
+   "full_wall_s": 3.1485187660437077,
+   "pack_exit": 0,
+   "pack_wall_s": 1.4468308489304036,
+   "plan": {
+    "targets": 162,
+    "decay_states": 281,
+    "files": 724,
+    "bytes": 5322002
+   },
+   "full": "target/p196-work/problems/v-4cr-4ti-thermal-1e15-10y/full.json",
+   "full_sha256": "c98310750430c9700a3797adb04dd5d03a2c9e4df1bcb258830b98b8b325d4c7",
+   "pack": "target/p196-work/problems/v-4cr-4ti-thermal-1e15-10y/pack.json",
+   "pack_sha256": "7fa628e37fbe718a5d5389e8e37fb3b124fea88265532316932ccf647a587260"
+  },
+  {
+   "name": "pb-15.7li-fusion-14mev-1e14-1y",
+   "spec": "target/p196-work/problems/pb-15.7li-fusion-14mev-1e14-1y/spec.json",
+   "spec_sha256": "70afaba4810a57c346f5dec59fa50ec117626615776aff0e673b5d19fcb3d8b6",
+   "full_exit": 0,
+   "full_wall_s": 2.898158817086369,
+   "pack_exit": 0,
+   "pack_wall_s": 2.334144582040608,
+   "plan": {
+    "targets": 179,
+    "decay_states": 286,
+    "files": 751,
+    "bytes": 16239163
+   },
+   "full": "target/p196-work/problems/pb-15.7li-fusion-14mev-1e14-1y/full.json",
+   "full_sha256": "b279ada482883124c2c699de0ab8eee3e885a243989ed0718a90925a919d6f89",
+   "pack": "target/p196-work/problems/pb-15.7li-fusion-14mev-1e14-1y/pack.json",
+   "pack_sha256": "f32229bf21fb2adc446eed18ce168eebdadbd7ea77a1e5529682641d5407dc10"
+  },
+  {
+   "name": "pb-15.7li-fission-1e14-1y",
+   "spec": "target/p196-work/problems/pb-15.7li-fission-1e14-1y/spec.json",
+   "spec_sha256": "1b4ef8264c23540c55113648cbe291fe3517b96d60235d63304bee4585395a16",
+   "full_exit": 0,
+   "full_wall_s": 2.7674986380152404,
+   "pack_exit": 0,
+   "pack_wall_s": 2.256784836994484,
+   "plan": {
+    "targets": 179,
+    "decay_states": 286,
+    "files": 751,
+    "bytes": 16239163
+   },
+   "full": "target/p196-work/problems/pb-15.7li-fission-1e14-1y/full.json",
+   "full_sha256": "413eba6aed756731584fad48296283d09ff9827c1ad481e311fdd4c25b484eb5",
+   "pack": "target/p196-work/problems/pb-15.7li-fission-1e14-1y/pack.json",
+   "pack_sha256": "6f3021d2c8ac3743a7c71719da0233ce0ae703c03f940ec38d7e84667f51d0a8"
+  },
+  {
+   "name": "pb-15.7li-thermal-1e14-1y",
+   "spec": "target/p196-work/problems/pb-15.7li-thermal-1e14-1y/spec.json",
+   "spec_sha256": "c7f288d759d5b8e0b6d4c7cd0b25040b6f77a47236e8f4cb8a42ecf6dffec01c",
+   "full_exit": 0,
+   "full_wall_s": 2.8644828170072287,
+   "pack_exit": 0,
+   "pack_wall_s": 2.1400701471138746,
+   "plan": {
+    "targets": 179,
+    "decay_states": 286,
+    "files": 751,
+    "bytes": 16239163
+   },
+   "full": "target/p196-work/problems/pb-15.7li-thermal-1e14-1y/full.json",
+   "full_sha256": "787bada5d256ea30e10115b8eaaec511c63858f523da561386ee8ea57a4a1fee",
+   "pack": "target/p196-work/problems/pb-15.7li-thermal-1e14-1y/pack.json",
+   "pack_sha256": "59a0089058acbff4adace4cedc4412554c2aed46c0e0e5fc2dcc047eeb86ca1a"
+  },
+  {
+   "name": "pb-15.7li-one-over-e-1e14-1y",
+   "spec": "target/p196-work/problems/pb-15.7li-one-over-e-1e14-1y/spec.json",
+   "spec_sha256": "c3d3102690ea7ce3d63ef207a687984d5f10359c919f02721247bb8c091140b7",
+   "full_exit": 0,
+   "full_wall_s": 2.668003466911614,
+   "pack_exit": 0,
+   "pack_wall_s": 2.2079853599425405,
+   "plan": {
+    "targets": 179,
+    "decay_states": 286,
+    "files": 751,
+    "bytes": 16239163
+   },
+   "full": "target/p196-work/problems/pb-15.7li-one-over-e-1e14-1y/full.json",
+   "full_sha256": "4ae0836ca022f52ec6fc178b522922d031d21d96e0312f47dd69cf63afa85c92",
+   "pack": "target/p196-work/problems/pb-15.7li-one-over-e-1e14-1y/pack.json",
+   "pack_sha256": "b219e40488a76ff93417d146e9e15cf6afdef034f8021effdd9f07b2a232849c"
+  },
+  {
+   "name": "pb-15.7li-fusion-14mev-1e15-10y",
+   "spec": "target/p196-work/problems/pb-15.7li-fusion-14mev-1e15-10y/spec.json",
+   "spec_sha256": "079b027ec002be29074f69f9cbd5d4013591d82f4f3d024d6a1abedcf56ce2f6",
+   "full_exit": 0,
+   "full_wall_s": 4.430282970191911,
+   "pack_exit": 0,
+   "pack_wall_s": 2.3003875240683556,
+   "plan": {
+    "targets": 179,
+    "decay_states": 286,
+    "files": 751,
+    "bytes": 16239163
+   },
+   "full": "target/p196-work/problems/pb-15.7li-fusion-14mev-1e15-10y/full.json",
+   "full_sha256": "3c14d7c0e000a21808afc64a9a9b4ff8bf359d2c8e55f95850a16723b7426cc8",
+   "pack": "target/p196-work/problems/pb-15.7li-fusion-14mev-1e15-10y/pack.json",
+   "pack_sha256": "240350b99bd1d90ad69c32c9d0f25f27b6d67cdabae2d7b8fa2aeb9f319998b0"
+  },
+  {
+   "name": "pb-15.7li-thermal-1e15-10y",
+   "spec": "target/p196-work/problems/pb-15.7li-thermal-1e15-10y/spec.json",
+   "spec_sha256": "9bf365ab4a62ef085b27477017afa2c6fe081174be9f32ded70d82a4de8198cd",
+   "full_exit": 0,
+   "full_wall_s": 3.031855480046943,
+   "pack_exit": 0,
+   "pack_wall_s": 2.250530441990122,
+   "plan": {
+    "targets": 179,
+    "decay_states": 286,
+    "files": 751,
+    "bytes": 16239163
+   },
+   "full": "target/p196-work/problems/pb-15.7li-thermal-1e15-10y/full.json",
+   "full_sha256": "0c4fe22ee7a46368ba1eb78432ea70cbd5abf8727207c78f559463d0a14233a7",
+   "pack": "target/p196-work/problems/pb-15.7li-thermal-1e15-10y/pack.json",
+   "pack_sha256": "6f53f4aae17f30d8b8f8b5782a31a52ed6c6bb200e08a2306f1c78e925c727ad"
+  }
+ ],
+ "browser": [
+  {
+   "name": "example-fns_fe_5min",
+   "exit": 0,
+   "wall_s": 18.316841966938227,
+   "engine_js_sha256": "cb5577a2f08366c86bf9b9f349a46aeb305c19834bb8bf7c4fb55e9623fb1d78",
+   "engine_wasm_sha256": "0e816603600620a54141d74faf5fc9603866bc45c9da2e6d5513f3a820176154",
+   "report": {
+    "seconds": 10.703,
+    "fetched_files": 517,
+    "fetch_seconds": 6.3430999999046325,
+    "page_errors": []
+   },
+   "browser": "target/p196-work/problems/example-fns_fe_5min/browser.json",
+   "browser_sha256": "5dbfcd70b7d4ee91a8c6ea972388656588a1375b40183aed437d4502e322d650"
+  },
+  {
+   "name": "example-pulsed_demo",
+   "exit": 0,
+   "wall_s": 19.354571965988725,
+   "engine_js_sha256": "cb5577a2f08366c86bf9b9f349a46aeb305c19834bb8bf7c4fb55e9623fb1d78",
+   "engine_wasm_sha256": "0e816603600620a54141d74faf5fc9603866bc45c9da2e6d5513f3a820176154",
+   "report": {
+    "seconds": 11.0315,
+    "fetched_files": 517,
+    "fetch_seconds": 6.101399999856949,
+    "page_errors": []
+   },
+   "browser": "target/p196-work/problems/example-pulsed_demo/browser.json",
+   "browser_sha256": "a9a05f44b3723a9fb8d55aa4aa4092d9dd6b50b3536806452b1b3c40bd67b9fd"
+  },
+  {
+   "name": "example-feed_removal_demo",
+   "exit": 0,
+   "wall_s": 10.153963987948373,
+   "engine_js_sha256": "cb5577a2f08366c86bf9b9f349a46aeb305c19834bb8bf7c4fb55e9623fb1d78",
+   "engine_wasm_sha256": "0e816603600620a54141d74faf5fc9603866bc45c9da2e6d5513f3a820176154",
+   "report": {
+    "seconds": 5.7995,
+    "fetched_files": 567,
+    "fetch_seconds": 3.358600000143051,
+    "page_errors": []
+   },
+   "browser": "target/p196-work/problems/example-feed_removal_demo/browser.json",
+   "browser_sha256": "ee1cd259530942447d3667ea5dc0701991825583ee0d19000fe6b764786d787c"
+  },
+  {
+   "name": "eurofer97-fusion-14mev-1e15-10y",
+   "exit": 0,
+   "wall_s": 46.7712830749806,
+   "engine_js_sha256": "cb5577a2f08366c86bf9b9f349a46aeb305c19834bb8bf7c4fb55e9623fb1d78",
+   "engine_wasm_sha256": "0e816603600620a54141d74faf5fc9603866bc45c9da2e6d5513f3a820176154",
+   "report": {
+    "seconds": 38.19979999995232,
+    "fetched_files": 2647,
+    "fetch_seconds": 21.5475,
+    "page_errors": []
+   },
+   "browser": "target/p196-work/problems/eurofer97-fusion-14mev-1e15-10y/browser.json",
+   "browser_sha256": "f7f22037dd29f64f70b9808e3d918239a765199ab4b639d6991fd0f21ce756f6"
+  },
+  {
+   "name": "ss316-thermal-1e15-10y",
+   "exit": 0,
+   "wall_s": 37.76128156087361,
+   "engine_js_sha256": "cb5577a2f08366c86bf9b9f349a46aeb305c19834bb8bf7c4fb55e9623fb1d78",
+   "engine_wasm_sha256": "0e816603600620a54141d74faf5fc9603866bc45c9da2e6d5513f3a820176154",
+   "report": {
+    "seconds": 30.515,
+    "fetched_files": 1846,
+    "fetch_seconds": 19.763299999952316,
+    "page_errors": []
+   },
+   "browser": "target/p196-work/problems/ss316-thermal-1e15-10y/browser.json",
+   "browser_sha256": "d617e55ef57d97dcacd74649ef1bfae9d5fc69bfdc50f4beb3be8a7c50108cd2"
+  },
+  {
+   "name": "tungsten-fusion-14mev-1e15-10y",
+   "exit": 0,
+   "wall_s": 37.89555067801848,
+   "engine_js_sha256": "cb5577a2f08366c86bf9b9f349a46aeb305c19834bb8bf7c4fb55e9623fb1d78",
+   "engine_wasm_sha256": "0e816603600620a54141d74faf5fc9603866bc45c9da2e6d5513f3a820176154",
+   "report": {
+    "seconds": 29.57609999990463,
+    "fetched_files": 1674,
+    "fetch_seconds": 19.450599999904632,
+    "page_errors": []
+   },
+   "browser": "target/p196-work/problems/tungsten-fusion-14mev-1e15-10y/browser.json",
+   "browser_sha256": "51424fd59c5694a3c45b68120b29eb1c53222acac85529c452720ca8e65f3cde"
+  },
+  {
+   "name": "zircaloy4-thermal-1e15-10y",
+   "exit": 0,
+   "wall_s": 47.20219036494382,
+   "engine_js_sha256": "cb5577a2f08366c86bf9b9f349a46aeb305c19834bb8bf7c4fb55e9623fb1d78",
+   "engine_wasm_sha256": "0e816603600620a54141d74faf5fc9603866bc45c9da2e6d5513f3a820176154",
+   "report": {
+    "seconds": 39.35129999995232,
+    "fetched_files": 2369,
+    "fetch_seconds": 24.949799999952315,
+    "page_errors": []
+   },
+   "browser": "target/p196-work/problems/zircaloy4-thermal-1e15-10y/browser.json",
+   "browser_sha256": "09c2a6ba01e348883e287c0ea4d89d52e9f9aeea1b968205d7e1a7a03dcb1af8"
+  },
+  {
+   "name": "concrete-ordinary-thermal-1e14-1y",
+   "exit": 0,
+   "wall_s": 22.424534045159817,
+   "engine_js_sha256": "cb5577a2f08366c86bf9b9f349a46aeb305c19834bb8bf7c4fb55e9623fb1d78",
+   "engine_wasm_sha256": "0e816603600620a54141d74faf5fc9603866bc45c9da2e6d5513f3a820176154",
+   "report": {
+    "seconds": 15.8805,
+    "fetched_files": 889,
+    "fetch_seconds": 10.989899999856949,
+    "page_errors": []
+   },
+   "browser": "target/p196-work/problems/concrete-ordinary-thermal-1e14-1y/browser.json",
+   "browser_sha256": "15cd02f7fe527608e1e0da013cbd90b6b9369a93fb460075bc98b14dc5640140"
+  },
+  {
+   "name": "copper-fission-1e14-1y",
+   "exit": 0,
+   "wall_s": 16.10317680495791,
+   "engine_js_sha256": "cb5577a2f08366c86bf9b9f349a46aeb305c19834bb8bf7c4fb55e9623fb1d78",
+   "engine_wasm_sha256": "0e816603600620a54141d74faf5fc9603866bc45c9da2e6d5513f3a820176154",
+   "report": {
+    "seconds": 9.025900000095367,
+    "fetched_files": 464,
+    "fetch_seconds": 6.1634000000953675,
+    "page_errors": []
+   },
+   "browser": "target/p196-work/problems/copper-fission-1e14-1y/browser.json",
+   "browser_sha256": "66411b2fc4143dbdc118111c9b38b4f75c3697a97252bfd8b8a0907c596bf3a7"
+  },
+  {
+   "name": "inconel718-one-over-e-1e14-1y",
+   "exit": 0,
+   "wall_s": 37.08078522305004,
+   "engine_js_sha256": "cb5577a2f08366c86bf9b9f349a46aeb305c19834bb8bf7c4fb55e9623fb1d78",
+   "engine_wasm_sha256": "0e816603600620a54141d74faf5fc9603866bc45c9da2e6d5513f3a820176154",
+   "report": {
+    "seconds": 29.637900000095367,
+    "fetched_files": 1903,
+    "fetch_seconds": 18.518200000047685,
+    "page_errors": []
+   },
+   "browser": "target/p196-work/problems/inconel718-one-over-e-1e14-1y/browser.json",
+   "browser_sha256": "453b73160ad2c250a2f3fac338839c0be0031771a851a5e093f8d54754e0ef09"
+  },
+  {
+   "name": "pb-15.7li-fusion-14mev-1e14-1y",
+   "exit": 0,
+   "wall_s": 19.90166896302253,
+   "engine_js_sha256": "cb5577a2f08366c86bf9b9f349a46aeb305c19834bb8bf7c4fb55e9623fb1d78",
+   "engine_wasm_sha256": "0e816603600620a54141d74faf5fc9603866bc45c9da2e6d5513f3a820176154",
+   "report": {
+    "seconds": 13.31910000014305,
+    "fetched_files": 751,
+    "fetch_seconds": 8.147700000047683,
+    "page_errors": []
+   },
+   "browser": "target/p196-work/problems/pb-15.7li-fusion-14mev-1e14-1y/browser.json",
+   "browser_sha256": "6f0cea1ebe4e0769ca594b34348c6e410635e52096518a9a0b20458ae6f2da64"
+  },
+  {
+   "name": "v-4cr-4ti-fission-1e14-1y",
+   "exit": 0,
+   "wall_s": 18.916720630135387,
+   "engine_js_sha256": "cb5577a2f08366c86bf9b9f349a46aeb305c19834bb8bf7c4fb55e9623fb1d78",
+   "engine_wasm_sha256": "0e816603600620a54141d74faf5fc9603866bc45c9da2e6d5513f3a820176154",
+   "report": {
+    "seconds": 13.968700000047683,
+    "fetched_files": 724,
+    "fetch_seconds": 9.888900000095367,
+    "page_errors": []
+   },
+   "browser": "target/p196-work/problems/v-4cr-4ti-fission-1e14-1y/browser.json",
+   "browser_sha256": "c608a0f61413d4d08811ffa53fb11622cb498cd23a5038252d337704c5756080"
+  }
+ ],
+ "refusals": [
+  {
+   "name": "other-library",
+   "exit": 1,
+   "stderr": "pack_run: this pack holds tendl-2025-neutron-709g; the problem names data/another-library.npz",
+   "wrote_output": false
+  },
+  {
+   "name": "other-library-pin",
+   "exit": 1,
+   "stderr": "pack_run: the problem pins another library SHA-256 than the pack was built from",
+   "wrote_output": false
+  },
+  {
+   "name": "decay-order",
+   "exit": 1,
+   "stderr": "pack_run: this pack holds the decay data endfb-viii-0-decay then jeff-3-3-decay; the problem names catalog:jeff-3-3-decay then catalog:endfb-viii-0-decay",
+   "wrote_output": false
+  },
+  {
+   "name": "fission-yields",
+   "exit": 1,
+   "stderr": "pack_run: a pack run cannot follow fission products; run this problem with the whole library",
+   "wrote_output": false
+  },
+  {
+   "name": "damage",
+   "exit": 1,
+   "stderr": "pack_run: a pack holds no damage table; run a problem with damage with the whole library",
+   "wrote_output": false
+  }
+ ],
+ "wall_s": 1505.585934638977
+}

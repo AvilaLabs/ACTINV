@@ -6582,3 +6582,28 @@ sealed in `protocols/protocol_hash.txt`.
   showed that the damage case needed a pinned table to reach the pack's refusal.
 - **Scored run.** From the candidate with a clean tracked tree, inside the AGENTS.md scope, with the bundle built by
   Trunk at the candidate. G6 is CI on the evidence commit. One repair round is allowed.
+
+## Entry 379 — P196 evidence: P196-FAIL on G2 (25 of 118 problems; two reactions miss capture chains at 1e15 n/cm²/s thermal for ten years); G0, G1, G3 and G4 hold (2026-11-08)
+
+The registered run on `ba966e4` (code `f6b0264`) with a clean tracked tree, inside the AGENTS.md scope, wrote
+`results/p196_record.json`. `controls/check_p196.py` wrote `results/p196_verdict.json`: **P196-FAIL**. Every one of
+the 236 runs finished, each pair with the same number of steps.
+- **G2 fails on 25 problems.**
+  - Sixteen fail on total activity because a pack at two reactions leaves out nuclides three or more captures from
+    the material. Fourteen of them are 1e15 n/cm²/s thermal problems for ten years. The largest changes of total
+    activity there: tungsten 0.97 (Au199), V-4Cr-4Ti 0.85 (Fe59), tantalum 0.79 (Ir191m1), beryllium 0.14 (Am244),
+    Eurofer 0.042 and 0.044 (Ir191m1), copper 4.4e-3 (Zn69), niobium 1.1e-3. SS316, Inconel 718, Zircaloy-4,
+    Al6061, ordinary concrete and titanium change by 2e-4 to 7e-4.
+  - The other two are `beryllium-s65` under the thermal and 1/E spectra at 1e14 for a year: total activity 1.5e-3
+    and 8.1e-4, from Pu241 that the uranium impurity reaches by three captures.
+  - Nine fail only on photon emission, at steps where it has fallen to 1e-10 or less of the problem's largest:
+    four problems each of water and graphite, and V-4Cr-4Ti thermal at 1e14. Their activity and heat
+    are within 3e-8.
+  - The other 93 pass, 86 of them with every change within 1e-6. Of the 1e15 thermal problems only `ss304`, `ss304l` and `pb-15.7li` pass.
+- **G1, G3, G4 hold.** The pack graph names the catalog library and decay data and carries the pinned library
+  SHA-256, and every output matches its hash. All twelve browser runs were identical to `pack_run`, with no page
+  errors. All five refusal cases exited 1 without a result, each naming its cause.
+- **G5, reported.** Per problem the pack fetched a median of 16.2 MB in 1157 files (at most 67.8 MB, 3666 files). In
+  Chromium from a local Python web server: median 14.9 s, at most 39.4 s. Native `pack_run`: median 2.6 s.
+- **Next.** The protocol allows one repair round, registered as an amendment before its run. P196's sentences are not
+  quoted.
