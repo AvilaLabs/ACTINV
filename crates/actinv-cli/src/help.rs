@@ -33,7 +33,8 @@ Build nuclear data
   build-library  build-damage  build-shielding  build-covariance
 
 Advanced
-  mesh  reverse  reverse-qualified  assimilate  twin  surrogate  eval-spread
+  mesh  reverse  reverse-qualified  unfold  assimilate  twin  surrogate
+  eval-spread
 
 'actinv help COMMAND' for details and an example; 'actinv help exit-codes'.";
 
@@ -80,6 +81,7 @@ pub const COMMANDS: &[&str] = &[
     "mesh",
     "reverse",
     "reverse-qualified",
+    "unfold",
     "assimilate",
     "twin",
     "surrogate",
@@ -370,6 +372,19 @@ usage: actinv reverse-qualified PROBLEM.json MEASUREMENTS.json OUT.ndjson\n\n\
 As reverse, per segment, with the forward runs and checks that qualify the\n\
 estimate recorded in OUT.ndjson.\n\n\
 Exit: 0 done, 1 the fit failed, 2 bad usage or input.",
+        "unfold" => "actinv unfold: the neutron spectrum from measured foils\n\n\
+usage: actinv unfold PROBLEM.json MEASUREMENTS.json [OUT.json]\n\n\
+Adjusts the prior spectrum of PROBLEM.json to foil activities and reaction\n\
+rates (actinv-unfold-input-1) by least squares on the log group fluxes, with\n\
+the declared prior covariance and, when the problem names a covariance\n\
+sidecar, the cross-section covariance. Each foil is solved over the problem's\n\
+irradiation and cooling history, so decay, pulsing and burn-up are modelled.\n\
+The result (actinv-unfold-1) holds the posterior group fluxes and their\n\
+uncertainty, band fluxes with intervals, each measurement's pulls and the\n\
+energies it responds to, and a chi-square test.\n\n\
+  actinv unfold problem.json foils.json unfolded.json\n\n\
+Writes OUT.json, or stdout without it or for `-`; a summary goes to stderr.\n\n\
+Exit: 0 done, 1 the fit failed, 2 bad usage or a refused input.",
         "assimilate" => "actinv assimilate: fold a measurement into a result's bands\n\n\
 usage: actinv assimilate --result RUN.json --assay ASSAY.json [--out OUT.json] [--emit-result UPDATED.json]\n\n\
 Updates certified response bands with an assay (actinv-assay-1): a scalar\n\

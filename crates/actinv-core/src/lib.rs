@@ -36,6 +36,7 @@ pub mod spec;
 pub mod study;
 pub mod summary;
 pub mod uncertainty;
+pub mod unfold;
 pub mod waste;
 pub mod waste_bounds;
 pub mod waste_btp;

@@ -1325,6 +1325,40 @@ pub fn main_from(a: Vec<String>) {
                 positional[2]
             );
         }
+        "unfold" => {
+            const UNFOLD_USAGE: &str =
+                "usage: actinv unfold PROBLEM.json MEASUREMENTS.json [OUT.json]";
+            let positional: Vec<&String> = a[2..].iter().filter(|x| !x.starts_with("--")).collect();
+            if !(2..=3).contains(&positional.len()) || a.len() - 2 != positional.len() {
+                die(UNFOLD_USAGE, 2);
+            }
+            let out = positional.get(2).map(|s| s.as_str()).filter(|s| *s != "-");
+            guard_out(out, &[positional[0].as_str(), positional[1].as_str()]);
+            let problem_text =
+                crate::resolve_catalog_json(&read(positional[0])).unwrap_or_else(|e| die(e, 2));
+            let spec = Spec::from_json(&problem_text).unwrap_or_else(|e| die(e, 2));
+            let measurements_text = read(positional[1]);
+            let document = actinv_core::unfold::unfold(&spec, &problem_text, &measurements_text)
+                .unwrap_or_else(|e| match e {
+                    actinv_core::unfold::UnfoldError::Input(message) => die(message, 2),
+                    actinv_core::unfold::UnfoldError::Failed(message) => die(message, 1),
+                });
+            let text = serde_json::to_string_pretty(&document).expect("serialise unfold result");
+            match out {
+                Some(path) => {
+                    std::fs::write(path, format!("{text}\n"))
+                        .unwrap_or_else(|e| die(format!("Cannot write {path}: {e}"), 1));
+                    eprintln!(
+                        "unfold: {} measurements, {} forward solves, chi-square {:.3} on {} -> {path}",
+                        document["consistency"]["degrees_of_freedom"],
+                        document["convergence"]["forward_solves"],
+                        document["consistency"]["chi_square"].as_f64().unwrap_or(f64::NAN),
+                        document["consistency"]["degrees_of_freedom"],
+                    );
+                }
+                None => println!("{text}"),
+            }
+        }
         "optimize" => {
             const OPT_USAGE: &str = "usage: actinv optimize OPTSPEC.json [OUTDIR] [--resume]";
             let resume = a.iter().any(|x| x == "--resume");
