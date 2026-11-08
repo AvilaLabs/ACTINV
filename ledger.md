@@ -6494,3 +6494,17 @@ not run P16's control, which is why it reached CI. G0–G6 held as ledger 373 re
 quoted. The repair round is Amendment A (ledger 375), which also restores the three G3 measurements dropped by the
 naming error.
 
+## Entry 375 — P195 Amendment A registered: the repair round, with nuclide names resolved, the barn conversion typed, and a fresh run on all fifteen G3 measurements (2026-11-08)
+
+`protocols/ACTINV-P195_AMENDMENT_A.md` and `controls/p195a.py` are sealed in `protocols/protocol_hash.txt`.
+- **Why.** P195 failed G7 (ledger 374). Its G3 had also dropped In115m, In116m and Nb92m as not produced: results
+  name a first isomer `m1`, and `actinv unfold` looked the given name up verbatim. G3 passed on 8 foils and 12
+  measurements instead of 10 and 15 (P195's text and ledger 373 say 16; the list holds 15).
+- **Change.** `actinv unfold` resolves a measured nuclide to its canonical name (`In115m` is `In115m1`), and folds
+  reaction rates through `quantity.rs`'s typed barn conversion. The three measurements are named canonically; G3
+  also fails if any declared measurement is dropped. Everything else is P195's, run through its sealed harness and
+  checker by `controls/p195a.py`.
+- **Seen.** All of P195's results and the failed CI log. A first start from an unregistered draft was stopped in its
+  G1 step and that record deleted unread.
+- **Scored run.** From the commit adding the change, with the P16 control passing locally first, inside the 6 GiB
+  scope. G7 is CI on the evidence commit. No further amendment; on a fail P195's sentences are never quoted.
