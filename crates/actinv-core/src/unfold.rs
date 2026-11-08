@@ -15,6 +15,7 @@
 //! u = L⁻¹ (x − x⁰) (P⁰ = L Lᵀ), so the prior covariance is never inverted. The outer loop stops when
 //! the inner solve built at the current point no longer moves it.
 
+use crate::quantity::{CrossSectionBarns, ParticleFlux, RatePerBarnSecond};
 use crate::run;
 use crate::spec::{Material, Spec, UncertaintyOptions};
 use serde::Deserialize;
@@ -39,8 +40,6 @@ const OBJECTIVE_ROUNDING: f64 = 1e-12;
 /// Relative tolerance of the internal anchor: a foil's MF=33 variance assembled here must equal the
 /// variance its own solve reports.
 const MF33_ANCHOR_TOLERANCE: f64 = 1e-6;
-/// Library cross sections are in barns; a reaction rate per atom needs cm².
-const CM2_PER_BARN: f64 = 1e-24;
 
 #[derive(Debug, Deserialize)]
 #[serde(deny_unknown_fields)]
@@ -705,6 +704,34 @@ fn validate_problem(spec: &Spec, has_rates: bool) -> Result<(), String> {
     Ok(())
 }
 
+/// Reactions per atom per second from a group cross section (barns) and its group flux, through
+/// the typed barn boundary.
+fn rate_per_atom(sigma_barns: f64, flux: f64) -> Result<f64, UnfoldError> {
+    let sigma = CrossSectionBarns::new(sigma_barns)
+        .map_err(|error| UnfoldError::Failed(format!("unfold: library {error}")))?;
+    Ok((sigma * RatePerBarnSecond::from_particle_flux(particle_flux(flux)?)).get())
+}
+
+/// A flux expressed per barn: the derivative of a rate per atom with respect to a cross section.
+fn per_barn(flux: f64) -> Result<f64, UnfoldError> {
+    Ok(RatePerBarnSecond::from_particle_flux(particle_flux(flux)?).get())
+}
+
+fn particle_flux(flux: f64) -> Result<ParticleFlux, UnfoldError> {
+    ParticleFlux::new(flux).map_err(|error| UnfoldError::Failed(format!("unfold: {error}")))
+}
+
+/// The canonical name of an explicit nuclide (Co58, In115m1), as results key it.
+fn canonical_nuclide(name: &str) -> Result<String, String> {
+    match actinv_data::composition::material_key(name) {
+        Ok(actinv_data::composition::MaterialKey::Nuclide { canonical, .. }) => Ok(canonical),
+        Ok(_) => Err(format!(
+            "measured nuclide '{name}' must be an explicit nuclide, e.g. 'Co58' or 'In115m'"
+        )),
+        Err(error) => Err(format!("measured nuclide '{name}': {error}")),
+    }
+}
+
 fn find_target(view: &LibraryView, name: &str) -> Result<usize, String> {
     let (za, liso) = match actinv_data::composition::material_key(name) {
         Ok(actinv_data::composition::MaterialKey::Nuclide { za, liso, .. }) => (za, liso),
@@ -897,7 +924,7 @@ impl Context<'_> {
         for (&i, sigma) in &self.rate_sigma {
             let mut value = 0.0;
             for g in 0..ngroups {
-                let term = sigma[g] * CM2_PER_BARN * phi[g];
+                let term = rate_per_atom(sigma[g], phi[g])?;
                 value += term;
                 if position[g] != usize::MAX {
                     s[i][position[g]] = term;
@@ -914,8 +941,8 @@ impl Context<'_> {
                 let Kind::Rate { row, .. } = self.measurements[i].kind else {
                     unreachable!("rate measurements carry a row");
                 };
-                // R = σ̄ Φ with σ̄ collapsed under φ, so ∂R/∂σ̄ = Φ (in cm² per barn).
-                gradients[i].push((row, total_flux * CM2_PER_BARN));
+                // R = σ̄ Φ with σ̄ collapsed under φ, so ∂R/∂σ̄ = Φ, per barn.
+                gradients[i].push((row, per_barn(total_flux)?));
             }
         }
         let mut c_xs = vec![vec![0.0; n_meas]; n_meas];
@@ -1194,7 +1221,12 @@ pub fn unfold(spec: &Spec, problem_json: &str, input_json: &str) -> Result<Value
         let mut responses = Vec::new();
         let mut indices = Vec::new();
         for measurement in &foil.measurements {
-            let id = format!("{}:{}@{}", foil.id, measurement.nuclide, measurement.step);
+            // Results name nuclides canonically (a first isomer is In115m1); In115m and In115m1
+            // name the same state, so the given name is resolved before it is looked up.
+            let nuclide = canonical_nuclide(&measurement.nuclide).map_err(|error| {
+                UnfoldError::Input(format!("unfold: foil {}: {error}", foil.id))
+            })?;
+            let id = format!("{}:{}@{}", foil.id, nuclide, measurement.step);
             check_measured(
                 &id,
                 measurement.activity_Bq_per_g,
@@ -1212,7 +1244,7 @@ pub fn unfold(spec: &Spec, problem_json: &str, input_json: &str) -> Result<Value
             if !seen_ids.insert(id.clone()) {
                 return refuse(format!("unfold: measurement {id} is declared twice"));
             }
-            let response = format!("activity:{}", measurement.nuclide);
+            let response = format!("activity:{nuclide}");
             if !responses.contains(&response) {
                 responses.push(response);
             }
@@ -1221,7 +1253,7 @@ pub fn unfold(spec: &Spec, problem_json: &str, input_json: &str) -> Result<Value
                 id,
                 kind: Kind::Activity {
                     foil: foil_index,
-                    nuclide: measurement.nuclide.clone(),
+                    nuclide,
                     step: measurement.step,
                 },
                 value: measurement.activity_Bq_per_g,
@@ -1935,6 +1967,17 @@ mod tests {
         });
         extra(&mut value);
         serde_json::from_value(value).expect("fixture spec")
+    }
+
+    #[test]
+    fn measured_nuclides_are_resolved_to_the_names_results_use() {
+        assert_eq!(canonical_nuclide("In115m").unwrap(), "In115m1");
+        assert_eq!(canonical_nuclide("In115m1").unwrap(), "In115m1");
+        assert_eq!(canonical_nuclide("Hf178m2").unwrap(), "Hf178m2");
+        assert_eq!(canonical_nuclide("Co58").unwrap(), "Co58");
+        assert!(canonical_nuclide("Fe")
+            .unwrap_err()
+            .contains("explicit nuclide"));
     }
 
     #[test]
