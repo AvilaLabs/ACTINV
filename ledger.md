@@ -6535,3 +6535,27 @@ tree, inside the 6 GiB scope, in 68 min. Before them the P16 control (dependency
 - **CI.** The candidate push's CI (`f856ad3`) passed `rust-quality`, including the P16 control, and six other control
   jobs; `runtime-controls`, `fns-iron`, the browser and desktop builds failed fetching release assets during a
   GitHub outage (HTTP 504), before running any ACTINV code. G7 is CI on this commit.
+
+## Entry 377 — P195A verdict: P195A-PASS; `actinv unfold` qualified, with all fifteen G3 measurements (2026-11-08)
+
+CI on the evidence commit `ce7493c` passed every job (`controls` 8 of 8, `fns-iron`, `fusion-isotope`), so G7 holds
+and, with G0–G3, G5 and G6 (ledger 376), P195A passes. CI on the candidate `f856ad3` needed reruns of jobs that had
+failed fetching GitHub release assets (HTTP 504 and read time-outs, before any ACTINV code ran); every one passed on a
+rerun without a change. As the amendment provides, P195A's sentences, filled from `results/p195a_verdict.json`,
+replace P195's, which are never quoted:
+
+> `actinv unfold` estimates a neutron spectrum from foil activities, modelled with a full ACTINV solve of each foil's
+> irradiation history, and from reaction rates, carrying the library's cross-section covariance into the fit.
+>
+> On 40 synthetic spectra drawn from its prior, 94% of the true band fluxes fell inside its 95% intervals and 74%
+> inside one standard deviation, and its band fluxes were closer to the truth than the prior's (root-mean-square log
+> error 0.124 against 0.208).
+>
+> On IRDFF-II's measured spectrum-averaged cross sections in the Cf-252 and U-235 fission fields, predicting each
+> reaction left out of the fit, the median |ln(C/E)| was Cf-252-a prior (the other field): 0.321 → 0.087, UNFOLD
+> CLOSER, p = 3e-08; Cf-252-b prior (a Maxwellian): 0.158 → 0.080, UNFOLD CLOSER, p = 0.00068; U-235-a prior (the
+> other field): 0.246 → 0.044, UNFOLD CLOSER, p = 1.3e-05; U-235-b prior (a Maxwellian): 1.031 → 0.048, UNFOLD
+> CLOSER, p = 2e-09; the Cf-252 reference spectrum used similar measurements in its evaluation.
+
+The handbook chapter `docs/guide/unfold.md` quotes them together, with the illustrative example
+`examples/unfold_foils/`.
