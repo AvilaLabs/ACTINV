@@ -1342,11 +1342,11 @@ dfb8c8f7c7ffbd5aaac73e21a5198af7b662b862fb416c90f6418086da05ae45  ./docs/defects
 2a77dcfdc893688d4fea08eb30bb4092038d30df4826a69c19e4abdc2931f97f  ./docs/defects/tendl2023-o18-width-inconsistency.md
 245f5933ab759ab1961691ab03111502c748ae54395af2fa3802b818ab2f5c9f  ./docs/defects/tendl2023-orphan-product-sections.md
 8e502b8b5b1c79654008fbfec98882f6ab4f437f5a3490a4d103a299993dbeb1  ./docs/defects/unitarity-violating-partial-cross-sections.md
-0ca16ed2f29d3a0329c4dac78cf29181055cfd472d6ce1ad7940873da352e647  ./docs/guide/SUMMARY.md
+0add1f6335b1b72c62dc92dfb135d6b33ab239b4249832390b2a22000df07b83  ./docs/guide/SUMMARY.md
 29b9a4871b61c1e5af86963b6f73f4319b50a1fe0c1e5a7e0461c3afe3ac1fd9  ./docs/guide/account.md
 592326a371fba801c9f221d524d4e335f970cae48476df60a5d0d08315e2d9c9  ./docs/guide/benchmarks.md
 60bff8f41b5d855161397fa948970c2fe52fc9cc6b69cace1a1f355744678802  ./docs/guide/browser.md
-d44213ac43cecac8377cd89c38a616bd0198da022233f0c911f3667e7b9be7cb  ./docs/guide/cli.md
+eac8b0688cf53e4edad7593c1e02162366f725158268dc08ba837051ecc3e5e1  ./docs/guide/cli.md
 da78a08922cd7bddf0b15532ac3107d34c4e8f03edbfc12a62ad838ea39f74b4  ./docs/guide/data-limits.md
 ad272dc87c112bfb5295c3feb7bc00aacb2aa964ca2fb1fe1a7e63dc241ac192  ./docs/guide/data.md
 4a0742249776107d3961a63ff56e00294495f317fc59e4949a71ff2f1f35acc7  ./docs/guide/desktop.md
@@ -1365,6 +1365,7 @@ df538569c15135d41ea9af2374e80c37103f28fa0f8b3df1f65dc4b29ef66cf7  ./docs/guide/r
 2cf6d99b692de04b4f9f496345f3666afa3cef9db2f91cb159c7ddd37a63d96b  ./docs/guide/specification.md
 4c9d53ead637d2bdc27586ca7cd18e737cee9212ac3c58cc56707679d2daa5da  ./docs/guide/studies.md
 2469eb0f22bf437121f5edcb75a448c3b5553361f8e4cf881e22bdf6f53a4fd5  ./docs/guide/troubleshooting.md
+1512309644e274b297b0c1de1f80be6aef0be8702ff038db1f5add59fd05b833  ./docs/guide/unfold.md
 bf2aedf8ecf698a1f56bf75927411a336f1add2770f48bd398cd1fc23abd46d9  ./docs/guide/validation.md
 c596c555a17bd42034a158fd0311d3544494138552981d7d932fb101f12d9a86  ./docs/guide/waste.md
 e12d1136a0c49aaf3ca56c76fe0e2cb510b0b6fa06793f796e1e491b59de7549  ./docs/guide/whats-new-1.6.md
@@ -1435,7 +1436,7 @@ e69634b0202dad6d7451986843b22b959bbccef749c7b3ddbc0e56dbe1e984a5  ./docs/release
 abb2788e3ee1c366ec0b50490204c30d511d45eef5af6d9d1c275078e30909b2  ./docs/releases/desktop-v0.4.0-preview.1.md
 20610e67a2a8682d29abe5a907112ae29ee643052b66a3ebd8794052816507ea  ./docs/releases/desktop-v0.5.0-preview.1.md
 7232b57b7d9b6a20ba9c5e4c8b090cc29e58e72ace259ff18409134751059c30  ./docs/releases/desktop-v0.6.0-preview.1.md
-f36287793748e6ae3bef9c2d58e61e177993966e9b1a095583f4eb2a793095fe  ./examples/README.md
+a9a695e3cb31efe7ea3e083cb34e3c8180dcbea82d169892c206ea692e0cd9d7  ./examples/README.md
 8e2cb8857363a87d3f0bd0dee6788d3a1d256102dfe7cd770aa47f89fd5f78c1  ./examples/damage_demo.json
 b585b8f3f4761cbd47d998a846a0e6cdf8d5848450b3f163b462a804da1ec972  ./examples/damage_table_demo.json
 d59a6df1d9b41abe57a3b2c1f8126f0122737045b4727975aacd37a8971d02f8  ./examples/decide/README.md
@@ -1484,6 +1485,9 @@ d77ea54f285b898c2e1783fd835d7ab4f969b2ef68a9704c1067df54937605f7  ./examples/rev
 f9d2b037ba5d8a42d81f740cef8e2ae625655c4b3192ecc1d59e63283e2e6f20  ./examples/study_fe_smoke.json
 65ff9908e755267371b623c4b15b13d98c0d14754b05e04e9cb002f6f937223d  ./examples/twin/README.md
 a234dae3578336d2090ec1b7926beab1d052f6c47072dd3ae805fb2c1a202fb8  ./examples/twin/twin.json
+a532a5c111e786292144e2eb8558002fbd4b5a44c32dabfdab0314c3cd7186c6  ./examples/unfold_foils/README.md
+7063136fe3a616fb63f18087be97264c7e0f7ae3847beaac8777253ab823de0a  ./examples/unfold_foils/measurements.json
+9ce444dfd89d3513e2fba6b7637de45ef3f0bca43e3e74e294d1c11aa479ddfb  ./examples/unfold_foils/problem.json
 cef6521b6c90419bacfe8233de02a4f03ae511e99da346425ffd02c86e57ce8b  ./examples/waste_bounds/README.md
 f6723eefeb6f5cacef2e87a83cd53b078dd5ca2777b7400f48f6b49ddc7a07b4  ./examples/waste_bounds/bounds.json
 78eee8d2e7a188241bc871a19c0b70bb2e83c0de8de77cb6bd147fdd8eaadc3a  ./examples/waste_package/README.md

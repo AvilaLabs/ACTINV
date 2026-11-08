@@ -210,6 +210,7 @@ actinv study build STUDY.json [OUTDIR] [--revocations FILE]
 actinv study run STUDY.json [OUTDIR] [--revocations FILE]
 actinv reverse PROBLEM.json MEASUREMENTS.json [OUT.json] [--segments]
 actinv reverse-qualified PROBLEM.json MEASUREMENTS.json OUT.ndjson
+actinv unfold PROBLEM.json MEASUREMENTS.json [OUT.json]
 actinv optimize OPTSPEC.json [OUTDIR] [--resume]
 actinv decide DECISION.json [OUT.json]
 actinv budget BUDGET.json [OUT.json] [--no-verify]
@@ -236,6 +237,9 @@ writes the result with the updated bands for `decide`, `clearance` or another `a
 a problem once with each decay evaluation as primary (it needs `decay.fallback`) and reports how far every quantity
 moves. `actinv surrogate` fits a fast model of a response over a design grid, which `optimize` can use; responses are
 named once each, and the surrogate spec's `base_spec` is read relative to the spec's own folder.
+
+`actinv unfold` estimates a neutron spectrum from foil activities and reaction rates, starting from the problem's
+spectrum as a prior; see [Unfold a neutron spectrum from foils](unfold.md).
 
 `actinv impurities` screens a material's impurities over declared composition ranges from one solve per element; see
 [Screen a material's impurities](impurities.md). It exits 3, after writing its output, when a verification re-solve

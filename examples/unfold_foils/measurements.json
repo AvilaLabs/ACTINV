@@ -1,0 +1,56 @@
+{
+ "format": "actinv-unfold-input-1",
+ "prior": {
+  "relative_uncertainty": 0.3,
+  "correlation": {
+   "kind": "lethargy_exponential",
+   "length": 1.0
+  }
+ },
+ "foils": [
+  {
+   "id": "ni",
+   "measurements": [
+    {
+     "nuclide": "Co58",
+     "step": 2,
+     "activity_Bq_per_g": 5450.0,
+     "sigma_Bq_per_g": 164.0
+    },
+    {
+     "nuclide": "Ni57",
+     "step": 2,
+     "activity_Bq_per_g": 52490.0,
+     "sigma_Bq_per_g": 1575.0
+    }
+   ]
+  },
+  {
+   "id": "al",
+   "material": {
+    "mass_g": 1.0,
+    "basis": "wt_percent",
+    "composition": {
+     "AL": 100.0
+    }
+   },
+   "measurements": [
+    {
+     "nuclide": "Na24",
+     "step": 2,
+     "activity_Bq_per_g": 1112200.0,
+     "sigma_Bq_per_g": 33370.0
+    }
+   ]
+  }
+ ],
+ "reaction_rates": [
+  {
+   "id": "ni58-np",
+   "target": "Ni58",
+   "mt": 103,
+   "rate_per_atom_s": 3.39e-15,
+   "sigma_per_atom_s": 1e-16
+  }
+ ]
+}
