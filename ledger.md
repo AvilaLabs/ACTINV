@@ -6662,3 +6662,25 @@ runs finished.
   - A problem fetched a median of 34 MB in 1436 files, at most 209 MB in 8891.
   - Chromium, from a local Python web server: median 18 s, at most 196 s. Native `pack_run`: median 4.6 s.
 - **G6** is CI on this commit.
+
+## Entry 383 — P196A verdict: P196A-PASS; activation calculations in the browser qualified against the whole library on 175 problems, with the browser identical to native (2026-11-08)
+
+CI on the evidence commit `92f26a6` passed every job (`controls`, `fns-iron`, `fusion-isotope`), so G6 holds. With G0–G4
+(ledger 382), P196A passes. Its sentences, filled from `results/p196a_verdict.json`, replace P196's, which are never
+quoted:
+
+> In the browser, ACTINV solves a problem with the standard TENDL-2025 library, fetching only the reactions its
+> material can reach and the decay data they lead to, and following more reactions, round by round, until the result
+> no longer changes.
+>
+> On 175 problems (19 materials under four standard spectra at 1e14 n/cm²/s for a year and at 1e15 for ten years,
+> under a thermal spectrum at 3e14 for three years, and 4 of the examples), its total activity, decay heat and photon
+> emission at every step were within 9e-07 of the whole library's (of 1e-10 of its largest value, where it had fallen
+> below that), and every nuclide carrying 0.1% of the activity within 5e-15.
+>
+> Run in Chromium, the browser's result was identical to the native one on all 15 problems tried; a problem fetched
+> a median of 34 MB of data (at most 209 MB).
+
+The handbook's browser chapter (`docs/guide/browser.md`) quotes them together, with the problems a browser refuses.
+The **Run in browser** panel appears only where a site serves the pack. Hosting it on the public site is the owner's
+decision and has not been done.

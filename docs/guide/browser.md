@@ -2,7 +2,7 @@
 
 Open [ACTINV in your browser](https://actinv.avilalabs.org/) to learn the interface, edit a problem, import a FISPACT-II deck, or inspect result files without installation. A laptop or desktop with WebGL enabled works best.
 
-The browser has the same pages and controls as the [desktop app](desktop.md), under the same names, laid out the same way: **Start**, the numbered setup steps ending in **Check & run**, and the results, which open on **Summary**. It leaves out what runs or downloads things: the **Sweep**, **Mesh & transport** and **Measurements** studies, the run button, the nuclear-data download and **Verify the data**. The **Data** page only records the library and decay paths. On **Check & run** the browser hands the problem over instead: **Download problem**, run it with the desktop app or `actinv run`, then open the result here. The pages that differ only in how they choose a file are described below.
+The browser has the same pages and controls as the [desktop app](desktop.md), under the same names, laid out the same way: **Start**, the numbered setup steps ending in **Check & run**, and the results, which open on **Summary**. It leaves out what runs or downloads things: the **Sweep**, **Mesh & transport** and **Measurements** studies, the run button, the nuclear-data download and **Verify the data**. The **Data** page only records the library and decay paths. On **Check & run** the browser hands the problem over instead: **Download problem**, run it with the desktop app or `actinv run`, then open the result here. Where the site serves the data for it, the browser can also [run the problem itself](#run-a-problem-in-the-browser). The pages that differ only in how they choose a file are described below.
 
 ## Explore results
 
@@ -34,6 +34,32 @@ The browser checks the specification. It does not run the activation solver, dow
 ### Files you pin by name
 
 Some options point at a data file with its SHA-256: the kerma table, the photon response, a radiological response table, the covariance sidecar and resonance files. **Choose and pin** opens your browser's file chooser, reads the file on your device and writes its SHA-256 into the problem. A browser does not reveal where a file lives, so the recorded path is the file name only. Keep each file where you run ACTINV so that name resolves against the input base folder, or edit the path before you run.
+
+## Run a problem in the browser
+
+Where the site serves the browser's nuclear data, **Check & run** has a **Run it here** panel with a **Run in browser** button. ACTINV then solves the problem in the page, in the background, with the standard TENDL-2025 library (709 groups) and the ENDF/B-VIII.0 and JEFF-3.3 decay data. The problem and its result stay on your computer. The result opens on **Summary**, and **Download result** keeps it. **Cancel** stops the run.
+
+The browser does not download the whole library. It fetches the reactions the material can reach in two steps, with the decays between them, and the decay data they lead to, and solves. Then it solves again with more reactions (three, four, six and so on), fetching only what each round adds, until two rounds in a row give the same answer. Meanwhile the progress line says **Checking with more reactions**. In the tests below, most problems settled at four reactions after about 34 MB of data. A material burnt for years in a strong thermal flux needs most of the library: tungsten at 1e15 n/cm²/s for ten years fetched about 200 MB and took about three minutes.
+
+Some problems run only on your computer, and the panel says why:
+
+- a library or decay data other than the standard ones;
+- fission yields;
+- displacement damage;
+- self-shielding;
+- a schedule whose steps change library.
+
+Download those and run them with the desktop app or `actinv run`.
+
+How close browser runs come to the desktop, from the registered test P196A:
+
+> In the browser, ACTINV solves a problem with the standard TENDL-2025 library, fetching only the reactions its material can reach and the decay data they lead to, and following more reactions, round by round, until the result no longer changes.
+>
+> On 175 problems (19 materials under four standard spectra at 1e14 n/cm²/s for a year and at 1e15 for ten years, under a thermal spectrum at 3e14 for three years, and 4 of the examples), its total activity, decay heat and photon emission at every step were within 9e-07 of the whole library's (of 1e-10 of its largest value, where it had fallen below that), and every nuclide carrying 0.1% of the activity within 5e-15.
+>
+> Run in Chromium, the browser's result was identical to the native one on all 15 problems tried; a problem fetched a median of 34 MB of data (at most 209 MB).
+
+Agreement outside those problems is not measured, and that the rounds settle does not prove a deeper chain could not matter elsewhere. For a result you will rely on, run the problem with the desktop app or the CLI.
 
 ## Import a FISPACT-II deck
 
