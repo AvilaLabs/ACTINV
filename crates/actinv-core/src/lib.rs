@@ -2,6 +2,7 @@
 #![forbid(unsafe_code)]
 pub mod chain;
 pub mod clearance;
+pub mod clock;
 pub mod cram;
 pub mod cram_coeffs;
 pub mod damage;

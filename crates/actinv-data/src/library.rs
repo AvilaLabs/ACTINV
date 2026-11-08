@@ -657,7 +657,7 @@ pub(crate) fn sha256_verified_member<'a, R: Read + Seek>(
     Ok((reader, size))
 }
 
-fn open_npz_reader<R: Read + Seek>(reader: R) -> Result<zip::ZipArchive<R>, String> {
+pub(crate) fn open_npz_reader<R: Read + Seek>(reader: R) -> Result<zip::ZipArchive<R>, String> {
     let mut archive = zip::ZipArchive::new(reader).map_err(|error| error.to_string())?;
     validate_members(&mut archive)?;
     Ok(archive)

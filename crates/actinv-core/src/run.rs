@@ -61,11 +61,11 @@ impl RunProfiler {
         Self::default()
     }
 
-    fn start(&self) -> Option<std::time::Instant> {
-        self.enabled.then(std::time::Instant::now)
+    fn start(&self) -> Option<crate::clock::Instant> {
+        self.enabled.then(crate::clock::Instant::now)
     }
 
-    fn finish(&mut self, name: &'static str, started: Option<std::time::Instant>) {
+    fn finish(&mut self, name: &'static str, started: Option<crate::clock::Instant>) {
         if let Some(started) = started {
             self.stages_ms
                 .insert(name, started.elapsed().as_secs_f64() * 1e3);
@@ -405,10 +405,130 @@ fn modified_nanos(metadata: &std::fs::Metadata) -> u128 {
         .unwrap_or(0)
 }
 
+/// A run's inputs held in memory, keyed by the path the spec names.
+type MemoryInputs = std::sync::Arc<HashMap<String, Vec<u8>>>;
+
+thread_local! {
+    /// The inputs of a [`run_with_inputs`] call on this thread, keyed by the path the spec names.
+    /// While they are installed a run reads nothing from the file system.
+    static MEMORY_INPUTS: std::cell::RefCell<Option<MemoryInputs>> =
+        const { std::cell::RefCell::new(None) };
+}
+
+/// Installs a run's in-memory inputs for the life of the guard, restoring what was there before.
+struct MemoryInputsGuard(Option<MemoryInputs>);
+
+impl MemoryInputsGuard {
+    fn install(inputs: HashMap<String, Vec<u8>>) -> Self {
+        let previous =
+            MEMORY_INPUTS.with(|slot| slot.borrow_mut().replace(std::sync::Arc::new(inputs)));
+        Self(previous)
+    }
+}
+
+impl Drop for MemoryInputsGuard {
+    fn drop(&mut self) {
+        let previous = self.0.take();
+        MEMORY_INPUTS.with(|slot| *slot.borrow_mut() = previous);
+    }
+}
+
+/// `Some` while a run's inputs are held in memory: the bytes `path` names, or an error when the
+/// caller did not supply them (a file is never read in their place).
+fn memory_input(path: &str) -> Option<Result<MemoryInputs, String>> {
+    MEMORY_INPUTS.with(|slot| {
+        slot.borrow().as_ref().map(|inputs| {
+            if inputs.contains_key(path) {
+                Ok(inputs.clone())
+            } else {
+                Err(format!("{path} was not supplied with the run's inputs"))
+            }
+        })
+    })
+}
+
+fn memory_inputs_installed() -> bool {
+    MEMORY_INPUTS.with(|slot| slot.borrow().is_some())
+}
+
+/// Run `spec` reading every input it names from `inputs` (path → bytes) instead of the file
+/// system, for hosts that have none (the browser). A path the spec names but `inputs` lacks is an
+/// error. The result is the one [`run`] gives for the same bytes on disk, apart from wall times,
+/// which are zero where there is no clock. Covariance-based uncertainty is not available here.
+pub fn run_with_inputs(
+    spec: &Spec,
+    entry_point: &str,
+    inputs: HashMap<String, Vec<u8>>,
+) -> Result<RunResult, String> {
+    let _inputs = MemoryInputsGuard::install(inputs);
+    run(spec, entry_point)
+}
+
+/// The activation library `path` names: from memory while a run's inputs are held there, else
+/// through the prepared cache. `dense` keeps every original row as stored (uncertainty
+/// propagation); `collapse` is the run's spectrum when the exact one-group collapse applies.
+fn load_activation_library(
+    path: &str,
+    library_sha: &str,
+    index_sha: &str,
+    dense: bool,
+    collapse: Option<&[f64]>,
+) -> Result<ActivationLibrary, String> {
+    if let Some(inputs) = memory_input(path) {
+        let inputs = inputs?;
+        let bytes = &inputs[path];
+        return Ok(if dense {
+            ActivationLibrary::Dense(library::read_npz_bytes(bytes)?)
+        } else {
+            let groupwise = prepared_data::prepare_groupwise_from_npz_bytes(bytes)?;
+            match collapse {
+                Some(phi) => {
+                    ActivationLibrary::Collapsed(prepared_data::collapse_prepared(&groupwise, phi)?)
+                }
+                None => ActivationLibrary::Groupwise(groupwise),
+            }
+        });
+    }
+    Ok(if dense {
+        // Covariance propagation still indexes the original dense rows directly. The complete NPZ matched its
+        // computed (and, when supplied, declared) SHA-256 above, so member CRC work is redundant.
+        ActivationLibrary::Dense(library::read_npz_after_sha256_verification(path)?)
+    } else if let Some(phi) = collapse {
+        ActivationLibrary::Collapsed(
+            prepared_data::load_or_prepare_collapsed_after_sha256_verification(
+                path,
+                library_sha,
+                index_sha,
+                phi,
+            )?,
+        )
+    } else {
+        ActivationLibrary::Groupwise(
+            prepared_data::load_or_prepare_groupwise_after_sha256_verification(
+                path,
+                library_sha,
+                index_sha,
+            )?,
+        )
+    })
+}
+
 /// Read an input once and hash exactly those bytes, so the certified SHA-256 always
 /// names the bytes that are parsed: hashing and then re-opening the file for parsing
 /// left a window in which it could be replaced. The digest also primes the cache.
 fn read_verified(path: &str, declared: Option<&str>) -> Result<(Vec<u8>, String), String> {
+    if let Some(inputs) = memory_input(path) {
+        let bytes = inputs?[path].clone();
+        let computed = format!("{:x}", Sha256::digest(&bytes));
+        if let Some(expected) = declared {
+            if !computed.eq_ignore_ascii_case(expected) {
+                return Err(format!(
+                    "SHA-256 mismatch for {path}: declared {expected}, computed {computed}"
+                ));
+            }
+        }
+        return Ok((bytes, computed));
+    }
     let before = std::fs::metadata(path).map_err(|e| format!("cannot stat {path}: {e}"))?;
     let bytes = std::fs::read(path).map_err(|e| format!("cannot read {path}: {e}"))?;
     let after = std::fs::metadata(path).map_err(|e| format!("cannot restat {path}: {e}"))?;
@@ -444,6 +564,9 @@ fn read_verified_text(path: &str, declared: Option<&str>) -> Result<(String, Str
 }
 
 fn file_sha256(path: &str) -> Result<String, String> {
+    if let Some(inputs) = memory_input(path) {
+        return Ok(format!("{:x}", Sha256::digest(&inputs?[path])));
+    }
     let metadata = std::fs::metadata(path).map_err(|e| format!("cannot stat {path}: {e}"))?;
     let key = (path.to_string(), metadata.len(), modified_nanos(&metadata));
     let cache = sha_cache();
@@ -2487,7 +2610,7 @@ impl PreparedRun {
     }
 
     pub fn prepare(spec: &Spec) -> Result<Self, String> {
-        let started = std::time::Instant::now();
+        let started = crate::clock::Instant::now();
         let mut profiler = RunProfiler::from_environment();
         let physical = spec.physical_inputs()?;
         let prepared = Self::prepare_profiled(spec, &physical, &mut profiler);
@@ -2976,34 +3099,19 @@ impl PreparedRun {
         let activation_started = profiler.start();
         let library = if decay_only {
             ActivationLibrary::Absent
-        } else if uncertainty_options.is_some() {
-            // Covariance propagation still indexes the original dense rows directly. The complete NPZ matched its
-            // computed (and, when supplied, declared) SHA-256 above, so member CRC work is redundant.
-            ActivationLibrary::Dense(library::read_npz_after_sha256_verification(
-                &library_ref.path,
-            )?)
-        } else if let Some(phi) = collapse_flux
-            .filter(|_| shielding.is_none() && fission_options.energy != "rate_weighted")
-        {
+        } else {
             // Self-shielding scales each library row's sigma per group inside
             // the unresolved ranges, which requires the groupwise data; the
             // spectrum-collapsed artifact keeps only one value per row.
-            ActivationLibrary::Collapsed(
-                prepared_data::load_or_prepare_collapsed_after_sha256_verification(
-                    &library_ref.path,
-                    &library_sha,
-                    &index_sha,
-                    phi,
-                )?,
-            )
-        } else {
-            ActivationLibrary::Groupwise(
-                prepared_data::load_or_prepare_groupwise_after_sha256_verification(
-                    &library_ref.path,
-                    &library_sha,
-                    &index_sha,
-                )?,
-            )
+            let collapse = collapse_flux
+                .filter(|_| shielding.is_none() && fission_options.energy != "rate_weighted");
+            load_activation_library(
+                &library_ref.path,
+                &library_sha,
+                &index_sha,
+                uncertainty_options.is_some(),
+                collapse,
+            )?
         };
         profiler.finish("activation_read_validation", activation_started);
 
@@ -3305,13 +3413,8 @@ impl PreparedRun {
             .get("groups")
             .and_then(serde_json::Value::as_str)
             .map(str::to_owned);
-        let library = ActivationLibrary::Groupwise(
-            prepared_data::load_or_prepare_groupwise_after_sha256_verification(
-                &reference.path,
-                &library_sha,
-                &index_sha,
-            )?,
-        );
+        let library =
+            load_activation_library(&reference.path, &library_sha, &index_sha, false, None)?;
         let index_projectile = match index.get("projectile") {
             None | Some(serde_json::Value::Null) => Projectile::Neutron,
             Some(serde_json::Value::String(value)) => Projectile::parse(value)?,
@@ -3505,6 +3608,9 @@ impl PreparedRun {
                     ));
                 }
             }
+        }
+        if memory_inputs_installed() {
+            return Err("covariance-based uncertainty needs the covariance file on disk; it is not available for a run whose inputs are held in memory".into());
         }
         let library = covariance::read_npz(path)?;
         let component_count = index
@@ -3893,7 +3999,7 @@ impl PreparedRun {
         cell: Option<CellCollapse<'_>>,
         flux_origin: Option<MeshFluxOrigin<'_>>,
     ) -> Result<RunResult, String> {
-        let started = std::time::Instant::now();
+        let started = crate::clock::Instant::now();
         let mut profiler = RunProfiler::from_environment();
         let physical = spec.physical_inputs()?;
         let result = self.run_started_profiled(
@@ -3942,7 +4048,7 @@ impl PreparedRun {
         spec: &Spec,
         physical: &PhysicalInputs,
         entry_point: &str,
-        t0: std::time::Instant,
+        t0: crate::clock::Instant,
         profiler: &mut RunProfiler,
         cell_collapse: Option<CellCollapse<'_>>,
         flux_origin: Option<MeshFluxOrigin<'_>>,
@@ -8931,10 +9037,10 @@ pub fn run_with_cache(
     entry_point: &str,
     cache: &mut PreparedCache,
 ) -> Result<RunResult, String> {
-    let started = std::time::Instant::now();
+    let started = crate::clock::Instant::now();
     let mut profiler = RunProfiler::from_environment();
     let physical = spec.physical_inputs()?;
-    let fingerprint_started = std::time::Instant::now();
+    let fingerprint_started = crate::clock::Instant::now();
     let (fingerprint, base) = prepared_fingerprint(spec, &physical)?;
     cache.last_fingerprint_ms = fingerprint_started.elapsed().as_secs_f64() * 1e3;
     let same_base = cache.slot.is_some() && cache.base.as_deref() == Some(base.as_str());

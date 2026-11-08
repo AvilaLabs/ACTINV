@@ -1210,6 +1210,204 @@ fn write_collapsed_row(writer: &mut impl Write, row: &Row) -> Result<(), String>
     Ok(())
 }
 
+/// The first group and length of the span a prepared row stores: from the first to the last group
+/// whose value is not positive zero. Negative zero and every other bit pattern inside it are kept.
+fn stored_span(raw_row: &[u8], source_row: usize) -> Result<(usize, usize), String> {
+    let mut first = None;
+    let mut last = None;
+    for (group, encoded) in raw_row.as_chunks::<8>().0.iter().enumerate() {
+        let value = f64::from_le_bytes(*encoded);
+        if !value.is_finite() || value < 0.0 {
+            return Err(format!(
+                "sig.npy contains a nonfinite or negative cross section at row {source_row}, group {group}"
+            ));
+        }
+        // Preserve negative zero and every other non-positive-zero bit pattern exactly.
+        if value.to_bits() != 0 {
+            first.get_or_insert(group);
+            last = Some(group + 1);
+        }
+    }
+    Ok(match (first, last) {
+        (Some(first_group), Some(last_group)) => (first_group, last_group - first_group),
+        (None, None) => (0, 0),
+        _ => unreachable!("first and last nonzero groups are recorded together"),
+    })
+}
+
+/// Groupwise prepared data built in memory from an NPZ's bytes, for hosts without a file system or
+/// cache (the browser). Row for row and bit for bit it is what [`load_or_prepare_groupwise`]
+/// materializes from the cache artifact it writes for the same NPZ. The caller verifies the bytes'
+/// SHA-256 first, as for the file path.
+pub fn prepare_groupwise_from_npz_bytes(bytes: &[u8]) -> Result<PreparedLibrary, String> {
+    let mut archive = library::open_npz_reader(std::io::Cursor::new(bytes))?;
+    let rows = read_rows(&mut archive)?;
+    if rows.is_empty() {
+        return Err("activation library has no rows".into());
+    }
+    let (sig_reader, member_size) = sha256_verified_member(&mut archive, "sig.npy")?;
+    let mut sig_reader = BufReader::with_capacity(256 * 1024, sig_reader);
+    let sig_header = read_npy_header(&mut sig_reader)?;
+    if sig_header.dtype != NpyDtype::F64
+        || sig_header.shape.len() != 2
+        || sig_header.shape[0] != rows.len()
+    {
+        return Err(format!(
+            "sig must have dtype <f8 and shape ({}, G), got {sig_header:?}",
+            rows.len()
+        ));
+    }
+    require_payload_size(&sig_header, member_size, "sig.npy")?;
+    let group_count = sig_header.shape[1];
+    if group_count == 0 {
+        return Err("activation library has zero energy groups".into());
+    }
+    let row_bytes = group_count
+        .checked_mul(8)
+        .ok_or("prepared source row size overflows")?;
+    let mut raw_row = vec![0u8; row_bytes];
+    let mut spans = Vec::new();
+    spans
+        .try_reserve_exact(rows.len())
+        .map_err(|error| format!("cannot allocate prepared spans: {error}"))?;
+    let mut values = Vec::new();
+    for source_row in 0..rows.len() {
+        sig_reader
+            .read_exact(&mut raw_row)
+            .map_err(|error| format!("truncated sig.npy row {source_row}: {error}"))?;
+        let (first_group, value_count) = stored_span(&raw_row, source_row)?;
+        spans.push(PreparedSpan {
+            source_row,
+            first_group,
+            value_count,
+            value_offset: values.len(),
+        });
+        let stored = &raw_row[first_group * 8..(first_group + value_count) * 8];
+        values.extend(
+            stored
+                .as_chunks::<8>()
+                .0
+                .iter()
+                .map(|encoded| f64::from_le_bytes(*encoded)),
+        );
+    }
+    ensure_eof(&mut sig_reader, "sig.npy")?;
+    drop(sig_reader);
+    let boundaries_ev = read_bounds(&mut archive, group_count)?;
+    validate_boundaries(&boundaries_ev)?;
+    let source_row_count = rows.len();
+    Ok(PreparedLibrary {
+        rows,
+        spans,
+        values,
+        group_count,
+        boundaries_ev,
+        source_row_count,
+    })
+}
+
+/// The flux window an exact collapse adds over: the sum of every flux (in group order) and the
+/// first and one-past-last groups with nonzero flux.
+fn collapse_window(phi: &[f64]) -> (f64, usize, usize) {
+    let mut flux_denominator = 0.0;
+    for flux in phi {
+        flux_denominator += *flux;
+    }
+    let first_flux_group = phi
+        .iter()
+        .position(|flux| *flux != 0.0)
+        .unwrap_or(phi.len());
+    let last_flux_group = phi
+        .iter()
+        .rposition(|flux| *flux != 0.0)
+        .map(|group| group + 1)
+        .unwrap_or(first_flux_group);
+    (flux_denominator, first_flux_group, last_flux_group)
+}
+
+/// One row of an exact collapse: its one-group cross section and, for a total-fission row, the
+/// fission-averaged energy (`None` when the library cannot give one).
+fn collapse_one_row(
+    row: &Row,
+    group_count: usize,
+    boundaries_ev: &[f64],
+    phi: &[f64],
+    window: (f64, usize, usize),
+    cross_section: impl Fn(usize) -> f64,
+) -> Result<(f64, Option<f64>), String> {
+    let (flux_denominator, first_flux_group, last_flux_group) = window;
+    let mut numerator = 0.0;
+    for (group, flux) in phi
+        .iter()
+        .enumerate()
+        .take(last_flux_group)
+        .skip(first_flux_group)
+    {
+        numerator += cross_section(group) * flux;
+    }
+    let one_group = if flux_denominator > 0.0 {
+        numerator / flux_denominator
+    } else {
+        0.0
+    };
+    let fission_average = if row.mt == 18 && row.zap == 0 {
+        library::fission_average_energy_ev(group_count, boundaries_ev, phi, cross_section)?
+    } else {
+        None
+    };
+    Ok((one_group, fission_average))
+}
+
+/// The exact one-spectrum collapse of in-memory groupwise data, value for value what
+/// [`load_or_prepare_collapsed`] reads from the artifact it builds for the same library and
+/// spectrum. `prepared` must hold every row of its source library.
+pub fn collapse_prepared(
+    prepared: &PreparedLibrary,
+    phi: &[f64],
+) -> Result<CollapsedLibrary, String> {
+    if prepared.rows.len() != prepared.source_row_count {
+        return Err("an exact collapse needs every row of the activation library".into());
+    }
+    if phi.len() != prepared.group_count {
+        return Err(format!(
+            "spectrum has {} groups but prepared activation library has {}",
+            phi.len(),
+            prepared.group_count
+        ));
+    }
+    if phi.iter().any(|value| !value.is_finite() || *value < 0.0) {
+        return Err("prepared spectrum fluxes must be finite and nonnegative".into());
+    }
+    let window = collapse_window(phi);
+    let mut one_group_barns = Vec::with_capacity(prepared.rows.len());
+    let mut fission_average_energy_ev = Vec::with_capacity(prepared.rows.len());
+    let mut fission_average_present = Vec::with_capacity(prepared.rows.len());
+    for (index, row) in prepared.rows.iter().enumerate() {
+        let (one_group, fission_average) = collapse_one_row(
+            row,
+            prepared.group_count,
+            &prepared.boundaries_ev,
+            phi,
+            window,
+            |group| prepared.cross_section(index, group),
+        )?;
+        one_group_barns.push(one_group);
+        fission_average_energy_ev.push(fission_average.unwrap_or(0.0));
+        fission_average_present.push(fission_average.is_some());
+    }
+    let library = CollapsedLibrary {
+        rows: prepared.rows.clone(),
+        group_count: prepared.group_count,
+        boundaries_ev: prepared.boundaries_ev.clone(),
+        flux: phi.to_vec(),
+        one_group_barns,
+        fission_average_energy_ev,
+        fission_average_present,
+    };
+    library.validate_flux(phi)?;
+    Ok(library)
+}
+
 fn build_prepared_artifact(
     source_npz: &str,
     output: &Path,
@@ -1264,26 +1462,7 @@ fn build_prepared_artifact(
         sig_reader
             .read_exact(&mut raw_row)
             .map_err(|error| format!("truncated sig.npy row {source_row}: {error}"))?;
-        let mut first = None;
-        let mut last = None;
-        for (group, encoded) in raw_row.as_chunks::<8>().0.iter().enumerate() {
-            let value = f64::from_le_bytes(*encoded);
-            if !value.is_finite() || value < 0.0 {
-                return Err(format!(
-                    "sig.npy contains a nonfinite or negative cross section at row {source_row}, group {group}"
-                ));
-            }
-            // Preserve negative zero and every other non-positive-zero bit pattern exactly.
-            if value.to_bits() != 0 {
-                first.get_or_insert(group);
-                last = Some(group + 1);
-            }
-        }
-        let (first_group, span_count) = match (first, last) {
-            (Some(first_group), Some(last_group)) => (first_group, last_group - first_group),
-            (None, None) => (0, 0),
-            _ => unreachable!("first and last nonzero groups are recorded together"),
-        };
+        let (first_group, span_count) = stored_span(&raw_row, source_row)?;
         descriptors.push(PreparedDescriptor {
             row,
             first_group,
@@ -1365,19 +1544,7 @@ fn build_collapsed_artifact(
     if phi.iter().any(|value| !value.is_finite() || *value < 0.0) {
         return Err("prepared spectrum fluxes must be finite and nonnegative".into());
     }
-    let mut flux_denominator = 0.0;
-    for flux in phi {
-        flux_denominator += *flux;
-    }
-    let first_flux_group = phi
-        .iter()
-        .position(|flux| *flux != 0.0)
-        .unwrap_or(phi.len());
-    let last_flux_group = phi
-        .iter()
-        .rposition(|flux| *flux != 0.0)
-        .map(|group| group + 1)
-        .unwrap_or(first_flux_group);
+    let window = collapse_window(phi);
 
     prepared
         .file
@@ -1427,40 +1594,17 @@ fn build_collapsed_artifact(
             encoded.copy_from_slice(&raw_values[local * 8..local * 8 + 8]);
             f64::from_le_bytes(encoded)
         };
-        let mut numerator = 0.0;
-        for (group, flux) in phi
-            .iter()
-            .enumerate()
-            .take(last_flux_group)
-            .skip(first_flux_group)
-        {
-            numerator += cross_section(group) * flux;
-        }
-        one_group_barns.push(if flux_denominator > 0.0 {
-            numerator / flux_denominator
-        } else {
-            0.0
-        });
-        if descriptor.row.mt == 18 && descriptor.row.zap == 0 {
-            match library::fission_average_energy_ev(
-                prepared.header.group_count,
-                &prepared.boundaries_ev,
-                phi,
-                cross_section,
-            )? {
-                Some(value) => {
-                    fission_average_energy_ev.push(value);
-                    fission_average_present.push(true);
-                }
-                None => {
-                    fission_average_energy_ev.push(0.0);
-                    fission_average_present.push(false);
-                }
-            }
-        } else {
-            fission_average_energy_ev.push(0.0);
-            fission_average_present.push(false);
-        }
+        let (one_group, fission_average) = collapse_one_row(
+            &descriptor.row,
+            prepared.header.group_count,
+            &prepared.boundaries_ev,
+            phi,
+            window,
+            cross_section,
+        )?;
+        one_group_barns.push(one_group);
+        fission_average_energy_ev.push(fission_average.unwrap_or(0.0));
+        fission_average_present.push(fission_average.is_some());
     }
 
     let row_count = prepared.header.row_count;
@@ -2338,6 +2482,86 @@ mod tests {
             ngroups: 5,
             bounds: vec![1.0, 2.0, 4.0, 8.0, 16.0, 32.0],
         }
+    }
+
+    #[test]
+    fn in_memory_preparation_and_collapse_equal_the_cache_artifacts_bit_for_bit() {
+        let scratch = scratch("in-memory");
+        let source = scratch.join("source.npz");
+        let mut dense = fixture();
+        // A leading gap, interior zeros, a negative zero, a late span and an all-zero row.
+        dense.rows.push(Row {
+            target: 0,
+            mt: 16,
+            zap: 26_055,
+            lfs: 0,
+            lmf: 3,
+        });
+        dense.sig.extend_from_slice(&[0.0, 0.0, 1.0e-3, 0.0, 7.25]);
+        dense.rows.push(Row {
+            target: 2,
+            mt: 107,
+            zap: 23_053,
+            lfs: 0,
+            lmf: 3,
+        });
+        dense.sig.extend_from_slice(&[0.0; 5]);
+        write_npz(&source, &dense).unwrap();
+        let bytes = std::fs::read(&source).unwrap();
+        let library_sha = sha256_file(&source);
+        let index_sha = "22".repeat(32);
+        let cache = scratch.join("cache");
+        let from_cache = load_or_prepare_groupwise_in(
+            &cache,
+            source.to_str().unwrap(),
+            &library_sha,
+            &index_sha,
+        )
+        .unwrap();
+        let in_memory = prepare_groupwise_from_npz_bytes(&bytes).unwrap();
+        assert_eq!(in_memory.rows(), from_cache.rows());
+        assert_eq!(in_memory.spans(), from_cache.spans());
+        let bits = |values: &[f64]| values.iter().map(|v| v.to_bits()).collect::<Vec<_>>();
+        assert_eq!(bits(in_memory.values()), bits(from_cache.values()));
+        assert_eq!(
+            bits(in_memory.boundaries_ev()),
+            bits(from_cache.boundaries_ev())
+        );
+        assert_eq!(in_memory.group_count(), from_cache.group_count());
+        assert_eq!(in_memory.source_row_count(), from_cache.source_row_count());
+
+        let spectra: [&[f64]; 4] = [
+            &[0.0, 2.0, 3.0, 0.0, 5.0],
+            &[1.0, 1.0, 1.0, 1.0, 1.0],
+            &[0.0, 0.0, 0.0, 0.0, 0.0],
+            &[0.0, 0.0, 0.25, 0.0, 0.0],
+        ];
+        for phi in spectra {
+            let from_cache = load_or_prepare_collapsed_in(
+                &cache,
+                source.to_str().unwrap(),
+                &library_sha,
+                &index_sha,
+                phi,
+            )
+            .unwrap();
+            let in_memory = collapse_prepared(&in_memory, phi).unwrap();
+            assert_eq!(in_memory.rows(), from_cache.rows());
+            assert_eq!(
+                bits(in_memory.one_group_barns()),
+                bits(from_cache.one_group_barns())
+            );
+            assert_eq!(bits(in_memory.flux()), bits(from_cache.flux()));
+            assert_eq!(
+                in_memory.fission_average_energy_ev,
+                from_cache.fission_average_energy_ev
+            );
+            assert_eq!(
+                in_memory.fission_average_present,
+                from_cache.fission_average_present
+            );
+        }
+        std::fs::remove_dir_all(&scratch).unwrap();
     }
 
     #[test]
