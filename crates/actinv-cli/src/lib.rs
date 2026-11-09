@@ -10,6 +10,7 @@ pub mod fispact_import;
 pub mod help;
 pub mod impurities;
 pub mod inspect;
+pub mod maintenance;
 pub mod optimize;
 pub mod output_guard;
 pub mod report;

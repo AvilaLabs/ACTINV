@@ -33,8 +33,8 @@ Build nuclear data
   build-library  build-damage  build-shielding  build-covariance
 
 Advanced
-  mesh  reverse  reverse-qualified  unfold  assimilate  twin  surrogate
-  eval-spread
+  mesh  reverse  reverse-qualified  unfold  assimilate  twin  maintenance
+  surrogate  eval-spread
 
 'actinv help COMMAND' for details and an example; 'actinv help exit-codes'.";
 
@@ -84,6 +84,7 @@ pub const COMMANDS: &[&str] = &[
     "unfold",
     "assimilate",
     "twin",
+    "maintenance",
     "surrogate",
     "eval-spread",
     "worker",
@@ -400,6 +401,16 @@ Evaluates declared clearance limits against each cell's certified bands from\n\
 an `actinv mesh` result (actinv-twin-1).\n\n\
 Writes OUT.json, or stdout without it.\n\n\
 Exit: 0 done, 1 the evaluation failed, 2 bad usage.",
+        "maintenance" => "actinv maintenance: plan maintenance jobs against shutdown dose rates\n\n\
+usage: actinv maintenance PLAN.json [OUT.json]\n\n\
+Reads an actinv-maintenance-1 plan: dose rates at each job's place over cooling\n\
+time (an `actinv twin` result or an actinv-dose-map-1 table), the jobs in order,\n\
+an access limit and optionally an individual limit and costs. Reports each job's\n\
+earliest start, the dose of every job at each wait, the earliest feasible wait\n\
+and, with costs, the wait of least cost (actinv-maintenance-result-1).\n\n\
+Writes OUT.json, or stdout without it.\n\n\
+  actinv maintenance examples/maintenance/plan.json plan-result.json\n\n\
+Exit: 0 done, 1 the result could not be written, 2 bad usage or an invalid plan.",
         "surrogate" => "actinv surrogate: a fast fitted model of a response\n\n\
 usage: actinv surrogate fit SURSPEC.json [OUTDIR]\n       actinv surrogate eval ARTIFACT.json X.json [OUT.json]\n\n\
 fit solves a design over its nodes and writes a surrogate artifact; eval\n\

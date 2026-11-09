@@ -1,0 +1,15 @@
+{
+ "schema": "actinv-maintenance-1",
+ "dose_rates": {"runs": [
+  {"result": "pipe-result.json", "location": "pipe"},
+  {"result": "bracket-result.json", "location": "bracket"}
+ ]},
+ "access_limit_Sv_h": 3.0e-3,
+ "individual_limit_Sv": 2.0e-2,
+ "jobs": [
+  {"name": "cut out pipe section", "location": "pipe", "duration_h": 8, "crew": 2},
+  {"name": "unbolt bracket", "location": "bracket", "duration_h": 6, "crew": 3}
+ ],
+ "waits_d": [1, 7, 14, 30, 60, 90, 180],
+ "cost": {"per_person_Sv": 1.0e6, "per_outage_day": 2.0e3}
+}

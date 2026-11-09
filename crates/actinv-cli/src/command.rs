@@ -1608,6 +1608,22 @@ pub fn main_from(a: Vec<String>) {
                 println!("{}", serde_json::to_string(&summary).unwrap());
             }
         }
+        "maintenance" => {
+            if a.len() < 3 || a.len() > 4 {
+                die(crate::help::usage(&a[1]), 2);
+            }
+            // An invalid plan or dose rate is bad input (2); only a failed write is 1.
+            let result =
+                crate::maintenance::evaluate_file(&a[2]).unwrap_or_else(|error| die(error, 2));
+            if a.len() == 4 {
+                crate::maintenance::write(&result, &a[3]).unwrap_or_else(|error| die(error, 1));
+            } else {
+                println!(
+                    "{}",
+                    serde_json::to_string_pretty(&result).expect("serialise maintenance result")
+                );
+            }
+        }
         "study" => {
             study_command(&a[2..]);
         }

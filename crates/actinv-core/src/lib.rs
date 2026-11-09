@@ -15,6 +15,7 @@ pub mod fission_count;
 pub mod fission_mix;
 pub mod flux;
 pub mod gas;
+pub mod maintenance;
 pub mod mesh;
 pub mod overrides;
 pub mod pack;
