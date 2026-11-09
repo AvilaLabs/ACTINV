@@ -41,6 +41,8 @@ Where the site serves the browser's nuclear data, **Check & run** has a **Run it
 
 The browser does not download the whole library. It fetches the reactions the material can reach in two steps, with the decays between them, and the decay data they lead to, and solves. Then it solves again with more reactions (three, four, six and so on), fetching only what each round adds, until two rounds in a row give the same answer. Meanwhile the progress line says **Checking with more reactions**. In the tests below, most problems settled at four reactions after about 34 MB of data. A material burnt for years in a strong thermal flux needs most of the library: tungsten at 1e15 n/cm²/s for ten years fetched about 200 MB and took about three minutes.
 
+The browser keeps the files it fetches, so running the problem again, or another one with the same materials, fetches only what it has not kept, even after a restart. A kept file is used only if it still matches the library's record of it, and is otherwise fetched again. Clearing the site's data in your browser's settings removes them. Pages served without HTTPS (other than from your own computer) cannot keep files and fetch everything each run.
+
 Some problems run only on your computer, and the panel says why:
 
 - a library or decay data other than the standard ones;

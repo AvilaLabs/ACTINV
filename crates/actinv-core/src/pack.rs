@@ -78,6 +78,23 @@ pub struct PackGraph {
     pub daughters: Vec<(State, Vec<State>)>,
 }
 
+impl PackGraph {
+    /// Every file of the pack, target and decay record, with its SHA-256.
+    pub fn file_hashes(&self) -> HashMap<&str, &str> {
+        let targets = self
+            .targets
+            .iter()
+            .map(|target| (target.file.as_str(), target.sha256.as_str()));
+        let states = self.decay.iter().flat_map(|source| {
+            source
+                .states
+                .iter()
+                .map(|state| (state.file.as_str(), state.sha256.as_str()))
+        });
+        targets.chain(states).collect()
+    }
+}
+
 /// What a problem may call the pack's sources: a catalog id (`catalog:ID`) or a path ending in
 /// the source's file name. Decay names are in merge order.
 #[derive(Clone, Debug, Default, Serialize, Deserialize, PartialEq, Eq)]
@@ -116,7 +133,8 @@ pub struct PackDecayState {
     pub sha256: String,
 }
 
-fn sha256_hex(bytes: &[u8]) -> String {
+/// The SHA-256 a pack's graph records for a file's bytes.
+pub fn sha256_hex(bytes: &[u8]) -> String {
     format!("{:x}", Sha256::digest(bytes))
 }
 
@@ -1050,6 +1068,17 @@ mod tests {
         for key in nuclides {
             assert_eq!(rebuilt[&key].modes.len(), whole[&key].modes.len());
             assert_eq!(rebuilt[&key].half_life, whole[&key].half_life);
+        }
+    }
+
+    #[test]
+    fn the_graph_names_every_file_with_its_hash() {
+        let (npz, index, decay) = library();
+        let (graph, files) = build(&npz, &index, &[&decay], names()).expect("pack");
+        let hashes = graph.file_hashes();
+        assert_eq!(hashes.len(), files.len());
+        for (file, bytes) in &files {
+            assert_eq!(hashes[file.as_str()], sha256_hex(bytes), "{file}");
         }
     }
 

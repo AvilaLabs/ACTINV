@@ -1120,7 +1120,7 @@ f358759dc25c7bb42d81006074a2f0b8ef679c0623725a3eef85cbe1bccbf6d4  ./crates/actin
 37db221256d6eacfd7c995491aba4eb121762fd2d950eb536e019d0222ef0397  ./crates/actinv-core/src/lib.rs
 ff1eb037cf82a523d76eaa8d918619909dd8e00184c3e9746dbbe6d344c28b1c  ./crates/actinv-core/src/mesh.rs
 8e2cc0d64d78207d86626f25fe560a6e8fd907bbe29b5ffeb262ad61383c1c1f  ./crates/actinv-core/src/overrides.rs
-80d5dfd2915d72cc9af4a68412d8baefcb61c6b53e46ece8e54daff27eda9aa6  ./crates/actinv-core/src/pack.rs
+159354e80962b62cec267e0dede855890c3d631983a232e067e6b60aeef0ba6a  ./crates/actinv-core/src/pack.rs
 2d195a4d3ce8800d437c4b971a97b01b01f29198085a5005007fc0b3d719e8ab  ./crates/actinv-core/src/pathways.rs
 2edf88dc595f247a8fa844025a2f3c32154fd60a370a95e396472177102d551e  ./crates/actinv-core/src/photon.rs
 7457c7d29ec7cb786ff6c28b037f2b0127e03cbbf02ff6a8ec89e4bcd8bbfafb  ./crates/actinv-core/src/power.rs
@@ -1272,8 +1272,8 @@ a39b5155e624e5540f1c2d88868b22b1f5be1765d872a1e17e70e00dd98821ac  ./crates/actin
 c69b558a7a3a41bfedd8414ac2956f3008a550fd07c17f1bf4688b6482295e92  ./crates/actinv-gui/src/web.rs
 b2f8951e3d15a7f71dd21e59560bcad53672073c5234665a835df9a44af614b7  ./crates/actinv-gui/src/web_app.rs
 675fc95f420adc3ae414933ed45512aec4017dd9f4b217d5e4b0e90a12451391  ./crates/actinv-gui/src/worker.rs
-7fdff907a2e102ad8c7b5f40b05f5ce23ad252f855d6e56df3df9d70c41adf94  ./crates/actinv-web-engine/Cargo.toml
-66a08c04732a895ac5c94c2f2ad8087d55f058dcb6f2d5344655449705f0b0a7  ./crates/actinv-web-engine/src/lib.rs
+8fbae1766c4b3b7cc1c48c112f5720eea7215ed4bb974f1ea64b0530ad853179  ./crates/actinv-web-engine/Cargo.toml
+a326285a1456fd8a7e1b238c12d4a2e8b3a58eab3dddc7aa8e3ba1efd6db0482  ./crates/actinv-web-engine/src/lib.rs
 3b2e1bde3099de437f81a76a2c0ac9315803a83ecc81c005dc69de11305c1016  ./data/clearance_iaea_2004.json
 df5b6970c892117944416a67e40072227cafd7ec677917f71b1b2e7bce1cae23  ./data/cram_coefficients.json
 890268af81a53815b8e11c238e4a1694eabb79664a1ca087fd7fe22b9fabe5d7  ./data/waste_us_nrc_61_55_v1.json
@@ -1357,7 +1357,7 @@ dfb8c8f7c7ffbd5aaac73e21a5198af7b662b862fb416c90f6418086da05ae45  ./docs/defects
 0add1f6335b1b72c62dc92dfb135d6b33ab239b4249832390b2a22000df07b83  ./docs/guide/SUMMARY.md
 29b9a4871b61c1e5af86963b6f73f4319b50a1fe0c1e5a7e0461c3afe3ac1fd9  ./docs/guide/account.md
 592326a371fba801c9f221d524d4e335f970cae48476df60a5d0d08315e2d9c9  ./docs/guide/benchmarks.md
-1e0503b91ec6985115769dfe482fdc100d568a03af92dbb90340a2044ca1f00d  ./docs/guide/browser.md
+11a43a4435fb9534d1f358ff7e1384105e1ac53339c388c5bb6ea807dd579ef7  ./docs/guide/browser.md
 eac8b0688cf53e4edad7593c1e02162366f725158268dc08ba837051ecc3e5e1  ./docs/guide/cli.md
 da78a08922cd7bddf0b15532ac3107d34c4e8f03edbfc12a62ad838ea39f74b4  ./docs/guide/data-limits.md
 ad272dc87c112bfb5295c3feb7bc00aacb2aa964ca2fb1fe1a7e63dc241ac192  ./docs/guide/data.md
@@ -1429,6 +1429,7 @@ d0a980eaa3928f2d3c65f1410ae0a0781c59aafce9adf3695d212f27bc475b6b  ./docs/images/
 5430360e7b2f9f74f1192094ccf5fce1bb1f58c42ae28756c6214fd5c115dd61  ./docs/images/desktop/walkthrough.png
 bb711553eb6ef8f83cca1c3ead2c0053bf94bd9a49b81f4bcd389b182fd7d51e  ./docs/maintainers/ACCURACY_PROGRAM.md
 32672bb79351e60b4951b064628b5d085839b0feb07a3774513d0c2d39ed1089  ./docs/maintainers/AGENTS.md
+36f6c78abb28afab9e9adda801f5a2901755c52e42206e55bf4d6ef39ae25e10  ./docs/maintainers/BROWSER_DATA.md
 8521498862326e55426f442d7805f58c76630eb05f2b96c8a318590ac1db5557  ./docs/maintainers/CI_DATA_CACHE_NOTICE.md
 ee09626af6c747dccb4630c53851469ba9fead0aea5414b3409e995bd0221eda  ./docs/maintainers/CI_DATA_RECOVERY.md
 ea83f46c2f23d8ad2550ccfbf2ab7ab5d5e3160afd3874b7830bea512f9213ff  ./docs/maintainers/DOCUMENTATION.md
@@ -6713,6 +6714,7 @@ b93c8937a94b581b42b9d4b98ddda3f800bcc90c8be0a878f491244556463f61  ./web/download
 fd5016da6964afb5da58520f4362c50b71be13ea1516fd09fd521c0fbd0562d0  ./web/examples/impurities-result.json
 cf2d2b00e3c04ca677b6dd9f81adc645b72245011d13a43d008cfc32479f4318  ./web/examples/iron-result.json
 99e589dc32ec01200c1b505759b6126d091a2100efd0059d28b948c801fabab2  ./web/examples/manifest.json
+47946b16bf62afe260502c2b7600970d2d2d6d9f3687e52bc3fb161def6bbb87  ./web/pack-cache.mjs
 6af0bc14cf3b6bf0da0ae08f8c09eebd363a3f13658c2ce2c2272c7e78085524  ./web/package-lock.json
 4017d230247557c90dd7ddd13fc0e63a0c5d7ceb92b9fbfbf39075dc1e95d088  ./web/package.json
 4ebe111f4c45f1bcfa229991a72be1e9456a009f3a7551f7e8b2575ac00091db  ./web/smoke-fixtures/intrusion-screen-result.json
