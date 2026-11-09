@@ -6717,3 +6717,23 @@ minutes.
   the check errs towards flagging. The pipe and tungsten were not flagged (1.9% and 9e-5). The table source gave the
   same answers as the runs on every component.
 - **G4.** All ten refusal cases exited 2 without a result, naming their cause.
+
+## Entry 386 — P197 verdict: P197-PASS; `actinv maintenance` qualified on closed-form dose curves, seven ACTINV-computed components and refusals (2026-11-09)
+
+CI on the evidence commit `b976931` passed every job (`controls`, `fns-iron`, `fusion-isotope`), so G5 holds. The first
+attempt of each started no jobs during a GitHub Actions outage; the re-run after it ended is the one counted. With
+G0–G4 (ledger 385), P197 passes. Its sentences, filled from `results/p197_verdict.json`:
+
+> `actinv maintenance` plans jobs after shutdown from dose rates tabulated over cooling time: when each job may start,
+> the dose of each crew at each wait, the earliest allowed wait and the wait of least cost.
+>
+> On three dose curves of one, two and three decaying nuclides with exact answers, its doses, start times and least
+> costs on a 201-time grid were within 0.0006 of exact, never below the exact dose or start on any grid, and its
+> interpolation check flagged every grid where an answer was more than 5% off.
+>
+> On 7 activated components computed by ACTINV (5 of them held out), plans from a 15-time cooling grid were within
+> 0.02 of plans from a 73-time grid wherever the check did not flag the coarser grid (5 flagged).
+
+The handbook chapter `docs/guide/maintenance.md` quotes them, with the five flagged components that were also within
+2.4%, and is linked from `SUMMARY.md` and the CLI guide. P197 qualifies the planner's arithmetic, not any dose rate
+it reads. The workbench page and the OpenMC dose-map helper are not part of it.

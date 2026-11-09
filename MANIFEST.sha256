@@ -1357,11 +1357,11 @@ dfb8c8f7c7ffbd5aaac73e21a5198af7b662b862fb416c90f6418086da05ae45  ./docs/defects
 2a77dcfdc893688d4fea08eb30bb4092038d30df4826a69c19e4abdc2931f97f  ./docs/defects/tendl2023-o18-width-inconsistency.md
 245f5933ab759ab1961691ab03111502c748ae54395af2fa3802b818ab2f5c9f  ./docs/defects/tendl2023-orphan-product-sections.md
 8e502b8b5b1c79654008fbfec98882f6ab4f437f5a3490a4d103a299993dbeb1  ./docs/defects/unitarity-violating-partial-cross-sections.md
-0add1f6335b1b72c62dc92dfb135d6b33ab239b4249832390b2a22000df07b83  ./docs/guide/SUMMARY.md
+258929cd3194e581bcefffceda032c490eb9ceb726a195d2d63daf89977abf7f  ./docs/guide/SUMMARY.md
 29b9a4871b61c1e5af86963b6f73f4319b50a1fe0c1e5a7e0461c3afe3ac1fd9  ./docs/guide/account.md
 592326a371fba801c9f221d524d4e335f970cae48476df60a5d0d08315e2d9c9  ./docs/guide/benchmarks.md
 11a43a4435fb9534d1f358ff7e1384105e1ac53339c388c5bb6ea807dd579ef7  ./docs/guide/browser.md
-eac8b0688cf53e4edad7593c1e02162366f725158268dc08ba837051ecc3e5e1  ./docs/guide/cli.md
+70bfddb2746d0be4f2a82591551e152c177794e3e9cdcd49bba51fe315146432  ./docs/guide/cli.md
 da78a08922cd7bddf0b15532ac3107d34c4e8f03edbfc12a62ad838ea39f74b4  ./docs/guide/data-limits.md
 ad272dc87c112bfb5295c3feb7bc00aacb2aa964ca2fb1fe1a7e63dc241ac192  ./docs/guide/data.md
 4a0742249776107d3961a63ff56e00294495f317fc59e4949a71ff2f1f35acc7  ./docs/guide/desktop.md
@@ -1369,6 +1369,7 @@ feb943c57e5e4d6cf37ece3668b4fc4eda055ad224265c75edfdb38f180d0d56  ./docs/guide/f
 18f20e637d3103ec4bbdbeca8e09ac892bb9e7ad8f0b7b69b12ec0667a92924f  ./docs/guide/impurities.md
 84446ba326def11c1c26216dad4e33f8f8c00179f336c695d24be606c066d5ff  ./docs/guide/index.md
 baa91d187e1bce94dba06b69e25d216f8eec9c60c4bbc5627c0b2d5adaefad91  ./docs/guide/install.md
+07f7e9e9382a7561be7695844cec3499385e36d208a402022e9c2825e1e81b49  ./docs/guide/maintenance.md
 8966d3c2d3c39f01faad034889f06082ae45668a25ebd91d74728f7a8937fbc5  ./docs/guide/method.md
 e499a74c6ae8b01ad5cb2c538ff3a82bf5ee6ba84645b7023a72b170caf6d536  ./docs/guide/openmc.md
 9a1e669909cff94a1fbc0893b683f3416b0d35b461db34eaff046c140bed7297  ./docs/guide/problems.md
@@ -1519,7 +1520,7 @@ f6723eefeb6f5cacef2e87a83cd53b078dd5ca2777b7400f48f6b49ddc7a07b4  ./examples/was
 cfd86c2c5ac15d76ec2358c6bd196a6362b46bcc889160c06439975dc5ae8f3a  ./interchange/INTERCHANGE.md
 057dd636e1814f93c0869d4839887ff28a361f5c845f24153c4e93cbee1918d1  ./interchange/actinv_core_adapter.py
 4c42c2d68d375681621d6d3828b6daab4e2fdfc37f23cacbfc3b5a1c3fd3beec  ./interchange/run_case.py
-fef11f538c6e7d21eb0a0b89c6a7c8d09b4cfa4db64faf9f814d1e19aadcf3b6  ./ledger.md
+e6be18cdd63c0b4a1bc65635ab0ea1061743907e2f7e192ca13a890b8f280dd5  ./ledger.md
 588e9f4f4ff74df627a1a15306214db678531d7334f2f6e95a1603eabd1f1c55  ./packaging/actinv.ico
 9897482011f194d9495fc80965177f0632ae4166917a7f240d80c0fc3c8fb83e  ./packaging/actinv.png
 be93fd3e3bf295ec7e2bf23765492499f4e45f7aa45766a5143d565c16712adc  ./packaging/conda-forge/SUBMIT.md

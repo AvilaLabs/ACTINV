@@ -147,6 +147,16 @@ band results but leave both waste fields unchanged. The class summary counts
 components separately; it does not make a facility class or determine disposal
 acceptance. Omitting the `waste` block retains the existing twin result fields.
 
+### Plan maintenance after shutdown
+
+`actinv maintenance PLAN.json [OUT.json]` plans jobs after shutdown from dose
+rates tabulated over cooling time: when each job may start under an access
+limit, each crew's dose at each wait, the earliest allowed wait and, with
+costs, the wait of least cost. It reads the dose rates from `actinv run`
+results with a point-source dose, from an `actinv twin` result's dose points,
+or from an `actinv-dose-map-1` table. See [Plan maintenance after
+shutdown](maintenance.md).
+
 ## Convert a FISPACT-II deck
 
 ```text

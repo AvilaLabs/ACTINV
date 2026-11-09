@@ -17,6 +17,7 @@
 - [Component waste classes and impurity limits](waste.md)
 - [Screen a material's impurities](impurities.md)
 - [Unfold a neutron spectrum from foils](unfold.md)
+- [Plan maintenance after shutdown](maintenance.md)
 - [Certify, optimize and compare designs](studies.md)
 - [Choose and install nuclear data](data.md)
 - [Known data limitations](data-limits.md)
