@@ -6684,3 +6684,21 @@ quoted:
 The handbook's browser chapter (`docs/guide/browser.md`) quotes them together, with the problems a browser refuses.
 The **Run in browser** panel appears only where a site serves the pack. Hosting it on the public site is the owner's
 decision and has not been done.
+
+## Entry 384 — P197 registered: `actinv maintenance`, maintenance jobs planned against shutdown dose rates, on closed-form curves, ACTINV-computed components and refusals (2026-11-09)
+
+`protocols/ACTINV-P197_PROTOCOL.md` and `controls/p197.py` are sealed in `protocols/protocol_hash.txt`.
+- **What.** `actinv maintenance PLAN.json [OUT.json]` (candidate `45b6166`) reads dose rates at each job's place over
+  cooling time (from `actinv run` point-source doses, an `actinv twin` result or an `actinv-dose-map-1` table) and a
+  list of jobs, and reports each job's earliest start, each crew's dose at each wait, the earliest allowed wait and,
+  with costs, the wait of least cost. Between tabulated times the dose rate is an exponential, never extrapolated; an
+  interpolation check solves the plan again on every other time and flags a result that moves by more than 5%.
+- **Gates.** G2: on three closed-form curves of one, two and three nuclides on 9, 41 and 201 times, every answer
+  within 1e-3 of exact on 201 times, never below exact dose or start, exact to 1e-9 for one nuclide, and every grid
+  more than 5% off flagged. G3: on seven ACTINV-computed components (two development, five held out) planned on 15
+  and 73 cooling times, the 15-time plan within 5% of the 73-time plan or flagged, and the table source identical to
+  the runs. G4: ten refusals exit 2 without a result. G5 is CI on the evidence commit.
+- **Seen.** Unit tests, the example (G3's two development components on 15 times, read in full) and one rehearsal
+  read for exit statuses only. No G2 answer beyond the unit tests' and no held-out component has been run.
+- **Scored run.** From a clean tracked tree inside the AGENTS.md scope with a release build. One repair round is
+  allowed. P197 tests the planner's arithmetic, not the accuracy of the dose rates it reads.
