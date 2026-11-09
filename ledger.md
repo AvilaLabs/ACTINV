@@ -6702,3 +6702,18 @@ decision and has not been done.
   read for exit statuses only. No G2 answer beyond the unit tests' and no held-out component has been run.
 - **Scored run.** From a clean tracked tree inside the AGENTS.md scope with a release build. One repair round is
   allowed. P197 tests the planner's arithmetic, not the accuracy of the dose rates it reads.
+
+## Entry 385 — P197 evidence: G0–G4 pass on 7c4ff09; closed-form answers within 6.3e-4 of exact on 201 times and never below exact, seven ACTINV-computed components within 2.4% across cooling grids; P197-PASS pending G5 (2026-11-09)
+
+`results/p197_record.json` and `results/p197_verdict.json`, from `python3 controls/p197.py run` and `check` on
+`7c4ff09` (a clean tracked tree; the release binary built from candidate `45b6166`), inside the AGENTS.md scope, in 16
+minutes.
+- **G2.** The one-nuclide curve was exact to 7e-14 on every grid. On the 201-time grids the largest difference from
+  exact was 6.3e-4 (the two-nuclide curve, the second job's dose at 3 d). Nothing was below exact on any grid. The
+  check flagged the two 9-time grids that were off by more than 5% (two nuclides 0.52, three 0.074) and no other.
+- **G3.** On all seven components the 15-time plan was within 2.4% of the 73-time plan (largest: ordinary concrete's
+  earliest wait). The check flagged five of them (the bracket, EUROFER97, Inconel 718, Al 6061 and concrete) although
+  none was off by more than 2.4%: halving the grid moves the answers by more than the 15-time grid's own error, so
+  the check errs towards flagging. The pipe and tungsten were not flagged (1.9% and 9e-5). The table source gave the
+  same answers as the runs on every component.
+- **G4.** All ten refusal cases exited 2 without a result, naming their cause.

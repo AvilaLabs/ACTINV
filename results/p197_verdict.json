@@ -1,0 +1,231 @@
+{
+ "G0": {
+  "pass": true,
+  "missing": []
+ },
+ "G1": {
+  "pass": true,
+  "problems": []
+ },
+ "G2": {
+  "pass": true,
+  "failures": [],
+  "largest_dense": 0.0006338775918697583,
+  "rows": [
+   {
+    "name": "one-sparse-access",
+    "largest": 6.585668392333226e-14,
+    "at": "wait 300.0 job[0]",
+    "coarse": false,
+    "check_change": 4.671538555558057e-15
+   },
+   {
+    "name": "one-sparse-limited",
+    "largest": 6.585668392333226e-14,
+    "at": "wait 300.0 job[0]",
+    "coarse": false,
+    "check_change": 4.671538555558057e-15
+   },
+   {
+    "name": "one-medium-access",
+    "largest": 6.17739245426405e-14,
+    "at": "wait 300.0 job[0]",
+    "coarse": false,
+    "check_change": 2.0554769644455375e-15
+   },
+   {
+    "name": "one-medium-limited",
+    "largest": 6.17739245426405e-14,
+    "at": "wait 300.0 job[0]",
+    "coarse": false,
+    "check_change": 2.0554769644455375e-15
+   },
+   {
+    "name": "one-dense-access",
+    "largest": 6.425908242653984e-14,
+    "at": "wait 300.0 job[0]",
+    "coarse": false,
+    "check_change": 4.005464842449789e-16
+   },
+   {
+    "name": "one-dense-limited",
+    "largest": 6.425908242653984e-14,
+    "at": "wait 300.0 job[0]",
+    "coarse": false,
+    "check_change": 4.005464842449789e-16
+   },
+   {
+    "name": "two-sparse-access",
+    "largest": 0.5209867394018038,
+    "at": "wait 3.0 job[1]",
+    "coarse": true,
+    "check_change": 0.5146017307505938
+   },
+   {
+    "name": "two-sparse-limited",
+    "largest": 0.5209867394018038,
+    "at": "wait 3.0 job[1]",
+    "coarse": true,
+    "check_change": 0.5146017307505938
+   },
+   {
+    "name": "two-medium-access",
+    "largest": 0.01680311261339994,
+    "at": "wait 3.0 job[1]",
+    "coarse": false,
+    "check_change": 0.0272458001866465
+   },
+   {
+    "name": "two-medium-limited",
+    "largest": 0.01680311261339994,
+    "at": "wait 3.0 job[1]",
+    "coarse": false,
+    "check_change": 0.0272458001866465
+   },
+   {
+    "name": "two-dense-access",
+    "largest": 0.0006338775918697583,
+    "at": "wait 3.0 job[1]",
+    "coarse": false,
+    "check_change": 0.0016758722012216243
+   },
+   {
+    "name": "two-dense-limited",
+    "largest": 0.0006338775918697583,
+    "at": "wait 3.0 job[1]",
+    "coarse": false,
+    "check_change": 0.0016758722012216243
+   },
+   {
+    "name": "three-sparse-access",
+    "largest": 0.07388415452472041,
+    "at": "wait 0.5 job[1]",
+    "coarse": true,
+    "check_change": 0.2369010519497227
+   },
+   {
+    "name": "three-sparse-limited",
+    "largest": 0.07388415452472041,
+    "at": "wait 0.5 job[1]",
+    "coarse": true,
+    "check_change": 0.2369010519497227
+   },
+   {
+    "name": "three-medium-access",
+    "largest": 0.0026938649406441713,
+    "at": "wait 3.0 job[0]",
+    "coarse": false,
+    "check_change": 0.004175583690168567
+   },
+   {
+    "name": "three-medium-limited",
+    "largest": 0.0026938649406441713,
+    "at": "wait 3.0 job[0]",
+    "coarse": false,
+    "check_change": 0.004175583690168567
+   },
+   {
+    "name": "three-dense-access",
+    "largest": 7.653995271755149e-05,
+    "at": "wait 0.5 job[1]",
+    "coarse": false,
+    "check_change": 0.0001953892671472005
+   },
+   {
+    "name": "three-dense-limited",
+    "largest": 7.653995271755149e-05,
+    "at": "wait 0.5 job[1]",
+    "coarse": false,
+    "check_change": 0.0001953892671472005
+   }
+  ]
+ },
+ "G3": {
+  "pass": true,
+  "failures": [],
+  "largest_unflagged": 0.018505038609659474,
+  "flagged": [
+   "bracket",
+   "eurofer97",
+   "inconel718",
+   "al6061",
+   "concrete-ordinary"
+  ],
+  "rows": [
+   {
+    "name": "pipe",
+    "held_out": false,
+    "largest": 0.018505038609659474,
+    "at": "wait 1.0 job[0]",
+    "coarse": false,
+    "dense_coarse": false,
+    "earliest_wait_d": 322.6470987506471
+   },
+   {
+    "name": "bracket",
+    "held_out": false,
+    "largest": 0.014360062117187019,
+    "at": "earliest_wait_d",
+    "coarse": true,
+    "dense_coarse": false,
+    "earliest_wait_d": 52.3738582873127
+   },
+   {
+    "name": "eurofer97",
+    "held_out": true,
+    "largest": 0.014656116188119732,
+    "at": "earliest_wait_d",
+    "coarse": true,
+    "dense_coarse": false,
+    "earliest_wait_d": 68.2951675650942
+   },
+   {
+    "name": "inconel718",
+    "held_out": true,
+    "largest": 0.012791408586155307,
+    "at": "earliest_wait_d",
+    "coarse": true,
+    "dense_coarse": false,
+    "earliest_wait_d": 49.68726633979715
+   },
+   {
+    "name": "tungsten",
+    "held_out": true,
+    "largest": 9.462750961382201e-05,
+    "at": "earliest_wait_d",
+    "coarse": false,
+    "dense_coarse": false,
+    "earliest_wait_d": 48.433189012011994
+   },
+   {
+    "name": "al6061",
+    "held_out": true,
+    "largest": 0.01804402309815646,
+    "at": "earliest_wait_d",
+    "coarse": true,
+    "dense_coarse": false,
+    "earliest_wait_d": 52.11016467620177
+   },
+   {
+    "name": "concrete-ordinary",
+    "held_out": true,
+    "largest": 0.02398410214216969,
+    "at": "earliest_wait_d",
+    "coarse": true,
+    "dense_coarse": false,
+    "earliest_wait_d": 34.8744183760297
+   }
+  ]
+ },
+ "G4": {
+  "pass": true,
+  "failures": []
+ },
+ "G5": "CI on the evidence commit (external)",
+ "verdict": "P197-PASS",
+ "sentences": [
+  "`actinv maintenance` plans jobs after shutdown from dose rates tabulated over cooling time: when each job may start, the dose of each crew at each wait, the earliest allowed wait and the wait of least cost.",
+  "On three dose curves of one, two and three decaying nuclides with exact answers, its doses, start times and least costs on a 201-time grid were within 0.0006 of exact, never below the exact dose or start on any grid, and its interpolation check flagged every grid where an answer was more than 5% off.",
+  "On 7 activated components computed by ACTINV (5 of them held out), plans from a 15-time cooling grid were within 0.02 of plans from a 73-time grid wherever the check did not flag the coarser grid (5 flagged)."
+ ]
+}
