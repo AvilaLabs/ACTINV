@@ -9,6 +9,7 @@ mod data;
 mod export;
 mod impurities;
 mod ledger;
+mod maintenance;
 mod material;
 mod measurements;
 pub(super) mod mesh;
@@ -67,6 +68,7 @@ impl Desktop {
             Page::Sweep => self.sweep_page(ui),
             Page::Mesh => self.mesh_page(ui),
             Page::Measurements => self.measurements_page(ui),
+            Page::Maintenance => self.maintenance_page(ui),
             Page::Data => self.data_page(ui),
             Page::Advanced => self.advanced(ui),
         }

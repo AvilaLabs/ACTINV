@@ -7,6 +7,7 @@ pub mod compare;
 pub mod export;
 pub mod import;
 pub mod impurities;
+pub mod maintenance;
 pub mod material;
 #[cfg(not(target_arch = "wasm32"))]
 pub mod measurements;

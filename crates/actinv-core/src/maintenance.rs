@@ -69,6 +69,11 @@ impl DoseCurve {
         self.times_s[0]
     }
 
+    /// The tabulated `(seconds after shutdown, Sv/h)` pairs.
+    pub fn points(&self) -> impl Iterator<Item = (f64, f64)> + '_ {
+        self.times_s.iter().copied().zip(self.sv_h.iter().copied())
+    }
+
     pub fn last_s(&self) -> f64 {
         self.times_s[self.times_s.len() - 1]
     }
@@ -583,6 +588,92 @@ fn change(a: Option<f64>, b: Option<f64>) -> f64 {
     }
 }
 
+/// A run's point-source dose after its last irradiated step, named `location`, in Sv/h, and when
+/// that step ended. `file` names the result in messages.
+pub fn run_curve(
+    result: &serde_json::Value,
+    file: &str,
+    location: &str,
+) -> Result<(DoseCurve, f64), String> {
+    let steps = result["steps"]
+        .as_array()
+        .filter(|steps| !steps.is_empty())
+        .ok_or_else(|| format!("{file} is not an actinv run result"))?;
+    let shutdown = steps
+        .iter()
+        .filter(|step| step["flux"].as_f64().is_some_and(|flux| flux > 0.0))
+        .filter_map(|step| step["t_s"].as_f64())
+        .fold(None, |last: Option<f64>, t| {
+            Some(last.map_or(t, |l| l.max(t)))
+        })
+        .ok_or_else(|| format!("{file} has no irradiated step"))?;
+    let (mut times, mut rates) = (Vec::new(), Vec::new());
+    for step in steps {
+        let t = step["t_s"]
+            .as_f64()
+            .ok_or_else(|| format!("{file}: a step has no t_s"))?;
+        if t < shutdown {
+            continue;
+        }
+        let dose = &step["photon_source"]["point_source_dose"];
+        let sv_h = dose["gamma_air_dose_Sv_h"].as_f64().ok_or_else(|| {
+            let why = dose["unavailable_reason"]
+                .as_str()
+                .map(|r| format!(" ({r})"))
+                .unwrap_or_default();
+            format!(
+                "{file} has no point-source dose at t = {t} s{why}: its problem needs photon.point_source and the photons output"
+            )
+        })?;
+        times.push(t - shutdown);
+        rates.push(sv_h);
+    }
+    Ok((DoseCurve::new(location, times, rates)?, shutdown))
+}
+
+/// An `actinv-dose-map-1` table: dose rates in Sv/h at named places, times from shutdown.
+#[derive(Clone, Debug, Deserialize, Serialize, PartialEq)]
+#[serde(deny_unknown_fields)]
+pub struct DoseMap {
+    pub schema: String,
+    pub unit: String,
+    #[serde(default)]
+    pub source: Option<String>,
+    pub locations: Vec<DoseMapLocation>,
+}
+
+#[derive(Clone, Debug, Deserialize, Serialize, PartialEq)]
+#[serde(deny_unknown_fields)]
+pub struct DoseMapLocation {
+    pub name: String,
+    pub times_s: Vec<f64>,
+    pub dose_rate: Vec<f64>,
+}
+
+impl DoseMap {
+    /// The table's curves; `file` names it in messages.
+    pub fn curves(self, file: &str) -> Result<Vec<DoseCurve>, String> {
+        if self.schema != DOSE_MAP_SCHEMA {
+            return Err(format!(
+                "{file} must declare \"schema\": \"{DOSE_MAP_SCHEMA}\""
+            ));
+        }
+        if self.unit != "Sv/h" {
+            return Err(format!(
+                "{file}: unit must be \"Sv/h\", not \"{}\"",
+                self.unit
+            ));
+        }
+        if self.locations.is_empty() {
+            return Err(format!("{file} has no locations"));
+        }
+        self.locations
+            .into_iter()
+            .map(|location| DoseCurve::new(&location.name, location.times_s, location.dose_rate))
+            .collect()
+    }
+}
+
 /// Solve a plan, and check how far its answers move on the coarsened curves.
 pub fn evaluate(plan: &Plan, curves: &[DoseCurve]) -> Result<Outcome, String> {
     let mut outcome = answers(plan, curves)?;
@@ -795,5 +886,44 @@ mod tests {
         let curve = DoseCurve::new("p", vec![0.0, 3600.0], vec![2e-3, 0.0]).unwrap();
         assert!((curve.rate(1800.0).unwrap() - 1e-3).abs() < 1e-18);
         assert!((curve.dose(0.0, 3600.0).unwrap() - 1e-3).abs() < 1e-15);
+    }
+
+    #[test]
+    fn a_run_gives_its_point_source_dose_after_the_last_irradiation() {
+        let step = |t: f64, flux: f64, sv_h: Option<f64>| {
+            serde_json::json!({"t_s": t, "flux": flux,
+                   "photon_source": {"point_source_dose": {"gamma_air_dose_Sv_h": sv_h, "distance_m": 1.0}}})
+        };
+        let result = serde_json::json!({"steps": [
+            step(100.0, 1.0, Some(5.0)), step(200.0, 0.0, Some(4.0)),
+            step(300.0, 1.0, Some(6.0)), step(400.0, 0.0, Some(3.0)), step(1300.0, 0.0, Some(1.0))
+        ]});
+        let (curve, shutdown) = run_curve(&result, "r.json", "bench").unwrap();
+        assert_eq!(shutdown, 300.0);
+        assert_eq!(curve.name, "bench");
+        assert_eq!(curve.first_s(), 0.0);
+        assert_eq!(curve.last_s(), 1000.0);
+        assert_eq!(curve.rate(100.0), Some(3.0));
+        let unasked =
+            serde_json::json!({"steps": [step(100.0, 1.0, None), step(200.0, 0.0, None)]});
+        assert!(run_curve(&unasked, "r.json", "bench")
+            .unwrap_err()
+            .contains("photon.point_source"));
+    }
+
+    #[test]
+    fn a_dose_map_must_be_in_sv_per_hour() {
+        let map = |unit: &str| DoseMap {
+            schema: DOSE_MAP_SCHEMA.into(),
+            unit: unit.into(),
+            source: None,
+            locations: vec![DoseMapLocation {
+                name: "port".into(),
+                times_s: vec![0.0, 10.0],
+                dose_rate: vec![1.0, 0.5],
+            }],
+        };
+        assert_eq!(map("Sv/h").curves("m.json").unwrap().len(), 1);
+        assert!(map("mSv/h").curves("m.json").unwrap_err().contains("Sv/h"));
     }
 }

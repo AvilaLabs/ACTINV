@@ -77,6 +77,8 @@ Each file is chosen on its own: the deck, an optional fluxes file and an optiona
 - **Optimize**: **Download the search file** gives `search.json` and `base_spec.json`. Keep them in one folder and run `actinv optimize search.json out`. **Use this design** is a desktop button.
 - **Compare**: **Download the study file** gives `compare.json`; run `actinv study run compare.json out`.
 
+**Maintenance** plans in the browser itself, as in the [desktop](desktop.md#plan-maintenance-after-shutdown): the run results and dose-rate tables it adds are read on your device, and **Save result…** downloads `maintenance-result.json`.
+
 The starting cards on **Material**, **Source & spectrum** and **Irradiation & cooling** work in the browser, as does **New problem** on **Start**; see [Start a new problem](desktop.md#start-a-new-problem).
 
 ## Keep your edits

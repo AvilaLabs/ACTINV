@@ -9,7 +9,7 @@
 
 use std::path::Path;
 
-use actinv_core::maintenance::{self, DoseCurve, Plan, DOSE_MAP_SCHEMA, PLAN_SCHEMA};
+use actinv_core::maintenance::{self, DoseCurve, DoseMap, Plan, PLAN_SCHEMA};
 use serde::Deserialize;
 use serde_json::{json, Value};
 
@@ -54,60 +54,6 @@ enum Source {
     Runs(RunsSource),
     Twin(TwinSource),
     Table(TableSource),
-}
-
-/// A run's point-source dose after its last irradiated step, in Sv/h, and when that step ended.
-fn run_curve(result: &Value, location: &RunLocation) -> Result<(DoseCurve, f64), String> {
-    let steps = result["steps"]
-        .as_array()
-        .filter(|steps| !steps.is_empty())
-        .ok_or_else(|| format!("{} is not an actinv run result", location.result))?;
-    let shutdown = steps
-        .iter()
-        .filter(|step| step["flux"].as_f64().is_some_and(|flux| flux > 0.0))
-        .filter_map(|step| step["t_s"].as_f64())
-        .fold(None, |last: Option<f64>, t| {
-            Some(last.map_or(t, |l| l.max(t)))
-        })
-        .ok_or_else(|| format!("{} has no irradiated step", location.result))?;
-    let (mut times, mut rates) = (Vec::new(), Vec::new());
-    for step in steps {
-        let t = step["t_s"]
-            .as_f64()
-            .ok_or_else(|| format!("{}: a step has no t_s", location.result))?;
-        if t < shutdown {
-            continue;
-        }
-        let dose = &step["photon_source"]["point_source_dose"];
-        let sv_h = dose["gamma_air_dose_Sv_h"].as_f64().ok_or_else(|| {
-            let why = dose["unavailable_reason"].as_str().map(|r| format!(" ({r})")).unwrap_or_default();
-            format!(
-                "{} has no point-source dose at t = {t} s{why}: its problem needs photon.point_source and the photons output",
-                location.result
-            )
-        })?;
-        times.push(t - shutdown);
-        rates.push(sv_h);
-    }
-    Ok((DoseCurve::new(&location.location, times, rates)?, shutdown))
-}
-
-#[derive(Debug, Deserialize)]
-#[serde(deny_unknown_fields)]
-struct DoseMap {
-    schema: String,
-    unit: String,
-    #[serde(default)]
-    source: Option<String>,
-    locations: Vec<DoseMapLocation>,
-}
-
-#[derive(Debug, Deserialize)]
-#[serde(deny_unknown_fields)]
-struct DoseMapLocation {
-    name: String,
-    times_s: Vec<f64>,
-    dose_rate: Vec<f64>,
 }
 
 fn read(path: &Path, what: &str) -> Result<Vec<u8>, String> {
@@ -158,27 +104,6 @@ fn twin_curves(twin: &Value, source: &TwinSource) -> Result<Vec<DoseCurve>, Stri
     Ok(curves)
 }
 
-fn table_curves(map: DoseMap, path: &str) -> Result<Vec<DoseCurve>, String> {
-    if map.schema != DOSE_MAP_SCHEMA {
-        return Err(format!(
-            "{path} must declare \"schema\": \"{DOSE_MAP_SCHEMA}\""
-        ));
-    }
-    if map.unit != "Sv/h" {
-        return Err(format!(
-            "{path}: unit must be \"Sv/h\", not \"{}\"",
-            map.unit
-        ));
-    }
-    if map.locations.is_empty() {
-        return Err(format!("{path} has no locations"));
-    }
-    map.locations
-        .into_iter()
-        .map(|location| DoseCurve::new(&location.name, location.times_s, location.dose_rate))
-        .collect()
-}
-
 /// Read and solve a plan; the result, with the inputs it used and their SHA-256.
 pub fn evaluate_file(plan_path: &str) -> Result<Value, String> {
     let bytes = read(Path::new(plan_path), "plan")?;
@@ -213,7 +138,8 @@ pub fn evaluate_file(plan_path: &str) -> Result<Value, String> {
                 let bytes = read(&base.join(&location.result), "run result")?;
                 let value: Value = serde_json::from_slice(&bytes)
                     .map_err(|e| format!("{}: {e}", location.result))?;
-                let (curve, shutdown) = run_curve(&value, location)?;
+                let (curve, shutdown) =
+                    maintenance::run_curve(&value, &location.result, &location.location)?;
                 let distance =
                     value["steps"][0]["photon_source"]["point_source_dose"]["distance_m"].as_f64();
                 used.push(json!({
@@ -254,7 +180,7 @@ pub fn evaluate_file(plan_path: &str) -> Result<Value, String> {
                 serde_json::from_slice(&bytes).map_err(|e| format!("{}: {e}", table.table))?;
             let described = map.source.clone();
             (
-                table_curves(map, &table.table)?,
+                map.curves(&table.table)?,
                 json!({"table": table.table, "sha256": sha256_hex(&bytes), "source": described}),
             )
         }
@@ -324,48 +250,5 @@ mod tests {
             .contains("sv_per_gy"));
         let wrong = json!({"schema": "actinv-mesh-1"});
         assert!(twin_curves(&wrong, &source()).is_err());
-    }
-
-    #[test]
-    fn a_run_gives_its_point_source_dose_after_the_last_irradiation() {
-        let step = |t: f64, flux: f64, sv_h: Option<f64>| {
-            json!({"t_s": t, "flux": flux,
-                   "photon_source": {"point_source_dose": {"gamma_air_dose_Sv_h": sv_h, "distance_m": 1.0}}})
-        };
-        let result = json!({"steps": [
-            step(100.0, 1.0, Some(5.0)), step(200.0, 0.0, Some(4.0)),
-            step(300.0, 1.0, Some(6.0)), step(400.0, 0.0, Some(3.0)), step(1300.0, 0.0, Some(1.0))
-        ]});
-        let location = RunLocation {
-            result: "r.json".into(),
-            location: "bench".into(),
-        };
-        let (curve, shutdown) = run_curve(&result, &location).unwrap();
-        assert_eq!(shutdown, 300.0);
-        assert_eq!(curve.first_s(), 0.0);
-        assert_eq!(curve.last_s(), 1000.0);
-        assert_eq!(curve.rate(100.0), Some(3.0));
-        let unasked = json!({"steps": [step(100.0, 1.0, None), step(200.0, 0.0, None)]});
-        assert!(run_curve(&unasked, &location)
-            .unwrap_err()
-            .contains("photon.point_source"));
-    }
-
-    #[test]
-    fn a_dose_map_must_be_in_sv_per_hour() {
-        let map = |unit: &str| DoseMap {
-            schema: DOSE_MAP_SCHEMA.into(),
-            unit: unit.into(),
-            source: None,
-            locations: vec![DoseMapLocation {
-                name: "port".into(),
-                times_s: vec![0.0, 10.0],
-                dose_rate: vec![1.0, 0.5],
-            }],
-        };
-        assert_eq!(table_curves(map("Sv/h"), "m.json").unwrap().len(), 1);
-        assert!(table_curves(map("mSv/h"), "m.json")
-            .unwrap_err()
-            .contains("Sv/h"));
     }
 }

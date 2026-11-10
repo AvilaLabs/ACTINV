@@ -125,6 +125,7 @@ pub struct Desktop {
     sweep: SweepUi,
     /// The Measurements page, and the flux fit it started: (command, folder), read once it stops.
     measurements: crate::views::measurements::MeasurementsState,
+    maintenance: crate::views::maintenance::MaintenanceState,
     measure_pending: Option<(crate::jobs::Command, std::path::PathBuf)>,
     /// The folder of a running library-disagreement estimate for the uncertainty card.
     spread_pending: Option<std::path::PathBuf>,
@@ -433,6 +434,7 @@ impl Desktop {
             imported: None,
             sweep: SweepUi::default(),
             measurements: Default::default(),
+            maintenance: Default::default(),
             measure_pending: None,
             spread_pending: None,
             tables: TablesState::default(),
@@ -1608,7 +1610,7 @@ mod ui_tests {
     }
     #[test]
     fn every_page_renders_in_both_themes_at_minimum_size_with_and_without_a_result() {
-        assert_eq!(Page::ALL.len(), 23);
+        assert_eq!(Page::ALL.len(), 24);
         for theme in [egui::ThemePreference::Light, egui::ThemePreference::Dark] {
             for with_result in [false, true] {
                 let ctx = egui::Context::default();

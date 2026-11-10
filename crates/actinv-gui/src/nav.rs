@@ -62,13 +62,14 @@ pub enum Page {
     Mesh,
     Compare,
     Measurements,
+    Maintenance,
     Data,
     Advanced,
 }
 
 impl Page {
     /// Every page in sidebar order. Pages of one group are contiguous.
-    pub const ALL: [Page; 23] = [
+    pub const ALL: [Page; 24] = [
         Page::Start,
         Page::Material,
         Page::Schedule,
@@ -90,6 +91,7 @@ impl Page {
         Page::Mesh,
         Page::Compare,
         Page::Measurements,
+        Page::Maintenance,
         Page::Data,
         Page::Advanced,
     ];
@@ -126,6 +128,7 @@ impl Page {
             Page::Mesh => "Mesh & transport",
             Page::Compare => "Compare",
             Page::Measurements => "Measurements",
+            Page::Maintenance => "Maintenance",
             Page::Data => "Data",
             Page::Advanced => "Advanced JSON",
         }
@@ -151,7 +154,8 @@ impl Page {
             | Page::Sweep
             | Page::Mesh
             | Page::Compare
-            | Page::Measurements => Group::Studies,
+            | Page::Measurements
+            | Page::Maintenance => Group::Studies,
             Page::Data | Page::Advanced => Group::Tools,
         }
     }
@@ -205,6 +209,7 @@ mod tests {
                 "Mesh & transport",
                 "Compare",
                 "Measurements",
+                "Maintenance",
                 "Data",
                 "Advanced JSON",
             ]
@@ -217,7 +222,7 @@ mod tests {
         let mut expected = vec![Group::Start];
         expected.extend([Group::Setup; 5]);
         expected.extend([Group::Results; 8]);
-        expected.extend([Group::Studies; 7]);
+        expected.extend([Group::Studies; 8]);
         expected.extend([Group::Tools; 2]);
         assert_eq!(groups, expected);
         assert_eq!(Group::Start.caption(), None);

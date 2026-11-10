@@ -16,6 +16,9 @@ actinv maintenance plan.json plan-result.json
 The planner does arithmetic on the dose rates it is given. Their accuracy is their source's, and it never says a plan
 is safe.
 
+The **Maintenance** page of the desktop app and the browser does the same from the open result and the files you
+add; see [Plan maintenance after shutdown](desktop.md#plan-maintenance-after-shutdown).
+
 ## Write a plan
 
 A plan (`actinv-maintenance-1`) names where its dose rates come from, the limits, the jobs in the order they are done,

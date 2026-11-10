@@ -42,12 +42,13 @@ const NARROW: f32 = 760.;
 
 /// The studies the browser sets up, in the order the studies page lists them: page, card title,
 /// what it answers.
-const STUDIES: [(Page, &str, &str); 5] = [
+const STUDIES: [(Page, &str, &str); 6] = [
     (Page::Waste, "Waste class", "Which class the waste falls in, which package takes it, over which ranges, and how sure."),
     (Page::Impurities, "Impurities", "Which trace elements drive activity, heat, dose or waste class, and how far each may rise."),
     (Page::Compare, "Compare", "How materials, spectra or irradiation lengths compare, every case solved the same way."),
     (Page::Certify, "Certify", "Whether the design meets its limits once the nuclear-data uncertainty is counted."),
     (Page::Optimize, "Optimize", "Which design, within the ranges you give, does best while meeting every limit."),
+    (Page::Maintenance, "Maintenance", "When each job may start after shutdown, each crew's dose, and the wait of least cost."),
 ];
 
 /// What a toolbar click asks for, applied after the bar is drawn.
@@ -227,6 +228,8 @@ enum FileKind {
     ScreenResult,
     /// A container, ranges or how-sure result for the Waste class page.
     WasteAnswer,
+    /// A run result or dose-rate table for the Maintenance page.
+    DoseRates,
 }
 
 /// A result computed ahead of time that the Start page can open.
@@ -496,6 +499,7 @@ pub struct Workbench {
     /// The waste spec in the editor on the Waste class page.
     waste_spec: String,
     impurities: crate::views::impurities::ImpuritiesState,
+    maintenance: crate::views::maintenance::MaintenanceState,
     /// The deck import dialog while it is open.
     import: Option<ImportState>,
     dark: bool,
@@ -563,6 +567,7 @@ impl Workbench {
             export: Default::default(),
             waste_spec: String::new(),
             impurities: Default::default(),
+            maintenance: Default::default(),
             import: None,
             dark: false,
             suite: avila_account::ui_web::WebSuite::new(&cc.egui_ctx, "actinv"),
@@ -689,6 +694,7 @@ impl Workbench {
                     None => Err("The import dialog was closed; the file was not used.".into()),
                 };
             }
+            FileKind::DoseRates => return self.maintenance.add_file(&name, bytes),
             FileKind::Spectrum => {
                 self.spectrum_text = String::from_utf8_lossy(bytes).into_owned();
                 return Ok(format!(
@@ -792,7 +798,9 @@ impl Workbench {
                 ))
             }
             // handled above
-            FileKind::Pin(_) | FileKind::Import(_) | FileKind::Spectrum => Ok(String::new()),
+            FileKind::Pin(_) | FileKind::Import(_) | FileKind::Spectrum | FileKind::DoseRates => {
+                Ok(String::new())
+            }
         }
     }
 
@@ -2017,6 +2025,27 @@ impl Workbench {
         }
     }
 
+    fn maintenance_page(&mut self, ui: &mut egui::Ui) {
+        use crate::views::maintenance::{self, MaintenanceAction};
+        visuals::heading(ui, "Maintenance", maintenance::QUESTION);
+        ui.label("Files you add are read here in the browser and never uploaded.");
+        match maintenance::show(ui, &mut self.maintenance, self.result.as_ref()) {
+            MaintenanceAction::None => {}
+            MaintenanceAction::OpenResult => self.pick(FileKind::Result, &["json"], ui.ctx()),
+            MaintenanceAction::AddFile => self.pick(FileKind::DoseRates, &["json"], ui.ctx()),
+            MaintenanceAction::GoTo(target) => self.page = page_for(target),
+            MaintenanceAction::SaveResult => {
+                if let Some(result) = maintenance::result_document(&self.maintenance) {
+                    let saved = serde_json::to_string_pretty(&result)
+                        .map_err(|e| e.to_string())
+                        .and_then(|text| web::download("maintenance-result.json", text.as_bytes()))
+                        .map(|()| "Download started.".to_owned());
+                    self.report(saved);
+                }
+            }
+        }
+    }
+
     fn impurities_page(&mut self, ui: &mut egui::Ui) {
         use crate::views::impurities::{self, Context, ImpuritiesAction};
         visuals::heading(
@@ -2716,6 +2745,7 @@ impl eframe::App for Workbench {
                     Page::Certify => self.certify_page(ui),
                     Page::Optimize => self.optimize_page(ui),
                     Page::Compare => self.compare_page(ui),
+                    Page::Maintenance => self.maintenance_page(ui),
                     Page::Data => self.data_page(ui),
                     Page::Advanced => self.advanced_page(ui),
                     // the browser never runs the solver
