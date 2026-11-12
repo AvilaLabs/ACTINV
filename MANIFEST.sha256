@@ -1275,7 +1275,7 @@ a39b5155e624e5540f1c2d88868b22b1f5be1765d872a1e17e70e00dd98821ac  ./crates/actin
 22736b9953c82f108784f40fff7840bdea2a4e82748ef1153096e1fe60ee8668  ./crates/actinv-gui/src/views/waste_uncertainty.rs
 60263898d33d04a0d3c0d99887718ce7a4e4b65df36188bad7d6dcc976e0c43e  ./crates/actinv-gui/src/visuals.rs
 c69b558a7a3a41bfedd8414ac2956f3008a550fd07c17f1bf4688b6482295e92  ./crates/actinv-gui/src/web.rs
-c1e93d0313ec57bac5b962eae280619c8912f4b7ec9dfeba4daad64cb2fca8f1  ./crates/actinv-gui/src/web_app.rs
+1584f3abd8d5ed5b44ceac80669453c51e17ea9e942aa57a52efdd6f4e48a95e  ./crates/actinv-gui/src/web_app.rs
 675fc95f420adc3ae414933ed45512aec4017dd9f4b217d5e4b0e90a12451391  ./crates/actinv-gui/src/worker.rs
 8fbae1766c4b3b7cc1c48c112f5720eea7215ed4bb974f1ea64b0530ad853179  ./crates/actinv-web-engine/Cargo.toml
 a326285a1456fd8a7e1b238c12d4a2e8b3a58eab3dddc7aa8e3ba1efd6db0482  ./crates/actinv-web-engine/src/lib.rs

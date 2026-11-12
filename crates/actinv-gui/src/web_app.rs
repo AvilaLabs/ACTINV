@@ -2435,8 +2435,10 @@ impl Workbench {
         if ui.ctx().content_rect().width() < NARROW {
             return;
         }
+        // A fixed width: the ticks are laid out right to left, so a panel sized to its content
+        // would widen to whatever it is allowed and cover the page.
         egui::Panel::left("navigation")
-            .default_size(215.)
+            .exact_size(215.)
             .resizable(false)
             .show(ui, |ui| {
                 egui::ScrollArea::vertical()
