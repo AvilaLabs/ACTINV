@@ -1,0 +1,15 @@
+[package]
+name = "actinv-verification-kernels"
+version = "0.0.0"
+edition = "2021"
+publish = false
+
+[dependencies]
+num-complex.workspace = true
+
+[dev-dependencies]
+proptest.workspace = true
+loom = "=0.7.2"
+
+[lints]
+workspace = true

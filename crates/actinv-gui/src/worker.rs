@@ -2,17 +2,23 @@ use crate::jobs::Job;
 use actinv_core::spec::Spec;
 use serde_json::Value;
 use std::{
-    io::{Read, Write},
+    io::Read,
     path::PathBuf,
-    process::{Child, Command, Stdio},
     sync::mpsc::{self, Receiver, Sender},
     thread,
+};
+#[cfg(not(test))]
+use std::{
+    io::Write,
+    process::{Child, Command, Stdio},
     time::Duration,
 };
 
 // stdout is a complete JSON result; stderr is diagnostic text and is kept
 // deliberately smaller so a failed child cannot consume unbounded memory.
+#[cfg(not(test))]
 const MAX_STDOUT_BYTES: usize = 256 * 1024 * 1024;
+#[cfg(not(test))]
 const MAX_STDERR_BYTES: usize = 1024 * 1024;
 
 pub struct Handle {
@@ -66,8 +72,10 @@ fn read_bounded(input: impl Read, max_bytes: usize, stream: &str) -> Result<Vec<
     Ok(bytes)
 }
 
+#[cfg(not(test))]
 struct ChildGuard(Child);
 
+#[cfg(not(test))]
 impl Drop for ChildGuard {
     fn drop(&mut self) {
         let _ = self.0.kill();
@@ -75,8 +83,10 @@ impl Drop for ChildGuard {
     }
 }
 
+#[cfg(not(test))]
 struct CacheGuard(PathBuf);
 
+#[cfg(not(test))]
 impl Drop for CacheGuard {
     fn drop(&mut self) {
         let _ = std::fs::remove_dir_all(&self.0);
@@ -87,8 +97,7 @@ pub fn spawn(spec: Spec, cache: PathBuf) -> Result<Handle, String> {
     spawn_input(serde_json::to_vec(&spec).map_err(|e| e.to_string())?, cache)
 }
 
-/// Run an `actinv-impurities-1` screen in the worker. The document must embed its base spec:
-/// the worker resolves no path relative to a document file.
+/// Run an impurities screen with its embedded base specification.
 pub fn spawn_impurities(document: &Value, cache: PathBuf) -> Result<Handle, String> {
     if document["schema"] != IMPURITIES_SCHEMA || !document["base_spec"].is_object() {
         return Err("an impurities screen needs an actinv-impurities-1 document with its base spec embedded".into());
@@ -99,8 +108,7 @@ pub fn spawn_impurities(document: &Value, cache: PathBuf) -> Result<Handle, Stri
     )
 }
 
-/// Run a job (see `jobs`) in the worker. Its files go to the job's `out_dir`, which the worker
-/// does not clean up: only the private cache is removed.
+/// Run a job, retaining its output directory and cleaning only the private cache.
 #[allow(dead_code)]
 pub fn spawn_job(job: &Job, cache: PathBuf) -> Result<Handle, String> {
     job.check()?;
@@ -110,15 +118,16 @@ pub fn spawn_job(job: &Job, cache: PathBuf) -> Result<Handle, String> {
     )
 }
 
-/// The schema that makes the worker run an impurities screen instead of a calculation.
 pub const IMPURITIES_SCHEMA: &str = "actinv-impurities-1";
 
+// Keep application launching out of every unit-test entry point entirely.
+#[cfg(test)]
+fn spawn_input(_input: Vec<u8>, _cache: PathBuf) -> Result<Handle, String> {
+    Err("Calculation spawning is disabled in the unit-test harness; use a separately built application for integration tests".into())
+}
+
+#[cfg(not(test))]
 fn spawn_input(input: Vec<u8>, cache: PathBuf) -> Result<Handle, String> {
-    // A Rust unit-test executable does not run our application main. Launching
-    // current_exe from it would recursively run the entire test suite.
-    if cfg!(test) {
-        return Err("Calculation spawning is disabled in the unit-test harness; use a separately built application for integration tests".into());
-    }
     let exe = std::env::current_exe().map_err(|e| e.to_string())?;
     let (tx, rx) = mpsc::channel();
     let (cancel_tx, cancel_rx) = mpsc::channel();
@@ -161,30 +170,11 @@ fn spawn_input(input: Vec<u8>, cache: PathBuf) -> Result<Handle, String> {
             let out_thread = thread::spawn(|| read_bounded(stdout, MAX_STDOUT_BYTES, "stdout"));
             let err_thread = thread::spawn(|| read_bounded(stderr, MAX_STDERR_BYTES, "stderr"));
 
-            let mut cancelled = false;
-            let status = loop {
-                match cancel_rx.try_recv() {
-                    Ok(_) | Err(mpsc::TryRecvError::Disconnected) => {
-                        cancelled = true;
-                        let _ = child.0.kill();
-                        break child.0.wait();
-                    }
-                    Err(mpsc::TryRecvError::Empty) => {}
-                }
-                match child.0.try_wait() {
-                    Ok(Some(status)) => break Ok(status),
-                    Ok(None) => thread::sleep(Duration::from_millis(10)),
-                    Err(error) => {
-                        let _ = child.0.kill();
-                        let _ = child.0.wait();
-                        break Err(error);
-                    }
-                }
-            };
-            // Cancellation wins a race with process completion.
-            if !cancelled && cancel_rx.try_recv().is_ok() {
-                cancelled = true;
-            }
+            let (status, cancelled) = crate::worker_wait::wait_for_exit(
+                &mut child.0,
+                |check| crate::worker_wait::cancellation_requested(cancel_rx.try_recv(), check),
+                || thread::sleep(Duration::from_millis(10)),
+            );
             let write_result = writer
                 .join()
                 .unwrap_or_else(|_| Err("worker stdin thread panicked".into()));
@@ -253,6 +243,15 @@ pub fn run_in_solver_thread(spec: Spec) -> Result<Value, String> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn spawning_is_disabled_in_the_unit_test_executable() {
+        let spec = Spec::from_json(include_str!("../../../examples/fns_fe_5min.json")).unwrap();
+        let Err(error) = spawn(spec, PathBuf::from("unused-test-cache")) else {
+            panic!("unit tests must never launch their own executable as a worker");
+        };
+        assert!(error.contains("disabled in the unit-test harness"));
+    }
+
     fn status(code: u32) -> std::process::ExitStatus {
         #[cfg(unix)]
         {

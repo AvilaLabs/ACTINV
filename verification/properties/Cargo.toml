@@ -1,0 +1,13 @@
+[package]
+name = "actinv-verification-properties"
+version = "0.0.0"
+edition = "2021"
+publish = false
+
+[dependencies]
+actinv-core = { path = "../../crates/actinv-core" }
+actinv-data = { path = "../../crates/actinv-data" }
+num-complex.workspace = true
+
+[dev-dependencies]
+proptest.workspace = true

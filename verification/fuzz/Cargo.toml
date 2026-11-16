@@ -1,0 +1,45 @@
+[package]
+name = "actinv-verification-fuzz"
+version = "0.0.0"
+edition = "2021"
+publish = false
+
+[package.metadata]
+cargo-fuzz = true
+
+[features]
+spec = ["dep:actinv-core"]
+npz = ["dep:actinv-data", "dep:zip", "dep:serde_json"]
+
+[dependencies]
+libfuzzer-sys = "=0.4.13"
+actinv-verification-kernels = { path = "../kernels" }
+actinv-core = { path = "../../crates/actinv-core", optional = true }
+actinv-data = { path = "../../crates/actinv-data", optional = true }
+zip = { version = "=9.0.4", optional = true, default-features = false, features = ["deflate-flate2"] }
+# Match the core's serde_json features, allowing NPZ and spec fuzz builds to
+# reuse the same instrumented data crate.
+serde_json = { version = "1", optional = true, features = ["float_roundtrip", "raw_value"] }
+
+[[bin]]
+name = "endf"
+path = "fuzz_targets/endf.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "spec"
+required-features = ["spec"]
+path = "fuzz_targets/spec.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "npz"
+required-features = ["npz"]
+path = "fuzz_targets/npz.rs"
+test = false
+doc = false
+bench = false

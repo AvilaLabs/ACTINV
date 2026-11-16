@@ -1,0 +1,11 @@
+# Focus this first campaign on Part 61 decision boundaries and bound aggregation.
+examine_globs = ["crates/actinv-core/src/waste.rs", "crates/actinv-core/src/waste_bounds.rs"]
+examine_re = ["replace <= with <", "replace < with <=", "replace >= with >", "replace > with >=", "finite_total"]
+# Reviewed exclusions and their limits: docs/maintainers/VERIFICATION.md.
+exclude_re = [
+    'replace > with >= in add_table2_row$',
+    'replace \+ with - in finite_total$',
+    'waste\.rs:182:52: replace > with >= in RulePack::validate$',
+]
+additional_cargo_test_args = ["waste"]
+gitignore = true

@@ -1069,8 +1069,32 @@ impl Spectrum {
             let s: f64 = f.iter().sum();
             if s > 0.0 {
                 let k = t / s;
-                for v in f.iter_mut() {
-                    *v *= k;
+                // Keep ordinary spectra bit-compatible. Finite shape values
+                // can nevertheless overflow their sum, or overflow/underflow
+                // the multiplier even when every desired group is finite.
+                let ordinary = s.is_finite()
+                    && k.is_finite()
+                    && (k.is_normal() || t == 0.0)
+                    && f.iter().all(|value| (value * k).is_finite());
+                if ordinary {
+                    for v in f.iter_mut() {
+                        *v *= k;
+                    }
+                } else {
+                    let largest = f.iter().copied().fold(0.0, f64::max);
+                    let scaled_sum: f64 = f.iter().map(|value| value / largest).sum();
+                    let scaled_total = t / scaled_sum;
+                    let multiplier = scaled_total / largest;
+                    for value in &mut f {
+                        // A representable common multiplier retains tiny
+                        // components that value/largest could underflow away.
+                        let multiplied = *value * multiplier;
+                        *value = if multiplier.is_normal() && multiplied.is_finite() {
+                            multiplied
+                        } else {
+                            (*value / largest) * scaled_total
+                        };
+                    }
                 }
             }
         }

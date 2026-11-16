@@ -14,6 +14,8 @@ mod transport;
 mod views;
 mod visuals;
 mod worker;
+#[cfg(not(test))]
+mod worker_wait;
 
 fn main() -> eframe::Result {
     if std::env::var_os("ACTINV_GUI_CALCULATION_WORKER").is_some() {

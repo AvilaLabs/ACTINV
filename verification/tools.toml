@@ -1,0 +1,6 @@
+# Versions used by the runner and the manual CI workflow.
+rust = "1.98.1"
+nightly = "nightly-2026-08-21"
+kani = "0.68.0"
+cargo-fuzz = "0.13.2"
+cargo-mutants = "27.1.0"

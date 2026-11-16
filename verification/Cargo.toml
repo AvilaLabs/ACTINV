@@ -1,0 +1,10 @@
+[workspace]
+resolver = "2"
+members = ["kernels", "properties", "fuzz"]
+
+[workspace.dependencies]
+proptest = { version = "=1.12.0", default-features = false, features = ["std"] }
+num-complex = "0.4"
+
+[workspace.lints.rust]
+unexpected_cfgs = { level = "warn", check-cfg = ['cfg(kani)'] }

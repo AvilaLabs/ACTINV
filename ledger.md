@@ -6737,3 +6737,35 @@ G0–G4 (ledger 385), P197 passes. Its sentences, filled from `results/p197_verd
 The handbook chapter `docs/guide/maintenance.md` quotes them, with the five flagged components that were also within
 2.4%, and is linked from `SUMMARY.md` and the CLI guide. P197 qualifies the planner's arithmetic, not any dose rate
 it reads. The workbench page and the OpenMC dose-map helper are not part of it.
+
+## Entry 387 — Internal correctness audit: spectrum-total normalization repaired; bounded verification coverage added (2026-11-15)
+
+The first-pass review on `0b19b79d` is recorded in `docs/maintainers/CORRECTNESS_AUDIT.md`.
+A validated custom spectrum with weights `[1e308, 1e308]` and total `2` returned
+`[0, 0]`: the finite weights overflowed their sum and produced a zero normalization
+multiplier. Tiny weights could instead produce an infinite multiplier, and a
+subnormal multiplier could lose relative precision despite finite desired groups.
+An independent equal-weight regression reproduced the zero-flux defect before
+the repair; the ordinary-case binary-compatibility control passed on that baseline.
+
+`Spectrum::ascending_flux` now uses a largest-weight rescaling fallback when the
+ordinary normalization intermediates are unusable. A normal common multiplier,
+where available, preserves representable traces. Ordinary normalization retains
+its previous arithmetic. Independent equal/half-weight controls include tiny and
+large shapes/totals, zero groups, a representable trace and a 709-group spectrum;
+ordinary-case bit compatibility is checked separately.
+
+Application and verification formatting, workspace check/clippy/tests for all
+targets/features, verification clippy, and 24,576 generated cases across twelve
+properties passed in the enforced workstation scope. The expanded numerical
+controls independently check forced LU pivots under uniform scaling, branched
+decay, multiple RHS columns and log-rate derivatives. Nineteen default Kani
+harnesses and two Loom tests passed on the current-master integration. ENDF
+rejection experiments that timed out remain unproved. Earlier fuzz/mutation/Miri
+runs are distinguished from this integration in the verification guide.
+
+This is an input-arithmetic regression repair and internal QA expansion. It does
+not change solver algorithms, acceptance tolerances, frozen protocols, historical
+evidence or scientific qualification verdicts. Public API contract hardening,
+scientific input semantics, difficult numerical cases and full worker-lifecycle
+integration remain follow-up audit work.

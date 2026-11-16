@@ -1,7 +1,7 @@
 [workspace]
 resolver = "2"
 members = ["crates/*"]
-exclude = ["python", "target"]
+exclude = ["python", "target", "verification"]
 
 [workspace.package]
 version = "1.7.2"
