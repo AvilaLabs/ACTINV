@@ -189,6 +189,10 @@ REVIEWED_ARCHIVES = {
     # TENDL threshold note supplement: the tracked protocol, scripts, JSON and notes only.
     "paper/tendl-threshold-note/TENDL_threshold_supplement.zip":
         "c4a152e9ad7760e5ab4986a83f5fccd001ef31c90136fbd8d582aa6a44b0ea21",
+    # 764-byte fuzz seed: three independently assembled, synthetic NPY arrays.
+    # Contents are checked by test_g1_p13_data_distribution.py; no evaluated data.
+    "verification/fuzz/seeds/npz/small-library.npz":
+        "074f20da9214bf87d43196a444498571e11b5e9096d42be9f15b26299dfa7b11",
 }
 
 

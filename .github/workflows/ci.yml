@@ -499,6 +499,7 @@ jobs:
         env:
           ACTINV_BIN: target/release/actinv
         run: |
+          python controls/test_g1_p13_data_distribution.py
           python controls/g1_p13_data_distribution.py
           python controls/check_p13.py
 

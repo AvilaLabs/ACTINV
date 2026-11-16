@@ -10,3 +10,8 @@ writer. Members use NPY v1, little-endian values, C order, and stored ZIP entrie
 
 The seed reachability test checks that the production reader accepts this exact
 fixture. The corpus script copies the tested bytes into the writable fuzz corpus.
+
+The distribution control permits only this path with SHA-256
+`074f20da9214bf87d43196a444498571e11b5e9096d42be9f15b26299dfa7b11`.
+Its regression independently decodes the arrays and rejects both an altered
+fixture and an unlisted copy. Other archives remain subject to the bulk-data guard.
