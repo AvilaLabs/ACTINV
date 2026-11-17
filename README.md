@@ -58,11 +58,10 @@ locally and compares the initial FNS iron five-minute decay-heat case at all 20 
 The accompanying [benchmark input and measurement package](https://github.com/IAEA-NDS/open-benchmarks/pull/26)
 was accepted into the IAEA Nuclear Data Section's Open Benchmarks repository the same day.
 
-The peer-reviewed paper describing ACTINV, *ACTINV: an open and reproducible activation and nuclide-inventory
-solver with executable verification and validation*, was accepted for publication in the *Journal of
-Radioanalytical and Nuclear Chemistry* on October 27, 2026. Its results were computed with ACTINV 1.6.1
-([archived on Zenodo](https://doi.org/10.5281/zenodo.23539164)). A link to the article will follow when it is
-published.
+The peer-reviewed paper describing ACTINV, [*ACTINV: an open and reproducible activation and nuclide-inventory
+solver with executable verification and validation*](https://link.springer.com/article/10.1007/s10967-026-11282-4),
+was published online in the *Journal of Radioanalytical and Nuclear Chemistry* on November 5, 2026. Its results
+were computed with ACTINV 1.6.1 ([archived on Zenodo](https://doi.org/10.5281/zenodo.23539164)).
 
 See [external review, integrations, and validation](EXTERNAL_EVIDENCE.md) for the dated evidence and scope,
 and the [JADE setup guide](contrib/jade/README.md) for the merged upstream workflow. These records document
