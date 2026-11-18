@@ -6788,3 +6788,19 @@ integration remain follow-up audit work.
   commit.
 - **Seen.** Unit tests; one candidate development run of C for its exit status and this protocol's G3/G4 result
   (no problems), with no band or share value printed; one baseline run of C for its exit status. No run of A or B.
+
+## Entry 389 — P198 evidence: G0–G5 pass on 8099e7f; shares within 2e-15 of the checker's, bands within 1e-14, A and B bit-identical to master, the bracket runs and Co-60 is partial; P198-PASS pending G6 (2026-11-18)
+
+`results/p198_record.json` and `results/p198_verdict.json`, from `python3 controls/p198_harness.py build`, `observe`
+and `assemble` and `controls/check_p198.py` on `8099e7f` (a clean worktree), inside the AGENTS.md scope.
+- **G2.** On P185's problems A and B every activity, band and sensitivity is bit-identical to master's `6cd018e`, with
+  the same excluded blocks and uncovered rows.
+- **G3.** Largest share difference 2.0e-15, largest relative band difference 9.7e-15, over the five runs that exit 0.
+- **G4.** Master exits 1 on problem C with "activation row 72209 is nonzero where base row 72208 is zero"; the
+  candidate runs it, and Co-60 is partial at every step.
+- **G5.** Every candidate band has a propagated parameter at 1% or more outside the covariance, so every band is
+  partial (they already were from P185's state-resolved parameters). In the bracket the Co-59 capture parameter
+  behind Co-60 is 100% outside: Co-60's 2.7% comes only from parameters the covariance reaches, and the
+  resonance-range capture uncertainty is missing from it. In A and B, a band's largest share is 84–100%. Its
+  relative standard deviations: bracket Co-60 2.72%, Co-58 5.66%, Cr-51 5.58%, Fe-55 12.9%, Mn-54 29%,
+  Mn-56 18.7% at the end of irradiation.

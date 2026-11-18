@@ -1,0 +1,112 @@
+{
+ "base": "6cd018eebfdd83b2ce28e8fc7a723fbeb9f61472",
+ "build": {
+  "baseline": {
+   "binary": "/home/connoravila/Documents/actinv-wt-p198/target/p198-work/base-target/release/actinv",
+   "binary_sha256": "e9ad1528aeb3e00ff385756cf69246c917304fb2b2f11bab1aacebd9b7051ad7",
+   "exit": 0,
+   "git_dirty": "",
+   "git_head": "6cd018eebfdd83b2ce28e8fc7a723fbeb9f61472",
+   "stderr": "0.3.10\n   Compiling unicode-ident v1.0.24\n   Compiling crossbeam-epoch v0.9.20\n   Compiling typenum v1.20.1\n   Compiling ring v0.17.14\n   Compiling miniz_oxide v0.8.9\n   Compiling serde_core v1.0.229\n   Compiling crossbeam-deque v0.8.7\n   Compiling itoa v1.0.18\n   Compiling autocfg v1.5.1\n   Compiling num-traits v0.2.19\n   Compiling flate2 v1.1.9\n   Compiling zeroize v1.9.0\n   Compiling zmij v1.0.23\n   Compiling rayon-core v1.13.0\n   Compiling rustls-pki-types v1.15.1\n   Compiling getrandom v0.2.17\n   Compiling syn v3.0.4\n   Compiling crypto-common v0.1.7\n   Compiling block-buffer v0.10.4\n   Compiling serde_json v1.0.151\n   Compiling hashbrown v0.17.1\n   Compiling equivalent v1.0.2\n   Compiling httparse v1.10.1\n   Compiling libm v0.2.16\n   Compiling serde v1.0.229\n   Compiling untrusted v0.9.0\n   Compiling memchr v2.8.3\n   Compiling indexmap v2.14.0\n   Compiling digest v0.10.7\n   Compiling serde_derive v1.0.229\n   Compiling log v0.4.34\n   Compiling cpufeatures v0.2.17\n   Compiling typed-path v0.12.3\n   Compiling bytes v1.12.1\n   Compiling rustls v0.23.45\n   Compiling either v1.18.0\n   Compiling hdf5-pure v0.39.0\n   Compiling rayon v1.12.0\n   Compiling http v1.5.0\n   Compiling zip v9.0.4\n   Compiling sha2 v0.10.9\n   Compiling num-complex v0.4.6\n   Compiling rustls-webpki v0.103.15\n   Compiling subtle v2.6.1\n   Compiling once_cell v1.21.4\n   Compiling byteorder v1.5.0\n   Compiling base64 v0.23.1\n   Compiling ureq-proto v0.6.1\n   Compiling actinv-data v1.7.2 (/home/connoravila/Documents/actinv-wt-p198/target/p198-work/base-src/crates/actinv-data)\n   Compiling webpki-roots v1.0.9\n   Compiling utf8-zero v0.8.1\n   Compiling percent-encoding v2.3.2\n   Compiling ureq v3.4.0\n   Compiling actinv-core v1.7.2 (/home/connoravila/Documents/actinv-wt-p198/target/p198-work/base-src/crates/actinv-core)\n   Compiling actinv-cli v1.7.2 (/home/connoravila/Documents/actinv-wt-p198/target/p198-work/base-src/crates/actinv-cli)\n    Finished `release` profile [optimized] target(s) in 3m 38s\n"
+  },
+  "candidate": {
+   "binary": "/home/connoravila/Documents/actinv-wt-p198/target/release/actinv",
+   "binary_sha256": "c894e12e611c2cf4d44260dec2420386aa56bb84feb1bc70590dc0019361f219",
+   "exit": 0,
+   "git_dirty": "",
+   "git_head": "8099e7f00652dba3edab22a4c9f25071a9bb22f4",
+   "stderr": "0.9.20\n   Compiling unicode-ident v1.0.24\n   Compiling typenum v1.20.1\n   Compiling libc v0.2.189\n   Compiling simd-adler32 v0.3.10\n   Compiling adler2 v2.0.1\n   Compiling quote v1.0.47\n   Compiling miniz_oxide v0.8.9\n   Compiling ring v0.17.14\n   Compiling itoa v1.0.18\n   Compiling serde_core v1.0.229\n   Compiling crossbeam-deque v0.8.7\n   Compiling autocfg v1.5.1\n   Compiling num-traits v0.2.19\n   Compiling flate2 v1.1.9\n   Compiling zeroize v1.9.0\n   Compiling rayon-core v1.13.0\n   Compiling zmij v1.0.23\n   Compiling rustls-pki-types v1.15.1\n   Compiling getrandom v0.2.17\n   Compiling syn v3.0.4\n   Compiling crypto-common v0.1.7\n   Compiling block-buffer v0.10.4\n   Compiling serde_json v1.0.151\n   Compiling equivalent v1.0.2\n   Compiling untrusted v0.9.0\n   Compiling libm v0.2.16\n   Compiling memchr v2.8.3\n   Compiling serde v1.0.229\n   Compiling httparse v1.10.1\n   Compiling hashbrown v0.17.1\n   Compiling indexmap v2.14.0\n   Compiling digest v0.10.7\n   Compiling serde_derive v1.0.229\n   Compiling either v1.18.0\n   Compiling rustls v0.23.45\n   Compiling log v0.4.34\n   Compiling bytes v1.12.1\n   Compiling cpufeatures v0.2.17\n   Compiling hdf5-pure v0.39.0\n   Compiling typed-path v0.12.3\n   Compiling sha2 v0.10.9\n   Compiling zip v9.0.4\n   Compiling http v1.5.0\n   Compiling rayon v1.12.0\n   Compiling num-complex v0.4.6\n   Compiling rustls-webpki v0.103.15\n   Compiling subtle v2.6.1\n   Compiling base64 v0.23.1\n   Compiling byteorder v1.5.0\n   Compiling once_cell v1.21.4\n   Compiling ureq-proto v0.6.1\n   Compiling actinv-data v1.7.2 (/home/connoravila/Documents/actinv-wt-p198/crates/actinv-data)\n   Compiling webpki-roots v1.0.9\n   Compiling percent-encoding v2.3.2\n   Compiling utf8-zero v0.8.1\n   Compiling ureq v3.4.0\n   Compiling actinv-core v1.7.2 (/home/connoravila/Documents/actinv-wt-p198/crates/actinv-core)\n   Compiling actinv-cli v1.7.2 (/home/connoravila/Documents/actinv-wt-p198/crates/actinv-cli)\n    Finished `release` profile [optimized] target(s) in 3m 36s\n"
+  },
+  "cgroup": {
+   "cpu_max": "200000 100000",
+   "memory_max": "6442450944",
+   "memory_swap_max": "0",
+   "path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p1405921-i47512553.scope",
+   "pids_max": "128"
+  }
+ },
+ "observe": {
+  "cgroup": {
+   "cpu_max": "200000 100000",
+   "memory_max": "6442450944",
+   "memory_swap_max": "0",
+   "path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p1405921-i47512553.scope",
+   "pids_max": "128"
+  },
+  "git_head": "8099e7f00652dba3edab22a4c9f25071a9bb22f4",
+  "runs": {
+   "baseline_A": {
+    "binary": "baseline",
+    "binary_sha256": "e9ad1528aeb3e00ff385756cf69246c917304fb2b2f11bab1aacebd9b7051ad7",
+    "exit": 0,
+    "output": "/home/connoravila/Documents/actinv-wt-p198/target/p198-work/baseline_A.json",
+    "output_sha256": "275a80cd3f5e27409e8495daa5510b5cc6aab2a9de746a6a14e2b58e438438fc",
+    "problem": "A",
+    "spec": "/home/connoravila/Documents/actinv-wt-p198/target/p198-work/problem_A.json",
+    "spec_sha256": "366f5144e1076df5b0374656eb4b9e48f2896e79ec6974f137e9e453c0897733",
+    "stderr": "4 steps, 55 of 3873 states, 6190.8 ms -> /home/connoravila/Documents/actinv-wt-p198/target/p198-work/baseline_A.json\n"
+   },
+   "baseline_B": {
+    "binary": "baseline",
+    "binary_sha256": "e9ad1528aeb3e00ff385756cf69246c917304fb2b2f11bab1aacebd9b7051ad7",
+    "exit": 0,
+    "output": "/home/connoravila/Documents/actinv-wt-p198/target/p198-work/baseline_B.json",
+    "output_sha256": "01519980b3e44450caccc2b391e1354f18d0de46d152384a0489948fce79aa1d",
+    "problem": "B",
+    "spec": "/home/connoravila/Documents/actinv-wt-p198/target/p198-work/problem_B.json",
+    "spec_sha256": "58795d0815b66260ddce504d208abe46c0b023b599dce1a214d0bdbf270f53a7",
+    "stderr": "4 steps, 225 of 3873 states, 49424.4 ms -> /home/connoravila/Documents/actinv-wt-p198/target/p198-work/baseline_B.json\n"
+   },
+   "baseline_C": {
+    "binary": "baseline",
+    "binary_sha256": "e9ad1528aeb3e00ff385756cf69246c917304fb2b2f11bab1aacebd9b7051ad7",
+    "exit": 1,
+    "output": "/home/connoravila/Documents/actinv-wt-p198/target/p198-work/baseline_C.json",
+    "output_sha256": null,
+    "problem": "C",
+    "spec": "/home/connoravila/Documents/actinv-wt-p198/target/p198-work/problem_C.json",
+    "spec_sha256": "eed2c07171c141edf16407989fe37b646276d67f914baa38c78ad116fc9e5e34",
+    "stderr": "activation row 72209 is nonzero where base row 72208 is zero\n"
+   },
+   "candidate_A": {
+    "binary": "candidate",
+    "binary_sha256": "c894e12e611c2cf4d44260dec2420386aa56bb84feb1bc70590dc0019361f219",
+    "exit": 0,
+    "output": "/home/connoravila/Documents/actinv-wt-p198/target/p198-work/candidate_A.json",
+    "output_sha256": "ea8289b7c176bc46ff68ac82fe05abac981928d79822f9a9251fd0398fd31c89",
+    "problem": "A",
+    "spec": "/home/connoravila/Documents/actinv-wt-p198/target/p198-work/problem_A.json",
+    "spec_sha256": "366f5144e1076df5b0374656eb4b9e48f2896e79ec6974f137e9e453c0897733",
+    "stderr": "4 steps, 55 of 3873 states, 7601.1 ms -> /home/connoravila/Documents/actinv-wt-p198/target/p198-work/candidate_A.json\n"
+   },
+   "candidate_B": {
+    "binary": "candidate",
+    "binary_sha256": "c894e12e611c2cf4d44260dec2420386aa56bb84feb1bc70590dc0019361f219",
+    "exit": 0,
+    "output": "/home/connoravila/Documents/actinv-wt-p198/target/p198-work/candidate_B.json",
+    "output_sha256": "18a7ccfbeff162bcf4c82d1575edd8bb4ec048db9e5fd22bee4f432678f25a0b",
+    "problem": "B",
+    "spec": "/home/connoravila/Documents/actinv-wt-p198/target/p198-work/problem_B.json",
+    "spec_sha256": "58795d0815b66260ddce504d208abe46c0b023b599dce1a214d0bdbf270f53a7",
+    "stderr": "4 steps, 225 of 3873 states, 52924.3 ms -> /home/connoravila/Documents/actinv-wt-p198/target/p198-work/candidate_B.json\n"
+   },
+   "candidate_C": {
+    "binary": "candidate",
+    "binary_sha256": "c894e12e611c2cf4d44260dec2420386aa56bb84feb1bc70590dc0019361f219",
+    "exit": 0,
+    "output": "/home/connoravila/Documents/actinv-wt-p198/target/p198-work/candidate_C.json",
+    "output_sha256": "020a73d5324ff173cd8c3db7496488a0b1e7b3ec9eabd7941852a426222ba437",
+    "problem": "C",
+    "spec": "/home/connoravila/Documents/actinv-wt-p198/target/p198-work/problem_C.json",
+    "spec_sha256": "eed2c07171c141edf16407989fe37b646276d67f914baa38c78ad116fc9e5e34",
+    "stderr": "3 steps, 268 of 3873 states, 45096.1 ms -> /home/connoravila/Documents/actinv-wt-p198/target/p198-work/candidate_C.json\n"
+   }
+  }
+ },
+ "pins": {
+  "activation": "ec4c72bf598dc8ad3d533d9cfafdcf493e2d1f949a3e4db6251495659b68cc44",
+  "bracket": "32811eb64f86bd8457ca0b68b708268be4721dfd4af78348b1fc81c47d191f25",
+  "cov_v120": "c19dec86b44ad5d90b66c9ab94d53e18641a1d354a89402a4da7986b6c530cde"
+ },
+ "schema": "actinv-p198-record-1"
+}
