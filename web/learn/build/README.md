@@ -2,7 +2,7 @@
 
 `web/learn` is the interactive course served at `/learn/` (`scripts/prepare_web.py` copies it into the web
 bundle, without this folder). The pages are static HTML, CSS and JavaScript modules; nothing is compiled.
-Fonts are the latin subsets of Bricolage Grotesque, Source Serif 4 and IBM Plex Mono (SIL OFL 1.1).
+Fonts are the two the ACTINV app uses, egui's defaults from `epaint_default_fonts` 0.36.2: Ubuntu Light (Ubuntu Font Licence) and Hack (its own licence). The page copies the workbench look: its colours, flat buttons, 1 px frames and side panel of numbered steps.
 
 ## Chapter 1: Your first irradiation
 

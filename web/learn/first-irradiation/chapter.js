@@ -1,5 +1,5 @@
 import {
-  sound, soundButton, glossary, complete, isDone, markTasks, rail, onProgress, toast, resetProgress, store,
+  sound, soundButton, themeButton, glossary, complete, isDone, markTasks, rail, onProgress, toast, resetProgress, store,
   plot, svg, sci, doseText, bqText, wattText, durationText, meter, reducedMotion,
 } from "../learn.js";
 
@@ -28,6 +28,7 @@ glossary({
 });
 
 soundButton($("#sound"));
+themeButton($("#theme"));
 markTasks();
 rail({
   welcome: ["welcome"], physics: ["beam", "halflife"], problem: ["file"], guess: ["guess"],
@@ -105,10 +106,10 @@ const nice = (n) => n.replace(/^([A-Z][a-z]?)(\d+)(m1)?$/, (_, el, a, m) => `${e
         }
       }
       ctx.beginPath(); ctx.arc(a.x, a.y, a.kind ? 5.2 : 3.6, 0, Math.PI * 2);
-      ctx.fillStyle = a.kind ? a.kind.color : style.getPropertyValue("--grid-strong");
+      ctx.fillStyle = a.kind ? a.kind.color : style.getPropertyValue("--stroke");
       ctx.fill();
     }
-    ctx.fillStyle = style.getPropertyValue("--mark");
+    ctx.fillStyle = style.getPropertyValue("--accent");
     for (const n of neutrons) { ctx.beginPath(); ctx.arc(n.x, n.y, 2.2, 0, Math.PI * 2); ctx.fill(); }
     flashes = flashes.filter((f) => {
       f.r += dt * 60;
@@ -212,7 +213,7 @@ const nice = (n) => n.replace(/^([A-Z][a-z]?)(\d+)(m1)?$/, (_, el, a, m) => `${e
       .map((k) => `  <span class="k">"${k}"</span>: ${render(problem[k], 1, k)}`).join(",\n") + "</span>").join(",\n") + "\n}";
   PARTS.forEach((part) => {
     const c = document.createElement("button");
-    c.type = "button"; c.className = "chip" + (seen.has(part.id) ? " seen" : ""); c.textContent = part.name;
+    c.type = "button"; c.className = "sel chip" + (seen.has(part.id) ? " seen" : ""); c.textContent = part.name;
     c.setAttribute("role", "tab"); c.dataset.part = part.id;
     c.addEventListener("click", () => select(part.id));
     chips.append(c);
@@ -656,9 +657,9 @@ function buildReveal() {
   svg("line", { x1: p.x(LIMIT), x2: p.x(LIMIT), y1: p.m.t, y2: p.H - p.m.b, class: "limit" }, p.layer);
   svg("circle", { cx: p.x(g), cy, r: 10, class: "guess locked" }, p.top);
   const close = Math.abs(p.x(g) - p.x(truth1d)) < 110;
-  svg("text", { x: p.x(g), y: p.m.t - (close ? 26 : 10), "text-anchor": "middle", class: "landmark", style: "fill:var(--mark)" }, p.top).textContent = "your guess";
-  const dot = svg("circle", { cx: p.x(1e-8), cy, r: 10, fill: "var(--ink)" }, p.top);
-  const lab = svg("text", { x: p.x(truth1d), y: p.m.t - 10, "text-anchor": "middle", class: "landmark", style: "fill:var(--ink);font-weight:700" }, p.top);
+  svg("text", { x: p.x(g), y: p.m.t - (close ? 26 : 10), "text-anchor": "middle", class: "landmark", style: "fill:var(--warn)" }, p.top).textContent = "your guess";
+  const dot = svg("circle", { cx: p.x(1e-8), cy, r: 10, fill: "var(--accent)" }, p.top);
+  const lab = svg("text", { x: p.x(truth1d), y: p.m.t - 10, "text-anchor": "middle", class: "landmark", style: "fill:var(--accent);font-weight:400" }, p.top);
   lab.textContent = `ACTINV: ${doseText(truth1d)}`;
   if (!reducedMotion) {
     dot.animate([{ cx: p.x(1e-8) }, { cx: p.x(truth1d) }], { duration: 1400, easing: "cubic-bezier(.2,.9,.3,1.1)", fill: "forwards" });
@@ -696,7 +697,7 @@ function buildCooling() {
   svg("text", { x: p.x(100 * YEAR) - 4, y: p.y(LIMIT) - 6, "text-anchor": "end", class: "limit-label" }, p.layer).textContent = "access limit 3 mSv/h";
   p.line(idx.map(after), idx.map((i) => run.dose_Gy_h[i]), { class: "ink" }, { animate: true });
   const cursor = svg("line", { class: "cursor", y1: p.m.t, y2: p.H - p.m.b }, p.top);
-  const dot = svg("circle", { r: 6, fill: "var(--ink)", stroke: "var(--sheet)", "stroke-width": 2 }, p.top);
+  const dot = svg("circle", { r: 6, fill: "var(--accent)", stroke: "var(--frame)", "stroke-width": 2 }, p.top);
   const slider = $("#cool");
   slider.max = idx.length - 1;
   slider.value = 6; // one day
@@ -709,7 +710,7 @@ function buildCooling() {
     $("#s-act").textContent = bqText(run.activity_Bq[i]);
     $("#s-heat").textContent = wattText(run.heat_W[i]);
     $("#s-dose").textContent = doseText(d);
-    $("#s-dose").style.color = d >= LIMIT ? "#c92a2a" : "";
+    $("#s-dose").style.color = d >= LIMIT ? "var(--err)" : "";
     shares($("#shares"), run.dose_by, d, i);
     meter.set(d, `${durationText(t)} after shutdown`);
     if (d < LIMIT && run.dose_Gy_h[idx[+slider.value - 1] ?? i] >= LIMIT && complete("access"))
@@ -745,10 +746,10 @@ function buildCobalt() {
   });
   svg("line", { x1: p.x(60), x2: p.x(100 * YEAR), y1: p.y(LIMIT), y2: p.y(LIMIT), class: "limit" }, p.layer);
   p.line(idx.map(after), idx.map((i) => data.runs[0].dose_Gy_h[i]), { class: "ink thin" });
-  const cur = p.line(idx.map(after), idx.map((i) => data.runs[0].dose_Gy_h[i]), { class: "ink", style: "stroke:var(--mark)" });
-  const accLine = svg("line", { class: "cursor", y1: p.m.t, y2: p.H - p.m.b, style: "stroke:var(--mark);stroke-dasharray:3 3;opacity:.9" }, p.top);
+  const cur = p.line(idx.map(after), idx.map((i) => data.runs[0].dose_Gy_h[i]), { class: "ink", style: "stroke:var(--warn)" });
+  const accLine = svg("line", { class: "cursor", y1: p.m.t, y2: p.H - p.m.b, style: "stroke:var(--warn);stroke-dasharray:3 3;opacity:.9" }, p.top);
   const legend = document.createElement("div"); legend.className = "legend";
-  legend.innerHTML = `<span><i style="background:var(--ink);opacity:.55"></i>no cobalt</span><span><i style="background:var(--mark)"></i>with the cobalt you choose</span><span><i style="background:#c92a2a"></i>access limit</span>`;
+  legend.innerHTML = `<span><i style="background:var(--accent);opacity:.55"></i>no cobalt</span><span><i style="background:var(--warn)"></i>with the cobalt you choose</span><span><i style="background:var(--err)"></i>access limit</span>`;
   host.append(legend);
   const slider = $("#co");
   slider.max = data.runs.length - 1;
@@ -797,7 +798,7 @@ function buildCobalt() {
     const opts = box.querySelector(".opts"), why = box.querySelector(".why");
     const order = q.a.map((x, i) => [x, i]).sort((a, b) => ((a[1] * 7 + qi * 3) % 5) - ((b[1] * 7 + qi * 3) % 5));
     order.forEach(([[text, right]]) => {
-      const b = document.createElement("button"); b.type = "button"; b.className = "opt"; b.textContent = text;
+      const b = document.createElement("button"); b.type = "button"; b.className = "btn opt"; b.textContent = text;
       b.addEventListener("click", () => {
         if (right) {
           b.classList.add("right"); why.hidden = false; why.textContent = q.why;
@@ -818,10 +819,8 @@ const ALL = ["welcome", "beam", "halflife", "file", "guess", "ran", "access", "h
 const wasComplete = ALL.every(isDone);
 onProgress((set) => {
   const n = ALL.filter((t) => set.has(t)).length;
-  $("#ring").style.strokeDashoffset = 339 * (1 - n / ALL.length);
   if (n === ALL.length) {
-    $("#finish").classList.add("earned");
-    $("#finish-title").textContent = "Chapter 1 complete";
+    $("#finish-title").innerHTML = '<svg class="done-mark" viewBox="0 0 16 16" aria-hidden="true"><path d="M2.5 8.5l3.5 3.5L13.5 4"/></svg>Chapter 1 complete';
     $("#finish-text").textContent = "You made a steel bracket radioactive, predicted its dose, ran ACTINV and found the impurity that decides when people can work near it. Take the problem home and run it yourself.";
     if (!wasComplete) sound.fanfare();
   }

@@ -1,1 +1,2 @@
-Fonts: Bricolage Grotesque, Source Serif 4, IBM Plex Mono — SIL Open Font License 1.1, from Google Fonts (latin subset).
+The two fonts the ACTINV app uses (egui's defaults, from epaint_default_fonts 0.36.2):
+Ubuntu-Light.ttf under the Ubuntu Font Licence (UFL.txt); Hack-Regular.ttf under its licence (Hack-Regular.txt).

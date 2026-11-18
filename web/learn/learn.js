@@ -72,12 +72,22 @@ addEventListener("keydown", () => sound.unlock(), { once: true });
 export function soundButton(btn) {
   const draw = () => {
     btn.setAttribute("aria-pressed", String(sound.on));
-    btn.innerHTML = (sound.on
-      ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 9v6h4l5 4V5L8 9H4z"/><path d="M16 9a4 4 0 0 1 0 6M18.5 6.5a8 8 0 0 1 0 11"/></svg>Sound on'
-      : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 9v6h4l5 4V5L8 9H4z"/><path d="M17 9l5 6M22 9l-5 6"/></svg>Sound off');
+    btn.textContent = sound.on ? "Sound off" : "Sound on";
+    btn.title = sound.on ? "Sound is on" : "Sound is off";
   };
   btn.addEventListener("click", () => { sound.set(!sound.on); draw(); if (sound.on) sound.tick(); });
   sound.onChange(draw);
+  draw();
+}
+
+/* Light and dark, as the workbench's "Dark theme" button. */
+export function themeButton(btn) {
+  const draw = () => { btn.textContent = document.documentElement.dataset.theme === "dark" ? "Light theme" : "Dark theme"; };
+  btn.addEventListener("click", () => {
+    const dark = document.documentElement.dataset.theme !== "dark";
+    if (dark) document.documentElement.dataset.theme = "dark"; else delete document.documentElement.dataset.theme;
+    store.set("theme", dark ? "Dark" : "Light"); sound.tick(); draw();
+  });
   draw();
 }
 
@@ -135,16 +145,17 @@ export function complete(id, { quiet = false } = {}) {
 export function resetProgress() { done.clear(); store.set("done", []); location.reload(); }
 export function markTasks() {
   document.querySelectorAll(".task[data-task]").forEach((t) => {
-    if (!t.querySelector(".box")) t.insertAdjacentHTML("afterbegin", '<span class="box" aria-hidden="true"></span>');
+    if (!t.querySelector(".box")) t.insertAdjacentHTML("afterbegin", '<span class="box" aria-hidden="true"><svg viewBox="0 0 12 12"><path d="M2 6.5l2.6 2.6L10 3"/></svg></span>');
     if (done.has(t.dataset.task)) t.classList.add("done");
   });
 }
 
+/* Messages go to the status bar at the bottom, where the workbench puts them. */
 export function toast(text) {
-  let el = document.querySelector(".toast");
-  if (!el) { el = document.createElement("div"); el.className = "toast"; el.setAttribute("role", "status"); document.body.append(el); }
-  el.textContent = text; el.classList.add("shown");
-  clearTimeout(el._t); el._t = setTimeout(() => el.classList.remove("shown"), 2600);
+  const el = document.querySelector("#status");
+  if (!el) return;
+  el.textContent = text; el.classList.add("fresh");
+  clearTimeout(el._t); el._t = setTimeout(() => el.classList.remove("fresh"), 2600);
 }
 
 /* ---------- Numbers people can read ---------- */
@@ -228,6 +239,7 @@ export function plot(container, opts) {
   if (opts.x.minor) for (const v of opts.x.minor) svg("line", { x1: x(v), x2: x(v), y1: m.t, y2: H - m.b, class: "gminor" }, grid);
   if (opts.x.title) svg("text", { x: (m.l + W - m.r) / 2, y: H - 6, "text-anchor": "middle", class: "axis-title" }, root).textContent = opts.x.title;
   if (opts.y.title) svg("text", { x: 14, y: (m.t + H - m.b) / 2, transform: `rotate(-90 14 ${(m.t + H - m.b) / 2})`, "text-anchor": "middle", class: "axis-title" }, root).textContent = opts.y.title;
+  svg("rect", { x: m.l, y: m.t, width: W - m.l - m.r, height: H - m.t - m.b, class: "pframe" }, grid);
   const layer = svg("g", {}, root);
   const top = svg("g", {}, root);
   const clampY = (v) => Math.min(Math.max(v, opts.y.domain[0]), opts.y.domain[1]);
@@ -264,21 +276,22 @@ export const meter = (() => {
     el = document.createElement("aside");
     el.className = "meter"; el.setAttribute("aria-label", "Survey meter");
     el.innerHTML = `
-      <div class="row"><span class="label"><span class="led"></span>Survey meter</span><button type="button" class="mute">${muted ? "Unmute" : "Mute"}</button></div>
+      <div class="title"><span><span class="led"></span>Survey meter</span><button type="button" class="btn mute">${muted ? "Unmute" : "Mute"}</button></div>
+      <div class="body">
       <svg class="dial" viewBox="0 0 200 74" aria-hidden="true">
-        <path d="M18 68 A82 82 0 0 1 182 68" fill="none" stroke="#3a4166" stroke-width="10" stroke-linecap="round"/>
-        <path d="M164.2 17 A82 82 0 0 1 182 68" fill="none" stroke="#c92a2a" stroke-width="10" stroke-linecap="round" opacity=".7"/>
+        <path class="arc" d="M18 68 A82 82 0 0 1 182 68" fill="none" stroke-width="6"/>
+        <path class="hot" d="M164.2 17 A82 82 0 0 1 182 68" fill="none" stroke-width="6"/>
         <g class="ticks"></g>
-        <line class="needle" x1="100" y1="68" x2="100" y2="12" stroke="#ffd08a" stroke-width="3" stroke-linecap="round"/>
-        <circle cx="100" cy="68" r="5" fill="#ffd08a"/>
+        <line class="needle" x1="100" y1="68" x2="100" y2="12" stroke-width="2"/>
+        <circle cx="100" cy="68" r="4" fill="currentColor" class="hub"/>
       </svg>
-      <div class="val" aria-live="polite">—</div><div class="sub">waiting for a result</div>`;
+      <div class="val" aria-live="polite">—</div><div class="sub">waiting for a result</div></div>`;
     document.body.append(el);
     needle = el.querySelector(".needle"); valEl = el.querySelector(".val"); subEl = el.querySelector(".sub"); led = el.querySelector(".led");
     const ticks = el.querySelector(".ticks");
     for (let i = 0; i <= 8; i++) {
       const a = Math.PI * (1 - i / 8);
-      svg("line", { x1: 100 + 70 * Math.cos(a), y1: 68 - 70 * Math.sin(a), x2: 100 + 62 * Math.cos(a), y2: 68 - 62 * Math.sin(a), stroke: "#8d96b8", "stroke-width": 1.5 }, ticks);
+      svg("line", { x1: 100 + 70 * Math.cos(a), y1: 68 - 70 * Math.sin(a), x2: 100 + 62 * Math.cos(a), y2: 68 - 62 * Math.sin(a), class: "arc", "stroke-width": 1 }, ticks);
     }
     el.querySelector(".mute").addEventListener("click", () => {
       muted = !muted; store.set("meter-muted", muted);
@@ -313,7 +326,12 @@ export const meter = (() => {
 
 /* ---------- Rail: current step and finished steps ---------- */
 export function rail(stepTasks) {
-  const links = [...document.querySelectorAll(".rail a")];
+  const links = [...document.querySelectorAll(".side a")];
+  links.forEach((a) => a.insertAdjacentHTML("beforeend", '<svg class="tick" viewBox="0 0 14 14" aria-hidden="true"><path d="M2 7.5l3 3L12 3.5"/></svg>'));
+  const side = document.querySelector(".side"), menu = document.querySelector("#menu");
+  menu?.addEventListener("click", (e) => { e.stopPropagation(); side.classList.toggle("open"); });
+  links.forEach((a) => a.addEventListener("click", () => side.classList.remove("open")));
+  addEventListener("click", (e) => { if (side.classList.contains("open") && !side.contains(e.target)) side.classList.remove("open"); });
   const sections = links.map((a) => document.querySelector(a.getAttribute("href")));
   const io = new IntersectionObserver((entries) => {
     entries.forEach((e) => {
@@ -321,14 +339,14 @@ export function rail(stepTasks) {
     });
   }, { rootMargin: "-40% 0px -55% 0px" });
   sections.forEach((s) => s && io.observe(s));
-  const bar = document.querySelector(".topbar .progress i");
-  const all = Object.values(stepTasks).flat();
+  const meta = document.querySelector("#progress-text");
   onProgress((set) => {
     links.forEach((a) => {
       const id = a.getAttribute("href").slice(1);
       const need = stepTasks[id] || [];
       a.classList.toggle("done", need.length > 0 && need.every((t) => set.has(t)));
     });
-    if (bar) bar.style.width = (100 * all.filter((t) => set.has(t)).length / all.length) + "%";
+    const n = links.filter((a) => a.classList.contains("done")).length;
+    if (meta) meta.textContent = `${n} of ${links.length} steps done`;
   });
 }
