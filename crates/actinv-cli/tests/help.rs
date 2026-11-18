@@ -127,6 +127,6 @@ fn doctor_without_data_says_to_fetch_it() {
     assert_eq!(output.status.code(), Some(1));
     let stdout = text(&output.stdout);
     assert!(stdout.contains("Data directory: "));
-    assert!(stdout.contains("Data catalog: 1.2.0 (standard bundle tendl-2025-neutron)"));
+    assert!(stdout.contains("Data catalog: 1.3.0 (standard bundle tendl-2025-neutron)"));
     assert!(text(&output.stderr).contains("Next: actinv data fetch"));
 }

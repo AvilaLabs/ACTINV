@@ -425,7 +425,7 @@ table sum, because it reports no covariance between nuclides.
   }],
   "sampling": {
     "channels": {"cross_section_mf33": true, "decay_constants": true},
-    "covariance": {"path": "catalog:tendl-2025-neutron-709g-covariance"},
+    "covariance": {"path": "catalog:tendl-2025-irdff-ii-neutron-709g-covariance"},
     "samples": 512,
     "seed": 20261016,
     "keep_samples": "samples"
@@ -599,7 +599,7 @@ minimum (`order_statistic.minimum_samples` states it for your level).
   "confidence_level": 0.95,
   "sampling": {
     "channels": {"cross_section_mf33": true, "decay_constants": true, "flux_rel_std": 0.05},
-    "covariance": {"path": "catalog:tendl-2025-neutron-709g-covariance"},
+    "covariance": {"path": "catalog:tendl-2025-irdff-ii-neutron-709g-covariance"},
     "samples": 200,
     "seed": 146001,
     "keep_samples": "samples"

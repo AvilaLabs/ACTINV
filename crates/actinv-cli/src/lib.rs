@@ -1074,9 +1074,9 @@ mod tests {
         // and controls still read this copy, so the two must never drift.
         assert_eq!(
             embedded_catalog_json(),
-            include_str!("../data/actinv-data-catalog-v1.2.0.json")
+            include_str!("../data/actinv-data-catalog-v1.3.0.json")
         );
-        assert_eq!(embedded_catalog().unwrap().bundles.len(), 7);
+        assert_eq!(embedded_catalog().unwrap().bundles.len(), 8);
     }
 
     #[test]

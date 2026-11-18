@@ -6824,3 +6824,25 @@ G0–G5 (ledger 389), P198 passes. Its sentences, filled from `results/p198_verd
 The handbook's specification chapter describes the new fields. The band still leaves out resonance-range
 uncertainty; a sidecar that fills it for IRDFF-II's reactions (P188's) is not yet shipped. The work directories and
 the baseline worktree were deleted after the verdict.
+
+## Entry 391 — Data catalog 1.3.0: P188's IRDFF-II covariance sidecar shipped and made the default (2026-11-18)
+
+Owner direction (2026-11-18): ship P188's sidecar and make it the default covariance. The sidecar was rebuilt from
+P188's sealed code (`controls/p188.py stage`, `build`) after its inputs were restored: `IRDFF-II_ENDF.zip` downloaded
+again (SHA-256 `225b2578…`, P188's pin; member `162b1de7…`), and the 2,850 TENDL-2025 sources extracted from
+`TENDL-n.tgz`, 2,849 matching the v1.2.0 index's `source_sha256` directly and Pb-208 after P10 Amendment D's repair
+(`scripts/prepare_tendl_2025_neutron_working.py`). The rebuilt sidecar is byte-identical to P188's
+(`622a62054973ffbf8e08059c5aeefaa15b8534a4ac1f6c5d31c5672ffdf4e859`). Its index differs from P188's in build-path and
+builder fields; its counts (2,850 targets, 84,489 sections, 284,506 components) match P188's build.
+- **Catalog 1.3.0** adds `tendl-2025-irdff-ii-neutron-709g-covariance` and its index and the notice
+  `ACTINV-DATA-NOTICE-v1.3.0.md`. Bundle `tendl-2025-neutron-covariance` installs the new sidecar; the new bundle
+  `tendl-2025-neutron-tendl-covariance` installs the unchanged TENDL-2025-only sidecar. Every v1.2.0 artifact is
+  unchanged. Published as GitHub release `data-v1.3.0`; `actinv data fetch tendl-2025-neutron-covariance` from it
+  verified all 8 files.
+- **Defaults:** the desktop/browser pages, `actinv import-fispact` and the handbook examples name the new sidecar.
+  Examples and controls pinned to the TENDL-2025-only sidecar's hash (P175, P195 and their examples) keep it.
+- **Controls:** P13 pinned to catalog 1.3.0 (23 artifacts, 8 bundles, 18 evidence identities; the new sidecar's
+  identity is P188's recorded hash); fns-iron reads v1.3.0 first.
+- **Observation** (P198's problem C, the course bracket, end of irradiation; old → new sidecar): Co-60 2.72% → 1.41%
+  with Co-59 capture's share outside the covariance 0.9999 → 0; Mn-54 29% → 1.45%; Mn-56 18.7% → 1.15%; Co-58 5.66% →
+  2.04%; Cr-51 5.58% → 5.36%; Fe-55 12.9% → 12.9%.

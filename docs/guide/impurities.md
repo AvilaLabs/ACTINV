@@ -276,7 +276,7 @@ the nuclear-data uncertainty. The worked example `examples/impurities_ra_steel/i
  "confidence_level": 0.95,
  "sampling": {
   "channels": {"cross_section_mf33": true, "decay_constants": true},
-  "covariance": {"path": "catalog:tendl-2025-neutron-709g-covariance"},
+  "covariance": {"path": "catalog:tendl-2025-irdff-ii-neutron-709g-covariance"},
   "samples": 72,
   "seed": 158001
  }

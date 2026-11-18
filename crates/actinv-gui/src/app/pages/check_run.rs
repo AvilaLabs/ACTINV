@@ -377,7 +377,7 @@ mod tests {
             "title": "catalog:not-a-reference",
             "library": {"path": "catalog:tendl-2025-neutron-709g"},
             "decay": {"primary": "catalog:endfb-viii-0-decay", "fallback": "plain/file.dat"},
-            "uncertainty": {"covariance": {"path": "catalog:tendl-2025-neutron-709g-covariance"}},
+            "uncertainty": {"covariance": {"path": "catalog:tendl-2025-irdff-ii-neutron-709g-covariance"}},
             "schedule": [{"library": {"path": "catalog:tendl-2025-neutron-709g"}}],
         });
         let mut found = references(&document);
@@ -386,8 +386,8 @@ mod tests {
             found,
             [
                 "catalog:endfb-viii-0-decay",
+                "catalog:tendl-2025-irdff-ii-neutron-709g-covariance",
                 "catalog:tendl-2025-neutron-709g",
-                "catalog:tendl-2025-neutron-709g-covariance",
             ]
         );
         assert!(references(&json!({"library": {"path": "a.npz"}})).is_empty());

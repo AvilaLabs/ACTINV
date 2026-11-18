@@ -160,7 +160,7 @@ impl Default for Bands {
 /// The confidence levels offered.
 const CONFIDENCES: [f64; 3] = [0.9, 0.95, 0.99];
 /// The covariance the cross-section channel samples.
-const COVARIANCE: &str = "catalog:tendl-2025-neutron-709g-covariance";
+const COVARIANCE: &str = "catalog:tendl-2025-irdff-ii-neutron-709g-covariance";
 
 /// Fewest samples whose largest value is an upper bound at `confidence`: (1 − c)/2 ≥ cⁿ, so 72 at
 /// 0.95. `actinv impurities` refuses fewer.

@@ -4,7 +4,7 @@ use serde::{Deserialize, Serialize};
 use std::collections::{BTreeMap, BTreeSet};
 use std::path::Path;
 
-const CATALOG_JSON: &str = include_str!("../data/actinv-data-catalog-v1.2.0.json");
+const CATALOG_JSON: &str = include_str!("../data/actinv-data-catalog-v1.3.0.json");
 const MAX_ARTIFACT_BYTES: u64 = 2_000_000_000;
 
 #[derive(Clone, Copy, Debug, Deserialize, Eq, Ord, PartialEq, PartialOrd, Serialize)]
@@ -397,7 +397,7 @@ mod tests {
     fn embedded_catalog_is_strict_and_matches_release_evidence() {
         let catalog = embedded_catalog().unwrap();
         assert_eq!(catalog.default_bundle, "tendl-2025-neutron");
-        assert_eq!(catalog.bundles.len(), 7);
+        assert_eq!(catalog.bundles.len(), 8);
         assert_eq!(
             catalog.artifact("tendl-2025-neutron-709g").unwrap().sha256,
             "ec4c72bf598dc8ad3d533d9cfafdcf493e2d1f949a3e4db6251495659b68cc44"
@@ -408,6 +408,14 @@ mod tests {
                 .unwrap()
                 .sha256,
             "c19dec86b44ad5d90b66c9ab94d53e18641a1d354a89402a4da7986b6c530cde"
+        );
+        // P188's sidecar, byte-identical to the one it qualified, installed by the covariance bundle
+        assert_eq!(
+            catalog
+                .artifact("tendl-2025-irdff-ii-neutron-709g-covariance")
+                .unwrap()
+                .sha256,
+            "622a62054973ffbf8e08059c5aeefaa15b8534a4ac1f6c5d31c5672ffdf4e859"
         );
 
         let mut value: serde_json::Value = serde_json::from_str(CATALOG_JSON).unwrap();
@@ -426,7 +434,7 @@ mod tests {
     #[test]
     fn damage_table_is_optional_unique_and_in_the_neutron_bundles_only() {
         let catalog = embedded_catalog().unwrap();
-        assert_eq!(catalog.catalog_version, "1.2.0");
+        assert_eq!(catalog.catalog_version, "1.3.0");
         let table = catalog.artifact("tendl-2025-neutron-damage").unwrap();
         assert_eq!(table.role, ArtifactRole::DamageTable);
         for bundle in &catalog.bundles {

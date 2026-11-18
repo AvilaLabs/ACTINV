@@ -17,5 +17,5 @@ the path. Without a `photon` section the contact-dose proxy is `null`. The handb
 
 `impurities_uncertainty.json` is the same screen with a `sampling` block: 72 correlated draws of the cross-section
 (MF=33) and decay-constant data, each applied to every element solve of its sample, and a bound at confidence 0.95 on
-every value and limit. It needs the catalog covariance `tendl-2025-neutron-709g-covariance`; see the handbook section
+every value and limit. It needs the catalog covariance `tendl-2025-irdff-ii-neutron-709g-covariance`; see the handbook section
 "Add nuclear-data uncertainty".

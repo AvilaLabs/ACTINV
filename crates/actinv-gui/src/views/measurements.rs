@@ -12,7 +12,7 @@ use serde_json::{json, Value};
 use std::path::Path;
 
 /// The covariance the qualified fit reads.
-pub const COVARIANCE: &str = "catalog:tendl-2025-neutron-709g-covariance";
+pub const COVARIANCE: &str = "catalog:tendl-2025-irdff-ii-neutron-709g-covariance";
 
 #[derive(Clone, Copy, PartialEq, Eq, Debug, Default)]
 pub enum Question {

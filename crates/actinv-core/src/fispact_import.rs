@@ -47,7 +47,7 @@ const MAX_EXPANDED_COMMANDS: u64 = 2_000_000;
 pub const IRRADIATES_WITHOUT_FLUXES: &str =
     "the deck irradiates (FLUX, POWER or WALL) but no FLUXES file was found";
 /// Catalog identifier of the covariance sidecar paired with the default neutron library.
-const DEFAULT_COVARIANCE: &str = "tendl-2025-neutron-709g-covariance";
+const DEFAULT_COVARIANCE: &str = "tendl-2025-irdff-ii-neutron-709g-covariance";
 /// Catalog identifier of the shipped neutron damage table that ALLDISPEN and ATDISPEN refer to
 /// when no `--damage` table is given.
 const DEFAULT_DAMAGE_TABLE: &str = "tendl-2025-neutron-damage";
@@ -5222,7 +5222,7 @@ END
         );
         assert_eq!(
             conversion.spec["uncertainty"]["covariance"]["path"],
-            "catalog:tendl-2025-neutron-709g-covariance"
+            "catalog:tendl-2025-irdff-ii-neutron-709g-covariance"
         );
         assert_eq!(
             entry_status(&conversion, "UNCERTAINTY"),

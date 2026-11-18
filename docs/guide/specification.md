@@ -672,7 +672,7 @@ targets, model, and units; the certificate records the table's provenance and th
 
 Damage-energy production comes from ENDF-6 MF=3/MT=444 sections. TENDL-2025 and EAF-2010 as distributed do not
 carry MT=444. For TENDL-2025 neutron targets that are stable or have a half-life of at least one year, the data
-catalog (1.2.0) ships a ready table, `catalog:tendl-2025-neutron-damage`, built with the kinematic method; for other
+catalog (1.2.0 and later) ships a ready table, `catalog:tendl-2025-neutron-damage`, built with the kinematic method; for other
 data, build tables from `heatr`-processed or equivalent damage-energy evaluations, or build an
 `actinv-damage-table-2` table with `actinv build-damage --method kinematic`.
 

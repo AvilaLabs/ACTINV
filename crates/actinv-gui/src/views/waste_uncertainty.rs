@@ -6,7 +6,7 @@ use eframe::egui::{self, RichText};
 use serde_json::{json, Value};
 use std::collections::BTreeSet;
 
-pub const COVARIANCE: &str = "catalog:tendl-2025-neutron-709g-covariance";
+pub const COVARIANCE: &str = "catalog:tendl-2025-irdff-ii-neutron-709g-covariance";
 /// Samples needed before a class can be established at 95 % confidence.
 pub const ESTABLISH: u64 = 72;
 

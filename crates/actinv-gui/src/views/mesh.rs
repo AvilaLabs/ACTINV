@@ -19,7 +19,7 @@ use std::{
 };
 
 /// The covariance a banded mesh reads; the same one the waste and certify pages use.
-pub const COVARIANCE: &str = "catalog:tendl-2025-neutron-709g-covariance";
+pub const COVARIANCE: &str = "catalog:tendl-2025-irdff-ii-neutron-709g-covariance";
 /// The most cell rows the page keeps for its table; the counts and totals cover every cell.
 const KEPT_ROWS: usize = 500;
 /// The most photon-carrying nuclides a banded mesh adds as responses.

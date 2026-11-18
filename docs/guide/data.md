@@ -10,7 +10,7 @@ actinv data verify
 actinv data list
 ```
 
-The default bundle is `tendl-2025-neutron`, the full 2,850-target neutron library. Catalog 1.2.0 installs it under `actinv-data/v1.2.0/` with its index, ENDF/B-VIII.0 primary decay data, JEFF-3.3 fallback decay data, and the neutron damage table (see below).
+The default bundle is `tendl-2025-neutron`, the full 2,850-target neutron library. Catalog 1.3.0 installs it under `actinv-data/v1.3.0/` with its index, ENDF/B-VIII.0 primary decay data, JEFF-3.3 fallback decay data, and the neutron damage table (see below).
 
 Downloads are checked by size and SHA-256 before installation. Correct existing files are reused, and a file already present under an older version directory (`actinv-data/v1.1.0/`) with the same SHA-256 is copied and re-verified instead of downloaded again. An incorrect existing file is left in place unless you explicitly request replacement with `--force`.
 
@@ -22,7 +22,7 @@ Every neutron bundle also installs `tendl-2025-neutron-damage`, a table of damag
 
 | Calculation | Activation bundle | Matching covariance bundle |
 | --- | --- | --- |
-| Full neutron corpus | `tendl-2025-neutron` | `tendl-2025-neutron-covariance` |
+| Full neutron corpus | `tendl-2025-neutron` | `tendl-2025-neutron-covariance` (or `tendl-2025-neutron-tendl-covariance`) |
 | Derived patched neutron subset | `tendl-2025-patched-neutron` | `tendl-2025-patched-neutron-covariance` |
 | Proton | `tendl-2025-proton` | None in the shipped catalog |
 | Deuteron | `tendl-2025-deuteron` | None in the shipped catalog |
@@ -37,6 +37,19 @@ actinv data verify tendl-2025-neutron-covariance
 
 A covariance sidecar must match the exact activation library and index. Both full and patched neutron corpora have matching sidecars; mixing them is rejected. Add the corresponding `uncertainty` section to your problem to request propagation. Downloading a sidecar alone does not enable uncertainty.
 
+Since catalog 1.3.0, `tendl-2025-neutron-covariance` installs `tendl-2025-irdff-ii-neutron-709g-covariance`: TENDL-2025's
+covariances, except that the 62 dosimetry reactions IRDFF-II evaluates (on 42 nuclides, among them Fe-56(n,p),
+Co-59(n,γ), Ni-58(n,p) and Al-27(n,α)) take IRDFF-II's covariance, expressed about TENDL-2025's cross section and
+including the difference between the two evaluations. TENDL-2025's own covariances for these reactions come from model
+parameter variation and are often several times IRDFF-II's (Fe-56(n,p) at 14 MeV: 50 % against 1.1 %), and its capture
+covariance is zero through the resonance range. This sidecar is what `actinv new`, the desktop and browser apps, and
+`actinv import-fispact` use. The TENDL-2025-only sidecar of catalogs 1.0.0 to 1.2.0,
+`tendl-2025-neutron-709g-covariance`, is unchanged and installed by `tendl-2025-neutron-tendl-covariance`; use it to
+reproduce earlier bands. A problem that names it needs `actinv data fetch tendl-2025-neutron-tendl-covariance` once,
+which copies it from an older version folder instead of downloading it. Resonance-range capture uncertainty for reactions IRDFF-II does not evaluate is still not
+propagated, and the band reports it as `partial` coverage (`uncovered_rate_fraction`, see the
+[specification](specification.md)).
+
 The patched subset corrects a bounded upstream defect and excludes many targets. It is not a drop-in accuracy upgrade for every material or spectrum. Read [Known data limitations](data-limits.md) before choosing between the neutron bundles.
 
 ## Use another location
@@ -47,7 +60,7 @@ actinv data verify --output /data/actinv
 actinv new problem.json --data-dir /data/actinv
 ```
 
-`--data-dir` writes absolute paths to the generated problem. To keep symbolic catalog references, set `ACTINV_DATA_DIR` to your installation root when using the default `actinv new` output. It names the root above `v1.2.0`, not the version folder itself.
+`--data-dir` writes absolute paths to the generated problem. To keep symbolic catalog references, set `ACTINV_DATA_DIR` to your installation root when using the default `actinv new` output. It names the root above `v1.3.0`, not the version folder itself.
 
 `actinv data fetch` and `verify` use `--output` for their destination; pass it explicitly when installing or checking a custom location.
 
