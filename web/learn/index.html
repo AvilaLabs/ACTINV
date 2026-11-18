@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Learn ACTINV</title>
+<meta name="description" content="An interactive course in ACTINV, the activation and inventory code: predict, run and read real calculations step by step, no installation or coding experience needed.">
+<link rel="icon" href="../favicon-e820714f418d9a3a.svg" type="image/svg+xml">
+<link rel="stylesheet" href="./learn.css">
+<style>
+  .home { max-width: 1040px; margin: 0 auto; padding: 0 24px 80px; }
+  .home-hero { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: 40px; align-items: center; padding: 64px 0 48px; }
+  .home-hero h1 { font-size: clamp(44px, 7vw, 80px); }
+  .curve { width: 100%; height: auto; }
+  .curve .ink { stroke-width: 3.2; }
+  .curve .halo { stroke: var(--ink-soft); stroke-width: 14; fill: none; stroke-linecap: round; }
+  .track { margin: 34px 0; }
+  .track h2 { font-size: 28px; margin-bottom: 4px; }
+  .track > p { color: var(--muted); margin-bottom: 16px; }
+  .chapters { display: grid; gap: 10px; }
+  .ch { display: grid; grid-template-columns: 54px minmax(0, 1fr) auto; gap: 16px; align-items: center; padding: 16px 18px; border-radius: 12px;
+        background: var(--sheet); border: 1px solid var(--rule); color: var(--text); text-decoration: none; }
+  a.ch:hover { border-color: var(--ink); }
+  a.ch:hover .go { transform: translateX(3px); }
+  .ch .n { font: 700 26px var(--display); color: var(--ink); text-align: center; }
+  .ch h3 { margin: 0; font-size: 19px; }
+  .ch p { margin: 2px 0 0; font-size: 16px; color: var(--muted); line-height: 1.45; }
+  .ch .go { font: 650 15px var(--display); color: var(--ink); transition: transform .15s; white-space: nowrap; }
+  .ch.soon { background: transparent; border-style: dashed; }
+  .ch.soon .n { color: var(--grid-strong); }
+  .ch.soon .go { color: var(--muted); font-weight: 500; }
+  .ch .bar { height: 5px; width: 90px; border-radius: 4px; background: var(--grid); overflow: hidden; margin-top: 6px; }
+  .ch .bar i { display: block; height: 100%; width: 0; background: var(--ok); }
+  .others { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px; }
+  .others div { padding: 16px; border-radius: 12px; border: 1px dashed var(--grid-strong); font-size: 16px; }
+  .others b { display: block; font: 650 17px var(--display); margin-bottom: 4px; }
+  .promise { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 22px; padding: 26px 0; border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); }
+  .promise b { display: block; font: 650 18px var(--display); margin-bottom: 4px; }
+  .promise span { font-size: 16px; color: var(--muted); }
+  @media (max-width: 800px) { .home-hero { grid-template-columns: 1fr; padding-top: 36px; gap: 18px; } .home { padding: 0 16px 60px; } .ch { grid-template-columns: 36px minmax(0, 1fr); } .ch .go { grid-column: 2; } }
+</style>
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="./">ACTINV<span>Learn</span></a>
+  <span class="spacer"></span>
+  <button type="button" class="iconbtn" id="sound" aria-label="Sound"></button>
+</header>
+<div class="home">
+  <section class="home-hero">
+    <div>
+      <div class="eyebrow">An interactive course</div>
+      <h1>Learn ACTINV</h1>
+      <p class="lede">Make things radioactive, guess what happens, then let ACTINV tell you. Each chapter is one real engineering question, worked out step by step with real calculations you can poke at.</p>
+      <p><a class="btn" href="first-irradiation/">Start chapter 1</a></p>
+    </div>
+    <svg class="curve" viewBox="0 0 420 300" role="img" aria-label="A cooling curve: dose rate falling after shutdown, with the steps where different nuclides take over">
+      <defs><pattern id="paper" width="42" height="30" patternUnits="userSpaceOnUse"><path d="M42 0H0V30" fill="none" stroke="var(--grid)" stroke-width="1"/></pattern></defs>
+      <rect width="420" height="300" rx="14" fill="var(--sheet)"/>
+      <rect x="14" y="14" width="392" height="272" fill="url(#paper)"/>
+      <path class="halo" id="h" d=""/>
+      <path class="ink" id="c" d="" fill="none" stroke="var(--ink)"/>
+      <g id="labels" font-family="var(--display)" font-size="13" font-weight="650"></g>
+      <text x="400" y="280" text-anchor="end" font-family="var(--display)" font-size="11" fill="var(--muted)">chapter 1's bracket: dose rate from 1 minute to 100 years after shutdown</text>
+      <circle r="6" fill="var(--mark)" id="dot"/>
+    </svg>
+  </section>
+
+  <section class="promise">
+    <div><b>Assumes nothing</b><span>Every technical word has a plain definition one tap away, from <em>half-life</em> to <em>terminal</em>.</span></div>
+    <div><b>Guess, then see</b><span>You predict before each calculation. Being wrong by a factor of a hundred is part of the fun.</span></div>
+    <div><b>Real numbers</b><span>Every result comes from an ACTINV run of a problem file you can download and run yourself.</span></div>
+    <div><b>Your way in</b><span>Each chapter shows the desktop app, the command line and Python side by side. Use whichever suits you.</span></div>
+  </section>
+
+  <section class="track">
+    <div class="eyebrow">Track · Fusion components</div>
+    <h2>From the plasma to the waste store</h2>
+    <p>Follow one steel component through its life near a fusion machine.</p>
+    <div class="chapters">
+      <a class="ch" href="first-irradiation/">
+        <span class="n">1</span>
+        <span><h3>Your first irradiation</h3><p>Activate a steel bracket, predict its dose rate, run ACTINV three ways and find what a trace of cobalt does. About 35 minutes.</p><span class="bar" aria-hidden="true"><i id="p1"></i></span></span>
+        <span class="go" id="go1">Start →</span>
+      </a>
+      <div class="ch soon"><span class="n">2</span><span><h3>Where does it come from?</h3><p>Trace each nuclide back through its reactions and decays to the atoms it started as.</p></span><span class="go">Being written</span></div>
+      <div class="ch soon"><span class="n">3</span><span><h3>The impurities that matter</h3><p>Screen every trace element at once and write the limits into a purchase specification.</p></span><span class="go">Being written</span></div>
+      <div class="ch soon"><span class="n">4</span><span><h3>Planning maintenance</h3><p>When can each job start, and what does waiting save in dose and cost?</p></span><span class="go">Being written</span></div>
+      <div class="ch soon"><span class="n">5</span><span><h3>What waste is it?</h3><p>Classify the component for disposal, and find what keeps it out of a worse class.</p></span><span class="go">Being written</span></div>
+      <div class="ch soon"><span class="n">6</span><span><h3>How sure are we?</h3><p>Put error bars on the answers from the nuclear data itself.</p></span><span class="go">Being written</span></div>
+    </div>
+  </section>
+
+  <section class="track">
+    <div class="eyebrow">More tracks, planned</div>
+    <div class="others">
+      <div><b>Facilities and measurements</b>Foils, unfolding a neutron spectrum, and checking ACTINV against what you measured.</div>
+      <div><b>Coupling to transport</b>From a neutron transport mesh to activation on every cell, and the photon source back again.</div>
+      <div><b>Isotope production</b>Yield, purity and the timing of a production irradiation.</div>
+    </div>
+  </section>
+</div>
+<footer class="site">ACTINV · <a href="../">Open ACTINV in your browser</a> · <a href="../docs/">Handbook</a> · <a href="../download/">Download</a> · <a href="https://github.com/AvilaLabs/ACTINV">Source</a></footer>
+<script type="module">
+  import { soundButton, store, reducedMotion } from "./learn.js";
+  soundButton(document.querySelector("#sound"));
+  // Chapter 1 progress, from the same store the chapter writes.
+  const done = store.get("done", []);
+  const ALL = ["welcome", "beam", "halflife", "file", "guess", "ran", "access", "handoff", "cobalt-guess", "cobalt", "quiz"];
+  const n = ALL.filter((t) => done.includes(t)).length;
+  document.querySelector("#p1").style.width = (100 * n / ALL.length) + "%";
+  if (n === ALL.length) document.querySelector("#go1").textContent = "Done ✓";
+  else if (n) document.querySelector("#go1").textContent = "Continue →";
+  // The hero: chapter 1's bracket, dose rate after shutdown on log paper, labelled by the nuclide that dominates.
+  const COLORS = { Mn56: "#0ca678", Co58: "#ae3ec9", Mn54: "#e03131", Co60: "#5f3dc4", Nb94: "#d6336c" };
+  const data = await fetch("first-irradiation/data/bracket-data.json").then((r) => r.json());
+  const run = data.runs[0], sh = data.shutdown_s;
+  const idx = data.t_s.map((t, i) => i).filter((i) => data.t_s[i] > sh);
+  const X = (t) => 30 + (Math.log10(t) - Math.log10(60)) / (Math.log10(100 * 365.25 * 86400) - Math.log10(60)) * 360;
+  const Y = (d) => 34 + (-1 - Math.log10(d)) / 10 * 236;
+  const pts = idx.map((i) => [X(data.t_s[i] - sh), Y(run.dose_Gy_h[i])]);
+  const d = "M" + pts.map((p) => p.map((v) => v.toFixed(1)).join(",")).join("L");
+  const c = document.querySelector("#c"), h = document.querySelector("#h"), dot = document.querySelector("#dot");
+  c.setAttribute("d", d); h.setAttribute("d", d);
+  const labels = document.querySelector("#labels");
+  let lastName = null;
+  idx.forEach((i, k) => {
+    const [name] = Object.entries(run.dose_by).sort((a, b) => b[1][i] - a[1][i])[0];
+    if (name !== lastName && COLORS[name]) {
+      const t = document.createElementNS("http://www.w3.org/2000/svg", "text");
+      const right = pts[k][0] > 330;
+      t.setAttribute("x", right ? pts[k][0] - 10 : pts[k][0] + 6); t.setAttribute("y", pts[k][1] - 12); t.setAttribute("fill", COLORS[name]);
+      if (right) t.setAttribute("text-anchor", "end");
+      t.textContent = name.replace(/(\d+)/, "-$1"); labels.append(t);
+    }
+    lastName = name;
+  });
+  const axis = (x, y, text, anchor = "start") => { const t = document.createElementNS("http://www.w3.org/2000/svg", "text"); Object.entries({ x, y, "text-anchor": anchor, "font-family": "var(--mono)", "font-size": 10, fill: "var(--muted)" }).forEach(([k, v]) => t.setAttribute(k, v)); t.textContent = text; labels.append(t); };
+  axis(32, 262, "1 min"); axis(390, 262, "100 y", "end"); axis(32, Y(1e-2) + 14, "10 mSv/h"); axis(32, Y(1e-8) - 4, "10 nSv/h");
+  const len = c.getTotalLength();
+  if (!reducedMotion) {
+    c.style.strokeDasharray = len; c.style.strokeDashoffset = len;
+    c.animate([{ strokeDashoffset: len }, { strokeDashoffset: 0 }], { duration: 1800, easing: "cubic-bezier(.6,.05,.3,1)", fill: "forwards" });
+    let t0 = null;
+    const step = (t) => { t0 ??= t; const u = ((t - t0) / 9000) % 1, p = c.getPointAtLength(u * len); dot.setAttribute("cx", p.x); dot.setAttribute("cy", p.y); requestAnimationFrame(step); };
+    setTimeout(() => requestAnimationFrame(step), 1800);
+  } else { const p = c.getPointAtLength(len * 0.4); dot.setAttribute("cx", p.x); dot.setAttribute("cy", p.y); }
+</script>
+</body>
+</html>

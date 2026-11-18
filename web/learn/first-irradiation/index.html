@@ -1,0 +1,320 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Your first irradiation · Learn ACTINV</title>
+<meta name="description" content="Chapter 1 of the ACTINV course: make a steel bracket radioactive, predict its dose rate, run ACTINV three ways and see what one trace element changes.">
+<link rel="icon" href="../../favicon-e820714f418d9a3a.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../learn.css">
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="../">ACTINV<span>Learn</span></a>
+  <span class="spacer"></span>
+  <div class="progress" title="Your progress in this chapter" aria-hidden="true"><i></i></div>
+  <button type="button" class="iconbtn" id="sound" aria-label="Sound"></button>
+</header>
+
+<div class="layout">
+  <nav class="rail" aria-label="Chapter steps">
+    <ol>
+      <li><a href="#welcome"><span>Welcome<span class="time">2 min</span></span></a></li>
+      <li><a href="#physics"><span>What neutrons do to steel<span class="time">6 min</span></span></a></li>
+      <li><a href="#problem"><span>Meet the bracket<span class="time">5 min</span></span></a></li>
+      <li><a href="#guess"><span>Make a guess<span class="time">2 min</span></span></a></li>
+      <li><a href="#run"><span>Run it, three ways<span class="time">8 min</span></span></a></li>
+      <li><a href="#read"><span>Read the answer<span class="time">5 min</span></span></a></li>
+      <li><a href="#cobalt"><span>The cobalt twist<span class="time">5 min</span></span></a></li>
+      <li><a href="#wrap"><span>Check yourself<span class="time">3 min</span></span></a></li>
+    </ol>
+  </nav>
+
+  <main>
+    <div class="lesson">
+      <header class="hero">
+        <div class="eyebrow">Chapter 1 · Fusion components</div>
+        <h1>Your first irradiation</h1>
+        <p class="lede">A steel bracket spends two years next to a fusion machine. When the machine stops, how radioactive is the bracket, when can someone safely go and unbolt it, and why does a speck of cobalt matter so much? You'll work it out with ACTINV, one step at a time.</p>
+        <div class="meta">
+          <span><b>About 35 minutes</b></span>
+          <span><b>Nothing to install</b> to follow along</span>
+          <span><b>No coding</b> or terminal experience needed</span>
+        </div>
+      </header>
+
+      <section class="step" id="welcome">
+        <div class="eyebrow">Step 1</div>
+        <h2>How this works</h2>
+        <p>Each step explains one idea, then asks you to do something small with it: drag a slider, click a part of a file, type a command. When you've done it, the box ticks and the step is marked off on the left. Your progress stays in this browser, so you can stop and come back later.</p>
+        <p>Underlined words like <span data-term="activity">activity</span> have a short definition. Tap one whenever a word is new. Nobody knows all of them, and you don't need to remember any of them.</p>
+        <div class="aside note">
+          <p><strong>About the sound.</strong> A few things on this page make sound, mostly a survey meter that clicks faster as the dose rises. If you'd rather keep it quiet, use the <em>Sound</em> button at the top.</p>
+        </div>
+        <p>All the numbers in this chapter come from real ACTINV runs of one problem file, which you can download at the end and run yourself. Where the page replays a calculation instead of running it live, it says so.</p>
+        <div class="task" data-task="welcome">Ready? Press <button type="button" class="btn" id="start" style="margin-left:6px">Start the chapter</button></div>
+      </section>
+
+      <section class="step" id="physics">
+        <div class="eyebrow">Step 2</div>
+        <h2>What neutrons do to steel</h2>
+        <p>A fusion machine fuses <span data-term="dt">deuterium and tritium</span>, and each fusion releases a fast <span data-term="neutron">neutron</span>. Neutrons have no charge, so they fly straight out of the plasma and into everything nearby, including our steel bracket.</p>
+        <p>Usually a neutron passes straight through. Now and then it hits the nucleus of an atom and changes it. An iron atom might become a manganese atom, or a nickel atom might become a cobalt atom. This is called <span data-term="activation">activation</span>, and many of the new <span data-term="nuclide">nuclides</span> are unstable: sooner or later each one <span data-term="decay">decays</span>, giving off radiation. That is what makes the bracket radioactive.</p>
+
+        <div class="figure wide">
+          <h4>Inside the bracket</h4>
+          <canvas class="atoms" id="atoms" aria-label="Animation: neutrons strike steel atoms, some become radioactive and later decay"></canvas>
+          <div class="controls">
+            <button type="button" class="btn" id="beam">Turn the machine on</button>
+            <span class="readout" id="atoms-status">Machine off</span>
+          </div>
+          <p class="cap">This is a cartoon, not a simulation: real steel has about 10²⁴ atoms per kilogram, and only a tiny fraction ever change. Grey dots are stable atoms, coloured dots are radioactive ones, and each flash is a decay.</p>
+        </div>
+        <div class="task" data-task="beam">Turn the machine on, then turn it off again and watch what happens next.</div>
+
+        <h3>Half-life: how fast it builds and fades</h3>
+        <p>Every radioactive nuclide has a <span data-term="halflife">half-life</span>: the time for half of its atoms to decay. Half-lives run from fractions of a second to millions of years, and that one number decides most of what happens to a part after shutdown.</p>
+        <p>Under steady irradiation, a nuclide builds up until it decays as fast as it is made. It gets close to that ceiling after a few half-lives, and after the machine stops, its activity halves once every half-life. Try three nuclides that really are made in steel:</p>
+
+        <div class="figure wide">
+          <h4>One nuclide during and after irradiation</h4>
+          <div class="controls" role="group" aria-label="Choose a nuclide">
+            <span>Nuclide:</span>
+            <button type="button" class="chip on" data-nuc="Cr51">Chromium-51 · 27.7 days</button>
+            <button type="button" class="chip" data-nuc="Mn54">Manganese-54 · 312 days</button>
+            <button type="button" class="chip" data-nuc="Co60">Cobalt-60 · 5.27 years</button>
+          </div>
+          <div id="buildup"></div>
+          <div class="controls">
+            <label>Irradiate for <input type="range" id="irr" min="0" max="100" value="40" aria-describedby="irr-out"></label>
+            <span class="readout" id="irr-out"></span>
+          </div>
+          <p class="cap" id="buildup-cap"></p>
+        </div>
+        <div class="task" data-task="halflife">Look at all three nuclides. Which one is still far from its ceiling after two years?</div>
+        <div class="aside tech">
+          <details>
+            <summary>The formula, if you want it</summary>
+            <p>For a nuclide made at a steady rate <i>R</i> with decay constant λ = ln 2 / half-life, the activity after irradiating for time <i>t</i> is <i>A</i> = <i>R</i>(1 − e<sup>−λt</sup>). After shutdown it falls as e<sup>−λt</sup>. ACTINV solves the same kind of equations, for thousands of nuclides at once, including chains where one radioactive nuclide decays into another.</p>
+          </details>
+        </div>
+      </section>
+
+      <section class="step" id="problem">
+        <div class="eyebrow">Step 3</div>
+        <h2>Meet the bracket</h2>
+        <p>Here is the job. A 20 kg bracket made of <span data-term="ss316">SS316 stainless steel</span> sits in a port cell of a fusion machine for two years, where about 300 million neutrons cross each square centimetre of it every second (the <span data-term="flux">flux</span>). Then the machine shuts down for maintenance, and a crew needs to go in and unbolt the bracket.</p>
+        <p>ACTINV takes the whole question as one plain text file, a <em>problem file</em>. It is written in <span data-term="json">JSON</span>, a format that both people and programs can read. Click each part of the file to see what it says.</p>
+
+        <div class="filebox wide" id="filebox">
+          <pre aria-label="The bracket's problem file" id="file"></pre>
+          <div class="explain">
+            <div class="chips" id="chips" role="tablist" aria-label="Parts of the file"></div>
+            <div id="explain" aria-live="polite"></div>
+          </div>
+        </div>
+        <div class="task" data-task="file">Open all six parts of the file.</div>
+
+        <div class="aside tech">
+          <details>
+            <summary>New to JSON? A 30-second tour</summary>
+            <p>JSON is labels and values. <code>"mass_g": 20000.0</code> means "the mass in grams is 20,000". Text goes in quotes, numbers don't, curly braces <code>{ }</code> group related labels together, and square brackets <code>[ ]</code> hold a list. That's nearly all of it.</p>
+            <p>You rarely type a problem file from scratch. <code>actinv new</code> writes a complete one for you to edit, the app writes one as you click through its pages, and a script can write one.</p>
+          </details>
+        </div>
+        <div class="aside diff">
+          <div class="tag">◆ How ACTINV is different</div>
+          <p><strong>The whole problem is one readable file.</strong> No fixed input-deck syntax, no set of files that must sit together under particular names. You can email it to a colleague, keep it under version control next to your design, or have a script write a hundred variations of it. Results come back as JSON too, so any tool, spreadsheet or plotting library can read them without parsing printed tables.</p>
+        </div>
+      </section>
+
+      <section class="step" id="guess">
+        <div class="eyebrow">Step 4</div>
+        <h2>Make a guess first</h2>
+        <p>Before running anything, guess. Guessing first, then seeing how far off you were, is how people get a feel for these numbers. Nobody scores this, and wild guesses are welcome.</p>
+        <p><strong>The question:</strong> one day after shutdown, what is the <span data-term="dose">dose rate</span> one metre from the bracket? Drag the orange marker left or right, or use the arrow keys. The grey lines are landmarks.</p>
+        <div class="figure wide">
+          <div id="guessplot"></div>
+          <div class="controls"><span>Your guess:</span><span class="readout" id="guess-out" style="color:var(--mark)"></span><button type="button" class="btn mark" id="lock">Lock in my guess</button></div>
+        </div>
+        <div class="task" data-task="guess">Lock in a guess. You'll find out how close you were after the run.</div>
+      </section>
+
+      <section class="step" id="run">
+        <div class="eyebrow">Step 5</div>
+        <h2>Run it, three ways</h2>
+        <p>The same ACTINV engine sits behind three ways in. They give identical answers, so pick whichever fits how you like to work. You only need one to continue, but try the others when you're curious.</p>
+        <div class="tabs" role="tablist" aria-label="Ways to run ACTINV">
+          <button type="button" role="tab" aria-selected="true" aria-controls="door-terminal" id="tab-terminal">Command line</button>
+          <button type="button" role="tab" aria-selected="false" aria-controls="door-app" id="tab-app">Desktop app</button>
+          <button type="button" role="tab" aria-selected="false" aria-controls="door-python" id="tab-python">Python</button>
+        </div>
+
+        <div class="tabpanel" role="tabpanel" id="door-terminal" aria-labelledby="tab-terminal">
+          <p>A <span data-term="terminal">terminal</span> is a window where you type commands instead of clicking. It looks old-fashioned, but it has one big advantage: anything you type once can be saved and repeated exactly. The terminal below is a practice one. It accepts real ACTINV commands and shows the output they really print, recorded from actual runs.</p>
+          <div class="term-window wide">
+            <div class="bar"><i></i><i></i><i></i><span>practice terminal: ~/bracket-lesson</span></div>
+            <div class="term-screen" id="screen" aria-live="polite"></div>
+          </div>
+          <div class="term-cue" id="cue"></div>
+          <div class="task" data-task="t-version">Check ACTINV is installed: <code>actinv --version</code></div>
+          <div class="task" data-task="t-ls">See what's in the folder: <code>ls</code></div>
+          <div class="task" data-task="t-fetch">Install the nuclear data: <code>actinv data fetch</code></div>
+          <div class="task" data-task="t-validate">Check the file: <code>actinv validate bracket.json</code></div>
+          <div class="task" data-task="t-run">Run it: <code>actinv run bracket.json result.json</code></div>
+          <div class="aside tech">
+            <details>
+              <summary>How do I open a real terminal?</summary>
+              <p><strong>Windows:</strong> press the Windows key, type <em>PowerShell</em> and press Enter. <strong>macOS:</strong> press ⌘ Space, type <em>Terminal</em> and press Enter. <strong>Linux:</strong> look for <em>Terminal</em> in your applications, or press Ctrl Alt T.</p>
+              <p>Install ACTINV with <code>python -m pip install actinv</code> (that needs <span data-term="python">Python</span>) or download a ready-made program from the <a href="https://github.com/AvilaLabs/ACTINV/releases">releases page</a>. The <a href="../../docs/install.html">install guide</a> has the details.</p>
+            </details>
+          </div>
+        </div>
+
+        <div class="tabpanel" role="tabpanel" id="door-app" aria-labelledby="tab-app" hidden>
+          <p>If you'd rather click than type, the desktop app does everything on this page through ordinary windows and buttons.</p>
+          <ol class="steps">
+            <li><a href="../../download/">Download the ACTINV desktop app</a> and open it.</li>
+            <li>Download this chapter's two files (<a href="files/bracket.json" download>bracket.json</a> and <a href="files/photon-response.json" download>photon-response.json</a>) and keep them in the same folder.</li>
+            <li>On the <strong>Start</strong> page, choose <strong>Open problem…</strong> and pick <code>bracket.json</code>. The steps on the left fill in: Material, Irradiation &amp; cooling, Source &amp; spectrum, What to compute. Click through them, they match the parts of the file you just explored.</li>
+            <li>Go to <strong>Check &amp; run</strong>. The first time, it offers <strong>Download standard neutron data</strong>. That's the same download as <code>actinv data fetch</code>, about 186 MB, done once.</li>
+            <li>Press <strong>▶ Run calculation</strong>. About 20 seconds later the result opens on its <strong>Summary</strong>.</li>
+          </ol>
+          <div class="aside note"><p>You can also open ACTINV in your browser without installing anything, to look at problems and results. Running a problem in the browser is coming. Until then, the desktop app or the command line does the run.</p></div>
+          <div class="task" data-task="app">I've read the app steps. <button type="button" class="btn ghost" id="app-replay" style="margin-left:6px">Show me the result</button></div>
+        </div>
+
+        <div class="tabpanel" role="tabpanel" id="door-python" aria-labelledby="tab-python" hidden>
+          <p>ACTINV is also a <span data-term="python">Python</span> library. You load a problem, solve it, and pick out whatever number you need. Here are five lines that answer the question you just guessed at:</p>
+          <pre class="code" id="py1"></pre>
+          <div class="controls"><button type="button" class="btn" id="py-run">Run this</button><span class="readout" id="py-status"></span></div>
+          <pre class="code" id="py1-out" hidden></pre>
+          <p>Because ACTINV is a library, a calculation can be one line inside your own program, notebook or design loop. This one runs the bracket four times with different amounts of cobalt. Remember it, you'll need it in step 7:</p>
+          <pre class="code" id="py2"></pre>
+          <div class="controls"><button type="button" class="btn ghost" id="py2-run">Run this</button><span class="readout" id="py2-status"></span></div>
+          <pre class="code" id="py2-out" hidden></pre>
+          <div class="aside tech">
+            <details>
+              <summary>Never used Python?</summary>
+              <p>Python is a free programming language that's popular in science. Save the lines above in a file called <code>first.py</code>, in the folder with <code>bracket.json</code>, and run <code>python first.py</code> in a terminal. Before that, once: <code>python -m pip install actinv</code> to install ACTINV, then <code>actinv data fetch</code> for the data. Jupyter notebooks work just as well.</p>
+            </details>
+          </div>
+          <div class="task" data-task="python">Run the first Python example.</div>
+          <p class="cap" style="font-size:15px;color:var(--muted)">These buttons replay the output the examples printed with ACTINV <span class="ver"></span>. On your computer, the first example takes about 20 seconds and the second about a minute and a half.</p>
+        </div>
+
+        <div class="aside diff">
+          <div class="tag">◆ How ACTINV is different</div>
+          <p><strong>One engine, three ways in, and they don't drift apart.</strong> A file you build in the app runs unchanged from the command line or Python, and vice versa. The command line follows ordinary conventions: results can go straight into another program, errors say what to fix, and the exit code tells a script whether it worked. That's what lets ACTINV sit inside a larger workflow, such as a transport code's output feeding straight into it, instead of being a separate step you do by hand.</p>
+        </div>
+      </section>
+
+      <section class="step" id="read">
+        <div class="eyebrow">Step 6</div>
+        <h2>Read the answer</h2>
+        <div id="locked-read" class="aside note"><p>Run the bracket in step 5 (any of the three ways) to unlock this step.</p></div>
+        <div id="read-body" hidden>
+          <p id="verdict-intro">Here's how your guess compares with ACTINV:</p>
+          <div class="figure wide">
+            <div id="revealplot"></div>
+            <div class="verdict" id="verdict"></div>
+          </div>
+          <p>A <span data-term="msvh">few millisieverts per hour</span> is far above anything you'd meet in daily life, but it's typical for a part that sat next to a fusion plasma. It means time near the bracket has to be planned. Drag the cooling time below and watch how the numbers fall, and how the nuclide responsible changes as you go. The survey meter in the corner clicks along.</p>
+          <div class="figure wide">
+            <div class="explorer">
+              <div>
+                <div id="coolplot"></div>
+                <div class="controls">
+                  <label>Time after shutdown <input type="range" id="cool" min="0" max="33" value="6" aria-describedby="cool-out"></label>
+                  <span class="readout" id="cool-out"></span>
+                </div>
+              </div>
+              <div class="stats">
+                <div class="stat"><small><span data-term="activity">Activity</span></small><strong id="s-act"></strong></div>
+                <div class="stat"><small><span data-term="heat">Decay heat</span></small><strong id="s-heat"></strong></div>
+                <div class="stat"><small>Dose rate at 1 m</small><strong id="s-dose"></strong></div>
+                <div class="stat"><small>Where the dose comes from</small><div class="shares" id="shares"></div></div>
+              </div>
+            </div>
+            <p class="cap">The red line is this example's access limit of 3 mSv/h. The limit, like the bracket, is made up for teaching. Real limits come from your site's radiation protection rules.</p>
+          </div>
+          <div class="task" data-task="access">Find the first cooling time when the dose rate is under the 3 mSv/h limit.</div>
+          <div class="task" data-task="handoff">Drag out to 10 years and see which nuclide is left.</div>
+          <div class="aside tech">
+            <details>
+              <summary>Gray, sievert, and the fine print on this dose</summary>
+              <p>ACTINV reports this dose as the rate of energy the photons would deposit in air (the <em>air kerma</em>), in grays per hour, with the bracket treated as a point one metre away. For the photon energies here, one gray of air kerma corresponds to roughly one sievert of dose to a person, so the page shows Sv/h. It's a screening number, good for "how long should we wait?". A real dose map of a port cell needs a radiation transport calculation, and ACTINV can feed one.</p>
+            </details>
+          </div>
+        </div>
+      </section>
+
+      <section class="step" id="cobalt">
+        <div class="eyebrow">Step 7</div>
+        <h2>The cobalt twist</h2>
+        <p>SS316's standard recipe says nothing about cobalt, so ordinary steel usually contains a little: 0.05 to 0.2% is common, and nuclear-grade steel is bought with a limit on it. That's an <span data-term="impurity">impurity</span>. A neutron turns cobalt-59 into cobalt-60, which has a 5.3-year half-life and gives off energetic gamma rays. Cobalt-60 also forms from nickel, which this steel has plenty of, but much more slowly.</p>
+        <p><strong>Guess again:</strong> if this bracket had 0.1% cobalt, when would it matter most?</p>
+        <div class="quiz" id="cobalt-guess">
+          <div class="opts">
+            <button type="button" class="opt" data-a="day">Right after shutdown: everything would be much hotter</button>
+            <button type="button" class="opt" data-a="years">Years later, once the short-lived nuclides are gone</button>
+            <button type="button" class="opt" data-a="never">Hardly ever: 0.1% is too little to matter</button>
+          </div>
+          <p class="why" id="cobalt-why" hidden></p>
+        </div>
+        <div id="cobalt-body" hidden>
+          <div class="figure wide">
+            <h4>Dose rate at 1 m, with and without cobalt</h4>
+            <div id="coplot"></div>
+            <div class="controls">
+              <label>Cobalt in the steel <input type="range" id="co" min="0" max="7" value="0" aria-describedby="co-out"></label>
+              <span class="readout" id="co-out"></span>
+            </div>
+            <div class="stats" style="grid-template-columns:repeat(auto-fit,minmax(180px,1fr));margin-top:10px">
+              <div class="stat"><small>Crew can go in after</small><strong id="c-access"></strong></div>
+              <div class="stat"><small>Dose rate after 10 years</small><strong id="c-10y"></strong><em id="c-10y-x"></em></div>
+              <div class="stat"><small>Activity after 10 years</small><strong id="c-10a"></strong></div>
+            </div>
+            <p class="cap">Each position of the slider is its own ACTINV run of the bracket, with cobalt replacing the same weight of iron. These are the runs the Python study in step 5 makes.</p>
+          </div>
+          <div class="task" data-task="cobalt">Slide the cobalt to 0.1% and compare the dose after 10 years with the cobalt-free bracket.</div>
+          <p>Short-lived nuclides, such as manganese-56 and chromium-51, come from the main ingredients and dominate the first days. They don't care about a trace of cobalt. Years later they're gone, and what's left is set by the impurities. For waste disposal and long-term maintenance, the impurity list in the purchase order matters as much as the alloy's name.</p>
+          <div class="aside diff">
+            <div class="tag">◆ How ACTINV is different</div>
+            <p><strong>It tells you which impurities matter before you buy the steel.</strong> Here we checked one impurity by hand. <code>actinv impurities</code> checks every element at once: in one command it lists which trace elements drive the dose, heat or waste class of your part, and how much of each you can tolerate, ready for a purchase specification. That's chapter 3.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="step" id="wrap">
+        <div class="eyebrow">Step 8</div>
+        <h2>Check yourself</h2>
+        <p>Three quick questions. Wrong answers just explain themselves, there's no score.</p>
+        <div class="quiz" id="quiz"></div>
+        <div class="finish" id="finish">
+          <svg class="badge" viewBox="0 0 120 120" aria-hidden="true">
+            <circle cx="60" cy="60" r="54" fill="none" stroke="var(--grid-strong)" stroke-width="6"/>
+            <circle cx="60" cy="60" r="54" fill="none" stroke="var(--ink)" stroke-width="6" stroke-dasharray="339" stroke-dashoffset="339" id="ring" style="transition:stroke-dashoffset 1s ease;transform:rotate(-90deg);transform-origin:60px 60px"/>
+            <g fill="var(--ink)" transform="translate(60 60)">
+              <circle r="7"/>
+              <path d="M0 -10 L-16 -36 A31 31 0 0 1 16 -36 Z" transform="rotate(0)"/>
+              <path d="M0 -10 L-16 -36 A31 31 0 0 1 16 -36 Z" transform="rotate(120)"/>
+              <path d="M0 -10 L-16 -36 A31 31 0 0 1 16 -36 Z" transform="rotate(240)"/>
+            </g>
+          </svg>
+          <h3 id="finish-title" style="margin-top:0">Finish the steps to complete the chapter</h3>
+          <p id="finish-text" style="color:var(--muted)">Each step's box needs a tick. The left side shows which are done.</p>
+          <p><a class="btn" href="files/bracket.json" download>Download bracket.json</a> <a class="btn ghost" href="files/photon-response.json" download>photon-response.json</a></p>
+          <p style="font-size:16px;color:var(--muted)">Put both files in one folder, open a terminal there and run <code>actinv data fetch</code>, then <code>actinv run bracket.json result.json</code>.</p>
+        </div>
+        <h3>Where to go next</h3>
+        <p>The chapters after this one follow a fusion component from design to disposal: where a nuclide comes from (pathways), which impurities to limit, when maintenance can start, what waste class the part ends up in, and how certain those numbers are. Until they're out, the <a href="../../docs/">handbook</a> covers every command.</p>
+        <p style="font-size:15px;color:var(--muted)"><button type="button" class="iconbtn" id="reset">Start this chapter over</button></p>
+      </section>
+    </div>
+  </main>
+</div>
+<footer class="site">ACTINV <span class="ver"></span> · <a href="../">Course home</a> · <a href="../../">Open ACTINV in your browser</a> · <a href="../../docs/">Handbook</a> · <a href="https://github.com/AvilaLabs/ACTINV">Source</a></footer>
+<script type="module" src="./chapter.js"></script>
+</body>
+</html>

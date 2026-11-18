@@ -32,6 +32,8 @@ class HandbookPackaging(unittest.TestCase):
         self.assertEqual((old / "searchindex.js").read_text(), "current search")
         self.assertEqual((self.bundle / "index.html").read_text(), "existing app")
         self.assertTrue((self.bundle / "download/releases.json").is_file())
+        self.assertTrue((self.bundle / "learn/first-irradiation/index.html").is_file())
+        self.assertFalse((self.bundle / "learn/build").exists())
 
     def test_missing_handbook_fails_before_modifying_bundle(self):
         with self.assertRaises(ValueError):
@@ -46,6 +48,18 @@ class HandbookPackaging(unittest.TestCase):
         with self.assertRaises(ValueError):
             prepare(self.bundle, overlapping)
         self.assertEqual((overlapping / "index.html").read_text(), "keep me")
+
+
+class Course(unittest.TestCase):
+    def test_chapter_data_matches_its_problem(self):
+        chapter = ROOT / "web/learn/first-irradiation"
+        problem = (chapter / "files/bracket.json").read_bytes()
+        data = json.loads((chapter / "data/bracket-data.json").read_text())
+        self.assertEqual(data["problem_sha256"], hashlib.sha256(problem).hexdigest(),
+                         "recompute the chapter: web/learn/build/make_bracket.py")
+        response = json.loads(problem)["photon"]["response"]
+        self.assertEqual(response["sha256"],
+                         hashlib.sha256((chapter / "files" / response["path"]).read_bytes()).hexdigest())
 
 
 class ExampleResults(unittest.TestCase):

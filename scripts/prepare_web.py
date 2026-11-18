@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
-"""Add the download page, the example results and optional handbook to an ACTINV browser bundle.
+"""Add the download page, the example results, the course and optional handbook to an ACTINV browser bundle.
 
 Desktop asset names follow scripts/package_desktop.py. The release version is
 read from packaging/desktop.json so the site and installers stay together. The
 example results (scripts/web_examples.py) are served at examples/, where the
-workbench's Start page fetches them.
+workbench's Start page fetches them. The interactive course (web/learn, without its
+build scripts) is served at learn/.
 """
 from __future__ import annotations
 
@@ -50,6 +51,10 @@ def prepare(destination: Path, docs: Path | None = None) -> None:
     examples.mkdir(exist_ok=True)
     for source in sorted((ROOT / "web/examples").glob("*.json")):
         shutil.copyfile(source, examples / source.name)
+    course = destination / "learn"
+    if course.exists():
+        shutil.rmtree(course)
+    shutil.copytree(ROOT / "web/learn", course, ignore=shutil.ignore_patterns("build"))
     (destination / ".nojekyll").touch()
     if docs is not None:
         handbook = destination / "docs"
