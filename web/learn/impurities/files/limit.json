@@ -1,0 +1,61 @@
+{
+ "schema": "actinv-impurities-1",
+ "base_spec": "base.json",
+ "balance": "Fe",
+ "matrix": {
+  "C": 0.041,
+  "Cr": 17.0,
+  "Mn": 1.014,
+  "Mo": 2.5,
+  "Ni": 12.0,
+  "P": 0.023,
+  "S": 0.015,
+  "Si": 0.507
+ },
+ "impurities": {
+  "Co": {
+   "nominal": 0.1,
+   "min": 0.02,
+   "max": 0.2
+  },
+  "Cu": {
+   "nominal": 0.1,
+   "min": 0.0,
+   "max": 0.3
+  },
+  "N": {
+   "nominal": 0.05,
+   "min": 0.02,
+   "max": 0.1
+  },
+  "Nb": {
+   "nominal": 0.005,
+   "min": 0.0,
+   "max": 0.05
+  },
+  "Ta": {
+   "nominal": 0.005,
+   "min": 0.0,
+   "max": 0.02
+  },
+  "B": {
+   "nominal": 0.001,
+   "min": 0.0,
+   "max": 0.003
+  },
+  "Ag": {
+   "nominal": 0.0005,
+   "min": 0.0,
+   "max": 0.002
+  }
+ },
+ "targets": [
+  10
+ ],
+ "endpoints": [
+  {
+   "endpoint": "dose.contact_proxy",
+   "limit": 0.02
+  }
+ ]
+}

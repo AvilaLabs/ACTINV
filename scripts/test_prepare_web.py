@@ -61,6 +61,18 @@ class Course(unittest.TestCase):
         self.assertEqual(response["sha256"],
                          hashlib.sha256((chapter / "files" / response["path"]).read_bytes()).hexdigest())
 
+    def test_later_chapters_data_match_their_files(self):
+        for name, data_file, script in (("where-from", "routes-data.json", "make_routes.py"),
+                                        ("impurities", "impurities-data.json", "make_impurities.py"),
+                                        ("maintenance", "maintenance-data.json", "make_maintenance.py"),
+                                        ("waste", "waste-data.json", "make_waste.py")):
+            chapter = ROOT / "web/learn" / name
+            data = json.loads((chapter / "data" / data_file).read_text())
+            pinned = data.get("files_sha256") or {"routes.json": data["problem_sha256"]}
+            for file, sha in pinned.items():
+                self.assertEqual(sha, hashlib.sha256((chapter / "files" / file).read_bytes()).hexdigest(),
+                                 f"recompute the chapter: web/learn/build/{script}")
+
 
 class ExampleResults(unittest.TestCase):
     def test_examples_are_current_and_served(self):

@@ -92,10 +92,30 @@
       <div class="bar" aria-hidden="true"><i id="p1"></i></div>
       <div><a class="btn primary" id="go1b" href="first-irradiation/">Start</a></div>
     </div>
-    <div class="frame soon"><h4>2 · Where does it come from?</h4><p>Trace each nuclide back through its reactions and decays to the atoms it started as.</p><span class="note">Being written</span></div>
-    <div class="frame soon"><h4>3 · The impurities that matter</h4><p>Screen every trace element at once and write the limits into a purchase specification.</p><span class="note">Being written</span></div>
-    <div class="frame soon"><h4>4 · Planning maintenance</h4><p>When can each job start, and what does waiting save in dose and cost?</p><span class="note">Being written</span></div>
-    <div class="frame soon"><h4>5 · What waste is it?</h4><p>Classify the component for disposal, and find what keeps it out of a worse class.</p><span class="note">Being written</span></div>
+    <div class="frame live" data-tasks="c2-start c2-reactions c2-guess c2-routes c2-field c2-file c2-ran c2-change c2-quiz">
+      <h4>2 · Where does it come from?</h4>
+      <p>Trace each nuclide in the bracket back to the atom that made it, and find which ones a purchase spec can change. About 25 minutes.</p>
+      <div class="bar" aria-hidden="true"><i></i></div>
+      <div><a class="btn primary" href="where-from/">Start</a></div>
+    </div>
+    <div class="frame live" data-tasks="c3-start c3-guess c3-times c3-under c3-clear c3-check c3-file c3-ran c3-limit c3-quiz">
+      <h4>3 · The impurities that matter</h4>
+      <p>Screen every trace element at once, see which decide the dose and the clearance, and set a cobalt limit. About 25 minutes.</p>
+      <div class="bar" aria-hidden="true"><i></i></div>
+      <div><a class="btn primary" href="impurities/">Start</a></div>
+    </div>
+    <div class="frame live" data-tasks="c4-start c4-guess c4-wait c4-persv c4-file c4-ran c4-cobalt c4-quiz">
+      <h4>4 · Planning maintenance</h4>
+      <p>When can each job start, and what does waiting save in dose and cost? About 20 minutes.</p>
+      <div class="bar" aria-hidden="true"><i></i></div>
+      <div><a class="btn primary" href="maintenance/">Start</a></div>
+    </div>
+    <div class="frame live" data-tasks="c5-start c5-guess c5-tables c5-times c5-over c5-zero c5-file c5-ran c5-wait c5-quiz">
+      <h4>5 · What waste is it?</h4>
+      <p>Classify a steel block for disposal, and find the trace of niobium that decides its class. About 20 minutes.</p>
+      <div class="bar" aria-hidden="true"><i></i></div>
+      <div><a class="btn primary" href="waste/">Start</a></div>
+    </div>
     <div class="frame soon"><h4>6 · How sure are we?</h4><p>Put error bars on the answers from the nuclear data itself.</p><span class="note">Being written</span></div>
   </div>
 
@@ -119,6 +139,11 @@
   document.querySelector("#go1").textContent = n === ALL.length ? "Open chapter 1 again" : n ? "Continue chapter 1" : "Start chapter 1";
   document.querySelector("#go1b").textContent = n === ALL.length ? "Open again" : n ? "Continue" : "Start";
   if (n) document.querySelector("#status").textContent = `Chapter 1: ${n} of ${ALL.length} tasks done.`;
+  document.querySelectorAll("[data-tasks]").forEach((card) => {
+    const ts = card.dataset.tasks.split(" "), k = ts.filter((t) => done.includes(t)).length;
+    requestAnimationFrame(() => (card.querySelector(".bar i").style.width = (100 * k / ts.length) + "%"));
+    card.querySelector(".btn").textContent = k === ts.length ? "Open again" : k ? "Continue" : "Start";
+  });
 
   // The preview: chapter 1's real runs, without cobalt and with 0.1% (run index 4).
   const DAY = 86400, YEAR = 365.25 * DAY, LIMIT = 3e-3;

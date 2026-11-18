@@ -84,8 +84,8 @@ code, kbd, .mono, pre { font-family: var(--mono); font-size: 13px; }
 .side .caption { margin: 8px 0 4px; }
 .side ol { list-style: none; margin: 0; padding: 0; counter-reset: step; }
 .side li { counter-increment: step; }
-.side a { display: grid; grid-template-columns: 22px 1fr 16px; align-items: center; padding: 4px 4px 4px 8px; border-radius: 2px; color: var(--text); font-size: 13px; }
-.side a::before { content: counter(step); color: var(--text); }
+.side ol a { display: grid; grid-template-columns: 22px 1fr 16px; align-items: center; padding: 4px 4px 4px 8px; border-radius: 2px; color: var(--text); font-size: 13px; }
+.side ol a::before { content: counter(step); color: var(--text); }
 .side a:hover { background: var(--btn-hover); text-decoration: none; color: var(--strong); }
 .side a.current { background: var(--sel); color: var(--sel-text); }
 .side a.current::before { color: var(--sel-text); }
@@ -94,6 +94,7 @@ code, kbd, .mono, pre { font-family: var(--mono); font-size: 13px; }
 .side a.current .tick path { stroke: var(--sel-text); }
 .side a.done .tick path { opacity: 1; }
 .side .meta { font-size: 12px; color: var(--weak); padding: 10px 8px 0; }
+.side .meta a { color: var(--accent); }
 .content { min-width: 0; padding: 16px 24px 80px; }
 .lesson { max-width: 780px; }
 .statusbar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 40; height: 26px; padding: 4px 8px; background: var(--bg);

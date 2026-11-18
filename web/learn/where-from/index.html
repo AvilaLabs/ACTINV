@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Where does it come from? · Learn ACTINV</title>
+<meta name="description" content="Chapter 2 of the ACTINV course: trace each radioactive nuclide in the steel bracket back to the atom it was made from, and see why that decides what you can change.">
+<link rel="icon" href="../../favicon-e820714f418d9a3a.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../learn.css">
+<script>document.documentElement.dataset.theme = "dark"; try { if (localStorage.getItem("actinv-learn:theme") === '"Light"') delete document.documentElement.dataset.theme; } catch {}</script>
+<style>
+  .chart { display: grid; gap: 3px; margin: 6px 0; }
+  .chart .row { display: grid; grid-template-columns: 36px repeat(11, minmax(0, 1fr)); gap: 3px; }
+  .chart .zl { font-size: 12px; color: var(--weak); align-self: center; }
+  .chart .cell { min-height: 40px; border-radius: 2px; font: 11px/1.15 var(--mono); display: grid; place-items: center; text-align: center; padding: 2px; }
+  .chart .stable { background: var(--btn); color: var(--strong); border: 1px solid transparent; cursor: pointer; }
+  .chart .stable:hover { border-color: var(--btn-hover-stroke); }
+  .chart .stable.on { background: var(--sel); color: var(--sel-text); }
+  .chart .made { outline: 2px solid var(--warn); color: var(--strong); animation: pop .4s ease-out; }
+  .chart .made.radio { background: rgb(214 84 0 / .18); }
+  .chart .nl { font-size: 11px; color: var(--weak); text-align: center; }
+  @keyframes pop { from { transform: scale(.6); } }
+  .rx { display: flex; flex-wrap: wrap; gap: 6px; margin: 8px 0; }
+  .route { display: grid; grid-template-columns: minmax(0, 1fr) 170px 52px; gap: 10px; align-items: center; padding: 5px 0; border-bottom: 1px solid var(--stroke); font-size: 14px; }
+  .route:last-child { border-bottom: 0; }
+  .route .chain { font-family: var(--mono); font-size: 13px; color: var(--strong); }
+  .route .chain i { font-style: normal; color: var(--weak); }
+  .route .bar { height: 8px; background: var(--btn); }
+  .route .bar i { display: block; height: 100%; background: var(--accent); transition: width .4s ease; }
+  .route .pc { text-align: right; font-family: var(--mono); font-size: 13px; color: var(--strong); }
+  .guess-row { display: grid; grid-template-columns: 90px minmax(0, 1fr); gap: 8px; align-items: center; margin: 6px 0; }
+  .guess-row .who { font-family: var(--mono); color: var(--strong); }
+  .guess-row .verdict { grid-column: 2; font-size: 13px; color: var(--weak); }
+  .guess-row .sel.right { background: var(--sel); color: var(--sel-text); }
+  .guess-row .sel.miss { text-decoration: line-through; }
+  @media (max-width: 600px) { .route { grid-template-columns: 1fr 52px; } .route .bar { grid-column: 1 / -1; grid-row: 2; } .chart .cell { font-size: 9px; min-height: 34px; } }
+</style>
+</head>
+<body data-chapter="where-from">
+<header class="appbar">
+  <a class="brand" href="../../"><img src="../../actinv-mark.svg" alt=""><span><b>ACTINV</b> · Avila Labs</span></a>
+  <span class="spacer"></span>
+  <a class="link" href="../">Learn</a>
+  <a class="link" href="../../docs/">Handbook</a>
+  <a class="link" href="../../download/">Download desktop</a>
+</header>
+<div class="toolbar">
+  <button type="button" class="btn menu-btn" id="menu">Steps</button>
+  <a class="btn" href="../">Course home</a>
+  <a class="btn hide-narrow" href="files/routes.json" download>Download problem</a>
+  <span class="sep hide-narrow"></span>
+  <a class="btn hide-narrow" href="../../">Open the workbench</a>
+  <span class="spacer"></span>
+  <button type="button" class="btn" id="sound"></button>
+  <button type="button" class="btn" id="theme"></button>
+</div>
+
+<div class="shell">
+  <nav class="side" aria-label="Chapter steps">
+    <span class="caption">Chapter 2 · Where does it come from?</span>
+    <ol>
+      <li><a href="#intro"><span>The question</span></a></li>
+      <li><a href="#reactions"><span>Four reactions</span></a></li>
+      <li><a href="#guess"><span>Make a guess</span></a></li>
+      <li><a href="#routes"><span>The routes</span></a></li>
+      <li><a href="#run"><span>Ask ACTINV yourself</span></a></li>
+      <li><a href="#change"><span>What can you change?</span></a></li>
+      <li><a href="#wrap"><span>Check yourself</span></a></li>
+    </ol>
+    <div class="meta" id="progress-text"></div>
+    <span class="caption" style="margin-top:18px">About this chapter</span>
+    <div class="meta" style="padding-top:0">About 25 minutes. Builds on <a href="../first-irradiation/">chapter 1</a>, the steel bracket.</div>
+  </nav>
+
+  <main class="content">
+    <div class="lesson">
+      <h1>Where does it come from?</h1>
+      <p class="subtitle">The bracket from chapter 1 is radioactive, but steel isn't made of cobalt-60 or manganese-54. Each radioactive nuclide was made from an ordinary atom. This chapter traces them back, and shows why that tells you what you can and can't change.</p>
+
+      <section class="step" id="intro" style="border-top:0;padding-top:4px">
+        <div class="frame">
+          <p>In chapter 1 you found that cobalt-60 showed up even in steel with no cobalt in it, and that a little cobalt made the bracket much harder to handle years later. Both facts come from the same question: <strong>which atom turned into which nuclide, and by what reaction?</strong> ACTINV calls the answer a <span data-term="route">route</span>.</p>
+          <p class="note">This chapter uses the same bracket: 20 kg of SS316 with 0.1% cobalt, two years in chapter 1's neutron field, looked at one day after shutdown. All numbers come from ACTINV runs of the problem file you can download.</p>
+        </div>
+        <div class="task" data-task="c2-start"><span>Ready? <button type="button" class="btn primary" id="start" data-task="c2-start" style="margin-left:6px">Start the chapter</button></span></div>
+      </section>
+
+      <section class="step" id="reactions">
+        <div class="stepno">Step 2 of 7</div>
+        <h2>Four reactions make most of it</h2>
+        <p>When a neutron hits a nucleus, a handful of things can happen. Four of them make nearly everything radioactive in steel. They're written as <code>(n,x)</code>: a neutron goes in, <code>x</code> comes out.</p>
+        <ul>
+          <li><strong>(n,γ)</strong>, "n-gamma": the nucleus <span data-term="capture">captures</span> the neutron and gets one mass unit heavier. Same element. Slow neutrons are best at it.</li>
+          <li><strong>(n,p)</strong>: the neutron goes in and a proton comes out, so the element changes to the one below it. Needs a fast neutron.</li>
+          <li><strong>(n,2n)</strong>: a very fast neutron knocks a second one out. Same element, one mass unit lighter.</li>
+          <li><strong>(n,α)</strong>: an alpha particle (two protons, two neutrons) comes out. Two elements down. Needs a fast neutron.</li>
+        </ul>
+        <p>Below is a small piece of the <span data-term="chart">chart of nuclides</span>: each row is an element, each column a number of neutrons. The grey squares are the stable atoms in steel. Pick one, then a reaction, and see what it makes.</p>
+        <div class="frame">
+          <div class="chart" id="chart" aria-label="Part of the chart of nuclides from chromium to nickel"></div>
+          <div class="rx" id="rx" role="group" aria-label="Reactions">
+            <button type="button" class="btn" data-rx="ng">(n,γ) capture</button>
+            <button type="button" class="btn" data-rx="np">(n,p)</button>
+            <button type="button" class="btn" data-rx="n2n">(n,2n)</button>
+            <button type="button" class="btn" data-rx="na">(n,α)</button>
+          </div>
+          <p class="cap" id="rx-out">Pick a grey square first.</p>
+        </div>
+        <div class="task" data-task="c2-reactions"><span>Try all four reactions, on any atoms you like.</span></div>
+      </section>
+
+      <section class="step" id="guess">
+        <div class="stepno">Step 3 of 7</div>
+        <h2>Make a guess</h2>
+        <p>Here are four nuclides that matter in the bracket one day after shutdown. For each, which element of the steel do you think made most of it? Steel here is 67% iron, 17% chromium, 12% nickel, 2.5% molybdenum, 1% manganese and 0.1% cobalt.</p>
+        <div class="frame" id="guesses"></div>
+        <div class="controls"><button type="button" class="btn primary" id="lock" disabled>Lock in my guesses</button><span class="note" id="guess-note">Pick an element for each.</span></div>
+        <div class="task" data-task="c2-guess"><span>Lock in your four guesses.</span></div>
+      </section>
+
+      <section class="step" id="routes">
+        <div class="stepno">Step 4 of 7</div>
+        <h2>The routes</h2>
+        <p>ACTINV follows every chain from the atoms you started with to each nuclide you ask about, integrates each one exactly through the irradiation, and reports what share of the nuclide's atoms came down each route. Pick a nuclide:</p>
+        <div class="frame">
+          <div class="controls" id="targets" role="group" aria-label="Nuclide"></div>
+          <div class="controls" role="group" aria-label="Which bracket">
+            <span>Bracket:</span>
+            <button type="button" class="sel on" data-case="cobalt">Chapter 1's field, 0.1% cobalt</button>
+            <button type="button" class="sel" data-case="no_cobalt">No cobalt</button>
+            <button type="button" class="sel" data-case="fast_only">Only 14 MeV neutrons</button>
+          </div>
+          <h4 id="route-title" style="margin-top:10px"></h4>
+          <div id="route-list"></div>
+          <p class="cap" id="route-cap"></p>
+        </div>
+        <div class="task" data-task="c2-routes"><span>Look at the routes for at least four nuclides.</span></div>
+        <div class="task" data-task="c2-field"><span>Switch to "Only 14 MeV neutrons" and look at cobalt-60 again. Where did its biggest route go?</span></div>
+        <details class="collapse"><summary>Why is cobalt-60 split into two routes through Co-60m?</summary><div>
+          <p>Capture on cobalt-59 often leaves cobalt-60 in an excited, <span data-term="isomer">isomeric</span> state, Co-60m, which settles to ordinary cobalt-60 in about ten minutes. ACTINV keeps the two states apart, so a route can pass through either. Both end in the same nuclide, so for this question you can add them up.</p>
+        </div></details>
+      </section>
+
+      <section class="step" id="run">
+        <div class="stepno">Step 5 of 7</div>
+        <h2>Ask ACTINV yourself</h2>
+        <p>Routes are something you ask for. The problem file is chapter 1's, with one extra block, <code>pathways</code>, naming the nuclides to trace. Click each part:</p>
+        <div class="filebox">
+          <pre aria-label="The routes problem file" id="file"></pre>
+          <div class="explain">
+            <div class="chips" id="chips" role="tablist" aria-label="Parts of the file"></div>
+            <div id="explain" aria-live="polite"></div>
+          </div>
+        </div>
+        <div class="task" data-task="c2-file"><span>Open every part of the file.</span></div>
+
+        <div class="tabs" role="tablist" aria-label="Ways to run ACTINV">
+          <button type="button" class="sel on" role="tab" aria-selected="true" aria-controls="door-terminal" id="tab-terminal">Command line</button>
+          <button type="button" class="sel" role="tab" aria-selected="false" aria-controls="door-app" id="tab-app">Desktop app</button>
+          <button type="button" class="sel" role="tab" aria-selected="false" aria-controls="door-python" id="tab-python">Python</button>
+        </div>
+        <div class="tabpanel" role="tabpanel" id="door-terminal" aria-labelledby="tab-terminal">
+          <p>The result is JSON, so any tool can pick out what you need. Here that tool is <span data-term="jq">jq</span>, a small, free command-line program for reading JSON.</p>
+          <div class="term-window">
+            <div class="bar">Practice terminal · ~/routes-lesson</div>
+            <div class="term-screen" id="screen" aria-live="polite"></div>
+          </div>
+          <div class="term-cue" id="cue"></div>
+          <div class="task" data-task="c2-t-validate"><span>Check the file: <code>actinv validate routes.json</code></span></div>
+          <div class="task" data-task="c2-t-run"><span>Run it: <code>actinv run routes.json routes-result.json</code></span></div>
+          <div class="task" data-task="c2-t-jq"><span>Read cobalt-60's routes out of the result with jq.</span></div>
+        </div>
+        <div class="tabpanel" role="tabpanel" id="door-app" aria-labelledby="tab-app" hidden>
+          <ol class="steps">
+            <li>Download <a href="files/routes.json" download>routes.json</a> and <a href="files/photon-response.json" download>photon-response.json</a> into one folder, and open <code>routes.json</code> with <strong>Open problem…</strong>.</li>
+            <li>On <strong>What to compute</strong>, the pathways card already has <strong>Full routes with closure</strong> ticked and the eight nuclides listed as targets. For your own problems, tick it there and type the nuclides you care about, or leave the targets empty for the nuclides that dominate at the last step.</li>
+            <li><strong>Check &amp; run</strong>, then <strong>▶ Run calculation</strong>.</li>
+            <li>Open <strong>Pathways</strong> among the result pages: each target with its routes and their shares, as in step 4.</li>
+          </ol>
+          <div class="task" data-task="c2-app"><span>I've read the app steps. <button type="button" class="btn" id="app-done" style="margin-left:6px">Done</button></span></div>
+        </div>
+        <div class="tabpanel" role="tabpanel" id="door-python" aria-labelledby="tab-python" hidden>
+          <p>A result is a dictionary in Python, so the routes are one loop away:</p>
+          <pre class="code" id="py1"></pre>
+          <div class="controls"><button type="button" class="btn primary" id="py-run">Run this</button><span id="py-status"></span></div>
+          <pre class="code" id="py1-out" hidden></pre>
+          <div class="task" data-task="c2-python"><span>Run the Python example.</span></div>
+          <p class="note">The button replays what this script printed with ACTINV <span class="ver"></span>.</p>
+        </div>
+        <details class="collapse"><summary>Why does it say a route is "integrated exactly"?</summary><div>
+          <p>Some codes estimate a route's share from a simplified chain formula. ACTINV solves each route as its own small chain, with every nuclide's full loss rate and the same irradiation history as the main calculation, so the shares of a nuclide's routes add up to the atoms ACTINV actually computed. The result says how much is explained: <code>explained_fraction</code> is 0.999 or more for every nuclide here.</p>
+        </div></details>
+      </section>
+
+      <section class="step" id="change">
+        <div class="stepno">Step 6 of 7</div>
+        <h2>What can you change?</h2>
+        <p>Here's why routes matter. Suppose the bracket's dose rate is too high and you're choosing which steel to buy next time. For each nuclide below, can a different purchase specification lower it?</p>
+        <div class="frame" id="levers"></div>
+        <div class="task" data-task="c2-change"><span>Decide for all four nuclides.</span></div>
+        <div class="frame">
+          <span class="caption">What ACTINV does differently</span>
+          <p><strong>Routes on request, in the same run.</strong> One extra block in the problem file gives every route to the nuclides you name, with exact shares and how much of each nuclide the routes explain. It works for any material and history ACTINV can run, and the answer comes back in the same JSON result as everything else, ready for a script, a notebook or the app's Pathways page.</p>
+        </div>
+      </section>
+
+      <section class="step" id="wrap">
+        <div class="stepno">Step 7 of 7</div>
+        <h2>Check yourself</h2>
+        <div class="quiz" id="quiz"></div>
+        <div class="frame" id="finish">
+          <h4 id="finish-title">Finish the steps to complete the chapter</h4>
+          <p class="note" id="finish-text">Each step needs its boxes ticked.</p>
+          <p><a class="btn primary" href="files/routes.json" download>Download routes.json</a> <a class="btn" href="files/photon-response.json" download>photon-response.json</a></p>
+        </div>
+        <h3>Next</h3>
+        <p><a href="../impurities/">Chapter 3: the impurities that matter</a>. Cobalt was one impurity, checked by hand. ACTINV can check every trace element at once and tell you how much of each you can allow.</p>
+        <p><button type="button" class="btn" id="reset">Start this chapter over</button></p>
+      </section>
+    </div>
+  </main>
+</div>
+<div class="statusbar" id="status" role="status">Start with step 1, or pick any step from the list on the left.</div>
+<script type="module" src="./chapter.js"></script>
+</body>
+</html>

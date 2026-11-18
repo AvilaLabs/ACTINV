@@ -1,0 +1,819 @@
+{
+ "about": "ACTINV pathway routes for the course bracket one day after shutdown: each route's share of its nuclide's atoms; activity in Bq and the 1 m point-source air kerma rate in Gy/h (about Sv/h).",
+ "actinv_version": "actinv 1.7.2",
+ "problem_sha256": "26413982d0dfe67e9f9a1add57029bfbfa9265a58c1799b48de5dc0fca39070d",
+ "composition_wt_percent": {
+  "C": 0.041,
+  "Cr": 17.0,
+  "Fe": 66.8,
+  "Mn": 1.014,
+  "Mo": 2.5,
+  "Ni": 12.0,
+  "P": 0.023,
+  "S": 0.015,
+  "Si": 0.507,
+  "Co": 0.1
+ },
+ "cases": {
+  "cobalt": {
+   "total_dose_Gy_h": 0.005375014031547055,
+   "total_activity_Bq": 202122218901.50482,
+   "targets": {
+    "Mn56": {
+     "activity_Bq": 160720154.19547638,
+     "dose_Gy_h": 3.249751026120398e-05,
+     "explained": 0.9993810810610383,
+     "routes": [
+      {
+       "nuclides": [
+        "Mn55",
+        "Mn56"
+       ],
+       "edges": [
+        "(n,g)"
+       ],
+       "fraction": 0.6319
+      },
+      {
+       "nuclides": [
+        "Fe56",
+        "Mn56"
+       ],
+       "edges": [
+        "(n,p)"
+       ],
+       "fraction": 0.36748
+      }
+     ]
+    },
+    "Cr51": {
+     "activity_Bq": 82557423270.21513,
+     "dose_Gy_h": 0.0003472698188929408,
+     "explained": 0.9999999894347542,
+     "routes": [
+      {
+       "nuclides": [
+        "Cr50",
+        "Cr51"
+       ],
+       "edges": [
+        "(n,g)"
+       ],
+       "fraction": 0.6735
+      },
+      {
+       "nuclides": [
+        "Cr52",
+        "Cr51"
+       ],
+       "edges": [
+        "(n,2n)"
+       ],
+       "fraction": 0.30457
+      },
+      {
+       "nuclides": [
+        "Fe54",
+        "Cr51"
+       ],
+       "edges": [
+        "(n,a)/(n,nh)/(n,pt)"
+       ],
+       "fraction": 0.02192
+      }
+     ]
+    },
+    "Fe55": {
+     "activity_Bq": 59784371545.53157,
+     "dose_Gy_h": 1.0714262625962923e-12,
+     "explained": 0.999999979643642,
+     "routes": [
+      {
+       "nuclides": [
+        "Fe56",
+        "Fe55"
+       ],
+       "edges": [
+        "(n,2n)"
+       ],
+       "fraction": 0.70004
+      },
+      {
+       "nuclides": [
+        "Fe54",
+        "Fe55"
+       ],
+       "edges": [
+        "(n,g)"
+       ],
+       "fraction": 0.24905
+      },
+      {
+       "nuclides": [
+        "Ni58",
+        "Fe55"
+       ],
+       "edges": [
+        "(n,a)/(n,nh)/(n,pt)"
+       ],
+       "fraction": 0.05092
+      }
+     ]
+    },
+    "Co58": {
+     "activity_Bq": 14987309163.303617,
+     "dose_Gy_h": 0.0016217070010532502,
+     "explained": 0.9999930686203464,
+     "routes": [
+      {
+       "nuclides": [
+        "Ni58",
+        "Co58"
+       ],
+       "edges": [
+        "(n,p)"
+       ],
+       "fraction": 0.49676
+      },
+      {
+       "nuclides": [
+        "Ni58",
+        "Co58m1",
+        "Co58"
+       ],
+       "edges": [
+        "(n,p)",
+        "IT"
+       ],
+       "fraction": 0.47967
+      },
+      {
+       "nuclides": [
+        "Co59",
+        "Co58m1",
+        "Co58"
+       ],
+       "edges": [
+        "(n,2n)",
+        "IT"
+       ],
+       "fraction": 0.01523
+      },
+      {
+       "nuclides": [
+        "Co59",
+        "Co58"
+       ],
+       "edges": [
+        "(n,2n)"
+       ],
+       "fraction": 0.00833
+      }
+     ]
+    },
+    "Mn54": {
+     "activity_Bq": 8964237088.586454,
+     "dose_Gy_h": 0.000983533529955085,
+     "explained": 0.9995422252615466,
+     "routes": [
+      {
+       "nuclides": [
+        "Fe54",
+        "Mn54"
+       ],
+       "edges": [
+        "(n,p)"
+       ],
+       "fraction": 0.63319
+      },
+      {
+       "nuclides": [
+        "Mn55",
+        "Mn54"
+       ],
+       "edges": [
+        "(n,2n)"
+       ],
+       "fraction": 0.36635
+      }
+     ]
+    },
+    "Co60": {
+     "activity_Bq": 5018578636.73642,
+     "dose_Gy_h": 0.0015339146422346398,
+     "explained": 0.9992035155569873,
+     "routes": [
+      {
+       "nuclides": [
+        "Co59",
+        "Co60"
+       ],
+       "edges": [
+        "(n,g)"
+       ],
+       "fraction": 0.65797
+      },
+      {
+       "nuclides": [
+        "Co59",
+        "Co60m1",
+        "Co60"
+       ],
+       "edges": [
+        "(n,g)",
+        "IT"
+       ],
+       "fraction": 0.2316
+      },
+      {
+       "nuclides": [
+        "Ni60",
+        "Co60m1",
+        "Co60"
+       ],
+       "edges": [
+        "(n,p)",
+        "IT"
+       ],
+       "fraction": 0.06341
+      },
+      {
+       "nuclides": [
+        "Ni60",
+        "Co60"
+       ],
+       "edges": [
+        "(n,p)"
+       ],
+       "fraction": 0.04622
+      }
+     ]
+    },
+    "Fe59": {
+     "activity_Bq": 1189001297.2706103,
+     "dose_Gy_h": 0.00017458469389034618,
+     "explained": 0.9999959618584884,
+     "routes": [
+      {
+       "nuclides": [
+        "Fe58",
+        "Fe59"
+       ],
+       "edges": [
+        "(n,g)"
+       ],
+       "fraction": 0.94672
+      },
+      {
+       "nuclides": [
+        "Ni62",
+        "Fe59"
+       ],
+       "edges": [
+        "(n,a)/(n,nh)/(n,pt)"
+       ],
+       "fraction": 0.03218
+      },
+      {
+       "nuclides": [
+        "Co59",
+        "Fe59"
+       ],
+       "edges": [
+        "(n,p)"
+       ],
+       "fraction": 0.02109
+      }
+     ]
+    },
+    "Co57": {
+     "activity_Bq": 20778692809.157833,
+     "dose_Gy_h": 0.00046761183178666607,
+     "explained": 0.9999999912249002,
+     "routes": [
+      {
+       "nuclides": [
+        "Ni58",
+        "Co57"
+       ],
+       "edges": [
+        "(n,d)/(n,np)"
+       ],
+       "fraction": 0.96007
+      },
+      {
+       "nuclides": [
+        "Ni58",
+        "Ni57",
+        "Co57"
+       ],
+       "edges": [
+        "(n,2n)",
+        "(n,p)/b+/EC"
+       ],
+       "fraction": 0.03993
+      }
+     ]
+    }
+   }
+  },
+  "no_cobalt": {
+   "total_dose_Gy_h": 0.003969787685697238,
+   "total_activity_Bq": 197340649292.33368,
+   "targets": {
+    "Mn56": {
+     "activity_Bq": 160783388.4216641,
+     "dose_Gy_h": 3.2510296180460215e-05,
+     "explained": 0.9995379360078045,
+     "routes": [
+      {
+       "nuclides": [
+        "Mn55",
+        "Mn56"
+       ],
+       "edges": [
+        "(n,g)"
+       ],
+       "fraction": 0.63165
+      },
+      {
+       "nuclides": [
+        "Fe56",
+        "Mn56"
+       ],
+       "edges": [
+        "(n,p)"
+       ],
+       "fraction": 0.36788
+      }
+     ]
+    },
+    "Cr51": {
+     "activity_Bq": 82560132828.18059,
+     "dose_Gy_h": 0.00034728121638654796,
+     "explained": 0.9999999894348028,
+     "routes": [
+      {
+       "nuclides": [
+        "Cr50",
+        "Cr51"
+       ],
+       "edges": [
+        "(n,g)"
+       ],
+       "fraction": 0.67348
+      },
+      {
+       "nuclides": [
+        "Cr52",
+        "Cr51"
+       ],
+       "edges": [
+        "(n,2n)"
+       ],
+       "fraction": 0.30456
+      },
+      {
+       "nuclides": [
+        "Fe54",
+        "Cr51"
+       ],
+       "edges": [
+        "(n,a)/(n,nh)/(n,pt)"
+       ],
+       "fraction": 0.02196
+      }
+     ]
+    },
+    "Fe55": {
+     "activity_Bq": 59869312122.716484,
+     "dose_Gy_h": 1.0729485260708975e-12,
+     "explained": 0.9999999796633133,
+     "routes": [
+      {
+       "nuclides": [
+        "Fe56",
+        "Fe55"
+       ],
+       "edges": [
+        "(n,2n)"
+       ],
+       "fraction": 0.70009
+      },
+      {
+       "nuclides": [
+        "Fe54",
+        "Fe55"
+       ],
+       "edges": [
+        "(n,g)"
+       ],
+       "fraction": 0.24906
+      },
+      {
+       "nuclides": [
+        "Ni58",
+        "Fe55"
+       ],
+       "edges": [
+        "(n,a)/(n,nh)/(n,pt)"
+       ],
+       "fraction": 0.05085
+      }
+     ]
+    },
+    "Co58": {
+     "activity_Bq": 14634249277.628428,
+     "dose_Gy_h": 0.0015835040333188936,
+     "explained": 0.999992901685899,
+     "routes": [
+      {
+       "nuclides": [
+        "Ni58",
+        "Co58"
+       ],
+       "edges": [
+        "(n,p)"
+       ],
+       "fraction": 0.50875
+      },
+      {
+       "nuclides": [
+        "Ni58",
+        "Co58m1",
+        "Co58"
+       ],
+       "edges": [
+        "(n,p)",
+        "IT"
+       ],
+       "fraction": 0.49124
+      }
+     ]
+    },
+    "Mn54": {
+     "activity_Bq": 8972734294.40117,
+     "dose_Gy_h": 0.0009844658219892108,
+     "explained": 0.9995426463180848,
+     "routes": [
+      {
+       "nuclides": [
+        "Fe54",
+        "Mn54"
+       ],
+       "edges": [
+        "(n,p)"
+       ],
+       "fraction": 0.63354
+      },
+      {
+       "nuclides": [
+        "Mn55",
+        "Mn54"
+       ],
+       "edges": [
+        "(n,2n)"
+       ],
+       "fraction": 0.36601
+      }
+     ]
+    },
+    "Co60": {
+     "activity_Bq": 554179558.7444302,
+     "dose_Gy_h": 0.00016938344521747094,
+     "explained": 0.9927872666804779,
+     "routes": [
+      {
+       "nuclides": [
+        "Ni60",
+        "Co60m1",
+        "Co60"
+       ],
+       "edges": [
+        "(n,p)",
+        "IT"
+       ],
+       "fraction": 0.57424
+      },
+      {
+       "nuclides": [
+        "Ni60",
+        "Co60"
+       ],
+       "edges": [
+        "(n,p)"
+       ],
+       "fraction": 0.41855
+      }
+     ]
+    },
+    "Fe59": {
+     "activity_Bq": 1165612012.7534745,
+     "dose_Gy_h": 0.00017115037377050114,
+     "explained": 0.9999959756466414,
+     "routes": [
+      {
+       "nuclides": [
+        "Fe58",
+        "Fe59"
+       ],
+       "edges": [
+        "(n,g)"
+       ],
+       "fraction": 0.96717
+      },
+      {
+       "nuclides": [
+        "Ni62",
+        "Fe59"
+       ],
+       "edges": [
+        "(n,a)/(n,nh)/(n,pt)"
+       ],
+       "fraction": 0.03283
+      }
+     ]
+    },
+    "Co57": {
+     "activity_Bq": 20778692804.933308,
+     "dose_Gy_h": 0.00046761183169159574,
+     "explained": 0.9999999914282108,
+     "routes": [
+      {
+       "nuclides": [
+        "Ni58",
+        "Co57"
+       ],
+       "edges": [
+        "(n,d)/(n,np)"
+       ],
+       "fraction": 0.96007
+      },
+      {
+       "nuclides": [
+        "Ni58",
+        "Ni57",
+        "Co57"
+       ],
+       "edges": [
+        "(n,2n)",
+        "(n,p)/b+/EC"
+       ],
+       "fraction": 0.03993
+      }
+     ]
+    }
+   }
+  },
+  "fast_only": {
+   "total_dose_Gy_h": 0.014161383819714825,
+   "total_activity_Bq": 490164784646.8451,
+   "targets": {
+    "Mn56": {
+     "activity_Bq": 236663539.27355495,
+     "dose_Gy_h": 4.785321314861999e-05,
+     "explained": 0.9982284948023977,
+     "routes": [
+      {
+       "nuclides": [
+        "Fe56",
+        "Mn56"
+       ],
+       "edges": [
+        "(n,p)"
+       ],
+       "fraction": 0.99823
+      }
+     ]
+    },
+    "Cr51": {
+     "activity_Bq": 107845000572.38336,
+     "dose_Gy_h": 0.0004536395678762937,
+     "explained": 0.9997625345600213,
+     "routes": [
+      {
+       "nuclides": [
+        "Cr52",
+        "Cr51"
+       ],
+       "edges": [
+        "(n,2n)"
+       ],
+       "fraction": 0.93263
+      },
+      {
+       "nuclides": [
+        "Fe54",
+        "Cr51"
+       ],
+       "edges": [
+        "(n,a)/(n,nh)/(n,pt)"
+       ],
+       "fraction": 0.06713
+      }
+     ]
+    },
+    "Fe55": {
+     "activity_Bq": 179630128839.4956,
+     "dose_Gy_h": 3.2192433008284446e-12,
+     "explained": 0.9997211496964072,
+     "routes": [
+      {
+       "nuclides": [
+        "Fe56",
+        "Fe55"
+       ],
+       "edges": [
+        "(n,2n)"
+       ],
+       "fraction": 0.93194
+      },
+      {
+       "nuclides": [
+        "Ni58",
+        "Fe55"
+       ],
+       "edges": [
+        "(n,a)/(n,nh)/(n,pt)"
+       ],
+       "fraction": 0.06778
+      }
+     ]
+    },
+    "Co58": {
+     "activity_Bq": 59984132765.82649,
+     "dose_Gy_h": 0.006490603950216104,
+     "explained": 0.9999995437328341,
+     "routes": [
+      {
+       "nuclides": [
+        "Ni58",
+        "Co58"
+       ],
+       "edges": [
+        "(n,p)"
+       ],
+       "fraction": 0.49675
+      },
+      {
+       "nuclides": [
+        "Ni58",
+        "Co58m1",
+        "Co58"
+       ],
+       "edges": [
+        "(n,p)",
+        "IT"
+       ],
+       "fraction": 0.47969
+      },
+      {
+       "nuclides": [
+        "Co59",
+        "Co58m1",
+        "Co58"
+       ],
+       "edges": [
+        "(n,2n)",
+        "IT"
+       ],
+       "fraction": 0.01523
+      },
+      {
+       "nuclides": [
+        "Co59",
+        "Co58"
+       ],
+       "edges": [
+        "(n,2n)"
+       ],
+       "fraction": 0.00833
+      }
+     ]
+    },
+    "Mn54": {
+     "activity_Bq": 35856631784.999855,
+     "dose_Gy_h": 0.003934099386628522,
+     "explained": 0.9995475837407453,
+     "routes": [
+      {
+       "nuclides": [
+        "Fe54",
+        "Mn54"
+       ],
+       "edges": [
+        "(n,p)"
+       ],
+       "fraction": 0.63319
+      },
+      {
+       "nuclides": [
+        "Mn55",
+        "Mn54"
+       ],
+       "edges": [
+        "(n,2n)"
+       ],
+       "fraction": 0.36636
+      }
+     ]
+    },
+    "Co60": {
+     "activity_Bq": 2217134977.52444,
+     "dose_Gy_h": 0.0006776611570735313,
+     "explained": 0.992600673735397,
+     "routes": [
+      {
+       "nuclides": [
+        "Ni60",
+        "Co60m1",
+        "Co60"
+       ],
+       "edges": [
+        "(n,p)",
+        "IT"
+       ],
+       "fraction": 0.57413
+      },
+      {
+       "nuclides": [
+        "Ni60",
+        "Co60"
+       ],
+       "edges": [
+        "(n,p)"
+       ],
+       "fraction": 0.41847
+      }
+     ]
+    },
+    "Fe59": {
+     "activity_Bq": 257299900.14055803,
+     "dose_Gy_h": 3.778013060807643e-05,
+     "explained": 0.9999950368289358,
+     "routes": [
+      {
+       "nuclides": [
+        "Ni62",
+        "Fe59"
+       ],
+       "edges": [
+        "(n,a)/(n,nh)/(n,pt)"
+       ],
+       "fraction": 0.5949
+      },
+      {
+       "nuclides": [
+        "Co59",
+        "Fe59"
+       ],
+       "edges": [
+        "(n,p)"
+       ],
+       "fraction": 0.38981
+      },
+      {
+       "nuclides": [
+        "Fe58",
+        "Fe59"
+       ],
+       "edges": [
+        "(n,g)"
+       ],
+       "fraction": 0.01529
+      }
+     ]
+    },
+    "Co57": {
+     "activity_Bq": 83114965245.11778,
+     "dose_Gy_h": 0.0018704516931895413,
+     "explained": 0.9999999654459605,
+     "routes": [
+      {
+       "nuclides": [
+        "Ni58",
+        "Co57"
+       ],
+       "edges": [
+        "(n,d)/(n,np)"
+       ],
+       "fraction": 0.96007
+      },
+      {
+       "nuclides": [
+        "Ni58",
+        "Ni57",
+        "Co57"
+       ],
+       "edges": [
+        "(n,2n)",
+        "(n,p)/b+/EC"
+       ],
+       "fraction": 0.03993
+      }
+     ]
+    }
+   }
+  }
+ }
+}

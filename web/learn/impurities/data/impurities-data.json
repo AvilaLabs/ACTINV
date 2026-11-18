@@ -1,0 +1,1123 @@
+{
+ "about": "actinv impurities on the course bracket steel: per cooling time and endpoint, the matrix-only and nominal values, each impurity's contribution and gradient per wt%, and the limits at 10 years.",
+ "actinv_version": "actinv 1.7.2",
+ "files_sha256": {
+  "base.json": "47ea5c8558878728811359d1fd246832953ca8e7267aa3a62dac9b9572466fe1",
+  "screen.json": "23484c62d781d500a370cd022aa368f10a7ea8832027da18feb2e517eea21e2f",
+  "limit.json": "7f91e5bb4846490911b25c59cbf1ad0e76c14773e5cfeab7d110882e5805637d"
+ },
+ "impurities": {
+  "Co": {
+   "nominal": 0.1,
+   "min": 0.02,
+   "max": 0.2
+  },
+  "Cu": {
+   "nominal": 0.1,
+   "min": 0.0,
+   "max": 0.3
+  },
+  "N": {
+   "nominal": 0.05,
+   "min": 0.02,
+   "max": 0.1
+  },
+  "Nb": {
+   "nominal": 0.005,
+   "min": 0.0,
+   "max": 0.05
+  },
+  "Ta": {
+   "nominal": 0.005,
+   "min": 0.0,
+   "max": 0.02
+  },
+  "B": {
+   "nominal": 0.001,
+   "min": 0.0,
+   "max": 0.003
+  },
+  "Ag": {
+   "nominal": 0.0005,
+   "min": 0.0,
+   "max": 0.002
+  }
+ },
+ "times": [
+  "30 days",
+  "1 year",
+  "10 years",
+  "100 years"
+ ],
+ "screen": [
+  {
+   "activity.total": {
+    "unit": "Bq/g",
+    "matrix_only": 7021229.270585352,
+    "nominal": 7284151.244071613,
+    "worst": 7639537.1190937245,
+    "impurities": {
+     "Ag": {
+      "nominal_wt": 0.0005,
+      "gradient": 802803.4360061139,
+      "contribution": 401.40171800305694,
+      "at_max": 1605.6068720122278,
+      "top": [
+       "Ag110m1",
+       "Ag110"
+      ]
+     },
+     "B": {
+      "nominal_wt": 0.001,
+      "gradient": -46802.5204382599,
+      "contribution": -46.8025204382599,
+      "at_max": -140.40756131477968,
+      "top": [
+       "Fe55",
+       "Mn54"
+      ]
+     },
+     "Co": {
+      "nominal_wt": 0.1,
+      "gradient": 2303196.2330623125,
+      "contribution": 230319.62330623125,
+      "at_max": 460639.2466124625,
+      "top": [
+       "Co60",
+       "Co58"
+      ]
+     },
+     "Cu": {
+      "nominal_wt": 0.1,
+      "gradient": -44967.935511056465,
+      "contribution": -4496.793551105647,
+      "at_max": -13490.380653316939,
+      "top": [
+       "Fe55",
+       "Mn54"
+      ]
+     },
+     "N": {
+      "nominal_wt": 0.05,
+      "gradient": -46404.22743442456,
+      "contribution": -2320.2113717212283,
+      "at_max": -4640.4227434424565,
+      "top": [
+       "Fe55",
+       "Mn54"
+      ]
+     },
+     "Nb": {
+      "nominal_wt": 0.005,
+      "gradient": -36602.79757078933,
+      "contribution": -183.01398785394665,
+      "at_max": -1830.1398785394665,
+      "top": [
+       "Fe55",
+       "Mn54"
+      ]
+     },
+     "Ta": {
+      "nominal_wt": 0.005,
+      "gradient": 7849553.978629367,
+      "contribution": 39247.76989314684,
+      "at_max": 156991.07957258736,
+      "top": [
+       "Ta182",
+       "Hf181"
+      ]
+     }
+    }
+   },
+   "dose.contact_proxy": {
+    "unit": "Gy/h",
+    "matrix_only": 0.25003596397027583,
+    "nominal": 0.42531011609337804,
+    "worst": 0.6280389448995659,
+    "impurities": {
+     "Ag": {
+      "nominal_wt": 0.0005,
+      "gradient": 0.5926438722159129,
+      "contribution": 0.00029632194466600037,
+      "at_max": 0.0011852876759665398,
+      "top": [
+       "Ag110m1",
+       "Ag106m1"
+      ]
+     },
+     "B": {
+      "nominal_wt": 0.001,
+      "gradient": -0.0009016087071378441,
+      "contribution": -9.016086586211003e-07,
+      "at_max": -2.704826234656288e-06,
+      "top": [
+       "Mn54",
+       "Fe59"
+      ]
+     },
+     "Co": {
+      "nominal_wt": 0.1,
+      "gradient": 1.61674390356603,
+      "contribution": 0.1616719789681495,
+      "at_max": 0.32334878078511775,
+      "top": [
+       "Co60",
+       "Co58"
+      ]
+     },
+     "Cu": {
+      "nominal_wt": 0.1,
+      "gradient": 0.0002530255063526441,
+      "contribution": 2.5301748256878476e-05,
+      "at_max": 7.591005879153956e-05,
+      "top": [
+       "Co60",
+       "Co58"
+      ]
+     },
+     "N": {
+      "nominal_wt": 0.05,
+      "gradient": -0.0012369192656791473,
+      "contribution": -6.18481255952319e-05,
+      "at_max": -0.00012369192652106342,
+      "top": [
+       "Mn54",
+       "Fe59"
+      ]
+     },
+     "Nb": {
+      "nominal_wt": 0.005,
+      "gradient": 0.0013811384680373435,
+      "contribution": 6.905657089273376e-06,
+      "at_max": 6.905974138121662e-05,
+      "top": [
+       "Nb92m1",
+       "Co60"
+      ]
+     },
+     "Ta": {
+      "nominal_wt": 0.005,
+      "gradient": 2.666753759711942,
+      "contribution": 0.013333874137883284,
+      "at_max": 0.0533342333451553,
+      "top": [
+       "Ta182",
+       "Hf181"
+      ]
+     }
+    }
+   },
+   "clearance_index": {
+    "unit": "1 (IAEA clearance index)",
+    "matrix_only": 6059552.831515839,
+    "nominal": 8672798.590709044,
+    "worst": 12091933.692161359,
+    "impurities": {
+     "Ag": {
+      "nominal_wt": 0.0005,
+      "gradient": 8309611.439406053,
+      "contribution": 4154.805719703027,
+      "at_max": 16619.222878812107,
+      "top": [
+       "Ag110m1",
+       "Cd109"
+      ]
+     },
+     "B": {
+      "nominal_wt": 0.001,
+      "gradient": -40419.98153298457,
+      "contribution": -40.41998153298457,
+      "at_max": -121.25994459895372,
+      "top": [
+       "Mn54",
+       "Fe59"
+      ]
+     },
+     "Co": {
+      "nominal_wt": 0.1,
+      "gradient": 22190714.33991991,
+      "contribution": 2219071.433991991,
+      "at_max": 4438142.867983982,
+      "top": [
+       "Co60",
+       "Co58"
+      ]
+     },
+     "Cu": {
+      "nominal_wt": 0.1,
+      "gradient": -23431.73987641993,
+      "contribution": -2343.1739876419933,
+      "at_max": -7029.521962925979,
+      "top": [
+       "Mn54",
+       "Fe59"
+      ]
+     },
+     "N": {
+      "nominal_wt": 0.05,
+      "gradient": -40021.65783275934,
+      "contribution": -2001.082891637967,
+      "at_max": -4002.165783275934,
+      "top": [
+       "Mn54",
+       "Fe59"
+      ]
+     },
+     "Nb": {
+      "nominal_wt": 0.005,
+      "gradient": -40120.878504248874,
+      "contribution": -200.60439252124436,
+      "at_max": -2006.0439252124438,
+      "top": [
+       "Mn54",
+       "Fe59"
+      ]
+     },
+     "Ta": {
+      "nominal_wt": 0.005,
+      "gradient": 78920960.14696899,
+      "contribution": 394604.800734845,
+      "at_max": 1578419.20293938,
+      "top": [
+       "Ta182",
+       "Hf181"
+      ]
+     }
+    }
+   }
+  },
+  {
+   "activity.total": {
+    "unit": "Bq/g",
+    "matrix_only": 3028941.1362892766,
+    "nominal": 3221667.0828889958,
+    "worst": 3434590.1204500566,
+    "impurities": {
+     "Ag": {
+      "nominal_wt": 0.0005,
+      "gradient": 299148.0811078979,
+      "contribution": 149.57404055394898,
+      "at_max": 598.2961622157959,
+      "top": [
+       "Ag110m1",
+       "Ag110"
+      ]
+     },
+     "B": {
+      "nominal_wt": 0.001,
+      "gradient": -34907.42436574559,
+      "contribution": -34.90742436574559,
+      "at_max": -104.72227309723677,
+      "top": [
+       "Fe55",
+       "Mn54"
+      ]
+     },
+     "Co": {
+      "nominal_wt": 0.1,
+      "gradient": 1927996.742429056,
+      "contribution": 192799.6742429056,
+      "at_max": 385599.3484858112,
+      "top": [
+       "Co60",
+       "Co58"
+      ]
+     },
+     "Cu": {
+      "nominal_wt": 0.1,
+      "gradient": -33266.843359543454,
+      "contribution": -3326.6843359543454,
+      "at_max": -9980.053007863036,
+      "top": [
+       "Fe55",
+       "Mn54"
+      ]
+     },
+     "N": {
+      "nominal_wt": 0.05,
+      "gradient": -34509.17581907052,
+      "contribution": -1725.4587909535262,
+      "at_max": -3450.9175819070524,
+      "top": [
+       "Fe55",
+       "Mn54"
+      ]
+     },
+     "Nb": {
+      "nominal_wt": 0.005,
+      "gradient": -34326.3779500179,
+      "contribution": -171.6318897500895,
+      "at_max": -1716.3188975008952,
+      "top": [
+       "Fe55",
+       "Mn54"
+      ]
+     },
+     "Ta": {
+      "nominal_wt": 0.005,
+      "gradient": 1007076.1514567563,
+      "contribution": 5035.380757283781,
+      "at_max": 20141.523029135125,
+      "top": [
+       "Ta182",
+       "Ta179"
+      ]
+     }
+    }
+   },
+   "dose.contact_proxy": {
+    "unit": "Gy/h",
+    "matrix_only": 0.06633890151120456,
+    "nominal": 0.20904850890218418,
+    "worst": 0.3556308488131984,
+    "impurities": {
+     "Ag": {
+      "nominal_wt": 0.0005,
+      "gradient": 0.23300746880838769,
+      "contribution": 0.00011650373773089417,
+      "at_max": 0.0004660149110472245,
+      "top": [
+       "Ag110m1",
+       "Ag108m1"
+      ]
+     },
+     "B": {
+      "nominal_wt": 0.001,
+      "gradient": -0.00034943328508507584,
+      "contribution": -3.494332621867269e-07,
+      "at_max": -1.0482998941963029e-06,
+      "top": [
+       "Mn54",
+       "Fe59"
+      ]
+     },
+     "Co": {
+      "nominal_wt": 0.1,
+      "gradient": 1.4079252539309348,
+      "contribution": 0.14079042384474605,
+      "at_max": 0.2815850508489044,
+      "top": [
+       "Co60",
+       "Co58"
+      ]
+     },
+     "Cu": {
+      "nominal_wt": 0.1,
+      "gradient": 0.0007126106549987237,
+      "contribution": 7.125972921348533e-05,
+      "at_max": 0.00021378720546150198,
+      "top": [
+       "Co60",
+       "Co58"
+      ]
+     },
+     "N": {
+      "nominal_wt": 0.05,
+      "gradient": -0.0005148401943100285,
+      "contribution": -2.5742909429943284e-05,
+      "at_max": -5.148401941143521e-05,
+      "top": [
+       "Mn54",
+       "Co60"
+      ]
+     },
+     "Nb": {
+      "nominal_wt": 0.005,
+      "gradient": -0.0003723920666276493,
+      "contribution": -1.861970580718797e-06,
+      "at_max": -1.8618784297763646e-05,
+      "top": [
+       "Mn54",
+       "Co57"
+      ]
+     },
+     "Ta": {
+      "nominal_wt": 0.005,
+      "gradient": 0.3514363320694679,
+      "contribution": 0.001757195273121237,
+      "at_max": 0.00702861784927683,
+      "top": [
+       "Ta182",
+       "Hf181"
+      ]
+     }
+    }
+   },
+   "clearance_index": {
+    "unit": "1 (IAEA clearance index)",
+    "matrix_only": 2674483.4438792956,
+    "nominal": 4683158.09157579,
+    "worst": 6801603.164817615,
+    "impurities": {
+     "Ag": {
+      "nominal_wt": 0.0005,
+      "gradient": 3274253.259832423,
+      "contribution": 1637.1266299162116,
+      "at_max": 6548.506519664847,
+      "top": [
+       "Ag110m1",
+       "Cd109"
+      ]
+     },
+     "B": {
+      "nominal_wt": 0.001,
+      "gradient": -18953.230200352624,
+      "contribution": -18.953230200352625,
+      "at_max": -56.85969060105787,
+      "top": [
+       "Mn54",
+       "Fe55"
+      ]
+     },
+     "Co": {
+      "nominal_wt": 0.1,
+      "gradient": 19564631.60927382,
+      "contribution": 1956463.1609273823,
+      "at_max": 3912926.3218547646,
+      "top": [
+       "Co60",
+       "Co58"
+      ]
+     },
+     "Cu": {
+      "nominal_wt": 0.1,
+      "gradient": -3896.498698768418,
+      "contribution": -389.6498698768418,
+      "at_max": -1168.9496096305254,
+      "top": [
+       "Mn54",
+       "Fe55"
+      ]
+     },
+     "N": {
+      "nominal_wt": 0.05,
+      "gradient": -18554.95095730118,
+      "contribution": -927.747547865059,
+      "at_max": -1855.495095730118,
+      "top": [
+       "Mn54",
+       "Fe55"
+      ]
+     },
+     "Nb": {
+      "nominal_wt": 0.005,
+      "gradient": -18657.421724193893,
+      "contribution": -93.28710862096946,
+      "at_max": -932.8710862096947,
+      "top": [
+       "Mn54",
+       "Fe55"
+      ]
+     },
+     "Ta": {
+      "nominal_wt": 0.005,
+      "gradient": 10400799.579151884,
+      "contribution": 52003.99789575942,
+      "at_max": 208015.99158303768,
+      "top": [
+       "Ta182",
+       "Hf181"
+      ]
+     }
+    }
+   }
+  },
+  {
+   "activity.total": {
+    "unit": "Bq/g",
+    "matrix_only": 264407.24376748496,
+    "nominal": 323550.0776804512,
+    "worst": 383569.422109593,
+    "impurities": {
+     "Ag": {
+      "nominal_wt": 0.0005,
+      "gradient": -3113.6211268097272,
+      "contribution": -1.5568105634048637,
+      "at_max": -6.227242253619455,
+      "top": [
+       "Fe55",
+       "Mn54"
+      ]
+     },
+     "B": {
+      "nominal_wt": 0.001,
+      "gradient": -3400.1406937508646,
+      "contribution": -3.4001406937508647,
+      "at_max": -10.200422081252594,
+      "top": [
+       "Fe55",
+       "Mn54"
+      ]
+     },
+     "Co": {
+      "nominal_wt": 0.1,
+      "gradient": 596111.1244908576,
+      "contribution": 59611.11244908576,
+      "at_max": 119222.22489817152,
+      "top": [
+       "Co60",
+       "Ni59"
+      ]
+     },
+     "Cu": {
+      "nominal_wt": 0.1,
+      "gradient": -2812.1669968679025,
+      "contribution": -281.21669968679026,
+      "at_max": -843.6500990603707,
+      "top": [
+       "Fe55",
+       "Mn54"
+      ]
+     },
+     "N": {
+      "nominal_wt": 0.05,
+      "gradient": -3002.3278031765035,
+      "contribution": -150.11639015882517,
+      "at_max": -300.23278031765034,
+      "top": [
+       "Fe55",
+       "Mn54"
+      ]
+     },
+     "Nb": {
+      "nominal_wt": 0.005,
+      "gradient": -2997.7720871503902,
+      "contribution": -14.98886043575195,
+      "at_max": -149.8886043575195,
+      "top": [
+       "Fe55",
+       "Mn54"
+      ]
+     },
+     "Ta": {
+      "nominal_wt": 0.005,
+      "gradient": -3399.9269161795646,
+      "contribution": -16.999634580897823,
+      "at_max": -67.99853832359129,
+      "top": [
+       "Fe55",
+       "Mn54"
+      ]
+     }
+    }
+   },
+   "dose.contact_proxy": {
+    "unit": "Gy/h",
+    "matrix_only": 0.0053779996077665355,
+    "nominal": 0.048502452034839466,
+    "worst": 0.0916680260590498,
+    "impurities": {
+     "Ag": {
+      "nominal_wt": 0.0005,
+      "gradient": 0.00011778400962891813,
+      "contribution": 5.8892018671430346e-08,
+      "at_max": 2.3556791470258354e-07,
+      "top": [
+       "Ag108m1",
+       "Ag110m1"
+      ]
+     },
+     "B": {
+      "nominal_wt": 0.001,
+      "gradient": 7.749628716524605e-06,
+      "contribution": 7.749627259356906e-09,
+      "at_max": 2.3248889487181845e-08,
+      "top": [
+       "Co60",
+       "Co57"
+      ]
+     },
+     "Co": {
+      "nominal_wt": 0.1,
+      "gradient": 0.4309198730610659,
+      "contribution": 0.04309134407794584,
+      "at_max": 0.08618397463141601,
+      "top": [
+       "Co60",
+       "Nb94"
+      ]
+     },
+     "Cu": {
+      "nominal_wt": 0.1,
+      "gradient": 0.0003390679415536665,
+      "contribution": 3.390623631339268e-05,
+      "at_max": 0.00010172205610227414,
+      "top": [
+       "Co60",
+       "Nb94"
+      ]
+     },
+     "N": {
+      "nominal_wt": 0.05,
+      "gradient": -3.087075731156294e-05,
+      "contribution": -1.5435865653723457e-06,
+      "at_max": -3.087075734681255e-06,
+      "top": [
+       "Co60",
+       "Mn54"
+      ]
+     },
+     "Nb": {
+      "nominal_wt": 0.005,
+      "gradient": 2.2533584650985674e-05,
+      "contribution": 1.1266781309998697e-07,
+      "at_max": 1.126688018257549e-06,
+      "top": [
+       "Co60",
+       "Nb94"
+      ]
+     },
+     "Ta": {
+      "nominal_wt": 0.005,
+      "gradient": -2.008414420884298e-05,
+      "contribution": -1.0042104615914926e-07,
+      "at_max": -4.0168029543513617e-07,
+      "top": [
+       "Co60",
+       "Mn54"
+      ]
+     }
+    }
+   },
+   "clearance_index": {
+    "unit": "1 (IAEA clearance index)",
+    "matrix_only": 76275.28805747577,
+    "nominal": 676264.9532627413,
+    "worst": 1276725.1409255974,
+    "impurities": {
+     "Ag": {
+      "nominal_wt": 0.0005,
+      "gradient": 343.24753744353654,
+      "contribution": 0.17162376872176827,
+      "at_max": 0.6864950748870731,
+      "top": [
+       "Ag110m1",
+       "Cd109"
+      ]
+     },
+     "B": {
+      "nominal_wt": 0.001,
+      "gradient": -16.15584844850649,
+      "contribution": -0.01615584844850649,
+      "at_max": -0.04846754534551947,
+      "top": [
+       "Mn54",
+       "Fe55"
+      ]
+     },
+     "Co": {
+      "nominal_wt": 0.1,
+      "gradient": 5995096.802892131,
+      "contribution": 599509.6802892131,
+      "at_max": 1199019.3605784262,
+      "top": [
+       "Co60",
+       "Co57"
+      ]
+     },
+     "Cu": {
+      "nominal_wt": 0.1,
+      "gradient": 4595.171637915435,
+      "contribution": 459.5171637915435,
+      "at_max": 1378.5514913746304,
+      "top": [
+       "Co60",
+       "Ni63"
+      ]
+     },
+     "N": {
+      "nominal_wt": 0.05,
+      "gradient": 381.68773837542125,
+      "contribution": 19.084386918771063,
+      "at_max": 38.168773837542126,
+      "top": [
+       "C14",
+       "Na24"
+      ]
+     },
+     "Nb": {
+      "nominal_wt": 0.005,
+      "gradient": 261.7105881721847,
+      "contribution": 1.3085529408609236,
+      "at_max": 13.085529408609236,
+      "top": [
+       "Nb94",
+       "Nb93m1"
+      ]
+     },
+     "Ta": {
+      "nominal_wt": 0.005,
+      "gradient": -16.131103768168384,
+      "contribution": -0.08065551884084192,
+      "at_max": -0.3226220753633677,
+      "top": [
+       "Mn54",
+       "Fe55"
+      ]
+     }
+    }
+   }
+  },
+  {
+   "activity.total": {
+    "unit": "Bq/g",
+    "matrix_only": 9371.002753464278,
+    "nominal": 9398.23635910641,
+    "worst": 9433.817266461725,
+    "impurities": {
+     "Ag": {
+      "nominal_wt": 0.0005,
+      "gradient": 216.89928492229305,
+      "contribution": 0.10844964246114652,
+      "at_max": 0.4337985698445861,
+      "top": [
+       "Ag108m1",
+       "Ag108"
+      ]
+     },
+     "B": {
+      "nominal_wt": 0.001,
+      "gradient": 0.02745425740003885,
+      "contribution": 2.745425740003885e-05,
+      "at_max": 8.236277220011655e-05,
+      "top": [
+       "Be10",
+       "C14"
+      ]
+     },
+     "Co": {
+      "nominal_wt": 0.1,
+      "gradient": 4.341554789833648,
+      "contribution": 0.4341554789833648,
+      "at_max": 0.8683109579667296,
+      "top": [
+       "Co60",
+       "Ni59"
+      ]
+     },
+     "Cu": {
+      "nominal_wt": 0.1,
+      "gradient": 68.56229789646952,
+      "contribution": 6.856229789646952,
+      "at_max": 20.568689368940856,
+      "top": [
+       "Ni63",
+       "Co60"
+      ]
+     },
+     "N": {
+      "nominal_wt": 0.05,
+      "gradient": 393.5099077537454,
+      "contribution": 19.67549538768727,
+      "at_max": 39.35099077537454,
+      "top": [
+       "C14",
+       "Be10"
+      ]
+     },
+     "Nb": {
+      "nominal_wt": 0.005,
+      "gradient": 31.852819250967137,
+      "contribution": 0.1592640962548357,
+      "at_max": 1.5926409625483569,
+      "top": [
+       "Nb94",
+       "Nb93m1"
+      ]
+     },
+     "Ta": {
+      "nominal_wt": 0.005,
+      "gradient": -0.003241431864308836,
+      "contribution": -1.620715932154418e-05,
+      "at_max": -6.482863728617672e-05,
+      "top": [
+       "Mn53",
+       "Fe55"
+      ]
+     }
+    }
+   },
+   "dose.contact_proxy": {
+    "unit": "Gy/h",
+    "matrix_only": 1.0578169888952252e-07,
+    "nominal": 4.998579543498761e-07,
+    "worst": 1.335355745788156e-06,
+    "impurities": {
+     "Ag": {
+      "nominal_wt": 0.0005,
+      "gradient": 7.042476648370057e-05,
+      "contribution": 3.521239510877106e-08,
+      "at_max": 1.4084943803249893e-07,
+      "top": [
+       "Ag108m1",
+       "Ag108"
+      ]
+     },
+     "B": {
+      "nominal_wt": 0.001,
+      "gradient": 9.604015839202672e-11,
+      "contribution": 9.60401436748295e-14,
+      "at_max": 2.8812055426778233e-13,
+      "top": [
+       "Co60",
+       "Nb94"
+      ]
+     },
+     "Co": {
+      "nominal_wt": 0.1,
+      "gradient": 3.122997474712952e-06,
+      "contribution": 3.1229508581827514e-07,
+      "at_max": 6.245994950817492e-07,
+      "top": [
+       "Co60",
+       "Nb94"
+      ]
+     },
+     "Cu": {
+      "nominal_wt": 0.1,
+      "gradient": 2.478010277781105e-09,
+      "contribution": 2.477969564480753e-10,
+      "at_max": 7.434152981282727e-10,
+      "top": [
+       "Co60",
+       "Nb94"
+      ]
+     },
+     "N": {
+      "nominal_wt": 0.05,
+      "gradient": -3.0078891338751865e-10,
+      "contribution": -1.503990449410034e-11,
+      "at_max": -3.0078891378033044e-11,
+      "top": [
+       "Co60",
+       "Nb94"
+      ]
+     },
+     "Nb": {
+      "nominal_wt": 0.005,
+      "gradient": 9.266493834983708e-06,
+      "contribution": 4.633245543925162e-08,
+      "at_max": 4.6332579061373856e-07,
+      "top": [
+       "Nb94",
+       "Nb92"
+      ]
+     },
+     "Ta": {
+      "nominal_wt": 0.005,
+      "gradient": -5.289769449409693e-10,
+      "contribution": -2.644923193447284e-12,
+      "at_max": -1.0579231388801777e-11,
+      "top": [
+       "Nb94",
+       "Ag108m1"
+      ]
+     }
+    }
+   },
+   "clearance_index": {
+    "unit": "1 (IAEA clearance index)",
+    "matrix_only": 98.54812973273205,
+    "nominal": 123.84089265910481,
+    "worst": 158.8088742633141,
+    "impurities": {
+     "Ag": {
+      "nominal_wt": 0.0005,
+      "gradient": -3.242192526747599e-05,
+      "contribution": -1.6210962633737997e-08,
+      "at_max": -6.484385053495199e-08,
+      "top": [
+       "Mn53",
+       "Co60"
+      ]
+     },
+     "B": {
+      "nominal_wt": 0.001,
+      "gradient": -3.2421925400023565e-05,
+      "contribution": -3.242192540002357e-08,
+      "at_max": -9.726577620007069e-08,
+      "top": [
+       "Mn53",
+       "Co60"
+      ]
+     },
+     "Co": {
+      "nominal_wt": 0.1,
+      "gradient": 43.44792578019705,
+      "contribution": 4.344792578019706,
+      "at_max": 8.689585156039412,
+      "top": [
+       "Co60",
+       "Ni59"
+      ]
+     },
+     "Cu": {
+      "nominal_wt": 0.1,
+      "gradient": 0.7189997055842748,
+      "contribution": 0.07189997055842749,
+      "at_max": 0.21569991167528244,
+      "top": [
+       "Ni63",
+       "Co60"
+      ]
+     },
+     "N": {
+      "nominal_wt": 0.05,
+      "gradient": 393.51311605584715,
+      "contribution": 19.67565580279236,
+      "at_max": 39.35131160558472,
+      "top": [
+       "C14"
+      ]
+     },
+     "Nb": {
+      "nominal_wt": 0.005,
+      "gradient": 240.0829571456527,
+      "contribution": 1.2004147857282634,
+      "at_max": 12.004147857282636,
+      "top": [
+       "Nb94",
+       "Nb93m1"
+      ]
+     },
+     "Ta": {
+      "nominal_wt": 0.005,
+      "gradient": -3.24186186401239e-05,
+      "contribution": -1.6209309320061948e-07,
+      "at_max": -6.483723728024779e-07,
+      "top": [
+       "Mn53",
+       "Co60"
+      ]
+     }
+    }
+   }
+  }
+ ],
+ "limit_Gy_h": 0.02,
+ "limits": {
+  "Ag": {
+   "alone": {
+    "detail": "the limit is not reached before the balance element is exhausted",
+    "status": "no response",
+    "wt_pct": null
+   },
+   "others_at_nominal": {
+    "detail": "the other constituents alone reach the limit",
+    "status": "infeasible",
+    "wt_pct": null
+   },
+   "others_at_worst": {
+    "detail": "the other constituents alone reach the limit",
+    "status": "infeasible",
+    "wt_pct": null
+   }
+  },
+  "B": {
+   "alone": {
+    "detail": "the limit is not reached before the balance element is exhausted",
+    "status": "no response",
+    "wt_pct": null
+   },
+   "others_at_nominal": {
+    "detail": "the other constituents alone reach the limit",
+    "status": "infeasible",
+    "wt_pct": null
+   },
+   "others_at_worst": {
+    "detail": "the other constituents alone reach the limit",
+    "status": "infeasible",
+    "wt_pct": null
+   }
+  },
+  "Co": {
+   "alone": {
+    "status": "limit",
+    "wt_pct": 0.033932380215151166
+   },
+   "others_at_nominal": {
+    "status": "limit",
+    "wt_pct": 0.033856071092527036
+   },
+   "others_at_worst": {
+    "status": "limit",
+    "wt_pct": 0.03369795657081909
+   }
+  },
+  "Cu": {
+   "alone": {
+    "status": "limit",
+    "wt_pct": 43.728731197561146
+   },
+   "others_at_nominal": {
+    "detail": "the other constituents alone reach the limit",
+    "status": "infeasible",
+    "wt_pct": null
+   },
+   "others_at_worst": {
+    "detail": "the other constituents alone reach the limit",
+    "status": "infeasible",
+    "wt_pct": null
+   }
+  },
+  "N": {
+   "alone": {
+    "detail": "the limit is not reached before the balance element is exhausted",
+    "status": "no response",
+    "wt_pct": null
+   },
+   "others_at_nominal": {
+    "detail": "the other constituents alone reach the limit",
+    "status": "infeasible",
+    "wt_pct": null
+   },
+   "others_at_worst": {
+    "detail": "the other constituents alone reach the limit",
+    "status": "infeasible",
+    "wt_pct": null
+   }
+  },
+  "Nb": {
+   "alone": {
+    "detail": "the limit is not reached before the balance element is exhausted",
+    "status": "no response",
+    "wt_pct": null
+   },
+   "others_at_nominal": {
+    "detail": "the other constituents alone reach the limit",
+    "status": "infeasible",
+    "wt_pct": null
+   },
+   "others_at_worst": {
+    "detail": "the other constituents alone reach the limit",
+    "status": "infeasible",
+    "wt_pct": null
+   }
+  },
+  "Ta": {
+   "alone": {
+    "detail": "the limit is not reached before the balance element is exhausted",
+    "status": "no response",
+    "wt_pct": null
+   },
+   "others_at_nominal": {
+    "detail": "the other constituents alone reach the limit",
+    "status": "infeasible",
+    "wt_pct": null
+   },
+   "others_at_worst": {
+    "detail": "the other constituents alone reach the limit",
+    "status": "infeasible",
+    "wt_pct": null
+   }
+  }
+ },
+ "joint_k": {
+  "status": "limit",
+  "value": 0.33906506452214924
+ },
+ "stderr": {
+  "screen": "impurities: 16 element solves, 4 targets, verification passed (max rel dev 1.6412896759952994e-15) -> screen-result.json",
+  "limit": "impurities: 16 element solves, 1 targets, verification passed (max rel dev 2.835585931921538e-10) -> limit-result.json"
+ }
+}

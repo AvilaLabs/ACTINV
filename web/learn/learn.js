@@ -337,7 +337,7 @@ export const meter = (() => {
 
 /* ---------- Rail: current step and finished steps ---------- */
 export function rail(stepTasks) {
-  const links = [...document.querySelectorAll(".side a")];
+  const links = [...document.querySelectorAll(".side ol a")];
   links.forEach((a) => a.insertAdjacentHTML("beforeend", '<svg class="tick" viewBox="0 0 14 14" aria-hidden="true"><path d="M2 7.5l3 3L12 3.5"/></svg>'));
   const side = document.querySelector(".side"), menu = document.querySelector("#menu");
   menu?.addEventListener("click", (e) => { e.stopPropagation(); side.classList.toggle("open"); });

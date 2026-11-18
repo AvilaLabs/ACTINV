@@ -33,3 +33,27 @@ The bracket's spectrum is illustrative: 25% of the flux in the 14.1 MeV line, 55
 the thermal shape of `actinv new --source`, 1e10 n/cm2/s in total. X-rays are excluded from the photon source
 (`photon.exclude_xrays`), because the steel absorbs them; without that, Fe-55's X-rays dominate a point-source
 dose with no attenuation in the part.
+
+## Chapters 2 to 5
+
+Each chapter has a `make_*.py` that writes the files the learner downloads (`<chapter>/files/`) and the numbers the
+page shows (`<chapter>/data/`), pinning each file's SHA-256 so `scripts/test_prepare_web.py` notices when they drift.
+Run them from the repository root inside the bounded scope, as for chapter 1:
+
+| Chapter | Script | Takes |
+|---|---|---|
+| 2 `where-from/` | `make_routes.py --work target/learn-work/routes` | under a minute |
+| 3 `impurities/` | `make_impurities.py --work target/learn-work/impurities` | about 4 minutes |
+| 4 `maintenance/` | `make_maintenance.py --work target/learn-work/maintenance` | under a minute |
+| 5 `waste/` | `make_waste.py --work target/learn-work/waste-ch` | about 2 minutes |
+
+The pages share `kit.js` (start-up, tabs, quiz, the file explorer and a practice terminal driven by recorded output).
+Each `chapter.js` holds its recorded output next to the command that printed it: the practice terminal's `script`
+entries and the Python tab's replay. The Python tabs are `routes.py`, `impurities.py`, `maintenance.py` and
+`waste.py` in this folder, run in the chapter's work folder with the `actinv` package on `PATH`. Chapter 4's
+`actinv maintenance` was recorded with a build of master, ahead of its release; the others with ACTINV 1.7.2.
+
+The impurity sliders of chapter 3 and the niobium slider of chapter 5 add each impurity's reported gradient to the
+impurity-free value, which is exact for activity, the clearance index and the waste-class sums and close for the
+contact dose proxy over these ranges (the page says so). Chapter 4's slider integrates the recorded dose-rate
+curves the way `actinv maintenance` does; at the tabulated waits it agrees with the plan within a percent.

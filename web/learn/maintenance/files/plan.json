@@ -1,0 +1,53 @@
+{
+ "schema": "actinv-maintenance-1",
+ "dose_rates": {
+  "runs": [
+   {
+    "result": "pipe-result.json",
+    "location": "pipe"
+   },
+   {
+    "result": "bracket-result.json",
+    "location": "bracket"
+   }
+  ]
+ },
+ "access_limit_Sv_h": 0.003,
+ "individual_limit_Sv": 0.02,
+ "jobs": [
+  {
+   "name": "cut out the cooling pipe",
+   "location": "pipe",
+   "duration_h": 8,
+   "crew": 2
+  },
+  {
+   "name": "unbolt the bracket",
+   "location": "bracket",
+   "duration_h": 6,
+   "crew": 3
+  },
+  {
+   "name": "inspect the bracket's mounting",
+   "location": "bracket",
+   "duration_h": 2,
+   "crew": 1
+  }
+ ],
+ "waits_d": [
+  1,
+  7,
+  14,
+  30,
+  60,
+  90,
+  120,
+  180,
+  270,
+  365
+ ],
+ "cost": {
+  "per_person_Sv": 1000000.0,
+  "per_outage_day": 2000.0
+ }
+}

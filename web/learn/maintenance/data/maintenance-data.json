@@ -1,0 +1,3981 @@
+{
+ "about": "actinv maintenance on the course bracket and a copper pipe: plans at each cost per person-Sv, with and without 0.1 wt% cobalt in the bracket; dose rates in Sv/h at 1 m (air kerma).",
+ "actinv_version": "actinv 1.7.2",
+ "files_sha256": {
+  "bracket.json": "e0cab01f87afd87e77d3784c1e147440046dbbf76b9ac3ae14760825630ebc3c",
+  "pipe.json": "0690ffd9e8773bbd57f4a6a5b5f2cde0f934d35dc7f6f2e8258f5f84090947e7",
+  "plan.json": "9c54e5d0090582393e14e3d03d3d1a7ebf254473049b6779e0fe74cb36839d3c"
+ },
+ "plan": {
+  "schema": "actinv-maintenance-1",
+  "dose_rates": {
+   "runs": [
+    {
+     "result": "pipe-result.json",
+     "location": "pipe"
+    },
+    {
+     "result": "bracket-result.json",
+     "location": "bracket"
+    }
+   ]
+  },
+  "access_limit_Sv_h": 0.003,
+  "individual_limit_Sv": 0.02,
+  "jobs": [
+   {
+    "name": "cut out the cooling pipe",
+    "location": "pipe",
+    "duration_h": 8,
+    "crew": 2
+   },
+   {
+    "name": "unbolt the bracket",
+    "location": "bracket",
+    "duration_h": 6,
+    "crew": 3
+   },
+   {
+    "name": "inspect the bracket's mounting",
+    "location": "bracket",
+    "duration_h": 2,
+    "crew": 1
+   }
+  ],
+  "waits_d": [
+   1,
+   7,
+   14,
+   30,
+   60,
+   90,
+   120,
+   180,
+   270,
+   365
+  ],
+  "cost": {
+   "per_person_Sv": 1000000.0,
+   "per_outage_day": 2000.0
+  }
+ },
+ "per_sv": [
+  200000.0,
+  1000000.0,
+  5000000.0,
+  20000000.0
+ ],
+ "per_day": 2000.0,
+ "curves": {
+  "bracket": [
+   [
+    60.0,
+    0.027774704102952425
+   ],
+   [
+    600.0,
+    0.025550072215415772
+   ],
+   [
+    3600.0,
+    0.021229071886535937
+   ],
+   [
+    10800.0,
+    0.014651845644715717
+   ],
+   [
+    21600.0,
+    0.009539534037355123
+   ],
+   [
+    43200.0,
+    0.006217846457804623
+   ],
+   [
+    86400.0,
+    0.005375014031547055
+   ],
+   [
+    172800.0,
+    0.005250292903723642
+   ],
+   [
+    259200.0,
+    0.005178231578714757
+   ],
+   [
+    432000.0,
+    0.005070498410447302
+   ],
+   [
+    604800.0,
+    0.00498859942567695
+   ],
+   [
+    864000.0,
+    0.004887591137483953
+   ],
+   [
+    1209600.0,
+    0.0047710888604919005
+   ],
+   [
+    1814400.0,
+    0.004589847101221611
+   ],
+   [
+    2592000.0,
+    0.0043822053123763385
+   ],
+   [
+    3888000.0,
+    0.004083051143751505
+   ],
+   [
+    5184000.0,
+    0.0038304031522234405
+   ],
+   [
+    7776000.0,
+    0.0034280912165698743
+   ],
+   [
+    10368000.0,
+    0.003123030925212153
+   ],
+   [
+    15552000.0,
+    0.002692353503706244
+   ],
+   [
+    23328000.0,
+    0.0022890153107211464
+   ],
+   [
+    31557600.0,
+    0.0020147312025003317
+   ],
+   [
+    47336400.0,
+    0.0016753421941989083
+   ],
+   [
+    63115200.0,
+    0.0014482159914863924
+   ],
+   [
+    94672800.0,
+    0.0011493901063912178
+   ],
+   [
+    157788000.0,
+    0.0008165887911102259
+   ],
+   [
+    220903200.0,
+    0.0006152717332739014
+   ],
+   [
+    315576000.0,
+    0.00041230812301596423
+   ],
+   [
+    473364000.0,
+    0.00021346772715146974
+   ],
+   [
+    631152000.0,
+    0.00011060550412227156
+   ],
+   [
+    946728000.0,
+    2.9695598299347412e-05
+   ],
+   [
+    1577880000.0,
+    2.141132351337358e-06
+   ],
+   [
+    2209032000.0,
+    1.5500039986958344e-07
+   ],
+   [
+    3155760000.0,
+    3.7039119394065213e-09
+   ]
+  ],
+  "pipe": [
+   [
+    60.0,
+    0.0015849359486874498
+   ],
+   [
+    600.0,
+    0.0009281046273347989
+   ],
+   [
+    3600.0,
+    0.0005646507577339693
+   ],
+   [
+    10800.0,
+    0.0005134040077477531
+   ],
+   [
+    21600.0,
+    0.0004678090654204456
+   ],
+   [
+    43200.0,
+    0.00040613776675259625
+   ],
+   [
+    86400.0,
+    0.00033626345553876426
+   ],
+   [
+    172800.0,
+    0.0002821675594489052
+   ],
+   [
+    259200.0,
+    0.0002675144463897604
+   ],
+   [
+    432000.0,
+    0.000262336302425894
+   ],
+   [
+    604800.0,
+    0.00026178434122272785
+   ],
+   [
+    864000.0,
+    0.0002614737758013445
+   ],
+   [
+    1209600.0,
+    0.0002610969211611342
+   ],
+   [
+    1814400.0,
+    0.0002604397039071666
+   ],
+   [
+    2592000.0,
+    0.0002595971475886421
+   ],
+   [
+    3888000.0,
+    0.00025819894702176256
+   ],
+   [
+    5184000.0,
+    0.0002568082845724365
+   ],
+   [
+    7776000.0,
+    0.0002540494065876081
+   ],
+   [
+    10368000.0,
+    0.0002513201834626386
+   ],
+   [
+    15552000.0,
+    0.0002459494121268896
+   ],
+   [
+    23328000.0,
+    0.00023810773166649574
+   ],
+   [
+    31557600.0,
+    0.00023008080061957378
+   ],
+   [
+    47336400.0,
+    0.00021543961352362768
+   ],
+   [
+    63115200.0,
+    0.00020173015552070543
+   ],
+   [
+    94672800.0,
+    0.00017687297471504423
+   ],
+   [
+    157788000.0,
+    0.00013596996904640578
+   ],
+   [
+    220903200.0,
+    0.00010452606118755671
+   ],
+   [
+    315576000.0,
+    7.045259315671982e-05
+   ],
+   [
+    473364000.0,
+    3.650488482558034e-05
+   ],
+   [
+    631152000.0,
+    1.891494062790182e-05
+   ],
+   [
+    946728000.0,
+    5.078237195640034e-06
+   ],
+   [
+    1577880000.0,
+    3.660403665813664e-07
+   ],
+   [
+    2209032000.0,
+    2.638426383663395e-08
+   ],
+   [
+    3155760000.0,
+    5.105860977466676e-10
+   ]
+  ],
+  "bracket-no-cobalt": [
+   [
+    60.0,
+    0.02637385633363947
+   ],
+   [
+    600.0,
+    0.024150252995271345
+   ],
+   [
+    3600.0,
+    0.019829179580927832
+   ],
+   [
+    10800.0,
+    0.013249496061717953
+   ],
+   [
+    21600.0,
+    0.008135279525043006
+   ],
+   [
+    43200.0,
+    0.004812501016541001
+   ],
+   [
+    86400.0,
+    0.003969787685697238
+   ],
+   [
+    172800.0,
+    0.003845950282851908
+   ],
+   [
+    259200.0,
+    0.0037747953536472036
+   ],
+   [
+    432000.0,
+    0.003668866521976957
+   ],
+   [
+    604800.0,
+    0.003588754895037796
+   ],
+   [
+    864000.0,
+    0.0034903954278929436
+   ],
+   [
+    1209600.0,
+    0.003377365992405623
+   ],
+   [
+    1814400.0,
+    0.0032020466012123165
+   ],
+   [
+    2592000.0,
+    0.0030017481654779445
+   ],
+   [
+    3888000.0,
+    0.002714222568750705
+   ],
+   [
+    5184000.0,
+    0.0024725337651046535
+   ],
+   [
+    7776000.0,
+    0.002090490438042659
+   ],
+   [
+    10368000.0,
+    0.0018039684228817277
+   ],
+   [
+    15552000.0,
+    0.0014067639451762761
+   ],
+   [
+    23328000.0,
+    0.0010481460510746666
+   ],
+   [
+    31557600.0,
+    0.0008172258216673209
+   ],
+   [
+    47336400.0,
+    0.000554771038514881
+   ],
+   [
+    63115200.0,
+    0.0003990173874254009
+   ],
+   [
+    94672800.0,
+    0.00022941949916066646
+   ],
+   [
+    157788000.0,
+    0.00010932097529018949
+   ],
+   [
+    220903200.0,
+    7.155477820171378e-05
+   ],
+   [
+    315576000.0,
+    4.583047303113517e-05
+   ],
+   [
+    473364000.0,
+    2.357784964054465e-05
+   ],
+   [
+    631152000.0,
+    1.2214402075804206e-05
+   ],
+   [
+    946728000.0,
+    3.2797947881222375e-06
+   ],
+   [
+    1577880000.0,
+    2.3707587348526175e-07
+   ],
+   [
+    2209032000.0,
+    1.7755622824557225e-08
+   ],
+   [
+    3155760000.0,
+    1.0479623414369778e-09
+   ]
+  ]
+ },
+ "plans": {
+  "cobalt|200000": {
+   "alone": [
+    {
+     "earliest_start_d": 0.0,
+     "location": "pipe",
+     "name": "cut out the cooling pipe"
+    },
+    {
+     "earliest_start_d": 136.25129576479918,
+     "location": "bracket",
+     "name": "unbolt the bracket"
+    },
+    {
+     "earliest_start_d": 136.25129576479918,
+     "location": "bracket",
+     "name": "inspect the bracket's mounting"
+    }
+   ],
+   "waits": [
+    {
+     "collective_Sv": 0.11153429873099352,
+     "cost": 25640.193079532037,
+     "feasible": false,
+     "jobs": [
+      {
+       "accessible": true,
+       "collective_Sv": 0.00522595990847719,
+       "end_d": 1.3333333333333333,
+       "individual_Sv": 0.002612979954238595,
+       "name": "cut out the cooling pipe",
+       "peak_Sv_h": 0.00033626345553876426,
+       "start_d": 1.0
+      },
+      {
+       "accessible": false,
+       "collective_Sv": 0.09571489607855065,
+       "end_d": 1.5833333333333333,
+       "individual_Sv": 0.03190496535951688,
+       "name": "unbolt the bracket",
+       "peak_Sv_h": 0.00533311455485023,
+       "start_d": 1.3333333333333333
+      },
+      {
+       "accessible": false,
+       "collective_Sv": 0.010593442743965687,
+       "end_d": 1.6666666666666667,
+       "individual_Sv": 0.010593442743965687,
+       "name": "inspect the bracket's mounting",
+       "peak_Sv_h": 0.005301904428723916,
+       "start_d": 1.5833333333333333
+      }
+     ],
+     "largest_individual_Sv": 0.03190496535951688,
+     "outage_d": 1.6666666666666667,
+     "wait_d": 1.0
+    },
+    {
+     "collective_Sv": 0.10363765904984218,
+     "cost": 36060.86514330177,
+     "feasible": false,
+     "jobs": [
+      {
+       "accessible": true,
+       "collective_Sv": 0.004188273249675767,
+       "end_d": 7.333333333333333,
+       "individual_Sv": 0.0020941366248378836,
+       "name": "cut out the cooling pipe",
+       "peak_Sv_h": 0.00026178434122272785,
+       "start_d": 7.0
+      },
+      {
+       "accessible": false,
+       "collective_Sv": 0.08951461505509017,
+       "end_d": 7.583333333333333,
+       "individual_Sv": 0.02983820501836339,
+       "name": "unbolt the bracket",
+       "peak_Sv_h": 0.004977273978395855,
+       "start_d": 7.333333333333333
+      },
+      {
+       "accessible": false,
+       "collective_Sv": 0.00993477074507623,
+       "end_d": 7.666666666666667,
+       "individual_Sv": 0.00993477074507623,
+       "name": "inspect the bracket's mounting",
+       "peak_Sv_h": 0.004968796769483224,
+       "start_d": 7.583333333333333
+      }
+     ],
+     "largest_individual_Sv": 0.02983820501836339,
+     "outage_d": 7.666666666666667,
+     "wait_d": 7.0
+    },
+    {
+     "collective_Sv": 0.09934865237531418,
+     "cost": 49203.06380839617,
+     "feasible": false,
+     "jobs": [
+      {
+       "accessible": true,
+       "collective_Sv": 0.004177300064492839,
+       "end_d": 14.333333333333334,
+       "individual_Sv": 0.0020886500322464196,
+       "name": "cut out the cooling pipe",
+       "peak_Sv_h": 0.0002610969211611342,
+       "start_d": 14.0
+      },
+      {
+       "accessible": false,
+       "collective_Sv": 0.08566211287538206,
+       "end_d": 14.583333333333334,
+       "individual_Sv": 0.028554037625127354,
+       "name": "unbolt the bracket",
+       "peak_Sv_h": 0.004762298208651195,
+       "start_d": 14.333333333333334
+      },
+      {
+       "accessible": false,
+       "collective_Sv": 0.009509239435439291,
+       "end_d": 14.666666666666666,
+       "individual_Sv": 0.009509239435439291,
+       "name": "inspect the bracket's mounting",
+       "peak_Sv_h": 0.004755715850441867,
+       "start_d": 14.583333333333334
+      }
+     ],
+     "largest_individual_Sv": 0.028554037625127354,
+     "outage_d": 14.666666666666666,
+     "wait_d": 14.0
+    },
+    {
+     "collective_Sv": 0.09160139643715638,
+     "cost": 79653.61262076462,
+     "feasible": false,
+     "jobs": [
+      {
+       "accessible": true,
+       "collective_Sv": 0.00415330513058444,
+       "end_d": 30.333333333333332,
+       "individual_Sv": 0.00207665256529222,
+       "name": "cut out the cooling pipe",
+       "peak_Sv_h": 0.0002595971475886421,
+       "start_d": 30.0
+      },
+      {
+       "accessible": false,
+       "collective_Sv": 0.07870946387840837,
+       "end_d": 30.583333333333332,
+       "individual_Sv": 0.026236487959469455,
+       "name": "unbolt the bracket",
+       "peak_Sv_h": 0.004375325051979095,
+       "start_d": 30.333333333333332
+      },
+      {
+       "accessible": false,
+       "collective_Sv": 0.008738627428163573,
+       "end_d": 30.666666666666668,
+       "individual_Sv": 0.008738627428163573,
+       "name": "inspect the bracket's mounting",
+       "peak_Sv_h": 0.0043701719466314815,
+       "start_d": 30.583333333333332
+      }
+     ],
+     "largest_individual_Sv": 0.026236487959469455,
+     "outage_d": 30.666666666666668,
+     "wait_d": 30.0
+    },
+    {
+     "collective_Sv": 0.08058227303484632,
+     "cost": 137449.7879403026,
+     "feasible": false,
+     "jobs": [
+      {
+       "accessible": true,
+       "collective_Sv": 0.004108686002646674,
+       "end_d": 60.333333333333336,
+       "individual_Sv": 0.002054343001323337,
+       "name": "cut out the cooling pipe",
+       "peak_Sv_h": 0.0002568082845724365,
+       "start_d": 60.0
+      },
+      {
+       "accessible": false,
+       "collective_Sv": 0.06883047050190606,
+       "end_d": 60.583333333333336,
+       "individual_Sv": 0.02294349016730202,
+       "name": "unbolt the bracket",
+       "peak_Sv_h": 0.0038256833265158333,
+       "start_d": 60.333333333333336
+      },
+      {
+       "accessible": false,
+       "collective_Sv": 0.007643116530293575,
+       "end_d": 60.666666666666664,
+       "individual_Sv": 0.007643116530293575,
+       "name": "inspect the bracket's mounting",
+       "peak_Sv_h": 0.0038221472742281225,
+       "start_d": 60.583333333333336
+      }
+     ],
+     "largest_individual_Sv": 0.02294349016730202,
+     "outage_d": 60.666666666666664,
+     "wait_d": 60.0
+    },
+    {
+     "collective_Sv": 0.07252527394655482,
+     "cost": 195838.3881226443,
+     "feasible": false,
+     "jobs": [
+      {
+       "accessible": true,
+       "collective_Sv": 0.0040645466050401894,
+       "end_d": 90.33333333333333,
+       "individual_Sv": 0.0020322733025200947,
+       "name": "cut out the cooling pipe",
+       "peak_Sv_h": 0.0002540494065876081,
+       "start_d": 90.0
+      },
+      {
+       "accessible": false,
+       "collective_Sv": 0.061617844341484165,
+       "end_d": 90.58333333333333,
+       "individual_Sv": 0.020539281447161387,
+       "name": "unbolt the bracket",
+       "peak_Sv_h": 0.003424543089248506,
+       "start_d": 90.33333333333333
+      },
+      {
+       "accessible": false,
+       "collective_Sv": 0.006842883000030469,
+       "end_d": 90.66666666666667,
+       "individual_Sv": 0.006842883000030469,
+       "name": "inspect the bracket's mounting",
+       "peak_Sv_h": 0.003421884403955956,
+       "start_d": 90.58333333333333
+      }
+     ],
+     "largest_individual_Sv": 0.020539281447161387,
+     "outage_d": 90.66666666666667,
+     "wait_d": 90.0
+    },
+    {
+     "collective_Sv": 0.0664081696126476,
+     "cost": 254614.96725586287,
+     "feasible": false,
+     "jobs": [
+      {
+       "accessible": true,
+       "collective_Sv": 0.004020881656628654,
+       "end_d": 120.33333333333333,
+       "individual_Sv": 0.002010440828314327,
+       "name": "cut out the cooling pipe",
+       "peak_Sv_h": 0.0002513201834626386,
+       "start_d": 120.0
+      },
+      {
+       "accessible": false,
+       "collective_Sv": 0.05615087324362571,
+       "end_d": 120.58333333333333,
+       "individual_Sv": 0.018716957747875237,
+       "name": "unbolt the bracket",
+       "peak_Sv_h": 0.0031204574243038517,
+       "start_d": 120.33333333333333
+      },
+      {
+       "accessible": false,
+       "collective_Sv": 0.00623641471239324,
+       "end_d": 120.66666666666667,
+       "individual_Sv": 0.00623641471239324,
+       "name": "inspect the bracket's mounting",
+       "peak_Sv_h": 0.0031185286904055792,
+       "start_d": 120.58333333333333
+      }
+     ],
+     "largest_individual_Sv": 0.018716957747875237,
+     "outage_d": 120.66666666666667,
+     "wait_d": 120.0
+    },
+    {
+     "collective_Sv": 0.05773592213357465,
+     "cost": 372880.5177600483,
+     "feasible": true,
+     "jobs": [
+      {
+       "accessible": true,
+       "collective_Sv": 0.003934954472745421,
+       "end_d": 180.33333333333334,
+       "individual_Sv": 0.0019674772363727105,
+       "name": "cut out the cooling pipe",
+       "peak_Sv_h": 0.0002459494121268896,
+       "start_d": 180.0
+      },
+      {
+       "accessible": true,
+       "collective_Sv": 0.04842232601852936,
+       "end_d": 180.58333333333334,
+       "individual_Sv": 0.016140775339509788,
+       "name": "unbolt the bracket",
+       "peak_Sv_h": 0.002690735646318926,
+       "start_d": 180.33333333333334
+      },
+      {
+       "accessible": true,
+       "collective_Sv": 0.005378641642299869,
+       "end_d": 180.66666666666666,
+       "individual_Sv": 0.005378641642299869,
+       "name": "inspect the bracket's mounting",
+       "peak_Sv_h": 0.002689522891306026,
+       "start_d": 180.58333333333334
+      }
+     ],
+     "largest_individual_Sv": 0.016140775339509788,
+     "outage_d": 180.66666666666666,
+     "wait_d": 180.0
+    },
+    {
+     "collective_Sv": 0.04956067151846185,
+     "cost": 551245.4676370258,
+     "feasible": true,
+     "jobs": [
+      {
+       "accessible": true,
+       "collective_Sv": 0.0038094951145803474,
+       "end_d": 270.3333333333333,
+       "individual_Sv": 0.0019047475572901737,
+       "name": "cut out the cooling pipe",
+       "peak_Sv_h": 0.00023810773166649574,
+       "start_d": 270.0
+      },
+      {
+       "accessible": true,
+       "collective_Sv": 0.04117697830388619,
+       "end_d": 270.5833333333333,
+       "individual_Sv": 0.01372565943462873,
+       "name": "unbolt the bracket",
+       "peak_Sv_h": 0.002287993104651503,
+       "start_d": 270.3333333333333
+      },
+      {
+       "accessible": true,
+       "collective_Sv": 0.004574198099995312,
+       "end_d": 270.6666666666667,
+       "individual_Sv": 0.004574198099995312,
+       "name": "inspect the bracket's mounting",
+       "peak_Sv_h": 0.0022872267496798757,
+       "start_d": 270.5833333333333
+      }
+     ],
+     "largest_individual_Sv": 0.01372565943462873,
+     "outage_d": 270.6666666666667,
+     "wait_d": 270.0
+    },
+    {
+     "collective_Sv": 0.0439668706985216,
+     "cost": 740126.7074730376,
+     "feasible": true,
+     "jobs": [
+      {
+       "accessible": true,
+       "collective_Sv": 0.0036814032612127578,
+       "end_d": 365.3333333333333,
+       "individual_Sv": 0.0018407016306063789,
+       "name": "cut out the cooling pipe",
+       "peak_Sv_h": 0.00023010151043663794,
+       "start_d": 365.0
+      },
+      {
+       "accessible": true,
+       "collective_Sv": 0.03625753104244768,
+       "end_d": 365.5833333333333,
+       "individual_Sv": 0.012085843680815894,
+       "name": "unbolt the bracket",
+       "peak_Sv_h": 0.0020145616207085416,
+       "start_d": 365.3333333333333
+      },
+      {
+       "accessible": true,
+       "collective_Sv": 0.0040279363948611605,
+       "end_d": 365.6666666666667,
+       "individual_Sv": 0.0040279363948611605,
+       "name": "inspect the bracket's mounting",
+       "peak_Sv_h": 0.0020140529609715043,
+       "start_d": 365.5833333333333
+      }
+     ],
+     "largest_individual_Sv": 0.012085843680815894,
+     "outage_d": 365.6666666666667,
+     "wait_d": 365.0
+    }
+   ],
+   "earliest_wait_d": 135.91796243146587,
+   "best": {
+    "collective_Sv": 0.0639768873645515,
+    "cost": 285964.6356691753,
+    "feasible": true,
+    "jobs": [
+     {
+      "accessible": true,
+      "collective_Sv": 0.0039979040237321335,
+      "end_d": 136.25129576479918,
+      "individual_Sv": 0.0019989520118660667,
+      "name": "cut out the cooling pipe",
+      "peak_Sv_h": 0.0002498839952312415,
+      "start_d": 135.91796243146587
+     },
+     {
+      "accessible": true,
+      "collective_Sv": 0.0539833097605738,
+      "end_d": 136.50129576479918,
+      "individual_Sv": 0.017994436586857933,
+      "name": "unbolt the bracket",
+      "peak_Sv_h": 0.003,
+      "start_d": 136.25129576479918
+     },
+     {
+      "accessible": true,
+      "collective_Sv": 0.0059956735802455625,
+      "end_d": 136.58462909813252,
+      "individual_Sv": 0.0059956735802455625,
+      "name": "inspect the bracket's mounting",
+      "peak_Sv_h": 0.0029981457200313807,
+      "start_d": 136.50129576479918
+     }
+    ],
+    "largest_individual_Sv": 0.017994436586857933,
+    "outage_d": 136.58462909813252,
+    "wait_d": 135.91796243146587
+   },
+   "interpolation_check": {
+    "at": "collective_Sv at 1 d",
+    "coarse": false,
+    "largest_relative_change": 0.04625489844839198,
+    "method": "every other tabulated time dropped, the first and last kept",
+    "tolerance": 0.05
+   }
+  },
+  "cobalt|1e+06": {
+   "alone": [
+    {
+     "earliest_start_d": 0.0,
+     "location": "pipe",
+     "name": "cut out the cooling pipe"
+    },
+    {
+     "earliest_start_d": 136.25129576479918,
+     "location": "bracket",
+     "name": "unbolt the bracket"
+    },
+    {
+     "earliest_start_d": 136.25129576479918,
+     "location": "bracket",
+     "name": "inspect the bracket's mounting"
+    }
+   ],
+   "waits": [
+    {
+     "collective_Sv": 0.11153429873099352,
+     "cost": 114867.63206432684,
+     "feasible": false,
+     "jobs": [
+      {
+       "accessible": true,
+       "collective_Sv": 0.00522595990847719,
+       "end_d": 1.3333333333333333,
+       "individual_Sv": 0.002612979954238595,
+       "name": "cut out the cooling pipe",
+       "peak_Sv_h": 0.00033626345553876426,
+       "start_d": 1.0
+      },
+      {
+       "accessible": false,
+       "collective_Sv": 0.09571489607855065,
+       "end_d": 1.5833333333333333,
+       "individual_Sv": 0.03190496535951688,
+       "name": "unbolt the bracket",
+       "peak_Sv_h": 0.00533311455485023,
+       "start_d": 1.3333333333333333
+      },
+      {
+       "accessible": false,
+       "collective_Sv": 0.010593442743965687,
+       "end_d": 1.6666666666666667,
+       "individual_Sv": 0.010593442743965687,
+       "name": "inspect the bracket's mounting",
+       "peak_Sv_h": 0.005301904428723916,
+       "start_d": 1.5833333333333333
+      }
+     ],
+     "largest_individual_Sv": 0.03190496535951688,
+     "outage_d": 1.6666666666666667,
+     "wait_d": 1.0
+    },
+    {
+     "collective_Sv": 0.10363765904984218,
+     "cost": 118970.9923831755,
+     "feasible": false,
+     "jobs": [
+      {
+       "accessible": true,
+       "collective_Sv": 0.004188273249675767,
+       "end_d": 7.333333333333333,
+       "individual_Sv": 0.0020941366248378836,
+       "name": "cut out the cooling pipe",
+       "peak_Sv_h": 0.00026178434122272785,
+       "start_d": 7.0
+      },
+      {
+       "accessible": false,
+       "collective_Sv": 0.08951461505509017,
+       "end_d": 7.583333333333333,
+       "individual_Sv": 0.02983820501836339,
+       "name": "unbolt the bracket",
+       "peak_Sv_h": 0.004977273978395855,
+       "start_d": 7.333333333333333
+      },
+      {
+       "accessible": false,
+       "collective_Sv": 0.00993477074507623,
+       "end_d": 7.666666666666667,
+       "individual_Sv": 0.00993477074507623,
+       "name": "inspect the bracket's mounting",
+       "peak_Sv_h": 0.004968796769483224,
+       "start_d": 7.583333333333333
+      }
+     ],
+     "largest_individual_Sv": 0.02983820501836339,
+     "outage_d": 7.666666666666667,
+     "wait_d": 7.0
+    },
+    {
+     "collective_Sv": 0.09934865237531418,
+     "cost": 128681.98570864751,
+     "feasible": false,
+     "jobs": [
+      {
+       "accessible": true,
+       "collective_Sv": 0.004177300064492839,
+       "end_d": 14.333333333333334,
+       "individual_Sv": 0.0020886500322464196,
+       "name": "cut out the cooling pipe",
+       "peak_Sv_h": 0.0002610969211611342,
+       "start_d": 14.0
+      },
+      {
+       "accessible": false,
+       "collective_Sv": 0.08566211287538206,
+       "end_d": 14.583333333333334,
+       "individual_Sv": 0.028554037625127354,
+       "name": "unbolt the bracket",
+       "peak_Sv_h": 0.004762298208651195,
+       "start_d": 14.333333333333334
+      },
+      {
+       "accessible": false,
+       "collective_Sv": 0.009509239435439291,
+       "end_d": 14.666666666666666,
+       "individual_Sv": 0.009509239435439291,
+       "name": "inspect the bracket's mounting",
+       "peak_Sv_h": 0.004755715850441867,
+       "start_d": 14.583333333333334
+      }
+     ],
+     "largest_individual_Sv": 0.028554037625127354,
+     "outage_d": 14.666666666666666,
+     "wait_d": 14.0
+    },
+    {
+     "collective_Sv": 0.09160139643715638,
+     "cost": 152934.7297704897,
+     "feasible": false,
+     "jobs": [
+      {
+       "accessible": true,
+       "collective_Sv": 0.00415330513058444,
+       "end_d": 30.333333333333332,
+       "individual_Sv": 0.00207665256529222,
+       "name": "cut out the cooling pipe",
+       "peak_Sv_h": 0.0002595971475886421,
+       "start_d": 30.0
+      },
+      {
+       "accessible": false,
+       "collective_Sv": 0.07870946387840837,
+       "end_d": 30.583333333333332,
+       "individual_Sv": 0.026236487959469455,
+       "name": "unbolt the bracket",
+       "peak_Sv_h": 0.004375325051979095,
+       "start_d": 30.333333333333332
+      },
+      {
+       "accessible": false,
+       "collective_Sv": 0.008738627428163573,
+       "end_d": 30.666666666666668,
+       "individual_Sv": 0.008738627428163573,
+       "name": "inspect the bracket's mounting",
+       "peak_Sv_h": 0.0043701719466314815,
+       "start_d": 30.583333333333332
+      }
+     ],
+     "largest_individual_Sv": 0.026236487959469455,
+     "outage_d": 30.666666666666668,
+     "wait_d": 30.0
+    },
+    {
+     "collective_Sv": 0.08058227303484632,
+     "cost": 201915.60636817967,
+     "feasible": false,
+     "jobs": [
+      {
+       "accessible": true,
+       "collective_Sv": 0.004108686002646674,
+       "end_d": 60.333333333333336,
+       "individual_Sv": 0.002054343001323337,
+       "name": "cut out the cooling pipe",
+       "peak_Sv_h": 0.0002568082845724365,
+       "start_d": 60.0
+      },
+      {
+       "accessible": false,
+       "collective_Sv": 0.06883047050190606,
+       "end_d": 60.583333333333336,
+       "individual_Sv": 0.02294349016730202,
+       "name": "unbolt the bracket",
+       "peak_Sv_h": 0.0038256833265158333,
+       "start_d": 60.333333333333336
+      },
+      {
+       "accessible": false,
+       "collective_Sv": 0.007643116530293575,
+       "end_d": 60.666666666666664,
+       "individual_Sv": 0.007643116530293575,
+       "name": "inspect the bracket's mounting",
+       "peak_Sv_h": 0.0038221472742281225,
+       "start_d": 60.583333333333336
+      }
+     ],
+     "largest_individual_Sv": 0.02294349016730202,
+     "outage_d": 60.666666666666664,
+     "wait_d": 60.0
+    },
+    {
+     "collective_Sv": 0.07252527394655482,
+     "cost": 253858.60727988818,
+     "feasible": false,
+     "jobs": [
+      {
+       "accessible": true,
+       "collective_Sv": 0.0040645466050401894,
+       "end_d": 90.33333333333333,
+       "individual_Sv": 0.0020322733025200947,
+       "name": "cut out the cooling pipe",
+       "peak_Sv_h": 0.0002540494065876081,
+       "start_d": 90.0
+      },
+      {
+       "accessible": false,
+       "collective_Sv": 0.061617844341484165,
+       "end_d": 90.58333333333333,
+       "individual_Sv": 0.020539281447161387,
+       "name": "unbolt the bracket",
+       "peak_Sv_h": 0.003424543089248506,
+       "start_d": 90.33333333333333
+      },
+      {
+       "accessible": false,
+       "collective_Sv": 0.006842883000030469,
+       "end_d": 90.66666666666667,
+       "individual_Sv": 0.006842883000030469,
+       "name": "inspect the bracket's mounting",
+       "peak_Sv_h": 0.003421884403955956,
+       "start_d": 90.58333333333333
+      }
+     ],
+     "largest_individual_Sv": 0.020539281447161387,
+     "outage_d": 90.66666666666667,
+     "wait_d": 90.0
+    },
+    {
+     "collective_Sv": 0.0664081696126476,
+     "cost": 307741.50294598093,
+     "feasible": false,
+     "jobs": [
+      {
+       "accessible": true,
+       "collective_Sv": 0.004020881656628654,
+       "end_d": 120.33333333333333,
+       "individual_Sv": 0.002010440828314327,
+       "name": "cut out the cooling pipe",
+       "peak_Sv_h": 0.0002513201834626386,
+       "start_d": 120.0
+      },
+      {
+       "accessible": false,
+       "collective_Sv": 0.05615087324362571,
+       "end_d": 120.58333333333333,
+       "individual_Sv": 0.018716957747875237,
+       "name": "unbolt the bracket",
+       "peak_Sv_h": 0.0031204574243038517,
+       "start_d": 120.33333333333333
+      },
+      {
+       "accessible": false,
+       "collective_Sv": 0.00623641471239324,
+       "end_d": 120.66666666666667,
+       "individual_Sv": 0.00623641471239324,
+       "name": "inspect the bracket's mounting",
+       "peak_Sv_h": 0.0031185286904055792,
+       "start_d": 120.58333333333333
+      }
+     ],
+     "largest_individual_Sv": 0.018716957747875237,
+     "outage_d": 120.66666666666667,
+     "wait_d": 120.0
+    },
+    {
+     "collective_Sv": 0.05773592213357465,
+     "cost": 419069.255466908,
+     "feasible": true,
+     "jobs": [
+      {
+       "accessible": true,
+       "collective_Sv": 0.003934954472745421,
+       "end_d": 180.33333333333334,
+       "individual_Sv": 0.0019674772363727105,
+       "name": "cut out the cooling pipe",
+       "peak_Sv_h": 0.0002459494121268896,
+       "start_d": 180.0
+      },
+      {
+       "accessible": true,
+       "collective_Sv": 0.04842232601852936,
+       "end_d": 180.58333333333334,
+       "individual_Sv": 0.016140775339509788,
+       "name": "unbolt the bracket",
+       "peak_Sv_h": 0.002690735646318926,
+       "start_d": 180.33333333333334
+      },
+      {
+       "accessible": true,
+       "collective_Sv": 0.005378641642299869,
+       "end_d": 180.66666666666666,
+       "individual_Sv": 0.005378641642299869,
+       "name": "inspect the bracket's mounting",
+       "peak_Sv_h": 0.002689522891306026,
+       "start_d": 180.58333333333334
+      }
+     ],
+     "largest_individual_Sv": 0.016140775339509788,
+     "outage_d": 180.66666666666666,
+     "wait_d": 180.0
+    },
+    {
+     "collective_Sv": 0.04956067151846185,
+     "cost": 590894.0048517953,
+     "feasible": true,
+     "jobs": [
+      {
+       "accessible": true,
+       "collective_Sv": 0.0038094951145803474,
+       "end_d": 270.3333333333333,
+       "individual_Sv": 0.0019047475572901737,
+       "name": "cut out the cooling pipe",
+       "peak_Sv_h": 0.00023810773166649574,
+       "start_d": 270.0
+      },
+      {
+       "accessible": true,
+       "collective_Sv": 0.04117697830388619,
+       "end_d": 270.5833333333333,
+       "individual_Sv": 0.01372565943462873,
+       "name": "unbolt the bracket",
+       "peak_Sv_h": 0.002287993104651503,
+       "start_d": 270.3333333333333
+      },
+      {
+       "accessible": true,
+       "collective_Sv": 0.004574198099995312,
+       "end_d": 270.6666666666667,
+       "individual_Sv": 0.004574198099995312,
+       "name": "inspect the bracket's mounting",
+       "peak_Sv_h": 0.0022872267496798757,
+       "start_d": 270.5833333333333
+      }
+     ],
+     "largest_individual_Sv": 0.01372565943462873,
+     "outage_d": 270.6666666666667,
+     "wait_d": 270.0
+    },
+    {
+     "collective_Sv": 0.0439668706985216,
+     "cost": 775300.204031855,
+     "feasible": true,
+     "jobs": [
+      {
+       "accessible": true,
+       "collective_Sv": 0.0036814032612127578,
+       "end_d": 365.3333333333333,
+       "individual_Sv": 0.0018407016306063789,
+       "name": "cut out the cooling pipe",
+       "peak_Sv_h": 0.00023010151043663794,
+       "start_d": 365.0
+      },
+      {
+       "accessible": true,
+       "collective_Sv": 0.03625753104244768,
+       "end_d": 365.5833333333333,
+       "individual_Sv": 0.012085843680815894,
+       "name": "unbolt the bracket",
+       "peak_Sv_h": 0.0020145616207085416,
+       "start_d": 365.3333333333333
+      },
+      {
+       "accessible": true,
+       "collective_Sv": 0.0040279363948611605,
+       "end_d": 365.6666666666667,
+       "individual_Sv": 0.0040279363948611605,
+       "name": "inspect the bracket's mounting",
+       "peak_Sv_h": 0.0020140529609715043,
+       "start_d": 365.5833333333333
+      }
+     ],
+     "largest_individual_Sv": 0.012085843680815894,
+     "outage_d": 365.6666666666667,
+     "wait_d": 365.0
+    }
+   ],
+   "earliest_wait_d": 135.91796243146587,
+   "best": {
+    "collective_Sv": 0.0639768873645515,
+    "cost": 337146.1455608165,
+    "feasible": true,
+    "jobs": [
+     {
+      "accessible": true,
+      "collective_Sv": 0.0039979040237321335,
+      "end_d": 136.25129576479918,
+      "individual_Sv": 0.0019989520118660667,
+      "name": "cut out the cooling pipe",
+      "peak_Sv_h": 0.0002498839952312415,
+      "start_d": 135.91796243146587
+     },
+     {
+      "accessible": true,
+      "collective_Sv": 0.0539833097605738,
+      "end_d": 136.50129576479918,
+      "individual_Sv": 0.017994436586857933,
+      "name": "unbolt the bracket",
+      "peak_Sv_h": 0.003,
+      "start_d": 136.25129576479918
+     },
+     {
+      "accessible": true,
+      "collective_Sv": 0.0059956735802455625,
+      "end_d": 136.58462909813252,
+      "individual_Sv": 0.0059956735802455625,
+      "name": "inspect the bracket's mounting",
+      "peak_Sv_h": 0.0029981457200313807,
+      "start_d": 136.50129576479918
+     }
+    ],
+    "largest_individual_Sv": 0.017994436586857933,
+    "outage_d": 136.58462909813252,
+    "wait_d": 135.91796243146587
+   },
+   "interpolation_check": {
+    "at": "collective_Sv at 1 d",
+    "coarse": false,
+    "largest_relative_change": 0.04625489844839198,
+    "method": "every other tabulated time dropped, the first and last kept",
+    "tolerance": 0.05
+   }
+  },
+  "cobalt|5e+06": {
+   "alone": [
+    {
+     "earliest_start_d": 0.0,
+     "location": "pipe",
+     "name": "cut out the cooling pipe"
+    },
+    {
+     "earliest_start_d": 136.25129576479918,
+     "location": "bracket",
+     "name": "unbolt the bracket"
+    },
+    {
+     "earliest_start_d": 136.25129576479918,
+     "location": "bracket",
+     "name": "inspect the bracket's mounting"
+    }
+   ],
+   "waits": [
+    {
+     "collective_Sv": 0.11153429873099352,
+     "cost": 561004.826988301,
+     "feasible": false,
+     "jobs": [
+      {
+       "accessible": true,
+       "collective_Sv": 0.00522595990847719,
+       "end_d": 1.3333333333333333,
+       "individual_Sv": 0.002612979954238595,
+       "name": "cut out the cooling pipe",
+       "peak_Sv_h": 0.00033626345553876426,
+       "start_d": 1.0
+      },
+      {
+       "accessible": false,
+       "collective_Sv": 0.09571489607855065,
+       "end_d": 1.5833333333333333,
+       "individual_Sv": 0.03190496535951688,
+       "name": "unbolt the bracket",
+       "peak_Sv_h": 0.00533311455485023,
+       "start_d": 1.3333333333333333
+      },
+      {
+       "accessible": false,
+       "collective_Sv": 0.010593442743965687,
+       "end_d": 1.6666666666666667,
+       "individual_Sv": 0.010593442743965687,
+       "name": "inspect the bracket's mounting",
+       "peak_Sv_h": 0.005301904428723916,
+       "start_d": 1.5833333333333333
+      }
+     ],
+     "largest_individual_Sv": 0.03190496535951688,
+     "outage_d": 1.6666666666666667,
+     "wait_d": 1.0
+    },
+    {
+     "collective_Sv": 0.10363765904984218,
+     "cost": 533521.6285825443,
+     "feasible": false,
+     "jobs": [
+      {
+       "accessible": true,
+       "collective_Sv": 0.004188273249675767,
+       "end_d": 7.333333333333333,
+       "individual_Sv": 0.0020941366248378836,
+       "name": "cut out the cooling pipe",
+       "peak_Sv_h": 0.00026178434122272785,
+       "start_d": 7.0
+      },
+      {
+       "accessible": false,
+       "collective_Sv": 0.08951461505509017,
+       "end_d": 7.583333333333333,
+       "individual_Sv": 0.02983820501836339,
+       "name": "unbolt the bracket",
+       "peak_Sv_h": 0.004977273978395855,
+       "start_d": 7.333333333333333
+      },
+      {
+       "accessible": false,
+       "collective_Sv": 0.00993477074507623,
+       "end_d": 7.666666666666667,
+       "individual_Sv": 0.00993477074507623,
+       "name": "inspect the bracket's mounting",
+       "peak_Sv_h": 0.004968796769483224,
+       "start_d": 7.583333333333333
+      }
+     ],
+     "largest_individual_Sv": 0.02983820501836339,
+     "outage_d": 7.666666666666667,
+     "wait_d": 7.0
+    },
+    {
+     "collective_Sv": 0.09934865237531418,
+     "cost": 526076.5952099042,
+     "feasible": false,
+     "jobs": [
+      {
+       "accessible": true,
+       "collective_Sv": 0.004177300064492839,
+       "end_d": 14.333333333333334,
+       "individual_Sv": 0.0020886500322464196,
+       "name": "cut out the cooling pipe",
+       "peak_Sv_h": 0.0002610969211611342,
+       "start_d": 14.0
+      },
+      {
+       "accessible": false,
+       "collective_Sv": 0.08566211287538206,
+       "end_d": 14.583333333333334,
+       "individual_Sv": 0.028554037625127354,
+       "name": "unbolt the bracket",
+       "peak_Sv_h": 0.004762298208651195,
+       "start_d": 14.333333333333334
+      },
+      {
+       "accessible": false,
+       "collective_Sv": 0.009509239435439291,
+       "end_d": 14.666666666666666,
+       "individual_Sv": 0.009509239435439291,
+       "name": "inspect the bracket's mounting",
+       "peak_Sv_h": 0.004755715850441867,
+       "start_d": 14.583333333333334
+      }
+     ],
+     "largest_individual_Sv": 0.028554037625127354,
+     "outage_d": 14.666666666666666,
+     "wait_d": 14.0
+    },
+    {
+     "collective_Sv": 0.09160139643715638,
+     "cost": 519340.31551911525,
+     "feasible": false,
+     "jobs": [
+      {
+       "accessible": true,
+       "collective_Sv": 0.00415330513058444,
+       "end_d": 30.333333333333332,
+       "individual_Sv": 0.00207665256529222,
+       "name": "cut out the cooling pipe",
+       "peak_Sv_h": 0.0002595971475886421,
+       "start_d": 30.0
+      },
+      {
+       "accessible": false,
+       "collective_Sv": 0.07870946387840837,
+       "end_d": 30.583333333333332,
+       "individual_Sv": 0.026236487959469455,
+       "name": "unbolt the bracket",
+       "peak_Sv_h": 0.004375325051979095,
+       "start_d": 30.333333333333332
+      },
+      {
+       "accessible": false,
+       "collective_Sv": 0.008738627428163573,
+       "end_d": 30.666666666666668,
+       "individual_Sv": 0.008738627428163573,
+       "name": "inspect the bracket's mounting",
+       "peak_Sv_h": 0.0043701719466314815,
+       "start_d": 30.583333333333332
+      }
+     ],
+     "largest_individual_Sv": 0.026236487959469455,
+     "outage_d": 30.666666666666668,
+     "wait_d": 30.0
+    },
+    {
+     "collective_Sv": 0.08058227303484632,
+     "cost": 524244.6985075649,
+     "feasible": false,
+     "jobs": [
+      {
+       "accessible": true,
+       "collective_Sv": 0.004108686002646674,
+       "end_d": 60.333333333333336,
+       "individual_Sv": 0.002054343001323337,
+       "name": "cut out the cooling pipe",
+       "peak_Sv_h": 0.0002568082845724365,
+       "start_d": 60.0
+      },
+      {
+       "accessible": false,
+       "collective_Sv": 0.06883047050190606,
+       "end_d": 60.583333333333336,
+       "individual_Sv": 0.02294349016730202,
+       "name": "unbolt the bracket",
+       "peak_Sv_h": 0.0038256833265158333,
+       "start_d": 60.333333333333336
+      },
+      {
+       "accessible": false,
+       "collective_Sv": 0.007643116530293575,
+       "end_d": 60.666666666666664,
+       "individual_Sv": 0.007643116530293575,
+       "name": "inspect the bracket's mounting",
+       "peak_Sv_h": 0.0038221472742281225,
+       "start_d": 60.583333333333336
+      }
+     ],
+     "largest_individual_Sv": 0.02294349016730202,
+     "outage_d": 60.666666666666664,
+     "wait_d": 60.0
+    },
+    {
+     "collective_Sv": 0.07252527394655482,
+     "cost": 543959.7030661075,
+     "feasible": false,
+     "jobs": [
+      {
+       "accessible": true,
+       "collective_Sv": 0.0040645466050401894,
+       "end_d": 90.33333333333333,
+       "individual_Sv": 0.0020322733025200947,
+       "name": "cut out the cooling pipe",
+       "peak_Sv_h": 0.0002540494065876081,
+       "start_d": 90.0
+      },
+      {
+       "accessible": false,
+       "collective_Sv": 0.061617844341484165,
+       "end_d": 90.58333333333333,
+       "individual_Sv": 0.020539281447161387,
+       "name": "unbolt the bracket",
+       "peak_Sv_h": 0.003424543089248506,
+       "start_d": 90.33333333333333
+      },
+      {
+       "accessible": false,
+       "collective_Sv": 0.006842883000030469,
+       "end_d": 90.66666666666667,
+       "individual_Sv": 0.006842883000030469,
+       "name": "inspect the bracket's mounting",
+       "peak_Sv_h": 0.003421884403955956,
+       "start_d": 90.58333333333333
+      }
+     ],
+     "largest_individual_Sv": 0.020539281447161387,
+     "outage_d": 90.66666666666667,
+     "wait_d": 90.0
+    },
+    {
+     "collective_Sv": 0.0664081696126476,
+     "cost": 573374.1813965713,
+     "feasible": false,
+     "jobs": [
+      {
+       "accessible": true,
+       "collective_Sv": 0.004020881656628654,
+       "end_d": 120.33333333333333,
+       "individual_Sv": 0.002010440828314327,
+       "name": "cut out the cooling pipe",
+       "peak_Sv_h": 0.0002513201834626386,
+       "start_d": 120.0
+      },
+      {
+       "accessible": false,
+       "collective_Sv": 0.05615087324362571,
+       "end_d": 120.58333333333333,
+       "individual_Sv": 0.018716957747875237,
+       "name": "unbolt the bracket",
+       "peak_Sv_h": 0.0031204574243038517,
+       "start_d": 120.33333333333333
+      },
+      {
+       "accessible": false,
+       "collective_Sv": 0.00623641471239324,
+       "end_d": 120.66666666666667,
+       "individual_Sv": 0.00623641471239324,
+       "name": "inspect the bracket's mounting",
+       "peak_Sv_h": 0.0031185286904055792,
+       "start_d": 120.58333333333333
+      }
+     ],
+     "largest_individual_Sv": 0.018716957747875237,
+     "outage_d": 120.66666666666667,
+     "wait_d": 120.0
+    },
+    {
+     "collective_Sv": 0.05773592213357465,
+     "cost": 650012.9440012067,
+     "feasible": true,
+     "jobs": [
+      {
+       "accessible": true,
+       "collective_Sv": 0.003934954472745421,
+       "end_d": 180.33333333333334,
+       "individual_Sv": 0.0019674772363727105,
+       "name": "cut out the cooling pipe",
+       "peak_Sv_h": 0.0002459494121268896,
+       "start_d": 180.0
+      },
+      {
+       "accessible": true,
+       "collective_Sv": 0.04842232601852936,
+       "end_d": 180.58333333333334,
+       "individual_Sv": 0.016140775339509788,
+       "name": "unbolt the bracket",
+       "peak_Sv_h": 0.002690735646318926,
+       "start_d": 180.33333333333334
+      },
+      {
+       "accessible": true,
+       "collective_Sv": 0.005378641642299869,
+       "end_d": 180.66666666666666,
+       "individual_Sv": 0.005378641642299869,
+       "name": "inspect the bracket's mounting",
+       "peak_Sv_h": 0.002689522891306026,
+       "start_d": 180.58333333333334
+      }
+     ],
+     "largest_individual_Sv": 0.016140775339509788,
+     "outage_d": 180.66666666666666,
+     "wait_d": 180.0
+    },
+    {
+     "collective_Sv": 0.04956067151846185,
+     "cost": 789136.6909256426,
+     "feasible": true,
+     "jobs": [
+      {
+       "accessible": true,
+       "collective_Sv": 0.0038094951145803474,
+       "end_d": 270.3333333333333,
+       "individual_Sv": 0.0019047475572901737,
+       "name": "cut out the cooling pipe",
+       "peak_Sv_h": 0.00023810773166649574,
+       "start_d": 270.0
+      },
+      {
+       "accessible": true,
+       "collective_Sv": 0.04117697830388619,
+       "end_d": 270.5833333333333,
+       "individual_Sv": 0.01372565943462873,
+       "name": "unbolt the bracket",
+       "peak_Sv_h": 0.002287993104651503,
+       "start_d": 270.3333333333333
+      },
+      {
+       "accessible": true,
+       "collective_Sv": 0.004574198099995312,
+       "end_d": 270.6666666666667,
+       "individual_Sv": 0.004574198099995312,
+       "name": "inspect the bracket's mounting",
+       "peak_Sv_h": 0.0022872267496798757,
+       "start_d": 270.5833333333333
+      }
+     ],
+     "largest_individual_Sv": 0.01372565943462873,
+     "outage_d": 270.6666666666667,
+     "wait_d": 270.0
+    },
+    {
+     "collective_Sv": 0.0439668706985216,
+     "cost": 951167.6868259413,
+     "feasible": true,
+     "jobs": [
+      {
+       "accessible": true,
+       "collective_Sv": 0.0036814032612127578,
+       "end_d": 365.3333333333333,
+       "individual_Sv": 0.0018407016306063789,
+       "name": "cut out the cooling pipe",
+       "peak_Sv_h": 0.00023010151043663794,
+       "start_d": 365.0
+      },
+      {
+       "accessible": true,
+       "collective_Sv": 0.03625753104244768,
+       "end_d": 365.5833333333333,
+       "individual_Sv": 0.012085843680815894,
+       "name": "unbolt the bracket",
+       "peak_Sv_h": 0.0020145616207085416,
+       "start_d": 365.3333333333333
+      },
+      {
+       "accessible": true,
+       "collective_Sv": 0.0040279363948611605,
+       "end_d": 365.6666666666667,
+       "individual_Sv": 0.0040279363948611605,
+       "name": "inspect the bracket's mounting",
+       "peak_Sv_h": 0.0020140529609715043,
+       "start_d": 365.5833333333333
+      }
+     ],
+     "largest_individual_Sv": 0.012085843680815894,
+     "outage_d": 365.6666666666667,
+     "wait_d": 365.0
+    }
+   ],
+   "earliest_wait_d": 135.91796243146587,
+   "best": {
+    "collective_Sv": 0.0639768873645515,
+    "cost": 593053.6950190226,
+    "feasible": true,
+    "jobs": [
+     {
+      "accessible": true,
+      "collective_Sv": 0.0039979040237321335,
+      "end_d": 136.2512957647992,
+      "individual_Sv": 0.0019989520118660667,
+      "name": "cut out the cooling pipe",
+      "peak_Sv_h": 0.0002498839952312415,
+      "start_d": 135.91796243146587
+     },
+     {
+      "accessible": true,
+      "collective_Sv": 0.0539833097605738,
+      "end_d": 136.5012957647992,
+      "individual_Sv": 0.017994436586857933,
+      "name": "unbolt the bracket",
+      "peak_Sv_h": 0.003,
+      "start_d": 136.2512957647992
+     },
+     {
+      "accessible": true,
+      "collective_Sv": 0.005995673580245562,
+      "end_d": 136.58462909813255,
+      "individual_Sv": 0.005995673580245562,
+      "name": "inspect the bracket's mounting",
+      "peak_Sv_h": 0.0029981457200313802,
+      "start_d": 136.5012957647992
+     }
+    ],
+    "largest_individual_Sv": 0.017994436586857933,
+    "outage_d": 136.58462909813255,
+    "wait_d": 135.91796243146587
+   },
+   "interpolation_check": {
+    "at": "collective_Sv at 1 d",
+    "coarse": false,
+    "largest_relative_change": 0.04625489844839198,
+    "method": "every other tabulated time dropped, the first and last kept",
+    "tolerance": 0.05
+   }
+  },
+  "cobalt|2e+07": {
+   "alone": [
+    {
+     "earliest_start_d": 0.0,
+     "location": "pipe",
+     "name": "cut out the cooling pipe"
+    },
+    {
+     "earliest_start_d": 136.25129576479918,
+     "location": "bracket",
+     "name": "unbolt the bracket"
+    },
+    {
+     "earliest_start_d": 136.25129576479918,
+     "location": "bracket",
+     "name": "inspect the bracket's mounting"
+    }
+   ],
+   "waits": [
+    {
+     "collective_Sv": 0.11153429873099352,
+     "cost": 2234019.307953204,
+     "feasible": false,
+     "jobs": [
+      {
+       "accessible": true,
+       "collective_Sv": 0.00522595990847719,
+       "end_d": 1.3333333333333333,
+       "individual_Sv": 0.002612979954238595,
+       "name": "cut out the cooling pipe",
+       "peak_Sv_h": 0.00033626345553876426,
+       "start_d": 1.0
+      },
+      {
+       "accessible": false,
+       "collective_Sv": 0.09571489607855065,
+       "end_d": 1.5833333333333333,
+       "individual_Sv": 0.03190496535951688,
+       "name": "unbolt the bracket",
+       "peak_Sv_h": 0.00533311455485023,
+       "start_d": 1.3333333333333333
+      },
+      {
+       "accessible": false,
+       "collective_Sv": 0.010593442743965687,
+       "end_d": 1.6666666666666667,
+       "individual_Sv": 0.010593442743965687,
+       "name": "inspect the bracket's mounting",
+       "peak_Sv_h": 0.005301904428723916,
+       "start_d": 1.5833333333333333
+      }
+     ],
+     "largest_individual_Sv": 0.03190496535951688,
+     "outage_d": 1.6666666666666667,
+     "wait_d": 1.0
+    },
+    {
+     "collective_Sv": 0.10363765904984218,
+     "cost": 2088086.5143301769,
+     "feasible": false,
+     "jobs": [
+      {
+       "accessible": true,
+       "collective_Sv": 0.004188273249675767,
+       "end_d": 7.333333333333333,
+       "individual_Sv": 0.0020941366248378836,
+       "name": "cut out the cooling pipe",
+       "peak_Sv_h": 0.00026178434122272785,
+       "start_d": 7.0
+      },
+      {
+       "accessible": false,
+       "collective_Sv": 0.08951461505509017,
+       "end_d": 7.583333333333333,
+       "individual_Sv": 0.02983820501836339,
+       "name": "unbolt the bracket",
+       "peak_Sv_h": 0.004977273978395855,
+       "start_d": 7.333333333333333
+      },
+      {
+       "accessible": false,
+       "collective_Sv": 0.00993477074507623,
+       "end_d": 7.666666666666667,
+       "individual_Sv": 0.00993477074507623,
+       "name": "inspect the bracket's mounting",
+       "peak_Sv_h": 0.004968796769483224,
+       "start_d": 7.583333333333333
+      }
+     ],
+     "largest_individual_Sv": 0.02983820501836339,
+     "outage_d": 7.666666666666667,
+     "wait_d": 7.0
+    },
+    {
+     "collective_Sv": 0.09934865237531418,
+     "cost": 2016306.3808396168,
+     "feasible": false,
+     "jobs": [
+      {
+       "accessible": true,
+       "collective_Sv": 0.004177300064492839,
+       "end_d": 14.333333333333334,
+       "individual_Sv": 0.0020886500322464196,
+       "name": "cut out the cooling pipe",
+       "peak_Sv_h": 0.0002610969211611342,
+       "start_d": 14.0
+      },
+      {
+       "accessible": false,
+       "collective_Sv": 0.08566211287538206,
+       "end_d": 14.583333333333334,
+       "individual_Sv": 0.028554037625127354,
+       "name": "unbolt the bracket",
+       "peak_Sv_h": 0.004762298208651195,
+       "start_d": 14.333333333333334
+      },
+      {
+       "accessible": false,
+       "collective_Sv": 0.009509239435439291,
+       "end_d": 14.666666666666666,
+       "individual_Sv": 0.009509239435439291,
+       "name": "inspect the bracket's mounting",
+       "peak_Sv_h": 0.004755715850441867,
+       "start_d": 14.583333333333334
+      }
+     ],
+     "largest_individual_Sv": 0.028554037625127354,
+     "outage_d": 14.666666666666666,
+     "wait_d": 14.0
+    },
+    {
+     "collective_Sv": 0.09160139643715638,
+     "cost": 1893361.262076461,
+     "feasible": false,
+     "jobs": [
+      {
+       "accessible": true,
+       "collective_Sv": 0.00415330513058444,
+       "end_d": 30.333333333333332,
+       "individual_Sv": 0.00207665256529222,
+       "name": "cut out the cooling pipe",
+       "peak_Sv_h": 0.0002595971475886421,
+       "start_d": 30.0
+      },
+      {
+       "accessible": false,
+       "collective_Sv": 0.07870946387840837,
+       "end_d": 30.583333333333332,
+       "individual_Sv": 0.026236487959469455,
+       "name": "unbolt the bracket",
+       "peak_Sv_h": 0.004375325051979095,
+       "start_d": 30.333333333333332
+      },
+      {
+       "accessible": false,
+       "collective_Sv": 0.008738627428163573,
+       "end_d": 30.666666666666668,
+       "individual_Sv": 0.008738627428163573,
+       "name": "inspect the bracket's mounting",
+       "peak_Sv_h": 0.0043701719466314815,
+       "start_d": 30.583333333333332
+      }
+     ],
+     "largest_individual_Sv": 0.026236487959469455,
+     "outage_d": 30.666666666666668,
+     "wait_d": 30.0
+    },
+    {
+     "collective_Sv": 0.08058227303484632,
+     "cost": 1732978.7940302596,
+     "feasible": false,
+     "jobs": [
+      {
+       "accessible": true,
+       "collective_Sv": 0.004108686002646674,
+       "end_d": 60.333333333333336,
+       "individual_Sv": 0.002054343001323337,
+       "name": "cut out the cooling pipe",
+       "peak_Sv_h": 0.0002568082845724365,
+       "start_d": 60.0
+      },
+      {
+       "accessible": false,
+       "collective_Sv": 0.06883047050190606,
+       "end_d": 60.583333333333336,
+       "individual_Sv": 0.02294349016730202,
+       "name": "unbolt the bracket",
+       "peak_Sv_h": 0.0038256833265158333,
+       "start_d": 60.333333333333336
+      },
+      {
+       "accessible": false,
+       "collective_Sv": 0.007643116530293575,
+       "end_d": 60.666666666666664,
+       "individual_Sv": 0.007643116530293575,
+       "name": "inspect the bracket's mounting",
+       "peak_Sv_h": 0.0038221472742281225,
+       "start_d": 60.583333333333336
+      }
+     ],
+     "largest_individual_Sv": 0.02294349016730202,
+     "outage_d": 60.666666666666664,
+     "wait_d": 60.0
+    },
+    {
+     "collective_Sv": 0.07252527394655482,
+     "cost": 1631838.8122644296,
+     "feasible": false,
+     "jobs": [
+      {
+       "accessible": true,
+       "collective_Sv": 0.0040645466050401894,
+       "end_d": 90.33333333333333,
+       "individual_Sv": 0.0020322733025200947,
+       "name": "cut out the cooling pipe",
+       "peak_Sv_h": 0.0002540494065876081,
+       "start_d": 90.0
+      },
+      {
+       "accessible": false,
+       "collective_Sv": 0.061617844341484165,
+       "end_d": 90.58333333333333,
+       "individual_Sv": 0.020539281447161387,
+       "name": "unbolt the bracket",
+       "peak_Sv_h": 0.003424543089248506,
+       "start_d": 90.33333333333333
+      },
+      {
+       "accessible": false,
+       "collective_Sv": 0.006842883000030469,
+       "end_d": 90.66666666666667,
+       "individual_Sv": 0.006842883000030469,
+       "name": "inspect the bracket's mounting",
+       "peak_Sv_h": 0.003421884403955956,
+       "start_d": 90.58333333333333
+      }
+     ],
+     "largest_individual_Sv": 0.020539281447161387,
+     "outage_d": 90.66666666666667,
+     "wait_d": 90.0
+    },
+    {
+     "collective_Sv": 0.0664081696126476,
+     "cost": 1569496.7255862853,
+     "feasible": false,
+     "jobs": [
+      {
+       "accessible": true,
+       "collective_Sv": 0.004020881656628654,
+       "end_d": 120.33333333333333,
+       "individual_Sv": 0.002010440828314327,
+       "name": "cut out the cooling pipe",
+       "peak_Sv_h": 0.0002513201834626386,
+       "start_d": 120.0
+      },
+      {
+       "accessible": false,
+       "collective_Sv": 0.05615087324362571,
+       "end_d": 120.58333333333333,
+       "individual_Sv": 0.018716957747875237,
+       "name": "unbolt the bracket",
+       "peak_Sv_h": 0.0031204574243038517,
+       "start_d": 120.33333333333333
+      },
+      {
+       "accessible": false,
+       "collective_Sv": 0.00623641471239324,
+       "end_d": 120.66666666666667,
+       "individual_Sv": 0.00623641471239324,
+       "name": "inspect the bracket's mounting",
+       "peak_Sv_h": 0.0031185286904055792,
+       "start_d": 120.58333333333333
+      }
+     ],
+     "largest_individual_Sv": 0.018716957747875237,
+     "outage_d": 120.66666666666667,
+     "wait_d": 120.0
+    },
+    {
+     "collective_Sv": 0.05773592213357465,
+     "cost": 1516051.7760048264,
+     "feasible": true,
+     "jobs": [
+      {
+       "accessible": true,
+       "collective_Sv": 0.003934954472745421,
+       "end_d": 180.33333333333334,
+       "individual_Sv": 0.0019674772363727105,
+       "name": "cut out the cooling pipe",
+       "peak_Sv_h": 0.0002459494121268896,
+       "start_d": 180.0
+      },
+      {
+       "accessible": true,
+       "collective_Sv": 0.04842232601852936,
+       "end_d": 180.58333333333334,
+       "individual_Sv": 0.016140775339509788,
+       "name": "unbolt the bracket",
+       "peak_Sv_h": 0.002690735646318926,
+       "start_d": 180.33333333333334
+      },
+      {
+       "accessible": true,
+       "collective_Sv": 0.005378641642299869,
+       "end_d": 180.66666666666666,
+       "individual_Sv": 0.005378641642299869,
+       "name": "inspect the bracket's mounting",
+       "peak_Sv_h": 0.002689522891306026,
+       "start_d": 180.58333333333334
+      }
+     ],
+     "largest_individual_Sv": 0.016140775339509788,
+     "outage_d": 180.66666666666666,
+     "wait_d": 180.0
+    },
+    {
+     "collective_Sv": 0.04956067151846185,
+     "cost": 1532546.7637025705,
+     "feasible": true,
+     "jobs": [
+      {
+       "accessible": true,
+       "collective_Sv": 0.0038094951145803474,
+       "end_d": 270.3333333333333,
+       "individual_Sv": 0.0019047475572901737,
+       "name": "cut out the cooling pipe",
+       "peak_Sv_h": 0.00023810773166649574,
+       "start_d": 270.0
+      },
+      {
+       "accessible": true,
+       "collective_Sv": 0.04117697830388619,
+       "end_d": 270.5833333333333,
+       "individual_Sv": 0.01372565943462873,
+       "name": "unbolt the bracket",
+       "peak_Sv_h": 0.002287993104651503,
+       "start_d": 270.3333333333333
+      },
+      {
+       "accessible": true,
+       "collective_Sv": 0.004574198099995312,
+       "end_d": 270.6666666666667,
+       "individual_Sv": 0.004574198099995312,
+       "name": "inspect the bracket's mounting",
+       "peak_Sv_h": 0.0022872267496798757,
+       "start_d": 270.5833333333333
+      }
+     ],
+     "largest_individual_Sv": 0.01372565943462873,
+     "outage_d": 270.6666666666667,
+     "wait_d": 270.0
+    },
+    {
+     "collective_Sv": 0.0439668706985216,
+     "cost": 1610670.7473037653,
+     "feasible": true,
+     "jobs": [
+      {
+       "accessible": true,
+       "collective_Sv": 0.0036814032612127578,
+       "end_d": 365.3333333333333,
+       "individual_Sv": 0.0018407016306063789,
+       "name": "cut out the cooling pipe",
+       "peak_Sv_h": 0.00023010151043663794,
+       "start_d": 365.0
+      },
+      {
+       "accessible": true,
+       "collective_Sv": 0.03625753104244768,
+       "end_d": 365.5833333333333,
+       "individual_Sv": 0.012085843680815894,
+       "name": "unbolt the bracket",
+       "peak_Sv_h": 0.0020145616207085416,
+       "start_d": 365.3333333333333
+      },
+      {
+       "accessible": true,
+       "collective_Sv": 0.0040279363948611605,
+       "end_d": 365.6666666666667,
+       "individual_Sv": 0.0040279363948611605,
+       "name": "inspect the bracket's mounting",
+       "peak_Sv_h": 0.0020140529609715043,
+       "start_d": 365.5833333333333
+      }
+     ],
+     "largest_individual_Sv": 0.012085843680815894,
+     "outage_d": 365.6666666666667,
+     "wait_d": 365.0
+    }
+   ],
+   "earliest_wait_d": 135.91796243146587,
+   "best": {
+    "collective_Sv": 0.0577698937179592,
+    "cost": 1516041.3575325776,
+    "feasible": true,
+    "jobs": [
+     {
+      "accessible": true,
+      "collective_Sv": 0.003935443159628102,
+      "end_d": 179.98840825336347,
+      "individual_Sv": 0.001967721579814051,
+      "name": "cut out the cooling pipe",
+      "peak_Sv_h": 0.00024597995697137835,
+      "start_d": 179.65507492003013
+     },
+     {
+      "accessible": true,
+      "collective_Sv": 0.048452462404068114,
+      "end_d": 180.23840825336347,
+      "individual_Sv": 0.016150820801356037,
+      "name": "unbolt the bracket",
+      "peak_Sv_h": 0.002692430689163669,
+      "start_d": 179.98840825336347
+     },
+     {
+      "accessible": true,
+      "collective_Sv": 0.005381988154262991,
+      "end_d": 180.32174158669682,
+      "individual_Sv": 0.005381988154262991,
+      "name": "inspect the bracket's mounting",
+      "peak_Sv_h": 0.0026911962730126757,
+      "start_d": 180.23840825336347
+     }
+    ],
+    "largest_individual_Sv": 0.016150820801356037,
+    "outage_d": 180.32174158669682,
+    "wait_d": 179.65507492003013
+   },
+   "interpolation_check": {
+    "at": "collective_Sv at 1 d",
+    "coarse": false,
+    "largest_relative_change": 0.04625489844839198,
+    "method": "every other tabulated time dropped, the first and last kept",
+    "tolerance": 0.05
+   }
+  },
+  "no_cobalt|200000": {
+   "alone": [
+    {
+     "earliest_start_d": 0.0,
+     "location": "pipe",
+     "name": "cut out the cooling pipe"
+    },
+    {
+     "earliest_start_d": 30.086784631591758,
+     "location": "bracket",
+     "name": "unbolt the bracket"
+    },
+    {
+     "earliest_start_d": 30.086784631591758,
+     "location": "bracket",
+     "name": "inspect the bracket's mounting"
+    }
+   ],
+   "waits": [
+    {
+     "collective_Sv": 0.08343575335634608,
+     "cost": 20020.48400460255,
+     "feasible": false,
+     "jobs": [
+      {
+       "accessible": true,
+       "collective_Sv": 0.00522595990847719,
+       "end_d": 1.3333333333333333,
+       "individual_Sv": 0.002612979954238595,
+       "name": "cut out the cooling pipe",
+       "peak_Sv_h": 0.00033626345553876426,
+       "start_d": 1.0
+      },
+      {
+       "accessible": false,
+       "collective_Sv": 0.07042593117316673,
+       "end_d": 1.5833333333333333,
+       "individual_Sv": 0.023475310391055576,
+       "name": "unbolt the bracket",
+       "peak_Sv_h": 0.003928071720464798,
+       "start_d": 1.3333333333333333
+      },
+      {
+       "accessible": false,
+       "collective_Sv": 0.00778386227470216,
+       "end_d": 1.6666666666666667,
+       "individual_Sv": 0.00778386227470216,
+       "name": "inspect the bracket's mounting",
+       "peak_Sv_h": 0.003897072677276524,
+       "start_d": 1.5833333333333333
+      }
+     ],
+     "largest_individual_Sv": 0.023475310391055576,
+     "outage_d": 1.6666666666666667,
+     "wait_d": 1.0
+    },
+    {
+     "collective_Sv": 0.07564826753505792,
+     "cost": 30462.986840344918,
+     "feasible": false,
+     "jobs": [
+      {
+       "accessible": true,
+       "collective_Sv": 0.004188273249675767,
+       "end_d": 7.333333333333333,
+       "individual_Sv": 0.0020941366248378836,
+       "name": "cut out the cooling pipe",
+       "peak_Sv_h": 0.00026178434122272785,
+       "start_d": 7.0
+      },
+      {
+       "accessible": false,
+       "collective_Sv": 0.06432391947004473,
+       "end_d": 7.583333333333333,
+       "individual_Sv": 0.02144130649001491,
+       "name": "unbolt the bracket",
+       "peak_Sv_h": 0.0035776905953798775,
+       "start_d": 7.333333333333333
+      },
+      {
+       "accessible": false,
+       "collective_Sv": 0.007136074815337418,
+       "end_d": 7.666666666666667,
+       "individual_Sv": 0.007136074815337418,
+       "name": "inspect the bracket's mounting",
+       "peak_Sv_h": 0.00356941476223244,
+       "start_d": 7.583333333333333
+      }
+     ],
+     "largest_individual_Sv": 0.02144130649001491,
+     "outage_d": 7.666666666666667,
+     "wait_d": 7.0
+    },
+    {
+     "collective_Sv": 0.07148074398337978,
+     "cost": 43629.48213000929,
+     "feasible": false,
+     "jobs": [
+      {
+       "accessible": true,
+       "collective_Sv": 0.004177300064492839,
+       "end_d": 14.333333333333334,
+       "individual_Sv": 0.0020886500322464196,
+       "name": "cut out the cooling pipe",
+       "peak_Sv_h": 0.0002610969211611342,
+       "start_d": 14.0
+      },
+      {
+       "accessible": false,
+       "collective_Sv": 0.06058078430949752,
+       "end_d": 14.583333333333334,
+       "individual_Sv": 0.02019359476983251,
+       "name": "unbolt the bracket",
+       "peak_Sv_h": 0.0033688038313061637,
+       "start_d": 14.333333333333334
+      },
+      {
+       "accessible": false,
+       "collective_Sv": 0.0067226596093894215,
+       "end_d": 14.666666666666666,
+       "individual_Sv": 0.0067226596093894215,
+       "name": "inspect the bracket's mounting",
+       "peak_Sv_h": 0.0033623964583466455,
+       "start_d": 14.583333333333334
+      }
+     ],
+     "largest_individual_Sv": 0.02019359476983251,
+     "outage_d": 14.666666666666666,
+     "wait_d": 14.0
+    },
+    {
+     "collective_Sv": 0.06399716195385989,
+     "cost": 74132.76572410531,
+     "feasible": true,
+     "jobs": [
+      {
+       "accessible": true,
+       "collective_Sv": 0.00415330513058444,
+       "end_d": 30.333333333333332,
+       "individual_Sv": 0.00207665256529222,
+       "name": "cut out the cooling pipe",
+       "peak_Sv_h": 0.0002595971475886421,
+       "start_d": 30.0
+      },
+      {
+       "accessible": true,
+       "collective_Sv": 0.05386549464084088,
+       "end_d": 30.583333333333332,
+       "individual_Sv": 0.017955164880280292,
+       "name": "unbolt the bracket",
+       "peak_Sv_h": 0.0029950391441989385,
+       "start_d": 30.333333333333332
+      },
+      {
+       "accessible": true,
+       "collective_Sv": 0.0059783621824345675,
+       "end_d": 30.666666666666668,
+       "individual_Sv": 0.0059783621824345675,
+       "name": "inspect the bracket's mounting",
+       "peak_Sv_h": 0.0029900172204884766,
+       "start_d": 30.583333333333332
+      }
+     ],
+     "largest_individual_Sv": 0.017955164880280292,
+     "outage_d": 30.666666666666668,
+     "wait_d": 30.0
+    },
+    {
+     "collective_Sv": 0.05342812413127943,
+     "cost": 132018.9581595892,
+     "feasible": true,
+     "jobs": [
+      {
+       "accessible": true,
+       "collective_Sv": 0.004108686002646674,
+       "end_d": 60.333333333333336,
+       "individual_Sv": 0.002054343001323337,
+       "name": "cut out the cooling pipe",
+       "peak_Sv_h": 0.0002568082845724365,
+       "start_d": 60.0
+      },
+      {
+       "accessible": true,
+       "collective_Sv": 0.04439163209783628,
+       "end_d": 60.583333333333336,
+       "individual_Sv": 0.01479721069927876,
+       "name": "unbolt the bracket",
+       "peak_Sv_h": 0.0024679269311327356,
+       "start_d": 60.333333333333336
+      },
+      {
+       "accessible": true,
+       "collective_Sv": 0.004927806030796479,
+       "end_d": 60.666666666666664,
+       "individual_Sv": 0.004927806030796479,
+       "name": "inspect the bracket's mounting",
+       "peak_Sv_h": 0.002464477439431058,
+       "start_d": 60.583333333333336
+      }
+     ],
+     "largest_individual_Sv": 0.01479721069927876,
+     "outage_d": 60.666666666666664,
+     "wait_d": 60.0
+    },
+    {
+     "collective_Sv": 0.04577688920538635,
+     "cost": 190488.71117441062,
+     "feasible": true,
+     "jobs": [
+      {
+       "accessible": true,
+       "collective_Sv": 0.0040645466050401894,
+       "end_d": 90.33333333333333,
+       "individual_Sv": 0.0020322733025200947,
+       "name": "cut out the cooling pipe",
+       "peak_Sv_h": 0.0002540494065876081,
+       "start_d": 90.0
+      },
+      {
+       "accessible": true,
+       "collective_Sv": 0.03754418194666927,
+       "end_d": 90.58333333333333,
+       "individual_Sv": 0.012514727315556423,
+       "name": "unbolt the bracket",
+       "peak_Sv_h": 0.0020870692546057818,
+       "start_d": 90.33333333333333
+      },
+      {
+       "accessible": true,
+       "collective_Sv": 0.004168160653676898,
+       "end_d": 90.66666666666667,
+       "individual_Sv": 0.004168160653676898,
+       "name": "inspect the bracket's mounting",
+       "peak_Sv_h": 0.0020845070418230444,
+       "start_d": 90.58333333333333
+      }
+     ],
+     "largest_individual_Sv": 0.012514727315556423,
+     "outage_d": 90.66666666666667,
+     "wait_d": 90.0
+    },
+    {
+     "collective_Sv": 0.040029287349716336,
+     "cost": 249339.1908032766,
+     "feasible": true,
+     "jobs": [
+      {
+       "accessible": true,
+       "collective_Sv": 0.004020881656628654,
+       "end_d": 120.33333333333333,
+       "individual_Sv": 0.002010440828314327,
+       "name": "cut out the cooling pipe",
+       "peak_Sv_h": 0.0002513201834626386,
+       "start_d": 120.0
+      },
+      {
+       "accessible": true,
+       "collective_Sv": 0.032409803428972615,
+       "end_d": 120.58333333333333,
+       "individual_Sv": 0.010803267809657539,
+       "name": "unbolt the bracket",
+       "peak_Sv_h": 0.0018014776917148262,
+       "start_d": 120.33333333333333
+      },
+      {
+       "accessible": true,
+       "collective_Sv": 0.0035986022641150716,
+       "end_d": 120.66666666666667,
+       "individual_Sv": 0.0035986022641150716,
+       "name": "inspect the bracket's mounting",
+       "peak_Sv_h": 0.0017996119004047382,
+       "start_d": 120.58333333333333
+      }
+     ],
+     "largest_individual_Sv": 0.010803267809657539,
+     "outage_d": 120.66666666666667,
+     "wait_d": 120.0
+    },
+    {
+     "collective_Sv": 0.03202657185209947,
+     "cost": 367738.6477037532,
+     "feasible": true,
+     "jobs": [
+      {
+       "accessible": true,
+       "collective_Sv": 0.003934954472745421,
+       "end_d": 180.33333333333334,
+       "individual_Sv": 0.0019674772363727105,
+       "name": "cut out the cooling pipe",
+       "peak_Sv_h": 0.0002459494121268896,
+       "start_d": 180.0
+      },
+      {
+       "accessible": true,
+       "collective_Sv": 0.02528383315261849,
+       "end_d": 180.58333333333334,
+       "individual_Sv": 0.008427944384206163,
+       "name": "unbolt the bracket",
+       "peak_Sv_h": 0.001405231568918735,
+       "start_d": 180.33333333333334
+      },
+      {
+       "accessible": true,
+       "collective_Sv": 0.0028077842267355607,
+       "end_d": 180.66666666666666,
+       "individual_Sv": 0.0028077842267355607,
+       "name": "inspect the bracket's mounting",
+       "peak_Sv_h": 0.0014040833822406358,
+       "start_d": 180.58333333333334
+      }
+     ],
+     "largest_individual_Sv": 0.008427944384206163,
+     "outage_d": 180.66666666666666,
+     "wait_d": 180.0
+    },
+    {
+     "collective_Sv": 0.0247464168022562,
+     "cost": 546282.6166937846,
+     "feasible": true,
+     "jobs": [
+      {
+       "accessible": true,
+       "collective_Sv": 0.0038094951145803474,
+       "end_d": 270.3333333333333,
+       "individual_Sv": 0.0019047475572901737,
+       "name": "cut out the cooling pipe",
+       "peak_Sv_h": 0.00023810773166649574,
+       "start_d": 270.0
+      },
+      {
+       "accessible": true,
+       "collective_Sv": 0.018844049944352563,
+       "end_d": 270.5833333333333,
+       "individual_Sv": 0.006281349981450854,
+       "name": "unbolt the bracket",
+       "peak_Sv_h": 0.001047233606761394,
+       "start_d": 270.3333333333333
+      },
+      {
+       "accessible": true,
+       "collective_Sv": 0.0020928717433232884,
+       "end_d": 270.6666666666667,
+       "individual_Sv": 0.0020928717433232884,
+       "name": "inspect the bracket's mounting",
+       "peak_Sv_h": 0.0010465497948312884,
+       "start_d": 270.5833333333333
+      }
+     ],
+     "largest_individual_Sv": 0.006281349981450854,
+     "outage_d": 270.6666666666667,
+     "wait_d": 270.0
+    },
+    {
+     "collective_Sv": 0.02001812156127604,
+     "cost": 735336.9576455886,
+     "feasible": true,
+     "jobs": [
+      {
+       "accessible": true,
+       "collective_Sv": 0.0036814032612127578,
+       "end_d": 365.3333333333333,
+       "individual_Sv": 0.0018407016306063789,
+       "name": "cut out the cooling pipe",
+       "peak_Sv_h": 0.00023010151043663794,
+       "start_d": 365.0
+      },
+      {
+       "accessible": true,
+       "collective_Sv": 0.014703566181135854,
+       "end_d": 365.5833333333333,
+       "individual_Sv": 0.004901188727045285,
+       "name": "unbolt the bracket",
+       "peak_Sv_h": 0.0008170813851633851,
+       "start_d": 365.3333333333333
+      },
+      {
+       "accessible": true,
+       "collective_Sv": 0.0016331521189274305,
+       "end_d": 365.6666666666667,
+       "individual_Sv": 0.0016331521189274305,
+       "name": "inspect the bracket's mounting",
+       "peak_Sv_h": 0.0008166482287997906,
+       "start_d": 365.5833333333333
+      }
+     ],
+     "largest_individual_Sv": 0.004901188727045285,
+     "outage_d": 365.6666666666667,
+     "wait_d": 365.0
+    }
+   ],
+   "earliest_wait_d": 29.753451298258426,
+   "best": {
+    "collective_Sv": 0.06409665347487693,
+    "cost": 73659.56662482557,
+    "feasible": true,
+    "jobs": [
+     {
+      "accessible": true,
+      "collective_Sv": 0.00415367382549264,
+      "end_d": 30.086784631591758,
+      "individual_Sv": 0.00207683691274632,
+      "name": "cut out the cooling pipe",
+      "peak_Sv_h": 0.0002596201924764335,
+      "start_d": 29.753451298258426
+     },
+     {
+      "accessible": true,
+      "collective_Sv": 0.05395471516140857,
+      "end_d": 30.336784631591758,
+      "individual_Sv": 0.017984905053802857,
+      "name": "unbolt the bracket",
+      "peak_Sv_h": 0.003,
+      "start_d": 30.086784631591758
+     },
+     {
+      "accessible": true,
+      "collective_Sv": 0.005988264487975722,
+      "end_d": 30.420117964925094,
+      "individual_Sv": 0.005988264487975722,
+      "name": "inspect the bracket's mounting",
+      "peak_Sv_h": 0.0029949697581881135,
+      "start_d": 30.336784631591758
+     }
+    ],
+    "largest_individual_Sv": 0.017984905053802857,
+    "outage_d": 30.420117964925094,
+    "wait_d": 29.753451298258426
+   },
+   "interpolation_check": {
+    "at": "collective_Sv at 1 d",
+    "coarse": true,
+    "largest_relative_change": 0.059700816423640266,
+    "method": "every other tabulated time dropped, the first and last kept",
+    "tolerance": 0.05
+   }
+  },
+  "no_cobalt|1e+06": {
+   "alone": [
+    {
+     "earliest_start_d": 0.0,
+     "location": "pipe",
+     "name": "cut out the cooling pipe"
+    },
+    {
+     "earliest_start_d": 30.086784631591758,
+     "location": "bracket",
+     "name": "unbolt the bracket"
+    },
+    {
+     "earliest_start_d": 30.086784631591758,
+     "location": "bracket",
+     "name": "inspect the bracket's mounting"
+    }
+   ],
+   "waits": [
+    {
+     "collective_Sv": 0.08343575335634608,
+     "cost": 86769.0866896794,
+     "feasible": false,
+     "jobs": [
+      {
+       "accessible": true,
+       "collective_Sv": 0.00522595990847719,
+       "end_d": 1.3333333333333333,
+       "individual_Sv": 0.002612979954238595,
+       "name": "cut out the cooling pipe",
+       "peak_Sv_h": 0.00033626345553876426,
+       "start_d": 1.0
+      },
+      {
+       "accessible": false,
+       "collective_Sv": 0.07042593117316673,
+       "end_d": 1.5833333333333333,
+       "individual_Sv": 0.023475310391055576,
+       "name": "unbolt the bracket",
+       "peak_Sv_h": 0.003928071720464798,
+       "start_d": 1.3333333333333333
+      },
+      {
+       "accessible": false,
+       "collective_Sv": 0.00778386227470216,
+       "end_d": 1.6666666666666667,
+       "individual_Sv": 0.00778386227470216,
+       "name": "inspect the bracket's mounting",
+       "peak_Sv_h": 0.003897072677276524,
+       "start_d": 1.5833333333333333
+      }
+     ],
+     "largest_individual_Sv": 0.023475310391055576,
+     "outage_d": 1.6666666666666667,
+     "wait_d": 1.0
+    },
+    {
+     "collective_Sv": 0.07564826753505792,
+     "cost": 90981.60086839125,
+     "feasible": false,
+     "jobs": [
+      {
+       "accessible": true,
+       "collective_Sv": 0.004188273249675767,
+       "end_d": 7.333333333333333,
+       "individual_Sv": 0.0020941366248378836,
+       "name": "cut out the cooling pipe",
+       "peak_Sv_h": 0.00026178434122272785,
+       "start_d": 7.0
+      },
+      {
+       "accessible": false,
+       "collective_Sv": 0.06432391947004473,
+       "end_d": 7.583333333333333,
+       "individual_Sv": 0.02144130649001491,
+       "name": "unbolt the bracket",
+       "peak_Sv_h": 0.0035776905953798775,
+       "start_d": 7.333333333333333
+      },
+      {
+       "accessible": false,
+       "collective_Sv": 0.007136074815337418,
+       "end_d": 7.666666666666667,
+       "individual_Sv": 0.007136074815337418,
+       "name": "inspect the bracket's mounting",
+       "peak_Sv_h": 0.00356941476223244,
+       "start_d": 7.583333333333333
+      }
+     ],
+     "largest_individual_Sv": 0.02144130649001491,
+     "outage_d": 7.666666666666667,
+     "wait_d": 7.0
+    },
+    {
+     "collective_Sv": 0.07148074398337978,
+     "cost": 100814.07731671311,
+     "feasible": false,
+     "jobs": [
+      {
+       "accessible": true,
+       "collective_Sv": 0.004177300064492839,
+       "end_d": 14.333333333333334,
+       "individual_Sv": 0.0020886500322464196,
+       "name": "cut out the cooling pipe",
+       "peak_Sv_h": 0.0002610969211611342,
+       "start_d": 14.0
+      },
+      {
+       "accessible": false,
+       "collective_Sv": 0.06058078430949752,
+       "end_d": 14.583333333333334,
+       "individual_Sv": 0.02019359476983251,
+       "name": "unbolt the bracket",
+       "peak_Sv_h": 0.0033688038313061637,
+       "start_d": 14.333333333333334
+      },
+      {
+       "accessible": false,
+       "collective_Sv": 0.0067226596093894215,
+       "end_d": 14.666666666666666,
+       "individual_Sv": 0.0067226596093894215,
+       "name": "inspect the bracket's mounting",
+       "peak_Sv_h": 0.0033623964583466455,
+       "start_d": 14.583333333333334
+      }
+     ],
+     "largest_individual_Sv": 0.02019359476983251,
+     "outage_d": 14.666666666666666,
+     "wait_d": 14.0
+    },
+    {
+     "collective_Sv": 0.06399716195385989,
+     "cost": 125330.49528719322,
+     "feasible": true,
+     "jobs": [
+      {
+       "accessible": true,
+       "collective_Sv": 0.00415330513058444,
+       "end_d": 30.333333333333332,
+       "individual_Sv": 0.00207665256529222,
+       "name": "cut out the cooling pipe",
+       "peak_Sv_h": 0.0002595971475886421,
+       "start_d": 30.0
+      },
+      {
+       "accessible": true,
+       "collective_Sv": 0.05386549464084088,
+       "end_d": 30.583333333333332,
+       "individual_Sv": 0.017955164880280292,
+       "name": "unbolt the bracket",
+       "peak_Sv_h": 0.0029950391441989385,
+       "start_d": 30.333333333333332
+      },
+      {
+       "accessible": true,
+       "collective_Sv": 0.0059783621824345675,
+       "end_d": 30.666666666666668,
+       "individual_Sv": 0.0059783621824345675,
+       "name": "inspect the bracket's mounting",
+       "peak_Sv_h": 0.0029900172204884766,
+       "start_d": 30.583333333333332
+      }
+     ],
+     "largest_individual_Sv": 0.017955164880280292,
+     "outage_d": 30.666666666666668,
+     "wait_d": 30.0
+    },
+    {
+     "collective_Sv": 0.05342812413127943,
+     "cost": 174761.45746461276,
+     "feasible": true,
+     "jobs": [
+      {
+       "accessible": true,
+       "collective_Sv": 0.004108686002646674,
+       "end_d": 60.333333333333336,
+       "individual_Sv": 0.002054343001323337,
+       "name": "cut out the cooling pipe",
+       "peak_Sv_h": 0.0002568082845724365,
+       "start_d": 60.0
+      },
+      {
+       "accessible": true,
+       "collective_Sv": 0.04439163209783628,
+       "end_d": 60.583333333333336,
+       "individual_Sv": 0.01479721069927876,
+       "name": "unbolt the bracket",
+       "peak_Sv_h": 0.0024679269311327356,
+       "start_d": 60.333333333333336
+      },
+      {
+       "accessible": true,
+       "collective_Sv": 0.004927806030796479,
+       "end_d": 60.666666666666664,
+       "individual_Sv": 0.004927806030796479,
+       "name": "inspect the bracket's mounting",
+       "peak_Sv_h": 0.002464477439431058,
+       "start_d": 60.583333333333336
+      }
+     ],
+     "largest_individual_Sv": 0.01479721069927876,
+     "outage_d": 60.666666666666664,
+     "wait_d": 60.0
+    },
+    {
+     "collective_Sv": 0.04577688920538635,
+     "cost": 227110.22253871968,
+     "feasible": true,
+     "jobs": [
+      {
+       "accessible": true,
+       "collective_Sv": 0.0040645466050401894,
+       "end_d": 90.33333333333333,
+       "individual_Sv": 0.0020322733025200947,
+       "name": "cut out the cooling pipe",
+       "peak_Sv_h": 0.0002540494065876081,
+       "start_d": 90.0
+      },
+      {
+       "accessible": true,
+       "collective_Sv": 0.03754418194666927,
+       "end_d": 90.58333333333333,
+       "individual_Sv": 0.012514727315556423,
+       "name": "unbolt the bracket",
+       "peak_Sv_h": 0.0020870692546057818,
+       "start_d": 90.33333333333333
+      },
+      {
+       "accessible": true,
+       "collective_Sv": 0.004168160653676898,
+       "end_d": 90.66666666666667,
+       "individual_Sv": 0.004168160653676898,
+       "name": "inspect the bracket's mounting",
+       "peak_Sv_h": 0.0020845070418230444,
+       "start_d": 90.58333333333333
+      }
+     ],
+     "largest_individual_Sv": 0.012514727315556423,
+     "outage_d": 90.66666666666667,
+     "wait_d": 90.0
+    },
+    {
+     "collective_Sv": 0.040029287349716336,
+     "cost": 281362.62068304967,
+     "feasible": true,
+     "jobs": [
+      {
+       "accessible": true,
+       "collective_Sv": 0.004020881656628654,
+       "end_d": 120.33333333333333,
+       "individual_Sv": 0.002010440828314327,
+       "name": "cut out the cooling pipe",
+       "peak_Sv_h": 0.0002513201834626386,
+       "start_d": 120.0
+      },
+      {
+       "accessible": true,
+       "collective_Sv": 0.032409803428972615,
+       "end_d": 120.58333333333333,
+       "individual_Sv": 0.010803267809657539,
+       "name": "unbolt the bracket",
+       "peak_Sv_h": 0.0018014776917148262,
+       "start_d": 120.33333333333333
+      },
+      {
+       "accessible": true,
+       "collective_Sv": 0.0035986022641150716,
+       "end_d": 120.66666666666667,
+       "individual_Sv": 0.0035986022641150716,
+       "name": "inspect the bracket's mounting",
+       "peak_Sv_h": 0.0017996119004047382,
+       "start_d": 120.58333333333333
+      }
+     ],
+     "largest_individual_Sv": 0.010803267809657539,
+     "outage_d": 120.66666666666667,
+     "wait_d": 120.0
+    },
+    {
+     "collective_Sv": 0.03202657185209947,
+     "cost": 393359.90518543276,
+     "feasible": true,
+     "jobs": [
+      {
+       "accessible": true,
+       "collective_Sv": 0.003934954472745421,
+       "end_d": 180.33333333333334,
+       "individual_Sv": 0.0019674772363727105,
+       "name": "cut out the cooling pipe",
+       "peak_Sv_h": 0.0002459494121268896,
+       "start_d": 180.0
+      },
+      {
+       "accessible": true,
+       "collective_Sv": 0.02528383315261849,
+       "end_d": 180.58333333333334,
+       "individual_Sv": 0.008427944384206163,
+       "name": "unbolt the bracket",
+       "peak_Sv_h": 0.001405231568918735,
+       "start_d": 180.33333333333334
+      },
+      {
+       "accessible": true,
+       "collective_Sv": 0.0028077842267355607,
+       "end_d": 180.66666666666666,
+       "individual_Sv": 0.0028077842267355607,
+       "name": "inspect the bracket's mounting",
+       "peak_Sv_h": 0.0014040833822406358,
+       "start_d": 180.58333333333334
+      }
+     ],
+     "largest_individual_Sv": 0.008427944384206163,
+     "outage_d": 180.66666666666666,
+     "wait_d": 180.0
+    },
+    {
+     "collective_Sv": 0.0247464168022562,
+     "cost": 566079.7501355896,
+     "feasible": true,
+     "jobs": [
+      {
+       "accessible": true,
+       "collective_Sv": 0.0038094951145803474,
+       "end_d": 270.3333333333333,
+       "individual_Sv": 0.0019047475572901737,
+       "name": "cut out the cooling pipe",
+       "peak_Sv_h": 0.00023810773166649574,
+       "start_d": 270.0
+      },
+      {
+       "accessible": true,
+       "collective_Sv": 0.018844049944352563,
+       "end_d": 270.5833333333333,
+       "individual_Sv": 0.006281349981450854,
+       "name": "unbolt the bracket",
+       "peak_Sv_h": 0.001047233606761394,
+       "start_d": 270.3333333333333
+      },
+      {
+       "accessible": true,
+       "collective_Sv": 0.0020928717433232884,
+       "end_d": 270.6666666666667,
+       "individual_Sv": 0.0020928717433232884,
+       "name": "inspect the bracket's mounting",
+       "peak_Sv_h": 0.0010465497948312884,
+       "start_d": 270.5833333333333
+      }
+     ],
+     "largest_individual_Sv": 0.006281349981450854,
+     "outage_d": 270.6666666666667,
+     "wait_d": 270.0
+    },
+    {
+     "collective_Sv": 0.02001812156127604,
+     "cost": 751351.4548946094,
+     "feasible": true,
+     "jobs": [
+      {
+       "accessible": true,
+       "collective_Sv": 0.0036814032612127578,
+       "end_d": 365.3333333333333,
+       "individual_Sv": 0.0018407016306063789,
+       "name": "cut out the cooling pipe",
+       "peak_Sv_h": 0.00023010151043663794,
+       "start_d": 365.0
+      },
+      {
+       "accessible": true,
+       "collective_Sv": 0.014703566181135854,
+       "end_d": 365.5833333333333,
+       "individual_Sv": 0.004901188727045285,
+       "name": "unbolt the bracket",
+       "peak_Sv_h": 0.0008170813851633851,
+       "start_d": 365.3333333333333
+      },
+      {
+       "accessible": true,
+       "collective_Sv": 0.0016331521189274305,
+       "end_d": 365.6666666666667,
+       "individual_Sv": 0.0016331521189274305,
+       "name": "inspect the bracket's mounting",
+       "peak_Sv_h": 0.0008166482287997906,
+       "start_d": 365.5833333333333
+      }
+     ],
+     "largest_individual_Sv": 0.004901188727045285,
+     "outage_d": 365.6666666666667,
+     "wait_d": 365.0
+    }
+   ],
+   "earliest_wait_d": 29.753451298258426,
+   "best": {
+    "collective_Sv": 0.06409665347487693,
+    "cost": 124936.88940472712,
+    "feasible": true,
+    "jobs": [
+     {
+      "accessible": true,
+      "collective_Sv": 0.00415367382549264,
+      "end_d": 30.086784631591758,
+      "individual_Sv": 0.00207683691274632,
+      "name": "cut out the cooling pipe",
+      "peak_Sv_h": 0.0002596201924764335,
+      "start_d": 29.753451298258426
+     },
+     {
+      "accessible": true,
+      "collective_Sv": 0.05395471516140857,
+      "end_d": 30.336784631591758,
+      "individual_Sv": 0.017984905053802857,
+      "name": "unbolt the bracket",
+      "peak_Sv_h": 0.003,
+      "start_d": 30.086784631591758
+     },
+     {
+      "accessible": true,
+      "collective_Sv": 0.005988264487975722,
+      "end_d": 30.420117964925094,
+      "individual_Sv": 0.005988264487975722,
+      "name": "inspect the bracket's mounting",
+      "peak_Sv_h": 0.0029949697581881135,
+      "start_d": 30.336784631591758
+     }
+    ],
+    "largest_individual_Sv": 0.017984905053802857,
+    "outage_d": 30.420117964925094,
+    "wait_d": 29.753451298258426
+   },
+   "interpolation_check": {
+    "at": "collective_Sv at 1 d",
+    "coarse": true,
+    "largest_relative_change": 0.059700816423640266,
+    "method": "every other tabulated time dropped, the first and last kept",
+    "tolerance": 0.05
+   }
+  },
+  "no_cobalt|5e+06": {
+   "alone": [
+    {
+     "earliest_start_d": 0.0,
+     "location": "pipe",
+     "name": "cut out the cooling pipe"
+    },
+    {
+     "earliest_start_d": 30.086784631591758,
+     "location": "bracket",
+     "name": "unbolt the bracket"
+    },
+    {
+     "earliest_start_d": 30.086784631591758,
+     "location": "bracket",
+     "name": "inspect the bracket's mounting"
+    }
+   ],
+   "waits": [
+    {
+     "collective_Sv": 0.08343575335634608,
+     "cost": 420512.1001150637,
+     "feasible": false,
+     "jobs": [
+      {
+       "accessible": true,
+       "collective_Sv": 0.00522595990847719,
+       "end_d": 1.3333333333333333,
+       "individual_Sv": 0.002612979954238595,
+       "name": "cut out the cooling pipe",
+       "peak_Sv_h": 0.00033626345553876426,
+       "start_d": 1.0
+      },
+      {
+       "accessible": false,
+       "collective_Sv": 0.07042593117316673,
+       "end_d": 1.5833333333333333,
+       "individual_Sv": 0.023475310391055576,
+       "name": "unbolt the bracket",
+       "peak_Sv_h": 0.003928071720464798,
+       "start_d": 1.3333333333333333
+      },
+      {
+       "accessible": false,
+       "collective_Sv": 0.00778386227470216,
+       "end_d": 1.6666666666666667,
+       "individual_Sv": 0.00778386227470216,
+       "name": "inspect the bracket's mounting",
+       "peak_Sv_h": 0.003897072677276524,
+       "start_d": 1.5833333333333333
+      }
+     ],
+     "largest_individual_Sv": 0.023475310391055576,
+     "outage_d": 1.6666666666666667,
+     "wait_d": 1.0
+    },
+    {
+     "collective_Sv": 0.07564826753505792,
+     "cost": 393574.6710086229,
+     "feasible": false,
+     "jobs": [
+      {
+       "accessible": true,
+       "collective_Sv": 0.004188273249675767,
+       "end_d": 7.333333333333333,
+       "individual_Sv": 0.0020941366248378836,
+       "name": "cut out the cooling pipe",
+       "peak_Sv_h": 0.00026178434122272785,
+       "start_d": 7.0
+      },
+      {
+       "accessible": false,
+       "collective_Sv": 0.06432391947004473,
+       "end_d": 7.583333333333333,
+       "individual_Sv": 0.02144130649001491,
+       "name": "unbolt the bracket",
+       "peak_Sv_h": 0.0035776905953798775,
+       "start_d": 7.333333333333333
+      },
+      {
+       "accessible": false,
+       "collective_Sv": 0.007136074815337418,
+       "end_d": 7.666666666666667,
+       "individual_Sv": 0.007136074815337418,
+       "name": "inspect the bracket's mounting",
+       "peak_Sv_h": 0.00356941476223244,
+       "start_d": 7.583333333333333
+      }
+     ],
+     "largest_individual_Sv": 0.02144130649001491,
+     "outage_d": 7.666666666666667,
+     "wait_d": 7.0
+    },
+    {
+     "collective_Sv": 0.07148074398337978,
+     "cost": 386737.0532502322,
+     "feasible": false,
+     "jobs": [
+      {
+       "accessible": true,
+       "collective_Sv": 0.004177300064492839,
+       "end_d": 14.333333333333334,
+       "individual_Sv": 0.0020886500322464196,
+       "name": "cut out the cooling pipe",
+       "peak_Sv_h": 0.0002610969211611342,
+       "start_d": 14.0
+      },
+      {
+       "accessible": false,
+       "collective_Sv": 0.06058078430949752,
+       "end_d": 14.583333333333334,
+       "individual_Sv": 0.02019359476983251,
+       "name": "unbolt the bracket",
+       "peak_Sv_h": 0.0033688038313061637,
+       "start_d": 14.333333333333334
+      },
+      {
+       "accessible": false,
+       "collective_Sv": 0.0067226596093894215,
+       "end_d": 14.666666666666666,
+       "individual_Sv": 0.0067226596093894215,
+       "name": "inspect the bracket's mounting",
+       "peak_Sv_h": 0.0033623964583466455,
+       "start_d": 14.583333333333334
+      }
+     ],
+     "largest_individual_Sv": 0.02019359476983251,
+     "outage_d": 14.666666666666666,
+     "wait_d": 14.0
+    },
+    {
+     "collective_Sv": 0.06399716195385989,
+     "cost": 381319.1431026328,
+     "feasible": true,
+     "jobs": [
+      {
+       "accessible": true,
+       "collective_Sv": 0.00415330513058444,
+       "end_d": 30.333333333333332,
+       "individual_Sv": 0.00207665256529222,
+       "name": "cut out the cooling pipe",
+       "peak_Sv_h": 0.0002595971475886421,
+       "start_d": 30.0
+      },
+      {
+       "accessible": true,
+       "collective_Sv": 0.05386549464084088,
+       "end_d": 30.583333333333332,
+       "individual_Sv": 0.017955164880280292,
+       "name": "unbolt the bracket",
+       "peak_Sv_h": 0.0029950391441989385,
+       "start_d": 30.333333333333332
+      },
+      {
+       "accessible": true,
+       "collective_Sv": 0.0059783621824345675,
+       "end_d": 30.666666666666668,
+       "individual_Sv": 0.0059783621824345675,
+       "name": "inspect the bracket's mounting",
+       "peak_Sv_h": 0.0029900172204884766,
+       "start_d": 30.583333333333332
+      }
+     ],
+     "largest_individual_Sv": 0.017955164880280292,
+     "outage_d": 30.666666666666668,
+     "wait_d": 30.0
+    },
+    {
+     "collective_Sv": 0.05342812413127943,
+     "cost": 388473.95398973045,
+     "feasible": true,
+     "jobs": [
+      {
+       "accessible": true,
+       "collective_Sv": 0.004108686002646674,
+       "end_d": 60.333333333333336,
+       "individual_Sv": 0.002054343001323337,
+       "name": "cut out the cooling pipe",
+       "peak_Sv_h": 0.0002568082845724365,
+       "start_d": 60.0
+      },
+      {
+       "accessible": true,
+       "collective_Sv": 0.04439163209783628,
+       "end_d": 60.583333333333336,
+       "individual_Sv": 0.01479721069927876,
+       "name": "unbolt the bracket",
+       "peak_Sv_h": 0.0024679269311327356,
+       "start_d": 60.333333333333336
+      },
+      {
+       "accessible": true,
+       "collective_Sv": 0.004927806030796479,
+       "end_d": 60.666666666666664,
+       "individual_Sv": 0.004927806030796479,
+       "name": "inspect the bracket's mounting",
+       "peak_Sv_h": 0.002464477439431058,
+       "start_d": 60.583333333333336
+      }
+     ],
+     "largest_individual_Sv": 0.01479721069927876,
+     "outage_d": 60.666666666666664,
+     "wait_d": 60.0
+    },
+    {
+     "collective_Sv": 0.04577688920538635,
+     "cost": 410217.7793602651,
+     "feasible": true,
+     "jobs": [
+      {
+       "accessible": true,
+       "collective_Sv": 0.0040645466050401894,
+       "end_d": 90.33333333333333,
+       "individual_Sv": 0.0020322733025200947,
+       "name": "cut out the cooling pipe",
+       "peak_Sv_h": 0.0002540494065876081,
+       "start_d": 90.0
+      },
+      {
+       "accessible": true,
+       "collective_Sv": 0.03754418194666927,
+       "end_d": 90.58333333333333,
+       "individual_Sv": 0.012514727315556423,
+       "name": "unbolt the bracket",
+       "peak_Sv_h": 0.0020870692546057818,
+       "start_d": 90.33333333333333
+      },
+      {
+       "accessible": true,
+       "collective_Sv": 0.004168160653676898,
+       "end_d": 90.66666666666667,
+       "individual_Sv": 0.004168160653676898,
+       "name": "inspect the bracket's mounting",
+       "peak_Sv_h": 0.0020845070418230444,
+       "start_d": 90.58333333333333
+      }
+     ],
+     "largest_individual_Sv": 0.012514727315556423,
+     "outage_d": 90.66666666666667,
+     "wait_d": 90.0
+    },
+    {
+     "collective_Sv": 0.040029287349716336,
+     "cost": 441479.770081915,
+     "feasible": true,
+     "jobs": [
+      {
+       "accessible": true,
+       "collective_Sv": 0.004020881656628654,
+       "end_d": 120.33333333333333,
+       "individual_Sv": 0.002010440828314327,
+       "name": "cut out the cooling pipe",
+       "peak_Sv_h": 0.0002513201834626386,
+       "start_d": 120.0
+      },
+      {
+       "accessible": true,
+       "collective_Sv": 0.032409803428972615,
+       "end_d": 120.58333333333333,
+       "individual_Sv": 0.010803267809657539,
+       "name": "unbolt the bracket",
+       "peak_Sv_h": 0.0018014776917148262,
+       "start_d": 120.33333333333333
+      },
+      {
+       "accessible": true,
+       "collective_Sv": 0.0035986022641150716,
+       "end_d": 120.66666666666667,
+       "individual_Sv": 0.0035986022641150716,
+       "name": "inspect the bracket's mounting",
+       "peak_Sv_h": 0.0017996119004047382,
+       "start_d": 120.58333333333333
+      }
+     ],
+     "largest_individual_Sv": 0.010803267809657539,
+     "outage_d": 120.66666666666667,
+     "wait_d": 120.0
+    },
+    {
+     "collective_Sv": 0.03202657185209947,
+     "cost": 521466.19259383064,
+     "feasible": true,
+     "jobs": [
+      {
+       "accessible": true,
+       "collective_Sv": 0.003934954472745421,
+       "end_d": 180.33333333333334,
+       "individual_Sv": 0.0019674772363727105,
+       "name": "cut out the cooling pipe",
+       "peak_Sv_h": 0.0002459494121268896,
+       "start_d": 180.0
+      },
+      {
+       "accessible": true,
+       "collective_Sv": 0.02528383315261849,
+       "end_d": 180.58333333333334,
+       "individual_Sv": 0.008427944384206163,
+       "name": "unbolt the bracket",
+       "peak_Sv_h": 0.001405231568918735,
+       "start_d": 180.33333333333334
+      },
+      {
+       "accessible": true,
+       "collective_Sv": 0.0028077842267355607,
+       "end_d": 180.66666666666666,
+       "individual_Sv": 0.0028077842267355607,
+       "name": "inspect the bracket's mounting",
+       "peak_Sv_h": 0.0014040833822406358,
+       "start_d": 180.58333333333334
+      }
+     ],
+     "largest_individual_Sv": 0.008427944384206163,
+     "outage_d": 180.66666666666666,
+     "wait_d": 180.0
+    },
+    {
+     "collective_Sv": 0.0247464168022562,
+     "cost": 665065.4173446144,
+     "feasible": true,
+     "jobs": [
+      {
+       "accessible": true,
+       "collective_Sv": 0.0038094951145803474,
+       "end_d": 270.3333333333333,
+       "individual_Sv": 0.0019047475572901737,
+       "name": "cut out the cooling pipe",
+       "peak_Sv_h": 0.00023810773166649574,
+       "start_d": 270.0
+      },
+      {
+       "accessible": true,
+       "collective_Sv": 0.018844049944352563,
+       "end_d": 270.5833333333333,
+       "individual_Sv": 0.006281349981450854,
+       "name": "unbolt the bracket",
+       "peak_Sv_h": 0.001047233606761394,
+       "start_d": 270.3333333333333
+      },
+      {
+       "accessible": true,
+       "collective_Sv": 0.0020928717433232884,
+       "end_d": 270.6666666666667,
+       "individual_Sv": 0.0020928717433232884,
+       "name": "inspect the bracket's mounting",
+       "peak_Sv_h": 0.0010465497948312884,
+       "start_d": 270.5833333333333
+      }
+     ],
+     "largest_individual_Sv": 0.006281349981450854,
+     "outage_d": 270.6666666666667,
+     "wait_d": 270.0
+    },
+    {
+     "collective_Sv": 0.02001812156127604,
+     "cost": 831423.9411397136,
+     "feasible": true,
+     "jobs": [
+      {
+       "accessible": true,
+       "collective_Sv": 0.0036814032612127578,
+       "end_d": 365.3333333333333,
+       "individual_Sv": 0.0018407016306063789,
+       "name": "cut out the cooling pipe",
+       "peak_Sv_h": 0.00023010151043663794,
+       "start_d": 365.0
+      },
+      {
+       "accessible": true,
+       "collective_Sv": 0.014703566181135854,
+       "end_d": 365.5833333333333,
+       "individual_Sv": 0.004901188727045285,
+       "name": "unbolt the bracket",
+       "peak_Sv_h": 0.0008170813851633851,
+       "start_d": 365.3333333333333
+      },
+      {
+       "accessible": true,
+       "collective_Sv": 0.0016331521189274305,
+       "end_d": 365.6666666666667,
+       "individual_Sv": 0.0016331521189274305,
+       "name": "inspect the bracket's mounting",
+       "peak_Sv_h": 0.0008166482287997906,
+       "start_d": 365.5833333333333
+      }
+     ],
+     "largest_individual_Sv": 0.004901188727045285,
+     "outage_d": 365.6666666666667,
+     "wait_d": 365.0
+    }
+   ],
+   "earliest_wait_d": 29.753451298258426,
+   "best": {
+    "collective_Sv": 0.06351811716538039,
+    "cost": 381309.60019864776,
+    "feasible": true,
+    "jobs": [
+     {
+      "accessible": true,
+      "collective_Sv": 0.004151521793411753,
+      "end_d": 31.526173852539568,
+      "individual_Sv": 0.0020757608967058765,
+      "name": "cut out the cooling pipe",
+      "peak_Sv_h": 0.00025948568232696186,
+      "start_d": 31.192840519206236
+     },
+     {
+      "accessible": true,
+      "collective_Sv": 0.053435911296579416,
+      "end_d": 31.776173852539568,
+      "individual_Sv": 0.01781197043219314,
+      "name": "unbolt the bracket",
+      "peak_Sv_h": 0.0029711533720485524,
+      "start_d": 31.526173852539568
+     },
+     {
+      "accessible": true,
+      "collective_Sv": 0.005930684075389221,
+      "end_d": 31.859507185872904,
+      "individual_Sv": 0.005930684075389221,
+      "name": "inspect the bracket's mounting",
+      "peak_Sv_h": 0.0029661714987413504,
+      "start_d": 31.776173852539568
+     }
+    ],
+    "largest_individual_Sv": 0.01781197043219314,
+    "outage_d": 31.859507185872904,
+    "wait_d": 31.192840519206236
+   },
+   "interpolation_check": {
+    "at": "collective_Sv at 1 d",
+    "coarse": true,
+    "largest_relative_change": 0.059700816423640266,
+    "method": "every other tabulated time dropped, the first and last kept",
+    "tolerance": 0.05
+   }
+  },
+  "no_cobalt|2e+07": {
+   "alone": [
+    {
+     "earliest_start_d": 0.0,
+     "location": "pipe",
+     "name": "cut out the cooling pipe"
+    },
+    {
+     "earliest_start_d": 30.086784631591758,
+     "location": "bracket",
+     "name": "unbolt the bracket"
+    },
+    {
+     "earliest_start_d": 30.086784631591758,
+     "location": "bracket",
+     "name": "inspect the bracket's mounting"
+    }
+   ],
+   "waits": [
+    {
+     "collective_Sv": 0.08343575335634608,
+     "cost": 1672048.4004602549,
+     "feasible": false,
+     "jobs": [
+      {
+       "accessible": true,
+       "collective_Sv": 0.00522595990847719,
+       "end_d": 1.3333333333333333,
+       "individual_Sv": 0.002612979954238595,
+       "name": "cut out the cooling pipe",
+       "peak_Sv_h": 0.00033626345553876426,
+       "start_d": 1.0
+      },
+      {
+       "accessible": false,
+       "collective_Sv": 0.07042593117316673,
+       "end_d": 1.5833333333333333,
+       "individual_Sv": 0.023475310391055576,
+       "name": "unbolt the bracket",
+       "peak_Sv_h": 0.003928071720464798,
+       "start_d": 1.3333333333333333
+      },
+      {
+       "accessible": false,
+       "collective_Sv": 0.00778386227470216,
+       "end_d": 1.6666666666666667,
+       "individual_Sv": 0.00778386227470216,
+       "name": "inspect the bracket's mounting",
+       "peak_Sv_h": 0.003897072677276524,
+       "start_d": 1.5833333333333333
+      }
+     ],
+     "largest_individual_Sv": 0.023475310391055576,
+     "outage_d": 1.6666666666666667,
+     "wait_d": 1.0
+    },
+    {
+     "collective_Sv": 0.07564826753505792,
+     "cost": 1528298.6840344917,
+     "feasible": false,
+     "jobs": [
+      {
+       "accessible": true,
+       "collective_Sv": 0.004188273249675767,
+       "end_d": 7.333333333333333,
+       "individual_Sv": 0.0020941366248378836,
+       "name": "cut out the cooling pipe",
+       "peak_Sv_h": 0.00026178434122272785,
+       "start_d": 7.0
+      },
+      {
+       "accessible": false,
+       "collective_Sv": 0.06432391947004473,
+       "end_d": 7.583333333333333,
+       "individual_Sv": 0.02144130649001491,
+       "name": "unbolt the bracket",
+       "peak_Sv_h": 0.0035776905953798775,
+       "start_d": 7.333333333333333
+      },
+      {
+       "accessible": false,
+       "collective_Sv": 0.007136074815337418,
+       "end_d": 7.666666666666667,
+       "individual_Sv": 0.007136074815337418,
+       "name": "inspect the bracket's mounting",
+       "peak_Sv_h": 0.00356941476223244,
+       "start_d": 7.583333333333333
+      }
+     ],
+     "largest_individual_Sv": 0.02144130649001491,
+     "outage_d": 7.666666666666667,
+     "wait_d": 7.0
+    },
+    {
+     "collective_Sv": 0.07148074398337978,
+     "cost": 1458948.2130009288,
+     "feasible": false,
+     "jobs": [
+      {
+       "accessible": true,
+       "collective_Sv": 0.004177300064492839,
+       "end_d": 14.333333333333334,
+       "individual_Sv": 0.0020886500322464196,
+       "name": "cut out the cooling pipe",
+       "peak_Sv_h": 0.0002610969211611342,
+       "start_d": 14.0
+      },
+      {
+       "accessible": false,
+       "collective_Sv": 0.06058078430949752,
+       "end_d": 14.583333333333334,
+       "individual_Sv": 0.02019359476983251,
+       "name": "unbolt the bracket",
+       "peak_Sv_h": 0.0033688038313061637,
+       "start_d": 14.333333333333334
+      },
+      {
+       "accessible": false,
+       "collective_Sv": 0.0067226596093894215,
+       "end_d": 14.666666666666666,
+       "individual_Sv": 0.0067226596093894215,
+       "name": "inspect the bracket's mounting",
+       "peak_Sv_h": 0.0033623964583466455,
+       "start_d": 14.583333333333334
+      }
+     ],
+     "largest_individual_Sv": 0.02019359476983251,
+     "outage_d": 14.666666666666666,
+     "wait_d": 14.0
+    },
+    {
+     "collective_Sv": 0.06399716195385989,
+     "cost": 1341276.572410531,
+     "feasible": true,
+     "jobs": [
+      {
+       "accessible": true,
+       "collective_Sv": 0.00415330513058444,
+       "end_d": 30.333333333333332,
+       "individual_Sv": 0.00207665256529222,
+       "name": "cut out the cooling pipe",
+       "peak_Sv_h": 0.0002595971475886421,
+       "start_d": 30.0
+      },
+      {
+       "accessible": true,
+       "collective_Sv": 0.05386549464084088,
+       "end_d": 30.583333333333332,
+       "individual_Sv": 0.017955164880280292,
+       "name": "unbolt the bracket",
+       "peak_Sv_h": 0.0029950391441989385,
+       "start_d": 30.333333333333332
+      },
+      {
+       "accessible": true,
+       "collective_Sv": 0.0059783621824345675,
+       "end_d": 30.666666666666668,
+       "individual_Sv": 0.0059783621824345675,
+       "name": "inspect the bracket's mounting",
+       "peak_Sv_h": 0.0029900172204884766,
+       "start_d": 30.583333333333332
+      }
+     ],
+     "largest_individual_Sv": 0.017955164880280292,
+     "outage_d": 30.666666666666668,
+     "wait_d": 30.0
+    },
+    {
+     "collective_Sv": 0.05342812413127943,
+     "cost": 1189895.8159589218,
+     "feasible": true,
+     "jobs": [
+      {
+       "accessible": true,
+       "collective_Sv": 0.004108686002646674,
+       "end_d": 60.333333333333336,
+       "individual_Sv": 0.002054343001323337,
+       "name": "cut out the cooling pipe",
+       "peak_Sv_h": 0.0002568082845724365,
+       "start_d": 60.0
+      },
+      {
+       "accessible": true,
+       "collective_Sv": 0.04439163209783628,
+       "end_d": 60.583333333333336,
+       "individual_Sv": 0.01479721069927876,
+       "name": "unbolt the bracket",
+       "peak_Sv_h": 0.0024679269311327356,
+       "start_d": 60.333333333333336
+      },
+      {
+       "accessible": true,
+       "collective_Sv": 0.004927806030796479,
+       "end_d": 60.666666666666664,
+       "individual_Sv": 0.004927806030796479,
+       "name": "inspect the bracket's mounting",
+       "peak_Sv_h": 0.002464477439431058,
+       "start_d": 60.583333333333336
+      }
+     ],
+     "largest_individual_Sv": 0.01479721069927876,
+     "outage_d": 60.666666666666664,
+     "wait_d": 60.0
+    },
+    {
+     "collective_Sv": 0.04577688920538635,
+     "cost": 1096871.1174410603,
+     "feasible": true,
+     "jobs": [
+      {
+       "accessible": true,
+       "collective_Sv": 0.0040645466050401894,
+       "end_d": 90.33333333333333,
+       "individual_Sv": 0.0020322733025200947,
+       "name": "cut out the cooling pipe",
+       "peak_Sv_h": 0.0002540494065876081,
+       "start_d": 90.0
+      },
+      {
+       "accessible": true,
+       "collective_Sv": 0.03754418194666927,
+       "end_d": 90.58333333333333,
+       "individual_Sv": 0.012514727315556423,
+       "name": "unbolt the bracket",
+       "peak_Sv_h": 0.0020870692546057818,
+       "start_d": 90.33333333333333
+      },
+      {
+       "accessible": true,
+       "collective_Sv": 0.004168160653676898,
+       "end_d": 90.66666666666667,
+       "individual_Sv": 0.004168160653676898,
+       "name": "inspect the bracket's mounting",
+       "peak_Sv_h": 0.0020845070418230444,
+       "start_d": 90.58333333333333
+      }
+     ],
+     "largest_individual_Sv": 0.012514727315556423,
+     "outage_d": 90.66666666666667,
+     "wait_d": 90.0
+    },
+    {
+     "collective_Sv": 0.040029287349716336,
+     "cost": 1041919.0803276601,
+     "feasible": true,
+     "jobs": [
+      {
+       "accessible": true,
+       "collective_Sv": 0.004020881656628654,
+       "end_d": 120.33333333333333,
+       "individual_Sv": 0.002010440828314327,
+       "name": "cut out the cooling pipe",
+       "peak_Sv_h": 0.0002513201834626386,
+       "start_d": 120.0
+      },
+      {
+       "accessible": true,
+       "collective_Sv": 0.032409803428972615,
+       "end_d": 120.58333333333333,
+       "individual_Sv": 0.010803267809657539,
+       "name": "unbolt the bracket",
+       "peak_Sv_h": 0.0018014776917148262,
+       "start_d": 120.33333333333333
+      },
+      {
+       "accessible": true,
+       "collective_Sv": 0.0035986022641150716,
+       "end_d": 120.66666666666667,
+       "individual_Sv": 0.0035986022641150716,
+       "name": "inspect the bracket's mounting",
+       "peak_Sv_h": 0.0017996119004047382,
+       "start_d": 120.58333333333333
+      }
+     ],
+     "largest_individual_Sv": 0.010803267809657539,
+     "outage_d": 120.66666666666667,
+     "wait_d": 120.0
+    },
+    {
+     "collective_Sv": 0.03202657185209947,
+     "cost": 1001864.7703753228,
+     "feasible": true,
+     "jobs": [
+      {
+       "accessible": true,
+       "collective_Sv": 0.003934954472745421,
+       "end_d": 180.33333333333334,
+       "individual_Sv": 0.0019674772363727105,
+       "name": "cut out the cooling pipe",
+       "peak_Sv_h": 0.0002459494121268896,
+       "start_d": 180.0
+      },
+      {
+       "accessible": true,
+       "collective_Sv": 0.02528383315261849,
+       "end_d": 180.58333333333334,
+       "individual_Sv": 0.008427944384206163,
+       "name": "unbolt the bracket",
+       "peak_Sv_h": 0.001405231568918735,
+       "start_d": 180.33333333333334
+      },
+      {
+       "accessible": true,
+       "collective_Sv": 0.0028077842267355607,
+       "end_d": 180.66666666666666,
+       "individual_Sv": 0.0028077842267355607,
+       "name": "inspect the bracket's mounting",
+       "peak_Sv_h": 0.0014040833822406358,
+       "start_d": 180.58333333333334
+      }
+     ],
+     "largest_individual_Sv": 0.008427944384206163,
+     "outage_d": 180.66666666666666,
+     "wait_d": 180.0
+    },
+    {
+     "collective_Sv": 0.0247464168022562,
+     "cost": 1036261.6693784574,
+     "feasible": true,
+     "jobs": [
+      {
+       "accessible": true,
+       "collective_Sv": 0.0038094951145803474,
+       "end_d": 270.3333333333333,
+       "individual_Sv": 0.0019047475572901737,
+       "name": "cut out the cooling pipe",
+       "peak_Sv_h": 0.00023810773166649574,
+       "start_d": 270.0
+      },
+      {
+       "accessible": true,
+       "collective_Sv": 0.018844049944352563,
+       "end_d": 270.5833333333333,
+       "individual_Sv": 0.006281349981450854,
+       "name": "unbolt the bracket",
+       "peak_Sv_h": 0.001047233606761394,
+       "start_d": 270.3333333333333
+      },
+      {
+       "accessible": true,
+       "collective_Sv": 0.0020928717433232884,
+       "end_d": 270.6666666666667,
+       "individual_Sv": 0.0020928717433232884,
+       "name": "inspect the bracket's mounting",
+       "peak_Sv_h": 0.0010465497948312884,
+       "start_d": 270.5833333333333
+      }
+     ],
+     "largest_individual_Sv": 0.006281349981450854,
+     "outage_d": 270.6666666666667,
+     "wait_d": 270.0
+    },
+    {
+     "collective_Sv": 0.02001812156127604,
+     "cost": 1131695.764558854,
+     "feasible": true,
+     "jobs": [
+      {
+       "accessible": true,
+       "collective_Sv": 0.0036814032612127578,
+       "end_d": 365.3333333333333,
+       "individual_Sv": 0.0018407016306063789,
+       "name": "cut out the cooling pipe",
+       "peak_Sv_h": 0.00023010151043663794,
+       "start_d": 365.0
+      },
+      {
+       "accessible": true,
+       "collective_Sv": 0.014703566181135854,
+       "end_d": 365.5833333333333,
+       "individual_Sv": 0.004901188727045285,
+       "name": "unbolt the bracket",
+       "peak_Sv_h": 0.0008170813851633851,
+       "start_d": 365.3333333333333
+      },
+      {
+       "accessible": true,
+       "collective_Sv": 0.0016331521189274305,
+       "end_d": 365.6666666666667,
+       "individual_Sv": 0.0016331521189274305,
+       "name": "inspect the bracket's mounting",
+       "peak_Sv_h": 0.0008166482287997906,
+       "start_d": 365.5833333333333
+      }
+     ],
+     "largest_individual_Sv": 0.004901188727045285,
+     "outage_d": 365.6666666666667,
+     "wait_d": 365.0
+    }
+   ],
+   "earliest_wait_d": 29.753451298258426,
+   "best": {
+    "collective_Sv": 0.0320648846463059,
+    "cost": 1001815.2706558069,
+    "feasible": true,
+    "jobs": [
+     {
+      "accessible": true,
+      "collective_Sv": 0.003935532357289363,
+      "end_d": 179.9254555315111,
+      "individual_Sv": 0.0019677661786446816,
+      "name": "cut out the cooling pipe",
+      "peak_Sv_h": 0.0002459855321597343,
+      "start_d": 179.59212219817775
+     },
+     {
+      "accessible": true,
+      "collective_Sv": 0.025317821046618096,
+      "end_d": 180.1754555315111,
+      "individual_Sv": 0.008439273682206032,
+      "name": "unbolt the bracket",
+      "peak_Sv_h": 0.0014071986784819507,
+      "start_d": 179.9254555315111
+     },
+     {
+      "accessible": true,
+      "collective_Sv": 0.002811531242398442,
+      "end_d": 180.2587888648444,
+      "individual_Sv": 0.002811531242398442,
+      "name": "inspect the bracket's mounting",
+      "peak_Sv_h": 0.0014059571453222683,
+      "start_d": 180.1754555315111
+     }
+    ],
+    "largest_individual_Sv": 0.008439273682206032,
+    "outage_d": 180.2587888648444,
+    "wait_d": 179.59212219817775
+   },
+   "interpolation_check": {
+    "at": "collective_Sv at 1 d",
+    "coarse": true,
+    "largest_relative_change": 0.059700816423640266,
+    "method": "every other tabulated time dropped, the first and last kept",
+    "tolerance": 0.05
+   }
+  }
+ },
+ "stderr": {
+  "bracket": "41 steps, 318 of 3873 states, 1312.3 ms -> bracket-result.json",
+  "pipe": "41 steps, 73 of 3873 states, 1437.0 ms -> pipe-result.json",
+  "bracket-no-cobalt": "41 steps, 318 of 3873 states, 1132.6 ms -> bracket-no-cobalt-result.json",
+  "plan": ""
+ }
+}
