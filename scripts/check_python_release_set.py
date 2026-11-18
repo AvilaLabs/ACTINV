@@ -93,7 +93,7 @@ def validate_sdist(path: Path) -> None:
         f"{prefix}/crates/actinv-cli/src/lib.rs",
         f"{prefix}/crates/actinv-cli/src/command.rs",
         f"{prefix}/crates/actinv-cli/src/bin/actinv.rs",
-        f"{prefix}/crates/actinv-cli/data/actinv-data-catalog-v1.2.0.json",
+        f"{prefix}/crates/actinv-cli/data/actinv-data-catalog-v1.3.0.json",
         f"{prefix}/crates/actinv-core/Cargo.toml",
         f"{prefix}/crates/actinv-core/src/run.rs",
         f"{prefix}/crates/actinv-data/Cargo.toml",
