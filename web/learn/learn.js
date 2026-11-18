@@ -272,11 +272,19 @@ export function plot(container, opts) {
    millisieverts per hour roar. It plays only while a section that drives it is on screen. */
 export const meter = (() => {
   let el, needle, valEl, subEl, led, timer = null, rate = 0, live = false, muted = store.get("meter-muted", false);
+  let hidden = store.get("meter-hidden", false);
+  // A hidden meter comes back from the toolbar's "Survey meter" button.
+  function reopen(showButton) {
+    const b = document.querySelector("#meter-btn");
+    if (!b) return;
+    b.hidden = !showButton;
+    b.onclick = () => { hidden = false; store.set("meter-hidden", false); el.hidden = false; el.classList.add("shown"); b.hidden = true; schedule(); };
+  }
   function build() {
     el = document.createElement("aside");
     el.className = "meter"; el.setAttribute("aria-label", "Survey meter");
     el.innerHTML = `
-      <div class="title"><span><span class="led"></span>Survey meter</span><button type="button" class="btn mute">${muted ? "Unmute" : "Mute"}</button></div>
+      <div class="title"><span><span class="led"></span>Survey meter</span><span><button type="button" class="btn mute">${muted ? "Unmute" : "Mute"}</button> <button type="button" class="btn close" title="Hide the survey meter" aria-label="Hide the survey meter">✕</button></span></div>
       <div class="body">
       <svg class="dial" viewBox="0 0 200 74" aria-hidden="true">
         <path class="arc" d="M18 68 A82 82 0 0 1 182 68" fill="none" stroke-width="6"/>
@@ -293,6 +301,9 @@ export const meter = (() => {
       const a = Math.PI * (1 - i / 8);
       svg("line", { x1: 100 + 70 * Math.cos(a), y1: 68 - 70 * Math.sin(a), x2: 100 + 62 * Math.cos(a), y2: 68 - 62 * Math.sin(a), class: "arc", "stroke-width": 1 }, ticks);
     }
+    el.querySelector(".close").addEventListener("click", () => {
+      hidden = true; store.set("meter-hidden", true); el.hidden = true; schedule(); reopen(true);
+    });
     el.querySelector(".mute").addEventListener("click", () => {
       muted = !muted; store.set("meter-muted", muted);
       el.querySelector(".mute").textContent = muted ? "Unmute" : "Mute";
@@ -300,7 +311,7 @@ export const meter = (() => {
   }
   function schedule() {
     clearTimeout(timer);
-    if (!live || rate <= 0) return;
+    if (!live || rate <= 0 || hidden) return;
     const wait = -Math.log(1 - Math.random()) / rate * 1000; // Poisson: random, like the real thing
     timer = setTimeout(() => {
       if (!muted && document.visibilityState === "visible") sound.click(0.35 + Math.random() * 0.2);
@@ -309,7 +320,7 @@ export const meter = (() => {
     }, Math.min(wait, 8000));
   }
   return {
-    show() { if (!el) build(); requestAnimationFrame(() => el.classList.add("shown")); },
+    show() { if (!el) build(); if (hidden) { reopen(true); return; } requestAnimationFrame(() => el.classList.add("shown")); },
     set(gyh, label) {
       if (!el) build();
       // 1e-8 Gy/h (background-ish) at the left, 1e-1 at the right.

@@ -20,7 +20,7 @@ ee1273ad14e0d9547b836897a2e845840635a7adfb00f4ac65d751677d007c96  ./Cargo.toml
 69bb1d4c16fc5fb2832a33b1b9902022dc18d250a8af98e199e8b9f4d69f7575  ./EXTERNAL_EVIDENCE.md
 cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30  ./LICENSE-APACHE
 4f722528d1cb3662dcc69ff215f00088cd74706a21ad5c8fd35b167ce804e5e9  ./LICENSE-MIT
-05a45f2c815bc7c4a913659eb32fa2c19f4d26ad59a95ae160cd76a8324ca854  ./README.md
+9d08782cb6fd45d3fb875acf1a8d8628577e42380ccbe8f36520bbf8cf898648  ./README.md
 72c26f76b9541d51c25c6b1efb89ad02ffb0410e5831ec11c176fbda30b8bc72  ./book.toml
 59a1965306cf3cf4603b9fe5fce3a193afed625f82c42e0f4715fe0440bab3ce  ./contrib/jade/README.md
 38789b6bf4037959b92de43730937a63c730af4bb178ad2155e47bcee1897aa2  ./contrib/jade/jade-actinv-code-target.patch
@@ -6767,11 +6767,11 @@ e47b715b256b4e08835db78cb7063fa1d5beb5db856d8789503ccd554134fc1c  ./web/learn/bu
 36968df116bc9adbb5467a8e1fab1e9dcde959065833ea4033937f0d45862636  ./web/learn/build/first.py
 23ed37e7e688f24ea02d0bf314bf8f3e7ff464bfb609e19246b4dd45b9fba5ca  ./web/learn/build/make_bracket.py
 e90e1d751d0eb41fc88d4376a4f64eee31890e87b7e8f663d8e2ca93e40697d1  ./web/learn/build/study.py
-0393e2ca77adc74f48ab84d885bcf28a9d15d374db988aa0982e6e363f5f3690  ./web/learn/first-irradiation/chapter.js
+a893b25436853c4715602e6aa35ff577086d94c22e7ab895b83372cf12576f2c  ./web/learn/first-irradiation/chapter.js
 648268df47ed937edefe8914356ac4c8ec8712509e57420c72e6ffbfd7ac5a25  ./web/learn/first-irradiation/data/bracket-data.json
 32811eb64f86bd8457ca0b68b708268be4721dfd4af78348b1fc81c47d191f25  ./web/learn/first-irradiation/files/bracket.json
 9efa40486780c9eec663654e13f5835ba36a549b1bae0c9f75677957a5a0acd8  ./web/learn/first-irradiation/files/photon-response.json
-0c672635030e5feab584e782cd83a8def747c28a14c003ebfdf580548ec94171  ./web/learn/first-irradiation/index.html
+5efff9880912bf6806c050b9285b00bc92d51c12bbedca8a27138f4c5345204b  ./web/learn/first-irradiation/index.html
 15f55cc0c85a2988d2b4b3a8cdb5d77fdfbaf319e1bb5309d725db9818fb7125  ./web/learn/fonts/Hack-Regular.ttf
 47c0cccbeec7e8614548cc485588b28149e7874188df5f41b36efebcee285c87  ./web/learn/fonts/Hack-Regular.txt
 8e233b1e327578431453773e77d086e8f2dc58181d0e7ec8c15abfd339120ae4  ./web/learn/fonts/LICENSES.txt
@@ -6779,8 +6779,8 @@ e90e1d751d0eb41fc88d4376a4f64eee31890e87b7e8f663d8e2ca93e40697d1  ./web/learn/bu
 80307b8da7649aa4ee4d484b232140e3ce1ec0ca093073d3c53c8f5a5ced7a70  ./web/learn/fonts/Ubuntu-Light.ttf
 1309e36a0c023a6019ca3c3573b7787bd19f422c783fecf96559b1473407eeab  ./web/learn/fonts/fonts.css
 3de2c26d555d1670b9b0eaf8dc55083b982e4d9c3bff0e11878e86d3736fd74c  ./web/learn/index.html
-487612450af93297bc611a8ce58f2730272426b429acdcaff5c1ca7cd84a0b06  ./web/learn/learn.css
-a2d70475457dc2fb676f33d8733b8e190d186478abc2eb282a32bb300153c219  ./web/learn/learn.js
+28e8188f9d2f959ff929bdc22f42a8aea15160598c3ea571e4a9d38614ba3d28  ./web/learn/learn.css
+a276c35851ef1d6a2d71f26e2479c9c752c9b51525e831a37f668796bc7a81e3  ./web/learn/learn.js
 47946b16bf62afe260502c2b7600970d2d2d6d9f3687e52bc3fb161def6bbb87  ./web/pack-cache.mjs
 6af0bc14cf3b6bf0da0ae08f8c09eebd363a3f13658c2ce2c2272c7e78085524  ./web/package-lock.json
 4017d230247557c90dd7ddd13fc0e63a0c5d7ceb92b9fbfbf39075dc1e95d088  ./web/package.json

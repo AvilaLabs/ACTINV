@@ -12,7 +12,7 @@
 [![Download ACTINV](https://img.shields.io/badge/Download-ACTINV-1800AD?style=for-the-badge)](https://actinv.avilalabs.org/download/)
 [![Open in browser](https://img.shields.io/badge/Open_in-browser-1800AD?style=for-the-badge)](https://actinv.avilalabs.org/)
 
-[Read the ACTINV Handbook](https://actinv.avilalabs.org/docs/)
+[Read the ACTINV Handbook](https://actinv.avilalabs.org/docs/) · [Learn ACTINV, an interactive course](https://actinv.avilalabs.org/learn/)
 
 **Download ACTINV** selects the desktop installer for your computer when the browser can identify it.
 If it cannot, choose from the downloads shown. No Rust or Python is needed.

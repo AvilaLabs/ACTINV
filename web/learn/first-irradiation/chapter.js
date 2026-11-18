@@ -102,7 +102,7 @@ const nice = (n) => n.replace(/^([A-Z][a-z]?)(\d+)(m1)?$/, (_, el, a, m) => `${e
         if (Math.random() < dt * Math.LN2 / a.kind.life * 3) {
           flashes.push({ x: a.x, y: a.y, r: 3, c: a.kind.color });
           a.kind = null;
-          if (clicks < 12) { sound.click(0.3); clicks++; }
+          if (clicks < 12 && inView) { sound.click(0.3); clicks++; }
         }
       }
       ctx.beginPath(); ctx.arc(a.x, a.y, a.kind ? 5.2 : 3.6, 0, Math.PI * 2);
@@ -122,6 +122,8 @@ const nice = (n) => n.replace(/^([A-Z][a-z]?)(\d+)(m1)?$/, (_, el, a, m) => `${e
     if (!on && everOn) status.textContent = live ? `Machine off: ${live} radioactive atoms left` : "Machine off: all decayed";
     requestAnimationFrame(frame);
   }
+  let inView = false;
+  new IntersectionObserver(([e]) => { inView = e.isIntersecting; }).observe(cv);
   requestAnimationFrame(frame);
 })();
 
@@ -293,7 +295,7 @@ const guess = (() => {
   const tabs = [...document.querySelectorAll('.tabs [role="tab"]')];
   tabs.forEach((t) => t.addEventListener("click", () => {
     sound.tick();
-    tabs.forEach((x) => { x.setAttribute("aria-selected", x === t); document.getElementById(x.getAttribute("aria-controls")).hidden = x !== t; });
+    tabs.forEach((x) => { x.setAttribute("aria-selected", x === t); x.classList.toggle("on", x === t); document.getElementById(x.getAttribute("aria-controls")).hidden = x !== t; });
   }));
 })();
 
