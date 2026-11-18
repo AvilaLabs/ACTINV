@@ -4,6 +4,21 @@
 
 **Added**
 
+- `actinv unfold PROBLEM MEASUREMENTS OUT`: the neutron spectrum from measured foil activities and reaction rates.
+  Each foil is modelled with a full ACTINV solve over its irradiation and cooling, the fit is generalized least
+  squares on ln φ with the MF=33 covariances, and the result gives each energy range's uncertainty. P195A qualified
+  it: 94% of fifteen measurements inside their 95% intervals, closer than the prior in every IRDFF-II arm. Handbook
+  chapter and `examples/unfold_foils`.
+- `actinv maintenance PLAN [OUT]`: when jobs inside a shut-down machine may start, each worker's and crew's dose at
+  each wait, the earliest wait every job allows, and, with a cost per person-sievert and per outage day, the cheapest
+  allowed wait. It reads dose rates from run results, twins or tables. P197 qualified it against closed-form dose
+  curves and seven ACTINV-computed components. The desktop app and the browser workbench have a **Maintenance**
+  page that plans from the open result.
+- Problems can run in the browser workbench where the site serves the browser's nuclear data: the page fetches the
+  reactions a material reaches, solves, and repeats with more reactions until two rounds agree, keeping fetched
+  files for later runs. P196A qualified it on 175 problems (57 held out): totals within 9e-7 of the whole library,
+  and Chromium results identical to native. The library pack is not hosted yet.
+- The desktop app's help links to the Learn ACTINV course and the handbook.
 - `actinv build-covariance --mf33-from DIR` reads an input's MF=33 covariances from the file of the same name in
   `DIR`, so a sidecar can carry another evaluation's covariances for some reactions while the input still binds each
   target to the activation library by its SHA-256. The index records the file's SHA-256 as `mf33_source_sha256`; a
@@ -17,6 +32,12 @@
 
 **Changed**
 
+- Data catalog 1.3.0 (data-v1.3.0): the default MF=33 covariance sidecar takes IRDFF-II covariances for TENDL-2025's
+  62 dosimetry reactions, with IRDFF-II's absolute variances (P188). Uncertainty bands of results that use those
+  reactions change. The TENDL-2025-only sidecar stays available under its own bundle.
+- MF=33 bands say where the covariance does not reach: a band reports `uncovered_rate_fraction`, the share of a
+  reaction's rate at energies its covariance doesn't cover (MF=32 resonance ranges, for now), and a state-resolved
+  row that is nonzero where its reaction total is zero no longer stops the run (P198).
 - `actinv mesh` is about 1.7× faster on a P189-style mesh (TENDL-2025, rate pruning, photon groups as the cell
   output): the lean cell output no longer serializes photon lines and per-nuclide tables it then drops, the batched
   flux collapse uses its fixed-lane path for every library row, and rate pruning sorts its edges by counting. Results
@@ -32,6 +53,12 @@
 - Mixture self-shielding computes the mixture's total cross section once per energy point, not once per nuclide,
   and walks each nuclide's grid instead of searching it. P178's Inconel 718 region (34 nuclides from pointwise tables)
   plans in 5 s instead of 70 s. Results are unchanged, byte for byte.
+
+**Fixed**
+
+- A spectrum whose group weights overflow or underflow when summed (for example two weights of 1e308) was normalized
+  to zero flux. It is now rescaled first; ordinary spectra give the same bits as before.
+- The browser workbench's sidebar has a fixed width; a width saved in the browser could widen it over the page.
 
 ## v1.7.2 — 2026-11-02
 
