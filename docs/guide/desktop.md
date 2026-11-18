@@ -2,7 +2,7 @@
 
 The desktop edits a single-material problem, runs the shared ACTINV solver in the background, and displays inventories, activity, heat, photon spectra, and pathways.
 
-Install it from the [download page](https://actinv.avilalabs.org/download/). Published preview packages and current source builds can expose different features; see [Versions and releases](releases.md).
+Install it from the [download page](https://actinv.avilalabs.org/download/). Published preview packages and current source builds can expose different features; see the [release history](releases.md).
 
 ## How the app is organized
 

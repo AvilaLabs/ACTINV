@@ -1,6 +1,6 @@
 # Scope and qualification
 
-ACTINV is research-grade calculation software. Recorded controls demonstrate specified numerical, data-handling, and benchmark behavior within their stated bounds. They do not approve ACTINV, or a calculation made with it, for licensing, safety, waste classification, or another regulatory purpose.
+ACTINV is research software. Its recorded checks show how it behaves on the cases they cover, within their stated bounds. They do not approve ACTINV, or a calculation made with it, for licensing, safety, waste classification, or another regulatory purpose.
 
 ## Where ACTINV fits
 
@@ -35,11 +35,11 @@ Missing decay modes, fission yields, spectra, response coefficients, or material
 
 ## Uncertainty interpretation
 
-MF=33 cross-section covariance is the default. Half-life and independent fission-yield uncertainties may be requested separately and are treated as diagonal channels. Since 1.4.0 a diagonal transport-tally statistical `flux` channel is also available; it can run alone without an MF=33 sidecar.
+MF=33 cross-section covariance is the default. Since data catalog 1.3.0 the default covariance file takes IRDFF-II's covariances for the 62 dosimetry reactions IRDFF-II evaluates and TENDL-2025's elsewhere; see [Nuclear data](data.md). Half-life and independent fission-yield uncertainties may be requested separately and are treated as diagonal channels. Since 1.4.0 a diagonal transport-tally statistical `flux` channel is also available; it can run alone without an MF=33 sidecar.
 
 State-resolved (MF=10) productions, such as Co-58 from Ni-58(n,p) or Al-26 from Al-27(n,2n), take their reaction's MF=33 covariance, fully correlated with the reaction total; their isomer-branching part is not propagated, and their responses report `partial` coverage.
 
-Decay-yield and cross-channel correlations, MF=32 resonance covariance, MF=40 production covariance, composition, response-coefficient, geometry, and model uncertainties are outside the propagated band. Flux uncertainty is excluded unless its channel is requested; even then, systematic errors in the transport model, geometry, and transport nuclear data remain excluded.
+Decay-yield and cross-channel correlations, MF=32 resonance covariance (TENDL-2025's MF=33 capture covariance is zero through the resonance range, so a response whose rate falls there reports `partial` coverage with its `uncovered_rate_fraction`), MF=40 production covariance, composition, response-coefficient, geometry, and model uncertainties are outside the propagated band. Flux uncertainty is excluded unless its channel is requested; even then, systematic errors in the transport model, geometry, and transport nuclear data remain excluded.
 
 An explicitly declared unmodeled relative contribution can supplement that band, including a term drawn from a calibration or evaluation-spread artifact. It does not recover a missing channel or establish coverage of all omitted sources.
 

@@ -109,7 +109,6 @@ pub fn spawn_impurities(document: &Value, cache: PathBuf) -> Result<Handle, Stri
 }
 
 /// Run a job, retaining its output directory and cleaning only the private cache.
-#[allow(dead_code)]
 pub fn spawn_job(job: &Job, cache: PathBuf) -> Result<Handle, String> {
     job.check()?;
     spawn_input(

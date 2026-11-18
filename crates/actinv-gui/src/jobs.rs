@@ -26,8 +26,6 @@
 //!
 //! Every message and exit status follows the command line; the `actinv` handlers in
 //! `actinv_cli::command` and the library functions behind them do the work.
-// The pages that launch jobs arrive after this layer.
-#![allow(dead_code)]
 
 use actinv_cli::{
     command::{doctor_report, mesh_photon_cells, photon_source_at, write_alara_export, Failure},
@@ -112,6 +110,7 @@ pub enum Command {
 }
 
 impl Command {
+    #[cfg(test)]
     pub const ALL: [Command; 22] = [
         Command::Decide,
         Command::Optimize,

@@ -1,6 +1,6 @@
 # What's new in 1.7
 
-ACTINV 1.7.0 screens an alloy's impurities, ships a damage table so that dpa needs no setup, starts a problem from a cited material library, and reorganises the desktop and browser app so that it reaches most of the command line. This page is a tour by task. [Versions and releases](releases.md) has the version table, and the [1.7.0 release notes](https://github.com/AvilaLabs/ACTINV/blob/master/docs/RELEASE_NOTES_v1.7.0.md) have the full list.
+ACTINV 1.7.0 screens an alloy's impurities, ships a damage table so that dpa needs no setup, starts a problem from a cited material library, and reorganises the desktop and browser app so that it reaches most of the command line. The [release history](releases.md) has the version table, and the [1.7.0 release notes](https://github.com/AvilaLabs/ACTINV/blob/master/docs/RELEASE_NOTES_v1.7.0.md) have the full list.
 
 The additions are new commands and opt-in options, except the pathway closure and measurement-design changes collected in [Results that may change](#results-that-may-change). The nuclear-data catalog is 1.2.0. The desktop is 0.6.0-preview.1, and the [desktop release page](https://github.com/AvilaLabs/ACTINV/blob/master/docs/releases/desktop-v0.6.0-preview.1.md) describes it.
 

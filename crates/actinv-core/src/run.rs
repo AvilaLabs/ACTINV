@@ -1,5 +1,5 @@
 #![allow(non_snake_case)] // field names are the JSON wire format (Z, A, LISO, heat_W_per_g)
-//! spec -> result. This is the single path the CLI, the Python API and the harness all take (P5 G3).
+//! spec -> result. The CLI, the Python API and the test harness all call this one path.
 use crate::chain::{self, RateLedger};
 use crate::cram::{step as cram_step, step_with_tangents, Cram};
 use crate::damage::{DamageStepOut, PreparedDamageTable, RecoilCumulative};
@@ -41,8 +41,8 @@ use std::sync::{Mutex, OnceLock};
 
 pub const EV: f64 = 1.602176634e-19;
 
-/// P14 control-only timing. The environment switch is intentionally undocumented for users and does not alter the
-/// result wire format. Disabled runs do not call the clock at stage boundaries.
+/// Stage timing for the speed controls; not a user feature and never part of the result. When disabled it doesn't
+/// read the clock.
 #[derive(Default)]
 struct RunProfiler {
     enabled: bool,

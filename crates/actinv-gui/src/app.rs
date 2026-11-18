@@ -1478,12 +1478,38 @@ impl Desktop {
             self.redo.clear();
         }
         if self.help {
-            egui::Window::new("Help & walkthroughs").collapsible(false).resizable(false).default_width(430.).show(&ctx,|ui|{
-            ui.heading("Let’s walk through ACTINV");ui.label("Guides highlight real controls while dimming the surrounding workspace. You can use the highlighted control, or press Next to keep exploring. Escape exits a tour.");
-            ui.horizontal(|ui| { ui.label("Interface size"); let mut zoom=ctx.zoom_factor(); if ui.add(egui::Slider::new(&mut zoom,0.8..=2.).text("Scale")).changed() { ctx.set_zoom_factor(zoom); } });
-            if ui.button("Start: create and run a calculation").clicked(){self.help=false;self.tour.start(false);}
-            if ui.button("Start: understand and export results").clicked(){self.help=false;self.tour.start(true);}
-            ui.separator();ui.label("Shortcuts: Ctrl/Cmd+O opens a problem; Ctrl/Cmd+I imports a FISPACT-II deck; Ctrl/Cmd+S saves; F1 opens Help.");ui.hyperlink_to("ACTINV specification guide","https://github.com/AvilaLabs/ACTINV/blob/master/docs/SPEC.md");ui.hyperlink_to("Data setup","https://github.com/AvilaLabs/ACTINV/blob/master/docs/DATA.md");ui.hyperlink_to("Qualification and limitations","https://github.com/AvilaLabs/ACTINV/blob/master/docs/QUALIFICATION.md");if ui.button("Close help").clicked(){self.help=false;}
+            egui::Window::new("Help & walkthroughs")
+                .collapsible(false)
+                .resizable(false)
+                .default_width(430.)
+                .show(&ctx, |ui| {
+                    ui.heading("Let’s walk through ACTINV");
+                    ui.label("Each tour highlights one control at a time. Use it, or press Next; Esc leaves the tour.");
+                    ui.horizontal(|ui| {
+                        ui.label("Interface size");
+                        let mut zoom = ctx.zoom_factor();
+                        if ui.add(egui::Slider::new(&mut zoom, 0.8..=2.).text("Scale")).changed() {
+                            ctx.set_zoom_factor(zoom);
+                        }
+                    });
+                    if ui.button("Start: create and run a calculation").clicked() {
+                        self.help = false;
+                        self.tour.start(false);
+                    }
+                    if ui.button("Start: understand and export results").clicked() {
+                        self.help = false;
+                        self.tour.start(true);
+                    }
+                    ui.separator();
+                    ui.label("Shortcuts: Ctrl/Cmd+O opens a problem; Ctrl/Cmd+I imports a FISPACT-II deck; Ctrl/Cmd+S saves; F1 opens Help.");
+                    ui.hyperlink_to("Learn ACTINV (course)", "https://actinv.avilalabs.org/learn/");
+                    ui.hyperlink_to("Handbook", "https://actinv.avilalabs.org/docs/");
+                    ui.hyperlink_to("Problem specification", "https://actinv.avilalabs.org/docs/specification.html");
+                    ui.hyperlink_to("Nuclear data", "https://actinv.avilalabs.org/docs/data.html");
+                    ui.hyperlink_to("Scope and qualification", "https://actinv.avilalabs.org/docs/qualification.html");
+                    if ui.button("Close help").clicked() {
+                        self.help = false;
+                    }
         });
         }
         if let Some(pending) = self.pending {

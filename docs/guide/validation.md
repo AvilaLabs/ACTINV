@@ -1,6 +1,6 @@
 # Validation evidence
 
-ACTINV carries numerical controls, reader and data-processing checks, and comparisons with measured activation histories. Evidence establishes behavior for the recorded inputs, implementation, and acceptance bounds. Assess applicability to your own material, spectrum, data, time range, and response separately.
+ACTINV carries numerical controls, reader and data-processing checks, and comparisons with measured activation histories. Each check covers the inputs, code and acceptance bounds it recorded. Whether it covers your material, spectrum, data, time range and response is a separate question.
 
 ## What has been checked
 
