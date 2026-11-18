@@ -9,7 +9,6 @@ dependencies = [
  "actinv-core",
  "actinv-data",
  "flate2",
- "num-complex",
  "serde",
  "serde_json",
  "sha2",
