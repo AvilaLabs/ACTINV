@@ -39,7 +39,7 @@ banded photon source.
 - **Cheapest validation:** D is linear in S at fixed R. So about 200 sampled ACTINV-only reruns with R fixed check
   `R^T C_S R`, and a few OpenMC seeds check `sigma_R`. No full R2S reruns are needed.
 
-**Tests, before SINBAD.**
+**Tests, before a measurement.**
 
 - A1: on the steel cube and one tungsten case, compare the first-order dose band with brute-force sampling: perturb
   cross sections and fluxes, rerun steps 1–3 N times. Pass: band widths agree within a stated tolerance.
@@ -52,7 +52,7 @@ cell-weighted response, `R^T C_S R` matches the variance of 200 sampled mesh rer
 limit (ratios 0.87–1.29). The photon-tally term `sigma_R` is not tested, and the cases are synthetic. The first run
 exposed two defects in the reference sampler, now fixed.
 
-**Test, with SINBAD FNG.** Does the band cover the measured dose at the stated coverage? This is the claim no other
+**Test, against a measured dose.** Does the band cover the measured dose at the stated coverage? This is the claim no other
 code can make today.
 
 ## 2. Group-collapse and resonance error in the reaction rates
@@ -64,7 +64,7 @@ factors derived from continuous-energy runs (Gilbert, Sublet and Dudarev 2016).
 **What ACTINV has.** The OpenMC adapter tallies 709 groups, so the flux is never rebinned. Bondarenko and geometry
 self-shielding exist but have no recorded comparison. `options.rate_scale` scales any single collapsed reaction rate.
 
-**Test, before SINBAD.**
+**Test, before a measurement.**
 
 - B1: in each region of a steel, tungsten, copper and concrete model, compare ACTINV's 709-group collapsed rates for
   the dose-dominant reactions with OpenMC continuous-energy reaction-rate tallies of the same reactions on the same
@@ -124,7 +124,7 @@ fixed. This extends P163. Report the mesh resolution each code reaches inside th
 - Waste classification across several national schemes at once, including fusion nuclides missing from the
   standards. ACTINV covers US 10 CFR 61, EU, German, UK and Canadian clearance, and US transport tables.
 - pypact-compatible output (planned for 1.8).
-- Too few measured shutdown-dose experiments: SINBAD FNG via RSICC DLC-237 (US route; the NEA request was cancelled).
+- Too few measured shutdown-dose experiments: SINBAD FNG is dropped (2026-11-18): RSICC charges $940 for SINBAD.V2 and the owner declined.
 
 ## Order
 
@@ -132,4 +132,4 @@ fixed. This extends P163. Report the mesh resolution each code reaches inside th
 2. A1.
 3. C1.
 4. Fixes from B1 if warranted.
-5. SINBAD FNG scoring of items 1 and 2 when the licence arrives.
+5. Scoring of items 1 and 2 against a measured dose, once a free measurement is found.

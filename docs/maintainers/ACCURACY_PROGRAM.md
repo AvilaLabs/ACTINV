@@ -60,11 +60,12 @@ choose or tune it.
 
    Validate leave-one-facility-out. Check every source evaluation's licence for redistribution before shipping.
 4. **R2S workflow accuracy with OpenMC.** Continuous-energy reaction rates for the dominant reactions, within-group
-   spectrum correction, and material-aware self-shielding. Score against a measured shutdown-dose experiment (SINBAD
-   FNG once the licence arrives; the request was filed 2026-10-30), in comparison with OpenMC's own depletion R2S.
+   spectrum correction, and material-aware self-shielding. Score against a measured shutdown-dose experiment, in
+   comparison with OpenMC's own depletion R2S. SINBAD FNG is dropped (2026-11-18): RSICC charges $940 for SINBAD.V2
+   and the owner declined; a freely available measurement is still needed.
    Target claim, if earned: faster *and* closer to the measurement than OpenMC alone.
 
-Stages 1–3 do not need SINBAD.
+Stages 1–3 do not need a shutdown-dose measurement.
 
 ## Status
 

@@ -4,37 +4,50 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>What waste is it? · Learn ACTINV</title>
-<meta name="description" content="Chapter 5 of the ACTINV course: classify an activated steel block as radioactive waste, find the nuclides and impurities that decide its class, and set a niobium limit.">
+<meta name="description" content="Chapter 5 of the ACTINV course: fill in the 10 CFR 61.55 classification worksheet for an activated steel block from ACTINV's concentrations, then find the niobium limit that keeps it buriable.">
 <link rel="icon" href="../../favicon-e820714f418d9a3a.svg" type="image/svg+xml">
 <link rel="stylesheet" href="../learn.css">
 <script>document.documentElement.dataset.theme = "dark"; try { if (localStorage.getItem("actinv-learn:theme") === '"Light"') delete document.documentElement.dataset.theme; } catch {}</script>
 <style>
-  .ladder { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; margin: 8px 0; }
-  .ladder > div { border: 1px solid var(--stroke); padding: 8px; font-size: 13px; }
-  .ladder b { display: block; font-size: 15px; color: var(--strong); margin-bottom: 2px; font-weight: 400; }
-  .ladder .on { border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); }
-  .guess-opts { display: flex; flex-wrap: wrap; gap: 6px; }
-  .guess-opts .sel.right { background: var(--sel); color: var(--sel-text); }
-  .sumbar { position: relative; height: 30px; border: 1px solid var(--stroke); margin: 28px 0 4px; display: flex; }
-  .sumbar i { display: block; height: 100%; transition: width .3s ease; position: relative; }
-  .sumbar i span { position: absolute; left: 4px; top: 7px; font-size: 11px; color: #fff; white-space: nowrap; overflow: hidden; max-width: calc(100% - 6px); }
-  .sumbar .mk { position: absolute; top: -22px; bottom: -4px; border-left: 2px dashed var(--weak); }
-  .sumbar .mk.one { border-color: var(--err); }
-  .sumbar .mk span { position: absolute; top: 0; left: 4px; font-size: 11px; color: var(--weak); white-space: nowrap; }
-  .sumbar .mk.one span { color: var(--err); }
-  .readout { font-family: var(--mono); font-size: 13px; color: var(--strong); }
-  .cls { font-size: 26px; font-family: var(--mono); color: var(--strong); }
-  .cls.bad { color: var(--err); }
-  .slider { display: grid; grid-template-columns: 110px minmax(0, 1fr) 90px; gap: 10px; align-items: center; margin: 8px 0; }
-  .slider input { width: 100%; accent-color: var(--accent); }
-  .slider output { font-family: var(--mono); color: var(--strong); text-align: right; }
-  table.t { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 8px; }
-  table.t td, table.t th { padding: 3px 6px; border-bottom: 1px solid var(--stroke); text-align: right; }
-  table.t td:first-child, table.t th:first-child, table.t td:last-child, table.t th:last-child { text-align: left; }
-  table.t th { font-weight: normal; color: var(--weak); }
-  table.t td { font-family: var(--mono); }
-  table.t td:last-child { font-family: var(--ui); color: var(--weak); }
-  @media (max-width: 600px) { .ladder { grid-template-columns: 1fr 1fr; } .slider { grid-template-columns: 1fr 80px; } .slider span:first-child { grid-column: 1 / -1; } }
+  /* The worksheet: a form with boxed fields, filled in pencil (the learner) and print (ACTINV) */
+  .form { border: 1px solid var(--strong); background: var(--frame); margin: 10px 0; font-size: 14px; }
+  .form-head { display: grid; grid-template-columns: 1fr auto; gap: 4px 12px; padding: 8px 12px; border-bottom: 2px solid var(--strong); }
+  .form-head b { font: 13px var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--strong); font-weight: normal; }
+  .form-head span { font-size: 12px; color: var(--weak); }
+  .fields { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); border-bottom: 1px solid var(--stroke); }
+  .fields div { padding: 4px 10px 6px; border-right: 1px solid var(--stroke); }
+  .fields div:last-child { border-right: 0; }
+  .fields small, .part small { display: block; font-size: 10px; text-transform: uppercase; letter-spacing: .05em; color: var(--weak); }
+  .fields output { font: 13px var(--mono); color: var(--strong); }
+  .part { border-bottom: 1px solid var(--stroke); padding: 8px 12px 10px; }
+  .part:last-child { border-bottom: 0; }
+  .part h4 { margin: 0 0 6px; font: 13px var(--ui); color: var(--strong); }
+  .part h4 em { font: 11px var(--mono); font-style: normal; color: var(--weak); margin-right: 8px; border: 1px solid var(--stroke); padding: 0 5px; }
+  .rows { width: 100%; border-collapse: collapse; }
+  .rows th { text-align: right; font: 11px var(--ui); color: var(--weak); padding: 3px 6px; border-bottom: 1px solid var(--stroke); }
+  .rows th:first-child, .rows td:first-child { text-align: left; }
+  .rows td { padding: 4px 6px; border-bottom: 1px dotted var(--grid); text-align: right; font: 13px var(--mono); color: var(--text); }
+  .rows tr.total td { border-top: 1px solid var(--strong); border-bottom: 0; color: var(--strong); }
+  .rows td.moved { color: var(--warn); }
+  .pencil { width: 82px; font: 14px var(--mono); text-align: right; background: transparent; color: var(--accent-text, #9fa8ff); border: 0; border-bottom: 1px dashed var(--weak); padding: 1px 2px; }
+  .pencil:focus { outline: 1px solid var(--accent); border-bottom-color: transparent; }
+  .pencil.ok { border-bottom: 1px solid var(--good, #3a9a50); }
+  .pencil.bad { border-bottom: 1px solid var(--err); }
+  .boxes { display: flex; flex-wrap: wrap; gap: 6px 18px; margin: 6px 0 2px; }
+  .boxes button { display: inline-flex; align-items: center; gap: 7px; background: none; border: 0; color: var(--text); font: 13px var(--ui); padding: 2px 0; cursor: pointer; }
+  .boxes button::before { content: ""; width: 13px; height: 13px; border: 1px solid var(--strong); display: inline-block; }
+  .boxes button.on::before { background: var(--strong); box-shadow: inset 0 0 0 2px var(--frame); }
+  .boxes button.wrong::before { border-color: var(--err); }
+  .boxes button:disabled { cursor: default; }
+  .why { font-size: 13px; color: var(--weak); margin: 4px 0 0; min-height: 1em; }
+  .why b { color: var(--strong); font-weight: normal; }
+  .stamp { display: inline-block; margin: 6px 0 0; font: bold 15px var(--mono); letter-spacing: .12em; text-transform: uppercase; padding: 4px 12px; border: 3px double currentColor; transform: rotate(-3deg); color: var(--warn); }
+  .stamp.gtcc { color: var(--err); }
+  .stamp[hidden] { display: none; }
+  .steel { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin: 4px 0 8px; }
+  .side .ws { font: 12px var(--mono); padding: 4px 8px; }
+  .side .ws div { display: flex; justify-content: space-between; gap: 8px; padding: 3px 0; border-bottom: 1px dotted var(--stroke); }
+  .side .ws b { color: var(--strong); font-weight: normal; }
 </style>
 </head>
 <body data-chapter="waste">
@@ -46,7 +59,7 @@
   <a class="link" href="../../download/">Download desktop</a>
 </header>
 <div class="toolbar">
-  <button type="button" class="btn menu-btn" id="menu">Steps</button>
+  <button type="button" class="btn menu-btn" id="menu">Worksheet</button>
   <a class="btn" href="../">Course home</a>
   <a class="btn hide-narrow" href="files/waste-screen.json" download>Download screen</a>
   <span class="sep hide-narrow"></span>
@@ -57,179 +70,120 @@
 </div>
 
 <div class="shell">
-  <nav class="side" aria-label="Chapter steps">
+  <nav class="side" aria-label="Chapter parts">
     <span class="caption">Chapter 5 · What waste is it?</span>
     <ol>
-      <li><a href="#intro"><span>The block comes out</span></a></li>
-      <li><a href="#guess"><span>Make a guess</span></a></li>
-      <li><a href="#tables"><span>How a class is decided</span></a></li>
-      <li><a href="#niobium"><span>The trace that decides</span></a></li>
-      <li><a href="#run"><span>Classify it yourself</span></a></li>
-      <li><a href="#differs"><span>Waiting won't help</span></a></li>
-      <li><a href="#wrap"><span>Check yourself</span></a></li>
+      <li><a href="#sheet"><span>Fill in the worksheet</span></a></li>
+      <li><a href="#trace"><span>The certificate's worst case</span></a></li>
+      <li><a href="#later"><span>Classify it later?</span></a></li>
+      <li><a href="#script"><span>Let ACTINV fill it in</span></a></li>
     </ol>
+    <span class="caption" style="margin-top:18px">Your worksheet</span>
+    <div class="ws" id="ws"></div>
     <div class="meta" id="progress-text"></div>
-    <span class="caption" style="margin-top:18px">About this chapter</span>
-    <div class="meta" style="padding-top:0">About 20 minutes. Uses the impurity screen of <a href="../impurities/">chapter 3</a>.</div>
+    <div class="meta">About 20 minutes. Uses the impurity screen of <a href="../impurities/">chapter 3</a>.</div>
   </nav>
 
   <main class="content">
     <div class="lesson">
       <h1>What waste is it?</h1>
-      <p class="subtitle">Every activated part is eventually removed for good. Where it can go depends on its waste class, and the class can hang on a trace element nobody thought about. This chapter classifies a steel block and finds that element.</p>
+      <p class="subtitle">A 50 kg support block of the course steel spent five years much closer to the plasma than chapter 1's bracket. Now it's coming out for good, and before anyone can ship it for burial, someone has to fill in the waste classification. Today that's you.</p>
 
-      <section class="step" id="intro" style="border-top:0;padding-top:4px">
-        <div class="frame">
-          <p>A 50 kg steel support block sat much closer to the plasma than the bracket: five years in a field 500 times stronger. It's the same steel, SS316 with 0.1% cobalt, plus 0.05% nitrogen and 0.01% niobium. Now it has to go.</p>
-          <p>This chapter uses the United States rules for burying radioactive waste near the surface, called <span data-term="part61">10 CFR 61.55</span>, which ACTINV ships as a ready-made rule pack. They sort waste into classes:</p>
-          <div class="ladder" id="ladder">
-            <div data-c="A"><b>Class A</b>The least radioactive. The simplest disposal.</div>
-            <div data-c="B"><b>Class B</b>Needs a stable form that keeps its shape for 300 years.</div>
-            <div data-c="C"><b>Class C</b>Also buried deeper or behind a barrier, against someone digging into it.</div>
-            <div data-c="above_class_c"><b>Above class C</b>Not allowed near the surface at all. Few places will take it.</div>
+      <section class="step" id="sheet" style="border-top:0;padding-top:4px">
+        <p>In the United States, <span class="term" data-term="part61">10 CFR 61.55</span> sorts waste for burial near the surface into classes A, B and C, from the concentration of certain nuclides in curies per cubic metre. Two tables decide: table 1 lists long-lived nuclides, table 2 short-lived ones. Each nuclide's concentration is divided by its limit and the fractions are added: the <span class="term" data-term="sof">sum of fractions</span>. A sum above 1 means the limit is broken.</p>
+        <p>ACTINV has printed the concentrations. The pencilled boxes are yours.</p>
+
+        <div class="form" id="form">
+          <div class="form-head"><b>Waste classification worksheet · 10 CFR 61.55</b><span>Activated metal</span></div>
+          <div class="fields">
+            <div><small>Item</small><output>Support block, SS316</output></div>
+            <div><small>Mass · volume</small><output id="f-vol"></output></div>
+            <div><small>Irradiation</small><output id="f-irr"></output></div>
+            <div><small>Cooling</small><output id="f-cool"></output></div>
+            <div><small>Steel</small><output id="f-steel"></output></div>
           </div>
-          <p class="note">All numbers come from <code>actinv impurities</code> with waste-class endpoints, and from a full run of the block. Other countries' rules differ; the idea is the same.</p>
-        </div>
-        <div class="task" data-task="c5-start"><span>Ready? <button type="button" class="btn primary" id="start" data-task="c5-start" style="margin-left:6px">Start the chapter</button></span></div>
-      </section>
-
-      <section class="step" id="guess">
-        <div class="stepno">Step 2 of 7</div>
-        <h2>Make a guess</h2>
-        <p>One day after it comes out, the block's dose rate would stop you working near it for long. What class do you think it is?</p>
-        <div class="frame">
-          <div class="guess-opts" id="guess-opts">
-            <button type="button" class="sel" data-a="A">Class A</button>
-            <button type="button" class="sel" data-a="B">Class B</button>
-            <button type="button" class="sel" data-a="C">Class C</button>
-            <button type="button" class="sel" data-a="above_class_c">Above class C</button>
+          <div class="part">
+            <h4><em>A</em>Table 1: long-lived nuclides</h4>
+            <table class="rows" id="t1"></table>
+            <div class="boxes" id="b1" role="group" aria-label="Table 1 result">
+              <button type="button" data-v="A">at most 0.1: class A</button>
+              <button type="button" data-v="C">0.1 to 1: class C</button>
+              <button type="button" data-v="X">over 1: not for near-surface burial</button>
+            </div>
+            <p class="why" id="w1"></p>
           </div>
-          <p class="cap" id="guess-out"></p>
-        </div>
-        <div class="task" data-task="c5-guess"><span>Make your guess.</span></div>
-      </section>
-
-      <section class="step" id="tables">
-        <div class="stepno">Step 3 of 7</div>
-        <h2>How a class is decided</h2>
-        <p>The rules list nuclides in two tables, each with a concentration limit. For each nuclide you divide how much there is per cubic metre by its limit, then add up the fractions. That <span data-term="sof">sum of fractions</span> decides the class.</p>
-        <ul>
-          <li><strong>Table 1</strong> holds the long-lived nuclides, the ones that stay for thousands of years. Sum above 1: above class C. Above 0.1: class C at best.</li>
-          <li><strong>Table 2</strong> holds shorter-lived ones, with a column of limits for each class.</li>
-        </ul>
-        <div class="frame">
-          <div class="controls" role="group" aria-label="When"><span>Cooled for:</span><span id="times"></span></div>
-          <div class="controls" role="group" aria-label="Which table">
-            <span>Table:</span>
-            <button type="button" class="sel on" data-tb="t1">Table 1, long-lived</button>
-            <button type="button" class="sel" data-tb="t2">Table 2, class C column</button>
+          <div class="part">
+            <h4><em>B</em>Table 2: short-lived nuclides</h4>
+            <table class="rows" id="t2"></table>
+            <div class="boxes" id="b2" role="group" aria-label="Table 2 result">
+              <button type="button" data-v="1">column 1: class A</button>
+              <button type="button" data-v="2">column 2: class B</button>
+              <button type="button" data-v="3">column 3: class C</button>
+              <button type="button" data-v="X">none</button>
+            </div>
+            <p class="why" id="w2"></p>
           </div>
-          <div class="sumbar" id="sumbar"></div>
-          <div class="readout" id="sum-read"></div>
-          <table class="t" id="tbl"></table>
-          <p class="cap" id="tbl-cap"></p>
-        </div>
-        <div class="task" data-task="c5-tables"><span>Look at both tables.</span></div>
-        <div class="task" data-task="c5-times"><span>Look at 1 day and 100 years. What changes?</span></div>
-      </section>
-
-      <section class="step" id="niobium">
-        <div class="stepno">Step 4 of 7</div>
-        <h2>The trace that decides</h2>
-        <p>Niobium-94 is the biggest share of table 1, and it lasts 20,000 years. In chapter 2 you traced nuclides to the atoms that made them. Here, ACTINV's impurity screen says niobium-94 comes from two places: some from the molybdenum in the steel, and most from 0.01% niobium. Move the niobium and see what happens to the class.</p>
-        <div class="frame">
-          <div class="slider"><span>Niobium, wt%</span><input type="range" id="nb" min="0" max="0.05" step="0.0005" value="0.01" aria-label="Niobium, wt%"><output id="nb-out"></output></div>
-          <div class="slider"><span>Nitrogen, wt%</span><input type="range" id="n" min="0.02" max="0.1" step="0.001" value="0.05" aria-label="Nitrogen, wt%"><output id="n-out"></output></div>
-          <div class="cls" id="nb-class" aria-live="polite"></div>
-          <div class="sumbar" id="nbbar"></div>
-          <div class="readout" id="nb-read"></div>
-          <p class="cap" id="nb-cap"></p>
-        </div>
-        <div class="task" data-task="c5-over"><span>Find how much niobium pushes the block above class C.</span></div>
-        <div class="task" data-task="c5-zero"><span>Set niobium to zero. Can the block reach class B?</span></div>
-      </section>
-
-      <section class="step" id="run">
-        <div class="stepno">Step 5 of 7</div>
-        <h2>Classify it yourself</h2>
-        <p>The screen is chapter 3's, with waste classes as the endpoints and a <code>waste</code> block saying how to classify. Click each part:</p>
-        <div class="filebox">
-          <pre aria-label="The waste screen" id="file"></pre>
-          <div class="explain">
-            <div class="chips" id="chips" role="tablist" aria-label="Parts of the file"></div>
-            <div id="explain" aria-live="polite"></div>
+          <div class="part">
+            <h4><em>C</em>Classification</h4>
+            <p class="why" style="margin:0 0 4px">The waste takes the stricter of parts A and B.</p>
+            <div class="boxes" id="b3" role="group" aria-label="Class">
+              <button type="button" data-v="A">Class A</button>
+              <button type="button" data-v="B">Class B</button>
+              <button type="button" data-v="C">Class C</button>
+              <button type="button" data-v="X">Not for near-surface burial</button>
+            </div>
+            <p class="why" id="w3"></p>
+            <span class="stamp" id="stamp" hidden></span>
           </div>
         </div>
-        <div class="task" data-task="c5-file"><span>Open every part of the file.</span></div>
-
-        <div class="tabs" role="tablist" aria-label="Ways to run ACTINV">
-          <button type="button" class="sel on" role="tab" aria-selected="true" aria-controls="door-terminal" id="tab-terminal">Command line</button>
-          <button type="button" class="sel" role="tab" aria-selected="false" aria-controls="door-app" id="tab-app">Desktop app</button>
-          <button type="button" class="sel" role="tab" aria-selected="false" aria-controls="door-python" id="tab-python">Python</button>
-        </div>
-        <div class="tabpanel" role="tabpanel" id="door-terminal" aria-labelledby="tab-terminal">
-          <div class="term-window">
-            <div class="bar">Practice terminal · ~/waste-lesson</div>
-            <div class="term-screen" id="screen" aria-live="polite"></div>
-          </div>
-          <div class="term-cue" id="cue"></div>
-          <div class="task" data-task="c5-t-screen"><span>Classify: <code>actinv impurities waste-screen.json waste-screen-result.json</code></span></div>
-          <div class="task" data-task="c5-t-jq"><span>Read the class at each time with jq.</span></div>
-        </div>
-        <div class="tabpanel" role="tabpanel" id="door-app" aria-labelledby="tab-app" hidden>
-          <ol class="steps">
-            <li>Download <a href="files/block.json" download>block.json</a> and open it with <strong>Open problem…</strong>, then run it.</li>
-            <li>Open <strong>Waste class</strong> and choose <strong>What class is this result?</strong>, with the block's mass, density and waste type from step 5's file. It gives the class at each step against the U.S. tables, with each table's sum and the nuclides that drive it.</li>
-            <li>For the impurities' part, open <strong>Impurities</strong>, add niobium, nitrogen and cobalt with their ranges, and under <strong>What matters</strong> pick the waste class with class C to meet.</li>
-          </ol>
-          <div class="task" data-task="c5-app"><span>I've read the app steps. <button type="button" class="btn" id="app-done" style="margin-left:6px">Done</button></span></div>
-        </div>
-        <div class="tabpanel" role="tabpanel" id="door-python" aria-labelledby="tab-python" hidden>
-          <p>Run the screen from Python and print the class at each time:</p>
-          <pre class="code" id="py1"></pre>
-          <div class="controls"><button type="button" class="btn primary" id="py-run">Run this</button><span id="py-status"></span></div>
-          <pre class="code" id="py1-out" hidden></pre>
-          <div class="task" data-task="c5-python"><span>Run the Python example.</span></div>
-          <p class="note">The button replays what this script printed with ACTINV <span class="ver"></span>; it took a minute on a laptop.</p>
-        </div>
+        <div class="task" data-task="c5-nb"><span>Work out niobium-94's fraction.</span></div>
+        <div class="task" data-task="c5-sum"><span>Add up table 1 and tick its result.</span></div>
+        <div class="task" data-task="c5-col"><span>Find the first column of table 2 the block meets.</span></div>
+        <div class="task" data-task="c5-class"><span>Classify the block.</span></div>
       </section>
 
-      <section class="step" id="differs">
-        <div class="stepno">Step 6 of 7</div>
-        <h2>Waiting won't help</h2>
-        <p>In chapter 4, waiting brought the dose rate down. Will waiting change this block's class? Look at step 3's numbers at 1 day and 100 years, then decide.</p>
-        <div class="frame">
-          <div class="guess-opts" id="wait-opts">
-            <button type="button" class="sel" data-a="yes">Yes, after a century it's class B</button>
-            <button type="button" class="sel" data-a="no">No, it stays class C</button>
-          </div>
-          <p class="cap" id="wait-out"></p>
+      <section class="step" id="trace">
+        <h2>The certificate's worst case</h2>
+        <p>The concentrations above are for the typical steel: 0.01% niobium and 0.05% nitrogen. The mill's certificate allows up to 0.05% niobium and 0.1% nitrogen. Niobium-93 captures a neutron and becomes niobium-94, which lasts 20,000 years; nitrogen-14 becomes carbon-14. A trace of either goes straight into table 1.</p>
+        <p>Choose the steel, and the worksheet above recomputes from <code>actinv impurities</code>' screen of the block.</p>
+        <div class="steel" role="group" aria-label="Which steel">
+          <button type="button" class="sel" data-steel="typical">Typical steel</button>
+          <button type="button" class="sel" data-steel="worst">Worst the certificate allows</button>
+          <button type="button" class="sel" data-steel="spec">Worst, with your niobium limit:</button>
+          <span>Nb ≤ <input class="pencil" id="nb-limit" inputmode="decimal" placeholder="wt%" aria-label="Your niobium limit in wt%"> wt%</span>
         </div>
-        <div class="task" data-task="c5-wait"><span>Decide.</span></div>
-        <div class="frame">
-          <span class="caption">What ACTINV does differently</span>
-          <p><strong>The waste class as something you design for.</strong> ACTINV classifies a result against a rule pack, and its impurity screen tells you how each trace element moves the class, the worst steel the certificate allows, and so which impurity to limit when you buy the steel. Every nuclide's half-life and type come from the decay data, so you don't type them in.</p>
-          <p class="note">The class is the nominal U.S. classification. Whether a site accepts the waste is a separate question.</p>
-        </div>
+        <div class="frame"><p id="trace-out" style="margin:0"></p></div>
+        <div class="task" data-task="c5-worst"><span>See what the worst steel does to the class.</span></div>
+        <div class="task" data-task="c5-limit"><span>Write a niobium limit that keeps even the worst steel buriable.</span></div>
       </section>
 
-      <section class="step" id="wrap">
-        <div class="stepno">Step 7 of 7</div>
-        <h2>Check yourself</h2>
-        <div class="quiz" id="quiz"></div>
+      <section class="step" id="later">
+        <h2>Classify it later?</h2>
+        <p>Cobalt-60 halves every 5.3 years, and the dose rate falls with it. Does the class fall too? Change the cooling time, and the worksheet above recomputes.</p>
+        <div class="controls" role="group" aria-label="Cooling time" id="times"></div>
+        <div class="frame"><p id="later-out" style="margin:0"></p></div>
+        <div class="task" data-task="c5-wait"><span>Look at the block after 100 years of cooling.</span></div>
+      </section>
+
+      <section class="step" id="script">
+        <h2>Let ACTINV fill it in</h2>
+        <p>Every printed number on the worksheet came from one file, <code>waste-screen.json</code>: the steel's composition with each trace element's range, the cooling times, and the two classes to test. <code>actinv impurities</code> runs the block once per element, derives each nuclide's half-life from the decay data, and reports the class for the typical steel and for the worst the ranges allow. A few lines of Python print the worksheet's bottom line:</p>
+        <pre class="code" id="py1"></pre>
+        <div class="controls"><button type="button" class="btn primary" id="py-run">Run this</button><span id="py-status"></span></div>
+        <pre class="code" id="py1-out" hidden></pre>
+        <div class="task" data-task="c5-python"><span>Run the classification script.</span></div>
+        <p class="note">In the desktop app, open <code>block.json</code>, run it, and the <strong>Waste class</strong> page shows the same worksheet for the open result.</p>
         <div class="frame" id="finish">
-          <h4 id="finish-title">Finish the steps to complete the chapter</h4>
-          <p class="note" id="finish-text">Each step needs its boxes ticked.</p>
+          <h4 id="finish-title">Finish the worksheet to complete the chapter</h4>
+          <p class="note" id="finish-text">The list on the left shows what's left.</p>
           <p><a class="btn primary" href="files/waste-screen.json" download>Download waste-screen.json</a> <a class="btn" href="files/base.json" download>base.json</a> <a class="btn" href="files/block.json" download>block.json</a></p>
         </div>
-        <h3>Next</h3>
-        <p><a href="../uncertainty/">Chapter 6: how sure are we?</a>. Every number so far came from nuclear data that is itself measured, with errors. How much can the answers move?</p>
         <p><button type="button" class="btn" id="reset">Start this chapter over</button></p>
       </section>
     </div>
   </main>
 </div>
-<div class="statusbar" id="status" role="status">Start with step 1, or pick any step from the list on the left.</div>
+<div class="statusbar" id="status" role="status">Start with niobium-94's fraction in part A.</div>
 <script type="module" src="./chapter.js"></script>
 </body>
 </html>

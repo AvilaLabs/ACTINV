@@ -58,8 +58,8 @@ That gives `R_c`, dose per unit source in region `c`. Combine with `C_S` from `e
 - Cost: one photon run per time if `R_c` is summed over groups (the pooled source spectrum is fixed by ACTINV, so
   group-wise `R` is a refinement). With groups: 5 to 10 runs, since OpenMC has no birth-energy filter. Plus
   `export-r2s-cov`, small next to the activation solve. The birth filter adds tally bins and some memory.
-- Qualification: A1 (below) for the source term; the `sigma_R` term needs its own check; then SINBAD FNG for
-  coverage of measured dose. The SINBAD data are export-controlled (RSICC 216443) and cannot go into CI.
+- Qualification: A1 (below) for the source term; the `sigma_R` term needs its own check; then coverage of a
+  measured dose. SINBAD FNG is dropped (2026-11-18, RSICC charges $940); a freely available measurement is needed.
 
 Caveat: the pooled-over-groups form assumes the source spectrum shape is not itself uncertain. Spectrum-shape
 errors from yields would be missed. Group-wise `R` removes this at 5 to 10 times the photon cost.
@@ -86,7 +86,7 @@ Qualification plan:
 2. Run A1 from the plan: on the steel cube and one tungsten case, compare the band with brute-force sampling (a),
    with a pre-registered ratio limit.
 3. Seed-repeat OpenMC to check `sigma_R`.
-4. SINBAD FNG coverage, local only.
+4. Coverage of a measured dose, once a free measurement is found (SINBAD FNG dropped).
 
 ## Where the band is a lower bound
 

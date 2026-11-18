@@ -1,269 +1,179 @@
-import { boot, tabs, quiz, replay, fileExplorer, terminal, python, $, sound, complete, isDone, store, toast, key, wait } from "../kit.js";
-import { onProgress, sci } from "../learn.js";
+import { boot, $, sound, complete, isDone, store, key } from "../kit.js";
+import { onProgress, doseText } from "../learn.js";
 
-const STEPS = {
-  intro: ["c3-start"], guess: ["c3-guess"], sheet: ["c3-times", "c3-under", "c3-clear"], how: ["c3-check"],
-  run: ["c3-file", "c3-ran"], limit: ["c3-limit"], wrap: ["c3-quiz"],
-};
+const STEPS = { quotes: ["c3-order", "c3-mills"], when: ["c3-map"], spec: ["c3-spec", "c3-lean"], yours: ["c3-app"] };
 const data = await fetch("data/impurities-data.json").then((r) => r.json());
-const screenDoc = await fetch("files/screen.json").then((r) => r.json());
 
 boot({
   steps: STEPS, version: data.actinv_version,
   terms: {
-    impurity: ["Impurity", "An element in the steel that nobody added on purpose, or added only in traces. The certificate gives a range for each, and the steel can be anywhere in it."],
+    trace: ["Trace element", "An element in the steel that nobody added on purpose, at hundredths or thousandths of a percent. It comes with the scrap and ore the mill melts."],
+    cert: ["Mill certificate", "The document a steel mill ships with each batch (each \"heat\"), listing the composition it measured. Buyers check it against the purchase specification."],
   },
 });
 
-const IMP = ["Co", "Cu", "N", "Nb", "Ta", "B", "Ag"];
+const EL = ["Co", "Cu", "N", "Nb", "Ta", "B", "Ag"];
 const NAME = { Co: "cobalt", Cu: "copper", N: "nitrogen", Nb: "niobium", Ta: "tantalum", B: "boron", Ag: "silver" };
-const COLOR = { Co: "#4f7cff", Cu: "#e07b39", N: "#2bb39a", Nb: "#c25bd6", Ta: "#d6b336", B: "#8a9a5b", Ag: "#e0567a" };
-const NICE = (n) => n.replace(/^([A-Z][a-z]?)(\d+)(m1)?$/, (_, e, a, m) => `${e}-${a}${m ? "m" : ""}`);
-const ranges = data.impurities;
-const pct = (w) => (w >= 0.01 ? w.toFixed(3) : w.toFixed(4)) + "%";
-const LIMIT = data.limit_Gy_h;
+const NUC = (n) => n.replace(/^([A-Z][a-z]?)(\d+)(m1)?$/, (_, e, a, m) => `${e}-${a}${m ? "m" : ""}`);
+const T10 = data.times.indexOf("10 years");
+const dose = (i) => data.screen[i]["dose.contact_proxy"];
+const LIMIT = data.limit_Gy_h, MATRIX = dose(T10).matrix_only;
+const G = Object.fromEntries(EL.map((e) => [e, dose(T10).impurities[e].gradient]));
+const RANGE = data.impurities;
+// wt% -> dose rate at ten years: the steel's own plus each trace element's amount times its effect.
+const at10 = (comp) => MATRIX + EL.reduce((s, e) => s + G[e] * (comp[e] || 0), 0);
+const fmt = (x) => (x >= 0.01 ? x.toFixed(x >= 0.1 ? 2 : 3) : x.toPrecision(1)).replace(/\.?0+$/, "") + "%";
+const status = (t) => { $("#status").textContent = t; $("#status").classList.add("fresh"); };
+$("#limit-text").textContent = doseText(LIMIT);
 
-/* ---------- Step 1: the certificate ---------- */
-$("#cert").innerHTML = `<tr><th>Impurity</th><th>Typical</th><th>Allowed range</th><th></th></tr>` +
-  IMP.map((e) => `<tr><td>${NAME[e]} (${e})</td><td>${pct(ranges[e].nominal)}</td><td>${pct(ranges[e].min)} to ${pct(ranges[e].max)}</td><td></td></tr>`).join("");
-
-/* ---------- Step 2: guesses ---------- */
-const QS = [
-  { id: "dose10", q: "The dose rate when a crew removes the bracket after 10 years", t: 2, ep: "dose.contact_proxy" },
-  { id: "clear100", q: "Whether the steel can go out as ordinary scrap after 100 years", t: 3, ep: "clearance_index" },
+/* ---------- Three quotes ---------- */
+const MILLS = [
+  { id: "A", name: "Mill A", kind: "Commercial grade", price: 4.10, comp: { Co: 0.15, Cu: 0.30, N: 0.06, Nb: 0.01, Ta: 0.01, B: 0.002, Ag: 0.001 } },
+  { id: "B", name: "Mill B", kind: "Low-cobalt scrap", price: 4.60, comp: { Co: 0.03, Cu: 0.25, N: 0.05, Nb: 0.04, Ta: 0.02, B: 0.002, Ag: 0.0015 } },
+  { id: "C", name: "Mill C", kind: "Nuclear grade", price: 7.90, comp: { Co: 0.01, Cu: 0.03, N: 0.03, Nb: 0.002, Ta: 0.002, B: 0.0005, Ag: 0.0002 } },
 ];
-const leader = (q) => {
-  const imps = data.screen[q.t][q.ep].impurities;
-  return IMP.slice().sort((a, b) => imps[b].contribution - imps[a].contribution)[0];
-};
-(() => {
-  const host = $("#guesses"), lock = $("#lock");
-  const saved = store.get(key("guess"), {});
-  const locked = () => store.get(key("guess-locked"), false);
-  QS.forEach((q) => {
-    const row = document.createElement("div"); row.className = "guess-row";
-    row.innerHTML = `<span>${q.q}</span><span class="controls" style="margin:0">${IMP.map((e) => `<button type="button" class="sel" data-el="${e}">${NAME[e]}</button>`).join("")}</span><span class="verdict"></span>`;
-    row.querySelectorAll("[data-el]").forEach((b) => b.addEventListener("click", () => {
-      if (locked()) return;
-      saved[q.id] = b.dataset.el; store.set(key("guess"), saved); sound.tick(); draw();
-    }));
-    host.append(row);
-  });
-  function draw() {
-    host.querySelectorAll(".guess-row").forEach((row, i) => {
-      const q = QS[i], g = saved[q.id];
-      row.querySelectorAll("[data-el]").forEach((b) => b.classList.toggle("on", b.dataset.el === g));
-      if (!locked()) return;
-      const best = leader(q), e = data.screen[q.t][q.ep], c = e.impurities[best];
-      row.querySelectorAll("[data-el]").forEach((b) => { b.disabled = true; b.classList.toggle("right", b.dataset.el === best); b.classList.toggle("miss", b.dataset.el === g && g !== best); });
-      row.querySelector(".verdict").textContent = (g === best ? "Right: " : "Most of it: ") +
-        `${NAME[best]}, ${Math.round(100 * c.contribution / e.nominal)}% of the total, through ${NICE(c.top[0])}.` +
-        (q.id === "clear100" ? " Nitrogen-14 turns into carbon-14 by an (n,p) reaction, and carbon-14 lasts 5,700 years. Cobalt's cobalt-60 is mostly gone by then." : " The cobalt-60 of chapters 1 and 2.");
-    });
-    const n = QS.filter((q) => saved[q.id]).length;
-    lock.disabled = locked() || n < QS.length;
-    $("#guess-note").textContent = locked() ? "Step 3 lets you see the whole picture." : n < QS.length ? "Pick one for each." : "Ready.";
-  }
-  lock.addEventListener("click", () => { store.set(key("guess-locked"), true); sound.reveal(); complete("c3-guess"); draw(); });
-  draw();
-})();
+const TONNES = 2;
+const cost = (m) => `${(m.price * 1000 * TONNES).toLocaleString("en", { maximumFractionDigits: 0 })}`;
+const tried = new Set(store.get(key("mills"), []));
+let chosen = store.get(key("chosen"), null);
+let spec = store.get(key("spec"), {});
 
-/* ---------- Step 3: the spec sheet ---------- */
-const EP = {
-  "dose.contact_proxy": { name: "Dose rate at the surface", fmt: (v) => `${sci(v, 3)} Gy/h` },
-  clearance_index: { name: "Clearance index (1 or less clears)", fmt: (v) => sci(v, 3) },
-  "activity.total": { name: "Activity", fmt: (v) => `${sci(v, 3)} Bq per gram` },
-};
-let ti = 2, ep = "dose.contact_proxy";
-const wt = Object.fromEntries(IMP.map((e) => [e, ranges[e].nominal]));
-const seenTimes = new Set(store.get(key("times"), []));
-(() => {
-  const ts = $("#times");
-  data.times.forEach((t, i) => ts.insertAdjacentHTML("beforeend", `<button type="button" class="sel${i === ti ? " on" : ""}" data-t="${i}">${t}</button>`));
-  ts.querySelectorAll("[data-t]").forEach((b) => b.addEventListener("click", () => { ti = +b.dataset.t; sound.tick(); ts.querySelectorAll("[data-t]").forEach((x) => x.classList.toggle("on", x === b)); draw(); }));
-  document.querySelectorAll("[data-ep]").forEach((b) => b.addEventListener("click", () => { ep = b.dataset.ep; sound.tick(); document.querySelectorAll("[data-ep]").forEach((x) => x.classList.toggle("on", x === b)); draw(); }));
-  const host = $("#sliders");
-  IMP.forEach((e) => {
-    const r = ranges[e], row = document.createElement("label"); row.className = "imp";
-    row.innerHTML = `<span class="el"><i style="background:${COLOR[e]}"></i>${NAME[e]}</span><input type="range" min="${r.min}" max="${r.max}" step="${(r.max - r.min) / 200}" value="${r.nominal}" aria-label="${NAME[e]}, wt%"><output></output>`;
-    const inp = row.querySelector("input");
-    inp.addEventListener("input", () => { wt[e] = +inp.value; draw(); });
-    inp.addEventListener("change", () => sound.tick());
-    host.append(row);
-  });
-  const setAll = (f) => { IMP.forEach((e, i) => { wt[e] = f(e); host.querySelectorAll("input")[i].value = wt[e]; }); sound.tick(); draw(); };
-  $("#nominal").addEventListener("click", () => setAll((e) => ranges[e].nominal));
-  $("#worst").addEventListener("click", () => setAll((e) => { const g = data.screen[ti][ep].impurities[e].gradient; return g > 0 ? ranges[e].max : ranges[e].min; }));
-})();
-function total(t, endpoint, w) {
-  const e = data.screen[t][endpoint];
-  return e.matrix_only + IMP.reduce((s, x) => s + e.impurities[x].gradient * w[x], 0);
-}
-function draw() {
-  const e = data.screen[ti][ep], v = total(ti, ep, wt);
-  $("#sliders").querySelectorAll("output").forEach((o, i) => (o.textContent = pct(wt[IMP[i]])));
-  $("#ep-name").textContent = `${EP[ep].name}, ${data.times[ti]} after shutdown`;
-  const over = ep === "dose.contact_proxy" ? v > LIMIT : ep === "clearance_index" ? v > 1 : false;
-  $("#ep-value").textContent = EP[ep].fmt(v);
-  $("#ep-value").classList.toggle("over", over);
-  $("#ep-limit").textContent = ep === "dose.contact_proxy" ? (v > LIMIT ? `Above this lesson's limit of ${LIMIT} Gy/h` : `Under this lesson's limit of ${LIMIT} Gy/h`)
-    : ep === "clearance_index" ? (v > 1 ? `${sci(v, 2)} times the level for release as scrap` : "Can be released as scrap") : "";
-  const contrib = Object.fromEntries(IMP.map((x) => [x, e.impurities[x].gradient * wt[x]]));
-  const neg = IMP.reduce((s, x) => s + Math.min(0, contrib[x]), 0);
-  const worstV = Math.max(e.worst, total(ti, ep, wt));
-  const scaleMax = ep === "dose.contact_proxy" ? Math.max(worstV, LIMIT) * 1.05 : worstV * 1.05;
-  const w = (x) => `${Math.max(0, 100 * x / scaleMax).toFixed(2)}%`;
-  $("#stack").innerHTML = `<i style="width:${w(e.matrix_only + neg)};background:var(--weak);opacity:.5" title="the steel without impurities"></i>` +
-    IMP.map((x) => `<i style="width:${w(Math.max(0, contrib[x]))};background:${COLOR[x]}" title="${NAME[x]}"></i>`).join("") +
-    (ep === "dose.contact_proxy" ? `<span class="lim" style="left:${w(LIMIT)}"><span>limit</span></span>` : "");
-  $("#legend").innerHTML = `<span><i style="background:var(--weak);opacity:.5"></i>steel without impurities</span>` + IMP.map((x) => `<span><i style="background:${COLOR[x]}"></i>${NAME[x]}</span>`).join("");
-  const rows = IMP.slice().sort((a, b) => Math.abs(contrib[b]) - Math.abs(contrib[a]));
-  $("#contrib").innerHTML = `<tr><th>Impurity</th><th>Amount</th><th>Share of the total</th><th>Through</th></tr>` +
-    rows.map((x) => `<tr><td>${NAME[x]}</td><td>${pct(wt[x])}</td><td>${(100 * contrib[x] / v).toFixed(Math.abs(contrib[x] / v) < 0.001 ? 3 : 1)}%</td><td>${Math.abs(contrib[x] / v) < 0.001 ? "–" : e.impurities[x].top.slice(0, 2).map(NICE).join(", ")}</td></tr>`).join("");
-  $("#ep-cap").textContent = `The steel without impurities alone gives ${EP[ep].fmt(e.matrix_only)}. ` +
-    (ep === "dose.contact_proxy" ? "The dose rate at the surface depends a little on how much the steel itself absorbs, so the sliders draw a straight line through ACTINV's numbers; over these small amounts it stays within a fraction of a percent." : "This quantity adds up exactly, element by element.");
-  seenTimes.add(ti); store.set(key("times"), [...seenTimes]);
-  if (seenTimes.size === 4) complete("c3-times");
-  if (ti === 2 && ep === "dose.contact_proxy" && v <= LIMIT) complete("c3-under");
-  if (ti === 3 && ep === "clearance_index") complete("c3-clear");
-}
-draw();
-
-/* ---------- Step 4: add it up ---------- */
-(() => {
-  const e = data.screen[2]["dose.contact_proxy"], host = $("#sum");
-  const lines = [`<span class="t">${sci(e.matrix_only, 4)}</span>  the steel without impurities`]
-    .concat(IMP.map((x) => `${e.impurities[x].gradient >= 0 ? "+" : "−"} ${sci(Math.abs(e.impurities[x].gradient), 4)} × ${ranges[x].nominal}  ${NAME[x]}`))
-    .concat([`= <span class="t">${e.nominal.toPrecision(8)} Gy/h</span>`]);
-  host.insertAdjacentHTML("beforebegin", `<p class="note" style="margin-top:0">Each impurity line is its effect per wt% (Gy/h), times its typical amount in wt%.</p>`);
-  host.innerHTML = lines.map((l) => `<div>${l}</div>`).join("");
-  const show = async (quiet) => {
-    $("#sum-go").disabled = true;
-    for (const d of host.children) { d.classList.add("in"); if (!quiet) { sound.tick(); await wait(220); } }
-    $("#check").disabled = false;
-  };
-  $("#sum-go").addEventListener("click", () => show(false));
-  // Recorded from screen-result.json: verification.points, the nominal check at step 10.
-  const V = { predicted: 0.048502452034839466, solved: 0.04850245203483947, rel_dev: 1.430627445169782e-16 };
-  const check = async (quiet) => {
-    $("#check").disabled = true;
-    if (!quiet) { $("#check-out").textContent = "running the full calculation…"; for (let i = 0; i < 8; i++) { sound.key(); await wait(110); } sound.reveal(); }
-    $("#check-out").innerHTML = `Full run of this exact steel: <strong>${V.solved} Gy/h</strong>. Added up: ${V.predicted}. They differ by ${sci(V.rel_dev, 1)} of the value, which is rounding in the last digit. ACTINV makes this check itself, for the typical steel, every corner of the certificate's ranges and every limit it reports.`;
-    store.set(key("checked"), true);
-    complete("c3-check");
-  };
-  $("#check").addEventListener("click", () => check(false));
-  if (store.get(key("checked"), false)) { show(true); check(true); }
-})();
-
-/* ---------- Step 5: the file, three ways in ---------- */
-const ran = (how) => { if (complete("c3-ran", { quiet: true })) { sound.reveal(); toast(`Screen run (${how}).`); } };
-fileExplorer({
-  pre: $("#file"), chips: $("#chips"), explain: $("#explain"), doc: screenDoc, task: "c3-file",
-  shorten: {
-    matrix: (v) => "{" + Object.entries(v).map(([k, x]) => `<span class="k">"${k}"</span>: <span class="n">${x}</span>`).join(", ") + "}",
-    impurities: (v) => "{\n" + Object.entries(v).map(([k, x]) => `    <span class="k">"${k}"</span>: {<span class="k">"nominal"</span>: <span class="n">${x.nominal}</span>, <span class="k">"min"</span>: <span class="n">${x.min}</span>, <span class="k">"max"</span>: <span class="n">${x.max}</span>}`).join(",\n") + "\n  }",
-  },
-  parts: [
-    { id: "base", keys: ["schema", "base_spec"], name: "The problem",
-      text: "<p><code>base_spec</code> names an ordinary problem file: the bracket's field, schedule and photon settings, the same as chapter 1. ACTINV takes everything from it except the composition.</p>" },
-    { id: "steel", keys: ["balance", "matrix"], name: "The steel",
-      text: "<p><code>matrix</code> holds the main ingredients fixed, in wt%. <code>balance</code> names the element that makes up the rest, here iron: add an impurity and the same weight of iron goes.</p>" },
-    { id: "imps", keys: ["impurities"], name: "Impurities",
-      text: "<p>The certificate: each impurity's typical amount and the range it can be in. Add any element you like, even one the problem doesn't mention.</p>" },
-    { id: "ask", keys: ["targets", "endpoints"], name: "When and what",
-      text: "<p><code>targets</code> are step numbers of the schedule: 8 to 11 are 30 days, 1, 10 and 100 years after shutdown. <code>endpoints</code> are the quantities to screen. Give one a <code>limit</code> and ACTINV also works out the most of each impurity you can allow, as <code>limit.json</code> does in step 6.</p>" },
-  ],
+const certs = $("#certs");
+MILLS.forEach((m) => {
+  const card = document.createElement("article");
+  card.className = "cert"; card.dataset.m = m.id;
+  card.innerHTML = `<h4>${m.name}</h4><div class="kind">Certificate · ${m.kind}</div>
+    <table>${EL.map((e) => `<tr><td>${e} <span style="color:#777">${NAME[e]}</span></td><td data-e="${e}">${fmt(m.comp[e])}</td></tr>`).join("")}</table>
+    <div class="price"><span>per kg</span><b>${m.price.toFixed(2)}</b></div>
+    <button type="button" class="btn">Buy 2 t for ${cost(m)}</button><span class="stamp" hidden></span>`;
+  card.querySelector("button").addEventListener("click", () => buy(m));
+  certs.append(card);
 });
-tabs(document.querySelector(".tabs"));
-terminal({
-  screen: $("#screen"), cue: $("#cue"), folder: "impurities-lesson", version: data.actinv_version,
-  files: ["screen.json", "limit.json", "base.json", "photon-response.json", "actinv-data/"],
-  script: [
-    { cmd: "actinv impurities screen.json screen-result.json", task: "c3-t-screen", needs: ["screen.json", "base.json"], makes: ["screen-result.json"],
-      ms: 3200, working: "one run per element, then full runs to check… (about a minute on a laptop)",
-      out: "impurities: 16 element solves, 4 targets, verification passed (max rel dev 1.6412896759952994e-15) -> screen-result.json",
-      hint: "Sixteen runs, every reported number checked. Next, rank the impurities for the dose rate at 10 years (step 10).", then: () => ran("command line") },
-    { cmd: `jq -r '.targets[] | select(.step == 10) | .endpoints[] | select(.response == "dose.contact_proxy") | .impurities | to_entries | sort_by(-.value.contribution_nominal)[] | "\\(.key)  \\(.value.contribution_nominal)  \\(.value.top_nuclides[0][0])"' screen-result.json`,
-      task: "c3-t-jq", needs: ["screen-result.json"],
-      out: ["Co  0.04309134407794584  Co60", "Cu  0.00003390623631339268  Co60", "Nb  1.1266781309998697E-7  Co60", "Ag  5.8892018671430346E-8  Ag108m1",
-        "B  7.749627259356906E-9  Co60", "Ta  -1.0042104615914926E-7  Co60", "N  -0.0000015435865653723457  Co60"],
-      hint: "Each impurity's effect in Gy/h at typical amounts, and the nuclide it mostly acts through. Cobalt is a thousand times ahead of the rest." },
-    { cmd: "actinv impurities limit.json limit-result.json", needs: ["limit.json", "base.json"], makes: ["limit-result.json"],
-      ms: 3200, working: "one run per element, then full runs to check… (about a minute on a laptop)",
-      out: "impurities: 16 element solves, 1 targets, verification passed (max rel dev 2.835585931921538e-10) -> limit-result.json",
-      hint: "limit.json is the same screen with a limit of 0.02 Gy/h at 10 years. Step 6 shows what it found." },
-    { cmd: `jq -r '.targets[0].endpoints[0].impurities | to_entries[] | "\\(.key)  \\(.value.limits.alone.status)  \\(.value.limits.alone.wt_pct // "-")"' limit-result.json`,
-      needs: ["limit-result.json"],
-      out: ["Ag  no response  -", "B  no response  -", "Co  limit  0.033932380215151166", "Cu  limit  43.728731197561146", "N  no response  -", "Nb  no response  -", "Ta  no response  -"],
-      hint: "The most of each impurity you can allow, with the others at zero. 'no response' means that impurity can't reach the limit by itself." },
-  ],
-});
-$("#app-done").addEventListener("click", () => { complete("c3-app"); ran("desktop app"); });
-$("#py1").innerHTML = python(`import json
-import subprocess
 
-# actinv impurities has no Python function of its own; it's one command, and its result is JSON.
-subprocess.run(["actinv", "impurities", "limit.json", "limit-result.json"], check=True)
-result = json.load(open("limit-result.json"))
+function buy(m, quiet = false) {
+  chosen = m.id; store.set(key("chosen"), chosen);
+  tried.add(m.id); store.set(key("mills"), [...tried]);
+  certs.querySelectorAll(".cert").forEach((c) => c.classList.toggle("chosen", c.dataset.m === m.id));
+  const d = at10(m.comp), ok = d <= LIMIT;
+  const stamp = certs.querySelector(`[data-m="${m.id}"] .stamp`);
+  stamp.hidden = false; stamp.className = `stamp ${ok ? "pass" : "fail"}`; stamp.textContent = ok ? "meets rule" : "fails rule";
+  // the gauge: the steel's own dose, then each element's share, against the rule
+  const top = Math.max(LIMIT * 1.6, d * 1.1), pct = (x) => `${(100 * x / top).toFixed(2)}%`;
+  let left = MATRIX;
+  const segs = [`<div class="seg matrix" style="left:0;width:${pct(MATRIX)}" title="the steel itself"></div>`];
+  EL.filter((e) => G[e] * m.comp[e] > 0).forEach((e) => {
+    const w = G[e] * m.comp[e];
+    segs.push(`<div class="seg imp" style="left:${pct(left)};width:${pct(w)};opacity:${e === "Co" ? 1 : 0.6}" title="${NAME[e]}"></div>`); left += w;
+  });
+  $("#track").innerHTML = segs.join("") + `<div class="limit" style="left:${pct(LIMIT)}"><span>rule ${doseText(LIMIT)}</span></div>`;
+  $("#axis-end").textContent = doseText(top);
+  $("#out-title").textContent = `${m.name}'s steel, ten years after shutdown: ${doseText(d)} at the surface. ${ok ? "It meets the rule." : `That's ${(d / LIMIT).toFixed(1)} times the rule.`}`;
+  const others = EL.filter((e) => e !== "Co").reduce((t, e) => t + Math.max(0, G[e] * m.comp[e]), 0);
+  const rows = [["the steel itself", MATRIX], ["cobalt", G.Co * m.comp.Co], ["the other six", others]];
+  $("#parts").innerHTML = rows.map(([n, x]) => `<span>${n}</span><span class="bar" style="height:6px;align-self:center;background:var(--btn)"><i style="display:block;height:100%;width:${Math.max(0, 100 * x / d).toFixed(1)}%;background:${n === "the steel itself" ? "var(--weak)" : "var(--warn)"}"></i></span><span>${x <= 0 ? "none" : doseText(x)}</span>`).join("");
+  const co = G.Co * m.comp.Co;
+  $("#out-cap").textContent = m.id === "C"
+    ? `Everything is low, so it passes easily. But you paid ${cost(MILLS[2])} for steel when ${cost(MILLS[1])} would also have passed: only one of these lines mattered.`
+    : `Cobalt alone adds ${doseText(co)}, ${Math.round(100 * co / d)}% of the total. Every other trace element together adds ${doseText(Math.max(0, d - MATRIX - co))}.`;
+  $("#outcome").hidden = false;
+  if (!quiet) { ok ? sound.done() : sound.wrong(); status(`${m.name}: ${ok ? "meets" : "fails"} the rule.`); }
+  complete("c3-order", { quiet });
+  if (tried.size === MILLS.length) complete("c3-mills");
+  po();
+}
 
-dose = result["targets"][0]["endpoints"][0]
-print(f'Limit: {dose["limit"]} {dose["unit"]} after 10 years')
-for name, imp in dose["impurities"].items():
-    alone = imp["limits"]["alone"]
-    if alone["status"] == "limit":
-        print(f'{name:3} at most {alone["wt_pct"]:.3f} wt%')
-    else:
-        print(f'{name:3} can\\'t reach the limit on its own')`);
-$("#py-run").addEventListener("click", () => replay($("#py-run"), $("#py-status"), $("#py1-out"),
-  ["impurities: 16 element solves, 1 targets, verification passed (max rel dev 2.835585931921538e-10) -> limit-result.json",
-    "Limit: 0.02 Gy/h after 10 years", "Ag  can't reach the limit on its own", "B   can't reach the limit on its own", "Co  at most 0.034 wt%",
-    "Cu  at most 43.729 wt%", "N   can't reach the limit on its own", "Nb  can't reach the limit on its own", "Ta  can't reach the limit on its own"].join("\n"),
-  () => { complete("c3-python"); ran("Python"); }));
-
-/* ---------- Step 6: a purchase limit ---------- */
+/* ---------- Which impurity, when ---------- */
 (() => {
-  const s = $("#co-guess"), out = $("#co-guess-out"), L = data.limits;
-  s.addEventListener("input", () => (out.textContent = pct(+s.value)));
-  const reveal = (g, quiet) => {
-    s.value = g; out.textContent = pct(g); s.disabled = true; $("#co-lock").disabled = true;
-    const lim = L.Co.alone.wt_pct;
-    $("#co-reveal").hidden = false;
-    $("#co-limit").textContent = pct(lim);
-    const off = g / lim;
-    $("#co-text").innerHTML = `You guessed ${pct(g)}${Math.abs(off - 1) < 0.25 ? ", close" : off > 1 ? `, ${off.toFixed(1)} times too much` : ""}. ` +
-      `That's about a third of the typical 0.1%. With the other impurities at their typical amounts it's ${pct(L.Co.others_at_nominal.wt_pct)}, and at their worst ${pct(L.Co.others_at_worst.wt_pct)}: the others hardly matter here. ` +
-      `If you'd rather keep the mix, scaling every impurity to ${Math.round(100 * data.joint_k.value)}% of its typical amount meets the limit too.`;
-    $("#limits").innerHTML = `<tr><th>Impurity</th><th>Most you can allow, others at zero</th><th>What it means</th></tr>` + IMP.map((e) => {
-      const a = L[e].alone;
-      return `<tr><td>${NAME[e]}</td><td>${a.status === "limit" ? pct(a.wt_pct) : "–"}</td><td>${a.status === "limit" ? (a.wt_pct > 1 ? "no real limit: that's far beyond any certificate" : "the one that sets the purchase spec") : "can't reach the limit on its own"}</td></tr>`;
-    }).join("");
-    if (!quiet) sound.reveal();
-    complete("c3-limit", { quiet });
-  };
-  $("#co-lock").addEventListener("click", () => { store.set(key("co-guess"), +s.value); reveal(+s.value, false); });
-  const g = store.get(key("co-guess"), null);
-  if (g !== null) reveal(g, true);
+  const host = $("#heat"), out = $("#heat-out");
+  const seen = new Set(store.get(key("cells"), []));
+  const add = (e, i) => { const x = dose(i); return x.impurities[e].gradient * RANGE[e].max / x.matrix_only; };
+  const shade = (f) => (f <= 0.01 ? 0 : Math.min(1, Math.log10(f * 100) / 3.3));
+  const label = (f) => (f <= 0 ? "none" : f < 0.01 ? "<1%" : f < 1 ? `+${Math.round(100 * f)}%` : `×${(1 + f).toFixed(f < 9 ? 1 : 0)}`);
+  host.innerHTML = `<thead><tr><th>each at its highest</th>${data.times.map((t, i) => `<th class="${i === T10 ? "rule" : ""}">${t}${i === T10 ? " · your rule" : ""}</th>`).join("")}</tr></thead>
+    <tbody>${EL.map((e) => `<tr><td>${NAME[e]} <span class="note" style="font-size:11px">≤ ${fmt(RANGE[e].max)}</span></td>${data.times.map((t, i) => {
+      const f = add(e, i);
+      return `<td data-e="${e}" data-i="${i}" class="${i === T10 ? "rulecol" : ""}" style="background:rgb(214 84 0 / ${(0.08 + 0.75 * shade(f)).toFixed(2)})" tabindex="0" role="button">${label(f)}</td>`;
+    }).join("")}</tr>`).join("")}</tbody>`;
+  const HL = { Co60: "5.3 years", Co58: "71 days", Ta182: "115 days", Ag110m1: "250 days", Ag108m1: "438 years", Nb94: "20,000 years", Nb92m1: "10 days", Mn54: "312 days", Fe59: "45 days", Hf181: "42 days" };
+  host.querySelectorAll("td[data-e]").forEach((td) => {
+    const go = () => {
+      const e = td.dataset.e, i = +td.dataset.i, x = dose(i), imp = x.impurities[e], f = add(e, i);
+      host.querySelectorAll("td.on").forEach((c) => c.classList.remove("on")); td.classList.add("on");
+      const nuc = imp.top[0], via = `${NUC(nuc)}${HL[nuc] ? ` (half-life ${HL[nuc]})` : ""}`;
+      out.textContent = imp.gradient <= 0
+        ? `${NAME[e]} at ${data.times[i]}: it adds nothing. It barely activates, and since it replaces iron, slightly less iron is there to make ${NUC(imp.top[0])}.`
+        : `${NAME[e]} at ${data.times[i]}: ${fmt(RANGE[e].max)} of it ${f < 0.01 ? "adds under 1% to" : f < 1 ? `adds ${Math.round(100 * f)}% to` : `multiplies by ${(1 + f).toFixed(f < 9 ? 1 : 0)}`} the steel's own ${doseText(x.matrix_only)}, mostly through ${via}.`
+          + (e === "Ta" && i === 0 ? " Tantalum matters for handling in the first months, not at ten years." : "")
+          + (e === "Nb" && i === 3 ? " After a century, niobium-94 is one of the last things left: chapter 5 meets it again." : "")
+          + (e === "Co" && i === T10 ? " This is the cell your rule falls in." : "");
+      sound.tick();
+      seen.add(`${e}${i}`); store.set(key("cells"), [...seen]);
+      if (seen.size >= 3 && [...seen].some((s) => !s.endsWith(String(T10)))) complete("c3-map");
+    };
+    td.addEventListener("click", go);
+    td.addEventListener("keydown", (ev) => { if (ev.key === "Enter" || ev.key === " ") { ev.preventDefault(); go(); } });
+  });
 })();
 
-/* ---------- Step 7 ---------- */
-quiz($("#quiz"), [
-  { q: "Which impurity matters most depends on…",
-    a: [["when you ask, and what you ask about", true], ["only how much of it there is", false], ["only its half-life", false]],
-    why: "Cobalt rules the dose rate for the first decades; at 100 years nitrogen leads the clearance index through carbon-14. Screen every time and quantity you care about." },
-  { q: "How can actinv impurities answer for every steel the certificate allows without running each one?",
-    a: [["What each element turns into doesn't depend on the rest, so element runs add up", true], ["It interpolates between a few sample steels", false], ["It assumes the impurities don't matter", false]],
-    why: "At a fixed neutron field the result is linear in the composition: matrix plus each impurity's effect per wt% times its amount. ACTINV then checks the numbers it reports with full runs." },
-  { q: "The screen says copper can go up to 43.7% for the dose limit. What does that tell a buyer?",
-    a: [["Copper isn't a concern for this limit", true], ["Buy steel with 43.7% copper", false], ["Copper is the most dangerous impurity", false]],
-    why: "A limit far beyond any real certificate means that impurity doesn't constrain you. The spec only needs a tighter cobalt limit." },
-], "c3-quiz");
+/* ---------- Write the specification ---------- */
+const host = $("#lines");
+EL.forEach((e) => {
+  const line = document.createElement("div"); line.className = "line";
+  line.innerHTML = `<label for="max-${e}">${NAME[e]} (${e})</label><span>≤ <input id="max-${e}" inputmode="decimal" placeholder="no limit" value="${spec[e] ?? ""}"> wt%</span><span class="eff" data-eff="${e}"></span>`;
+  line.querySelector("input").addEventListener("input", (ev) => {
+    const v = ev.target.value.trim();
+    if (v === "") delete spec[e]; else spec[e] = v;
+    store.set(key("spec"), spec); check(true);
+  });
+  host.append(line);
+});
+const limits = () => Object.fromEntries(EL.filter((e) => spec[e] !== undefined && !Number.isNaN(parseFloat(spec[e]))).map((e) => [e, Math.max(0, parseFloat(spec[e]))]));
+function check(live) {
+  const lim = limits();
+  // the worst steel a mill could ship and still meet the spec: each element at its limit, or at the top of its usual range
+  const worst = Object.fromEntries(EL.map((e) => [e, G[e] > 0 ? (lim[e] ?? RANGE[e].max) : 0]));
+  const d = at10(worst), ok = d <= LIMIT, n = Object.keys(lim).length;
+  EL.forEach((e) => {
+    const c = G[e] * worst[e];
+    document.querySelector(`[data-eff="${e}"]`).textContent = c <= 0 ? "adds nothing" : c < 1e-6 ? "adds almost nothing" : `worst case adds ${doseText(c)}`;
+  });
+  $("#verdict").className = `verdict ${ok ? "ok" : "no"}`;
+  $("#verdict").innerHTML = `Worst steel this spec allows: <b>${doseText(d)}</b> at ten years, ${ok ? "within" : "over"} the ${doseText(LIMIT)} rule. ${n} line${n === 1 ? "" : "s"}.`;
+  const bid = MILLS.map((m) => [m, EL.every((e) => lim[e] === undefined || m.comp[e] <= lim[e])]);
+  $("#bidders").innerHTML = bid.map(([m, can]) => `<span class="${can ? "in" : "out"}">${m.name} ${m.price.toFixed(2)}/kg</span>`).join("");
+  const cheapest = bid.filter(([, can]) => can).map(([m]) => m).sort((a, b) => a.price - b.price)[0];
+  $("#sheet-cap").textContent = !ok ? "A mill could meet every line of this spec and still ship steel that breaks the rule. Tighten the line that matters."
+    : cheapest ? `Every steel that meets this spec meets the rule. Cheapest mill that can bid: ${cheapest.name}, ${cost(cheapest)} for the order${cheapest.id === "C" ? ", which is more than you need to pay" : ""}.`
+    : "Every steel that meets this spec meets the rule, but none of the three mills can supply it. Loosen a line.";
+  if (ok && live) sound.done();
+  if (ok) complete("c3-spec", { quiet: !live });
+  if (ok && n === 1) complete("c3-lean", { quiet: !live });
+  po();
+}
+const coLimit = data.limits.Co.others_at_worst.wt_pct;
+$("#answer").addEventListener("click", () => {
+  $("#answer-out").hidden = false; sound.reveal();
+  $("#answer-out").innerHTML = `<code>actinv impurities</code> solves for it: with every other trace element at the top of its range, cobalt can be at most <strong>${coLimit.toFixed(4)} wt%</strong>. Round down and write <em>Co ≤ 0.033%</em>, one line, and Mill B can bid. No other element needs a line: tantalum, silver, niobium, boron and nitrogen can't reach the rule however much a mill ships, and copper would need 44%.`;
+});
+check(false);
+
+/* ---------- Purchase order in the side panel ---------- */
+function po() {
+  const m = MILLS.find((x) => x.id === chosen), lim = limits();
+  $("#po").innerHTML = `<div><span>Mill</span><b>${m ? m.name : "—"}</b></div>
+    <div><span>Ten years on</span><b>${m ? doseText(at10(m.comp)) : "—"}</b></div>
+    <div><span>Spec lines</span><b>${Object.keys(lim).map((e) => `${e} ≤ ${lim[e]}`).join(", ") || "none"}</b></div>`;
+}
+po();
+if (chosen) buy(MILLS.find((m) => m.id === chosen), true);
+$("#app-done").addEventListener("click", () => complete("c3-app"));
+
 const ALL = Object.values(STEPS).flat();
 const was = ALL.every(isDone);
 onProgress((set) => {
   if (ALL.every((t) => set.has(t))) {
     $("#finish-title").innerHTML = '<svg class="done-mark" viewBox="0 0 16 16" aria-hidden="true"><path d="M2.5 8.5l3.5 3.5L13.5 4"/></svg>Chapter 3 complete';
-    $("#finish-text").textContent = "You screened every impurity in the steel at four times, found the one that sets the purchase spec, and turned a dose limit into a cobalt limit.";
+    $("#finish-text").textContent = "You found the one trace element your rule depends on, and bought steel with a one-line specification instead of paying for nuclear grade.";
     if (!was) sound.fanfare();
   }
 });

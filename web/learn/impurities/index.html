@@ -4,42 +4,72 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>The impurities that matter · Learn ACTINV</title>
-<meta name="description" content="Chapter 3 of the ACTINV course: check every trace element in a steel at once, see which ones decide the dose and the clearance, and set a purchase limit.">
+<meta name="description" content="Chapter 3 of the ACTINV course: three steel mills quote for the bracket steel. Find out which trace elements decide the answer, and write a purchase specification that asks for exactly what matters.">
 <link rel="icon" href="../../favicon-e820714f418d9a3a.svg" type="image/svg+xml">
 <link rel="stylesheet" href="../learn.css">
 <script>document.documentElement.dataset.theme = "dark"; try { if (localStorage.getItem("actinv-learn:theme") === '"Light"') delete document.documentElement.dataset.theme; } catch {}</script>
 <style>
-  .spec { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); gap: 16px; }
-  .spec .sheet { border: 1px solid var(--stroke); padding: 8px 10px; background: var(--bg); }
-  .spec .sheet h4 { margin: 0 0 6px; }
-  .imp { display: grid; grid-template-columns: 74px minmax(0, 1fr) 72px; gap: 8px; align-items: center; font-size: 13px; padding: 3px 0; }
-  .imp .el { color: var(--strong); }
-  .imp .el i { display: inline-block; width: 9px; height: 9px; margin-right: 6px; }
-  .imp output { font-family: var(--mono); text-align: right; color: var(--strong); }
-  .imp input[type=range] { width: 100%; accent-color: var(--accent); }
-  .read { font-family: var(--mono); font-size: 13px; }
-  .stack { display: flex; height: 26px; border: 1px solid var(--stroke); position: relative; margin: 26px 0 6px; background: transparent; }
-  .stack i { display: block; height: 100%; transition: width .25s ease; }
-  .stack .lim { position: absolute; top: -22px; bottom: -4px; border-left: 2px dashed var(--warn); transition: left .25s ease; }
-  .stack .lim span { position: absolute; top: 0; left: 4px; font-size: 11px; color: var(--warn); white-space: nowrap; }
-  .big { font-size: 26px; font-family: var(--mono); color: var(--strong); }
-  .big.over { color: var(--warn); }
-  .legend { display: flex; flex-wrap: wrap; gap: 4px 12px; font-size: 12px; color: var(--weak); }
-  .legend i { display: inline-block; width: 9px; height: 9px; margin-right: 4px; }
-  table.contrib { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 8px; }
-  table.contrib td, table.contrib th { padding: 3px 6px; border-bottom: 1px solid var(--stroke); text-align: right; }
-  table.contrib td:first-child, table.contrib th:first-child, table.contrib td:last-child, table.contrib th:last-child { text-align: left; }
-  table.contrib th { font-weight: normal; color: var(--weak); }
-  table.contrib td { font-family: var(--mono); }
-  .sum { font-family: var(--mono); font-size: 13px; line-height: 1.9; }
-  .sum .t { color: var(--strong); }
-  .sum div { opacity: 0; transform: translateY(-4px); transition: opacity .3s, transform .3s; }
-  .sum div.in { opacity: 1; transform: none; }
-  .guess-row { display: grid; grid-template-columns: minmax(0, 220px) minmax(0, 1fr); gap: 8px; align-items: center; margin: 6px 0; }
-  .guess-row .verdict { grid-column: 1 / -1; font-size: 13px; color: var(--weak); }
-  .guess-row .sel.right { background: var(--sel); color: var(--sel-text); }
-  .guess-row .sel.miss { text-decoration: line-through; }
-  @media (max-width: 760px) { .spec { grid-template-columns: 1fr; } .guess-row { grid-template-columns: 1fr; } }
+  /* Mill certificates: paper documents, the one light surface in a dark page */
+  .certs { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; margin: 12px 0; }
+  .cert { position: relative; background: #f4f3ee; color: #2a2a2a; border: 1px solid #c9c6ba; padding: 12px 14px 10px; font: 13px/1.35 var(--ui);
+    box-shadow: 0 1px 0 rgb(0 0 0 / .15); transition: transform .2s ease, box-shadow .2s ease; }
+  .cert.chosen { transform: translateY(-3px); box-shadow: 0 0 0 2px var(--accent); }
+  .cert h4 { margin: 0; font: 15px var(--mono); color: #111; }
+  .cert .kind { font: 10px var(--mono); letter-spacing: .06em; text-transform: uppercase; color: #6b6b6b; margin: 2px 0 8px; }
+  .cert table { width: 100%; border-collapse: collapse; font: 12px var(--mono); }
+  .cert td { padding: 2px 0; border-bottom: 1px dotted #c9c6ba; }
+  .cert td:last-child { text-align: right; }
+  .cert td.hot { color: #b04000; font-weight: bold; }
+  .cert .price { display: flex; justify-content: space-between; align-items: baseline; margin: 8px 0; font: 13px var(--mono); color: #111; }
+  .cert .price b { font-size: 18px; color: #111; }
+  .cert .btn { width: 100%; justify-content: center; background: #e2e0d8; color: #222; }
+  .cert .btn:hover { background: #d5d2c7; border-color: #777; color: #000; }
+  .cert .stamp { position: absolute; top: 10px; right: 10px; font: bold 11px var(--mono); letter-spacing: .08em; text-transform: uppercase; padding: 2px 6px;
+    border: 2px solid; transform: rotate(6deg); animation: stamp .25s ease-out; }
+  .cert .stamp.pass { color: #1a5a2a; } .cert .stamp.fail { color: #b00000; } .cert .stamp.out { color: #6b6b6b; }
+  @keyframes stamp { from { transform: rotate(6deg) scale(1.8); opacity: 0; } }
+
+  /* The bracket in ten years, for the chosen certificate */
+  .gauge { margin: 10px 0 4px; }
+  .gauge .track { position: relative; height: 26px; background: var(--btn); }
+  .gauge .seg { position: absolute; top: 0; bottom: 0; transition: left .5s ease, width .5s ease; }
+  .gauge .seg.matrix { background: var(--weak); opacity: .55; } .gauge .seg.imp { background: var(--warn); }
+  .gauge .limit { position: absolute; top: -6px; bottom: -6px; width: 2px; background: var(--err); }
+  .gauge .limit span { position: absolute; bottom: -18px; left: 4px; font: 11px var(--mono); color: var(--err); white-space: nowrap; }
+  .gauge .axis { display: flex; justify-content: space-between; font: 11px var(--mono); color: var(--weak); margin-top: 3px; }
+  .gauge .axis span:last-child { margin-left: auto; }
+  .parts { display: grid; grid-template-columns: 80px minmax(0, 1fr) 90px; gap: 2px 10px; font-size: 13px; margin-top: 8px; }
+  .parts span:nth-child(3n) { text-align: right; font-family: var(--mono); color: var(--strong); }
+
+  /* Which impurity, when: a table of what each adds to the steel's own dose */
+  .heat { width: 100%; border-collapse: separate; border-spacing: 3px; font: 13px var(--mono); margin: 8px 0; }
+  .heat th { font: 12px var(--ui); color: var(--weak); text-align: center; padding: 2px 4px; }
+  .heat th:first-child { text-align: left; }
+  .heat th.rule { color: var(--err); }
+  .heat td { text-align: center; padding: 8px 4px; cursor: pointer; color: var(--strong); background: var(--btn); border: 1px solid transparent; border-radius: 2px; }
+  .heat td:first-child { text-align: left; cursor: default; background: none; color: var(--text); font-family: var(--ui); }
+  .heat td:hover:not(:first-child), .heat td.on { border-color: var(--btn-hover-stroke); }
+  .heat td.rulecol { box-shadow: inset 0 0 0 1px rgb(200 0 0 / .45); }
+
+  /* The specification sheet */
+  .spec { border: 1px solid var(--stroke); background: var(--frame); }
+  .spec header { display: flex; flex-wrap: wrap; gap: 4px 12px; align-items: baseline; padding: 8px 12px; border-bottom: 1px solid var(--stroke); background: var(--bg); }
+  .spec header b { font: 14px var(--mono); color: var(--strong); }
+  .spec header span { font-size: 12px; color: var(--weak); }
+  .spec .line { display: grid; grid-template-columns: 110px 150px minmax(0, 1fr); gap: 10px; align-items: center; padding: 6px 12px; border-bottom: 1px solid var(--grid); font-size: 14px; }
+  .spec .line input { width: 90px; font: 13px var(--mono); padding: 3px 6px; background: var(--window); color: var(--strong); border: 1px solid var(--stroke); border-radius: 2px; }
+  .spec .line input:focus { outline: 2px solid var(--accent); outline-offset: -1px; }
+  .spec .line .eff { font: 12px var(--mono); color: var(--weak); }
+  .spec footer { padding: 10px 12px; }
+  .verdict { font-size: 15px; color: var(--strong); }
+  .verdict.ok b { color: var(--accent); } .verdict.no b { color: var(--err); }
+  .bidders { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; font: 13px var(--mono); }
+  .bidders span { padding: 2px 8px; border: 1px solid var(--stroke); border-radius: 2px; }
+  .bidders span.in { border-color: var(--accent); color: var(--strong); } .bidders span.out { text-decoration: line-through; color: var(--weak); }
+  .po { font: 12px var(--mono); color: var(--text); padding: 4px 8px; }
+  .po div { display: flex; justify-content: space-between; gap: 8px; padding: 3px 0; border-bottom: 1px dotted var(--stroke); }
+  .po b { color: var(--strong); font-weight: normal; }
+  @media (max-width: 600px) { .spec .line { grid-template-columns: 90px 1fr; } .spec .line .eff { grid-column: 1 / -1; } .heat { font-size: 11px; } }
 </style>
 </head>
 <body data-chapter="impurities">
@@ -51,9 +81,9 @@
   <a class="link" href="../../download/">Download desktop</a>
 </header>
 <div class="toolbar">
-  <button type="button" class="btn menu-btn" id="menu">Steps</button>
+  <button type="button" class="btn menu-btn" id="menu">Order</button>
   <a class="btn" href="../">Course home</a>
-  <a class="btn hide-narrow" href="files/screen.json" download>Download screen</a>
+  <a class="btn hide-narrow" href="files/limit.json" download>Download screen</a>
   <span class="sep hide-narrow"></span>
   <a class="btn hide-narrow" href="../../">Open the workbench</a>
   <span class="spacer"></span>
@@ -62,183 +92,101 @@
 </div>
 
 <div class="shell">
-  <nav class="side" aria-label="Chapter steps">
+  <nav class="side" aria-label="Chapter parts">
     <span class="caption">Chapter 3 · The impurities that matter</span>
     <ol>
-      <li><a href="#intro"><span>The certificate</span></a></li>
-      <li><a href="#guess"><span>Make a guess</span></a></li>
-      <li><a href="#sheet"><span>Move the impurities</span></a></li>
-      <li><a href="#how"><span>Why it's instant</span></a></li>
-      <li><a href="#run"><span>Screen it yourself</span></a></li>
-      <li><a href="#limit"><span>Set a limit</span></a></li>
-      <li><a href="#wrap"><span>Check yourself</span></a></li>
+      <li><a href="#quotes"><span>Three quotes</span></a></li>
+      <li><a href="#when"><span>Which impurity, when</span></a></li>
+      <li><a href="#spec"><span>Write the specification</span></a></li>
+      <li><a href="#yours"><span>Screen your own steel</span></a></li>
     </ol>
+    <span class="caption" style="margin-top:18px">Your purchase order</span>
+    <div class="po" id="po"></div>
     <div class="meta" id="progress-text"></div>
-    <span class="caption" style="margin-top:18px">About this chapter</span>
-    <div class="meta" style="padding-top:0">About 25 minutes. Builds on <a href="../where-from/">chapter 2</a>: which atoms make which nuclides.</div>
+    <div class="meta">About 20 minutes. Uses the bracket from <a href="../first-irradiation/">chapter 1</a>.</div>
   </nav>
 
   <main class="content">
     <div class="lesson">
       <h1>The impurities that matter</h1>
-      <p class="subtitle">Real steel carries traces of elements nobody asked for. Most don't matter. A few decide whether a part can be handled, or thrown away, decades later. This chapter checks them all at once and turns the answer into a purchase limit.</p>
+      <p class="subtitle">You're buying the steel for the next batch of brackets. Three mills have quoted. The cheapest would make your scrapped brackets more than three times too radioactive; the most expensive one is overkill. The difference is a few hundredths of a percent of one element.</p>
 
-      <section class="step" id="intro" style="border-top:0;padding-top:4px">
-        <div class="frame">
-          <p>Steel comes with a certificate listing what's in it. Beside the main ingredients it lists <span data-term="impurity">impurities</span>, each with a range: "cobalt 0.02 to 0.2%", say. The maker guarantees the range, not the exact amount.</p>
-          <p>In chapter 2 you saw cobalt-59 turn into cobalt-60. That was one impurity, checked by hand. This steel's certificate lists seven:</p>
-          <table class="contrib" id="cert" style="max-width:520px"></table>
-          <p class="note">Same bracket, field and two years as chapters 1 and 2, with the main ingredients of SS316 held fixed and iron making up the rest. The numbers on this page come from <code>actinv impurities</code> runs of the screen you can download.</p>
+      <section class="step" id="quotes" style="border-top:0;padding-top:4px">
+        <p>The order is 2 tonnes of SS316 plate. The steel's recipe fixes its main ingredients: iron, 17% chromium, 12% nickel and so on. It doesn't fix the <span data-term="trace">trace elements</span> each mill's scrap and ore bring along, so every batch comes with a <span data-term="cert">certificate</span> that lists what was measured.</p>
+        <p>Your site has one rule for parts like this, made up for this course but typical of real ones: <strong>ten years after the machine stops, a scrapped bracket must read under <span id="limit-text"></span> at its surface</strong>, so it can be handled and packed without remote tools. Buy from one mill and see what ten years in chapter 1's port cell would leave behind.</p>
+        <div class="certs" id="certs"></div>
+        <div class="frame" id="outcome" hidden>
+          <h4 id="out-title"></h4>
+          <div class="gauge"><div class="track" id="track"></div><div class="axis"><span>0</span><span id="axis-end"></span></div></div>
+          <div class="parts" id="parts"></div>
+          <p class="cap" id="out-cap"></p>
         </div>
-        <div class="task" data-task="c3-start"><span>Ready? <button type="button" class="btn primary" id="start" data-task="c3-start" style="margin-left:6px">Start the chapter</button></span></div>
+        <div class="task" data-task="c3-order"><span>Buy from one of the mills.</span></div>
+        <div class="task" data-task="c3-mills"><span>Try all three.</span></div>
+        <p class="note">The mills, their certificates and their prices are made up. The dose rates are ACTINV's, from <code>actinv impurities</code> on the bracket steel: the steel's own dose rate plus what each trace element adds.</p>
       </section>
 
-      <section class="step" id="guess">
-        <div class="stepno">Step 2 of 7</div>
-        <h2>Make a guess</h2>
-        <p>Two questions people really ask about a part like this. For each, which impurity do you think matters most?</p>
-        <div class="frame" id="guesses"></div>
-        <div class="controls"><button type="button" class="btn primary" id="lock" disabled>Lock in my guesses</button><span class="note" id="guess-note">Pick one for each.</span></div>
-        <div class="task" data-task="c3-guess"><span>Lock in both guesses.</span></div>
-      </section>
-
-      <section class="step" id="sheet">
-        <div class="stepno">Step 3 of 7</div>
-        <h2>Move the impurities</h2>
-        <p>Each slider runs over the range the certificate allows. Pick when you're asking and what you're asking about, and watch who takes the bar.</p>
-        <div class="frame">
-          <div class="controls" role="group" aria-label="When">
-            <span>When:</span>
-            <span id="times"></span>
-          </div>
-          <div class="controls" role="group" aria-label="What">
-            <span>What:</span>
-            <button type="button" class="sel on" data-ep="dose.contact_proxy">Dose rate at the surface</button>
-            <button type="button" class="sel" data-ep="clearance_index">Clearance index</button>
-            <button type="button" class="sel" data-ep="activity.total">Activity</button>
-          </div>
-          <div class="spec">
-            <div class="sheet" id="sliders"><h4>Impurities, wt%</h4></div>
-            <div>
-              <div class="caption" id="ep-name"></div>
-              <div class="big" id="ep-value" aria-live="polite"></div>
-              <div class="note" id="ep-limit"></div>
-              <div class="stack" id="stack"></div>
-              <div class="legend" id="legend"></div>
-              <div class="controls"><button type="button" class="btn" id="nominal">Back to typical amounts</button><button type="button" class="btn" id="worst">Worst the certificate allows</button></div>
-            </div>
-          </div>
-          <table class="contrib" id="contrib"></table>
-          <p class="cap" id="ep-cap"></p>
+      <section class="step" id="when">
+        <h2>Which impurity, when</h2>
+        <p>Cobalt decided it. But that's because your rule is at ten years. ACTINV screened all seven trace elements at four cooling times, each over the range a mill might ship. The table shows how much each one can add to the steel's own dose rate, at the top of that range. Click a cell to see why.</p>
+        <div class="frame" style="overflow-x:auto">
+          <table class="heat" id="heat" aria-label="Dose added by each impurity at each cooling time"></table>
+          <p id="heat-out" aria-live="polite" class="cap">Your rule is at ten years, the outlined column.</p>
         </div>
-        <div class="task" data-task="c3-times"><span>Look at all four times.</span></div>
-        <div class="task" data-task="c3-under"><span>Get the dose rate at the surface under 0.02 Gy/h at 10 years.</span></div>
-        <div class="task" data-task="c3-clear"><span>Look at the clearance index at 100 years. Which impurity leads there?</span></div>
-        <details class="collapse"><summary>What are these three quantities?</summary><div>
-          <p><strong>Dose rate at the surface</strong> is the dose rate right up against a thick piece of the steel. ACTINV uses it to compare materials quickly; it's not the dose for a real shape. <strong>Clearance index</strong> compares every nuclide with the level below which a regulator lets the material go as ordinary scrap: 1 means just at the line, above 1 means not yet. <strong>Activity</strong> counts decays per second in each gram.</p>
+        <div class="task" data-task="c3-map"><span>Open three cells, at least one outside the ten-year column.</span></div>
+        <details class="collapse"><summary>How can the page answer instantly for any certificate?</summary><div>
+          <p>A trace element is so dilute that its atoms are activated independently of each other: twice the cobalt, twice the cobalt-60. So ACTINV runs the steel once without impurities and once per impurity, and the dose rate for any certificate is the steel's own plus each element's amount times its effect. <code>actinv impurities</code> checks this by rerunning the nominal steel in full and comparing; here they agreed to 2 parts in 10¹⁵.</p>
         </div></details>
       </section>
 
-      <section class="step" id="how">
-        <div class="stepno">Step 4 of 7</div>
-        <h2>Why the sliders are instant</h2>
-        <p>The sliders didn't run ACTINV each time you moved them. They didn't need to. At a fixed neutron field, what each element turns into doesn't depend on what else is in the steel, so the answer for any mixture is the matrix's answer plus each impurity's effect times how much of it there is.</p>
-        <p>So <code>actinv impurities</code> runs the matrix once and each element once, sixteen runs in all, and then knows every steel the certificate allows. Here is the dose rate at 10 years for the typical amounts:</p>
-        <div class="frame">
-          <div class="sum" id="sum"></div>
-          <div class="controls"><button type="button" class="btn primary" id="sum-go">Add it up</button><button type="button" class="btn" id="check" disabled>Check with a full run</button></div>
-          <p class="cap" id="check-out"></p>
+      <section class="step" id="spec">
+        <h2>Write the specification</h2>
+        <p>The fix isn't to buy the purest steel. It's to ask for exactly what matters. A purchase specification sets a maximum for any element you name; anything you don't name can be anywhere in its usual range. Each line you add costs the mill testing and narrows who can bid, so use as few as you can.</p>
+        <div class="spec" id="sheet">
+          <header><b>Purchase specification · SS316 plate · 2 t</b><span>Leave a box empty for no limit.</span></header>
+          <div id="lines"></div>
+          <footer>
+            <div class="verdict" id="verdict"></div>
+            <div class="bidders" id="bidders"></div>
+            <p class="cap" id="sheet-cap"></p>
+            <div class="controls"><button type="button" class="btn" id="answer">Show ACTINV's limit</button></div>
+            <p id="answer-out" hidden></p>
+          </footer>
         </div>
-        <div class="task" data-task="c3-check"><span>Add it up, then check it against a full run.</span></div>
-        <details class="collapse"><summary>Why can an impurity's effect be negative?</summary><div>
-          <p>Adding 0.1% of an impurity takes 0.1% of iron out, since iron makes up the rest. If the impurity makes less radioactivity than the iron it replaces, the total goes down a little. Nitrogen and boron do that for the dose rate.</p>
-        </div></details>
+        <div class="task" data-task="c3-spec"><span>Write a specification that meets the rule.</span></div>
+        <div class="task" data-task="c3-lean"><span>Meet it with a single line.</span></div>
       </section>
 
-      <section class="step" id="run">
-        <div class="stepno">Step 5 of 7</div>
-        <h2>Screen it yourself</h2>
-        <p>A screen is a short file pointing at an ordinary problem file (<code>base.json</code>, the bracket without impurities). Click each part:</p>
-        <div class="filebox">
-          <pre aria-label="The impurity screen" id="file"></pre>
-          <div class="explain">
-            <div class="chips" id="chips" role="tablist" aria-label="Parts of the file"></div>
-            <div id="explain" aria-live="polite"></div>
-          </div>
-        </div>
-        <div class="task" data-task="c3-file"><span>Open every part of the file.</span></div>
-
-        <div class="tabs" role="tablist" aria-label="Ways to run ACTINV">
-          <button type="button" class="sel on" role="tab" aria-selected="true" aria-controls="door-terminal" id="tab-terminal">Command line</button>
-          <button type="button" class="sel" role="tab" aria-selected="false" aria-controls="door-app" id="tab-app">Desktop app</button>
-          <button type="button" class="sel" role="tab" aria-selected="false" aria-controls="door-python" id="tab-python">Python</button>
-        </div>
-        <div class="tabpanel" role="tabpanel" id="door-terminal" aria-labelledby="tab-terminal">
-          <div class="term-window">
-            <div class="bar">Practice terminal · ~/impurities-lesson</div>
-            <div class="term-screen" id="screen" aria-live="polite"></div>
-          </div>
-          <div class="term-cue" id="cue"></div>
-          <div class="task" data-task="c3-t-screen"><span>Screen the steel: <code>actinv impurities screen.json screen-result.json</code></span></div>
-          <div class="task" data-task="c3-t-jq"><span>Rank the impurities at 10 years with jq.</span></div>
-        </div>
-        <div class="tabpanel" role="tabpanel" id="door-app" aria-labelledby="tab-app" hidden>
-          <ol class="steps">
-            <li>Download <a href="files/base.json" download>base.json</a> and <a href="files/photon-response.json" download>photon-response.json</a> into one folder, and open <code>base.json</code> with <strong>Open problem…</strong>.</li>
-            <li>Open <strong>Impurities</strong>, under <strong>STUDIES</strong>. Keep <strong>Fe</strong> as the <strong>Balance</strong> and the main ingredients <strong>Fixed</strong>.</li>
-            <li>Add each impurity by its symbol, with the nominal, minimum and maximum from the certificate in step 1.</li>
-            <li>Under <strong>What matters</strong>, pick the dose rate at the surface, the clearance index and the activity.</li>
-            <li><strong>Screen impurities</strong>. The card shows each impurity's share, the nuclides it acts through and its limits; <strong>Save screen…</strong> writes the same file you can download here.</li>
-          </ol>
-          <div class="task" data-task="c3-app"><span>I've read the app steps. <button type="button" class="btn" id="app-done" style="margin-left:6px">Done</button></span></div>
-        </div>
-        <div class="tabpanel" role="tabpanel" id="door-python" aria-labelledby="tab-python" hidden>
-          <p>The screen is one command, and its result is JSON, so Python runs it and reads the answer like any other file. This script finds the purchase limits of step 6:</p>
-          <pre class="code" id="py1"></pre>
-          <div class="controls"><button type="button" class="btn primary" id="py-run">Run this</button><span id="py-status"></span></div>
-          <pre class="code" id="py1-out" hidden></pre>
-          <div class="task" data-task="c3-python"><span>Run the Python example.</span></div>
-          <p class="note">The button replays what this script printed with ACTINV <span class="ver"></span>; it took 74 seconds on a laptop.</p>
-        </div>
-      </section>
-
-      <section class="step" id="limit">
-        <div class="stepno">Step 6 of 7</div>
-        <h2>Set a limit</h2>
-        <p>Say the crew who remove this bracket in 10 years shouldn't face more than 0.02 Gy/h at its surface. How much cobalt can you allow? Make a guess with the slider.</p>
-        <div class="frame">
-          <div class="imp" style="grid-template-columns:110px minmax(0,1fr) 80px"><span class="el">Most cobalt</span><input type="range" id="co-guess" min="0" max="0.2" step="0.002" value="0.1" aria-label="Your guess for the most cobalt"><output id="co-guess-out">0.100%</output></div>
-          <div class="controls"><button type="button" class="btn primary" id="co-lock">That's my guess</button></div>
-          <div id="co-reveal" hidden>
-            <p><span class="big" id="co-limit"></span> <span class="note">the most cobalt, by <code>actinv impurities</code></span></p>
-            <p id="co-text"></p>
-            <table class="contrib" id="limits"></table>
-          </div>
-        </div>
-        <div class="task" data-task="c3-limit"><span>Make your guess and see ACTINV's limit.</span></div>
-        <div class="frame">
-          <span class="caption">What ACTINV does differently</span>
-          <p><strong>Every trace element, every time, in one command.</strong> <code>actinv impurities</code> takes the certificate's ranges and gives each impurity's share at each time, the worst steel the certificate allows, and the most of each impurity you can accept for a limit you set. It works out each answer from a run per element and then checks every reported number with a full run of its own, so you get both the speed and the proof.</p>
-        </div>
-      </section>
-
-      <section class="step" id="wrap">
-        <div class="stepno">Step 7 of 7</div>
-        <h2>Check yourself</h2>
-        <div class="quiz" id="quiz"></div>
+      <section class="step" id="yours">
+        <h2>Screen your own steel</h2>
+        <p>Every number in this chapter came from two screens of the bracket steel, which you can download and run. The first lists each impurity's effect; the second, <a href="files/limit.json" download>limit.json</a>, adds the rule and asks for the largest amount of each impurity that keeps it.</p>
+        <p>In the desktop app:</p>
+        <ol class="steps">
+          <li>Download <a href="files/base.json" download>base.json</a> and <a href="files/photon-response.json" download>photon-response.json</a> into one folder, and open <code>base.json</code> with <strong>Open problem…</strong>.</li>
+          <li>Open <strong>Impurities</strong>, under <strong>STUDIES</strong>. Keep <strong>Fe</strong> as the <strong>Balance</strong>.</li>
+          <li>Add each trace element by its symbol, with the lowest, usual and highest amount you expect. Your own mills' certificates are the best source.</li>
+          <li>Under <strong>What matters</strong>, pick the dose rate at the surface, set a limit, and pick the cooling time your rule applies at.</li>
+          <li><strong>Screen impurities</strong>. Each element gets its effect, the nuclides it acts through, and its largest allowed amount.</li>
+        </ol>
+        <p>The command line does the same in one command, <code>actinv impurities limit.json limit-result.json</code>, and the limit is in the result:</p>
+        <pre class="code">Co  limit  0.0339
+Cu  limit  43.7
+Ag, B, N, Nb, Ta  no response</pre>
+        <p class="note">Copper has a limit too, but at 43.7% it is no limit at all. The other five can't reach the rule however much there is, before the iron runs out.</p>
+        <div class="task" data-task="c3-app"><span>I've read how to run it. <button type="button" class="btn" id="app-done" style="margin-left:6px">Done</button></span></div>
         <div class="frame" id="finish">
-          <h4 id="finish-title">Finish the steps to complete the chapter</h4>
-          <p class="note" id="finish-text">Each step needs its boxes ticked.</p>
-          <p><a class="btn primary" href="files/screen.json" download>Download screen.json</a> <a class="btn" href="files/limit.json" download>limit.json</a> <a class="btn" href="files/base.json" download>base.json</a> <a class="btn" href="files/photon-response.json" download>photon-response.json</a></p>
+          <h4 id="finish-title">Finish the order to complete the chapter</h4>
+          <p class="note" id="finish-text">The list on the left shows what's left.</p>
+          <p><a class="btn primary" href="files/limit.json" download>Download limit.json</a> <a class="btn" href="files/screen.json" download>screen.json</a> <a class="btn" href="files/base.json" download>base.json</a></p>
         </div>
         <h3>Next</h3>
-        <p><a href="../maintenance/">Chapter 4: planning maintenance</a>. The dose rate falls as you wait, but waiting costs money too. ACTINV can plan when to send the crew in.</p>
+        <p><a href="../maintenance/">Chapter 4: planning maintenance</a>. The brackets are in, the machine has run, and a crew has to go in and change parts. When, and at what dose?</p>
         <p><button type="button" class="btn" id="reset">Start this chapter over</button></p>
       </section>
     </div>
   </main>
 </div>
-<div class="statusbar" id="status" role="status">Start with step 1, or pick any step from the list on the left.</div>
+<div class="statusbar" id="status" role="status">Start with the three quotes.</div>
 <script type="module" src="./chapter.js"></script>
 </body>
 </html>

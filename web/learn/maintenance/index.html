@@ -4,37 +4,51 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Planning maintenance · Learn ACTINV</title>
-<meta name="description" content="Chapter 4 of the ACTINV course: decide when a crew can go in after shutdown, weigh their dose against the cost of waiting, and let ACTINV plan the jobs.">
+<meta name="description" content="Chapter 4 of the ACTINV course: the machine stops and three jobs need doing. Pick the day the crew goes in on a year planner coloured by ACTINV's dose rates, and weigh dose against outage days.">
 <link rel="icon" href="../../favicon-e820714f418d9a3a.svg" type="image/svg+xml">
 <link rel="stylesheet" href="../learn.css">
 <script>document.documentElement.dataset.theme = "dark"; try { if (localStorage.getItem("actinv-learn:theme") === '"Light"') delete document.documentElement.dataset.theme; } catch {}</script>
 <style>
-  .jobs { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 8px; }
-  .jobs td, .jobs th { padding: 4px 6px; border-bottom: 1px solid var(--stroke); text-align: right; }
-  .jobs td:first-child, .jobs th:first-child { text-align: left; }
-  .jobs th { font-weight: normal; color: var(--weak); }
-  .jobs td { font-family: var(--mono); }
-  .jobs td:first-child { font-family: var(--ui); }
-  .jobs .no { color: var(--warn); }
-  .slider { display: grid; grid-template-columns: 110px minmax(0, 1fr) 120px; gap: 10px; align-items: center; margin: 8px 0; }
-  .slider input { width: 100%; accent-color: var(--accent); }
-  .slider output { font-family: var(--mono); color: var(--strong); text-align: right; }
-  .verdict-line { font-size: 15px; color: var(--strong); margin: 6px 0; }
-  .verdict-line.no { color: var(--warn); }
-  svg.plot .s-pipe { stroke: #2bb39a; stroke-width: 1.8; fill: none; }
-  svg.plot .s-noco { stroke: var(--accent); stroke-width: 1.4; fill: none; stroke-dasharray: 5 4; opacity: .8; }
-  svg.plot .s-dose { stroke: #e07b39; stroke-width: 1.6; fill: none; }
-  svg.plot .s-out { stroke: #2bb39a; stroke-width: 1.6; fill: none; }
-  svg.plot .zone { fill: var(--err); opacity: .07; }
-  svg.plot .mark { stroke: var(--frame); stroke-width: 2; }
-  .key { display: flex; flex-wrap: wrap; gap: 4px 16px; font-size: 13px; margin-top: 6px; }
-  .key i { display: inline-block; width: 16px; height: 2px; vertical-align: middle; margin-right: 6px; }
-  .compare { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-  .compare > div { border: 1px solid var(--stroke); padding: 8px 10px; }
-  .compare .big { font-size: 24px; font-family: var(--mono); color: var(--strong); }
-  .guess-opts { display: flex; flex-wrap: wrap; gap: 6px; }
-  .guess-opts .sel.right { background: var(--sel); color: var(--sel-text); }
-  @media (max-width: 600px) { .slider { grid-template-columns: 1fr 90px; } .slider span:first-child { grid-column: 1 / -1; } .compare { grid-template-columns: 1fr; } }
+  /* Work order */
+  .jobs { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 8px; margin: 10px 0; }
+  .job { border: 1px solid var(--stroke); border-left: 4px solid var(--weak); background: var(--frame); padding: 8px 10px; font-size: 14px; }
+  .job.pipe { border-left-color: rgb(0 150 160); } .job.bracket { border-left-color: var(--warn); }
+  .job b { display: block; color: var(--strong); }
+  .job span { font: 12px var(--mono); color: var(--weak); }
+  .rules { display: grid; grid-template-columns: auto 1fr; gap: 4px 12px; font-size: 14px; margin: 6px 0; }
+  .rules b { font-family: var(--mono); color: var(--err); font-weight: normal; }
+
+  /* The year planner */
+  .planner-wrap { overflow-x: auto; }
+  .planner { display: grid; grid-template-columns: 44px repeat(31, minmax(16px, 1fr)); gap: 2px; min-width: 620px; font: 10px var(--mono); }
+  .planner .mo { color: var(--text); align-self: center; font-size: 11px; }
+  .planner .dn { color: var(--weak); text-align: center; }
+  .planner button { aspect-ratio: 1; min-height: 16px; border: 1px solid transparent; border-radius: 1px; padding: 0; cursor: pointer; background: var(--btn); transition: background .3s; }
+  .planner button:hover { border-color: var(--strong); }
+  .planner button.hot { background: rgb(200 0 0 / .55); }
+  .planner button.chosen { outline: 2px solid var(--strong); outline-offset: 1px; z-index: 1; }
+  .planner button.best { box-shadow: inset 0 0 0 2px var(--accent); }
+  .planner button.shut { background: var(--strong); cursor: default; }
+  .planner span.void { visibility: hidden; }
+  .legend-row { display: flex; flex-wrap: wrap; gap: 4px 16px; font-size: 12px; color: var(--weak); margin: 8px 0; align-items: center; }
+  .legend-row i { display: inline-block; width: 12px; height: 12px; vertical-align: -2px; margin-right: 5px; border-radius: 1px; }
+
+  /* The job sheet for the chosen day */
+  .sheet { width: 100%; border-collapse: collapse; font-size: 14px; margin: 6px 0; }
+  .sheet th { text-align: left; font: 12px var(--ui); color: var(--weak); border-bottom: 1px solid var(--stroke); padding: 4px 6px; }
+  .sheet td { padding: 5px 6px; border-bottom: 1px solid var(--grid); }
+  .sheet td.n { font-family: var(--mono); text-align: right; color: var(--strong); }
+  .sheet td.bad { color: var(--err); }
+  .totals { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 0; border: 1px solid var(--stroke); margin: 8px 0; }
+  .totals div { padding: 8px 10px; border-right: 1px solid var(--stroke); }
+  .totals div:last-child { border-right: 0; }
+  .totals b { display: block; font: 18px var(--mono); color: var(--strong); font-weight: normal; }
+  .totals span { font-size: 12px; color: var(--weak); }
+  .verdict { font-size: 15px; color: var(--strong); margin: 6px 0; }
+  .verdict.no { color: var(--err); }
+  .side .po { font: 12px var(--mono); padding: 4px 8px; }
+  .side .po div { display: flex; justify-content: space-between; gap: 8px; padding: 3px 0; border-bottom: 1px dotted var(--stroke); }
+  .side .po b { color: var(--strong); font-weight: normal; }
 </style>
 </head>
 <body data-chapter="maintenance">
@@ -46,7 +60,7 @@
   <a class="link" href="../../download/">Download desktop</a>
 </header>
 <div class="toolbar">
-  <button type="button" class="btn menu-btn" id="menu">Steps</button>
+  <button type="button" class="btn menu-btn" id="menu">Outage</button>
   <a class="btn" href="../">Course home</a>
   <a class="btn hide-narrow" href="files/plan.json" download>Download plan</a>
   <span class="sep hide-narrow"></span>
@@ -57,177 +71,89 @@
 </div>
 
 <div class="shell">
-  <nav class="side" aria-label="Chapter steps">
+  <nav class="side" aria-label="Chapter parts">
     <span class="caption">Chapter 4 · Planning maintenance</span>
     <ol>
-      <li><a href="#intro"><span>Three jobs</span></a></li>
-      <li><a href="#guess"><span>Make a guess</span></a></li>
-      <li><a href="#wait"><span>Wait and see</span></a></li>
-      <li><a href="#cost"><span>What waiting costs</span></a></li>
-      <li><a href="#run"><span>Plan it yourself</span></a></li>
-      <li><a href="#cobalt"><span>Cobalt, one more time</span></a></li>
-      <li><a href="#wrap"><span>Check yourself</span></a></li>
+      <li><a href="#order"><span>The work order</span></a></li>
+      <li><a href="#pick"><span>Pick the day</span></a></li>
+      <li><a href="#worth"><span>What a day is worth</span></a></li>
+      <li><a href="#ask"><span>Ask ACTINV for the plan</span></a></li>
     </ol>
+    <span class="caption" style="margin-top:18px">Your outage</span>
+    <div class="po" id="po"></div>
     <div class="meta" id="progress-text"></div>
-    <span class="caption" style="margin-top:18px">About this chapter</span>
-    <div class="meta" style="padding-top:0">About 20 minutes. Uses the bracket of <a href="../first-irradiation/">chapter 1</a> and the cobalt limit of <a href="../impurities/">chapter 3</a>.</div>
+    <div class="meta">About 20 minutes. Uses the bracket from <a href="../first-irradiation/">chapter 1</a>.</div>
   </nav>
 
   <main class="content">
     <div class="lesson">
       <h1>Planning maintenance</h1>
-      <p class="subtitle">After shutdown, crews go in to cut, unbolt and inspect. The longer they wait, the lower their dose, but every day of waiting is a day the machine isn't running. This chapter finds the balance.</p>
+      <p class="subtitle">The machine stopped on 1 March. Three jobs are waiting in the port cell, and the parts are still radioactive. Go in too early and the crew can't legally work; wait too long and the outage costs more every day. Pick the day.</p>
 
-      <section class="step" id="intro" style="border-top:0;padding-top:4px">
-        <div class="frame">
-          <p>Two parts sat two years in chapter 1's neutron field: the steel bracket, with 0.1% cobalt, and a 5 kg copper cooling pipe. Three jobs are planned, done one after the other:</p>
-          <table class="jobs" id="jobs-list"></table>
-          <p>Two rules protect the crew. Nobody enters while the dose rate where they'd work is above the <span data-term="access">access limit</span>, 3 mSv/h here. And nobody gets more than 20 mSv from the whole outage.</p>
-          <p class="note">The dose rates are the ones from chapter 1, 1 m from each part. All numbers come from <code>actinv maintenance</code> on those runs. The command is new: it comes with the next ACTINV release.</p>
+      <section class="step" id="order" style="border-top:0;padding-top:4px">
+        <p>The work order has three jobs, done one after another by the same team on the same day:</p>
+        <div class="jobs" id="jobs"></div>
+        <p>The site's radiation rules, made up for this course but typical of real ones:</p>
+        <div class="rules">
+          <b>≤ 3 mSv/h</b><span>Nobody works where the dose rate is above this. It's the access limit.</span>
+          <b>≤ 20 mSv</b><span>Nobody receives more than this over the whole outage.</span>
         </div>
-        <div class="task" data-task="c4-start"><span>Ready? <button type="button" class="btn primary" id="start" data-task="c4-start" style="margin-left:6px">Start the chapter</button></span></div>
+        <p>Both parts sat two years in chapter 1's port cell: the bracket, 20 kg of steel with 0.1% cobalt, and a 5 kg copper cooling pipe. ACTINV computed each one's dose rate at one metre, from a minute to a hundred years after shutdown. The pipe is under the access limit from the start; the bracket takes months to get there.</p>
       </section>
 
-      <section class="step" id="guess">
-        <div class="stepno">Step 2 of 7</div>
-        <h2>Make a guess</h2>
-        <p>One day after shutdown, the bracket gives 5.4 mSv/h at 1 m, nearly twice the access limit. How long until the crew can unbolt it?</p>
-        <div class="frame">
-          <div class="guess-opts" id="guess-opts">
-            <button type="button" class="sel" data-a="week">About a week</button>
-            <button type="button" class="sel" data-a="month">About a month</button>
-            <button type="button" class="sel" data-a="months">Four or five months</button>
-            <button type="button" class="sel" data-a="year">Over a year</button>
-          </div>
-          <p class="cap" id="guess-out"></p>
+      <section class="step" id="pick">
+        <h2>Pick the day</h2>
+        <p>This is the year after shutdown. Red days are the ones where some job would break a rule. Click a day to send the crew in and see their doses.</p>
+        <div class="controls" role="group" aria-label="Which bracket">
+          <span>Bracket:</span>
+          <button type="button" class="sel on" data-co="cobalt">0.1% cobalt</button>
+          <button type="button" class="sel" data-co="no_cobalt">no cobalt</button>
         </div>
-        <div class="task" data-task="c4-guess"><span>Make your guess.</span></div>
+        <div class="frame">
+          <div class="planner-wrap"><div class="planner" id="planner" role="grid" aria-label="Days after shutdown"></div></div>
+          <div class="legend-row"><span><i style="background:var(--strong)"></i>shutdown</span><span><i style="background:rgb(200 0 0 / .55)"></i>breaks a rule</span><span><i style="background:var(--btn)"></i>allowed</span><span id="legend-cost" hidden><i style="background:var(--btn);box-shadow:inset 0 0 0 2px var(--accent)"></i>ACTINV's cheapest plan</span></div>
+          <div id="day-out" aria-live="polite"><p class="note">No day picked yet.</p></div>
+        </div>
+        <div class="task" data-task="c4-red"><span>Pick a red day and find out which rule it breaks.</span></div>
+        <div class="task" data-task="c4-first"><span>Find the first allowed day.</span></div>
+        <div class="task" data-task="c4-cobalt"><span>Switch to the bracket with no cobalt. How much earlier can the crew go in?</span></div>
       </section>
 
-      <section class="step" id="wait">
-        <div class="stepno">Step 3 of 7</div>
-        <h2>Wait and see</h2>
-        <p>The dose rate at each part falls as its nuclides decay. Slide the wait and watch whether each job is allowed, and what the crew receives.</p>
-        <div class="frame">
-          <div id="rateplot"></div>
-          <div class="key"><span><i style="background:var(--accent)"></i>bracket, 0.1% cobalt</span><span><i style="background:var(--accent);opacity:.6"></i>bracket, no cobalt (dashed)</span><span><i style="background:#2bb39a"></i>copper pipe</span><span><i style="background:var(--err)"></i>access limit</span></div>
-          <div class="slider"><span>Start the jobs after</span><input type="range" id="wait-s" min="0" max="1000" value="0" aria-label="Wait after shutdown"><output id="wait-out"></output></div>
-          <p class="verdict-line" id="wait-verdict" aria-live="polite"></p>
-          <table class="jobs" id="wait-jobs"></table>
-        </div>
-        <div class="task" data-task="c4-wait"><span>Find the first day every job is allowed.</span></div>
-        <details class="collapse"><summary>Why does the pipe hardly change?</summary><div>
-          <p>Copper's activation is dominated by cobalt-60, made by fast-neutron reactions on copper, and cobalt-60 halves only every 5.3 years. Its dose rate is low from the start, so the pipe can be cut on day one. The bracket starts higher, and its short-lived part decays over the first months.</p>
-        </div></details>
+      <section class="step" id="worth">
+        <h2>What a day is worth</h2>
+        <p>The first allowed day isn't always the best one. Every day the machine stays off costs money (here <span id="per-day"></span> a day), and every person-sievert of dose the crew takes has a cost too: an organisation's figure for what it's worth paying to avoid. Waiting longer means less dose and more outage. Pick the figure, and the planner shades each allowed day by its total cost.</p>
+        <div class="controls" role="group" aria-label="Value of one person-sievert" id="persv"></div>
+        <div class="frame"><div id="worth-out"></div></div>
+        <div class="task" data-task="c4-persv"><span>Set the value to the highest figure. Where does the cheapest day move?</span></div>
+        <div class="task" data-task="c4-match"><span>Pick, on the planner, a day within 1% of the cheapest plan's cost.</span></div>
       </section>
 
-      <section class="step" id="cost">
-        <div class="stepno">Step 4 of 7</div>
-        <h2>What waiting costs</h2>
-        <p>Rules say when the crew <em>may</em> go in. When they <em>should</em> is a trade. Waiting longer lowers the crew's dose, a little, while the machine sits idle. Many organisations put a money value on dose for exactly this: what they'd spend to avoid one <span data-term="personsv">person-sievert</span>. ACTINV adds up both costs for every wait and picks the cheapest allowed one.</p>
-        <div class="frame">
-          <div class="controls" role="group" aria-label="Value put on dose">
-            <span>Value on one person-sievert:</span><span id="persv"></span>
-          </div>
-          <div class="controls" role="group" aria-label="Which bracket">
-            <span>Bracket:</span>
-            <button type="button" class="sel on" data-co="cobalt">0.1% cobalt</button>
-            <button type="button" class="sel" data-co="no_cobalt">No cobalt</button>
-          </div>
-          <div id="costplot"></div>
-          <div class="key"><span><i style="background:var(--accent)"></i>total cost</span><span><i style="background:#e07b39"></i>cost of the crew's dose</span><span><i style="background:#2bb39a"></i>cost of the outage, 2,000 a day</span></div>
-          <p class="verdict-line" id="best-out" aria-live="polite"></p>
-          <p class="cap" id="cost-cap"></p>
+      <section class="step" id="ask">
+        <h2>Ask ACTINV for the plan</h2>
+        <p>The planner on this page is <code>actinv maintenance</code>, run in your browser on ACTINV's dose rates. On your computer, the plan is one file: the dose-rate results it reads, the two rules, the jobs, the days to try and the two costs.</p>
+        <pre class="code" id="planfile"></pre>
+        <p>Try it in the practice terminal. It already has the two parts' problem files and the plan.</p>
+        <div class="term-window">
+          <div class="bar">Practice terminal · ~/maintenance-lesson</div>
+          <div class="term-screen" id="screen" aria-live="polite"></div>
         </div>
-        <div class="task" data-task="c4-persv"><span>Try all four values. At which one does waiting longer pay?</span></div>
-        <details class="collapse"><summary>Why is the cheapest wait usually the earliest one?</summary><div>
-          <p>Here the dose falls slowly: waiting a month more saves the crew a few person-millisieverts, worth little next to 60,000 of outage. Only when dose is valued very highly does a longer wait pay. With other parts, faster-decaying nuclides or a cheaper outage, the answer changes. That's why it's worth computing.</p>
-        </div></details>
-      </section>
-
-      <section class="step" id="run">
-        <div class="stepno">Step 5 of 7</div>
-        <h2>Plan it yourself</h2>
-        <p>A plan is a short file. It points at the results of ordinary runs, one per place, and lists the limits, the jobs and the costs. Click each part:</p>
-        <div class="filebox">
-          <pre aria-label="The maintenance plan" id="file"></pre>
-          <div class="explain">
-            <div class="chips" id="chips" role="tablist" aria-label="Parts of the file"></div>
-            <div id="explain" aria-live="polite"></div>
-          </div>
-        </div>
-        <div class="task" data-task="c4-file"><span>Open every part of the file.</span></div>
-
-        <div class="tabs" role="tablist" aria-label="Ways to run ACTINV">
-          <button type="button" class="sel on" role="tab" aria-selected="true" aria-controls="door-terminal" id="tab-terminal">Command line</button>
-          <button type="button" class="sel" role="tab" aria-selected="false" aria-controls="door-app" id="tab-app">Desktop app</button>
-          <button type="button" class="sel" role="tab" aria-selected="false" aria-controls="door-python" id="tab-python">Python</button>
-        </div>
-        <div class="tabpanel" role="tabpanel" id="door-terminal" aria-labelledby="tab-terminal">
-          <div class="term-window">
-            <div class="bar">Practice terminal · ~/maintenance-lesson</div>
-            <div class="term-screen" id="screen" aria-live="polite"></div>
-          </div>
-          <div class="term-cue" id="cue"></div>
-          <div class="task" data-task="c4-t-runs"><span>Run both parts: <code>actinv run bracket.json bracket-result.json</code>, then the pipe.</span></div>
-          <div class="task" data-task="c4-t-plan"><span>Plan: <code>actinv maintenance plan.json plan-result.json</code></span></div>
-          <div class="task" data-task="c4-t-jq"><span>Read the best plan with jq.</span></div>
-        </div>
-        <div class="tabpanel" role="tabpanel" id="door-app" aria-labelledby="tab-app" hidden>
-          <ol class="steps">
-            <li>Download <a href="files/bracket.json" download>bracket.json</a>, <a href="files/pipe.json" download>pipe.json</a>, <a href="files/plan.json" download>plan.json</a> and <a href="files/photon-response.json" download>photon-response.json</a> into one folder.</li>
-            <li>Open <code>bracket.json</code>, run it, and save the result as <code>bracket-result.json</code>. Do the same for the pipe.</li>
-            <li>Open <strong>Maintenance</strong>. It starts from the open result; add the other one, name each place, and enter the jobs, limits and costs, or open <code>plan.json</code>.</li>
-            <li>The page shows when each job may start, the dose to each worker and crew at every wait, and the cheapest allowed wait.</li>
-          </ol>
-          <div class="task" data-task="c4-app"><span>I've read the app steps. <button type="button" class="btn" id="app-done" style="margin-left:6px">Done</button></span></div>
-        </div>
-        <div class="tabpanel" role="tabpanel" id="door-python" aria-labelledby="tab-python" hidden>
-          <p>The plan is JSON, so Python can change it and run it again. This script replans at four values on dose, as in step 4:</p>
-          <pre class="code" id="py1"></pre>
-          <div class="controls"><button type="button" class="btn primary" id="py-run">Run this</button><span id="py-status"></span></div>
-          <pre class="code" id="py1-out" hidden></pre>
-          <div class="task" data-task="c4-python"><span>Run the Python example.</span></div>
-          <p class="note">The button replays what this script printed with a build of the next release.</p>
-        </div>
-      </section>
-
-      <section class="step" id="cobalt">
-        <div class="stepno">Step 6 of 7</div>
-        <h2>Cobalt, one more time</h2>
-        <p>In chapter 3 you set a cobalt limit for the bracket. Here's what the cobalt costs this outage, at one million per person-sievert:</p>
-        <div class="frame">
-          <div class="compare">
-            <div><span class="caption">0.1% cobalt</span><div class="big" id="cmp-co"></div><div class="note" id="cmp-co-t"></div></div>
-            <div><span class="caption">No cobalt</span><div class="big" id="cmp-no"></div><div class="note" id="cmp-no-t"></div></div>
-          </div>
-          <p class="verdict-line" id="cmp-out"></p>
-          <div class="controls"><button type="button" class="btn primary" id="cmp-go">Compare the plans</button></div>
-        </div>
-        <div class="task" data-task="c4-cobalt"><span>Compare the plans with and without cobalt.</span></div>
-        <div class="frame">
-          <span class="caption">What ACTINV does differently</span>
-          <p><strong>From dose rates to a plan, in the same tool.</strong> <code>actinv maintenance</code> reads the results you already have, one per place, and answers when each job may start, what each worker and crew receives at every wait, the earliest wait that meets every limit, and the cheapest one when you put a price on dose and downtime. The plan is a short JSON file, so changing a job or a limit and planning again takes seconds.</p>
-        </div>
-      </section>
-
-      <section class="step" id="wrap">
-        <div class="stepno">Step 7 of 7</div>
-        <h2>Check yourself</h2>
-        <div class="quiz" id="quiz"></div>
+        <div class="term-cue" id="cue"></div>
+        <div class="task" data-task="c4-t-plan"><span>Run both parts, then the plan.</span></div>
+        <div class="task" data-task="c4-t-jq"><span>Read the cheapest plan out of the result.</span></div>
+        <p class="note">The desktop app's <strong>Maintenance</strong> page plans from the open result in the same way, with the dose-rate chart and each wait's costs.</p>
         <div class="frame" id="finish">
-          <h4 id="finish-title">Finish the steps to complete the chapter</h4>
-          <p class="note" id="finish-text">Each step needs its boxes ticked.</p>
+          <h4 id="finish-title">Finish the outage to complete the chapter</h4>
+          <p class="note" id="finish-text">The list on the left shows what's left.</p>
           <p><a class="btn primary" href="files/plan.json" download>Download plan.json</a> <a class="btn" href="files/bracket.json" download>bracket.json</a> <a class="btn" href="files/pipe.json" download>pipe.json</a> <a class="btn" href="files/photon-response.json" download>photon-response.json</a></p>
         </div>
         <h3>Next</h3>
-        <p><a href="../waste/">Chapter 5: what waste is it?</a>. One day the part comes out for good. Can it be thrown away, and how?</p>
+        <p><a href="../waste/">Chapter 5: what waste is it?</a> One day the bracket comes out for good. Which class of waste is it, and why does a trace of niobium decide?</p>
         <p><button type="button" class="btn" id="reset">Start this chapter over</button></p>
       </section>
     </div>
   </main>
 </div>
-<div class="statusbar" id="status" role="status">Start with step 1, or pick any step from the list on the left.</div>
+<div class="statusbar" id="status" role="status">Read the work order, then pick a day.</div>
 <script type="module" src="./chapter.js"></script>
 </body>
 </html>
