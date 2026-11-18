@@ -6804,3 +6804,23 @@ and `assemble` and `controls/check_p198.py` on `8099e7f` (a clean worktree), ins
   resonance-range capture uncertainty is missing from it. In A and B, a band's largest share is 84–100%. Its
   relative standard deviations: bracket Co-60 2.72%, Co-58 5.66%, Cr-51 5.58%, Fe-55 12.9%, Mn-54 29%,
   Mn-56 18.7% at the end of irradiation.
+
+## Entry 390 — P198 verdict: P198-PASS; the MF=33 band reports rate the covariance does not reach, and a state-resolved row nonzero where its total is zero no longer stops the run (2026-11-18)
+
+CI on the evidence commit `bfc548a` passed every job (`controls`, `fns-iron`, `fusion-isotope`), so G6 holds. With
+G0–G5 (ledger 389), P198 passes. Its sentences, filled from `results/p198_verdict.json`:
+
+> In ACTINV's MF=33 band, a covered parameter that takes 1% or more of its reaction rate at energies where the
+> covariance is zero (in TENDL-2025, the resonance range, whose uncertainty is MF=32) leaves the band's coverage
+> partial, and the band reports how many such parameters it has and the largest share.
+>
+> A state-resolved (MF=10) row that is nonzero where its reaction total is zero no longer stops the run; it takes
+> no covariance there and that rate is reported outside the band.
+>
+> For Learn ACTINV's steel bracket with 0.1 wt% cobalt after 30 days in its moderated field, the cross-section part
+> of the relative standard deviation of the Co60 activity is 2.7%, and 100% of the Co-59 capture rate behind it is
+> at energies TENDL-2025's MF=33 covariance does not reach.
+
+The handbook's specification chapter describes the new fields. The band still leaves out resonance-range
+uncertainty; a sidecar that fills it for IRDFF-II's reactions (P188's) is not yet shipped. The work directories and
+the baseline worktree were deleted after the verdict.
