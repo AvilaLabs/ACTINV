@@ -443,7 +443,17 @@ requested channel has evaluated uncertainty data. Missing evaluated cross-reacti
 counted; they are not invented. A state-resolved (MF=10) product row takes its reaction's MF=33 covariance, fully
 correlated with the reaction total, so a product such as Co-58 from Ni-58(n,p) is in the band. Its isomer-branching
 uncertainty (MF=40) is not. Such a response counts these rows in `parameters_from_reaction_total`, its
-`cross_section_mf33` channel says so in `note`, and its coverage is `partial`. These intervals are neither tolerance
+`cross_section_mf33` channel says so in `note`, and its coverage is `partial`.
+
+An evaluation's MF=33 covariance can be zero over part of the energy range. TENDL-2025's is zero for capture through
+the resonance range, whose uncertainty TENDL gives as resonance-parameter covariance (MF=32), which the band does not
+propagate. Each sensitivity's parameter reports `uncovered_rate_fraction`, the share of its reaction rate under the
+problem's spectrum at energies the covariance does not reach (absent when zero). A state-resolved row that is nonzero
+where its reaction total is zero takes no covariance there, and that rate counts as outside too. A response with a
+propagated parameter whose share is 1% or more counts those parameters in `parameters_with_uncovered_energies`,
+reports the largest share in `largest_uncovered_rate_fraction`, has coverage `partial`, and its `cross_section_mf33`
+channel says so in `note`. In a moderated field, for example, Co-60 from Co-59 capture is nearly all outside, and
+its band says so instead of showing a near-zero uncertainty as complete. These intervals are neither tolerance
 limits nor safety margins, and exclude MF=32 resonance-parameter and MF=40 production covariance, decay-yield and
 cross-channel correlation, material-composition, response-coefficient and model uncertainty — the `uncovered_remainder` channel names these.
 Absent a requested `flux` channel, incident-flux uncertainty is excluded there too; with `flux` requested, that

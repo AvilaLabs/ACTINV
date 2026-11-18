@@ -30,6 +30,10 @@ pub struct SensitivityParameter {
     /// The parameter's self block was excluded under the frozen
     /// asymmetry/PSD defect rules; it contributes nothing to the variance.
     pub covariance_excluded: bool,
+    /// Share of this parameter's reaction rate, under its spectrum, in energy groups the MF=33 covariance does not
+    /// reach (zero variance there, as in TENDL's resonance range, whose uncertainty is MF=32). Absent when zero.
+    #[serde(skip_serializing_if = "is_zero_f64")]
+    pub uncovered_rate_fraction: f64,
 }
 
 /// A decay-constant uncertainty parameter (P20 G4): one radioactive nuclide's
@@ -169,6 +173,14 @@ pub struct ResponseUncertainty {
     /// so the band's coverage is `partial`. Absent when zero.
     #[serde(skip_serializing_if = "is_zero")]
     pub parameters_from_reaction_total: usize,
+    /// Covered parameters with nonzero sensitivity whose `uncovered_rate_fraction` is at least
+    /// `UNCOVERED_RATE_FRACTION_LIMIT`: part of their uncertainty is outside the band, so its coverage is `partial`.
+    /// Absent when zero.
+    #[serde(skip_serializing_if = "is_zero")]
+    pub parameters_with_uncovered_energies: usize,
+    /// Largest `uncovered_rate_fraction` over the covered parameters with nonzero sensitivity. Absent when zero.
+    #[serde(skip_serializing_if = "is_zero_f64")]
+    pub largest_uncovered_rate_fraction: f64,
     /// Per-channel breakdown; every band names the channels it does not cover.
     pub channels: Vec<ChannelReport>,
     /// Standard uncertainty over every propagated channel, emitted only when a
@@ -580,6 +592,18 @@ fn is_zero(value: &usize) -> bool {
     *value == 0
 }
 
+fn is_zero_f64(value: &f64) -> bool {
+    *value == 0.0
+}
+
+/// A covered parameter with at least this share of its reaction rate outside the covariance's reach leaves its
+/// band `partial`.
+pub const UNCOVERED_RATE_FRACTION_LIMIT: f64 = 0.01;
+
+const STATE_RESOLVED_NOTE: &str = "state-resolved (MF=10) products take their reaction's MF=33 covariance, fully correlated with the reaction total; their isomer-branching (MF=40) uncertainty is not propagated";
+const UNCOVERED_ENERGIES_NOTE: &str = "some covered parameters take 1% or more of their reaction rate at energies where the MF=33 covariance is zero (in TENDL, the resonance range, whose uncertainty is MF=32 and not propagated); their uncertainty there is missing from the band";
+const BOTH_NOTES: &str = "state-resolved (MF=10) products take their reaction's MF=33 covariance, fully correlated with the reaction total; their isomer-branching (MF=40) uncertainty is not propagated. Some covered parameters take 1% or more of their reaction rate at energies where the MF=33 covariance is zero (in TENDL, the resonance range, whose uncertainty is MF=32 and not propagated); their uncertainty there is missing from the band";
+
 /// MF=10 product rows: the activation library's state-resolved productions.
 const STATE_RESOLVED_LMF: i32 = 10;
 
@@ -671,11 +695,25 @@ pub fn response_band(input: BandInput) -> Result<ResponseUncertainty, String> {
                 && record.value != 0.0
         })
         .count();
-    let mf33_coverage = if parameters_from_reaction_total == 0 {
-        channel_coverage(covered_parameters, total_parameters)
-    } else {
-        "partial"
+    let propagated = || {
+        input.sensitivities.iter().filter(|record| {
+            record.parameter.covariance_covered
+                && !record.parameter.covariance_excluded
+                && record.value != 0.0
+        })
     };
+    let parameters_with_uncovered_energies = propagated()
+        .filter(|record| record.parameter.uncovered_rate_fraction >= UNCOVERED_RATE_FRACTION_LIMIT)
+        .count();
+    let largest_uncovered_rate_fraction = propagated()
+        .map(|record| record.parameter.uncovered_rate_fraction)
+        .fold(0.0, f64::max);
+    let mf33_coverage =
+        if parameters_from_reaction_total == 0 && parameters_with_uncovered_energies == 0 {
+            channel_coverage(covered_parameters, total_parameters)
+        } else {
+            "partial"
+        };
     let decay_coverage = input
         .decay_channel
         .as_ref()
@@ -701,9 +739,15 @@ pub fn response_band(input: BandInput) -> Result<ResponseUncertainty, String> {
             coverage: Some(mf33_coverage.into()),
             covered_parameters: Some(covered_parameters),
             total_parameters: Some(total_parameters),
-            note: (parameters_from_reaction_total > 0).then_some(
-                "state-resolved (MF=10) products take their reaction's MF=33 covariance, fully correlated with the reaction total; their isomer-branching (MF=40) uncertainty is not propagated",
-            ),
+            note: match (
+                parameters_from_reaction_total > 0,
+                parameters_with_uncovered_energies > 0,
+            ) {
+                (true, true) => Some(BOTH_NOTES),
+                (true, false) => Some(STATE_RESOLVED_NOTE),
+                (false, true) => Some(UNCOVERED_ENERGIES_NOTE),
+                (false, false) => None,
+            },
         },
         match &input.decay_channel {
             Some(channel) => ChannelReport {
@@ -798,6 +842,8 @@ pub fn response_band(input: BandInput) -> Result<ResponseUncertainty, String> {
         covered_parameters,
         total_parameters,
         parameters_from_reaction_total,
+        parameters_with_uncovered_energies,
+        largest_uncovered_rate_fraction,
         channels,
         combined_standard_uncertainty: extra_channels.then_some(standard_uncertainty),
         unmodeled_relative: input.unmodeled_relative,
@@ -848,6 +894,7 @@ mod tests {
                 collapsed_cross_section_b: 0.01,
                 covariance_covered: covered,
                 covariance_excluded: false,
+                uncovered_rate_fraction: 0.0,
             },
             value: 1.0,
             unit: "Bq/g per b".into(),
@@ -884,6 +931,66 @@ mod tests {
             .note
             .unwrap()
             .contains("isomer-branching"));
+        assert!(!states.channels[0].note.unwrap().contains("MF=32"));
+    }
+
+    #[test]
+    fn rate_outside_the_covariance_leaves_the_band_partial() {
+        use super::*;
+        let sensitivity = |row: usize, outside: f64| SensitivityOut {
+            parameter: SensitivityParameter {
+                library_row: row,
+                target: 0,
+                target_nuclide: "Co59".into(),
+                target_za: 27059,
+                target_liso: 0,
+                mt: 102,
+                zap: -1,
+                lfs: 0,
+                lmf: -1,
+                spectrum: 0,
+                collapsed_cross_section_b: 10.0,
+                covariance_covered: true,
+                covariance_excluded: false,
+                uncovered_rate_fraction: outside,
+            },
+            value: 1.0,
+            unit: "Bq/g per b".into(),
+        };
+        let band = |sensitivities| {
+            response_band(BandInput {
+                nominal: 10.0,
+                alternate: 10.0,
+                unit: "Bq/g".into(),
+                confidence_level: 0.95,
+                normal_multiplier: 1.96,
+                variance: 1.0,
+                negative_variance_roundoff_removed: 0.0,
+                sensitivities,
+                decay_channel: None,
+                fission_yield_channel: None,
+                flux_channel: None,
+                flux_fully_correlated_bound: None,
+                unmodeled_relative: None,
+            })
+            .unwrap()
+        };
+        // Below the limit: complete, and no new fields in the output.
+        let small = band(vec![sensitivity(0, 0.009)]);
+        assert_eq!(small.coverage, "complete");
+        assert_eq!(small.parameters_with_uncovered_energies, 0);
+        assert_eq!(small.largest_uncovered_rate_fraction, 0.009);
+        assert!(small.channels[0].note.is_none());
+        let none = serde_json::to_string(&band(vec![sensitivity(0, 0.0)])).unwrap();
+        assert!(!none.contains("uncovered_rate_fraction"));
+        assert!(!none.contains("parameters_with_uncovered_energies"));
+        // At the limit: partial, counted, with the MF=32 note.
+        let cobalt = band(vec![sensitivity(0, 0.99), sensitivity(1, 0.01)]);
+        assert_eq!(cobalt.coverage, "partial");
+        assert_eq!(cobalt.channels[0].coverage.as_deref(), Some("partial"));
+        assert_eq!(cobalt.parameters_with_uncovered_energies, 2);
+        assert_eq!(cobalt.largest_uncovered_rate_fraction, 0.99);
+        assert!(cobalt.channels[0].note.unwrap().contains("MF=32"));
     }
 
     #[test]

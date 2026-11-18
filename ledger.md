@@ -6769,3 +6769,22 @@ not change solver algorithms, acceptance tolerances, frozen protocols, historica
 evidence or scientific qualification verdicts. Public API contract hardening,
 scientific input semantics, difficult numerical cases and full worker-lifecycle
 integration remain follow-up audit work.
+
+## Entry 388 — P198 registered: the MF=33 band where the covariance does not reach; a state-resolved row nonzero where its total is zero no longer stops the run, and bands report rate outside the covariance (2026-11-18)
+
+`protocols/ACTINV-P198_PROTOCOL.md`, `controls/p198_harness.py` and `controls/check_p198.py` are sealed in
+`protocols/protocol_hash.txt`.
+- **Why.** Learn ACTINV's steel bracket in its moderated field has no band on master: TENDL-2025's K-41(n,α) MF=10
+  row to Cl-38 is nonzero at 115–871 keV where MF=3 is zero, and P185's collapse refuses it. With 1.7.2 the same
+  problem gives Co-60 a band of about 0.007%, reported complete, because the v1.2.0 sidecar's capture covariance is
+  zero through the resonance range for every target (TENDL puts that uncertainty in MF=32, not propagated).
+- **What.** Such a row takes no covariance where its total is zero. Each parameter reports
+  `uncovered_rate_fraction`, its share of reaction rate where the covariance does not reach. A band with a
+  propagated parameter at 1% or more reports `parameters_with_uncovered_energies` and
+  `largest_uncovered_rate_fraction`, is `partial`, and names MF=32 in its channel note. No band value changes.
+- **Gates.** G2: on P185's FNS problems A and B, activities, bands and sensitivities bit-identical to master. G3:
+  shares within 1e-12 of the checker's, bands equal to P185's s^T C s with the new rule. G4: reporting; master fails
+  on problem C (the bracket), the candidate runs it and Co-60 is partial at every step. G6 is CI on the evidence
+  commit.
+- **Seen.** Unit tests; one candidate development run of C for its exit status and this protocol's G3/G4 result
+  (no problems), with no band or share value printed; one baseline run of C for its exit status. No run of A or B.

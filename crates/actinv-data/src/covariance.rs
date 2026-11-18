@@ -97,6 +97,10 @@ pub struct CollapsedCovariance {
     /// The single-spectrum collapse fills this with zeros.
     pub param_spectrum: Vec<usize>,
     pub one_group_barns: Vec<f64>,
+    /// Per parameter, the share of its reaction rate under its spectrum that falls in activation groups the
+    /// covariance does not reach: the reaction's MF=33 variance is zero there (TENDL puts resonance-range
+    /// uncertainty in MF=32, outside the band), or a state-resolved row is nonzero where its reaction total is zero.
+    pub uncovered_rate_fraction: Vec<f64>,
     /// Dense row-major covariance matrix in barn^2.
     pub covariance_barn2: Vec<f64>,
     pub uncovered_rows: Vec<usize>,
@@ -810,6 +814,43 @@ impl CovarianceLibrary {
         Ok(())
     }
 
+    /// Per activation group, whether (target, MT)'s self-covariance has a positive variance anywhere over the group:
+    /// the diagonal of a square relative or absolute block, or a short-range (LB=8/9) factor, on a covariance bin that
+    /// overlaps it. A rectangular self block's diagonal is not defined and adds nothing.
+    fn variance_reaches(&self, library: &Library, target: usize, mt: i32) -> Vec<bool> {
+        let mut reaches = vec![false; library.ngroups];
+        for component in self.components.iter().filter(|component| {
+            component.target == target && component.mt == mt && component.mt1 == mt
+        }) {
+            let grid = &self.grids[component.row_grid];
+            let bins = grid.len() - 1;
+            let values = self.component_values(component);
+            let positive: Vec<bool> = match component.kind {
+                ComponentKind::Relative | ComponentKind::Absolute => {
+                    if component.row_grid != component.column_grid || values.len() != bins * bins {
+                        continue;
+                    }
+                    (0..bins)
+                        .map(|bin| values[bin * bins + bin] > 0.0)
+                        .collect()
+                }
+                ComponentKind::ShortRange8 | ComponentKind::ShortRange9 => {
+                    values.iter().map(|value| *value > 0.0).collect()
+                }
+            };
+            for (group, reached) in reaches.iter_mut().enumerate() {
+                if *reached {
+                    continue;
+                }
+                let low = library.bounds[group];
+                let high = library.bounds[group + 1];
+                *reached = (0..bins)
+                    .any(|bin| positive[bin] && high.min(grid[bin + 1]) - low.max(grid[bin]) > 0.0);
+            }
+        }
+        reaches
+    }
+
     fn component_values(&self, component: &StoredComponent) -> &[f64] {
         &self.values[component.value_offset..component.value_offset + component.value_len]
     }
@@ -851,12 +892,10 @@ impl CovarianceLibrary {
                 1.0
             } else if base_sigma[group] > 0.0 {
                 row_sigma[group] / base_sigma[group]
-            } else if row_sigma[group] == 0.0 {
-                0.0
             } else {
-                return Err(format!(
-                    "activation row {row_index} is nonzero where base row {base_index} is zero"
-                ));
+                // A state-resolved row nonzero where its reaction total is zero has no defined share of the
+                // reaction's perturbation; those groups are reported in `uncovered_rate_fraction`.
+                0.0
             };
             if multiplier == 0.0 {
                 continue;
@@ -912,17 +951,14 @@ impl CovarianceLibrary {
         let left_base_sigma = library.sigma(left_base);
         let right_sigma = library.sigma(right_row);
         let right_base_sigma = library.sigma(right_base);
+        // As in `vector_for_grid`: a row nonzero where its reaction total is zero takes no share there.
         let ratio = |row: usize, base: usize, sigma: &[f64], base_sigma: &[f64], group: usize| {
             if row == base {
-                Ok(1.0)
+                1.0
             } else if base_sigma[group] > 0.0 {
-                Ok(sigma[group] / base_sigma[group])
-            } else if sigma[group] == 0.0 {
-                Ok(0.0)
+                sigma[group] / base_sigma[group]
             } else {
-                Err(format!(
-                    "activation row {row} is nonzero where base row {base} is zero"
-                ))
+                0.0
             }
         };
         let mut sum = 0.0;
@@ -935,8 +971,8 @@ impl CovarianceLibrary {
             let low = library.bounds[group];
             let high = library.bounds[group + 1];
             let group_width = high - low;
-            let left_ratio = ratio(left_row, left_base, left_sigma, left_base_sigma, group)?;
-            let right_ratio = ratio(right_row, right_base, right_sigma, right_base_sigma, group)?;
+            let left_ratio = ratio(left_row, left_base, left_sigma, left_base_sigma, group);
+            let right_ratio = ratio(right_row, right_base, right_sigma, right_base_sigma, group);
             for bin in 0..grid.len() - 1 {
                 let segment_width = (high.min(grid[bin + 1]) - low.max(grid[bin])).max(0.0);
                 if segment_width == 0.0 {
@@ -1080,12 +1116,41 @@ impl CovarianceLibrary {
                 });
             }
         }
+        let base_rows = Self::base_rows(library);
+        let mut reaches_by_key: HashMap<(usize, i32), Vec<bool>> = HashMap::new();
+        let mut uncovered_rate_fraction = Vec::with_capacity(size);
+        for (&row, &spectrum) in row_indices.iter().zip(&param_spectrum) {
+            let descriptor = library.rows[row];
+            let reaches = reaches_by_key
+                .entry((descriptor.target, descriptor.mt))
+                .or_insert_with(|| {
+                    self.variance_reaches(library, descriptor.target, descriptor.mt)
+                });
+            let sigma = library.sigma(row);
+            let base_sigma = base_rows
+                .get(&(descriptor.target, descriptor.mt))
+                .filter(|base| **base != row)
+                .map(|base| library.sigma(*base));
+            let (mut all, mut outside) = (0.0, 0.0);
+            for (group, &flux) in phis[spectrum].iter().enumerate() {
+                let rate = flux * row_scale(row, group) * sigma[group];
+                if rate == 0.0 {
+                    continue;
+                }
+                all += rate;
+                if !reaches[group] || base_sigma.is_some_and(|base| base[group] <= 0.0) {
+                    outside += rate;
+                }
+            }
+            uncovered_rate_fraction.push(if all > 0.0 { outside / all } else { 0.0 });
+        }
         let mut covariance_barn2 = vec![0.0; size * size];
         if totals.iter().all(|total| *total == 0.0) {
             return Ok(CollapsedCovariance {
                 row_indices,
                 param_spectrum,
                 one_group_barns,
+                uncovered_rate_fraction,
                 covariance_barn2,
                 uncovered_rows,
                 absent_cross_parameter_pairs: n_covered * n_covered.saturating_sub(1) / 2,
@@ -1093,7 +1158,6 @@ impl CovarianceLibrary {
                 excluded_blocks: Vec::new(),
             });
         }
-        let base_rows = Self::base_rows(library);
         let mut by_key: BTreeMap<(usize, i32), Vec<usize>> = BTreeMap::new();
         for (parameter, &row_index) in row_indices.iter().enumerate() {
             let row = library.rows[row_index];
@@ -1333,6 +1397,7 @@ impl CovarianceLibrary {
             row_indices,
             param_spectrum,
             one_group_barns,
+            uncovered_rate_fraction,
             covariance_barn2,
             uncovered_rows,
             absent_cross_parameter_pairs,
@@ -2723,6 +2788,87 @@ mod tests {
         // the states' joint variance is the reaction total's
         let states = c[4] + c[5] + c[7] + c[8];
         assert!((states - c[0]).abs() < 1e-12, "{states} vs {}", c[0]);
+    }
+
+    #[test]
+    fn state_row_nonzero_where_its_total_is_zero_is_reported_not_refused() {
+        // TENDL-2025's K-41(n,a) MF=10 row to Cl-38 is nonzero at 115-871 keV where MF=3 is zero. An absolute
+        // component needs the row's share of the total, which is undefined there: those groups take no
+        // covariance and are reported as rate outside it, instead of failing every run.
+        let component = ParsedComponent {
+            mat: 1,
+            mt: 107,
+            mt1: 107,
+            lb: 0,
+            kind: ComponentKind::Absolute,
+            row_grid: vec![1.0, 5.0],
+            column_grid: vec![1.0, 5.0],
+            values: vec![0.25],
+        };
+        let covariance = CovarianceLibrary::from_parsed([(0, component)]).unwrap();
+        let row = |zap, lfs, lmf| crate::library::Row {
+            target: 0,
+            mt: 107,
+            zap,
+            lfs,
+            lmf,
+        };
+        let activation = Library {
+            rows: vec![row(-1, -1, 0), row(17038, 0, 10)],
+            sig: vec![0.0, 4.0, 1.0, 2.0],
+            ngroups: 2,
+            bounds: vec![1.0, 2.0, 5.0],
+        };
+        let collapsed = covariance
+            .collapse(&activation, &[1.0, 3.0], &[0, 1])
+            .unwrap();
+        assert_eq!(collapsed.row_indices, vec![0, 1]);
+        assert_eq!(collapsed.uncovered_rate_fraction[0], 0.0);
+        // state row: rate 1*1 in group 0 (total zero there) of 1*1 + 3*2
+        assert!((collapsed.uncovered_rate_fraction[1] - 1.0 / 7.0).abs() < 1e-15);
+        // the total's flux weights are 1/4 (group 0) and 3/4 (group 1); the state takes only group 1, at its
+        // share 2/4 of the total there
+        let c = &collapsed.covariance_barn2;
+        assert!((c[0] - 0.25).abs() < 1e-15, "{}", c[0]);
+        assert!((c[3] - 0.25 * 0.375 * 0.375).abs() < 1e-15, "{}", c[3]);
+    }
+
+    #[test]
+    fn rate_where_the_variance_is_zero_is_reported() {
+        // TENDL's MF=33 capture covariance is zero through the resonance range (that uncertainty is MF=32).
+        let component = ParsedComponent {
+            mat: 1,
+            mt: 102,
+            mt1: 102,
+            lb: 5,
+            kind: ComponentKind::Relative,
+            row_grid: vec![1.0, 3.0, 5.0],
+            column_grid: vec![1.0, 3.0, 5.0],
+            values: vec![0.0, 0.0, 0.0, 0.09],
+        };
+        let covariance = CovarianceLibrary::from_parsed([(0, component)]).unwrap();
+        let activation = Library {
+            rows: vec![crate::library::Row {
+                target: 0,
+                mt: 102,
+                zap: -1,
+                lfs: -1,
+                lmf: 0,
+            }],
+            sig: vec![2.0, 4.0],
+            ngroups: 2,
+            bounds: vec![1.0, 2.0, 5.0],
+        };
+        // group 0 (1-2 eV) lies wholly in the zero-variance bin; group 1 (2-5 eV) reaches the positive one
+        let collapsed = covariance.collapse(&activation, &[1.0, 3.0], &[0]).unwrap();
+        assert!((collapsed.uncovered_rate_fraction[0] - 2.0 / 14.0).abs() < 1e-15);
+        // a spectrum only in group 1 is wholly reached
+        let fast = covariance.collapse(&activation, &[0.0, 3.0], &[0]).unwrap();
+        assert_eq!(fast.uncovered_rate_fraction[0], 0.0);
+        // and one only in group 0 is wholly outside
+        let slow = covariance.collapse(&activation, &[1.0, 0.0], &[0]).unwrap();
+        assert_eq!(slow.uncovered_rate_fraction[0], 1.0);
+        assert_eq!(slow.covariance_barn2[0], 0.0);
     }
 
     fn two_row_activation() -> Library {

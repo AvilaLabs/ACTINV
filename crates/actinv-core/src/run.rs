@@ -5616,6 +5616,13 @@ impl PreparedRun {
                         collapsed.uncovered_rows.len()
                     ));
                 }
+                let uncovered_share: HashMap<(usize, usize), f64> = collapsed
+                    .row_indices
+                    .iter()
+                    .zip(&collapsed.param_spectrum)
+                    .zip(&collapsed.uncovered_rate_fraction)
+                    .map(|((&row, &spectrum), &share)| ((spectrum, row), share))
+                    .collect();
                 let covered_rows: BTreeMap<usize, usize> = collapsed
                     .row_indices
                     .iter()
@@ -5702,6 +5709,10 @@ impl PreparedRun {
                             collapsed_cross_section_b: lib.one_group(row_index, phi_s),
                             covariance_covered: covered,
                             covariance_excluded: excluded,
+                            uncovered_rate_fraction: uncovered_share
+                                .get(&(spectrum, row_index))
+                                .copied()
+                                .unwrap_or(0.0),
                         });
                         // Restricted mode integrates a tangent only for
                         // covariance-covered rows: an uncovered parameter's
