@@ -7,20 +7,42 @@
 <meta name="description" content="An interactive course in ACTINV, the activation and inventory code: predict, run and read real calculations step by step, no installation or coding experience needed.">
 <link rel="icon" href="../favicon-e820714f418d9a3a.svg" type="image/svg+xml">
 <link rel="stylesheet" href="./learn.css">
-<script>try { if (localStorage.getItem("actinv-learn:theme") === '"Dark"') document.documentElement.dataset.theme = "dark"; } catch {}</script>
+<script>document.documentElement.dataset.theme = "dark"; try { if (localStorage.getItem("actinv-learn:theme") === '"Light"') delete document.documentElement.dataset.theme; } catch {}</script>
 <style>
-  .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 10px; }
+  .home { max-width: 1000px; margin: 0 auto; padding: 36px 20px 80px; }
+  .intro { text-align: center; max-width: 680px; margin: 0 auto 26px; }
+  .intro h1 { font-size: 36px; }
+  .intro .subtitle { font-size: 17px; margin: 8px 0 18px; }
+  .intro .actions { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
+  .intro .btn { font-size: 14px; padding: 8px 16px; }
+  .preview { margin: 0 0 8px; padding: 14px 16px 10px; }
+  .preview .head { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 4px 16px; align-items: baseline; }
+  .preview h4 { margin: 0; }
+  .preview .legend { margin: 0 0 6px; }
+  .points { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); border: 1px solid var(--stroke); border-radius: 2px; margin: 14px 0 0; }
+  .points div { padding: 10px 12px; border-right: 1px solid var(--stroke); font-size: 14px; }
+  .points div:last-child { border-right: 0; }
+  .points b { display: block; font-weight: 400; color: var(--strong); margin-bottom: 2px; }
+  .points span { color: var(--weak); }
+  .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 10px; }
   .cards .frame { margin: 0; display: flex; flex-direction: column; }
   .cards .frame p { flex: 1; font-size: 14px; }
+  .cards .live { border-color: var(--accent); }
   .cards .soon { background: transparent; }
   .cards .soon h4, .cards .soon p { color: var(--weak); }
-  .bar { height: 6px; background: var(--btn); margin: 0 0 10px; }
-  .bar i { display: block; height: 100%; width: 0; background: var(--accent); }
-  .home { max-width: 1100px; }
+  .bar { height: 4px; background: var(--btn); margin: 0 0 10px; }
+  .bar i { display: block; height: 100%; width: 0; background: var(--accent); transition: width .6s ease; }
   .list { padding: 4px 12px; }
   .list > div { padding: 6px 0; }
-  .list b { display: block; font-weight: 300; }
+  .list b { display: block; font-weight: 300; color: var(--strong); }
   .list span { font-size: 14px; color: var(--weak); }
+  h2.section { font-size: 18px; margin: 30px 0 10px; }
+  @media (max-width: 700px) {
+    .home { padding-top: 22px; }
+    .intro h1 { font-size: 28px; }
+    .points div { border-right: 0; border-bottom: 1px solid var(--stroke); }
+    .points div:last-child { border-bottom: 0; }
+  }
 </style>
 </head>
 <body>
@@ -32,27 +54,43 @@
   <a class="link" href="https://github.com/AvilaLabs/ACTINV">GitHub</a>
 </header>
 <div class="toolbar">
-  <a class="btn primary" id="go1" href="first-irradiation/">Start chapter 1</a>
   <a class="btn" href="../">Open the workbench</a>
   <span class="spacer"></span>
   <button type="button" class="btn" id="sound"></button>
   <button type="button" class="btn" id="theme"></button>
 </div>
-<main class="content home">
-  <h1>Learn ACTINV</h1>
-  <p class="subtitle">A course in ACTINV, step by step: make something radioactive, guess what happens, then run ACTINV and read the answer.</p>
-
-  <div class="frame">
-    <p>Each chapter is one engineering question, worked out with real ACTINV results you can explore. Every technical word has a short definition you can click, and nothing needs to be installed to follow along. Each chapter shows the desktop app, the command line and Python side by side, so you can use whichever suits you, and ends with the problem file to run yourself.</p>
+<main class="home">
+  <div class="intro">
+    <h1>Learn ACTINV</h1>
+    <p class="subtitle">Make something radioactive, guess what happens, then run ACTINV and read the answer. One engineering question per chapter, worked out step by step.</p>
+    <div class="actions">
+      <a class="btn primary" id="go1" href="first-irradiation/">Start chapter 1</a>
+      <a class="btn" href="../docs/">Read the handbook instead</a>
+    </div>
   </div>
 
-  <span class="caption">Fusion components: from the plasma to the waste store</span>
+  <div class="frame preview">
+    <div class="head">
+      <h4>From chapter 1: when can the crew go in?</h4>
+      <div class="legend"><span><i style="background:var(--accent)"></i>steel bracket</span><span><i style="background:var(--warn)"></i>the same, with 0.1% cobalt</span><span><i style="background:var(--err)"></i>access limit</span></div>
+    </div>
+    <div id="curve"></div>
+    <p class="cap">Dose rate 1 m from a 20 kg steel bracket after two years next to a fusion machine, from ACTINV runs you can repeat. A trace of cobalt turns a four-week wait into four months.</p>
+  </div>
+
+  <div class="points">
+    <div><b>Assumes nothing</b><span>Every technical word has a short definition one click away.</span></div>
+    <div><b>Nothing to install</b><span>Follow along in the browser. The problem files are yours to run later.</span></div>
+    <div><b>Your way in</b><span>The desktop app, the command line and Python, side by side.</span></div>
+  </div>
+
+  <h2 class="section">Fusion components: from the plasma to the waste store</h2>
   <div class="cards">
-    <div class="frame">
+    <div class="frame live">
       <h4>1 · Your first irradiation</h4>
       <p>Activate a steel bracket, predict its dose rate, run ACTINV three ways and find what a trace of cobalt does. About 35 minutes.</p>
       <div class="bar" aria-hidden="true"><i id="p1"></i></div>
-      <div><a class="btn" id="go1b" href="first-irradiation/">Start</a></div>
+      <div><a class="btn primary" id="go1b" href="first-irradiation/">Start</a></div>
     </div>
     <div class="frame soon"><h4>2 · Where does it come from?</h4><p>Trace each nuclide back through its reactions and decays to the atoms it started as.</p><span class="note">Being written</span></div>
     <div class="frame soon"><h4>3 · The impurities that matter</h4><p>Screen every trace element at once and write the limits into a purchase specification.</p><span class="note">Being written</span></div>
@@ -61,7 +99,7 @@
     <div class="frame soon"><h4>6 · How sure are we?</h4><p>Put error bars on the answers from the nuclear data itself.</p><span class="note">Being written</span></div>
   </div>
 
-  <span class="caption">More tracks, planned</span>
+  <h2 class="section">More tracks, planned</h2>
   <div class="frame list">
     <div><b>Facilities and measurements</b><span>Foils, unfolding a neutron spectrum, and checking ACTINV against what you measured.</span></div>
     <div><b>Coupling to transport</b><span>From a neutron transport mesh to activation on every cell, and the photon source back again.</span></div>
@@ -70,18 +108,34 @@
 </main>
 <div class="statusbar" id="status" role="status">Your progress is kept in this browser.</div>
 <script type="module">
-  import { soundButton, themeButton, store } from "./learn.js";
+  import { soundButton, themeButton, store, plot, svg, doseText } from "./learn.js";
   soundButton(document.querySelector("#sound"));
   themeButton(document.querySelector("#theme"));
   // Chapter 1 progress, from the same store the chapter writes.
   const done = store.get("done", []);
   const ALL = ["welcome", "beam", "halflife", "file", "guess", "ran", "access", "handoff", "cobalt-guess", "cobalt", "quiz"];
   const n = ALL.filter((t) => done.includes(t)).length;
-  document.querySelector("#p1").style.width = (100 * n / ALL.length) + "%";
-  const label = n === ALL.length ? "Chapter 1 done: open again" : n ? "Continue chapter 1" : "Start chapter 1";
-  document.querySelector("#go1").textContent = label;
+  requestAnimationFrame(() => (document.querySelector("#p1").style.width = (100 * n / ALL.length) + "%"));
+  document.querySelector("#go1").textContent = n === ALL.length ? "Open chapter 1 again" : n ? "Continue chapter 1" : "Start chapter 1";
   document.querySelector("#go1b").textContent = n === ALL.length ? "Open again" : n ? "Continue" : "Start";
   if (n) document.querySelector("#status").textContent = `Chapter 1: ${n} of ${ALL.length} tasks done.`;
+
+  // The preview: chapter 1's real runs, without cobalt and with 0.1% (run index 4).
+  const DAY = 86400, YEAR = 365.25 * DAY, LIMIT = 3e-3;
+  const data = await fetch("first-irradiation/data/bracket-data.json").then((r) => r.json());
+  const sh = data.shutdown_s;
+  const idx = data.t_s.map((t, i) => i).filter((i) => data.t_s[i] - sh >= 60);
+  const p = plot(document.querySelector("#curve"), {
+    height: 300, margin: { l: 90 }, label: "Dose rate after shutdown, with and without cobalt",
+    x: { domain: [60, 100 * YEAR], log: true, title: "time after shutdown",
+         ticks: [[60, "1 min"], [3600, "1 h"], [DAY, "1 day"], [7 * DAY, "1 week"], [30.44 * DAY, "1 month"], [YEAR, "1 year"], [10 * YEAR, "10 years"], [100 * YEAR, "100 years"]],
+         narrow: [[60, "1 min"], [DAY, "1 d"], [YEAR, "1 y"], [100 * YEAR, "100 y"]] },
+    y: { domain: [1e-11, 1e-1], log: true, every: 2, fmt: doseText, title: "dose rate at 1 m" },
+  });
+  svg("line", { x1: p.x(60), x2: p.x(100 * YEAR), y1: p.y(LIMIT), y2: p.y(LIMIT), class: "limit" }, p.layer);
+  const ts = idx.map((i) => data.t_s[i] - sh);
+  p.line(ts, idx.map((i) => data.runs[4].dose_Gy_h[i]), { class: "ink other" }, { animate: true });
+  p.line(ts, idx.map((i) => data.runs[0].dose_Gy_h[i]), { class: "ink" }, { animate: true });
 </script>
 </body>
 </html>

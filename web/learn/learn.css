@@ -26,7 +26,7 @@
   color-scheme: light;
 }
 :root[data-theme="dark"] {
-  --bg: rgb(27 27 27); --frame: rgb(10 10 10); --window: rgb(27 27 27); --stroke: rgb(60 60 60); --grid: rgb(45 45 45);
+  --bg: rgb(27 27 27); --frame: rgb(10 10 10); --window: rgb(27 27 27); --stroke: rgb(60 60 60); --grid: rgb(36 36 36);
   --text: rgb(178 178 178); --strong: rgb(255 255 255); --weak: rgb(175 184 205); --btn: rgb(60 60 60); --btn-text: rgb(180 180 180);
   --btn-hover: rgb(70 70 70); --btn-hover-stroke: rgb(150 150 150); --accent: rgb(165 178 255); --code: rgb(64 64 64);
   --warn: rgb(255 143 0); --err: rgb(255 80 80);
